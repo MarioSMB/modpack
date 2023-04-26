@@ -332,8 +332,7 @@ void boss_missile(entity this, vector p)
 
 	entity newmis = launch_spike(this, org, vec);
 	_setmodel(newmis, "progs/lavaball.mdl");
-	if(MP_IMPEL)
-		newmis.owner = this;
+	newmis.owner = this;
 	newmis.avelocity = '200 100 300';
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;

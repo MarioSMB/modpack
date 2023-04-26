@@ -623,16 +623,6 @@ void spawn_touchblood(entity this, float damage, entity targ)
 
 
 /*
-================
-SpawnChunk
-================
-*/
-void SpawnChunk(vector org, vector vel)
-{
-	particle(org, vel * 0.02, 0, 10);
-}
-
-/*
 ==============================================================================
 
 MULTI-DAMAGE
@@ -1466,53 +1456,11 @@ void gibhim(entity this)
 	else if(this.elec == 1)
 	{
 		vector oldmin = this.mins, oldmax = this.maxs;
-		if(this.classname == "monster_ogre")
-			_setmodel(this, "progs/ogre.mdl");
-		else if(this.classname == "monster_ogre_marksman")
-			_setmodel(this, "progs/ogre.mdl");
-		else if(this.classname == "monster_dknight")
-			_setmodel(this, "progs/dknight.mdl");
-		else if(this.classname == "monster_blud")
-			_setmodel(this, "progs/blud.mdl");
-		else if(this.classname == "monster_legond")
-			_setmodel(this, "progs/legond.mdl");
-		else if(this.classname == "monster_spider")
-			_setmodel(this, "progs/spid.mdl");
-		else if(this.classname == "monster_hbot")
-			_setmodel(this, "progs/hbot.mdl");
-		else if(this.classname == "monster_grenling")
-			_setmodel(this, "progs/grenling.mdl");
-		else if(this.classname == "monster_gren")
-			_setmodel(this, "progs/grenling.mdl");
-		else if(this.classname == "monster_knight")
-			_setmodel(this, "progs/knight.mdl");
-		else if(this.classname == "monster_shambler")
-			_setmodel(this, "progs/shambler.mdl");
-		else if(this.classname == "monster_demon1")
-			_setmodel(this, "progs/demon.mdl");
-		else if(this.classname == "monster_wizard")
-			_setmodel(this, "progs/wizard.mdl");
-		else if(this.classname == "monster_zombie")
-			_setmodel(this, "progs/zombie.mdl");
-		else if(this.classname == "monster_dog")
-			_setmodel(this, "progs/dog.mdl");
-		else if(this.classname == "monster_hell_knight")
-			_setmodel(this, "progs/hknight.mdl");
-		else if(this.classname == "monster_tarbaby")
-			_setmodel(this, "progs/tarbaby.mdl");
-		else if(this.classname == "monster_army")
-			_setmodel(this, "progs/soldier.mdl");
-		else if(this.classname == "monster_shalrath")
-			_setmodel(this, "progs/shalrath.mdl");
-		else if(this.classname == "monster_fish")
-			_setmodel(this, "progs/fish.mdl");
-		else if(this.classname == "monster_enforcer")
-			_setmodel(this, "progs/enforcer.mdl");
-		else if(this.classname == "monster_lenforcer")
-			_setmodel(this, "progs/enforcer.mdl");
-		else if(this.classname == "monster_babyblud")
-			_setmodel(this, "progs/spawn.mdl");
-		else if(IS_PLAYER(this))
+		//if(this.classname == "monster_hbot")
+		//	_setmodel(this, "progs/hbot.mdl");
+		//if(this.classname == "monster_babyblud")
+		//	_setmodel(this, "progs/spawn.mdl");
+		if(IS_PLAYER(this))
 		{
 			r = random();
 			this.modelindex = this.modelindex_player;
@@ -1533,6 +1481,8 @@ void gibhim(entity this)
 			else
 				this.frame = 87;
 		}
+		else if(this.gibmodel)
+			_setmodel(this, this.gibmodel);
 		this.effects = EF_DIMLIGHT;
 		this.elec = 0;
 		this.exptime = this.exptime + 0.1;

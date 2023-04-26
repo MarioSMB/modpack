@@ -505,6 +505,7 @@ spawnfunc(monster_legond)
 	this.sightsound = legond_sight;
 	this.deathmessage = legond_deathmessage;
 	this.checkattack = LegondCheckAttack;
+	this.gibmodel = "progs/legond.mdl";
 
 	monster_start(this, 0);
 }

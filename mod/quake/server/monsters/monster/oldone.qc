@@ -16,6 +16,7 @@ void finale_2(entity this);
 void finale_3(entity this);
 void finale_4(entity this);
 
+#if 0
 const int anim_old_old1 = 0;
 const int anim_old_old2 = 1;
 const int anim_old_old3 = 2;
@@ -83,85 +84,89 @@ const int anim_old_shake17 = 62;
 const int anim_old_shake18 = 63;
 const int anim_old_shake19 = 64;
 const int anim_old_shake20 = 65;
+#endif
 
-//void old_stand(entity this) { set_anim(this, anim_old_old1, old_stand); }
+const int anim_old_old = 0; //'0 45 0'
+const int anim_old_shake = 46; //'46 65 0'
+
+//void old_stand(entity this) { set_animofs(this, anim_old_old, 1, old_stand); }
 
 void old_idle1(entity this);
-void old_idle46(entity this) { set_anim(this, anim_old_old46, old_idle1); }
-void old_idle45(entity this) { set_anim(this, anim_old_old45, old_idle46); }
-void old_idle44(entity this) { set_anim(this, anim_old_old44, old_idle45); }
-void old_idle43(entity this) { set_anim(this, anim_old_old43, old_idle44); }
-void old_idle42(entity this) { set_anim(this, anim_old_old42, old_idle43); }
-void old_idle41(entity this) { set_anim(this, anim_old_old41, old_idle42); }
-void old_idle40(entity this) { set_anim(this, anim_old_old40, old_idle41); }
-void old_idle39(entity this) { set_anim(this, anim_old_old39, old_idle40); }
-void old_idle38(entity this) { set_anim(this, anim_old_old38, old_idle39); }
-void old_idle37(entity this) { set_anim(this, anim_old_old37, old_idle38); }
-void old_idle36(entity this) { set_anim(this, anim_old_old36, old_idle37); }
-void old_idle35(entity this) { set_anim(this, anim_old_old35, old_idle36); }
-void old_idle34(entity this) { set_anim(this, anim_old_old34, old_idle35); }
-void old_idle33(entity this) { set_anim(this, anim_old_old33, old_idle34); }
-void old_idle32(entity this) { set_anim(this, anim_old_old32, old_idle33); }
-void old_idle31(entity this) { set_anim(this, anim_old_old31, old_idle32); }
-void old_idle30(entity this) { set_anim(this, anim_old_old30, old_idle31); }
-void old_idle29(entity this) { set_anim(this, anim_old_old29, old_idle30); }
-void old_idle28(entity this) { set_anim(this, anim_old_old28, old_idle29); }
-void old_idle27(entity this) { set_anim(this, anim_old_old27, old_idle28); }
-void old_idle26(entity this) { set_anim(this, anim_old_old26, old_idle27); }
-void old_idle25(entity this) { set_anim(this, anim_old_old25, old_idle26); }
-void old_idle24(entity this) { set_anim(this, anim_old_old24, old_idle25); }
-void old_idle23(entity this) { set_anim(this, anim_old_old23, old_idle24); }
-void old_idle22(entity this) { set_anim(this, anim_old_old22, old_idle23); }
-void old_idle21(entity this) { set_anim(this, anim_old_old21, old_idle22); }
-void old_idle20(entity this) { set_anim(this, anim_old_old20, old_idle21); }
-void old_idle19(entity this) { set_anim(this, anim_old_old19, old_idle20); }
-void old_idle18(entity this) { set_anim(this, anim_old_old18, old_idle19); }
-void old_idle17(entity this) { set_anim(this, anim_old_old17, old_idle18); }
-void old_idle16(entity this) { set_anim(this, anim_old_old16, old_idle17); }
-void old_idle15(entity this) { set_anim(this, anim_old_old15, old_idle16); }
-void old_idle14(entity this) { set_anim(this, anim_old_old14, old_idle15); }
-void old_idle13(entity this) { set_anim(this, anim_old_old13, old_idle14); }
-void old_idle12(entity this) { set_anim(this, anim_old_old12, old_idle13); }
-void old_idle11(entity this) { set_anim(this, anim_old_old11, old_idle12); }
-void old_idle10(entity this) { set_anim(this, anim_old_old10, old_idle11); }
-void old_idle9(entity this) { set_anim(this, anim_old_old9, old_idle10); }
-void old_idle8(entity this) { set_anim(this, anim_old_old8, old_idle9); }
-void old_idle7(entity this) { set_anim(this, anim_old_old7, old_idle8); }
-void old_idle6(entity this) { set_anim(this, anim_old_old6, old_idle7); }
-void old_idle5(entity this) { set_anim(this, anim_old_old5, old_idle6); }
-void old_idle4(entity this) { set_anim(this, anim_old_old4, old_idle5); }
-void old_idle3(entity this) { set_anim(this, anim_old_old3, old_idle4); }
-void old_idle2(entity this) { set_anim(this, anim_old_old2, old_idle3); }
-void old_idle1(entity this) { set_anim(this, anim_old_old1, old_idle2); }
+void old_idle46(entity this) { set_animofs(this, anim_old_old, 46, old_idle1); }
+void old_idle45(entity this) { set_animofs(this, anim_old_old, 45, old_idle46); }
+void old_idle44(entity this) { set_animofs(this, anim_old_old, 44, old_idle45); }
+void old_idle43(entity this) { set_animofs(this, anim_old_old, 43, old_idle44); }
+void old_idle42(entity this) { set_animofs(this, anim_old_old, 42, old_idle43); }
+void old_idle41(entity this) { set_animofs(this, anim_old_old, 41, old_idle42); }
+void old_idle40(entity this) { set_animofs(this, anim_old_old, 40, old_idle41); }
+void old_idle39(entity this) { set_animofs(this, anim_old_old, 39, old_idle40); }
+void old_idle38(entity this) { set_animofs(this, anim_old_old, 38, old_idle39); }
+void old_idle37(entity this) { set_animofs(this, anim_old_old, 37, old_idle38); }
+void old_idle36(entity this) { set_animofs(this, anim_old_old, 36, old_idle37); }
+void old_idle35(entity this) { set_animofs(this, anim_old_old, 35, old_idle36); }
+void old_idle34(entity this) { set_animofs(this, anim_old_old, 34, old_idle35); }
+void old_idle33(entity this) { set_animofs(this, anim_old_old, 33, old_idle34); }
+void old_idle32(entity this) { set_animofs(this, anim_old_old, 32, old_idle33); }
+void old_idle31(entity this) { set_animofs(this, anim_old_old, 31, old_idle32); }
+void old_idle30(entity this) { set_animofs(this, anim_old_old, 30, old_idle31); }
+void old_idle29(entity this) { set_animofs(this, anim_old_old, 29, old_idle30); }
+void old_idle28(entity this) { set_animofs(this, anim_old_old, 28, old_idle29); }
+void old_idle27(entity this) { set_animofs(this, anim_old_old, 27, old_idle28); }
+void old_idle26(entity this) { set_animofs(this, anim_old_old, 26, old_idle27); }
+void old_idle25(entity this) { set_animofs(this, anim_old_old, 25, old_idle26); }
+void old_idle24(entity this) { set_animofs(this, anim_old_old, 24, old_idle25); }
+void old_idle23(entity this) { set_animofs(this, anim_old_old, 23, old_idle24); }
+void old_idle22(entity this) { set_animofs(this, anim_old_old, 22, old_idle23); }
+void old_idle21(entity this) { set_animofs(this, anim_old_old, 21, old_idle22); }
+void old_idle20(entity this) { set_animofs(this, anim_old_old, 20, old_idle21); }
+void old_idle19(entity this) { set_animofs(this, anim_old_old, 19, old_idle20); }
+void old_idle18(entity this) { set_animofs(this, anim_old_old, 18, old_idle19); }
+void old_idle17(entity this) { set_animofs(this, anim_old_old, 17, old_idle18); }
+void old_idle16(entity this) { set_animofs(this, anim_old_old, 16, old_idle17); }
+void old_idle15(entity this) { set_animofs(this, anim_old_old, 15, old_idle16); }
+void old_idle14(entity this) { set_animofs(this, anim_old_old, 14, old_idle15); }
+void old_idle13(entity this) { set_animofs(this, anim_old_old, 13, old_idle14); }
+void old_idle12(entity this) { set_animofs(this, anim_old_old, 12, old_idle13); }
+void old_idle11(entity this) { set_animofs(this, anim_old_old, 11, old_idle12); }
+void old_idle10(entity this) { set_animofs(this, anim_old_old, 10, old_idle11); }
+void old_idle9(entity this) { set_animofs(this, anim_old_old, 9, old_idle10); }
+void old_idle8(entity this) { set_animofs(this, anim_old_old, 8, old_idle9); }
+void old_idle7(entity this) { set_animofs(this, anim_old_old, 7, old_idle8); }
+void old_idle6(entity this) { set_animofs(this, anim_old_old, 6, old_idle7); }
+void old_idle5(entity this) { set_animofs(this, anim_old_old, 5, old_idle6); }
+void old_idle4(entity this) { set_animofs(this, anim_old_old, 4, old_idle5); }
+void old_idle3(entity this) { set_animofs(this, anim_old_old, 3, old_idle4); }
+void old_idle2(entity this) { set_animofs(this, anim_old_old, 2, old_idle3); }
+void old_idle1(entity this) { set_animofs(this, anim_old_old, 1, old_idle2); }
 
 void old_thrash1(entity this);
-void old_thrash20(entity this) { set_anim(this, anim_old_shake20, old_thrash20); finale_4(this); }
-void old_thrash19(entity this) { set_anim(this, anim_old_shake19, old_thrash20); lightstyle(0, "a"); }
-void old_thrash18(entity this) { set_anim(this, anim_old_shake18, old_thrash19); lightstyle(0, "b"); }
-void old_thrash17(entity this) { set_anim(this, anim_old_shake17, old_thrash18); lightstyle(0, "c"); }
-void old_thrash16(entity this) { set_anim(this, anim_old_shake16, old_thrash17); lightstyle(0, "g"); }
+void old_thrash20(entity this) { set_animofs(this, anim_old_shake, 20, old_thrash20); finale_4(this); }
+void old_thrash19(entity this) { set_animofs(this, anim_old_shake, 19, old_thrash20); lightstyle(0, "a"); }
+void old_thrash18(entity this) { set_animofs(this, anim_old_shake, 18, old_thrash19); lightstyle(0, "b"); }
+void old_thrash17(entity this) { set_animofs(this, anim_old_shake, 17, old_thrash18); lightstyle(0, "c"); }
+void old_thrash16(entity this) { set_animofs(this, anim_old_shake, 16, old_thrash17); lightstyle(0, "g"); }
 void old_thrash15(entity this)
 {
-	set_anim(this, anim_old_shake15, old_thrash16);
+	set_animofs(this, anim_old_shake, 15, old_thrash16);
 	lightstyle(0, "m");
 	this.cnt += 1;
 	if(this.cnt < 3)
 		setthink(this, old_thrash1);
 }
-void old_thrash14(entity this) { set_anim(this, anim_old_shake14, old_thrash15); lightstyle(0, "m"); }
-void old_thrash13(entity this) { set_anim(this, anim_old_shake13, old_thrash14); lightstyle(0, "k"); }
-void old_thrash12(entity this) { set_anim(this, anim_old_shake12, old_thrash13); lightstyle(0, "i"); }
-void old_thrash11(entity this) { set_anim(this, anim_old_shake11, old_thrash12); lightstyle(0, "g"); }
-void old_thrash10(entity this) { set_anim(this, anim_old_shake10, old_thrash11); lightstyle(0, "e"); }
-void old_thrash9(entity this) { set_anim(this, anim_old_shake9, old_thrash10); lightstyle(0, "c"); }
-void old_thrash8(entity this) { set_anim(this, anim_old_shake8, old_thrash9); lightstyle(0, "a"); }
-void old_thrash7(entity this) { set_anim(this, anim_old_shake7, old_thrash8); lightstyle(0, "c"); }
-void old_thrash6(entity this) { set_anim(this, anim_old_shake6, old_thrash7); lightstyle(0, "e"); }
-void old_thrash5(entity this) { set_anim(this, anim_old_shake5, old_thrash6); lightstyle(0, "g"); }
-void old_thrash4(entity this) { set_anim(this, anim_old_shake4, old_thrash5); lightstyle(0, "i"); }
-void old_thrash3(entity this) { set_anim(this, anim_old_shake3, old_thrash4); lightstyle(0, "k"); }
-void old_thrash2(entity this) { set_anim(this, anim_old_shake2, old_thrash3); lightstyle(0, "k"); }
-void old_thrash1(entity this) { set_anim(this, anim_old_shake1, old_thrash2); lightstyle(0, "m"); }
+void old_thrash14(entity this) { set_animofs(this, anim_old_shake, 14, old_thrash15); lightstyle(0, "m"); }
+void old_thrash13(entity this) { set_animofs(this, anim_old_shake, 13, old_thrash14); lightstyle(0, "k"); }
+void old_thrash12(entity this) { set_animofs(this, anim_old_shake, 12, old_thrash13); lightstyle(0, "i"); }
+void old_thrash11(entity this) { set_animofs(this, anim_old_shake, 11, old_thrash12); lightstyle(0, "g"); }
+void old_thrash10(entity this) { set_animofs(this, anim_old_shake, 10, old_thrash11); lightstyle(0, "e"); }
+void old_thrash9(entity this) { set_animofs(this, anim_old_shake, 9, old_thrash10); lightstyle(0, "c"); }
+void old_thrash8(entity this) { set_animofs(this, anim_old_shake, 8, old_thrash9); lightstyle(0, "a"); }
+void old_thrash7(entity this) { set_animofs(this, anim_old_shake, 7, old_thrash8); lightstyle(0, "c"); }
+void old_thrash6(entity this) { set_animofs(this, anim_old_shake, 6, old_thrash7); lightstyle(0, "e"); }
+void old_thrash5(entity this) { set_animofs(this, anim_old_shake, 5, old_thrash6); lightstyle(0, "g"); }
+void old_thrash4(entity this) { set_animofs(this, anim_old_shake, 4, old_thrash5); lightstyle(0, "i"); }
+void old_thrash3(entity this) { set_animofs(this, anim_old_shake, 3, old_thrash4); lightstyle(0, "k"); }
+void old_thrash2(entity this) { set_animofs(this, anim_old_shake, 2, old_thrash3); lightstyle(0, "k"); }
+void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); lightstyle(0, "m"); }
 
 //============================================================================
 

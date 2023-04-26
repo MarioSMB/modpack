@@ -177,13 +177,13 @@ void CheckWaterJump(entity this)
 	v_forward_z = 0;
 	normalize(v_forward);
 	vector end = start + v_forward*24;
-	traceline(start, end, true, this);
+	traceline(start, end, MOVE_NOMONSTERS, this);
 	if(trace_fraction < 1)
 	{	// solid at waist
 		start.z = start.z + this.maxs_z - 8;
 		end = start + v_forward * 24;
 		this.movedir = trace_plane_normal * -50;
-		traceline(start, end, true, this);
+		traceline(start, end, MOVE_NOMONSTERS, this);
 		if(trace_fraction == 1)
 		{	// open at eye level
 			this.flags |= FL_WATERJUMP;

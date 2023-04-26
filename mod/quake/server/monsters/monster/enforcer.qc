@@ -476,6 +476,7 @@ spawnfunc(monster_enforcer)
 
 	this.sightsound = enf_sight;
 	this.deathmessage = enf_deathmessage;
+	this.gibmodel = "progs/enforcer.mdl";
 
 	monster_start(this, 0);
 }

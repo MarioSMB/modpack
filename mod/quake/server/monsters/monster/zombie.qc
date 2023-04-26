@@ -890,6 +890,7 @@ spawnfunc(monster_zombie)
 
 	this.sightsound = zombie_sight;
 	this.deathmessage = zombie_deathmessage;
+	this.gibmodel = "progs/zombie.mdl";
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)
 	{

@@ -56,7 +56,7 @@ Return true if the target's armor can take damage from this attacker.
 bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage)
 {
 	if(teamplay <= 0)
-		return true;	// PGM bug? fix
+		return true; // PGM bug? fix
 
 	// teamplay modes 4,5,6 protect armor
 	if((teamplay == TEAM_CTF ||
@@ -672,20 +672,30 @@ void Team_weapon_touch(entity this, entity toucher)
 	//int best = W_BestWeapon(toucher);
 
 	int new = WEP_AXE;
-	if(this.classname == "weapon_nailgun")
-		new = WEP_NAILGUN;
-	else if(this.classname == "weapon_supernailgun")
-		new = WEP_SUPER_NAILGUN;
-	else if(this.classname == "weapon_supershotgun")
-		new = WEP_SUPER_SHOTGUN;
-	else if(this.classname == "weapon_rocketlauncher")
-		new = WEP_ROCKET_LAUNCHER;
-	else if(this.classname == "weapon_grenadelauncher")
-		new = WEP_GRENADE_LAUNCHER;
-	else if(this.classname == "weapon_lightning")
-		new = WEP_LIGHTNING;
-	else
-		objerror(this, "Team_weapon_touch: unknown classname");
+	switch(this.classname)
+	{
+		case "weapon_nailgun":
+			new = WEP_NAILGUN;
+			break;
+		case "weapon_supernailgun":
+			new = WEP_SUPER_NAILGUN;
+			break;
+		case "weapon_supershotgun":
+			new = WEP_SUPER_SHOTGUN;
+			break;
+		case "weapon_rocketlauncher":
+			new = WEP_ROCKET_LAUNCHER;
+			break;
+		case "weapon_grenadelauncher":
+			new = WEP_GRENADE_LAUNCHER;
+			break;
+		case "weapon_lightning":
+			new = WEP_LIGHTNING;
+			break;
+		default:
+			objerror(this, "Team_weapon_touch: unknown classname");
+			break;
+	}
 
 	sprint(toucher, strcat("You captured the ", this.netname, "\n"));
 // weapon touch sound
@@ -724,8 +734,14 @@ void TossWeapon(entity this)
 	if(teamplay < 1)
 		return;
 
-	if((this.weapon == WEP_AXE) || (this.weapon == WEP_SHOTGUN) || (this.weapon == WEP_GRAPPLE) || (this.weapon == WEP_MJOLNIR))
-		return;
+	switch(this.weapon)
+	{
+		case WEP_AXE:
+		case WEP_SHOTGUN:
+		case WEP_GRAPPLE:
+		case WEP_MJOLNIR:
+			return;
+	}
 		
 	entity item = spawn();
 	item.owner = this;
@@ -738,60 +754,70 @@ void TossWeapon(entity this)
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_BOUNCE);
-	
-	if(this.weapon == WEP_SUPER_SHOTGUN)
+
+	switch(this.weapon)
 	{
-		_setmodel(item, "progs/g_shot.mdl");
-		item.weapon = WEP_SUPER_SHOTGUN;
-		item.netname = "Double-barrelled Shotgun";
-		item.classname = "weapon_supershotgun";
-		this.weapons &= ~WEP_SUPER_SHOTGUN;
+		case WEP_SUPER_SHOTGUN:
+		{
+			_setmodel(item, "progs/g_shot.mdl");
+			item.weapon = WEP_SUPER_SHOTGUN;
+			item.netname = "Double-barrelled Shotgun";
+			item.classname = "weapon_supershotgun";
+			this.weapons &= ~WEP_SUPER_SHOTGUN;
+			break;
+		}
+		case WEP_NAILGUN:
+		case WEP_LAVA_NAILGUN:
+		{
+			_setmodel(item, "progs/g_nail.mdl");
+			item.weapon = WEP_NAILGUN;
+			item.netname = "nailgun";
+			item.classname = "weapon_nailgun";
+			this.weapons &= ~(WEP_NAILGUN | WEP_LAVA_NAILGUN);
+			break;
+		}
+		case WEP_SUPER_NAILGUN:
+		case WEP_LAVA_SUPER_NAILGUN:
+		{
+			_setmodel(item, "progs/g_nail2.mdl");
+			item.weapon = WEP_SUPER_NAILGUN;
+			item.netname = "Super Nailgun";
+			item.classname = "weapon_supernailgun";
+			this.weapons &= ~(WEP_SUPER_NAILGUN | WEP_LAVA_SUPER_NAILGUN);
+			break;
+		}
+		case WEP_GRENADE_LAUNCHER:
+		case WEP_MULTI_GRENADE:
+		{
+			_setmodel(item, "progs/g_rock.mdl");
+			item.weapon = WEP_GRENADE_LAUNCHER;
+			item.netname = "Grenade Launcher";
+			item.classname = "weapon_grenadelauncher";
+			this.weapons &= ~(WEP_GRENADE_LAUNCHER | WEP_MULTI_GRENADE);
+			break;
+		}
+		case WEP_ROCKET_LAUNCHER:
+		case WEP_MULTI_ROCKET:
+		{
+			_setmodel(item, "progs/g_rock2.mdl");
+			item.weapon = WEP_ROCKET_LAUNCHER;
+			item.netname = "Rocket Launcher";
+			item.classname = "weapon_rocketlauncher";
+			this.weapons &= ~(WEP_ROCKET_LAUNCHER | WEP_MULTI_ROCKET);
+			break;
+		}
+		case WEP_LIGHTNING:
+		case WEP_PLASMA_GUN:
+		{
+			_setmodel(item, "progs/g_light.mdl");
+			item.weapon = WEP_LIGHTNING;
+			item.netname = "Thunderbolt";
+			item.classname = "weapon_lightning";
+			this.weapons &= ~(WEP_LIGHTNING | WEP_PLASMA_GUN);
+			break;
+		}
 	}
 
-	if(this.weapon == WEP_NAILGUN || this.weapon == WEP_LAVA_NAILGUN)
-	{
-		_setmodel(item, "progs/g_nail.mdl");
-		item.weapon = WEP_NAILGUN;
-		item.netname = "nailgun";
-		item.classname = "weapon_nailgun";
-		this.weapons &= ~(WEP_NAILGUN | WEP_LAVA_NAILGUN);
-	}
-		
-	if(this.weapon == WEP_SUPER_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
-	{
-		_setmodel(item, "progs/g_nail2.mdl");
-		item.weapon = WEP_SUPER_NAILGUN;
-		item.netname = "Super Nailgun";
-		item.classname = "weapon_supernailgun";
-		this.weapons &= ~(WEP_SUPER_NAILGUN | WEP_LAVA_SUPER_NAILGUN);
-	}
-	
-	if(this.weapon == WEP_GRENADE_LAUNCHER || this.weapon == WEP_MULTI_GRENADE)
-	{
-		_setmodel(item, "progs/g_rock.mdl");
-		item.weapon = WEP_GRENADE_LAUNCHER;
-		item.netname = "Grenade Launcher";
-		item.classname = "weapon_grenadelauncher";
-		this.weapons &= ~(WEP_GRENADE_LAUNCHER | WEP_MULTI_GRENADE);
-	}
-	
-	if(this.weapon == WEP_ROCKET_LAUNCHER || this.weapon == WEP_MULTI_ROCKET)
-	{
-		_setmodel(item, "progs/g_rock2.mdl");
-		item.weapon = WEP_ROCKET_LAUNCHER;
-		item.netname = "Rocket Launcher";
-		item.classname = "weapon_rocketlauncher";
-		this.weapons &= ~(WEP_ROCKET_LAUNCHER | WEP_MULTI_ROCKET);
-	}
-	
-	if(this.weapon == WEP_LIGHTNING || this.weapon == WEP_PLASMA_GUN)
-	{
-		_setmodel(item, "progs/g_light.mdl");
-		item.weapon = WEP_LIGHTNING;
-		item.netname = "Thunderbolt";
-		item.classname = "weapon_lightning";
-		this.weapons &= ~(WEP_LIGHTNING | WEP_PLASMA_GUN);
-	}
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, Team_weapon_touch);
 	setthink(item, SUB_Remove);
@@ -802,21 +828,21 @@ void TossWeapon(entity this)
 
 .int cnt;
 .float touch_time;
-void RegenFlag(entity flg)
+void RegenFlag(entity this)
 {
-	set_movetype(flg, MOVETYPE_TOSS);
-	flg.solid = SOLID_TRIGGER;
-	_sound(flg, CH_INFO, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
-	setorigin(flg, flg.oldorigin);
-	flg.angles = flg.mangle;
-	flg.cnt = FLAG_AT_BASE; // it's at home base
-	flg.owner = NULL;
-	flg.touch_time = time + 1; // prevent touching again for a bit, to prevent instant cap loops
+	set_movetype(this, MOVETYPE_TOSS);
+	this.solid = SOLID_TRIGGER;
+	_sound(this, CH_INFO, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
+	setorigin(this, this.oldorigin);
+	this.angles = this.mangle;
+	this.cnt = FLAG_AT_BASE; // it's at home base
+	this.owner = NULL;
+	this.touch_time = time + 1; // prevent touching again for a bit, to prevent instant cap loops
 }
 
-void TeamReturnFlag(entity flg)
+void TeamReturnFlag(entity this)
 {
-	RegenFlag(flg);
+	RegenFlag(this);
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -824,16 +850,16 @@ void TeamReturnFlag(entity flg)
 			centerprint(it, "The flag has been returned!\n");
 		else {
 			if(teamplay == TEAM_CTF_ALT) {
-				if(flg.team == TEAM1)
+				if(this.team == TEAM1)
 					centerprint(it, "Red flag has been returned to base!\n");
-				else if(flg.team == TEAM2)
+				else if(this.team == TEAM2)
 					centerprint(it, "Blue flag has been returned to base!\n");
 				else
 					centerprint(it, "Some flag has been returned to base!\n");
 			} else {
-				if(it.steam != flg.team)
+				if(it.steam != this.team)
 					centerprint(it, "Enemy flag has been returned to base!\n");
-				else if(it.steam == flg.team)
+				else if(it.steam == this.team)
 					centerprint(it, "Your flag has been returned to base!\n");
 			}
 		}
@@ -862,31 +888,31 @@ void TeamRegenFlags()
 	});
 }
 
-void TeamDropFlag(entity flg)
+void TeamDropFlag(entity this)
 {
-	entity own = flg.owner;
+	entity own = this.owner;
 
 	if(teamplay == TEAM_CTF_ONEFLAG)
 		bprint(strcat(own.netname, " the flag!\n"));
 	else
 	{
-		if(flg.team == TEAM1)
+		if(this.team == TEAM1)
 			bprint(strcat(own.netname, " the ^1Red flag^7!\n")); // red
 		else
 			bprint(strcat(own.netname, " the ^4Blue flag^7!\n")); // blue
 	}
 
-	setorigin(flg, own.origin - '0 0 24');
-	flg.cnt = FLAG_DROPPED;
-	flg.velocity_z = 300;
-	flg.velocity_x = 0;
-	flg.velocity_y = 0;
-	flg.flags = FL_ITEM;
-	flg.solid = SOLID_TRIGGER;
-	set_movetype(flg, MOVETYPE_TOSS);
-	setsize(flg, '-16 -16 0', '16 16 74');
+	setorigin(this, own.origin - '0 0 24');
+	this.cnt = FLAG_DROPPED;
+	this.velocity_z = 300;
+	this.velocity_x = 0;
+	this.velocity_y = 0;
+	this.flags = FL_ITEM;
+	this.solid = SOLID_TRIGGER;
+	set_movetype(this, MOVETYPE_TOSS);
+	setsize(this, '-16 -16 0', '16 16 74');
 	// return it after so long
-	flg.super_time = time + CTF_FLAG_RETURN_TIME;
+	this.super_time = time + CTF_FLAG_RETURN_TIME;
 }
 
 void TeamDropFlagOfPlayer(entity player)

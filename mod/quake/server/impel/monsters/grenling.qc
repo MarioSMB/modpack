@@ -343,6 +343,7 @@ spawnfunc(monster_grenling)
 
 	this.sightsound = gren_sight;
 	this.deathmessage = grenling_deathmessage;
+	this.gibmodel = "progs/grenling.mdl";
 
 	monster_start(this, FL_FLY);
 }

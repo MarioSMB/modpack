@@ -407,6 +407,7 @@ spawnfunc(monster_blud)
 
 	this.sightsound = blud_sight;
 	this.deathmessage = blud_deathmessage;
+	this.gibmodel = "progs/blud.mdl";
 
 	monster_start(this, 0);
 }

@@ -18,6 +18,7 @@ $skin skin2
 
 $skin skin
 
+#if 0
 const int anim_tbaby_walk1 = 0;
 const int anim_tbaby_walk2 = 1;
 const int anim_tbaby_walk3 = 2;
@@ -83,64 +84,71 @@ const int anim_tbaby_fly3 = 58;
 const int anim_tbaby_fly4 = 59;
 
 const int anim_tbaby_exp = 60;
+#endif
 
-void tbaby_stand1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_stand1); ai_stand(this); }
+const int anim_tbaby_walk = 0; //'0 24 0'
+const int anim_tbaby_run = 25; //'25 49 0'
+const int anim_tbaby_jump = 50; //'50 55 0'
+const int anim_tbaby_fly = 56; //'56 59 0'
+const int anim_tbaby_exp = 60; //'60 60 0'
 
-void tbaby_hang1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_hang1); ai_stand(this); }
+void tbaby_stand1(entity this) { set_animofs(this, anim_tbaby_walk, 1, tbaby_stand1); ai_stand(this); }
+
+void tbaby_hang1(entity this) { set_animofs(this, anim_tbaby_walk, 1, tbaby_hang1); ai_stand(this); }
 
 void tbaby_walk1(entity this);
-void tbaby_walk25(entity this) { set_anim(this, anim_tbaby_walk25, tbaby_walk1); ai_walk(this, 2); }
-void tbaby_walk24(entity this) { set_anim(this, anim_tbaby_walk24, tbaby_walk25); ai_walk(this, 2); }
-void tbaby_walk23(entity this) { set_anim(this, anim_tbaby_walk23, tbaby_walk24); ai_walk(this, 2); }
-void tbaby_walk22(entity this) { set_anim(this, anim_tbaby_walk22, tbaby_walk23); ai_walk(this, 2); }
-void tbaby_walk21(entity this) { set_anim(this, anim_tbaby_walk21, tbaby_walk22); ai_walk(this, 2); }
-void tbaby_walk20(entity this) { set_anim(this, anim_tbaby_walk20, tbaby_walk21); ai_walk(this, 2); }
-void tbaby_walk19(entity this) { set_anim(this, anim_tbaby_walk19, tbaby_walk20); ai_walk(this, 2); }
-void tbaby_walk18(entity this) { set_anim(this, anim_tbaby_walk18, tbaby_walk19); ai_walk(this, 2); }
-void tbaby_walk17(entity this) { set_anim(this, anim_tbaby_walk17, tbaby_walk18); ai_walk(this, 2); }
-void tbaby_walk16(entity this) { set_anim(this, anim_tbaby_walk16, tbaby_walk17); ai_walk(this, 2); }
-void tbaby_walk15(entity this) { set_anim(this, anim_tbaby_walk15, tbaby_walk16); ai_walk(this, 2); }
-void tbaby_walk14(entity this) { set_anim(this, anim_tbaby_walk14, tbaby_walk15); ai_walk(this, 2); }
-void tbaby_walk13(entity this) { set_anim(this, anim_tbaby_walk13, tbaby_walk14); ai_walk(this, 2); }
-void tbaby_walk12(entity this) { set_anim(this, anim_tbaby_walk12, tbaby_walk13); ai_walk(this, 2); }
-void tbaby_walk11(entity this) { set_anim(this, anim_tbaby_walk11, tbaby_walk12); ai_walk(this, 2); }
-void tbaby_walk10(entity this) { set_anim(this, anim_tbaby_walk10, tbaby_walk11); ai_turn(this); }
-void tbaby_walk9(entity this) { set_anim(this, anim_tbaby_walk9, tbaby_walk10); ai_turn(this); }
-void tbaby_walk8(entity this) { set_anim(this, anim_tbaby_walk8, tbaby_walk9); ai_turn(this); }
-void tbaby_walk7(entity this) { set_anim(this, anim_tbaby_walk7, tbaby_walk8); ai_turn(this); }
-void tbaby_walk6(entity this) { set_anim(this, anim_tbaby_walk6, tbaby_walk7); ai_turn(this); }
-void tbaby_walk5(entity this) { set_anim(this, anim_tbaby_walk5, tbaby_walk6); ai_turn(this); }
-void tbaby_walk4(entity this) { set_anim(this, anim_tbaby_walk4, tbaby_walk5); ai_turn(this); }
-void tbaby_walk3(entity this) { set_anim(this, anim_tbaby_walk3, tbaby_walk4); ai_turn(this); }
-void tbaby_walk2(entity this) { set_anim(this, anim_tbaby_walk2, tbaby_walk3); ai_turn(this); }
-void tbaby_walk1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_walk2); ai_turn(this); }
+void tbaby_walk25(entity this) { set_animofs(this, anim_tbaby_walk, 25, tbaby_walk1); ai_walk(this, 2); }
+void tbaby_walk24(entity this) { set_animofs(this, anim_tbaby_walk, 24, tbaby_walk25); ai_walk(this, 2); }
+void tbaby_walk23(entity this) { set_animofs(this, anim_tbaby_walk, 23, tbaby_walk24); ai_walk(this, 2); }
+void tbaby_walk22(entity this) { set_animofs(this, anim_tbaby_walk, 22, tbaby_walk23); ai_walk(this, 2); }
+void tbaby_walk21(entity this) { set_animofs(this, anim_tbaby_walk, 21, tbaby_walk22); ai_walk(this, 2); }
+void tbaby_walk20(entity this) { set_animofs(this, anim_tbaby_walk, 20, tbaby_walk21); ai_walk(this, 2); }
+void tbaby_walk19(entity this) { set_animofs(this, anim_tbaby_walk, 19, tbaby_walk20); ai_walk(this, 2); }
+void tbaby_walk18(entity this) { set_animofs(this, anim_tbaby_walk, 18, tbaby_walk19); ai_walk(this, 2); }
+void tbaby_walk17(entity this) { set_animofs(this, anim_tbaby_walk, 17, tbaby_walk18); ai_walk(this, 2); }
+void tbaby_walk16(entity this) { set_animofs(this, anim_tbaby_walk, 16, tbaby_walk17); ai_walk(this, 2); }
+void tbaby_walk15(entity this) { set_animofs(this, anim_tbaby_walk, 15, tbaby_walk16); ai_walk(this, 2); }
+void tbaby_walk14(entity this) { set_animofs(this, anim_tbaby_walk, 14, tbaby_walk15); ai_walk(this, 2); }
+void tbaby_walk13(entity this) { set_animofs(this, anim_tbaby_walk, 13, tbaby_walk14); ai_walk(this, 2); }
+void tbaby_walk12(entity this) { set_animofs(this, anim_tbaby_walk, 12, tbaby_walk13); ai_walk(this, 2); }
+void tbaby_walk11(entity this) { set_animofs(this, anim_tbaby_walk, 11, tbaby_walk12); ai_walk(this, 2); }
+void tbaby_walk10(entity this) { set_animofs(this, anim_tbaby_walk, 10, tbaby_walk11); ai_turn(this); }
+void tbaby_walk9(entity this) { set_animofs(this, anim_tbaby_walk, 9, tbaby_walk10); ai_turn(this); }
+void tbaby_walk8(entity this) { set_animofs(this, anim_tbaby_walk, 8, tbaby_walk9); ai_turn(this); }
+void tbaby_walk7(entity this) { set_animofs(this, anim_tbaby_walk, 7, tbaby_walk8); ai_turn(this); }
+void tbaby_walk6(entity this) { set_animofs(this, anim_tbaby_walk, 6, tbaby_walk7); ai_turn(this); }
+void tbaby_walk5(entity this) { set_animofs(this, anim_tbaby_walk, 5, tbaby_walk6); ai_turn(this); }
+void tbaby_walk4(entity this) { set_animofs(this, anim_tbaby_walk, 4, tbaby_walk5); ai_turn(this); }
+void tbaby_walk3(entity this) { set_animofs(this, anim_tbaby_walk, 3, tbaby_walk4); ai_turn(this); }
+void tbaby_walk2(entity this) { set_animofs(this, anim_tbaby_walk, 2, tbaby_walk3); ai_turn(this); }
+void tbaby_walk1(entity this) { set_animofs(this, anim_tbaby_walk, 1, tbaby_walk2); ai_turn(this); }
 
 void tbaby_run1(entity this);
-void tbaby_run25(entity this) { set_anim(this, anim_tbaby_run25, tbaby_run1); ai_run(this, 2); }
-void tbaby_run24(entity this) { set_anim(this, anim_tbaby_run24, tbaby_run25); ai_run(this, 2); }
-void tbaby_run23(entity this) { set_anim(this, anim_tbaby_run23, tbaby_run24); ai_run(this, 2); }
-void tbaby_run22(entity this) { set_anim(this, anim_tbaby_run22, tbaby_run23); ai_run(this, 2); }
-void tbaby_run21(entity this) { set_anim(this, anim_tbaby_run21, tbaby_run22); ai_run(this, 2); }
-void tbaby_run20(entity this) { set_anim(this, anim_tbaby_run20, tbaby_run21); ai_run(this, 2); }
-void tbaby_run19(entity this) { set_anim(this, anim_tbaby_run19, tbaby_run20); ai_run(this, 2); }
-void tbaby_run18(entity this) { set_anim(this, anim_tbaby_run18, tbaby_run19); ai_run(this, 2); }
-void tbaby_run17(entity this) { set_anim(this, anim_tbaby_run17, tbaby_run18); ai_run(this, 2); }
-void tbaby_run16(entity this) { set_anim(this, anim_tbaby_run16, tbaby_run17); ai_run(this, 2); }
-void tbaby_run15(entity this) { set_anim(this, anim_tbaby_run15, tbaby_run16); ai_run(this, 2); }
-void tbaby_run14(entity this) { set_anim(this, anim_tbaby_run14, tbaby_run15); ai_run(this, 2); }
-void tbaby_run13(entity this) { set_anim(this, anim_tbaby_run13, tbaby_run14); ai_run(this, 2); }
-void tbaby_run12(entity this) { set_anim(this, anim_tbaby_run12, tbaby_run13); ai_run(this, 2); }
-void tbaby_run11(entity this) { set_anim(this, anim_tbaby_run11, tbaby_run12); ai_run(this, 2); }
-void tbaby_run10(entity this) { set_anim(this, anim_tbaby_run10, tbaby_run11); ai_face(this); }
-void tbaby_run9(entity this) { set_anim(this, anim_tbaby_run9, tbaby_run10); ai_face(this); }
-void tbaby_run8(entity this) { set_anim(this, anim_tbaby_run8, tbaby_run9); ai_face(this); }
-void tbaby_run7(entity this) { set_anim(this, anim_tbaby_run7, tbaby_run8); ai_face(this); }
-void tbaby_run6(entity this) { set_anim(this, anim_tbaby_run6, tbaby_run7); ai_face(this); }
-void tbaby_run5(entity this) { set_anim(this, anim_tbaby_run5, tbaby_run6); ai_face(this); }
-void tbaby_run4(entity this) { set_anim(this, anim_tbaby_run4, tbaby_run5); ai_face(this); }
-void tbaby_run3(entity this) { set_anim(this, anim_tbaby_run3, tbaby_run4); ai_face(this); }
-void tbaby_run2(entity this) { set_anim(this, anim_tbaby_run2, tbaby_run3); ai_face(this); }
-void tbaby_run1(entity this) { set_anim(this, anim_tbaby_run1, tbaby_run2); ai_face(this); }
+void tbaby_run25(entity this) { set_animofs(this, anim_tbaby_run, 25, tbaby_run1); ai_run(this, 2); }
+void tbaby_run24(entity this) { set_animofs(this, anim_tbaby_run, 24, tbaby_run25); ai_run(this, 2); }
+void tbaby_run23(entity this) { set_animofs(this, anim_tbaby_run, 23, tbaby_run24); ai_run(this, 2); }
+void tbaby_run22(entity this) { set_animofs(this, anim_tbaby_run, 22, tbaby_run23); ai_run(this, 2); }
+void tbaby_run21(entity this) { set_animofs(this, anim_tbaby_run, 21, tbaby_run22); ai_run(this, 2); }
+void tbaby_run20(entity this) { set_animofs(this, anim_tbaby_run, 20, tbaby_run21); ai_run(this, 2); }
+void tbaby_run19(entity this) { set_animofs(this, anim_tbaby_run, 19, tbaby_run20); ai_run(this, 2); }
+void tbaby_run18(entity this) { set_animofs(this, anim_tbaby_run, 18, tbaby_run19); ai_run(this, 2); }
+void tbaby_run17(entity this) { set_animofs(this, anim_tbaby_run, 17, tbaby_run18); ai_run(this, 2); }
+void tbaby_run16(entity this) { set_animofs(this, anim_tbaby_run, 16, tbaby_run17); ai_run(this, 2); }
+void tbaby_run15(entity this) { set_animofs(this, anim_tbaby_run, 15, tbaby_run16); ai_run(this, 2); }
+void tbaby_run14(entity this) { set_animofs(this, anim_tbaby_run, 14, tbaby_run15); ai_run(this, 2); }
+void tbaby_run13(entity this) { set_animofs(this, anim_tbaby_run, 13, tbaby_run14); ai_run(this, 2); }
+void tbaby_run12(entity this) { set_animofs(this, anim_tbaby_run, 12, tbaby_run13); ai_run(this, 2); }
+void tbaby_run11(entity this) { set_animofs(this, anim_tbaby_run, 11, tbaby_run12); ai_run(this, 2); }
+void tbaby_run10(entity this) { set_animofs(this, anim_tbaby_run, 10, tbaby_run11); ai_face(this); }
+void tbaby_run9(entity this) { set_animofs(this, anim_tbaby_run, 9, tbaby_run10); ai_face(this); }
+void tbaby_run8(entity this) { set_animofs(this, anim_tbaby_run, 8, tbaby_run9); ai_face(this); }
+void tbaby_run7(entity this) { set_animofs(this, anim_tbaby_run, 7, tbaby_run8); ai_face(this); }
+void tbaby_run6(entity this) { set_animofs(this, anim_tbaby_run, 6, tbaby_run7); ai_face(this); }
+void tbaby_run5(entity this) { set_animofs(this, anim_tbaby_run, 5, tbaby_run6); ai_face(this); }
+void tbaby_run4(entity this) { set_animofs(this, anim_tbaby_run, 4, tbaby_run5); ai_face(this); }
+void tbaby_run3(entity this) { set_animofs(this, anim_tbaby_run, 3, tbaby_run4); ai_face(this); }
+void tbaby_run2(entity this) { set_animofs(this, anim_tbaby_run, 2, tbaby_run3); ai_face(this); }
+void tbaby_run1(entity this) { set_animofs(this, anim_tbaby_run, 1, tbaby_run2); ai_face(this); }
 
 
 //============================================================================
@@ -189,19 +197,19 @@ void tbaby_jump5(entity this);
 void tbaby_fly1(entity this);
 void tbaby_fly4(entity this)
 {
-	set_anim(this, anim_tbaby_fly4, tbaby_fly1);
+	set_animofs(this, anim_tbaby_fly, 4, tbaby_fly1);
 	this.cnt += 1;
 	if(this.cnt >= 4)
 		tbaby_jump5(this);
 }
-void tbaby_fly3(entity this) { set_anim(this, anim_tbaby_fly3, tbaby_fly4); }
-void tbaby_fly2(entity this) { set_anim(this, anim_tbaby_fly2, tbaby_fly3); }
-void tbaby_fly1(entity this) { set_anim(this, anim_tbaby_fly1, tbaby_fly2); }
+void tbaby_fly3(entity this) { set_animofs(this, anim_tbaby_fly, 3, tbaby_fly4); }
+void tbaby_fly2(entity this) { set_animofs(this, anim_tbaby_fly, 2, tbaby_fly3); }
+void tbaby_fly1(entity this) { set_animofs(this, anim_tbaby_fly, 1, tbaby_fly2); }
 
-void tbaby_jump6(entity this) { set_anim(this, anim_tbaby_jump6, tbaby_fly1); }
+void tbaby_jump6(entity this) { set_animofs(this, anim_tbaby_jump, 6, tbaby_fly1); }
 void tbaby_jump5(entity this)
 {
-	set_anim(this, anim_tbaby_jump5, tbaby_jump6);
+	set_animofs(this, anim_tbaby_jump, 5, tbaby_jump6);
 
 	set_movetype(this, MOVETYPE_BOUNCE);
 	settouch(this, Tar_JumpTouch);
@@ -212,10 +220,10 @@ void tbaby_jump5(entity this)
 	UNSET_ONGROUND(this);
 	this.cnt = 0;
 }
-void tbaby_jump4(entity this) { set_anim(this, anim_tbaby_jump4, tbaby_jump5); ai_face(this); }
-void tbaby_jump3(entity this) { set_anim(this, anim_tbaby_jump3, tbaby_jump4); ai_face(this); }
-void tbaby_jump2(entity this) { set_anim(this, anim_tbaby_jump2, tbaby_jump3); ai_face(this); }
-void tbaby_jump1(entity this) { set_anim(this, anim_tbaby_jump1, tbaby_jump2); ai_face(this); }
+void tbaby_jump4(entity this) { set_animofs(this, anim_tbaby_jump, 4, tbaby_jump5); ai_face(this); }
+void tbaby_jump3(entity this) { set_animofs(this, anim_tbaby_jump, 3, tbaby_jump4); ai_face(this); }
+void tbaby_jump2(entity this) { set_animofs(this, anim_tbaby_jump, 2, tbaby_jump3); ai_face(this); }
+void tbaby_jump1(entity this) { set_animofs(this, anim_tbaby_jump, 1, tbaby_jump2); ai_face(this); }
 
 
 
@@ -348,6 +356,7 @@ spawnfunc(monster_tarbaby)
 
 	this.sightsound = tbaby_sight;
 	this.deathmessage = tbaby_deathmessage;
+	this.gibmodel = "progs/tarbaby.mdl";
 
 	if(MP_ROGUE)
 	{

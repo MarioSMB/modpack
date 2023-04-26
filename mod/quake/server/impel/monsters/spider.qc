@@ -122,6 +122,7 @@ spawnfunc(monster_spider)
 	this.th_die = spider_die;
 
 	this.deathmessage = spider_deathmessage;
+	this.gibmodel = "progs/spid.mdl";
 
 	monster_start(this, 0);
 }

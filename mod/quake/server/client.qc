@@ -2045,7 +2045,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 
 		if(attacker.classname == "teledeath2")
 		{
-			bprintf("Satan's power deflects %s's telefrag\n", targ.netname);
+			bprintf("An unholy power deflects %s's telefrag\n", targ.netname);
 
 			targ.frags = targ.frags - 1;
 			return;
@@ -2120,8 +2120,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					deathstring = " gets a frag for the other team\n";
 				else
 					deathstring = " loses another friend\n";
-				bprint(attacker.netname);
-				bprint(deathstring);
+				bprint(strcat(attacker.netname, deathstring));
 				attacker.frags = attacker.frags - 1;
 				return;
 			}
@@ -2162,8 +2161,8 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					return;
 				}
 
-				rnum = attacker.weapon;
-				if(rnum == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
+				int wep = attacker.weapon;
+				if(wep == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
 				{
 					if(MP_IMPEL)
 					{
@@ -2176,32 +2175,32 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "\n";
 					}
 				}
-				if(rnum == WEP_GRAPPLE)
+				if(wep == WEP_GRAPPLE)
 				{
 					deathstring = " was grappled by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " chewed on ";
 					deathstring2 = "'s boomstick\n";
 				}
-				if(rnum == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " ate 2 loads of ";
 					deathstring2 = "'s buckshot\n";
 				}
-				if(rnum == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
+				if(wep == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
 				{
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_SUPER_NAILGUN || (MP_IMPEL && inflictor.classname == "superspike"))
+				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && inflictor.classname == "superspike"))
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_GRENADE_LAUNCHER || (MP_IMPEL && inflictor.classname == "grenade"))
+				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && inflictor.classname == "grenade"))
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -2211,7 +2210,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s grenade\n";
 					}
 				}
-				if(rnum == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
+				if(wep == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
 				{
 					deathstring = " rides ";
 					deathstring2 = "'s rocket\n";
@@ -2221,7 +2220,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s rocket\n" ;
 					}
 				}
-				if(rnum == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " accepts ";
 					if(attacker.waterlevel > 1)
@@ -2229,7 +2228,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					else
 						deathstring2 = "'s shaft\n";
 				}
-				if(rnum == WEP_LASER_CANNON)
+				if(wep == WEP_LASER_CANNON)
 				{
 					if(random() < 0.5)
 						deathstring = " was toasted by ";
@@ -2237,27 +2236,27 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring = " was radiated by ";
 					deathstring2 = "'s laser\n";
 				}
-				if(rnum == WEP_MJOLNIR)
+				if(wep == WEP_MJOLNIR)
 				{
 					deathstring = " was slammed by ";
 					deathstring2 = "'s hammer\n";
 				}
-				if(rnum == WEP_LAVA_NAILGUN || rnum == WEP_LAVA_SUPER_NAILGUN)
+				if(wep == WEP_LAVA_NAILGUN || wep == WEP_LAVA_SUPER_NAILGUN)
 				{
 					deathstring = " was burned by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_PLASMA_GUN)
+				if(wep == WEP_PLASMA_GUN)
 				{
 					deathstring = " was fused by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_MULTI_GRENADE || rnum == WEP_MULTI_ROCKET)
+				if(wep == WEP_MULTI_GRENADE || wep == WEP_MULTI_ROCKET)
 				{
 					deathstring = " was blasted to bits by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_LIGHTME)
+				if(wep == WEP_LIGHTME)
 				{
 					if(attacker.waterlevel > 1)
 					{
@@ -2290,10 +2289,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					deathstring = " died at the hands of ";
 					deathstring2 = "!\n";
 				}
-				bprint(targ.netname);
-				bprint(deathstring);
-				bprint(attacker.netname);
-				bprint(deathstring2);
+				bprint(strcat(targ.netname, deathstring, attacker.netname, deathstring2));
 			}
 			return;
 		}
@@ -2328,7 +2324,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				bprint(" blew up\n");
 				return;
 			}
-			if(attacker.solid == SOLID_BSP && attacker != NULL)
+			if(attacker && attacker.solid == SOLID_BSP)
 			{	
 				bprint(" was squished\n");
 				return;
@@ -2392,35 +2388,37 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			}
 
 			// in-water deaths
-			rnum = targ.watertype;
-			if(rnum == CONTENT_WATER)
+			switch(targ.watertype)
 			{
-				if(random() < 0.5)
-					bprint(" sleeps with the fishes\n");
-				else
-					bprint(" sucks it down\n");
-				return;
-			}
-			else if(rnum == CONTENT_SLIME)
-			{
-				if(random() < 0.5)
-					bprint(" gulped a load of slime\n");
-				else
-					bprint(" can't exist on slime alone\n");
-				return;
-			}
-			else if(rnum == CONTENT_LAVA)
-			{
-				if(targ.health < -15)
+				case CONTENT_WATER:
 				{
-					bprint(" burst into flames\n");
+					if(random() < 0.5)
+						bprint(" sleeps with the fishes\n");
+					else
+						bprint(" sucks it down\n");
 					return;
 				}
-				if(random() < 0.5)
-					bprint(" turned into hot slag\n");
-				else
-					bprint(" visits the Volcano God\n");
-				return;
+				case CONTENT_SLIME:
+				{
+					if(random() < 0.5)
+						bprint(" gulped a load of slime\n");
+					else
+						bprint(" can't exist on slime alone\n");
+					return;
+				}
+				case CONTENT_LAVA:
+				{
+					if(targ.health < -15)
+					{
+						bprint(" burst into flames\n");
+						return;
+					}
+					if(random() < 0.5)
+						bprint(" turned into hot slag\n");
+					else
+						bprint(" visits the Volcano God\n");
+					return;
+				}
 			}
 
 			// fell to their death?

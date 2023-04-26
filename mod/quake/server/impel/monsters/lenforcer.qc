@@ -257,6 +257,7 @@ spawnfunc(monster_lenforcer)
 
 	this.sightsound = lenf_sight;
 	this.deathmessage = lenf_deathmessage;
+	this.gibmodel = "progs/enforcer.mdl";
 
 	monster_start(this, 0);
 }

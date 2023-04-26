@@ -481,7 +481,7 @@ int W_BestWeapon(entity this, float except);
 
 void weapon_touch(entity this, entity toucher)
 {
-	if(MP_IMPEL && toucher.health <= 0)
+	if(toucher.health <= 0)
 		return;
 	if(!IS_CLIENT(toucher))
 		return;
@@ -558,7 +558,7 @@ void weapon_touch(entity this, entity toucher)
 		}
 		case "weapon_laser_gun":
 		{
-	      	if (leave && (toucher.weapons & WEP_LASER_CANNON) )
+	      	if(leave && (toucher.weapons & WEP_LASER_CANNON))
 				return;
 			hadammo = toucher.ammo_rockets;
 	      	newitem = WEP_LASER_CANNON;

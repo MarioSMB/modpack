@@ -327,6 +327,7 @@ spawnfunc(monster_demon1)
 	this.sightsound = demon1_sight;
 	this.checkattack = DemonCheckAttack;
 	this.deathmessage = demon1_deathmessage;
+	this.gibmodel = "progs/demon.mdl";
 		
 	monster_start(this, 0);
 }
