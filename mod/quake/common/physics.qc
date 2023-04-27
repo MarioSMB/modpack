@@ -171,7 +171,7 @@ void WaterMove(entity this, float dt)
 void CheckWaterJump(entity this)
 {
 	// check for a jump-out-of-water
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	vector start = this.origin;
 	start.z = start.z + 8; 
 	v_forward_z = 0;

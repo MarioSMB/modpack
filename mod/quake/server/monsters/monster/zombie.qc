@@ -417,6 +417,7 @@ void ZombieFireGrenade(entity this, vector st)
 	_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
+	missile.classname = "zombie_grenade";
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
@@ -426,7 +427,7 @@ void ZombieFireGrenade(entity this, vector st)
 	
 // set missile speed	
 
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 
 	missile.velocity = normalize(this.enemy.origin - org);
 	missile.velocity = missile.velocity * 600;

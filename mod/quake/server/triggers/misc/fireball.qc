@@ -22,6 +22,7 @@ void fire_fly(entity this)
 	fireball.nextthink = time + 5;
 	setthink(fireball, SUB_Remove);
 	settouch(fireball, fire_touch);
+	fireball.killstring = " ate a lavaball";
 	
 	this.nextthink = time + (random() * 5) + 3;
 	setthink(this, fire_fly);
@@ -37,6 +38,7 @@ spawnfunc(misc_fireball)
 	set_movetype(this, MOVETYPE_NONE); // link to the physics logic
 	this.nextthink = time + 1 + (random() * 5);
 	setthink(this, fire_fly);
+	this.killstring = " ate a lavaball";
 	if(!this.speed)
 		this.speed = 1000;
 }

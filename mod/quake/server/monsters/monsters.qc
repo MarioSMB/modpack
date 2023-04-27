@@ -24,8 +24,7 @@ void monster_use(entity this, entity actor, entity trigger)
 	if(this.enemy || this.health <= 0 || (actor.powerups & POWERUP_INVISIBILITY) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
 		return;
 	
-// delay reaction so if the monster is teleported, its sound is still
-// heard
+	// delay reaction so if the monster is teleported, its sound is still heard
 	this.enemy = actor;
 	this.nextthink = time + 0.1;
 	setthink(this, FoundTarget);
@@ -97,6 +96,7 @@ void monster_start(entity this, int stype)
 	setthink(this, monster_start_go);
 	this.flags |= FL_MONSTER;
 	this.flags |= stype; // TODO?
+	this.max_health = this.health;
 
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);

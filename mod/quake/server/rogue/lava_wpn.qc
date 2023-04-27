@@ -113,9 +113,9 @@ void lavaspike_touch(entity this, entity toucher)
 	}
 	else
 	{
-		if(this.classname == "wizspike")
+		if(this.classname == "wizard_spike")
 			te_wizspike(this.origin);
-		else if(this.classname == "knightspike")
+		else if(this.classname == "knight_spike")
 			te_knightspike(this.origin);
 		else
 			te_spike(this.origin);

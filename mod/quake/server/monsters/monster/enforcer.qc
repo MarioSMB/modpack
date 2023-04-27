@@ -169,9 +169,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 
 	vector vec2 = normalize(vec);
 	
-	entity newmis = spawn();
-	if(MP_ROGUE)
-		newmis.classname = "enforcer_laser";
+	entity newmis = new(enforcer_laser);
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
@@ -198,7 +196,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 void enforcer_fire(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	
 	vector org = this.origin + v_forward * 30 + v_right * 8.5 + '0 0 16';
 

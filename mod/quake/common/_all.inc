@@ -1,5 +1,7 @@
 #include "_all.qh"
 
+#include <lib/warpzone/anglestransform.qc>
+
 #include "util.qc"
 
 #include <common/physics/movetypes/movetypes.qh>

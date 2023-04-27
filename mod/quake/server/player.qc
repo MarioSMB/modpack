@@ -1031,7 +1031,7 @@ void ThrowGib(entity this, string gibname, float dm)
 void HeadThink(entity this)
 {
    	this.nextthink = -1;
-   	if(world.worldtype != 2 && this.gorging)
+   	if(world.worldtype != WORLDTYPE_BASE && this.gorging)
 	{
 	  	if(random() < 0.1)
 		 	_sound(this, 6, "misc/flys.wav", 0.7, ATTN_STATIC);
@@ -1119,12 +1119,13 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 {
 	ClientObituary(this, inflictor, attacker); // tell the world what happened
 
-	this.powerups &= ~POWERUP_INVISIBILITY;
+	this.powerups &= ~(POWERUP_INVISIBILITY | POWERUP_INVULNERABILITY | POWERUP_SUIT | POWERUP_QUAD);
 	this.invisible_finished = 0;	// don't die as eyes
 	this.invincible_finished = 0;
 	this.super_damage_finished = 0;
 	this.field_generator_finished = 0;
 	this.radsuit_finished = 0;
+	this.effects = 0;
 	this.modelindex = this.modelindex_player;	// don't use eyes
 
 	// hipnotic fields
@@ -1187,11 +1188,9 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 		return;
 	}
 	
-	int i = autocvar_temp1;
-	if(!i)
-		i = 1 + floor(random()*6);
+	int j = 1 + floor(random() * 6);
 
-	switch(i)
+	switch(j)
 	{
 		case 1: player_diea1(this); break;
 		case 2: player_dieb1(this); break;

@@ -1,7 +1,5 @@
 #pragma once
 
-int autocvar_temp1; // temp
-
 .int walkframe;
 
 void make_bubbles(entity this);

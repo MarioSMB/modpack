@@ -2,7 +2,6 @@
 
 #include "../common/_all.inc"
 
-#include <lib/warpzone/anglestransform.qc>
 #include <lib/csqcmodel/sv_model.qc>
 
 // mission pack defs

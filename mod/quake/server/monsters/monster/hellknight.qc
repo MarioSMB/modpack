@@ -228,7 +228,7 @@ void hknight_shot(entity this, float offset)
 	vec_z = 0 - vec_z +(random() - 0.5)*0.1;
 	
 	entity newmis = launch_spike(this, org, vec);
-	newmis.classname = "knightspike";
+	newmis.classname = "knight_spike";
 	_setmodel(newmis, "progs/k_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
@@ -238,7 +238,7 @@ void hknight_shot(entity this, float offset)
 void CheckForCharge(entity this)
 {
 	// check for mad charge
-	if(!this.enemy_vis)
+	if(!this.enemy_visible)
 		return;
 	if(time < this.attack_finished)
 		return;	

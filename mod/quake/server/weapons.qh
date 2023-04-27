@@ -12,3 +12,5 @@
 .float ammo_plasma;
 
 .string gibmodel;
+
+bool W_WantsToChangeWeapon(entity this, int old, int new);

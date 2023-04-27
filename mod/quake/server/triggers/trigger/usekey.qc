@@ -20,19 +20,19 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 		{
 			if(this.owner.items == IT_KEY1)
 			{
-				if(world.worldtype == 2)
+				if(world.worldtype == WORLDTYPE_BASE)
 					centerprint(actor, "You need the silver keycard");
-				else if(world.worldtype == 1)
+				else if(world.worldtype == WORLDTYPE_METAL)
 					centerprint(actor, "You need the silver runekey");
-				else if(world.worldtype == 0)
+				else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 					centerprint(actor, "You need the silver key");
 				else
 				{
-					if(world.worldtype == 2)
+					if(world.worldtype == WORLDTYPE_BASE)
 						centerprint(actor, "You need the gold keycard");
-					else if(world.worldtype == 1)
+					else if(world.worldtype == WORLDTYPE_METAL)
 						centerprint(actor, "You need the gold runekey");
-					else if(world.worldtype == 0)
+					else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 						centerprint(actor, "You need the gold key");
 				}
 				_sound(this, CH_INFO, this.noise3, 1, ATTN_NORM);
@@ -71,21 +71,21 @@ spawnfunc(trigger_usekey)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	if(world.worldtype == 0)
+	if(world.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		precache_sound("doors/medtry.wav");
 		precache_sound("doors/meduse.wav");
 		this.noise3 = "doors/medtry.wav";
 		this.noise4 = "doors/meduse.wav";
 	}
-	else if(world.worldtype == 1)
+	else if(world.worldtype == WORLDTYPE_METAL)
 	{
 		precache_sound("doors/runetry.wav");
 		precache_sound("doors/runeuse.wav");
 		this.noise3 = "doors/runetry.wav";
 		this.noise4 = "doors/runeuse.wav";
 	}
-	else if(world.worldtype == 2)
+	else if(world.worldtype == WORLDTYPE_BASE)
 	{
 		precache_sound("doors/basetry.wav");
 		precache_sound("doors/baseuse.wav");

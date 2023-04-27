@@ -301,14 +301,13 @@ void finale_4(entity this)
 #else
 	SendCDTrack(NULL, 3);
 #endif
-	lightstyle(0, "m");	
-}
+	lightstyle(0, "m");
 
-//============================================================================
-
-void nopain(entity this, entity attacker, float damage)
-{
-	this.health = 40000;
+	// NOTE: disabled as classic engines do not support credits (TODO: xonotic does? maybe make use of it!)
+	// instead of sitting here forever, run the quake ex credits and send the user back to start
+	//entity timer = spawn();
+	//timer.nextthink = time + 1;
+	//setthink(timer, finale_5);
 }
 
 //============================================================================
@@ -336,10 +335,11 @@ spawnfunc(monster_oldone)
 	setsize(this, '-160 -128 -24', '160 128 256');
 
 	this.health = 40000;		// kill by telefrag
+	this.max_health = this.health;
 	setthink(this, old_idle1);
 	this.nextthink = time + 0.1;	
 	this.takedamage = DAMAGE_YES;
-	this.th_pain = nopain;
+	this.th_pain = func_null;
 	this.th_die = finale_1;
 
 	this.deathmessage = oldone_deathmessage;

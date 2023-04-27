@@ -180,6 +180,7 @@ void ShalMissile(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
+	missile.classname = "vore_ball";
 	missile.owner = this;
 
 	missile.solid = SOLID_BBOX;
@@ -208,10 +209,7 @@ void ShalHome(entity this)
 		return;
 	}
 	vector dir = normalize(vtemp - this.origin);
-	if(autocvar_skill == 3)
-		this.velocity = dir * 350;
-	else
-		this.velocity = dir * 250;
+	this.velocity = dir * 250;
 	this.nextthink = time + 0.2;
 	setthink(this, ShalHome);	
 }
@@ -283,5 +281,5 @@ spawnfunc(monster_shalrath)
 
 	monster_start(this, 0);
 	if(!MP_IMPEL)
-		this.nextthink = time + 0.1 + random()*0.1;	
+		this.nextthink = time + 0.1 + random() * 0.1;	
 }

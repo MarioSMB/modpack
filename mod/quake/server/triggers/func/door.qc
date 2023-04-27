@@ -112,7 +112,7 @@ void door_fire(entity this)
 	if(this.items)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise4, 1, ATTN_NORM);
 
-	this.message = string_null;		// no more message
+	this.message = "";		// no more message
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -138,7 +138,7 @@ void door_fire(entity this)
 
 void door_use(entity this, entity actor, entity trigger)
 {
-	this.message = "";			// door message are for touch only
+	this.message = ""; // door message are for touch only
 	this.owner.message = "";	
 	this.enemy.message = "";
 	door_fire(this.owner);
@@ -182,7 +182,7 @@ void door_touch(entity this, entity toucher)
 
 	this.owner.attack_finished = time + 2;
 
-	if(this.owner.message != "")
+	if(this.owner.message && this.owner.message != "")
 	{
 		centerprint(toucher, this.owner.message);
 		_sound(toucher, CH_TRIGGER_SINGLE, QUAKE_TALKSOUND, 1, ATTN_NORM);
@@ -197,17 +197,17 @@ void door_touch(entity this, entity toucher)
 	{
 		if(this.owner.items == IT_KEY1)
 		{
-			if(world.worldtype == 2)
+			if(world.worldtype == WORLDTYPE_BASE)
 			{
 				centerprint(toucher, "You need the silver keycard");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == 1)
+			else if(world.worldtype == WORLDTYPE_METAL)
 			{
 				centerprint(toucher, "You need the silver runekey");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == 0)
+			else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 			{
 				centerprint(toucher, "You need the silver key");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
@@ -215,17 +215,17 @@ void door_touch(entity this, entity toucher)
 		}
 		else
 		{
-			if(world.worldtype == 2)
+			if(world.worldtype == WORLDTYPE_BASE)
 			{
 				centerprint(toucher, "You need the gold keycard");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == 1)
+			else if(world.worldtype == WORLDTYPE_METAL)
 			{
 				centerprint(toucher, "You need the gold runekey");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);			
 			}
-			else if(world.worldtype == 0)
+			else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 			{
 				centerprint(toucher, "You need the gold key");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
@@ -513,9 +513,9 @@ spawnfunc(func_door)
 
 	switch(world.worldtype)
 	{
-		case 0: this.noise3 = "doors/medtry.wav"; this.noise4 = "doors/meduse.wav"; break;
-		case 1: this.noise3 = "doors/runetry.wav"; this.noise4 = "doors/runeuse.wav"; break;
-		case 2: this.noise3 = "doors/basetry.wav"; this.noise4 = "doors/baseuse.wav"; break;
+		case WORLDTYPE_MEDIEVAL: this.noise3 = "doors/medtry.wav"; this.noise4 = "doors/meduse.wav"; break;
+		case WORLDTYPE_METAL: this.noise3 = "doors/runetry.wav"; this.noise4 = "doors/runeuse.wav"; break;
+		case WORLDTYPE_BASE: this.noise3 = "doors/basetry.wav"; this.noise4 = "doors/baseuse.wav"; break;
 		default: LOG_DEBUG("func_door: unhandled worldtype!\n"); break;
 	}
 
@@ -525,7 +525,6 @@ spawnfunc(func_door)
 	if(this.noise4 != "") precache_sound(this.noise4);
 
 	this.effects |= EF_LOWPRECISION;
-	this.classname = "door";
 
 	setblocked(this, door_blocked);
 	this.use = door_use;

@@ -560,7 +560,7 @@ void SpawnMeatSpray(entity this, vector org, vector vel)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_NOT;
 
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 
 	missile.velocity = vel;
 	missile.velocity_z = missile.velocity_z + 250 + 50*random();
@@ -1434,7 +1434,7 @@ void gibhim(entity this)
 {
 	float r;
 
-	if(this.elec == 0)
+	if(!this.elec)
 	{
 		this.effects = EF_MUZZLEFLASH;
 		r = random();
@@ -1444,16 +1444,16 @@ void gibhim(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
 		else
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
-		if(this.classname == "player")
+		if(IS_PLAYER(this))
 			this.modelindex = modelindex_bolt;
 		else
 			_setmodel(this, "progs/bolt2.mdl");
 		this.frame = 0;
-		this.elec = 1;
+		this.elec = true;
 		this.exptime = this.exptime + 0.1;
 		spawn_touchspark(this, 10);
 	}
-	else if(this.elec == 1)
+	else if(this.elec)
 	{
 		vector oldmin = this.mins, oldmax = this.maxs;
 		//if(this.classname == "monster_hbot")
@@ -1481,12 +1481,12 @@ void gibhim(entity this)
 			else
 				this.frame = 87;
 		}
-		else if(this.gibmodel)
+		else if(this.gibmodel && this.gibmodel != "")
 			_setmodel(this, this.gibmodel);
 		this.effects = EF_DIMLIGHT;
-		this.elec = 0;
+		this.elec = false;
 		this.exptime = this.exptime + 0.1;
-		if(!IS_PLAYER(this))
+		if(!IS_PLAYER(this) && this.gibmodel && this.gibmodel != "")
 			setsize(this, oldmin, oldmax);
 	}
 	if(this.exptime >= 1.6)
@@ -1571,7 +1571,7 @@ void ThrowMe(entity this, entity targ, float dm)
 {
 	if(targ.move_movetype == MOVETYPE_PUSH)
 		return;
-	if(targ.classname == "door")
+	if(targ.classname == "func_door" || targ.classname == "func_door_secret")
 		return;
 	if(targ.move_movetype == MOVETYPE_NONE)
 		return;
@@ -1619,7 +1619,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			if(toucher.classname == "door")
+			if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
 			{
 				T_Damage(toucher, this, this.owner, damg);
 				return;
@@ -1647,7 +1647,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			if(toucher.classname == "door")
+			if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
 			{
 				T_Damage(toucher, this, this.owner, damg);
 				return;
@@ -1951,7 +1951,7 @@ void MakeFlame(entity this, entity toucher)
 		BecomeExplosion(this);
 		return;
 	}
-	if(toucher.classname == "door")
+	if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
 	{
 		BecomeExplosion(this);
 		return;
@@ -2452,6 +2452,8 @@ void W_FireSuperSpikes(entity this)
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	if(MP_IMPEL)
 		newmis.classname = "superspike";
+	else
+		newmis.classname = "super_spike";
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
@@ -2655,9 +2657,9 @@ void spike_touch(entity this, entity toucher)
 	}
 	else
 	{
-		if(this.classname == "wizspike")
+		if(this.classname == "wizard_spike")
 			te_wizspike(this.origin);
-		else if(this.classname == "knightspike")
+		else if(this.classname == "knight_spike")
 			te_knightspike(this.origin);
 		else
 			te_spike(this.origin);
@@ -2885,7 +2887,7 @@ void T_SpearTouch(entity this, entity toucher)
 		this.nextthink = time + 0.5;
 		this.count = time + 3;
 	}
-	else if(toucher.classname == "door" || toucher.classname == "train" || toucher.classname == "plat" || IS_CLIENT(toucher) || IS_MONSTER(toucher))
+	else if(toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_CLIENT(toucher) || IS_MONSTER(toucher))
 	{
 		_setmodel(this, "progs/impwall.mdl");
 		BecomePurpleExplosion(this, toucher, 50);
@@ -3208,6 +3210,7 @@ void W_SetCurrentAmmo(entity this)
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
+	this.weaponframe = 0;
 	
 	switch(this.weapon)
 	{
@@ -3215,7 +3218,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_srock.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_ROCKETS;
 			break;
 		}
@@ -3223,7 +3225,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_light2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_CELLS;
 			break;
 		}
@@ -3231,7 +3232,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_implr.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_ROCKETS;
 			break;
 		}
@@ -3240,7 +3240,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/null.mdl"; // TODO?!
-			this.weaponframe = 0;
 			this.items |= IT_CELLS;
 			break;
 		}
@@ -3249,21 +3248,18 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_axe.mdl";
-			this.weaponframe = 0;
 			break;
 		}
 		case WEP_GRAPPLE:
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_grpple.mdl";
-			this.weaponframe = 0;
 			break;
 		}
 		case WEP_SHOTGUN:
 		{
 			this.currentammo = this.ammo_shells;
 			this.weaponmodel = "progs/v_shot.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_SHELLS;
 			break;
 		}
@@ -3271,7 +3267,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_shells;
 			this.weaponmodel = "progs/v_shot2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_SHELLS;
 			break;
 		}
@@ -3279,7 +3274,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_LAVA_NAILS;
 			break;
 		}
@@ -3287,7 +3281,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_LAVA_NAILS;
 			break;
 		}
@@ -3295,7 +3288,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
@@ -3303,7 +3295,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
@@ -3311,7 +3302,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_plasma;
 			this.weaponmodel = "progs/v_plasma.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_PLASMA_AMMO;
 			break;
 		}
@@ -3319,7 +3309,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_nails;
 			this.weaponmodel = "progs/v_nail.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_NAILS;
 			break;
 		}
@@ -3327,7 +3316,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_nails;
 			this.weaponmodel = "progs/v_nail2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_NAILS;
 			break;
 		}
@@ -3335,7 +3323,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_rock.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_ROCKETS;
 			break;
 		}
@@ -3343,7 +3330,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_rock2.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_ROCKETS;
 			break;
 		}
@@ -3351,7 +3337,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_light.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_CELLS;
 			break;
 		}
@@ -3359,7 +3344,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_laserg.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_CELLS;
 			break;
 		}
@@ -3367,7 +3351,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_hammer.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_CELLS;
 			break;
 		}
@@ -3375,7 +3358,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_prox.mdl";
-			this.weaponframe = 0;
 			this.items |= IT_ROCKETS;
 			break;
 		}
@@ -3383,7 +3365,6 @@ void W_SetCurrentAmmo(entity this)
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "";
-			this.weaponframe = 0;
 			break;
 		}
 	}
@@ -3419,6 +3400,11 @@ int W_BestWeapon(entity this, int except)
 	else if(itm & WEP_MJOLNIR)
 		return WEP_MJOLNIR;
 	return WEP_AXE; // just fall back if all else fails
+}
+
+bool W_WantsToChangeWeapon(entity this, int old, int new)
+{
+	return !(old == new);
 }
 
 bool NoAmmo(entity this, bool doswitch)
@@ -3776,7 +3762,7 @@ W_ChangeWeapon
 void W_ChangeWeapon(entity this, int imp)
 {
 	bool am = false;
-	int fl = 0;
+	int fl = this.weapon;
 
 	switch(imp)
 	{
@@ -4057,6 +4043,12 @@ void CheatCommand(entity this)
 		WEP_GRENADE_LAUNCHER |
 		WEP_ROCKET_LAUNCHER);
 	//this.items |= (IT_KEY1 | IT_KEY2); // breaks levels
+
+	// mal: also give full armor...
+	this.armortype = 0.8;
+	this.armorvalue = 200;
+	this.items &= ~(IT_ARMOR1 | IT_ARMOR2);
+	this.items |= IT_ARMOR3;
 
 	this.weapons |= WEP_LIGHTNING;
 	if(MP_HIPNOTIC)

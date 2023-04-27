@@ -1,50 +1,43 @@
 #ifdef SVQC
 
-void barrel_explode2(entity this)
+void barrel_explode(entity this)
 {
-	if(!MP_IMPEL)
-		this.takedamage = DAMAGE_NO;
-	this.classname = "explo_box";
 	// did say this.owner
-	T_RadiusDamage(this, this, 160, NULL);
+	T_RadiusDamage(this, this.enemy, 160, NULL);
 	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
-	setSendEntity(this, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
+	setmodel(this, MDL_Null);
+	setsize(this, '0 0 0', '0 0 0');
+	setorigin(this, this.origin + '0 0 32');
+	setthink(this, BecomeExplosion);
+	this.nextthink = time;
 
-	this.origin_z = this.origin_z + 32;
-	if(MP_IMPEL)
-	{
-		_setmodel(this, string_null);
-		setsize(this, '0 0 0', '0 0 0');
-		setthink(this, BecomeExplosion);
-		this.nextthink = time;
-	}
-	else
-		BecomeExplosion(this);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void barrel_explode(entity this, entity inflictor, entity attacker)
+void barrel_detonate(entity this, entity inflictor, entity attacker)
 {
-	if(MP_IMPEL)
-	{
-		this.takedamage = DAMAGE_NO;
-		setthink(this, barrel_explode2);
-		this.nextthink = time;
-	}
-	else
-		barrel_explode2(this);
+	this.classname = "explo_box";
+	this.takedamage = DAMAGE_NO;
+	setthink(this, barrel_explode);
+	this.nextthink = time + 0.3; // enhanced uses .ltime but that doesn't translate well to time!
 }
 
 void barrel_spawn(entity this)
 {
-	this.solid = SOLID_BBOX;
-	precache_model(this.model);
-	_setmodel(this, this.model);
+	if(!this.mdl || this.mdl == "")
+		this.mdl = "maps/b_explob.bsp";
+
+	this.solid = SOLID_BSP;
+	set_movetype(this, MOVETYPE_NONE); // enhanced uses MOVETYPE_PUSH, doesn't use regular thinking
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	if(!this.health)
 		this.health = 20;
-	this.th_die = barrel_explode;
+	this.th_die = barrel_detonate;
 	this.takedamage = DAMAGE_AIM;
+	this.killstring = " blew up";
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
@@ -67,7 +60,7 @@ TESTING THING
 
 spawnfunc(misc_explobox)
 {
-	this.model = "maps/b_explob.bsp";
+	this.mdl = "maps/b_explob.bsp";
 	barrel_spawn(this);
 }
 
@@ -79,7 +72,7 @@ Smaller exploding box, REGISTERED ONLY
 
 spawnfunc(misc_explobox2)
 {
-	this.model = "maps/b_exbox2.bsp";
+	this.mdl = "maps/b_exbox2.bsp";
 	barrel_spawn(this);
 }
 

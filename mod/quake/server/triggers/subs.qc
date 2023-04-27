@@ -232,13 +232,14 @@ bool InitMovingBrushTrigger(entity this)
 
 in nightmare mode, all attack_finished times become 0
 some monsters refire twice automatically
+update: not anymore! it makes nightmare too easy
 
 */
 
 void SUB_AttackFinished(entity this, float normal)
 {
 	this.cnt = 0;		// refire count for nightmare
-	if(autocvar_skill != 3)
+	//if(autocvar_skill != 3)
 		this.attack_finished = time + normal;
 }
 

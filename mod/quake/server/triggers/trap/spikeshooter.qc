@@ -96,6 +96,7 @@ spawnfunc(trap_spikeshooter)
 {
 	SetMovedir(this);
 	this.use = spikeshooter_use;
+	this.killstring = " was spiked";
 	if(this.spawnflags & SPAWNFLAG_LASER)
 	{
 		precache_model2("progs/laser.mdl");

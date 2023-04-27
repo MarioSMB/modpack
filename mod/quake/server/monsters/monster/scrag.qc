@@ -100,7 +100,7 @@ if this.enemy maintains it's current velocity
 */
 void LaunchMissile(entity this, entity missile, float mspeed, float accuracy)
 {
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 		
 // set missile speed
 	vector vec = this.enemy.origin + this.enemy.mins + this.enemy.size * 0.7 - missile.origin;
@@ -140,7 +140,7 @@ bool WizardCheckAttack(entity this)
 {
 	if(time < this.attack_finished)
 		return false;
-	if(!MP_IMPEL && !this.enemy_vis)
+	if(!MP_IMPEL && !this.enemy_visible)
 		return false;
 
 	if(this.enemy_range == RANGE_FAR)
@@ -214,7 +214,7 @@ WizardAttackFinished
 */
 void WizardAttackFinished(entity this)
 {
-	if(this.enemy_range >= RANGE_MID || !this.enemy_vis)
+	if(this.enemy_range >= RANGE_MID || !this.enemy_visible)
 	{
 		this.attack_state = AS_STRAIGHT;
 		setthink(this, wiz_run1);
@@ -240,7 +240,7 @@ void Wiz_FastFire(entity this)
 	{
 		this.owner.effects = this.owner.effects | EF_MUZZLEFLASH;
 
-		makevectors(this.enemy.angles);	
+		fixedmakevectors(this.enemy.angles);	
 		vector dst = this.enemy.origin - 13*this.movedir;
 	
 		vector vec = normalize(dst - this.origin);
@@ -248,7 +248,7 @@ void Wiz_FastFire(entity this)
 		entity newmis = launch_spike(this, this.origin, vec);
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
-		newmis.classname = "wizspike";
+		newmis.classname = "wizard_spike";
 		_setmodel(newmis, "progs/w_spike.mdl");
 		setsize(newmis, '0 0 0', '0 0 0');		
 	}
@@ -260,7 +260,7 @@ void Wiz_StartFast(entity this)
 {
 	_sound(this, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 	this.v_angle = this.angles;
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 
 	entity missile = spawn();
 	missile.owner = this;

@@ -1,4 +1,4 @@
-#include "boss.qh"
+#include "chthon.qh"
 
 #include "../../triggers/triggers.qh"
 #include "../../triggers/func/door.qh"
@@ -141,7 +141,7 @@ const int anim_boss_shockc = 96; //'96 105 0'
 
 void boss_face(entity this)
 {
-// go for another player if multi player
+	// go for another player if multi player
 	if(this.enemy.health <= 0 || (coop && random() < 0.02))
 		this.enemy = NULL;
 
@@ -217,7 +217,15 @@ void boss_idle5(entity this) { set_animofs(this, anim_boss_walk, 5, boss_idle6);
 void boss_idle4(entity this) { set_animofs(this, anim_boss_walk, 4, boss_idle5); boss_face(this); }
 void boss_idle3(entity this) { set_animofs(this, anim_boss_walk, 3, boss_idle4); boss_face(this); }
 void boss_idle2(entity this) { set_animofs(this, anim_boss_walk, 2, boss_idle3); boss_face(this); }
-void boss_idle1(entity this) { set_animofs(this, anim_boss_walk, 1, boss_idle2); }
+void boss_idle1(entity this)
+{
+	set_animofs(this, anim_boss_walk, 1, boss_idle2);
+	// [QuakeEX] If boss_face found a new target, start throwing stuff at them.
+	if(this.enemy.health > 0)
+		boss_missile1(this);
+	else
+		boss_face(this);
+}
 
 void boss_missile23(entity this) { set_animofs(this, anim_boss_attack, 23, boss_missile1); boss_face(this); }
 void boss_missile22(entity this) { set_animofs(this, anim_boss_attack, 22, boss_missile23); boss_face(this); }
@@ -331,6 +339,7 @@ void boss_missile(entity this, vector p)
 	vec = normalize(d - org);
 
 	entity newmis = launch_spike(this, org, vec);
+	newmis.classname = "chthon_lavaball";
 	_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.owner = this;
 	newmis.avelocity = '200 100 300';
@@ -358,6 +367,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 	else
 		this.health = 3;
 
+	this.max_health = this.health;
 	this.enemy = actor;
 
 	te_lavasplash(this.origin);
@@ -387,8 +397,7 @@ spawnfunc(monster_boss)
 
 	monsters_total += 1;
 
-	if(MP_IMPEL)
-		this.deathmessage = boss_deathmessage;
+	this.deathmessage = boss_deathmessage;
 
 	this.use = boss_awake;
 }

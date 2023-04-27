@@ -24,7 +24,7 @@ const int AS_MISSILE = 4;
 
 .float show_hostile;
 
-.float enemy_vis;
+.bool enemy_visible;
 //.bool enemy_infront;
 .int enemy_range;
 .float enemy_yaw;

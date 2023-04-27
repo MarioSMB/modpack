@@ -23,6 +23,12 @@ string current_cdtrack;
 .float super_damage_finished;
 .float radsuit_finished;
 
+.float healthrot_nextcheck; // if grabbed Mega-Health, the next time we'll rot the players health
+
+.string killstring;
+
+.float spawn_deferred;
+
 .float field_generator_finished;
 .float field_generator_health;
 .float field_generator_time;

@@ -480,7 +480,7 @@ spawnfunc(func_new_plat)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
-	this.classname = "plat";
+	this.classname = "func_new_plat";
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
 	setorigin(this, this.origin);	

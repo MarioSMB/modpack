@@ -13,7 +13,7 @@ void tag_token_respawn()
 	if(tagToken == NULL)
 		return;
 		
-	entity spawnPoint = SelectSpawnPoint(NULL);
+	entity spawnPoint = SelectSpawnPoint(NULL, false);
 	setorigin(tagToken, spawnPoint.origin);
 	tag_token_owner = NULL;
 	tagToken.solid = SOLID_TRIGGER;

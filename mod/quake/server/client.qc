@@ -21,9 +21,15 @@ spawnfunc(info_intermission)
 {
 }
 
+bool reset_flag;
 void SetChangeParms(entity this)
 {
-	if(this.health <= 0)
+	if(reset_flag)
+	{
+		setspawnparms(this);
+		return;
+	}
+	if(this.health <= 0 || deathmatch)
 	{
 		SetNewParms();
 		parm14 = this.steam; // Save the current team of the player
@@ -35,7 +41,8 @@ void SetChangeParms(entity this)
 	this.items &= ~IT_SUPERHEALTH; // rogue
 	this.gravity = 1.0;
 
-	this.health = bound(50, this.health, 100); // cap super health
+	float maxhp = (this.max_health) ? this.max_health : 100; // ensure no possibility of a division by 0
+	this.health = bound(maxhp / 2, this.health, maxhp); // cap super health
 	if(teamplay >= TEAM_CTF) // don't carry items between level in CTF
 		SetNewParms();
 	else
@@ -76,7 +83,10 @@ void SetNewParms()
 		parm9 = 0;
 		parm16 = 0;
 	}
-	parm2 = 100;
+	if(autocvar_skill == 3 && !deathmatch)
+		parm2 = 50;
+	else
+		parm2 = 100;
 	parm4 = 25;
 	parm5 = 0;
 	parm6 = 0;
@@ -750,9 +760,9 @@ void set_suicide_frame(entity this);
 
 // make a body que entry for the given ent so the ent can be
 // respawned elsewhere
-void CopyToBodyQue(entity ent)
+void CopyToBodyQueue(entity ent)
 {
-	entity body = new(bodyque);
+	entity body = new(bodyqueue);
 	body.angles = ent.angles;
 	body.model = ent.model;
 	body.modelindex = ent.modelindex;
@@ -780,7 +790,7 @@ void respawn(entity this)
 	if(coop)
 	{
 		// make a copy of the dead body for appearances sake
-		CopyToBodyQue(this);
+		CopyToBodyQueue(this);
 		// get the spawn parms as they were at level start
 		setspawnparms(this);
 		// respawn		
@@ -789,7 +799,7 @@ void respawn(entity this)
 	else if(deathmatch)
 	{
 		// make a copy of the dead body for appearances sake
-		CopyToBodyQue(this);
+		CopyToBodyQueue(this);
 		// set default spawn parms
 		SetNewParms();
 		// respawn		
@@ -801,8 +811,13 @@ void respawn(entity this)
 		}
 	}
 	else
-	{	// restart the entire server
-		localcmd("restart\n");
+	{
+		// put serverflags back to map's initial setting
+		serverflags = startingserverflags;
+		// request a reset to the parms
+		reset_flag = true;
+		// "change" to the same level
+		localcmd(strcat("changelevel ", mapname, "\n"));
 	}
 }
 
@@ -853,13 +868,41 @@ void ClientKill(entity this)
 
 /*
 ============
+PlayerVisibleToSpawnPoint
+
+Returns true if player can see this point
+============
+*/
+bool PlayerVisibleToSpawnPoint(entity point)
+{
+	FOREACH_CLIENT(it.health > 0,
+	{
+		vector spot1 = point.origin + it.view_ofs;
+		vector spot2 = it.origin + it.view_ofs;
+		traceline(spot1, spot2, true, point);
+		if(trace_fraction >= 1.0f)
+			return true;
+	});
+
+	return false;
+}
+
+float IDEAL_DIST_FROM_DM_SPAWN_POINT = 384;
+float MIN_DIST_FROM_DM_SPAWN_POINT = 84;
+
+/*
+============
 SelectSpawnPoint
 
 Returns the entity to spawn at
 ============
 */
-entity SelectSpawnPoint(entity this)
+entity SelectSpawnPoint(entity this, bool forceSpawn)
 {
+	int pcount = 0;
+	int numspots = 0, totalspots = 0;
+	entity spots = NULL;
+	entity thing = NULL;
 // testinfo_player_start is only found in regioned levels
 	entity spot = find(NULL, classname, "testplayerstart");
 	if(spot)
@@ -874,11 +917,11 @@ entity SelectSpawnPoint(entity this)
 		if(lastspawn != NULL)
 			return lastspawn;
 	}
-	else if(deathmatch)
+	else if(MP_ROGUE && deathmatch) // TODO: merge with regular deathmatch code!
 	{
 		entity startspot = spot = lastspawn;
 		int t = 0;
-		if(MP_ROGUE && !this.ctf_killed && teamplay >= TEAM_CTF)
+		if(!this.ctf_killed && teamplay >= TEAM_CTF)
 		{
 			if(this.steam == TEAM1)
 			{
@@ -893,24 +936,16 @@ entity SelectSpawnPoint(entity this)
 		}
 		while(1)
 		{
-			if(MP_ROGUE && t == TEAM1)
+			if(t == TEAM1)
 				spot = find(spot, classname, "info_player_team1");
-			else if(MP_ROGUE && t == TEAM2)
+			else if(t == TEAM2)
 				spot = find(spot, classname, "info_player_team2");
 			else
 				spot = find(spot, classname, "info_player_deathmatch");
 			if(spot != NULL)
 			{
-				if(MP_ROGUE)
-				{
-					if(spot == startspot)
-						return startspot;
-				}
-				else
-				{
-					if(spot == lastspawn)
-						return lastspawn;
-				}
+				if(spot == startspot)
+					return startspot;
 				int pcount = 0;
 				entity thing = findradius(spot.origin, 32);
 				while(thing)
@@ -921,18 +956,124 @@ entity SelectSpawnPoint(entity this)
 				}
 				if(pcount == 0)
 				{
-					if(MP_ROGUE && t == TEAM1)
+					if(t == TEAM1)
 						team1_lastspawn = spot;
-					else if(MP_ROGUE && t == TEAM2)
+					else if(t == TEAM2)
 						team2_lastspawn = spot;
 					else
 						lastspawn = spot;
 					return spot;
 				}
 			}
-			else if(MP_ROGUE)
+			else
 				t = 0; // fix for ctf levels without ctf support
 		}
+	}
+	else if(deathmatch)
+	{
+		// find all spots that don't have visible players nearby
+		spot = find(NULL, classname, "info_player_deathmatch");
+
+		while(spot)
+		{
+			totalspots = totalspots + 1;
+
+			thing = findradius(spot.origin, IDEAL_DIST_FROM_DM_SPAWN_POINT);
+			pcount = 0;               
+
+			while(thing)
+			{
+				if(IS_PLAYER(thing) && thing.health > 0)
+					pcount += 1;                      
+
+				thing = thing.chain;      
+			}
+
+			if(pcount == 0)
+			{
+				if(PlayerVisibleToSpawnPoint(spot))
+					pcount += 1;
+			}
+
+			if(pcount == 0)
+			{ // good spot!
+				spot.goalentity = spots;
+				spots = spot;
+				numspots += 1;
+			}
+
+			// Get the next spot in the chain
+			spot = find(spot, classname, "info_player_deathmatch");                
+		}
+
+		totalspots = totalspots - 1;
+
+		// on small maps with few spawn points, our "ideal" spawn conditions may not be possible to meet
+		// so fallback to just trying to pick a point without a player on top of it, so we don't start
+		// a spawn frag loop
+		if(numspots == 0)
+		{
+			spot = find(NULL, classname, "info_player_deathmatch");
+
+			while(spot)
+			{
+				thing = findradius(spot.origin, MIN_DIST_FROM_DM_SPAWN_POINT);
+				pcount = 0;               
+
+				while(thing)
+				{
+					if(IS_PLAYER(thing) && thing.health > 0)
+						pcount += 1;
+
+					thing = thing.chain;      
+				}
+
+				if(pcount == 0)
+				{ // good spot!
+					spot.goalentity = spots;
+					spots = spot;
+					numspots += 1;
+				}
+
+				// Get the next spot in the chain
+				spot = find(spot, classname, "info_player_deathmatch");                
+			}             
+		}
+
+		// uncomment to force a deferred spawn
+		// if(!forceSpawn)
+		//	return NULL;
+
+		if(!numspots)
+		{
+			if(!forceSpawn)
+				return NULL;
+
+			// no spots available so just pick one at random
+			totalspots = rint((random() * totalspots));
+			spot = find(NULL, classname, "info_player_deathmatch");       
+
+			while(totalspots > 0)
+			{
+				totalspots -= 1;
+				spot = find(spot, classname, "info_player_deathmatch");
+			}
+			return spot;
+		}
+		
+		// Generate a random number between 1 and numspots
+		numspots -= 1;
+	
+		numspots = rint((random() * numspots));
+
+		spot = spots;
+		while(numspots > 0)
+		{
+			spot = spot.goalentity;
+			numspots -= 1;
+		}
+	
+		return spot;
 	}
 
 	if(serverflags)
@@ -972,13 +1113,18 @@ void player_touch(entity this, entity toucher);
 
 void PutClientInServer(entity this)
 {
+	entity spot = SelectSpawnPoint(this, false);
+
 	this.classname = STR_PLAYER;
-	this.health = 100;
+	if(autocvar_skill == 3 && !deathmatch)
+		this.health = 50;
+	else
+		this.health = 100;
 	this.takedamage = DAMAGE_AIM;
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_WALK);
 	this.show_hostile = 0;
-	this.max_health = 100;
+	this.max_health = this.health;
 	this.flags = FL_CLIENT;
 	this.air_finished = time + 12;
 	this.dmg = 2;   		// initial water damage
@@ -986,6 +1132,7 @@ void PutClientInServer(entity this)
 	this.radsuit_finished = 0;
 	this.invisible_finished = 0;
 	this.invincible_finished = 0;
+	this.healthrot_nextcheck = 0;
 	this.field_generator_finished = 0;
 	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
@@ -1014,8 +1161,6 @@ void PutClientInServer(entity this)
 
 	DecodeLevelParms(this);
 
-	entity spot = SelectSpawnPoint(this);
-
 	W_SetCurrentAmmo(this);
 
 	this.attack_finished = time;
@@ -1026,8 +1171,44 @@ void PutClientInServer(entity this)
 	this.deadflag = DEAD_NO;
 // paustime is set by teleporters to keep the player from moving a while
 	this.pausetime = 0;
-	
-//	spot = SelectSpawnPoint();
+
+	bool shouldTelefrag;
+	if(this.spawn_deferred > 0 && time >= this.spawn_deferred)
+	{
+		LOG_DEBUG("forcing telefrag on this spawn");
+		shouldTelefrag = true;
+	}
+	else
+		shouldTelefrag = false;
+	spot = SelectSpawnPoint(this, shouldTelefrag);
+	if(!spot)
+	{
+		this.takedamage = DAMAGE_NO;
+		this.solid = SOLID_NOT;
+		set_movetype(this, MOVETYPE_NONE);
+		this.deadflag = DEAD_DEAD;
+		_setmodel(this, "");
+		this.view_ofs = '0 0 1'; // not 0 because PlayerPreThink would return out
+		this.velocity = '0 0 0';
+
+		if(this.spawn_deferred == 0)
+		{
+			LOG_DEBUG("no spawns available! deferring");
+			this.spawn_deferred = time + 5;
+		}
+
+		spot = FindIntermission(this);
+		this.angles = this.v_angle = spot.mangle;
+		this.fixangle = true;
+		setorigin(this, spot.origin);
+		this.weaponmodel = "";
+		this.weaponframe = 0;
+		this.weapon = 0;
+
+		return;
+	}
+
+	this.spawn_deferred = 0;
 
 	this.origin = spot.origin + '0 0 1';
 	this.angles = vec2(spot.angles);
@@ -1059,12 +1240,13 @@ void PutClientInServer(entity this)
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	
 	this.view_ofs = '0 0 22';
+	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	player_stand1(this);
 	
 	if(deathmatch || coop)
 	{
-		makevectors(this.angles);
+		fixedmakevectors(this.angles);
 		spawn_tfog(this.origin + v_forward * 20);
 	}
 
@@ -1072,6 +1254,8 @@ void PutClientInServer(entity this)
 	this.hook_out = false;
 
 	spawn_tdeath(this.origin, this);
+
+	stuffcmd(this, "-attack\n"); // prevent shooting after respawning
 }
 
 
@@ -1134,10 +1318,12 @@ RULES
 
 /*
 go to the next level for deathmatch
-only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	if(nextmap && nextmap != "")
+		return; // already done
+
 	entity o = NULL;
 
 	if(MP_IMPEL)
@@ -1145,10 +1331,9 @@ void NextLevel()
 	// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
 
-		// go back to start if no trigger_changelevel
-		if(!o)
+		// go back to same map if no trigger_changelevel
+		if(!o || mapname == "aopstart")
 		{
-			mapname = "aopstart";
 			o = spawn();
 			o.map = mapname;
 		}
@@ -1158,10 +1343,9 @@ void NextLevel()
 		// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
 
-		// go back to start if no trigger_changelevel
-		if(!o)
+		// go back to same map if no trigger_changelevel
+		if(!o || mapname == "hipstart")
 		{
-			mapname = "hipstart";
 			o = spawn();
 			o.map = mapname;
 		}
@@ -1180,10 +1364,9 @@ void NextLevel()
 			// find a trigger changelevel
 			o = find(NULL, classname, "trigger_changelevel");
 
-			// go back to start if no trigger_changelevel
-			if(!o)
+			// go back to same map if no trigger_changelevel
+			if(!o || mapname == "rstart")
 			{
-				mapname = "rstart";
 				o = spawn();
 				o.map = mapname;
 			}
@@ -1224,10 +1407,9 @@ void NextLevel()
 		// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
 
-		// go back to start if no trigger_changelevel
-		if(!o)
+		// go back to same map if no trigger_changelevel
+		if(!o || mapname == "start")
 		{
-			mapname = "start";
 			o = spawn();
 			o.map = mapname;
 		}
@@ -1255,6 +1437,14 @@ void PlayerDeathThink(entity this)
 			this.velocity = '0 0 0';
 		else	
 			this.velocity = forward * normalize(this.velocity);
+	}
+
+	if(this.spawn_deferred)
+	{
+		entity spot = SelectSpawnPoint(this, false);
+		if(spot || time >= this.spawn_deferred)
+			respawn(this);
+		return;
 	}
 
 // wait for all buttons released
@@ -1791,6 +1981,33 @@ void Player_Physics(entity this)
 	}
 }
 
+/*
+================
+CheckHealthRot
+
+Checks for taking off health points from a player
+that recently used a Mega-Health.
+================
+*/
+void CheckHealthRot(entity this)
+{
+	if(!MP_HIPNOTIC && !(this.items & IT_SUPERHEALTH))
+		return;
+
+	if(this.healthrot_nextcheck > time)
+		return;
+
+	if(this.health > this.max_health)
+	{
+		this.health -= 1;
+		this.healthrot_nextcheck = time + 1;
+		return;
+	}
+
+	if(!MP_HIPNOTIC)
+		this.items &= ~IT_SUPERHEALTH;
+	this.healthrot_nextcheck = 0;
+}
 
 /*
 ================
@@ -1836,10 +2053,11 @@ void PlayerPostThink(entity this)
 		}
 
 		CheckPowerups(this);
-	}
+		CheckHealthRot(this);
 
-	if(IS_PLAYER(this))
-		DrownPlayer(this);
+		if(IS_PLAYER(this))
+			DrownPlayer(this);
+	}
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -2000,6 +2218,7 @@ void ClientDisconnect(entity this)
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
+	this.effects = 0;
 
 	if(MP_ROGUE)
 	{
@@ -2061,7 +2280,13 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				
 				if(targ.weapon == 64 && targ.waterlevel > 1)
 				{
-					bprint(" discharges into the water.\n");
+					switch(targ.watertype)
+					{
+						case CONTENT_SLIME: bprint(" discharges into the slime.\n"); break;
+						case CONTENT_LAVA: bprint(" discharges into the lava.\n"); break;
+						default:
+						case CONTENT_WATER: bprint(" discharges into the water.\n"); break;
+					}
 					return;
 				}
 				if(MP_IMPEL)
@@ -2081,7 +2306,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						bprint(" discharges into the water.\n");
 						return;
 					}
-					if(inflictor.classname == "grenade")
+					if(inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")
 						bprint(" tries to put the pin back in!\n");
 					else if(inflictor.classname == "flame")
 						bprint(" went up in his own flames!\n");
@@ -2109,7 +2334,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					bprint(" becomes bored with life\n");
 				return;
 			}
-			else if((teamplay == 2) &&(targ.team > 0)&&(targ.team == attacker.team) )
+			else if((teamplay == 2) && (attacker.team != 0) && (targ.team == attacker.team))
 			{
 				// NOTE: impel adds punctuation here, couldn't be bothered sorry!
 				if(rnum < 0.25)
@@ -2195,12 +2420,12 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && inflictor.classname == "superspike"))
+				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && inflictor.classname == "grenade"))
+				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -2327,6 +2552,11 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			if(attacker && attacker.solid == SOLID_BSP)
 			{	
 				bprint(" was squished\n");
+				return;
+			}
+			if(attacker.killstring && attacker.killstring != "")
+			{
+				bprintf(" %s\n", attacker.killstring);
 				return;
 			}
 			if(attacker.classname == "trap_shooter" || attacker.classname == "trap_spikeshooter")

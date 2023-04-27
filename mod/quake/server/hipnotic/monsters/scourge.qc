@@ -141,7 +141,7 @@ bool ScourgeCheckAttack(entity this)
 	if(time < this.attack_finished)
 		return false;
 
-	if(!this.enemy_vis)
+	if(!this.enemy_visible)
 		return false;
 
 

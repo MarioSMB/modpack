@@ -29,7 +29,7 @@ void multi_trigger(entity this)
 		secrets_found += 1;
 	}
 
-	if(this.noise)
+	if(this.noise && this.noise != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 // don't trigger again until reset

@@ -9,7 +9,7 @@ void trigger_push_touch(entity this, entity toucher)
 	if(MP_ROGUE && !(this.spawnflags & PUSH_ACTIVE))
 		return;
 
-	if(toucher.classname == "grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
+	if(toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
 		toucher.velocity = this.speed * this.movedir * 10;
 	else if(toucher.health > 0)
 	{

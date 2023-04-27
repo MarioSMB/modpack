@@ -909,6 +909,8 @@ STATIC_INIT_EARLY(missionpacks)
 
 spawnfunc(worldspawn)
 {
+	startingserverflags = serverflags;
+
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
     bool wantrestart = false;
@@ -1305,7 +1307,8 @@ void CreatureFrame_FallDamage(entity this)
 					if(IS_PLAYER(this))
 					{
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
-						this.deathtype = "falling";
+						if(this.health <= 5)
+							this.deathtype = "falling";
 					}
 				}
 			}
@@ -1350,7 +1353,8 @@ void StartFrame()
 		earthquake_frame();
 
 	CreatureFrame_All();
-	CheckRules_World();
+	if(deathmatch || coop)
+		CheckRules_World();
 
 	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));

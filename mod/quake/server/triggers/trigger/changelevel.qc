@@ -37,7 +37,8 @@ void changelevel_touch(entity this, entity toucher)
 
 	SUB_UseTargets(this, toucher, NULL);
 
-	if((this.spawnflags & 1) &&(deathmatch == 0) )
+	// coded fix for aop's lack of a spawnflag
+	if(((this.spawnflags & 1) || mapname == "aopstart") &&(deathmatch == 0) )
 	{	// NO_INTERMISSION
 		GotoNextMap();
 		return;
@@ -51,14 +52,18 @@ void changelevel_touch(entity this, entity toucher)
 	this.nextthink = time + 0.1;
 }
 
-/*QUAKED trigger_changelevel(0.5 0.5 0.5) ? NO_INTERMISSION
-When the player touches this, he gets sent to the map listed in the "map" variable.  Unless the NO_INTERMISSION flag is set, the view will go to the info_intermission spot and display stats.
+/*
+QUAKED trigger_changelevel (0.5 0.5 0.5) ? NO_INTERMISSION
+When the player touches this, he gets sent to the map listed in the "map" variable.
+Unless the NO_INTERMISSION flag is set, the view will go to the info_intermission spot and display stats.
 */
 spawnfunc(trigger_changelevel)
 {
-	if(!this.map)
-		objerror(this, "chagnelevel trigger doesn't have map");
-	
+	if(!this.map || this.map == "")
+		objerror(this, "changelevel trigger doesn't have map");
+
+	this.killstring = " tried to leave";
+
 	InitTrigger(this);
 	settouch(this, changelevel_touch);
 	if(!this.count) { this.count = 0.7; }

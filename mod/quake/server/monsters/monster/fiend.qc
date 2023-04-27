@@ -79,7 +79,7 @@ void demon1_jump4(entity this)
 	ai_face(this);
 	settouch(this, Demon_JumpTouch);
 	this.origin_z += 1;
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	this.velocity = v_forward * 600 + '0 0 250';
 	UNSET_ONGROUND(this);
 }
@@ -249,7 +249,7 @@ void Demon_Melee(entity this, float side)
 	float ldmg = 10 + 5*random();
 	T_Damage(this.enemy, this, this, ldmg);	
 
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	SpawnMeatSpray(this, this.origin + v_forward*16, side * v_right);
 }
 

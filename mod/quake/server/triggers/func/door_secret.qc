@@ -155,7 +155,7 @@ void secret_touch(entity this, entity toucher)
 
 	this.attack_finished = time + 2;
 	
-	if(this.message)
+	if(this.message && this.message != "")
 	{
 		centerprint(toucher, this.message);
 		_sound(toucher, CH_PLAYER, QUAKE_TALKSOUND, 1, ATTN_NORM);
@@ -216,7 +216,7 @@ spawnfunc(func_door_secret)
 	// Magic formula...
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
-	this.classname = "door";
+	this.classname = "func_door_secret";
 	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 

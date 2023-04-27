@@ -227,7 +227,7 @@ void ShamClaw(entity this, float side)
 
 	if(side)
 	{
-		makevectors(this.angles);
+		fixedmakevectors(this.angles);
 		SpawnMeatSpray(this, this.origin + v_forward*16, side * v_right);
 	}
 }
@@ -308,12 +308,7 @@ void CastLightning(entity this)
 }
 
 void sham_magic12(entity this) { set_animofs(this, anim_sham_magic, 12, sham_run1); }
-void sham_magic11(entity this)
-{
-	set_animofs(this, anim_sham_magic, 11, sham_magic12);
-	if(autocvar_skill == 3)
-		CastLightning(this);
-}
+void sham_magic11(entity this) { set_animofs(this, anim_sham_magic, 11, sham_magic12); }
 void sham_magic10(entity this) { set_animofs(this, anim_sham_magic, 10, sham_magic11); CastLightning(this); }
 void sham_magic9(entity this) { set_animofs(this, anim_sham_magic, 9, sham_magic10); CastLightning(this); }
 void sham_magic6(entity this)
@@ -447,7 +442,7 @@ bool ShamCheckAttack(entity this)
 		if(time < this.attack_finished)
 			return false;
 		
-		if(!this.enemy_vis)
+		if(!this.enemy_visible)
 			return false;
 	}
 		

@@ -240,14 +240,13 @@ void OgreFireGrenade(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	if(MP_ROGUE)
-		missile.classname = "ogre_grenade";
+	missile.classname = "ogre_grenade";
 	if(MP_IMPEL)
-		missile.classname = "grenade"; // NOTE: impel takes priority over rogue here!
+		missile.classname = "grenade"; // NOTE: impel takes priority over rogue here! TODO
 		
 // set missile speed	
 
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 
 	missile.velocity = normalize(this.enemy.origin - this.origin);
 	missile.velocity = missile.velocity * 600;
@@ -303,7 +302,7 @@ void chainsaw(entity this, float side)
 	
 	if(side)
 	{
-		makevectors(this.angles);
+		fixedmakevectors(this.angles);
 		if(side == 1)
 			SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 		else
@@ -613,7 +612,7 @@ bool OgreCheckAttack(entity this)
 		if(time < this.attack_finished)
 			return false;
 		
-		if(!this.enemy_vis)
+		if(!this.enemy_visible)
 			return false;
 	}
 

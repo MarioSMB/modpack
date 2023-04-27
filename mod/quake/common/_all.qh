@@ -14,10 +14,12 @@ REGISTER_NET_LINKED(ENT_CLIENT_TOGGLEWALL)
 	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic
 	#define MP_ROGUE autocvar_sv_missionpack_rogue
 	#define MP_IMPEL autocvar_sv_missionpack_impel
+	#define MP_MG autocvar_sv_missionpack_mg
 #elif defined(CSQC)
 	#define MP_HIPNOTIC (STAT(MISSIONPACKS) & MISSIONPACK_HIPNOTIC)
 	#define MP_ROGUE (STAT(MISSIONPACKS) & MISSIONPACK_ROGUE)
 	#define MP_IMPEL (STAT(MISSIONPACKS) & MISSIONPACK_IMPEL)
+	#define MP_MG (STAT(MISSIONPACKS) & MISSIONPACK_MG)
 #endif
 
 // generic entity flags

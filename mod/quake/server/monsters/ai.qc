@@ -10,7 +10,7 @@ Will be world if not currently angry at anyone.
 The next path spot to walk toward.  If .enemy, ignore .movetarget.
 When an enemy is killed, the monster will try to return to it's path.
 
-.huntt_ime
+.hunt_ime
 Set to time + something when the player is in sight, but movement straight for
 him is blocked.  This causes the monster to use wall following code for
 movement direction instead of sighting on the player.
@@ -648,7 +648,7 @@ returns 1 if the entity is in front(in sight) of this
 */
 bool infront(entity this, entity targ)
 {
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
 	
@@ -912,7 +912,7 @@ bool FindTarget(entity this)
 	{
 		client = sight_entity;
 		if(client.enemy == this.enemy)
-			return false;
+			return true;
 	}
 	else if (this.charmed)
 	{
@@ -1171,7 +1171,7 @@ bool FacingIdeal(entity this)
 .bool(entity this) checkattack;
 bool CheckAnyAttack(entity this)
 {
-	if(!this.enemy_vis)
+	if(!this.enemy_visible)
 		return false;
 	if(this.checkattack)
 		return this.checkattack(this);
@@ -1330,8 +1330,8 @@ void ai_run(entity this, float dist)
 	this.show_hostile = time + 1; // wake up other monsters
 
 // check knowledge of enemy
-	this.enemy_vis = visible(this, this.enemy);
-	if(this.enemy_vis)
+	this.enemy_visible = visible(this, this.enemy);
+	if(this.enemy_visible)
 		this.search_time = time + 5;
 
 // look for other coop players
@@ -1392,14 +1392,13 @@ void ai_run(entity this, float dist)
 		if (!axis)
 		{
 			this.endtime = time + 3;
-			t_movetogoal(this, dist);      // done in C code...
+			t_movetogoal(this, dist); // fall back to normal Quake movement behavior.
 		}
 //      else
 //         changeyaw();
 	}
 	else
 	{
-		// head straight in
-		t_movetogoal(this, dist);      // done in C code...
+		t_movetogoal(this, dist); // fall back to normal Quake movement behavior.
 	}
 }

@@ -9,3 +9,8 @@
 .int aflag;
 
 .int worldtype;
+const int WORLDTYPE_MEDIEVAL = 0;
+const int WORLDTYPE_METAL = 1;
+const int WORLDTYPE_BASE = 2;
+
+string Weapon_PrettyName(int wepid);

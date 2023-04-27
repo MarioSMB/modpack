@@ -170,7 +170,7 @@ spawnfunc(func_plat)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
-	this.classname = "plat";
+	this.classname = "func_plat";
 	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;

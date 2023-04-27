@@ -1,16 +1,16 @@
 #include "ogre.qc"
-#include "demon.qc"
+#include "fiend.qc"
 #include "shambler.qc"
 #include "knight.qc"
-#include "soldier.qc"
-#include "wizard.qc"
-#include "dog.qc"
+#include "grunt.qc"
+#include "scrag.qc"
+#include "rottweiler.qc"
 #include "zombie.qc"
-#include "boss.qc"
+#include "chthon.qc"
 
-#include "tarbaby.qc"		// registered
-#include "hknight.qc"		// registered
-#include "fish.qc"			// registered
-#include "shalrath.qc"		// registered
+#include "spawn.qc"			// registered
+#include "hellknight.qc"	// registered
+#include "rotfish.qc"		// registered
+#include "vore.qc"			// registered
 #include "enforcer.qc"		// registered
-#include "oldone.qc"		// registered
+#include "shub.qc"			// registered

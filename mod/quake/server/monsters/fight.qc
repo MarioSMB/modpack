@@ -139,7 +139,7 @@ void ai_charge_side(entity this)
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
 	changeyaw(this);
 
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	vector dtemp = this.enemy.origin - 30 * v_right;
 	float heading = vectoyaw(dtemp - this.origin);
 	

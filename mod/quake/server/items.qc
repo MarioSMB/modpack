@@ -120,7 +120,6 @@ const int H_ROTTEN = BIT(0);
 const int H_MEGA = BIT(1);
 .float	healamount, healtype;
 void health_touch(entity this, entity toucher);
-void item_megahealth_rot(entity this);
 
 spawnfunc(item_health)
 {	
@@ -195,44 +194,19 @@ void health_touch(entity this, entity toucher)
 		if(!MP_HIPNOTIC)
 			toucher.items |= IT_SUPERHEALTH;
 
-		this.nextthink = time + 5;
-		setthink(this, item_megahealth_rot);
-		this.owner = toucher;
+		toucher.healthrot_nextcheck = time + 5;
 	}
-	else
+
+	if(deathmatch && deathmatch != 2) // deathmatch 2 is the silly old rules
 	{
-		if(deathmatch != 2)		// deathmatch 2 is the silly old rules
-		{
-			if(deathmatch)
-			{
-				this.nextthink = time + 20;
-				setthink(this, SUB_regen);
-			}
-		}
+		if(this.healtype == 2)
+			this.nextthink = time + 120;
+		else
+			this.nextthink = time + 20;
+		setthink(this, SUB_regen);
 	}
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
-}	
-
-void item_megahealth_rot(entity this)
-{
-	if(this.owner.health > this.owner.max_health)
-	{
-		this.owner.health = this.owner.health - 1;
-		this.nextthink = time + 1;
-		return;
-	}
-
-// it is possible for a player to die and respawn between rots, so don't
-// just blindly subtract the flag off
-	if(!MP_HIPNOTIC)
-		this.owner.items &= ~IT_SUPERHEALTH;
-	
-	if(deathmatch == 1)	// deathmatch 2 is silly old rules
-	{
-		this.nextthink = time + 20;
-		setthink(this, SUB_regen);
-	}
 }
 
 /*
@@ -250,8 +224,8 @@ void armor_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	float type = 0, value = 0;
-	int bit = 0;
+	float type = 0.3, value = 100;
+	int bit = IT_ARMOR1;
 
 	if(this.classname == "item_armor1")
 	{
@@ -271,7 +245,7 @@ void armor_touch(entity this, entity toucher)
 		value = 200;
 		bit = IT_ARMOR3;
 	}
-	if(toucher.armortype*toucher.armorvalue >= type*value)
+	if(toucher.armortype*toucher.armorvalue >= type * value)
 		return;
 		
 	toucher.armortype = type;
@@ -281,7 +255,7 @@ void armor_touch(entity this, entity toucher)
 
 	this.solid = SOLID_NOT;
 	this.model = string_null;
-	if(deathmatch == 1)
+	if(deathmatch && deathmatch != 2)
 	{
 		this.nextthink = time + 20;
 		setthink(this, SUB_regen);
@@ -302,6 +276,8 @@ void armor_touch(entity this, entity toucher)
 spawnfunc(item_armor1)
 {
 	settouch(this, armor_touch);
+	this.armortype = 0.3;
+	this.armorvalue = 100;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 0;
@@ -315,6 +291,8 @@ spawnfunc(item_armor1)
 spawnfunc(item_armor2)
 {
 	settouch(this, armor_touch);
+	this.armortype = 0.6;
+	this.armorvalue = 150;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 1;
@@ -329,6 +307,8 @@ spawnfunc(item_artifact_field_generator);
 spawnfunc(item_armorInv)
 {
 	settouch(this, armor_touch);
+	this.armortype = 0.8;
+	this.armorvalue = 200;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 2;
@@ -486,11 +466,11 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_CLIENT(toucher))
 		return;
 
-	int hadammo = 0, newitem = 0;
+	int hadammo = 0, newitem = toucher.weapon;
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
-	bool leave = (deathmatch == 2 || coop);
+	bool leave = (coop || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 	
 	switch(this.classname)
 	{
@@ -635,10 +615,13 @@ void weapon_touch(entity this, entity toucher)
 			newitem = WEP_LAVA_NAILGUN;
 	}
 
-	if(!deathmatch)
-		W_SwitchWeapon(toucher, newitem);
-	else
-		Deathmatch_Weapon(toucher, old, newitem);
+	if(W_WantsToChangeWeapon(toucher, old, newitem))
+	{
+		if(!deathmatch)
+			W_SwitchWeapon(toucher, newitem);
+		else
+			Deathmatch_Weapon(toucher, old, newitem);
+	}
 
 	if(leave)
 	{
@@ -653,7 +636,7 @@ void weapon_touch(entity this, entity toucher)
 // remove it in single player, or setup for respawning in deathmatch
 	this.model = string_null;
 	this.solid = SOLID_NOT;
-	if(deathmatch == 1)
+	if(deathmatch && deathmatch != 2)
 	{
 		this.nextthink = time + 30;
 		setthink(this, SUB_regen);
@@ -889,8 +872,10 @@ void impel_weapon_touch(entity this, entity toucher)
 	this.model = string_null;
 	this.solid = SOLID_NOT;
 	if(deathmatch == 1)
+	{
 		this.nextthink = time + 30;
-	setthink(this, SUB_regen);
+		setthink(this, SUB_regen);
+	}
 	SUB_UseTargets(this, toucher, NULL);
 }
 
@@ -903,6 +888,7 @@ spawnfunc(weapon_lightme)
 	this.weapon = 3;
 	this.netname = "LG-2 Prototype";
 	settouch(this, impel_weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -916,6 +902,7 @@ spawnfunc(weapon_rifle)
 	this.weapon = 3;
 	this.netname = "Armor Laser System";
 	settouch(this, impel_weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -929,6 +916,7 @@ spawnfunc(weapon_rifleupgrade)
 	this.weapon = 3;
 	this.netname = "Laser System Upgrade";
 	settouch(this, impel_weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -942,6 +930,7 @@ spawnfunc(weapon_napalm)
 	this.weapon = 3;
 	this.netname = "Napalm Gun";
 	settouch(this, impel_weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -955,6 +944,7 @@ spawnfunc(weapon_not_a_spear)
 	this.weapon = 3;
 	this.netname = "Rocket Powered Impaler";
 	settouch(this, impel_weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -1067,7 +1057,7 @@ void ammo_touch(entity this, entity toucher)
 
 // change to a better weapon if appropriate
 
-	if( toucher.weapon == best )
+	if(toucher.weapon == best && W_WantsToChangeWeapon(toucher, 0, 1))
 		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
 
 // if changed current ammo, update it
@@ -1076,9 +1066,12 @@ void ammo_touch(entity this, entity toucher)
 // remove it in single player, or setup for respawning in deathmatch
 	this.model = string_null;
 	this.solid = SOLID_NOT;
-	if(deathmatch == 1)
+	if(deathmatch)
 	{
-		this.nextthink = time + 30;
+		if(deathmatch == 3 || deathmatch == 5)
+			this.nextthink = time + 15;
+		else if(deathmatch != 2)
+			this.nextthink = time + 30;
 		setthink(this, SUB_regen);
 	}
 
@@ -1388,17 +1381,17 @@ bool key_customize(entity this, entity client)
 
 void key_setsounds(entity this)
 {
-	if(world.worldtype == 0)
+	if(world.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		precache_sound("misc/medkey.wav");
 		this.noise = "misc/medkey.wav";
 	}
-	if(world.worldtype == 1)
+	if(world.worldtype == WORLDTYPE_METAL)
 	{
 		precache_sound("misc/runekey.wav");
 		this.noise = "misc/runekey.wav";
 	}
-	if(world.worldtype == 2)
+	if(world.worldtype == WORLDTYPE_BASE)
 	{
 		precache_sound2("misc/basekey.wav");
 		this.noise = "misc/basekey.wav";
@@ -1418,17 +1411,17 @@ following:
 
 spawnfunc(item_key1)
 {
-	if(world.worldtype == 0)
+	if(world.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		setmodel(this, MDL_ITEM_SILVERKEY);
 		this.netname = "silver key";
 	}
-	else if(world.worldtype == 1)
+	else if(world.worldtype == WORLDTYPE_METAL)
 	{
 		setmodel(this, MDL_ITEM_SILVERRUNEKEY);
 		this.netname = "silver runekey";
 	}
-	else if(world.worldtype == 2)
+	else if(world.worldtype == WORLDTYPE_BASE)
 	{
 		setmodel(this, MDL_ITEM_SILVERKEYCARD);
 		this.netname = "silver keycard";
@@ -1454,17 +1447,17 @@ following:
 
 spawnfunc(item_key2)
 {
-	if(world.worldtype == 0)
+	if(world.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		setmodel(this, MDL_ITEM_GOLDKEY);
 		this.netname = "gold key";
 	}
-	if(world.worldtype == 1)
+	if(world.worldtype == WORLDTYPE_METAL)
 	{
 		setmodel(this, MDL_ITEM_GOLDRUNEKEY);
 		this.netname = "gold runekey";
 	}
-	if(world.worldtype == 2)
+	if(world.worldtype == WORLDTYPE_BASE)
 	{
 		setmodel(this, MDL_ITEM_GOLDKEYCARD);
 		this.netname = "gold keycard";
@@ -1501,8 +1494,8 @@ void sigil_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	serverflags = serverflags |(this.spawnflags & 15);
-	this.classname = "";		// so rune doors won't find it
-	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+	this.classname = ""; // so rune doors won't find it
+	SUB_UseTargets(this, toucher, NULL); // fire all targets / killtargets
 }
 
 
@@ -1837,8 +1830,11 @@ void BackpackTouch(entity this, entity toucher)
 		EnableComboWeapons(toucher);
 
 // change to the weapon
-	if(newitem && newitem != WEP_PULSERIFLE) // offhand
+	if(newitem && W_WantsToChangeWeapon(toucher, old, newitem) && newitem != WEP_PULSERIFLE) // offhand
 	{
+		if((this.flags & FL_INWATER) && newitem == WEP_LIGHTNING)
+			return; // lol
+
 		if(!deathmatch)
 			W_SwitchWeapon(toucher, newitem);
 		else
@@ -1895,6 +1891,19 @@ void DropBackpack(entity this)
 	item.ammo_nails = this.ammo_nails;
 	item.ammo_rockets = this.ammo_rockets;
 	item.ammo_cells = this.ammo_cells;
+
+	// include some ammo in the backpack if the weapon is being given
+	if(item.ammo_shells < 5 && (this.weapon == WEP_SHOTGUN || this.weapon == WEP_SUPER_SHOTGUN))
+		item.ammo_shells = 5;
+
+	if(item.ammo_nails < 20 && (this.weapon == WEP_NAILGUN || this.weapon == WEP_SUPER_NAILGUN))
+		item.ammo_nails = 20;
+
+	if(item.ammo_rockets < 5 && (this.weapon == WEP_GRENADE_LAUNCHER || this.weapon == WEP_ROCKET_LAUNCHER))
+		item.ammo_rockets = 5;
+
+	if(item.ammo_cells < 15 && this.weapon == WEP_LIGHTNING)
+		item.ammo_cells = 15;
 
 	// rogue
 	item.ammo_lava_nails = this.ammo_lava_nails;

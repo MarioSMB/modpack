@@ -168,7 +168,11 @@ void Killed(entity targ, entity inflictor, entity attacker)
 
 // bump the monster counter
 	if(IS_MONSTER(targ))
+	{
 		monsters_killed += 1;
+		if(IS_PLAYER(attacker))
+			attacker.frags += 1;
+	}
 
 	if(MP_ROGUE)
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
@@ -212,6 +216,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	float r = random();
 	bool showpain = true;
 	if(!targ.takedamage)
+		return;
+
+	// shub kill crash fix.
+	if(targ.classname == "monster_oldone" && damage < 9999)
 		return;
 
 	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
@@ -300,7 +308,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 
 // team play damage avoidance
-	if((teamplay == 1) &&(targ.team > 0)&&(targ.team == attacker.team) )
+	if(teamplay == 1 && targ != attacker && targ.team > 0 && targ.team == attacker.team)
 		return;
 
 	if(MP_ROGUE && !TeamHealthDam(targ, inflictor, attacker, damage))
@@ -319,7 +327,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		
 // do the damage
 	if(MP_IMPEL && targ.field_generator_finished > time
-		&& inflictor.classname != "grenade" && inflictor.classname != "missile" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
+		&& inflictor.classname != "grenade" && inflictor.classname != "ogre_grenade" && inflictor.classname != "missile" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
 		&& !(!inflictor && targ.watertype == CONTENT_WATER) && !(!inflictor && targ.jump_flag < -650))
 	{
 		if(r < 0.3)

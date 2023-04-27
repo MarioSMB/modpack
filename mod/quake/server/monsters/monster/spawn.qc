@@ -213,7 +213,7 @@ void tbaby_jump5(entity this)
 
 	set_movetype(this, MOVETYPE_BOUNCE);
 	settouch(this, Tar_JumpTouch);
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 600 + '0 0 200';
 	this.velocity_z = this.velocity_z + random()*150;

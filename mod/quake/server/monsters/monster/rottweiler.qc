@@ -266,7 +266,7 @@ void dog_leap1(entity this)
 	ai_face(this);
 
 	settouch(this, Dog_JumpTouch);
-	makevectors(this.angles);
+	fixedmakevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 300 + '0 0 200';
 	UNSET_ONGROUND(this);

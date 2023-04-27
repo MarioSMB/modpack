@@ -15,6 +15,8 @@ float sys_frametime;     // gets initialised in worldspawn, saves the value from
 
 float servertime, serverprevtime, serverframetime;
 
+int startingserverflags;
+
 const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
 
 int intermission_running;
