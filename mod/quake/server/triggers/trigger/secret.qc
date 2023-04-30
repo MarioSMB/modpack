@@ -11,6 +11,11 @@ set "message" to text string
 */
 spawnfunc(trigger_secret)
 {
+	if(MP_MG && Inhibit_Coop(this))
+	{
+		delete(this);
+		return;
+	}
 	secrets_total += 1;
 	this.wait = -1;
 	if(!this.message)

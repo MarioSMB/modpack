@@ -1,6 +1,7 @@
 #include "items.qh"
 
 #include "rogue/rogue.qh"
+#include "triggers/subs.qh"
 #include "triggers/triggers.qh"
 #include "weapons.qh"
 
@@ -57,7 +58,10 @@ void PlaceItem(entity this)
 	this.mdl = this.model;		// so it can be restored on respawn
 	this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	set_movetype(this, MOVETYPE_TOSS);	
+	if(MP_MG && (this.spawnflags & DROPTOFLOOR_DISABLE))
+		set_movetype(this, MOVETYPE_NONE);
+	else
+		set_movetype(this, MOVETYPE_TOSS);	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
 	this.m_min = this.mins;
@@ -76,6 +80,11 @@ Sets the clipping size and plants the object on the floor
 */
 void StartItem(entity this)
 {
+	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	{
+		delete(this);
+		return;
+	}
 	this.nextthink = time + 0.2;	// items start after other solids
 	setthink(this, PlaceItem);
 }
@@ -98,6 +107,10 @@ bool T_Heal(entity e, float healamount, bool ignore)
 	if((!ignore) &&(e.health >= e.max_health))
 		return false;
 	healamount = ceil(healamount);
+
+	// AY Dec13 2021, horde rune of hunger
+	if(MP_MG && autocvar_horde && (serverflags & 2))
+		e.hunger_time = time + HUNGER_MAX;
 
 	e.health = e.health + healamount;
 	if((!ignore) &&(e.health >= e.max_health))
@@ -203,6 +216,12 @@ void health_touch(entity this, entity toucher)
 			this.nextthink = time + 120;
 		else
 			this.nextthink = time + 20;
+		setthink(this, SUB_regen);
+	}
+	else if(MP_MG && this.wait)
+	{
+		this.enemy = NULL;
+		this.nextthink = time + this.wait;
 		setthink(this, SUB_regen);
 	}
 
@@ -623,8 +642,14 @@ void weapon_touch(entity this, entity toucher)
 			Deathmatch_Weapon(toucher, old, newitem);
 	}
 
+	// Moved up so the targets are fired even in coop, but only once.
+	if(MP_MG)
+		SUB_UseTargets(this, toucher, NULL);
+
 	if(leave)
 	{
+		if(MP_MG)
+			this.target = string_null;
 		if(MP_IMPEL && this.state == 0)
 		{
 			SUB_UseTargets(this, toucher, NULL);
@@ -641,8 +666,14 @@ void weapon_touch(entity this, entity toucher)
 		this.nextthink = time + 30;
 		setthink(this, SUB_regen);
 	}
+	else if(MP_MG && this.wait)
+	{
+		this.nextthink = time + this.wait;
+		setthink(this, SUB_regen);
+	}
 
-	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+	if(!MP_MG)
+		SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
 
@@ -676,7 +707,7 @@ spawnfunc(weapon_nailgun)
 	precache_model("progs/g_nail.mdl");
 	_setmodel(this, "progs/g_nail.mdl");
 	this.weapon = WEP_NAILGUN;
-	this.netname = "nailgun";
+	this.netname = "Nailgun";
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -845,7 +876,8 @@ void impel_weapon_touch(entity this, entity toucher)
 	{
 		_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		_sound(toucher, CHAN_WEAPON, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-		centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
+		if(!(toucher.weapons & WEP_PULSERIFLE))
+			centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
 	}
 	else
 		_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
@@ -899,7 +931,7 @@ spawnfunc(weapon_rifle)
 
 	precache_model("progs/g_tek.mdl");
 	_setmodel(this, "progs/g_tek.mdl");
-	this.weapon = 3;
+	this.weapon = WEP_LIGHTME;
 	this.netname = "Armor Laser System";
 	settouch(this, impel_weapon_touch);
 	setcefc(this, weapon_customize);
@@ -913,7 +945,7 @@ spawnfunc(weapon_rifleupgrade)
 
 	precache_model("progs/wing.mdl");
 	_setmodel(this, "progs/wing.mdl");
-	this.weapon = 3;
+	this.weapon = WEP_PULSERIFLE;
 	this.netname = "Laser System Upgrade";
 	settouch(this, impel_weapon_touch);
 	setcefc(this, weapon_customize);
@@ -927,7 +959,7 @@ spawnfunc(weapon_napalm)
 
 	precache_model("progs/g_rock.mdl");
 	_setmodel(this, "progs/g_rock.mdl");
-	this.weapon = 3;
+	this.weapon = WEP_NAPALM;
 	this.netname = "Napalm Gun";
 	settouch(this, impel_weapon_touch);
 	setcefc(this, weapon_customize);
@@ -941,7 +973,7 @@ spawnfunc(weapon_not_a_spear)
 
 	precache_model("progs/g_implr.mdl");
 	_setmodel(this, "progs/g_implr.mdl");
-	this.weapon = 3;
+	this.weapon = WEP_SPEAR;
 	this.netname = "Rocket Powered Impaler";
 	settouch(this, impel_weapon_touch);
 	setcefc(this, weapon_customize);
@@ -1066,13 +1098,40 @@ void ammo_touch(entity this, entity toucher)
 // remove it in single player, or setup for respawning in deathmatch
 	this.model = string_null;
 	this.solid = SOLID_NOT;
-	if(deathmatch)
+
+	setthink(this, SUB_regen);
+	if(coop && (!MP_MG || this.wait <= 0)) //Wait overrides coop respawn behaviour
+	{
+		this.cnt++;
+		int num_players = 0;
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			num_players += 1;
+		});
+		if(this.cnt < num_players) //Not been picked up by all players yet.
+		{
+			this.nextthink = time + 1; 
+			setthink(this, SUB_regen); // Respawn almost immediately
+		}
+		else
+		{
+			this.enemy = NULL;
+			this.cnt = 0;
+			this.nextthink = time + 4 * 60;
+			setthink(this, SUB_regen); // Respawn after 4 mins in case the players get stuck on something hard.
+		}
+	}
+	else if(deathmatch)
 	{
 		if(deathmatch == 3 || deathmatch == 5)
 			this.nextthink = time + 15;
 		else if(deathmatch != 2)
 			this.nextthink = time + 30;
-		setthink(this, SUB_regen);
+	}
+	else if(MP_MG && this.wait)
+	{
+		this.enemy = NULL;
+		this.nextthink = time + this.wait;
 	}
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
@@ -1372,6 +1431,8 @@ void key_touch(entity this, entity toucher)
 			bprintf("%s^7 picked up a key\n");
 	}
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+	if(MP_MG)
+		this.target = string_null; // only fire the trigger once though
 }
 
 bool key_customize(entity this, entity client)
@@ -1381,17 +1442,18 @@ bool key_customize(entity this, entity client)
 
 void key_setsounds(entity this)
 {
-	if(world.worldtype == WORLDTYPE_MEDIEVAL)
+	// yoder mod jan 13, 2021
+	if(this.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		precache_sound("misc/medkey.wav");
 		this.noise = "misc/medkey.wav";
 	}
-	if(world.worldtype == WORLDTYPE_METAL)
+	if(this.worldtype == WORLDTYPE_METAL)
 	{
 		precache_sound("misc/runekey.wav");
 		this.noise = "misc/runekey.wav";
 	}
-	if(world.worldtype == WORLDTYPE_BASE)
+	if(this.worldtype == WORLDTYPE_BASE)
 	{
 		precache_sound2("misc/basekey.wav");
 		this.noise = "misc/basekey.wav";
@@ -1411,17 +1473,18 @@ following:
 
 spawnfunc(item_key1)
 {
-	if(world.worldtype == WORLDTYPE_MEDIEVAL)
+	SUB_SetWorldtype(this);
+	if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 	{
 		setmodel(this, MDL_ITEM_SILVERKEY);
 		this.netname = "silver key";
 	}
-	else if(world.worldtype == WORLDTYPE_METAL)
+	else if(this.worldtype == WORLDTYPE_METAL)
 	{
 		setmodel(this, MDL_ITEM_SILVERRUNEKEY);
 		this.netname = "silver runekey";
 	}
-	else if(world.worldtype == WORLDTYPE_BASE)
+	else if(this.worldtype == WORLDTYPE_BASE)
 	{
 		setmodel(this, MDL_ITEM_SILVERKEYCARD);
 		this.netname = "silver keycard";
@@ -1447,17 +1510,18 @@ following:
 
 spawnfunc(item_key2)
 {
-	if(world.worldtype == WORLDTYPE_MEDIEVAL)
+	SUB_SetWorldtype(this);
+	if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 	{
 		setmodel(this, MDL_ITEM_GOLDKEY);
 		this.netname = "gold key";
 	}
-	if(world.worldtype == WORLDTYPE_METAL)
+	if(this.worldtype == WORLDTYPE_METAL)
 	{
 		setmodel(this, MDL_ITEM_GOLDRUNEKEY);
 		this.netname = "gold runekey";
 	}
-	if(world.worldtype == WORLDTYPE_BASE)
+	if(this.worldtype == WORLDTYPE_BASE)
 	{
 		setmodel(this, MDL_ITEM_GOLDKEYCARD);
 		this.netname = "gold keycard";
@@ -1493,11 +1557,35 @@ void sigil_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	this.model = string_null;
-	serverflags = serverflags |(this.spawnflags & 15);
 	this.classname = ""; // so rune doors won't find it
+	if(MP_MG)
+	{
+		int lastPickup = SUB_LeftShift(this.spawnflags & SIGIL_ALL, SIGIL_NUMBITS);
+    	serverflags |= (this.spawnflags & SIGIL_ALL) | lastPickup;
+	}
+	else
+		serverflags = serverflags | (this.spawnflags & 15);
+	if(MP_MG && autocvar_horde && (this.spawnflags & SIGIL_E2)) // Hunger
+	{
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			it.hunger_time = time + HUNGER_MAX;
+		});
+	}
+
 	SUB_UseTargets(this, toucher, NULL); // fire all targets / killtargets
 }
 
+int sigil_getLastPickup()
+{
+    int lastPickup = SUB_RightShift(serverflags, SIGIL_NUMBITS) & SIGIL_ALL;
+    return lastPickup;
+}
+
+void sigil_clearLastPickup()
+{
+    serverflags &= ~SUB_LeftShift(SIGIL_ALL, SIGIL_NUMBITS);
+}
 
 /*QUAKED item_sigil(0 .5 .8)(-16 -16 -24)(16 16 32) E1 E2 E3 E4
 End of level sigil, pick up to end episode and return to jrstart.
@@ -1506,28 +1594,32 @@ End of level sigil, pick up to end episode and return to jrstart.
 spawnfunc(item_sigil)
 {
 	if(!this.spawnflags)
-		objerror(this, "no spawnflags");
+		this.spawnflags |= SIGIL_E1;
 
 	precache_sound("misc/runekey.wav");
 	this.noise = "misc/runekey.wav";
 
-	if(this.spawnflags & 1)
+	if(this.spawnflags & SIGIL_E1)
 	{
+		this.spawnflags = SIGIL_E1;
 		precache_model("progs/end1.mdl");
 		_setmodel(this, "progs/end1.mdl");
 	}
-	if(this.spawnflags & 2)
+	if(this.spawnflags & SIGIL_E2)
 	{
+		this.spawnflags = SIGIL_E2;
 		precache_model2("progs/end2.mdl");
 		_setmodel(this, "progs/end2.mdl");
 	}
-	if(this.spawnflags & 4)
+	if(this.spawnflags & SIGIL_E3)
 	{
+		this.spawnflags = SIGIL_E3;
 		precache_model2("progs/end3.mdl");
 		_setmodel(this, "progs/end3.mdl");
 	}
-	if(this.spawnflags & 8)
+	if(this.spawnflags & SIGIL_E4)
 	{
+		this.spawnflags = SIGIL_E4;
 		precache_model2("progs/end4.mdl");
 		_setmodel(this, "progs/end4.mdl");
 	}
@@ -1535,6 +1627,78 @@ spawnfunc(item_sigil)
 	settouch(this, sigil_touch);
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
+}
+
+const int RUNE_INDICATOR_ACTIVE = 64;
+
+void misc_rune_indicator_use(entity this, entity actor, entity trigger)
+{
+	this.alpha = 1.0;
+	SUB_UseTargets(this, actor, trigger);
+}
+
+void misc_rune_indicator_usetargets(entity this)
+{
+	SUB_UseTargets(this, NULL, NULL);
+}
+
+spawnfunc(misc_rune_indicator)
+{
+	if(!MP_MG) { delete(this); return; }
+	bool isactive = (this.spawnflags & RUNE_INDICATOR_ACTIVE);
+	this.spawnflags &= ~RUNE_INDICATOR_ACTIVE;
+	if(!this.spawnflags)
+		this.spawnflags |= SIGIL_E1;
+	this.spawnflags &= SIGIL_ALL_ALL_ALLLL;
+
+    string mymdl = string_null;
+
+	if(this.spawnflags & SIGIL_E1)
+	{
+        this.spawnflags = SIGIL_E1;
+		mymdl = "progs/mg1_rune1.mdl";
+	}
+	else if(this.spawnflags & SIGIL_E2)
+	{
+		this.spawnflags = SIGIL_E2;
+        mymdl = "progs/mg1_rune2.mdl";
+	}
+	else if(this.spawnflags & SIGIL_E3)
+	{
+		this.spawnflags = SIGIL_E3;
+        mymdl = "progs/mg1_rune3.mdl";
+	}
+	else if(this.spawnflags & SIGIL_E4)
+	{
+		this.spawnflags = SIGIL_E4;
+        mymdl = "progs/mg1_rune4.mdl";
+	}
+	else if(this.spawnflags & SIGIL_E5)
+	{
+		this.spawnflags = SIGIL_E5;
+        mymdl = "progs/mg1_rune5.mdl";
+	}
+	else if(this.spawnflags & SIGIL_E6)
+	{
+		this.spawnflags = SIGIL_E6;
+        mymdl = "progs/mg1_rune6.mdl";
+	}
+    
+    precache_model(mymdl);
+    _setmodel(this, mymdl);
+
+	this.use = misc_rune_indicator_use;
+
+	if(((this.spawnflags & serverflags) == this.spawnflags) || isactive)
+    {
+		setthink(this, misc_rune_indicator_usetargets);
+		this.nextthink = time + 0.2;
+	}
+	else
+	{
+		//Show a ghost of the rune before you collect it.
+		this.alpha = 0.2;
+	}
 }
 
 /*
@@ -1578,13 +1742,21 @@ void powerup_touch(entity this, entity toucher)
 			
 			setthink(this, SUB_regen);
 		}
-	}	
+	}
+	else if(MP_MG && this.wait)
+	{
+		this.nextthink = time + this.wait;
+		setthink(this, SUB_regen);
+	}
 
 	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	toucher.powerups |= this.powerups;
 	this.model = string_null;
+
+	if(MP_MG)
+		SUB_UseTargets(this, toucher, NULL);
 
 // do the apropriate action
 	bool cname;
@@ -1594,13 +1766,23 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.rad_time = 1;
 		toucher.radsuit_finished = time + 30;
+		if(MP_MG && coop) // Respawn biosuit in coop, since it might be required for progression
+		{
+			this.target = string_null;
+			setthink(this, SUB_regen);
+			this.nextthink = time + 2.5;
+		}
 	}
 
 	cname = ((MP_ROGUE) ? (this.netname == "Pentagram of Protection") : (this.classname == "item_artifact_invulnerability"));
 	if(cname)
 	{
 		toucher.invincible_time = 1;
-		toucher.invincible_finished = time + 30;
+		// Yoder Sept24 2021 Horde Merge
+		if(MP_MG && horde_ent)
+			toucher.invincible_finished = time + 5;
+		else
+			toucher.invincible_finished = time + 30;
 	}
 
 	cname = ((MP_ROGUE) ? (this.netname == "Ring of Shadows") : (this.classname == "item_artifact_invisibility"));
@@ -1614,15 +1796,20 @@ void powerup_touch(entity this, entity toucher)
 	if(cname)
 	{
 		toucher.super_time = 1;
-		toucher.super_damage_finished = time + 30;
+		// Yoder Sept24 2021 Horde Merge
+		if(MP_MG && horde_ent)
+			toucher.super_damage_finished = time + 5;
+		else
+			toucher.super_damage_finished = time + 30;
 	}
 	if(this.netname == "item_artifact_field_generator")
 	{
 		toucher.field_generator_health = this.health;
 		toucher.field_generator_time = -150;
 		toucher.field_generator_finished = time + 30;
-	}	
-	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+	}
+	if(!MP_MG)
+		SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
 
@@ -1749,12 +1936,14 @@ void BackpackTouch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
+	if(this.realowner && toucher != this.realowner && IS_PLAYER(this.realowner))
+		return; // don't let other players grab a backpack they can't see
 
 	if(MP_ROGUE && toucher == this.owner && ((this.nextthink - time) > 119))
 		return; // don't let owner pick up his own backpack for a second
 
 	string wepmsg = "";
-	if(this.weapons && !(toucher.weapons & this.weapons))
+	if(this.weapons && !(toucher.weapons & this.weapons) && this.netname && this.netname != "")
 		wepmsg = this.netname;
 
 // if the player was using his best weapon, change up to the new one if better
@@ -1871,6 +2060,11 @@ string Weapon_PrettyName(int wepid)
 	return "";
 }
 
+bool BackpackCustomize(entity this, entity client)
+{
+	return (!this.realowner || this.realowner == client || !IS_PLAYER(this.realowner));
+}
+
 /*
 ===============
 DropBackpack
@@ -1880,6 +2074,11 @@ void DropBackpack(entity this)
 {
 	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
 			return;	// nothing in it
+
+	// Yoder Sept24 2021 Horde Merge
+	// don't drop backpacks in horde mode
+	if(MP_MG && horde_ent)
+		return; 
 
 	entity item = spawn();
 	item.origin = this.origin - '0 0 24';
@@ -1926,6 +2125,11 @@ void DropBackpack(entity this)
 	_setmodel(item, "progs/backpack.mdl");
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, BackpackTouch);
+	if(autocvar_sv_quake_instance_backpacks && IS_PLAYER(this) && IS_REAL_CLIENT(this))
+	{
+		item.realowner = this;
+		setcefc(item, BackpackCustomize);
+	}
 	
 	item.nextthink = time + 120;	// remove after 2 minutes
 	setthink(item, SUB_Remove);

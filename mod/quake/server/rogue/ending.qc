@@ -199,6 +199,8 @@ void ending_for_coop(entity this)
 	
 	WriteByte(MSG_ALL, SVC_FINALE);
 	WriteString(MSG_ALL, "You have destroyed Quake's\nTemporal Teleporter. His assault\non Time has been defeated.");
+
+	server_reset();
 	
 	ending_remove_stuff();
 

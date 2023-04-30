@@ -1,5 +1,7 @@
 #pragma once
 
+bool autocvar_sv_quake_instance_backpacks = true;
+
 .int weapons;
 
 .int powerups;
@@ -12,5 +14,17 @@
 const int WORLDTYPE_MEDIEVAL = 0;
 const int WORLDTYPE_METAL = 1;
 const int WORLDTYPE_BASE = 2;
+const int WORLDTYPE_HUB = 3;
+
+const int SIGIL_E1 = BIT(0);
+const int SIGIL_E2 = BIT(1);
+const int SIGIL_E3 = BIT(2);
+const int SIGIL_E4 = BIT(3);
+const int SIGIL_E5 = BIT(4);
+const int SIGIL_E6 = BIT(5);
+const int SIGIL_NUMBITS = 6;
+
+const int SIGIL_ALL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5;
+const int SIGIL_ALL_ALL_ALLLL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5 | SIGIL_E6;
 
 string Weapon_PrettyName(int wepid);

@@ -11,6 +11,8 @@ bool autocvar_sv_curl_serverpackages_auto;
 // protocol bytes
 const int SVC_CUTSCENE = 34;
 
+const int DROPTOFLOOR_DISABLE = 65536;
+
 float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
 
 float servertime, serverprevtime, serverframetime;
@@ -22,6 +24,8 @@ const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
 int intermission_running;
 
 bool gameover;
+
+.string endtext;
 
 .bool jump_flag;
 

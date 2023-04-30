@@ -326,7 +326,7 @@ void hknight_pain2(entity this) { set_animofs(this, anim_hknight_pain, 2, hknigh
 void hknight_pain1(entity this)
 {
 	set_animofs(this, anim_hknight_pain, 1, hknight_pain2);
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
@@ -334,7 +334,17 @@ void hknight_pain1(entity this)
 
 //============================================================================
 
-void hknight_die12(entity this) { set_animofs(this, anim_hknight_death, 12, hknight_die12); CorpseThink(this); }
+void hknight_die12(entity this)
+{
+	set_animofs(this, anim_hknight_death, 12, hknight_die12);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void hknight_die11(entity this) { set_animofs(this, anim_hknight_death, 11, hknight_die12); }
 void hknight_die10(entity this) { set_animofs(this, anim_hknight_death, 10, hknight_die11); }
 void hknight_die9(entity this) { set_animofs(this, anim_hknight_death, 9, hknight_die10); ai_forward(this, 11); }
@@ -347,7 +357,17 @@ void hknight_die3(entity this) { set_animofs(this, anim_hknight_death, 3, hknigh
 void hknight_die2(entity this) { set_animofs(this, anim_hknight_death, 2, hknight_die3); ai_forward(this, 8); }
 void hknight_die1(entity this) { set_animofs(this, anim_hknight_death, 1, hknight_die2); ai_forward(this, 10); }
 
-void hknight_dieb9(entity this) { set_animofs(this, anim_hknight_deathb, 9, hknight_dieb9); CorpseThink(this); }
+void hknight_dieb9(entity this)
+{
+	set_animofs(this, anim_hknight_deathb, 9, hknight_dieb9);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void hknight_dieb8(entity this) { set_animofs(this, anim_hknight_deathb, 8, hknight_dieb9); }
 void hknight_dieb7(entity this) { set_animofs(this, anim_hknight_deathb, 7, hknight_dieb8); }
 void hknight_dieb6(entity this) { set_animofs(this, anim_hknight_deathb, 6, hknight_dieb7); }
@@ -364,7 +384,7 @@ void hknight_die(entity this, entity inflictor, entity attacker)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -381,7 +401,7 @@ void hknight_die(entity this, entity inflictor, entity attacker)
 	}
 
 // regular death
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
@@ -526,7 +546,7 @@ void hk_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_NORM);
 		else
 			_sound(this, CH_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
@@ -541,7 +561,7 @@ void hknight_pain(entity this, entity attacker, float damage)
 	if(this.pain_finished > time)
 		return;
 
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
@@ -632,7 +652,7 @@ spawnfunc(monster_hell_knight)
 	precache_model2("progs/h_hellkn.mdl");
 
 	
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -665,7 +685,7 @@ spawnfunc(monster_hell_knight)
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 250;
 
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 	{
 		if(this.frame == 0)
 			this.frame = 73;
@@ -699,6 +719,6 @@ spawnfunc(monster_hell_knight)
 
 	monster_start(this, 0);
 
-	if(MP_ROGUE && (this.spawnflags & 2))
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2))
 		this.use = hknight_pause; // do this AFTER monster_start, so .use isn't overridden!
 }

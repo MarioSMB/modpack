@@ -718,18 +718,6 @@ void Sbar_FinaleOverlay()
 	drawpic(vec2((vid_conwidth - pz.x) / 2, 16), "gfx/quake/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-int HIP_GetWeaponBit(int numb)
-{
-	switch(numb)
-	{
-		default:
-		case 0: return 15; // proximity gun
-		case 1: return 13; // mjolnir
-		case 2: return 4; // 4??
-		case 3: return 14; // laser cannon
-	}
-}
-
 bool CanDrawWeapon(int wep)
 {
 	// these weapons share the same position as another weapon, so we don't want to draw them in their own slot!
@@ -792,11 +780,17 @@ int GetDrawWeapon(int wep, int awep)
 			return WEP_MULTI_GRENADE;
 		else if(awep == WEP_PROXIMITY_GUN)
 			return WEP_PROXIMITY_GUN;
+		else if(awep == WEP_NAPALM)
+			return WEP_NAPALM;
 	}
 	if(wep == WEP_ROCKET_LAUNCHER && awep == WEP_MULTI_ROCKET)
 		return WEP_MULTI_ROCKET;
+	if(wep == WEP_ROCKET_LAUNCHER && awep == WEP_SPEAR)
+		return WEP_SPEAR;
 	if(wep == WEP_LIGHTNING && awep == WEP_PLASMA_GUN)
 		return WEP_PLASMA_GUN;
+	if(wep == WEP_LIGHTNING && awep == WEP_LIGHTME)
+		return WEP_LIGHTME;
 
 	return wep;
 }
@@ -807,7 +801,7 @@ Sbar_DrawInventory
 ===============
 */
 int oldweapons;
-float weapon_gettime[32];
+float weapon_gettime[24];
 void Sbar_DrawInventory()
 {
 	// set flash times
@@ -817,7 +811,7 @@ void Sbar_DrawInventory()
 
 	if(oldweapons != myweapons)
 	{
-		for(int j = 0; j < 32; j++)
+		for(int j = 0; j < 24; j++)
 		{
 			if((myweapons & BIT(j)) != (oldweapons & BIT(j)))
 				weapon_gettime[j] = time;

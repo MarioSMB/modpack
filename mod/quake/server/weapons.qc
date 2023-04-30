@@ -263,10 +263,10 @@ void HIP_LightningThink(entity this)
 		entity head = findradius(this.owner.origin, this.distance);
 		while(head)
 		{
-			if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_CLIENT(head)))
+			if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_PLAYER(head)))
 			{
 //            if(visible(head) &&(head!=this.owner.owner) &&(head.health>0))
-				if((visible(this, head)) &&(head!=this.owner.owner) &&(head.health>0))
+				if((head!=this.owner.owner) &&(head.health>0) && (visible(this, head)))
 				{
 					float cur_dist = this.distance;
 					float head_dist = vlen(head.origin - this.lastvictim.origin);
@@ -483,7 +483,7 @@ void W_FireAxe(entity this)
 	
 	vector org = trace_endpos - v_forward * 4;
 
-	if(trace_ent.takedamage)
+	if(trace_ent.takedamage && trace_ent.classname != "monster_boss") // yoder mod, Jan 05 2021
 	{
 		if(MP_IMPEL)
 		{
@@ -684,7 +684,7 @@ void TraceAttack(float damage, vector dir)
 
 	vector org = trace_endpos - dir*4;
 
-	if(trace_ent.takedamage)
+	if(trace_ent.takedamage && trace_ent.classname != "monster_boss") // yoder mod, Jan 05 2021)
 	{
 		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
 			SpawnBlood(org, vel*0.2, damage, trace_ent);
@@ -1430,6 +1430,7 @@ void SpawnDischarge(entity this, float dm)
 	setorigin(missile, this.origin);
 }
 
+.float modelindex_elec;
 void gibhim(entity this)
 {
 	float r;
@@ -1444,10 +1445,9 @@ void gibhim(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
 		else
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
-		if(IS_PLAYER(this))
-			this.modelindex = modelindex_bolt;
-		else
-			_setmodel(this, "progs/bolt2.mdl");
+		if(!IS_PLAYER(this))
+			this.modelindex_elec = this.modelindex;
+		this.modelindex = modelindex_bolt;
 		this.frame = 0;
 		this.elec = true;
 		this.exptime = this.exptime + 0.1;
@@ -1455,7 +1455,6 @@ void gibhim(entity this)
 	}
 	else if(this.elec)
 	{
-		vector oldmin = this.mins, oldmax = this.maxs;
 		//if(this.classname == "monster_hbot")
 		//	_setmodel(this, "progs/hbot.mdl");
 		//if(this.classname == "monster_babyblud")
@@ -1481,13 +1480,14 @@ void gibhim(entity this)
 			else
 				this.frame = 87;
 		}
-		else if(this.gibmodel && this.gibmodel != "")
-			_setmodel(this, this.gibmodel);
+		else if(this.modelindex_elec)
+		{
+			this.modelindex = this.modelindex_elec;
+			this.modelindex_elec = 0;
+		}
 		this.effects = EF_DIMLIGHT;
 		this.elec = false;
 		this.exptime = this.exptime + 0.1;
-		if(!IS_PLAYER(this) && this.gibmodel && this.gibmodel != "")
-			setsize(this, oldmin, oldmax);
 	}
 	if(this.exptime >= 1.6)
 	{
@@ -1571,7 +1571,7 @@ void ThrowMe(entity this, entity targ, float dm)
 {
 	if(targ.move_movetype == MOVETYPE_PUSH)
 		return;
-	if(targ.classname == "func_door" || targ.classname == "func_door_secret")
+	if(targ.classname == "door")
 		return;
 	if(targ.move_movetype == MOVETYPE_NONE)
 		return;
@@ -1619,7 +1619,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
+			if(toucher.classname == "door")
 			{
 				T_Damage(toucher, this, this.owner, damg);
 				return;
@@ -1647,7 +1647,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
+			if(toucher.classname == "door")
 			{
 				T_Damage(toucher, this, this.owner, damg);
 				return;
@@ -1951,7 +1951,7 @@ void MakeFlame(entity this, entity toucher)
 		BecomeExplosion(this);
 		return;
 	}
-	if(toucher.classname == "func_door" || toucher.classname == "func_door_secret")
+	if(toucher.classname == "door")
 	{
 		BecomeExplosion(this);
 		return;
@@ -2356,7 +2356,9 @@ void GrenadeTouch(entity this, entity toucher)
 		GrenadeExplode(this);
 		return;
 	}
-	_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
+	if(this.attack_finished < time)
+		_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
+	this.attack_finished = time + 0.1;
 	if(this.velocity == '0 0 0')
 		this.avelocity = '0 0 0';
 }
@@ -2650,7 +2652,7 @@ void spike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage)
+	if(toucher.takedamage && toucher.classname != "monster_boss") // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 9, toucher);
 		T_Damage(toucher, this, this.owner, 9);
@@ -2684,7 +2686,7 @@ void superspike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage)
+	if(toucher.takedamage && toucher.classname != "monster_boss") // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 18, toucher);
 		T_Damage(toucher, this, this.owner, 18);
@@ -3581,6 +3583,7 @@ void W_Attack(entity this, bool offhand)
 	}
 
 	RuneApplyBlackNoise(this); // make rune noise
+	float r = random();
 
 	switch(this.weapon)
 	{
@@ -3590,19 +3593,47 @@ void W_Attack(entity this, bool offhand)
 				_sound(this, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 			else
 				_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
-			float r = random();
-			if(r < 0.25)
-				player_axe1(this);
-			else if(r<0.5)
-				player_axeb1(this);
-			else if(r<0.75)
-				player_axec1(this);
+			if(MP_MG && autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
+			{
+				if(this.axe_hit_chain >= 2 && time < this.axe_hit_chain_time)
+				{
+					// vertical CHOP
+					if(r < 0.5)
+						player_axe1(this);
+					else
+						player_axec1(this);
+					this.attack_finished = time + RuneApplyHell(0.8, this); // long recover
+				}
+				else
+				{
+					// diagonal SWEEP
+					if(r < 0.5)
+						player_axeb1(this);
+					else
+						player_axed1(this);
+					
+					if(this.axe_hit_chain > 1)
+						this.attack_finished = time + RuneApplyHell(0.6, this);
+					else
+						this.attack_finished = time + RuneApplyHell(0.4, this);
+						
+				}
+			}
 			else
-				player_axed1(this);
-			float fire_delay = 0.5;
-			if(MP_IMPEL && random() < 0.5)
-				fire_delay = 0.4;
-			this.attack_finished = time + RuneApplyHell(fire_delay, this);
+			{
+				if(r < 0.25)
+					player_axe1(this);
+				else if(r<0.5)
+					player_axeb1(this);
+				else if(r<0.75)
+					player_axec1(this);
+				else
+					player_axed1(this);
+				float fire_delay = 0.5;
+				if(MP_IMPEL && random() < 0.5)
+					fire_delay = 0.4;
+				this.attack_finished = time + RuneApplyHell(fire_delay, this);
+			}
 			break;
 		}
 		case WEP_GRAPPLE:

@@ -12,6 +12,18 @@
 //		<code>
 // }
 
+const int MONSTER_SPAWNED = 4;
+const int MONSTER_SPAWNED_ANGRY = 8;
+const int MONSTER_SPAWNED_TFOG = 16;
+const int MONSTER_WAITWALK = 4096;
+
+const int MONSTER_TYPE_WALK = 1;
+const int MONSTER_TYPE_FLY = 2;
+const int MONSTER_TYPE_SWIM = 3;
+
+const int MONSTER_SIZE_SMALL = 1;
+const int MONSTER_SIZE_LARGE = 2;
+
 /*
 ================
 monster_use
@@ -36,9 +48,17 @@ float orig_random(entity this)
 	return len - floor(len);
 }
 
+void monster_begin_walking(entity this, entity actor, entity trigger)
+{
+	this.use = monster_use;
+	this.pausetime = 0;
+	setthink(this, this.th_walk);
+	this.nextthink = time;
+}
 
 //============================================================================
 
+.float oldsolid;
 void monster_start_go(entity this)
 {
 	bool is_walker = !((this.flags & FL_SWIM) || (this.flags & FL_FLY)); // special check needed here as there isn't a walk flag
@@ -58,50 +78,158 @@ void monster_start_go(entity this)
 
 	if(!(this.flags & FL_SWIM))
 	{
-		if(!t_walkmove(this, 0, 0))
+		if(!this.damagedbycontents)
+			IL_PUSH(g_damagedbycontents, this);
+		this.damagedbycontents	= true;
+	}
+
+	if(!(this.flags & FL_SWIM))
+	{
+		tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
+		if(trace_startsolid)
 			LOG_DEBUG("Monster in wall at ", vtos(this.origin), "\n");
 	}
 
 	if(MP_IMPEL && this.health <= 0)
 		return;
 
+	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))
+	{
+		spawn_tdeath(this.origin, this);
+		if(this.spawnflags & MONSTER_SPAWNED_TFOG)
+			spawn_tfog(this.origin);
+	}
+
 	if(this.target && this.target != "")
 	{
+		if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND))
+		{
+			RandomSelection_Init();
+			for(entity targ = findchain(targetname, this.target); targ; targ = targ.chain)
+			{
+				if(!targ.takedamage)
+					continue;
+				RandomSelection_AddEnt(targ, 1, 1);
+			}
+
+			entity f = RandomSelection_chosen_ent;
+			if(f)
+			{
+				this.enemy = f;
+				FoundTarget(this);
+				return;
+			}
+		}
 		this.goalentity = this.movetarget = find(NULL, targetname, this.target);
 		if(!this.movetarget || this.movetarget.classname != "path_corner")
 		{
 			//LOG_DEBUG("Monster can't find target at ", vtos(this.origin), "\n");
 			this.pausetime = -1;
-			this.th_stand(this);
+			setthink(this, this.th_stand);
+			this.nextthink = time;
 		}
 		else
 		{
-			this.ideal_yaw = vectoyaw(this.goalentity.origin - this.origin);
-			this.th_walk(this);
+			if(MP_MG && (this.spawnflags & MONSTER_WAITWALK))
+			{
+				this.pausetime = -1;
+				setthink(this, this.th_stand);
+				this.nextthink = time;
+				this.use = monster_begin_walking;
+			}
+			else
+			{
+				this.ideal_yaw = vectoyaw(this.goalentity.origin - this.origin);
+				setthink(this, this.th_walk);
+				this.nextthink = time;
+			}
 		}
 	}
 	else
 	{
 		this.pausetime = -1;
-		this.th_stand(this);
+		setthink(this, this.th_stand);
+		this.nextthink = time;
 	}
+
+	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))
+	{
+		// Yoder, Sept29, horde fix so that preplaced monsters are counted on spawn_tdeath
+		if(horde_ent)
+			monsters_total += 1;
+		// end Yoder chunk, back to normal
+		
+		if(this.spawnflags & MONSTER_SPAWNED_ANGRY)
+			monster_use(this, NULL, NULL); //Make monster angry!
+	}
+}
+
+void StartMonster(entity this, entity actor, entity trigger)
+{
+	this.solid = this.oldsolid;
+	this.oldsolid = 0;
+	this.effects &= ~EF_NODRAW;
+	monster_start_go(this);
 }
 
 void monster_start(entity this, int stype)
 {
 	if(deathmatch) { delete(this); return; }
-
+	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	{
+		delete(this);
+		return;
+	}
 	// spread think times so they don't all happen at same time
-	this.nextthink = this.nextthink + random() * 0.5;
-	setthink(this, monster_start_go);
 	this.flags |= FL_MONSTER;
 	this.flags |= stype; // TODO?
 	this.max_health = this.health;
 
-	if(!this.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, this);
-	this.damagedbycontents	= true;
-
-	if(!(stype & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
+	// Yoder, Sept29, fix for preplaced monsters in horde_ent
+	// in horde, mosnters shouldn't increase total count until spawned
+	if(MP_MG && autocvar_horde)
+	{
+		if(!(this.spawnflags & MONSTER_SPAWNED))
+			monsters_total += 1;
+	}
+	else if(!(stype & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
 		monsters_total += 1;
+
+	if(this.spawnflags & MONSTER_SPAWNED)
+	{
+		this.use = StartMonster;
+		this.oldsolid = this.solid;
+		this.effects |= EF_NODRAW;
+		this.solid = SOLID_NOT;
+		return;
+	}
+
+	this.nextthink = this.nextthink + random() * 0.5;
+	setthink(this, monster_start_go);
+}
+
+// Yoder Sept24 2021, Horde Merge
+// Monster fade, used to fade out the model a few seconds after deathmatch
+void MonsterFade2(entity this)
+{
+	if(this.alpha > 0)
+	{
+		this.alpha = this.alpha - 1 * frametime;
+		//this.think = MonsterFade;
+		this.nextthink = time; // think next frame
+	}
+	else
+		delete(this);
+}
+void MonsterFade(entity this)
+{
+	if(!autocvar_horde)
+	{
+		setthink(this, func_null);
+		return;
+	}
+	if(!this.alpha)
+		this.alpha = 1;
+	setthink(this, MonsterFade2);
+	this.nextthink = time + 10 + random() * 5; // wait a bit before fading
 }

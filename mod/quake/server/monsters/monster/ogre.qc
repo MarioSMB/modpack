@@ -508,7 +508,17 @@ void ogre_pain(entity this, entity attacker, float damage)
 	}
 }
 
-void ogre_die14(entity this) { set_animofs(this, anim_ogre_death, 14, ogre_die14); CorpseThink(this); }
+void ogre_die14(entity this)
+{
+	set_animofs(this, anim_ogre_death, 14, ogre_die14);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void ogre_die13(entity this) { set_animofs(this, anim_ogre_death, 13, ogre_die14); }
 void ogre_die12(entity this) { set_animofs(this, anim_ogre_death, 12, ogre_die13); }
 void ogre_die11(entity this) { set_animofs(this, anim_ogre_death, 11, ogre_die12); }
@@ -532,7 +542,17 @@ void ogre_die3(entity this)
 void ogre_die2(entity this) { set_animofs(this, anim_ogre_death, 2, ogre_die3); }
 void ogre_die1(entity this) { set_animofs(this, anim_ogre_death, 1, ogre_die2); }
 
-void ogre_bdie10(entity this) { set_animofs(this, anim_ogre_bdeath, 10, ogre_bdie10); CorpseThink(this); }
+void ogre_bdie10(entity this)
+{
+	set_animofs(this, anim_ogre_bdeath, 10, ogre_bdie10);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void ogre_bdie9(entity this) { set_animofs(this, anim_ogre_bdeath, 9, ogre_bdie10); }
 void ogre_bdie8(entity this) { set_animofs(this, anim_ogre_bdeath, 8, ogre_bdie9); }
 void ogre_bdie7(entity this) { set_animofs(this, anim_ogre_bdeath, 7, ogre_bdie8); ai_forward(this, 25); }

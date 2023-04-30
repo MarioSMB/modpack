@@ -1,6 +1,15 @@
 #pragma once
 
 #ifdef SVQC
+const int DOOR_START_OPEN = BIT(0);
+const int DOOR_DONT_LINK = BIT(2);
+const int DOOR_GOLD_KEY = BIT(3);
+const int DOOR_SILVER_KEY = BIT(4);
+const int DOOR_TOGGLE = BIT(5);
+const int DOOR_CRUSHER = BIT(6); // mg flag
+
+.float speed2; // Yoder add, July 10 2020, used by func_doors' "door_go_down"
+
 void door_go_down(entity this);
 void door_go_up(entity this);
 #endif

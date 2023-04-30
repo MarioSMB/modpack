@@ -346,7 +346,17 @@ void enf_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void enf_die14(entity this) { set_animofs(this, anim_enf_death, 14, enf_die14); CorpseThink(this); }
+void enf_die14(entity this)
+{
+	set_animofs(this, anim_enf_death, 14, enf_die14);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void enf_die13(entity this) { set_animofs(this, anim_enf_death, 13, enf_die14); }
 void enf_die12(entity this) { set_animofs(this, anim_enf_death, 12, enf_die13); ai_forward(this, 5); }
 void enf_die11(entity this) { set_animofs(this, anim_enf_death, 11, enf_die12); ai_forward(this, 5); }
@@ -367,7 +377,15 @@ void enf_die3(entity this)
 void enf_die2(entity this) { set_animofs(this, anim_enf_death, 2, enf_die3); }
 void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); }
 
-void enf_fdie11(entity this) { set_animofs(this, anim_enf_fdeath, 11, enf_fdie11); }
+void enf_fdie11(entity this)
+{
+	set_animofs(this, anim_enf_fdeath, 11, enf_fdie11);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+}
 void enf_fdie10(entity this) { set_animofs(this, anim_enf_fdeath, 10, enf_fdie11); }
 void enf_fdie9(entity this) { set_animofs(this, anim_enf_fdeath, 9, enf_fdie10); }
 void enf_fdie8(entity this) { set_animofs(this, anim_enf_fdeath, 8, enf_fdie9); }

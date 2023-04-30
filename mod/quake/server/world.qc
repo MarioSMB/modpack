@@ -1,6 +1,8 @@
 #include "world.qh"
 
+#include "frametick.qh"
 #include "gamelog.qh"
+#include "horde.qh"
 
 entity lastspawn;
 
@@ -905,6 +907,8 @@ STATIC_INIT_EARLY(missionpacks)
 	cvar_set("sv_missionpack_rogue", ftos(fexists("progs/dragon.mdl")));
 
 	cvar_set("sv_missionpack_hipnotic", ftos(fexists("progs/armabody.mdl")));
+
+	cvar_set("sv_missionpack_mg", ftos(fexists("progs/mg1_rune1.mdl")));
 }
 
 spawnfunc(worldspawn)
@@ -1106,7 +1110,9 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
-		if(MP_IMPEL)
+		if(MP_MG)
+			mapname = "mgstart";
+		else if(MP_IMPEL)
 			mapname = "aopstart";
 		else if(MP_ROGUE)
 			mapname = "rstart";
@@ -1189,9 +1195,11 @@ void CheckRules_World()
 	{
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
 		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch 
-			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp" && world.model != "maps/aopstart.bsp")
+			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp" && world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp")
 		{
-			if(MP_IMPEL)
+			if(MP_MG)
+				localcmd("\nmap mgstart\n");
+			else if(MP_IMPEL)
 				localcmd("\nmap aopstart\n");
 			else if(MP_HIPNOTIC)
 				localcmd("\nmap hipstart\n");
@@ -1352,6 +1360,9 @@ void StartFrame()
 	if(MP_HIPNOTIC)
 		earthquake_frame();
 
+	if(MP_MG)
+		RunFrameTickEntities(serverframetime);
+
 	CreatureFrame_All();
 	if(deathmatch || coop)
 		CheckRules_World();
@@ -1437,7 +1448,8 @@ void DropToFloor_Handler(entity this)
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 	{
-		_Movetype_UnstickEntity(this);
+		if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+			set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
 		move_out_of_solid(this);
 	}
 
@@ -1464,7 +1476,8 @@ void DropToFloor_Handler(entity this)
 			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 			{
-				_Movetype_UnstickEntity(this);
+				if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+					set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
 				move_out_of_solid(this);
 			}
 			SET_ONGROUND(this);
@@ -1494,6 +1507,8 @@ void DropToFloor_Handler(entity this)
 
 void droptofloor(entity this)
 {
+	if(MP_MG && (this.spawnflags & DROPTOFLOOR_DISABLE))
+		return;
 	DropToFloor_Handler(this);
 }
 

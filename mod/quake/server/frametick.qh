@@ -1,0 +1,9 @@
+#pragma once
+
+.void(entity this, float dt) tick;
+
+void RegisterFrameTickEntity(entity this);
+
+void RemoveFrameTickEntity(entity this);
+
+void RunFrameTickEntities(float dt);

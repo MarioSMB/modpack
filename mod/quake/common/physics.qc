@@ -86,7 +86,7 @@ void PlayerJump(entity this)
 		else
 			this.velocity_z = 50;
 
-// play swiming sound
+	// play swimming sound
 #ifdef SVQC
 		if(this.swim_flag < time)
 		{

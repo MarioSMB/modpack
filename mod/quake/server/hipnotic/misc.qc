@@ -16,7 +16,7 @@ void play_sound_use(entity this, entity actor, entity trigger)
 		else
 		{
 			this.state = 0;
-			_sound(this, this.impulse, "misc/null.wav", this.volume, this.speed);
+			sound(this, this.impulse, SND_Null, this.volume, this.speed);
 		}
 	}
 	else

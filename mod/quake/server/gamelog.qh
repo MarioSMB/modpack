@@ -18,6 +18,6 @@ void GameLogEcho(string s);
 
 #if 0
 void GameLogInit();
+#endif
 
 void GameLogClose();
-#endif

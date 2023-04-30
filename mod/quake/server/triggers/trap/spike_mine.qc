@@ -38,7 +38,7 @@ void spikemine_Home(entity this)
 		}
 	if(this.enemy == NULL)
 	{
-		_sound(this, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+		sound(this, CH_TRIGGER_SINGLE, SND_Null, 1, ATTN_NORM);
 		this.velocity = '0 0 0';
 		return;
 	}
@@ -74,7 +74,7 @@ void spikemine_Touch(entity this, entity toucher)
 
 	te_explosion(this.origin);
 
-	_sound(this, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+	sound(this, CH_TRIGGER_SINGLE, SND_Null, 1, ATTN_NORM);
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
@@ -110,7 +110,6 @@ spawnfunc(trap_spike_mine)
 
 	precache_model ("progs/spikmine.mdl");
 	precache_sound("hipitems/spikmine.wav");
-	precache_sound("misc/null.wav");
 	_setmodel(this, "progs/spikmine.mdl");
 //   _setmodel(this, "progs/spike.mdl");
 	setsize(this, this.mins, this.maxs);

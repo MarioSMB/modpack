@@ -380,9 +380,9 @@ void PlasmaGroundOut(entity this)
 	{
 		if((current.flags & FL_MONSTER) || IS_PLAYER(current))
 		{
-			if( current != this.owner )
+			if(current != this.owner && current.takedamage) // only take alive targets?
 			{
-				traceline( this.origin, current.origin, true, world );
+				traceline(this.origin, current.origin, true, NULL);
 				if(trace_fraction == 1)
 				{
 					monstersHit = monstersHit + 1;

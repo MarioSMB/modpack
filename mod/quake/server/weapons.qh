@@ -5,6 +5,10 @@
 
 .bool axhitme;
 
+.float axe_hit_chain; // number of consecutive axe hits
+.float axe_hit_chain_time; // time of last axe hit + combo time
+//const float AXE_COMBO_TIME = 0.7; // max time before combo resets
+
 .int prevweapon;
 
 .float ammo_lava_nails;

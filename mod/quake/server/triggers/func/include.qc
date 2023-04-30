@@ -1,5 +1,6 @@
 #include "include.qh"
 
+#include "bob.qc"
 #include "bobbingwater.qc"
 #include "breakawaywall.qc"
 #include "button.qc"
@@ -8,6 +9,8 @@
 #include "door.qc"
 #include "door_secret.qc"
 #include "exploder.qc"
+#include "fade.qc"
+#include "hurt.qc"
 #include "particlefield.qc"
 #include "oncount.qc"
 #include "plat.qc"
@@ -16,4 +19,5 @@
 #include "rubble.qc"
 #include "spawn.qc"
 #include "togglewall.qc"
+#include "toss.qc"
 #include "train.qc"

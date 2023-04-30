@@ -71,6 +71,16 @@ bool visible(entity this, entity targ);
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 
+void SUB_SwitchTargets(.string field, string oldtarget, string newtarget);
+
+void SUB_SetWorldtype(entity this);
+
+// Yoder Sept 24 2021 Horde merge
+const int COUNTER_LOOPS = 2; // so counters can loop back to the start again
+const int MONSTER_ONLY = 8; // for trigger_hurt
+
 const int SPAWNFLAG_NOMESSAGE = BIT(0);
 const int SPAWNFLAG_NOTOUCH = BIT(0);
+
+const int SPAWNFLAG_TRIGGER_FIRST = BIT(1);
 #endif

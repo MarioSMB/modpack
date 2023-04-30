@@ -1,4 +1,8 @@
+#include "door.qh"
+
 #ifdef SVQC
+
+const int BUTTON_KEY_ALWAYS_REQUIRED = 32;
 
 // button and multiple button
 
@@ -37,6 +41,13 @@ void button_fire(entity this)
 	if(this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
+	if(MP_MG && this.items)
+	{
+		_sound(this, CH_TRIGGER_SINGLE, this.noise4, 1, ATTN_NORM);
+		if(!(this.spawnflags & BUTTON_KEY_ALWAYS_REQUIRED))
+			this.items = 0;
+	}
+
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	this.state = STATE_UP;
@@ -53,6 +64,47 @@ void button_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
+	if(MP_MG)
+	{
+		if(time < this.attack_finished)
+			return;
+		this.attack_finished = time + 2;
+
+		if((this.items & toucher.items) != this.items)
+		{
+			_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
+			if(this.items == IT_KEY1)
+			{
+				if(this.worldtype == WORLDTYPE_BASE)
+					centerprint(toucher, "You need the silver keycard");
+				else if(this.worldtype == WORLDTYPE_METAL)
+					centerprint(toucher, "You need the silver runekey");
+				else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
+					centerprint(toucher, "You need the silver key");
+			}
+			else if(this.items == IT_KEY2)
+			{
+				if(this.worldtype == WORLDTYPE_BASE)
+					centerprint(toucher, "You need the gold keycard");
+				else if(this.worldtype == WORLDTYPE_METAL)
+					centerprint(toucher, "You need the gold runekey");			
+				else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
+					centerprint(toucher, "You need the gold key");
+			}
+			return;
+		}
+		else
+		{
+			// Yoder Sept24, 2021 Horde merge
+			if(horde_ent)
+			{
+				horde_key_spend(this.items);
+				settouch(this, func_null);
+			}
+			else // standard behaviour
+				toucher.items &= ~this.items;
+		}
+	}
 	this.enemy = toucher;
 	button_fire(this);
 }
@@ -83,8 +135,8 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 spawnfunc(func_button)
 {
+	vector oldmovedir = this.movedir;
 	SetMovedir(this);
-
 	if (!InitMovingBrushTrigger(this))
 		return;
 
@@ -120,8 +172,53 @@ spawnfunc(func_button)
 
 	this.state = STATE_BOTTOM;
 
-	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+	if(MP_MG)
+	{
+		SUB_SetWorldtype(this);
+		if(this.worldtype ==  WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
+		{
+			precache_sound("doors/medtry.wav");
+			precache_sound("doors/meduse.wav");
+			this.noise3 = "doors/medtry.wav";
+			this.noise4 = "doors/meduse.wav";
+		}
+		else if(this.worldtype == WORLDTYPE_METAL)
+		{
+			precache_sound("doors/runetry.wav");
+			precache_sound("doors/runeuse.wav");
+			this.noise3 = "doors/runetry.wav";
+			this.noise4 = "doors/runeuse.wav";
+		}
+		else if(this.worldtype == WORLDTYPE_BASE)
+		{
+			precache_sound("doors/basetry.wav");
+			precache_sound("doors/baseuse.wav");
+			this.noise3 = "doors/basetry.wav";
+			this.noise4 = "doors/baseuse.wav";
+		}
+
+		if(this.spawnflags & DOOR_SILVER_KEY)
+			this.items = IT_KEY1;
+		if(this.spawnflags & DOOR_GOLD_KEY)
+			this.items = IT_KEY2;
+
+		if(oldmovedir)
+		{
+			this.pos1 = this.origin;
+			this.pos2 = this.pos1 + oldmovedir;
+			this.angles = '0 0 0';
+		}
+		else
+		{
+			this.pos1 = this.origin;
+			this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+		}
+	}
+	else
+	{
+		this.pos1 = this.origin;
+		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+	}
 }
 
 #endif

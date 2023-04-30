@@ -230,7 +230,7 @@ void scourge_think(entity this)
 		this.state = 1;
 	}
 	if((this.spawnsilent == 0) && (this.spawnmulti == 1))
-		_sound(this, CH_PLAYER_SINGLE, "misc/null.wav", 1, ATTEN_IDLE);
+		sound(this, CH_PLAYER_SINGLE, SND_Null, 1, ATTEN_IDLE);
 	else if((this.spawnsilent == 1) && (this.spawnmulti == 0))
 		_sound(this, CH_PLAYER_SINGLE, "scourge/walk.wav", 1, ATTEN_IDLE);
 
@@ -541,7 +541,6 @@ spawnfunc(monster_scourge)
 	precache_model2("progs/s_light.mdl");
 	precache_model2("progs/spike.mdl");
 
-	precache_sound("misc/null.wav");
 	precache_sound("scourge/idle.wav");
 	precache_sound("scourge/pain.wav");
 	precache_sound("scourge/pain2.wav");

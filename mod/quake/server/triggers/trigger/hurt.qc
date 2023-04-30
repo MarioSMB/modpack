@@ -17,14 +17,28 @@ void hurt_on(entity this)
 	this.nextthink = -1;
 }
 
+void hurt_use(entity this, entity actor, entity trigger)
+{
+	this.state = 1 - this.state;
+}
+
 void hurt_touch(entity this, entity toucher)
 {
+	if(MP_MG && this.state)
+		return;
 	if(toucher.takedamage)
 	{
+		// Yoder Sept24 2021 Horde merge
+		// allows for monster-only hurt volumes
+		if(MP_MG && (this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
+			return;
 		this.solid = SOLID_NOT;
 		T_Damage(toucher, this, this, this.dmg);
 		setthink(this, hurt_on);
-		this.nextthink = time + 1;
+		if(MP_MG)
+			this.nextthink = time + this.wait;
+		else
+			this.nextthink = time + 1;
 
 		//MED 12/01/96 added count stuff
 		if(MP_HIPNOTIC && this.cnt > 0)
@@ -38,8 +52,6 @@ void hurt_touch(entity this, entity toucher)
 			}
 		}
 	}
-
-	return;
 }
 
 /*QUAKED trigger_hurt(.5 .5 .5) ?
@@ -54,6 +66,14 @@ spawnfunc(trigger_hurt)
 	settouch(this, hurt_touch);
 	if(!this.dmg)
 		this.dmg = 5;
+	if(MP_MG)
+	{
+		if(!this.wait)
+			this.wait = 1;
+		if(this.spawnflags & START_OFF)
+			this.state = 1;
+		this.use = hurt_use;
+	}
 
 	if(MP_HIPNOTIC && !this.cnt)
 		this.cnt = -1;

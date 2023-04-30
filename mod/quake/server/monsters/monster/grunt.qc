@@ -311,7 +311,17 @@ void army_fire(entity this)
 }
 
 
-void army_die10(entity this) { set_animofs(this, anim_army_death, 10, army_die10); CorpseThink(this); }
+void army_die10(entity this)
+{
+	set_animofs(this, anim_army_death, 10, army_die10);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void army_die9(entity this) { set_animofs(this, anim_army_death, 9, army_die10); }
 void army_die8(entity this) { set_animofs(this, anim_army_death, 8, army_die9); }
 void army_die7(entity this) { set_animofs(this, anim_army_death, 7, army_die8); }
@@ -328,7 +338,17 @@ void army_die3(entity this)
 void army_die2(entity this) { set_animofs(this, anim_army_death, 2, army_die3); }
 void army_die1(entity this) { set_animofs(this, anim_army_death, 1, army_die2); }
 
-void army_cdie11(entity this) { set_animofs(this, anim_army_deathc, 11, army_cdie11); CorpseThink(this); }
+void army_cdie11(entity this)
+{
+	set_animofs(this, anim_army_deathc, 11, army_cdie11);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void army_cdie10(entity this) { set_animofs(this, anim_army_deathc, 10, army_cdie11); }
 void army_cdie9(entity this) { set_animofs(this, anim_army_deathc, 9, army_cdie10); }
 void army_cdie8(entity this) { set_animofs(this, anim_army_deathc, 8, army_cdie9); }

@@ -2,7 +2,8 @@
 
 const int PLAYER_ONLY = BIT(0);
 const int SILENT = BIT(1);
-const int CTF_ONLY = BIT(2);
+const int CTF_ONLY = BIT(2); // rogue
+const int IGNORE_TARGETNAME = BIT(2); // mg
 
 void spawn_tfog(vector org)
 {
@@ -10,6 +11,10 @@ void spawn_tfog(vector org)
 	te_teleport(org);
 }
 
+void spawn_tfog_silent(vector org)
+{
+	te_teleport(org);
+}
 
 void tdeath_touch(entity this, entity toucher)
 {
@@ -34,7 +39,7 @@ void tdeath_touch(entity this, entity toucher)
 }
 
 
-void spawn_tdeath(vector org, entity death_owner)
+entity spawn_tdeath(vector org, entity death_owner)
 {
 	entity death = spawn();
 	death.classname = "teledeath";
@@ -49,6 +54,15 @@ void spawn_tdeath(vector org, entity death_owner)
 	death.owner = death_owner;
 	
 	force_retouch = 2;		// make sure even still objects get hit
+	return death;
+}
+
+// Yoder sept24 2021 horde merge
+// a faster version of tdeath to minimize telefragging 
+void spawn_tdeath_fast(vector org, entity death_owner)
+{
+	entity death = spawn_tdeath(org, death_owner);
+	death.nextthink = time + 0.01;
 }
 
 #endif

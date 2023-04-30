@@ -1,12 +1,18 @@
 #pragma once
 
 float autocvar_sv_quake_katria = 0.3;
+int autocvar_sv_quake_suicide_limit = 3;
 
 bool autocvar_g_playerclip_collisions;
 
 bool autocvar_samelevel;
 
+string intermissiontext;
+
 bool autocvar_registered = true; // to prevent being locked out of gpl levels
+
+const int COOP_ONLY = 32768; // yoder add, Jan 16 2021; Only spawn in coop. Used by items and monsters
+const int COOP_SPAWN_ACTIVE = 73;
 
 .float model_randomizer;
 
@@ -54,7 +60,8 @@ void W_SetCurrentAmmo(entity this);
 void player_pain(entity this, entity attacker, float damage);
 void player_stand1(entity this);
 void spawn_tfog(vector org);
-void spawn_tdeath(vector org, entity death_owner);
+
+void centerprint_all(string s);
 
 void ClientObituary(entity targ, entity inflictor, entity attacker);
 
@@ -65,3 +72,4 @@ void(entity targ, entity attacker) dmatch_score;
 
 const bool OPT_MOTD = true; // TODO: opt-out in non-impel!
 const int FL_MOTDVIEWED = 8192; // impel
+const int FL_INSHELTER = 32768; // for marking entities as sheltered from trigger_push

@@ -9,7 +9,7 @@ void changelevel_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart")))
+	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart")))
 	{
 		T_Damage(toucher, this, this, 50000);
 		return;
@@ -32,14 +32,21 @@ void changelevel_touch(entity this, entity toucher)
 
 	if(coop || deathmatch)
 		bprintf("%s exited the level\n", toucher.netname);
-	
+
 	nextmap = this.map;
+	if(MP_MG)
+		intermissiontext = this.endtext;
+	if(MP_MG && world.model == "maps/mgend.bsp")
+	{
+		//Finished the whole pack, clear the runes.
+		serverflags = 0;
+	}
 
 	SUB_UseTargets(this, toucher, NULL);
 
 	// coded fix for aop's lack of a spawnflag
-	if(((this.spawnflags & 1) || mapname == "aopstart") &&(deathmatch == 0) )
-	{	// NO_INTERMISSION
+	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!MP_MG || (!this.endtext || this.endtext == "")))
+	{
 		GotoNextMap();
 		return;
 	}

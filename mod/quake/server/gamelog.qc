@@ -70,6 +70,7 @@ void GameLogInit()
 	GameLogEcho(":gameinfo:end");
 }
 
+#endif
 void GameLogClose()
 {
 	if (logfile_open && logfile >= 0)
@@ -78,4 +79,3 @@ void GameLogClose()
 		logfile = -1;
 	}
 }
-#endif

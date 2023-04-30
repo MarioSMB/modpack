@@ -1,5 +1,10 @@
 #include "ai.qh"
 
+bool CanTakedamage(entity e, entity actor)
+{
+	return (e.takedamage > 0);
+}
+
 void spider_wake1(entity this); // TODO?
 /*
 
@@ -432,7 +437,10 @@ Monsters will continue walking towards the next target corner.
 spawnfunc(path_corner)
 {
 	if(!this.targetname || this.targetname == "")
-		objerror(this, "monster_movetarget: no targetname");
+		objerror(this, "path_corner with no targetname");
+
+	if(MP_MG && this.wait < 0)
+		this.wait = 999999;
 		
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_movetarget);
@@ -455,6 +463,20 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.enemy)
 		return; // fighting, not following a path
 
+	if(MP_MG)
+	{
+		this.owner = toucher; // we have a valid visitor!
+		if(toucher.dmg_inflictor && toucher.dmg_inflictor.classname == "path_corner")
+		{
+			// clear the previous path_corner from owning our new visitor
+			if(toucher.dmg_inflictor.owner == toucher.dmg_inflictor)
+				toucher.dmg_inflictor.owner = NULL;
+		}
+		toucher.dmg_inflictor = this;
+		if(toucher.pausetime > time)
+			return; // waiting to walk...
+	}
+
 	if(toucher.classname == "monster_ogre")
 		_sound(toucher, CH_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
@@ -466,6 +488,11 @@ void t_movetarget(entity this, entity toucher)
 			toucher.pausetime = -1;
 			toucher.th_stand(toucher);
 			return;
+		}
+		else if(MP_MG && this.wait)
+		{
+			toucher.pausetime = time + this.wait;
+			toucher.th_stand(toucher);
 		}
 		else if(MP_HIPNOTIC && this.delay)
 		{
@@ -479,10 +506,121 @@ void t_movetarget(entity this, entity toucher)
 	{
 		toucher.pausetime = -1;
 		toucher.th_stand(toucher);
-		return;
 	}
 }
 
+//============================================================================
+// Functions for changing how path_corners work.
+//============================================================================
+
+void target_cancelpause_use(entity this, entity actor, entity trigger)
+{
+	FOREACH_ENTITY_STRING(targetname, this.target,
+	{
+		if(IS_MONSTER(it))
+		{
+			it.pausetime = 0;
+			it.use = monster_use;
+		}
+	});
+}
+
+/*QUAKED target_cancelpause (0.5 0.3 0) (-8 -8 -8) (8 8 8)
+When activated, will zero out the pausetime for monsters, causing them to continue walking their paths.
+*/
+spawnfunc(target_cancelpause)
+{
+	if(!MP_MG) { delete(this); return; }
+	if(!this.target || this.target == "")
+		objerror(this, "target_cancelpause with no target given.\n");
+	if(!this.targetname || this.targetname == "")
+		objerror(this, "target_cancelpause with no targetname given.\n");
+	this.use = target_cancelpause_use;
+}
+
+void target_switchpath_use(entity this, entity actor, entity trigger)
+{
+	FOREACH_ENTITY_STRING(targetname, this.target,
+	{
+		if(it.classname == "path_corner")
+		{
+			string oldTarget = it.target;
+			// Just switch the target
+			it.target = this.netname;
+			
+			// Has this corner been visited by a monster lately?
+			if(it.owner)
+			{
+				entity o = it.owner;
+				entity oldtarg = find(NULL, targetname, oldTarget);
+				if(o.movetarget == oldtarg)
+				{
+					// Switch that monster over to walk to the new target instead
+					o.goalentity = o.movetarget = find(NULL, targetname, it.target);
+					o.ideal_yaw = vectoyaw(o.goalentity.origin - o.origin);
+				}
+			}
+		}
+	});
+}
+
+/*QUAKED target_switchpath (0.5 0.3 0) (-8 -8 -8) (8 8 8)
+When activated, will switch out the target .
+*/
+spawnfunc(target_switchpath)
+{
+	if(!MP_MG) { delete(this); return; }
+	if(!this.target || this.target == "")
+		objerror(this, "target_switchtarget with no target given.\n");
+	if(!this.targetname || this.targetname == "")
+		objerror(this, "target_switchtarget with no targetname given.\n");
+	if(!this.netname || this.netname == "")
+		objerror(this, "target_switchtarget with no netname given.\n");
+	this.use = target_switchpath_use;
+}
+
+//============================================================================
+// CheckContentsDamage
+// Returns true if the monster died and shouldn't proceed with its current think
+//============================================================================
+
+.float dmgtime;
+bool CheckContentsDamage(entity this)
+{
+	if(!this.damagedbycontents) return false; // not affected by liquids
+	if(this.waterlevel == 0) return false; //Not in any liquid
+	if(this.health <= 0) return false; //Dead or dying
+	if(time < this.dmgtime) return false; //Still processing damage from last time
+	if(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE) return false; //We're immune
+
+	if(this.watertype == CONTENT_SLIME)
+	{
+		this.dmgtime = time + 1;
+		T_Damage(this, NULL, NULL, 4 * this.waterlevel);
+		// this.pain_finished = 0; //Enable for spasming monsters
+	}
+	else if(this.watertype == CONTENT_LAVA)
+	{
+		this.dmgtime = time + 0.2;
+		if(this.classname == "monster_zombie")
+		{
+			T_Damage(this, NULL, NULL, 120); // GIB!
+			return true;
+		}
+		T_Damage(this, NULL, NULL, 30 * this.waterlevel);
+		// this.pain_finished = 0; //Enable for spasming monsters
+	}
+
+	return (this.health <= 0);
+}
+
+//============================================================================
+
+const vector RANGES_NORMAL = '120 500 1000';
+const vector RANGES_NEARSIGHTED = '120 300 340';
+
+const float VISIONCONE_NORMAL = 0.3;
+const float VISIONCONE_NEARSIGHTED = 0.866; // ~30 degrees
 
 /*
 =============
@@ -604,12 +742,16 @@ int range(entity this, entity targ)
 {
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
+
+	vector ranges = RANGES_NORMAL;
+	if(MP_MG)
+		ranges = (MP_MG && (this.spawnflags & SPAWNFLAG_NEARSIGHTED)) ? ((this.enemy) ? RANGES_NORMAL * 0.8 : RANGES_NEARSIGHTED) : RANGES_NORMAL;
 	
-	if(vdist(spot1 - spot2, <, 120))
+	if(vdist(spot1 - spot2, <, ranges.x))
 		return RANGE_MELEE;
-	if(vdist(spot1 - spot2, <, 500))
+	if(vdist(spot1 - spot2, <, ranges.y))
 		return RANGE_NEAR;
-	if(vdist(spot1 - spot2, <, 1000))
+	if(vdist(spot1 - spot2, <, ranges.z))
 		return RANGE_MID;
 	return RANGE_FAR;
 }
@@ -651,8 +793,9 @@ bool infront(entity this, entity targ)
 	fixedmakevectors(this.angles);
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
+	float dottarget = ((MP_MG && (this.spawnflags & SPAWNFLAG_NEARSIGHTED)) ? VISIONCONE_NEARSIGHTED : VISIONCONE_NORMAL);
 	
-	return (dot > 0.3);
+	return (dot > dottarget);
 }
 
 
@@ -865,6 +1008,26 @@ bool FindTarget(entity this)
 {
 	entity client = NULL;
 
+	// First, if we are attacking friends, try to find another friend
+	if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND))
+	{
+		RandomSelection_Init();
+		FOREACH_ENTITY_STRING(targetname, this.target,
+		{
+			if(!it.takedamage)
+				continue;
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+
+		entity f = RandomSelection_chosen_ent;
+		if(f)
+		{
+			this.enemy = f;
+			FoundTarget(this);
+			return true;
+		}
+	}
+
 // if the first spawnflag bit is set, the monster will only wake up on
 // really seeing the player, not another monster getting angry
 
@@ -905,7 +1068,7 @@ bool FindTarget(entity this)
 		}
 	}
 
-	if(MP_IMPEL && (this.spawnflags & 4))
+	if(!MP_MG && MP_IMPEL && (this.spawnflags & 4))
 		return false;
 
 	if(sight_entity_time >= time - 0.1 && !(this.spawnflags & 3) && !this.charmed)
@@ -914,27 +1077,22 @@ bool FindTarget(entity this)
 		if(client.enemy == this.enemy)
 			return true;
 	}
-	else if (this.charmed)
+	else if(this.charmed)
 	{
 		entity selected = NULL;
 		float dist = CHARMED_RADIUS;
-		entity head = findradius(this.origin, CHARMED_RADIUS);
-		while(head)
+		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && it.health > 0,
 		{
-			if(!(head.flags & FL_NOTARGET) && IS_MONSTER(head))
+			if(visible(this, it) && visible_distance < dist)
 			{
-				if (visible(this, head) && (visible_distance < dist) && (head.health>0))
+				if(it != this && it != this.charmer && it.charmer != this.charmer)
 				{
-					if ((head != this) && (head != this.charmer) && (head.charmer != this.charmer))
-					{
-						selected = head;
-						dist = visible_distance;
-					}
+					selected = it;
+					dist = visible_distance;
 				}
 			}
-			head = head.chain;
-		}
-		if (selected == world)
+		});
+		if(!selected)
 			return false;
 
 		client = selected;
@@ -991,7 +1149,7 @@ bool FindTarget(entity this)
 	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
 	{
 		this.enemy = this.enemy.enemy;
-		if(!IS_PLAYER(this.enemy) || (MP_IMPEL && this.enemy.health < 1))
+		if(!IS_PLAYER(this.enemy) || (MP_IMPEL && this.enemy.health < 1) || (this.enemy.flags & FL_NOTARGET))
 		{
 			this.enemy = NULL;
 			return false;
@@ -1058,6 +1216,9 @@ The monster is walking its beat
 .float move_dist;
 void ai_walk(entity this, float dist)
 {
+	if(MP_MG && CheckContentsDamage(this))
+		return;
+
 	this.move_dist = dist;
 
 	// check for noticing a player
@@ -1080,6 +1241,8 @@ The monster is staying in one place for a while, with slight angle turns
 */
 void ai_stand(entity this)
 {
+	if(MP_MG && CheckContentsDamage(this))
+		return;
 	if(FindTarget(this))
 		return;
 
@@ -1222,7 +1385,7 @@ void ai_run_missile(entity this)
 =============
 ai_run_slide
 
-Strafe sideways, but stay at aproximately the same range
+Strafe sideways, but stay at approximately the same range
 =============
 */
 void ai_run_slide(entity this)
@@ -1301,9 +1464,11 @@ The monster has an enemy it is trying to kill
 .bool run_straight;
 void ai_run(entity this, float dist)
 {
+	if(MP_MG && CheckContentsDamage(this))
+		return;
 	this.move_dist = dist;
 // see if the enemy is dead
-	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)))
+	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
 	{
 		this.enemy = NULL;
 		if(MP_HIPNOTIC && this.charmed)
@@ -1312,7 +1477,7 @@ void ai_run(entity this, float dist)
 			return;
 		}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0)
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET))
 		{
 			this.enemy = this.oldenemy;
 			HuntTarget(this);

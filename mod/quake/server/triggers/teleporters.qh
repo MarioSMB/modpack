@@ -1,0 +1,11 @@
+#pragma once
+
+#ifdef SVQC
+
+entity spawn_tdeath(vector org, entity death_owner);
+
+void spawn_tdeath_fast(vector org, entity death_owner);
+
+void spawn_tfog_silent(vector org);
+
+#endif

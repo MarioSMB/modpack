@@ -143,7 +143,7 @@ void kn_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
 		else
 			_sound(this, CH_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
@@ -268,7 +268,7 @@ void knight_pain(entity this, entity attacker, float damage)
 
 	float r = random();
 	
-	if(this.spawnflags & 2) // statue)
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
@@ -298,7 +298,17 @@ void knight_bow3(entity this) { set_animofs(this, anim_knight_kneel, 3, knight_b
 void knight_bow2(entity this) { set_animofs(this, anim_knight_kneel, 2, knight_bow3); ai_turn(this); }
 void knight_bow1(entity this) { set_animofs(this, anim_knight_kneel, 1, knight_bow2); ai_turn(this); }
 
-void knight_die10(entity this) { set_animofs(this, anim_knight_death, 10, knight_die10); CorpseThink(this); }
+void knight_die10(entity this)
+{
+	set_animofs(this, anim_knight_death, 10, knight_die10);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void knight_die9(entity this) { set_animofs(this, anim_knight_death, 9, knight_die10); }
 void knight_die8(entity this) { set_animofs(this, anim_knight_death, 8, knight_die9); }
 void knight_die7(entity this) { set_animofs(this, anim_knight_death, 7, knight_die8); }
@@ -309,7 +319,17 @@ void knight_die3(entity this) { set_animofs(this, anim_knight_death, 3, knight_d
 void knight_die2(entity this) { set_animofs(this, anim_knight_death, 2, knight_die3); }
 void knight_die1(entity this) { set_animofs(this, anim_knight_death, 1, knight_die2); }
 
-void knight_dieb11(entity this) { set_animofs(this, anim_knight_deathb, 11, knight_dieb11); CorpseThink(this); }
+void knight_dieb11(entity this)
+{
+	set_animofs(this, anim_knight_deathb, 11, knight_dieb11);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void knight_dieb10(entity this) { set_animofs(this, anim_knight_deathb, 10, knight_dieb11); }
 void knight_dieb9(entity this) { set_animofs(this, anim_knight_deathb, 9, knight_dieb10); }
 void knight_dieb8(entity this) { set_animofs(this, anim_knight_deathb, 8, knight_dieb9); }
@@ -328,7 +348,7 @@ void knight_die(entity this, entity inflictor, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -345,7 +365,7 @@ void knight_die(entity this, entity inflictor, entity attacker)
 	}
 
 // regular death
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
@@ -401,7 +421,7 @@ spawnfunc(monster_knight)
 	precache_model("progs/knight.mdl");
 	precache_model("progs/h_knight.mdl");
 
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -433,7 +453,7 @@ spawnfunc(monster_knight)
 	this.deathmessage = knight_deathmessage;
 	this.gibmodel = "progs/knight.mdl";
 
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
 	{
 		if(this.frame == 0)
 			this.frame = 44;
@@ -461,6 +481,6 @@ spawnfunc(monster_knight)
 	
 	monster_start(this, 0);
 
-	if(MP_ROGUE && (this.spawnflags & 2))
+	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2))
 		this.use = knight_pause; // do this AFTER monster_start, so .use isn't overridden!
 }

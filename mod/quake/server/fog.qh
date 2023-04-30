@@ -1,0 +1,10 @@
+#pragma once
+
+.float fog_density;
+.vector fog_color;
+.entity fog_active_fog_trigger;
+.string fog_info_entity;
+
+bool FogPushSettingsFrom(entity client, entity source, float transitionTime);
+
+void SetFog(entity client, float density, vector color, float transitionTime);

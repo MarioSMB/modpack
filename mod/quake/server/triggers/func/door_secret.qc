@@ -31,6 +31,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	{
 		this.th_pain = func_null;
 		this.takedamage = DAMAGE_NO;
+		this.th_die = func_null;
 	}
 	this.velocity = '0 0 0';
 
@@ -126,7 +127,8 @@ void fd_secret_done(entity this)
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
-		this.th_pain = fd_secret_pain;	
+		this.th_pain = fd_secret_pain;
+		this.th_die = fd_secret_die;
 	}
 	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 }
@@ -216,7 +218,7 @@ spawnfunc(func_door_secret)
 	// Magic formula...
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
-	this.classname = "func_door_secret";
+	this.classname = "door";
 	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 

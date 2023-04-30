@@ -1,10 +1,7 @@
 #ifdef SVQC
 
-const int DOOR_START_OPEN = BIT(0);
-const int DOOR_DONT_LINK = BIT(2);
-const int DOOR_GOLD_KEY = BIT(3);
-const int DOOR_SILVER_KEY = BIT(4);
-const int DOOR_TOGGLE = BIT(5);
+//Yoder Sept24 Horde Merge
+void horde_key_spend(int key_item);
 
 /*
 
@@ -32,6 +29,9 @@ void door_blocked(entity this, entity blocker)
 	T_Damage(blocker, this, this, this.dmg);
 
 	if(MP_IMPEL && (!this.model || this.model == ""))
+		return;
+
+	if(MP_MG && (this.spawnflags & DOOR_CRUSHER))
 		return;
 	
 // if a door has a negative wait, it would never come back if blocked,
@@ -72,7 +72,10 @@ void door_go_down(entity this)
 	}
 	
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
+	if(MP_MG && this.speed2)
+		SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed2, door_hit_bottom);
+	else
+		SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
 }
 
 void door_go_up(entity this)
@@ -104,6 +107,7 @@ ACTIVATION FUNCTIONS
 
 void door_fire(entity this)
 {
+	entity e = this;
 	if(this.owner != this)
 		objerror(this, "door_fire: this.owner != this");
 
@@ -114,25 +118,23 @@ void door_fire(entity this)
 
 	this.message = "";		// no more message
 
-	if (this.spawnflags & DOOR_TOGGLE)
+	if(this.spawnflags & DOOR_TOGGLE)
 	{
 		if (this.state == STATE_UP || this.state == STATE_TOP)
 		{
-			entity e = this;
 			do {
 				door_go_down(e);
 				e = e.enemy;
-			} while ((e != this) && (e != NULL));
+			} while(e != this && e != NULL);
 			return;
 		}
 	}
 	
 // trigger all paired doors
-	entity e = this;
 	do {
 		door_go_up(e);
 		e = e.enemy;
-	} while ((e != this) && (e != NULL));
+	} while(e != this && e != NULL);
 }
 
 
@@ -160,9 +162,9 @@ void door_trigger_touch(entity this, entity toucher)
 
 void door_killed(entity this, entity inflictor, entity attacker)
 {
-	this.owner.health = this.owner.max_health;
-	this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-	door_use(this.owner, attacker, NULL);
+	this.health = this.max_health;
+	this.takedamage = DAMAGE_NO;	// will be reset upon return
+	door_use(this, attacker, NULL);
 }
 
 
@@ -193,39 +195,39 @@ void door_touch(entity this, entity toucher)
 		return;
 
 // FIXME: blink key on player's status bar
-	if((this.items & toucher.items) != this.items )
+	if((this.items & toucher.items) != this.items)
 	{
 		if(this.owner.items == IT_KEY1)
 		{
-			if(world.worldtype == WORLDTYPE_BASE)
+			if(this.worldtype == WORLDTYPE_BASE)
 			{
 				centerprint(toucher, "You need the silver keycard");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == WORLDTYPE_METAL)
+			else if(this.worldtype == WORLDTYPE_METAL)
 			{
 				centerprint(toucher, "You need the silver runekey");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == WORLDTYPE_MEDIEVAL)
+			else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 			{
 				centerprint(toucher, "You need the silver key");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 		}
-		else
+		else if(this.owner.items == IT_KEY2)
 		{
-			if(world.worldtype == WORLDTYPE_BASE)
+			if(this.worldtype == WORLDTYPE_BASE)
 			{
 				centerprint(toucher, "You need the gold keycard");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
-			else if(world.worldtype == WORLDTYPE_METAL)
+			else if(this.worldtype == WORLDTYPE_METAL)
 			{
 				centerprint(toucher, "You need the gold runekey");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);			
 			}
-			else if(world.worldtype == WORLDTYPE_MEDIEVAL)
+			else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 			{
 				centerprint(toucher, "You need the gold key");
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
@@ -234,7 +236,11 @@ void door_touch(entity this, entity toucher)
 		return;
 	}
 
-	toucher.items &= ~this.items;
+	// Yoder sept24, 2021, horde merge
+	if(MP_MG && horde_ent)
+		horde_key_spend(this.items);
+	else // standard behaviour
+		toucher.items &= ~this.items;
 	settouch(this, func_null);
 	if(this.enemy)
 		settouch(this.enemy, func_null); // get paired door
@@ -264,6 +270,7 @@ entity spawn_field(entity this, vector fmins, vector fmaxs)
 	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = this;
+	trigger.worldtype = this.worldtype;
 	settouch(trigger, door_trigger_touch);
 
 	vector t1 = fmins;
@@ -496,7 +503,9 @@ Key doors are allways wait -1.
 
 spawnfunc(func_door)
 {
+	vector oldmovedir = this.movedir;
 	SetMovedir(this);
+	SUB_SetWorldtype(this);
 
 	this.max_health = this.health;
 	if (!InitMovingBrushTrigger(this))
@@ -511,12 +520,12 @@ spawnfunc(func_door)
 		case 4: this.noise1 = "doors/ddoor2.wav"; this.noise2 = "doors/ddoor1.wav"; break;
 	}
 
-	switch(world.worldtype)
+	switch(this.worldtype)
 	{
+		case WORLDTYPE_HUB:
 		case WORLDTYPE_MEDIEVAL: this.noise3 = "doors/medtry.wav"; this.noise4 = "doors/meduse.wav"; break;
 		case WORLDTYPE_METAL: this.noise3 = "doors/runetry.wav"; this.noise4 = "doors/runeuse.wav"; break;
 		case WORLDTYPE_BASE: this.noise3 = "doors/basetry.wav"; this.noise4 = "doors/baseuse.wav"; break;
-		default: LOG_DEBUG("func_door: unhandled worldtype!\n"); break;
 	}
 
 	if(this.noise1 != "") precache_sound(this.noise1);
@@ -525,6 +534,7 @@ spawnfunc(func_door)
 	if(this.noise4 != "") precache_sound(this.noise4);
 
 	this.effects |= EF_LOWPRECISION;
+	this.classname = "door";
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
@@ -544,8 +554,6 @@ spawnfunc(func_door)
 		this.dmg = 2;
 
 	this.pos1 = this.origin;
-	if(!MP_ROGUE)
-		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
 	if(MP_ROGUE)
 	{
@@ -556,6 +564,14 @@ spawnfunc(func_door)
 		if(tmpvec.y < 0)
 			tmpvec.y = 0 - tmpvec.y;
 		this.pos2 = this.pos1 + this.movedir * (fabs(tmpvec * this.size) - this.lip);
+	}
+	else
+		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+
+	if(MP_MG && oldmovedir)
+	{
+		this.pos2 = this.pos1 + oldmovedir;
+		this.angles = '0 0 0';
 	}
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position

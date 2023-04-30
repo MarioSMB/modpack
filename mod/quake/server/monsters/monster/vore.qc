@@ -124,7 +124,17 @@ void shal_pain3(entity this) { set_animofs(this, anim_shal_pain, 3, shal_pain4);
 void shal_pain2(entity this) { set_animofs(this, anim_shal_pain, 2, shal_pain3); }
 void shal_pain1(entity this) { set_animofs(this, anim_shal_pain, 1, shal_pain2); }
 
-void shal_death7(entity this) { set_animofs(this, anim_shal_death, 7, shal_death7); CorpseThink(this); }
+void shal_death7(entity this)
+{
+	set_animofs(this, anim_shal_death, 7, shal_death7);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void shal_death6(entity this) { set_animofs(this, anim_shal_death, 6, shal_death7); }
 void shal_death5(entity this) { set_animofs(this, anim_shal_death, 5, shal_death6); }
 void shal_death4(entity this) { set_animofs(this, anim_shal_death, 4, shal_death5); }

@@ -2,8 +2,11 @@
 
 void teleport_touch(entity this, entity toucher)
 {
-	if(this.targetname && this.targetname != "" && this.nextthink < time)
-		return;		// not fired yet
+	if(this.targetname && this.targetname != "" && (!MP_MG || !(this.spawnflags & IGNORE_TARGETNAME)))
+	{
+		if(this.attack_finished < time)
+			return; // not fired yet
+	}
 
 	if((this.spawnflags & PLAYER_ONLY) && !IS_PLAYER(toucher))
 		return;
@@ -12,7 +15,7 @@ void teleport_touch(entity this, entity toucher)
 	if(toucher.health <= 0 || toucher.solid != SOLID_SLIDEBOX)
 		return;
 
-	SUB_UseTargets(this, NULL, toucher);
+	SUB_UseTargets(this, NULL, NULL);
 
 // put a tfog where the player was
 	spawn_tfog(toucher.origin);
@@ -31,7 +34,7 @@ void teleport_touch(entity this, entity toucher)
 // move the player and lock him down for a little while
 	if(!toucher.health)
 	{
-		toucher.origin = targ.origin;
+		setorigin(toucher, targ.origin);
 		toucher.velocity = (v_forward * toucher.velocity_x) + (v_forward * toucher.velocity_y);
 		return;
 	}
@@ -43,6 +46,8 @@ void teleport_touch(entity this, entity toucher)
 		toucher.fixangle = 1;		// turn this way immediately
 		toucher.teleport_time = time + 0.7;
 		toucher.velocity = v_forward * 300;
+		if(MP_MG && !coop && !deathmatch)
+			FogPushSettingsFrom(toucher, targ, 0);
 	}
 
 	UNSET_ONGROUND(toucher);
@@ -66,9 +71,8 @@ spawnfunc(info_teleport_destination)
 
 void teleport_use(entity this, entity actor, entity trigger)
 {
-	this.nextthink = time + 0.2;
+	this.attack_finished = time + 0.2;
 	force_retouch = 2;		// make sure even still objects get hit
-	setthink(this, SUB_NullThink);
 }
 
 void trigger_start_go(entity this)

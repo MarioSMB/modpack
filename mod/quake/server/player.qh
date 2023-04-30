@@ -6,3 +6,5 @@ void make_bubbles(entity this);
 void bubble_remove(entity this, entity toucher);
 void bubble_bob(entity this);
 void DeathBubbles(entity this, int num_bubbles);
+
+void PlayerDie(entity this, entity inflictor, entity attacker);

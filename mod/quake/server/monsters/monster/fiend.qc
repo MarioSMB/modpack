@@ -129,7 +129,17 @@ void demon1_pain(entity this, entity attacker, float damage)
 	demon1_pain1(this);
 }
 
-void demon1_die9(entity this) { set_animofs(this, anim_demon_death, 9, demon1_die9); CorpseThink(this); }
+void demon1_die9(entity this) 
+{
+	set_animofs(this, anim_demon_death, 9, demon1_die9);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void demon1_die8(entity this) { set_animofs(this, anim_demon_death, 8, demon1_die9); }
 void demon1_die7(entity this) { set_animofs(this, anim_demon_death, 7, demon1_die8); }
 void demon1_die6(entity this) { set_animofs(this, anim_demon_death, 6, demon1_die7); }
@@ -259,12 +269,14 @@ void Demon_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
 		return;
 		
-	if(toucher.takedamage)
+	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
 	{
 		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 40 + 10*random();
-			T_Damage(toucher, this, this, ldmg);	
+			T_Damage(toucher, this, this, ldmg);
+			if(MP_MG)
+				this.attack_finished = time + 0.5;	
 		}
 	}
 

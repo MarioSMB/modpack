@@ -19,7 +19,7 @@ void multi_trigger(entity this)
 {
 	if(this.nextthink > time)
 	{
-		return;		// allready been triggered
+		return; // already been triggered
 	}
 
 	if(this.classname == "trigger_secret")
@@ -32,7 +32,7 @@ void multi_trigger(entity this)
 	if(this.noise && this.noise != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
-// don't trigger again until reset
+	// don't trigger again until reset
 	this.takedamage = DAMAGE_NO;
 
 	SUB_UseTargets(this, this.enemy, NULL);
@@ -44,7 +44,7 @@ void multi_trigger(entity this)
 	}
 	else
 	{	// we can't just delete(this) here, because this is a touch function
-		// called wheil C code is looping through area links...
+		// called while C code is looping through area links...
 		settouch(this, func_null);
 		this.nextthink = time + 0.1;
 		setthink(this, SUB_Remove);
@@ -105,8 +105,18 @@ sounds
 4)
 set "message" to text string
 */
+spawnfunc(trigger_multiple);
+void trigger_multiple_use(entity this, entity actor, entity trigger)
+{
+	spawnfunc_trigger_multiple(this);
+}
 spawnfunc(trigger_multiple)
 {
+	if(MP_MG && Inhibit_Coop(this))
+	{
+		delete(this);
+		return;
+	}
 	if(this.sounds == 1)
 	{
 		precache_sound("misc/secret.wav");
@@ -121,6 +131,17 @@ spawnfunc(trigger_multiple)
 	{
 		precache_sound("misc/trigger1.wav");
 		this.noise = "misc/trigger1.wav";
+	}
+
+	if(MP_MG)
+	{
+		this.sounds = 0;
+		if(this.spawnflags & SPAWNFLAG_TRIGGER_FIRST)
+		{
+			this.use = trigger_multiple_use;
+			this.spawnflags &= ~SPAWNFLAG_TRIGGER_FIRST;
+			return;
+		}
 	}
 	
 	if(!this.wait)
@@ -139,13 +160,8 @@ spawnfunc(trigger_multiple)
 		this.solid = SOLID_BBOX;
 		setorigin(this, this.origin);	// make sure it links into the world
 	}
-	else
-	{
-		if( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
-		{
+	else if(!(this.spawnflags & SPAWNFLAG_NOTOUCH))
 			settouch(this, multi_touch);
-		}
-	}
 
 	if(MP_HIPNOTIC && !this.cnt)
 		this.cnt = -1;

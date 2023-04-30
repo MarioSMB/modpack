@@ -150,12 +150,14 @@ void Dog_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
 		return;
 		
-	if(toucher.takedamage)
+	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
 	{
 		if(vdist(this.velocity, >, 300))
 		{
 			float ldmg = 10 + 10*random();
-			T_Damage(toucher, this, this, ldmg);	
+			T_Damage(toucher, this, this, ldmg);
+			if(MP_MG)
+				this.attack_finished = time + 0.5;
 		}
 	}
 
@@ -317,7 +319,17 @@ void dog_pain(entity this, entity attacker, float damage)
 	}
 }
 
-void dog_die9(entity this) { set_animofs(this, anim_dog_death, 9, dog_die9); CorpseThink(this); }
+void dog_die9(entity this)
+{
+	set_animofs(this, anim_dog_death, 9, dog_die9);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void dog_die8(entity this) { set_animofs(this, anim_dog_death, 8, dog_die9); }
 void dog_die7(entity this) { set_animofs(this, anim_dog_death, 7, dog_die8); }
 void dog_die6(entity this) { set_animofs(this, anim_dog_death, 6, dog_die7); }
@@ -327,7 +339,17 @@ void dog_die3(entity this) { set_animofs(this, anim_dog_death, 3, dog_die4); }
 void dog_die2(entity this) { set_animofs(this, anim_dog_death, 2, dog_die3); }
 void dog_die1(entity this) { set_animofs(this, anim_dog_death, 1, dog_die2); }
 
-void dog_dieb9(entity this) { set_animofs(this, anim_dog_deathb, 9, dog_dieb9); CorpseThink(this); }
+void dog_dieb9(entity this)
+{
+	set_animofs(this, anim_dog_deathb, 9, dog_dieb9);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void dog_dieb8(entity this) { set_animofs(this, anim_dog_deathb, 8, dog_dieb9); }
 void dog_dieb7(entity this) { set_animofs(this, anim_dog_deathb, 7, dog_dieb8); }
 void dog_dieb6(entity this) { set_animofs(this, anim_dog_deathb, 6, dog_dieb7); }
@@ -346,9 +368,9 @@ void dog_die(entity this, entity inflictor, entity attacker)
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		if(MP_IMPEL)
 		{
-			ThrowGib(this, "progs/grenbone.mdl", self.health);
-			ThrowGib(this, "progs/grenbone.mdl", self.health);
-			ThrowGib(this, "progs/grenbone.mdl", self.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
 		}
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);

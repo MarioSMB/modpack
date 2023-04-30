@@ -7,6 +7,10 @@ void barrel_explode(entity this)
 	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
+	// yoder add, 27/09/2020 to make barrels fire targets on explode
+	if(MP_MG)
+		SUB_UseTargets(this, this.enemy, NULL);
+
 	setmodel(this, MDL_Null);
 	setsize(this, '0 0 0', '0 0 0');
 	setorigin(this, this.origin + '0 0 32');
@@ -21,7 +25,10 @@ void barrel_detonate(entity this, entity inflictor, entity attacker)
 	this.classname = "explo_box";
 	this.takedamage = DAMAGE_NO;
 	setthink(this, barrel_explode);
-	this.nextthink = time + 0.3; // enhanced uses .ltime but that doesn't translate well to time!
+	if(MP_MG)
+		this.nextthink = time + 0.15;
+	else
+		this.nextthink = time + 0.3; // enhanced uses .ltime but that doesn't translate well to time!
 }
 
 void barrel_spawn(entity this)
@@ -53,7 +60,6 @@ void barrel_spawn(entity this)
 }
 
 
-
 /*QUAKED misc_explobox(0 .5 .8)(0 0 0)(32 32 64)
 TESTING THING
 */
@@ -74,6 +80,42 @@ spawnfunc(misc_explobox2)
 {
 	this.mdl = "maps/b_exbox2.bsp";
 	barrel_spawn(this);
+}
+
+
+void func_explode_detonate(entity this)
+{
+	vector pos = this.mins + (this.size * 0.5);
+	pos.z -= 32;
+	setmodel(this, MDL_Null);
+	setorigin(this, pos);
+
+	barrel_explode(this);
+}
+
+void func_explode_die(entity this, entity inflictor, entity attacker)
+{
+	this.takedamage = DAMAGE_NO;
+	setthink(this, func_explode_detonate);
+	this.nextthink = time + 0.15;
+}
+
+
+/*QUAKED func_explode (0 .5 .8) (0 0 0) (32 32 64)
+Custom exploding box
+*/
+
+spawnfunc(func_explode)
+{
+	if(!MP_MG) { delete(this); return; }
+	this.angles = '0 0 0';
+	set_movetype(this, MOVETYPE_NONE);
+	this.solid = SOLID_BSP;
+	_setmodel(this, this.model);
+
+	this.health = 20;
+	this.th_die = func_explode_die;
+	this.takedamage = DAMAGE_AIM;
 }
 
 #endif

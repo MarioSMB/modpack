@@ -694,9 +694,9 @@ void armagon_repulse_attack(entity this)
 		entity head = findradius(this.origin, 300);
 		while(head)
 		{
-			if(!(head.flags & FL_NOTARGET) && IS_CLIENT(head))
+			if(!(head.flags & FL_NOTARGET) && IS_CLIENT(head) && head.health > 0)
 			{
-				if(visible(this, head) && (head.health > 0))
+				if(visible(this, head))
 				{
 					vector dir = head.origin - (this.origin - '0 0 24');
 					dir = normalize(dir);

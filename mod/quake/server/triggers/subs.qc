@@ -13,6 +13,11 @@ spawnfunc(info_null)
 #endif
 
 #ifdef SVQC
+bool Inhibit_Coop(entity this)
+{
+	return (coop && (this.spawnflags & NOT_IN_COOP));
+}
+
 /*
 =============
 SUB_CalcMove
@@ -183,6 +188,11 @@ just constant angles.
 */
 void SetMovedir(entity this)
 {
+	if(MP_MG && this.movedir)
+	{
+		this.angles = '0 0 0';
+		return;
+	}
 	if(this.angles == '0 -1 0')
 		this.movedir = '0 0 1';
 	else if(this.angles == '0 -2 0')
@@ -196,8 +206,24 @@ void SetMovedir(entity this)
 	this.angles = '0 0 0';
 }
 
+/*
+================
+RemovedOutsideCoop
+Returns true if COOP_ONLY spawnflag is set and we're not in coop.
+================
+*/
+bool RemovedOutsideCoop(entity this)
+{
+	return (!coop && (this.spawnflags & COOP_ONLY));
+}
+
 void InitTrigger(entity this)
 {
+	if(MP_MG && RemovedOutsideCoop(this))
+	{
+		delete(this);
+		return;
+	}
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	if(this.angles != '0 0 0')
@@ -257,3 +283,31 @@ void SUB_CheckRefire(entity this, void(entity) thinkst)
 	setthink(this, thinkst);
 }
 #endif
+
+/*
+================
+Bitshift emulation
+================
+*/
+// TODO: we have actual bitshift, port to it!
+float SUB_LeftShift(float num, float bits)
+{
+	bits = floor(bits);
+	while(bits > 0)
+	{
+		num*= 2;
+		bits--;
+	}
+	return num;
+}
+
+float SUB_RightShift(float num, float bits)
+{
+	bits = floor(bits);
+	while(bits > 0)
+	{
+		num/= 2;
+		bits--;
+	}
+	return num;
+}

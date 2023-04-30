@@ -19,6 +19,10 @@
 #include "gamelog.qc"
 #include "commands.qc"
 #include "chat.qc"
+#include "fog.qc"
+#include "frametick.qc"
+#include "horde.qc"
+#include "fx.qc"
 
 #include "monsters/_all.inc"
 #include "triggers/include.qc"

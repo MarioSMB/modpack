@@ -6,6 +6,10 @@ const int AS_SLIDING = 2;
 const int AS_MELEE = 3;
 const int AS_MISSILE = 4;
 
+const int MONSTER_ATTACK_FRIEND = 32;
+const int SPAWNFLAG_NEARSIGHTED = 8192;
+const int SPAWNFLAG_NO_CONTENTS_DAMAGE = 16384;
+
 .entity oldenemy;
 
 .void(entity this) th_stand;
@@ -28,6 +32,8 @@ const int AS_MISSILE = 4;
 //.bool enemy_infront;
 .int enemy_range;
 .float enemy_yaw;
+
+bool CanTakedamage(entity e, entity actor);
 
 bool visible(entity this, entity targ);
 

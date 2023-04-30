@@ -1,19 +1,44 @@
 #ifdef SVQC
 
 const int PUSH_ONCE = BIT(0);
-const int PUSH_TOGL = BIT(1);
-const int PUSH_ACTIVE = BIT(2);
+const int PUSH_TOGL = BIT(1); // rogue
+const int PUSH_ACTIVE = BIT(2); // rogue
+const int ADDITIVE_PUSH = BIT(1); // mg
+const int PUSH_START_OFF = BIT(2); // mg
 
 void trigger_push_touch(entity this, entity toucher)
 {
 	if(MP_ROGUE && !(this.spawnflags & PUSH_ACTIVE))
 		return;
 
-	if(toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
-		toucher.velocity = this.speed * this.movedir * 10;
-	else if(toucher.health > 0)
+	// yoder Sept 24 2021 horde merge
+	
+	if(MP_MG && horde_ent)
 	{
-		toucher.velocity = this.speed * this.movedir * 10;
+		if(toucher.spawnflags & PUSH_START_OFF) // ignore this spawnflag in horde mode
+			toucher.spawnflags &= ~PUSH_START_OFF;
+		
+		if(!IS_PLAYER(toucher))
+		{
+			if((toucher.classname == "item_artifact_invulnerability") || (toucher.classname == "item_artifact_super_damage"))
+			{
+				if(this.spawnflags & ADDITIVE_PUSH)
+					toucher.velocity = toucher.velocity + (this.speed * this.movedir * 10 * frametime); 
+				else
+					toucher.velocity = this.speed * this.movedir * 10;
+			}
+			return;
+		}
+	}
+
+	if(toucher.health > 0 || toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
+	{
+		if(MP_MG && (toucher.flags & FL_INSHELTER))
+			return;
+		if(MP_MG && (this.spawnflags & ADDITIVE_PUSH)) // yoder add, Jan 28 2021
+			toucher.velocity = toucher.velocity + this.speed * this.movedir * 10 * frametime;
+		else
+			toucher.velocity = this.speed * this.movedir * 10;
 		if(IS_PLAYER(toucher))
 		{
 			if(toucher.fly_sound < time)
@@ -22,6 +47,7 @@ void trigger_push_touch(entity this, entity toucher)
 				_sound(toucher, CH_TRIGGER, "ambience/windfly.wav", 1, ATTN_NORM);
 			}
 		}
+		UNSET_ONGROUND(toucher);
 	}
 	if(this.spawnflags & PUSH_ONCE)
 		delete(this);
@@ -35,19 +61,37 @@ void trigger_push_use(entity this, entity actor, entity trigger)
 		this.spawnflags |= PUSH_ACTIVE;
 }
 
+void trigger_push_use_mg(entity this, entity actor, entity trigger)
+{
+	if(this.solid == SOLID_TRIGGER)
+		this.solid = SOLID_NOT;
+	else
+	{
+		this.solid = SOLID_TRIGGER;
+		force_retouch = 1;
+	}
+}
 
-/*QUAKED trigger_push(.5 .5 .5) ? PUSH_ONCE PUSH_TOGL PUSH_ACTIVE
+
+/*QUAKED trigger_push(.5 .5 .5) ? PUSH_ONCE PUSH_TOGL PUSH_ACTIVE ADDITIVE_PUSH START_OFF
 Pushes the player.
 
 speed: velocity of push. (default 1000)
 */
 spawnfunc(trigger_push)
 {
-	if(MP_ROGUE)
-	if(this.spawnflags & PUSH_TOGL)
-		this.use = trigger_push_use;
-	else
-		this.spawnflags |= PUSH_ACTIVE;
+	if(MP_MG)
+		this.use = trigger_push_use_mg;
+	else if(MP_ROGUE)
+	{
+		if(this.spawnflags & PUSH_TOGL)
+			this.use = trigger_push_use;
+		else
+			this.spawnflags |= PUSH_ACTIVE;
+	}
+
+	if(MP_MG && (this.spawnflags & PUSH_START_OFF))
+		this.solid = SOLID_NOT;
 
 	InitTrigger(this);
 	precache_sound("ambience/windfly.wav");
@@ -64,6 +108,17 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 		return;
 	if((toucher.flags & FL_FLY) || (toucher.flags & FL_SWIM))
 		return;
+
+	// yoder add, July 10th 2020
+	// making it so trigger_monsterjump's with spawnflag 8 only affect monsters with spawnflag 8
+	if(MP_MG && (this.spawnflags & 64))
+	{
+		if(!(toucher.spawnflags & 64))
+		{
+			LOG_DEBUG("monster didn't have spawnflag 8!");
+			return;
+		}
+	}
 
 // set XY even if not on ground, so the jump will clear lips
 	toucher.velocity_x = this.movedir_x * this.speed;

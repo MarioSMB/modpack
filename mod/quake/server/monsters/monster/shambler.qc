@@ -381,7 +381,17 @@ void sham_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void sham_death11(entity this) { set_animofs(this, anim_sham_death, 11, sham_death11); CorpseThink(this); }
+void sham_death11(entity this)
+{
+	set_animofs(this, anim_sham_death, 11, sham_death11);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void sham_death10(entity this) { set_animofs(this, anim_sham_death, 10, sham_death11); }
 void sham_death9(entity this) { set_animofs(this, anim_sham_death, 9, sham_death10); }
 void sham_death8(entity this) { set_animofs(this, anim_sham_death, 8, sham_death9); }

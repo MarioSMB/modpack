@@ -23,3 +23,5 @@
 // trigger
 #include "trigger/include.qc"
 
+// map specific
+#include "map_specific/include.qc"

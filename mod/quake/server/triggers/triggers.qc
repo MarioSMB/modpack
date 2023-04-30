@@ -36,13 +36,18 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	if(this.delay)
 	{
 	// create a temp object to fire at a later time
-		entity t = new(DelayedUse);
+		entity t = new_pure(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
 		t.target = this.target;
+		if(MP_MG)
+		{
+			t.targetname = this.targetname;
+			t.use = func_null;
+		}
 		return;
 	}
 	
@@ -64,7 +69,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 
 	string s;
 	s = this.killtarget;
-	if (s != "")
+	if (s && s != "")
 	{
 		for(entity t = NULL; (t = find(t, targetname, s)); )
 			delete(t);
@@ -83,6 +88,34 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 				t.use(t, actor, this);
 		}
 	}
+}
+
+/*
+================
+SUB_SwitchTargets
+================
+*/
+
+void SUB_SwitchTargets(.string field, string oldtarget, string newtarget)
+{
+	FOREACH_ENTITY_STRING(targetname, oldtarget,
+	{
+		it.(field) = newtarget;
+	});
+}
+
+/*
+================
+SUB_SetWorldType
+================
+*/
+
+void SUB_SetWorldtype(entity this)
+{
+	if(this.worldtype)
+		this.worldtype--;
+	else
+		this.worldtype = world.worldtype;
 }
 
 #endif

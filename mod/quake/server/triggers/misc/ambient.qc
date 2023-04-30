@@ -66,4 +66,21 @@ spawnfunc(ambient_swamp2)
 	ambientsound(this.origin, "ambience/swamp2.wav", 0.5, ATTN_STATIC);
 }
 
+/*QUAKED ambient_generic (0.3 0.1 0.6) (-10 -10 -8) (10 10 8)
+*/
+spawnfunc(ambient_generic)
+{
+	if(!MP_MG) { delete(this); return; }
+	if(!this.noise || this.noise == "")
+	{
+		LOG_DEBUG("ambient_generic with no noise. Removing.");
+		delete(this);
+	}
+	if(!this.volume) this.volume = 0.5;
+	if(!this.delay) this.delay = 3;
+	
+	precache_sound(this.noise);
+	ambientsound(this.origin, this.noise, this.volume, this.delay);
+}
+
 #endif

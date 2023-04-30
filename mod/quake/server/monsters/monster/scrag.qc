@@ -105,7 +105,7 @@ void LaunchMissile(entity this, entity missile, float mspeed, float accuracy)
 // set missile speed
 	vector vec = this.enemy.origin + this.enemy.mins + this.enemy.size * 0.7 - missile.origin;
 
-// calc aproximate time for missile to reach vec
+// calc approximate time for missile to reach vec
 	float fly = vlen(vec) / mspeed;
 	
 // get the entities xy velocity
@@ -360,7 +360,17 @@ void wiz_pain3(entity this) { set_animofs(this, anim_wiz_pain, 3, wiz_pain4); }
 void wiz_pain2(entity this) { set_animofs(this, anim_wiz_pain, 2, wiz_pain3); }
 void wiz_pain1(entity this) { set_animofs(this, anim_wiz_pain, 1, wiz_pain2); }
 
-void wiz_death8(entity this) { set_animofs(this, anim_wiz_death, 8, wiz_death8); CorpseThink(this); }
+void wiz_death8(entity this)
+{
+	set_animofs(this, anim_wiz_death, 8, wiz_death8);
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else
+		CorpseThink(this);
+}
 void wiz_death7(entity this) { set_animofs(this, anim_wiz_death, 7, wiz_death8); }
 void wiz_death6(entity this) { set_animofs(this, anim_wiz_death, 6, wiz_death7); }
 void wiz_death5(entity this) { set_animofs(this, anim_wiz_death, 5, wiz_death6); }

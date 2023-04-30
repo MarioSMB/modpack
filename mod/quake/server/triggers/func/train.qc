@@ -60,6 +60,8 @@ void func_train_find(entity this)
 	}
 }
 
+const int FUNC_TRAIN_NONSOLID = 1;
+
 /*QUAKED func_train(0 .5 .8) ?
 Trains are moving platforms that players can ride.
 The targets origin specifies the min point of the train at each corner.
@@ -101,7 +103,10 @@ spawnfunc(func_train)
 	}
 
 	this.cnt = 1;
-	setblocked(this, train_blocked);
+	if(MP_MG && (this.spawnflags & FUNC_TRAIN_NONSOLID))
+		this.solid = SOLID_NOT; // TODO: MOVETYPE_FAKEPUSH?
+	else
+		setblocked(this, train_blocked);
 	this.use = train_use;
 	this.classname = "train";
 

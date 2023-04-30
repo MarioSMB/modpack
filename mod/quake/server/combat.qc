@@ -1,11 +1,15 @@
 #include "combat.qh"
 
+#include "horde.qh"
 #include "monsters/ai.qh"
 #include "rogue/runes.qh"
 #include "rogue/teamplay.qh"
 #include "triggers/triggers.qh"
 
 bool IsExplosionDamage;
+
+// Yoder Sept24 2021 Horde Merge
+void horde_spawn_powerup(entity this);
 
 //============================================================================
 
@@ -155,6 +159,8 @@ void Killed(entity targ, entity inflictor, entity attacker)
 
 	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
+		if(MP_MG && (targ.classname == "misc_explobox" || targ.classname == "misc_explobox2"))
+			targ.enemy = attacker;
 		if(targ.th_die)
 			targ.th_die(targ, inflictor, attacker);
 		return;
@@ -166,10 +172,65 @@ void Killed(entity targ, entity inflictor, entity attacker)
 
 	targ.enemy = attacker;
 
+	// Yoder March04 2022, punish team killspree
+	if(MP_MG && autocvar_horde && IS_PLAYER(attacker) && IS_PLAYER(targ))
+	{
+		LOG_DEBUG("punish teamkill");
+		attacker.killtime = 0;
+		attacker.frags -= 2;
+	}
+
 // bump the monster counter
 	if(IS_MONSTER(targ))
 	{
-		monsters_killed += 1;
+		// Yoder Sept24, 2021 Horde Merge
+		if(MP_MG && horde_ent)
+		{
+			if(targ.classname != "monster_zombie") // zombies don't count
+				monsters_killed += 1;
+			
+			// check kill spree
+			if(IS_PLAYER(attacker))
+			{
+				attacker.killspree += 1;
+				attacker.killtime = time + KILLSPREE_GAP;
+					
+				if(time < attacker.killtime)
+				{
+					if(attacker.killspree >= 14)
+						sprint(attacker, sprintf("^2%d^7 kill streak!\n", attacker.killspree));
+					else if(attacker.killspree == 13)
+						sprint(attacker, "^113^7 kill streak!\n");
+					else if(attacker.killspree == 12)
+						sprint(attacker, "^112^7 kill streak!\n");
+					else if(attacker.killspree == 11)
+						sprint(attacker, "^111^7 kill streak!\n");
+					else if(attacker.killspree == 10)
+						sprint(attacker, "^110^7 kill streak!\n");
+					else if(attacker.killspree == 9)
+						sprint(attacker, "^19^7 kill streak!\n");
+					else if(attacker.killspree == 8)
+						sprint(attacker, "^18^7 kill streak!\n");
+					else if(attacker.killspree == 7)
+						sprint(attacker, "^17^7 kill streak!\n");
+					else if(attacker.killspree == 6)
+						sprint(attacker, "^16^7 kill streak!\n");
+					else if(attacker.killspree == 5)
+						sprint(attacker, "^15^7 kill streak!\n");
+					else if(attacker.killspree == 4)
+						sprint(attacker, "^34^7 kill streak!\n");
+					else if(attacker.killspree == 3)
+						sprint(attacker, "^33^7 kill streak!\n");
+					else if(attacker.killspree == 2)
+						sprint(attacker, "^32^7 kill streak!\n");
+				}
+			}
+			
+			// check to see about spawning a powerup
+			horde_spawn_powerup(targ);
+		}
+		else
+			monsters_killed += 1;
 		if(IS_PLAYER(attacker))
 			attacker.frags += 1;
 	}
@@ -187,6 +248,9 @@ void Killed(entity targ, entity inflictor, entity attacker)
 	// fall to ground
 	targ.flags &= ~FL_FLY;
 	targ.flags &= ~FL_SWIM;
+
+	if(MP_MG && IS_MONSTER(targ) && autocvar_horde && targ.classname != "monster_zombie")
+		remote_wavecheck(targ);
 
 	if(targ.target && targ.target != "")
 		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
@@ -218,8 +282,12 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	if(!targ.takedamage)
 		return;
 
+	// Yoder add, September 9 2020
+	if(MP_MG && targ.is_frozen)
+		return;
+
 	// shub kill crash fix.
-	if(targ.classname == "monster_oldone" && damage < 9999)
+	if(!MP_MG && targ.classname == "monster_oldone" && damage < 9999)
 		return;
 
 	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
@@ -293,6 +361,24 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 			targ.invincible_sound = time + 2;
 		}
 		return;
+	}
+
+	if(MP_MG)
+	{
+		// special case for killable chthon (yoder, december 16 2020)
+		if(targ.classname == "monster_boss" && (targ.spawnflags & 2)) // is killable chthon
+		{
+			if(attacker.weapon == WEP_LIGHTNING)
+			{
+				// TODO: Spawn blood
+				LOG_DEBUG("Player has LG! Damage Chthon!");
+			}
+			else
+			{
+				LOG_DEBUG("player attacked with non-lightning weapon. Do nothing.");
+				return;
+			}
+		}
 	}
 
 	if(MP_HIPNOTIC)
@@ -372,7 +458,36 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		{
 			if(targ.classname != attacker.classname || targ.classname == "monster_army" || targ.classname == "monster_armagon")
 			{
-				if(targ.classname != "monster_dragon")
+				if(coop || (MP_MG && autocvar_horde))
+				{
+					// yoder Sept24, 2021
+					// if in horde mode, have enemies obey a reaggro time
+					// TODO: Evaluate if we want this as default in co-op?
+					if(IS_PLAYER(targ.enemy) && IS_PLAYER(attacker)) // current and new enemy are both players, check reaggro times
+					{
+						// check reaggro times
+						if((!targ.aggro_time) || (targ.aggro_time + AGGRO_MIN + (random() * AGGRO_ADD < time)))
+						{
+							targ.oldenemy = targ.enemy;
+							targ.enemy = attacker;
+							targ.aggro_time = time;
+							FoundTarget(targ);
+						}
+						else
+						{
+							// ignore new aggro from this hit
+							//LOG_DEBUG("ignore new aggro");
+						}
+					}
+					else // immediately aggro, store the player if previous was player
+					{
+						if(IS_PLAYER(targ.enemy))
+							targ.oldenemy = targ.enemy;
+						targ.enemy = attacker;
+						FoundTarget(targ);
+					}
+				}
+				else if(targ.classname != "monster_dragon")
 				{
 					if(IS_PLAYER(targ.enemy))
 						targ.oldenemy = targ.enemy;
@@ -410,51 +525,21 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 	entity head = findradius(inflictor.origin, damage + 40);
 	while(head)
 	{
-		if(head != ignore)
+		entity next = head.chain;
+		if(head != ignore && head.takedamage)
 		{
-			if(head.takedamage)
-			{
-				vector org = head.origin +(head.mins + head.maxs) * 0.5;
-				float points = max(0, 0.5 * vlen(inflictor.origin - org));
-				points = damage - points;
-				if(head == attacker || head.classname == "monster_shambler" || head.classname == "monster_legond")
-					points *= 0.5; // shambler takes half damage from all explosions
-				if(points > 0)
-				{
-					if(CanDamage(head, inflictor))
-						T_Damage(head, inflictor, attacker, points);
-				}
-			}
-		}
-		head = head.chain;
-	}
-	inside_radius = false;
-}
-
-/*
-============
-T_BeamDamage
-============
-*/
-void T_BeamDamage(entity attacker, float damage)
-{
-	entity head = findradius(attacker.origin, damage + 40);
-	IsExplosionDamage = true;
-	
-	while(head)
-	{
-		if(head.takedamage)
-		{
-			float points = max(0, 0.5 * vlen(attacker.origin - head.origin));
+			vector org = head.origin + (head.mins + head.maxs) * 0.5;
+			float points = max(0, 0.5 * vlen(inflictor.origin - org));
 			points = damage - points;
-			if(head == attacker || head.classname == "monster_shambler")
-				points *= 0.5;
+			if(head == attacker || head.classname == "monster_shambler" || head.classname == "monster_legond")
+				points *= 0.5; // shambler takes half damage from all explosions
 			if(points > 0)
 			{
-				if(CanDamage(head, attacker))
-					T_Damage(head, attacker, attacker, points);
+				if(CanDamage(head, inflictor))
+					T_Damage(head, inflictor, attacker, points);
 			}
 		}
-		head = head.chain;
+		head = next;
 	}
+	inside_radius = false;
 }

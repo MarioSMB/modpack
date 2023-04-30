@@ -2,7 +2,15 @@
 
 #ifdef SVQC
 
+bool RemovedOutsideCoop(entity this);
+
+bool Inhibit_Coop(entity this);
+
+void InitTrigger(entity this);
+
 const int TSPEED_LINEAR = 0;
+
+const int NOT_IN_COOP = 131072;
 
 float TemporaryDB;
 
@@ -34,3 +42,6 @@ void initialize_field_db()
 }
 
 #endif
+
+float SUB_LeftShift(float num, float bits);
+float SUB_RightShift(float num, float bits);

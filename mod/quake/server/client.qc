@@ -1,7 +1,10 @@
 #include "client.qh"
 
 #include "combat.qh"
+#include "fog.qh"
+#include "player.qh"
 #include "rogue/teamplay.qh"
+#include "triggers/teleporters.qh"
 
 /*
 =============================================================================
@@ -11,7 +14,21 @@
 =============================================================================
 */
 
+void centerprint_all(string s)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		centerprint(it, s);
+	});
+}
+
+void horde_set_keys(entity temp_player); // yoder sept24
+void GibMonster(entity this);
+float HordeGetPlayersAlive();
+
 float intermission_exittime;
+
+const int NO_INTERMISSION = BIT(0);
 
 /*QUAKED info_intermission(1 0.5 0.5)(-16 -16 -16)(16 16 16)
 This is the camera point for the intermission.
@@ -19,6 +36,19 @@ Use mangle instead of angle, so you can set pitch or roll as well as yaw.  'pitc
 */
 spawnfunc(info_intermission)
 {
+}
+
+void intermission_clear_powerups(entity this)
+{
+	this.powerups &= ~(POWERUP_QUAD | POWERUP_INVISIBILITY | POWERUP_INVULNERABILITY | POWERUP_SUIT);
+	this.super_damage_finished = 0;
+	this.super_time = 0;
+	this.invisible_finished = 0;
+	this.invisible_time = 0;
+	this.invincible_finished = 0;
+	this.invincible_time = 0;
+	this.radsuit_finished = 0;
+	this.rad_time = 0;
 }
 
 bool reset_flag;
@@ -29,7 +59,7 @@ void SetChangeParms(entity this)
 		setspawnparms(this);
 		return;
 	}
-	if(this.health <= 0 || deathmatch)
+	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB))
 	{
 		SetNewParms();
 		parm14 = this.steam; // Save the current team of the player
@@ -92,7 +122,7 @@ void SetNewParms()
 	parm6 = 0;
 	parm7 = 0;
 	parm8 = WEP_SHOTGUN;
-	parm10 = random();
+	parm10 = (deathmatch) ? 1 : random();
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
@@ -102,11 +132,12 @@ void SetNewParms()
 
 void DecodeLevelParms(entity this)
 {
-	if(serverflags)
-	{
-		if(world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp")
-			SetNewParms();		// take away all stuff on starting new episode
-	}
+	if(world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB))
+		SetNewParms();		// take away all stuff on starting new episode
+
+	// Yoder Oct25, reset weapons between map loads
+	if(MP_MG && autocvar_horde)
+		SetNewParms();
 
 	if(world.model == "maps/hipstart.bsp"
 	|| world.model == "maps/hip1m1.bsp"
@@ -350,13 +381,38 @@ entity FindIntermission(entity this)
 	return spot;
 }
 
+/*
+============
+HORDE random map pick
+
+added Aug31, 2021
+============
+*/
+string HordeRandomMap()
+{
+	//dprint("go with next map in progression\n");
+	if(mapname == "horde1")
+		return "horde2";
+	else if(mapname == "horde2")
+		return "horde3";
+	else if(mapname == "horde3")
+		return "horde4";
+	else
+		return "horde1";
+};
+
 string nextmap;
 void GotoNextMap()
 {
 	if(autocvar_samelevel)	// if samelevel is set, stay on same level
 		changelevel(mapname);
 	else
-		changelevel(nextmap);
+	{
+		if(MP_MG && autocvar_horde)
+			changelevel(HordeRandomMap());
+		else
+			changelevel(nextmap);
+	}
 }
 
 string getcdtrack(int numb);
@@ -462,6 +518,33 @@ void ExitIntermission()
 			WriteByte(MSG_ALL, SVC_FINALE);
 			WriteString(MSG_ALL, "Despite the awful might of the Elder\nWorld, you have achieved the Rune of\nElder Magic, capstone of all types of\narcane wisdom. Beyond good and evil,\nbeyond life and death, the Rune\npulsates, heavy with import. Patient and\npotent, the Elder Being Shub-Niggurath\nweaves her dire plans to clear off all\nlife from the Earth, and bring her own\nfoul offspring to our world! For all the\ndwellers in these nightmare dimensions\nare her descendants! Once all Runes of\nmagic power are united, the energy\nbehind them will blast open the Gateway\nto Shub-Niggurath, and you can travel\nthere to foil the Hell-Mother's plots\nin person.");
 			return;
+		}
+		//MP
+		if(MP_MG)
+		{
+			if(intermissiontext && intermissiontext != "")
+			{
+				WriteByte(MSG_ALL, SVC_FINALE);
+				WriteString(MSG_ALL, intermissiontext);
+				intermissiontext = string_null;
+				if(world.model == "maps/mgend.bsp")
+				{
+					intermission_exittime = time + 10000000;  // never allow exit
+					server_reset();
+				}
+				return;
+			}
+			if(MP_MG && world.endtext && world.endtext != "")
+			{
+				WriteByte(MSG_ALL, SVC_FINALE);
+				WriteString(MSG_ALL, world.endtext);
+				if(world.model == "maps/mgend.bsp")
+				{
+					intermission_exittime = time + 10000000;  // never allow exit
+					server_reset();
+				}
+				return;
+			}
 		}
 		//HIPNOTIC
 		if(world.model == "maps/hip1m4.bsp")
@@ -577,6 +660,8 @@ void ExitIntermission()
 			WriteString(MSG_ALL, "After the last echoes of Armagon's\ndeath yell fade away, you breathe a\nheavy sigh of relief.  With the loss\nof his magic, Armagon's fortress\nbegins to collapse.  The rift he\ncreated to send his grisly troops\nthrough time slowly closes and seals\nitself forever.  In the chaos that\nensues, a wall collapses, revealing\none remaining time portal.  With your\nchances to escape rapidly growing\nslim, you race for the portal,\nmindless of your destination.  In a\nflash of light, you find yourself\nback at Command HQ, safe and sound." );
 			//WriteString(MSG_ALL, "Congratulations!  You are victorious!\nThe minions of Quake have once again\nfallen before your mighty hand.\nIs this the last you will see of\nQuake's hellions?\n\nOnly time will tell..." );
 			//intermission_exittime = time + 10000000;  // never allow exit
+			intermission_exittime = time + 10000000;  // never allow exit
+			server_reset();
 			return;
 		}
 		else if(world.model == "maps/r1m7.bsp")
@@ -615,6 +700,8 @@ void ExitIntermission()
 			return;
 		}
 
+		// NOTE: credits not implemented
+		//if(MP_MG && nextmap == "start" || nextmap == "hipstart" || nextmap == "rstart" || nextmap == "aopstart" || nextmap == "mgstart" && !coop && !autocvar_horde) // Yoder modify Oct25 to check against horde
 		GotoNextMap();
 	}
 	
@@ -626,7 +713,7 @@ void ExitIntermission()
 			return;
 		}
 		
-		if((serverflags&15) == 15)
+		if((serverflags&15) == 15 && substring(world.model, 0, 6) == "maps/e") // try to catch only standard Quake episodes
 		{
 			WriteByte(MSG_ALL, SVC_FINALE);
 			WriteString(MSG_ALL, "Now, you have all four Runes. You sense\ntremendous invisible forces moving to\nunseal ancient barriers. Shub-Niggurath\nhad hoped to use the Runes Herthis to\nclear off the Earth, but now instead,\nyou will use them to enter her home and\nconfront her as an avatar of avenging\nEarth-life. If you defeat her, you will\nbe remembered forever as the savior of\nthe planet. If she conquers, it will be\nas if you had never been born.");
@@ -651,6 +738,7 @@ void ExitIntermission()
 			WriteByte (MSG_ALL, SVC_FINALE);
 			WriteString (MSG_ALL, "Congratulations!  You are victorious!\nThe minions of Quake have once again\nfallen before your mighty hand.\nIs this the last you will see of\nQuake's hellions?\n\nOnly time will tell..." );
 			intermission_exittime = time + 10000000;  // never allow exit
+			server_reset();
 			return;
 		}
 	}
@@ -690,6 +778,8 @@ void server_delayed_reset(entity this)
 		themap = "rstart";
 	else if(MP_IMPEL)
 		themap = "aopstart";
+	else if(MP_MG)
+		themap = "mgstart";
 
 	localcmd("\nmap ", themap, "\n");
 }
@@ -738,6 +828,11 @@ void execute_changelevel(entity this)
 			it.flags |= FL_NOTARGET; // fix a silly monster bug
 			//it.health = -2342; // can't do this because of parms
 			set_movetype(it, MOVETYPE_NONE);
+			if(MP_MG)
+			{
+				intermission_clear_powerups(it);
+				FogPushSettingsFrom(it, pos, 0);
+			}
 			//it.modelindex = 0;
 			setmodel(it, MDL_Null);
 			setorigin(it, pos.origin);
@@ -745,6 +840,26 @@ void execute_changelevel(entity this)
 	}
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
+
+	if(MP_MG)
+	{
+		// Yoder merge Horde sept24 2021
+		if(horde_ent)
+		{
+			setthink(horde_ent, func_null);
+			horde_ent.nextthink = -1;
+			FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
+			{
+				setthink(it, GibMonster);
+				it.nextthink = time + 0.2 + random() * 1.8;
+			});
+		}
+		if(this.spawnflags & NO_INTERMISSION)
+		{
+			//Go directly to intermission text.
+			ExitIntermission();
+		}
+	}
 }
 
 
@@ -777,16 +892,27 @@ void CopyToBodyQueue(entity ent)
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
 
-	if(coop)
+	if(coop || deathmatch)
 	{
 		setthink(body, SUB_Remove);
 		body.nextthink = time + 10;
 	}
 }
 
+void LoadGame()
+{
+	FOREACH_CLIENT(it.fog_density,
+	{
+		// Restore fog
+		SetFog(it, it.fog_density, it.fog_color, 0.0);
+	});
+}
+
 // called by ClientKill and DeadThink
 void respawn(entity this)
 {
+	if(MP_MG)
+		this.velocity = '0 0 0';
 	if(coop)
 	{
 		// make a copy of the dead body for appearances sake
@@ -821,6 +947,27 @@ void respawn(entity this)
 	}
 }
 
+// Yoder, Sept24, 2021
+// when in horde coop, respawn a dead teammate with this:
+void horde_respawn_teammate(entity this)
+{
+	CopyToBodyQueue(this);
+	PutClientInServer(this);
+}
+
+// Yoder, Sept24, 2021
+// when in horde (coop or solo), respawn all by restarting the server:
+void horde_respawn_all()
+{
+	// restart the entire server
+	// put serverflags back to map's initial setting
+	serverflags = startingserverflags;
+	// request a reset to the parms
+	reset_flag = true;
+	// "change" to the same level
+	localcmd(strcat("changelevel ", mapname, "\n"));
+}
+
 
 /*
 ============
@@ -833,15 +980,15 @@ void TeamDropFlagOfPlayer(entity player);
 void tag_token_drop();
 void ClientKill(entity this)
 {
+	if(autocvar_sv_quake_suicide_limit > 0 && this.suicide_count > autocvar_sv_quake_suicide_limit)
+	{
+		sprint(this, "You have suicide too much already... Get help.\n");
+		return;
+	}
+	this.suicide_count += 1;
 	if(MP_ROGUE)
 	{
-		if(this.suicide_count > 3)
-		{
-			sprint(this, "You have suicide too much already... Get help.\n");
-			return;
-		}
 		TeamDropFlagOfPlayer(this);
-		this.suicide_count += 1;
 
 		if(tag_token_owner == this)
 		{
@@ -860,6 +1007,13 @@ void ClientKill(entity this)
 	}
 
 	bprintf("%s suicides\n", this.netname);
+
+	if(MP_MG && autocvar_horde) // horde mode behaviour
+	{
+		PlayerDie(this, NULL, NULL);
+		this.health = 0;
+		return;
+	}
 	set_suicide_frame(this);
 	this.modelindex = this.modelindex_player;
 	this.frags = this.frags - 2;	// extra penalty
@@ -889,6 +1043,12 @@ bool PlayerVisibleToSpawnPoint(entity point)
 
 float IDEAL_DIST_FROM_DM_SPAWN_POINT = 384;
 float MIN_DIST_FROM_DM_SPAWN_POINT = 84;
+float MIN_DIST_FROM_HORDE_SPAWN_POINT = 72;
+
+bool predicate_is_active_spawnpoint(entity this)
+{
+	return (this.state == COOP_SPAWN_ACTIVE);
+}
 
 /*
 ============
@@ -909,12 +1069,50 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 		return spot;
 		
 // choose a info_player_deathmatch point
-	if(coop)
+	if(MP_MG && autocvar_horde)
+	{ // run simpler logic for horde - just need a spot with noone on top of it...
+    	entity hordeSpawn = find(NULL, classname, "info_player_coop");
+
+    	while(hordeSpawn)
+    	{
+    		thing = findradius(hordeSpawn.origin, MIN_DIST_FROM_HORDE_SPAWN_POINT);
+
+    		pcount = 0;
+
+    		while(thing)
+    		{
+				if(IS_PLAYER(thing) && thing.health > 0)
+					++pcount;                      
+
+				thing = thing.chain;      
+			}
+
+			if(pcount == 0)
+				return hordeSpawn;
+
+			// Get the next spot in the chain
+			hordeSpawn = find(hordeSpawn, classname, "info_player_coop");
+		}
+
+		if(coop) // fix for singleplayer
+			return NULL; // didn't find anything....
+	}
+    else if(coop)
 	{
-		lastspawn = find(lastspawn, classname, "info_player_coop");
-		if(lastspawn == NULL)
+		if(MP_MG)
+		{
+			// choose a point that is active
+			FOREACH_ENTITY_CLASS("info_player_coop", it.state == COOP_SPAWN_ACTIVE,
+			{
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+			lastspawn = RandomSelection_chosen_ent;
+		}
+		else
+			lastspawn = find(lastspawn, classname, "info_player_coop");
+		if(!lastspawn)
 			lastspawn = find(lastspawn, classname, "info_player_start");
-		if(lastspawn != NULL)
+		if(lastspawn)
 			return lastspawn;
 	}
 	else if(MP_ROGUE && deathmatch) // TODO: merge with regular deathmatch code!
@@ -942,16 +1140,16 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 				spot = find(spot, classname, "info_player_team2");
 			else
 				spot = find(spot, classname, "info_player_deathmatch");
-			if(spot != NULL)
+			if(spot)
 			{
 				if(spot == startspot)
 					return startspot;
-				int pcount = 0;
-				entity thing = findradius(spot.origin, 32);
+				pcount = 0;
+				thing = findradius(spot.origin, 32);
 				while(thing)
 				{
 					if(IS_PLAYER(thing))
-						pcount = pcount + 1;
+						pcount += 1;
 					thing = thing.chain;
 				}
 				if(pcount == 0)
@@ -965,8 +1163,10 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 					return spot;
 				}
 			}
-			else
+			else if(t)
 				t = 0; // fix for ctf levels without ctf support
+			else
+				break; // no spawns, just bail out
 		}
 	}
 	else if(deathmatch)
@@ -1078,6 +1278,32 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 
 	if(serverflags)
 	{	// return with a rune to start
+		if(MP_MG)
+		{
+			int lastPickup = sigil_getLastPickup();
+			if(lastPickup)
+			{
+				string spname = string_null;
+				if(lastPickup & SIGIL_E1) spname = "start_1";
+				else if(lastPickup & SIGIL_E2) spname = "start_2";
+				else if(lastPickup & SIGIL_E3) spname = "start_3";
+				else if(lastPickup & SIGIL_E4) spname = "start_4";
+				else if(lastPickup & SIGIL_E5) spname = "start_5";
+				else if(lastPickup & SIGIL_E6) spname = "start_6";
+				if(spname)
+				{
+					spot = find(NULL, netname, spname);
+					if(spot)
+					{
+						if(spot.classname == "info_player_start_hub")
+						{
+							sigil_clearLastPickup();
+							return spot;
+						}
+					}
+				}
+			}
+		}
 		spot = find(NULL, classname, "info_player_start2");
 		if(spot)
 			return spot;
@@ -1108,8 +1334,23 @@ called each time a player is spawned
 ============
 */
 void DecodeLevelParms(entity this);
-void PlayerDie(entity this, entity inflictor, entity attacker);
 void player_touch(entity this, entity toucher);
+
+void RunPostPutClientInServer(entity this) 
+{
+	entity player = this.owner;
+	entity spot = this.enemy;
+	
+	// Yoder Sept24, 2021
+	horde_set_keys(player); // reset player's key count accordingly
+
+	// Fog settings sometimes (?) need to be set a frame after the client has spawned.
+	// Not sure why, or why it sometimes works on the same frame.
+	if(!FogPushSettingsFrom(player, spot, 0))
+		FogPushSettingsFrom(player, NULL, 0);
+
+	remove(this);
+}
 
 void PutClientInServer(entity this)
 {
@@ -1214,6 +1455,17 @@ void PutClientInServer(entity this)
 	this.angles = vec2(spot.angles);
 	this.fixangle = true;		// turn this way immediately
 
+	if(MP_MG && coop && spot.weapons)
+	{
+		this.weapons |= spot.weapons;
+		if(this.weapons & (WEP_NAILGUN | WEP_SUPER_NAILGUN))
+			this.ammo_shells = max(30, this.ammo_shells);
+		if(this.weapons & (WEP_GRENADE_LAUNCHER | WEP_ROCKET_LAUNCHER))
+			this.ammo_rockets = max(4, this.ammo_rockets);
+		if(this.weapons & WEP_LIGHTNING)
+			this.ammo_cells = max(12, this.ammo_cells);
+	}
+
 	if(MP_ROGUE)
 		settouch(this, player_touch);
 
@@ -1255,6 +1507,15 @@ void PutClientInServer(entity this)
 
 	spawn_tdeath(this.origin, this);
 
+	if(MP_MG)
+	{
+		entity postSpawn = new(postSpawn);
+		postSpawn.owner = this;
+		postSpawn.enemy = spot;
+		setthink(postSpawn, RunPostPutClientInServer);
+		postSpawn.nextthink = time + 0.05;
+	}
+
 	stuffcmd(this, "-attack\n"); // prevent shooting after respawning
 }
 
@@ -1283,6 +1544,12 @@ spawnfunc(info_player_start2)
 {
 }
 
+/*QUAKED info_player_start_hub (1 0 0) (-16 -16 -24) (16 16 24)
+Only used on start map for the return point from an episode.
+*/
+spawnfunc(info_player_start_hub)
+{
+}
 
 /*
 saved out by quaked in region mode
@@ -1297,15 +1564,63 @@ potential spawning position for deathmatch games
 void SpawnRunes(entity this);
 spawnfunc(info_player_deathmatch)
 {
+	if(MP_MG && !deathmatch) { delete(this); return; }
 	if(MP_ROGUE)
 		SpawnRunes(this);
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+void trigger_activate_coop_spawns_use(entity this, entity actor, entity trigger)
+{
+	int newitems = 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		newitems |= it.weapons;
+	});
+
+	FOREACH_ENTITY_CLASS("info_player_coop", true,
+	{
+		if(it.targetname == this.target)
+		{
+			it.state = COOP_SPAWN_ACTIVE;
+			it.weapons = newitems;
+		}
+		else
+		{
+			it.state = 0;
+			it.weapons = 0;
+		}
+	});
+}
+
+/*QUAKED trigger_activate_coop_spawns (1 0 1) (-8 -8 -8) (8 8 8)
+Activates a set of coop spawnpoints.
+*/
+spawnfunc(trigger_activate_coop_spawns)
+{
+	if(!MP_MG) { delete(this); return; }
+	if(!coop) { delete(this); return; }
+	this.use = trigger_activate_coop_spawns_use;
+}
+
+const int COOP_SPAWN_START_ACTIVE = BIT(0);
 
 /*QUAKED info_player_coop(1 0 1)(-16 -16 -24)(16 16 24)
 potential spawning position for coop games
 */
 spawnfunc(info_player_coop)
 {
+	if(MP_MG)
+	{
+		if(!coop)
+		{
+			delete(this);
+			return;
+		}
+		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
+			this.state = COOP_SPAWN_ACTIVE;
+	}
 }
 
 /*
@@ -1318,6 +1633,7 @@ RULES
 
 /*
 go to the next level for deathmatch
+only called if a time or frag limit has expired
 */
 void NextLevel()
 {
@@ -1326,7 +1642,19 @@ void NextLevel()
 
 	entity o = NULL;
 
-	if(MP_IMPEL)
+	if(MP_MG)
+	{
+	// find a trigger changelevel
+		o = find(NULL, classname, "trigger_changelevel");
+
+		// go back to same map if no trigger_changelevel
+		if(!o || mapname == "mgstart")
+		{
+			o = spawn();
+			o.map = mapname;
+		}
+	}
+	else if(MP_IMPEL)
 	{
 	// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
@@ -1352,7 +1680,7 @@ void NextLevel()
 	}
 	else if(MP_ROGUE)
 	{
-		if(mapname == "start" || mapname == "rstart" || mapname == "hipstart" || mapname == "aopstart")
+		if(mapname == "start" || mapname == "rstart" || mapname == "hipstart" || mapname == "aopstart" || mapname == "mgstart")
 		{
 			mapname = "r1m1";
 
@@ -1402,13 +1730,33 @@ void NextLevel()
 		o = spawn();
 		o.map = mapname;
 	}
+	if(world.model == "maps/mgdm1.bsp")
+	{
+		o = spawn();
+		o.map = "mgdm2";
+	}
+	else if(world.model == "maps/mgdm2.bsp")
+	{
+		o = spawn();
+		o.map = "mgdm3";
+	}
+	else if(world.model == "maps/mgdm3.bsp")
+	{
+		o = spawn();
+		o.map = "mgdm4";
+	}
+	else if(world.model == "maps/mgdm4.bsp")
+	{
+		o = spawn();
+		o.map = "mgdm1";
+	}
 	else
 	{
 		// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
 
 		// go back to same map if no trigger_changelevel
-		if(!o || mapname == "start")
+		if(!o)
 		{
 			o = spawn();
 			o.map = mapname;
@@ -1417,6 +1765,11 @@ void NextLevel()
 
 	nextmap = o.map;
 	gameover = true;
+
+	if(autocvar_sv_eventlog)
+		GameLogEcho(":gameover");
+
+	GameLogClose();
 	
 	if(o.nextthink < time)
 	{
@@ -1470,6 +1823,13 @@ void PlayerDeathThink(entity this)
 	this.button1 = 0;
 	this.button2 = 0;
 	this.button3 = 0;
+	// Yoder Sept24, 2021
+	if(MP_MG && horde_ent)
+	{
+		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
+			horde_respawn_all();
+		return;
+	}
 	respawn(this);
 }
 
@@ -2052,6 +2412,25 @@ void PlayerPostThink(entity this)
 			this.rifle_cnt = 0;
 		}
 
+		// AY 11 Nov 2021, check killspree end
+		if(MP_MG)
+		{
+			if (this.killspree > 0 && time > this.killtime)
+			{
+				LOG_DEBUG("killspree ended.");
+				
+				//score = (this.killspree + (this.killspree - 1) -1) * 5; // previously was "attacker.killspree - 1"
+				if(this.killspree > 1)
+				{
+					float score = ceil((this.killspree * this.killspree) / 2);
+					sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, score));
+					this.frags += score;
+				}
+				
+				this.killspree = 0; // reset killspree
+			}
+		}
+
 		CheckPowerups(this);
 		CheckHealthRot(this);
 
@@ -2213,6 +2592,10 @@ void ClientDisconnect(entity this)
 	// if the level end trigger has been activated, just return
 	// since they aren't *really* leaving
 
+	// yoder oct13, horde fix for dc-ing players
+	if(MP_MG && autocvar_horde)
+		this.health = 0;
+
 	// let everyone else know
 	bprintf("%s left the %s with %d frags\n", this.netname, ((MP_IMPEL) ? "Abyss" : "game"), this.frags);
 	if(autocvar_sv_eventlog)
@@ -2278,7 +2661,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				attacker.frags = attacker.frags - 1;
 				bprint(targ.netname);
 				
-				if(targ.weapon == 64 && targ.waterlevel > 1)
+				if(targ.weapon == WEP_LIGHTNING && targ.waterlevel > 1)
 				{
 					switch(targ.watertype)
 					{
@@ -2523,10 +2906,10 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			targ.frags = targ.frags - 1; // killed self
 			bprint(targ.netname);
 
-			if(MP_HIPNOTIC && attacker.deathtype)
+			if(MP_HIPNOTIC && attacker.deathtype && attacker.deathtype != "")
 			{
 				bprintf(" %s\n", attacker.deathtype);
-				attacker.deathtype = "";
+				attacker.deathtype = string_null;
 				return;
 			}
 
@@ -2535,6 +2918,8 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			{
 				if(attacker.deathmessage)
 					bprintf(" %s\n", attacker.deathmessage(attacker));
+				else
+					bprint(" was killed by a monster\n");
 				return;
 			}
 
@@ -2655,7 +3040,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			if(targ.deathtype == "falling")
 			{
 				if(!MP_IMPEL)
-					targ.deathtype = "";
+					targ.deathtype = string_null;
 				bprint(" fell to their death\n");
 				return;
 			}
@@ -2712,6 +3097,16 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "cvar_changes")
 	{
 		sprint(this, strcat(cvar_changes, "\n"));
+		return;
+	}
+
+	if(cmd_name == "tracer")
+	{
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 300, MOVE_NORMAL, this);
+		sprint(this, strcat("Texture: ", trace_dphittexturename, "\n"));
+		sprint(this, strcat("Texture flag: ", ftos(trace_dphitq3surfaceflags), "\n"));
+		sprint(this, sprintf("Entity: %s (%d)\n", trace_ent.classname, etof(trace_ent)));
 		return;
 	}
 

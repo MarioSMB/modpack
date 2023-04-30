@@ -83,11 +83,10 @@ void placebullethole(vector pos)
 	if(numbulletholes >= 10)
 		return;
 
-	entity bullet = spawn();
+	entity bullet = new(bullethole);
 	bullet.owner = bullet;
 	set_movetype(bullet, MOVETYPE_NONE);
 	bullet.solid = SOLID_NOT;
-	bullet.classname = "bullethole";
 	_setmodel( bullet, "progs/s_bullet.spr" );
 	setsize (bullet, '0 0 0', '0 0 0');
 

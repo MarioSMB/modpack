@@ -12,6 +12,18 @@ void wordwrap_cb(string s, float l, void(string) callback);
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
+#ifdef GAMEQC
+	#ifdef CSQC
+		noref bool autocvar_cl_gentle;
+		noref int autocvar_cl_gentle_messages;
+		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#else
+		noref int autocvar_sv_gentle;
+		#define GENTLE autocvar_sv_gentle
+	#endif
+	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)
+#endif
+
 USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
 USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);

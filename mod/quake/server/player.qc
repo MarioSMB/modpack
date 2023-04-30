@@ -10,6 +10,9 @@ PLAYER
 ==============================================================================
 */
 
+//Yoder Sept24 2021, Horde Merge
+void MonsterFade(entity this); // Used for handling gibs and corpses
+
 $cd id1/models/player_4
 $origin 0 -6 24
 $base base		
@@ -739,7 +742,8 @@ void PainSound(entity this, entity attacker)
 
 	this.noise = get_painsound(this, rs);
 
-	_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
+	if(this.noise && this.noise != "")
+		_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 }
 
 void player_pain6(entity this) { set_animofs(this, anim_player_pain1, 6, player_run); }
@@ -976,8 +980,10 @@ vector VelocityForDamage(entity this, float dm)
 {
 	vector v;
 
-	if(MP_HIPNOTIC && vdist(damage_inflictor.velocity, >, 0))
+	// check if the inflictor had velocity, e.g. like a rocket or explode box
+	if(damage_inflictor.velocity != '0 0 0')
 	{
+		// impact some of inflictor's velocity on the gibs
 		v = 0.2 * damage_inflictor.velocity;
 		v = v + (25 * normalize(this.origin - damage_inflictor.origin));
 		v.z = 100 + 100 * random();
@@ -1054,7 +1060,14 @@ void ThrowHead(entity this, string gibname, float dm)
 	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
 
-	if(MP_HIPNOTIC)
+	// Yoder Sept24 2021, Horde Merge
+	if(MP_MG && horde_ent && !IS_PLAYER(this))
+	{
+		// only monsters gibs should fade away 
+		setthink(this, MonsterFade);
+		self.nextthink = time + 1;
+	}
+	else if(MP_HIPNOTIC)
 	{
 		this.gorging = true;
 		setthink(this, HeadThink);
@@ -1201,9 +1214,9 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 }
 
 void set_suicide_frame(entity this)
-{	// used by kill command and diconnect command
+{	// used by kill command and disconnect command
 	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl" && this.model != "progs/player_mario.mdl")
-		return;	// allready gibbed
+		return;	// already gibbed
 	this.frame = anim_player_deatha1 + (11 - 1); // frame 11, hax
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_TOSS);

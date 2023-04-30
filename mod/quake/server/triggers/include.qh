@@ -20,3 +20,6 @@
 
 // trigger
 #include "trigger/include.qh"
+
+// map specific
+#include "map_specific/include.qh"

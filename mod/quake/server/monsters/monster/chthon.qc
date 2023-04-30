@@ -139,6 +139,14 @@ const int anim_boss_shocka = 80; //'80 89 0'
 const int anim_boss_shockb = 90; //'90 95 0'
 const int anim_boss_shockc = 96; //'96 105 0'
 
+const int BOSS_KILLABLE = 2;
+
+void boss_pain(entity targ, entity attacker, float damage); // Yoder add, September 9 2020
+void SUB_Freeze(entity this); // Yoder add, Dec 16 2020
+void SUB_Unfreeze(entity this);
+void SUB_Unfreeze_use(entity this, entity actor, entity trigger); // Yoder add, Dec 16 2020
+void boss_missile1(entity this); // yoder add, Jan 20 2020
+
 void boss_face(entity this)
 {
 	// go for another player if multi player
@@ -157,7 +165,8 @@ void boss_face(entity this)
 		setthink(this, boss_missile1); // return to attack state
 	}
 
-	ai_face(this);
+	if(this.enemy && this.enemy.health > 0) // yoder add Jan 20 2020 to stop Chthon from twitching each idle step.
+		ai_face(this);
 }
 
 void boss_rise17(entity this) { set_animofs(this, anim_boss_rise, 17, boss_missile1); }
@@ -187,7 +196,16 @@ void boss_rise1(entity this)
 }
 
 void boss_idle1(entity this);
-void boss_idle31(entity this) { set_animofs(this, anim_boss_walk, 31, boss_idle1); boss_face(this); }
+void boss_idle31(entity this)
+{
+	set_animofs(this, anim_boss_walk, 31, boss_idle1);
+	boss_face(this);
+	// [QuakeEX] If boss_face found a new target, start throwing stuff at them.
+	if(this.enemy && this.enemy.health > 0)
+		boss_missile1(this);
+	else
+		boss_idle1(this);
+}
 void boss_idle30(entity this) { set_animofs(this, anim_boss_walk, 30, boss_idle31); boss_face(this); }
 void boss_idle29(entity this) { set_animofs(this, anim_boss_walk, 29, boss_idle30); boss_face(this); }
 void boss_idle28(entity this) { set_animofs(this, anim_boss_walk, 28, boss_idle29); boss_face(this); }
@@ -217,15 +235,7 @@ void boss_idle5(entity this) { set_animofs(this, anim_boss_walk, 5, boss_idle6);
 void boss_idle4(entity this) { set_animofs(this, anim_boss_walk, 4, boss_idle5); boss_face(this); }
 void boss_idle3(entity this) { set_animofs(this, anim_boss_walk, 3, boss_idle4); boss_face(this); }
 void boss_idle2(entity this) { set_animofs(this, anim_boss_walk, 2, boss_idle3); boss_face(this); }
-void boss_idle1(entity this)
-{
-	set_animofs(this, anim_boss_walk, 1, boss_idle2);
-	// [QuakeEX] If boss_face found a new target, start throwing stuff at them.
-	if(this.enemy.health > 0)
-		boss_missile1(this);
-	else
-		boss_face(this);
-}
+void boss_idle1(entity this) { set_animofs(this, anim_boss_walk, 1, boss_idle2); boss_face(this); }
 
 void boss_missile23(entity this) { set_animofs(this, anim_boss_attack, 23, boss_missile1); boss_face(this); }
 void boss_missile22(entity this) { set_animofs(this, anim_boss_attack, 22, boss_missile23); boss_face(this); }
@@ -251,7 +261,28 @@ void boss_missile3(entity this) { set_animofs(this, anim_boss_attack, 3, boss_mi
 void boss_missile2(entity this) { set_animofs(this, anim_boss_attack, 2, boss_missile3); boss_face(this); }
 void boss_missile1(entity this) { set_animofs(this, anim_boss_attack, 1, boss_missile2); boss_face(this); }
 
-void boss_shocka10(entity this) { set_animofs(this, anim_boss_shocka, 10, boss_missile1); }
+// Yoder add, Jan 05 2021
+// this is a version of shock a but without doing the Freeze
+void boss_shockz10(entity this) { set_animofs(this, anim_boss_shocka, 10, boss_missile1); }
+void boss_shockz9(entity this) { set_animofs(this, anim_boss_shocka, 9, boss_shockz10); }
+void boss_shockz8(entity this) { set_animofs(this, anim_boss_shocka, 8, boss_shockz9); }
+void boss_shockz7(entity this) { set_animofs(this, anim_boss_shocka, 7, boss_shockz8); }
+void boss_shockz6(entity this) { set_animofs(this, anim_boss_shocka, 6, boss_shockz7); }
+void boss_shockz5(entity this) { set_animofs(this, anim_boss_shocka, 5, boss_shockz6); }
+void boss_shockz4(entity this) { set_animofs(this, anim_boss_shocka, 4, boss_shockz5); }
+void boss_shockz3(entity this) { set_animofs(this, anim_boss_shocka, 3, boss_shockz4); }
+void boss_shockz2(entity this) { set_animofs(this, anim_boss_shocka, 2, boss_shockz3); }
+void boss_shockz1(entity this) { set_animofs(this, anim_boss_shocka, 1, boss_shockz2); }
+
+void boss_shocka10(entity this)
+{
+	set_animofs(this, anim_boss_shocka, 10, boss_missile1);
+	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
+	{
+		SUB_Freeze(this);
+		this.use = SUB_Unfreeze_use;
+	}
+}
 void boss_shocka9(entity this) { set_animofs(this, anim_boss_shocka, 9, boss_shocka10); }
 void boss_shocka8(entity this) { set_animofs(this, anim_boss_shocka, 8, boss_shocka9); }
 void boss_shocka7(entity this) { set_animofs(this, anim_boss_shocka, 7, boss_shocka8); }
@@ -262,7 +293,15 @@ void boss_shocka3(entity this) { set_animofs(this, anim_boss_shocka, 3, boss_sho
 void boss_shocka2(entity this) { set_animofs(this, anim_boss_shocka, 2, boss_shocka3); }
 void boss_shocka1(entity this) { set_animofs(this, anim_boss_shocka, 1, boss_shocka2); }
 
-void boss_shockb10(entity this) { set_animofs(this, anim_boss_shockb, 4, boss_missile1); }
+void boss_shockb10(entity this)
+{
+	set_animofs(this, anim_boss_shockb, 4, boss_missile1);
+	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
+	{
+		SUB_Freeze(this);
+		this.use = SUB_Unfreeze_use;
+	}
+}
 void boss_shockb9(entity this) { set_animofs(this, anim_boss_shockb, 3, boss_shockb10); }
 void boss_shockb8(entity this) { set_animofs(this, anim_boss_shockb, 2, boss_shockb9); }
 void boss_shockb7(entity this) { set_animofs(this, anim_boss_shockb, 1, boss_shockb8); }
@@ -312,6 +351,11 @@ void boss_death1(entity this)
 {
 	set_animofs(this, anim_boss_death, 1, boss_death2);
 	_sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM);
+}
+
+void boss_die(entity this, entity inflictor, entity attacker)
+{
+	boss_death1(this);
 }
 
 void boss_missile(entity this, vector p)
@@ -369,6 +413,19 @@ void boss_awake(entity this, entity actor, entity trigger)
 
 	this.max_health = this.health;
 	this.enemy = actor;
+
+	// Yoder add, June 14, 2020
+	// Checking a spawnflag to see if chthon is killable
+	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
+	{
+		this.takedamage = DAMAGE_AIM;
+		this.th_die = boss_die;
+		this.health = 4000;
+		this.max_health = this.health;
+		this.use = monster_use; // prevent from being re-triggered into boss_awake state
+		this.th_pain = boss_pain; // Yoder add, September 9 2020
+	}
+	// end of Yoder add
 
 	te_lavasplash(this.origin);
 
@@ -457,7 +514,10 @@ void lightning_use(entity this, entity actor, entity trigger)
 // don't let the electrodes go back up until the bolt is done
 	le1.nextthink = -1;
 	le2.nextthink = -1;
-	lightning_end = time + 1;
+	if(MP_MG)
+		lightning_end = time + 2;
+	else
+		lightning_end = time + 1;
 
 	_sound(this, CH_VOICE, "misc/power.wav", 1, ATTN_NORM);
 	lightning_fire(this);		
@@ -487,4 +547,44 @@ Just for boss level.
 spawnfunc(event_lightning)
 {
 	this.use = lightning_use;
+}
+
+/* boss_pain
+Play the pain animations when health drops below a certain percent
+
+Yoder add, September 9, 2020
+*/
+void boss_pain(entity this, entity attacker, float damage)
+{
+	if(!(this.spawnflags & BOSS_KILLABLE))
+		return;
+	
+	float priorhealth = this.health + damage;
+	LOG_DEBUGF("prior health: %d\ncurrent health: %d", priorhealth, this.health);
+	
+	// check if first hit
+	if(priorhealth == this.max_health && this.health < this.max_health)
+	{
+		LOG_DEBUG("FIRST HIT!");
+		boss_shockz1(this);
+		SUB_UseTargets(this, NULL, NULL);
+	}
+	// check if crossed 1/3 threshold
+	if((this.health < (this.max_health/3)) && (priorhealth > (this.max_health/3)))
+	{
+		LOG_DEBUG("CROSSED 1/3 MARK!");
+		boss_shockb1(this);
+		SUB_UseTargets(this, NULL, NULL); // Yoder add, Dec 16 2020
+		return;
+	}
+	
+	// check if crossed 2/3 threshold
+	if((this.health < (this.max_health * 2/3)) && (priorhealth > this.max_health * 2/3))
+	{
+		LOG_DEBUG("CROSSED 2/3 MARK!");
+		boss_shocka1(this);
+		SUB_UseTargets(this, NULL, NULL); // Yoder add, Dec 16 2020
+		return;
+	}
+	
 }
