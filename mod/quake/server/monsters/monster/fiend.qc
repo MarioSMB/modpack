@@ -58,9 +58,23 @@ void demon1_run1(entity this)
 
 void demon1_die1(entity this);
 void demon1_jump1(entity this);
-void demon1_jump12(entity this) { set_animofs(this, anim_demon_leap, 12, demon1_jump1); }
+void demon1_jump12(entity this) { set_animofs(this, anim_demon_leap, 12, demon1_run1); }
 void demon1_jump11(entity this) { set_animofs(this, anim_demon_leap, 11, demon1_jump12); }
-void demon1_jump10(entity this) { set_animofs(this, anim_demon_leap, 10, demon1_jump1); if(!MP_IMPEL || this.exptime == 0) this.nextthink = time + 3; }
+void demon1_jump10(entity this)
+{
+	set_animofs(this, anim_demon_leap, 10, demon1_jump1);
+	if(MP_IMPEL && this.exptime != 0)
+		return;
+	// physics says we're on ground
+	if(IS_ONGROUND(this))
+	{
+		settouch(this, func_null);
+		setthink(this, demon1_jump11);
+		return;
+	}
+	// still jumping
+	setthink(this, demon1_jump10);
+}
 void demon1_jump9(entity this) { set_animofs(this, anim_demon_leap, 9, demon1_jump10); }
 void demon1_jump8(entity this) { set_animofs(this, anim_demon_leap, 8, demon1_jump9); }
 void demon1_jump7(entity this) { set_animofs(this, anim_demon_leap, 7, demon1_jump8); }
@@ -291,13 +305,6 @@ void Demon_JumpTouch(entity this, entity toucher)
 		}
 		return;	// not on ground yet
 	}
-
-	settouch(this, func_null);
-	if(MP_IMPEL && this.exptime != 0)
-		return;
-
-	setthink(this, demon1_jump11);
-	this.nextthink = time + 0.1;
 }
 
 string demon1_sight(entity this) { return "demon/sight2.wav"; }

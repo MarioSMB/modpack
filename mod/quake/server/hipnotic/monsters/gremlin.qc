@@ -706,9 +706,12 @@ void gremlin_jump13(entity this) { set_animofs(this, anim_gremlin_jump, 13, grem
 void gremlin_jump12(entity this) { set_animofs(this, anim_gremlin_jump, 12, gremlin_jump13); }
 void gremlin_jump11(entity this)
 {
-	set_animofs(this, anim_gremlin_jump, 11, gremlin_jump1);
-	this.nextthink = time + 3;
-	// if three seconds pass, assume gremlin is stuck and jump again
+	set_animofs(this, anim_gremlin_jump, 11, gremlin_jump11);
+	if(IS_ONGROUND(this))
+	{
+		setthink(this, gremlin_jump13);
+		settouch(this, func_null);
+	}
 }
 void gremlin_jump10(entity this) { set_animofs(this, anim_gremlin_jump, 10, gremlin_jump11); }
 void gremlin_jump9(entity this) { set_animofs(this, anim_gremlin_jump, 9, gremlin_jump10); }
@@ -723,8 +726,8 @@ void gremlin_jump5(entity this)
 	if(IS_ONGROUND(this))
 	{
 		settouch(this, Gremlin_JumpTouch);
-		makevectors(this.angles);
-		this.origin_z = this.origin_z + 1;
+		fixedmakevectors(this.angles);
+		setorigin(this, this.origin + '0 0 1');
 		this.velocity = v_forward * 300 + '0 0 300';
 		UNSET_ONGROUND(this);
 	}
@@ -948,17 +951,16 @@ void gremlin_die3(entity this) { set_animofs(this, anim_gremlin_death, 3, gremli
 void gremlin_die2(entity this) { set_animofs(this, anim_gremlin_death, 2, gremlin_die3); ai_forward(this, 2); }
 void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM); }
 
-void gremlin_gib(entity this)
-{
-	_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-	ThrowHead(this, "progs/h_grem.mdl", -35);
-	ThrowGib(this, "progs/gib1.mdl", -35);
-	ThrowGib(this, "progs/gib1.mdl", -35);
-	ThrowGib(this, "progs/gib1.mdl", -35);
-}
-
 void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); this.solid = SOLID_NOT; }
-void gremlin_flip7(entity this) { set_animofs(this, anim_gremlin_flip, 7, gremlin_gib); this.nextthink = time + 3; } // if stuck for 3 seconds, jump again
+void gremlin_flip7(entity this)
+{
+	set_animofs(this, anim_gremlin_flip, 7, gremlin_flip7);
+	if(IS_ONGROUND(this))
+	{
+		setthink(this, gremlin_flip8);
+		settouch(this, func_null);
+	}
+}
 void gremlin_flip6(entity this) { set_animofs(this, anim_gremlin_flip, 6, gremlin_flip7); settouch(this, Gremlin_FlipTouch); }
 void gremlin_flip5(entity this) { set_animofs(this, anim_gremlin_flip, 5, gremlin_flip6); }
 void gremlin_flip4(entity this) { set_animofs(this, anim_gremlin_flip, 4, gremlin_flip5); }
@@ -969,10 +971,9 @@ void gremlin_flip1(entity this)
 	set_animofs(this, anim_gremlin_flip, 1, gremlin_flip2);
 	ai_face(this);
 	makevectors (this.angles);
-	this.origin_z = this.origin_z + 1;
+	setorigin(this, this.origin + '0 0 1');
 	this.velocity = '0 0 350' - (v_forward * 200);
-	if(IS_ONGROUND(this))
-		this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	_sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM);
 }
 

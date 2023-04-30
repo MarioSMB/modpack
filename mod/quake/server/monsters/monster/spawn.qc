@@ -198,6 +198,12 @@ void tbaby_fly1(entity this);
 void tbaby_fly4(entity this)
 {
 	set_animofs(this, anim_tbaby_fly, 4, tbaby_fly1);
+	if(IS_ONGROUND(this))
+	{
+		settouch(this, func_null);
+		setthink(this, tbaby_run1);
+		return;
+	}
 	this.cnt += 1;
 	if(this.cnt >= 4)
 		tbaby_jump5(this);

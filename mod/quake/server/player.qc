@@ -280,7 +280,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(MP_HIPNOTIC && footsteps == 1)
+	if(MP_HIPNOTIC && footsteps == 1 && !gameover)
 	{
 		this.spawnsilent = this.spawnsilent + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -315,7 +315,7 @@ void player_run(entity this)
 
 	if(MP_IMPEL)
 	{
-		if(this.waterlevel == 0)
+		if(this.waterlevel == 0 && !gameover)
 		{
 			if(this.walkframe == 1 || this.walkframe == 4)
 			{

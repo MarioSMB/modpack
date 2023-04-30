@@ -312,11 +312,12 @@ bool t_stepdirection(entity this, float yaw, float dist)
 	return false;
 }
 
-const int DI_NODIR = -1;
+#define ANGLEMOD(a) ((a) - 360.0 * floor((a) / 360.0))
+const float DI_NODIR = -1;
 void t_newchasedir(entity this, entity targ, float dist)
 {
-	float olddir = anglemods(rint(this.ideal_yaw / 45) * 45);
-	float turnaround = anglemods(olddir - 180);
+	float olddir = ANGLEMOD(rint(this.ideal_yaw / 45) * 45);
+	float turnaround = ANGLEMOD(olddir - 180);
 
 	vector delta = vec2(targ.origin - this.origin);
 
@@ -377,6 +378,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 	if(!t_checkbottom(this))
 		this.flags |= FL_PARTIALGROUND;
 }
+#undef ANGLEMOD
 #endif
 
 void t_movetogoal(entity this, float dist)

@@ -247,7 +247,15 @@ void dog_atta2(entity this) { set_animofs(this, anim_dog_attack, 2, dog_atta3); 
 void dog_atta1(entity this) { set_animofs(this, anim_dog_attack, 1, dog_atta2); ai_charge(this, 10); }
 
 void dog_die1(entity this);
-void dog_leap9(entity this) { set_animofs(this, anim_dog_leap, 9, dog_leap9); }
+void dog_leap9(entity this)
+{
+	set_animofs(this, anim_dog_leap, 9, dog_leap9);
+	if(IS_ONGROUND(this))
+	{
+		setthink(this, dog_run1);
+		settouch(this, func_null);
+	}
+}
 void dog_leap8(entity this) { set_animofs(this, anim_dog_leap, 8, dog_leap9); }
 void dog_leap7(entity this) { set_animofs(this, anim_dog_leap, 7, dog_leap8); }
 void dog_leap6(entity this) { set_animofs(this, anim_dog_leap, 6, dog_leap7); }
@@ -269,7 +277,7 @@ void dog_leap1(entity this)
 
 	settouch(this, Dog_JumpTouch);
 	fixedmakevectors(this.angles);
-	this.origin_z = this.origin_z + 1;
+	setorigin(this, this.origin + '0 0 1');
 	this.velocity = v_forward * 300 + '0 0 200';
 	UNSET_ONGROUND(this);
 }
