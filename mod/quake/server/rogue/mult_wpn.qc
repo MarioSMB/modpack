@@ -1,4 +1,4 @@
-// multi_weapons
+#include "multi_wpn.qh"
 
 //=============================================================================
 // Multi Grenade Code
@@ -146,10 +146,10 @@ void MultiRocketExplode(entity this, entity directhitentity)
 
 	if(directhitentity.health)
 	{
-		if(directhitentity.classname == "monster_shambler")
+		if(directhitentity.monsterdef && (directhitentity.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
 		if(directhitentity.classname == "monster_dragon")
-			damg = damg * 0.5;	// mostly immune
+			damg = damg * 0.5;	// mostly immune (special case)
 		T_Damage(directhitentity, this, this.owner, damg );
 	}
 
@@ -414,7 +414,7 @@ void PlasmaTouch(entity this, entity toucher)
 	
 	if(toucher.health)
 	{
-		if(toucher.classname == "monster_shambler")
+		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
 		T_Damage(toucher, this, this.owner, damg );
 	}

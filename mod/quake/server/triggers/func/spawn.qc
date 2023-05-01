@@ -116,6 +116,12 @@ Think of it like setting up a normal entity.
 "spawnmulti" set this to 1 if you want this spawn to be reoccuring.
 */
 
+// TODO
+spawnfunc(monster_dog);
+spawnfunc(monster_ogre);
+spawnfunc(monster_demon1);
+spawnfunc(monster_zombie);
+spawnfunc(monster_shambler);
 spawnfunc(func_spawn)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }

@@ -1,0 +1,24 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_JUGGERNAUT, "progs/jugg.mdl");
+MODEL(MON_JUGGERNAUT_HEAD, "progs/h_jugg.mdl");
+MODEL(MON_JUGGERNAUT2, "progs/jugg2.mdl");
+MODEL(MON_JUGGERNAUT2_HEAD, "progs/h_jugg2.mdl");
+#endif
+
+CLASS(Juggernaut, Monster)
+    ATTRIB(Juggernaut, spawnflags, int, 0);
+    ATTRIB(Juggernaut, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Juggernaut, m_maxs, vector, '32 32 68');
+#ifdef GAMEQC
+    ATTRIB(Juggernaut, m_model, Model, MDL_MON_JUGGERNAUT);
+    ATTRIB(Juggernaut, m_model_head, Model, MDL_MON_JUGGERNAUT_HEAD);
+#endif
+    ATTRIB(Juggernaut, netname, string, "juggernaut");
+    ATTRIB(Juggernaut, monster_name, string, _("Juggernaut"));
+ENDCLASS(Juggernaut)
+
+REGISTER_MONSTER(JUGGERNAUT, NEW(Juggernaut));

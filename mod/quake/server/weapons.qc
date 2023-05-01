@@ -11,7 +11,6 @@
 */
 void player_run(entity this);
 void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
-void SpawnBlood(vector org, vector vel, float damage, entity targ);
 void SuperDamageSound(entity this);
 
 // called by worldspawn
@@ -30,8 +29,6 @@ PRECACHE(Weapons)
 	precache_sound("weapons/shotgn2.wav");	// super shotgun
 }
 
-//MED 10/18/96
-void spawn_touchblood(entity this, float damage, entity targ);
 /*
 ================
 HIPNOTIC WEAPONS
@@ -817,7 +814,7 @@ void T_MissileTouch(entity this, entity toucher)
 	
 	if(toucher.health)
 	{
-		if(toucher.classname == "monster_shambler" || toucher.classname == "monster_legond")
+		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
 		T_Damage(toucher, this, this.owner, damg );
 	}
@@ -2500,8 +2497,6 @@ void ProximityExplode(entity this)
 }
 
 //MED 10/31/96
-.int NumProximityGrenades;
-.entity realowner; // not lost between attacks
 /*
 ================
 ProximityGrenadeExplode

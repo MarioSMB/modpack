@@ -9,12 +9,41 @@
 .float axe_hit_chain_time; // time of last axe hit + combo time
 //const float AXE_COMBO_TIME = 0.7; // max time before combo resets
 
+.int NumProximityGrenades;
+.entity realowner; // not lost between attacks
+
 .int prevweapon;
 
 .float ammo_lava_nails;
 .float ammo_multi_rockets;
 .float ammo_plasma;
 
-.string gibmodel;
-
 bool W_WantsToChangeWeapon(entity this, int old, int new);
+
+entity launch_spike(entity this, vector org, vector dir);
+
+void T_MissileTouch(entity this, entity toucher);
+
+entity HIP_LaunchLaser(entity this, vector org, vector vec, float light);
+
+void s_explode1(entity this); // TODO: shouldn't be referenced directly!
+
+void SpawnMeatSpray(entity this, vector org, vector vel);
+
+void LightningDamage(vector p1, vector p2, entity from, float damage);
+
+void SpawnBlood(vector org, vector vel, float damage, entity targ);
+
+int W_BestWeapon(entity this, int except);
+
+void FireBullets(entity this, int shotcount, vector dir, vector spread);
+
+void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker);
+
+void ProximityGrenadeTouch(entity this, entity toucher);
+
+void ProximityBomb(entity this);
+
+void BecomeExplosion(entity this);
+
+void spawn_touchblood(entity this, float damage, entity targ);

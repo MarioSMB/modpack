@@ -1,0 +1,8 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef SVQC
+void dragon_fireball(entity this);
+void dragon_melee1(entity this);
+#endif

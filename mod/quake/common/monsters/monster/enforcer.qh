@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_ENFORCER, "progs/enforcer.mdl");
+MODEL(MON_ENFORCER_HEAD, "progs/h_mega.mdl");
+#endif
+
+CLASS(Enforcer, Monster)
+    ATTRIB(Enforcer, spawnflags, int, 0);
+    ATTRIB(Enforcer, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Enforcer, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Enforcer, m_model, Model, MDL_MON_ENFORCER);
+    ATTRIB(Enforcer, m_model_head, Model, MDL_MON_ENFORCER_HEAD);
+#endif
+    ATTRIB(Enforcer, netname, string, "enforcer");
+    ATTRIB(Enforcer, monster_name, string, _("Enforcer"));
+ENDCLASS(Enforcer)
+
+REGISTER_MONSTER(ENFORCER, NEW(Enforcer));

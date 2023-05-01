@@ -10,3 +10,5 @@
 #include "physics.qc"
 
 #include "effects/all.qc"
+
+#include "monsters/_mod.inc"

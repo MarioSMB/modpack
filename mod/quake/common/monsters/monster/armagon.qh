@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_ARMAGON, "progs/armalegs.mdl");
+#endif
+
+CLASS(Armagon, Monster)
+    ATTRIB(Armagon, spawnflags, int, 0);
+    ATTRIB(Armagon, m_mins, vector, '-48 -48 -24');
+    ATTRIB(Armagon, m_maxs, vector, '48 48 84');
+#ifdef GAMEQC
+    ATTRIB(Armagon, m_model, Model, MDL_MON_ARMAGON);
+#endif
+    ATTRIB(Armagon, netname, string, "armagon");
+    ATTRIB(Armagon, monster_name, string, _("Armagon"));
+ENDCLASS(Armagon)
+
+REGISTER_MONSTER(ARMAGON, NEW(Armagon));

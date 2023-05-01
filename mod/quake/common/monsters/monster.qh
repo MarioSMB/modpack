@@ -1,0 +1,49 @@
+#pragma once
+
+// special spawn flags
+const int MONSTER_TYPE_FLY = BIT(5);
+const int MONSTER_TYPE_SWIM = BIT(6);
+// bit 7 now unused
+const int MON_FLAG_EXPLOSIONRESISTANT = BIT(8); // takes half damage from explosions
+const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
+const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
+const int MON_FLAG_HIDDEN = BIT(16);
+
+// entity properties of monsterinfo:
+.entity monsterdef;
+
+CLASS(Monster, Object)
+    ATTRIB(Monster, monsterid, int, 0);
+    /** attributes */
+    ATTRIB(Monster, spawnflags, int, 0);
+    /** human readable name */
+    ATTRIB(Monster, monster_name, string, "Monster");
+    /** short name */
+    ATTRIB(Monster, netname, string, "");
+    /** model */
+    ATTRIB(Monster, m_model, entity);
+    /** head model */
+    ATTRIB(Monster, m_model_head, entity);
+    /** hitbox size */
+    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
+    /** hitbox size */
+    ATTRIB(Monster, m_maxs, vector, '0 0 0');
+
+    /** (SERVER) setup monster data */
+    /* in quake, most functions are stored as entity properties */
+    METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+
+ENDCLASS(Monster)
+
+#ifdef SVQC
+#include "../../server/client.qh"
+#include "../../server/combat.qh"
+#include "../../server/impel/impel.qh"
+#include "../../server/items.qh"
+#include "../../server/monsters/ai.qh"
+#include "../../server/monsters/fight.qh"
+#include "../../server/monsters/monsters.qh"
+#include "../../server/rogue/multi_wpn.qh"
+#include "../../server/rogue/new_ai.qh"
+#include "../../server/weapons.qh"
+#endif

@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_MUMMY, "progs/mummy.mdl");
+MODEL(MON_MUMMY_HEAD, "progs/h_zombie.mdl");
+#endif
+
+CLASS(Mummy, Monster)
+    ATTRIB(Mummy, spawnflags, int, 0);
+    ATTRIB(Mummy, m_mins, vector, VEC_HULL_MIN);
+    ATTRIB(Mummy, m_maxs, vector, VEC_HULL_MAX);
+#ifdef GAMEQC
+    ATTRIB(Mummy, m_model, Model, MDL_MON_MUMMY);
+    ATTRIB(Mummy, m_model_head, Model, MDL_MON_MUMMY_HEAD);
+#endif
+    ATTRIB(Mummy, netname, string, "mummy");
+    ATTRIB(Mummy, monster_name, string, _("Mummy"));
+ENDCLASS(Mummy)
+
+REGISTER_MONSTER(MUMMY, NEW(Mummy));

@@ -1,8 +1,4 @@
-/* Miscelanneous QuickC program
-	Copyright (c)1996 Hipnotic Interactive, Inc.
-	All rights reserved.
-	Distributed (unsupported) on 3.12.97
-*/
+#include "../../common/monsters/_mod.qh"
 
 void play_sound_use(entity this, entity actor, entity trigger)
 {

@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_VORE, "progs/shalrath.mdl");
+MODEL(MON_VORE_HEAD, "progs/h_shal.mdl");
+#endif
+
+CLASS(Vore, Monster)
+    ATTRIB(Vore, spawnflags, int, 0);
+    ATTRIB(Vore, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Vore, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
+    ATTRIB(Vore, m_model_head, Model, MDL_MON_VORE_HEAD);
+#endif
+    ATTRIB(Vore, netname, string, "vore");
+    ATTRIB(Vore, monster_name, string, _("Vore"));
+ENDCLASS(Vore)
+
+REGISTER_MONSTER(VORE, NEW(Vore));

@@ -409,8 +409,6 @@ void t_movetogoal(entity this, float dist)
 entity sight_entity;
 float sight_entity_time;
 
-void FoundTarget(entity this);
-
 /*
 ==============================================================================
 
@@ -938,7 +936,6 @@ void HuntTarget(entity this)
 	SUB_AttackFinished(this, 1);	// wait a while before first attack
 }
 
-.string(entity this) sightsound;
 void SightSound(entity this)
 {
 	if(this.classname == "monster_gremlin" && this.stoleweapon != 0)
@@ -1233,7 +1230,6 @@ ai_walk
 The monster is walking its beat
 =============
 */
-.float move_dist;
 void ai_walk(entity this, float dist)
 {
 	if(MP_MG && CheckContentsDamage(this))
@@ -1351,7 +1347,6 @@ bool FacingIdeal(entity this)
 
 //=============================================================================
 
-.bool(entity this) checkattack;
 bool CheckAnyAttack(entity this)
 {
 	if(!this.enemy_visible)

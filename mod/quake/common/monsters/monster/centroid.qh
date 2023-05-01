@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_CENTROID, "progs/scor.mdl");
+MODEL(MON_CENTROID_HEAD, "progs/h_scourg.mdl");
+#endif
+
+CLASS(Centroid, Monster)
+    ATTRIB(Centroid, spawnflags, int, 0);
+    ATTRIB(Centroid, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Centroid, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Centroid, m_model, Model, MDL_MON_CENTROID);
+    ATTRIB(Centroid, m_model_head, Model, MDL_MON_CENTROID_HEAD);
+#endif
+    ATTRIB(Centroid, netname, string, "centroid");
+    ATTRIB(Centroid, monster_name, string, _("Centroid"));
+ENDCLASS(Centroid)
+
+REGISTER_MONSTER(CENTROID, NEW(Centroid));

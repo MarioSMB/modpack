@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_SHAMBLER, "progs/shambler.mdl");
+MODEL(MON_SHAMBLER_HEAD, "progs/h_shams.mdl");
+#endif
+
+CLASS(Shambler, Monster)
+    ATTRIB(Shambler, spawnflags, int, MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Shambler, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Shambler, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
+    ATTRIB(Shambler, m_model_head, Model, MDL_MON_SHAMBLER_HEAD);
+#endif
+    ATTRIB(Shambler, netname, string, "shambler");
+    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+ENDCLASS(Shambler)
+
+REGISTER_MONSTER(SHAMBLER, NEW(Shambler));

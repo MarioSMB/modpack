@@ -17,3 +17,5 @@ MODEL(ITEM_GOLDRUNEKEY,                   	"progs/m_g_key.mdl");
 MODEL(ITEM_GOLDKEYCARD,                   	"progs/b_g_key.mdl");
 
 MODEL(LAVABALL,                             "progs/lavaball.mdl");
+
+MODEL(EXPLOSION,                            "progs/s_explod.spr");

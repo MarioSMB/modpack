@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_FIEND, "progs/demon.mdl");
+MODEL(MON_FIEND_HEAD, "progs/h_demon.mdl");
+#endif
+
+CLASS(Fiend, Monster)
+    ATTRIB(Fiend, spawnflags, int, 0);
+    ATTRIB(Fiend, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Fiend, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Fiend, m_model, Model, MDL_MON_FIEND);
+    ATTRIB(Fiend, m_model_head, Model, MDL_MON_FIEND_HEAD);
+#endif
+    ATTRIB(Fiend, netname, string, "fiend");
+    ATTRIB(Fiend, monster_name, string, _("Fiend"));
+ENDCLASS(Fiend)
+
+REGISTER_MONSTER(FIEND, NEW(Fiend));

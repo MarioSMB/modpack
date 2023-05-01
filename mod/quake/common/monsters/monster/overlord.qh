@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_OVERLORD, "progs/s_wrath.mdl");
+#endif
+
+CLASS(Overlord, Monster)
+    ATTRIB(Overlord, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Overlord, m_mins, vector, VEC_HULL_MIN);
+    ATTRIB(Overlord, m_maxs, vector, VEC_HULL_MAX);
+#ifdef GAMEQC
+    ATTRIB(Overlord, m_model, Model, MDL_MON_OVERLORD);
+#endif
+    ATTRIB(Overlord, netname, string, "overlord");
+    ATTRIB(Overlord, monster_name, string, _("Overlord"));
+ENDCLASS(Overlord)
+
+REGISTER_MONSTER(OVERLORD, NEW(Overlord));

@@ -28,3 +28,9 @@ const int SIGIL_ALL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5;
 const int SIGIL_ALL_ALL_ALLLL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5 | SIGIL_E6;
 
 string Weapon_PrettyName(int wepid);
+
+void DropBackpack(entity this);
+
+void BackpackTouch(entity this, entity toucher);
+
+bool T_Heal(entity e, float healamount, bool ignore);

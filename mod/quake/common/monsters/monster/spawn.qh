@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_SPAWN, "progs/tarbaby.mdl");
+#endif
+
+CLASS(Spawn, Monster)
+    ATTRIB(Spawn, spawnflags, int, 0);
+    ATTRIB(Spawn, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Spawn, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Spawn, m_model, Model, MDL_MON_SPAWN);
+#endif
+    ATTRIB(Spawn, netname, string, "spawn");
+    ATTRIB(Spawn, monster_name, string, _("Spawn"));
+ENDCLASS(Spawn)
+
+REGISTER_MONSTER(SPAWN, NEW(Spawn));

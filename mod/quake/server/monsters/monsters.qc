@@ -1,5 +1,15 @@
 #include "monsters.qh"
 
+#include "ai.qh"
+#include "../combat.qh"
+#include "../horde.qh"
+#include "../hipnotic/defs.qh"
+#include "../player.qh"
+#include "../triggers/subs.qh"
+#include "../triggers/teleporters.qh"
+#include "../triggers/triggers.qh"
+#include "../weapons.qh"
+
 /* ALL MONSTERS SHOULD BE 1 0 0 IN COLOR */
 
 // name =[framenum,	nexttime, nextthink] {code}
@@ -11,18 +21,6 @@
 //		this.think = nextthink
 //		<code>
 // }
-
-const int MONSTER_SPAWNED = 4;
-const int MONSTER_SPAWNED_ANGRY = 8;
-const int MONSTER_SPAWNED_TFOG = 16;
-const int MONSTER_WAITWALK = 4096;
-
-const int MONSTER_TYPE_WALK = 1;
-const int MONSTER_TYPE_FLY = 2;
-const int MONSTER_TYPE_SWIM = 3;
-
-const int MONSTER_SIZE_SMALL = 1;
-const int MONSTER_SIZE_LARGE = 2;
 
 /*
 ================
@@ -76,7 +74,7 @@ void monster_start_go(entity this)
 	this.ideal_yaw = this.angles * '0 1 0';
 	this.use = monster_use;
 
-	if(!(this.flags & FL_SWIM))
+	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY))
 	{
 		if(!this.damagedbycontents)
 			IL_PUSH(g_damagedbycontents, this);
@@ -90,7 +88,7 @@ void monster_start_go(entity this)
 			LOG_DEBUG("Monster in wall at ", vtos(this.origin), "\n");
 	}
 
-	if(MP_IMPEL && this.health <= 0)
+	if(this.health <= 0)
 		return;
 
 	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))
@@ -172,18 +170,28 @@ void StartMonster(entity this, entity actor, entity trigger)
 	monster_start_go(this);
 }
 
-void monster_start(entity this, int stype)
+void monster_start(entity this, Monster mon)
 {
+	if(!mon || mon == MON_Null) { return; } // invalid monster
 	if(deathmatch) { delete(this); return; }
 	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
 	{
 		delete(this);
 		return;
 	}
-	// spread think times so they don't all happen at same time
+
 	this.flags |= FL_MONSTER;
-	this.flags |= stype; // TODO?
+	this.monsterdef = mon;
 	this.max_health = this.health;
+	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
+	if(mon.spawnflags & MONSTER_TYPE_FLY) { this.flags |= FL_FLY; }
+	// hipnotic
+	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
+
+	this.solid = SOLID_SLIDEBOX;
+	set_movetype(this, MOVETYPE_STEP);
+	setmodel(this, mon.m_model);
+	setsize(this, mon.m_mins, mon.m_maxs);
 
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent
 	// in horde, mosnters shouldn't increase total count until spawned
@@ -192,8 +200,14 @@ void monster_start(entity this, int stype)
 		if(!(this.spawnflags & MONSTER_SPAWNED))
 			monsters_total += 1;
 	}
-	else if(!(stype & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
+	else if(!(this.flags & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
 		monsters_total += 1;
+
+	if(!mon.mr_setup(mon, this))
+	{
+		delete(this);
+		return;
+	}
 
 	if(this.spawnflags & MONSTER_SPAWNED)
 	{

@@ -22,6 +22,4 @@
 #include "ending.qc"
 #include "timemach.qc"
 
-#include "monsters/_all.inc"
-
 #include "rogue.qc"

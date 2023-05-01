@@ -4,6 +4,6 @@
 #include "bulletholes.qc"
 #include "misc.qc"
 
-#include "monsters/_all.inc"
+#include "spikemine.qc"
 
 #include "hipnotic.qc"

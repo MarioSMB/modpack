@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_ROTTWEILER, "progs/dog.mdl");
+MODEL(MON_ROTTWEILER_HEAD, "progs/h_dog.mdl");
+#endif
+
+CLASS(Rottweiler, Monster)
+    ATTRIB(Rottweiler, spawnflags, int, 0);
+    ATTRIB(Rottweiler, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Rottweiler, m_maxs, vector, '32 32 40');
+#ifdef GAMEQC
+    ATTRIB(Rottweiler, m_model, Model, MDL_MON_ROTTWEILER);
+    ATTRIB(Rottweiler, m_model_head, Model, MDL_MON_ROTTWEILER_HEAD);
+#endif
+    ATTRIB(Rottweiler, netname, string, "rottweiler");
+    ATTRIB(Rottweiler, monster_name, string, _("Rottweiler"));
+ENDCLASS(Rottweiler)
+
+REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler));

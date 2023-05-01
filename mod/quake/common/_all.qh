@@ -54,6 +54,7 @@ const int FL_ONSLICK 				= BIT(19);
 #include "sounds/all.qh"
 
 #include "items/item.qh"
+#include "monsters/all.qh"
 
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))

@@ -1,3 +1,10 @@
 #pragma once
 
+const int MONSTER_SPAWNED = 4;
+const int MONSTER_SPAWNED_ANGRY = 8;
+const int MONSTER_SPAWNED_TFOG = 16;
+const int MONSTER_WAITWALK = 4096;
+
 .float waitmin, waitmax;
+
+void monster_use(entity this, entity actor, entity trigger);

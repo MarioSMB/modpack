@@ -504,7 +504,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	{
 		_setmodel(monster, "progs/demon.mdl");
 
-		setsize(monster, VEC_HULL2_MIN, VEC_HULL2_MAX);
+		setsize(monster, '-32 -32 -24', '32 32 64');
 		monster.classname = "monster_demon1";
 		monster.health = 300;
 		org += '0 0 48';
@@ -519,7 +519,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	else if(class == "ogre")
 	{
 		_setmodel(monster, "progs/ogre.mdl");
-		setsize(monster, VEC_HULL2_MIN, VEC_HULL2_MAX);
+		setsize(monster, '-32 -32 -24', '32 32 64');
 		monster.classname = "monster_ogre";
 		monster.health = 200;
 		org += '0 0 32';
@@ -562,7 +562,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	else if(class == "shambler")
 	{
 		_setmodel(monster, "progs/shambler.mdl");
-		setsize(monster, VEC_HULL2_MIN, VEC_HULL2_MAX);
+		setsize(monster, '-32 -32 -24', '32 32 64');
 		monster.classname = "monster_shambler";
 		monster.health = 600;
 		org += '0 0 32';
@@ -577,7 +577,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	else if(class == "shalrath")
 	{
 		_setmodel(monster, "progs/shalrath.mdl");
-		setsize(monster, VEC_HULL2_MIN, VEC_HULL2_MAX);
+		setsize(monster, '-32 -32 -24', '32 32 64');
 		monster.classname = "monster_shalrath";
 		org += '0 0 32';
 		monster.health = 400;

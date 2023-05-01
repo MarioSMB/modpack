@@ -1,5 +1,0 @@
-#pragma once
-
-void boss_missile(entity this, vector p);
-
-void boss_missile1(entity this);

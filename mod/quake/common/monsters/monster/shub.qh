@@ -1,0 +1,8 @@
+#pragma once
+
+#ifdef SVQC
+void finale_1(entity this, entity inflictor, entity attacker);
+void finale_2(entity this);
+void finale_3(entity this);
+void finale_4(entity this);
+#endif

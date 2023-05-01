@@ -1,3 +1,5 @@
+#include "fight.qh"
+
 #include "ai.qh"
 #include "../combat.qh"
 

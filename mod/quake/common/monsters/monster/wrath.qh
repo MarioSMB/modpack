@@ -1,0 +1,26 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_WRATH, "progs/wrath.mdl");
+#endif
+
+CLASS(Wrath, Monster)
+    ATTRIB(Wrath, spawnflags, int, 0);
+    ATTRIB(Wrath, m_mins, vector, VEC_HULL_MIN);
+    ATTRIB(Wrath, m_maxs, vector, VEC_HULL_MAX);
+#ifdef GAMEQC
+    ATTRIB(Wrath, m_model, Model, MDL_MON_WRATH);
+#endif
+    ATTRIB(Wrath, netname, string, "wrath");
+    ATTRIB(Wrath, monster_name, string, _("Wrath"));
+ENDCLASS(Wrath)
+
+REGISTER_MONSTER(WRATH, NEW(Wrath));
+
+#ifdef SVQC
+void WrathMissileTouch(entity this, entity toucher);
+void WrathHome(entity this);
+void WrathMissile(entity this, int AttackNumber);
+#endif

@@ -1,0 +1,9 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef SVQC
+void boss_missile(entity this, vector p);
+
+void boss_missile1(entity this);
+#endif

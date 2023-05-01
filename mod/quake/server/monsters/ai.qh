@@ -18,6 +18,10 @@ const int SPAWNFLAG_NO_CONTENTS_DAMAGE = 16384;
 .void(entity this) th_missile;
 .void(entity this) th_melee;
 
+.string(entity this) sightsound;
+
+.bool(entity this) checkattack;
+
 .float lefty;
 
 .float pausetime;
@@ -32,6 +36,8 @@ const int SPAWNFLAG_NO_CONTENTS_DAMAGE = 16384;
 //.bool enemy_infront;
 .int enemy_range;
 .float enemy_yaw;
+
+.float move_dist;
 
 bool CanTakedamage(entity e, entity actor);
 
@@ -54,3 +60,35 @@ void t_movetogoal(entity this, float dist);
 bool t_walkmove(entity this, float yaw, float dist);
 
 void FoundTarget(entity this);
+
+void ai_stand(entity this);
+
+void ai_walk(entity this, float dist);
+
+void ai_run_melee(entity this);
+
+void ai_run_missile(entity this);
+
+void ai_run_slide(entity this);
+
+void ai_run_dodge(entity this);
+
+void ai_run(entity this, float dist);
+
+void ai_face(entity this);
+
+void ai_turn(entity this);
+
+void ai_turn_in_place(entity this);
+
+void ai_painforward(entity this, float dist);
+
+bool FindTarget(entity this);
+
+void ai_pain(entity this, float dist);
+
+void ai_forward(entity this, float dist);
+
+void HuntTarget(entity this);
+
+void ai_back(entity this, float dist);

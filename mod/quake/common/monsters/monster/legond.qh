@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_LEGOND, "progs/legond.mdl");
+#endif
+
+CLASS(Legond, Monster)
+    ATTRIB(Legond, spawnflags, int, MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Legond, m_mins, vector, '-5 -14 -1');
+    ATTRIB(Legond, m_maxs, vector, '11 14 53');
+#ifdef GAMEQC
+    ATTRIB(Legond, m_model, Model, MDL_MON_LEGOND);
+#endif
+    ATTRIB(Legond, netname, string, "legond");
+    ATTRIB(Legond, monster_name, string, _("Legond"));
+ENDCLASS(Legond)
+
+REGISTER_MONSTER(LEGOND, NEW(Legond));

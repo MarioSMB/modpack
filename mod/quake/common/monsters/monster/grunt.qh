@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_GRUNT, "progs/soldier.mdl");
+MODEL(MON_GRUNT_HEAD, "progs/h_guard.mdl");
+#endif
+
+CLASS(Grunt, Monster)
+    ATTRIB(Grunt, spawnflags, int, 0);
+    ATTRIB(Grunt, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Grunt, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Grunt, m_model, Model, MDL_MON_GRUNT);
+    ATTRIB(Grunt, m_model_head, Model, MDL_MON_GRUNT_HEAD);
+#endif
+    ATTRIB(Grunt, netname, string, "grunt");
+    ATTRIB(Grunt, monster_name, string, _("Grunt"));
+ENDCLASS(Grunt)
+
+REGISTER_MONSTER(GRUNT, NEW(Grunt));

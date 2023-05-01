@@ -26,10 +26,6 @@ void horde_set_keys(entity temp_player); // yoder sept24
 void GibMonster(entity this);
 float HordeGetPlayersAlive();
 
-float intermission_exittime;
-
-const int NO_INTERMISSION = BIT(0);
-
 /*QUAKED info_intermission(1 0.5 0.5)(-16 -16 -16)(16 16 16)
 This is the camera point for the intermission.
 Use mangle instead of angle, so you can set pitch or roll as well as yaw.  'pitch roll yaw'
@@ -415,7 +411,6 @@ void GotoNextMap()
 	}
 }
 
-string getcdtrack(int numb);
 void SendCDTrack(entity to, int numb)
 {
 	if(!to)
@@ -438,7 +433,6 @@ void SendCDTrack(entity to, int numb)
 	stuffcmd(to, strcat("cd loop ", getcdtrack(numb), "\n"));
 }
 
-void server_reset();
 void ExitIntermission()
 {
 // skip any text in deathmatch

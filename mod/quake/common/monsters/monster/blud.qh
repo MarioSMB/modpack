@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_BLUD, "progs/blud.mdl");
+MODEL(MON_BLUD_HEAD, "progs/rawbone.mdl");
+#endif
+
+CLASS(Blud, Monster)
+    ATTRIB(Blud, spawnflags, int, 0);
+    ATTRIB(Blud, m_mins, vector, '-22 -46 -68');
+    ATTRIB(Blud, m_maxs, vector, '24 35 72');
+#ifdef GAMEQC
+    ATTRIB(Blud, m_model, Model, MDL_MON_BLUD);
+    ATTRIB(Blud, m_model_head, Model, MDL_MON_BLUD_HEAD);
+#endif
+    ATTRIB(Blud, netname, string, "blud");
+    ATTRIB(Blud, monster_name, string, _("Blud"));
+ENDCLASS(Blud)
+
+REGISTER_MONSTER(BLUD, NEW(Blud));

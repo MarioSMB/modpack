@@ -1,0 +1,32 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_ZOMBIE, "progs/zombie.mdl");
+MODEL(MON_ZOMBIE_HEAD, "progs/h_zombie.mdl");
+#endif
+
+CLASS(Zombie, Monster)
+    ATTRIB(Zombie, spawnflags, int, MONSTER_TYPE_UNDEAD);
+    ATTRIB(Zombie, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Zombie, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
+    ATTRIB(Zombie, m_model_head, Model, MDL_MON_ZOMBIE_HEAD);
+#endif
+    ATTRIB(Zombie, netname, string, "zombie");
+    ATTRIB(Zombie, monster_name, string, _("Zombie"));
+ENDCLASS(Zombie)
+
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie));
+
+#ifdef SVQC
+const int SPAWN_CRUCIFIED = BIT(0);
+const int SPAWN_LYINGDOWN = BIT(2); // HIPNOTIC
+
+// ROGUE
+const int SPAWN_LYING = BIT(1);
+const int SPAWN_AMBUSH = BIT(2);
+const int SPAWN_SNEAKY = BIT(3);
+#endif

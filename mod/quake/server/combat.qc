@@ -531,7 +531,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 			vector org = head.origin + (head.mins + head.maxs) * 0.5;
 			float points = max(0, 0.5 * vlen(inflictor.origin - org));
 			points = damage - points;
-			if(head == attacker || head.classname == "monster_shambler" || head.classname == "monster_legond")
+			if(head == attacker || (head.monsterdef && (head.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)))
 				points *= 0.5; // shambler takes half damage from all explosions
 			if(points > 0)
 			{

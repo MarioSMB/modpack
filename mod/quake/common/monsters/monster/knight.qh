@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_KNIGHT, "progs/knight.mdl");
+MODEL(MON_KNIGHT_HEAD, "progs/h_knight.mdl");
+#endif
+
+CLASS(Knight, Monster)
+    ATTRIB(Knight, spawnflags, int, 0);
+    ATTRIB(Knight, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Knight, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Knight, m_model, Model, MDL_MON_KNIGHT);
+    ATTRIB(Knight, m_model_head, Model, MDL_MON_KNIGHT_HEAD);
+#endif
+    ATTRIB(Knight, netname, string, "knight");
+    ATTRIB(Knight, monster_name, string, _("Knight"));
+ENDCLASS(Knight)
+
+REGISTER_MONSTER(KNIGHT, NEW(Knight));

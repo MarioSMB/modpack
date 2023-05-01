@@ -1,6 +1,4 @@
-// new ai functions
-//
-// pmack
+#include "new_ai.qh"
 
 .float orbitPosition;
 

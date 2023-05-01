@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_SPIDER_DROID, "progs/spid.mdl");
+MODEL(MON_SPIDER_DROID_HEAD, "progs/spidgib.mdl");
+#endif
+
+CLASS(SpiderDroid, Monster)
+    ATTRIB(SpiderDroid, spawnflags, int, 0);
+    ATTRIB(SpiderDroid, m_mins, vector, '-10 -16 -1');
+    ATTRIB(SpiderDroid, m_maxs, vector, '8 16 24');
+#ifdef GAMEQC
+    ATTRIB(SpiderDroid, m_model, Model, MDL_MON_SPIDER_DROID);
+    ATTRIB(SpiderDroid, m_model_head, Model, MDL_MON_SPIDER_DROID_HEAD);
+#endif
+    ATTRIB(SpiderDroid, netname, string, "spider_droid");
+    ATTRIB(SpiderDroid, monster_name, string, _("Spider Droid"));
+ENDCLASS(SpiderDroid)
+
+REGISTER_MONSTER(SPIDER_DROID, NEW(SpiderDroid));

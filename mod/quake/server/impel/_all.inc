@@ -8,6 +8,4 @@
 #include "pinhead.qc"
 #include "pixel.qc"
 
-#include "monsters/_all.inc"
-
 #include "impel.qc"

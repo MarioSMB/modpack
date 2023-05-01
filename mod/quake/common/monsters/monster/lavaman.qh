@@ -1,0 +1,7 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef SVQC
+void lavaman_missile(entity this, int AttackNumber);
+#endif

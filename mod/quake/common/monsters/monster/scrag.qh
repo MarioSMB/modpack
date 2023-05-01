@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_SCRAG, "progs/wizard.mdl");
+MODEL(MON_SCRAG_HEAD, "progs/h_wizard.mdl");
+#endif
+
+CLASS(Scrag, Monster)
+    ATTRIB(Scrag, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Scrag, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Scrag, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
+    ATTRIB(Scrag, m_model_head, Model, MDL_MON_SCRAG_HEAD);
+#endif
+    ATTRIB(Scrag, netname, string, "scrag");
+    ATTRIB(Scrag, monster_name, string, _("Scrag"));
+ENDCLASS(Scrag)
+
+REGISTER_MONSTER(SCRAG, NEW(Scrag));

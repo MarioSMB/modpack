@@ -1,0 +1,12 @@
+#pragma once
+
+REGISTRY(Monsters, BITS(5))
+#define get_monsterinfo(i) REGISTRY_GET(Monsters, i)
+REGISTER_REGISTRY(Monsters)
+REGISTRY_CHECK(Monsters)
+#define REGISTER_MONSTER(id, inst) REGISTER(Monsters, MON, id, monsterid, inst)
+
+#include "monster.qh"
+
+REGISTER_MONSTER(Null, NEW(Monster));
+REGISTRY_DEFINE_GET(Monsters, MON_Null)

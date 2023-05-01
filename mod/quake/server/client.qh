@@ -65,6 +65,18 @@ void centerprint_all(string s);
 
 void ClientObituary(entity targ, entity inflictor, entity attacker);
 
+void NextLevel();
+
+void server_reset();
+
+string getcdtrack(int numb);
+
+void SendCDTrack(entity to, int numb);
+
+float intermission_exittime;
+
+const int NO_INTERMISSION = BIT(0);
+
 .string deathtype;
 .string(entity this) deathmessage;
 

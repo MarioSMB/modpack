@@ -8,3 +8,7 @@ void bubble_bob(entity this);
 void DeathBubbles(entity this, int num_bubbles);
 
 void PlayerDie(entity this, entity inflictor, entity attacker);
+
+void ThrowHead(entity this, string gibname, float dm);
+
+void ThrowGib(entity this, string gibname, float dm);
