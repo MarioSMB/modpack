@@ -194,7 +194,9 @@ void Killed(entity targ, entity inflictor, entity attacker)
 			{
 				attacker.killspree += 1;
 				attacker.killtime = time + KILLSPREE_GAP;
-					
+				// disabling to reduce console spam from streaks
+				// TODO: implement a HUD element for streaks!
+#if 0	
 				if(time < attacker.killtime)
 				{
 					if(attacker.killspree >= 14)
@@ -224,6 +226,7 @@ void Killed(entity targ, entity inflictor, entity attacker)
 					else if(attacker.killspree == 2)
 						sprint(attacker, "^32^7 kill streak!\n");
 				}
+#endif
 			}
 			
 			// check to see about spawning a powerup

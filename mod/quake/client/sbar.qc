@@ -978,21 +978,16 @@ void Sbar_DrawInventory()
 	for(int j = 0; j < 4; j++)
 	{
 		int itemstat;
+		bool alt = (MP_ROGUE && STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN);
 		switch(j)
 		{
 			default:
 			case 0: itemstat = getstati(STAT_SHELLS); break;
-			case 1: itemstat = getstati(STAT_NAILS); break;
-			case 2: itemstat = getstati(STAT_ROCKETS); break;
-			case 3: itemstat = getstati(STAT_CELLS); break;
+			case 1: itemstat = ((alt) ? STAT(LAVA_NAILS) : getstati(STAT_NAILS)); break;
+			case 2: itemstat = ((alt) ? STAT(MULTI_ROCKETS) : getstati(STAT_ROCKETS)); break;
+			case 3: itemstat = ((alt) ? STAT(PLASMA_AMMO) : getstati(STAT_CELLS)); break;
 		}
-		/*string theitem = sprintf("%4d", itemstat);
-		FOREACH_CHAR(theitem, it != ' ',
-		{
-			Sbar_DrawCharacter((6 * j + iter_i) * 8 - 2, -24, 18 + it - '0');
-		});*/
-
-		Sbar_DrawString(vec2((6 * j) * 8 - 2, -24), ftos(itemstat));
+		Sbar_DrawString(vec2((6 * j + ((j < 2) ? j : 0.5)) * 8, -24), ftos(itemstat));
 	}
 
 	// items

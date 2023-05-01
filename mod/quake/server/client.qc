@@ -2418,7 +2418,7 @@ void PlayerPostThink(entity this)
 				if(this.killspree > 1)
 				{
 					float score = ceil((this.killspree * this.killspree) / 2);
-					sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, this.killspree));
+					//sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, this.killspree));
 					this.frags += score;
 				}
 				
