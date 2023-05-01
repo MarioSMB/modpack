@@ -1,0 +1,12 @@
+#pragma once
+
+// ======================================================
+//  Declarations for reply messages, re-worked by Samual
+//  Last updated: December 30th, 2011
+// ======================================================
+
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
+
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
+
+void GetCvars(entity this, entity store, int f);
