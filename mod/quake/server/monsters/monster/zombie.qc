@@ -416,18 +416,17 @@ void ZombieFireGrenade(entity this, vector st)
 {
 	_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 
-	entity missile = spawn();
-	missile.classname = "zombie_grenade";
+	entity missile = new(zombie_grenade);
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 
 // calc org
-	vector org = this.origin + st_x * v_forward + st_y * v_right +(st_z - 24) * v_up;
+	fixedmakevectors(this.angles);
+	vector org = this.origin + st.x * v_forward + st.y * v_right +(st.z - 24) * v_up;
 	
 // set missile speed	
 
-	fixedmakevectors(this.angles);
 
 	missile.velocity = normalize(this.enemy.origin - org);
 	missile.velocity = missile.velocity * 600;
@@ -636,7 +635,11 @@ void zombie_paine11(entity this)
 		this.nextthink = time + 5;
 		this.health = 60;
 	}
-	// TODO: original quake has logic here missing from mine?!
+	// no infighting!
+	if(!IS_PLAYER(this.oldenemy))
+		this.oldenemy = NULL;
+	if(!IS_PLAYER(this.enemy))
+		this.enemy = NULL;
 }
 void zombie_paine10(entity this)
 {

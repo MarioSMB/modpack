@@ -954,6 +954,18 @@ void SightSound(entity this)
 
 void FoundTarget(entity this)
 {
+	// prevent getting stuck without an enemy (some triggers set the think frame to this)
+	if(!this.enemy || this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET))
+	{
+		this.enemy = NULL;
+		if(this.th_stand)
+		{
+			setthink(this, this.th_stand);
+			this.nextthink = time + 0.1;
+		}
+		return;
+	}
+
 	if(IS_PLAYER(this.enemy))
 	{
 		if(MP_HIPNOTIC && this.charmed && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
@@ -1073,6 +1085,12 @@ bool FindTarget(entity this)
 	if(!MP_MG && MP_IMPEL && (this.spawnflags & 4))
 		return false;
 
+	// if the first spawnflag bit is set, the monster will only wake up on
+	// really seeing the player, not another monster getting angry
+
+	// spawnflags & 3 is a big hack, because zombie crucified used the first
+	// spawn flag prior to the ambush flag, and I forgot about it, so the second
+	// spawn flag works as well
 	if(sight_entity_time >= time - 0.1 && !(this.spawnflags & 3) && !this.charmed)
 	{
 		client = sight_entity;
