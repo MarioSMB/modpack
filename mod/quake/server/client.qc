@@ -2,6 +2,7 @@
 
 #include "combat.qh"
 #include "fog.qh"
+#include "getreplies.qh"
 #include "player.qh"
 #include "rogue/teamplay.qh"
 #include "triggers/teleporters.qh"
@@ -2417,7 +2418,7 @@ void PlayerPostThink(entity this)
 				if(this.killspree > 1)
 				{
 					float score = ceil((this.killspree * this.killspree) / 2);
-					sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, score));
+					sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, this.killspree));
 					this.frags += score;
 				}
 				
@@ -2516,17 +2517,12 @@ void ClientConnect(entity this)
 {
 	make_impure(this);
 	this.classname = "player_joining";
-	if(MP_IMPEL)
+	if(MP_IMPEL && OPT_MOTD)
 	{
-		bprintf("%s enters the Abyss!\n", this.netname);
-		if(OPT_MOTD)
-		{
-			this.motd_time = time + 3;
-			this.motd_count = 0;
-		}
+		this.motd_time = time + 3;
+		this.motd_count = 0;
 	}
-	else
-		bprintf("%s entered the game\n", this.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	this.suicide_count = 0;
 	this.ctf_killed = 0;
@@ -2591,7 +2587,7 @@ void ClientDisconnect(entity this)
 		this.health = 0;
 
 	// let everyone else know
-	bprintf("%s left the %s with %d frags\n", this.netname, ((MP_IMPEL) ? "Abyss" : "game"), this.frags);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname, this.frags);
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
@@ -3094,6 +3090,15 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "sentcvar")
+	{
+		if(argc >= 3)
+			GetCvars(this, this, 1);
+		else
+			sprint(this, "Incorrect parameters for GetCvars\nUsage:^3 cmd sentcvar <cvar> <arguments>\n");
+		return;
+	}
+
 	if(cmd_name == "tracer")
 	{
 		makevectors(this.v_angle);
@@ -3154,7 +3159,7 @@ void SV_ChangeTeam(entity this, float _color)
 	if(!IS_CLIENT(this))
 	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		bprintf("%s is connecting...\n", this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
 		return;
 	}
 }

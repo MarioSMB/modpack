@@ -525,7 +525,11 @@ void Sbar_Score(int margin)
 	sbar.x -= margin;
 
 	int me = player_localnum; // was -1
-	if(autocvar_sbar_scorerank && me >= 0 && me < maxclients)
+	if(MP_MG && STAT(HORDE))
+	{
+		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, '1 1 1');
+	}
+	else if(autocvar_sbar_scorerank && me >= 0 && me < maxclients)
 	{
 		// Layout:
 		//
@@ -646,6 +650,122 @@ void Sbar_DeathmatchOverlay()
 
 	for(int j = 0; j < scoreboardlines && dy < vid_conheight; j++)
 		dy += Sbar_PrintScoreboardItem(fragsort[j], vec2(xmin, dy));
+}
+
+string Sbar_ItemIcon(string item)
+{
+	switch(item)
+	{
+		case "shells": return "sb_shells";
+		case "nails": return "sb_nails";
+		case "rockets": return "sb_rocket";
+		case "cells": return "sb_cells";
+		case "lava nails": return "r_ammolava";
+		case "multi rockets": return "r_ammomulti";
+		case "plasma": return "r_ammoplasma";
+	}
+	return item;
+}
+
+void Sbar_Notify_Push(float amount, string item)
+{
+	string icon = Sbar_ItemIcon(item);
+	item = cons(ftos(amount), item);
+
+	++notify_count;
+	--notify_index;
+
+	if (notify_index == -1)
+		notify_index = NOTIFY_MAX_ENTRIES-1;
+
+	// Free old strings
+	if (notify_items[notify_index])
+		strunzone(notify_items[notify_index]);
+	if (notify_icons[notify_index])
+		strunzone(notify_icons[notify_index]);
+
+	// Allocate new strings
+	notify_items[notify_index] = strzone(item);
+	notify_icons[notify_index] = strzone(icon);
+	notify_times[notify_index] = time;
+}
+
+void Sbar_DrawNotify()
+{
+	if(notify_count == 0)
+		return;
+
+	vector pos, size;
+	// hardcoded values from Xonotic, TODO
+	vector panel_pos = vec2(0.73 * vid_conwidth, 0.80 * vid_conheight);
+	vector panel_size = vec2(0.265 * vid_conwidth, 0.20 * vid_conheight);
+	pos  = panel_pos;
+	size = panel_size;
+
+	float fade_start = max(0, autocvar_sbar_notify_time);
+	if(intermission) // fade out in half the time
+		fade_start -= (time - intermission_time);
+	float fade_time = max(0, autocvar_sbar_notify_fadetime);
+	float icon_aspect = 1;
+
+	int entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size.y / size.x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size.y / entry_count;
+
+	float panel_width_half = size.x * 0.5;
+	float icon_width_half = entry_height * icon_aspect / 2;
+	float name_maxwidth = panel_width_half - icon_width_half - size.x * NOTIFY_ICON_MARGIN;
+
+	vector font_size = '0.5 0.5 0' * entry_height * autocvar_sbar_notify_fontsize;
+	vector icon_size = vec2(icon_aspect, 1) * entry_height;
+	vector icon_left = eX * (panel_width_half - icon_width_half);
+	vector item_left = eX * (size.x - name_maxwidth);
+
+	vector item_pos, icon_pos;
+	string item, icon;
+	int i, j, count, step, limit;
+	float alpha;
+
+	// Order items from the bottom up
+	i = entry_count - 1;
+	step = -1;
+	limit = -1;
+
+	for(j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
+	{
+		if (j == NOTIFY_MAX_ENTRIES)
+			j = 0;
+
+		if(notify_times[j] + fade_start > time)
+			alpha = 1;
+		else if(fade_time != 0)
+		{
+			alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+			if (alpha == 0)
+				break;
+		}
+		else
+			break;
+
+		item = notify_items[j];
+		icon = notify_icons[j];
+
+		if (icon != "" && item != "")
+		{
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
+
+			icon_pos = pos + icon_left + eY * i * entry_height;
+			drawpic(icon_pos, strcat("gfx/quake/", icon), icon_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+			item = textShortenToWidth(item, name_maxwidth, font_size, stringwidth_colors);
+			item_pos = pos + item_left + name_top;
+			float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
+			drawfont = 8; // FONT_USER
+			drawcolorcodedstring(item_pos, item, font_size, alpha, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
+		}
+	}
+
+	notify_count = count;
 }
 
 void Sbar_DrawScoreboard()
@@ -1026,6 +1146,9 @@ void Sbar_Draw()
 			else
 				sb_lines = 24+16+8;
 		}
+
+		// always draw push notifications?
+		Sbar_DrawNotify();
 
 		if(sb_showscores)
 			Sbar_DrawScoreboard();

@@ -2,23 +2,6 @@
 
 #include "triggers/teleporters.qh"
 
-.float storednextthink;
-.void(entity this) storedthink;
-void Countdown(entity this);
-void Wavecheck(entity this);
-void SpawnAmmo(entity this);
-.int wave; // what wave of the horde mode we're on
-.int fodder; // how many fodder squads to spawn
-.int elites; // how many elite squads to spawn
-.int bosses; // how many bosses to spawn
-.int spawncount; // number of monster spawns
-.bool army; // Spawn Army? True/fallse
-bool CheckBlockedSpawn(entity spawnpoint);
-
-bool key_spawned; // true/false, determine if key has already been spawned, prevent dupes.
-
-const float SPAWN_RESET_TIME = 5; // amount of time that a spawn point is considered occupied and not valid for use
-
 /*
 ================
 HordeGetPlayersAlive
@@ -629,7 +612,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 		droptofloor(monster);
 	
 	if(!t_walkmove(monster, 0, 0))
-		LOG_INFO("walkmonster in wall at: ", vtos(monster.origin));
+		LOG_DEBUG("walkmonster in wall at: ", vtos(monster.origin));
 	
 	monster.category = CATEGORY_MONSTER;
 	monster.takedamage = DAMAGE_AIM;
@@ -676,7 +659,10 @@ void horde_ammo_touch(entity this, entity toucher)
 		((this.weapon == 4) && (toucher.ammo_cells >= 100))) // cells
 		return;
 		
-	sprint(toucher, strcat("You got the ", this.netname, "\n"));
+	if(this.netname != "")
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, this.netname, this.aflag);
+	else
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_PICKUP); // TODO: icon?
 	
 	// ammo touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
@@ -729,7 +715,8 @@ void horde_health_touch(entity this, entity toucher)
 	if(!T_Heal(toucher, this.healamount, 0))
 		return;
 	
-	sprint(toucher, sprintf("You receive %d health\n", this.healamount));
+	// NOTE: disabling spammy message as you already know from the HUD that you got it!
+	//sprint(toucher, sprintf("You receive %d health\n", this.healamount));
 	
 	// health touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
@@ -779,7 +766,8 @@ void horde_armor_touch(entity this, entity toucher)
 
 	this.solid = SOLID_NOT;
 	this.model = string_null;
-	sprint(toucher, "You got armor\n");
+	// NOTE: disabling spammy message as you already know from the HUD that you got it!
+	//sprint(toucher, "You got armor\n");
 // armor touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -863,11 +851,10 @@ void horde_key_touch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
-	
-	if(this.netname != "")
-		sprint(toucher, sprintf("You got the %s\n", this.netname));
-	else
-		sprint(toucher, sprintf("You picked up a key\n"));
+
+	string keyname = (this.netname != "") ? this.netname : "key";
+	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_MULTI, ITEM_KEY_GOT, toucher.netname, keyname);
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_KEY_GOT_SELF, keyname);
 	
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -877,13 +864,13 @@ void horde_key_touch(entity this, entity toucher)
 	// find the horde manager and trigger the next wave
 	if(key_spawned)
 	{
-		LOG_DEBUG("key triggers next wave");
+		//LOG_DEBUG("key triggers next wave");
 		horde_ent.wait = true;
 		setthink(horde_ent, Countdown);
 		horde_ent.nextthink = time;
 	}
-	else
-		LOG_DEBUG("key shouldn't trigger next wave!");
+	//else
+		//LOG_DEBUG("key shouldn't trigger next wave!");
 	delete(this);
 }
 
@@ -1705,22 +1692,26 @@ bool SpawnWavePrep(entity this)
 void Countdown4(entity this)
 {
 	if((this.wave % 3) == 0)
-		centerprint_all("Boss wave!");
+		//centerprint_all("Boss wave!");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_BEGIN_BOSSWAVE);
 	else
-		centerprint_all("Fight!");
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
+		//centerprint_all("Fight!");
 	SpawnWave2(this);
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
 }
 void Countdown3(entity this)
 {
-	centerprint_all("1");
+	//centerprint_all("1");
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, 1, this.wave);
 	setthink(this, Countdown4);
 	this.nextthink = time + 1;
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
 }
 void Countdown2(entity this)
 {
-	centerprint_all("2");
+	//centerprint_all("2");
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, 2, this.wave);
 	setthink(this, Countdown3);
 	this.nextthink = time + 1;
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
@@ -1730,7 +1721,8 @@ void Countdown(entity this)
 	if(!SpawnWavePrep(this))
 		return;
 	
-	centerprint_all("3");
+	//centerprint_all("3");
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, 3, this.wave);
 	setthink(this, Countdown2);
 	this.nextthink = time + 1;
 	

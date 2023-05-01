@@ -15,9 +15,8 @@ void newitems_touch(entity this, entity toucher)
 	if(this.classname == "item_sphere" && (toucher.powerups & POWERUP_V_SPHERE))
 		return;
 
-	sprint(toucher, "You got the ");
-	sprint(toucher, this.netname);
-	sprint(toucher, "\n");
+	string pname = (this.netname != "") ? this.netname : "Powerup";
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
 
 	if(deathmatch)
 	{

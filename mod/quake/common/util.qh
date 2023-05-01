@@ -8,6 +8,13 @@ void wordwrap_sprint(entity to, string s, float l);
 #endif
 void wordwrap_cb(string s, float l, void(string) callback);
 
+USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
+USING(textLengthUpToLength_lenFunction_t, float(string s));
+float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
+string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
+float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
+string textShortenToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
+
 // Some common varargs functions. Lowercase as they match C.
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
@@ -27,6 +34,9 @@ void wordwrap_cb(string s, float l, void(string) callback);
 USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
 USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
+// expand multiple arguments into one argument by stripping parenthesis
+#define XPD(...) __VA_ARGS__
 
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);

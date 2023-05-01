@@ -17,6 +17,7 @@
 #include "client.qc"
 #include "player.qc"
 #include "gamelog.qc"
+#include "getreplies.qc"
 #include "commands.qc"
 #include "chat.qc"
 #include "fog.qc"

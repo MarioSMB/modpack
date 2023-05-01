@@ -1,7 +1,6 @@
 #pragma once
 
-void reset_centerprint_messages();
-
+#if 0
 bool autocvar_hud_panel_centerprint = true;
 float autocvar_hud_panel_centerprint_align = 0.5;
 float autocvar_hud_panel_centerprint_fade_in = 0.2;
@@ -16,3 +15,12 @@ float autocvar_hud_panel_centerprint_fade_minfontsize = 0;
 bool autocvar_hud_panel_centerprint_flip = false;
 float autocvar_hud_panel_centerprint_fontscale = 1;
 float autocvar_hud_panel_centerprint_time = 3;
+#endif
+
+void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num);
+void centerprint_AddStandard(string strMessage);
+void centerprint_Kill(int id);
+void centerprint_KillAll();
+
+void centerprint_SetTitle(string title);
+void centerprint_ClearTitle();

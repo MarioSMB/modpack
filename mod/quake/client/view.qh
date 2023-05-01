@@ -4,6 +4,8 @@ void HUD_CenterPrint ();
 
 float drawframetime;
 
+float intermission_time;
+
 int cs_project_is_b0rked;
 int vid_width, vid_height;
 float vid_pixelheight;

@@ -5,6 +5,23 @@ bool autocvar_horde;
 int keys_silver; // number of silver keys the players are carrying
 int keys_gold; // number of gold keys the players are carrying
 
+.float storednextthink;
+.void(entity this) storedthink;
+void Countdown(entity this);
+void Wavecheck(entity this);
+void SpawnAmmo(entity this);
+.int wave; // what wave of the horde mode we're on
+.int fodder; // how many fodder squads to spawn
+.int elites; // how many elite squads to spawn
+.int bosses; // how many bosses to spawn
+.int spawncount; // number of monster spawns
+.bool army; // Spawn Army? True/fallse
+bool CheckBlockedSpawn(entity spawnpoint);
+
+bool key_spawned; // true/false, determine if key has already been spawned, prevent dupes.
+
+const float SPAWN_RESET_TIME = 5; // amount of time that a spawn point is considered occupied and not valid for use
+
 const float HORDE_START_DELAY = 10; // how long to wait before starting
 const float HORDE_AMMO_RESPAWN_DELAY = 20; // how long between horde ammo spawns
 //float horde;

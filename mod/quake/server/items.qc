@@ -191,7 +191,8 @@ void health_touch(entity this, entity toucher)
 			return;
 	}
 
-	sprint(toucher, sprintf("You receive %d health\n", this.healamount));
+	// NOTE: disabling spammy message as you already know from the HUD that you got it!
+	//sprint(toucher, sprintf("You receive %d health\n", this.healamount));
 	
 // health touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
@@ -280,7 +281,8 @@ void armor_touch(entity this, entity toucher)
 		setthink(this, SUB_regen);
 	}
 
-	sprint(toucher, "You got armor\n");
+	// NOTE: disabling spammy message as you already know from the HUD that you got it!
+	//sprint(toucher, "You got armor\n");
 // armor touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -426,7 +428,8 @@ void EnableComboWeapons(entity this)
 	{
 		if (this.ammo_lava_nails > 0 && (this.weapons & WEP_NAILGUN))
 		{
-			sprint (this, "Lava Enabled\n");
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "Lava Enabled\n");
 			this.weapons |= WEP_LAVA_NAILGUN;
 		}
 	}
@@ -436,7 +439,8 @@ void EnableComboWeapons(entity this)
 		if (this.ammo_lava_nails > 0 && 
 							(this.weapons & WEP_SUPER_NAILGUN))
 		{
-			sprint (this, "Super Lava Enabled\n");
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "Super Lava Enabled\n");
 			this.weapons |= WEP_LAVA_SUPER_NAILGUN;		
 		}
 	}
@@ -446,7 +450,8 @@ void EnableComboWeapons(entity this)
 		if (this.ammo_multi_rockets > 0 && 
 							(this.weapons & WEP_GRENADE_LAUNCHER))
 		{
-			sprint (this, "Multi Grenades Enabled\n");
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "Multi Grenades Enabled\n");
 			this.weapons |= WEP_MULTI_GRENADE;		
 		}
 	}
@@ -456,7 +461,8 @@ void EnableComboWeapons(entity this)
 		if (this.ammo_multi_rockets > 0 && 
 							(this.weapons & WEP_ROCKET_LAUNCHER))
 		{
-			sprint (this, "Multi Rockets Enabled\n");
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "Multi Rockets Enabled\n");
 			this.weapons |= WEP_MULTI_ROCKET;		
 		}
 	}
@@ -465,7 +471,8 @@ void EnableComboWeapons(entity this)
 	{
 		if (this.ammo_plasma > 0 && (this.weapons & WEP_LIGHTNING))
 		{
-			sprint (this, "Plasma Gun Enabled\n");
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "Plasma Gun Enabled\n");
 			this.weapons |= WEP_PLASMA_GUN;		
 		}
 	}
@@ -590,9 +597,9 @@ void weapon_touch(entity this, entity toucher)
 	}
 
 	if(this.netname != "")
-		sprint(toucher, sprintf("You got the %s\n", this.netname));
+		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, this.netname);
 	else
-		sprint(toucher, sprintf("You picked up a weapon\n"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_WEAPON_PICKUP);
 // weapon touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -846,32 +853,30 @@ void impel_weapon_touch(entity this, entity toucher)
 		objerror(this, "impel_weapon_touch: unknown classname");
 		return; // don't try to give it anyway!
 	}
-	sprint(toucher, "You got the ");
 	if(this.classname == "weapon_rifleupgrade")
 	{
 		if(toucher.items & IT_PULSEPOWER2)
 		{
-			sprint(toucher, "ammo out of the upgrade ");
 			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+			sprint(toucher, "You got ammo out of the upgrade\n");
 		}
 		else if(toucher.items & IT_PULSEPOWER1)
 		{
 			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
 			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-			sprint(toucher, "Level III Laser System upgrade ");
+			sprint(toucher, "You got the Level III Laser System upgrade\n");
 		}
 		else if(toucher.weapons & WEP_PULSERIFLE)
 		{
 			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
 			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-			sprint(toucher, "Level II Laser System upgrade ");
+			sprint(toucher, "You got the Level II Laser System upgrade\n");
 		}
 		else
 			return;
 	}
 	else
-		sprint(toucher, this.netname);
-	sprint(toucher, "\n");
+		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, this.netname);
 	if(this.classname == "weapon_rifle")
 	{
 		_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
@@ -1080,9 +1085,9 @@ void ammo_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 	if(this.netname != "")
-		sprint(toucher, sprintf("You got the %s\n", this.netname));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, this.netname, this.aflag);
 	else
-		sprint(toucher, sprintf("You picked up some ammo\n"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_PICKUP); // TODO: icon?
 // ammo touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -1409,10 +1414,9 @@ void key_touch(entity this, entity toucher)
 	if(toucher.items & this.items)
 		return;
 
-	if(this.netname != "")
-		sprint(toucher, sprintf("You got the %s\n", this.netname));
-	else
-		sprint(toucher, sprintf("You picked up a key\n"));
+	string keyname = (this.netname != "") ? this.netname : "key";
+	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_MULTI, ITEM_KEY_GOT, toucher.netname, keyname);
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_KEY_GOT_SELF, keyname);
 
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -1422,13 +1426,6 @@ void key_touch(entity this, entity toucher)
 	{	
 		this.solid = SOLID_NOT;
 		this.model = string_null;
-	}
-	else
-	{
-		if(this.netname != "")
-			bprintf("%s^7 got the %s\n", toucher.netname, this.netname);
-		else
-			bprintf("%s^7 picked up a key\n");
 	}
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 	if(MP_MG)
@@ -1718,10 +1715,8 @@ void powerup_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
-	if(this.netname != "")
-		sprint(toucher, sprintf("You got the %s\n", this.netname));
-	else
-		sprint(toucher, sprintf("You picked up a powerup\n"));
+	string pname = (this.netname != "") ? this.netname : "Powerup";
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
 
 	if(deathmatch)
 	{
@@ -1985,9 +1980,14 @@ void BackpackTouch(entity this, entity toucher)
 		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_plasma), " plasma"));
 
 	if(theitems != "")
-		sprint(toucher, strcat("You get ", ((wepmsg != "") ? strcat("the ", wepmsg, " and ") : ""), theitems, "\n"));
+	{
+		if(wepmsg != "")
+			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BACKPACK_GOT_WEAPON, wepmsg, theitems);
+		else
+			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BACKPACK_GOT, theitems);
+	}
 	else if(wepmsg != "")
-		sprint(toucher, strcat("You get the ", wepmsg, "\n"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, wepmsg);
 
 // backpack touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);

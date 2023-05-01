@@ -478,6 +478,7 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 		precache_sound2("hknight/sight1.wav");
 		precache_sound2("hknight/idle.wav");
 	}
+	precache_model2("progs/k_spike.mdl");
 	precache_sound2("hknight/attack1.wav");
 	precache_sound("hknight/hit.wav");		// used by C code, so don't sound2
 	precache_sound2("hknight/slash1.wav");

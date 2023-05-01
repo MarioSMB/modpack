@@ -12,5 +12,19 @@ bool autocvar_sbar_gametime;
 bool autocvar_sbar_scorerank;
 float autocvar_sbar_miniscoreboard_size;
 
+float autocvar_sbar_notify_time = 1.75;
+float autocvar_sbar_notify_fadetime = 0.75;
+float autocvar_sbar_notify_fontsize = 0.8;
+
+// notify panel, ported from Xonotic
+const int NOTIFY_MAX_ENTRIES = 10;
+const float NOTIFY_ICON_MARGIN = 0.02;
+
+int notify_index;
+int notify_count;
+float notify_times[NOTIFY_MAX_ENTRIES];
+string notify_items[NOTIFY_MAX_ENTRIES];
+string notify_icons[NOTIFY_MAX_ENTRIES];
+
 const int WEP_INDEXSTART_HIPNOTIC = 7;
 const int WEP_INDEXSTART_ROGUE = 11;

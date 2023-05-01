@@ -79,9 +79,6 @@ STATIC_INIT(fix_commands)
 {
 	registercommand("+showaccuracy");
 	registercommand("-showaccuracy");
-
-	// TODO: why would this be needed? mismatch in the implementation?!
-	//cvar_settemp("cl_useenginerefdef", "1");
 }
 
 bool CSQC_ConsoleCommand(string command)
@@ -91,6 +88,24 @@ bool CSQC_ConsoleCommand(string command)
 
 	if(s == "+showaccuracy" || s == "-showaccuracy")
 		return true; // don't handle, just don't do anything
+
+	if(s == "sendcvar")
+	{
+		if (argv(1))
+		{
+			// W_FixWeaponOrder will trash argv, so save what we need.
+			string thiscvar = string_null; strcpy(thiscvar, argv(1));
+			string thisval = cvar_string(thiscvar);
+
+			localcmd("cmd sentcvar ", thiscvar, " \"", thisval, "\"\n");
+			strfree(thiscvar);
+			return true;
+		}
+		LOG_INFOF("Incorrect parameters for ^2%s^7", s);
+		LOG_HELP("Usage:^3 cl_cmd sendcvar <cvar>");
+		LOG_HELP("  Where <cvar> is the cvar to send to the server.");
+		return true;
+	}
 
 	return false;
 }
@@ -185,12 +200,11 @@ void CSQC_Ent_Remove(entity this)
 	delete(this);
 }
 
-void centerprint_hud(string strMessage);
-// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_AddStandard string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
-	centerprint_hud(strMessage);
+	centerprint_AddStandard(strMessage);
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

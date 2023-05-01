@@ -240,6 +240,22 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	}
 }
 
+string textShortenToWidth(string theText, float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+{
+	if(tw(theText, theFontSize) <= maxWidth)
+		return theText;
+	else
+		return strcat(substring(theText, 0, textLengthUpToWidth(theText, maxWidth - tw("...", theFontSize), theFontSize, tw)), "...");
+}
+
+string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw)
+{
+	if(tw(theText) <= maxWidth)
+		return theText;
+	else
+		return strcat(substring(theText, 0, textLengthUpToLength(theText, maxWidth - tw("..."), tw)), "...");
+}
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)

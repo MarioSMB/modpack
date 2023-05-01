@@ -188,3 +188,9 @@ REGISTER_STAT(WEAPONS, int, this.weapons)
 .int powerups;
 #endif
 REGISTER_STAT(POWERUPS, int, this.powerups)
+
+#ifdef SVQC
+#include "../server/horde.qh"
+#endif
+REGISTER_STAT(HORDE, bool, autocvar_horde)
+REGISTER_STAT(HORDE_WAVE, int, (horde_ent) ? horde_ent.wave : 0)

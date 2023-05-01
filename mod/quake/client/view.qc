@@ -82,6 +82,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	stats_get();
 
+	ReplicateVars(REPLICATEVARS_CHECK);
+
 	if(autocvar__hud_showbinds_reload) // menu can set this one
 	{
 		// Xonotic expects this to be 0 and reloads the keybind database
@@ -108,6 +110,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else
 		drawframetime = bound(0.000001, time - drawtime, 1);
 	drawtime = time;
+
+	if(intermission && !intermission_time)
+		intermission_time = time;
 
 	// ALWAYS Clear Current Scene First
 	clearscene();
