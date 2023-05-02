@@ -22,6 +22,8 @@
 
 .float teleport_time;
 
+.float exptime; // impel
+
 // button mapping
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
@@ -61,6 +63,8 @@
 
 	#define PHYS_HEALTH(s)						STAT(HEALTH, s)
 
+	#define PHYS_EXPTIME(s)						STAT(EXPTIME, s)
+
 	#define IS_DEAD(s)                          (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
 
 	#define PHYS_INPUT_ANGLES(s)                input_angles
@@ -99,6 +103,8 @@
 #elif defined(SVQC)
 
 	#define PHYS_HEALTH(s)						((s).health)
+
+	#define PHYS_EXPTIME(s)						((s).exptime)
 
 	#define PHYS_INPUT_ANGLES(s)                ((s).v_angle)
 	#define PHYS_WORLD_ANGLES(s)                ((s).angles)

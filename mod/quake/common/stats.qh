@@ -190,6 +190,11 @@ REGISTER_STAT(WEAPONS, int, this.weapons)
 REGISTER_STAT(POWERUPS, int, this.powerups)
 
 #ifdef SVQC
+.float exptime;
+#endif
+REGISTER_STAT(EXPTIME, float, this.exptime)
+
+#ifdef SVQC
 .int ammo_lava_nails;
 .int ammo_multi_rockets;
 .int ammo_plasma;

@@ -376,6 +376,12 @@ void PM_Main(entity this, float dt)
 
 	SV_check_punch(this, dt);
 
+	if(PHYS_EXPTIME(this) != 0)
+	{
+		this.velocity = '0 0 0';
+		return;
+	}
+
 	if(PHYS_HEALTH(this) <= 0)
 		return;
 
