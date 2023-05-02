@@ -1031,14 +1031,11 @@ void Sbar_DrawInventory()
 			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
 	}
 
-	if(!MP_ROGUE)
+	// sigils
+	for(int j = 0; j < 4; j++)
 	{
-		// sigils
-		for(int j = 0; j < 4; j++)
-		{
-			if(STAT(SERVERFLAGS) & BIT(j))
-				Sbar_DrawPic(vec2(320 - 32 + j * 8, -16), Sbar_PickSigil(j));
-		}
+		if(STAT(SERVERFLAGS) & BIT(j))
+			Sbar_DrawPic(vec2(320 - 32 + j * 8, -16), Sbar_PickSigil(j));
 	}
 }
 

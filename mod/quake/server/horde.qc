@@ -239,6 +239,11 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	monster.flags = FL_MONSTER;
 	//monster.alpha = 1; // only set monster alpha after they're a corpse
 
+	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
+	if(mon.spawnflags & MONSTER_TYPE_FLY) { this.flags |= FL_FLY; }
+	// hipnotic
+	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
+
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);

@@ -1555,7 +1555,7 @@ void sigil_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	this.classname = ""; // so rune doors won't find it
-	if(MP_MG)
+	if(MP_MG && substring(world.model, 0, 6) != "maps/e")
 	{
 		int lastPickup = SUB_LeftShift(this.spawnflags & SIGIL_ALL, SIGIL_NUMBITS);
     	serverflags |= (this.spawnflags & SIGIL_ALL) | lastPickup;
