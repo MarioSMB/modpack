@@ -706,3 +706,14 @@ spawnfunc(monster_zombie)
 		this.th_stand = zombie_lay;
 }
 #endif // SVQC
+
+#ifdef SVQC
+METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+
+    // does nothing until it can be ported across
+
+    return true;
+}
+#endif
