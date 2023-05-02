@@ -4653,7 +4653,7 @@ void W_WeaponFrame(entity this)
 		}
 	}
 
-	if(!(time < this.attack2_finished))
+	if(!(time < this.attack2_finished) && (this.weapons & WEP_PULSERIFLE))
 	{
 		// offhand attack (pulse rifle)
 		if(this.button3)

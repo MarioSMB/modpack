@@ -301,7 +301,7 @@ void s_rain1(entity this) { set_anim(this, 0, s_rain2); }
 
 void make_rain(entity this)
 {
-	entity rain = spawn();
+	entity rain = new(raindrop);
 	_setmodel(rain, "progs/drop.spr");
 	setorigin (rain, this.origin);
 	set_movetype(rain, MOVETYPE_NOCLIP);
@@ -317,24 +317,28 @@ void premake_drop(entity this)
 	make_drop(this);
 }
 
+void s_splash1(entity this);
 void make_drop(entity this)
 {
-	entity bubble = spawn();
+	entity bubble = new(bubble);
 	_setmodel(bubble, "progs/drop.spr");
-	setorigin (bubble, this.origin);
+	bubble.origin = this.origin - '0 0 1';
 	float rnd1 = bubble.origin_x + (-120 + (random () * 240));
 	float rnd2 = bubble.origin_y + (-120 + (random () * 240));
 	bubble.origin_x = rnd1;
 	bubble.origin_y = rnd2;
 	setorigin(bubble, bubble.origin);
 	set_movetype(bubble, MOVETYPE_TOSS);
-	bubble.solid = SOLID_BBOX;
+	bubble.solid = SOLID_CORPSE; // needed to interact with the world
+	bubble.dphitcontentsmask = DPCONTENTS_SOLID;
 	bubble.velocity = '0 0 -50';
 	settouch(bubble, drop_bob);
-	bubble.classname = "bubble";
 	bubble.frame = 0;
 	bubble.cnt = 0;
 	setsize(bubble, '0 0 0', '0 0 0');
+	setthink(bubble, s_splash1);
+	bubble.nextthink = time + 20; // just incase we don't find a bottom
+
 	this.nextthink = time + 0.2;
 	setthink(this, premake_drop);
 }
