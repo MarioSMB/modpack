@@ -186,7 +186,7 @@ void Killed(entity targ, entity inflictor, entity attacker)
 		// Yoder Sept24, 2021 Horde Merge
 		if(MP_MG && horde_ent)
 		{
-			if(targ.classname != "monster_zombie") // zombies don't count
+			if(targ.monsterdef && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
 				monsters_killed += 1;
 			
 			// check kill spree
@@ -252,7 +252,7 @@ void Killed(entity targ, entity inflictor, entity attacker)
 	targ.flags &= ~FL_FLY;
 	targ.flags &= ~FL_SWIM;
 
-	if(MP_MG && IS_MONSTER(targ) && autocvar_horde && targ.classname != "monster_zombie")
+	if(MP_MG && IS_MONSTER(targ) && autocvar_horde && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		remote_wavecheck(targ);
 
 	if(targ.target && targ.target != "")
@@ -290,7 +290,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 
 	// shub kill crash fix.
-	if(!MP_MG && targ.classname == "monster_oldone" && damage < 9999)
+	if(!MP_MG && targ.monsterdef == MON_SHUB && damage < 9999)
 		return;
 
 	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
@@ -369,7 +369,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	if(MP_MG)
 	{
 		// special case for killable chthon (yoder, december 16 2020)
-		if(targ.classname == "monster_boss" && (targ.spawnflags & 2)) // is killable chthon
+		if(targ.monsterdef == MON_CHTHON && (targ.spawnflags & 2)) // is killable chthon
 		{
 			if(attacker.weapon == WEP_LIGHTNING)
 			{
@@ -459,7 +459,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)
 		{
-			if(targ.classname != attacker.classname || targ.classname == "monster_army" || targ.classname == "monster_armagon")
+			if(targ.classname != attacker.classname || targ.monsterdef == MON_GRUNT || targ.monsterdef == MON_ARMAGON)
 			{
 				if(coop || (MP_MG && autocvar_horde))
 				{
@@ -490,7 +490,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 						FoundTarget(targ);
 					}
 				}
-				else if(targ.classname != "monster_dragon")
+				else if(targ.monsterdef != MON_DRAGON)
 				{
 					if(IS_PLAYER(targ.enemy))
 						targ.oldenemy = targ.enemy;

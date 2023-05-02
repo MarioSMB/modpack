@@ -34,7 +34,7 @@ int HordeGetMonstersAlive()
 	int monstercount = 0;
 	FOREACH_ENTITY_STRING(category, "monster",
 	{
-		if(it.health > 0 && it.classname != "monster_zombie")
+		if(it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			monstercount += 1;
 	});
 	
@@ -353,72 +353,7 @@ void GibMonster(entity this)
 SpawnMonster
 ================
 */
-// TODO: cleaner method of spawning mobs
-void knight_stand1(entity this);
-void knight_walk1(entity this);
-void knight_run1(entity this);
-void knight_atk1(entity this);
-void knight_pain(entity this, entity attacker, float damage);
-void knight_die(entity this, entity inflictor, entity attacker);
-void hknight_stand1(entity this);
-void hknight_walk1(entity this);
-void hknight_run1(entity this);
-void hknight_melee(entity this);
-void hknight_magicc1(entity this);
-void hknight_pain(entity this, entity attacker, float damage);
-void hknight_die(entity this, entity inflictor, entity attacker);
-void dog_stand1(entity this);
-void dog_walk1(entity this);
-void dog_run1(entity this);
-void dog_pain(entity this, entity attacker, float damage);
-void dog_die(entity this, entity inflictor, entity attacker);
-void dog_atta1(entity this);
-void dog_leap1(entity this);
-void demon1_stand1(entity this);
-void demon1_walk1(entity this);
-void demon1_run1(entity this);
-void demon_die(entity this, entity inflictor, entity attacker);
-void Demon_MeleeAttack(entity this);
-void demon1_jump1(entity this);
-void demon1_pain(entity this, entity attacker, float damage);
-void ogre_stand1(entity this);
-void ogre_walk1(entity this);
-void ogre_run1(entity this);
-void ogre_die(entity this, entity inflictor, entity attacker);
-void ogre_melee(entity this);
-void ogre_nail1(entity this);
-void ogre_pain(entity this, entity attacker, float damage);
-void army_stand1(entity this);
-void army_walk1(entity this);
-void army_run1(entity this);
-void army_atk1(entity this);
-void army_pain(entity this, entity attacker, float damage);
-void army_die(entity this, entity inflictor, entity attacker);
-void enf_stand1(entity this);
-void enf_walk1(entity this);
-void enf_run1(entity this);
-void enf_pain(entity this, entity attacker, float damage);
-void enf_die(entity this, entity inflictor, entity attacker);
-void enf_atk1(entity this);
-void sham_stand1(entity this);
-void sham_walk1(entity this);
-void sham_run1(entity this);
-void sham_die(entity this, entity inflictor, entity attacker);
-void sham_melee(entity this);
-void sham_magic1(entity this);
-void sham_pain(entity this, entity attacker, float damage);
-void shal_stand(entity this);
-void shal_walk1(entity this);
-void shal_run1(entity this);
-void shalrath_die(entity this, entity inflictor, entity attacker);
-void shalrath_pain(entity this, entity attacker, float damage);
-void shal_attack1(entity this);
-void wiz_stand1(entity this);
-void wiz_walk1(entity this);
-void wiz_run1(entity this);
-void Wiz_Missile(entity this);
-void Wiz_Pain(entity this, entity attacker, float damage);
-void wiz_die(entity this, entity inflictor, entity attacker);
+spawnfunc(monster_zombie);
 void zombie_stand1(entity this);
 void zombie_walk1(entity this);
 void zombie_run1(entity this);
@@ -426,10 +361,14 @@ void zombie_pain(entity this, entity attacker, float damage);
 void zombie_die(entity this, entity inflictor, entity attacker);
 void zombie_missile(entity this);
 void monster_use(entity this, entity actor, entity trigger);
-entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
+entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 {
+	if(!mon || mon == MON_Null)
+		return NULL;
 	entity monster = spawn();
-	
+	monster.monsterdef = mon;
+
+	monster.spawnfunc_checked = true;
 	monster.angles = temp_angles; 
 	monster.solid = SOLID_SLIDEBOX;
 	set_movetype(monster, MOVETYPE_STEP);
@@ -438,160 +377,14 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	//monster.alpha = 1; // only set monster alpha after they're a corpse
 
 	// perform enemy-type specific loading
-	// TODO: missing newer fields
-	if(class == "knight")
+	setmodel(monster, mon.m_model);
+	setsize(monster, mon.m_mins, mon.m_maxs);
+	org.z += -mon.m_mins.z; // offset based on size
+	// TODO: zombie logic too messy to work with mr_setup for now!
+	if(mon == MON_ZOMBIE)
 	{
-		_setmodel(monster, "progs/knight.mdl");
-		setsize(monster, '-16 -16 -24', '16 16 40');
-		org += '0 0 24'; // offset based on size
-		monster.classname = "monster_knight";
-		monster.health = 75;
-		monster.th_stand = knight_stand1;
-		monster.th_walk = knight_walk1;
-		monster.th_run = knight_run1;
-		monster.th_melee = knight_atk1;
-		monster.th_pain = knight_pain;
-		monster.th_die = knight_die;
-	}
-	else if(class == "hellknight")
-	{
-		_setmodel(monster, "progs/hknight.mdl");
-		setsize(monster, '-16 -16 -24', '16 16 40');
-		org += '0 0 24';
-		monster.classname = "monster_hell_knight";
-		monster.health = 250;
-		monster.th_stand = hknight_stand1;
-		monster.th_walk = hknight_walk1;
-		monster.th_run = hknight_run1;
-		monster.th_melee = hknight_melee;
-		monster.th_missile = hknight_magicc1;
-		monster.th_pain = hknight_pain;
-		monster.th_die = hknight_die;
-	}
-	else if(class == "dog")
-	{
-		_setmodel(monster, "progs/dog.mdl");
-		setsize(monster, '-32 -32 -24', '32 32 40');
-		org += '0 0 24';
-		monster.classname = "monster_dog";
-		monster.health = 25;
-		monster.th_stand = dog_stand1;
-		monster.th_walk = dog_walk1;
-		monster.th_run = dog_run1;
-		monster.th_pain = dog_pain;
-		monster.th_die = dog_die;
-		monster.th_melee = dog_atta1;
-		monster.th_missile = dog_leap1;
-	}
-	else if(class == "demon")
-	{
-		_setmodel(monster, "progs/demon.mdl");
-
-		setsize(monster, '-32 -32 -24', '32 32 64');
-		monster.classname = "monster_demon1";
-		monster.health = 300;
-		org += '0 0 48';
-		monster.th_stand = demon1_stand1;
-		monster.th_walk = demon1_walk1;
-		monster.th_run = demon1_run1;
-		monster.th_die = demon_die;
-		monster.th_melee = Demon_MeleeAttack;
-		monster.th_missile = demon1_jump1;
-		monster.th_pain = demon1_pain;
-	}
-	else if(class == "ogre")
-	{
-		_setmodel(monster, "progs/ogre.mdl");
-		setsize(monster, '-32 -32 -24', '32 32 64');
-		monster.classname = "monster_ogre";
-		monster.health = 200;
-		org += '0 0 32';
-		monster.th_stand = ogre_stand1;
-		monster.th_walk = ogre_walk1;
-		monster.th_run = ogre_run1;
-		monster.th_die = ogre_die;
-		monster.th_melee = ogre_melee;
-		monster.th_missile = ogre_nail1;
-		monster.th_pain = ogre_pain;
-	}
-	else if(class == "grunt")
-	{
-		_setmodel(monster, "progs/soldier.mdl");
-		setsize(monster, '-16 -16 -24', '16 16 40');
-		monster.classname = "monster_army";
-		monster.health = 30;
-		org += '0 0 24';
-		monster.th_stand = army_stand1;
-		monster.th_walk = army_walk1;
-		monster.th_run = army_run1;
-		monster.th_missile = army_atk1;
-		monster.th_pain = army_pain;
-		monster.th_die = army_die;
-	}
-	else if(class == "enforcer")
-	{
-		_setmodel(monster, "progs/enforcer.mdl");
-		setsize(monster, '-16 -16 -24', '16 16 40');
-		monster.classname = "monster_enforcer";
-		monster.health = 80;
-		org += '0 0 24';
-		monster.th_stand = enf_stand1;
-		monster.th_walk = enf_walk1;
-		monster.th_run = enf_run1;
-		monster.th_pain = enf_pain;
-		monster.th_die = enf_die;
-		monster.th_missile = enf_atk1;
-	}
-	else if(class == "shambler")
-	{
-		_setmodel(monster, "progs/shambler.mdl");
-		setsize(monster, '-32 -32 -24', '32 32 64');
-		monster.classname = "monster_shambler";
-		monster.health = 600;
-		org += '0 0 32';
-		monster.th_stand = sham_stand1;
-		monster.th_walk = sham_walk1;
-		monster.th_run = sham_run1;
-		monster.th_die = sham_die;
-		monster.th_melee = sham_melee;
-		monster.th_missile = sham_magic1;
-		monster.th_pain = sham_pain;
-	}
-	else if(class == "shalrath")
-	{
-		_setmodel(monster, "progs/shalrath.mdl");
-		setsize(monster, '-32 -32 -24', '32 32 64');
-		monster.classname = "monster_shalrath";
-		org += '0 0 32';
-		monster.health = 400;
-		monster.th_stand = shal_stand;
-		monster.th_walk = shal_walk1;
-		monster.th_run = shal_run1;
-		monster.th_die = shalrath_die;
-		monster.th_pain = shalrath_pain;
-		monster.th_missile = shal_attack1;
-	}
-	else if(class == "wizard")
-	{
-		_setmodel(monster, "progs/wizard.mdl");
-		monster.flags |= FL_FLY; // special behavior
-		monster.classname = "monster_wizard";
-		setsize(monster, VEC_HULL_MIN, VEC_HULL_MAX);
-		org += '0 0 32';
-		monster.health = 80;
-		monster.th_stand = wiz_stand1;
-		monster.th_walk = wiz_walk1;
-		monster.th_run = wiz_run1;
-		monster.th_missile = Wiz_Missile;
-		monster.th_pain = Wiz_Pain;
-		monster.th_die = wiz_die;
-	}
-	else if(class == "zombie")
-	{
-		_setmodel(monster, "progs/zombie.mdl");
-		setsize(monster, '-16 -16 -24', '16 16 40');
 		monster.classname = "monster_zombie";
-		org += '0 0 32';
+		//org += '0 0 32';
 		monster.health = 60;
 		monster.th_stand = zombie_stand1;
 		monster.th_walk = zombie_walk1;
@@ -601,18 +394,21 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 		monster.th_missile = zombie_missile;
 		monster.target = string_null; // don't target anything!
 	}
-	else
+	else if(!mon.mr_setup(mon, monster))
 	{
-		LOG_DEBUG("ERROR: No monster provided");
+		delete(monster);
+		return NULL;
 	}
+
 	// finish the shared settings
 	setorigin(monster, org + '0 0 1');
 	
-	if(class != "wizard")
+	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
 		droptofloor(monster);
 	
-	if(!t_walkmove(monster, 0, 0))
-		LOG_DEBUG("walkmonster in wall at: ", vtos(monster.origin));
+	tracebox(monster.origin, monster.mins, monster.maxs, monster.origin, MOVE_NOMONSTERS, monster);
+	if(trace_startsolid)
+		LOG_DEBUG("Monster in wall at ", vtos(monster.origin), "\n");
 	
 	monster.category = CATEGORY_MONSTER;
 	monster.takedamage = DAMAGE_AIM;
@@ -621,9 +417,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 		monster.yaw_speed = 20;
 	monster.view_ofs = '0 0 25';
 	monster.use = monster_use;
-	
-	monster.flags |= FL_MONSTER;
-	
+
 	monster.enemy = HordeFindTarget(); // find a random living player
 	//monster.enemy = find (world, classname, "player");
 	setthink(monster, FoundTarget);
@@ -635,7 +429,7 @@ entity SpawnMonster(entity this, string class, vector org, vector temp_angles)
 	//spawn_tfog(monster.origin);
 	
 	monster.owner = this;
-	if(monster.classname != "monster_zombie") // don't count zombies toward total goal
+	if(!(mon.spawnflags & MONSTER_TYPE_UNDEAD)) // don't count zombies toward total goal
 		monsters_total += 1;
 
 	return monster;
@@ -1205,120 +999,120 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "grunt", org + '0 -40 0', temp_angles);
-			SpawnMonster(this, "grunt", org + '40 40 0', temp_angles);
-			SpawnMonster(this, "grunt", org + '-40 40 0', temp_angles);
+			SpawnMonster(this, MON_GRUNT, org + '0 -40 0', temp_angles);
+			SpawnMonster(this, MON_GRUNT, org + '40 40 0', temp_angles);
+			SpawnMonster(this, MON_GRUNT, org + '-40 40 0', temp_angles);
 		}
 		else
 		{
-			SpawnMonster(this, "grunt", org + '-40 0 0', temp_angles);
-			SpawnMonster(this, "grunt", org + '40 0 0', temp_angles);
+			SpawnMonster(this, MON_GRUNT, org + '-40 0 0', temp_angles);
+			SpawnMonster(this, MON_GRUNT, org + '40 0 0', temp_angles);
 		}
 	}
 	else if(name == "2 grunts, 1 dog")
 	{
-		SpawnMonster(this, "dog", org + '44 0 0', temp_angles);
-		SpawnMonster(this, "grunt", org + '-40 -40 0', temp_angles);
-		SpawnMonster(this, "grunt", org + '-40 40 0', temp_angles);
+		SpawnMonster(this, MON_ROTTWEILER, org + '44 0 0', temp_angles);
+		SpawnMonster(this, MON_GRUNT, org + '-40 -40 0', temp_angles);
+		SpawnMonster(this, MON_GRUNT, org + '-40 40 0', temp_angles);
 	}
 	else if(name == "2 dogs")
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "dog", org + '-0 -44 0', temp_angles);
-			SpawnMonster(this, "dog", org + '0 44 0', temp_angles);
+			SpawnMonster(this, MON_ROTTWEILER, org + '-0 -44 0', temp_angles);
+			SpawnMonster(this, MON_ROTTWEILER, org + '0 44 0', temp_angles);
 		}
 		else
-			SpawnMonster(this, "dog", org + '-0 -44 0', temp_angles);
+			SpawnMonster(this, MON_ROTTWEILER, org + '-0 -44 0', temp_angles);
 	}
 	else if(name == "1 enforcer")
 	{
-		SpawnMonster(this, "enforcer", org + '0 0 0', temp_angles);
+		SpawnMonster(this, MON_ENFORCER, org + '0 0 0', temp_angles);
 	}
 	else if(name == "2 enforcers")
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "enforcer", org + '40 0 0', temp_angles);
-			SpawnMonster(this, "enforcer", org + '-40 0 0', temp_angles);	
+			SpawnMonster(this, MON_ENFORCER, org + '40 0 0', temp_angles);
+			SpawnMonster(this, MON_ENFORCER, org + '-40 0 0', temp_angles);	
 		}
 		else
-			SpawnMonster(this, "enforcer", org + '0 0 0', temp_angles);
+			SpawnMonster(this, MON_ENFORCER, org + '0 0 0', temp_angles);
 	}
 	else if(name == "1 ogre")
 	{
-		SpawnMonster(this, "ogre", org + '0 0 0', temp_angles);
+		SpawnMonster(this, MON_OGRE, org + '0 0 0', temp_angles);
 	}
 	else if(name == "2 knights")
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "knight", org + '40 0 0', temp_angles);
-			SpawnMonster(this, "knight", org + '-40 0 0', temp_angles);
+			SpawnMonster(this, MON_KNIGHT, org + '40 0 0', temp_angles);
+			SpawnMonster(this, MON_KNIGHT, org + '-40 0 0', temp_angles);
 		}
 		else
 		{
-			SpawnMonster(this, "knight", org + '40 0 0', temp_angles);
+			SpawnMonster(this, MON_KNIGHT, org + '40 0 0', temp_angles);
 		}
 			
 	}
 	else if(name == "2 zombies")
 	{
-		SpawnMonster(this, "zombie", org + '40 0 0', temp_angles);
-		SpawnMonster(this, "zombie", org + '-40 0 0', temp_angles);
+		SpawnMonster(this, MON_ZOMBIE, org + '40 0 0', temp_angles);
+		SpawnMonster(this, MON_ZOMBIE, org + '-40 0 0', temp_angles);
 	}
 	else if(name == "1 wizard")
-		SpawnMonster(this, "wizard", org + '0 0 0', temp_angles);
+		SpawnMonster(this, MON_SCRAG, org + '0 0 0', temp_angles);
 	else if(name == "2 hellknights")
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "hellknight", org + '0 40 0', temp_angles);
-			SpawnMonster(this, "hellknight", org + '0 -40 0', temp_angles);
+			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 40 0', temp_angles);
+			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 -40 0', temp_angles);
 		}
 		else
-			SpawnMonster(this, "hellknight", org + '0 40 0', temp_angles);
+			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 40 0', temp_angles);
 	}
 	else if(name == "2 knights, 1 hellknight")
 	{
-		SpawnMonster(this, "hellknight", org + '40 0 0', temp_angles);
-		SpawnMonster(this, "knight", org + '-40 40 0', temp_angles);
-		SpawnMonster(this, "knight", org + '-40 -40 0', temp_angles);
+		SpawnMonster(this, MON_HELL_KNIGHT, org + '40 0 0', temp_angles);
+		SpawnMonster(this, MON_KNIGHT, org + '-40 40 0', temp_angles);
+		SpawnMonster(this, MON_KNIGHT, org + '-40 -40 0', temp_angles);
 	}
 	else if(name == "3 wizards")
 	{
 		if(autocvar_skill > 0)
 		{
-			SpawnMonster(this, "wizard", org + '40 40 40', temp_angles);
-			SpawnMonster(this, "wizard", org + '-40 40 40', temp_angles);
-			SpawnMonster(this, "wizard", org + '-40 -40 40', temp_angles);
+			SpawnMonster(this, MON_SCRAG, org + '40 40 40', temp_angles);
+			SpawnMonster(this, MON_SCRAG, org + '-40 40 40', temp_angles);
+			SpawnMonster(this, MON_SCRAG, org + '-40 -40 40', temp_angles);
 		}
 		else
 		{
-			SpawnMonster(this, "wizard", org + '40 40 40', temp_angles);
-			SpawnMonster(this, "wizard", org + '-40 40 40', temp_angles);
+			SpawnMonster(this, MON_SCRAG, org + '40 40 40', temp_angles);
+			SpawnMonster(this, MON_SCRAG, org + '-40 40 40', temp_angles);
 		}
 	}
 	else if(name == "shambler")
-		SpawnMonster(this, "shambler", org, temp_angles);
+		SpawnMonster(this, MON_SHAMBLER, org, temp_angles);
 	else if(name == "double demon")
 	{
 		if(autocvar_skill >= 3 && random() > 0.8)
 		{
 			// double shambler
-			SpawnMonster(this, "shambler", org + '40 40 0', temp_angles);
-			SpawnMonster(this, "shambler", org + '-40 -40 0', temp_angles);
+			SpawnMonster(this, MON_SHAMBLER, org + '40 40 0', temp_angles);
+			SpawnMonster(this, MON_SHAMBLER, org + '-40 -40 0', temp_angles);
 		}
 		else if(autocvar_skill >= 1)
 		{
-			SpawnMonster(this, "demon", org + '40 40 0', temp_angles);
-			SpawnMonster(this, "demon", org + '-40 -40 0', temp_angles);
+			SpawnMonster(this, MON_FIEND, org + '40 40 0', temp_angles);
+			SpawnMonster(this, MON_FIEND, org + '-40 -40 0', temp_angles);
 		}
 		else
-			SpawnMonster(this, "demon", org, temp_angles);
+			SpawnMonster(this, MON_FIEND, org, temp_angles);
 	}
 	else if(name == "shalrath")
-		SpawnMonster(this, "shalrath", org, temp_angles);	
+		SpawnMonster(this, MON_VORE, org, temp_angles);	
 	else
 		LOG_DEBUG("ERROR: unrecognized squad name!");
 	
@@ -1554,7 +1348,7 @@ void SpawnWave2(entity this)
 
 	//STEP 2: find a spawn point for the squad
 	entity t = HordeFindSpawnpoint(squad_type);
-	LOG_DEBUG("spawnpoint found was: ", t.classname);
+	//LOG_DEBUG("spawnpoint found was: ", t.classname);
 	if(t && (squad_cat != HORDE_SQUAD_CAT_ERROR))
 	{
 		t.wait = time + SPAWN_RESET_TIME; // block spawnpoint from reuse for a duration
@@ -1615,16 +1409,11 @@ bool SpawnWavePrep(entity this)
 	}
 	
 	// Items
-	entity p = find(NULL, classname, "info_horde_item");
-	while (p)
+	FOREACH_ENTITY_CLASS("info_horde_item", !it.wait,
 	{
-		if(!p.wait)
-		{
-			setthink(p, SpawnItem);
-			p.nextthink = time + random() * 2;
-		}
-		p = find (p, classname, "info_horde_item");
-	}
+		setthink(it, SpawnItem);
+		it.nextthink = time + random() * 2;
+	});
 
 	this.wave++;
 	LOG_DEBUG("wave ", ftos(this.wave));
@@ -1658,7 +1447,7 @@ bool SpawnWavePrep(entity this)
 		playerscalar = 1;
 	
 	// Boss Count
-	if(temp_wave % 3 == 0)
+	if((temp_wave % 3) == 0)
 	{
 		this.bosses = floor((temp_wave+1)/4);
 	}
@@ -1677,13 +1466,11 @@ bool SpawnWavePrep(entity this)
 	this.fodder = floor(this.fodder * playerscalar);
 	
 	// Trigger map entities
-	p = find(NULL, targetname, this.target);
-	while(p)
+	FOREACH_ENTITY_STRING(targetname, this.target,
 	{
-		if(p.use)
-			p.use(p, NULL, NULL);
-		p = find(p, targetname, this.target);
-	}
+		if(it.use)
+			it.use(it, NULL, NULL);
+	});
 
 	this.wait = true;
 	return 1;

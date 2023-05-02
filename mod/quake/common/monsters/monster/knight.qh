@@ -8,7 +8,7 @@ MODEL(MON_KNIGHT_HEAD, "progs/h_knight.mdl");
 #endif
 
 CLASS(Knight, Monster)
-    ATTRIB(Knight, spawnflags, int, 0);
+    ATTRIB(Knight, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(Knight, m_mins, vector, '-16 -16 -24');
     ATTRIB(Knight, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

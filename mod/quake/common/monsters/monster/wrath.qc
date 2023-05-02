@@ -242,14 +242,14 @@ void WrathHome(entity this)
 void WrathMissileTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner ||
-		toucher.classname == "monster_wrath" || 
-		toucher.classname == "monster_super_wrath")
+		toucher.monsterdef == MON_WRATH || 
+		toucher.monsterdef == MON_OVERLORD)
 	{
 		delete(this);
 		return;		// don't explode on any wraths
 	}
 
-	if(toucher.classname == "monster_zombie")
+	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		T_Damage(toucher, this, this, 110);	
 		
 	T_RadiusDamage(this, this.owner, 20, NULL);

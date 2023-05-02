@@ -520,6 +520,7 @@ spawnfunc(monster_morph)
 	precache_sound2("guard/see1.wav");
 
 	this.deathmessage = morph_deathmessage;
+	this.monsterdef = MON_GUARDIAN;
 
 	// NOTE: this isn't actually handled as a monster
 	// however, it does count towards the total monster count!

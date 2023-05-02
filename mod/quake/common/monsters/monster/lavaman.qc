@@ -430,6 +430,7 @@ spawnfunc(monster_lava_man)
 	}
 
 	this.deathmessage = lavaman_deathmessage;
+	this.monsterdef = MON_LAVAMAN;
 
 	lavaman_awake(this, NULL, NULL);
 }

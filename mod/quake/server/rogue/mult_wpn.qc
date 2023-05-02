@@ -148,7 +148,7 @@ void MultiRocketExplode(entity this, entity directhitentity)
 	{
 		if(directhitentity.monsterdef && (directhitentity.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
-		if(directhitentity.classname == "monster_dragon")
+		if(directhitentity.monsterdef == MON_DRAGON)
 			damg = damg * 0.5;	// mostly immune (special case)
 		T_Damage(directhitentity, this, this.owner, damg );
 	}

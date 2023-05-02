@@ -324,7 +324,7 @@ void FireballTouch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;		// don't explode on owner
 
-	if(this.owner.classname == "monster_dragon")
+	if(this.owner.monsterdef == MON_DRAGON)
 		T_RadiusDamage(this, this.owner, 90, this.owner);
 	else
 		T_RadiusDamage(this, this.owner, 30, NULL);
@@ -567,10 +567,10 @@ void dragon_squish(entity this, entity toucher)
 {
 	if(IS_PLAYER(toucher))
 	{
-		this.classname = "monster_dragon_dead";
-		T_Damage( toucher, this, this, 200);
+		this.classname = "monster_dragon_dead"; // TODO: deathtype support would give us a unique death message here!
+		T_Damage(toucher, this, this, 200);
 	}
-	if(!toucher || toucher == world)
+	if(!toucher)
 	{
 		this.velocity = '0 0 0';
 		dragon_explode(this);
@@ -701,7 +701,8 @@ spawnfunc(monster_dragon)
 	precache_sound("dragon/attack.wav");
 	precache_sound("dragon/pain.wav");
 	precache_sound("dragon/death.wav");
-	
+
+	this.classname = "monster_dragon"; // needed for dying state
 	this.dragonInRoom = DT_ROOM_A;
 	this.dragonInTransit = 0;
 	this.dragonAttacking = false;
@@ -721,6 +722,7 @@ spawnfunc(monster_dragon)
 
 	this.sightsound = dragon_sight;
 	this.deathmessage = dragon_deathmessage;
+	this.monsterdef = MON_DRAGON;
 
 	this.dragonPainSequence = 1;
 
@@ -761,10 +763,12 @@ void dragon_corner_touch(entity this, entity toucher)
 	if(toucher.movetarget != this)
 		return;
 	
-	if(toucher.classname != "monster_dragon")
+	if(toucher.monsterdef != MON_DRAGON)
+		return;
+	if(toucher.dragonDeathState > 0)
 		return;
 
-	toucher.movetarget = find (NULL, targetname, this.target);
+	toucher.movetarget = find(NULL, targetname, this.target);
 	toucher.goalentity = toucher.movetarget;
 	toucher.target = this.target;
 	

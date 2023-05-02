@@ -417,7 +417,7 @@ void HIP_FireMjolnir(entity this)
 	if(trace_ent.takedamage)
 	{
 		float damage = 50;
-		if(trace_ent.classname == "monster_zombie")
+		if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			damage = 70;
 		trace_ent.axhitme = true;
 		SpawnBlood(org, v_forward, damage, trace_ent);
@@ -480,14 +480,14 @@ void W_FireAxe(entity this)
 	
 	vector org = trace_endpos - v_forward * 4;
 
-	if(trace_ent.takedamage && trace_ent.classname != "monster_boss") // yoder mod, Jan 05 2021
+	if(trace_ent.takedamage && trace_ent.monsterdef != MON_CHTHON) // yoder mod, Jan 05 2021
 	{
 		if(MP_IMPEL)
 		{
 			float r = random();
-			if(trace_ent.classname == "monster_juggernaut" || trace_ent.classname == "monster_juggernaut2")
+			if(trace_ent.monsterdef == MON_JUGGERNAUT)
 				_sound(this, CH_WEAPON_SINGLE, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
-			else if(trace_ent.classname == "monster_hell_knight" || trace_ent.classname == "monster_knight" || trace_ent.classname == "monster_dknight")
+			else if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MON_FLAG_METAL))
 			{
 				if(r < 0.3)
 					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
@@ -496,7 +496,7 @@ void W_FireAxe(entity this)
 				else
 					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
 			}
-			else if(trace_ent.classname == "player" && trace_ent.armorvalue > 0)
+			else if(IS_PLAYER(trace_ent) && trace_ent.armorvalue > 0)
 			{
 				if(r < 0.3)
 					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
@@ -587,7 +587,7 @@ void SpawnBlood(vector org, vector vel, float damage, entity targ)
 			te_gunshot(org);
 		else
 		{
-			if(targ.classname == "monster_spider" || targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+			if(targ.monsterdef == MON_SPIDER_DROID || targ.monsterdef == MON_JUGGERNAUT)
 				particle(org, vel * 0.1, 5, damage * 2);
 			else
 			{
@@ -681,7 +681,7 @@ void TraceAttack(float damage, vector dir)
 
 	vector org = trace_endpos - dir*4;
 
-	if(trace_ent.takedamage && trace_ent.classname != "monster_boss") // yoder mod, Jan 05 2021)
+	if(trace_ent.takedamage && trace_ent.monsterdef != MON_CHTHON) // yoder mod, Jan 05 2021)
 	{
 		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
 			SpawnBlood(org, vel*0.2, damage, trace_ent);
@@ -915,13 +915,8 @@ void BecomePurpleExplosion(entity this, entity directhitentity, float dm)
 	settouch(missile, missile_touchremove);
 	missile.nextthink = time + 3;
 	setthink(missile, SUB_Remove);
-	if(directhitentity.classname == "monster_ogre" || directhitentity.classname == "monster_ogre_marksman" || directhitentity.classname == "monster_shambler"
-	|| directhitentity.classname == "monster_legond" || directhitentity.classname == "monster_blud" || directhitentity.classname == "monster_babyblud"
-	|| directhitentity.classname == "monster_shalrath" || directhitentity.classname == "monster_army" || directhitentity.classname == "monster_demon1"
-	|| directhitentity.classname == "monster_enforcer" || directhitentity.classname == "monster_lenforcer" || directhitentity.classname == "player")
-	{
+	if(IS_PLAYER(directhitentity) || IS_MONSTER(directhitentity))
 		_setmodel(missile, "progs/blpulse.mdl");
-	}
 	else
 		_setmodel(missile, "progs/wlpulse.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
@@ -955,13 +950,13 @@ void T_MediumPulseTouch(entity this, entity toucher)
 		return;
 	}
 	float damg;
-	if(toucher.classname == "monster_zombie")
+	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		damg = 55 + (random() * 7);
 	else
 		damg = 40 + (random() * 20);
 	if(toucher.takedamage)
 	{
-		if(toucher.health <= damg && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2"
+		if(toucher.health <= damg && toucher.monsterdef != MON_JUGGERNAUT
 			&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
 			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)));
@@ -969,8 +964,8 @@ void T_MediumPulseTouch(entity this, entity toucher)
 			setorigin(toucher, toucher.origin);
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
-			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
-				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
+				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -1001,14 +996,14 @@ void T_SinglePulseTouch(entity this, entity toucher)
 		return;
 	}
 	float damg;
-	if(toucher.classname == "monster_zombie")
+	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		damg = 55 + random() * 7;
 	else
 		damg = 35 + random() * 25;
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, damg);
-		if(toucher.health <= 0 && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2" && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
+		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
 		{
 			if(!IS_PLAYER(toucher))
 			{
@@ -1017,8 +1012,9 @@ void T_SinglePulseTouch(entity this, entity toucher)
 			}
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
-			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
-				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			// TODO: some kind of "heavy" flag?
+			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
+				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -1051,22 +1047,22 @@ void T_SmallPulseTouch(entity this, entity toucher)
 		return;
 	}
 	float damg;
-	if(toucher.classname == "monster_zombie")
+	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		damg = 55 + random() * 7;
 	else
 		damg = 35 + random() * 25;
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, damg);
-		if(toucher.health <= 0 && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2" 
+		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT 
 					&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
 			toucher.origin_z = toucher.origin_z + 1;
 			setorigin(toucher, toucher.origin);
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
-			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
-				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
+				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -1351,13 +1347,11 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		return '0 0 0';
 	else if(targ.classname == "missile")
 		return '0 0 0';
-	else if(targ.classname == "monster_shambler" && targ.health > 16)
+	else if(targ.monsterdef == MON_SHAMBLER && targ.health > 16)
 		return '0 0 0';
-	else if(targ.classname == "monster_blud" && targ.health > 16)
+	else if(targ.monsterdef == MON_BLUD && targ.health > 16)
 		return '0 0 0';
-	else if(targ.classname == "monster_babyblud" && targ.health > 16)
-		return '0 0 0';
-	else if((targ.classname == "monster_legond"))
+	else if((targ.monsterdef == MON_LEGOND))
 		return '0 0 0';
 	if(targ.classname == "missile")
 	{
@@ -1371,13 +1365,13 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		v.y = 1000 * crandom();
 		v.z = 2000 + 1000 * random();
 	}
-	else if(targ.classname == "monster_ogre" || targ.classname == "monster_ogre_marksman")
+	else if(targ.monsterdef == MON_OGRE)
 	{
 		v.x = 200 * crandom();
 		v.y = 200 * crandom();
 		v.z = 150 + 50 * random();
 	}
-	else if(targ.classname == "monster_hell_knight")
+	else if(targ.monsterdef == MON_HELL_KNIGHT)
 	{
 		v.x = 200 * crandom();
 		v.y = 200 * crandom();
@@ -1452,10 +1446,6 @@ void gibhim(entity this)
 	}
 	else if(this.elec)
 	{
-		//if(this.classname == "monster_hbot")
-		//	_setmodel(this, "progs/hbot.mdl");
-		//if(this.classname == "monster_babyblud")
-		//	_setmodel(this, "progs/spawn.mdl");
 		if(IS_PLAYER(this))
 		{
 			r = random();
@@ -1572,13 +1562,13 @@ void ThrowMe(entity this, entity targ, float dm)
 		return;
 	if(targ.move_movetype == MOVETYPE_NONE)
 		return;
-	if(targ.classname == "monster_wizard")
+	if(targ.monsterdef == MON_SCRAG)
 		return;
-	if(targ.classname == "monster_grenling" || targ.classname == "monster_gren")
+	if(targ.monsterdef == MON_GRENLING)
 		return;
-	if(targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+	if(targ.monsterdef == MON_JUGGERNAUT)
 		return;
-	if(targ.classname == "monster_legond")
+	if(targ.monsterdef == MON_LEGOND)
 		return;
 	if(targ.health <= 5 && IS_PLAYER(targ))
 		targ.health = 6;
@@ -1604,7 +1594,7 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(toucher.takedamage && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2")
+	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT)
 	{
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
@@ -1747,9 +1737,9 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.classname != "monster_juggernaut")
+				if(trace_ent.monsterdef != MON_JUGGERNAUT)
 					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else if(trace_ent.classname != "monster_juggernaut2")
+				else
 					particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
@@ -1771,9 +1761,9 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.classname != "monster_juggernaut")
+				if(trace_ent.monsterdef != MON_JUGGERNAUT)
 					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else if(trace_ent.classname != "monster_juggernaut2")
+				else
 					particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
@@ -1790,9 +1780,9 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.classname != "monster_juggernaut")
+				if(trace_ent.monsterdef != MON_JUGGERNAUT)
 					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else if(trace_ent.classname != "monster_juggernaut2")
+				else
 					particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
@@ -1963,7 +1953,7 @@ void MakeFlame(entity this, entity toucher)
 		BecomeExplosion(this);
 		return;
 	}
-	if(toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_hell_knight")
+	if(toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_HELL_KNIGHT)
 		_setmodel(this, "progs/flameo2.mdl");
 	else
 		_setmodel(this, "progs/flameo.mdl");
@@ -2030,7 +2020,7 @@ void ThrowGib(entity this, string gibname, float dm);
 void InternalFireThink(entity this)
 {
 	float damg = 65 + random() * 75;
-	if(this.enemy.classname == "monster_juggernaut" || this.enemy.classname == "monster_juggernaut2")
+	if(this.enemy.monsterdef == MON_JUGGERNAUT)
 	{
 		if(random() < 0.7)
 		{
@@ -2038,17 +2028,17 @@ void InternalFireThink(entity this)
 			return;
 		}
 	}
-	if(this.enemy.classname == "monster_legond")
+	if(this.enemy.monsterdef == MON_LEGOND)
 	{
 		BecomeExplosion(this);
 		return;
 	}
-	if(this.enemy.classname == "monster_shambler")
+	if(this.enemy.monsterdef == MON_SHAMBLER)
 	{
 		BecomeExplosion(this);
 		return;
 	}
-	if(this.enemy.classname == "monster_demon1")
+	if(this.enemy.monsterdef == MON_FIEND)
 	{
 		BecomeExplosion(this);
 		return;
@@ -2114,22 +2104,22 @@ void InternalFireThink(entity this)
 			return;
 		}
 	}
-	if(this.enemy.health <= 48 && this.owner.owner.super_damage_finished > time && this.enemy.classname != "monster_zombie")
+	if(this.enemy.health <= 48 && this.owner.owner.super_damage_finished > time && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 	{
 		if(this.enemy.health > 0)
 		{
-			if(this.enemy.classname == "monster_ogre" || this.enemy.classname == "monster_ogre_marksman")
+			if(this.enemy.monsterdef == MON_OGRE)
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg);
 				BecomeExplosion(this);
 				return;
 			}
 			T_Damage (this.enemy, this, this.owner.owner, damg);
-			if(this.enemy.classname != "monster_juggernaut" && this.enemy.classname != "monster_juggernaut2" && this.enemy.classname != "monster_spider" 
+			if(this.enemy.monsterdef != MON_JUGGERNAUT && this.enemy.monsterdef != MON_SPIDER_DROID 
 					&& this.enemy.classname != "misc_explobox" && this.enemy.classname != "misc_explobox2" && this.enemy.classname != "wall_explode")
 			{
 				_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
-				if(this.enemy.classname == "monster_gren" || this.enemy.classname == "monster_grenling" || this.enemy.classname == "monster_wizard" || this.enemy.classname == "monster_dog")
+				if(this.enemy.monsterdef == MON_GRENLING || this.enemy.monsterdef == MON_SCRAG || this.enemy.monsterdef == MON_ROTTWEILER)
 				{
 					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
 					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
@@ -2159,9 +2149,9 @@ void InternalFireThink(entity this)
 	}
 	else
 	{
-		if(this.enemy.health <= 8 && this.enemy.classname != "monster_zombie")
+		if(this.enemy.health <= 8 && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		{
-			if((this.enemy.classname == "monster_ogre" || this.enemy.classname == "monster_ogre_marksman") && (this.enemy.health - damg) > -80)
+			if(this.enemy.monsterdef == MON_OGRE && (this.enemy.health - damg) > -80)
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg);
 				BecomeExplosion(this);
@@ -2170,11 +2160,11 @@ void InternalFireThink(entity this)
 			if(this.enemy.health > 0)
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg);
-				if(this.enemy.classname != "monster_juggernaut" || this.enemy.classname != "monster_juggernaut2" || this.enemy.classname != "monster_spider" 
+				if(this.enemy.monsterdef != MON_JUGGERNAUT || this.enemy.monsterdef != MON_SPIDER_DROID
 						|| this.enemy.classname != "misc_explobox" || this.enemy.classname != "misc_explobox2" || this.enemy.classname != "wall_explode")
 				{
 					_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
-					if(this.enemy.classname == "monster_gren" || this.enemy.classname == "monster_grenling" || this.enemy.classname == "monster_wizard" || this.enemy.classname == "monster_dog")
+					if(this.enemy.monsterdef == MON_GRENLING || this.enemy.monsterdef == MON_SCRAG || this.enemy.monsterdef == MON_ROTTWEILER)
 					{
 						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
 						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
@@ -2197,7 +2187,7 @@ void InternalFireThink(entity this)
 				SpawnInternalFire2(this);
 				return;
 			}
-			else if(this.enemy.classname != "monster_zombie")
+			else if(!(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			{
 				T_Damage(this.enemy, this, this.owner, damg);
 				BecomeExplosion(this);
@@ -2217,11 +2207,11 @@ void InternalFireThink(entity this)
 		BecomeExplosion(this);
 		return;
 	}
-	if(this.enemy.classname != "monster_zombie" && this.enemy.classname != "monster_juggernaut" && this.enemy.classname != "monster_juggernaut2")
+	if(this.enemy.monsterdef != MON_ZOMBIE && this.enemy.monsterdef != MON_JUGGERNAUT)
 		setorigin(this, this.enemy.origin);
-	if(this.enemy.classname == "monster_zombie")
+	if(this.enemy.monsterdef == MON_ZOMBIE)
 		setorigin(this, this.enemy.origin - v_up * 16);
-	if(this.enemy.classname == "monster_juggernaut" || this.enemy.classname == "monster_juggernaut2")
+	if(this.enemy.monsterdef == MON_JUGGERNAUT)
 		setorigin(this, this.enemy.origin + v_up * 32);
 	setthink(this, InternalFireThink);
 }
@@ -2237,16 +2227,16 @@ void SpawnInternalFire(entity this, entity targ)
 	missile.nextthink = time + 0.3;
 	setthink(missile, InternalFireThink);
 	missile.classname = "flame";
-	if(targ.classname == "monster_ogre" || targ.classname == "monster_ogre_marksman" || targ.classname == "monster_hell_knight")
+	if(targ.monsterdef == MON_OGRE || targ.monsterdef == MON_HELL_KNIGHT)
 		_setmodel(missile, "progs/flameo2.mdl");
 	else
 		_setmodel(missile, "progs/flameo.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
-	if(targ.classname != "monster_zombie" && (targ.classname != "monster_juggernaut" || targ.classname != "monster_juggernaut2"))
+	if(targ.monsterdef != MON_ZOMBIE && targ.monsterdef != MON_JUGGERNAUT)
 		setorigin(missile, targ.origin);
-	if(targ.classname == "monster_zombie")
+	if(targ.monsterdef == MON_ZOMBIE)
 		setorigin(missile, targ.origin - v_up * 16);
-	if(targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+	if(targ.monsterdef == MON_JUGGERNAUT)
 		setorigin(missile, targ.origin - v_up * 32);
 }
 
@@ -2291,8 +2281,8 @@ void napalmrebound(entity this)
 
 void NapalmTouch(entity this, entity toucher)
 {
-	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.classname != "monster_spider" && toucher.classname != "monster_zombie" 
-			&& toucher.classname != "monster_shambler" && toucher.classname != "monster_shalrath")
+	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.monsterdef != MON_SPIDER_DROID && toucher.monsterdef != MON_ZOMBIE
+			&& toucher.monsterdef != MON_SHAMBLER && toucher.monsterdef != MON_VORE)
 	{
 		SpawnInternalFire(this, toucher);
 	}
@@ -2647,7 +2637,7 @@ void spike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage && toucher.classname != "monster_boss") // yoder mod, jan 05 2021
+	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 9, toucher);
 		T_Damage(toucher, this, this.owner, 9);
@@ -2681,7 +2671,7 @@ void superspike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage && toucher.classname != "monster_boss") // yoder mod, jan 05 2021
+	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 18, toucher);
 		T_Damage(toucher, this, this.owner, 18);
@@ -2743,23 +2733,23 @@ void T_SpearTouch(entity this, entity toucher)
 		_setmodel(this, "progs/impstuck.mdl");
 		if(IS_CLIENT(toucher))
 			knockback = 400 - (toucher.armorvalue * 3);
-		else if(toucher.classname == "monster_dog")
+		else if(toucher.monsterdef == MON_ROTTWEILER)
 			knockback = 550;
-		else if(toucher.classname == "monster_zombie")
+		else if(toucher.monsterdef == MON_ZOMBIE)
 			knockback = 250;
-		else if(toucher.classname == "monster_army")
+		else if(toucher.monsterdef == MON_GRUNT)
 			knockback = 450;
-		else if(toucher.classname == "monster_knight" || toucher.classname == "monster_dknight")
+		else if(toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT)
 			knockback = 250;
-		else if(toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer")
+		else if(toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
 			knockback = 300;
-		else if(toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman")
+		else if(toucher.monsterdef == MON_OGRE)
 			knockback = 100;
-		else if(toucher.classname == "monster_hell_knight")
+		else if(toucher.monsterdef == MON_HELL_KNIGHT)
 			knockback = 150;
-		else if(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren")
+		else if(toucher.monsterdef == MON_GRENLING)
 			knockback = 550;
-		else if(toucher.classname == "monster_shalrath")
+		else if(toucher.monsterdef == MON_VORE)
 			knockback = 100;
 		else
 			knockback = 0;
@@ -2776,9 +2766,9 @@ void T_SpearTouch(entity this, entity toucher)
 		}
 	}
 	if(toucher.takedamage 
-		&& (toucher.classname == "monster_juggernaut" || toucher.classname == "monster_juggernaut2" || toucher.classname == "monster_reactor" 
-			|| toucher.classname == "monster_boss" || toucher.classname == "monster_oldone" || toucher.classname == "monster_legond" 
-			|| toucher.classname == "monster_knight" || toucher.classname == "monster_dknight" || toucher.classname == "monster_hell_knight" || toucher.classname == "monster_shambler") 
+		&& (toucher.monsterdef == MON_JUGGERNAUT
+			|| toucher.monsterdef == MON_CHTHON || toucher.monsterdef == MON_SHUB || toucher.monsterdef == MON_LEGOND 
+			|| toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT || toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_SHAMBLER) 
 			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1))
 	{
 		_setmodel(this, "progs/impdef.mdl");
@@ -2800,7 +2790,7 @@ void T_SpearTouch(entity this, entity toucher)
 		this.nextthink = time + 0.5;
 		this.count = time + 3;
 	}
-	else if(((toucher.classname == "monster_army" || toucher.classname == "monster_wizard" || toucher.classname == "monster_dog") && random() < 0.5) || toucher.classname == "monster_fish")
+	else if(((toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTTWEILER) && random() < 0.5) || toucher.monsterdef == MON_ROTFISH)
 	{
 		T_Damage (toucher, this, this.owner, 5000);
 		entity missile = spawn();
@@ -2823,21 +2813,21 @@ void T_SpearTouch(entity this, entity toucher)
 		delete(this);
 	}
 	else if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)) && toucher.armorvalue == 0 && 
-		(IS_PLAYER(toucher) || toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer" 
-		|| toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_demon1" 
-		|| toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_grenling" 
-		|| toucher.classname == "monster_gren" || toucher.classname == "monster_army" || toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "wall_explode"))
+		(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER 
+		|| toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_FIEND 
+		|| toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_GRENLING
+		|| toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.classname == "wall_explode"))
 	{
 		_setmodel(this, "progs/impstuck.mdl");
 		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
-		if(toucher.classname == "player" || toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer")
+		if(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
 		{
 			BecomeBloodSpurt(this, 25);
 			T_Damage(toucher, this, this.owner, 25);
 			BecomeBloodSpurt(this, 25);
 		}
-		if(!(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren" || toucher.classname == "monster_army" 
-				|| toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "monster_fish"))
+		if(!(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
+				|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH))
 		{
 			BecomeBloodSpurt(this, 25);
 			T_Damage(toucher, this, this.owner, 25);
@@ -2855,8 +2845,8 @@ void T_SpearTouch(entity this, entity toucher)
 		this.mangle_z = this.mangle_z * 0.1 + 10;
 		setthink(this, SpearThink);
 		this.nextthink = time + 0.1;
-		if(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren" || toucher.classname == "monster_army" 
-			|| toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "monster_fish")
+		if(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
+			|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH)
 		{
 			T_Damage (toucher, this, this.owner, 5000);
 			BecomeBloodSpurt(this, 5000);
@@ -3053,7 +3043,7 @@ void SpearThink(entity this)
 {
 	setorigin(this, this.enemy.origin + this.mangle);
 	this.angles = this.enemy.angles + this.v_angle;
-	if(IS_CLIENT(this.enemy) || this.enemy.classname == "monster_enforcer" || IS_PLAYER(this.enemy) || this.enemy.classname == "monster_lenforcer")
+	if(IS_CLIENT(this.enemy) || this.enemy.monsterdef == MON_ENFORCER || IS_PLAYER(this.enemy) || this.enemy.monsterdef == MON_LIGHTNING_ENFORCER)
 	{
 		if(!(this.flags & FL_NOTARGET))
 		{
@@ -3123,7 +3113,7 @@ void DeathSound(entity this);
 
 void impale(entity this)
 {
-	if(this.classname == "monster_enforcer" || this.classname == "monster_lenforcer")
+	if(this.monsterdef == MON_ENFORCER || this.monsterdef == MON_LIGHTNING_ENFORCER)
 	{
 		_sound(this, CHAN_BODY, "player/udeath.wav", 1, ATTN_NORM);
 		BecomeBloodSpurt(this, 0);

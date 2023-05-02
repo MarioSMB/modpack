@@ -23,7 +23,7 @@ void T_EELZap(entity inflictor, entity attacker, float damage)
 			{
 				if (CanDamage(head, inflictor))
 				{	// eels take no damage from this attack
-					if (head.classname != "monster_eel" && 
+					if (head.monsterdef != MON_EEL && 
 						(head.flags & FL_INWATER))					
 						T_Damage(head, inflictor, attacker, points);
 				}

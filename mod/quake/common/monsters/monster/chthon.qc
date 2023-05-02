@@ -332,6 +332,7 @@ spawnfunc(monster_boss)
 	this.deathmessage = boss_deathmessage;
 
 	this.use = boss_awake;
+	this.monsterdef = MON_CHTHON; // for monster lookups
 }
 
 //===========================================================================
@@ -398,7 +399,7 @@ void lightning_use(entity this, entity actor, entity trigger)
 	lightning_fire(this);		
 
 // advance the boss pain if down
-	entity e = find(NULL, classname, "monster_boss");
+	entity e = findentity(NULL, monsterdef, MON_CHTHON);
 	if(!e)
 		return;
 	e.enemy = actor;

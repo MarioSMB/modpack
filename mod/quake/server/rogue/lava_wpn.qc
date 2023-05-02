@@ -107,7 +107,7 @@ void lavaspike_touch(entity this, entity toucher)
 		}
 		else		// is a monster
 		{
-			if(toucher.classname != "monster_lava_man")
+			if(toucher.monsterdef != MON_LAVAMAN)
 				T_Damage(toucher, this, this.owner, 15);
 		}
 	}
@@ -162,7 +162,7 @@ void superlavaspike_touch(entity this, entity toucher)
 		}
 		else		// is a monster, do 50% more damage
 		{
-			if(toucher.classname != "monster_lava_man")
+			if(toucher.monsterdef != MON_LAVAMAN)
 			{
 				T_Damage(toucher, this, this.owner, 30);
 			}

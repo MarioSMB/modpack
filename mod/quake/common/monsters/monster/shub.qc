@@ -258,6 +258,7 @@ spawnfunc(monster_oldone)
 	this.th_die = finale_1;
 
 	this.deathmessage = oldone_deathmessage;
+	this.monsterdef = MON_SHUB;
 	
 	// NOTE: this isn't actually handled as a monster
 	// however, it does count towards the total monster count!

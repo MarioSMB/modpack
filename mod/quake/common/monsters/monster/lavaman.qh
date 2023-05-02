@@ -2,6 +2,23 @@
 
 #include "../all.qh"
 
+#ifdef GAMEQC
+MODEL(MON_LAVAMAN, "progs/boss.mdl");
+#endif
+
+CLASS(LavaMan, Monster)
+    ATTRIB(LavaMan, spawnflags, int, MON_FLAG_HIDDEN | MON_FLAG_STATIONARY);
+    ATTRIB(LavaMan, m_mins, vector, '-32 -32 -24');
+    ATTRIB(LavaMan, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(LavaMan, m_model, Model, MDL_MON_LAVAMAN);
+#endif
+    ATTRIB(LavaMan, netname, string, "lavaman");
+    ATTRIB(LavaMan, monster_name, string, _("LavaMan"));
+ENDCLASS(LavaMan)
+
+REGISTER_MONSTER(LAVAMAN, NEW(LavaMan));
+
 #ifdef SVQC
 void lavaman_missile(entity this, int AttackNumber);
 #endif

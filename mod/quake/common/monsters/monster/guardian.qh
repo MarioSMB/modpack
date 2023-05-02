@@ -1,3 +1,22 @@
 #pragma once
 
 #include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_GUARDIAN_AZTEC, "progs/morph_az.mdl");
+MODEL(MON_GUARDIAN_EGYPT, "progs/morph_eg.mdl");
+MODEL(MON_GUARDIAN_GREEK, "progs/morph_gr.mdl");
+#endif
+
+CLASS(Guardian, Monster)
+    ATTRIB(Guardian, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_STATIONARY);
+    ATTRIB(Guardian, m_mins, vector, VEC_HULL_MIN);
+    ATTRIB(Guardian, m_maxs, vector, VEC_HULL_MAX);
+#ifdef GAMEQC
+    ATTRIB(Guardian, m_model, Model, MDL_MON_GUARDIAN_AZTEC);
+#endif
+    ATTRIB(Guardian, netname, string, "guardian");
+    ATTRIB(Guardian, monster_name, string, _("Guardian"));
+ENDCLASS(Guardian)
+
+REGISTER_MONSTER(GUARDIAN, NEW(Guardian));

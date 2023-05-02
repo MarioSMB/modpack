@@ -2,6 +2,7 @@
 
 #include "dark_knight.qh"
 #include "lightning_enforcer.qh"
+#include "guardian.qh"
 
 #ifdef SVQC
 const int anim_enf_stand = 0; //'0 6 0'
@@ -43,7 +44,7 @@ void Laser_Touch(entity this, entity toucher)
 
 entity LaunchLaser(entity this, vector org, vector vec)
 {
-	if(this.classname == "monster_enforcer" || MP_IMPEL)
+	if(this.monsterdef == MON_ENFORCER || MP_IMPEL)
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 
 	vector vec2 = normalize(vec);
@@ -57,7 +58,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	_setmodel(newmis, "progs/laser.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 
-	if(this.classname == "monster_morph" && !this.owner)
+	if(this.monsterdef == MON_GUARDIAN && !this.owner)
 		newmis.skin = 1; // class check doesn't need rogue check
 
 	setorigin(newmis, org);

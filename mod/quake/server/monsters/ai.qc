@@ -477,7 +477,7 @@ void t_movetarget(entity this, entity toucher)
 			return; // waiting to walk...
 	}
 
-	if(toucher.classname == "monster_ogre")
+	if(toucher.monsterdef == MON_OGRE)
 		_sound(toucher, CH_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
 	if(this.target && this.target != "")
@@ -602,7 +602,7 @@ bool CheckContentsDamage(entity this)
 	else if(this.watertype == CONTENT_LAVA)
 	{
 		this.dmgtime = time + 0.2;
-		if(this.classname == "monster_zombie")
+		if(this.monsterdef && (this.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		{
 			T_Damage(this, NULL, NULL, 120); // GIB!
 			return true;
@@ -634,7 +634,7 @@ void t_followtarget(entity this, entity toucher)
 {
 	if(!IS_MONSTER(toucher))
 		return;
-	if(toucher.classname == "monster_decoy")
+	if(toucher.flags & FL_DECOY)
 		return;
 //  if (toucher.enemy == NULL)
 //  	return;
@@ -938,11 +938,11 @@ void HuntTarget(entity this)
 
 void SightSound(entity this)
 {
-	if(this.classname == "monster_gremlin" && this.stoleweapon != 0)
+	if(this.monsterdef == MON_GREMLIN && this.stoleweapon != 0)
 		return; // don't play a sound if we have a weapon?
 
 	float atten = ATTN_NORM;
-	if(this.classname == "monster_armagon")
+	if(this.monsterdef == MON_ARMAGON)
 		atten = 0.1;
 
 	if(this.sightsound)
@@ -980,12 +980,12 @@ void FoundTarget(entity this)
 		this.enemy = NULL;
 		return;
 	}
-	else if(MP_ROGUE && (this.spawnflags & 2) && this.classname == "monster_knight" && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
+	else if(MP_ROGUE && (this.spawnflags & 2) && this.monsterdef == MON_KNIGHT && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
 	{
 		this.enemy = NULL;
 		return;
 	}
-	if(MP_IMPEL && this.classname == "monster_spider" && (!this.target || this.target == ""))
+	if(MP_IMPEL && this.monsterdef == MON_SPIDER_DROID && (!this.target || this.target == ""))
 	{
 		spider_wake1(this);
 		_sound(this, CHAN_AUTO, "monsters/spider/sactiv.wav", 1, ATTN_NORM);
@@ -1129,7 +1129,7 @@ bool FindTarget(entity this)
 	if(client.powerups & POWERUP_INVISIBILITY)
 		return false;
 
-	if(client.classname == "monster_spider" || client.classname == "monster_legond")
+	if(client.monsterdef == MON_SPIDER_DROID || client.monsterdef == MON_LEGOND)
 		return false;
 
 	if(!MP_IMPEL || !angry_monsters)
@@ -1173,7 +1173,7 @@ bool FindTarget(entity this)
 		}
 	}
 
-	if(this.classname != "monster_dragon")
+	if(this.monsterdef != MON_DRAGON)
 		FoundTarget(this);
 
 	return true;

@@ -3,8 +3,10 @@
 // special spawn flags
 const int MONSTER_TYPE_FLY = BIT(5);
 const int MONSTER_TYPE_SWIM = BIT(6);
-// bit 7 now unused
+const int MONSTER_TYPE_BOSS = BIT(7);
 const int MON_FLAG_EXPLOSIONRESISTANT = BIT(8); // takes half damage from explosions
+const int MON_FLAG_STATIONARY = BIT(9); // takes half damage from explosions
+const int MON_FLAG_METAL = BIT(10); // is a full metal soldier
 const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
 const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
 const int MON_FLAG_HIDDEN = BIT(16);

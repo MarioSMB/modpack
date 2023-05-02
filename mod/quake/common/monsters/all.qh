@@ -1,6 +1,6 @@
 #pragma once
 
-REGISTRY(Monsters, BITS(5))
+REGISTRY(Monsters, BITS(8))
 #define get_monsterinfo(i) REGISTRY_GET(Monsters, i)
 REGISTER_REGISTRY(Monsters)
 REGISTRY_CHECK(Monsters)

@@ -2,7 +2,7 @@
 
 void trigger_decoy_touch(entity this, entity toucher)
 {
-	if(toucher.classname != "monster_decoy")
+	if(!(toucher.flags & FL_DECOY))
 		return;
 	settouch(this, func_null);
 	this.nextthink = time + 0.1;
