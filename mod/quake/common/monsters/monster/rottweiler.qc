@@ -208,7 +208,7 @@ void dog_pain(entity this, entity attacker, float damage)
 
 	_sound(this, CH_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
 
-	if(random() > 0.5)
+	if(attacker || random() > 0.5)
 	{
 		dog_pain1(this);
 		if(MP_IMPEL)

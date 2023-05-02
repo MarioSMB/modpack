@@ -229,7 +229,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 {
 	if(!mon || mon == MON_Null || (mon.spawnflags & MONSTER_TYPE_DECOY))
 		return NULL;
-	entity monster = spawn();
+	entity monster = new(monster);
 	monster.monsterdef = mon;
 	monster.spawnfunc_checked = true;
 	monster.angles = temp_angles; 
@@ -239,8 +239,14 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	monster.flags = FL_MONSTER;
 	//monster.alpha = 1; // only set monster alpha after they're a corpse
 
-	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
-	if(mon.spawnflags & MONSTER_TYPE_FLY) { this.flags |= FL_FLY; }
+	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
+	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
+
+	if(!(monster.flags & FL_SWIM))
+	{
+		IL_PUSH(g_damagedbycontents, monster);
+		monster.damagedbycontents	= true;
+	}
 
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);

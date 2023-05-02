@@ -1241,7 +1241,13 @@ void CreatureFrame_hotliquids(entity this)
 			this.dmgtime = time + 1;
 		else
 			this.dmgtime = time + 0.2;
-		T_Damage(this, NULL, NULL, 10 * this.waterlevel);
+		if(this.monsterdef && (this.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+		{
+			T_Damage(this, NULL, NULL, 120); // GIB!
+			return;
+		}
+		float lavadmg = (IS_MONSTER(this)) ? 30 : 10;
+		T_Damage(this, NULL, NULL, lavadmg * this.waterlevel);
 	}
 	else if (this.watertype == CONTENT_SLIME)
 	{
@@ -1333,12 +1339,12 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	//IL_EACH(g_damagedbycontents, it.damagedbycontents,
-	FOREACH_CLIENT(IS_PLAYER(it) && it.damagedbycontents,
+	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
-		CreatureFrame_FallDamage(it);
+		if(IS_PLAYER(it))
+			CreatureFrame_FallDamage(it);
 	});
 }
 

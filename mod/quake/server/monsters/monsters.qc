@@ -74,7 +74,7 @@ void monster_start_go(entity this)
 	this.ideal_yaw = this.angles * '0 1 0';
 	this.use = monster_use;
 
-	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY))
+	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE))
 	{
 		if(!this.damagedbycontents)
 			IL_PUSH(g_damagedbycontents, this);

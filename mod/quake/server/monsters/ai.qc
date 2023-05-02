@@ -580,41 +580,6 @@ spawnfunc(target_switchpath)
 }
 
 //============================================================================
-// CheckContentsDamage
-// Returns true if the monster died and shouldn't proceed with its current think
-//============================================================================
-
-.float dmgtime;
-bool CheckContentsDamage(entity this)
-{
-	if(!this.damagedbycontents) return false; // not affected by liquids
-	if(this.waterlevel == 0) return false; //Not in any liquid
-	if(this.health <= 0) return false; //Dead or dying
-	if(time < this.dmgtime) return false; //Still processing damage from last time
-	if(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE) return false; //We're immune
-
-	if(this.watertype == CONTENT_SLIME)
-	{
-		this.dmgtime = time + 1;
-		T_Damage(this, NULL, NULL, 4 * this.waterlevel);
-		// this.pain_finished = 0; //Enable for spasming monsters
-	}
-	else if(this.watertype == CONTENT_LAVA)
-	{
-		this.dmgtime = time + 0.2;
-		if(this.monsterdef && (this.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		{
-			T_Damage(this, NULL, NULL, 120); // GIB!
-			return true;
-		}
-		T_Damage(this, NULL, NULL, 30 * this.waterlevel);
-		// this.pain_finished = 0; //Enable for spasming monsters
-	}
-
-	return (this.health <= 0);
-}
-
-//============================================================================
 
 const vector RANGES_NORMAL = '120 500 1000';
 const vector RANGES_NEARSIGHTED = '120 300 340';
@@ -1232,9 +1197,6 @@ The monster is walking its beat
 */
 void ai_walk(entity this, float dist)
 {
-	if(MP_MG && CheckContentsDamage(this))
-		return;
-
 	this.move_dist = dist;
 
 	// check for noticing a player
@@ -1257,8 +1219,6 @@ The monster is staying in one place for a while, with slight angle turns
 */
 void ai_stand(entity this)
 {
-	if(MP_MG && CheckContentsDamage(this))
-		return;
 	if(FindTarget(this))
 		return;
 
@@ -1479,8 +1439,6 @@ The monster has an enemy it is trying to kill
 .bool run_straight;
 void ai_run(entity this, float dist)
 {
-	if(MP_MG && CheckContentsDamage(this))
-		return;
 	this.move_dist = dist;
 // see if the enemy is dead
 	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
