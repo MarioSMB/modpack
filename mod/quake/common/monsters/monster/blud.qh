@@ -8,7 +8,7 @@ MODEL(MON_BLUD_HEAD, "progs/rawbone.mdl");
 #endif
 
 CLASS(Blud, Monster)
-    ATTRIB(Blud, spawnflags, int, 0);
+    ATTRIB(Blud, spawnflags, int, MONSTER_TYPE_BOSS);
     ATTRIB(Blud, m_mins, vector, '-22 -46 -68');
     ATTRIB(Blud, m_maxs, vector, '24 35 72');
 #ifdef GAMEQC

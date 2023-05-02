@@ -922,7 +922,7 @@ spawnfunc(weapon_lightme)
 
 	precache_model("progs/g_light2.mdl");
 	_setmodel(this, "progs/g_light2.mdl");
-	this.weapon = 3;
+	this.weapon = WEP_LIGHTME;
 	this.netname = "LG-2 Prototype";
 	settouch(this, impel_weapon_touch);
 	setcefc(this, weapon_customize);

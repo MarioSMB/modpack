@@ -227,7 +227,7 @@ void zombie_missile(entity this);
 void monster_use(entity this, entity actor, entity trigger);
 entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 {
-	if(!mon || mon == MON_Null)
+	if(!mon || mon == MON_Null || (mon.spawnflags & MONSTER_TYPE_DECOY))
 		return NULL;
 	entity monster = spawn();
 	monster.monsterdef = mon;
@@ -241,8 +241,6 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { this.flags |= FL_FLY; }
-	// hipnotic
-	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
 
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
