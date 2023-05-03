@@ -719,7 +719,7 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 		vector direction = dir + crandom() * spread.x * v_right + crandom() * spread.y * v_up;
 
 		traceline(src, src + direction * 2048, MOVE_NORMAL, this);
-		if(trace_fraction != 1.0)
+		if(trace_fraction != 1.0 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{
 			TraceAttack(4, direction);
 
