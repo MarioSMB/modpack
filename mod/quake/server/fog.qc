@@ -139,7 +139,7 @@ entity GetFogInfoEntity(entity e, .string field)
 
 bool FogPushSettingsFrom(entity client, entity source, float transitionTime)
 {
-	if(!IS_PLAYER(client))
+	if(!IS_PLAYER(client) || !IS_REAL_CLIENT(client))
 		return false;
 	source = GetFogInfoEntity(source, fog_info_entity);
 	if(!source)

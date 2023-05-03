@@ -162,6 +162,15 @@ void monster_start_go(entity this)
 	}
 }
 
+// interpolation for monsters only applies when .movetype is set to MOVETYPE_STEP
+// this hack ensures that while allowing us to use QC physics for movement
+// .movetype is reset by physics
+bool monster_customize(entity this, entity client)
+{
+	this.movetype = MOVETYPE_STEP; // RENDER_STEP
+	return true;
+}
+
 void StartMonster(entity this, entity actor, entity trigger)
 {
 	this.solid = this.oldsolid;
@@ -192,6 +201,7 @@ void monster_start(entity this, Monster mon)
 	set_movetype(this, MOVETYPE_STEP);
 	setmodel(this, mon.m_model);
 	setsize(this, mon.m_mins, mon.m_maxs);
+	setcefc(this, monster_customize);
 
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent
 	// in horde, mosnters shouldn't increase total count until spawned

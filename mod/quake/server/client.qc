@@ -69,7 +69,7 @@ void SetChangeParms(entity this)
 	this.gravity = 1.0;
 
 	float maxhp = (this.max_health) ? this.max_health : 100; // ensure no possibility of a division by 0
-	this.health = bound(maxhp / 2, this.health, maxhp); // cap super health
+	this.health = maxhp;
 	if(teamplay >= TEAM_CTF) // don't carry items between level in CTF
 		SetNewParms();
 	else
@@ -1344,7 +1344,7 @@ void RunPostPutClientInServer(entity this)
 	if(!FogPushSettingsFrom(player, spot, 0))
 		FogPushSettingsFrom(player, NULL, 0);
 
-	remove(this);
+	delete(this);
 }
 
 void PutClientInServer(entity this)
@@ -1423,7 +1423,7 @@ void PutClientInServer(entity this)
 		this.solid = SOLID_NOT;
 		set_movetype(this, MOVETYPE_NONE);
 		this.deadflag = DEAD_DEAD;
-		_setmodel(this, "");
+		setmodel(this, MDL_Null);
 		this.view_ofs = '0 0 1'; // not 0 because PlayerPreThink would return out
 		this.velocity = '0 0 0';
 
@@ -1974,7 +1974,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.invisible_time == 1)
 			{
-				sprint(this, "Ring of Shadows magic is fading\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_INVISIBLE);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/inv2.wav", 1, ATTN_NORM);
 				this.invisible_time = time + 1;
@@ -2011,7 +2012,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.invincible_time == 1)
 			{
-				sprint(this, "Protection is almost burned out\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_PROTECTION);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/protect2.wav", 1, ATTN_NORM);
 				this.invincible_time = time + 1;
@@ -2045,7 +2047,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.super_time == 1)
 			{
-				sprint(this, "Quad Damage is wearing off\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_QUAD_DAMAGE);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/damage2.wav", 1, ATTN_NORM);
 				this.super_time = time + 1;
@@ -2143,7 +2146,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.rad_time == 1)
 			{
-				sprint(this, "Air supply in Biosuit expiring\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_BIOSUIT);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.rad_time = time + 1;
@@ -2175,7 +2179,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.wetsuit_time == 1)
 			{
-				sprint(this, "Air supply in Wetsuit is running out\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_WETSUIT);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.wetsuit_time = time + 1;
@@ -2206,7 +2211,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.empathy_time == 1)
 			{
-				sprint(this, "Empathy Shields are running out\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_EMPATHY);
 				stuffcmd(this, "bf\n");
 				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.empathy_time = time + 1;
@@ -2239,7 +2245,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.shield_time == 1)
 			{
-				sprint(this, "Shield failing...\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHIELD);
 				_sound(this, CH_TRIGGER_SINGLE, "shield/fadeout.wav", 1, ATTN_NORM);
 				this.shield_time = 0;
 			}
@@ -2264,7 +2271,8 @@ void CheckPowerups(entity this)
 		{
 			if(this.antigrav_time == 1)
 			{
-				sprint(this, "Antigrav failing...\n");
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHIELD);
 				this.antigrav_time = 0;
 				_sound(this, CH_TRIGGER_SINGLE, "belt/fadeout.wav", 1, ATTN_NORM);
 			}

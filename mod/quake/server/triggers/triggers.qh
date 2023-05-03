@@ -57,6 +57,13 @@ void CorpseThink(entity this);
 .float speed;
 .float sounds;
 
+.int active;
+const int ACTIVE_NOT = 0;
+const int ACTIVE_ACTIVE = 1;
+const int ACTIVE_IDLE = 2;
+const int ACTIVE_BUSY = 2;
+const int ACTIVE_TOGGLE = 3;
+
 .string killtarget;
 
 .int cnt;

@@ -29,9 +29,7 @@ enum
 
 void rotate_object_continuously_tick(entity this, float dt)
 {
-	this.angles_x = anglemods(this.angles_x + this.avelocity_x * dt);
-	this.angles_y = anglemods(this.angles_y + this.avelocity_y * dt);
-	this.angles_z = anglemods(this.angles_z + this.avelocity_z * dt);
+	// avelocity handling already done!
 }
 
 void rotate_object_tween_tick(entity this, float dt)
@@ -51,9 +49,7 @@ void rotate_object_tween_tick(entity this, float dt)
 		this.tick(this, dt);
 		return;
 	}
-	this.angles_x = anglemods(this.angles_x + this.avelocity_x * dt * this.speed);
-	this.angles_y = anglemods(this.angles_y + this.avelocity_y * dt * this.speed);
-	this.angles_z = anglemods(this.angles_z + this.avelocity_z * dt * this.speed);
+	this.avelocity *= this.speed;
 }
 
 void rotate_object_continuously_use(entity this, entity actor, entity trigger)
@@ -122,7 +118,7 @@ spawnfunc(rotate_object_continuously)
 	}
 	else
 	{
-		set_movetype(this, MOVETYPE_NONE);
+		set_movetype(this, MOVETYPE_FAKEPUSH);
 		this.solid = SOLID_NOT;
 	}
 	this.angles = '0 0 0';

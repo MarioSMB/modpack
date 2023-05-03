@@ -527,7 +527,7 @@ void Sbar_Score(int margin)
 	int me = player_localnum; // was -1
 	if(MP_MG && STAT(HORDE))
 	{
-		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, '1 1 1');
+		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, (((STAT(HORDE_WAVE) % 3) == 0) ? '1 0 0 ' : '1 1 1'));
 	}
 	else if(autocvar_sbar_scorerank && me >= 0 && me < maxclients)
 	{

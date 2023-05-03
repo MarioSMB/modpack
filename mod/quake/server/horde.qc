@@ -274,6 +274,8 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 
 	// finish the shared settings
 	setorigin(monster, org + '0 0 1');
+
+	setcefc(this, monster_customize);
 	
 	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
 		droptofloor(monster);

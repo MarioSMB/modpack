@@ -362,7 +362,8 @@ void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 //================================
 void PlasmaDischarge(entity this, entity current, float doDamage)
 {
-	te_lightning2(NULL, current.origin, this.origin); // should be for current
+	//te_lightning2(NULL, current.origin, this.origin); // should be for current
+	Send_Effect(EFFECT_LIGHTNING, current.origin, this.origin, 1);
 
 	_sound(this, CH_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
 	if(doDamage == 1)

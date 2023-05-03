@@ -41,7 +41,8 @@ void TeslaLightningThink(entity this)
 		delete(this);
 		return;
 	}
-	te_lightning2(NULL, this.origin, trace_endpos); // should be this
+	//te_lightning2(NULL, this.origin, trace_endpos); // should be this
+	Send_Effect(EFFECT_LIGHTNING, this.origin, trace_endpos, 1);
 	LightningDamage(this.origin, trace_endpos, this.lastvictim, this.dmg);
 	this.nextthink = time + 0.1;
 }

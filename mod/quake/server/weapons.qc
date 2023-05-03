@@ -291,7 +291,8 @@ void HIP_LightningThink(entity this)
 
 			traceline(owner_org, end, true, this);
 
-			te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
+			//te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
+			Send_Effect(EFFECT_LIGHTNING, owner_org, trace_endpos, 1);
 
 			this.nextthink = time + 0.1;
 	//      setthink(this, HIP_DiversionLightningThink);
@@ -314,7 +315,8 @@ void HIP_LightningThink(entity this)
 		this.nextthink = time + 0.1;
 		return;
 	}
-	te_lightning2(NULL, org, trace_endpos);
+	//te_lightning2(NULL, org, trace_endpos);
+	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
 	vector vec = normalize(this.enemy.origin - this.owner.origin);
 	float dot = vec * this.owner.movedir;
 	float dam =((oldstate == 0) ? 80 : 30);
@@ -1594,7 +1596,7 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT)
+	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT && (!IS_PLAYER(toucher) || (!autocvar_g_friendlyfire_virtual && autocvar_g_friendlyfire > 0)))
 	{
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
@@ -1616,7 +1618,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			ThrowMe(this, toucher, damg);
+			//ThrowMe(this, toucher, damg);
 			if(!IS_PLAYER(toucher))
 				toucher.owner = this.owner;
 			else
@@ -1644,7 +1646,7 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg);
 				return;
 			}
-			ThrowMe(this, toucher, damg);
+			//ThrowMe(this, toucher, damg);
 			if(!IS_PLAYER(toucher))
 				toucher.owner = this.owner;
 			else
@@ -1660,7 +1662,7 @@ void LightningTouch(entity this, entity toucher)
 			T_Damage(toucher, this, this.owner, damg);
 			if(toucher.takedamage == DAMAGE_AIM)
 				SpawnMeatBounce(this, toucher, damg);
-			ThrowMe(this, toucher, damg);
+			//ThrowMe(this, toucher, damg);
 			delete(this);
 		}
 	}
@@ -1828,7 +1830,8 @@ void W_FireLightning(entity this)
 
 	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
 
-	te_lightning2(NULL, org, trace_endpos);
+	//te_lightning2(NULL, org, trace_endpos);
+	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
 
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30);
 }
@@ -2319,7 +2322,7 @@ void W_FireNapalm(entity this)
 	setthink(missile, SUB_Remove);
 	_setmodel(missile, "progs/nbomb.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + v_right * 6);
+	setorigin(missile, this.origin);
 }
 
 //=============================================================================
@@ -2549,7 +2552,7 @@ void ProximityBomb(entity this)
 
 	while(head)
 	{
-		if(head != this && head.health > 0 && (IS_CLIENT(head) || IS_MONSTER(head)) && head.classname != this.classname)
+		if(head != this && head.health > 0 && (IS_PLAYER(head) || IS_MONSTER(head)) && head.classname != this.classname && head != this.realowner)
 			blowup = true;
 		if((head.classname == this.classname) && (head.state == 0))
 			blowup = true;
@@ -3137,7 +3140,7 @@ void impale(entity this)
 	}
 	else
 	{
-		if(this.classname == "player")
+		if(IS_PLAYER(this))
 		{
 			this.impaled = true;
 			this.powerups &= ~POWERUP_INVISIBILITY;
@@ -4019,13 +4022,13 @@ void W_ChangeWeapon(entity this, int imp)
 	
 	if(!(this.weapons & fl))
 	{	// don't have the weapon
-		sprint(this, "no weapon.\n");
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NO_WEAPON);
 		return;
 	}
 	
 	if(am)
 	{	// don't have the ammo
-		sprint(this, "not enough ammo.\n");
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NO_AMMO);
 		return;
 	}
 

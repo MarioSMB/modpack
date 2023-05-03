@@ -106,7 +106,7 @@ void plat_crush(entity this, entity blocker)
 {
 //dprint("plat_crush\n");
 
-	T_Damage(blocker, this, this, 1);
+	T_Damage(blocker, this, this, ((IS_MONSTER(blocker)) ? 1000 : 1));
 	
 	if(this.state == STATE_UP)
 		plat_go_down(this);

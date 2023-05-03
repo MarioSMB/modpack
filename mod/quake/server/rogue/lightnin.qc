@@ -23,7 +23,8 @@ void ltrail_fire(entity this)
 		entity targ = this.enemy;
 		if(this.target && this.target != "")
 			targ = find(NULL, targetname, this.target);
-		te_lightning2(NULL, this.origin, targ.origin); // should be this
+		//te_lightning2(NULL, this.origin, targ.origin); // should be this
+		Send_Effect(EFFECT_LIGHTNING, this.origin, targ.origin, 1);
 		LightningDamage(this.origin, targ.origin, this, this.currentammo);
 	}
 

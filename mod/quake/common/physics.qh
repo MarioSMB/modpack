@@ -65,7 +65,7 @@
 
 	#define PHYS_EXPTIME(s)						STAT(EXPTIME, s)
 
-	#define IS_DEAD(s)                          (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
+	#define IS_DEAD(s)                          (((s).classname == "ENT_CLIENT_MODEL") ? (s).csqcmodel_isdead : ((s).health <= 0))
 
 	#define PHYS_INPUT_ANGLES(s)                input_angles
 // TODO

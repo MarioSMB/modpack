@@ -1,14 +1,14 @@
 #ifdef SVQC
 
 const int PUSH_ONCE = BIT(0);
-const int PUSH_TOGL = BIT(1); // rogue
+const int PUSH_TOGL = BIT(1); // rogue, deprecated
 const int PUSH_ACTIVE = BIT(2); // rogue
 const int ADDITIVE_PUSH = BIT(1); // mg
 const int PUSH_START_OFF = BIT(2); // mg
 
 void trigger_push_touch(entity this, entity toucher)
 {
-	if(MP_ROGUE && !(this.spawnflags & PUSH_ACTIVE))
+	if(this.active != ACTIVE_ACTIVE)
 		return;
 
 	// yoder Sept 24 2021 horde merge
@@ -55,21 +55,10 @@ void trigger_push_touch(entity this, entity toucher)
 
 void trigger_push_use(entity this, entity actor, entity trigger)
 {
-	if(this.spawnflags & PUSH_ACTIVE)
-		this.spawnflags &= ~PUSH_ACTIVE;
+	if(this.active == ACTIVE_ACTIVE)
+		this.active = ACTIVE_NOT;
 	else
-		this.spawnflags |= PUSH_ACTIVE;
-}
-
-void trigger_push_use_mg(entity this, entity actor, entity trigger)
-{
-	if(this.solid == SOLID_TRIGGER)
-		this.solid = SOLID_NOT;
-	else
-	{
-		this.solid = SOLID_TRIGGER;
-		force_retouch = 1;
-	}
+		this.active = ACTIVE_ACTIVE;
 }
 
 
@@ -80,24 +69,28 @@ speed: velocity of push. (default 1000)
 */
 spawnfunc(trigger_push)
 {
-	if(MP_MG)
-		this.use = trigger_push_use_mg;
-	else if(MP_ROGUE)
-	{
-		if(this.spawnflags & PUSH_TOGL)
-			this.use = trigger_push_use;
-		else
-			this.spawnflags |= PUSH_ACTIVE;
-	}
-
-	if(MP_MG && (this.spawnflags & PUSH_START_OFF))
-		this.solid = SOLID_NOT;
+	if(MP_MG || MP_ROGUE)
+		this.use = trigger_push_use;
 
 	InitTrigger(this);
 	precache_sound("ambience/windfly.wav");
 	settouch(this, trigger_push_touch);
 	if(!this.speed)
 		this.speed = 1000;
+
+	this.active = ACTIVE_ACTIVE;
+
+	// we're on a rogue campaign map, disable toggle flag which overlaps with additive, toggling handled automatically
+	if(MP_ROGUE && substring(world.model, 0, 6) == "maps/r")
+	{
+		this.spawnflags &= PUSH_TOGL;
+		if(!(this.spawnflags & PUSH_ACTIVE))
+			this.active = ACTIVE_NOT;
+		return; // avoid mg's handling in this case
+	}
+
+	if(MP_MG && (this.spawnflags & PUSH_START_OFF))
+		this.active = ACTIVE_NOT;
 }
 
 //============================================================================

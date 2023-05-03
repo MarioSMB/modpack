@@ -265,7 +265,7 @@ void armor_touch(entity this, entity toucher)
 		value = 200;
 		bit = IT_ARMOR3;
 	}
-	if(toucher.armortype*toucher.armorvalue >= type * value)
+	if(toucher.armortype * toucher.armorvalue >= type * value)
 		return;
 		
 	toucher.armortype = type;
@@ -1965,28 +1965,20 @@ void BackpackTouch(entity this, entity toucher)
 			toucher.weapons |= newitem;
 	}
 
-	string theitems = "";
 	if(this.ammo_shells)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_shells), " shells"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "shells", this.ammo_shells);
 	if(this.ammo_rockets)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_rockets), " rockets"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "rockets", this.ammo_rockets);
 	if(this.ammo_cells)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_cells), " cells"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "cells", this.ammo_cells);
 	if(this.ammo_lava_nails)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_lava_nails), " lava nails"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "lava nails", this.ammo_lava_nails);
 	if(this.ammo_multi_rockets)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_multi_rockets), " multi rockets"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "multi rockets", this.ammo_multi_rockets);
 	if(this.ammo_plasma)
-		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_plasma), " plasma"));
+		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "plasma", this.ammo_plasma);
 
-	if(theitems != "")
-	{
-		if(wepmsg != "")
-			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BACKPACK_GOT_WEAPON, wepmsg, theitems);
-		else
-			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BACKPACK_GOT, theitems);
-	}
-	else if(wepmsg != "")
+	if(wepmsg != "")
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, wepmsg);
 
 // backpack touch sound

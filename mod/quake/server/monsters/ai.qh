@@ -1,5 +1,7 @@
 #pragma once
 
+#define ANGLEMOD(a) ((a) - 360.0 * floor((a) / 360.0))
+
 .int attack_state;
 const int AS_STRAIGHT = 1;
 const int AS_SLIDING = 2;

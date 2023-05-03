@@ -110,6 +110,15 @@
     MSG_INFO_NOTIF(ITEM_WEAPON_GOT,                         N_DISABLE,  1, 0, "s1", "",                                  "",     _("^BGYou got the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_PICKUP,                      N_DISABLE,  0, 0, "", "",                                    "",     _("^BGYou picked up a weapon"), "")
 
+    MSG_INFO_NOTIF(POWERDOWN_ANTIGRAV,                      N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Antigrav failing..."), "")
+    MSG_INFO_NOTIF(POWERDOWN_BIOSUIT,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Air supply in Biosuit expiring"), "")
+    MSG_INFO_NOTIF(POWERDOWN_EMPATHY,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Empathy Shields are running out"), "")
+    MSG_INFO_NOTIF(POWERDOWN_INVISIBLE,                     N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Ring of Shadows magic is fading"), "")
+    MSG_INFO_NOTIF(POWERDOWN_PROTECTION,                    N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Protection is almost burned out"), "")
+    MSG_INFO_NOTIF(POWERDOWN_SHIELD,                        N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Shield failing..."), "")
+    MSG_INFO_NOTIF(POWERDOWN_QUAD_DAMAGE,                   N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Quad Damage is wearing off"), "")
+    MSG_INFO_NOTIF(POWERDOWN_WETSUIT,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Air supply in Wetsuit is running out"), "")
+
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 left the game with %s frags"), "")
 
 #undef N_DISABLE
@@ -134,8 +143,20 @@
     MSG_CENTER_NOTIF(ITEM_BACKPACK_GOT_WEAPON,          N_ENABLE,    2, 0, "s1 s2",                    CPID_ITEM, "2 0", _("^BGYou get the ^F1%s^BG and %s"), "")
     MSG_CENTER_NOTIF(ITEM_KEY_GOT,                      N_DISABL,    2, 0, "s1 s2",                    CPID_KEY,  "1.5 0", _("^BG%s^BG got the %s"), "")
     MSG_CENTER_NOTIF(ITEM_KEY_GOT_SELF,                 N_ENABLE,    1, 0, "s1",                       CPID_KEY,  "1.5 0", _("^BGYou got the %s"), "")
-    MSG_CENTER_NOTIF(ITEM_POWERUP_GOT,                  N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGYou got the ^F1%s"), "")
+    MSG_CENTER_NOTIF(ITEM_POWERUP_GOT,                  N_ENABLE,    1, 0, "s1",                       CPID_POWER,"1.5 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGYou got the ^F1%s"), "")
+
+    MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
+    MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
+
+    MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")
+    MSG_CENTER_NOTIF(POWERDOWN_BIOSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Biosuit expiring"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_EMPATHY,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Empathy Shields are running out"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_INVISIBLE,               N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Ring of Shadows magic is fading"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_PROTECTION,              N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Protection is almost burned out"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_SHIELD,                  N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Shield failing..."), "")
+    MSG_CENTER_NOTIF(POWERDOWN_QUAD_DAMAGE,             N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Quad Damage is wearing off"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_WETSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Wetsuit is running out"), "")
 
 #undef N_DISABL
 #undef N_ENABLE
@@ -158,6 +179,15 @@
     MSG_MULTI_NOTIF(ITEM_KEY_GOT_SELF,                  N_ENABLE,  NULL,           INFO_ITEM_KEY_GOT_SELF,                 CENTER_ITEM_KEY_GOT_SELF)
     MSG_MULTI_NOTIF(ITEM_POWERUP_GOT,                   N_ENABLE,  NULL,           INFO_ITEM_POWERUP_GOT,                  CENTER_ITEM_POWERUP_GOT)
     MSG_MULTI_NOTIF(ITEM_WEAPON_GOT,                    N_ENABLE,  NULL,           INFO_ITEM_WEAPON_GOT,                   CENTER_ITEM_WEAPON_GOT)
+
+    MSG_MULTI_NOTIF(POWERDOWN_ANTIGRAV,                 N_ENABLE,  NULL,           INFO_POWERDOWN_ANTIGRAV,                CENTER_POWERDOWN_ANTIGRAV)
+    MSG_MULTI_NOTIF(POWERDOWN_BIOSUIT,                  N_ENABLE,  NULL,           INFO_POWERDOWN_BIOSUIT,                 CENTER_POWERDOWN_BIOSUIT)
+    MSG_MULTI_NOTIF(POWERDOWN_EMPATHY,                  N_ENABLE,  NULL,           INFO_POWERDOWN_EMPATHY,                 CENTER_POWERDOWN_EMPATHY)
+    MSG_MULTI_NOTIF(POWERDOWN_INVISIBLE,                N_ENABLE,  NULL,           INFO_POWERDOWN_INVISIBLE,               CENTER_POWERDOWN_INVISIBLE)
+    MSG_MULTI_NOTIF(POWERDOWN_PROTECTION,               N_ENABLE,  NULL,           INFO_POWERDOWN_PROTECTION,              CENTER_POWERDOWN_PROTECTION)
+    MSG_MULTI_NOTIF(POWERDOWN_SHIELD,                   N_ENABLE,  NULL,           INFO_POWERDOWN_SHIELD,                  CENTER_POWERDOWN_SHIELD)
+    MSG_MULTI_NOTIF(POWERDOWN_QUAD_DAMAGE,              N_ENABLE,  NULL,           INFO_POWERDOWN_QUAD_DAMAGE,             CENTER_POWERDOWN_QUAD_DAMAGE)
+    MSG_MULTI_NOTIF(POWERDOWN_WETSUIT,                  N_ENABLE,  NULL,           INFO_POWERDOWN_WETSUIT,                 CENTER_POWERDOWN_WETSUIT)
 
 #undef N_DISABL
 #undef N_ENABLE

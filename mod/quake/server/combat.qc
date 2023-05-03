@@ -454,7 +454,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 // react to the damage
 
-	if(IS_MONSTER(targ) && attacker != NULL)
+	if(IS_MONSTER(targ) && attacker)
 	{
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)
@@ -465,11 +465,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 				{
 					// yoder Sept24, 2021
 					// if in horde mode, have enemies obey a reaggro time
-					// TODO: Evaluate if we want this as default in co-op?
 					if(IS_PLAYER(targ.enemy) && IS_PLAYER(attacker)) // current and new enemy are both players, check reaggro times
 					{
 						// check reaggro times
-						if((!targ.aggro_time) || (targ.aggro_time + AGGRO_MIN + (random() * AGGRO_ADD < time)))
+						if(!targ.aggro_time || (targ.aggro_time + AGGRO_MIN + (random() * AGGRO_ADD) < time))
 						{
 							targ.oldenemy = targ.enemy;
 							targ.enemy = attacker;

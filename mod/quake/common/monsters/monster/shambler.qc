@@ -202,7 +202,8 @@ void CastLightning(entity this)
 
 	traceline(org, this.origin + dir*600, true, this);
 
-	te_lightning1(NULL, org, trace_endpos); // TODO: entity breaks
+	//te_lightning1(NULL, org, trace_endpos); // TODO: entity breaks
+	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
 
 	LightningDamage(org, trace_endpos, this, 10);
 }

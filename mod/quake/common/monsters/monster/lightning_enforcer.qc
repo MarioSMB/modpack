@@ -9,7 +9,8 @@ void lenforcer_fire(entity this)
 	vector org = ((this.origin + '0 0 12') - (v_right * 8));
 	vector dir = normalize((this.enemy.origin + '0 0 16') - org);
 	traceline(org, (this.origin + (dir * 350)), true, this);
-	te_lightning2(NULL, org, trace_endpos); // should be this
+	//te_lightning2(NULL, org, trace_endpos); // should be this
+	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
 	LightningDamage(this.origin, trace_endpos + (v_forward * 4), this, 3);
 }
 

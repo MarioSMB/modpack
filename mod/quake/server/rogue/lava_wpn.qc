@@ -58,7 +58,8 @@ void W_FireLavaSpikes(entity this, float ox)
 
 	if(this.ammo_lava_nails < 1)
 	{
-		sprint(this, "Out of Lava Nails\n");
+		// disabled notification to reduce spam
+		//centerprint(this, "Out of Lava Nails");
 		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 		return;
 	}

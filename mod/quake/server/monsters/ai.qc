@@ -35,7 +35,7 @@ walkmove(angle, speed) primitive is all or nothing
 void changeyaw(entity this)
 {
 #if 1
-	float current = anglemods(this.angles_y);
+	float current = ANGLEMOD(this.angles_y);
 
 	if (current == this.ideal_yaw)
 		return;
@@ -63,7 +63,7 @@ void changeyaw(entity this)
 	}
 
 	current += move;
-	this.angles_y = anglemods(current);
+	this.angles_y = ANGLEMOD(current);
 #else
 	ChangeYaw(this);
 #endif
@@ -219,8 +219,6 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	vector oldtracenormal = trace_plane_normal;
 	entity oldtraceent = trace_ent;
 	this.origin = trace_endpos;
-	if(relink)
-		_Movetype_LinkEdict(this, true);
 
 	if(!t_checkbottom(this))
 	{
@@ -239,8 +237,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		return false;
 	}
 
-	if(this.flags & FL_PARTIALGROUND)
-		this.flags &= ~FL_PARTIALGROUND;
+	this.flags &= ~FL_PARTIALGROUND;
 
 	// gameplayfix: check if reached pretty steep plane and bail
 	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES))
@@ -298,10 +295,9 @@ bool t_stepdirection(entity this, float yaw, float dist)
 
 	if(t_movestep(this, move, false, false))
 	{
-		float delta = this.angles.y - this.ideal_yaw;
+		float delta = this.angles_y - this.ideal_yaw;
 		if(delta > 45 && delta < 315)
 			this.origin = oldorg; // not turned far enough, so don't take the step
-		// leave the linking to the engine? TODO
 		_Movetype_LinkEdict(this, true);
 		return true;
 	}
@@ -312,7 +308,6 @@ bool t_stepdirection(entity this, float yaw, float dist)
 	return false;
 }
 
-#define ANGLEMOD(a) ((a) - 360.0 * floor((a) / 360.0))
 const float DI_NODIR = -1;
 void t_newchasedir(entity this, entity targ, float dist)
 {
@@ -378,7 +373,6 @@ void t_newchasedir(entity this, entity targ, float dist)
 	if(!t_checkbottom(this))
 		this.flags |= FL_PARTIALGROUND;
 }
-#undef ANGLEMOD
 #endif
 
 void t_movetogoal(entity this, float dist)

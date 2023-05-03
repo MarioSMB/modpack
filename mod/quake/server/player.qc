@@ -550,7 +550,7 @@ void player_superlight1(entity this)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
 	W_FireSuperLightning(this);
-};
+}
 
 void player_superlight2(entity this)
 {
@@ -568,7 +568,7 @@ void player_superlight2(entity this)
 	SuperDamageSound(this);
 	W_FireSuperLightning(this);
 	this.attack_finished = time + 0.1;
-};
+}
 
 //============================================================================
 //ooppee - the entire player_light1 had to be reverted back to id1 code so replace the old player_light1 and player_light2 code with this, I deleted the old code.

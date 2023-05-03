@@ -1116,7 +1116,8 @@ void Gremlin_FireLightningGun(entity this)
 
 	traceline(org, this.origin + dir*600, true, this);
 
-	te_lightning2(NULL, org, trace_endpos); // should be this
+	//te_lightning2(NULL, org, trace_endpos); // should be this
+	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
 
 	LightningDamage(org, trace_endpos + (dir * 4), this, 30);
 }

@@ -211,7 +211,8 @@ void play_lightning(entity this, entity actor, entity trigger)
 		WriteCoord (MSG_BROADCAST, endpos_z);
 #endif
 		// TODO: style not supported
-		te_lightning2(NULL, startpos, endpos);
+		//te_lightning2(NULL, startpos, endpos);
+		Send_Effect(EFFECT_LIGHTNING, startpos, endpos, 1);
 
 		if(this.dmg)
 			LightningDamage(startpos, endpos, this, this.dmg);
