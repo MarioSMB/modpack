@@ -33,6 +33,8 @@ bool world_already_spawned;
 int world_initialized;
 bool server_is_dedicated;
 
+void SendCSQCLightningBeam(vector v1, vector v2);
+
 void dedicated_print(string input);
 
 void set_anim(entity this, int frm, void(entity) tnk);

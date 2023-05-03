@@ -1,3 +1,5 @@
+#include "main.qh"
+
 bool autocvar_developer_csqcentities;
 
 // required engine functions
@@ -183,7 +185,7 @@ void Ent_Remove(entity this)
 
 	this.enttype = 0;
 	this.classname = "";
-	//this.draw = func_null;
+	this.draw = func_null;
 	this.entremove = func_null;
 	// TODO possibly set more stuff to defaults
 }
@@ -251,6 +253,31 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 	e.ping = pi;
 	e.ping_packetloss = pl / 255.0;
 	e.ping_movementloss = ml / 255.0;
+}
+
+.vector vorg1, vorg2;
+void Lightning_Draw(entity this)
+{
+	string tex;
+	//tex = "particles/lgbeam";
+	tex = "particles/gauntletbeam";
+
+	Draw_CylindricLine(this.vorg1, this.vorg2, 6, tex, 0.25, -time * 3, '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
+}
+
+NET_HANDLE(TE_CSQC_LIGHTNING, bool isNew)
+{
+	Net_Accept(lightning);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.15;
+	this.draw = Lightning_Draw;
+	if (isNew) IL_PUSH(g_drawables, this);
+	this.drawmask = MASK_NORMAL;
+
+	this.vorg1 = ReadVector();
+	this.vorg2 = ReadVector();
+
+	return true;
 }
 
 .string mdl;

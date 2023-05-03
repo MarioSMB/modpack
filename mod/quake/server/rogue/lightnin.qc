@@ -24,7 +24,7 @@ void ltrail_fire(entity this)
 		if(this.target && this.target != "")
 			targ = find(NULL, targetname, this.target);
 		//te_lightning2(NULL, this.origin, targ.origin); // should be this
-		Send_Effect(EFFECT_LIGHTNING, this.origin, targ.origin, 1);
+		SendCSQCLightningBeam(this.origin, targ.origin);
 		LightningDamage(this.origin, targ.origin, this, this.currentammo);
 	}
 

@@ -292,7 +292,7 @@ void HIP_LightningThink(entity this)
 			traceline(owner_org, end, true, this);
 
 			//te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
-			Send_Effect(EFFECT_LIGHTNING, owner_org, trace_endpos, 1);
+			SendCSQCLightningBeam(owner_org, trace_endpos);
 
 			this.nextthink = time + 0.1;
 	//      setthink(this, HIP_DiversionLightningThink);
@@ -316,7 +316,7 @@ void HIP_LightningThink(entity this)
 		return;
 	}
 	//te_lightning2(NULL, org, trace_endpos);
-	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
+	SendCSQCLightningBeam(org, trace_endpos);
 	vector vec = normalize(this.enemy.origin - this.owner.origin);
 	float dot = vec * this.owner.movedir;
 	float dam =((oldstate == 0) ? 80 : 30);
@@ -1507,7 +1507,7 @@ void gibhim(entity this)
 
 void rebound(entity this)
 {
-	this.owner = this.owner;
+	//this.owner = this.owner;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lghit.wav", 1, ATTN_NORM);
 	this.velocity = normalize(this.velocity);
 	this.velocity = this.velocity * 1000;
@@ -1596,7 +1596,15 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT && (!IS_PLAYER(toucher) || (!autocvar_g_friendlyfire_virtual && autocvar_g_friendlyfire > 0)))
+	if(IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	{
+		set_movetype(this, MOVETYPE_BOUNCE);
+		setthink(this, rebound);
+		this.ltime = this.nextthink;
+		this.nextthink = time + 0.1;
+		return;
+	}
+	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT)
 	{
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
@@ -1689,11 +1697,10 @@ void W_FireSuperLightning(entity this)
 	}
 	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
 	this.punchangle_x = -2;
-	entity missile = spawn();
-	missile.owner = this;
+	entity missile = new(lightme);
+	missile.owner = missile.realowner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
-	missile.classname = "lightme";
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 2000);
 	missile.velocity = missile.velocity * 2000;
@@ -1831,7 +1838,7 @@ void W_FireLightning(entity this)
 	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
 
 	//te_lightning2(NULL, org, trace_endpos);
-	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
+	SendCSQCLightningBeam(org, trace_endpos);
 
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30);
 }

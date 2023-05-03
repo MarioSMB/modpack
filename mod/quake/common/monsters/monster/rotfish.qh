@@ -8,7 +8,7 @@ MODEL(MON_ROTFISH_HEAD, "progs/gib1.mdl");
 #endif
 
 CLASS(Rotfish, Monster)
-    ATTRIB(Rotfish, spawnflags, int, 0);
+    ATTRIB(Rotfish, spawnflags, int, MONSTER_TYPE_SWIM);
     ATTRIB(Rotfish, m_mins, vector, '-16 -16 -24');
     ATTRIB(Rotfish, m_maxs, vector, '16 16 24');
 #ifdef GAMEQC

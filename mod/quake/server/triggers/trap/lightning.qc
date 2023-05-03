@@ -14,7 +14,7 @@ void SpawnLightningThink(entity this)
 	if(t_checkclient(this))
 	{
 		//te_lightning2(NULL, this.origin, this.oldorigin); // should be this
-		Send_Effect(EFFECT_LIGHTNING, this.origin, this.oldorigin, 1);
+		SendCSQCLightningBeam(this.origin, this.oldorigin);
 	}
 	LightningDamage(this.origin, this.oldorigin, this.lastvictim, this.dmg);
 	this.nextthink = time + 0.1;
@@ -73,7 +73,7 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 	else if(t_checkclient(this))
 	{
 		//te_lightning2(NULL, p1, p2); // should be this
-		Send_Effect(EFFECT_LIGHTNING, p1, p2, 1);
+		SendCSQCLightningBeam(p1, p2);
 		LightningDamage(p1, p2, this, this.dmg);
 	}
 	else

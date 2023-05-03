@@ -363,7 +363,7 @@ void lightning_fire(entity this)
 
 	// was MSG_ALL (TODO?)
 	//te_lightning3(NULL, p1, p2);
-	Send_Effect(EFFECT_LIGHTNING, p1, p2, 1);
+	SendCSQCLightningBeam(p1, p2);
 }
 
 void lightning_use(entity this, entity actor, entity trigger)

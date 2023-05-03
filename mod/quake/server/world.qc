@@ -8,6 +8,13 @@ entity lastspawn;
 
 void main() { /* unused */ }
 
+void SendCSQCLightningBeam(vector v1, vector v2)
+{
+	WriteHeader(MSG_BROADCAST, TE_CSQC_LIGHTNING);
+	WriteVector(MSG_BROADCAST, v1);
+	WriteVector(MSG_BROADCAST, v2);
+}
+
 void dedicated_print(string input)
 {
 	if (server_is_dedicated) print(input);

@@ -99,7 +99,7 @@ void dknight_startfire(entity this)
 	traceline(org, emy, true, this);
 	_sound(this, CHAN_WEAPON, "monsters/dknight/dklight.wav", 1, ATTN_NORM);
 	//te_lightning2(NULL, org, trace_endpos); // should be this
-	Send_Effect(EFFECT_LIGHTNING, org, trace_endpos, 1);
+	SendCSQCLightningBeam(org, trace_endpos);
 	LightningDamage(org, trace_endpos, this, 3);
 	this.oldorigin = this.origin;
 }

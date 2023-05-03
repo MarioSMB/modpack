@@ -141,6 +141,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Draw the Engine Status Bar (the default Quake HUD)
 	setproperty(VF_DRAWENGINESBAR, 0);
 
+	IL_EACH(g_drawables, it.draw, it.draw(it));
+
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
 

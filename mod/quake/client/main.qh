@@ -1,0 +1,7 @@
+#pragma once
+
+IntrusiveList g_drawables;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+}
