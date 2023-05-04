@@ -83,7 +83,7 @@ spawnfunc(trigger_push)
 	// we're on a rogue campaign map, disable toggle flag which overlaps with additive, toggling handled automatically
 	if(MP_ROGUE && substring(world.model, 0, 6) == "maps/r")
 	{
-		this.spawnflags &= PUSH_TOGL;
+		this.spawnflags &= ~PUSH_TOGL;
 		if(!(this.spawnflags & PUSH_ACTIVE))
 			this.active = ACTIVE_NOT;
 		return; // avoid mg's handling in this case
