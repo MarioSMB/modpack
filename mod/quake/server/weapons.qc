@@ -388,7 +388,7 @@ void BecomeExplosion(entity this)
 	set_movetype(this, MOVETYPE_NONE);
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
-	_setmodel(this, "progs/s_explod.spr");
+	setmodel(this, MDL_EXPLOSION);
 	sound(this, CH_SHOTS, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 	s_explode1(this);
@@ -421,7 +421,7 @@ void T_MissileTouch(entity this, entity toucher)
 //	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
 }

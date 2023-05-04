@@ -476,7 +476,7 @@ void t_movetarget(entity this, entity toucher)
 
 	if(this.target && this.target != "")
 	{
-		toucher.goalentity = toucher.movetarget = find (NULL, targetname, this.target);
+		toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
 		if (!toucher.movetarget)
 		{
 			toucher.pausetime = -1;
@@ -617,7 +617,7 @@ void t_followtarget(entity this, entity toucher)
 		setthink(toucher, toucher.th_walk);
 	}
 
-	toucher.goalentity = toucher.movetarget = find (NULL, targetname, this.target);
+	toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
 
 	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
 	toucher.wetsuit_time = time + 2;

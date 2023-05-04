@@ -67,19 +67,17 @@ string Sbar_PickWeapon_wepname_id(int wpn)
 		return "shotgun";
 }
 
+bool katria_face_exists;
 PRECACHE(Sbar)
 {
+	katria_face_exists = fexists("gfx/quake/katria_face1.jpg");
+
 	precache_pic("gfx/quake/ranking");
 	precache_pic("gfx/quake/sbar");
 	precache_pic("gfx/quake/scorebar");
 	precache_pic("gfx/quake/complete");
 	precache_pic("gfx/quake/finale");
 	precache_pic("gfx/quake/inter");
-
-	precache_pic("gfx/quake/face_invis");
-	precache_pic("gfx/quake/face_invul2");
-	precache_pic("gfx/quake/face_inv2");
-	precache_pic("gfx/quake/face_quad");
 
 	if(MP_ROGUE)
 	{
@@ -142,6 +140,11 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/num_slash");
 	precache_pic("gfx/quake/num_colon");
 
+	precache_pic("gfx/quake/face_invis");
+	precache_pic("gfx/quake/face_invul2");
+	precache_pic("gfx/quake/face_inv2");
+	precache_pic("gfx/quake/face_quad");
+
 	precache_pic("gfx/quake/face1");
 	precache_pic("gfx/quake/face_p1");
 	precache_pic("gfx/quake/face2");
@@ -152,6 +155,25 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/face_p4");
 	precache_pic("gfx/quake/face5");
 	precache_pic("gfx/quake/face_p5");
+
+	if(katria_face_exists)
+	{
+		precache_pic("gfx/quake/katria_face_invis");
+		precache_pic("gfx/quake/katria_face_invul2");
+		precache_pic("gfx/quake/katria_face_inv2");
+		precache_pic("gfx/quake/katria_face_quad");
+
+		precache_pic("gfx/quake/katria_face1");
+		precache_pic("gfx/quake/katria_face_p1");
+		precache_pic("gfx/quake/katria_face2");
+		precache_pic("gfx/quake/katria_face_p2");
+		precache_pic("gfx/quake/katria_face3");
+		precache_pic("gfx/quake/katria_face_p3");
+		precache_pic("gfx/quake/katria_face4");
+		precache_pic("gfx/quake/katria_face_p4");
+		precache_pic("gfx/quake/katria_face5");
+		precache_pic("gfx/quake/katria_face_p5");
+	}
 
 	precache_pic("gfx/quake/sb_sigil1");
 	precache_pic("gfx/quake/sb_sigil2");
@@ -215,16 +237,24 @@ string Sbar_PickWeapon(int cnum, int wpn, int wep_id, bool with_prefix)
 	return strcat("gfx/quake/", prefix, wep);
 }
 
+string Sbar_FacePrefix(string input)
+{
+	string prefix = "gfx/quake/";
+	if(katria_face_exists && csqcplayer && csqcplayer.model == "progs/player_katria.mdl")
+		prefix = "gfx/quake/katria_";
+	return strcat(prefix, input);
+}
+
 string Sbar_PickFace(int frm, bool washurt)
 {
 	switch(frm)
 	{
 		default:
-		case 4: return ((washurt) ? "gfx/quake/face_p1" : "gfx/quake/face1");
-		case 3: return ((washurt) ? "gfx/quake/face_p2" : "gfx/quake/face2");
-		case 2: return ((washurt) ? "gfx/quake/face_p3" : "gfx/quake/face3");
-		case 1: return ((washurt) ? "gfx/quake/face_p4" : "gfx/quake/face4");
-		case 0: return ((washurt) ? "gfx/quake/face_p5" : "gfx/quake/face5");
+		case 4: return Sbar_FacePrefix(((washurt) ? "face_p1" : "face1"));
+		case 3: return Sbar_FacePrefix(((washurt) ? "face_p2" : "face2"));
+		case 2: return Sbar_FacePrefix(((washurt) ? "face_p3" : "face3"));
+		case 1: return Sbar_FacePrefix(((washurt) ? "face_p4" : "face4"));
+		case 0: return Sbar_FacePrefix(((washurt) ? "face_p5" : "face5"));
 	}
 }
 
@@ -1100,13 +1130,13 @@ void Sbar_DrawFace()
 	oldhealth = myhealth;
 
 	if((mypowerups & POWERUP_INVISIBILITY) && (mypowerups & POWERUP_INVULNERABILITY))
-		pic = "gfx/quake/face_inv2";
+		pic = Sbar_FacePrefix("face_inv2");
 	else if(mypowerups & POWERUP_QUAD)
-		pic = "gfx/quake/face_quad";
+		pic = Sbar_FacePrefix("face_quad");
 	else if(mypowerups & POWERUP_INVISIBILITY)
-		pic = "gfx/quake/face_invis";
+		pic = Sbar_FacePrefix("face_invis");
 	else if(mypowerups & POWERUP_INVULNERABILITY)
-		pic = "gfx/quake/face_invul2";
+		pic = Sbar_FacePrefix("face_invul2");
 	else
 	{
 		int f = rint(STAT(HEALTH) / 20);

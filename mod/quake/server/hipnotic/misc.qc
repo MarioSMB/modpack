@@ -289,12 +289,12 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 				pl = it;
 				break;
 			});
-			entity targ = find (NULL, targetname, this.mdl);
+			entity targ = find(NULL, targetname, this.mdl);
 			become_decoy(targ.target, pl.origin);
 		}
 		else
 		{
-			entity targ = find (NULL, targetname, this.mdl);
+			entity targ = find(NULL, targetname, this.mdl);
 			become_decoy(targ.target, targ.origin);
 		}
 	}

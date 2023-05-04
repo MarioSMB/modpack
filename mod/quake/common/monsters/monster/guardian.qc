@@ -461,7 +461,7 @@ void morph_teleport(entity this)
 		return;
 		
 	entity theDest = overlord_find_dest3();
-	if(theDest == world)
+	if(!theDest)
 		return;
 
 	entity theChild = new(monster_morph);

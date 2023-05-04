@@ -18,7 +18,7 @@ void time_chunk(entity this)
 	timeChunk.angles = this.owner.angles;
 	
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NONE);
-	te_explosion(timeChunk.origin);
+	Send_Effect(EFFECT_EXPLOSION, timeChunk.origin, '0 0 0', 1);
 
 	this.owner.frame = 1;
 
@@ -57,7 +57,7 @@ void time_boom(entity this)
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NONE);
 
 	if(random() < 0.5)
-		te_explosion(this.origin);
+		Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	else
 		te_explosion2(this.origin, 244, 3);
 	
@@ -78,7 +78,7 @@ void time_fall(entity this)
 			this.pain_finished = 1;
 		}
 		else if(random() < 0.3)
-			te_explosion(this.origin);
+			Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	}
 	
 	this.velocity_z = this.velocity_z - 5;

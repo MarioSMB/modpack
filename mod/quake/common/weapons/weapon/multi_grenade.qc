@@ -4,9 +4,9 @@
 void MiniGrenadeExplode(entity this)
 {
 	if(IS_PLAYER(this.owner))
-		T_RadiusDamage(this, this.owner, 90, world);
+		T_RadiusDamage(this, this.owner, 90, NULL);
 	else
-		T_RadiusDamage(this, this.owner, 60, world);
+		T_RadiusDamage(this, this.owner, 60, NULL);
 
     te_explosion2(this.origin, 230, 5);
 

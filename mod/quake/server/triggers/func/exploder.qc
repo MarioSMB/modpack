@@ -15,7 +15,7 @@ void exploder_fire(entity this)
 
 	T_RadiusDamage(this, this.owner, this.dmg, this.enemy);
 	if(this.spawnflags & USE_PARTICLES)
-		te_explosion(this.origin);
+		Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 
@@ -84,7 +84,7 @@ void multi_exploder_fire(entity this)
 	_sound(expl , CH_TRIGGER_SINGLE, "misc/shortexp.wav", this.volume, this.speed);
 	T_RadiusDamage(expl, this.owner, this.dmg, other);
 	if(this.spawnflags & USE_PARTICLES)
-		te_explosion(expl.origin);
+		Send_Effect(EFFECT_EXPLOSION, expl.origin, '0 0 0', 1);
 	BecomeExplosion(expl);
 }
 
@@ -95,7 +95,7 @@ void multi_explosion(vector loc, float rad, float damage, float dur, float pause
 	temp.dmg = damage;
 	temp.duration = dur;
 	temp.wait = pause;
-	temp.owner = world;
+	temp.owner = NULL;
 	temp.absmin = temp.origin - (rad * '1 1 1');
 	temp.absmax = temp.origin + (rad * '1 1 1');
 	setthink(temp, multi_exploder_fire);

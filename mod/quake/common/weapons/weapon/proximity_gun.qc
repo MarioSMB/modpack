@@ -5,7 +5,7 @@ void ProximityExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 95, NULL);
 
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
 }

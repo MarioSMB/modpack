@@ -6,6 +6,8 @@ EFFECT(0, EXPLOSION_SMALL,          "explosion_small")
 EFFECT(0, EXPLOSION_MEDIUM,         "explosion_medium")
 EFFECT(0, EXPLOSION_BIG,            "explosion_big")
 
+EFFECT(0, EXPLOSION,                "TE_EXPLOSION")
+
 EFFECT(0, SMOKE_SMALL,              "smoke_small")
 EFFECT(0, SMOKE_LARGE,              "smoke_large")
 

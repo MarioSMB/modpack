@@ -255,7 +255,7 @@ void ImpaledExplosion(entity this)
 		BecomeBloodSpurt(this, 60);
 		_sound(this.enemy, CHAN_BODY, "weapons/impaler/impex.wav", 1, ATTN_NORM);
 	}
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 
@@ -263,7 +263,7 @@ void SpearExplosion(entity this)
 {
 	T_RadiusDamage(this, this.owner, 60, NULL);
 	setorigin(this, this.origin - 16 * normalize(this.velocity));
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 

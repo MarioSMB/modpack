@@ -57,7 +57,7 @@ entity overlord_find_dest3()
 
 	while(1)
 	{
-		curDest = find ( curDest, classname, "info_overlord_destination");
+		curDest = find(curDest, classname, "info_overlord_destination");
 		if(curDest == NULL)
 		{
 			if(bestDest != NULL)
@@ -104,7 +104,7 @@ entity overlord_find_dest()
 		while (loopCount > 1)
 		{
 			curDest = nextent ( curDest );
-			curDest = find ( curDest, classname, "info_overlord_destination");
+			curDest = find(curDest, classname, "info_overlord_destination");
 			if(curDest != NULL)
 			{
 				if(isSpawnPointEmpty(curDest))

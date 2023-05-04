@@ -84,7 +84,7 @@ void juggernaut_die2(entity this)
 	T_RadiusDamage(this, this, 120, this);
 	_sound(this, CHAN_ITEM, "monsters/juggers/jgib.wav", 1, ATTN_NORM);
 	setorigin(this, this.origin + '0 0 24');
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 }
 
 void juggernaut_die(entity this, entity inflictor, entity attacker)
@@ -312,7 +312,7 @@ void juggernaut_rocket_touch(entity this, entity toucher)
 	}
 	T_RadiusDamage(this, this.owner, 60, toucher);
 	setorigin(this, this.origin - (8 * normalize(this.velocity)));
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 void juggernaut_firea6(entity this);

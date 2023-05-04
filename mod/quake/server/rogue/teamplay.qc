@@ -1327,7 +1327,7 @@ void TeamFlagStatusReport(entity this)
 	entity flag1, flag2;
 	if(teamplay == TEAM_CTF_ONEFLAG)
 	{
-		flag1 = find (NULL, classname, "item_flag");
+		flag1 = find(NULL, classname, "item_flag");
 		if(flag1 == NULL)
 			sprint(this, "The flag is missing!\n");
 		else if(flag1.cnt == FLAG_AT_BASE)
@@ -1408,8 +1408,8 @@ void TeamFlagStatusReport(entity this)
 		string n;
 
 		// Find the flags at home base
-		flag1 = find (NULL,classname, "item_flag_team1");
-		flag2 = find (NULL,classname, "item_flag_team2");
+		flag1 = find(NULL, classname, "item_flag_team1");
+		flag2 = find(NULL, classname, "item_flag_team2");
 
 		if(flag1 != NULL && flag1.cnt == FLAG_CARRIED)
 		{

@@ -24,15 +24,10 @@ const int OGRE_NORMAL = BIT(2);
 void OgreGrenadeExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 40, NULL);
-	sound(this, CH_VOICE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	setmodel(this, MDL_EXPLOSION);
-	this.solid = SOLID_NOT;
-	s_explode1(this);
+	BecomeExplosion(this);
 }
 
 void OgreGrenadeTouch(entity this, entity toucher)

@@ -294,7 +294,7 @@ void lavaman_touch(entity this, entity toucher)
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 // Change to an explosion2!!! Ramp in the non-diminishing reds...
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
 }

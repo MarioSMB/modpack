@@ -35,7 +35,7 @@ void DebrisBounceSound(entity this, entity toucher)
 
 void throw_debris(entity this)
 {
-	entity targ = find(world, targetname, this.target);
+	entity targ = find(NULL, targetname, this.target);
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
@@ -128,7 +128,7 @@ void throw_debris(entity this)
 
 void wall_die(entity this, entity inflictor, entity attacker)
 {
-	entity targ = find (world, targetname, this.target);
+	entity targ = find(NULL, targetname, this.target);
 	if(targ.classname == "light")
 	{
 		lightstyle (targ.style, "a");

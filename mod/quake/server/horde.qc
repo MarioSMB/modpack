@@ -293,7 +293,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	monster.use = monster_use;
 
 	monster.enemy = HordeFindTarget(); // find a random living player
-	//monster.enemy = find (world, classname, "player");
+	//monster.enemy = find (NULL, classname, "player");
 	setthink(monster, FoundTarget);
 		
 	//monster.nextthink = monster.nextthink + 0.1;

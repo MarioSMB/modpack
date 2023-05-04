@@ -41,7 +41,7 @@ void rubble_touch(entity this, entity toucher)
 
 void rubble_throw(entity this)
 {
-	entity rubble = find ( NULL, targetname, this.target );
+	entity rubble = find(NULL, targetname, this.target);
 	vector throw = normalize ( rubble.origin - this.origin );
 	throw.x = throw.x + (random() * 0.2) - 0.1;
 	throw.y = throw.y + (random() * 0.2) - 0.1;

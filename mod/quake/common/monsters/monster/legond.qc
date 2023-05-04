@@ -139,7 +139,7 @@ void Legond_MissileTouch(entity this, entity toucher)
 	else
 		T_RadiusDamage(this, this.owner, 70, toucher);
 	this.origin = this.origin - (8 * normalize(this.velocity));
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 

@@ -38,7 +38,7 @@ void earthquake_frame()
 	{
 		if(!quakeactive)
 		{
-			soundat(NULL, world.origin, CH_TRIGGER_SINGLE, "misc/quake.wav", 1, ATTEN_NONE); // just do it at world origin?
+			soundat(NULL, '0 0 0', CH_TRIGGER_SINGLE, "misc/quake.wav", 1, ATTEN_NONE); // just do it at world origin?
 			quakeactive = true;
 		}
 	}

@@ -313,9 +313,9 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(MP_IMPEL)
+	if(MP_IMPEL && !gameover)
 	{
-		if(this.waterlevel == 0 && !gameover)
+		if(this.waterlevel == 0)
 		{
 			if(this.walkframe == 1 || this.walkframe == 4)
 			{

@@ -162,7 +162,7 @@ void W_FirePlasma(entity this)
 		int cells = this.ammo_plasma;
 		this.ammo_plasma = 0;
 		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35*cells, world);
+		T_RadiusDamage(this, this, 35*cells, NULL);
 		return;
 	}
 	this.currentammo = this.ammo_plasma = this.ammo_plasma - 1;

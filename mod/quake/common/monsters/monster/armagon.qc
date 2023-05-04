@@ -503,7 +503,7 @@ void armagon_body_explode2(entity this)
 	ThrowGib(this, "progs/gib2.mdl", -200);
 	ThrowGib(this, "progs/gib3.mdl", -200);
 	set_movetype(this, MOVETYPE_NONE);
-	_setmodel (this, "progs/s_explod.spr");
+	setmodel(this, MDL_EXPLOSION);
 	this.solid = SOLID_NOT;
 	this.nextthink = time + 0.1;
 	s_explode1(this);

@@ -72,12 +72,12 @@ void spikemine_Touch(entity this, entity toucher)
 	T_RadiusDamage (this, this, 110, NULL);
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	sound(this, CH_TRIGGER_SINGLE, SND_Null, 1, ATTN_NORM);
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
-	_setmodel(this, "progs/s_explod.spr");
+	setmodel(this, MDL_EXPLOSION);
 	this.solid = SOLID_NOT;
 	s_explode1(this);
 }

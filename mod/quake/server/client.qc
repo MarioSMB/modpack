@@ -1897,7 +1897,7 @@ void PlayerPreThink(entity this)
 			this.invincible_finished = 0;
 			this.effects &= ~EF_DIMLIGHT;
 		}
-		T_Damage(this, this, world, this.health + 1000);
+		T_Damage(this, this, NULL, this.health + 1000);
 	}
 
 	if(MP_ROGUE && earthquake_active && IS_ONGROUND(this))

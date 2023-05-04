@@ -67,7 +67,7 @@ void trapbar_explode(entity this, entity inflictor, entity attacker)
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }
 

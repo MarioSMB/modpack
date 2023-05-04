@@ -19,7 +19,7 @@ void trigger_explosion_activate(entity this)
 	if(!(this.spawnflags & NO_DAMAGE))
 		T_RadiusDamage(this, this.owner, 120, this);
 
-	te_explosion(this.origin);
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
 }

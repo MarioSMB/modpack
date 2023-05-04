@@ -1,5 +1,44 @@
 #include "util.qh"
 
+#ifdef GAMEQC
+/*
+==================
+findbetterlocation
+
+Returns a point at least 12 units away from walls
+(useful for explosion animations, although the blast is performed where it really happened)
+Ripped from DPMod
+==================
+*/
+vector findbetterlocation (vector org, float mindist)
+{
+	vector vec = mindist * '1 0 0';
+	int c = 0;
+	while (c < 6)
+	{
+		traceline (org, org + vec, true, NULL);
+		vec = vec * -1;
+		if (trace_fraction < 1)
+		{
+			vector loc = trace_endpos;
+			traceline (loc, loc + vec, true, NULL);
+			if (trace_fraction >= 1)
+				org = loc + vec;
+		}
+		if (c & 1)
+		{
+			float h = vec.y;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
+		}
+		c = c + 1;
+	}
+
+	return org;
+}
+#endif
+
 USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
 USING(textLengthUpToLength_lenFunction_t, float(string s));
 
