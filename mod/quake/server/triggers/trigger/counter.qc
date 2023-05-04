@@ -9,7 +9,7 @@ void counter_use(entity this, entity actor, entity trigger)
 	if(this.count == 0)
 	{
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
-			centerprint(actor, "Sequence completed!");
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
 		this.enemy = actor;
 		// yoder Sept24, 2021, Horde Merge
@@ -22,13 +22,9 @@ void counter_use(entity this, entity actor, entity trigger)
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		{
 			if(this.count >= 4)
-				centerprint(actor, "There are more to go...");
-			else if(this.count == 3)
-				centerprint(actor, "Only 3 more to go...");
-			else if(this.count == 2)
-				centerprint(actor, "Only 2 more to go...");
+				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
 			else
-				centerprint(actor, "Only 1 more to go...");
+				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
 		}
 	}
 }
@@ -78,19 +74,15 @@ void counter_timed_use(entity this, entity actor, entity trigger)
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		{
 			if(this.count >= 4)
-				centerprint(actor, "There are more to go...");
-			else if(this.count == 3)
-				centerprint(actor, "Only 3 more to go...");
-			else if(this.count == 2)
-				centerprint(actor, "Only 2 more to go...");
+				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
 			else
-				centerprint(actor, "Only 1 more to go...");
+				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
 		}
 		return;
 	}
 	
 	if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
-		centerprint(actor, "Sequence completed!");
+		Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
 	this.enemy = actor;
 	this.delay = 0;

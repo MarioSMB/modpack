@@ -2062,16 +2062,16 @@ void DropBackpack(entity this)
 	item.ammo_cells = this.ammo_cells;
 
 	// include some ammo in the backpack if the weapon is being given
-	if(item.ammo_shells < 5 && (this.weapon == WEP_SHOTGUN.m_id || this.weapon == WEP_SUPER_SHOTGUN.m_id))
+	if(item.ammo_shells < 5 && wep.ammo_type == IT_SHELLS)
 		item.ammo_shells = 5;
 
-	if(item.ammo_nails < 20 && (this.weapon == WEP_NAILGUN.m_id || this.weapon == WEP_SUPER_NAILGUN.m_id))
+	if(item.ammo_nails < 20 && wep.ammo_type == IT_NAILS)
 		item.ammo_nails = 20;
 
-	if(item.ammo_rockets < 5 && (this.weapon == WEP_GRENADE_LAUNCHER.m_id || this.weapon == WEP_ROCKET_LAUNCHER.m_id))
+	if(item.ammo_rockets < 5 && wep.ammo_type == IT_ROCKETS)
 		item.ammo_rockets = 5;
 
-	if(item.ammo_cells < 15 && this.weapon == WEP_LIGHTNING.m_id)
+	if(item.ammo_cells < 15 && wep.ammo_type == IT_CELLS)
 		item.ammo_cells = 15;
 
 	// rogue

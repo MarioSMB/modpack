@@ -426,7 +426,7 @@ void impale(entity this)
 			this.modelindex = this.modelindex_player;
 			if(deathmatch || coop)
 				DropBackpack(this);
-			this.weaponmodel = "";
+			strfree(this.weaponmodel);
 			this.view_ofs = '0 0 -4';
 			this.nextthink = -1;
 			this.deadflag = DEAD_DEAD;

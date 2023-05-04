@@ -1443,7 +1443,7 @@ void PutClientInServer(entity this)
 		this.angles = this.v_angle = spot.mangle;
 		this.fixangle = true;
 		setorigin(this, spot.origin);
-		this.weaponmodel = "";
+		strfree(this.weaponmodel);
 		this.weaponframe = 0;
 		this.weapon = 0;
 
@@ -2657,6 +2657,30 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 
 		if(IS_PLAYER(attacker))
 		{
+			Weapon death_weapon = REGISTRY_GET(Weapons, attacker.weapon); //DEATH_WEAPONOF(deathtype);
+			if(death_weapon != WEP_Null)
+			{
+				Notification death_message = ((targ != attacker) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+				if(death_message)
+				{
+					Send_Notification(
+						NOTIF_ONE,
+						targ,
+						MSG_MULTI,
+						death_message,
+						targ.netname);
+					// send the info part to everyone
+					Send_Notification(
+						NOTIF_ALL_EXCEPT,
+						targ,
+						MSG_INFO,
+						death_message.nent_msginfo,
+						targ.netname
+					);
+					return; // handled by weapon code
+				}
+
+			}
 			if(targ == attacker)
 			{
 				// killed this

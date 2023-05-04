@@ -1621,153 +1621,28 @@ void W_SetCurrentAmmo(entity this)
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
 	this.weaponframe = 0;
-	
-	switch(this.weapon)
+
+	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	if(wep != WEP_Null)
 	{
-		case WEP_NAPALM.m_id:
+		strcpy(this.weaponmodel, strcat("progs/v_", wep.mdl, ".mdl"));
+		this.items |= wep.ammo_type;
+		switch(wep.ammo_type)
 		{
-			this.currentammo = this.ammo_rockets;
-			this.weaponmodel = "progs/v_srock.mdl";
-			this.items |= IT_ROCKETS;
-			break;
+			case IT_SHELLS: this.currentammo = this.ammo_shells; break;
+			case IT_ROCKETS: this.currentammo = this.ammo_rockets; break;
+			case IT_CELLS: this.currentammo = this.ammo_cells; break;
+			case IT_NAILS: this.currentammo = this.ammo_nails; break;
+			case IT_LAVA_NAILS: this.currentammo = this.ammo_lava_nails; break;
+			case IT_MULTI_ROCKETS: this.currentammo = this.ammo_multi_rockets; break;
+			case IT_PLASMA_AMMO: this.currentammo = this.ammo_plasma; break;
+			default: this.currentammo = 0; break;
 		}
-		case WEP_LIGHTME.m_id:
-		{
-			this.currentammo = this.ammo_cells;
-			this.weaponmodel = "progs/v_light2.mdl";
-			this.items |= IT_CELLS;
-			break;
-		}
-		case WEP_SPEAR.m_id:
-		{
-			this.currentammo = this.ammo_rockets;
-			this.weaponmodel = "progs/v_implr.mdl";
-			this.items |= IT_ROCKETS;
-			break;
-		}
-		case WEP_AXE.m_id:
-		{
-			this.currentammo = 0;
-			this.weaponmodel = "progs/v_axe.mdl";
-			break;
-		}
-		case WEP_GRAPPLE.m_id:
-		{
-			this.currentammo = 0;
-			this.weaponmodel = "progs/v_grpple.mdl";
-			break;
-		}
-		case WEP_SHOTGUN.m_id:
-		{
-			this.currentammo = this.ammo_shells;
-			this.weaponmodel = "progs/v_shot.mdl";
-			this.items |= IT_SHELLS;
-			break;
-		}
-		case WEP_SUPER_SHOTGUN.m_id:
-		{
-			this.currentammo = this.ammo_shells;
-			this.weaponmodel = "progs/v_shot2.mdl";
-			this.items |= IT_SHELLS;
-			break;
-		}
-		case WEP_LAVA_NAILGUN.m_id:
-		{
-			this.currentammo = this.ammo_lava_nails;
-			this.weaponmodel = "progs/v_lava.mdl";
-			this.items |= IT_LAVA_NAILS;
-			break;
-		}
-		case WEP_LAVA_SUPER_NAILGUN.m_id:
-		{
-			this.currentammo = this.ammo_lava_nails;
-			this.weaponmodel = "progs/v_lava2.mdl";
-			this.items |= IT_LAVA_NAILS;
-			break;
-		}
-		case WEP_MULTI_GRENADE.m_id:
-		{
-			this.currentammo = this.ammo_multi_rockets;
-			this.weaponmodel = "progs/v_multi.mdl";
-			this.items |= IT_MULTI_ROCKETS;
-			break;
-		}
-		case WEP_MULTI_ROCKET.m_id:
-		{
-			this.currentammo = this.ammo_multi_rockets;
-			this.weaponmodel = "progs/v_multi2.mdl";
-			this.items |= IT_MULTI_ROCKETS;
-			break;
-		}
-		case WEP_PLASMA_GUN.m_id:
-		{
-			this.currentammo = this.ammo_plasma;
-			this.weaponmodel = "progs/v_plasma.mdl";
-			this.items |= IT_PLASMA_AMMO;
-			break;
-		}
-		case WEP_NAILGUN.m_id:
-		{
-			this.currentammo = this.ammo_nails;
-			this.weaponmodel = "progs/v_nail.mdl";
-			this.items |= IT_NAILS;
-			break;
-		}
-		case WEP_SUPER_NAILGUN.m_id:
-		{
-			this.currentammo = this.ammo_nails;
-			this.weaponmodel = "progs/v_nail2.mdl";
-			this.items |= IT_NAILS;
-			break;
-		}
-		case WEP_GRENADE_LAUNCHER.m_id:
-		{
-			this.currentammo = this.ammo_rockets;
-			this.weaponmodel = "progs/v_rock.mdl";
-			this.items |= IT_ROCKETS;
-			break;
-		}
-		case WEP_ROCKET_LAUNCHER.m_id:
-		{
-			this.currentammo = this.ammo_rockets;
-			this.weaponmodel = "progs/v_rock2.mdl";
-			this.items |= IT_ROCKETS;
-			break;
-		}
-		case WEP_LIGHTNING.m_id:
-		{
-			this.currentammo = this.ammo_cells;
-			this.weaponmodel = "progs/v_light.mdl";
-			this.items |= IT_CELLS;
-			break;
-		}
-		case WEP_LASER_CANNON.m_id:
-		{
-			this.currentammo = this.ammo_cells;
-			this.weaponmodel = "progs/v_laserg.mdl";
-			this.items |= IT_CELLS;
-			break;
-		}
-		case WEP_MJOLNIR.m_id:
-		{
-			this.currentammo = this.ammo_cells;
-			this.weaponmodel = "progs/v_hammer.mdl";
-			this.items |= IT_CELLS;
-			break;
-		}
-		case WEP_PROXIMITY_GUN.m_id:
-		{
-			this.currentammo = this.ammo_rockets;
-			this.weaponmodel = "progs/v_prox.mdl";
-			this.items |= IT_ROCKETS;
-			break;
-		}
-		default:
-		{
-			this.currentammo = 0;
-			this.weaponmodel = "";
-			break;
-		}
+	}
+	else
+	{
+		strfree(this.weaponmodel);
+		this.currentammo = 0;
 	}
 }
 

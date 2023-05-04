@@ -131,8 +131,6 @@ void monster_start_go(entity this)
 				setthink(this, this.th_stand);
 				this.nextthink = time;
 			}
-			else
-				LOG_WARN("Missing th_stand ", etos(this));
 		}
 		else
 		{
@@ -144,8 +142,6 @@ void monster_start_go(entity this)
 					setthink(this, this.th_stand);
 					this.nextthink = time;
 				}
-				else
-					LOG_WARN("Missing th_stand ", etos(this));
 				this.use = monster_begin_walking;
 			}
 			else
@@ -156,8 +152,6 @@ void monster_start_go(entity this)
 					setthink(this, this.th_walk);
 					this.nextthink = time;
 				}
-				else
-					LOG_WARN("Missing th_walk ", etos(this));
 			}
 		}
 	}
@@ -169,8 +163,6 @@ void monster_start_go(entity this)
 			setthink(this, this.th_stand);
 			this.nextthink = time;
 		}
-		else
-			LOG_WARN("Missing th_stand ", etos(this));
 	}
 
 	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))

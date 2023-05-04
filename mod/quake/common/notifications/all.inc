@@ -161,6 +161,10 @@
     MSG_CENTER_NOTIF(POWERDOWN_QUAD_DAMAGE,             N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Quad Damage is wearing off"), "")
     MSG_CENTER_NOTIF(POWERDOWN_WETSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Wetsuit is running out"), "")
 
+    MSG_CENTER_NOTIF(SEQUENCE_COMPLETED,                N_ENABLE,    0, 0, "",                          CPID_COUNT,"0 0", _("^BGSequence completed!"), "")
+    MSG_CENTER_NOTIF(SEQUENCE_COUNTER,                  N_ENABLE,    0, 0, "",                          CPID_COUNT,"0 0", _("^BGThere are more to go..."), "")
+    MSG_CENTER_NOTIF(SEQUENCE_COUNTER_FEWMORE,          N_ENABLE,    0, 1, "f1",                        CPID_COUNT,"0 0", _("^BGOnly %s^BG more to go..."), "")
+
 #undef N_DISABL
 #undef N_ENABLE
 
