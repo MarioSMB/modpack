@@ -3,9 +3,8 @@
 #include "combat.qh"
 #include "client.qh"
 #include "impel/impel.qh"
+#include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
-
-.bool lavaGunFired;
 
 /*
 */
@@ -139,311 +138,9 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	return missile;
 }
 
-/*
-=================
-HIP_FireLaser
-=================
-*/
-void HIP_FireLaser(entity this, float stat)
-{
-	if(!this.button0)
-	{
-		player_run(this);
-		return;
-	}
-	if(this.ammo_cells < 1)
-	{
-		W_SwitchWeapon(this, W_BestWeapon(this, 0));
-		return;
-	}
-	SuperDamageSound(this);
-	this.effects |= EF_MUZZLEFLASH;
-	makevectors(this.v_angle);
-
-	float ofs = 6;
-	vector out = vec2(v_forward);
-	out = normalize(out);
-	vector org = this.origin +((12-ofs) * v_up) +(12*out);
-//   org = this.origin +(1*v_forward);
-	vector dir = qc_aim(this, 1000);
-	float aofs = ofs * 0.707;
-	if(stat == 0)
-	{
-		this.currentammo = this.ammo_cells = this.ammo_cells - 1;
-		org = org +(aofs*v_right);
-		org = org -(aofs*v_up);
-		HIP_LaunchLaser(this, org, dir, 0);
-		org = org -(2*aofs*v_right);
-		HIP_LaunchLaser(this, org, dir, 0);
-	}
-	else if(stat == 1)
-	{
-		this.currentammo = this.ammo_cells = this.ammo_cells - 1;
-		org = org +(ofs*v_up);
-		if(random() < 0.1)
-		{
-			entity missile = HIP_LaunchLaser(this, org, dir, 1);
-			missile.dmg = 25;
-		}
-		else
-			HIP_LaunchLaser(this, org, dir, 0);
-	}
-	this.punchangle_x = -1;
-}
-
-/*
-=================
-HIP_HammerDamage
-=================
-*/
-void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
-{
-	vector f = p2 - p1;
-	normalize(f);
-	f.x = 0 - f.y;
-	f.y = f.x;
-	f.z = 0;
-	f = f*16;
-
-	entity e1 = NULL, e2 = NULL;
-
-	traceline(p1, p2, false, from);
-//JIM
-	if(trace_ent.takedamage && !trace_ent.wetsuit_finished )
-	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
-		if(IS_PLAYER(from))
-		{
-			if(IS_PLAYER(trace_ent))
-				trace_ent.velocity_z = trace_ent.velocity_z + 400;
-		}
-	}
-	e1 = trace_ent;
-
-	traceline(p1 + f, p2 + f, false, from);
-//JIM
-	if(trace_ent != e1 && trace_ent.takedamage &&
-		!trace_ent.wetsuit_finished )
-	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
-	}
-	e2 = trace_ent;
-
-	traceline(p1 - f, p2 - f, false, from);
-//JIM
-	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage &&
-		!trace_ent.wetsuit_finished )
-	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
-	}
-}
-
-//void(entity prev, entity owner, float dst) HIP_SpawnMjolnirLightning;
-void HIP_LightningThink(entity this)
-{
-	if(time > this.delay)
-	{
-		if(this.enemy != NULL)
-			this.enemy.struck_by_mjolnir = false;
-		delete(this);
-		return;
-	}
-	int oldstate = this.state;
-	if(this.state == 0)
-	{
-		// look in our immediate vicinity
-		this.enemy = NULL;
-		entity selected = NULL;
-		entity head = findradius(this.owner.origin, this.distance);
-		while(head)
-		{
-			if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_PLAYER(head)))
-			{
-//            if(visible(head) &&(head!=this.owner.owner) &&(head.health>0))
-				if((head!=this.owner.owner) &&(head.health>0) && (visible(this, head)))
-				{
-					float cur_dist = this.distance;
-					float head_dist = vlen(head.origin - this.lastvictim.origin);
-					if((head_dist < cur_dist) && !head.struck_by_mjolnir)
-					{
-						selected = head;
-						cur_dist = head_dist;
-					}
-				}
-			}
-			head = head.chain;
-		}
-		if(selected != NULL)
-		{
-			this.state = 1;
-			this.enemy = selected;
-			this.enemy.struck_by_mjolnir = true;
-		}
-		else
-		{
-			makevectors(this.v_angle);
-			vector owner_org = this.owner.origin;
-			vector end = owner_org + v_forward * 200;
-			end = end +(((400 * random()) - 200) * v_right);
-
-			traceline(owner_org, end, true, this);
-
-			//te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
-			SendCSQCLightningBeam(owner_org, trace_endpos);
-
-			this.nextthink = time + 0.1;
-	//      setthink(this, HIP_DiversionLightningThink);
-	//      this.nextthink = time;
-	//		this.delay = time + 0.30;
-	//		this.origin = this.owner.origin;
-	//		getthink(this)(this);
-			return;
-		}
-	}
-	vector org = this.lastvictim.origin;
-	vector dst = this.enemy.absmin + 0.25 *(this.enemy.absmax - this.enemy.absmin);
-	dst = dst +(random() * 0.5 *(this.enemy.absmax - this.enemy.absmin));
-	traceline(org, dst, true, this.owner.owner);
-
-	if(trace_fraction != 1.0 || this.enemy.health<=0)
-	{
-		this.enemy.struck_by_mjolnir = false;
-		this.state = 0;
-		this.nextthink = time + 0.1;
-		return;
-	}
-	//te_lightning2(NULL, org, trace_endpos);
-	SendCSQCLightningBeam(org, trace_endpos);
-	vector vec = normalize(this.enemy.origin - this.owner.origin);
-	float dot = vec * this.owner.movedir;
-	float dam =((oldstate == 0) ? 80 : 30);
-	entity own = this.owner.owner;
-	if(dot > 0.3)
-		HIP_HammerDamage(org, trace_endpos, own, dam);
-	else
-		HIP_HammerDamage(org, trace_endpos, own, dam*0.5);
-
-	this.nextthink = time + 0.2;
-}
-
-void HIP_SpawnMjolnirLightning(entity this, entity prev, entity own, float dst)
-{
-	// spawn actual lightning
-	entity light = spawn();
-	light.delay = time + 0.8;
-	light.state = 0;
-	light.lastvictim = prev;
-	light.distance = dst;
-	light.owner = own;
-	light.v_angle = this.angles;
-	light.v_angle_x = 0;
-	light.v_angle_z = 0;
-	light.origin = own.origin;
-	setthink(light, HIP_LightningThink);
-	light.nextthink = time;
-}
-
-void HIP_SpawnMjolnirBase(entity this)
-{
-	// spawn lightning base
-	entity light = spawn();
-//   light.origin = this.origin - '0 0 24' +(32*v_forward);
-	light.origin = trace_endpos;
-	light.flags = 0;
-	light.owner = this;
-	light.struck_by_mjolnir = true;
-	setthink(light, SUB_Remove);
-	light.nextthink = time + 1;
-	_sound(light, CHAN_AUTO, "hipweap/mjolslap.wav", 1, ATTN_NORM);
-	_sound(light, CH_WEAPON_SINGLE, "hipweap/mjolhit.wav", 1, ATTN_NORM);
-	makevectors(this.v_angle);
-	light.movedir = v_forward;
-	HIP_SpawnMjolnirLightning(this, light, light, 350);
-	HIP_SpawnMjolnirLightning(this, light, light, 350);
-	HIP_SpawnMjolnirLightning(this, light, light, 350);
-	HIP_SpawnMjolnirLightning(this, light, light, 350);
-}
-
-void HIP_FireMjolnirLightning(entity this)
-{
-// explode if under water
-	if(this.waterlevel > 1)
-	{
-		int cells = this.ammo_cells;
-		this.ammo_cells = 0;
-		discharged = true;
-		T_RadiusDamage(this, this, 35 * cells, NULL);
-		discharged = false;
-		W_SetCurrentAmmo(this);
-		return;
-	}
-
-//   if(this.t_width < time)
-//   {
-//      _sound(this, CH_WEAPON_SINGLE, "weapons/lhit.wav", 1, ATTN_NORM);
-//      this.t_width = time + 0.6;
-//   }
-//   this.punchangle_x = 12;
-
-	this.currentammo = this.ammo_cells = this.ammo_cells - 15;
-
-	HIP_SpawnMjolnirBase(this);
-}
-
-void HIP_FireMjolnir(entity this)
-{
-	this.attack_finished = time + 0.4;
-	vector source = this.origin + '0 0 16';
-
-	makevectors(this.v_angle);
-	traceline(source, source + v_forward*32, false, this);
-	if(trace_fraction == 1.0 &&(this.ammo_cells >= 15))
-	{
-		source = source + v_forward*32;
-		traceline(source , source - v_up*50, false, this);
-//      dprint("fraction = ");
-//      dprint(ftos(trace_fraction));
-//      dprint("\n");
-		if(trace_fraction > 0.3 && trace_fraction< 1.0)
-		{
-			HIP_FireMjolnirLightning(this);
-			this.attack_finished = time + 1.5;
-			return;
-		}
-	}
-	vector org = trace_endpos - v_forward*4;
-
-	if(trace_ent.takedamage)
-	{
-		float damage = 50;
-		if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-			damage = 70;
-		trace_ent.axhitme = true;
-		SpawnBlood(org, v_forward, damage, trace_ent);
-		T_Damage(trace_ent, this, this, damage);
-	}
-	else
-	{  // hit wall
-		if(trace_fraction != 1.0)
-		{
-//         _sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
-			_sound(this, CH_WEAPON_SINGLE, "hipweap/mjoltink.wav", 1, ATTN_NORM);
-			te_gunshot(org);
-		}
-		else
-		{
-			_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM);
-		}
-	}
-	this.attack_finished = time + 0.4;
-}
-
 void W_SwitchWeapon(entity this, float to_wep)
 {
-	if(this.weapon == to_wep || to_wep == WEP_PULSERIFLE)
+	if(this.weapon == to_wep)
 		return; // don't mess up the system by switching to it again!
 
 	this.prevweapon = this.weapon;
@@ -452,7 +149,7 @@ void W_SwitchWeapon(entity this, float to_wep)
 	W_SetCurrentAmmo(this);
 
 #if 0
-	if(to_wep == WEP_PULSERIFLE)
+	if(to_wep == WEP_PULSERIFLE.m_id)
 	{
 		if(this.items & IT_PULSEPOWER2)
 			centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
@@ -465,71 +162,6 @@ void W_SwitchWeapon(entity this, float to_wep)
 		stuffcmd(this, "bf\n");
 	}
 #endif
-}
-
-/*
-================
-W_FireAxe
-================
-*/
-void W_FireAxe(entity this)
-{
-	makevectors(this.v_angle);
-	vector source = this.origin + '0 0 16';
-	traceline(source, source + v_forward*64, false, this);
-	if(trace_fraction == 1.0)
-		return;
-	
-	vector org = trace_endpos - v_forward * 4;
-
-	if(trace_ent.takedamage && trace_ent.monsterdef != MON_CHTHON) // yoder mod, Jan 05 2021
-	{
-		if(MP_IMPEL)
-		{
-			float r = random();
-			if(trace_ent.monsterdef == MON_JUGGERNAUT)
-				_sound(this, CH_WEAPON_SINGLE, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
-			else if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MON_FLAG_METAL))
-			{
-				if(r < 0.3)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
-				else if(r < 0.6)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
-				else
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
-			}
-			else if(IS_PLAYER(trace_ent) && trace_ent.armorvalue > 0)
-			{
-				if(r < 0.3)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
-				else if(r < 0.6)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
-				else
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
-			}
-			else if(r < 0.5)
-			{
-				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut1.wav", 1, ATTN_NORM);
-				SpawnBlood(org, '0 0 0', 20, trace_ent);
-				SpawnBlood(org, '0 0 0', 20, trace_ent);
-				SpawnBlood(org, '0 0 0', 20, trace_ent);
-			}
-			else
-			{
-				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut2.wav", 1, ATTN_NORM);
-				SpawnBlood(org, '0 0 0', 20, trace_ent);
-			}
-		}
-		trace_ent.axhitme = true;
-		if(!MP_IMPEL)
-			SpawnBlood(org, '0 0 0', 20, trace_ent);
-		T_Damage(trace_ent, this, this, 20);
-	}
-	else
-	{	// hit wall
-		_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
-		te_gunshot(org);
-	}
 }
 
 
@@ -735,45 +367,6 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 	ApplyMultiDamage(this);
 }
 
-/*
-================
-W_FireShotgun
-================
-*/
-void W_FireShotgun(entity this)
-{
-	_sound(this, CH_WEAPON_SINGLE, "weapons/guncock.wav", 1, ATTN_NORM);	
-
-	this.punchangle_x = -2;
-
-	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
-	vector dir = qc_aim(this, 100000);
-	FireBullets(this, 6, dir, '0.04 0.04 0');
-}
-
-
-/*
-================
-W_FireSuperShotgun
-================
-*/
-void W_FireSuperShotgun(entity this)
-{
-	if(this.currentammo == 1)
-	{
-		W_FireShotgun(this);
-		return;
-	}
-		
-	_sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);	
-
-	this.punchangle_x = -4;
-
-	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
-	vector dir = qc_aim(this, 100000);
-	FireBullets(this, 14, dir, '0.14 0.08 0');
-}
-
 
 /*
 ==============================================================================
@@ -833,46 +426,6 @@ void T_MissileTouch(entity this, entity toucher)
 	BecomeExplosion(this);
 }
 
-
-
-/*
-================
-W_FireRocket
-================
-*/
-entity W_FireRocket(entity this)
-{
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
-	
-	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
-
-	this.punchangle_x = -2;
-
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "missile";
-		
-// set missile speed	
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	
-	settouch(missile, T_MissileTouch);
-	
-// set missile duration
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-
-	_setmodel(missile, "progs/missile.mdl");
-	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin + v_forward*8 + '0 0 16');
-
-	return missile;
-}
 
 
 /*
@@ -1453,7 +1006,7 @@ void gibhim(entity this)
 			r = random();
 			this.modelindex = this.modelindex_player;
 			//_setmodel(this, "progs/player.mdl");
-			if(this.weapon == WEP_AXE)
+			if(this.weapon == WEP_AXE.m_id)
 			{
 				if(r < 0.3)
 					this.frame = 31;
@@ -1505,57 +1058,6 @@ void gibhim(entity this)
 	setthink(this, gibhim);
 }
 
-void rebound(entity this)
-{
-	//this.owner = this.owner;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lghit.wav", 1, ATTN_NORM);
-	this.velocity = normalize(this.velocity);
-	this.velocity = this.velocity * 1000;
-	set_movetype(this, MOVETYPE_FLYMISSILE);
-	this.angles = vectoangles(this.velocity);
-	setthink(this, SUB_Remove);
-	this.nextthink = time + 0.4;
-	spawn_touchspark(this, 1);
-	this.bounced = this.bounced + 1;
-	if(this.bounced == 5)
-	{
-		delete(this);
-		return;
-	}
-	if(!(this.flags & FL_INWATER))
-	{
-		if(this.watertype == CONTENT_WATER)
-		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis1.wav", 1, ATTN_NORM);
-			SpawnDischarge(this, 200);
-			SpawnDischarge(this, 200);
-			SpawnDischarge(this, 200);
-			T_RadiusDamage(this, this.owner, 200, NULL);
-			delete(this);
-			return;
-		}
-		if(this.watertype == CONTENT_SLIME)
-		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
-			SpawnDischarge(this, 150);
-			SpawnDischarge(this, 150);
-			T_RadiusDamage(this, this.owner, 150, NULL);
-			delete(this);
-			return;
-		}
-		if(this.watertype == CONTENT_LAVA)
-		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
-			SpawnDischarge(this, 100);
-			SpawnDischarge(this, 100);
-			T_RadiusDamage(this, this.owner, 100, NULL);
-			delete(this);
-			return;
-		}
-	}
-	this.owner = other;
-}
-
 void ThrowMe(entity this, entity targ, float dm)
 {
 	if(targ.move_movetype == MOVETYPE_PUSH)
@@ -1587,146 +1089,7 @@ LIGHTNING
 ===============================================================================
 */
 
-void LightningTouch(entity this, entity toucher)
-{
-	if(toucher.solid == SOLID_TRIGGER)
-		return;
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	if(IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
-	{
-		set_movetype(this, MOVETYPE_BOUNCE);
-		setthink(this, rebound);
-		this.ltime = this.nextthink;
-		this.nextthink = time + 0.1;
-		return;
-	}
-	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT)
-	{
-		if(toucher.takedamage == DAMAGE_AIM)
-			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
-		float damg = 16;
-		if(this.owner.super_damage_finished > time && toucher.health <= (damg * 4))
-		{
-			if(toucher.move_movetype == MOVETYPE_PUSH)
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			if(toucher.classname == "door")
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			if(toucher.move_movetype == MOVETYPE_NONE)
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			//ThrowMe(this, toucher, damg);
-			if(!IS_PLAYER(toucher))
-				toucher.owner = this.owner;
-			else
-				toucher.enemy = this.owner;
-			delete(this);
-			toucher.takedamage = DAMAGE_NO;
-			setthink(toucher, gibhim);
-			toucher.nextthink = time;
-			return;
-		}
-		if(toucher.health <= damg)
-		{
-			if(toucher.move_movetype == MOVETYPE_PUSH)
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			if(toucher.classname == "door")
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			if(toucher.move_movetype == MOVETYPE_NONE)
-			{
-				T_Damage(toucher, this, this.owner, damg);
-				return;
-			}
-			//ThrowMe(this, toucher, damg);
-			if(!IS_PLAYER(toucher))
-				toucher.owner = this.owner;
-			else
-				toucher.enemy = this.owner;
-			delete(this);
-			toucher.takedamage = DAMAGE_NO;
-			setthink(toucher, gibhim);
-			toucher.nextthink = time;
-			return;
-		}
-		else
-		{
-			T_Damage(toucher, this, this.owner, damg);
-			if(toucher.takedamage == DAMAGE_AIM)
-				SpawnMeatBounce(this, toucher, damg);
-			//ThrowMe(this, toucher, damg);
-			delete(this);
-		}
-	}
-	else
-	{
-		set_movetype(this, MOVETYPE_BOUNCE);
-		setthink(this, rebound);
-		this.ltime = this.nextthink;
-		this.nextthink = time + 0.1;
-		return;
-	}
-}
 
-void W_FireSuperLightning(entity this)
-{
-	float r = random();
-	if(this.waterlevel > 1)
-	{
-		float cells = this.ammo_cells;
-		this.ammo_cells = 0;
-		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35 * cells, NULL);
-		return;
-	}
-	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
-	this.punchangle_x = -2;
-	entity missile = new(lightme);
-	missile.owner = missile.realowner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 2000);
-	missile.velocity = missile.velocity * 2000;
-	missile.angles = vectoangles(missile.velocity);
-	settouch(missile, LightningTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	if(this.lightningmodel == 1)
-	{
-		if(r <= 0.3)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart2.wav", 1, ATTN_NORM);
-		else if(r <= 0.6)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart3.wav", 1, ATTN_NORM);
-		else
-			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
-		_setmodel(missile, "progs/bolt2.mdl");
-		this.lightningmodel = 0;
-	}
-	else if(this.lightningmodel == 0)
-	{
-		_setmodel(missile, "progs/bolt.mdl");
-		this.lightningmodel = 1;
-	}
-	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + '0 0 0' - v_forward * 0); // lol what
-}
 
 /*
 =================
@@ -1802,97 +1165,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 }
 
 
-void W_FireLightning(entity this)
-{
-	if(this.ammo_cells < 1)
-	{
-		W_SwitchWeapon(this, W_BestWeapon(this, 0));
-		return;
-	}
-
-// explode if under water
-	if(this.waterlevel > 1)
-	{
-		int cells = this.ammo_cells;
-		this.ammo_cells = 0;
-		W_SetCurrentAmmo(this);
-		discharged = true;
-		T_RadiusDamage(this, this, 35 * cells, NULL);
-		discharged = false;
-		return;
-	}
-
-	makevectors(this.v_angle);
-
-	if(this.t_width < time)
-	{
-		_sound(this, CH_WEAPON_SINGLE, "weapons/lhit.wav", 1, ATTN_NORM);
-		this.t_width = time + 0.6;
-	}
-	this.punchangle_x = -2;
-
-	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
-
-	vector org = this.origin + '0 0 16';
-
-	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
-
-	//te_lightning2(NULL, org, trace_endpos);
-	SendCSQCLightningBeam(org, trace_endpos);
-
-	LightningDamage(org, trace_endpos + v_forward*4, this, 30);
-}
-
-
 //=============================================================================
 
-
-bool inside_nradius;
-
-void NapalmFlameThink(entity this)
-{
-	if(!(this.flags & FL_INWATER) && this.cnt == 0)
-	{
-		if(this.watertype == CONTENT_WATER)
-		{
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_SLIME)
-		{
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_LAVA)
-		{
-			BecomeExplosion(this);
-			return;
-		}
-	}
-	if(inside_nradius)
-	{
-		error("NapalmFlameThink: recursive");
-		return;
-	}
-	inside_nradius = true;
-	entity head = findradius(this.origin, 55);
-	while(head)
-	{
-		if(head.takedamage)
-			T_Damage(head, this, this.owner.owner, 2 + (random() * 4));
-		head = head.chain;
-	}
-	inside_nradius = false;
-	this.nextthink = time + 0.35;
-	this.cnt = this.cnt + 1;
-	if(this.cnt >= 10 + random() * 5)
-	{
-		this.cnt = 0;
-		BecomeExplosion(this);
-		return;
-	}
-	setthink(this, NapalmFlameThink);
-}
 
 // TODO: additional frame information unknown!
 // NOTE: decompiled code alternates between first 2 frames, this is changed to use the frames available in the model
@@ -2259,158 +1533,11 @@ void BecomeBombExplosion(entity this)
 	delete(this);
 }
 
-void napalmrebound(entity this)
-{
-	if(!(this.flags & FL_INWATER))
-	{
-		if(this.watertype == CONTENT_WATER)
-		{
-			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_SLIME)
-		{
-			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_LAVA)
-		{
-			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-			BecomeExplosion(this);
-			return;
-		}
-	}
-	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	SpawnFireSpark(this);
-	SpawnFireSpark(this);
-	SpawnFireSpark(this);
-	BecomeExplosion(this);
-}
-
-void NapalmTouch(entity this, entity toucher)
-{
-	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.monsterdef != MON_SPIDER_DROID && toucher.monsterdef != MON_ZOMBIE
-			&& toucher.monsterdef != MON_SHAMBLER && toucher.monsterdef != MON_VORE)
-	{
-		SpawnInternalFire(this, toucher);
-	}
-	setorigin(this, this.origin - 8 * normalize(this.velocity));
-	setthink(this, napalmrebound);
-	this.ltime = this.nextthink;
-	this.nextthink = time;
-}
-
-void W_FireNapalm(entity this)
-{
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
-	this.punchangle_x = -2;
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_BOUNCE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "flame";
-	missile.takedamage = DAMAGE_NO;
-	makevectors(this.v_angle);
-	if(this.v_angle_x)
-		missile.velocity = v_forward * 800 + v_up * 250 + crandom() * v_right * 10 + crandom() * v_up * 10;
-	else
-	{
-		missile.velocity = qc_aim(this, 10000);
-		missile.velocity = missile.velocity * 600;
-		missile.velocity_z = 200;
-	}
-	missile.avelocity = '300 300 300';
-	missile.angles = vectoangles(missile.velocity);
-	settouch(missile, NapalmTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/nbomb.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin);
-}
-
 //=============================================================================
 
 
-void GrenadeExplode(entity this)
-{
-	T_RadiusDamage(this, this.owner, 120, NULL);
-
-	te_explosion(this.origin);
-
-	BecomeExplosion(this);
-}
-
-void GrenadeTouch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;		// don't explode on owner
-	if(toucher.takedamage == DAMAGE_AIM)
-	{
-		GrenadeExplode(this);
-		return;
-	}
-	if(this.attack_finished < time)
-		_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
-	this.attack_finished = time + 0.1;
-	if(this.velocity == '0 0 0')
-		this.avelocity = '0 0 0';
-}
-
-/*
-================
-W_FireGrenade
-================
-*/
-void W_FireGrenade(entity this)
-{
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
-	
-	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
-
-	this.punchangle_x = -2;
-
-	entity missile = new(grenade);
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_BOUNCE);
-	missile.solid = SOLID_BBOX;
-		
-// set missile speed	
-
-	makevectors(this.v_angle);
-
-	if(this.v_angle_x)
-		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
-	else
-	{
-		missile.velocity = qc_aim(this, 10000);
-		missile.velocity = missile.velocity * 600;
-		missile.velocity_z = 200;
-	}
-
-	missile.avelocity = '300 300 300';
-
-	missile.angles = vectoangles(missile.velocity);
-
-	settouch(missile, GrenadeTouch);
-	
-// set missile duration
-	missile.nextthink = time + 2.5;
-	setthink(missile, GrenadeExplode);
-
-	_setmodel(missile, "progs/grenade.mdl");
-	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin);
-}
-
 
 //=============================================================================
-
-void spike_touch(entity this, entity toucher);
-void superspike_touch(entity this, entity toucher);
 
 
 /*
@@ -2440,196 +1567,6 @@ entity launch_spike(entity this, vector org, vector dir)
 	newmis.velocity = dir * 1000;
 
 	return newmis;
-}
-
-void W_FireSuperSpikes(entity this)
-{
-	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
-	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
-	vector dir = qc_aim(this, 1000);
-	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
-	if(MP_IMPEL)
-		newmis.classname = "superspike";
-	else
-		newmis.classname = "super_spike";
-	settouch(newmis, superspike_touch);
-	_setmodel(newmis, "progs/s_spike.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');		
-	this.punchangle_x = -2;
-}
-
-void W_FireSpikes(entity this, float ox)
-{
-	makevectors(this.v_angle);
-	
-	if(this.ammo_nails >= 2 && this.weapon == WEP_SUPER_NAILGUN)
-	{
-		W_FireSuperSpikes(this);
-		return;
-	}
-	if(this.ammo_nails < 1)
-	{
-		W_SwitchWeapon(this, W_BestWeapon(this, 0));
-		return;
-	}
-
-	if(MP_IMPEL && this.silencer)
-		_sound(this, CH_WEAPON_SINGLE, "weapons/rocketli.wav", 0.2, ATTN_NORM);
-	else
-		_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
-	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
-	vector dir = qc_aim(this, 1000);
-	// NOTE: position fix by Seven and Sajt applied here
-	launch_spike(this, this.origin + this.view_ofs + v_up * -8 + v_right * ox, dir);
-
-	this.punchangle_x = -2;
-}
-
-void ProximityExplode(entity this)
-{
-	T_RadiusDamage(this, this.owner, 95, NULL);
-
-	te_explosion(this.origin);
-
-	BecomeExplosion(this);
-}
-
-//MED 10/31/96
-/*
-================
-ProximityGrenadeExplode
-================
-*/
-void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker)
-{
-	this.takedamage = DAMAGE_NO;
-	this.realowner.NumProximityGrenades -= 1;
-	this.deathtype = "exploding";
-	this.nextthink = time + 0.1;
-	this.owner = this.lastvictim;
-	setthink(this, ProximityExplode);
-}
-
-/*
-================
-ProximityGrenadeTouch
-================
-*/
-void ProximityGrenadeTouch(entity this, entity toucher)
-{
-	if(toucher == this)
-		return;
-	if(toucher.classname == this.classname)
-		return;
-	set_movetype(this, MOVETYPE_TOSS);
-	if(this.state == 1)
-		return;
-	if(vdist(toucher.velocity, >, 0) || toucher.takedamage == DAMAGE_AIM)
-	{
-		ProximityGrenadeExplode(this, NULL, NULL);
-		getthink(this)(this);
-		return;
-	}
-	_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM); // bounce sound
-	set_movetype(this, MOVETYPE_NONE);
-	setsize(this, '-8 -8 -8', '8 8 8');
-	this.state = 1;
-	this.spawnmaster = toucher;
-}
-
-/*
-================
-ProximityBomb
-================
-*/
-void ProximityBomb(entity this)
-{
-	if((time > this.delay) || (this.realowner.NumProximityGrenades > 15) || vdist(this.spawnmaster.velocity, >, 0) )
-	{
-		ProximityGrenadeExplode(this, NULL, NULL);
-		getthink(this)(this);
-		return;
-	}
-	this.owner = NULL;
-	this.takedamage = DAMAGE_YES;
-	entity head = findradius(this.origin, 140);
-	bool blowup = false;
-
-	while(head)
-	{
-		if(head != this && head.health > 0 && (IS_PLAYER(head) || IS_MONSTER(head)) && head.classname != this.classname && head != this.realowner)
-			blowup = true;
-		if((head.classname == this.classname) && (head.state == 0))
-			blowup = true;
-		traceline(this.origin, head.origin, MOVE_NOMONSTERS, this);
-		if(trace_fraction != 1.0)
-			blowup = false;
-		if(blowup)
-		{
-			_sound(this, CH_WEAPON_SINGLE, "hipweap/proxwarn.wav", 1, ATTN_NORM);
-			ProximityGrenadeExplode(this, NULL, NULL);
-			this.nextthink = time + 0.5;
-			return;
-		}
-		head = head.chain;
-	}
-	this.nextthink = time + 0.25;
-}
-
-/*
-================
-W_FireProximityGrenade
-================
-*/
-void W_FireProximityGrenade(entity this)
-{
-	this.NumProximityGrenades += 1;
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
-
-	_sound(this, CH_WEAPON_SINGLE, "hipweap/proxbomb.wav", 1, ATTN_NORM);
-
-	this.punchangle_x = -2;
-
-	entity missile = spawn();
-	missile.owner = missile.realowner = this;
-	missile.lastvictim = this;
-	set_movetype(missile, MOVETYPE_TOSS);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "proximity_grenade";
-	missile.takedamage = DAMAGE_NO;
-	missile.health = 5;
-	missile.state = 0;
-
-// set missile speed
-
-	makevectors(this.v_angle);
-
-	if(this.v_angle_x)
-		missile.velocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
-	else
-	{
-		missile.velocity = qc_aim(this, 10000);
-		missile.velocity = missile.velocity * 600;
-		missile.velocity_z = 200;
-	}
-
-	missile.avelocity = '100 600 100';
-
-	missile.angles = vectoangles(missile.velocity);
-
-	settouch(missile, ProximityGrenadeTouch);
-
-// set missile duration
-	missile.nextthink = time + 2;
-	missile.delay = time + 15 +(10*random());
-	setthink(missile, ProximityBomb);
-	missile.th_die = ProximityGrenadeExplode;
-
-	_setmodel(missile, "progs/proxbomb.mdl");
-	setorigin(missile, this.origin);
-	setsize(missile, '-1 -1 -1', '1 1 1');
 }
 
 void spike_touch(entity this, entity toucher)
@@ -2666,530 +1603,6 @@ void spike_touch(entity this, entity toucher)
 
 }
 
-void superspike_touch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return;	// trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	
-// hit something that bleeds
-	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
-	{
-		spawn_touchblood(this, 18, toucher);
-		T_Damage(toucher, this, this.owner, 18);
-	}
-	else
-		te_superspike(this.origin);
-
-	delete(this);
-
-}
-
-// impel weapon code
-
-void T_SpearTouch(entity this, entity toucher);
-void SpearThink(entity this);
-void Spear_Bounce_Think(entity this);
-void SpearExplosion(entity this);
-void SpearDig(entity this);
-
-void W_FireSpear(entity this)
-{
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "spear";
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 2000);
-	missile.velocity = missile.velocity * 2000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.movedir = missile.velocity;
-	missile.avelocity_z = crandom() * 500;
-	missile.count = 0;
-	settouch(missile, T_SpearTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/impaler.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + (v_forward * 8) + '0 0 16');
-	if(IS_ONGROUND(this))
-	{
-		UNSET_ONGROUND(this);
-		setorigin(this, this.origin + '0 0 1');
-	}
-	this.velocity = this.velocity - (v_forward * (600 - this.armorvalue)) + '0 0 50';
-	this.punchangle_x = -10;
-}
-
-void T_SpearTouch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-
-	float knockback;
-	float r = random();
-	if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)))
-	{
-		_setmodel(this, "progs/impstuck.mdl");
-		if(IS_CLIENT(toucher))
-			knockback = 400 - (toucher.armorvalue * 3);
-		else if(toucher.monsterdef == MON_ROTTWEILER)
-			knockback = 550;
-		else if(toucher.monsterdef == MON_ZOMBIE)
-			knockback = 250;
-		else if(toucher.monsterdef == MON_GRUNT)
-			knockback = 450;
-		else if(toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT)
-			knockback = 250;
-		else if(toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
-			knockback = 300;
-		else if(toucher.monsterdef == MON_OGRE)
-			knockback = 100;
-		else if(toucher.monsterdef == MON_HELL_KNIGHT)
-			knockback = 150;
-		else if(toucher.monsterdef == MON_GRENLING)
-			knockback = 550;
-		else if(toucher.monsterdef == MON_VORE)
-			knockback = 100;
-		else
-			knockback = 0;
-		if(knockback > 10)
-		{
-			if(IS_ONGROUND(toucher))
-			{
-				UNSET_ONGROUND(toucher);
-				setorigin(toucher, toucher.origin + '0 0 1');
-			}
-			makevectors(this.angles);
-			toucher.velocity = toucher.velocity + v_forward * knockback;
-			toucher.velocity_z = toucher.velocity_z + knockback / 2;
-		}
-	}
-	if(toucher.takedamage 
-		&& (toucher.monsterdef == MON_JUGGERNAUT
-			|| toucher.monsterdef == MON_CHTHON || toucher.monsterdef == MON_SHUB || toucher.monsterdef == MON_LEGOND 
-			|| toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT || toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_SHAMBLER) 
-			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1))
-	{
-		_setmodel(this, "progs/impdef.mdl");
-		T_Damage(toucher, this, this.owner, 50);
-		if(r < 0.4)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
-		else if(r < 0.7)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef2.wav", 1, ATTN_NORM);
-		else
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef3.wav", 1, ATTN_NORM);
-		if(toucher.health > 0)
-			T_Damage(toucher, this, this.owner, 50);
-		set_movetype(this, MOVETYPE_BOUNCE);
-		this.velocity = this.velocity * 0.35;
-		this.avelocity = '300 300 300';
-		this.solid = SOLID_NOT;
-		setsize(this, '0 0 0', '0 0 0');
-		setthink(this, Spear_Bounce_Think);
-		this.nextthink = time + 0.5;
-		this.count = time + 3;
-	}
-	else if(((toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTTWEILER) && random() < 0.5) || toucher.monsterdef == MON_ROTFISH)
-	{
-		T_Damage (toucher, this, this.owner, 5000);
-		entity missile = spawn();
-		missile.owner = this.owner;
-		set_movetype(missile, MOVETYPE_FLYMISSILE);
-		missile.solid = SOLID_BBOX;
-		missile.classname = "spear";
-		makevectors(this.angles);
-		missile.velocity = this.movedir;
-		missile.angles = vectoangles(missile.velocity);
-		missile.movedir = missile.velocity;
-		missile.avelocity_z = crandom() * 500;
-		missile.count = 0;
-		settouch(missile, T_SpearTouch);
-		toucher.nextthink = time + 4;
-		setthink(toucher, SUB_Remove);
-		_setmodel(missile, "progs/impstuck.mdl");
-		setsize(missile, '0 0 0', '0 0 0');
-		setorigin(missile, this.origin + v_forward);
-		delete(this);
-	}
-	else if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)) && toucher.armorvalue == 0 && 
-		(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER 
-		|| toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_FIEND 
-		|| toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_GRENLING
-		|| toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.classname == "wall_explode"))
-	{
-		_setmodel(this, "progs/impstuck.mdl");
-		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
-		if(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
-		{
-			BecomeBloodSpurt(this, 25);
-			T_Damage(toucher, this, this.owner, 25);
-			BecomeBloodSpurt(this, 25);
-		}
-		if(!(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
-				|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH))
-		{
-			BecomeBloodSpurt(this, 25);
-			T_Damage(toucher, this, this.owner, 25);
-			BecomeBloodSpurt(this, 25);
-		}
-		this.enemy = toucher;
-		this.cnt = this.enemy.health;
-		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_NOT;
-		setorigin(this, this.origin + normalize(this.velocity) * 30);
-		this.v_angle = this.angles - this.enemy.angles;
-		this.mangle = this.origin - this.enemy.origin;
-		this.mangle_x = this.mangle_x * 0.05;
-		this.mangle_y = this.mangle_y * 0.05;
-		this.mangle_z = this.mangle_z * 0.1 + 10;
-		setthink(this, SpearThink);
-		this.nextthink = time + 0.1;
-		if(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
-			|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH)
-		{
-			T_Damage (toucher, this, this.owner, 5000);
-			BecomeBloodSpurt(this, 5000);
-		}
-	}
-	else if(toucher.takedamage)
-	{
-		_setmodel(this, "progs/impdef.mdl");
-		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
-		T_Damage (toucher, this, this.owner, 50);
-		BecomePurpleExplosion(this, toucher, 50);
-		if(r < 0.4)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
-		else if(r < 0.7)
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef2.wav", 1, ATTN_NORM);
-		else
-			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef3.wav", 1, ATTN_NORM);
-		BecomePurpleExplosion(this, toucher, 50);
-		set_movetype(this, MOVETYPE_BOUNCE);
-		this.velocity = this.velocity * 0.05;
-		this.avelocity = '300 300 300';
-		this.solid = SOLID_NOT;
-		setsize(this, '0 0 0', '0 0 0');
-		setthink(this, Spear_Bounce_Think);
-		this.nextthink = time + 0.5;
-		this.count = time + 3;
-	}
-	else if(toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_CLIENT(toucher) || IS_MONSTER(toucher))
-	{
-		_setmodel(this, "progs/impwall.mdl");
-		BecomePurpleExplosion(this, toucher, 50);
-		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impwall.wav", 1, ATTN_NORM);
-		BecomePurpleExplosion(this, toucher, 50);
-		set_movetype(this, MOVETYPE_BOUNCE);
-		this.velocity = this.velocity * 0.35;
-		this.avelocity = '300 300 300';
-		this.solid = SOLID_NOT;
-		setsize(this, '0 0 0', '0 0 0');
-		setthink(this, Spear_Bounce_Think);
-		this.nextthink = time + 0.5;
-		this.count = time + 3;
-	}
-	else
-	{
-		_setmodel(this, "progs/impwall.mdl");
-		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impwall.wav", 1, ATTN_NORM);
-		BecomePurpleExplosion(this, toucher, 50);
-		makevectors(this.angles);
-		setorigin(this, this.origin + normalize(this.velocity) * -4);
-		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_NOT;
-		this.nextthink = time + 0.1;
-		setthink(this, SpearDig);
-	}
-}
-
-void SpearDig3(entity this)
-{
-	float r = random();
-	this.nextthink = time + r + 1;
-	setthink(this, SpearExplosion);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-
-void SpearDig2(entity this)
-{
-	float r = random();
-	this.nextthink = time + r;
-	setthink(this, SpearDig3);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-
-void SpearDig(entity this)
-{
-	float r = random();
-	this.nextthink = time + r;
-	setthink(this, SpearDig2);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	if(r < 0.6)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-void ThrowHead(entity this, string gibname, float dm);
-
-void ImpaledGibs(entity this)
-{
-	ThrowHead(this, "progs/gib3.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/rawbone2.mdl", this.health);
-	if(IS_PLAYER(this))
-		this.impaled = false;
-}
-
-void ImpaledExplosion(entity this)
-{
-	if(this.enemy.health <= 0)
-	{
-		T_RadiusDamage(this, this.owner, 60, NULL);
-		BecomeBloodSpurt(this, 60);
-		this.enemy.health = this.enemy.health - 60 - random() * 100;
-		setorigin(this, this.origin - 8 * normalize(this.velocity));
-		setthink(this.enemy, ImpaledGibs);
-		this.enemy.nextthink = time;
-		_sound(this.enemy, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		BecomeBloodSpurt(this, 60);
-		_sound(this.enemy, CHAN_BODY, "weapons/impaler/impex.wav", 1, ATTN_NORM);
-	}
-	te_explosion(this.origin);
-	BecomeExplosion(this);
-}
-
-void SpearExplosion(entity this)
-{
-	T_RadiusDamage(this, this.owner, 60, NULL);
-	setorigin(this, this.origin - 16 * normalize(this.velocity));
-	te_explosion(this.origin);
-	BecomeExplosion(this);
-}
-
-void SpearGo3(entity this)
-{
-	float r = random();
-	BecomeBloodSpurt(this, 0);
-	this.nextthink = time + r + 1;
-	BecomeBloodSpurt(this, 0);
-	setthink(this, ImpaledExplosion);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	else if((r < 0.6))
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-
-void SpearGo2(entity this)
-{
-	float r = random();
-	BecomeBloodSpurt(this, 0);
-	this.nextthink = time + 1 + r;
-	BecomeBloodSpurt(this, 0);
-	setthink(this, SpearGo3);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-
-void SpearGo(entity this)
-{
-	float r = random();
-	BecomeBloodSpurt(this, 0);
-	this.nextthink = time + 1 + r;
-	BecomeBloodSpurt(this, 0);
-	setthink(this, SpearGo2);
-	BecomePurpleExplosion(this, NULL, 0);
-	if(r < 0.3)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
-	else
-		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, NULL, 0);
-}
-
-void SpearThink(entity this)
-{
-	setorigin(this, this.enemy.origin + this.mangle);
-	this.angles = this.enemy.angles + this.v_angle;
-	if(IS_CLIENT(this.enemy) || this.enemy.monsterdef == MON_ENFORCER || IS_PLAYER(this.enemy) || this.enemy.monsterdef == MON_LIGHTNING_ENFORCER)
-	{
-		if(!(this.flags & FL_NOTARGET))
-		{
-			makevectors(this.angles);
-			traceline(this.origin + v_forward * 20, this.origin, true, this);
-			if(trace_startsolid)
-			{
-				this.classname = "impaler";
-				this.enemy.health = 1;
-				BecomeBloodSpurt(this, 15);
-				T_Damage(this.enemy, this, this.owner, 15);
-				BecomeBloodSpurt(this, 15);
-				entity fork = spawn();
-				fork.solid = SOLID_NOT;
-				setorigin(fork, this.origin - v_forward * 10);
-				fork.nextthink = time;
-				setthink(fork, func_null);
-				this.solid = SOLID_NOT;
-				this.nextthink = time + 0.1;
-				setthink(this, SpearGo);
-				return;
-			}
-		}
-	}
-	if(IS_ONGROUND(this.enemy) && !(this.flags & FL_NOTARGET))
-	{
-		this.flags = FL_NOTARGET;
-		BecomeBloodSpurt(this, 37);
-		T_Damage(this.enemy, this, this.owner, 37);
-		BecomeBloodSpurt(this, 37);
-	}
-	if(this.enemy.health <= 0 || this.enemy.health > this.cnt || random() < 0.01)
-	{
-		set_movetype(this, MOVETYPE_BOUNCE);
-		this.velocity = this.velocity * 0.05;
-		this.avelocity = '300 300 300';
-		this.solid = SOLID_NOT;
-		setsize(this, '0 0 0', '0 0 0');
-		setthink(this, Spear_Bounce_Think);
-		this.nextthink = time + 0.5;
-		this.count = time + 3;
-		return;
-	}
-	this.cnt = this.enemy.health;
-	this.count = this.count + 1;
-	if((random() * 10) < this.count)
-	{
-		SpawnBlood(this.origin, '0 0 0', this.count, this.enemy);
-		BecomeBloodSpurt(this, this.count / 2);
-		T_Damage(this.enemy, this, this.owner, this.count / 2);
-		if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
-			T_Damage(this.enemy, this, this.owner, 5);
-		BecomeBloodSpurt(this, this.count / 2);
-		this.count = 0;
-	}
-	this.nextthink = time + 0.1;
-}
-
-void Spear_Bounce_Think(entity this)
-{
-	if(this.velocity == '0 0 0' || this.count < time)
-		delete(this);
-	else
-		this.nextthink = time + 0.1;
-}
-void DeathSound(entity this);
-
-void impale(entity this)
-{
-	if(this.monsterdef == MON_ENFORCER || this.monsterdef == MON_LIGHTNING_ENFORCER)
-	{
-		_sound(this, CHAN_BODY, "player/udeath.wav", 1, ATTN_NORM);
-		BecomeBloodSpurt(this, 0);
-		_sound(this, CHAN_ITEM, "weapons/impaler/mimpale.wav", 1, ATTN_NORM);
-		BecomeBloodSpurt(this, 0);
-		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_NOT;
-		setthink(this, func_null);
-		this.ammo_shells = 5;
-		DropBackpack(this);
-		if(random() < 0.2)
-			this.frame = 83;
-		else if(random() < 0.4)
-			this.frame = 79;
-		else if(random() < 0.6)
-			this.frame = 80;
-		else if(random() < 0.8)
-			this.frame = 78;
-		else
-			this.frame = 84;
-	}
-	else
-	{
-		if(IS_PLAYER(this))
-		{
-			this.impaled = true;
-			this.powerups &= ~POWERUP_INVISIBILITY;
-			this.invisible_finished = 0;
-			this.invincible_finished = 0;
-			this.super_damage_finished = 0;
-			this.radsuit_finished = 0;
-			this.modelindex = this.modelindex_player;
-			if(deathmatch || coop)
-				DropBackpack(this);
-			this.weaponmodel = string_null;
-			this.view_ofs = '0 0 -4';
-			this.nextthink = -1;
-			this.deadflag = DEAD_DEAD;
-			this.solid = SOLID_NOT;
-			UNSET_ONGROUND(this);
-			set_movetype(this, MOVETYPE_NONE);
-			BecomeBloodSpurt(this, 0);
-			DeathSound(this);
-			BecomeBloodSpurt(this, 0);
-			_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
-			BecomeBloodSpurt(this, 0);
-			this.angles_x = this.angles_z = 0;
-			if(this.weapon == WEP_AXE)
-			{
-				if(random() < 0.3)
-					this.frame = 31;
-				else if(random() < 0.6)
-					this.frame = 35;
-				else
-					this.frame = 42;
-			}
-			else if(random() < 0.3)
-				this.frame = 61;
-			else if(random() < 0.6)
-				this.frame = 71;
-			else
-				this.frame = 87;
-		}
-	}
-}
-
 
 /*
 ===============================================================================
@@ -3211,147 +1624,138 @@ void W_SetCurrentAmmo(entity this)
 	
 	switch(this.weapon)
 	{
-		case WEP_NAPALM:
+		case WEP_NAPALM.m_id:
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_srock.mdl";
 			this.items |= IT_ROCKETS;
 			break;
 		}
-		case WEP_LIGHTME:
+		case WEP_LIGHTME.m_id:
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_light2.mdl";
 			this.items |= IT_CELLS;
 			break;
 		}
-		case WEP_SPEAR:
+		case WEP_SPEAR.m_id:
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_implr.mdl";
 			this.items |= IT_ROCKETS;
 			break;
 		}
-	#if 0
-		case WEP_PULSERIFLE:
-		{
-			this.currentammo = this.ammo_cells;
-			this.weaponmodel = "progs/null.mdl"; // TODO?!
-			this.items |= IT_CELLS;
-			break;
-		}
-	#endif
-		case WEP_AXE:
+		case WEP_AXE.m_id:
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_axe.mdl";
 			break;
 		}
-		case WEP_GRAPPLE:
+		case WEP_GRAPPLE.m_id:
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_grpple.mdl";
 			break;
 		}
-		case WEP_SHOTGUN:
+		case WEP_SHOTGUN.m_id:
 		{
 			this.currentammo = this.ammo_shells;
 			this.weaponmodel = "progs/v_shot.mdl";
 			this.items |= IT_SHELLS;
 			break;
 		}
-		case WEP_SUPER_SHOTGUN:
+		case WEP_SUPER_SHOTGUN.m_id:
 		{
 			this.currentammo = this.ammo_shells;
 			this.weaponmodel = "progs/v_shot2.mdl";
 			this.items |= IT_SHELLS;
 			break;
 		}
-		case WEP_LAVA_NAILGUN:
+		case WEP_LAVA_NAILGUN.m_id:
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava.mdl";
 			this.items |= IT_LAVA_NAILS;
 			break;
 		}
-		case WEP_LAVA_SUPER_NAILGUN:
+		case WEP_LAVA_SUPER_NAILGUN.m_id:
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava2.mdl";
 			this.items |= IT_LAVA_NAILS;
 			break;
 		}
-		case WEP_MULTI_GRENADE:
+		case WEP_MULTI_GRENADE.m_id:
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi.mdl";
 			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
-		case WEP_MULTI_ROCKET:
+		case WEP_MULTI_ROCKET.m_id:
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi2.mdl";
 			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
-		case WEP_PLASMA_GUN:
+		case WEP_PLASMA_GUN.m_id:
 		{
 			this.currentammo = this.ammo_plasma;
 			this.weaponmodel = "progs/v_plasma.mdl";
 			this.items |= IT_PLASMA_AMMO;
 			break;
 		}
-		case WEP_NAILGUN:
+		case WEP_NAILGUN.m_id:
 		{
 			this.currentammo = this.ammo_nails;
 			this.weaponmodel = "progs/v_nail.mdl";
 			this.items |= IT_NAILS;
 			break;
 		}
-		case WEP_SUPER_NAILGUN:
+		case WEP_SUPER_NAILGUN.m_id:
 		{
 			this.currentammo = this.ammo_nails;
 			this.weaponmodel = "progs/v_nail2.mdl";
 			this.items |= IT_NAILS;
 			break;
 		}
-		case WEP_GRENADE_LAUNCHER:
+		case WEP_GRENADE_LAUNCHER.m_id:
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_rock.mdl";
 			this.items |= IT_ROCKETS;
 			break;
 		}
-		case WEP_ROCKET_LAUNCHER:
+		case WEP_ROCKET_LAUNCHER.m_id:
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_rock2.mdl";
 			this.items |= IT_ROCKETS;
 			break;
 		}
-		case WEP_LIGHTNING:
+		case WEP_LIGHTNING.m_id:
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_light.mdl";
 			this.items |= IT_CELLS;
 			break;
 		}
-		case WEP_LASER_CANNON:
+		case WEP_LASER_CANNON.m_id:
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_laserg.mdl";
 			this.items |= IT_CELLS;
 			break;
 		}
-		case WEP_MJOLNIR:
+		case WEP_MJOLNIR.m_id:
 		{
 			this.currentammo = this.ammo_cells;
 			this.weaponmodel = "progs/v_hammer.mdl";
 			this.items |= IT_CELLS;
 			break;
 		}
-		case WEP_PROXIMITY_GUN:
+		case WEP_PROXIMITY_GUN.m_id:
 		{
 			this.currentammo = this.ammo_rockets;
 			this.weaponmodel = "progs/v_prox.mdl";
@@ -3369,34 +1773,34 @@ void W_SetCurrentAmmo(entity this)
 
 int W_BestWeapon(entity this, int except)
 {
-	int itm = this.weapons;
+	WepSet itm = STAT(WEAPONS, this);
 
 	// TODO: missing impel weapons!
 
 	// pgm - fix for sandy. will not change to plasma gun
 	
 //	if(this.waterlevel <= 1 && this.ammo_plasma >= 1 && (it & WEP_PLASMA_GUN))
-//		return WEP_PLASMA_GUN;
+//		return WEP_PLASMA_GUN.m_id;
 //	else 
-	if(this.waterlevel <= 1 && this.ammo_cells >= 1 && (itm & WEP_LIGHTNING) && except != WEP_LIGHTNING)
-		return WEP_LIGHTNING;
-	else if(this.ammo_lava_nails >= 2 && (itm & WEP_LAVA_SUPER_NAILGUN) && except != WEP_LAVA_SUPER_NAILGUN)
-		return WEP_LAVA_SUPER_NAILGUN;
-	else if(this.ammo_cells >= 1 && (itm & WEP_LASER_CANNON) && except != WEP_LASER_CANNON)
-		return WEP_LASER_CANNON;
-	else if(this.ammo_nails >= 2 && (itm & WEP_SUPER_NAILGUN) && except != WEP_SUPER_NAILGUN)
-		return WEP_SUPER_NAILGUN;
-	else if(this.ammo_lava_nails >= 1 && (itm & WEP_LAVA_NAILGUN) && except != WEP_LAVA_NAILGUN)
-		return WEP_LAVA_NAILGUN;
-	else if(this.ammo_shells >= 2 && (itm & WEP_SUPER_SHOTGUN) && except != WEP_SUPER_SHOTGUN)
-		return WEP_SUPER_SHOTGUN;
-	else if(this.ammo_nails >= 1 && (itm & WEP_NAILGUN) && except != WEP_NAILGUN)
-		return WEP_NAILGUN;
-	else if(this.ammo_shells >= 1 && (itm & WEP_SHOTGUN) && except != WEP_SHOTGUN)
-		return WEP_SHOTGUN;
-	else if(itm & WEP_MJOLNIR)
-		return WEP_MJOLNIR;
-	return WEP_AXE; // just fall back if all else fails
+	if(this.waterlevel <= 1 && this.ammo_cells >= 1 && (itm & WEPSET(LIGHTNING)) && except != WEP_LIGHTNING.m_id)
+		return WEP_LIGHTNING.m_id;
+	else if(this.ammo_lava_nails >= 2 && (itm & WEPSET(LAVA_SUPER_NAILGUN)) && except != WEP_LAVA_SUPER_NAILGUN.m_id)
+		return WEP_LAVA_SUPER_NAILGUN.m_id;
+	else if(this.ammo_cells >= 1 && (itm & WEPSET(LASER_CANNON)) && except != WEP_LASER_CANNON.m_id)
+		return WEP_LASER_CANNON.m_id;
+	else if(this.ammo_nails >= 2 && (itm & WEPSET(SUPER_NAILGUN)) && except != WEP_SUPER_NAILGUN.m_id)
+		return WEP_SUPER_NAILGUN.m_id;
+	else if(this.ammo_lava_nails >= 1 && (itm & WEPSET(LAVA_NAILGUN)) && except != WEP_LAVA_NAILGUN.m_id)
+		return WEP_LAVA_NAILGUN.m_id;
+	else if(this.ammo_shells >= 2 && (itm & WEPSET(SUPER_SHOTGUN)) && except != WEP_SUPER_SHOTGUN.m_id)
+		return WEP_SUPER_SHOTGUN.m_id;
+	else if(this.ammo_nails >= 1 && (itm & WEPSET(NAILGUN)) && except != WEP_NAILGUN.m_id)
+		return WEP_NAILGUN.m_id;
+	else if(this.ammo_shells >= 1 && (itm & WEPSET(SHOTGUN)) && except != WEP_SHOTGUN.m_id)
+		return WEP_SHOTGUN.m_id;
+	else if(itm & WEPSET(MJOLNIR))
+		return WEP_MJOLNIR.m_id;
+	return WEP_AXE.m_id; // just fall back if all else fails
 }
 
 bool W_WantsToChangeWeapon(entity this, int old, int new)
@@ -3418,43 +1822,34 @@ bool W_CheckNoAmmo(entity this, int forwep, bool doswitch)
 	{
 		switch(forwep)
 		{
-			case WEP_LIGHTNING: return (this.ammo_cells >= 1);
-			case WEP_SUPER_NAILGUN: return (this.ammo_nails >= 2);
-			case WEP_SUPER_SHOTGUN: return (this.ammo_shells >= 2);
-			case WEP_NAILGUN: return (this.ammo_nails >= 1);
-			case WEP_SHOTGUN: return (this.ammo_shells >= 1);
-			case WEP_LAVA_SUPER_NAILGUN: return (this.ammo_lava_nails >= 2);
-			case WEP_LAVA_NAILGUN: return (this.ammo_lava_nails >= 1);
-			case WEP_PLASMA_GUN: return (this.ammo_plasma >= 1);
-			case WEP_MULTI_GRENADE: return (this.ammo_multi_rockets >= 1);
-			case WEP_MULTI_ROCKET: return (this.ammo_multi_rockets >= 1);
-			case WEP_ROCKET_LAUNCHER: return (this.ammo_rockets >= 1);
-			case WEP_GRENADE_LAUNCHER: return (this.ammo_rockets >= 1);
-			case WEP_PROXIMITY_GUN: return (this.ammo_rockets >= 1);
-			case WEP_LIGHTME: return (this.ammo_cells >= 1);
-			case WEP_SPEAR: return (this.ammo_rockets >= 1);
-			case WEP_NAPALM: return (this.ammo_rockets >= 1);
-			case WEP_PULSERIFLE:
-			{
-				if(this.items & IT_PULSEPOWER2)
-					return (this.ammo_cells >= 4);
-				else if(this.items & IT_PULSEPOWER1)
-					return (this.ammo_cells >= 3);
-				else
-					return (this.ammo_cells >= 2);
-			}
-			case WEP_AXE: case WEP_MJOLNIR: case WEP_GRAPPLE:
+			case WEP_LIGHTNING.m_id: return (this.ammo_cells >= 1);
+			case WEP_SUPER_NAILGUN.m_id: return (this.ammo_nails >= 2);
+			case WEP_SUPER_SHOTGUN.m_id: return (this.ammo_shells >= 2);
+			case WEP_NAILGUN.m_id: return (this.ammo_nails >= 1);
+			case WEP_SHOTGUN.m_id: return (this.ammo_shells >= 1);
+			case WEP_LAVA_SUPER_NAILGUN.m_id: return (this.ammo_lava_nails >= 2);
+			case WEP_LAVA_NAILGUN.m_id: return (this.ammo_lava_nails >= 1);
+			case WEP_PLASMA_GUN.m_id: return (this.ammo_plasma >= 1);
+			case WEP_MULTI_GRENADE.m_id: return (this.ammo_multi_rockets >= 1);
+			case WEP_MULTI_ROCKET.m_id: return (this.ammo_multi_rockets >= 1);
+			case WEP_ROCKET_LAUNCHER.m_id: return (this.ammo_rockets >= 1);
+			case WEP_GRENADE_LAUNCHER.m_id: return (this.ammo_rockets >= 1);
+			case WEP_PROXIMITY_GUN.m_id: return (this.ammo_rockets >= 1);
+			case WEP_LIGHTME.m_id: return (this.ammo_cells >= 1);
+			case WEP_SPEAR.m_id: return (this.ammo_rockets >= 1);
+			case WEP_NAPALM.m_id: return (this.ammo_rockets >= 1);
+			case WEP_AXE.m_id: case WEP_MJOLNIR.m_id: case WEP_GRAPPLE.m_id:
 			default: return true; // axe and hammer don't use ammo, fallback
 		}
 	}
 
-	if(MP_IMPEL && this.currentammo < 1 && this.weapon == WEP_SPEAR)
+	if(MP_IMPEL && this.currentammo < 1 && this.weapon == WEP_SPEAR.m_id)
 		return NoAmmo(this, doswitch);
 
 	if(this.currentammo > 0)
 		return true;
 
-	if(this.weapon == WEP_AXE || this.weapon == WEP_GRAPPLE || this.weapon == WEP_MJOLNIR)
+	if(this.weapon == WEP_AXE.m_id || this.weapon == WEP_GRAPPLE.m_id || this.weapon == WEP_MJOLNIR.m_id)
 		return true;
 
 	if(!MP_IMPEL && doswitch)
@@ -3471,34 +1866,7 @@ W_Attack
 An attack impulse can be triggered now
 ============
 */
-void player_axe1(entity this);
-void player_axeb1(entity this);
-void player_axec1(entity this);
-void player_axed1(entity this);
-void player_shot1(entity this);
-void player_nail1(entity this);
-void player_light1(entity this);
-void player_rocket1(entity this);
-void player_lava_nail1(entity this);
-void player_plasma1(entity this); //ooppee addon
-//ZOID--
-void player_grapple1(entity this);
-void player_grapple3(entity this);
-//--ZOID
 
-//MED
-void player_laser1(entity this);
-void player_hammer1(entity this);
-void player_mjolnir1(entity this);
-
-void W_FireMultiGrenade(entity this);
-void W_FireMultiRocket(entity this);
-void W_FirePlasma(entity this); //ooppee addon
-
-// impel
-void player_superlight1(entity this);
-void player_rifle1(entity this);
-void player_shotimp1(entity this);
 
 void RuneApplyBlackNoise(entity who);
 float RuneApplyHell(float tvalue, entity who);
@@ -3507,15 +1875,24 @@ void W_Attack(entity this, bool offhand)
 {
 	if(MP_IMPEL && this.exptime != 0)
 		return;
-	if(!W_CheckNoAmmo(this, ((offhand) ? WEP_PULSERIFLE : 0), !offhand))
+	if(offhand)
+	{
+		if((this.items & IT_PULSEPOWER2) && this.ammo_cells < 4)
+			return;
+		else if((this.items & IT_PULSEPOWER1) && this.ammo_cells < 3)
+			return;
+		else if(this.ammo_cells < 2)
+			return;
+	}
+	else if(!W_CheckNoAmmo(this, 0, true))
 		return;
 
-	makevectors	(this.v_angle);			// calculate forward angle for velocity
+	makevectors(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
 	if(offhand)
 	{
-		if(this.weapons & WEP_PULSERIFLE)
+		if(this.items & IT_PULSERIFLE)
 		{
 			if(this.items & IT_PULSEPOWER2)
 			{
@@ -3578,205 +1955,10 @@ void W_Attack(entity this, bool offhand)
 	}
 
 	RuneApplyBlackNoise(this); // make rune noise
-	float r = random();
 
-	switch(this.weapon)
-	{
-		case WEP_AXE:
-		{
-			if(!MP_IMPEL || random() < 0.7)
-				_sound(this, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
-			else
-				_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
-			if(MP_MG && autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
-			{
-				if(this.axe_hit_chain >= 2 && time < this.axe_hit_chain_time)
-				{
-					// vertical CHOP
-					if(r < 0.5)
-						player_axe1(this);
-					else
-						player_axec1(this);
-					this.attack_finished = time + RuneApplyHell(0.8, this); // long recover
-				}
-				else
-				{
-					// diagonal SWEEP
-					if(r < 0.5)
-						player_axeb1(this);
-					else
-						player_axed1(this);
-					
-					if(this.axe_hit_chain > 1)
-						this.attack_finished = time + RuneApplyHell(0.6, this);
-					else
-						this.attack_finished = time + RuneApplyHell(0.4, this);
-						
-				}
-			}
-			else
-			{
-				if(r < 0.25)
-					player_axe1(this);
-				else if(r<0.5)
-					player_axeb1(this);
-				else if(r<0.75)
-					player_axec1(this);
-				else
-					player_axed1(this);
-				float fire_delay = 0.5;
-				if(MP_IMPEL && random() < 0.5)
-					fire_delay = 0.4;
-				this.attack_finished = time + RuneApplyHell(fire_delay, this);
-			}
-			break;
-		}
-		case WEP_GRAPPLE:
-		{
-			if(!this.hook_out)
-				player_grapple1(this);
-			else
-				player_grapple3(this);
-			this.attack_finished = time + 0.1;
-			break;
-		}
-		case WEP_SHOTGUN:
-		{
-			player_shot1(this);
-			W_FireShotgun(this);
-			this.attack_finished = time + RuneApplyHell(0.5, this);
-			break;
-		}
-		case WEP_SUPER_SHOTGUN:
-		{
-			player_shot1(this);
-			W_FireSuperShotgun(this);
-			this.attack_finished = time + RuneApplyHell(0.7, this);
-			break;
-		}
-		case WEP_LAVA_NAILGUN:
-		{
-			this.lavaGunFired = true;
-			player_lava_nail1(this);
-			break;
-		}
-		case WEP_LAVA_SUPER_NAILGUN:
-		{
-			this.lavaGunFired = true;
-			player_lava_nail1(this);
-			break;
-		}
-		case WEP_MULTI_GRENADE:
-		{
-			player_rocket1(this);
-			W_FireMultiGrenade(this);
-			this.attack_finished = time + RuneApplyHell(0.6, this);
-			break;
-		}
-		case WEP_MULTI_ROCKET:
-		{
-			player_rocket1(this);
-			W_FireMultiRocket(this);
-			this.attack_finished = time + RuneApplyHell(0.8, this);
-			break;
-		}
-		case WEP_PLASMA_GUN:
-		{
-			// player_light1 determines choice of W_FireLightning 
-			//      or W_FirePlasma, but same lighting and frames...
-			//this.attack_finished = time + RuneApplyHell(1.0, this);//ooppee edited line out
-			//player_light1(this);//ooppee edited line out
-			player_plasma1(this); //ooppee added
-			W_FirePlasma(this); //ooppee added
-			this.attack_finished = time + RuneApplyHell(1.0, this); //ooppee added (same as above code but needs to be executed AFTER)
-			break;
-		}
-		case WEP_NAILGUN:
-		{
-			player_nail1(this);
-			break;
-		}
-		case WEP_SUPER_NAILGUN:
-		{
-			player_nail1(this);
-			break;
-		}
-		case WEP_GRENADE_LAUNCHER:
-		{
-			player_rocket1(this);
-			W_FireGrenade(this);
-			this.attack_finished = time + RuneApplyHell(0.6, this);
-			break;
-		}
-		case WEP_ROCKET_LAUNCHER:
-		{
-			player_rocket1(this);
-			W_FireRocket(this);
-			this.attack_finished = time + RuneApplyHell(0.8, this);
-			break;
-		}
-		case WEP_LIGHTNING:
-		{
-			player_light1(this);
-			this.attack_finished = time + 0.1;
-			_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
-			break;
-		}
-		case WEP_LASER_CANNON:
-		{
-			player_laser1(this);
-			break;
-		}
-		case WEP_MJOLNIR:
-		{
-			if(this.ammo_cells < 30)
-				player_hammer1(this);
-			else
-				player_mjolnir1(this);
-			this.attack_finished = time + 0.8;
-			break;
-		}
-		case WEP_PROXIMITY_GUN:
-		{
-			player_rocket1(this);
-			W_FireProximityGrenade(this);
-			this.attack_finished = time + 0.6;
-			break;
-		}
-		case WEP_NAPALM:
-		{
-			if(this.cnt < 3)
-			{
-				player_rocket1(this);
-				W_FireNapalm(this);
-				this.attack_finished = time + 0.6;
-				this.cnt += 1;
-			}
-			else
-			{
-				_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
-				this.attack_finished = time + 0.9;
-				this.cnt = 0;
-			}
-			break;
-		}
-		case WEP_LIGHTME:
-		{
-			player_superlight1(this);
-			if(this.ammo_cells < 1)
-			{
-				this.ammo_cells = 0;
-				W_SetCurrentAmmo(this);
-			}
-			break;
-		}
-		case WEP_SPEAR:
-		{
-			player_shotimp1(this);
-			this.attack_finished = time + 1;
-			break;
-		}
-	}
+	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	if(wep != WEP_Null)
+		wep.wr_think(wep, this);
 }
 
 /*
@@ -3788,13 +1970,13 @@ W_ChangeWeapon
 void W_ChangeWeapon(entity this, int imp)
 {
 	bool am = false;
-	int fl = this.weapon;
+	Weapon fl = REGISTRY_GET(Weapons, this.weapon);
 
 	switch(imp)
 	{
 		case 1:
 		{
-			if(this.weapon == WEP_AXE && teamplay >= TEAM_CTF)
+			if(this.weapon == WEP_AXE.m_id && teamplay >= TEAM_CTF)
 				fl = WEP_GRAPPLE;
 			else
 				fl = WEP_AXE;
@@ -3822,7 +2004,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}		
 		case 4:
 		{
-			if((this.weapons & WEP_LAVA_NAILGUN) && (this.weapon == WEP_NAILGUN || this.ammo_nails < 1))
+			if((STAT(WEAPONS, this) & WEPSET(LAVA_NAILGUN)) && (this.weapon == WEP_NAILGUN.m_id || this.ammo_nails < 1))
 			{
 				fl = WEP_LAVA_NAILGUN;
 				if(this.ammo_lava_nails < 1)
@@ -3838,7 +2020,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 5:
 		{
-			if((this.weapons & WEP_LAVA_SUPER_NAILGUN) && (this.weapon == WEP_SUPER_NAILGUN || this.ammo_nails < 2))
+			if((STAT(WEAPONS, this) & WEPSET(LAVA_SUPER_NAILGUN)) && (this.weapon == WEP_SUPER_NAILGUN.m_id || this.ammo_nails < 2))
 			{
 				fl = WEP_LAVA_SUPER_NAILGUN;
 				if(this.ammo_lava_nails < 2)
@@ -3854,17 +2036,17 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 6:
 		{
-			if((this.weapons & WEP_MULTI_GRENADE) && (this.weapon == WEP_GRENADE_LAUNCHER || this.ammo_rockets < 1))
+			if((STAT(WEAPONS, this) & WEPSET(MULTI_GRENADE)) && (this.weapon == WEP_GRENADE_LAUNCHER.m_id || this.ammo_rockets < 1))
 			{
 				fl = WEP_MULTI_GRENADE;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break; // prefer multi grenade
 			}
-			if((this.weapons & WEP_PROXIMITY_GUN) && ((this.weapon == WEP_GRENADE_LAUNCHER && !(this.weapons & WEP_MULTI_GRENADE)) || this.weapon == WEP_MULTI_GRENADE || !(this.weapons & WEP_GRENADE_LAUNCHER)))
+			if((STAT(WEAPONS, this) & WEPSET(PROXIMITY_GUN)) && ((this.weapon == WEP_GRENADE_LAUNCHER.m_id && !(STAT(WEAPONS, this) & WEPSET(MULTI_GRENADE))) || this.weapon == WEP_MULTI_GRENADE.m_id || !(STAT(WEAPONS, this) & WEPSET(GRENADE_LAUNCHER))))
 				fl = WEP_PROXIMITY_GUN;
-			else if((this.weapons & WEP_NAPALM) && 
-					((this.weapon == WEP_GRENADE_LAUNCHER && !(this.weapons & WEP_PROXIMITY_GUN) && !(this.weapons & WEP_MULTI_GRENADE)) || this.weapon == WEP_PROXIMITY_GUN || !(this.weapons & WEP_GRENADE_LAUNCHER)))
+			else if((STAT(WEAPONS, this) & WEPSET(NAPALM)) && 
+					((this.weapon == WEP_GRENADE_LAUNCHER.m_id && !(STAT(WEAPONS, this) & WEPSET(PROXIMITY_GUN)) && !(STAT(WEAPONS, this) & WEPSET(MULTI_GRENADE))) || this.weapon == WEP_PROXIMITY_GUN.m_id || !(STAT(WEAPONS, this) & WEPSET(GRENADE_LAUNCHER))))
 				fl = WEP_NAPALM;
 			else
 				fl = WEP_GRENADE_LAUNCHER;
@@ -3874,7 +2056,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 7:
 		{
-			if((this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets < 1 || !(this.weapons & WEP_ROCKET_LAUNCHER)))
+			if((STAT(WEAPONS, this) & WEPSET(MULTI_ROCKET)) && (this.weapon == WEP_ROCKET_LAUNCHER.m_id || this.ammo_rockets < 1 || !(STAT(WEAPONS, this) & WEPSET(ROCKET_LAUNCHER))))
 			{
 				fl = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
@@ -3882,7 +2064,7 @@ void W_ChangeWeapon(entity this, int imp)
 			}
 			else
 			{
-				if((this.weapons & WEP_SPEAR) && ((this.weapon == WEP_ROCKET_LAUNCHER && !(this.weapons & WEP_MULTI_ROCKET)) || this.weapon == WEP_MULTI_ROCKET || !(this.weapons & WEP_ROCKET_LAUNCHER)))
+				if((STAT(WEAPONS, this) & WEPSET(SPEAR)) && ((this.weapon == WEP_ROCKET_LAUNCHER.m_id && !(STAT(WEAPONS, this) & WEPSET(MULTI_ROCKET))) || this.weapon == WEP_MULTI_ROCKET.m_id || !(STAT(WEAPONS, this) & WEPSET(ROCKET_LAUNCHER))))
 					fl = WEP_SPEAR;
 				else
 					fl = WEP_ROCKET_LAUNCHER;
@@ -3893,7 +2075,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 8:
 		{
-			if((this.weapons & WEP_PLASMA_GUN) && (this.weapon == WEP_LIGHTNING || this.ammo_cells < 1))
+			if((STAT(WEAPONS, this) & WEPSET(PLASMA_GUN)) && (this.weapon == WEP_LIGHTNING.m_id || this.ammo_cells < 1))
 			{
 				fl = WEP_PLASMA_GUN;
 				if(this.ammo_plasma < 1)
@@ -3902,7 +2084,7 @@ void W_ChangeWeapon(entity this, int imp)
 			else
 			{
 				float needed_cells = 1;
-				if((this.weapons & WEP_LIGHTME) && ((this.weapon == WEP_LIGHTNING && !(this.weapons & WEP_PLASMA_GUN)) || this.weapon == WEP_PLASMA_GUN || !(this.weapons & WEP_LIGHTNING)))
+				if((STAT(WEAPONS, this) & WEPSET(LIGHTME)) && ((this.weapon == WEP_LIGHTNING.m_id && !(STAT(WEAPONS, this) & WEPSET(PLASMA_GUN))) || this.weapon == WEP_PLASMA_GUN.m_id || !(STAT(WEAPONS, this) & WEPSET(LIGHTNING))))
 				{
 					fl = WEP_LIGHTME;
 					needed_cells = 2;
@@ -3924,7 +2106,7 @@ void W_ChangeWeapon(entity this, int imp)
 		case 14:
 		{
 		#if 0
-			if((this.weapons & WEP_PULSERIFLE) && this.weapon != WEP_PULSERIFLE)
+			if((STAT(WEAPONS, this) & WEPSET(PULSERIFLE)) && this.weapon != WEP_PULSERIFLE.m_id)
 			{
 				fl = WEP_PULSERIFLE;
 				float needed_cells = 2;
@@ -3937,7 +2119,7 @@ void W_ChangeWeapon(entity this, int imp)
 			}
 			else
 		#endif
-			if((this.weapons & WEP_MJOLNIR) || !(deathmatch && teamplay >= TEAM_CTF))
+			if((STAT(WEAPONS, this) & WEPSET(MJOLNIR)) || !(deathmatch && teamplay >= TEAM_CTF))
 				fl = WEP_MJOLNIR;
 			else
 				fl = WEP_GRAPPLE;
@@ -4027,7 +2209,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 	}
 	
-	if(!(this.weapons & fl))
+	if(!(STAT(WEAPONS, this) & fl.m_wepset))
 	{	// don't have the weapon
 		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NO_WEAPON);
 		return;
@@ -4042,7 +2224,7 @@ void W_ChangeWeapon(entity this, int imp)
 //
 // set weapon, set ammo
 //
-	W_SwitchWeapon(this, fl);
+	W_SwitchWeapon(this, fl.m_id);
 }
 
 /*
@@ -4060,14 +2242,18 @@ void CheatCommand(entity this)
 	this.ammo_nails = 200;
 	this.ammo_shells = 100;
 	this.ammo_cells = 200;
-	this.weapons |= 
-		(WEP_AXE |
-		WEP_SHOTGUN |
-		WEP_SUPER_SHOTGUN |
-		WEP_NAILGUN |
-		WEP_SUPER_NAILGUN |
-		WEP_GRENADE_LAUNCHER |
-		WEP_ROCKET_LAUNCHER);
+	// TODO: use WEP_FLAG_MUTATORBLOCKED to tell if a weapon isn't available from a mission pack?
+	// may not be needed if weapons become available in all packs anyway!
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
+			continue;
+		if(!MP_ROGUE && (it.spawnflags & WEP_FLAG_ROGUE))
+			continue;
+		if(!MP_IMPEL && (it.spawnflags & WEP_FLAG_IMPEL))
+			continue;
+		STAT(WEAPONS, this) |= it.m_wepset;
+	});
 	//this.items |= (IT_KEY1 | IT_KEY2); // breaks levels
 
 	// mal: also give full armor...
@@ -4076,23 +2262,16 @@ void CheatCommand(entity this)
 	this.items &= ~(IT_ARMOR1 | IT_ARMOR2);
 	this.items |= IT_ARMOR3;
 
-	this.weapons |= WEP_LIGHTNING;
-	if(MP_HIPNOTIC)
-		this.weapons |= (WEP_LASER_CANNON | WEP_MJOLNIR | WEP_PROXIMITY_GUN);
 	if(MP_ROGUE)
 	{
-		this.weapons |= (WEP_LAVA_NAILGUN | WEP_LAVA_SUPER_NAILGUN | WEP_MULTI_GRENADE | WEP_MULTI_ROCKET | WEP_PLASMA_GUN);
 		this.ammo_lava_nails = 200;
 		this.ammo_multi_rockets = 100;
 		this.ammo_plasma = 100;
 	}
 	if(MP_IMPEL)
-		this.weapons |= (WEP_LIGHTME | WEP_NAPALM | WEP_PULSERIFLE | WEP_SPEAR);
+		this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
 
-	if(MP_IMPEL)
-		W_SwitchWeapon(this, WEP_GRENADE_LAUNCHER);
-	else
-		W_SwitchWeapon(this, WEP_ROCKET_LAUNCHER);
+	W_SwitchWeapon(this, WEP_ROCKET_LAUNCHER.m_id);
 	this.impulse = 0;
 	if(MP_IMPEL)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
@@ -4116,180 +2295,156 @@ void CycleWeaponCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case WEP_MJOLNIR:
+			case WEP_MJOLNIR.m_id:
 			{
-				this.weapon = WEP_AXE;
+				this.weapon = WEP_AXE.m_id;
 				break;
 			}
-			case WEP_PLASMA_GUN:
+			case WEP_PLASMA_GUN.m_id:
 			{
-				this.weapon = WEP_LIGHTME;
+				this.weapon = WEP_LIGHTME.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_AXE:
+			case WEP_AXE.m_id:
 			{
 				if(deathmatch && teamplay >= TEAM_CTF)
-					this.weapon = WEP_GRAPPLE;
+					this.weapon = WEP_GRAPPLE.m_id;
 				else
 				{
-					this.weapon = WEP_SHOTGUN;
+					this.weapon = WEP_SHOTGUN.m_id;
 					if(this.ammo_shells < 1)
 						am = true;
 				}
 				break;
 			}
-			case WEP_GRAPPLE:
+			case WEP_GRAPPLE.m_id:
 			{
-				this.weapon = WEP_SHOTGUN;
+				this.weapon = WEP_SHOTGUN.m_id;
 				if(this.ammo_shells < 1)
 					am = true;
 				break;
 			}
-			case WEP_SHOTGUN:
+			case WEP_SHOTGUN.m_id:
 			{
-				this.weapon = WEP_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN.m_id;
 				if(this.ammo_shells < 2)
 					am = true;
 				break;
 			}		
-			case WEP_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN.m_id:
 			{
-				this.weapon = WEP_NAILGUN;
+				this.weapon = WEP_NAILGUN.m_id;
 				if(this.ammo_nails < 1)
 					am = true;
 				break;
 			}
-			case WEP_NAILGUN:
+			case WEP_NAILGUN.m_id:
 			{
-				this.weapon = WEP_LAVA_NAILGUN;
+				this.weapon = WEP_LAVA_NAILGUN.m_id;
 				if(this.ammo_lava_nails < 1)
 					am = true;
 				break;
 			}
-			case WEP_LAVA_NAILGUN:
+			case WEP_LAVA_NAILGUN.m_id:
 			{
-				this.weapon = WEP_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN.m_id;
 				if(this.ammo_nails < 2)
 					am = true;
 				break;
 			}
-			case WEP_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN.m_id:
 			{
-				this.weapon = WEP_LAVA_SUPER_NAILGUN;
+				this.weapon = WEP_LAVA_SUPER_NAILGUN.m_id;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case WEP_LAVA_SUPER_NAILGUN:
+			case WEP_LAVA_SUPER_NAILGUN.m_id:
 			{
-				this.weapon = WEP_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER.m_id:
 			{
-				this.weapon = WEP_NAPALM;
+				this.weapon = WEP_NAPALM.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_MULTI_GRENADE:
+			case WEP_MULTI_GRENADE.m_id:
 			{
-				this.weapon = WEP_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_NAPALM:
+			case WEP_NAPALM.m_id:
 			{
-				this.weapon = WEP_PROXIMITY_GUN;
+				this.weapon = WEP_PROXIMITY_GUN.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_PROXIMITY_GUN:
+			case WEP_PROXIMITY_GUN.m_id:
 			{
-				this.weapon = WEP_MULTI_GRENADE;
+				this.weapon = WEP_MULTI_GRENADE.m_id;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER.m_id:
 			{
-				this.weapon = WEP_MULTI_ROCKET;
+				this.weapon = WEP_MULTI_ROCKET.m_id;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_MULTI_ROCKET:
+			case WEP_MULTI_ROCKET.m_id:
 			{
-				this.weapon = WEP_SPEAR;
+				this.weapon = WEP_SPEAR.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_SPEAR:
+			case WEP_SPEAR.m_id:
 			{
-				this.weapon = WEP_LIGHTNING;
+				this.weapon = WEP_LIGHTNING.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_LIGHTNING:
+			case WEP_LIGHTNING.m_id:
 			{
-				this.weapon = WEP_LASER_CANNON;
+				this.weapon = WEP_LASER_CANNON.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_LASER_CANNON:
+			case WEP_LASER_CANNON.m_id:
 			{
-				this.weapon = WEP_PLASMA_GUN;
+				this.weapon = WEP_PLASMA_GUN.m_id;
 				if(this.ammo_plasma < 1)
 					am = true;
 				break;
 			}
-			case WEP_LIGHTME:
+			case WEP_LIGHTME.m_id:
 			{
-			#if 0
-				this.weapon = WEP_PULSERIFLE;
-			#else
-				this.weapon = WEP_MJOLNIR;
-			#endif
-			#if 0
-				if(this.items & IT_PULSEPOWER2)
-				{
-					if(this.ammo_cells < 4)
-						am = true;
-				}
-				else if(this.items & IT_PULSEPOWER1)
-				{
-					if(this.ammo_cells < 3)
-						am = true;
-				}
-				else if(this.ammo_cells < 2)
-					am = true;
-			#endif
+				this.weapon = WEP_MJOLNIR.m_id;
 				break;
 			}
-		#if 0
-			case WEP_PULSERIFLE:
-			{
-				this.weapon = WEP_MJOLNIR;
-				break;
-			}
-		#endif
 		}
-	
-		if((this.weapons & this.weapon) && !am)
+
+		Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
+		if(((STAT(WEAPONS, this) & newwep.m_wepset) || newwep == WEP_AXE) && !am)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
 		#if 0
-			if(this.weapon == WEP_PULSERIFLE)
+			if(this.weapon == WEP_PULSERIFLE.m_id)
 			{
 				if(this.items & IT_PULSEPOWER2)
 					centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
@@ -4319,186 +2474,162 @@ Go to the prev weapon with ammo
 */
 void CycleWeaponReverseCommand(entity this)
 {
-	int myitems = this.weapons;
 	this.impulse = 0;
 	int oldwep = this.weapon;
+	bool am = false;
 
 	while(1)
 	{
-		bool am = false;
+		am = false;
 
 		switch(this.weapon)
 		{
-			case WEP_LIGHTME:
+			case WEP_LIGHTME.m_id:
 			{
-				this.weapon = WEP_PLASMA_GUN;
+				this.weapon = WEP_PLASMA_GUN.m_id;
 				if(this.ammo_plasma < 1)
 					am = true;
 				break;
 			}
-		#if 0
-			case WEP_PULSERIFLE:
+			case WEP_MJOLNIR.m_id:
 			{
-				this.weapon = WEP_LIGHTME;
+				this.weapon = WEP_LIGHTME.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-		#endif
-			case WEP_MJOLNIR:
+			case WEP_LASER_CANNON.m_id:
 			{
-			#if 0
-				this.weapon = WEP_PULSERIFLE;
-				if(this.items & IT_PULSEPOWER2)
-				{
-					if(this.ammo_cells < 4)
-						am = true;
-				}
-				else if(this.items & IT_PULSEPOWER1)
-				{
-					if(this.ammo_cells < 3)
-						am = true;
-				}
-				else if(this.ammo_cells < 2)
-					am = true;
-			#else
-				this.weapon = WEP_LIGHTME;
-				if(this.ammo_cells < 1)
-					am = true;
-			#endif
-				break;
-			}
-			case WEP_LASER_CANNON:
-			{
-				this.weapon = WEP_LIGHTNING;
+				this.weapon = WEP_LIGHTNING.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_PLASMA_GUN:
+			case WEP_PLASMA_GUN.m_id:
 			{
-				this.weapon = WEP_LASER_CANNON;
+				this.weapon = WEP_LASER_CANNON.m_id;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_SPEAR:
+			case WEP_SPEAR.m_id:
 			{
-				this.weapon = WEP_MULTI_ROCKET;
+				this.weapon = WEP_MULTI_ROCKET.m_id;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_LIGHTNING:
+			case WEP_LIGHTNING.m_id:
 			{
-				this.weapon = WEP_SPEAR;
+				this.weapon = WEP_SPEAR.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_MULTI_ROCKET:
+			case WEP_MULTI_ROCKET.m_id:
 			{
-				this.weapon = WEP_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER.m_id:
 			{
-				this.weapon = WEP_MULTI_GRENADE;
+				this.weapon = WEP_MULTI_GRENADE.m_id;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_MULTI_GRENADE:
+			case WEP_MULTI_GRENADE.m_id:
 			{
-				this.weapon = WEP_PROXIMITY_GUN;
+				this.weapon = WEP_PROXIMITY_GUN.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_NAPALM:
+			case WEP_NAPALM.m_id:
 			{
-				this.weapon = WEP_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_PROXIMITY_GUN:
+			case WEP_PROXIMITY_GUN.m_id:
 			{
-				this.weapon = WEP_NAPALM;
+				this.weapon = WEP_NAPALM.m_id;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case WEP_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER.m_id:
 			{
-				this.weapon = WEP_LAVA_SUPER_NAILGUN;
+				this.weapon = WEP_LAVA_SUPER_NAILGUN.m_id;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case WEP_LAVA_SUPER_NAILGUN:
+			case WEP_LAVA_SUPER_NAILGUN.m_id:
 			{
-				this.weapon = WEP_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN.m_id;
 				if(this.ammo_nails < 2)
 					am = true;
 				break;
 			}
-			case WEP_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN.m_id:
 			{
-				this.weapon = WEP_LAVA_NAILGUN;
+				this.weapon = WEP_LAVA_NAILGUN.m_id;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case WEP_LAVA_NAILGUN:
+			case WEP_LAVA_NAILGUN.m_id:
 			{
-				this.weapon = WEP_NAILGUN;
+				this.weapon = WEP_NAILGUN.m_id;
 				if(this.ammo_nails < 1)
 					am = true;
 				break;
 			}
-			case WEP_NAILGUN:
+			case WEP_NAILGUN.m_id:
 			{
-				this.weapon = WEP_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN.m_id;
 				if(this.ammo_shells < 2)
 					am = true;
 				break;
 			}		
-			case WEP_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN.m_id:
 			{
-				this.weapon = WEP_SHOTGUN;
+				this.weapon = WEP_SHOTGUN.m_id;
 				if(this.ammo_shells < 1)
 					am = true;
 				break;
 			}
-			case WEP_SHOTGUN:
+			case WEP_SHOTGUN.m_id:
 			{
 				if(deathmatch && teamplay >= TEAM_CTF)
-					this.weapon = WEP_GRAPPLE;
+					this.weapon = WEP_GRAPPLE.m_id;
 				else
-					this.weapon = WEP_AXE;
+					this.weapon = WEP_AXE.m_id;
 				break;
 			}
-			case WEP_GRAPPLE:
+			case WEP_GRAPPLE.m_id:
 			{
-				this.weapon = WEP_AXE;
+				this.weapon = WEP_AXE.m_id;
 				break;
 			}
-			case WEP_AXE:
+			case WEP_AXE.m_id:
 			{
-				this.weapon = WEP_MJOLNIR;
+				this.weapon = WEP_MJOLNIR.m_id;
 				break;
 			}
 		}
-	
-		if((myitems & this.weapon) && am == false)
+
+		Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
+		if(((STAT(WEAPONS, this) & newwep.m_wepset) || newwep == WEP_AXE) && !am)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
 		#if 0
-			if(this.weapon == WEP_PULSERIFLE)
+			if(this.weapon == WEP_PULSERIFLE.m_id)
 			{
 				if(this.items & IT_PULSEPOWER2)
 					centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
@@ -4531,7 +2662,8 @@ void QuadCheat(entity this)
 
 void W_LastWeapon(entity this)
 {
-	if((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon, false))
+	Weapon oldwep = REGISTRY_GET(Weapons, this.prevweapon);
+	if((STAT(WEAPONS, this) & oldwep.m_wepset) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon, false))
 		W_SwitchWeapon(this, this.prevweapon);
 	else
 		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
@@ -4539,31 +2671,12 @@ void W_LastWeapon(entity this)
 
 int W_GetWeaponImpulse(int imp)
 {
-	switch(imp)
+	FOREACH(Weapons, it != WEP_Null && it.cnt == imp,
 	{
-		default: // default to axe
-		case 230: return 1; // blaster -> axe
-		case 244: return 14; // tuba -> mjolnir
-		case 231: return 2; // shotgun -> shotgun
-		case 248: return 67; // shockwave -> spear
-		case 232: return 4; // machinegun -> nailgun
-		case 233: return 6; // mortar -> grenade launcher
-		case 235: return 62; // electro -> multi grenade
-		case 234: return 50; // minelayer -> proximity gun
-		case 249: return 8; // arc -> lightning gun
-		case 238: return 5; // hagar -> super nailgun
-		case 243: return 9; // hlac -> lava super nailgun
-		case 245: return 61; // rifle -> lava super nailgun
-		case 247: return 60; // seeker -> lava nailgun
-		case 236: return 3; // crylink -> super shotgun
-		case 239: return 7; // devastator -> rocket launcher
-		case 246: return 63; // fireball -> multi rocket
-		case 242: return 22; // hook -> hook
-		//case 240: return 66; // porto -> pulse rifle
-		case 237: return 64; // vortex -> plasma gun
-		case 241: return 65; // vaporizer -> lg-2 prototype
-		case 250: return 68; // napalm (no replacement!)
-	}
+		return it.impulse;
+	});
+
+	return imp;
 }
 
 /*
@@ -4647,7 +2760,7 @@ void W_WeaponFrame(entity this)
 	{
 		if(this.lavaGunFired)
 		{
-			if(this.weapon == WEP_LAVA_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
+			if(this.weapon == WEP_LAVA_NAILGUN.m_id || this.weapon == WEP_LAVA_SUPER_NAILGUN.m_id)
 				_sound(this, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
 			this.lavaGunFired = false;
 		}
@@ -4663,7 +2776,7 @@ void W_WeaponFrame(entity this)
 		}
 	}
 
-	if(!(time < this.attack2_finished) && (this.weapons & WEP_PULSERIFLE))
+	if(!(time < this.attack2_finished) && (this.items & IT_PULSERIFLE))
 	{
 		// offhand attack (pulse rifle)
 		if(this.button3)

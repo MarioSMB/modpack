@@ -1,31 +1,5 @@
 #pragma once
 
-const int WEP_AXE                  = BIT(0);
-const int WEP_SHOTGUN              = BIT(1);
-const int WEP_SUPER_SHOTGUN        = BIT(2);
-const int WEP_NAILGUN              = BIT(3);
-const int WEP_SUPER_NAILGUN        = BIT(4);
-const int WEP_GRENADE_LAUNCHER     = BIT(5);
-const int WEP_ROCKET_LAUNCHER      = BIT(6);
-const int WEP_LIGHTNING            = BIT(7);
-
-const int WEP_LASER_CANNON         = BIT(8);
-const int WEP_MJOLNIR              = BIT(9);
-const int WEP_PROXIMITY_GUN        = BIT(10);
-
-const int WEP_GRAPPLE              = BIT(11);
-const int WEP_LAVA_NAILGUN         = BIT(12);
-const int WEP_LAVA_SUPER_NAILGUN   = BIT(13);
-const int WEP_MULTI_GRENADE        = BIT(14);
-const int WEP_MULTI_ROCKET         = BIT(15);
-const int WEP_PLASMA_GUN           = BIT(16);
-
-const int WEP_LIGHTME              = BIT(17);
-const int WEP_SPEAR                = BIT(18);
-const int WEP_NAPALM               = BIT(19);
-const int WEP_PULSERIFLE           = BIT(20);
-
-
 const int IT_SHELLS               = BIT(0);
 const int IT_NAILS                = BIT(1);
 const int IT_ROCKETS              = BIT(2);
@@ -39,12 +13,13 @@ const int IT_SUPERHEALTH          = BIT(7);
 const int IT_KEY1                 = BIT(8);
 const int IT_KEY2                 = BIT(9);
 
-const int IT_LAVA_NAILS          = BIT(14);
-const int IT_PLASMA_AMMO         = BIT(15);
-const int IT_MULTI_ROCKETS       = BIT(16);
+const int IT_LAVA_NAILS          = BIT(10);
+const int IT_PLASMA_AMMO         = BIT(11);
+const int IT_MULTI_ROCKETS       = BIT(12);
 
-const int IT_PULSEPOWER1         = BIT(17);
-const int IT_PULSEPOWER2         = BIT(18);
+const int IT_PULSERIFLE          = BIT(13);
+const int IT_PULSEPOWER1         = BIT(14);
+const int IT_PULSEPOWER2         = BIT(15);
 
 
 const int POWERUP_INVISIBILITY         = BIT(0);

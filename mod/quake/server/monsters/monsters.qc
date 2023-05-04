@@ -50,8 +50,11 @@ void monster_begin_walking(entity this, entity actor, entity trigger)
 {
 	this.use = monster_use;
 	this.pausetime = 0;
-	setthink(this, this.th_walk);
-	this.nextthink = time;
+	if(this.th_walk)
+	{
+		setthink(this, this.th_walk);
+		this.nextthink = time;
+	}
 }
 
 //============================================================================
@@ -123,31 +126,51 @@ void monster_start_go(entity this)
 		{
 			//LOG_DEBUG("Monster can't find target at ", vtos(this.origin), "\n");
 			this.pausetime = -1;
-			setthink(this, this.th_stand);
-			this.nextthink = time;
+			if(this.th_stand)
+			{
+				setthink(this, this.th_stand);
+				this.nextthink = time;
+			}
+			else
+				LOG_WARN("Missing th_stand ", etos(this));
 		}
 		else
 		{
 			if(MP_MG && (this.spawnflags & MONSTER_WAITWALK))
 			{
 				this.pausetime = -1;
-				setthink(this, this.th_stand);
-				this.nextthink = time;
+				if(this.th_stand)
+				{
+					setthink(this, this.th_stand);
+					this.nextthink = time;
+				}
+				else
+					LOG_WARN("Missing th_stand ", etos(this));
 				this.use = monster_begin_walking;
 			}
 			else
 			{
 				this.ideal_yaw = vectoyaw(this.goalentity.origin - this.origin);
-				setthink(this, this.th_walk);
-				this.nextthink = time;
+				if(this.th_walk)
+				{
+					setthink(this, this.th_walk);
+					this.nextthink = time;
+				}
+				else
+					LOG_WARN("Missing th_walk ", etos(this));
 			}
 		}
 	}
 	else
 	{
 		this.pausetime = -1;
-		setthink(this, this.th_stand);
-		this.nextthink = time;
+		if(this.th_stand)
+		{
+			setthink(this, this.th_stand);
+			this.nextthink = time;
+		}
+		else
+			LOG_WARN("Missing th_stand ", etos(this));
 	}
 
 	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))

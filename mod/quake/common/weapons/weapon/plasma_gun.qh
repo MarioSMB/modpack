@@ -1,0 +1,18 @@
+#pragma once
+
+CLASS(PlasmaGun, Weapon)
+/* ammotype  */ ATTRIB(PlasmaGun, ammo_type, int, IT_PLASMA_AMMO);
+/* impulse   */ ATTRIB(PlasmaGun, impulse, int, 64);
+/* cnt       */ ATTRIB(PlasmaGun, cnt, int, 237); // vortex
+/* spawnflags*/ ATTRIB(PlasmaGun, spawnflags, int, WEP_FLAG_ROGUE);
+/* modelname */ ATTRIB(PlasmaGun, mdl, string, "plasma");
+/* crosshair */ ATTRIB(PlasmaGun, w_crosshair, string, "gfx/crosshairelectro");
+/* crosshair */ ATTRIB(PlasmaGun, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(PlasmaGun, w_crosshair_color, vector, '0 0.5 1');
+/* refname   */ ATTRIB(PlasmaGun, netname, string, "plasma");
+/* wepname   */ ATTRIB(PlasmaGun, m_name, string, _("Plasma Gun"));
+
+ENDCLASS(PlasmaGun)
+REGISTER_WEAPON(PLASMA_GUN, NEW(PlasmaGun));
+
+//SPAWNFUNC_WEAPON(weapon_plasma, WEP_PLASMA_GUN)

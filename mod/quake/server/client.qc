@@ -59,7 +59,6 @@ void SetChangeParms(entity this)
 	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB))
 	{
 		SetNewParms();
-		parm14 = this.steam; // Save the current team of the player
 		return;
 	}
 
@@ -68,22 +67,21 @@ void SetChangeParms(entity this)
 	this.items &= ~IT_SUPERHEALTH; // rogue
 	this.gravity = 1.0;
 
-	float maxhp = (this.max_health) ? this.max_health : 100; // ensure no possibility of a division by 0
-	this.health = maxhp;
+	this.health = this.max_health;
 	if(teamplay >= TEAM_CTF) // don't carry items between level in CTF
 		SetNewParms();
 	else
 	{
-		parm1 = this.weapons;
-		parm2 = this.health;
-		parm3 = this.armorvalue;
-		parm4 = max(25, this.ammo_shells);
-		parm5 = this.ammo_nails;
-		parm6 = this.ammo_rockets;
-		parm7 = this.ammo_cells;
-		parm8 = this.weapon;
-		parm9 = this.armortype * 100;
-		//parm10 = this.items2;
+		vector myweps = STAT(WEAPONS, this);
+		parm1 = myweps.x;
+		parm2 = myweps.y;
+		parm3 = myweps.z;
+		parm4 = this.armorvalue;
+		parm5 = max(25, this.ammo_shells);
+		parm6 = this.ammo_nails;
+		parm7 = this.ammo_rockets;
+		parm8 = this.ammo_cells;
+		parm9 = this.weapon;
 		parm10 = this.model_randomizer;
 		parm11 = this.ammo_lava_nails;
 		parm12 = this.ammo_multi_rockets;
@@ -91,40 +89,39 @@ void SetChangeParms(entity this)
 		parm15 = this.prevweapon;
 		parm16 = this.items;
 	}
-	parm14 = this.steam; // save team setting
 }
 
 void SetNewParms()
 {
+	WepSet weps;
 	if(deathmatch && teamplay >= TEAM_CTF)
 	{
-		parm1 = WEP_SHOTGUN | WEP_AXE | WEP_GRAPPLE;
-		parm3 = 50;
-		parm9 = 30;
+		weps = (WEPSET(SHOTGUN) | WEPSET(AXE) | WEPSET(GRAPPLE));
+		parm1 = weps.x;
+		parm2 = weps.y;
+		parm3 = weps.z;
+		parm4 = 50;
 		parm16 = IT_ARMOR1;
 	}
 	else
 	{
-		parm1 = WEP_SHOTGUN | WEP_AXE;
-		parm3 = 0;
-		parm9 = 0;
+		weps = (WEPSET(SHOTGUN) | WEPSET(AXE));
+		parm1 = weps.x;
+		parm2 = weps.y;
+		parm3 = weps.z;
+		parm4 = 0;
 		parm16 = 0;
 	}
-	if(autocvar_skill == 3 && !deathmatch)
-		parm2 = 50;
-	else
-		parm2 = 100;
-	parm4 = 25;
-	parm5 = 0;
+	parm5 = 25;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = WEP_SHOTGUN;
+	parm8 = 0;
+	parm9 = WEP_SHOTGUN.m_id;
 	parm10 = (deathmatch) ? 1 : random();
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
-	parm14 = -1; // CTF: reset current team selection
-	parm15 = WEP_AXE; // always use axe as the alternate weapon
+	parm15 = WEP_AXE.m_id; // always use axe as the alternate weapon
 }
 
 void DecodeLevelParms(entity this)
@@ -147,33 +144,31 @@ void DecodeLevelParms(entity this)
 
 	//if(deathmatch && teamplay >= TEAM_CTF)
 		//SetNewParms(); // engine doesn't do this for us, apparently
-	
-	this.weapons = parm1;
-	this.health = parm2;
-	this.armorvalue = parm3;
-	this.ammo_shells = parm4;
-	this.ammo_nails = parm5;
-	this.ammo_rockets = parm6;
-	this.ammo_cells = parm7;
-	if(parm8 == WEP_GRAPPLE && teamplay < TEAM_CTF)
-		this.weapon = WEP_AXE;
+
+	STAT(WEAPONS, this) = vec3(parm1, parm2, parm3);
+	this.armorvalue = parm4;
+	this.ammo_shells = parm5;
+	this.ammo_nails = parm6;
+	this.ammo_rockets = parm7;
+	this.ammo_cells = parm8;
+	if(parm9 == WEP_GRAPPLE.m_id && teamplay < TEAM_CTF)
+		this.weapon = WEP_AXE.m_id;
 	else
-		this.weapon = parm8;
-	this.armortype = parm9 * 0.01;
+		this.weapon = parm9;
 	this.model_randomizer = parm10;
-	//this.items2 = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
-	if(TeamColorIsLegal(parm14))
-	{
-		this.steam = parm14;
-		TeamSetSkin(this);
-	}
 
 	this.prevweapon = parm15;
 	this.items = parm16;
 	this.powerups = 0;
+	if(this.items & IT_ARMOR3)
+		this.armortype = 0.8;
+	else if(this.items & IT_ARMOR2)
+		this.armortype = 0.6;
+	else if(this.items & IT_ARMOR1)
+		this.armortype = 0.3;
 }
 
 bool findinlist_abbrev(string tofind, string list)
@@ -1461,14 +1456,14 @@ void PutClientInServer(entity this)
 	this.angles = vec2(spot.angles);
 	this.fixangle = true;		// turn this way immediately
 
-	if(MP_MG && coop && spot.weapons)
+	if(MP_MG && coop && STAT(WEAPONS, spot))
 	{
-		this.weapons |= spot.weapons;
-		if(this.weapons & (WEP_NAILGUN | WEP_SUPER_NAILGUN))
+		STAT(WEAPONS, this) |= STAT(WEAPONS, spot);
+		if(STAT(WEAPONS, this) & (WEPSET(NAILGUN) | WEPSET(SUPER_NAILGUN)))
 			this.ammo_shells = max(30, this.ammo_shells);
-		if(this.weapons & (WEP_GRENADE_LAUNCHER | WEP_ROCKET_LAUNCHER))
+		if(STAT(WEAPONS, this) & (WEPSET(GRENADE_LAUNCHER) | WEPSET(ROCKET_LAUNCHER)))
 			this.ammo_rockets = max(4, this.ammo_rockets);
-		if(this.weapons & WEP_LIGHTNING)
+		if(STAT(WEAPONS, this) & WEPSET(LIGHTNING))
 			this.ammo_cells = max(12, this.ammo_cells);
 	}
 
@@ -1579,10 +1574,10 @@ spawnfunc(info_player_deathmatch)
 
 void trigger_activate_coop_spawns_use(entity this, entity actor, entity trigger)
 {
-	int newitems = 0;
+	WepSet newitems = '0 0 0';
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		newitems |= it.weapons;
+		newitems |= STAT(WEAPONS, it);
 	});
 
 	FOREACH_ENTITY_CLASS("info_player_coop", true,
@@ -1590,12 +1585,12 @@ void trigger_activate_coop_spawns_use(entity this, entity actor, entity trigger)
 		if(it.targetname == this.target)
 		{
 			it.state = COOP_SPAWN_ACTIVE;
-			it.weapons = newitems;
+			STAT(WEAPONS, it) = newitems;
 		}
 		else
 		{
 			it.state = 0;
-			it.weapons = 0;
+			STAT(WEAPONS, it) = '0 0 0';
 		}
 	});
 }
@@ -1954,7 +1949,7 @@ void PlayerPreThink(entity this)
 	}
 
 	if(!MP_ROGUE)
-	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != WEP_AXE && this.weapon != WEP_MJOLNIR)
+	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != WEP_AXE.m_id && this.weapon != WEP_MJOLNIR.m_id)
 		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 }
 	
@@ -2010,7 +2005,7 @@ void CheckPowerups(entity this)
 		this.frame = 0;
 		this.modelindex = modelindex_eyes;
 	}
-	else if(this.weapon == WEP_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR.m_id)
 		this.modelindex = modelindex_hammer; // don't use eyes
 	else
 		this.modelindex = this.modelindex_player; // don't use eyes
@@ -2283,7 +2278,7 @@ void CheckPowerups(entity this)
 			if(this.antigrav_time == 1)
 			{
 				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHIELD);
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_ANTIGRAV);
 				this.antigrav_time = 0;
 				_sound(this, CH_TRIGGER_SINGLE, "belt/fadeout.wav", 1, ATTN_NORM);
 			}
@@ -2549,10 +2544,8 @@ void ClientConnect(entity this)
 	if(MP_ROGUE)
 		SetMOTD(this);
 
-	// if this is our first connection, parm14 is < 0
 	// set lastteam negative
-	// NOTE: parm14 is NOT < 0 here, spawn parameters are not adjusted on connect!
-	if(MP_ROGUE && parm14 <= 0 && teamplay > 0)
+	if(MP_ROGUE && teamplay > 0)
 	{
 		if(cvar("gamecfg") & GAMECFG_USE_COLOR)
 			this.steam = this.team; // accept joining player's color if legal
@@ -2670,7 +2663,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				attacker.frags = attacker.frags - 1;
 				bprint(targ.netname);
 				
-				if(targ.weapon == WEP_LIGHTNING && targ.waterlevel > 1)
+				if(targ.weapon == WEP_LIGHTNING.m_id && targ.waterlevel > 1)
 				{
 					switch(targ.watertype)
 					{
@@ -2683,17 +2676,17 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				}
 				if(MP_IMPEL)
 				{
-					if(inflictor == attacker && targ.weapon == WEP_LIGHTME && targ.waterlevel > 1)
+					if(inflictor == attacker && targ.weapon == WEP_LIGHTME.m_id && targ.waterlevel > 1)
 					{
 						bprint(" screwed up AGAIN with the LG-2.\n");
 						return;
 					}
-					if(targ.weapon == WEP_LIGHTME)
+					if(targ.weapon == WEP_LIGHTME.m_id)
 					{
 						bprint(" screwed up with the LG-2 Prototype.\n");
 						return;
 					}
-					if(inflictor == attacker && targ.weapon == WEP_LIGHTME && targ.waterlevel > 1)
+					if(inflictor == attacker && targ.weapon == WEP_LIGHTME.m_id && targ.waterlevel > 1)
 					{
 						bprint(" discharges into the water.\n");
 						return;
@@ -2706,7 +2699,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						bprint(" got bored with life.\n");
 					return;
 				}
-				else if(targ.weapon == WEP_GRENADE_LAUNCHER)
+				else if(targ.weapon == WEP_GRENADE_LAUNCHER.m_id)
 					bprint(" tries to put the pin back in\n");
 				else if(MP_HIPNOTIC)
 				{
@@ -2779,7 +2772,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				}
 
 				int wep = attacker.weapon;
-				if(wep == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_AXE.m_id && (!MP_IMPEL || inflictor == attacker))
 				{
 					if(MP_IMPEL)
 					{
@@ -2792,32 +2785,32 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "\n";
 					}
 				}
-				if(wep == WEP_GRAPPLE)
+				if(wep == WEP_GRAPPLE.m_id)
 				{
 					deathstring = " was grappled by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SHOTGUN.m_id && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " chewed on ";
 					deathstring2 = "'s boomstick\n";
 				}
-				if(wep == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SUPER_SHOTGUN.m_id && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " ate 2 loads of ";
 					deathstring2 = "'s buckshot\n";
 				}
-				if(wep == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
+				if(wep == WEP_NAILGUN.m_id || (MP_IMPEL && inflictor.classname == "spike"))
 				{
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
+				if(wep == WEP_SUPER_NAILGUN.m_id || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
+				if(wep == WEP_GRENADE_LAUNCHER.m_id || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -2827,7 +2820,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s grenade\n";
 					}
 				}
-				if(wep == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
+				if(wep == WEP_ROCKET_LAUNCHER.m_id || (MP_IMPEL && inflictor.classname == "missile"))
 				{
 					deathstring = " rides ";
 					deathstring2 = "'s rocket\n";
@@ -2837,7 +2830,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s rocket\n" ;
 					}
 				}
-				if(wep == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_LIGHTNING.m_id && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " accepts ";
 					if(attacker.waterlevel > 1)
@@ -2845,7 +2838,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					else
 						deathstring2 = "'s shaft\n";
 				}
-				if(wep == WEP_LASER_CANNON)
+				if(wep == WEP_LASER_CANNON.m_id)
 				{
 					if(random() < 0.5)
 						deathstring = " was toasted by ";
@@ -2853,27 +2846,27 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring = " was radiated by ";
 					deathstring2 = "'s laser\n";
 				}
-				if(wep == WEP_MJOLNIR)
+				if(wep == WEP_MJOLNIR.m_id)
 				{
 					deathstring = " was slammed by ";
 					deathstring2 = "'s hammer\n";
 				}
-				if(wep == WEP_LAVA_NAILGUN || wep == WEP_LAVA_SUPER_NAILGUN)
+				if(wep == WEP_LAVA_NAILGUN.m_id || wep == WEP_LAVA_SUPER_NAILGUN.m_id)
 				{
 					deathstring = " was burned by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_PLASMA_GUN)
+				if(wep == WEP_PLASMA_GUN.m_id)
 				{
 					deathstring = " was fused by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_MULTI_GRENADE || wep == WEP_MULTI_ROCKET)
+				if(wep == WEP_MULTI_GRENADE.m_id || wep == WEP_MULTI_ROCKET.m_id)
 				{
 					deathstring = " was blasted to bits by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_LIGHTME)
+				if(wep == WEP_LIGHTME.m_id)
 				{
 					if(attacker.waterlevel > 1)
 					{
@@ -2933,7 +2926,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			}
 
 			// tricks and traps
-			if(targ.weapon == WEP_LIGHTME) // TODO: overrides all other deathtypes!
+			if(targ.weapon == WEP_LIGHTME.m_id) // TODO: overrides all other deathtypes!
 			{
 				bprint(" couldn't control the LG-2 Prototype!\n");
 				return;

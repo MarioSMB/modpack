@@ -37,6 +37,8 @@ const int MAX_CL_STATS = 256;
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
 
+REGISTER_STAT(WEAPONS, vectori)
+
 REGISTER_STAT(PL_VIEW_OFS, vector)
 REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
 
@@ -178,11 +180,6 @@ REGISTER_STAT(SERVERFLAGS, int, serverflags)
 REGISTER_STAT(WETSUIT_FINISHED, float)
 
 //REGISTER_STAT(KATRIA, bool, (this.model_randomizer < autocvar_sv_quake_katria && have_katria))
-
-#ifdef SVQC
-.int weapons;
-#endif
-REGISTER_STAT(WEAPONS, int, this.weapons)
 
 #ifdef SVQC
 .int powerups;

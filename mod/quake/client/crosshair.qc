@@ -33,34 +33,8 @@ vector crosshair_getcolor(entity this, float health_stat)
 		{
 			if(STAT(ACTIVEWEAPON))
 			{
-				switch(STAT(ACTIVEWEAPON))
-				{
-					default: wcross_color = '0 0 0'; break;
-					case WEP_AXE: wcross_color = '1 0.5 0.5'; break;
-					case WEP_SHOTGUN: wcross_color = '0.5 0.25 0'; break;
-					case WEP_SUPER_SHOTGUN: wcross_color = '0.5 0.25 0'; break;
-					case WEP_NAILGUN: wcross_color = '1 1 0'; break;
-					case WEP_SUPER_NAILGUN: wcross_color = '1 1 0.5'; break;
-					case WEP_GRENADE_LAUNCHER: wcross_color = '1 0 0'; break;
-					case WEP_ROCKET_LAUNCHER: wcross_color = '1 1 0'; break;
-					case WEP_LIGHTNING: wcross_color = '1 1 1'; break;
-
-					case WEP_LAVA_NAILGUN: wcross_color = '1 0.75 0'; break;
-					case WEP_LAVA_SUPER_NAILGUN: wcross_color = '1 0.75 0.25'; break;
-					case WEP_MULTI_GRENADE: wcross_color = '0.5 1 0'; break;
-					case WEP_MULTI_ROCKET: wcross_color = '1 0.75 0'; break;
-					case WEP_PLASMA_GUN: wcross_color = '0 0.5 1'; break;
-
-					case WEP_MJOLNIR: wcross_color = '1 0.75 1'; break;
-					case WEP_LASER_CANNON: wcross_color = '0 1 0'; break;
-					case WEP_PROXIMITY_GUN: wcross_color = '0.75 1 0'; break;
-					case WEP_GRAPPLE: wcross_color = '0 0.5 0'; break;
-
-					case WEP_LIGHTME: wcross_color = '0.5 1 1'; break;
-					case WEP_SPEAR: wcross_color = '0 0.75 1'; break;
-					case WEP_NAPALM: wcross_color = '1 0.5 0.75'; break;
-					case WEP_PULSERIFLE: wcross_color = '0.5 0.5 0.5'; break;
-				}
+				Weapon wep = REGISTRY_GET(Weapons, STAT(ACTIVEWEAPON));
+				wcross_color = wep.w_crosshair_color;
 				break;
 			}
 			else { goto normalcolor; }
@@ -187,35 +161,10 @@ void HUD_Crosshair(entity this)
 		if(autocvar_crosshair_per_weapon)
 		{
 			int thewep = STAT(ACTIVEWEAPON);
+			Weapon wep = REGISTRY_GET(Weapons, thewep);
 
-			switch(thewep)
-			{
-				default: wcross_resolution *= 1; wcross_name = "gfx/crosshairmoustache"; break;
-				case WEP_AXE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairlaser"; break;
-				case WEP_SHOTGUN: wcross_resolution *= 0.65; wcross_name = "gfx/crosshairshotgun"; break;
-				case WEP_SUPER_SHOTGUN: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairshotgun"; break;
-				case WEP_NAILGUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairuzi"; break;
-				case WEP_SUPER_NAILGUN: wcross_resolution *= 0.8; wcross_name = "gfx/crosshairhagar"; break;
-				case WEP_GRENADE_LAUNCHER: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairgrenadelauncher"; break;
-				case WEP_ROCKET_LAUNCHER: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairrocketlauncher"; break;
-				case WEP_LIGHTNING: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairhlac"; break;
-
-				case WEP_GRAPPLE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairhook"; break;
-				case WEP_LAVA_NAILGUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairuzi"; break;
-				case WEP_LAVA_SUPER_NAILGUN: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairuzi"; break;
-				case WEP_MULTI_GRENADE: wcross_resolution *= 0.8; wcross_name = "gfx/crosshairseeker"; break;
-				case WEP_MULTI_ROCKET: wcross_resolution *= 0.65; wcross_name = "gfx/crosshairfireball"; break;
-				case WEP_PLASMA_GUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairelectro"; break;
-
-				case WEP_MJOLNIR: wcross_resolution *= 0.5; wcross_name = "gfx/crosshaircrylink"; break;
-				case WEP_LASER_CANNON: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairhlac"; break;
-				case WEP_PROXIMITY_GUN: wcross_resolution *= 0.9; wcross_name = "gfx/crosshairminelayer"; break;
-
-				case WEP_LIGHTME: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairminstanex"; break;
-				case WEP_SPEAR: wcross_resolution *= 0.6; wcross_name = "gfx/crosshair64"; break;
-				case WEP_NAPALM: wcross_resolution *= 0.7; wcross_name = "gfx/crosshair66"; break;
-				case WEP_PULSERIFLE: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairporto"; break;
-			}
+			wcross_resolution *= wep.w_crosshair_size;
+			wcross_name = wep.w_crosshair;
 		}
 
 		if(wcross_name == "")

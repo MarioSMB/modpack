@@ -57,6 +57,7 @@ const int FL_ONSLICK 				= BIT(19);
 
 #include "items/item.qh"
 #include "monsters/all.qh"
+#include "weapons/weapon.qh"
 
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))

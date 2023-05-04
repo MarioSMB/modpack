@@ -7,8 +7,12 @@ const int SPAWNFLAG_SUPERLAVA = BIT(3);
 const int SPAWNFLAG_LAVASKILL = BIT(4);
 const int SPAWNFLAG_FIREBALL = BIT(5);
 
+const int SPAWNFLAG_LAVABALL = BIT(2);
+const int SPAWNFLAG_ROCKET = BIT(3);
+
 entity LaunchLaser(entity this, vector org, vector vec);
 void superlavaspike_touch(entity this, entity toucher);
+void superspike_touch(entity this, entity toucher);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
@@ -29,7 +33,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		if(MP_HIPNOTIC)
 			las.spawnflags = this.spawnflags;
 	}
-	else if(MP_HIPNOTIC && (this.spawnflags & SPAWNFLAG_LAVABALL))
+	else if(MP_HIPNOTIC && !MP_ROGUE && (this.spawnflags & SPAWNFLAG_LAVABALL))
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
 			_sound (this, CH_WEAPON_SINGLE, "misc/spike.wav", 1, ATTN_NORM);
@@ -48,7 +52,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		lavaball.nextthink = time + 5;
 		setthink(lavaball, SUB_Remove);
 	}
-	else if(MP_HIPNOTIC && (this.spawnflags & SPAWNFLAG_ROCKET))
+	else if(MP_HIPNOTIC && !MP_ROGUE && (this.spawnflags & SPAWNFLAG_ROCKET))
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);

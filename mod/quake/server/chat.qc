@@ -1,4 +1,3 @@
-string Weapon_PrettyName(int wepid);
 string formatmessage(entity this, string msg)
 {
 	float p = 0;
@@ -13,7 +12,8 @@ string formatmessage(entity this, string msg)
 	else if(this.items & IT_NAILS) ammoitems = "nails";
 	else if(this.items & IT_SHELLS) ammoitems = "shells";
 
-	string wep = Weapon_PrettyName(this.weapon);
+	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	string wepname = wep.m_name;
 
 	traceline(this.cursor_trace_start, this.cursor_trace_start + normalize(this.cursor_trace_endpos - this.cursor_trace_start) * 16384, MOVE_NORMAL, this);
 	vector cursor = trace_endpos;
@@ -51,7 +51,7 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = vtos(this.origin); break;
 			case "y": replacement = vtos(cursor); break;
 			//case "d": replacement = vtos(this.death_origin); break;
-			case "w": replacement = wep; break;
+			case "w": replacement = wepname; break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;

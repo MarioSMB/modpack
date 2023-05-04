@@ -1,0 +1,7 @@
+#pragma once
+
+.bool lavaGunFired;
+
+entity launch_lava_spike(entity this, vector org, vector dir);
+
+void superlavaspike_touch(entity this, entity toucher);

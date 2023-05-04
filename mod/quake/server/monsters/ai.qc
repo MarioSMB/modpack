@@ -939,7 +939,7 @@ void FoundTarget(entity this)
 		this.enemy = NULL;
 		return;
 	}
-	else if(MP_ROGUE && (this.spawnflags & 2) && this.monsterdef == MON_KNIGHT && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
+	else if(MP_ROGUE && (this.spawnflags & 2) && (this.monsterdef == MON_KNIGHT || this.monsterdef == MON_HELL_KNIGHT) && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
 	{
 		this.enemy = NULL;
 		return;

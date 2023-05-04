@@ -45,7 +45,6 @@ ENDCLASS(Monster)
 #include "../../server/monsters/ai.qh"
 #include "../../server/monsters/fight.qh"
 #include "../../server/monsters/monsters.qh"
-#include "../../server/rogue/multi_wpn.qh"
 #include "../../server/rogue/new_ai.qh"
 #include "../../server/weapons.qh"
 #endif

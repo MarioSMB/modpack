@@ -1,0 +1,88 @@
+#pragma once
+
+#include "weapon.qh"
+
+#ifdef SVQC
+// TODO
+void player_axe1(entity this);
+void player_axeb1(entity this);
+void player_axec1(entity this);
+void player_axed1(entity this);
+void player_shot1(entity this);
+void player_nail1(entity this);
+void player_light1(entity this);
+void player_rocket1(entity this);
+void player_lava_nail1(entity this);
+void player_plasma1(entity this); //ooppee addon
+//ZOID--
+void player_grapple1(entity this);
+void player_grapple3(entity this);
+//--ZOID
+
+//MED
+void player_laser1(entity this);
+void player_hammer1(entity this);
+void player_mjolnir1(entity this);
+
+void W_FireMultiGrenade(entity this);
+void W_FireMultiRocket(entity this);
+void W_FirePlasma(entity this); //ooppee addon
+
+// impel
+void player_superlight1(entity this);
+void player_rifle1(entity this);
+void player_shotimp1(entity this);
+#endif
+
+#ifdef SVQC
+void WriteWepSet(float dest, WepSet w);
+#endif
+
+#ifdef CSQC
+WepSet WepSet_GetFromStat();
+WepSet ReadWepSet();
+#endif
+
+#include "../util.qh"
+
+REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
+REGISTER_REGISTRY(Weapons)
+
+.WepSet m_wepset;
+#define WEPSET(id) (WEP_##id.m_wepset)
+#define WepSet_FromWeapon(it) ((it).m_wepset)
+WepSet _WepSet_FromWeapon(int i);
+
+#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
+#define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
+
+REGISTER_WEAPON(Null, NEW(Weapon));
+REGISTRY_DEFINE_GET(Weapons, WEP_Null)
+
+Weapon Weapon_from_name(string s)
+{
+    FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
+    return WEP_Null;
+}
+
+const int WEP_FIRST = 1;
+#define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)
+WepSet WEPSET_ALL;
+
+#include "all.inc"
+
+//const int WEP_HARDCODED_IMPULSES = 20;
+//REGISTRY_SORT(Weapons)
+REGISTRY_CHECK(Weapons)
+
+STATIC_INIT(register_weapons_done)
+{
+    FOREACH(Weapons, true, {
+        WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
+        WEPSET_ALL |= set;
+    });
+    #ifdef CSQC
+    FOREACH(Weapons, true, it.wr_init(it));
+    #endif
+}

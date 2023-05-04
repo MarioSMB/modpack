@@ -13,7 +13,6 @@
 #include "lightnin.qc"
 #include "shield.qc"
 #include "lava_wpn.qc"
-#include "mult_wpn.qc"
 #include "random.qc"
 #include "earthq.qc"
 #include "sphere.qc"

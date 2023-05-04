@@ -1,14 +1,13 @@
 #ifdef SVQC
 
-$skin buzzsaw
 const int anim_buzzsaw = 0;
 
 const int anim_buzzsaw_bzzrot01 = 1;
-const int anim_buzzsaw_bzzrot02 = 2;
-const int anim_buzzsaw_bzzrot03 = 3;
-const int anim_buzzsaw_bzzrot04 = 4;
-const int anim_buzzsaw_bzzrot05 = 5;
-const int anim_buzzsaw_bzzrot06 = 6;
+//const int anim_buzzsaw_bzzrot02 = 2;
+//const int anim_buzzsaw_bzzrot03 = 3;
+//const int anim_buzzsaw_bzzrot04 = 4;
+//const int anim_buzzsaw_bzzrot05 = 5;
+//const int anim_buzzsaw_bzzrot06 = 6;
 
 void buzzsaw_stand1(entity this)
 {
@@ -20,8 +19,9 @@ void buzzsaw_stand1(entity this)
 		this.pain_finished = time + 1;
 	}
 	
-	this.angles_x = this.angles_x - 60;
-	this.avelocity_x = 60;
+	//this.angles_x = this.angles_x - 60;
+	this.avelocity_x = 600;
+	this.velocity = '0 0 0';
 }
 
 void buzzsaw_fly(entity this)
@@ -32,12 +32,12 @@ void buzzsaw_fly(entity this)
 		this.pain_finished = time + 1;
 	}
 
-	vector dir = this.goalentity.origin - this.origin;
-	dir = normalize(dir);
-	dir = dir * this.speed;
-	setorigin(this, this.origin + dir);
-	this.angles_x = this.angles_x - 60;
-	this.avelocity_x = 60;
+	vector dir = normalize(this.goalentity.origin - this.origin);
+	float myspeed = this.speed * 10; // times 10 because 10 fps
+	this.velocity = dir * myspeed;
+	//setorigin(this, this.origin + dir);
+	//this.angles_x = this.angles_x - 60;
+	this.avelocity_x = 600;
 }
 
 void buzzsaw_fly1(entity this) { set_anim(this, anim_buzzsaw_bzzrot01, buzzsaw_fly1); buzzsaw_fly(this); }
@@ -116,10 +116,16 @@ spawnfunc(buzzsaw)
 
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_TRIGGER;
+	// TODO why was this here, is some map broken without it?
+#if 0
 	if(this.target == "grr")
 		set_movetype(this, MOVETYPE_FLY);
 	else
 		set_movetype(this, MOVETYPE_STEP);
+#else
+	set_movetype(this, MOVETYPE_FLY);
+	this.dphitcontentsmask = DPCONTENTS_BODY;
+#endif
 
 	if(this.angles_y == 0 || this.angles_y == 180)
 		setsize(this, '-18 0 -18', '18 0 18');
@@ -129,6 +135,7 @@ spawnfunc(buzzsaw)
 		objerror(this, "Buzzsaw: Not at 90 degree angle!");
 
 	setorigin(this, this.origin);
+	this.velocity = '0 0 0';
 	
 	if(!this.speed)
 		this.speed = 10;

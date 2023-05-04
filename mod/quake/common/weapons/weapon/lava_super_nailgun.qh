@@ -1,0 +1,18 @@
+#pragma once
+
+CLASS(LavaSuperNailgun, Weapon)
+/* ammotype  */ ATTRIB(LavaSuperNailgun, ammo_type, int, IT_LAVA_NAILS);
+/* impulse   */ ATTRIB(LavaSuperNailgun, impulse, int, 61);
+/* cnt       */ ATTRIB(LavaSuperNailgun, cnt, int, 245); // rifle
+/* spawnflags*/ ATTRIB(LavaSuperNailgun, spawnflags, int, WEP_FLAG_ROGUE);
+/* modelname */ ATTRIB(LavaSuperNailgun, mdl, string, "lava2");
+/* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair_color, vector, '1 0.75 0.25');
+/* refname   */ ATTRIB(LavaSuperNailgun, netname, string, "lavasupernailgun");
+/* wepname   */ ATTRIB(LavaSuperNailgun, m_name, string, _("Lava Super Nailgun"));
+
+ENDCLASS(LavaSuperNailgun)
+REGISTER_WEAPON(LAVA_SUPER_NAILGUN, NEW(LavaSuperNailgun));
+
+//SPAWNFUNC_WEAPON(weapon_lava_super_nailgun, WEP_LAVA_SUPER_NAILGUN)

@@ -14,7 +14,7 @@ void counter_use(entity this, entity actor, entity trigger)
 		this.enemy = actor;
 		// yoder Sept24, 2021, Horde Merge
 		if(MP_MG && (this.spawnflags & COUNTER_LOOPS))
-			this.count = this.wait;
+			this.count = this.cnt;
 		multi_trigger(this);
 	}
 	else
@@ -47,14 +47,15 @@ spawnfunc(trigger_counter)
 		delete(this);
 		return;
 	}
-	this.wait = -1;
+	if(!MP_MG || !(this.spawnflags & COUNTER_LOOPS))
+		this.wait = -1;
 	// Yoder Sept24, 2021 Horde Merge
 	// .count is decremented each use and fires its targets on 0
-	// .wait stores the original .count and restores to this if COUNTER_LOOPS
+	// .cnt stores the original .count and restores to this if COUNTER_LOOPS
 	if(!this.count)
 		this.count = 2;
-	if(MP_MG && !this.wait)
-		this.wait = this.count;
+	if(MP_MG)
+		this.cnt = this.count;
 
 	this.use = counter_use;
 }

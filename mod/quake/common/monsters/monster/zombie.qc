@@ -366,15 +366,16 @@ void zombie_paine13(entity this) { set_animofs(this, anim_zombie_paine, 13, zomb
 void zombie_paine12(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 12, zombie_paine13);
-	if(MP_ROGUE)
-		droptofloor(this);
 	// see if ok to stand up
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	if(MP_ROGUE)
 		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
-	if(!t_walkmove(this, 0, 0))
+	if(MP_ROGUE)
+		droptofloor(this);
+	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
+	if(trace_startsolid)
 	{
 		setthink(this, zombie_paine11);
 		if(MP_IMPEL)

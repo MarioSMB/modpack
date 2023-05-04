@@ -57,16 +57,17 @@ bool GremlinAttemptWeaponSteal(entity this)
 	//
 	entity victim = this.enemy;
 	int best = victim.weapon;
-	if(best == WEP_AXE || best == WEP_SHOTGUN || best == WEP_MJOLNIR)
+	if(best == WEP_AXE.m_id || best == WEP_SHOTGUN.m_id || best == WEP_MJOLNIR.m_id)
 		return false;
+	Weapon wep = REGISTRY_GET(Weapons, best);
 	// take that weapon from the entity
-	victim.weapons &= ~best;
+	STAT(WEAPONS, victim) &= ~wep.m_wepset;
 	// give it to our gremlin
-	this.weapons |= best;
+	STAT(WEAPONS, this) |= wep.m_wepset;
 	this.weapon = best;
 	// take some ammo while we are at it
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
-	if(best == WEP_SUPER_SHOTGUN)
+	if(best == WEP_SUPER_SHOTGUN.m_id)
 	{
 		amount = victim.ammo_shells;
 		if(amount > 20)
@@ -77,7 +78,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_shells;
 		sprint (victim, "Gremlin stole your Super Shotgun\n");
 	}
-	else if(best == WEP_NAILGUN)
+	else if(best == WEP_NAILGUN.m_id)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
@@ -88,7 +89,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Nailgun\n");
 	}
-	else if(best == WEP_SUPER_NAILGUN)
+	else if(best == WEP_SUPER_NAILGUN.m_id)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
@@ -99,7 +100,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Super Nailgun\n");
 	}
-	else if(best == WEP_GRENADE_LAUNCHER)
+	else if(best == WEP_GRENADE_LAUNCHER.m_id)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -110,7 +111,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Grenade Launcher\n");
 	}
-	else if(best == WEP_ROCKET_LAUNCHER)
+	else if(best == WEP_ROCKET_LAUNCHER.m_id)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -121,7 +122,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Rocket Launcher\n");
 	}
-	else if(best == WEP_LIGHTNING)
+	else if(best == WEP_LIGHTNING.m_id)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
@@ -132,7 +133,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Lightning Gun\n");
 	}
-	else if(best == WEP_LASER_CANNON)
+	else if(best == WEP_LASER_CANNON.m_id)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
@@ -143,7 +144,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Laser Cannon\n");
 	}
-	else if(best == WEP_PROXIMITY_GUN)
+	else if(best == WEP_PROXIMITY_GUN.m_id)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -785,29 +786,29 @@ void GremlinDropBackpack(entity this)
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	item.items = this.items;
 	item.powerups = this.powerups;
-	item.weapons = this.weapons;
+	STAT(WEAPONS, item) = STAT(WEAPONS, this);
 
-	if(item.weapons & WEP_AXE)
+	if(STAT(WEAPONS, item) & WEPSET(AXE))
 		item.netname = "Axe";
-	else if(item.weapons & WEP_SHOTGUN)
+	else if(STAT(WEAPONS, item) & WEPSET(SHOTGUN))
 		item.netname = "Shotgun";
-	else if(item.weapons & WEP_SUPER_SHOTGUN)
+	else if(STAT(WEAPONS, item) & WEPSET(SUPER_SHOTGUN))
 		item.netname = "Double-barrelled Shotgun";
-	else if(item.weapons & WEP_NAILGUN)
+	else if(STAT(WEAPONS, item) & WEPSET(NAILGUN))
 		item.netname = "Nailgun";
-	else if(item.weapons & WEP_SUPER_NAILGUN)
+	else if(STAT(WEAPONS, item) & WEPSET(SUPER_NAILGUN))
 		item.netname = "Super Nailgun";
-	else if(item.weapons & WEP_GRENADE_LAUNCHER)
+	else if(STAT(WEAPONS, item) & WEPSET(GRENADE_LAUNCHER))
 		item.netname = "Grenade Launcher";
-	else if(item.weapons & WEP_ROCKET_LAUNCHER)
+	else if(STAT(WEAPONS, item) & WEPSET(ROCKET_LAUNCHER))
 		item.netname = "Rocket Launcher";
-	else if(item.weapons & WEP_LIGHTNING)
+	else if(STAT(WEAPONS, item) & WEPSET(LIGHTNING))
 		item.netname = "Thunderbolt";
-	else if(item.weapons & WEP_LASER_CANNON)
+	else if(STAT(WEAPONS, item) & WEPSET(LASER_CANNON))
 		item.netname = "Laser Cannon";
-	else if(item.weapons & WEP_PROXIMITY_GUN)
+	else if(STAT(WEAPONS, item) & WEPSET(PROXIMITY_GUN))
 		item.netname = "Proximity Gun";
-	else if(item.weapons & WEP_MJOLNIR)
+	else if(STAT(WEAPONS, item) & WEPSET(MJOLNIR))
 		item.netname = "Mjolnir";
 	else
 		item.netname = "";
@@ -835,7 +836,7 @@ void GremlinDropBackpack(entity this)
 void gremlin_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
-	if(this.weapons & (WEP_SUPER_SHOTGUN | WEP_NAILGUN | WEP_SUPER_NAILGUN | WEP_GRENADE_LAUNCHER | WEP_ROCKET_LAUNCHER | WEP_LIGHTNING | WEP_LASER_CANNON | WEP_PROXIMITY_GUN))
+	if(STAT(WEAPONS, this) & (WEPSET(SUPER_SHOTGUN) | WEPSET(NAILGUN) | WEPSET(SUPER_NAILGUN) | WEPSET(GRENADE_LAUNCHER) | WEPSET(ROCKET_LAUNCHER) | WEPSET(LIGHTNING) | WEPSET(LASER_CANNON) | WEPSET(PROXIMITY_GUN)))
 	{
 		GremlinDropBackpack(this);
 		this.stoleweapon = false;
@@ -1189,53 +1190,53 @@ bool GremlinWeaponAttack(entity this)
 
 	this.show_hostile = time + 1; // wake monsters up
 
-	if(this.weapon == WEP_SHOTGUN)
+	if(this.weapon == WEP_SHOTGUN.m_id)
 	{
 		gremlin_shot1(this);
 		Gremlin_FireShotGun(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_SUPER_SHOTGUN)
+	else if(this.weapon == WEP_SUPER_SHOTGUN.m_id)
 	{
 		gremlin_shot1(this);
 		Gremlin_FireSuperShotGun(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_NAILGUN)
+	else if(this.weapon == WEP_NAILGUN.m_id)
 	{
 		gremlin_nail3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_SUPER_NAILGUN)
+	else if(this.weapon == WEP_SUPER_NAILGUN.m_id)
 	{
 		gremlin_nail3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_GRENADE_LAUNCHER)
+	else if(this.weapon == WEP_GRENADE_LAUNCHER.m_id)
 	{
 		gremlin_rocket1(this);
 		OgreFireGrenade(this);
 		this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_ROCKET_LAUNCHER)
+	else if(this.weapon == WEP_ROCKET_LAUNCHER.m_id)
 	{
 		gremlin_rocket1(this);
 		Gremlin_FireRocket(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_LIGHTNING)
+	else if(this.weapon == WEP_LIGHTNING.m_id)
 	{
 		gremlin_light1(this);
 		SUB_AttackFinished(this, 1);
 		_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
-	else if(this.weapon == WEP_LASER_CANNON)
+	else if(this.weapon == WEP_LASER_CANNON.m_id)
 	{
 		gremlin_laser3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == WEP_PROXIMITY_GUN)
+	else if(this.weapon == WEP_PROXIMITY_GUN.m_id)
 	{
 		gremlin_rocket1(this);
 		GremlinFireProximityGrenade(this);

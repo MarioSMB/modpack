@@ -1,0 +1,22 @@
+#pragma once
+
+CLASS(MultiGrenadeLauncher, Weapon)
+/* ammotype  */ ATTRIB(MultiGrenadeLauncher, ammo_type, int, IT_MULTI_ROCKETS);
+/* impulse   */ ATTRIB(MultiGrenadeLauncher, impulse, int, 62);
+/* cnt       */ ATTRIB(MultiGrenadeLauncher, cnt, int, 235); // electro
+/* spawnflags*/ ATTRIB(MultiGrenadeLauncher, spawnflags, int, WEP_FLAG_ROGUE);
+/* modelname */ ATTRIB(MultiGrenadeLauncher, mdl, string, "multi");
+/* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair, string, "gfx/crosshairseeker");
+/* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair_color, vector, '0.5 1 0');
+/* refname   */ ATTRIB(MultiGrenadeLauncher, netname, string, "multigrenade");
+/* wepname   */ ATTRIB(MultiGrenadeLauncher, m_name, string, _("Multi Grenade Launcher"));
+
+ENDCLASS(MultiGrenadeLauncher)
+REGISTER_WEAPON(MULTI_GRENADE, NEW(MultiGrenadeLauncher));
+
+//SPAWNFUNC_WEAPON(weapon_multi_grenade, WEP_MULTI_GRENADE)
+
+#ifdef SVQC
+void MultiGrenadeTouch(entity this, entity toucher);
+#endif

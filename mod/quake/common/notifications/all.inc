@@ -121,6 +121,8 @@
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 left the game with %s frags"), "")
 
+    MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  1, 0, "s1", "",                      "",          _("^BG%s^K1 is now thinking with portals"), "")
+
 #undef N_DISABLE
 #undef N_CONSOLE
 #undef N_CHATCON
@@ -137,6 +139,7 @@
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN_BOSSWAVE,          N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  BOLD(_("^K1Boss wave!")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f1",             CPID_ROUND,             "1 f2", strcat(_("^BGRound %s starts in"), "\n", BOLD("^COUNT")), "")
 
+    MSG_CENTER_NOTIF(DEATH_SELF_GENERIC,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You fragged yourself!")), BOLD(_("^K1You need to be more careful!")))
     MSG_CENTER_NOTIF(DEATH_SELF_SLIME,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You melted away in slime!")), "")
 
     MSG_CENTER_NOTIF(ITEM_BACKPACK_GOT,                 N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "2 0", _("^BGYou get %s"), "")
@@ -188,6 +191,8 @@
     MSG_MULTI_NOTIF(POWERDOWN_SHIELD,                   N_ENABLE,  NULL,           INFO_POWERDOWN_SHIELD,                  CENTER_POWERDOWN_SHIELD)
     MSG_MULTI_NOTIF(POWERDOWN_QUAD_DAMAGE,              N_ENABLE,  NULL,           INFO_POWERDOWN_QUAD_DAMAGE,             CENTER_POWERDOWN_QUAD_DAMAGE)
     MSG_MULTI_NOTIF(POWERDOWN_WETSUIT,                  N_ENABLE,  NULL,           INFO_POWERDOWN_WETSUIT,                 CENTER_POWERDOWN_WETSUIT)
+
+    MSG_MULTI_NOTIF(WEAPON_THINKING_WITH_PORTALS,       N_ENABLE,  NULL,           INFO_WEAPON_THINKING_WITH_PORTALS,      CENTER_DEATH_SELF_GENERIC)
 
 #undef N_DISABL
 #undef N_ENABLE

@@ -17,7 +17,7 @@ void kn_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
 		else
 			_sound(this, CH_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
@@ -142,7 +142,7 @@ void knight_pain(entity this, entity attacker, float damage)
 
 	float r = random();
 	
-	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue)
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
@@ -222,7 +222,7 @@ void knight_die(entity this, entity inflictor, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -239,7 +239,7 @@ void knight_die(entity this, entity inflictor, entity attacker)
 	}
 
 // regular death
-	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
@@ -297,7 +297,10 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 {
     TC(Knight, this);
 
-	if(!MP_MG && MP_ROGUE && (actor.spawnflags & 2)) // statue
+    if(MP_ROGUE && (actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
+    	actor.spawnflags &= ~2; // TODO: why would mg be setting this?
+
+	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -318,22 +321,19 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	precache_sound("knight/sword2.wav");
 
     actor.health = 75;
-	if(!MP_MG && MP_ROGUE && (actor.spawnflags & 2)) // statue
+	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
 	{
 		if(actor.frame == 0)
 			actor.frame = 44;
 		actor.skin = 1;
 
-		if(!actor.targetname || actor.targetname == "")
-		{
-			LOG_DEBUGF("statue %s not targeted at %v\n", actor.classname, actor.origin);
-			return true;
-		}
-
 		actor.th_stand = knight_pause1;
 		actor.th_walk = knight_pause1;
 		actor.th_run = knight_pause1;
 		actor.use = knight_pause;
+
+		if(!actor.targetname || actor.targetname == "")
+			LOG_DEBUGF("statue %s not targeted at %v\n", actor.classname, actor.origin);
 	}
 	else
 	{

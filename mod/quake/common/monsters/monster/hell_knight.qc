@@ -134,7 +134,7 @@ void hknight_pain2(entity this) { set_animofs(this, anim_hknight_pain, 2, hknigh
 void hknight_pain1(entity this)
 {
 	set_animofs(this, anim_hknight_pain, 1, hknight_pain2);
-	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
@@ -192,7 +192,7 @@ void hknight_die(entity this, entity inflictor, entity attacker)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
-		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -209,7 +209,7 @@ void hknight_die(entity this, entity inflictor, entity attacker)
 	}
 
 // regular death
-	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
@@ -354,7 +354,7 @@ void hk_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_NORM);
 		else
 			_sound(this, CH_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
@@ -369,7 +369,7 @@ void hknight_pain(entity this, entity attacker, float damage)
 	if(this.pain_finished > time)
 		return;
 
-	if(!MP_MG && MP_ROGUE && (this.spawnflags & 2)) // statue
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
@@ -461,7 +461,10 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 {
     TC(HellKnight, this);
 
-	if(!MP_MG && MP_ROGUE && (actor.spawnflags & 2)) // statue
+    if(MP_ROGUE && (actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
+    	actor.spawnflags &= ~2; // TODO: why would mg be setting this?
+
+	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -488,7 +491,7 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 	precache_sound("knight/sword2.wav");
 
 	actor.health = 250;
-    if(!MP_MG && MP_ROGUE && (actor.spawnflags & 2)) // statue
+    if(MP_ROGUE && (actor.spawnflags & 2)) // statue
 	{
 		if(actor.frame == 0)
 			actor.frame = 73;

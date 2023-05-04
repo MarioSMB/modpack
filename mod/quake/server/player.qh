@@ -2,6 +2,10 @@
 
 .int walkframe;
 
+void player_run(entity this);
+
+void DeathSound(entity this);
+
 void make_bubbles(entity this);
 void bubble_remove(entity this, entity toucher);
 void bubble_bob(entity this);

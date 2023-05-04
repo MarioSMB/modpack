@@ -4,25 +4,24 @@ string Sbar_PickWeapon_wepname(int wpn)
 {
 	switch(wpn)
 	{
-		case 0: return "shotgun";
-		case 1: return "sshotgun";
-		case 2: return "nailgun";
-		case 3: return "snailgun";
-		case 4: return "rlaunch";
-		case 5: return "srlaunch";
-		case 6: return "lightng";
+		case WEP_SHOTGUN.m_id: return "shotgun";
+		case WEP_SUPER_SHOTGUN.m_id: return "sshotgun";
+		case WEP_NAILGUN.m_id: return "nailgun";
+		case WEP_SUPER_NAILGUN.m_id: return "snailgun";
+		case WEP_GRENADE_LAUNCHER.m_id: return "rlaunch";
+		case WEP_ROCKET_LAUNCHER.m_id: return "srlaunch";
+		case WEP_LIGHTNING.m_id: return "lightng";
 		// hipnotic (first index should match WEP_INDEXSTART_HIPNOTIC)
-		case 7:  return "mjolnir";
-		case 8:  return "laser";
-		case 9:  return "gren_prox";
-		case 10: return "prox_gren"; // file names treat this oddly, better keep it for now
+		case WEP_MJOLNIR.m_id:  return "mjolnir";
+		case WEP_LASER_CANNON.m_id:  return "laser";
+		case WEP_PROXIMITY_GUN.m_id:  return "gren_prox";
 		// rogue (first index should match WEP_INDEXSTART_ROGUE)
-		case 11: return "prox";
-		case 12: return "r_lava";
-		case 13: return "r_superlava";
-		case 14: return "r_gren";
-		case 15: return "r_multirock";
-		case 16: return "r_plasma";
+		case WEP_GRAPPLE.m_id: return "prox";
+		case WEP_LAVA_NAILGUN.m_id: return "r_lava";
+		case WEP_LAVA_SUPER_NAILGUN.m_id: return "r_superlava";
+		case WEP_MULTI_GRENADE.m_id: return "r_gren";
+		case WEP_MULTI_ROCKET.m_id: return "r_multirock";
+		case WEP_PLASMA_GUN.m_id: return "r_plasma";
 	}
 
 	// defaults
@@ -38,25 +37,24 @@ string Sbar_PickWeapon_wepname_id(int wpn)
 {
 	switch(wpn)
 	{
-		case WEP_SHOTGUN: return "shotgun";
-		case WEP_SUPER_SHOTGUN: return "sshotgun";
-		case WEP_NAILGUN: return "nailgun";
-		case WEP_SUPER_NAILGUN: return "snailgun";
-		case WEP_GRENADE_LAUNCHER: return "rlaunch";
-		case WEP_ROCKET_LAUNCHER: return "srlaunch";
-		case WEP_LIGHTNING: return "lightng";
+		case WEP_SHOTGUN.m_id: return "shotgun";
+		case WEP_SUPER_SHOTGUN.m_id: return "sshotgun";
+		case WEP_NAILGUN.m_id: return "nailgun";
+		case WEP_SUPER_NAILGUN.m_id: return "snailgun";
+		case WEP_GRENADE_LAUNCHER.m_id: return "rlaunch";
+		case WEP_ROCKET_LAUNCHER.m_id: return "srlaunch";
+		case WEP_LIGHTNING.m_id: return "lightng";
 		// hipnotic
-		case WEP_MJOLNIR:  return "mjolnir";
-		case WEP_LASER_CANNON:  return "laser";
-		case WEP_PROXIMITY_GUN:  return "gren_prox";
-		//case 10: return "prox_gren";
+		case WEP_MJOLNIR.m_id:  return "mjolnir";
+		case WEP_LASER_CANNON.m_id:  return "laser";
+		case WEP_PROXIMITY_GUN.m_id:  return "gren_prox";
 		// rogue
-		case WEP_GRAPPLE: return "prox";
-		case WEP_LAVA_NAILGUN: return "r_lava";
-		case WEP_LAVA_SUPER_NAILGUN: return "r_superlava";
-		case WEP_MULTI_GRENADE: return "r_gren";
-		case WEP_MULTI_ROCKET: return "r_multirock";
-		case WEP_PLASMA_GUN: return "r_plasma";
+		case WEP_GRAPPLE.m_id: return "prox";
+		case WEP_LAVA_NAILGUN.m_id: return "r_lava";
+		case WEP_LAVA_SUPER_NAILGUN.m_id: return "r_superlava";
+		case WEP_MULTI_GRENADE.m_id: return "r_gren";
+		case WEP_MULTI_ROCKET.m_id: return "r_multirock";
+		case WEP_PLASMA_GUN.m_id: return "r_plasma";
 		// TODO: impel
 	}
 
@@ -93,39 +91,44 @@ PRECACHE(Sbar)
 	if(!MP_ROGUE)
 		precache_pic("gfx/quake/ibar");
 
-	for(int j = 0; j < 7; j++)
+	FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_HIPNOTIC) && !(it.spawnflags & WEP_FLAG_ROGUE) && !(it.spawnflags & WEP_FLAG_IMPEL),
 	{
-		precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(j)));
-		precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(j)));
-	}
+		precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it.m_id)));
+		precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it.m_id)));
+	});
 
 	for(int j = 0; j < 5; j++)
 	{
-		for(int k = 0; k < 7; k++)
+		FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_HIPNOTIC) && !(it.spawnflags & WEP_FLAG_ROGUE) && !(it.spawnflags & WEP_FLAG_IMPEL),
 		{
-			precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(k)));
-		}
+			precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(it.m_id)));
+		});
 	}
 
 	if(MP_HIPNOTIC)
 	{
+		FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIPNOTIC),
+		{
+			precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it.m_id)));
+			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it.m_id)));
+		});
+
 		for(int j = 0; j < 5; j++)
 		{
-			precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(WEP_INDEXSTART_HIPNOTIC + j)));
-			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(WEP_INDEXSTART_HIPNOTIC + j)));
-			for(int k = 0; k < 5; k++)
+			FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIPNOTIC),
 			{
-				precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(WEP_INDEXSTART_HIPNOTIC + k)));
-			}
+				precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(it.m_id)));
+			});
 		}
 	}
 
 	if(MP_ROGUE)
 	{
-		for(int j = 0; j < 5; j++)
+		FOREACH(Weapons, (it.spawnflags & WEP_FLAG_ROGUE),
 		{
-			precache_pic(strcat("gfx/quake/", Sbar_PickWeapon_wepname(WEP_INDEXSTART_ROGUE + j)));
-		}
+			precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it.m_id)));
+			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it.m_id)));
+		});
 	}
 
 	for(int j = 0; j < 10; j++)
@@ -843,74 +846,70 @@ bool CanDrawWeapon(int wep)
 	// these weapons share the same position as another weapon, so we don't want to draw them in their own slot!
 	switch(wep)
 	{
-		case WEP_SHOTGUN:
-		case WEP_SUPER_SHOTGUN:
-		case WEP_NAILGUN:
-		case WEP_SUPER_NAILGUN:
-		case WEP_GRENADE_LAUNCHER:
-		case WEP_ROCKET_LAUNCHER:
-		case WEP_LIGHTNING:
-		case WEP_MJOLNIR: 
-		case WEP_LASER_CANNON: 
-		case WEP_GRAPPLE:
+		case WEP_SHOTGUN.m_id:
+		case WEP_SUPER_SHOTGUN.m_id:
+		case WEP_NAILGUN.m_id:
+		case WEP_SUPER_NAILGUN.m_id:
+		case WEP_GRENADE_LAUNCHER.m_id:
+		case WEP_ROCKET_LAUNCHER.m_id:
+		case WEP_LIGHTNING.m_id:
+		case WEP_MJOLNIR.m_id: 
+		case WEP_LASER_CANNON.m_id: 
+		case WEP_GRAPPLE.m_id:
 			return true;
 
 		// these weapons never draw an icon
-		case WEP_AXE:
-		case WEP_LAVA_SUPER_NAILGUN:
-		case WEP_LAVA_NAILGUN:
-		case WEP_PROXIMITY_GUN:
-		case WEP_MULTI_GRENADE:
-		case WEP_MULTI_ROCKET:
-		case WEP_PLASMA_GUN:
-		case WEP_LIGHTME:
-		case WEP_SPEAR:
-		case WEP_NAPALM:
-		case WEP_PULSERIFLE:
+		case WEP_AXE.m_id:
+		case WEP_LAVA_SUPER_NAILGUN.m_id:
+		case WEP_LAVA_NAILGUN.m_id:
+		case WEP_PROXIMITY_GUN.m_id:
+		case WEP_MULTI_GRENADE.m_id:
+		case WEP_MULTI_ROCKET.m_id:
+		case WEP_PLASMA_GUN.m_id:
+		case WEP_LIGHTME.m_id:
+		case WEP_SPEAR.m_id:
+		case WEP_NAPALM.m_id:
 			return false;
 	}
 	return false;
 }
 
+bool WeaponIsFromRogue(int wep)
+{
+	// temporary hack to switch inventory bars
+	Weapon thewep = REGISTRY_GET(Weapons, wep);
+	return (thewep.spawnflags & WEP_FLAG_ROGUE);
+}
+
 bool WeaponHasPrefix(int wep)
 {
 	// rogue's weapons lack prefix support, so we need this ugly hack to work around it!
-	switch(wep)
-	{
-		case WEP_LAVA_NAILGUN:
-		case WEP_LAVA_SUPER_NAILGUN:
-		case WEP_MULTI_GRENADE:
-		case WEP_MULTI_ROCKET:
-		case WEP_PLASMA_GUN:
-			return false;
-	}
-
-	return true;
+	return !WeaponIsFromRogue(wep);
 }
 
 int GetDrawWeapon(int wep, int awep)
 {
-	if(wep == WEP_NAILGUN && awep == WEP_LAVA_NAILGUN)
-		return WEP_LAVA_NAILGUN;
-	if(wep == WEP_SUPER_NAILGUN && awep == WEP_LAVA_SUPER_NAILGUN)
-		return WEP_LAVA_SUPER_NAILGUN;
-	if(wep == WEP_GRENADE_LAUNCHER)
+	if(wep == WEP_NAILGUN.m_id && awep == WEP_LAVA_NAILGUN.m_id)
+		return WEP_LAVA_NAILGUN.m_id;
+	if(wep == WEP_SUPER_NAILGUN.m_id && awep == WEP_LAVA_SUPER_NAILGUN.m_id)
+		return WEP_LAVA_SUPER_NAILGUN.m_id;
+	if(wep == WEP_GRENADE_LAUNCHER.m_id)
 	{
-		if(awep == WEP_MULTI_GRENADE)
-			return WEP_MULTI_GRENADE;
-		else if(awep == WEP_PROXIMITY_GUN)
-			return WEP_PROXIMITY_GUN;
-		else if(awep == WEP_NAPALM)
-			return WEP_NAPALM;
+		if(awep == WEP_MULTI_GRENADE.m_id)
+			return WEP_MULTI_GRENADE.m_id;
+		else if(awep == WEP_PROXIMITY_GUN.m_id)
+			return WEP_PROXIMITY_GUN.m_id;
+		else if(awep == WEP_NAPALM.m_id)
+			return WEP_NAPALM.m_id;
 	}
-	if(wep == WEP_ROCKET_LAUNCHER && awep == WEP_MULTI_ROCKET)
-		return WEP_MULTI_ROCKET;
-	if(wep == WEP_ROCKET_LAUNCHER && awep == WEP_SPEAR)
-		return WEP_SPEAR;
-	if(wep == WEP_LIGHTNING && awep == WEP_PLASMA_GUN)
-		return WEP_PLASMA_GUN;
-	if(wep == WEP_LIGHTNING && awep == WEP_LIGHTME)
-		return WEP_LIGHTME;
+	if(wep == WEP_ROCKET_LAUNCHER.m_id && awep == WEP_MULTI_ROCKET.m_id)
+		return WEP_MULTI_ROCKET.m_id;
+	if(wep == WEP_ROCKET_LAUNCHER.m_id && awep == WEP_SPEAR.m_id)
+		return WEP_SPEAR.m_id;
+	if(wep == WEP_LIGHTNING.m_id && awep == WEP_PLASMA_GUN.m_id)
+		return WEP_PLASMA_GUN.m_id;
+	if(wep == WEP_LIGHTNING.m_id && awep == WEP_LIGHTME.m_id)
+		return WEP_LIGHTME.m_id;
 
 	return wep;
 }
@@ -920,28 +919,29 @@ int GetDrawWeapon(int wep, int awep)
 Sbar_DrawInventory
 ===============
 */
-int oldweapons;
-float weapon_gettime[24];
+WepSet oldweapons;
+float weapon_gettime[72];
 void Sbar_DrawInventory()
 {
 	// set flash times
 	int myitems = STAT(ITEMS);
 	int mypowerups = STAT(POWERUPS);
-	int myweapons = STAT(WEAPONS);
+	WepSet myweapons = STAT(WEAPONS);
+	int activeweapon = STAT(ACTIVEWEAPON);
 
 	if(oldweapons != myweapons)
 	{
-		for(int j = 0; j < 24; j++)
+		FOREACH(Weapons, it != WEP_Null,
 		{
-			if((myweapons & BIT(j)) != (oldweapons & BIT(j)))
-				weapon_gettime[j] = time;
-		}
+			if((myweapons & it.m_wepset) != (oldweapons & it.m_wepset))
+				weapon_gettime[it.m_id] = time;
+		});
 	}
 	oldweapons = myweapons;
 
 	if(MP_ROGUE)
 	{
-		if(STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN)
+		if(WeaponIsFromRogue(activeweapon))
 			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
 		else
 			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
@@ -950,35 +950,31 @@ void Sbar_DrawInventory()
 		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
-	// 24 is the highest bit count networked
-	int activeweapon = STAT(ACTIVEWEAPON);
 	int wep_pos = 0;
-	for(int j = 0; j < 24; j++)
+	FOREACH(Weapons, it != WEP_Null && (myweapons & it.m_wepset),
 	{
-		int wep = BIT(j + 1); // weapon list is off by 1, since axe isn't counted here
-		if(myweapons & wep)
-		{
-			float thetime = weapon_gettime[j];
-			int flashon = rint(max(0, time - thetime) * 10);
-			if(flashon >= 10)
-				flashon = (activeweapon == GetDrawWeapon(wep, activeweapon));
-			else
-				flashon = (flashon % 5) + 2;
+		// don't count axe?
+		if(it == WEP_AXE)
+			continue;
+		if(!CanDrawWeapon(it.m_id))
+			continue;
+		float thetime = weapon_gettime[it.m_id];
+		int flashon = rint(max(0, time - thetime) * 10);
+		int drawwep = GetDrawWeapon(it.m_id, activeweapon);
+		if(flashon >= 10)
+			flashon = (activeweapon == drawwep);
+		else
+			flashon = (flashon % 5) + 2;
 
-			if(CanDrawWeapon(wep))
-			{
-				int draw_wep = GetDrawWeapon(wep, activeweapon);
-				Sbar_DrawPic(vec2(wep_pos * 24, -16), Sbar_PickWeapon(flashon, j, draw_wep, WeaponHasPrefix(draw_wep)));
-				++wep_pos;
-			}
-		}
-	}
+		Sbar_DrawPic(vec2(wep_pos * 24, -16), Sbar_PickWeapon(flashon, it.m_id, drawwep, WeaponHasPrefix(drawwep)));
+		++wep_pos;
+	});
 
 	// ammo counts
 	for(int j = 0; j < 4; j++)
 	{
 		int itemstat;
-		bool alt = (MP_ROGUE && STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN);
+		bool alt = (MP_ROGUE && WeaponIsFromRogue(activeweapon));
 		switch(j)
 		{
 			default:

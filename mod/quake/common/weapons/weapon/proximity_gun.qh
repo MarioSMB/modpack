@@ -1,0 +1,18 @@
+#pragma once
+
+CLASS(ProximityGun, Weapon)
+/* ammotype  */ ATTRIB(ProximityGun, ammo_type, int, IT_ROCKETS);
+/* impulse   */ ATTRIB(ProximityGun, impulse, int, 50);
+/* cnt       */ ATTRIB(ProximityGun, cnt, int, 234); // minelayer
+/* spawnflags*/ ATTRIB(ProximityGun, spawnflags, int, WEP_FLAG_HIPNOTIC);
+/* modelname */ ATTRIB(ProximityGun, mdl, string, "prox");
+/* crosshair */ ATTRIB(ProximityGun, w_crosshair, string, "gfx/crosshairminelayer");
+/* crosshair */ ATTRIB(ProximityGun, w_crosshair_size, float, 0.9);
+/* crosshair */ ATTRIB(ProximityGun, w_crosshair_color, vector, '0.75 1 0');
+/* refname   */ ATTRIB(ProximityGun, netname, string, "proximitygun");
+/* wepname   */ ATTRIB(ProximityGun, m_name, string, _("Proximity Gun"));
+
+ENDCLASS(ProximityGun)
+REGISTER_WEAPON(PROXIMITY_GUN, NEW(ProximityGun));
+
+//SPAWNFUNC_WEAPON(weapon_proximity_gun, WEP_PROXIMITY_GUN)

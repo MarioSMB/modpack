@@ -225,13 +225,13 @@ void player_stand1(entity this)
 		return;
 	}
 
-	if(this.weapon == WEP_AXE)
+	if(this.weapon == WEP_AXE.m_id)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
 		this.frame = anim_player_axstnd1 + this.walkframe;
 	}
-	else if(this.weapon == WEP_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR.m_id)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
@@ -258,13 +258,13 @@ void player_run(entity this)
 		return;
 	}
 
-	if(this.weapon == WEP_AXE)
+	if(this.weapon == WEP_AXE.m_id)
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
 		this.frame = anim_player_axrun1 + this.walkframe;
 	}
-	else if(this.weapon == WEP_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR.m_id)
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
@@ -586,7 +586,7 @@ void player_light1(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	//if(this.weapon == WEP_PLASMA_GUN)
+	//if(this.weapon == WEP_PLASMA_GUN.m_id)
 	//{
 		//W_FirePlasma(this);
 		//player_run(this);
@@ -610,7 +610,7 @@ void player_light2(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	//if(this.weapon != WEP_PLASMA_GUN)
+	//if(this.weapon != WEP_PLASMA_GUN.m_id)
 	//{
 		W_FireLightning(this);
 		this.attack_finished = time + 0.2;
@@ -779,9 +779,9 @@ void player_pain(entity this, entity attacker, float damage)
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if(this.weapon == WEP_AXE)
+	if(this.weapon == WEP_AXE.m_id)
 		player_axpain1(this, attacker);
-	else if(this.weapon == WEP_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR.m_id)
 		player_hampain1(this, attacker);
 	else
 		player_pain1(this, attacker);
@@ -1189,12 +1189,12 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
-	if(this.weapon == WEP_AXE)
+	if(this.weapon == WEP_AXE.m_id)
 	{
 		player_die_ax1(this);
 		return;
 	}
-	else if(this.weapon == WEP_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR.m_id)
 	{
 		this.modelindex = modelindex_hammer; // use hammer model
 		player_die_ham1(this);

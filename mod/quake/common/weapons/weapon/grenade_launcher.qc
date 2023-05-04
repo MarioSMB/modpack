@@ -1,0 +1,80 @@
+#include "grenade_launcher.qh"
+
+#ifdef SVQC
+void GrenadeExplode(entity this)
+{
+	T_RadiusDamage(this, this.owner, 120, NULL);
+
+	te_explosion(this.origin);
+
+	BecomeExplosion(this);
+}
+
+void GrenadeTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+	if(toucher.takedamage == DAMAGE_AIM)
+	{
+		GrenadeExplode(this);
+		return;
+	}
+	if(this.attack_finished < time)
+		_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
+	this.attack_finished = time + 0.1;
+	if(this.velocity == '0 0 0')
+		this.avelocity = '0 0 0';
+}
+
+void W_FireGrenade(entity this)
+{
+	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
+
+	this.punchangle_x = -2;
+
+	entity missile = new(grenade);
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_BBOX;
+		
+// set missile speed	
+
+	makevectors(this.v_angle);
+
+	if(this.v_angle_x)
+		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
+	else
+	{
+		missile.velocity = qc_aim(this, 10000);
+		missile.velocity = missile.velocity * 600;
+		missile.velocity_z = 200;
+	}
+
+	missile.avelocity = '300 300 300';
+
+	missile.angles = vectoangles(missile.velocity);
+
+	settouch(missile, GrenadeTouch);
+	
+// set missile duration
+	missile.nextthink = time + 2.5;
+	setthink(missile, GrenadeExplode);
+
+	_setmodel(missile, "progs/grenade.mdl");
+	setsize(missile, '0 0 0', '0 0 0');		
+	setorigin(missile, this.origin);
+}
+
+METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor))
+{
+	player_rocket1(actor);
+	W_FireGrenade(actor);
+	actor.attack_finished = time + RuneApplyHell(0.6, actor);
+}
+METHOD(GrenadeLauncher, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+#endif

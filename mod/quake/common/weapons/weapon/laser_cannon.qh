@@ -1,0 +1,18 @@
+#pragma once
+
+CLASS(LaserCannon, Weapon)
+/* ammotype  */ ATTRIB(LaserCannon, ammo_type, int, IT_CELLS);
+/* impulse   */ ATTRIB(LaserCannon, impulse, int, 9);
+/* cnt       */ ATTRIB(LaserCannon, cnt, int, 243); // hlac
+/* spawnflags*/ ATTRIB(LaserCannon, spawnflags, int, WEP_FLAG_HIPNOTIC);
+/* modelname */ ATTRIB(LaserCannon, mdl, string, "laserg");
+/* crosshair */ ATTRIB(LaserCannon, w_crosshair, string, "gfx/crosshairhlac");
+/* crosshair */ ATTRIB(LaserCannon, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(LaserCannon, w_crosshair_color, vector, '0 1 0');
+/* refname   */ ATTRIB(LaserCannon, netname, string, "laser_gun");
+/* wepname   */ ATTRIB(LaserCannon, m_name, string, _("Laser Cannon"));
+
+ENDCLASS(LaserCannon)
+REGISTER_WEAPON(LASER_CANNON, NEW(LaserCannon));
+
+//SPAWNFUNC_WEAPON(weapon_laser_gun, WEP_LASER_CANNON)

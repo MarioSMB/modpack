@@ -18,7 +18,25 @@
 .float ammo_multi_rockets;
 .float ammo_plasma;
 
+void spawn_touchspark(entity this, float damage);
+
+void SpawnDischarge(entity this, float dm);
+
+void SpawnMeatBounce(entity this, entity targ, float dm);
+
+void spawn_extrablood(entity this, entity targ, float damage);
+
+void gibhim(entity this);
+
+void ThrowMe(entity this, entity targ, float dm);
+
+void SuperDamageSound(entity this);
+
+void W_SwitchWeapon(entity this, float to_wep);
+
 bool W_WantsToChangeWeapon(entity this, int old, int new);
+
+void spike_touch(entity this, entity toucher);
 
 entity launch_spike(entity this, vector org, vector dir);
 
@@ -32,7 +50,17 @@ void SpawnMeatSpray(entity this, vector org, vector vel);
 
 void LightningDamage(vector p1, vector p2, entity from, float damage);
 
+void MakeFlame(entity this, entity toucher);
+
+void SpawnInternalFire(entity this, entity targ);
+
+void SpawnFireSpark(entity this);
+
 void SpawnBlood(vector org, vector vel, float damage, entity targ);
+
+void BecomeBloodSpurt(entity this, float dm);
+
+void BecomePurpleExplosion(entity this, entity directhitentity, float dm);
 
 int W_BestWeapon(entity this, int except);
 

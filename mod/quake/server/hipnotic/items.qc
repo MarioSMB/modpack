@@ -169,9 +169,8 @@ spawnfunc(weapon_mjolnir)
 
 	precache_model ("progs/g_hammer.mdl");
 	_setmodel(this, "progs/g_hammer.mdl");
-	this.weapon = WEP_MJOLNIR;
+	this.weapon = WEP_MJOLNIR.m_id;
 	this.netname = "Mjolnir";
-	//this.weapons = WEP_MJOLNIR;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -187,9 +186,8 @@ spawnfunc(weapon_laser_gun)
 
 	precache_model ("progs/g_laserg.mdl");
 	_setmodel(this, "progs/g_laserg.mdl");
-	this.weapon = WEP_LASER_CANNON;
+	this.weapon = WEP_LASER_CANNON.m_id;
 	this.netname = "Laser Cannon";
-	//this.weapons = WEP_LASER_CANNON;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -205,9 +203,8 @@ spawnfunc(weapon_proximity_gun)
 
 	precache_model ("progs/g_prox.mdl");
 	_setmodel(this, "progs/g_prox.mdl");
-	this.weapon = WEP_PROXIMITY_GUN;
+	this.weapon = WEP_PROXIMITY_GUN.m_id;
 	this.netname = "Proximity Gun";
-	//this.weapons = WEP_PROXIMITY_GUN;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');

@@ -1,3 +1,0 @@
-#pragma once
-
-void launch_plasma(entity this, vector org, vector dir);

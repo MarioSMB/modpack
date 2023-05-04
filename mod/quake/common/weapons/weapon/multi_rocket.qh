@@ -1,0 +1,22 @@
+#pragma once
+
+CLASS(MultiRocketLauncher, Weapon)
+/* ammotype  */ ATTRIB(MultiRocketLauncher, ammo_type, int, IT_MULTI_ROCKETS);
+/* impulse   */ ATTRIB(MultiRocketLauncher, impulse, int, 63);
+/* cnt       */ ATTRIB(MultiRocketLauncher, cnt, int, 246); // fireball
+/* spawnflags*/ ATTRIB(MultiRocketLauncher, spawnflags, int, WEP_FLAG_ROGUE);
+/* modelname */ ATTRIB(MultiRocketLauncher, mdl, string, "multi2");
+/* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair, string, "gfx/crosshairfireball");
+/* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair_color, vector, '1 0.75 0');
+/* refname   */ ATTRIB(MultiRocketLauncher, netname, string, "multirocketlauncher");
+/* wepname   */ ATTRIB(MultiRocketLauncher, m_name, string, _("Multi Rocket Launcher"));
+
+ENDCLASS(MultiRocketLauncher)
+REGISTER_WEAPON(MULTI_ROCKET, NEW(MultiRocketLauncher));
+
+//SPAWNFUNC_WEAPON(weapon_multi_rocket, WEP_MULTI_ROCKET)
+
+#ifdef SVQC
+void MultiRocketExplode(entity this, entity directhitentity);
+#endif

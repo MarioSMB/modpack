@@ -1,4 +1,4 @@
-// LAVA Weapon Routines
+#include "lava_wpn.qh"
 
 /*
 ===============
@@ -27,51 +27,6 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 	newmis.velocity = dir * 1000;
 
 	return newmis;
-}
-
-void superlavaspike_touch(entity this, entity toucher);
-void W_FireSuperLavaSpikes(entity this)
-{
-	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
-	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 2;
-	
-	vector dir = qc_aim(this, 1000);
-	entity newmis = launch_lava_spike(this, this.origin + '0 0 16', dir);
-	settouch(newmis, superlavaspike_touch);
-
-//	setmodel(newmis, "progs/lspike.mdl");			
-
-	setsize(newmis, '0 0 0', '0 0 0');		
-	this.punchangle_x = -2;
-}
-
-void W_FireLavaSpikes(entity this, float ox)
-{
-	makevectors(this.v_angle);
-	
-	if(this.ammo_lava_nails >= 2 && this.weapon == WEP_LAVA_SUPER_NAILGUN)
-	{
-		W_FireSuperLavaSpikes(this);
-		return;
-	}
-
-	if(this.ammo_lava_nails < 1)
-	{
-		// disabled notification to reduce spam
-		//centerprint(this, "Out of Lava Nails");
-		W_SwitchWeapon(this, W_BestWeapon(this, 0));
-		return;
-	}
-
-	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
-	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 1;
-	
-	vector dir = qc_aim(this, 1000);
-	launch_lava_spike(this, this.origin + this.view_ofs + v_up * -8 + v_right * ox, dir);//Seven
-
-	this.punchangle_x = -2;
 }
 
 // =============== Lava Spike Touch Routines

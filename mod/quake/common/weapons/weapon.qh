@@ -1,0 +1,85 @@
+#pragma once
+
+#ifdef SVQC
+#include "../../server/hipnotic/defs.qh"
+#include "../../server/player.qh"
+#include "../../server/rogue/lava_wpn.qh"
+#include "../../server/rogue/runes.qh"
+#include "../../server/triggers/triggers.qh"
+#include "../../server/weapons.qh"
+#endif
+
+USING(WepSet, vector);
+
+/** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
+CLASS(Weapon, Object)
+	ATTRIB(Weapon, m_id, int, 0);
+    /** M: ammotype  : main ammo type */
+    ATTRIB(Weapon, ammo_type, int, 0);
+    /** M: impulse   : weapon impulse */
+    ATTRIB(Weapon, impulse, int, -1);
+    /** M: cnt       : impulse conversion, xonotic has binds that we want to reuse instead of making our own */
+    ATTRIB(Weapon, cnt, int, -1);
+    /** M: flags     : WEPSPAWNFLAG_... combined */
+    ATTRIB(Weapon, spawnflags, int, 0);
+    /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
+    ATTRIB(Weapon, mdl, string, "");
+    /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
+    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
+    /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
+    ATTRIB(Weapon, w_crosshair_size, float, 1);
+    /** A: crosshair : per-weapon crosshair color (argument three of "crosshair" field) */
+    ATTRIB(Weapon, w_crosshair_color, vector, '0 0 0');
+    /** M: refname   : reference name name */
+    ATTRIB(Weapon, netname, string, "");
+    /** M: wepname   : human readable name */
+    ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+
+    /** (SERVER) setup weapon data */
+    METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
+    /** (SERVER) logic to run every frame */
+    METHOD(Weapon, wr_think, void(Weapon this, entity actor)) {}
+    /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
+    METHOD(Weapon, wr_init, void(Weapon this)) {}
+    /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
+    METHOD(Weapon, wr_suicidemessage, entity(Weapon this)) {return NULL;}
+    /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
+    METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
+    /** (CLIENT) impact effect for weapon explosion */
+    METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
+ENDCLASS(Weapon)
+
+// weapon flags
+#if 0
+const int WEP_TYPE_OTHER          =  BIT(0); // not for damaging people
+const int WEP_TYPE_SPLASH         =  BIT(1); // splash damage
+const int WEP_TYPE_HITSCAN        =  BIT(2); // hitscan
+const int WEP_FLAG_CANCLIMB       =  BIT(3); // can be used for movement
+const int WEP_FLAG_NORMAL         =  BIT(4); // in "most weapons" set
+const int WEP_FLAG_HIDDEN         =  BIT(5); // hides from menu
+const int WEP_FLAG_RELOADABLE     =  BIT(6); // can has reload
+const int WEP_FLAG_SUPERWEAPON    =  BIT(7); // powerup timer
+const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
+const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
+#endif
+const int WEP_FLAG_HIPNOTIC      =  BIT(11); // from the hipnotic mission pack
+const int WEP_FLAG_ROGUE         =  BIT(12); // from the rogue mission pack
+const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack
+
+#if 0
+#ifdef SVQC
+
+void weapon_defaultspawnfunc(entity this, Weapon e);
+#define SPAWNFUNC_WEAPON(name, weapon) \
+    spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
+
+#define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
+	SPAWNFUNC_WEAPON(name, (cond ? wep1 : wep2))
+
+#else
+
+#define SPAWNFUNC_WEAPON(name, weapon)
+
+#endif
+#endif

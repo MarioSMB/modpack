@@ -371,7 +371,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		// special case for killable chthon (yoder, december 16 2020)
 		if(targ.monsterdef == MON_CHTHON && (targ.spawnflags & 2)) // is killable chthon
 		{
-			if(attacker.weapon == WEP_LIGHTNING)
+			if(attacker.weapon == WEP_LIGHTNING.m_id)
 			{
 				// TODO: Spawn blood
 				LOG_DEBUG("Player has LG! Damage Chthon!");
