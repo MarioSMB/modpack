@@ -119,7 +119,7 @@
     MSG_INFO_NOTIF(POWERDOWN_QUAD_DAMAGE,                   N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Quad Damage is wearing off"), "")
     MSG_INFO_NOTIF(POWERDOWN_WETSUIT,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Air supply in Wetsuit is running out"), "")
 
-    MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 left the game with %s frags"), "")
+    MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 left the game with %s frag(s)"), "")
 
     MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  1, 0, "s1", "",                      "",          _("^BG%s^K1 is now thinking with portals"), "")
 

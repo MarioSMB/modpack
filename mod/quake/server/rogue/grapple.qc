@@ -115,8 +115,7 @@ void GrappleAnchor(entity this, entity toucher)
 	}
 
 	this.owner.on_hook = true;
-	if(this.owner.flags & FL_ONGROUND)
-		this.owner.flags = this.owner.flags - FL_ONGROUND;
+	UNSET_ONGROUND(this.owner);
 
 	// CHAIN2 is a looping sample. Use LEFTY as a flag so that client.qc
 	// will know to only play the tink sound ONCE to clear the weapons

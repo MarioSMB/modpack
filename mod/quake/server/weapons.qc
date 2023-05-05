@@ -70,8 +70,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 		this.velocity = normalize(this.velocity);
 		this.velocity = this.speed * this.velocity;
 		this.old_velocity = this.velocity;
-		if(this.flags & FL_ONGROUND)
-			this.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 		//float r = random();
 		_sound(this, CH_WEAPON_SINGLE, "hipweap/laserric.wav", 1, ATTN_STATIC);
 /*
@@ -95,8 +94,7 @@ void HIP_LaserThink(entity this)
 		delete(this);
 		return;
 	}
-	if(this.flags & FL_ONGROUND)
-		this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	this.velocity = this.old_velocity;
 	this.angles = vectoangles(this.velocity);
 	this.nextthink = time + 0.1;

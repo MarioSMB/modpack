@@ -38,12 +38,15 @@ void shield_spawn(entity shieldOwner, vector dir)
 	newShield.owner = shieldOwner;
 	newShield.solid = SOLID_NOT;
 	newShield.takedamage = DAMAGE_NO;
+	newShield.nodrawtoclient = shieldOwner;
 	set_movetype(newShield, MOVETYPE_NONE);
 	
 	// time for shield to live
 //	shieldOwner.shield_death_time = time + 0.5;
 	shieldOwner.shield_death_time = time + 0.3;
 	shieldOwner.shield_entity = newShield;
+
+	STAT(SHIELD_TIME, shieldOwner) = time + 0.3;
 		
 	newShield.v_angle = shieldOwner.v_angle;
 	newShield.angles = shieldOwner.angles;

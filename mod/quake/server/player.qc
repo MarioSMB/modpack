@@ -253,28 +253,26 @@ void player_run(entity this)
 	this.weaponframe=0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
-		this.walkframe=0;
+		this.walkframe = 0;
 		player_stand1(this);
 		return;
 	}
 
 	if(this.weapon == WEP_AXE.m_id || (this.weapon == WEP_MJOLNIR.m_id && this.model != "progs/player.mdl"))
 	{
-		if(this.walkframe == 6)
+		if(this.walkframe >= 6)
 			this.walkframe = 0;
 		this.frame = anim_player_axrun1 + this.walkframe;
 	}
 	else if(this.weapon == WEP_MJOLNIR.m_id)
 	{
-		if(this.walkframe == 6)
+		if(this.walkframe >= 6)
 			this.walkframe = 0;
 		this.frame = this.walkframe;
 	}
 	else
 	{
-		bool check_walkframe = (this.walkframe == 6);
-		if(MP_IMPEL)
-			check_walkframe = (this.walkframe >= 6);
+		bool check_walkframe = (this.walkframe >= 6);
 		if(check_walkframe)
 			this.walkframe = 0;
 		this.frame = this.frame + this.walkframe;

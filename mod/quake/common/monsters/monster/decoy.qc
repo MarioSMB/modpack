@@ -92,6 +92,7 @@ METHOD(Decoy, mr_setup, bool(Decoy this, entity actor))
 	set_movetype(actor, MOVETYPE_STEP);
 
 	actor.health = 3000000;
+	actor.takedamage = DAMAGE_NO;
 
 	actor.th_stand = decoy_stand1;
 	actor.th_walk = decoy_walk1;

@@ -265,8 +265,8 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 	if(this.state == 1)
 		return;
 
-//   intermission_exittime = time + 10000000;  // never allow exit
-//   intermission_running = 1;
+	intermission_exittime = time + 10000000;  // never allow exit
+	intermission_running = 1;
 	this.state = 1;
 
 	// find the intermission spot

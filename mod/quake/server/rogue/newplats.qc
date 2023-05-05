@@ -481,10 +481,9 @@ spawnfunc(func_new_plat)
 	this.angles = '0 0 0';
 
 	this.classname = "func_new_plat";
-	this.solid = SOLID_BSP;
-	set_movetype(this, MOVETYPE_PUSH);
-	setorigin(this, this.origin);	
-	_setmodel(this, this.model);
+	if (!InitMovingBrushTrigger(this))
+		return;
+	this.effects |= EF_LOWPRECISION;
 	setsize(this, this.mins , this.maxs);
 
 	if(!this.speed)

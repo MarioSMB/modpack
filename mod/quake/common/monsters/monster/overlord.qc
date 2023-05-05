@@ -151,7 +151,7 @@ void overlord_teleport(entity this)
 	spawn_tdeath(theDest.origin, this);
 
 	setorigin(this, theDest.origin);
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 }
 // =======================================================
 

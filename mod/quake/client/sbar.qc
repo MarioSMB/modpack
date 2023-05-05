@@ -1148,6 +1148,14 @@ void Sbar_DrawFace()
 	Sbar_DrawPic('112 0 0', pic);
 }
 
+void Sbar_DrawShieldOverlay()
+{
+	if(time > STAT(SHIELD_TIME) || !(STAT(POWERUPS) & POWERUP_SHIELD))
+		return;
+
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '1 0 0', bound(0, 0.5 * (STAT(SHIELD_TIME) - time), 0.025), DRAWFLAG_NORMAL);
+}
+
 void Sbar_Draw()
 {
 	if(!getproperty(VF_DRAWENGINESBAR)) // drawing in engine turned off, fall back to qc implementation
@@ -1164,6 +1172,8 @@ void Sbar_Draw()
 			else
 				sb_lines = 24+16+8;
 		}
+
+		Sbar_DrawShieldOverlay();
 
 		// always draw push notifications?
 		Sbar_DrawNotify();

@@ -619,7 +619,7 @@ void dragon_death1(entity this, entity inflictor, entity attacker)
 	this.use = func_null;
 	makevectors(this.angles);
 	this.velocity = 300 * v_forward - 40 * v_up;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	settouch(this, dragon_squish);
 
