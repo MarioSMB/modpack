@@ -414,7 +414,7 @@ void Deathmatch_Weapon(entity this, int old, int new)
 
 bool weapon_customize(entity this, entity client)
 {
-	Weapon wep = this.weaponentity.m_weapon;
+	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 		return false;
 	return true;

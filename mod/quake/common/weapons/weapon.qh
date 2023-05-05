@@ -63,6 +63,7 @@ const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (muta
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
 #endif
+const int WEP_FLAG_NOSTEAL       =  BIT(10); // weapon should not be taken by gremlins
 const int WEP_FLAG_HIPNOTIC      =  BIT(11); // from the hipnotic mission pack
 const int WEP_FLAG_ROGUE         =  BIT(12); // from the rogue mission pack
 const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack

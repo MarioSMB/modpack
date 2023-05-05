@@ -4,7 +4,7 @@ CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_type, int, IT_SHELLS);
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* cnt       */ ATTRIB(Shotgun, cnt, int, 231); // shotgun
-/* spawnflags*/ ATTRIB(Shotgun, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NOSTEAL);
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shot");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);

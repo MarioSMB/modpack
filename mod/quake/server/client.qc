@@ -891,12 +891,14 @@ void CopyToBodyQueue(entity ent)
 	body.colormap = ent.colormap;
 	set_movetype(body, ent.move_movetype);
 	body.velocity = ent.velocity;
-	body.move_qcphysics = false; // not for clones
+	//body.move_qcphysics = false; // not for clones
 	body.flags = 0;
 	if(MP_ROGUE)
 		body.skin = ent.skin;
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
+
+	IL_PUSH(g_clones, body);
 
 	if(coop || deathmatch)
 	{

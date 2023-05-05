@@ -108,6 +108,7 @@
     MSG_INFO_NOTIF(ITEM_KEY_GOT_SELF,                       N_CONSOLE,  1, 0, "s1", "",                                  "",     _("^BGYou picked up %s"), "")
     MSG_INFO_NOTIF(ITEM_POWERUP_GOT,                        N_DISABLE,  1, 0, "s1", "",                                  "",     _("^BGYou got the ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_GOT,                         N_DISABLE,  1, 0, "s1", "",                                  "",     _("^BGYou got the ^F1%s"), "")
+    MSG_INFO_NOTIF(ITEM_WEAPON_STOLE,                       N_DISABLE,  1, 0, "s1", "",                                  "",     _("^BGGremlin stole your ^F1%s"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_PICKUP,                      N_DISABLE,  0, 0, "", "",                                    "",     _("^BGYou picked up a weapon"), "")
 
     MSG_INFO_NOTIF(POWERDOWN_ANTIGRAV,                      N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Antigrav failing..."), "")
@@ -148,6 +149,7 @@
     MSG_CENTER_NOTIF(ITEM_KEY_GOT_SELF,                 N_ENABLE,    1, 0, "s1",                       CPID_KEY,  "1.5 0", _("^BGYou got the %s"), "")
     MSG_CENTER_NOTIF(ITEM_POWERUP_GOT,                  N_ENABLE,    1, 0, "s1",                       CPID_POWER,"1.5 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGYou got the ^F1%s"), "")
+    MSG_CENTER_NOTIF(ITEM_WEAPON_STOLE,                 N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGGremlin stole your ^F1%s"), "")
 
     MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
@@ -186,6 +188,7 @@
     MSG_MULTI_NOTIF(ITEM_KEY_GOT_SELF,                  N_ENABLE,  NULL,           INFO_ITEM_KEY_GOT_SELF,                 CENTER_ITEM_KEY_GOT_SELF)
     MSG_MULTI_NOTIF(ITEM_POWERUP_GOT,                   N_ENABLE,  NULL,           INFO_ITEM_POWERUP_GOT,                  CENTER_ITEM_POWERUP_GOT)
     MSG_MULTI_NOTIF(ITEM_WEAPON_GOT,                    N_ENABLE,  NULL,           INFO_ITEM_WEAPON_GOT,                   CENTER_ITEM_WEAPON_GOT)
+    MSG_MULTI_NOTIF(ITEM_WEAPON_STOLE,                  N_ENABLE,  NULL,           INFO_ITEM_WEAPON_STOLE,                 CENTER_ITEM_WEAPON_STOLE)
 
     MSG_MULTI_NOTIF(POWERDOWN_ANTIGRAV,                 N_ENABLE,  NULL,           INFO_POWERDOWN_ANTIGRAV,                CENTER_POWERDOWN_ANTIGRAV)
     MSG_MULTI_NOTIF(POWERDOWN_BIOSUIT,                  N_ENABLE,  NULL,           INFO_POWERDOWN_BIOSUIT,                 CENTER_POWERDOWN_BIOSUIT)

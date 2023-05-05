@@ -4,7 +4,7 @@ CLASS(Axe, Weapon)
 /* ammotype  */ ATTRIB(Axe, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Axe, impulse, int, 1);
 /* cnt       */ ATTRIB(Axe, cnt, int, 230); // blaster
-/* spawnflags*/ ATTRIB(Axe, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NOSTEAL);
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");
 /* crosshair */ ATTRIB(Axe, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Axe, w_crosshair_size, float, 0.5);

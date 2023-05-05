@@ -4,7 +4,7 @@ CLASS(Mjolnir, Weapon)
 /* ammotype  */ ATTRIB(Mjolnir, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(Mjolnir, impulse, int, 14);
 /* cnt       */ ATTRIB(Mjolnir, cnt, int, 244); // tuba
-/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HIPNOTIC);
+/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HIPNOTIC | WEP_FLAG_NOSTEAL);
 /* modelname */ ATTRIB(Mjolnir, mdl, string, "hammer");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair, string, "gfx/crosshaircrylink");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair_size, float, 0.5);

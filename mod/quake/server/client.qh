@@ -85,3 +85,6 @@ void(entity targ, entity attacker) dmatch_score;
 const bool OPT_MOTD = true; // TODO: opt-out in non-impel!
 const int FL_MOTDVIEWED = 8192; // impel
 const int FL_INSHELTER = 32768; // for marking entities as sheltered from trigger_push
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
