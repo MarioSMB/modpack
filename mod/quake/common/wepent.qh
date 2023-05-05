@@ -1,0 +1,26 @@
+#pragma once
+
+REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
+REGISTER_NET_TEMP(CLIENT_WEPENT)
+
+#ifdef SVQC
+
+	bool wepent_send(entity this, entity to, int sf);
+
+	void wepent_link(entity wep);
+
+	.int m_forceupdate;
+
+	.Weapon m_weapon;
+
+	.entity weaponentity;
+
+	.float m_frame; // quake specific field for handling weaponframe
+
+#endif
+
+#ifdef CSQC
+	.int m_wepent_slot;
+
+	.Weapon activeweapon;
+#endif

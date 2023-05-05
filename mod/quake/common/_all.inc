@@ -16,4 +16,6 @@
 
 #include "weapons/_mod.inc"
 #include "monsters/_mod.inc"
+
+#include "wepent.qc"
 #endif

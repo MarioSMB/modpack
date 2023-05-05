@@ -56,18 +56,18 @@ bool GremlinAttemptWeaponSteal(entity this)
 	// we are within range so lets go for it
 	//
 	entity victim = this.enemy;
-	int best = victim.weapon;
-	if(best == WEP_AXE.m_id || best == WEP_SHOTGUN.m_id || best == WEP_MJOLNIR.m_id)
+	Weapon best = victim.weaponentity.m_weapon;
+	if(best == WEP_AXE || best == WEP_SHOTGUN || best == WEP_MJOLNIR)
 		return false;
-	Weapon wep = REGISTRY_GET(Weapons, best);
+	Weapon wep = best;
 	// take that weapon from the entity
 	STAT(WEAPONS, victim) &= ~wep.m_wepset;
 	// give it to our gremlin
 	STAT(WEAPONS, this) |= wep.m_wepset;
-	this.weapon = best;
+	this.weaponentity.m_weapon = best;
 	// take some ammo while we are at it
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
-	if(best == WEP_SUPER_SHOTGUN.m_id)
+	if(best == WEP_SUPER_SHOTGUN)
 	{
 		amount = victim.ammo_shells;
 		if(amount > 20)
@@ -78,7 +78,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_shells;
 		sprint (victim, "Gremlin stole your Super Shotgun\n");
 	}
-	else if(best == WEP_NAILGUN.m_id)
+	else if(best == WEP_NAILGUN)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
@@ -89,7 +89,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Nailgun\n");
 	}
-	else if(best == WEP_SUPER_NAILGUN.m_id)
+	else if(best == WEP_SUPER_NAILGUN)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
@@ -100,7 +100,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Super Nailgun\n");
 	}
-	else if(best == WEP_GRENADE_LAUNCHER.m_id)
+	else if(best == WEP_GRENADE_LAUNCHER)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -111,7 +111,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Grenade Launcher\n");
 	}
-	else if(best == WEP_ROCKET_LAUNCHER.m_id)
+	else if(best == WEP_ROCKET_LAUNCHER)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -122,7 +122,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Rocket Launcher\n");
 	}
-	else if(best == WEP_LIGHTNING.m_id)
+	else if(best == WEP_LIGHTNING)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
@@ -133,7 +133,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Lightning Gun\n");
 	}
-	else if(best == WEP_LASER_CANNON.m_id)
+	else if(best == WEP_LASER_CANNON)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
@@ -144,7 +144,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Laser Cannon\n");
 	}
-	else if(best == WEP_PROXIMITY_GUN.m_id)
+	else if(best == WEP_PROXIMITY_GUN)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
@@ -155,7 +155,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Proximity Gun\n");
 	}
-	victim.weapon = W_BestWeapon(victim, 0);
+	victim.weaponentity.m_weapon = REGISTRY_GET(Weapons, W_BestWeapon(victim, 0));
 	W_SetCurrentAmmo(victim);
 
 	// tag the gremlin as having stolen a weapon
@@ -1521,6 +1521,8 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 	precache_sound("grem/pain3.wav");
 	precache_sound("grem/idle.wav");
 	precache_sound("grem/sight1.wav");
+
+	actor.weaponentity = actor; // hack to allow weapon system to work
 
     actor.health = 100;
     actor.yaw_speed = 40;

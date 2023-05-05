@@ -86,3 +86,12 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, it.wr_init(it));
     #endif
 }
+
+#ifdef GAMEQC
+.string weaponname; // name of .weapon
+
+.vector movedir_aligned; // shot origin based on weapon alignment (unaffected by shootfromeye)
+
+vector shotorg_adjust_values(vector vecs);
+void CL_WeaponEntity_SetModel(entity this, string name);
+#endif

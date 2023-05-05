@@ -44,6 +44,9 @@ string textShortenToLength(string theText, int maxLength, textLengthUpToLength_l
 	#define normal_or_gentle(normal, gentle) ((GENTLE && (gentle != "")) ? gentle : normal)
 #endif
 
+float compressShotOrigin(vector v);
+vector decompressShotOrigin(int f);
+
 USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
 USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);

@@ -1,0 +1,142 @@
+#include "wepent.qh"
+
+#ifdef SVQC
+.int sv_entnum;
+#endif
+
+#ifdef CSQC
+void CSQCModel_InterpolateAnimation_1To2_Note(entity this, int sf, bool set_times);
+void CSQCModel_InterpolateAnimation_Do(entity this);
+void CSQCModel_InterpolateAnimation_1To2_PreNote(entity this, int sf);
+#endif
+
+#define WEPENT_SET_NORMAL(var, x) MACRO_BEGIN \
+	var = x; \
+MACRO_END
+
+// #define PROP(public, fld, set, sv, cl)
+#define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
+    PROP(false, m_weapon, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.m_weapon.m_id); }, \
+	{ viewmodels.activeweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
+    \
+    PROP(false, m_frame, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.m_frame); }, \
+	{ CSQCModel_InterpolateAnimation_1To2_PreNote(viewmodels, BIT(23)); viewmodels.frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note(viewmodels, BIT(23), true); CSQCModel_InterpolateAnimation_Do(viewmodels); }) \
+    \
+	/**/
+
+#ifdef SVQC
+
+	int WEPENT_PUBLICMASK = 0;
+	STATIC_INIT(WEPENT_PUBLICMASK)
+	{
+		int i = 0;
+		#define X(public, fld, set, sv, cl) { \
+			if (public) { \
+				WEPENT_PUBLICMASK |= BIT(i); \
+			} \
+			i += 1; \
+		}
+		WEPENT_NETPROPS(X);
+	#undef X
+		if (i >= BITS(24 - 1)) LOG_FATAL("Exceeded WEPENT_NETPROPS limit");
+	}
+
+	bool _wepent_send(entity this, entity to, int sf, int chan)
+	{
+		sf |= this.m_forceupdate;
+		this.m_forceupdate = 0;
+		if (chan == MSG_ENTITY)
+			WriteHeader(chan, ENT_CLIENT_WEPENT);
+		else
+			WriteHeader(chan, CLIENT_WEPENT);
+		WriteInt24_t(chan, sf);
+		int i = 0;
+		#define X(public, fld, set, sv, cl) { \
+			if (sf & BIT(i)) { \
+				sv; \
+			} \
+			i += 1; \
+		}
+		WEPENT_NETPROPS(X);
+	#undef X
+		return true;
+	}
+
+	bool wepent_send(entity this, entity to, int sf)
+	{
+		return _wepent_send(this, to, sf, MSG_ENTITY);
+	}
+
+	void wepent_think(entity this)
+	{
+		if(wasfreed(this.owner) || !this.owner)
+		{
+			delete(this);
+			return;
+		}
+
+		this.nextthink = time;
+
+		entity o = this.owner;
+
+		int i = 0;
+		#define X(public, fld, set, sv, cl) { \
+			if (this.fld != o.fld) { \
+				set(this.fld, o.fld); \
+				this.SendFlags |= BIT(i); \
+			} \
+			i += 1; \
+		}
+		WEPENT_NETPROPS(X);
+	#undef X
+	}
+
+	bool wepent_customize(entity this, entity client)
+	{
+		entity e = client;
+		return e.weaponentity == this.owner;
+	}
+
+	void wepent_link(entity wep)
+	{
+		entity e = new_pure(wepent_sender);
+		e.owner = wep;
+		setthink(e, wepent_think);
+		e.nextthink = time;
+		//e.drawonlytoclient = wep.owner;
+		setcefc(e, wepent_customize);
+		Net_LinkEntity(e, false, 0, wepent_send);
+	}
+
+#endif
+
+#ifdef CSQC
+
+	bool ReadWepent(entity this)
+	{
+		int sf = ReadInt24_t();
+		int i = 0;
+		#define X(public, fld, set, sv, cl) { \
+			if (sf & BIT(i)) { \
+				cl; \
+			} \
+			i += 1; \
+		}
+		WEPENT_NETPROPS(X);
+	#undef X
+		return true;
+	}
+
+	NET_HANDLE(ENT_CLIENT_WEPENT, bool isnew)
+	{
+		return ReadWepent(this);
+	}
+
+	NET_HANDLE(CLIENT_WEPENT, bool isnew)
+	{
+		return ReadWepent(NULL);
+	}
+
+#endif

@@ -1,0 +1,5 @@
+#pragma once
+
+#include "../../common/weapons/all.qh"
+
+void CL_SpawnWeaponentity(entity e);

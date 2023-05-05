@@ -440,7 +440,7 @@ void TossBackpack(entity this)
 	entity item = spawn();
 
 	// See if you have the Shotgun or Super Shotgun on
-	if((this.weapon == WEP_SHOTGUN.m_id) || (this.weapon == WEP_SUPER_SHOTGUN.m_id))
+	if((this.weaponentity.m_weapon == WEP_SHOTGUN) || (this.weaponentity.m_weapon == WEP_SUPER_SHOTGUN))
 	{
 		if(this.ammo_shells >= 20)
 		{
@@ -470,7 +470,7 @@ void TossBackpack(entity this)
 	}		
 	
 	// See if we are using a nailgun
-	if((this.weapon == WEP_NAILGUN.m_id) || (this.weapon == WEP_SUPER_NAILGUN.m_id))
+	if((this.weaponentity.m_weapon == WEP_NAILGUN) || (this.weaponentity.m_weapon == WEP_SUPER_NAILGUN))
 	{
 		if(this.ammo_nails >= 20)
 		{
@@ -485,7 +485,7 @@ void TossBackpack(entity this)
 	}	
 
 	// See if we are using the lava nailguns
-	if((this.weapon == WEP_LAVA_NAILGUN.m_id) || (this.weapon == WEP_LAVA_SUPER_NAILGUN.m_id))
+	if((this.weaponentity.m_weapon == WEP_LAVA_NAILGUN) || (this.weaponentity.m_weapon == WEP_LAVA_SUPER_NAILGUN))
 	{
 		if(this.ammo_lava_nails >= 20)
 		{
@@ -526,7 +526,7 @@ void TossBackpack(entity this)
 	}	
 	
 	// See if we are using a grenade or rocket launcher
-	if((this.weapon == WEP_GRENADE_LAUNCHER.m_id) || (this.weapon == WEP_ROCKET_LAUNCHER.m_id))
+	if((this.weaponentity.m_weapon == WEP_GRENADE_LAUNCHER) || (this.weaponentity.m_weapon == WEP_ROCKET_LAUNCHER))
 	{
 		if(this.ammo_rockets >= 10) {
 			item.ammo_rockets = 10;
@@ -538,7 +538,7 @@ void TossBackpack(entity this)
 	}
 
 	// See if we are using the multi grenade or rocket launcher
-	if((this.weapon == WEP_MULTI_GRENADE.m_id) || (this.weapon == WEP_MULTI_ROCKET.m_id))
+	if((this.weaponentity.m_weapon == WEP_MULTI_GRENADE) || (this.weaponentity.m_weapon == WEP_MULTI_ROCKET))
 	{
 		if(this.ammo_multi_rockets >= 10)
 		{
@@ -578,7 +578,7 @@ void TossBackpack(entity this)
 	}
 
 	// See if we're using the lightning gun
-	if(this.weapon == WEP_LIGHTNING.m_id)
+	if(this.weaponentity.m_weapon == WEP_LIGHTNING)
 	{	
 		if(this.ammo_cells >= 20)
 		{
@@ -593,7 +593,7 @@ void TossBackpack(entity this)
 	}
 
 	// see if we are using the plasma gun
-	if(this.weapon == WEP_PLASMA_GUN.m_id)
+	if(this.weaponentity.m_weapon == WEP_PLASMA_GUN)
 	{	
 		if(this.ammo_plasma >= 10)
 		{
@@ -705,15 +705,15 @@ void Team_weapon_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 // change to the weapon
-	int old = toucher.weapon;
+	Weapon old = toucher.weaponentity.m_weapon;
 	STAT(WEAPONS, toucher) |= newwep.m_wepset;
 	
 	delete(this);
 
 	if(!deathmatch)
-		toucher.weapon = newwep.m_id;
+		toucher.weaponentity.m_weapon = newwep;
 	else
-		Deathmatch_Weapon(toucher, old, newwep.m_id);
+		Deathmatch_Weapon(toucher, old.m_id, newwep.m_id);
 
 	EnableComboWeapons(toucher);
 
@@ -731,12 +731,12 @@ void TossWeapon(entity this)
 	if(teamplay < 1)
 		return;
 
-	switch(this.weapon)
+	switch(this.weaponentity.m_weapon)
 	{
-		case WEP_AXE.m_id:
-		case WEP_SHOTGUN.m_id:
-		case WEP_GRAPPLE.m_id:
-		case WEP_MJOLNIR.m_id:
+		case WEP_AXE:
+		case WEP_SHOTGUN:
+		case WEP_GRAPPLE:
+		case WEP_MJOLNIR:
 			return;
 	}
 		
@@ -752,9 +752,9 @@ void TossWeapon(entity this)
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_BOUNCE);
 
-	switch(this.weapon)
+	switch(this.weaponentity.m_weapon)
 	{
-		case WEP_SUPER_SHOTGUN.m_id:
+		case WEP_SUPER_SHOTGUN:
 		{
 			_setmodel(item, "progs/g_shot.mdl");
 			item.weapon = WEP_SUPER_SHOTGUN.m_id;
@@ -763,8 +763,8 @@ void TossWeapon(entity this)
 			STAT(WEAPONS, this) &= ~WEPSET(SUPER_SHOTGUN);
 			break;
 		}
-		case WEP_NAILGUN.m_id:
-		case WEP_LAVA_NAILGUN.m_id:
+		case WEP_NAILGUN:
+		case WEP_LAVA_NAILGUN:
 		{
 			_setmodel(item, "progs/g_nail.mdl");
 			item.weapon = WEP_NAILGUN.m_id;
@@ -773,8 +773,8 @@ void TossWeapon(entity this)
 			STAT(WEAPONS, this) &= ~(WEPSET(NAILGUN) | WEPSET(LAVA_NAILGUN));
 			break;
 		}
-		case WEP_SUPER_NAILGUN.m_id:
-		case WEP_LAVA_SUPER_NAILGUN.m_id:
+		case WEP_SUPER_NAILGUN:
+		case WEP_LAVA_SUPER_NAILGUN:
 		{
 			_setmodel(item, "progs/g_nail2.mdl");
 			item.weapon = WEP_SUPER_NAILGUN.m_id;
@@ -783,8 +783,8 @@ void TossWeapon(entity this)
 			STAT(WEAPONS, this) &= ~(WEPSET(SUPER_NAILGUN) | WEPSET(LAVA_SUPER_NAILGUN));
 			break;
 		}
-		case WEP_GRENADE_LAUNCHER.m_id:
-		case WEP_MULTI_GRENADE.m_id:
+		case WEP_GRENADE_LAUNCHER:
+		case WEP_MULTI_GRENADE:
 		{
 			_setmodel(item, "progs/g_rock.mdl");
 			item.weapon = WEP_GRENADE_LAUNCHER.m_id;
@@ -793,8 +793,8 @@ void TossWeapon(entity this)
 			STAT(WEAPONS, this) &= ~(WEPSET(GRENADE_LAUNCHER) | WEPSET(MULTI_GRENADE));
 			break;
 		}
-		case WEP_ROCKET_LAUNCHER.m_id:
-		case WEP_MULTI_ROCKET.m_id:
+		case WEP_ROCKET_LAUNCHER:
+		case WEP_MULTI_ROCKET:
 		{
 			_setmodel(item, "progs/g_rock2.mdl");
 			item.weapon = WEP_ROCKET_LAUNCHER.m_id;
@@ -803,8 +803,8 @@ void TossWeapon(entity this)
 			STAT(WEAPONS, this) &= ~(WEPSET(ROCKET_LAUNCHER) | WEPSET(MULTI_ROCKET));
 			break;
 		}
-		case WEP_LIGHTNING.m_id:
-		case WEP_PLASMA_GUN.m_id:
+		case WEP_LIGHTNING:
+		case WEP_PLASMA_GUN:
 		{
 			_setmodel(item, "progs/g_light.mdl");
 			item.weapon = WEP_LIGHTNING.m_id;

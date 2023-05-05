@@ -37,7 +37,6 @@ void decoy_walk1(entity this)
 //   a_y = this.ideal_yaw;
 //   makevectors(a);
 //   this.velocity = 1*v_forward;
-	this.weaponframe = 0;
 	if(this.walkframe == 6)
 		this.walkframe = 0;
 	if(this.walkframe == 2 || this.walkframe == 5)

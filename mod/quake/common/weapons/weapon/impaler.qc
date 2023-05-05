@@ -426,7 +426,6 @@ void impale(entity this)
 			this.modelindex = this.modelindex_player;
 			if(deathmatch || coop)
 				DropBackpack(this);
-			strfree(this.weaponmodel);
 			this.view_ofs = '0 0 -4';
 			this.nextthink = -1;
 			this.deadflag = DEAD_DEAD;
@@ -439,7 +438,7 @@ void impale(entity this)
 			_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
 			BecomeBloodSpurt(this, 0);
 			this.angles_x = this.angles_z = 0;
-			if(this.weapon == WEP_AXE.m_id)
+			if(this.weaponentity.m_weapon == WEP_AXE)
 			{
 				if(random() < 0.3)
 					this.frame = 31;

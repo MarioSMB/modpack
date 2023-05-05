@@ -402,11 +402,11 @@ Deathmatch weapon change rules for picking up a weapon
 */
 void Deathmatch_Weapon(entity this, int old, int new)
 {
-	if(MP_ROGUE && this.weapon == WEP_GRAPPLE.m_id && this.button0)
+	if(MP_ROGUE && this.weaponentity.m_weapon == WEP_GRAPPLE && this.button0)
 		return;
 
 // change this.weapon if desired
-	int or = RankForWeapon(this.weapon);
+	int or = RankForWeapon(this.weaponentity.m_weapon.m_id);
 	int nr = RankForWeapon(new);
 	if(nr < or)
 		W_SwitchWeapon(this, new);
@@ -414,7 +414,7 @@ void Deathmatch_Weapon(entity this, int old, int new)
 
 bool weapon_customize(entity this, entity client)
 {
-	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	Weapon wep = this.weaponentity.m_weapon;
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 		return false;
 	return true;
@@ -505,8 +505,8 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	int hadammo = 0, newitem = toucher.weapon;
-	Weapon wep = REGISTRY_GET(Weapons, newitem);
+	int hadammo = 0;
+	Weapon wep = toucher.weaponentity.m_weapon;
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
@@ -621,7 +621,7 @@ void weapon_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 // change to the weapon
-	int old = toucher.weapon;
+	int old = toucher.weaponentity.m_weapon.m_id;
 	STAT(WEAPONS, toucher) |= wep.m_wepset;
 
 	if(MP_ROGUE)
@@ -907,7 +907,7 @@ void impel_weapon_touch(entity this, entity toucher)
 	if(newwep != WEP_Null)
 	{
 		STAT(WEAPONS, toucher) |= newwep.m_wepset;
-		toucher.weapon = newwep.m_id;
+		toucher.weaponentity.m_weapon = newwep;
 	}
 	W_SetCurrentAmmo(toucher);
 	if(leave)
@@ -1105,7 +1105,7 @@ void ammo_touch(entity this, entity toucher)
 
 // change to a better weapon if appropriate
 
-	if(toucher.weapon == best && W_WantsToChangeWeapon(toucher, 0, 1))
+	if(toucher.weaponentity.m_weapon.m_id == best && W_WantsToChangeWeapon(toucher, 0, 1))
 		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
 
 // if changed current ammo, update it
@@ -1968,7 +1968,7 @@ void BackpackTouch(entity this, entity toucher)
 
 	//if(!newitem)
 		//newitem = toucher.weapon;
-	int old = toucher.weapon;
+	int old = toucher.weaponentity.m_weapon.m_id;
 
 	if(!MP_IMPEL)
 	{
@@ -2019,7 +2019,7 @@ void BackpackTouch(entity this, entity toucher)
 // change to the weapon
 	if(wep != WEP_Null && W_WantsToChangeWeapon(toucher, old, newitem))
 	{
-		if((this.flags & FL_INWATER) && wep == WEP_LIGHTNING)
+		if((toucher.flags & FL_INWATER) && wep == WEP_LIGHTNING)
 			return; // lol
 
 		if(!deathmatch)
@@ -2052,8 +2052,8 @@ void DropBackpack(entity this)
 	entity item = spawn();
 	setorigin(item, this.origin - '0 0 24');
 
-	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
-	item.weapon = this.weapon;
+	Weapon wep = this.weaponentity.m_weapon;
+	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
 
 	item.ammo_shells = this.ammo_shells;

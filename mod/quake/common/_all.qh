@@ -59,6 +59,8 @@ const int FL_ONSLICK 				= BIT(19);
 #include "monsters/all.qh"
 #include "weapons/weapon.qh"
 
+#include "wepent.qh"
+
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))
 #endif
@@ -76,4 +78,10 @@ const int FL_ONSLICK 				= BIT(19);
 #endif
 #ifndef BITXOR_ASSIGN
 # define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif
+
+#if defined(SVQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
+#elif defined(CSQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 #endif

@@ -31,9 +31,9 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(STAT(ACTIVEWEAPON))
+			if(viewmodels.activeweapon != WEP_Null)
 			{
-				Weapon wep = REGISTRY_GET(Weapons, STAT(ACTIVEWEAPON));
+				Weapon wep = viewmodels.activeweapon;
 				wcross_color = wep.w_crosshair_color;
 				break;
 			}
@@ -160,8 +160,7 @@ void HUD_Crosshair(entity this)
 
 		if(autocvar_crosshair_per_weapon)
 		{
-			int thewep = STAT(ACTIVEWEAPON);
-			Weapon wep = REGISTRY_GET(Weapons, thewep);
+			Weapon wep = viewmodels.activeweapon;
 
 			wcross_resolution *= wep.w_crosshair_size;
 			wcross_name = wep.w_crosshair;

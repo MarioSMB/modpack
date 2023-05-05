@@ -337,7 +337,7 @@ void horde_ammo_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 
 	// change to a better weapon if appropriate
-	if(toucher.weapon == best_weapon)
+	if(toucher.weaponentity.m_weapon.m_id == best_weapon)
 		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
 
 	// loop through all players and give ammo

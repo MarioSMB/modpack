@@ -402,6 +402,37 @@ void wordwrap_cb(string s, float l, void(string) callback)
 	strunzone(s);
 }
 
+float compressShotOrigin(vector v)
+{
+	float rx = rint(v.x * 2);
+	float ry = rint(v.y * 4) + 128;
+	float rz = rint(v.z * 4) + 128;
+	if(rx > 255 || rx < 0)
+	{
+		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
+		rx = bound(0, rx, 255);
+	}
+	if(ry > 255 || ry < 0)
+	{
+		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
+		ry = bound(0, ry, 255);
+	}
+	if(rz > 255 || rz < 0)
+	{
+		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
+		rz = bound(0, rz, 255);
+	}
+	return rx * 0x10000 + ry * 0x100 + rz;
+}
+vector decompressShotOrigin(int f)
+{
+	vector v;
+	v.x = ((f & 0xFF0000) / 0x10000) / 2;
+	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
+	v.z = ((f & 0xFF) - 128) / 4;
+	return v;
+}
+
 .float FindConnectedComponent_processing;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass)
 {

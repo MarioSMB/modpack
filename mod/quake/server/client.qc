@@ -6,6 +6,7 @@
 #include "player.qh"
 #include "rogue/teamplay.qh"
 #include "triggers/teleporters.qh"
+#include "weapons/weaponsystem.qh"
 
 /*
 =============================================================================
@@ -81,7 +82,8 @@ void SetChangeParms(entity this)
 		parm6 = this.ammo_nails;
 		parm7 = this.ammo_rockets;
 		parm8 = this.ammo_cells;
-		parm9 = this.weapon;
+		if(this.weaponentity)
+			parm9 = this.weaponentity.m_weapon.m_id;
 		parm10 = this.model_randomizer;
 		parm11 = this.ammo_lava_nails;
 		parm12 = this.ammo_multi_rockets;
@@ -151,10 +153,13 @@ void DecodeLevelParms(entity this)
 	this.ammo_nails = parm6;
 	this.ammo_rockets = parm7;
 	this.ammo_cells = parm8;
-	if(parm9 == WEP_GRAPPLE.m_id && teamplay < TEAM_CTF)
-		this.weapon = WEP_AXE.m_id;
-	else
-		this.weapon = parm9;
+	if(this.weaponentity)
+	{
+		if(parm9 == WEP_GRAPPLE.m_id && teamplay < TEAM_CTF)
+			this.weaponentity.m_weapon = WEP_AXE;
+		else
+			this.weaponentity.m_weapon = REGISTRY_GET(Weapons, parm9);
+	}
 	this.model_randomizer = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
@@ -1381,6 +1386,9 @@ void PutClientInServer(entity this)
 	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
 
+	this.weaponframe = 0;
+	this.weaponmodel = "";
+
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
@@ -1402,6 +1410,10 @@ void PutClientInServer(entity this)
 	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
 		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+
+	CL_SpawnWeaponentity(this);
+	this.weaponentity.weaponname = "";
+	this.weaponentity.m_weapon = WEP_Null;
 
 	DecodeLevelParms(this);
 
@@ -1445,9 +1457,7 @@ void PutClientInServer(entity this)
 		this.angles = this.v_angle = spot.mangle;
 		this.fixangle = true;
 		setorigin(this, spot.origin);
-		strfree(this.weaponmodel);
-		this.weaponframe = 0;
-		this.weapon = 0;
+		this.weaponentity.m_weapon = WEP_Null;
 
 		return;
 	}
@@ -1498,7 +1508,7 @@ void PutClientInServer(entity this)
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	player_stand1(this);
-	
+
 	if(deathmatch || coop)
 	{
 		fixedmakevectors(this.angles);
@@ -1951,7 +1961,7 @@ void PlayerPreThink(entity this)
 	}
 
 	if(!MP_ROGUE)
-	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != WEP_AXE.m_id && this.weapon != WEP_MJOLNIR.m_id)
+	if(time > this.attack_finished && this.currentammo == 0 && this.weaponentity.m_weapon != WEP_AXE && this.weaponentity.m_weapon != WEP_MJOLNIR)
 		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 }
 	
@@ -2007,7 +2017,7 @@ void CheckPowerups(entity this)
 		this.frame = 0;
 		this.modelindex = modelindex_eyes;
 	}
-	else if(this.weapon == WEP_MJOLNIR.m_id && this.model == "progs/player.mdl")
+	else if(this.weaponentity.m_weapon == WEP_MJOLNIR && this.model == "progs/player.mdl")
 		this.modelindex = modelindex_hammer; // don't use eyes
 	else
 		this.modelindex = this.modelindex_player; // don't use eyes
@@ -2659,7 +2669,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 
 		if(IS_PLAYER(attacker))
 		{
-			Weapon death_weapon = REGISTRY_GET(Weapons, attacker.weapon); //DEATH_WEAPONOF(deathtype);
+			Weapon death_weapon = attacker.weaponentity.m_weapon; //DEATH_WEAPONOF(deathtype);
 			if(death_weapon != WEP_Null)
 			{
 				Notification death_message = ((targ != attacker) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
@@ -2689,7 +2699,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				attacker.frags = attacker.frags - 1;
 				bprint(targ.netname);
 				
-				if(targ.weapon == WEP_LIGHTNING.m_id && targ.waterlevel > 1)
+				if(targ.weaponentity.m_weapon == WEP_LIGHTNING && targ.waterlevel > 1)
 				{
 					switch(targ.watertype)
 					{
@@ -2702,17 +2712,17 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 				}
 				if(MP_IMPEL)
 				{
-					if(inflictor == attacker && targ.weapon == WEP_LIGHTME.m_id && targ.waterlevel > 1)
+					if(inflictor == attacker && targ.weaponentity.m_weapon == WEP_LIGHTME && targ.waterlevel > 1)
 					{
 						bprint(" screwed up AGAIN with the LG-2.\n");
 						return;
 					}
-					if(targ.weapon == WEP_LIGHTME.m_id)
+					if(targ.weaponentity.m_weapon == WEP_LIGHTME)
 					{
 						bprint(" screwed up with the LG-2 Prototype.\n");
 						return;
 					}
-					if(inflictor == attacker && targ.weapon == WEP_LIGHTME.m_id && targ.waterlevel > 1)
+					if(inflictor == attacker && targ.weaponentity.m_weapon == WEP_LIGHTME && targ.waterlevel > 1)
 					{
 						bprint(" discharges into the water.\n");
 						return;
@@ -2725,7 +2735,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						bprint(" got bored with life.\n");
 					return;
 				}
-				else if(targ.weapon == WEP_GRENADE_LAUNCHER.m_id)
+				else if(targ.weaponentity.m_weapon == WEP_GRENADE_LAUNCHER)
 					bprint(" tries to put the pin back in\n");
 				else if(MP_HIPNOTIC)
 				{
@@ -2797,8 +2807,8 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					return;
 				}
 
-				int wep = attacker.weapon;
-				if(wep == WEP_AXE.m_id && (!MP_IMPEL || inflictor == attacker))
+				Weapon wep = attacker.weaponentity.m_weapon;
+				if(wep == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
 				{
 					if(MP_IMPEL)
 					{
@@ -2811,32 +2821,32 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "\n";
 					}
 				}
-				if(wep == WEP_GRAPPLE.m_id)
+				if(wep == WEP_GRAPPLE)
 				{
 					deathstring = " was grappled by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_SHOTGUN.m_id && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " chewed on ";
 					deathstring2 = "'s boomstick\n";
 				}
-				if(wep == WEP_SUPER_SHOTGUN.m_id && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " ate 2 loads of ";
 					deathstring2 = "'s buckshot\n";
 				}
-				if(wep == WEP_NAILGUN.m_id || (MP_IMPEL && inflictor.classname == "spike"))
+				if(wep == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
 				{
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_SUPER_NAILGUN.m_id || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
+				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_GRENADE_LAUNCHER.m_id || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
+				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -2846,7 +2856,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s grenade\n";
 					}
 				}
-				if(wep == WEP_ROCKET_LAUNCHER.m_id || (MP_IMPEL && inflictor.classname == "missile"))
+				if(wep == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
 				{
 					deathstring = " rides ";
 					deathstring2 = "'s rocket\n";
@@ -2856,7 +2866,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring2 = "'s rocket\n" ;
 					}
 				}
-				if(wep == WEP_LIGHTNING.m_id && (!MP_IMPEL || inflictor == attacker))
+				if(wep == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " accepts ";
 					if(attacker.waterlevel > 1)
@@ -2864,7 +2874,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 					else
 						deathstring2 = "'s shaft\n";
 				}
-				if(wep == WEP_LASER_CANNON.m_id)
+				if(wep == WEP_LASER_CANNON)
 				{
 					if(random() < 0.5)
 						deathstring = " was toasted by ";
@@ -2872,27 +2882,27 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 						deathstring = " was radiated by ";
 					deathstring2 = "'s laser\n";
 				}
-				if(wep == WEP_MJOLNIR.m_id)
+				if(wep == WEP_MJOLNIR)
 				{
 					deathstring = " was slammed by ";
 					deathstring2 = "'s hammer\n";
 				}
-				if(wep == WEP_LAVA_NAILGUN.m_id || wep == WEP_LAVA_SUPER_NAILGUN.m_id)
+				if(wep == WEP_LAVA_NAILGUN || wep == WEP_LAVA_SUPER_NAILGUN)
 				{
 					deathstring = " was burned by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_PLASMA_GUN.m_id)
+				if(wep == WEP_PLASMA_GUN)
 				{
 					deathstring = " was fused by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_MULTI_GRENADE.m_id || wep == WEP_MULTI_ROCKET.m_id)
+				if(wep == WEP_MULTI_GRENADE || wep == WEP_MULTI_ROCKET)
 				{
 					deathstring = " was blasted to bits by ";
 					deathstring2 = "\n";
 				}
-				if(wep == WEP_LIGHTME.m_id)
+				if(wep == WEP_LIGHTME)
 				{
 					if(attacker.waterlevel > 1)
 					{
@@ -2952,7 +2962,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 			}
 
 			// tricks and traps
-			if(targ.weapon == WEP_LIGHTME.m_id) // TODO: overrides all other deathtypes!
+			if(targ.weaponentity.m_weapon == WEP_LIGHTME) // TODO: overrides all other deathtypes!
 			{
 				bprint(" couldn't control the LG-2 Prototype!\n");
 				return;

@@ -700,6 +700,21 @@ string Sbar_ItemIcon(string item)
 	return item;
 }
 
+string Sbar_ItemName(int item)
+{
+	switch(item)
+	{
+		case IT_SHELLS: return "shells";
+		case IT_NAILS: return "nails";
+		case IT_ROCKETS: return "rockets";
+		case IT_CELLS: return "cells";
+		case IT_LAVA_NAILS: return "lava nails";
+		case IT_MULTI_ROCKETS: return "multi rockets";
+		case IT_PLASMA_AMMO: return "plasma";
+	}
+	return string_null;
+}
+
 void Sbar_Notify_Push(float amount, string item)
 {
 	string icon = Sbar_ItemIcon(item);
@@ -957,7 +972,7 @@ void Sbar_DrawInventory()
 	int myitems = STAT(ITEMS);
 	int mypowerups = STAT(POWERUPS);
 	WepSet myweapons = STAT(WEAPONS);
-	int activeweapon = STAT(ACTIVEWEAPON);
+	int activewep = viewmodels.activeweapon.m_id;
 
 	if(oldweapons != myweapons && time > 5) // time check to prevent initial load showing new weapons
 	{
@@ -971,7 +986,7 @@ void Sbar_DrawInventory()
 
 	if(MP_ROGUE)
 	{
-		if(WeaponIsFromRogue(activeweapon))
+		if(WeaponIsFromRogue(activewep))
 			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
 		else
 			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
@@ -990,9 +1005,9 @@ void Sbar_DrawInventory()
 			continue;
 		float thetime = weapon_gettime[it.m_id];
 		int flashon = rint(max(0, time - thetime) * 10);
-		int drawwep = GetDrawWeapon(it.m_id, activeweapon);
+		int drawwep = GetDrawWeapon(it.m_id, activewep);
 		if(flashon >= 10)
-			flashon = (activeweapon == drawwep);
+			flashon = (activewep == drawwep);
 		else
 			flashon = (flashon % 5) + 2;
 
@@ -1004,7 +1019,7 @@ void Sbar_DrawInventory()
 	for(int j = 0; j < 4; j++)
 	{
 		int itemstat;
-		bool alt = (MP_ROGUE && WeaponIsFromRogue(activeweapon));
+		bool alt = (MP_ROGUE && WeaponIsFromRogue(activewep));
 		switch(j)
 		{
 			default:
@@ -1238,25 +1253,12 @@ void Sbar_Draw()
 				Sbar_DrawNum('136 0 0', itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
 
 				// ammo icon
-				string pic = string_null;
-				if(STAT(ITEMS) & IT_SHELLS)
-					pic = "gfx/quake/sb_shells";
-				else if(STAT(ITEMS) & IT_NAILS)
-					pic = "gfx/quake/sb_nails";
-				else if(STAT(ITEMS) & IT_ROCKETS)
-					pic = "gfx/quake/sb_rocket";
-				else if(STAT(ITEMS) & IT_CELLS)
-					pic = "gfx/quake/sb_cells";
-				else if(STAT(ITEMS) & IT_LAVA_NAILS)
-					pic = "gfx/quake/r_ammolava";
-				else if(STAT(ITEMS) & IT_PLASMA_AMMO)
-					pic = "gfx/quake/r_ammomulti";
-				else if(STAT(ITEMS) & IT_MULTI_ROCKETS)
-					pic = "gfx/quake/r_ammoplasma";
+				int ammotype = viewmodels.activeweapon.ammo_type;
+				string pic = Sbar_ItemIcon(Sbar_ItemName(ammotype));
 
 				if(pic)
 				{
-					Sbar_DrawPic('224 0 0', pic);
+					Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
 					Sbar_DrawNum('248 0 0', itos(getstati(STAT_AMMO)), 3, getstati(STAT_AMMO) <= 10);
 				}
 

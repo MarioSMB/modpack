@@ -1,5 +1,7 @@
 #pragma once
 
+entity viewmodels;
+
 void HUD_CenterPrint ();
 
 float drawframetime;
@@ -13,6 +15,9 @@ float vid_pixelheight;
 float autocvar_vid_conwidth;
 float autocvar_vid_conheight;
 float autocvar_vid_pixelheight;
+
+bool autocvar_r_drawviewmodel;
+vector autocvar_cl_gunoffset;
 
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
