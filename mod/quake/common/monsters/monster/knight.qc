@@ -222,6 +222,7 @@ void knight_die(entity this, entity inflictor, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		ThrowHead(this, "progs/h_knight.mdl", this.health);
 		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
@@ -230,7 +231,6 @@ void knight_die(entity this, entity inflictor, entity attacker)
 		}
 		else
 		{
-			ThrowHead(this, "progs/h_knight.mdl", this.health);
 			ThrowGib(this, "progs/gib1.mdl", this.health);
 			ThrowGib(this, "progs/gib2.mdl", this.health);
 			ThrowGib(this, "progs/gib3.mdl", this.health);

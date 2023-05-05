@@ -407,7 +407,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		take = RuneApplyEarth(take, targ);
 
 // coop damage avoidance (if enabled)
-	if(coop && attacker != targ && IS_CLIENT(attacker) && IS_CLIENT(targ))
+	if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
 	{
 		if(autocvar_g_friendlyfire_virtual)
 			return;

@@ -8,3 +8,5 @@ const int MONSTER_WAITWALK = 4096;
 .float waitmin, waitmax;
 
 void monster_use(entity this, entity actor, entity trigger);
+
+bool monster_checkspawnedflag(entity this);

@@ -95,7 +95,7 @@ void monster_start_go(entity this)
 	if(this.health <= 0)
 		return;
 
-	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))
+	if(MP_MG && monster_checkspawnedflag(this))
 	{
 		spawn_tdeath(this.origin, this);
 		if(this.spawnflags & MONSTER_SPAWNED_TFOG)
@@ -166,7 +166,7 @@ void monster_start_go(entity this)
 		}
 	}
 
-	if(MP_MG && (this.spawnflags & MONSTER_SPAWNED))
+	if(MP_MG && monster_checkspawnedflag(this))
 	{
 		// Yoder, Sept29, horde fix so that preplaced monsters are counted on spawn_tdeath
 		if(horde_ent)
@@ -176,6 +176,14 @@ void monster_start_go(entity this)
 		if(this.spawnflags & MONSTER_SPAWNED_ANGRY)
 			monster_use(this, NULL, NULL); //Make monster angry!
 	}
+}
+
+// horrible hack needed because spawnflags 4 is used so commonly!
+bool monster_checkspawnedflag(entity this)
+{
+	if(!(this.spawnflags & MONSTER_SPAWNED))
+		return false;
+	return (substring(world.model, 0, 7) == "maps/mg" || substring(world.model, 0, 5) == "horde");
 }
 
 // interpolation for monsters only applies when .movetype is set to MOVETYPE_STEP
@@ -224,7 +232,7 @@ void monster_start(entity this, Monster mon)
 	// in horde, mosnters shouldn't increase total count until spawned
 	if(MP_MG && autocvar_horde)
 	{
-		if(!(this.spawnflags & MONSTER_SPAWNED))
+		if(!monster_checkspawnedflag(this))
 			monsters_total += 1;
 	}
 	else if(!(this.flags & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
@@ -236,7 +244,7 @@ void monster_start(entity this, Monster mon)
 		return;
 	}
 
-	if(this.spawnflags & MONSTER_SPAWNED)
+	if(MP_MG && monster_checkspawnedflag(this))
 	{
 		this.use = StartMonster;
 		this.oldsolid = this.solid;
