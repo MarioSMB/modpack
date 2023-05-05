@@ -2110,7 +2110,7 @@ CheatCommand
 .bool maycheat;
 void CheatCommand(entity this)
 {
-	if(!this.maycheat)
+	if(!autocvar_sv_cheats && !this.maycheat)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
 
 	this.ammo_rockets = 100;
@@ -2526,7 +2526,7 @@ void CycleWeaponReverseCommand(entity this)
 
 void QuadCheat(entity this)
 {
-	if(!this.maycheat)
+	if(!autocvar_sv_cheats && !this.maycheat)
 		return;
 
 	this.super_time = 1;

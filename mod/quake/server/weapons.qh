@@ -1,5 +1,7 @@
 #pragma once
 
+int autocvar_sv_cheats;
+
 .bool elec;
 .bool lightningmodel;
 
