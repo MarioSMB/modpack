@@ -959,7 +959,7 @@ void Sbar_DrawInventory()
 	WepSet myweapons = STAT(WEAPONS);
 	int activeweapon = STAT(ACTIVEWEAPON);
 
-	if(oldweapons != myweapons)
+	if(oldweapons != myweapons && time > 5) // time check to prevent initial load showing new weapons
 	{
 		FOREACH(Weapons, it != WEP_Null,
 		{

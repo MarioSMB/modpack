@@ -49,7 +49,7 @@ void superlightning_rebound(entity this)
 			return;
 		}
 	}
-	this.owner = other;
+	this.owner = NULL;
 }
 
 void LightningTouch(entity this, entity toucher)

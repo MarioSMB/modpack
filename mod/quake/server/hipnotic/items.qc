@@ -22,7 +22,8 @@ void hip_powerup_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
-	sprint(toucher, sprintf("You got the %s\n", this.netname));
+	string pname = (this.netname != "") ? this.netname : "Powerup";
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
 
 	if(deathmatch)
 	{

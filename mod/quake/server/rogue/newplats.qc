@@ -11,7 +11,7 @@ const int START_AT_TOP 	= BIT(3);
 const int PLAT2 		= BIT(4);
 const int PLAT2_BOTTOM 	= BIT(5);
 
-.float ELV_BUTN_DIR;	// was   = 0
+float ELV_BUTN_DIR;	// was   = 0
 
 .float plat2Called;
 .float plat2LastMove;
@@ -171,12 +171,12 @@ void elvtr_use(entity this, entity actor, entity trigger)
 		return;
 	
 	this.elevatorLastUse = time;
-	
-	if(this.ELV_BUTN_DIR == 0)
+
+	if(ELV_BUTN_DIR == 0)
 		return;
 
 	float elvPos = (this.absmin_z + this.absmax_z) * 0.5;
-	float btnPos = (other.absmin_z + other.absmax_z) * 0.5;
+	float btnPos = (trigger.absmin_z + trigger.absmax_z) * 0.5;
 
 	float tempDist;
 	if(elvPos > btnPos)
@@ -199,8 +199,8 @@ void elvtr_use(entity this, entity actor, entity trigger)
 			return;
 		}
 	}
-		
-	if(this.ELV_BUTN_DIR == -1)
+
+	if(ELV_BUTN_DIR == -1)
 	{	
 		if(this.elevatorOnFloor > 0)
 		{
@@ -208,7 +208,7 @@ void elvtr_use(entity this, entity actor, entity trigger)
 			elvtr_go(this);
 		}
 	}
-	else if(this.ELV_BUTN_DIR == 1)
+	else if(ELV_BUTN_DIR == 1)
 	{
 		if(this.elevatorOnFloor < (this.cnt - 1))
 		{
@@ -450,7 +450,7 @@ spawnfunc(func_new_plat)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 	
-	float negativeHeight = 0;
+	bool negativeHeight = false;
 	
 	if(!this.t_length)
 		this.t_length = 80;
@@ -496,7 +496,7 @@ spawnfunc(func_new_plat)
 
 	if(this.height < 0)
 	{
-		negativeHeight = 1;
+		negativeHeight = true;
 		this.height = 0 - this.height;
 	}
 	
@@ -504,7 +504,7 @@ spawnfunc(func_new_plat)
 		this.pos2_z = this.origin_z - this.height;
 	else
 	{
-		negativeHeight = 1;
+		negativeHeight = true;
 		this.height = this.size_z - 8;
 		this.pos2_z = this.origin_z - this.height;
 	}
@@ -514,7 +514,7 @@ spawnfunc(func_new_plat)
 		this.use = dn_and_wait_use;
 		setblocked(this, dn_and_wait_crush);
 
-		if(negativeHeight == 1)
+		if(negativeHeight)
 		{
 			this.state = STATE_BOTTOM;
 			setorigin(this, this.pos2);	
@@ -529,7 +529,7 @@ spawnfunc(func_new_plat)
 	{
 		this.use = toggle_use;
 		setblocked(this, toggle_crush);
-		if(negativeHeight == 1)
+		if(negativeHeight)
 		{	
 			setorigin(this, this.pos2);
 			this.state = STATE_BOTTOM;
@@ -544,18 +544,16 @@ spawnfunc(func_new_plat)
 		this.elevatorOnFloor = 0;
 		this.elevatorToFloor = 0;
 		this.elevatorLastUse = 0;
+		this.pos1 = this.origin;
+		this.pos2 = this.origin;
 		
 		if(this.spawnflags & START_AT_TOP)
 		{
-			this.pos1 = this.origin;
-			this.pos2 = this.origin;
 			this.pos2_z = this.origin_z - (this.height * (this.cnt - 1));
 			this.elevatorOnFloor = this.cnt - 1;
 		}
 		else
 		{
-			this.pos1 = this.origin;
-			this.pos2 = this.origin;
 			this.pos1_z = this.origin_z + (this.height * (this.cnt - 1));
 			this.elevatorOnFloor = 0;
 		}
@@ -575,7 +573,7 @@ spawnfunc(func_new_plat)
 		if(!this.delay)
 			this.delay = 3;
 			
-		if(negativeHeight == 1)
+		if(negativeHeight)
 		{
 			this.state = STATE_BOTTOM;
 			// make sure START_AT_TOP isn't set. We need that...

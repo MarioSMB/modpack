@@ -1167,7 +1167,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 	else
 		this.ctf_killed = 1;
 	
-	this.weaponmodel="";
+	strfree(this.weaponmodel);
 	this.view_ofs = '0 0 -8';
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;

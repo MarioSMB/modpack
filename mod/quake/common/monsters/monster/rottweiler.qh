@@ -15,7 +15,7 @@ CLASS(Rottweiler, Monster)
     ATTRIB(Rottweiler, m_model, Model, MDL_MON_ROTTWEILER);
     ATTRIB(Rottweiler, m_model_head, Model, MDL_MON_ROTTWEILER_HEAD);
 #endif
-    ATTRIB(Rottweiler, netname, string, "rottweiler");
+    ATTRIB(Rottweiler, netname, string, "dog");
     ATTRIB(Rottweiler, monster_name, string, _("Rottweiler"));
 ENDCLASS(Rottweiler)
 

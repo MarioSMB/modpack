@@ -860,7 +860,6 @@ void GetKey(entity this)
 	l.nextthink = time;
 }
 
-
 //============================================================================
 /* 
 SpawnSquad2
@@ -869,7 +868,7 @@ Yoder FEB02 2022
 */
 void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 {
-	if(name == "3 grunts")
+	if(name == "3 grunt")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -883,13 +882,13 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 			SpawnMonster(this, MON_GRUNT, org + '40 0 0', temp_angles);
 		}
 	}
-	else if(name == "2 grunts, 1 dog")
+	else if(name == "2 grunt 1 dog")
 	{
 		SpawnMonster(this, MON_ROTTWEILER, org + '44 0 0', temp_angles);
 		SpawnMonster(this, MON_GRUNT, org + '-40 -40 0', temp_angles);
 		SpawnMonster(this, MON_GRUNT, org + '-40 40 0', temp_angles);
 	}
-	else if(name == "2 dogs")
+	else if(name == "2 dog")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -903,7 +902,7 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 	{
 		SpawnMonster(this, MON_ENFORCER, org + '0 0 0', temp_angles);
 	}
-	else if(name == "2 enforcers")
+	else if(name == "2 enforcer")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -917,7 +916,7 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 	{
 		SpawnMonster(this, MON_OGRE, org + '0 0 0', temp_angles);
 	}
-	else if(name == "2 knights")
+	else if(name == "2 knight")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -930,14 +929,14 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 		}
 			
 	}
-	else if(name == "2 zombies")
+	else if(name == "2 zombie")
 	{
 		SpawnMonster(this, MON_ZOMBIE, org + '40 0 0', temp_angles);
 		SpawnMonster(this, MON_ZOMBIE, org + '-40 0 0', temp_angles);
 	}
 	else if(name == "1 wizard")
 		SpawnMonster(this, MON_SCRAG, org + '0 0 0', temp_angles);
-	else if(name == "2 hellknights")
+	else if(name == "2 hellknight")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -947,13 +946,13 @@ void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 		else
 			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 40 0', temp_angles);
 	}
-	else if(name == "2 knights, 1 hellknight")
+	else if(name == "2 knight 1 hellknight")
 	{
 		SpawnMonster(this, MON_HELL_KNIGHT, org + '40 0 0', temp_angles);
 		SpawnMonster(this, MON_KNIGHT, org + '-40 40 0', temp_angles);
 		SpawnMonster(this, MON_KNIGHT, org + '-40 -40 0', temp_angles);
 	}
-	else if(name == "3 wizards")
+	else if(name == "3 wizard")
 	{
 		if(autocvar_skill > 0)
 		{
@@ -1134,11 +1133,11 @@ void SpawnWave2(entity this)
 		{
 			r = random() * 4;
 			if(r < 1)
-				squad_name = "3 grunts";
+				squad_name = "3 grunt";
 			else if(r < 2)
-				squad_name = "2 grunts, 1 dog";
+				squad_name = "2 grunt 1 dog";
 			else if(r < 3.5)
-				squad_name = "2 dogs";
+				squad_name = "2 dog";
 			else
 			{
 				squad_name = "1 enforcer";
@@ -1152,7 +1151,7 @@ void SpawnWave2(entity this)
 			squad_type = HORDE_SQUAD_TYPE_RANGED; 
 			r = random() * 2;
 			if(r < 1.5)
-				squad_name = "2 enforcers";
+				squad_name = "2 enforcer";
 			else
 				squad_name = "1 ogre";
 			
@@ -1171,9 +1170,9 @@ void SpawnWave2(entity this)
 		{
 			r = random() * 4;
 			if(r < 2)
-				squad_name = "2 knights";
+				squad_name = "2 knight";
 			else if(r < 3)
-				squad_name = "2 zombies";
+				squad_name = "2 zombie";
 			else
 			{
 				squad_name = "1 wizard";
@@ -1186,9 +1185,9 @@ void SpawnWave2(entity this)
 		{
 			r = random() * 4;
 			if(r < 1)
-				squad_name = "2 hellknights";
+				squad_name = "2 hellknight";
 			else if(r < 2)
-				squad_name = "2 knights, 1 hellknight";
+				squad_name = "2 knight 1 hellknight";
 			else if(r < 3)
 			{
 				squad_name = "1 ogre";
@@ -1196,7 +1195,7 @@ void SpawnWave2(entity this)
 			}
 			else
 			{
-				squad_name = "3 wizards";
+				squad_name = "3 wizard";
 				squad_type = HORDE_SQUAD_TYPE_FLYING;
 			}
 			

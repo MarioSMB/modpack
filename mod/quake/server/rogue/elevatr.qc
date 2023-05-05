@@ -7,11 +7,11 @@ void elvtr_button_return(entity this);
 
 void elvtr_button_wait(entity this)
 {
-	this.ELV_BUTN_DIR = 0;
+	ELV_BUTN_DIR = 0;
 	if(this.spawnflags & ELVTR_DOWN)
-		this.ELV_BUTN_DIR = -1;
+		ELV_BUTN_DIR = -1;
 	else
-		this.ELV_BUTN_DIR = 1;
+		ELV_BUTN_DIR = 1;
 		
 	this.state = STATE_TOP;
 	this.nextthink = this.ltime + this.wait;
@@ -60,7 +60,7 @@ void elvtr_button_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	this.enemy = other;
+	this.enemy = toucher;
 	elvtr_button_fire(this);
 }
 
@@ -96,33 +96,21 @@ When a button is touched, it moves some distance in the direction of it's angle,
 spawnfunc(func_elvtr_button)
 {
 	if(!MP_ROGUE) { delete(this); return; }
-	
-	if(this.sounds == 0)
-	{
-		precache_sound("buttons/airbut1.wav");
-		this.noise = "buttons/airbut1.wav";
-	}
-	else if(this.sounds == 1)
-	{
-		precache_sound("buttons/switch21.wav");
-		this.noise = "buttons/switch21.wav";
-	}
-	else if(this.sounds == 2)
-	{
-		precache_sound("buttons/switch02.wav");
-		this.noise = "buttons/switch02.wav";
-	}
-	else if(this.sounds == 3)
-	{
-		precache_sound("buttons/switch04.wav");
-		this.noise = "buttons/switch04.wav";
-	}
-	
-	SetMovedir(this);
 
-	set_movetype(this, MOVETYPE_PUSH);
-	this.solid = SOLID_BSP;
-	_setmodel(this, this.model);
+	SetMovedir(this);
+	if (!InitMovingBrushTrigger(this))
+		return;
+
+	switch(this.sounds)
+	{
+		case 0: this.noise = "buttons/airbut1.wav"; break;
+		case 1: this.noise = "buttons/switch21.wav"; break;
+		case 2: this.noise = "buttons/switch02.wav"; break;
+		case 3: this.noise = "buttons/switch04.wav"; break;
+	}
+
+	if(this.noise != "")
+        precache_sound(this.noise);
 
 	setblocked(this, elvtr_button_blocked);
 	this.use = elvtr_button_use;

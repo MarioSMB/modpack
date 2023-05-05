@@ -15,7 +15,7 @@ CLASS(Scrag, Monster)
     ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
     ATTRIB(Scrag, m_model_head, Model, MDL_MON_SCRAG_HEAD);
 #endif
-    ATTRIB(Scrag, netname, string, "scrag");
+    ATTRIB(Scrag, netname, string, "wizard");
     ATTRIB(Scrag, monster_name, string, _("Scrag"));
 ENDCLASS(Scrag)
 

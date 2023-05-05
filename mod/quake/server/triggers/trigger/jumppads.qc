@@ -22,7 +22,7 @@ void trigger_push_touch(entity this, entity toucher)
 		{
 			if((toucher.classname == "item_artifact_invulnerability") || (toucher.classname == "item_artifact_super_damage"))
 			{
-				if(this.spawnflags & ADDITIVE_PUSH)
+				if(MP_MG && (this.spawnflags & ADDITIVE_PUSH))
 					toucher.velocity = toucher.velocity + (this.speed * this.movedir * 10 * frametime); 
 				else
 					toucher.velocity = this.speed * this.movedir * 10;
@@ -83,9 +83,10 @@ spawnfunc(trigger_push)
 	// we're on a rogue campaign map, disable toggle flag which overlaps with additive, toggling handled automatically
 	if(MP_ROGUE && substring(world.model, 0, 6) == "maps/r")
 	{
-		this.spawnflags &= ~PUSH_TOGL;
-		if(!(this.spawnflags & PUSH_ACTIVE))
+		// jumppads with the toggle flag aren't active by default unless specified
+		if(!(this.spawnflags & PUSH_ACTIVE) && (this.spawnflags & PUSH_TOGL))
 			this.active = ACTIVE_NOT;
+		this.spawnflags &= ~PUSH_TOGL;
 		return; // avoid mg's handling in this case
 	}
 

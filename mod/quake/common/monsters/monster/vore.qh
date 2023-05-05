@@ -15,7 +15,7 @@ CLASS(Vore, Monster)
     ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
     ATTRIB(Vore, m_model_head, Model, MDL_MON_VORE_HEAD);
 #endif
-    ATTRIB(Vore, netname, string, "vore");
+    ATTRIB(Vore, netname, string, "shalrath");
     ATTRIB(Vore, monster_name, string, _("Vore"));
 ENDCLASS(Vore)
 
