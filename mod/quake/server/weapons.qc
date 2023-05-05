@@ -2108,6 +2108,23 @@ CheatCommand
 ============
 */
 .bool maycheat;
+void NoclipCheat(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+
+	if(this.move_movetype == MOVETYPE_WALK)
+	{
+		set_movetype(this, MOVETYPE_NOCLIP);
+		sprint(this, "noclip ON\n");
+	}
+	else
+	{
+		set_movetype(this, MOVETYPE_WALK);
+		sprint(this, "noclip OFF\n");
+	}
+}
+
 void CheatCommand(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)

@@ -260,7 +260,7 @@ void knight_pause(entity this, entity actor, entity trigger)
 	this.th_melee = knight_atk1;
 	this.th_pain = knight_pain;
 	this.th_die = knight_die;
-	this.use = func_null;
+	this.use = monster_use;
 	
 	setthink(this, knight_run1);
 
@@ -327,6 +327,7 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 			actor.frame = 44;
 		actor.skin = 1;
 
+		actor.takedamage = DAMAGE_NO;
 		actor.th_stand = knight_pause1;
 		actor.th_walk = knight_pause1;
 		actor.th_run = knight_pause1;

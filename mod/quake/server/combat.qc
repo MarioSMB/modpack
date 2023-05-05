@@ -524,6 +524,8 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 	}
 	inside_radius = true;
 
+	IsExplosionDamage = true;
+
 	entity head = findradius(inflictor.origin, damage + 40);
 	while(head)
 	{
@@ -544,4 +546,5 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 		head = next;
 	}
 	inside_radius = false;
+	IsExplosionDamage = false;
 }

@@ -75,7 +75,8 @@ void monster_start_go(entity this)
 	this.view_ofs = ((this.flags & FL_SWIM) ? '0 0 10' : '0 0 25');
 	this.takedamage = DAMAGE_AIM;
 	this.ideal_yaw = this.angles * '0 1 0';
-	this.use = monster_use;
+	if(!this.use)
+		this.use = monster_use;
 
 	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE))
 	{
@@ -191,6 +192,7 @@ void StartMonster(entity this, entity actor, entity trigger)
 	this.solid = this.oldsolid;
 	this.oldsolid = 0;
 	this.effects &= ~EF_NODRAW;
+	this.use = monster_use;
 	monster_start_go(this);
 }
 

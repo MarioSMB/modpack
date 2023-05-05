@@ -3083,6 +3083,7 @@ void ClientObituary(entity targ, entity inflictor, entity attacker)
 }
 
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
+void NoclipCheat(entity this);
 void SV_ParseClientCommand(entity this, string command)
 {
 	// If invalid UTF-8, don't even parse it
@@ -3134,6 +3135,12 @@ void SV_ParseClientCommand(entity this, string command)
 			GetCvars(this, this, 1);
 		else
 			sprint(this, "Incorrect parameters for GetCvars\nUsage:^3 cmd sentcvar <cvar> <arguments>\n");
+		return;
+	}
+
+	if(cmd_name == "noclip")
+	{
+		NoclipCheat(this);
 		return;
 	}
 

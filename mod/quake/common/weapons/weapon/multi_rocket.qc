@@ -74,7 +74,7 @@ void MultiRocketExplode(entity this, entity directhitentity)
 	T_RadiusDamage(this, this.owner, 75, directhitentity);
 
 //	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	this.origin = this.origin - 8*normalize(this.velocity);
+	setorigin(this, this.origin - 8 * normalize(this.velocity));
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
