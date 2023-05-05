@@ -885,7 +885,6 @@ bool CanDrawWeapon(int wep)
 		case WEP_LIGHTNING.m_id:
 		case WEP_MJOLNIR.m_id: 
 		case WEP_LASER_CANNON.m_id: 
-		case WEP_GRAPPLE.m_id:
 			return true;
 
 		// these weapons never draw an icon
@@ -899,6 +898,7 @@ bool CanDrawWeapon(int wep)
 		case WEP_LIGHTME.m_id:
 		case WEP_SPEAR.m_id:
 		case WEP_NAPALM.m_id:
+		case WEP_GRAPPLE.m_id:
 			return false;
 	}
 	return false;

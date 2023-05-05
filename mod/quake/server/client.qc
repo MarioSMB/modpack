@@ -981,6 +981,8 @@ void TeamDropFlagOfPlayer(entity player);
 void tag_token_drop();
 void ClientKill(entity this)
 {
+	if(gameover)
+		return;
 	if(autocvar_sv_quake_suicide_limit > 0 && this.suicide_count > autocvar_sv_quake_suicide_limit)
 	{
 		sprint(this, "You have suicide too much already... Get help.\n");

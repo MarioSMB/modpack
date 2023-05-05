@@ -83,10 +83,12 @@ void earthquake_touch(entity this, entity toucher)
 			this.attack_finished = time + 1;
 		}
 
-		if(IS_PLAYER(toucher))
+		if(IS_PLAYER(toucher) && !deathmatch)
 		{
-			if(toucher.flags & FL_ONGROUND)
+			if(IS_ONGROUND(toucher))
 			{
+				//Ry: Removed horizontal movement [09-03-2022]
+#if 0
 				toucher.velocity_x = toucher.velocity_x + 
 									(random() * this.weapon * 2) -
 									this.weapon;
@@ -96,6 +98,11 @@ void earthquake_touch(entity this, entity toucher)
 				toucher.velocity_z = toucher.velocity_z + 
 									(random() * this.weapon * 2) -
 									this.weapon;
+#else
+				toucher.velocity_z = toucher.velocity_z + 
+									(random() * this.weapon * 2) -
+									this.weapon;
+#endif
 			}
 		}
 	}

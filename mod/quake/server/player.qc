@@ -313,7 +313,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(MP_IMPEL && !gameover)
+	if(MP_IMPEL && footsteps == 2 && !gameover)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -325,23 +325,23 @@ void player_run(entity this)
 					if(rand < 0.3)
 					{
 						if(random() < 0.5)
-							_sound(this, CHAN_BODY, "player/walk1.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk1.wav", 1, ATTN_NORM);
 						else
-							_sound(this, CHAN_BODY, "player/walk4.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk4.wav", 1, ATTN_NORM);
 					}
 					else if(rand < 0.6)
 					{
 						if(random() < 0.5)
-							_sound(this, CHAN_BODY, "player/walk2.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk2.wav", 1, ATTN_NORM);
 						else
-							_sound(this, CHAN_BODY, "player/walk5.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk5.wav", 1, ATTN_NORM);
 					}
 					else if(rand < 0.9)
 					{
 						if(random() < 0.5)
-							_sound(this, CHAN_BODY, "player/walk3.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk3.wav", 1, ATTN_NORM);
 						else
-							_sound(this, CHAN_BODY, "player/walk6.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walk6.wav", 1, ATTN_NORM);
 					}
 				}
 			}
@@ -355,9 +355,9 @@ void player_run(entity this)
 					if(random() < 0.3)
 					{
 						if(random() < 0.5)
-							_sound(this, CHAN_BODY, "player/walkh2o1.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walkh2o1.wav", 1, ATTN_NORM);
 						else
-							_sound(this, CHAN_BODY, "player/walkh2o2.wav", 1, ATTN_NORM);
+							_sound(this, CH_VOICE, "player/walkh2o2.wav", 1, ATTN_NORM);
 					}
 				}
 			}

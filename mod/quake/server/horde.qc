@@ -54,7 +54,7 @@ entity HordeFindTarget()
 		return NULL;
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && !(it.flags & FL_NOTARGET),
+	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && !it.deadflag && !(it.flags & FL_NOTARGET),
 	{
 		RandomSelection_AddEnt(it, 1, 1);
 	});
