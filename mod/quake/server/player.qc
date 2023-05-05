@@ -225,7 +225,7 @@ void player_stand1(entity this)
 		return;
 	}
 
-	if(this.weapon == WEP_AXE.m_id)
+	if(this.weapon == WEP_AXE.m_id || (this.weapon == WEP_MJOLNIR.m_id && this.model != "progs/player.mdl"))
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
@@ -258,7 +258,7 @@ void player_run(entity this)
 		return;
 	}
 
-	if(this.weapon == WEP_AXE.m_id)
+	if(this.weapon == WEP_AXE.m_id || (this.weapon == WEP_MJOLNIR.m_id && this.model != "progs/player.mdl"))
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
@@ -637,19 +637,24 @@ void player_plasma1(entity this) { set_animofs(this, anim_player_rockatt1, 1, pl
 //MED 10/18/96 added HIPWEAPONS
 //============================================================================
 
-void player_hammer6(entity this) { set_anim(this, 37, player_run); this.weaponframe = 4; }
-void player_hammer5(entity this) { set_anim(this, 36, player_hammer6); this.weaponframe = 4; }
-void player_hammer4(entity this) { set_anim(this, 35, player_hammer5); this.weaponframe = 4; HIP_FireMjolnir(this); }
-void player_hammer3(entity this) { set_anim(this, 34, player_hammer4); this.weaponframe = 3; }
-void player_hammer2(entity this) { set_anim(this, 33, player_hammer3); this.weaponframe = 2; }
-void player_hammer1(entity this) { set_anim(this, 32, player_hammer2); this.weaponframe = 1; }
+bool hamanim(entity this)
+{
+	return (this.model == "progs/player.mdl");
+}
 
-void player_mjolnir6(entity this) { set_anim(this, 43, player_run); this.weaponframe = 4; }
-void player_mjolnir5(entity this) { set_anim(this, 42, player_mjolnir6); this.weaponframe = 4; }
-void player_mjolnir4(entity this) { set_anim(this, 41, player_mjolnir5); this.weaponframe = 4; HIP_FireMjolnir(this); }
-void player_mjolnir3(entity this) { set_anim(this, 40, player_mjolnir4); this.weaponframe = 3; }
-void player_mjolnir2(entity this) { set_anim(this, 39, player_mjolnir3); this.weaponframe = 2; }
-void player_mjolnir1(entity this) { set_anim(this, 38, player_mjolnir2); this.weaponframe = 1; }
+void player_hammer6(entity this) { set_anim(this, ((hamanim(this)) ? 37 : anim_player_axatt1 + 2), player_run); this.weaponframe = 4; }
+void player_hammer5(entity this) { set_anim(this, ((hamanim(this)) ? 36 : anim_player_axatt1 + 2), player_hammer6); this.weaponframe = 4; }
+void player_hammer4(entity this) { set_anim(this, ((hamanim(this)) ? 35 : anim_player_axatt1 + 2), player_hammer5); this.weaponframe = 4; HIP_FireMjolnir(this); }
+void player_hammer3(entity this) { set_anim(this, ((hamanim(this)) ? 34 : anim_player_axatt1 + 2), player_hammer4); this.weaponframe = 3; }
+void player_hammer2(entity this) { set_anim(this, ((hamanim(this)) ? 33 : anim_player_axatt1 + 1), player_hammer3); this.weaponframe = 2; }
+void player_hammer1(entity this) { set_anim(this, ((hamanim(this)) ? 32 : anim_player_axatt1 + 3), player_hammer2); this.weaponframe = 1; }
+
+void player_mjolnir6(entity this) { set_anim(this, ((hamanim(this)) ? 43 : anim_player_axatt1 + 2), player_run); this.weaponframe = 4; }
+void player_mjolnir5(entity this) { set_anim(this, ((hamanim(this)) ? 42 : anim_player_axatt1 + 2), player_mjolnir6); this.weaponframe = 4; }
+void player_mjolnir4(entity this) { set_anim(this, ((hamanim(this)) ? 31 : anim_player_axatt1 + 2), player_mjolnir5); this.weaponframe = 4; HIP_FireMjolnir(this); }
+void player_mjolnir3(entity this) { set_anim(this, ((hamanim(this)) ? 40 : anim_player_axatt1 + 2), player_mjolnir4); this.weaponframe = 3; }
+void player_mjolnir2(entity this) { set_anim(this, ((hamanim(this)) ? 39 : anim_player_axatt1 + 1), player_mjolnir3); this.weaponframe = 2; }
+void player_mjolnir1(entity this) { set_anim(this, ((hamanim(this)) ? 38 : anim_player_axatt1), player_mjolnir2); this.weaponframe = 1; }
 
 //============================================================================
 
@@ -779,7 +784,7 @@ void player_pain(entity this, entity attacker, float damage)
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if(this.weapon == WEP_AXE.m_id)
+	if(this.weapon == WEP_AXE.m_id || (this.weapon == WEP_MJOLNIR.m_id && this.model != "progs/player.mdl"))
 		player_axpain1(this, attacker);
 	else if(this.weapon == WEP_MJOLNIR.m_id)
 		player_hampain1(this, attacker);
@@ -1189,7 +1194,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
-	if(this.weapon == WEP_AXE.m_id)
+	if(this.weapon == WEP_AXE.m_id || (this.weapon == WEP_MJOLNIR.m_id && this.model != "progs/player.mdl")) // katria has no hammer model
 	{
 		player_die_ax1(this);
 		return;

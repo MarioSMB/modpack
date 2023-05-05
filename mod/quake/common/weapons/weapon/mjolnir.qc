@@ -248,9 +248,11 @@ void HIP_FireMjolnir(entity this)
 
 METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor))
 {
-	player_shot1(actor);
-	HIP_FireMjolnir(actor);
-	actor.attack_finished = time + RuneApplyHell(0.5, actor);
+	if(actor.ammo_cells < 30)
+		player_hammer1(actor);
+	else
+		player_mjolnir1(actor);
+	actor.attack_finished = time + RuneApplyHell(0.8, actor);
 }
 METHOD(Mjolnir, wr_suicidemessage, Notification(entity thiswep))
 {

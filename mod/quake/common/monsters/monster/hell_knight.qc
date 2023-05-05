@@ -497,16 +497,13 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 			actor.frame = 73;
 		actor.skin = 1;
 
-		if(!actor.targetname || actor.targetname == "")
-		{
-			LOG_DEBUGF("statue %s not targeted at %v\n", actor.classname, actor.origin);
-			return true;
-		}
-
 		actor.use = hknight_pause;
 		actor.th_stand = hknight_pause1;
 		actor.th_walk = hknight_pause1;
 		actor.th_run = hknight_pause1;
+
+		if(!actor.targetname || actor.targetname == "")
+			LOG_DEBUGF("statue %s not targeted at %v\n", actor.classname, actor.origin);
 	}
 	else
 	{

@@ -2007,7 +2007,7 @@ void CheckPowerups(entity this)
 		this.frame = 0;
 		this.modelindex = modelindex_eyes;
 	}
-	else if(this.weapon == WEP_MJOLNIR.m_id)
+	else if(this.weapon == WEP_MJOLNIR.m_id && this.model == "progs/player.mdl")
 		this.modelindex = modelindex_hammer; // don't use eyes
 	else
 		this.modelindex = this.modelindex_player; // don't use eyes
