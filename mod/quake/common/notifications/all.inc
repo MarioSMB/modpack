@@ -150,8 +150,8 @@
     MSG_INFO_NOTIF(DEATH_SELF_MON_SWORD,                    N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slit open by a Phantom Swordsman"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_VORE,                     N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was exploded by a Vore"), "")
     MSG_INFO_NOTIF(DEATH_SELF_MON_WRATH,                    N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was disintegrated by a Wrath"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_MON_ZOMBIE,                   N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 tried to leave"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_NOEXIT,                       N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was squashed"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_MON_ZOMBIE,                   N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 joins the Zombies"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_NOEXIT,                       N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 tried to leave"), "")
     MSG_INFO_NOTIF(DEATH_SELF_PULSERIFLE,                   N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 pointed their Armor Laser System in the wrong direction"), "")
     MSG_INFO_NOTIF(DEATH_SELF_ROT,                          N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 lost too much blood"), "")
     MSG_INFO_NOTIF(DEATH_SELF_SLIME,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slimed"), "")
@@ -163,7 +163,6 @@
     MSG_INFO_NOTIF(DEATH_SELF_WRATH,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 angered a powerful being"), "")
     MSG_INFO_NOTIF(DEATH_TEAMKILL,                          N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 mows down a teammate"), "")
 
-    MSG_INFO_NOTIF(ITEM_AMMO_GOT,                           N_CONSOLE,  1, 1, "f2 s1", "s1",                    "item_ammo",     _("^BGYou picked up ^F1%s %s"), "")
     MSG_INFO_NOTIF(ITEM_AMMO_PICKUP,                        N_DISABLE,  0, 0, "", "",                           "",              _("^BGYou picked up some ammo"), "")
     MSG_INFO_NOTIF(ITEM_BACKPACK_GOT,                       N_DISABLE,  1, 0, "s1", "",                                  "",     _("^BGYou get %s"), "")
     MSG_INFO_NOTIF(ITEM_BACKPACK_GOT_WEAPON,                N_DISABLE,  2, 0, "s1 s2", "",                               "",     _("^BGYou get the ^F1%s^BG and %s"), "")
@@ -185,7 +184,7 @@
 
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 left the game with %s frag(s)"), "")
 
-    MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  1, 0, "s1", "",                      "",          _("^BG%s^K1 is now thinking with portals"), "")
+    MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  2, 0, "s1 s2", "",                      "",          _("^BG%s%s^K1 is now thinking with portals"), "")
 
 #undef N_DISABLE
 #undef N_CONSOLE

@@ -727,51 +727,6 @@ string Local_Notification_sprintf(
 }
 
 #ifdef CSQC
-void Sbar_Notify_Push(float amount, string item);
-void Local_Notification_HUD_Notify_Push(
-	string icon, string hudargs,
-	string s1, string s2, string s3, string s4,
-	float f1, float f2, float f3, float f4)
-{
-	arg_slot[0] = ""; arg_slot[1] = "";
-
-	for (int sel_num = 0; (hudargs != ""); )
-	{
-		string selected = car(hudargs); hudargs = cdr(hudargs);
-		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push");
-		switch (strtolower(selected))
-		{
-			#define ARG_CASE_ARG_CS_SV_HA(selected, result) case selected: arg_slot[sel_num++] = result; break;
-			#define ARG_CASE_ARG_CS_SV_DC(selected, result)
-			#define ARG_CASE_ARG_CS_SV(selected, result)
-			#define ARG_CASE_ARG_CS(selected, result)
-			#define ARG_CASE_ARG_SV(selected, result)
-			#define ARG_CASE_ARG_DC(selected, result)
-			#define ARG_CASE(prog, selected, result)        ARG_CASE_##prog(selected, result)
-			NOTIF_ARGUMENT_LIST
-			#undef ARG_CASE
-			#undef ARG_CASE_ARG_DC
-			#undef ARG_CASE_ARG_SV
-			#undef ARG_CASE_ARG_CS
-			#undef ARG_CASE_ARG_CS_SV
-			#undef ARG_CASE_ARG_CS_SV_DC
-			#undef ARG_CASE_ARG_CS_SV_HA
-			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
-		}
-	}
-	#ifdef NOTIFICATIONS_DEBUG
-	Debug_Notification(sprintf(
-		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s, %s);\n",
-		icon,
-		hudargs,
-		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
-		MakeConsoleSafe(sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
-	));
-	#endif
-	Sbar_Notify_Push(f1, arg_slot[0]);
-}
-
 void Local_Notification_centerprint_Add(
 	string input, string durcnt,
 	CPID cpid, float f1, float f2)
@@ -891,7 +846,6 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 	{
 		case MSG_INFO:
 		{
-			if(notif.nent_icon == "") // quake hack: notifications that push an icon do not show up in the console
 			print(
 				Local_Notification_sprintf(
 					notif.nent_string,
@@ -899,24 +853,6 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 					s1, s2, s3, s4,
 					f1, f2, f3, f4)
 			);
-			#ifdef CSQC
-			if (notif.nent_icon != "")
-			{
-				if (notif.nent_iconargs != "")
-				{
-					string s = Local_Notification_sprintf(
-						notif.nent_icon,notif.nent_iconargs,
-						s1, s2, s3, s4, f1, f2, f3, f4);
-					// remove the trailing newline
-					notif.nent_icon = strzone(substring(s, 0, -1));
-				}
-				Local_Notification_HUD_Notify_Push(
-					notif.nent_icon,
-					notif.nent_hudargs,
-					s1, s2, s3, s4,
-					f1, f2, f3, f4);
-			}
-			#endif
 			break;
 		}
 

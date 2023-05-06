@@ -327,10 +327,7 @@ void horde_ammo_touch(entity this, entity toucher)
 		((this.weapon == 4) && (toucher.ammo_cells >= 100))) // cells
 		return;
 		
-	if(this.netname != "")
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, this.netname, this.aflag);
-	else
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_PICKUP); // TODO: icon?
+	SendItemPickup(toucher, this.items, this.aflag);
 	
 	// ammo touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
@@ -579,6 +576,7 @@ void SpawnAmmo(entity this)
 			item.aflag = 20;
 		}
 		item.weapon = 1;
+		item.items = IT_SHELLS;
 		item.netname = "shells";
 	}
 	else if(r <= 14) // spikes
@@ -595,6 +593,7 @@ void SpawnAmmo(entity this)
 			item.aflag = 25;
 		}
 		item.weapon = 2;
+		item.items = IT_NAILS;
 		item.netname = "nails";
 	}
 	else if(r <= 17) // rockets
@@ -611,6 +610,7 @@ void SpawnAmmo(entity this)
 			item.aflag = 5;
 		}
 		item.weapon = 3;
+		item.items = IT_ROCKETS;
 		item.netname = "rockets";
 	}
 	else // cells
@@ -627,6 +627,7 @@ void SpawnAmmo(entity this)
 			item.aflag = 6;
 		}
 		item.weapon = 4;
+		item.items = IT_CELLS;
 		item.netname = "cells";
 	}
 	setorigin (item, pos + '0 0 1');

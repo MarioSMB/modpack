@@ -1,5 +1,7 @@
 #include "main.qh"
 
+#include "sbar.qh"
+
 bool autocvar_developer_csqcentities;
 
 // required engine functions
@@ -277,6 +279,16 @@ NET_HANDLE(TE_CSQC_LIGHTNING, bool isNew)
 	this.vorg1 = ReadVector();
 	this.vorg2 = ReadVector();
 
+	return true;
+}
+
+NET_HANDLE(TE_CSQC_ITEMPICKUP, bool isNew)
+{
+	int theitem = ReadByte();
+	float amount = ReadShort();
+	string item = Sbar_ItemName(theitem);
+	if(item)
+		Sbar_Notify_Push(amount, item);
 	return true;
 }
 

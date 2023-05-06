@@ -103,7 +103,7 @@ spawnfunc(func_train)
 	}
 
 	this.cnt = 1;
-	if(MP_MG && (this.spawnflags & FUNC_TRAIN_NONSOLID))
+	if(MP_MG && (this.spawnflags & FUNC_TRAIN_NONSOLID) && substring(world.model, 0, 7) == "maps/mg") // hack needed because this flag is set on vanilla maps!
 		this.solid = SOLID_NOT; // TODO: MOVETYPE_FAKEPUSH?
 	else
 		setblocked(this, train_blocked);

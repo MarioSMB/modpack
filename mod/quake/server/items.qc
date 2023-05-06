@@ -5,6 +5,17 @@
 #include "triggers/triggers.qh"
 #include "weapons.qh"
 
+void SendItemPickup(entity this, int item, float amount)
+{
+	if(!item || amount <= 0 || !IS_REAL_CLIENT(this))
+		return;
+
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_ITEMPICKUP);
+	WriteByte(MSG_ONE, item);
+	WriteShort(MSG_ONE, rint(amount));
+}
+
 void W_SwitchWeapon(entity this, float to_wep);
 void W_SetCurrentAmmo(entity this);
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
@@ -1087,13 +1098,10 @@ void ammo_touch(entity this, entity toucher)
 
 	bound_other_ammo(toucher);
 
-	if(this.netname != "")
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, this.netname, this.aflag);
-	else
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_PICKUP); // TODO: icon?
+	SendItemPickup(toucher, this.items, this.aflag);
+
 // ammo touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
 
 // change to a better weapon if appropriate
 
@@ -1169,6 +1177,7 @@ spawnfunc(item_shells)
 		this.aflag = 20;
 	}
 	this.weapon = 1;
+	this.items = IT_SHELLS;
 	this.netname = "shells";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1193,6 +1202,7 @@ spawnfunc(item_spikes)
 		this.aflag = 25;
 	}
 	this.weapon = 2;
+	this.items = IT_NAILS;
 	this.netname = "nails";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1221,6 +1231,7 @@ spawnfunc(item_lava_spikes)
 		this.aflag = 25;
 	}
 	this.weapon = 5;
+	this.items = IT_LAVA_NAILS;
 	this.netname = "lava nails";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1246,6 +1257,7 @@ spawnfunc(item_rockets)
 		this.aflag = 5;
 	}
 	this.weapon = 3;
+	this.items = IT_ROCKETS;
 	this.netname = "rockets";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1275,6 +1287,7 @@ spawnfunc(item_multi_rockets)
 		this.aflag = 5;
 	}
 	this.weapon = 6;
+	this.items = IT_MULTI_ROCKETS;
 	this.netname = "multi rockets";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1300,6 +1313,7 @@ spawnfunc(item_cells)
 		this.aflag = 6;
 	}
 	this.weapon = 4;
+	this.items = IT_CELLS;
 	this.netname = "cells";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1328,6 +1342,7 @@ spawnfunc(item_plasma)
 		this.aflag = 6;
 	}
 	this.weapon = 7;
+	this.items = IT_PLASMA_AMMO;
 	this.netname = "plasma";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
@@ -1970,17 +1985,17 @@ void BackpackTouch(entity this, entity toucher)
 	}
 
 	if(this.ammo_shells)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "shells", this.ammo_shells);
+		SendItemPickup(toucher, IT_SHELLS, this.ammo_shells);
 	if(this.ammo_rockets)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "rockets", this.ammo_rockets);
+		SendItemPickup(toucher, IT_ROCKETS, this.ammo_rockets);
 	if(this.ammo_cells)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "cells", this.ammo_cells);
+		SendItemPickup(toucher, IT_CELLS, this.ammo_cells);
 	if(this.ammo_lava_nails)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "lava nails", this.ammo_lava_nails);
+		SendItemPickup(toucher, IT_LAVA_NAILS, this.ammo_lava_nails);
 	if(this.ammo_multi_rockets)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "multi rockets", this.ammo_multi_rockets);
+		SendItemPickup(toucher, IT_MULTI_ROCKETS, this.ammo_multi_rockets);
 	if(this.ammo_plasma)
-		Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_AMMO_GOT, "plasma", this.ammo_plasma);
+		SendItemPickup(toucher, IT_PLASMA_AMMO, this.ammo_plasma);
 
 	if(wepmsg != "")
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, wepmsg);
