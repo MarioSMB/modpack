@@ -56,7 +56,7 @@ void lavaspike_touch(entity this, entity toucher)
 			int old_armormask = toucher.items & (IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
 			toucher.armortype = 0;
 			toucher.armorvalue = 0;
-			T_Damage(toucher, this, this.owner, 9);
+			T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype);
 			toucher.armortype = old_armortype;
 			toucher.armorvalue = old_armorvalue;
 			toucher.items |= old_armormask;
@@ -64,7 +64,7 @@ void lavaspike_touch(entity this, entity toucher)
 		else		// is a monster
 		{
 			if(toucher.monsterdef != MON_LAVAMAN)
-				T_Damage(toucher, this, this.owner, 15);
+				T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
 		}
 	}
 	else
@@ -107,7 +107,7 @@ void superlavaspike_touch(entity this, entity toucher)
 //			old_armorvalue = toucher.armorvalue;
 			toucher.armortype = toucher.armortype * 0.5;
 //			toucher.armorvalue = 0;
-			T_Damage(toucher, this, this.owner, 18);
+			T_Damage(toucher, this, this.owner, 18, this.projectiledeathtype);
 			
 			// if the damage didn't wipe out the armor, armortype 
 			if(toucher.armortype != 0)
@@ -120,7 +120,7 @@ void superlavaspike_touch(entity this, entity toucher)
 		{
 			if(toucher.monsterdef != MON_LAVAMAN)
 			{
-				T_Damage(toucher, this, this.owner, 30);
+				T_Damage(toucher, this, this.owner, 30, this.projectiledeathtype);
 			}
 		}
 	}

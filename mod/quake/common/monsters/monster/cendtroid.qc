@@ -75,7 +75,8 @@ void SCOURGE_FireSpikes(entity this, float ox)
 	vector vec = (this.enemy.origin + (200 * v_forward)) - src;
 	vec = normalize(vec);
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
-	launch_spike(this, src, vec);
+	entity missile = launch_spike(this, src, vec);
+	missile.projectiledeathtype = DEATH_MONSTER_CENTROID.m_id;
 
 	this.attack_finished = time + 0.2;
 }
@@ -94,7 +95,7 @@ void Attack_With_Tail(entity this)
 		return;
 
 	float ldmg = (random() + random() + random()) * 40;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, this.projectiledeathtype);
 	_sound(this, CH_WEAPON_SINGLE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward * 16, crandom() * 50 * v_right);
@@ -302,7 +303,7 @@ void scourge_pain3(entity this) { set_animofs(this, anim_scourge_pain, 3, scourg
 void scourge_pain2(entity this) { set_animofs(this, anim_scourge_pain, 2, scourge_pain3); }
 void scourge_pain1(entity this) { set_animofs(this, anim_scourge_pain, 1, scourge_pain2); this.spawnsilent = 0; scourge_think(this); }
 
-void scourge_pain(entity this, entity attacker, float damage)
+void scourge_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(random() * 50 > damage)
 		return;		// didn't flinch
@@ -326,7 +327,7 @@ void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourg
 void scourge_die2(entity this) { set_animofs(this, anim_scourge_death, 2, scourge_die3); }
 void scourge_die1(entity this) { set_animofs(this, anim_scourge_death, 1, scourge_die2); this.spawnsilent = 0; scourge_think(this); }
 
-void scourge_die(entity this, entity inflictor, entity attacker)
+void scourge_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	// check for gib
 	// stop sound
@@ -418,7 +419,6 @@ void ScourgeTriggerTouch(entity this, entity toucher)
 	}
 
 string scourge_sight(entity this) { return "scourge/sight.wav"; }
-string scourge_deathmessage(entity this) { return "was stung by a Centroid"; }
 
 /*QUAKED monster_scourge (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */
@@ -463,7 +463,6 @@ METHOD(Centroid, mr_setup, bool(Centroid this, entity actor))
 
 	actor.checkattack = ScourgeCheckAttack;
 	actor.sightsound = scourge_sight;
-	actor.deathmessage = scourge_deathmessage;
 
     return true;
 }

@@ -43,7 +43,7 @@ vector func_bob_GetPositionForAngle(entity this, float an)
 void func_bob_blocked(entity this, entity blocker)
 {
 	if(this.attack_finished > time) return;
-	T_Damage(blocker, this, this, this.dmg);
+	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 	this.attack_finished = time + 0.5;
 }
 

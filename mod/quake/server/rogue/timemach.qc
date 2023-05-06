@@ -101,16 +101,16 @@ void time_crash(entity this)
 	SUB_UseTargets(this, NULL, NULL);
 }
 
-void time_crash_die(entity this, entity inflictor, entity attacker)
+void time_crash_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	time_crash(this);
 }
-void time_crash_pain(entity this, entity attacker, float damage)
+void time_crash_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	time_crash(this);
 }
 
-void time_pain(entity this, entity attacker, float take)
+void time_pain(entity this, entity attacker, float take, int deathtype)
 {
 	if(this.health > 1100 && this.pain_finished > time)
 		return;
@@ -143,9 +143,9 @@ void time_pain(entity this, entity attacker, float take)
 	}
 }
 
-void time_die(entity this, entity inflictor, entity attacker)
+void time_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	time_pain(this, attacker, 0);
+	time_pain(this, attacker, 0, DEATH_GENERIC.m_id);
 }
 
 //(-16 -16 -32) (16 16 0)

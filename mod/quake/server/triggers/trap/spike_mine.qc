@@ -65,11 +65,11 @@ void spikemine_Touch(entity this, entity toucher)
 		if(toucher.classname == "proximity_grenade")
 			return;
 
-		T_Damage(this,this,this,this.health+10);
+		T_Damage(this, this, this, this.health + 10, DEATH_TRAP.m_id);
 	}
 //   this.effects = this.effects | EF_MUZZLEFLASH;
 
-	T_RadiusDamage (this, this, 110, NULL);
+	T_RadiusDamage(this, this, 110, DEATH_TRAP.m_id, NULL);
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
@@ -82,7 +82,7 @@ void spikemine_Touch(entity this, entity toucher)
 	s_explode1(this);
 }
 
-void spikemine_Die(entity this, entity inflictor, entity attacker)
+void spikemine_Die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	spikemine_Touch(this, attacker);
 }
@@ -134,8 +134,7 @@ spawnfunc(trap_spike_mine)
 	this.th_missile = spikemine_Home;
 	this.nextthink = time + 0.2;
 	monsters_total += 1;
-	this.flags |= FL_MONSTER;
-	this.deathtype = "was blasted by a spike mine";
+	this.flags |= FL_MONSTER; // TODO
 
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);

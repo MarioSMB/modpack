@@ -16,7 +16,7 @@ void W_FireLightning(entity this)
 		this.ammo_cells = 0;
 		W_SetCurrentAmmo(this);
 		discharged = true;
-		T_RadiusDamage(this, this, 35 * cells, NULL);
+		T_RadiusDamage(this, this, 35 * cells, DEATH_DISCHARGE.m_id, NULL);
 		discharged = false;
 		return;
 	}
@@ -39,7 +39,7 @@ void W_FireLightning(entity this)
 	//te_lightning2(NULL, org, trace_endpos);
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos + v_forward*4, this, 30);
+	LightningDamage(org, trace_endpos + v_forward*4, this, 30, WEP_LIGHTNING.m_id);
 }
 
 METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor))

@@ -51,7 +51,7 @@ void buzzsaw_touch(entity this, entity toucher)
 			_sound(this, CH_WEAPON_SINGLE, "buzz/buzz.wav", 1, ATTN_NORM);
 			this.attack_finished = time + 2;
 		}
-		T_Damage(toucher, this, this, this.currentammo);
+		T_Damage(toucher, this, this, this.currentammo, DEATH_TRAP.m_id);
 
 		vector sprayDir = normalize(this.goalentity.origin - this.origin);
 		sprayDir = sprayDir * 200;

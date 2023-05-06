@@ -113,7 +113,7 @@ void mummyGrenadeTouch(entity this, entity toucher)
 	{
 		float mummyDamage = 15 + random() * 15;
 		  
-		T_Damage(toucher, this, this.owner, mummyDamage );
+		T_Damage(toucher, this, this.owner, mummyDamage, this.projectiledeathtype);
 		_sound(this, CH_WEAPON_SINGLE, "zombie/z_hit.wav", 1, ATTN_NORM);
 		delete(this);
 		return;
@@ -137,6 +137,7 @@ void mummyFireGrenade(entity this, vector st)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = DEATH_MONSTER_MUMMY.m_id;
 
 // calc org
 	vector org = this.origin + st.x * v_forward + st.y * v_right + (st.z - 24) * v_up;
@@ -346,7 +347,7 @@ void mummy_paine3(entity this) { set_animofs(this, anim_mummy_paine, 3, mummy_pa
 void mummy_paine2(entity this) { set_animofs(this, anim_mummy_paine, 2, mummy_paine3); ai_pain(this, 8); }
 void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
-void mummy_die(entity this, entity inflictor, entity attacker)
+void mummy_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.health = -35;
 	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
@@ -361,7 +362,7 @@ void mummy_die(entity this, entity inflictor, entity attacker)
 mummy_pain
 =================
 */
-void mummy_pain(entity this, entity attacker, float damage)
+void mummy_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)	
 		return;
@@ -394,7 +395,7 @@ void mummy_wake(entity this)
 
 	mummy_paine12(this);
 }
-void mummy_wake_pain(entity this, entity attacker, float damage)
+void mummy_wake_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	mummy_wake(this);
 }
@@ -402,8 +403,6 @@ void mummy_wake_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 const int MUMMY_STRONG = BIT(2);
-
-string mummy_deathmessage(entity this) { return "was Mummified"; }
 
 /*QUAKED monster_mummy (1 0 0) (-16 -16 -24) (16 16 32) Ambush Lying Stronger
 
@@ -459,8 +458,6 @@ METHOD(Mummy, mr_setup, bool(Mummy this, entity actor))
 		actor.th_die = mummy_die;
 		actor.th_missile = mummy_missile;
 	}
-
-	actor.deathmessage = mummy_deathmessage;
 
     return true;
 }

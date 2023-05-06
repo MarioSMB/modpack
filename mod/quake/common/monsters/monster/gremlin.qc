@@ -304,7 +304,7 @@ The monster has an enemy it is trying to kill
 void gremlin_run(entity this, float dist)
 {
 	if(this.watertype == CONTENT_LAVA) // do damage
-		T_Damage (this, NULL, NULL, 2000);
+		T_Damage(this, NULL, NULL, 2000, DEATH_LAVA.m_id);
 
 	this.move_dist = dist;
 
@@ -701,7 +701,7 @@ void gremlin_gunpain3(entity this) { set_animofs(this, anim_gremlin_gpain, 3, gr
 void gremlin_gunpain2(entity this) { set_animofs(this, anim_gremlin_gpain, 2, gremlin_gunpain3); ai_back(this, 2); }
 void gremlin_gunpain1(entity this) { set_animofs(this, anim_gremlin_gpain, 1, gremlin_gunpain2); ai_back(this, 4); }
 
-void gremlin_pain(entity this, entity attacker, float damage)
+void gremlin_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(random() < 0.8)
 	{
@@ -817,7 +817,7 @@ void GremlinDropBackpack(entity this)
 	setthink(item, SUB_Remove);
 }
 
-void gremlin_die(entity this, entity inflictor, entity attacker)
+void gremlin_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.weaponentity.m_weapon != WEP_Null)
@@ -954,6 +954,7 @@ void Gremlin_FireRocket(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
 
 // set missile speed
 
@@ -995,7 +996,8 @@ void Gremlin_FireNailGun(entity this, float ox)
 	makevectors(this.v_angle);
 	dir = dir + crandom() * 0.1 * v_right + crandom() * 0.1 *v_up;
 	dir = normalize(dir);
-	launch_spike(this, this.origin + '0 0 16', dir);
+	entity missile = launch_spike(this, this.origin + '0 0 16', dir);
+	missile.projectiledeathtype = WEP_NAILGUN.m_id;
 }
 
 /*
@@ -1038,7 +1040,7 @@ void Gremlin_FireShotgun(entity this)
 	dir = dir + crandom()* 0.1 *v_right + crandom()* 0.1 *v_up;
 	dir = normalize(dir);
 	this.v_angle = vectoangles(dir);
-	FireBullets(this, 6, dir, '0.04 0.04 0');
+	FireBullets(this, 6, dir, '0.04 0.04 0', WEP_SHOTGUN.m_id);
 }
 
 /*
@@ -1060,7 +1062,7 @@ void Gremlin_FireSuperShotgun(entity this)
 	dir = dir + crandom() * 0.3 * v_right + crandom() * 0.3 *v_up;
 	dir = normalize(dir);
 	this.v_angle = vectoangles(dir);
-	FireBullets(this, 14, dir, '0.14 0.08 0');
+	FireBullets(this, 14, dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
 }
 
 /*
@@ -1078,7 +1080,7 @@ void Gremlin_FireLightningGun(entity this)
 		int cells = this.ammo_cells;
 		this.ammo_cells = 0;
 		discharged = true;
-		T_RadiusDamage(this, this, 35 * cells, NULL);
+		T_RadiusDamage(this, this, 35 * cells, DEATH_DISCHARGE.m_id, NULL);
 		discharged = false;
 //      W_SetCurrentAmmo ();
 		return;
@@ -1104,7 +1106,7 @@ void Gremlin_FireLightningGun(entity this)
 	//te_lightning2(NULL, org, trace_endpos); // should be this
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos + (dir * 4), this, 30);
+	LightningDamage(org, trace_endpos + (dir * 4), this, 30, WEP_LIGHTNING.m_id);
 }
 
 /*
@@ -1290,7 +1292,7 @@ void Gremlin_Melee(entity this, float side)
 
 	_sound(this, CH_WEAPON_SINGLE, "grem/attack.wav", 1, ATTN_NORM);
 	float ldmg = 10 + 5*random();
-	T_Damage (this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_GREMLIN.m_id);
 
 	makevectors(this.angles);
 	SpawnMeatSpray(this, this.origin + v_forward * 16, side * v_right);
@@ -1478,7 +1480,6 @@ void Gremlin_FlipTouch(entity this, entity toucher)
 }
 
 string gremlin_sight(entity this) { return "grem/sight1.wav"; }
-string gremlin_deathmessage(entity this) { return "was outsmarted by a Gremlin"; }
 
 bool GremlinCheckAttack(entity this);
 
@@ -1520,7 +1521,6 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 
 	actor.checkattack = GremlinCheckAttack;
 	actor.sightsound = gremlin_sight;
-	actor.deathmessage = gremlin_deathmessage;
 
     return true;
 }

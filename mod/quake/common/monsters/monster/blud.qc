@@ -36,7 +36,7 @@ void Blud_JumpTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		float ldmg = ((random() + random()) + random()) * 20;
-		T_Damage(this.enemy, this, this, ldmg);
+		T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_BLUD.m_id);
 		_sound(this, CHAN_BODY, "monsters/blud/blood.wav", 1, ATTN_NORM);
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
@@ -105,7 +105,7 @@ void blud_suck(entity this)
 	if(!CanDamage(this.enemy, this))
 		return;
 	float ldmg = (((random() + random()) + random()) * 10);
-	T_Damage (this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_BLUD.m_id);
 	_sound(this, CHAN_AUTO, "monsters/blud/blidle3.wav", 1, ATTN_NORM);
 	SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
 	SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
@@ -139,7 +139,7 @@ void BludGrenadeTouch(entity this, entity toucher)
 		return;
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, 10);
+		T_Damage(toucher, this, this.owner, 10, DEATH_MONSTER_BLUD.m_id);
 		_sound(this, CHAN_WEAPON, "zombie/z_hit.wav", 1, ATTN_NORM);
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
@@ -238,7 +238,7 @@ void blud_pain3(entity this) { set_anim(this, 48, blud_pain4); }
 void blud_pain2(entity this) { set_anim(this, 47, blud_pain3); }
 void blud_pain1(entity this) { set_anim(this, 46, blud_pain2); }
 
-void blud_pain(entity this, entity attacker, float damage)
+void blud_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -362,13 +362,12 @@ void blud_die1(entity this)
 	_sound(this, CHAN_AUTO, "monsters/blud/bldie.wav", 1, ATTN_NORM);
 	this.th_die = func_null;
 }
-void blud_die(entity this, entity inflictor, entity attacker)
+void blud_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	blud_die1(this);
 }
 
 string blud_sight(entity this) { return "monsters/blud/blsight.wav"; }
-string blud_deathmessage(entity this) { return "had the life sucked out of them"; }
 
 spawnfunc(monster_blud)
 {
@@ -411,7 +410,6 @@ METHOD(Blud, mr_setup, bool(Blud this, entity actor))
 	actor.th_die = blud_die;
 
 	actor.sightsound = blud_sight;
-	actor.deathmessage = blud_deathmessage;
 
     return true;
 }

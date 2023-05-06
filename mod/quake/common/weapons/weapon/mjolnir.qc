@@ -17,7 +17,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 	if(trace_ent.takedamage && !trace_ent.wetsuit_finished )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);
 		if(IS_PLAYER(from))
 		{
 			if(IS_PLAYER(trace_ent))
@@ -32,7 +32,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 		!trace_ent.wetsuit_finished )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);
 	}
 	e2 = trace_ent;
 
@@ -42,7 +42,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 		!trace_ent.wetsuit_finished )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);
 	}
 }
 
@@ -180,7 +180,7 @@ void HIP_FireMjolnirLightning(entity this)
 		int cells = this.ammo_cells;
 		this.ammo_cells = 0;
 		discharged = true;
-		T_RadiusDamage(this, this, 35 * cells, NULL);
+		T_RadiusDamage(this, this, 35 * cells, DEATH_DISCHARGE.m_id, NULL);
 		discharged = false;
 		W_SetCurrentAmmo(this);
 		return;
@@ -228,7 +228,7 @@ void HIP_FireMjolnir(entity this)
 			damage = 70;
 		trace_ent.axhitme = true;
 		SpawnBlood(org, v_forward, damage, trace_ent);
-		T_Damage(trace_ent, this, this, damage);
+		T_Damage(trace_ent, this, this, damage, WEP_MJOLNIR.m_id);
 	}
 	else
 	{  // hit wall

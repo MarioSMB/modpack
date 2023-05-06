@@ -27,7 +27,7 @@ void particlefield_touch(entity this, entity toucher)
 		return;
 
 	this.attack_finished = time + 0.5;
-	T_Damage(toucher, this, this, this.dmg);
+	T_Damage(toucher, this, this, this.dmg, DEATH_TRAP.m_id);
 }
 
 /*QUAKED func_particlefield (0 .5 .8) ? USE_COUNT

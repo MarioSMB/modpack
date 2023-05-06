@@ -19,7 +19,7 @@ void superspike_touch(entity this, entity toucher)
 	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 18, toucher);
-		T_Damage(toucher, this, this.owner, 18);
+		T_Damage(toucher, this, this.owner, 18, this.projectiledeathtype);
 	}
 	else
 		te_superspike(this.origin);
@@ -43,6 +43,7 @@ void W_FireSuperSpikes(entity this)
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
 	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
+	newmis.projectiledeathtype = WEP_SUPER_NAILGUN.m_id;
 	if(MP_IMPEL)
 		newmis.classname = "superspike";
 	else

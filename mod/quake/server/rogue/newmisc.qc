@@ -34,9 +34,9 @@ spawnfunc(light_candle)
 // ==========================================
 void rubble_touch(entity this, entity toucher)
 {
-	if(IS_PLAYER(toucher) || (toucher.flags & FL_MONSTER))
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 	if(vdist(this.velocity, >, 0))
-		T_Damage(toucher, this, this, 10);
+		T_Damage(toucher, this, this, 10, DEATH_TRAP.m_id);
 }
 
 void rubble_throw(entity this)

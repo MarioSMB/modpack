@@ -2,7 +2,7 @@
 // Jan'97 by ZOID <zoid@threewave.com>
 // Under contract to id software for Rogue Entertainment
 
-void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
+void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype);
 
 // Prototypes
 int W_BestWeapon(entity this, float except);
@@ -394,7 +394,7 @@ void TeamCheckLock(entity this)
 					// case base respawn
 					if(this.ctf_killed != 1)
 						this.ctf_killed = 2;
-					T_Damage(this, this, this, 1000);  // Kill the player
+					T_Damage(this, this, this, 1000, DEATH_KILL.m_id);  // Kill the player
 					// trying to change teams counts as a suicide
 					this.suicide_count = this.suicide_count + 1;
 
@@ -417,7 +417,7 @@ void TeamCheckLock(entity this)
 			// case base respawn
 			if(this.ctf_killed != 1)
 				this.ctf_killed = 2;
-			T_Damage(this, this, this, 1000);  // Kill the player
+			T_Damage(this, this, this, 1000, DEATH_TEAMCHANGE.m_id);  // Kill the player
 		}
 		this.frags = 0;                 // Zero out frags
 		TeamCheckTeam(this); // re-assignment

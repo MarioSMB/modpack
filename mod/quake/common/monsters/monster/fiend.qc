@@ -138,7 +138,7 @@ void demon1_pain3(entity this) { set_animofs(this, anim_demon_pain, 3, demon1_pa
 void demon1_pain2(entity this) { set_animofs(this, anim_demon_pain, 2, demon1_pain3); }
 void demon1_pain1(entity this) { set_animofs(this, anim_demon_pain, 1, demon1_pain2); }
 
-void demon1_pain(entity this, entity attacker, float damage)
+void demon1_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(gettouch(this) == Demon_JumpTouch)
 		return;
@@ -179,7 +179,7 @@ void demon1_die1(entity this)
 	_sound(this, CH_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
 }
 
-void demon_die(entity this, entity inflictor, entity attacker)
+void demon_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -80)
@@ -283,7 +283,7 @@ void Demon_Melee(entity this, float side)
 		
     _sound(this, CH_WEAPON_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
 	float ldmg = 10 + 5*random();
-	T_Damage(this.enemy, this, this, ldmg);	
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_FIEND.m_id);	
 
 	fixedmakevectors(this.angles);
 	SpawnMeatSpray(this, this.origin + v_forward*16, side * v_right);
@@ -300,7 +300,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 40 + 10*random();
-			T_Damage(toucher, this, this, ldmg);
+			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_FIEND.m_id);
 			if(MP_MG)
 				this.attack_finished = time + 0.5;	
 		}
@@ -320,7 +320,6 @@ void Demon_JumpTouch(entity this, entity toucher)
 }
 
 string demon1_sight(entity this) { return "demon/sight2.wav"; }
-string demon1_deathmessage(entity this) { return "was eviscerated by a Fiend"; }
 
 /*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
@@ -350,7 +349,6 @@ METHOD(Fiend, mr_setup, bool(Fiend this, entity actor))
 
 	actor.sightsound = demon1_sight;
 	actor.checkattack = DemonCheckAttack;
-	actor.deathmessage = demon1_deathmessage;
 
 	return true;
 }

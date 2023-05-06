@@ -64,12 +64,12 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 }
 
-void fd_secret_pain(entity this, entity attacker, float damage)
+void fd_secret_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	fd_secret_use(this, attacker, NULL);
 }
 
-void fd_secret_die(entity this, entity inflictor, entity attacker)
+void fd_secret_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	fd_secret_use(this, attacker, NULL);
 }
@@ -138,7 +138,7 @@ void secret_blocked(entity this, entity blocker)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + 0.5;
-	T_Damage(blocker, this, this, this.dmg);
+	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 }
 
 /*

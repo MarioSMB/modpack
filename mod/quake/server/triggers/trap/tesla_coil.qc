@@ -43,7 +43,7 @@ void TeslaLightningThink(entity this)
 	}
 	//te_lightning2(NULL, this.origin, trace_endpos); // should be this
 	SendCSQCLightningBeam(this.origin, trace_endpos);
-	LightningDamage(this.origin, trace_endpos, this.lastvictim, this.dmg);
+	LightningDamage(this.origin, trace_endpos, this.lastvictim, this.dmg, this.projectiledeathtype);
 	this.nextthink = time + 0.1;
 }
 
@@ -64,7 +64,7 @@ void SpawnTeslaLightning(entity this, entity targ)
 	lgt.origin = this.origin;
 	setthink(lgt, TeslaLightningThink);
 	lgt.nextthink = time;
-	lgt.deathtype = this.deathtype;
+	lgt.projectiledeathtype = this.projectiledeathtype;
 }
 
 void trap_tesla_think(entity this)
@@ -161,7 +161,7 @@ spawnfunc(trap_tesla_coil)
 	setthink(this, trap_tesla_think);
 	this.lastvictim = NULL;
 	this.attack_state = 0;
-	this.deathtype = "is electrocuted";
+	this.projectiledeathtype = DEATH_TRAP.m_id; // TODO: is electrocuted
 }
 
 void trap_gods_wrath_use(entity this, entity actor, entity trigger)
@@ -194,7 +194,7 @@ spawnfunc(trap_gods_wrath)
 	this.wait = 0;
 	this.state = 1;
 	this.nextthink = -1;
-	this.deathtype = "suffers the wrath of God";
+	this.projectiledeathtype = DEATH_WRATH.m_id;
 //   this.attack_state = 1;
 	this.use = trap_gods_wrath_use;
 }

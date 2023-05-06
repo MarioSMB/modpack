@@ -13,7 +13,7 @@ void exploder_fire(entity this)
 	else
 		_sound(this, CH_TRIGGER, "misc/longexpl.wav", this.volume, this.speed);
 
-	T_RadiusDamage(this, this.owner, this.dmg, this.enemy);
+	T_RadiusDamage(this, this.owner, this.dmg, DEATH_TRAP.m_id, this.enemy);
 	if(this.spawnflags & USE_PARTICLES)
 		Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
@@ -82,7 +82,7 @@ void multi_exploder_fire(entity this)
 	expl.origin_y = this.absmin_y + (random() * (this.absmax_y - this.absmin_y));
 	expl.origin_z = this.absmin_z + (random() * (this.absmax_z - this.absmin_z));
 	_sound(expl , CH_TRIGGER_SINGLE, "misc/shortexp.wav", this.volume, this.speed);
-	T_RadiusDamage(expl, this.owner, this.dmg, other);
+	T_RadiusDamage(expl, this.owner, this.dmg, DEATH_TRAP.m_id, other);
 	if(this.spawnflags & USE_PARTICLES)
 		Send_Effect(EFFECT_EXPLOSION, expl.origin, '0 0 0', 1);
 	BecomeExplosion(expl);

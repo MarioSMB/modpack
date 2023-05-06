@@ -1249,18 +1249,18 @@ void CreatureFrame_hotliquids(entity this)
 			this.dmgtime = time + 0.2;
 		if(this.monsterdef && (this.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		{
-			T_Damage(this, NULL, NULL, 120); // GIB!
+			T_Damage(this, NULL, NULL, 120, DEATH_LAVA.m_id); // GIB!
 			return;
 		}
 		float lavadmg = (IS_MONSTER(this)) ? 30 : 10;
-		T_Damage(this, NULL, NULL, lavadmg * this.waterlevel);
+		T_Damage(this, NULL, NULL, lavadmg * this.waterlevel, DEATH_LAVA.m_id);
 	}
 	else if (this.watertype == CONTENT_SLIME)
 	{
 		if(this.dmgtime < time && this.radsuit_finished < time)
 		{
 			this.dmgtime = time + 1;
-			T_Damage(this, NULL, NULL, 4 * this.waterlevel);
+			T_Damage(this, NULL, NULL, 4 * this.waterlevel, DEATH_SLIME.m_id);
 		}
 	}
 }
@@ -1323,13 +1323,9 @@ void CreatureFrame_FallDamage(entity this)
 				}
 				else
 				{
-					T_Damage(this, NULL, NULL, 5);
-					if(IS_PLAYER(this))
-					{
+					T_Damage(this, NULL, NULL, 5, DEATH_FALL.m_id);
+					if(IS_PLAYER(this) && this.health > 0)
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
-						if(this.health <= 5)
-							this.deathtype = "falling";
-					}
 				}
 			}
 			else if(IS_PLAYER(this))

@@ -109,7 +109,7 @@ void button_touch(entity this, entity toucher)
 	button_fire(this);
 }
 
-void button_killed(entity this, entity inflictor, entity attacker)
+void button_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.enemy = attacker;
 	this.health = this.max_health;

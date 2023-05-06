@@ -14,7 +14,7 @@ const int anim_boss_shockc = 96; //'96 105 0'
 
 const int BOSS_KILLABLE = 2;
 
-void boss_pain(entity targ, entity attacker, float damage); // Yoder add, September 9 2020
+void boss_pain(entity targ, entity attacker, float damage, int deathtype); // Yoder add, September 9 2020
 void SUB_Freeze(entity this); // Yoder add, Dec 16 2020
 void SUB_Unfreeze(entity this);
 void SUB_Unfreeze_use(entity this, entity actor, entity trigger); // Yoder add, Dec 16 2020
@@ -226,7 +226,7 @@ void boss_death1(entity this)
 	_sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM);
 }
 
-void boss_die(entity this, entity inflictor, entity attacker)
+void boss_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	boss_death1(this);
 }
@@ -256,6 +256,7 @@ void boss_missile(entity this, vector p)
 	vec = normalize(d - org);
 
 	entity newmis = launch_spike(this, org, vec);
+	newmis.projectiledeathtype = DEATH_MONSTER_CHTHON.m_id;
 	newmis.classname = "chthon_lavaball";
 	_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.owner = this;
@@ -306,8 +307,6 @@ void boss_awake(entity this, entity actor, entity trigger)
 	boss_rise1(this);
 }
 
-string boss_deathmessage(entity this) { return "becomes one with Chthon"; }
-
 /*QUAKED monster_boss(1 0 0)(-128 -128 -24)(128 128 256)
 */
 spawnfunc(monster_boss)
@@ -328,8 +327,6 @@ spawnfunc(monster_boss)
 	// NOTE: this isn't actually handled as a monster
 	// however, it does count towards the total monster count!
 	monsters_total += 1;
-
-	this.deathmessage = boss_deathmessage;
 
 	this.use = boss_awake;
 	this.monsterdef = MON_CHTHON; // for monster lookups
@@ -431,7 +428,7 @@ Play the pain animations when health drops below a certain percent
 
 Yoder add, September 9, 2020
 */
-void boss_pain(entity this, entity attacker, float damage)
+void boss_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(!(this.spawnflags & BOSS_KILLABLE))
 		return;

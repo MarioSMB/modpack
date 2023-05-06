@@ -6,14 +6,14 @@
 void sphere_impact(entity this, entity toucher)
 {
 	if(toucher.health)
-		T_Damage(toucher, this, this, 1000);
+		T_Damage(toucher, this, this, 1000, this.projectiledeathtype);
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this, 300, toucher);
+	T_RadiusDamage(this, this, 300, this.projectiledeathtype, toucher);
 
 //	sound (this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	this.origin = this.origin - 8 * normalize(this.velocity);
+	setorigin(this, this.origin - 8 * normalize(this.velocity));
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
@@ -112,6 +112,7 @@ void sphere_spawn(entity this, entity toucher)
 	missile.owner = toucher;
 	missile.weapon = 0;
 	missile.delay = time + 30;
+	missile.projectiledeathtype = DEATH_SPHERE.m_id;
 	_setmodel(missile, "progs/sphere.mdl");
 	setsize(missile, '0 0 0', '0 0 0');     
 	setorigin(missile, this.origin);

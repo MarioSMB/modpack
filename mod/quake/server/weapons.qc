@@ -9,7 +9,6 @@
 /*
 */
 void player_run(entity this);
-void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
 void SuperDamageSound(entity this);
 
 // called by worldspawn
@@ -55,7 +54,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 		if(this.lastvictim == toucher)
 			this.dmg = this.dmg / 2;
 		spawn_touchblood(this, this.dmg, toucher);
-		T_Damage(toucher, this, this.lastvictim, this.dmg);
+		T_Damage(toucher, this, this.lastvictim, this.dmg, WEP_LASER_CANNON.m_id);
 	}
 	else if((this.cnt == 3) ||(random()<0.15))
 	{
@@ -266,21 +265,23 @@ Collects multiple small damages into a single damage
 
 entity	multi_ent;
 float	multi_damage;
+int multi_deathtype;
 
 void ClearMultiDamage()
 {
 	multi_ent = NULL;
 	multi_damage = 0;
+	multi_deathtype = 0;
 }
 
 void ApplyMultiDamage(entity this)
 {
 	if(!multi_ent)
 		return;
-	T_Damage(multi_ent, this, this, multi_damage);
+	T_Damage(multi_ent, this, this, multi_damage, multi_deathtype);
 }
 
-void AddMultiDamage(entity hit, float damage)
+void AddMultiDamage(entity hit, float damage, int deathtype)
 {
 	if(!hit)
 		return;
@@ -308,7 +309,7 @@ BULLETS
 TraceAttack
 ================
 */
-void TraceAttack(float damage, vector dir)
+void TraceAttack(float damage, vector dir, int deathtype)
 {
 	vector vel = normalize(dir + v_up*crandom() + v_right*crandom());
 	vel = vel + 2*trace_plane_normal;
@@ -322,7 +323,7 @@ void TraceAttack(float damage, vector dir)
 			SpawnBlood(org, vel*0.2, damage, trace_ent);
 		else
 			te_gunshot(org); // secret doors need bumps too!
-		AddMultiDamage(trace_ent, damage);
+		AddMultiDamage(trace_ent, damage, deathtype);
 	}
 	else
 		te_gunshot(org);
@@ -337,7 +338,7 @@ Go to the trouble of combining multiple pellets into a single damage call.
 ================
 */
 void placebullethole(vector pos);
-void FireBullets(entity this, int shotcount, vector dir, vector spread)
+void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
 {
 	bool bullet = false; // hipnotic bullet holes
 
@@ -347,6 +348,7 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 	src.z = this.absmin_z + this.size_z * 0.7;
 
 	ClearMultiDamage();
+	multi_deathtype = deathtype;
 	while(shotcount > 0)
 	{
 		vector direction = dir + crandom() * spread.x * v_right + crandom() * spread.y * v_up;
@@ -354,7 +356,7 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 		traceline(src, src + direction * 2048, MOVE_NORMAL, this);
 		if(trace_fraction != 1.0 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{
-			TraceAttack(4, direction);
+			TraceAttack(4, direction, deathtype);
 
 			if(MP_HIPNOTIC && !bullet && !trace_ent)
 			{
@@ -412,12 +414,12 @@ void T_MissileTouch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
-		T_Damage(toucher, this, this.owner, damg );
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 120, toucher);
+	T_RadiusDamage(this, this.owner, 120, this.projectiledeathtype, toucher);
 
 //	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
@@ -515,7 +517,7 @@ void T_MediumPulseTouch(entity this, entity toucher)
 		if(toucher.health <= damg && toucher.monsterdef != MON_JUGGERNAUT
 			&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
-			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)));
+			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)), this.projectiledeathtype);
 			toucher.origin_z = toucher.origin_z + 1;
 			setorigin(toucher, toucher.origin);
 			UNSET_ONGROUND(toucher);
@@ -534,7 +536,7 @@ void T_MediumPulseTouch(entity this, entity toucher)
 			set_movetype(toucher, MOVETYPE_TOSS);
 			toucher.v_angle = this.angles;
 		}
-		T_Damage(toucher, this, this.owner, damg);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	BecomePurpleExplosion(this, toucher, damg);
@@ -558,7 +560,7 @@ void T_SinglePulseTouch(entity this, entity toucher)
 		damg = 35 + random() * 25;
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, damg);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
 		{
 			if(!IS_PLAYER(toucher))
@@ -609,7 +611,7 @@ void T_SmallPulseTouch(entity this, entity toucher)
 		damg = 35 + random() * 25;
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, damg);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT 
 					&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
@@ -670,6 +672,7 @@ void W_FireRifleM(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -685,6 +688,7 @@ void W_FireRifleL(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -700,6 +704,7 @@ void W_FireRifleK(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -715,6 +720,7 @@ void W_FireRifleJ(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -730,6 +736,7 @@ void W_FireRifleI(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -745,6 +752,7 @@ void W_FireRifleH(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -761,6 +769,7 @@ void W_FireRifleD(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = (time + 0.3);
 	setthink(missile, PulseHome);
@@ -777,6 +786,7 @@ void W_FireRifleC(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = time + 0.2;
 	setthink(missile, PulseHome);
@@ -793,6 +803,7 @@ void W_FireRifleB(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = (time + 0.1);
 	setthink(missile, PulseHome);
@@ -810,6 +821,7 @@ void W_FireRifleA(entity this)
 	vector dir = normalize(vtemp - missile.origin);
 	missile.velocity = dir * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -826,6 +838,7 @@ void W_FireRifle2A(entity this)
 	vector dir = normalize((vtemp - missile.origin));
 	missile.velocity = dir * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -841,6 +854,7 @@ void W_FireRifle3A(entity this)
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -1039,9 +1053,9 @@ void gibhim(entity this)
 		this.takedamage = DAMAGE_AIM;
 		set_movetype(this, MOVETYPE_STEP);
 		if(!IS_PLAYER(this))
-			T_RadiusDamage(this, this.owner, 120, NULL);
+			T_RadiusDamage(this, this.owner, 120, WEP_LIGHTME.m_id, NULL);
 		else
-			T_RadiusDamage(this, this.enemy, 120, NULL);
+			T_RadiusDamage(this, this.enemy, 120, WEP_LIGHTME.m_id, NULL);
 		SpawnDischarge(this, 120);
 		SpawnDischarge(this, 120);
 		SpawnDischarge(this, 120);
@@ -1097,7 +1111,7 @@ LIGHTNING
 LightningDamage
 =================
 */
-void LightningDamage(vector p1, vector p2, entity from, float damage)
+void LightningDamage(vector p1, vector p2, entity from, float damage, int deathtype)
 {
 	vector f = p2 - p1;
 	normalize(f);
@@ -1118,7 +1132,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		}
 		else
 			particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, deathtype);
 		if(IS_PLAYER(from))
 		{
 			if(IS_PLAYER(trace_ent))
@@ -1142,7 +1156,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		}
 		else
 			particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, deathtype);
 	}
 	entity e2 = trace_ent;
 
@@ -1161,7 +1175,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 		}
 		else
 			particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from, damage);
+		T_Damage(trace_ent, from, from, damage, deathtype);
 	}
 }
 
@@ -1219,7 +1233,7 @@ void MakeFlame(entity this, entity toucher)
 {
 	if(toucher.takedamage)
 	{
-		T_Damage (toucher, this, this.owner.owner, 16);
+		T_Damage(toucher, this, this.owner.owner, 16, this.projectiledeathtype);
 		BecomeExplosion(this);
 		return;
 	}
@@ -1262,6 +1276,7 @@ void SpawnFireSpark(entity this)
 	missile.solid = SOLID_BBOX;
 	missile.owner = this;
 	missile.classname = "flame";
+	missile.projectiledeathtype = WEP_NAPALM.m_id;
 	missile.velocity = VelocityForDamage(this, 0);
 	missile.velocity_z = missile.velocity_z + 100 + 50 * random();
 	settouch(missile, MakeFlame);
@@ -1395,11 +1410,11 @@ void InternalFireThink(entity this)
 		{
 			if(this.enemy.monsterdef == MON_OGRE)
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg);
+				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
-			T_Damage (this.enemy, this, this.owner.owner, damg);
+			T_Damage (this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 			if(this.enemy.monsterdef != MON_JUGGERNAUT && this.enemy.monsterdef != MON_SPIDER_DROID 
 					&& this.enemy.classname != "misc_explobox" && this.enemy.classname != "misc_explobox2" && this.enemy.classname != "wall_explode")
 			{
@@ -1438,13 +1453,13 @@ void InternalFireThink(entity this)
 		{
 			if(this.enemy.monsterdef == MON_OGRE && (this.enemy.health - damg) > -80)
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg);
+				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
 			if(this.enemy.health > 0)
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg);
+				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 				if(this.enemy.monsterdef != MON_JUGGERNAUT || this.enemy.monsterdef != MON_SPIDER_DROID
 						|| this.enemy.classname != "misc_explobox" || this.enemy.classname != "misc_explobox2" || this.enemy.classname != "wall_explode")
 				{
@@ -1474,13 +1489,13 @@ void InternalFireThink(entity this)
 			}
 			else if(!(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			{
-				T_Damage(this.enemy, this, this.owner, damg);
+				T_Damage(this.enemy, this, this.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
 		}
 	}
-	T_Damage(this.enemy, this, this.owner.owner, 7 + random() * 4);
+	T_Damage(this.enemy, this, this.owner.owner, 7 + random() * 4, this.projectiledeathtype);
 	if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
 		this.enemy.health = 6;
 	this.nextthink = time + 0.25;
@@ -1501,7 +1516,7 @@ void InternalFireThink(entity this)
 	setthink(this, InternalFireThink);
 }
 
-void SpawnInternalFire(entity this, entity targ)
+entity SpawnInternalFire(entity this, entity targ)
 {
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_NONE);
@@ -1523,15 +1538,8 @@ void SpawnInternalFire(entity this, entity targ)
 		setorigin(missile, targ.origin - v_up * 16);
 	if(targ.monsterdef == MON_JUGGERNAUT)
 		setorigin(missile, targ.origin - v_up * 32);
-}
 
-void BecomeBombExplosion(entity this)
-{
-	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	SpawnFireSpark(this);
-	SpawnFireSpark(this);
-	SpawnFireSpark(this);
-	delete(this);
+	return missile;
 }
 
 //=============================================================================
@@ -1588,7 +1596,7 @@ void spike_touch(entity this, entity toucher)
 	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 9, toucher);
-		T_Damage(toucher, this, this.owner, 9);
+		T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype);
 	}
 	else
 	{

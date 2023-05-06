@@ -154,7 +154,7 @@ void ZombieGrenadeTouch(entity this, entity toucher)
 		return;		// don't explode on owner
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, 10 );
+		T_Damage(toucher, this, this.owner, 10, this.projectiledeathtype);
 		_sound(this, CH_WEAPON_SINGLE, "zombie/z_hit.wav", 1, ATTN_NORM);
 		delete(this);
 		return;
@@ -178,6 +178,7 @@ void ZombieFireGrenade(entity this, vector st)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = DEATH_MONSTER_ZOMBIE.m_id;
 
 // calc org
 	fixedmakevectors(this.angles);
@@ -421,7 +422,7 @@ void zombie_paine1(entity this)
 	this.health = 60;
 }
 
-void zombie_die(entity this, entity inflictor, entity attacker)
+void zombie_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
 	ThrowHead(this, "progs/h_zombie.mdl", this.health);
@@ -449,7 +450,7 @@ A hit of less than 10 points of damage(winged by a shotgun) will be ignored.
 FIXME: don't use pain_finished because of nightmare hack
 =================
 */
-void zombie_pain(entity this, entity attacker, float take)
+void zombie_pain(entity this, entity attacker, float take, int deathtype)
 {
 	if(attacker.solid == SOLID_BSP || !attacker)
 		return; // if killed by trigger or world, don't reset health
@@ -499,7 +500,7 @@ void zombie_pain(entity this, entity attacker, float take)
 		zombie_paind1(this);
 }
 
-void zombie_lay12(entity this, entity attacker, float damage) { set_animofs(this, anim_zombie_paine, 12, zombie_paine13); this.th_pain = zombie_pain; }
+void zombie_lay12(entity this, entity attacker, float damage, int deathtype) { set_animofs(this, anim_zombie_paine, 12, zombie_paine13); this.th_pain = zombie_pain; }
 
 void zombie_lay(entity this)
 {
@@ -511,7 +512,7 @@ void zombie_lay(entity this)
 
 	if(FindTarget(this))
 	{
-		zombie_lay12(this, NULL, 0);
+		zombie_lay12(this, NULL, 0, DEATH_GENERIC.m_id);
 		return;
 	}
 }
@@ -533,7 +534,7 @@ void zombie_wake(entity this)
 	zombie_paine12(this);
 }
 
-void zombie_wake_pain(entity this, entity attacker, float damage)
+void zombie_wake_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	zombie_wake(this);
 }
@@ -593,13 +594,12 @@ void zombie_escape(entity this)
 	setthink(this, zombie_cruc1);
 	this.nextthink = time + 0.1;
 }
-void zombie_escape_pain(entity this, entity attacker, float damage)
+void zombie_escape_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	zombie_escape(this);
 }
 
 string zombie_sight(entity this) { return "zombie/z_idle.wav"; }
-string zombie_deathmessage(entity this) { return "joins the Zombies"; }
 
 /*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified Lying ambush Sneaky
 
@@ -648,7 +648,6 @@ spawnfunc(monster_zombie)
 	this.th_missile = zombie_missile;
 
 	this.sightsound = zombie_sight;
-	this.deathmessage = zombie_deathmessage;
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)
 	{

@@ -16,7 +16,7 @@ void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 	if(trace_ent.takedamage)
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from.owner, damage);
+		T_Damage(trace_ent, from, from.owner, damage, from.projectiledeathtype);
 		if(IS_PLAYER(from))
 		{
 			if(IS_PLAYER(trace_ent))
@@ -29,7 +29,7 @@ void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 	if(trace_ent != e1 && trace_ent.takedamage)
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from.owner, damage);
+		T_Damage(trace_ent, from, from.owner, damage, from.projectiledeathtype);
 	}
 	e2 = trace_ent;
 
@@ -37,7 +37,7 @@ void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage)
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
-		T_Damage(trace_ent, from, from.owner, damage);
+		T_Damage(trace_ent, from, from.owner, damage, from.projectiledeathtype);
 	}
 }
 
@@ -94,12 +94,12 @@ void PlasmaTouch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
-		T_Damage(toucher, this, this.owner, damg );
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 70, toucher);
+	T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, toucher);
 
 	te_explosion2(this.origin, 244, 3);
 
@@ -122,6 +122,7 @@ void launch_plasma(entity this, vector org, vector dir)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = WEP_PLASMA_GUN.m_id;
 	
 // set missile speed
 //ooppee new code... it was that damn 0.01. I changed it to 600 to match the
@@ -162,7 +163,7 @@ void W_FirePlasma(entity this)
 		int cells = this.ammo_plasma;
 		this.ammo_plasma = 0;
 		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35*cells, NULL);
+		T_RadiusDamage(this, this, 35*cells, DEATH_DISCHARGE.m_id, NULL);
 		return;
 	}
 	this.currentammo = this.ammo_plasma = this.ammo_plasma - 1;

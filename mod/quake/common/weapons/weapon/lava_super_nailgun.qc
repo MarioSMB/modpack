@@ -19,6 +19,7 @@ void W_FireSuperLavaSpikes(entity this)
 	
 	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_lava_spike(this, this.origin + '0 0 16', dir);
+	newmis.projectiledeathtype = WEP_LAVA_SUPER_NAILGUN.m_id;
 	settouch(newmis, superlavaspike_touch);
 
 //	setmodel(newmis, "progs/lspike.mdl");			

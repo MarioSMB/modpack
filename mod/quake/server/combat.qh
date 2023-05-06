@@ -23,14 +23,14 @@ const float KILLSPREE_GAP = 2; // amount of time that can lapse for a kill to no
 
 bool CanDamage(entity targ, entity inflictor);
 
-void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
+void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype);
 
-void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore);
+void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore);
 
 vector qc_aim(entity this, float missilespeed);
 
 void impale(entity this);
 
-.void(entity this, entity attacker, float damage) th_pain;
-.void(entity this, entity inflictor, entity attacker) th_die;
+.void(entity this, entity attacker, float damage, int deathtype) th_pain;
+.void(entity this, entity inflictor, entity attacker, int deathtype) th_die;
 //.void(entity this, entity inflictor, entity attacker) th_impale;

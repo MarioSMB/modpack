@@ -72,7 +72,7 @@ void spider_run1(entity this)
 
 void spider_die2(entity this)
 {
-	T_RadiusDamage(this, this, 80, this.other2);
+	T_RadiusDamage(this, this, 80, DEATH_MONSTER_SPIDER_DROID.m_id, this.other2);
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
 	ThrowHead(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
@@ -80,7 +80,7 @@ void spider_die2(entity this)
 	BecomeExplosion(this);
 }
 
-void spider_die(entity this, entity inflictor, entity attacker)
+void spider_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	setthink(this, spider_die2);
 	this.nextthink = time;
@@ -89,7 +89,7 @@ void spider_die(entity this, entity inflictor, entity attacker)
 
 void spider_blowup(entity this)
 {
-	T_Damage(this, this, this, this.health);
+	T_Damage(this, this, this, this.health, DEATH_MONSTER_SPIDER_DROID.m_id);
 }
 
 void spider_melee(entity this)
@@ -98,8 +98,6 @@ void spider_melee(entity this)
 	this.nextthink = time + 0.5;
 	setthink(this, spider_blowup);
 }
-
-string spider_deathmessage(entity this) { return "was blown apart by a Spider Droid"; }
 
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -126,8 +124,6 @@ METHOD(SpiderDroid, mr_setup, bool(SpiderDroid this, entity actor))
 	actor.th_run = spider_run1;
 	actor.th_melee = spider_melee;
 	actor.th_die = spider_die;
-
-	actor.deathmessage = spider_deathmessage;
 
     return true;
 }

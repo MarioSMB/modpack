@@ -80,7 +80,7 @@ void Tar_JumpTouch(entity this, entity toucher)
 		if( vdist(this.velocity, >, 400) )
 		{
 			float ldmg = 10 + 10*random();
-			T_Damage(toucher, this, this, ldmg);	
+			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_SPAWN.m_id);	
 			_sound(this, CH_WEAPON_SINGLE, "blob/hit1.wav", 1, ATTN_NORM);
 		}
 	}
@@ -153,7 +153,7 @@ void tbaby_jump1(entity this) { set_animofs(this, anim_tbaby_jump, 1, tbaby_jump
 void tbaby_die2(entity this)
 {
 	set_anim(this, anim_tbaby_exp, tbaby_run1);
-	T_RadiusDamage(this, this, 120, NULL);
+	T_RadiusDamage(this, this, 120, DEATH_MONSTER_SPAWN.m_id, NULL);
 
 	_sound(this, CH_VOICE, "blob/death1.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
@@ -162,9 +162,9 @@ void tbaby_die2(entity this)
 	
 	BecomeExplosion(this);
 }
-void tbaby_die1(entity this, entity inflictor, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
+void tbaby_die1(entity this, entity inflictor, entity attacker, int deathtype) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
 
-void tbaby_mitosis(entity targ, entity attacker, float damage);
+void tbaby_mitosis(entity targ, entity attacker, float damage, int deathtype);
 void tbaby_checknew(entity this)
 {
 	if(!t_walkmove(this, 0, 0))
@@ -208,7 +208,7 @@ void tbaby_checknew(entity this)
 	monsters_total += 1;
 }
 
-void tbaby_mitosis(entity targ, entity attacker, float damage)
+void tbaby_mitosis(entity targ, entity attacker, float damage, int deathtype)
 {
     if(random() < 0.35)
 	{
@@ -238,7 +238,6 @@ void tbaby_mitosis(entity targ, entity attacker, float damage)
 }
 
 string tbaby_sight(entity this) { return "blob/sight1.wav"; }
-string tbaby_deathmessage(entity this) { return "was slimed by a Spawn"; }
 
 /*QUAKED monster_tarbaby (1 0 0) (-16 -16 -24) (16 16 24) Ambush Blue Green Spots
 The Spawn (and hellspawn)
@@ -268,7 +267,6 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 	actor.th_die = tbaby_die1;
 
 	actor.sightsound = tbaby_sight;
-	actor.deathmessage = tbaby_deathmessage;
 
 	if(MP_ROGUE)
 	{

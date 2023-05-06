@@ -25,7 +25,7 @@ void T_EELZap(entity inflictor, entity attacker, float damage)
 				{	// eels take no damage from this attack
 					if (head.monsterdef != MON_EEL && 
 						(head.flags & FL_INWATER))					
-						T_Damage(head, inflictor, attacker, points);
+						T_Damage(head, inflictor, attacker, points, DEATH_MONSTER_EEL.m_id);
 				}
 			}
 		}
@@ -38,7 +38,7 @@ void eel_pitch_change(entity this)
 	if(pointcontents(this.origin) != CONTENT_WATER)
 	{
 		droptofloor(this);
-		T_Damage(this, NULL, NULL, 6);
+		T_Damage(this, NULL, NULL, 6, DEATH_DROWN.m_id);
 		return;
 	}
 	
@@ -159,7 +159,7 @@ void eel_death1(entity this)
 	_sound(this, CH_VOICE, "eel/edie3r.wav", 1, ATTN_NORM);
 }
 
-void eel_death(entity this, entity inflictor, entity attacker)
+void eel_death(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.flags |= FL_SWIM;
 	setsize(this, '0 0 0', '0 0 0');
@@ -185,7 +185,7 @@ void eel_pain5(entity this) { set_animofs(this, anim_eel_eeldth1, 3, eel_pain6);
 void eel_pain4(entity this) { set_animofs(this, anim_eel_eeldth1, 4, eel_pain5); }
 void eel_pain3(entity this) { set_animofs(this, anim_eel_eeldth1, 3, eel_pain4); }
 void eel_pain2(entity this) { set_animofs(this, anim_eel_eeldth1, 2, eel_pain3); }
-void eel_pain1(entity this, entity attacker, float damage)
+void eel_pain1(entity this, entity attacker, float damage, int deathtype)
 {
 	set_animofs(this, anim_eel_eeldth1, 1, eel_pain2);
 
@@ -198,7 +198,6 @@ void eel_pain1(entity this, entity attacker, float damage)
 }
 
 string eel_sight(entity this) { return "eel/eelc5.wav"; }
-string eel_deathmessage(entity this) { return "was electrified by an Eel"; }
 
 /*QUAKED monster_eel (1 0 0) (-16 -16 -24) (16 16 32) Ambush
 */
@@ -234,7 +233,6 @@ METHOD(Eel, mr_setup, bool(Eel this, entity actor))
 	actor.th_melee = eel_attack1;
 
 	actor.sightsound = eel_sight;
-	actor.deathmessage = eel_deathmessage;
 
     return true;
 }

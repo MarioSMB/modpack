@@ -14,6 +14,7 @@ entity W_FireRocket(entity this)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.classname = "missile";
+	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
 		
 // set missile speed	
 

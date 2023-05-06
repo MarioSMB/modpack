@@ -723,12 +723,12 @@ void movewall_touch(entity this, entity toucher)
 
 	if( this.dmg )
 	{
-		T_Damage(toucher, this, this.owner, this.dmg);
+		T_Damage(toucher, this, this.owner, this.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
 	}
 	else if( this.owner.dmg )
 	{
-		T_Damage(toucher, this, this.owner, this.owner.dmg);
+		T_Damage(toucher, this, this.owner, this.owner.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
 	}
 }
@@ -745,12 +745,12 @@ void movewall_blocked(entity this, entity blocker)
 
 	if(this.dmg)
 	{
-		T_Damage(blocker, this, this.owner, this.dmg);
+		T_Damage(blocker, this, this.owner, this.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
 	}
 	else if(this.owner.dmg)
 	{
-		T_Damage(blocker, this, this.owner, this.owner.dmg);
+		T_Damage(blocker, this, this.owner, this.owner.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
 	}
 }

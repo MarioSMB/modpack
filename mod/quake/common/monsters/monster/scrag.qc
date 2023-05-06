@@ -177,6 +177,7 @@ void Wiz_FastFire(entity this)
 		vector vec = normalize(dst - this.origin);
 		_sound(this, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, vec);
+		newmis.projectiledeathtype = DEATH_MONSTER_SCRAG.m_id;
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
 		newmis.classname = "wizard_spike";
@@ -318,7 +319,7 @@ void wiz_death1(entity this)
 	_sound(this, CH_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
 
-void wiz_die(entity this, entity inflictor, entity attacker)
+void wiz_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -40)
@@ -342,7 +343,7 @@ void wiz_die(entity this, entity inflictor, entity attacker)
 	wiz_death1(this);
 }
 
-void Wiz_Pain(entity this, entity attacker, float damage)
+void Wiz_Pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(MP_IMPEL && this.pain_finished > time)
 		return;
@@ -364,7 +365,6 @@ void Wiz_Missile(entity this)
 }
 
 string wiz_sight(entity this) { return "wizard/wsight.wav"; }
-string wiz_deathmessage(entity this) { return "was scragged by a Scrag"; }
 
 /*QUAKED monster_wizard(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -405,7 +405,6 @@ METHOD(Scrag, mr_setup, bool(Scrag this, entity actor))
 
 	actor.sightsound = wiz_sight;
 	actor.checkattack = WizardCheckAttack;
-	actor.deathmessage = wiz_deathmessage;
 
     return true;
 }

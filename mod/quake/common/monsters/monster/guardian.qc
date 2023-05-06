@@ -95,7 +95,7 @@ void morph_stab2(entity this)
 	{
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 		float attackDamage = (random() * 10) + 20;
-		T_Damage(this.enemy, this, this, attackDamage);
+		T_Damage(this.enemy, this, this, attackDamage, DEATH_MONSTER_GUARDIAN.m_id);
 		SpawnBlood(this.enemy.origin, v_forward * 150, 14, this.enemy);
 	}
 	else
@@ -164,7 +164,7 @@ void morph_smack(entity this)
 		return;
 		
 	float ldmg = (random() * 10) + 10;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_GUARDIAN.m_id);
 	
 	makevectors(this.angles);
 	this.enemy.velocity = v_forward * 100 + '0 0 100';
@@ -252,7 +252,7 @@ void morph_painB3(entity this) { set_animofs(this, anim_morph_mfpbin01, 3, morph
 void morph_painB2(entity this) { set_animofs(this, anim_morph_mfpbin01, 2, morph_painB3); }
 void morph_painB1(entity this) { set_animofs(this, anim_morph_mfpbin01, 1, morph_painB2); }
 
-void morph_pain(entity this, entity attacker, float damage)
+void morph_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(autocvar_skill == 3)
 	{
@@ -304,7 +304,7 @@ void morph_die3(entity this) { set_animofs(this, anim_morph_mfdth01, 3, morph_di
 void morph_die2(entity this) { set_animofs(this, anim_morph_mfdth01, 2, morph_die3); }
 void morph_die1(entity this) { set_animofs(this, anim_morph_mfdth01, 1, morph_die2); }		// 122
 
-void morph_die(entity this, entity inflictor, entity attacker)
+void morph_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CH_VOICE, "guard/death.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
@@ -480,8 +480,6 @@ void morph_teleport(entity this)
 	theChild.nextthink = time + 0.3;
 }
 
-string morph_deathmessage(entity this) { return "was crushed by a Guardian"; }
-
 
 /*QUAKED monster_morph (1 0 0) (-16 -16 -24) (16 16 32) Ambush Aztec Egyptian Greek
 The morphing monster.
@@ -519,7 +517,6 @@ spawnfunc(monster_morph)
 	precache_sound2("guard/pain1.wav");
 	precache_sound2("guard/see1.wav");
 
-	this.deathmessage = morph_deathmessage;
 	this.monsterdef = MON_GUARDIAN;
 
 	// NOTE: this isn't actually handled as a monster

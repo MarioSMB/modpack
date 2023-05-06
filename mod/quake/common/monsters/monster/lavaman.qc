@@ -234,7 +234,7 @@ void lavaman_shocka3(entity this) { set_animofs(this, anim_lavaman_shocka1, 3, l
 void lavaman_shocka2(entity this) { set_animofs(this, anim_lavaman_shocka1, 2, lavaman_shocka3); }
 void lavaman_shocka1(entity this) { set_animofs(this, anim_lavaman_shocka1, 1, lavaman_shocka2); }
 
-void lavaman_pain(entity this, entity attacker, float damage)
+void lavaman_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -265,7 +265,7 @@ void lavaman_death5(entity this) { set_animofs(this, anim_lavaman_death1, 5, lav
 void lavaman_death4(entity this) { set_animofs(this, anim_lavaman_death1, 4, lavaman_death5); }
 void lavaman_death3(entity this) { set_animofs(this, anim_lavaman_death1, 3, lavaman_death4); }
 void lavaman_death2(entity this) { set_animofs(this, anim_lavaman_death1, 2, lavaman_death3); }
-void lavaman_death1(entity this, entity inflictor, entity attacker) { set_animofs(this, anim_lavaman_death1, 1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
+void lavaman_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_lavaman_death1, 1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
 
 void lavaman_touch(entity this, entity toucher)
 {
@@ -283,12 +283,12 @@ void lavaman_touch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
-		T_Damage(toucher, this, this.owner, damg );
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 40, toucher);
+	T_RadiusDamage(this, this.owner, 40, this.projectiledeathtype, toucher);
 
 //	sound (this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
@@ -331,6 +331,7 @@ void lavaman_missile(entity this, int AttackNumber)
 	fireball.owner = this;
 //	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	set_movetype(fireball, MOVETYPE_BOUNCE);
+	fireball.projectiledeathtype = DEATH_MONSTER_LAVAMAN.m_id;
 	fireball.solid = SOLID_BBOX;
 	fireball.angles = vectoangles(vec);
 	settouch(fireball, lavaman_touch);
@@ -396,8 +397,6 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 	lavaman_rise1(this);
 }
 
-string lavaman_deathmessage(entity this) { return "fries in Hephaestus' fury"; }
-
 
 //								  (-64 -64 -12) (64 64 128)
 /*QUAKED monster_lava_man (1 0 0) (-32 -32 -24) (32 32 64) Ambush Sleeping
@@ -429,7 +428,6 @@ spawnfunc(monster_lava_man)
 		return;
 	}
 
-	this.deathmessage = lavaman_deathmessage;
 	this.monsterdef = MON_LAVAMAN;
 
 	lavaman_awake(this, NULL, NULL);

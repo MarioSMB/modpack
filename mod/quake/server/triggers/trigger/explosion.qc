@@ -1,6 +1,6 @@
 #ifdef SVQC
 
-void trigEx_die(entity this, entity inflictor, entity attacker)
+void trigEx_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	SUB_UseTargets(this, attacker, NULL);
 
@@ -17,7 +17,7 @@ void trigger_explosion_activate(entity this)
 	SUB_UseTargets(this, NULL, NULL);
 	
 	if(!(this.spawnflags & NO_DAMAGE))
-		T_RadiusDamage(this, this.owner, 120, this);
+		T_RadiusDamage(this, this.owner, 120, DEATH_TRAP.m_id, this);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 

@@ -16,7 +16,7 @@ void SpawnLightningThink(entity this)
 		//te_lightning2(NULL, this.origin, this.oldorigin); // should be this
 		SendCSQCLightningBeam(this.origin, this.oldorigin);
 	}
-	LightningDamage(this.origin, this.oldorigin, this.lastvictim, this.dmg);
+	LightningDamage(this.origin, this.oldorigin, this.lastvictim, this.dmg, DEATH_TRAP.m_id);
 	this.nextthink = time + 0.1;
 }
 
@@ -74,10 +74,10 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 	{
 		//te_lightning2(NULL, p1, p2); // should be this
 		SendCSQCLightningBeam(p1, p2);
-		LightningDamage(p1, p2, this, this.dmg);
+		LightningDamage(p1, p2, this, this.dmg, DEATH_TRAP.m_id);
 	}
 	else
-		LightningDamage(p1, p2, this, this.dmg);
+		LightningDamage(p1, p2, this, this.dmg, DEATH_TRAP.m_id);
 }
 
 void lightning_think(entity this)
@@ -145,7 +145,6 @@ void lightning_init(entity this)
 	this.huntingcharmer = this.save_nextthink;
 	setthink(this, lightning_firstthink);
 	this.nextthink = time + 0.25;
-	this.deathtype = "is electrocuted";
 }
 
 /*QUAKED trap_lightning_triggered (0 .5 .8) (-8 -8 -8) (8 8 8) random boom

@@ -21,7 +21,7 @@ REGISTRY_DEFINE_GET(Deathtypes, NULL)
         this.death_msgmurder = msg_death_by; \
     }
 
-//const int DEATH_WEAPONMASK = BITS(8);
+const int DEATH_WEAPONMASK = BITS(8);
 const int HITTYPE_SECONDARY = BITS(1) << 8;
 /** automatically set by RadiusDamage */
 const int HITTYPE_SPLASH = BITS(1) << 9;
@@ -36,8 +36,8 @@ const int DT_FIRST = BIT(13);
 #define DEATH_IS(t, dt)         (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)) == dt)
 #define DEATH_ENT(t)            (DEATH_ISSPECIAL(t) ?  (REGISTRY_GET(Deathtypes, t - DT_FIRST)) : NULL)
 #define DEATH_ISMONSTER(t)      (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)).death_msgextra == "monster")
-//#define DEATH_WEAPONOF(t)       (DEATH_ISSPECIAL(t) ? WEP_Null : REGISTRY_GET(Weapons, (t) & DEATH_WEAPONMASK))
-//#define DEATH_ISWEAPON(t, w)    (DEATH_WEAPONOF(t) == (w))
+#define DEATH_WEAPONOF(t)       (DEATH_ISSPECIAL(t) ? WEP_Null : REGISTRY_GET(Weapons, (t) & DEATH_WEAPONMASK))
+#define DEATH_ISWEAPON(t, w)    (DEATH_WEAPONOF(t) == (w))
 
 string Deathtype_Name(int deathtype);
 

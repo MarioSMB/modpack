@@ -9,7 +9,7 @@ void juggernaut_pain3(entity this) { set_anim(this, 92, juggernaut_pain4); ai_pa
 void juggernaut_pain2(entity this) { set_anim(this, 91, juggernaut_pain3); ai_pain(this, 1); }
 void juggernaut_pain1(entity this) { set_anim(this, 90, juggernaut_pain2); ai_pain(this, 1); }
 
-void juggernaut_pain(entity this, entity attacker, float damage)
+void juggernaut_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	float r = random();
 	if(r <= 0.3)
@@ -33,22 +33,22 @@ void JuggerCheckWater(entity this)
 	if(this.watertype == CONTENT_WATER)
 	{
 		this.effects = EF_DIMLIGHT;
-		T_Damage(this, NULL, NULL, 50 * this.waterlevel);
-		juggernaut_pain(this, NULL, 50 * this.waterlevel);
+		T_Damage(this, NULL, NULL, 50 * this.waterlevel, DEATH_DROWN.m_id);
+		juggernaut_pain(this, NULL, 50 * this.waterlevel, DEATH_DROWN.m_id);
 		this.effects &= ~EF_DIMLIGHT;
 	}
 	else if(this.watertype == CONTENT_SLIME)
 	{
 		this.effects = EF_DIMLIGHT;
-		T_Damage(this, NULL, NULL, 50 * this.waterlevel);
-		juggernaut_pain(this, NULL, 50 * this.waterlevel);
+		T_Damage(this, NULL, NULL, 50 * this.waterlevel, DEATH_SLIME.m_id);
+		juggernaut_pain(this, NULL, 50 * this.waterlevel, DEATH_SLIME.m_id);
 		this.effects &= ~EF_DIMLIGHT;
 	}
 	else if(this.watertype == CONTENT_LAVA)
 	{
 		this.effects = EF_DIMLIGHT;
-		T_Damage(this, NULL, NULL, 50 * this.waterlevel);
-		juggernaut_pain(this, NULL, 50 * this.waterlevel);
+		T_Damage(this, NULL, NULL, 50 * this.waterlevel, DEATH_LAVA.m_id);
+		juggernaut_pain(this, NULL, 50 * this.waterlevel, DEATH_LAVA.m_id);
 		this.effects &= ~EF_DIMLIGHT;
 	}
 }
@@ -81,13 +81,13 @@ void juggernaut_die2(entity this)
 		ThrowHead(this, "progs/h_jugg2.mdl", this.health);
 		ThrowGib(this, "progs/a_jugg2.mdl", this.health);
 	}
-	T_RadiusDamage(this, this, 120, this);
+	T_RadiusDamage(this, this, 120, DEATH_MONSTER_JUGGERNAUT.m_id, this);
 	_sound(this, CHAN_ITEM, "monsters/juggers/jgib.wav", 1, ATTN_NORM);
 	setorigin(this, this.origin + '0 0 24');
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 }
 
-void juggernaut_die(entity this, entity inflictor, entity attacker)
+void juggernaut_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -50)
 	{
@@ -308,9 +308,9 @@ void juggernaut_rocket_touch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;
-		T_Damage(toucher, this, this.owner, damg);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
-	T_RadiusDamage(this, this.owner, 60, toucher);
+	T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, toucher);
 	setorigin(this, this.origin - (8 * normalize(this.velocity)));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
@@ -326,6 +326,7 @@ void juggernaut_launch_rocket(entity this)
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "juggy_rocket";
+	newmis.projectiledeathtype = DEATH_MONSTER_JUGGERNAUT.m_id;
 	makevectors(this.angles);
 	float ammo = this.ammo_rockets;
 	vector forward = (v_forward * 30);
@@ -370,7 +371,7 @@ void juggernaut_laser_touch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		spawn_touchblood(this, 15, toucher);
-		T_Damage(toucher, this, this.owner, 15);
+		T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
 	}
 	_sound(this, CHAN_BODY, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	delete(this);
@@ -392,6 +393,7 @@ void juggernaut_fire_chain(entity this)
 	vector dir = ((this.enemy.origin + '0 0 16') - (this.enemy.velocity * 0.2));
 	dir = normalize(dir - org);
 	entity newmis = launch_spike(this, org, dir);
+	newmis.projectiledeathtype = DEATH_MONSTER_JUGGERNAUT.m_id;
 	_setmodel(newmis, "progs/laser.mdl");
 	settouch(newmis, juggernaut_laser_touch);
 	newmis.effects = EF_MUZZLEFLASH;
@@ -567,7 +569,7 @@ void juggernaut_fire(entity this)
 	}
 }
 
-void juggernaut_ai_melee(entity this)
+void juggernaut_ai_melee(entity this, int deathtype)
 {
 	if(!this.enemy)
 		return;
@@ -575,7 +577,7 @@ void juggernaut_ai_melee(entity this)
 	if(vdist(this.enemy.origin - this.origin, <=, 80))
 	{
 		float ldmg = (((random() + random()) + random()) * 15);
-		T_Damage(this.enemy, this, this, ldmg);
+		T_Damage(this.enemy, this, this, ldmg, deathtype);
 		if(r <= 0.3)
 			_sound(this, CHAN_WEAPON, "monsters/juggers/jwhap1.wav", 1, ATTN_NORM);
 		else if(r <= 0.6)
@@ -598,13 +600,13 @@ void juggernaut_melee9(entity this)
 {
 	set_anim(this, 78, juggernaut_melee10);
 	ai_charge(this, 4);
-	juggernaut_ai_melee(this);
+	juggernaut_ai_melee(this, DEATH_MONSTER_JUGGERNAUT.m_id);
 }
 void juggernaut_melee8(entity this)
 {
 	set_anim(this, 77, juggernaut_melee9);
 	ai_charge(this, 8);
-	juggernaut_ai_melee(this);
+	juggernaut_ai_melee(this, DEATH_MONSTER_JUGGERNAUT.m_id);
 }
 void juggernaut_melee7(entity this) { set_anim(this, 76, juggernaut_melee8); ai_charge(this, 8); }
 void juggernaut_melee6(entity this) { set_anim(this, 75, juggernaut_melee7); ai_charge(this, 4); }
@@ -645,8 +647,8 @@ void juggernaut_meleeb6(entity this)
 {
 	set_anim(this, 87, juggernaut_meleeb7);
 	ai_charge(this, 0);
-	juggernaut_ai_melee(this);
-	juggernaut_ai_melee(this);
+	juggernaut_ai_melee(this, DEATH_MONSTER_JUGGERNAUT.m_id);
+	juggernaut_ai_melee(this, DEATH_MONSTER_JUGGERNAUT.m_id);
 }
 void juggernaut_meleeb5(entity this) { set_anim(this, 86, juggernaut_meleeb6); ai_charge(this, 0); }
 void juggernaut_meleeb4(entity this) { set_anim(this, 85, juggernaut_meleeb5); ai_charge(this, 0); }
@@ -663,8 +665,6 @@ void juggernaut_melee(entity this)
 }
 
 string juggernaut_sight(entity this) { return "monsters/juggers/jlocked.wav"; }
-string juggernaut_deathmessage(entity this) { return "was crushed by a Juggernaut"; }
-string juggernaut2_deathmessage(entity this) { return "was destroyed by a Juggernaut"; }
 
 spawnfunc(monster_juggernaut)
 {
@@ -677,8 +677,6 @@ spawnfunc(monster_juggernaut2)
 	if(!MP_IMPEL) { delete(this); return; }
 
 	monster_start(this, MON_JUGGERNAUT);
-	if(!wasfreed(this))
-		this.deathmessage = juggernaut2_deathmessage;
 }
 #endif // SVQC
 
@@ -735,7 +733,6 @@ METHOD(Juggernaut, mr_setup, bool(Juggernaut this, entity actor))
 	actor.ammo_cells = 30;
 
 	actor.sightsound = juggernaut_sight;
-	actor.deathmessage = juggernaut_deathmessage;
 
     return true;
 }

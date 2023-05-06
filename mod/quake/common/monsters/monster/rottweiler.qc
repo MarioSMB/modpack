@@ -37,7 +37,7 @@ void dog_bite(entity this)
 		return;
 		
 	float ldmg =(random() + random() + random()) * 8;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_ROTTWEILER.m_id);
 }
 
 void Dog_JumpTouch(entity this, entity toucher)
@@ -50,7 +50,7 @@ void Dog_JumpTouch(entity this, entity toucher)
 		if(vdist(this.velocity, >, 300))
 		{
 			float ldmg = 10 + 10*random();
-			T_Damage(toucher, this, this, ldmg);
+			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_ROTTWEILER.m_id);
 			if(MP_MG)
 				this.attack_finished = time + 0.5;
 		}
@@ -201,7 +201,7 @@ void dog_painb3(entity this) { set_animofs(this, anim_dog_painb, 3, dog_painb4);
 void dog_painb2(entity this) { set_animofs(this, anim_dog_painb, 2, dog_painb3); }
 void dog_painb1(entity this) { set_animofs(this, anim_dog_painb, 1, dog_painb2); }
 
-void dog_pain(entity this, entity attacker, float damage)
+void dog_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(MP_IMPEL && this.pain_finished > time)
 		return;
@@ -262,7 +262,7 @@ void dog_dieb3(entity this) { set_animofs(this, anim_dog_deathb, 3, dog_dieb4); 
 void dog_dieb2(entity this) { set_animofs(this, anim_dog_deathb, 2, dog_dieb3); }
 void dog_dieb1(entity this) { set_animofs(this, anim_dog_deathb, 1, dog_dieb2); }
 
-void dog_die(entity this, entity inflictor, entity attacker)
+void dog_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -35)
@@ -356,7 +356,6 @@ bool DogCheckAttack(entity this)
 }
 
 string dog_sight(entity this) { return "dog/dsight.wav"; }
-string dog_deathmessage(entity this) { return "was mauled by a Rottweiler"; }
 
 /*QUAKED monster_dog(1 0 0)(-32 -32 -24)(32 32 40) Ambush
 */
@@ -395,7 +394,6 @@ METHOD(Rottweiler, mr_setup, bool(Rottweiler this, entity actor))
 
 	actor.sightsound = dog_sight;
 	actor.checkattack = DogCheckAttack;
-	actor.deathmessage = dog_deathmessage;
 
     return true;
 }

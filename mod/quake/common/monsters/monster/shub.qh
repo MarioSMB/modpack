@@ -20,7 +20,7 @@ ENDCLASS(Shub)
 REGISTER_MONSTER(SHUB, NEW(Shub));
 
 #ifdef SVQC
-void finale_1(entity this, entity inflictor, entity attacker);
+void finale_1(entity this, entity inflictor, entity attacker, int deathtype);
 void finale_2(entity this);
 void finale_3(entity this);
 void finale_4(entity this);

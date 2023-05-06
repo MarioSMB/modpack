@@ -64,7 +64,7 @@ void elvtr_button_touch(entity this, entity toucher)
 	elvtr_button_fire(this);
 }
 
-void elvtr_button_killed(entity this, entity inflictor, entity attacker)
+void elvtr_button_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.enemy = attacker;
 	this.health = this.max_health;

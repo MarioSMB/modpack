@@ -136,7 +136,7 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.swim_flag = srcent.swim_flag;
 	destent.air_finished = srcent.air_finished;
 	destent.bubble_count = srcent.bubble_count;
-	destent.deathtype = srcent.deathtype;
+	destent.projectiledeathtype = srcent.projectiledeathtype;
 	destent.mdl = srcent.mdl;
 	destent.mangle = srcent.mangle;
 	destent.oldorigin = srcent.oldorigin;

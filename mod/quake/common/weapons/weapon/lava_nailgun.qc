@@ -18,7 +18,8 @@ void W_FireLavaSpikes(entity this, float ox)
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 1;
 	
 	vector dir = qc_aim(this, 1000);
-	launch_lava_spike(this, this.origin + this.view_ofs + v_up * -8 + v_right * ox, dir);//Seven
+	entity missile = launch_lava_spike(this, this.origin + this.view_ofs + v_up * -8 + v_right * ox, dir);
+	missile.projectiledeathtype = WEP_LAVA_NAILGUN.m_id;
 
 	this.punchangle_x = -2;
 }

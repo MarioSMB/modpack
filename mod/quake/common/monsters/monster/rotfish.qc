@@ -73,7 +73,7 @@ void fish_melee(entity this)
 		
 	_sound(this, CH_VOICE, "fish/bite.wav", 1, ATTN_NORM);
 	float ldmg = (random() + random()) * 3;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_ROTFISH.m_id);
 }
 
 void f_attack1(entity this);
@@ -138,7 +138,7 @@ void f_pain3(entity this) { set_animofs(this, anim_fish_swim, 3, f_pain4); ai_pa
 void f_pain2(entity this) { set_animofs(this, anim_fish_swim, 2, f_pain3); ai_pain(this, 6); }
 void f_pain1(entity this) { set_animofs(this, anim_fish_swim, 1, f_pain2); }
 
-void fish_die(entity this, entity inflictor, entity attacker)
+void fish_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	// check for gib
 	if(this.health < -20)
@@ -156,16 +156,11 @@ void fish_die(entity this, entity inflictor, entity attacker)
 	f_death1(this, inflictor, attacker);
 }
 
-void fish_pain(entity this, entity attacker, float damage)
+void fish_pain(entity this, entity attacker, float damage, int deathtype)
 {
 
 // fish allways do pain frames
 	f_pain1(this);
-}
-
-string fish_deathmessage(entity this)
-{
-	return ((MP_IMPEL) ? "was eaten by a Rotfish" : "was fed to the Rotfish");
 }
 
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
@@ -189,8 +184,6 @@ METHOD(Rotfish, mr_setup, bool(Rotfish this, entity actor))
 	actor.th_die = fish_die;
 	actor.th_pain = fish_pain;
 	actor.th_melee = f_attack1;
-
-	actor.deathmessage = fish_deathmessage;
 
     return true;
 }

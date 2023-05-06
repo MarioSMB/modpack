@@ -106,7 +106,7 @@ void plat_crush(entity this, entity blocker)
 {
 //dprint("plat_crush\n");
 
-	T_Damage(blocker, this, this, ((IS_MONSTER(blocker)) ? 1000 : 1));
+	T_Damage(blocker, this, this, ((IS_MONSTER(blocker)) ? 1000 : 1), DEATH_CRUSH.m_id);
 	
 	if(this.state == STATE_UP)
 		plat_go_down(this);
@@ -165,7 +165,6 @@ spawnfunc(func_plat)
 		this.noise = "plats/quake_medplat1.wav";
 		this.noise1 = "plats/quake_medplat2.wav";
 	}
-
 
 	this.mangle = this.angles;
 	this.angles = '0 0 0';

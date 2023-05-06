@@ -1020,7 +1020,7 @@ void ClientKill(entity this)
 
 	if(MP_MG && autocvar_horde) // horde mode behaviour
 	{
-		PlayerDie(this, NULL, NULL);
+		PlayerDie(this, NULL, NULL, DEATH_KILL.m_id);
 		this.health = 0;
 		return;
 	}
@@ -1901,8 +1901,6 @@ void PlayerPreThink(entity this)
 	if(MP_HIPNOTIC)
 	if((this.origin_z < -1300) && (world.model == "maps/hipdm1.bsp") && (this.health > 0))
 	{
-		this.deathtype = "falling";
-
 		if (this.invincible_finished >= time)
 		{
 			this.invincible_finished = 0;
@@ -1911,7 +1909,7 @@ void PlayerPreThink(entity this)
 			this.invincible_finished = 0;
 			this.effects &= ~EF_DIMLIGHT;
 		}
-		T_Damage(this, this, NULL, this.health + 1000);
+		T_Damage(this, this, NULL, this.health + 1000, DEATH_FALL.m_id);
 	}
 
 	if(MP_ROGUE && earthquake_active && IS_ONGROUND(this))
@@ -2334,7 +2332,7 @@ void DrownPlayer(entity this)
 			this.dmg = this.dmg + 2;
 			if(this.dmg > 15)
 				this.dmg = 10;
-			T_Damage(this, NULL, NULL, this.dmg);
+			T_Damage(this, NULL, NULL, this.dmg, DEATH_DROWN.m_id);
 			this.pain_finished = time + 1;
 		}
 	}
@@ -2641,456 +2639,274 @@ ClientObituary
 called when a player dies
 ============
 */
+string AppendItemcodes(string s, entity player)
+{
+	int w = player.weaponentity.m_weapon.m_id;
+	if(w == 0)
+		w = player.prevweapon;
+	s = strcat(s, ftos(w));
+	if(PHYS_INPUT_BUTTON_BUTTON_CHAT(player))
+		s = strcat(s, "T");
+	return s;
+}
+
+void LogDeath(string mode, int deathtype, entity killer, entity killed)
+{
+	string s;
+	if(!autocvar_sv_eventlog)
+		return;
+	s = strcat(":kill:", mode);
+	s = strcat(s, ":", ftos(killer.playerid));
+	s = strcat(s, ":", ftos(killed.playerid));
+	s = strcat(s, ":type=", Deathtype_Name(deathtype));
+	s = strcat(s, ":items=");
+	s = AppendItemcodes(s, killer);
+	if(killed != killer)
+	{
+		s = strcat(s, ":victimitems=");
+		s = AppendItemcodes(s, killed);
+	}
+	GameLogEcho(s);
+}
+
+void Obituary_SpecialDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2)
+{
+	if(!DEATH_ISSPECIAL(deathtype))
+	{
+		backtrace("Obituary_SpecialDeath called without a special deathtype?\n");
+		return;
+	}
+
+	entity deathent = REGISTRY_GET(Deathtypes, deathtype - DT_FIRST);
+	if (!deathent)
+	{
+		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
+		return;
+	}
+
+	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
+	if(death_message)
+	{
+		Send_Notification(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2
+		);
+		Send_Notification(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2
+		);
+	}
+}
+
+float Obituary_WeaponDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2)
+{
+	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
+	if (death_weapon == WEP_Null)
+		return false;
+
+	w_deathtype = deathtype;
+	Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+	w_deathtype = false;
+
+	if (death_message)
+	{
+		Send_Notification(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2
+		);
+		// send the info part to everyone
+		Send_Notification(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2
+		);
+	}
+	else
+	{
+		LOG_TRACEF(
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %s!\n",
+			deathtype,
+			death_weapon.netname
+		);
+	}
+
+	return true;
+}
+
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, string attacker_name)
+{
+	if(empathyused)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG_EMPATHY, targ.netname);
+		Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_EMPATHY, attacker_name);
+		return true;
+	}
+
+	return false;
+}
+
 void TeamResetCarrier(entity who);
 void TeamAssists(entity targ, entity attacker);
-void ClientObituary(entity targ, entity inflictor, entity attacker)
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
-	string deathstring = "", deathstring2 = "";
-	float rnum = random();
+	// Sanity check
+	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
-	if(IS_PLAYER(targ))
+	// Declarations
+	string attacker_name = attacker.netname;
+
+	#ifdef NOTIFICATIONS_DEBUG
+	Debug_Notification(
+		sprintf(
+			"Obituary(%s, %s, %s, %s = %d);\n",
+			attacker_name,
+			inflictor.netname,
+			targ.netname,
+			Deathtype_Name(deathtype),
+			deathtype
+		)
+	);
+	#endif
+
+	if(MP_ROGUE)
+		TeamResetCarrier(targ);
+
+	// =======
+	// SUICIDE
+	// =======
+	if(targ == attacker)
 	{
-		if(MP_ROGUE)
-			TeamResetCarrier(targ);
-
-		if(attacker.classname == "teledeath")
+		if(DEATH_ISSPECIAL(deathtype))
 		{
-			bprintf("%s was telefragged by %s\n", targ.netname, attacker.owner.netname);
-
-			attacker.owner.frags = attacker.owner.frags + 1;
-			return;
-		}
-
-		if(attacker.classname == "teledeath2")
-		{
-			bprintf("An unholy power deflects %s's telefrag\n", targ.netname);
-
-			targ.frags = targ.frags - 1;
-			return;
-		}
-
-		if(IS_PLAYER(attacker))
-		{
-			Weapon death_weapon = attacker.weaponentity.m_weapon; //DEATH_WEAPONOF(deathtype);
-			if(death_weapon != WEP_Null)
+			if(deathtype == DEATH_TEAMCHANGE.m_id)
 			{
-				Notification death_message = ((targ != attacker) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
-				if(death_message)
-				{
-					Send_Notification(
-						NOTIF_ONE,
-						targ,
-						MSG_MULTI,
-						death_message,
-						targ.netname);
-					// send the info part to everyone
-					Send_Notification(
-						NOTIF_ALL_EXCEPT,
-						targ,
-						MSG_INFO,
-						death_message.nent_msginfo,
-						targ.netname
-					);
-					return; // handled by weapon code
-				}
-
-			}
-			if(targ == attacker)
-			{
-				// killed this
-				attacker.frags = attacker.frags - 1;
-				bprint(targ.netname);
-				
-				if(targ.weaponentity.m_weapon == WEP_LIGHTNING && targ.waterlevel > 1)
-				{
-					switch(targ.watertype)
-					{
-						case CONTENT_SLIME: bprint(" discharges into the slime.\n"); break;
-						case CONTENT_LAVA: bprint(" discharges into the lava.\n"); break;
-						default:
-						case CONTENT_WATER: bprint(" discharges into the water.\n"); break;
-					}
-					return;
-				}
-				if(MP_IMPEL)
-				{
-					if(inflictor == attacker && targ.weaponentity.m_weapon == WEP_LIGHTME && targ.waterlevel > 1)
-					{
-						bprint(" screwed up AGAIN with the LG-2.\n");
-						return;
-					}
-					if(targ.weaponentity.m_weapon == WEP_LIGHTME)
-					{
-						bprint(" screwed up with the LG-2 Prototype.\n");
-						return;
-					}
-					if(inflictor == attacker && targ.weaponentity.m_weapon == WEP_LIGHTME && targ.waterlevel > 1)
-					{
-						bprint(" discharges into the water.\n");
-						return;
-					}
-					if(inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")
-						bprint(" tries to put the pin back in!\n");
-					else if(inflictor.classname == "flame")
-						bprint(" went up in his own flames!\n");
-					else
-						bprint(" got bored with life.\n");
-					return;
-				}
-				else if(targ.weaponentity.m_weapon == WEP_GRENADE_LAUNCHER)
-					bprint(" tries to put the pin back in\n");
-				else if(MP_HIPNOTIC)
-				{
-					if(rnum > 0.4)
-						bprint(" becomes bored with life\n");
-					else
-						bprint(" checks if their weapon is loaded\n");
-				}
-				else if(MP_ROGUE && teamplay && targ.team != targ.steam)
-				{
-					if(cvar("gamecfg") & GAMECFG_ALLOW_CHG)
-						bprint(" changed teams\n");
-					else
-						bprint(" tried to change teams\n");
-				}
-				else
-					bprint(" becomes bored with life\n");
-				return;
-			}
-			else if((teamplay == 2) && (attacker.team != 0) && (targ.team == attacker.team))
-			{
-				// NOTE: impel adds punctuation here, couldn't be bothered sorry!
-				if(rnum < 0.25)
-					deathstring = " mows down a teammate\n";
-				else if(rnum < 0.50)
-					deathstring = " checks their glasses\n";
-				else if(rnum < 0.75)
-					deathstring = " gets a frag for the other team\n";
-				else
-					deathstring = " loses another friend\n";
-				bprint(strcat(attacker.netname, deathstring));
-				attacker.frags = attacker.frags - 1;
-				return;
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
 			}
 			else
 			{
-				if(MP_ROGUE && teamplay == TEAM_DMATCH_TAG)
-					dmatch_score(targ, attacker);
-				else
+				switch(DEATH_ENT(deathtype))
 				{
-					attacker.frags = attacker.frags + 1;
-					if(MP_ROGUE)
-						TeamAssists(targ, attacker);
-				}
-
-				//MED 01/19/97
-				if(empathyused == 1)
-				{
-					bprint(targ.netname);
-					if (random() < 0.5)
-						bprint(" shares ");
-					else
-						bprint(" feels ");
-					bprint(attacker.netname);
-					bprint("'s pain\n");
-					return;
-				}
-
-//MED 11/18/96
-				if(targ.dmg_inflictor.classname == "proximity_grenade")
-				{
-					bprint(targ.netname);
-					if(random() < 0.5)
-						bprint(" got too friendly with ");
-					else
-						bprint(" did the rhumba with ");
-					bprint(attacker.netname);
-					bprint("'s bomb\n");
-					return;
-				}
-
-				Weapon wep = attacker.weaponentity.m_weapon;
-				if(wep == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
-				{
-					if(MP_IMPEL)
+					case DEATH_MIRRORDAMAGE:
 					{
-						deathstring = " was hacked up by ";
-						deathstring2 = "!\n";
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+						break;
 					}
-					else
+					case DEATH_HURTTRIGGER:
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message);
+						break;
+					default:
 					{
-						deathstring = " was ax-murdered by ";
-						deathstring2 = "\n";
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+						break;
 					}
 				}
-				if(wep == WEP_GRAPPLE)
-				{
-					deathstring = " was grappled by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
-				{
-					deathstring = " chewed on ";
-					deathstring2 = "'s boomstick\n";
-				}
-				if(wep == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
-				{
-					deathstring = " ate 2 loads of ";
-					deathstring2 = "'s buckshot\n";
-				}
-				if(wep == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
-				{
-					deathstring = " was nailed by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_SUPER_NAILGUN || (MP_IMPEL && (inflictor.classname == "superspike" || inflictor.classname == "super_spike")))
-				{
-					deathstring = " was punctured by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_GRENADE_LAUNCHER || (MP_IMPEL && (inflictor.classname == "grenade" || inflictor.classname == "ogre_grenade")))
-				{
-					deathstring = " eats ";
-					deathstring2 = "'s pineapple\n";
-					if(targ.health < -40)
-					{
-						deathstring = " was gibbed by ";
-						deathstring2 = "'s grenade\n";
-					}
-				}
-				if(wep == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
-				{
-					deathstring = " rides ";
-					deathstring2 = "'s rocket\n";
-					if(targ.health < -40)
-					{
-						deathstring = " was gibbed by ";
-						deathstring2 = "'s rocket\n" ;
-					}
-				}
-				if(wep == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
-				{
-					deathstring = " accepts ";
-					if(attacker.waterlevel > 1)
-						deathstring2 = "'s discharge\n";
-					else
-						deathstring2 = "'s shaft\n";
-				}
-				if(wep == WEP_LASER_CANNON)
-				{
-					if(random() < 0.5)
-						deathstring = " was toasted by ";
-					else
-						deathstring = " was radiated by ";
-					deathstring2 = "'s laser\n";
-				}
-				if(wep == WEP_MJOLNIR)
-				{
-					deathstring = " was slammed by ";
-					deathstring2 = "'s hammer\n";
-				}
-				if(wep == WEP_LAVA_NAILGUN || wep == WEP_LAVA_SUPER_NAILGUN)
-				{
-					deathstring = " was burned by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_PLASMA_GUN)
-				{
-					deathstring = " was fused by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_MULTI_GRENADE || wep == WEP_MULTI_ROCKET)
-				{
-					deathstring = " was blasted to bits by ";
-					deathstring2 = "\n";
-				}
-				if(wep == WEP_LIGHTME)
-				{
-					if(attacker.waterlevel > 1)
-					{
-						deathstring = " accepts ";
-						deathstring2 = "'s shock beam!\n";
-					}
-					else
-					{
-						deathstring = " was killed by ";
-						deathstring2 = "'s shock beam!\n";
-					}
-				}
-				if(inflictor.classname == "flame")
-				{
-					deathstring = " was flamed by ";
-					deathstring2 = "!\n";
-				}
-				if(inflictor.classname == "pulse")
-				{
-					deathstring = " was zapped by ";
-					deathstring2 = "!\n";
-				}
-				if(inflictor.classname == "spear" || inflictor.classname == "impaler")
-				{
-					deathstring = " was impaled by ";
-					deathstring2 = "!\n";
-				}
-				if(MP_IMPEL && deathstring == "")
-				{
-					deathstring = " died at the hands of ";
-					deathstring2 = "!\n";
-				}
-				bprint(strcat(targ.netname, deathstring, attacker.netname, deathstring2));
 			}
+		}
+		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, attacker_name))
+		{
+			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
+		}
+		LogDeath("suicide", deathtype, targ, targ);
+		targ.frags -= 1;
+	}
+
+	// ======
+	// MURDER
+	// ======
+	else if(IS_PLAYER(attacker))
+	{
+		if(attacker.team == targ.team)
+		{
+			LogDeath("tk", deathtype, attacker, targ);
+			attacker.frags -= 1;
+
+			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
+			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DEATH_TEAMKILL, targ.netname, attacker_name);
+
+			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
+			// No need for specific death/weapon messages...
 		}
 		else
 		{
-			targ.frags = targ.frags - 1; // killed self
-			bprint(targ.netname);
-
-			if(MP_HIPNOTIC && attacker.deathtype && attacker.deathtype != "")
-			{
-				bprintf(" %s\n", attacker.deathtype);
-				attacker.deathtype = string_null;
-				return;
-			}
-
-			// killed by a monster?
-			if(IS_MONSTER(attacker))
-			{
-				if(attacker.deathmessage)
-					bprintf(" %s\n", attacker.deathmessage(attacker));
-				else
-					bprint(" was killed by a monster\n");
-				return;
-			}
-
-			// tricks and traps
-			if(targ.weaponentity.m_weapon == WEP_LIGHTME) // TODO: overrides all other deathtypes!
-			{
-				bprint(" couldn't control the LG-2 Prototype!\n");
-				return;
-			}
-			if(attacker.classname == "explo_box")
-			{
-				bprint(" blew up\n");
-				return;
-			}
-			if(attacker && attacker.solid == SOLID_BSP)
-			{	
-				bprint(" was squished\n");
-				return;
-			}
-			if(attacker.killstring && attacker.killstring != "")
-			{
-				bprintf(" %s\n", attacker.killstring);
-				return;
-			}
-			if(attacker.classname == "trap_shooter" || attacker.classname == "trap_spikeshooter")
-			{
-				bprint(" was spiked\n");
-				return;
-			}
-			if(attacker.classname == "fireball")
-			{
-				bprint(" ate a lavaball\n");
-				return;
-			}
-			if(attacker.classname == "trigger_changelevel")
-			{
-				bprint(" tried to leave\n");
-				return;
-			}
-			if(attacker.classname == "ltrail_start" || attacker.classname == "ltrail_relay")
-			{
-				bprint(" rode the lightning\n");
-				return;
-			}
-			if (attacker.classname == "pendulum")
-			{
-				bprint (" was cleaved in two\n");
-				return;
-			}
-			if (attacker.classname == "buzzsaw")
-			{
-				bprint (" was sliced to pieces\n");
-				return;
-			}
-			if (attacker.classname == "plasma")
-			{
-				bprint ( " was turned to plasma\n");
-				return;
-			}
-			if (attacker.classname == "Vengeance")
-			{
-				// vengeance sphere doesn't count as a negative frag
-				targ.frags = targ.frags + 1;
-				bprint ( " was purged by the Vengeance Sphere\n");
-				return;
-			}
-			if (attacker.classname == "power_shield")
-			{
-				// shield attacks should count for frags too..
-				// shield death doesn't count as a negative frag
-				targ.frags = targ.frags + 1;
-				attacker.owner.frags = attacker.owner.frags + 1;
-				TeamAssists(targ, attacker.owner);			//PGM
-
-				deathstring = " was smashed by ";
-				deathstring2 = "\n";
-				bprint (deathstring);
-				bprint (attacker.owner.netname);
-				bprint (deathstring2);
-				return;
-			}
-
-			// in-water deaths
-			switch(targ.watertype)
-			{
-				case CONTENT_WATER:
-				{
-					if(random() < 0.5)
-						bprint(" sleeps with the fishes\n");
-					else
-						bprint(" sucks it down\n");
-					return;
-				}
-				case CONTENT_SLIME:
-				{
-					if(random() < 0.5)
-						bprint(" gulped a load of slime\n");
-					else
-						bprint(" can't exist on slime alone\n");
-					return;
-				}
-				case CONTENT_LAVA:
-				{
-					if(targ.health < -15)
-					{
-						bprint(" burst into flames\n");
-						return;
-					}
-					if(random() < 0.5)
-						bprint(" turned into hot slag\n");
-					else
-						bprint(" visits the Volcano God\n");
-					return;
-				}
-			}
-
-			// fell to their death?
-			if(targ.deathtype == "falling")
-			{
-				if(!MP_IMPEL)
-					targ.deathtype = string_null;
-				bprint(" fell to their death\n");
-				return;
-			}
-
-			// hell if I know; he's just dead!!!
-			if(MP_IMPEL)
-				bprint(" died wickedly!\n");
+			LogDeath("frag", deathtype, attacker, targ);
+			if(MP_ROGUE && teamplay == TEAM_DMATCH_TAG)
+				dmatch_score(targ, attacker);
 			else
-				bprint(" died\n");
+				attacker.frags += 1;
+			if(MP_ROGUE)
+				TeamAssists(targ, attacker);
+
+			if(!frag_centermessage_override(attacker, targ, deathtype, attacker_name))
+			{
+				Send_Notification(
+					NOTIF_ONE,
+					attacker,
+					MSG_CENTER,
+					CENTER_DEATH_MURDER_FRAG,
+					targ.netname
+				);
+				Send_Notification(
+					NOTIF_ONE,
+					targ,
+					MSG_CENTER,
+					CENTER_DEATH_MURDER_FRAGGED,
+					attacker_name
+				);
+			}
+
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name);
 		}
+	}
+
+	// =============
+	// ACCIDENT/TRAP
+	// =============
+	else
+	{
+		switch(DEATH_ENT(deathtype))
+		{
+			// For now, we're just forcing HURTTRIGGER to behave as "DEATH_VOID" and giving it no special options...
+			// Later on you will only be able to make custom messages using DEATH_CUSTOM,
+			// and there will be a REAL DEATH_VOID implementation which mappers will use.
+			case DEATH_HURTTRIGGER:
+			{
+				Obituary_SpecialDeath(targ, false, deathtype,
+					targ.netname,
+					inflictor.message);
+				break;
+			}
+
+			default:
+			{
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+				break;
+			}
+		}
+
+		LogDeath("accident", deathtype, targ, targ);
+		targ.frags -= 1;
 	}
 }
 

@@ -85,7 +85,7 @@ void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2
 
 //============================================================================
 
-void finale_1(entity this, entity inflictor, entity attacker)
+void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	intermission_exittime = time + 10000000;	// never allow exit
 	intermission_running = 1;
@@ -227,8 +227,6 @@ void finale_4(entity this)
 
 //============================================================================
 
-string oldone_deathmessage(entity this) { return "became one with Shub-Niggurath"; }
-
 
 /*QUAKED monster_oldone(1 0 0)(-16 -16 -24)(16 16 32)
 */
@@ -257,7 +255,6 @@ spawnfunc(monster_oldone)
 	this.th_pain = func_null;
 	this.th_die = finale_1;
 
-	this.deathmessage = oldone_deathmessage;
 	this.monsterdef = MON_SHUB;
 	
 	// NOTE: this isn't actually handled as a monster

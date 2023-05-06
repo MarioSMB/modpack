@@ -4,9 +4,9 @@
 void MiniGrenadeExplode(entity this)
 {
 	if(IS_PLAYER(this.owner))
-		T_RadiusDamage(this, this.owner, 90, NULL);
+		T_RadiusDamage(this, this.owner, 90, this.projectiledeathtype, NULL);
 	else
-		T_RadiusDamage(this, this.owner, 60, NULL);
+		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
 
     te_explosion2(this.origin, 230, 5);
 
@@ -19,6 +19,7 @@ void MiniGrenadeLaunch(entity this, float offsetAngle)
 	missile.owner = this.owner;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = WEP_MULTI_GRENADE.m_id;
 		
 // set missile speed	
 	missile.v_angle = this.v_angle;

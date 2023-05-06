@@ -3,18 +3,17 @@
 #ifdef SVQC
 void ProximityExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 95, NULL);
+	T_RadiusDamage(this, this.owner, 95, this.projectiledeathtype, NULL);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
 }
 
-void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker)
+void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.takedamage = DAMAGE_NO;
 	this.realowner.NumProximityGrenades -= 1;
-	this.deathtype = "exploding";
 	this.nextthink = time + 0.1;
 	this.owner = this.lastvictim;
 	setthink(this, ProximityExplode);
@@ -31,7 +30,7 @@ void ProximityGrenadeTouch(entity this, entity toucher)
 		return;
 	if(vdist(toucher.velocity, >, 0) || toucher.takedamage == DAMAGE_AIM)
 	{
-		ProximityGrenadeExplode(this, NULL, NULL);
+		ProximityGrenadeExplode(this, NULL, NULL, 0);
 		getthink(this)(this);
 		return;
 	}
@@ -46,7 +45,7 @@ void ProximityBomb(entity this)
 {
 	if((time > this.delay) || (this.realowner.NumProximityGrenades > 15) || vdist(this.spawnmaster.velocity, >, 0) )
 	{
-		ProximityGrenadeExplode(this, NULL, NULL);
+		ProximityGrenadeExplode(this, NULL, NULL, 0);
 		getthink(this)(this);
 		return;
 	}
@@ -67,7 +66,7 @@ void ProximityBomb(entity this)
 		if(blowup)
 		{
 			_sound(this, CH_WEAPON_SINGLE, "hipweap/proxwarn.wav", 1, ATTN_NORM);
-			ProximityGrenadeExplode(this, NULL, NULL);
+			ProximityGrenadeExplode(this, NULL, NULL, 0);
 			this.nextthink = time + 0.5;
 			return;
 		}
@@ -94,6 +93,7 @@ void W_FireProximityGrenade(entity this)
 	missile.takedamage = DAMAGE_NO;
 	missile.health = 5;
 	missile.state = 0;
+	missile.projectiledeathtype = WEP_PROXIMITY_GUN.m_id;
 
 // set missile speed
 

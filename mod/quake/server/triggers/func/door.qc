@@ -26,7 +26,7 @@ THINK FUNCTIONS
 
 void door_blocked(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, this.dmg);
+	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 
 	if(MP_IMPEL && (!this.model || this.model == ""))
 		return;
@@ -160,7 +160,7 @@ void door_trigger_touch(entity this, entity toucher)
 }
 
 
-void door_killed(entity this, entity inflictor, entity attacker)
+void door_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.health = this.max_health;
 	this.takedamage = DAMAGE_NO;	// will be reset upon return

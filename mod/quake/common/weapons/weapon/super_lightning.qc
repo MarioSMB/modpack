@@ -26,7 +26,7 @@ void superlightning_rebound(entity this)
 			SpawnDischarge(this, 200);
 			SpawnDischarge(this, 200);
 			SpawnDischarge(this, 200);
-			T_RadiusDamage(this, this.owner, 200, NULL);
+			T_RadiusDamage(this, this.owner, 200, this.projectiledeathtype, NULL);
 			delete(this);
 			return;
 		}
@@ -35,7 +35,7 @@ void superlightning_rebound(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
 			SpawnDischarge(this, 150);
 			SpawnDischarge(this, 150);
-			T_RadiusDamage(this, this.owner, 150, NULL);
+			T_RadiusDamage(this, this.owner, 150, this.projectiledeathtype, NULL);
 			delete(this);
 			return;
 		}
@@ -44,7 +44,7 @@ void superlightning_rebound(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
 			SpawnDischarge(this, 100);
 			SpawnDischarge(this, 100);
-			T_RadiusDamage(this, this.owner, 100, NULL);
+			T_RadiusDamage(this, this.owner, 100, this.projectiledeathtype, NULL);
 			delete(this);
 			return;
 		}
@@ -78,17 +78,17 @@ void LightningTouch(entity this, entity toucher)
 		{
 			if(toucher.move_movetype == MOVETYPE_PUSH)
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			if(toucher.classname == "door")
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			if(toucher.move_movetype == MOVETYPE_NONE)
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			//ThrowMe(this, toucher, damg);
@@ -106,17 +106,17 @@ void LightningTouch(entity this, entity toucher)
 		{
 			if(toucher.move_movetype == MOVETYPE_PUSH)
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			if(toucher.classname == "door")
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			if(toucher.move_movetype == MOVETYPE_NONE)
 			{
-				T_Damage(toucher, this, this.owner, damg);
+				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
 			//ThrowMe(this, toucher, damg);
@@ -132,7 +132,7 @@ void LightningTouch(entity this, entity toucher)
 		}
 		else
 		{
-			T_Damage(toucher, this, this.owner, damg);
+			T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 			if(toucher.takedamage == DAMAGE_AIM)
 				SpawnMeatBounce(this, toucher, damg);
 			//ThrowMe(this, toucher, damg);
@@ -157,7 +157,7 @@ void W_FireSuperLightning(entity this)
 		float cells = this.ammo_cells;
 		this.ammo_cells = 0;
 		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35 * cells, NULL);
+		T_RadiusDamage(this, this, 35 * cells, DEATH_DISCHARGE.m_id, NULL);
 		return;
 	}
 	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
@@ -170,6 +170,7 @@ void W_FireSuperLightning(entity this)
 	missile.velocity = qc_aim(this, 2000);
 	missile.velocity = missile.velocity * 2000;
 	missile.angles = vectoangles(missile.velocity);
+	missile.projectiledeathtype = WEP_LIGHTME.m_id;
 	settouch(missile, LightningTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);

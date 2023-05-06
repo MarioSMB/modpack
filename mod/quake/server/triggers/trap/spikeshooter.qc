@@ -21,6 +21,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
+		newmis.projectiledeathtype = DEATH_TRAP.m_id;
 		newmis.velocity = this.movedir * 500;
 		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
 			settouch(newmis, superspike_touch);
@@ -44,6 +45,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		lavaball.velocity = this.movedir * 300;
 		lavaball.angles = vectoangles(lavaball.velocity);
 		lavaball.owner = this;
+		lavaball.projectiledeathtype = DEATH_TRAP.m_id;
 		settouch(lavaball, T_MissileTouch);
 		_setmodel (lavaball, "progs/lavarock.mdl");
 		setsize (lavaball, '-4 -4 -4', '4 4 4');
@@ -66,6 +68,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
+		newmis.projectiledeathtype = DEATH_TRAP.m_id;
 		newmis.velocity = this.movedir * 500;
 		if(MP_ROGUE)
 		{

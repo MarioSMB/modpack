@@ -62,7 +62,7 @@ void multi_trigger(entity this)
 	}
 }
 
-void multi_killed(entity this, entity inflictor, entity attacker)
+void multi_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.enemy = attacker;
 	multi_trigger(this);

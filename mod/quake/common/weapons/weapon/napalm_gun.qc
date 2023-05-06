@@ -33,7 +33,7 @@ void NapalmFlameThink(entity this)
 	while(head)
 	{
 		if(head.takedamage)
-			T_Damage(head, this, this.owner.owner, 2 + (random() * 4));
+			T_Damage(head, this, this.owner.owner, 2 + (random() * 4), this.projectiledeathtype);
 		head = head.chain;
 	}
 	inside_nradius = false;
@@ -83,7 +83,8 @@ void NapalmTouch(entity this, entity toucher)
 	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.monsterdef != MON_SPIDER_DROID && toucher.monsterdef != MON_ZOMBIE
 			&& toucher.monsterdef != MON_SHAMBLER && toucher.monsterdef != MON_VORE)
 	{
-		SpawnInternalFire(this, toucher);
+		entity missile = SpawnInternalFire(this, toucher);
+		missile.projectiledeathtype = WEP_NAPALM.m_id;
 	}
 	setorigin(this, this.origin - 8 * normalize(this.velocity));
 	setthink(this, napalmrebound);
@@ -100,6 +101,7 @@ void W_FireNapalm(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = WEP_NAPALM.m_id;
 	missile.classname = "flame";
 	missile.takedamage = DAMAGE_NO;
 	makevectors(this.v_angle);

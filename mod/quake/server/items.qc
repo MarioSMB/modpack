@@ -520,8 +520,6 @@ void weapon_touch(entity this, entity toucher)
 				return;
 			hadammo = toucher.ammo_nails;			
 			wep = WEP_NAILGUN;
-			if(MP_ROGUE && leave)
-				toucher.ammo_lava_nails += 20;
 			toucher.ammo_nails = toucher.ammo_nails + 30;
 			break;
 		}
@@ -531,8 +529,6 @@ void weapon_touch(entity this, entity toucher)
 				return;
 			hadammo = toucher.ammo_rockets;			
 			wep = WEP_SUPER_NAILGUN;
-			if(MP_ROGUE && leave)
-				toucher.ammo_lava_nails += 20;
 			toucher.ammo_nails = toucher.ammo_nails + 30;
 			break;
 		}
@@ -551,8 +547,6 @@ void weapon_touch(entity this, entity toucher)
 				return;
 			hadammo = toucher.ammo_rockets;		
 			wep = WEP_ROCKET_LAUNCHER;
-			if(MP_ROGUE && leave)
-				toucher.ammo_multi_rockets += 3;
 			toucher.ammo_rockets = toucher.ammo_rockets + 5;
 			break;
 		}
@@ -571,8 +565,6 @@ void weapon_touch(entity this, entity toucher)
 				return;
 			hadammo = toucher.ammo_rockets;			
 			wep = WEP_LIGHTNING;
-			if(MP_ROGUE && leave)
-				toucher.ammo_plasma += 5;
 			toucher.ammo_cells = toucher.ammo_cells + 15;
 			break;
 		}

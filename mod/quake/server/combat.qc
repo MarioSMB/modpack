@@ -145,7 +145,7 @@ bool CanDamage(entity targ, entity inflictor)
 Killed
 ============
 */
-void Killed(entity targ, entity inflictor, entity attacker)
+void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 {
 	if(targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
@@ -162,7 +162,7 @@ void Killed(entity targ, entity inflictor, entity attacker)
 		if(MP_MG && (targ.classname == "misc_explobox" || targ.classname == "misc_explobox2"))
 			targ.enemy = attacker;
 		if(targ.th_die)
-			targ.th_die(targ, inflictor, attacker);
+			targ.th_die(targ, inflictor, attacker, deathtype);
 		return;
 	}
 
@@ -261,7 +261,7 @@ void Killed(entity targ, entity inflictor, entity attacker)
 	if(MP_IMPEL && inflictor.classname == "impaler")
 		impale(targ);
 	else if(targ.th_die)
-		targ.th_die(targ, inflictor, attacker);
+		targ.th_die(targ, inflictor, attacker, deathtype);
 }
 
 // ====
@@ -278,7 +278,7 @@ The damage is coming from inflictor, but get mad at attacker
 This should be the only function that ever reduces health.
 ============
 */
-void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
+void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype)
 {
 	float r = random();
 	bool showpain = true;
@@ -317,7 +317,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		{
 			empathyused = true;
 			damage = damage/2;
-			T_Damage (attacker,targ,targ,damage);
+			T_Damage(attacker, targ, targ, damage, deathtype);
 			empathyused = false;
 		}
 	}
@@ -331,6 +331,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	float save = ceil(targ.armortype * damage);
 	if(MP_ROGUE && !TeamArmorDam(targ, inflictor, attacker, damage))
+		save = 0;
+	if(DEATH_IS(deathtype, DEATH_DROWN))
 		save = 0;
 
 	float take = ceil(damage-save);
@@ -448,7 +450,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 			
 	if(targ.health <= 0)
 	{
-		Killed(targ, inflictor, attacker);
+		Killed(targ, inflictor, attacker, deathtype);
 		return;
 	}
 
@@ -502,7 +504,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(targ.th_pain && (!MP_IMPEL || showpain))
 	{
-		targ.th_pain(targ, attacker, take);
+		targ.th_pain(targ, attacker, take, deathtype);
 	// nightmare mode monsters don't go into pain frames often
 		if(autocvar_skill == 3)
 			targ.pain_finished = time + 5;		
@@ -515,7 +517,7 @@ T_RadiusDamage
 ============
 */
 bool inside_radius = false;
-void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore)
+void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore)
 {
 	if(MP_IMPEL && inside_radius)
 	{
@@ -540,7 +542,12 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 			if(points > 0)
 			{
 				if(CanDamage(head, inflictor))
-					T_Damage(head, inflictor, attacker, points);
+				{
+					if(DEATH_ISSPECIAL(deathtype))
+						T_Damage(head, inflictor, attacker, points, deathtype);
+					else
+						T_Damage(head, inflictor, attacker, points, deathtype | HITTYPE_SPLASH);
+				}
 			}
 		}
 		head = next;

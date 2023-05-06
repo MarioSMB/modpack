@@ -29,7 +29,7 @@ void TrapbarTouch(entity this, entity toucher)
 		_sound(this, CHAN_AUTO, "enviro/physics/trcut.wav", 1, ATTN_NORM);
 		_sound(this, CHAN_AUTO, "enviro/physics/trcut.wav", 1, ATTN_NORM);
 		_sound(this, CHAN_AUTO, "enviro/physics/trcut.wav", 1, ATTN_NORM);
-		T_Damage(toucher, this, this, damg);
+		T_Damage(toucher, this, this, damg, DEATH_TRAP.m_id);
 		this.dmgtime = (time + 0.1);
 	}
 }
@@ -55,7 +55,7 @@ void dropblood(entity this)
 	setorigin(missile, this.origin);
 }
 
-void trapbar_explode(entity this, entity inflictor, entity attacker)
+void trapbar_explode(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CHAN_AUTO, "enviro/physics/trstop.wav", 1, ATTN_NORM);
 	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
@@ -71,7 +71,7 @@ void trapbar_explode(entity this, entity inflictor, entity attacker)
 	BecomeExplosion(this);
 }
 
-void trapbar_pain(entity this, entity attacker, float damage)
+void trapbar_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	this.health = 5000;
 }

@@ -2,7 +2,7 @@
 
 void fire_touch(entity this, entity toucher)
 {
-	T_Damage(toucher, this, this, 20);
+	T_Damage(toucher, this, this, 20, this.projectiledeathtype);
 	if(MP_MG && this.noise2 && this.noise2 != "")
 		_sound(this, CH_VOICE, this.noise2, 0.8, ATTN_NORM);
 	delete(this);
@@ -34,7 +34,7 @@ void fire_fly(entity this)
 	fireball.nextthink = time + 5;
 	setthink(fireball, SUB_Remove);
 	settouch(fireball, fire_touch);
-	fireball.killstring = " ate a lavaball";
+	fireball.projectiledeathtype = DEATH_TRAP.m_id;
 
 	if(MP_MG && this.noise && this.noise != "")
 	{

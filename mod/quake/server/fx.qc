@@ -215,7 +215,7 @@ void play_lightning(entity this, entity actor, entity trigger)
 		SendCSQCLightningBeam(startpos, endpos);
 
 		if(this.dmg)
-			LightningDamage(startpos, endpos, this, this.dmg);
+			LightningDamage(startpos, endpos, this, this.dmg, DEATH_TRAP.m_id);
 		
 		//If activatetargets and t has a target, activate it.
 		if(activatetargets && t.target)

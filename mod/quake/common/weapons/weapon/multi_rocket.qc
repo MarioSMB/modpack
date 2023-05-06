@@ -63,7 +63,7 @@ void MultiRocketExplode(entity this, entity directhitentity)
 			damg = damg * 0.5;	// mostly immune
 		if(directhitentity.monsterdef == MON_DRAGON)
 			damg = damg * 0.5;	// mostly immune (special case)
-		T_Damage(directhitentity, this, this.owner, damg );
+		T_Damage(directhitentity, this, this.owner, damg, this.projectiledeathtype);
 	}
 
 	// don't do radius damage to the directhitentity, because all the damage
@@ -71,7 +71,7 @@ void MultiRocketExplode(entity this, entity directhitentity)
 //	Stock single rocket damage.
 //	T_RadiusDamage(this, this.owner, 120, directhitentity);
 
-	T_RadiusDamage(this, this.owner, 75, directhitentity);
+	T_RadiusDamage(this, this.owner, 75, this.projectiledeathtype, directhitentity);
 
 //	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	setorigin(this, this.origin - 8 * normalize(this.velocity));
@@ -109,6 +109,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum)
 	missile.classname = "MultiRocket";
 	missile.delay = time + 4;
 	missile.frame = frameNum;
+	missile.projectiledeathtype = WEP_MULTI_ROCKET.m_id;
 	settouch(missile, MultiRocketTouch);
 
 	if(deathmatch || coop)

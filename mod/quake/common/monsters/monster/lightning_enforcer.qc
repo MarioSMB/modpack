@@ -11,7 +11,7 @@ void lenforcer_fire(entity this)
 	traceline(org, (this.origin + (dir * 350)), true, this);
 	//te_lightning2(NULL, org, trace_endpos); // should be this
 	SendCSQCLightningBeam(org, trace_endpos);
-	LightningDamage(this.origin, trace_endpos + (v_forward * 4), this, 3);
+	LightningDamage(this.origin, trace_endpos + (v_forward * 4), this, 3, DEATH_MONSTER_LENFORCER.m_id);
 }
 
 void lenf_stand1(entity this);
@@ -124,7 +124,7 @@ void lenf_paind3(entity this) { set_anim(this, 85, lenf_paind4); }
 void lenf_paind2(entity this) { set_anim(this, 84, lenf_paind3); }
 void lenf_paind1(entity this) { set_anim(this, 83, lenf_paind2); }
 
-void lenf_pain(entity this, entity attacker, float damage)
+void lenf_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	float r = random();
 	if(this.pain_finished > time)
@@ -194,7 +194,7 @@ void lenf_fdie3(entity this)
 void lenf_fdie2(entity this) { set_anim(this, 56, lenf_fdie3); }
 void lenf_fdie1(entity this) { set_anim(this, 55, lenf_fdie2); }
 
-void lenf_die(entity this, entity inflictor, entity attacker)
+void lenf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -35)
 	{
@@ -227,7 +227,6 @@ string lenf_sight(entity this)
 		default: case 3: return "monsters/lenforce/lesight4.wav";
 	}
 }
-string lenf_deathmessage(entity this) { return "was zapped by a Lightning Enforcer"; }
 
 spawnfunc(monster_lenforcer)
 {
@@ -271,7 +270,6 @@ METHOD(LightningEnforcer, mr_setup, bool(LightningEnforcer this, entity actor))
 	actor.th_missile = lenf_atk1;
 
 	actor.sightsound = lenf_sight;
-	actor.deathmessage = lenf_deathmessage;
 
     return true;
 }

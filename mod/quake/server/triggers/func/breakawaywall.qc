@@ -3,7 +3,7 @@
 const int MULTI_USE = BIT(0);
 const int INVISIBLE = BIT(1);
 
-void damagethreshold_killed(entity this, entity inflictor, entity attacker)
+void damagethreshold_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.health = this.max_health;
 
@@ -16,7 +16,7 @@ void damagethreshold_killed(entity this, entity inflictor, entity attacker)
 		delete(this);
 }
 
-void damagethreshold_pain(entity this, entity attacker, float damage)
+void damagethreshold_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	this.health = this.max_health;
 }

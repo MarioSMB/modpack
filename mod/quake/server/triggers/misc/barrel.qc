@@ -3,7 +3,7 @@
 void barrel_explode(entity this)
 {
 	// did say this.owner
-	T_RadiusDamage(this, this.enemy, 160, NULL);
+	T_RadiusDamage(this, this.enemy, 160, DEATH_TRAP.m_id, NULL);
 	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
@@ -20,7 +20,7 @@ void barrel_explode(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void barrel_detonate(entity this, entity inflictor, entity attacker)
+void barrel_detonate(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.classname = "explo_box";
 	this.takedamage = DAMAGE_NO;
@@ -93,7 +93,7 @@ void func_explode_detonate(entity this)
 	barrel_explode(this);
 }
 
-void func_explode_die(entity this, entity inflictor, entity attacker)
+void func_explode_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.takedamage = DAMAGE_NO;
 	setthink(this, func_explode_detonate);

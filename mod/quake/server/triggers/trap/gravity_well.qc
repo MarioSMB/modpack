@@ -9,7 +9,7 @@ void trap_gravity_touch(entity this, entity toucher)
 
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this, this.dmg);
+		T_Damage(toucher, this, this, this.dmg, DEATH_TRAP.m_id);
 		this.attack_finished = time + 0.2;
 	}
 }

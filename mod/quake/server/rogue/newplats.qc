@@ -56,7 +56,7 @@ void dn_and_wait_go_up(entity this)
 
 void dn_and_wait_crush(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, 1);
+	T_Damage(blocker, this, this, 1, DEATH_CRUSH.m_id);
 	
 	if(this.state == STATE_UP)
 		dn_and_wait_go_down(this);
@@ -110,7 +110,7 @@ void toggle_go_up(entity this)
 
 void toggle_crush(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, 1);
+	T_Damage(blocker, this, this, 1, DEATH_CRUSH.m_id);
 	
 	if(this.state == STATE_UP)
 		toggle_go_down(this);
@@ -394,7 +394,7 @@ void plat2_center_touch(entity this, entity toucher)
 
 void plat2_crush(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, 1);
+	T_Damage(blocker, this, this, 1, DEATH_CRUSH.m_id);
 	
 	if(this.state == STATE_UP)
 		plat2_go_down(this);

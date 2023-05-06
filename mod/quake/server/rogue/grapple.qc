@@ -48,7 +48,7 @@ void GrappleTrack(entity this)
 		
 //		_sound(this, CH_WEAPON_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
 		_sound(this, CH_WEAPON_SINGLE, "pendulum/hit.wav", 1, ATTN_NORM);
-		T_Damage(this.enemy, this, this.owner, 1);
+		T_Damage(this.enemy, this, this.owner, 1, WEP_GRAPPLE.m_id);
 		makevectors(this.v_angle);
 		vector spray;
 		spray.x = 100 * crandom();
@@ -88,7 +88,7 @@ void GrappleAnchor(entity this, entity toucher)
 		}
 
 		player_sound(this, CH_WEAPON_SINGLE, "axhit1.wav", ATTN_NORM);
-		T_Damage(toucher, this, this.owner, 10);
+		T_Damage(toucher, this, this.owner, 10, WEP_GRAPPLE.m_id);
 	}
 	else
 	{
@@ -98,7 +98,7 @@ void GrappleAnchor(entity this, entity toucher)
 		// damage will only be done to PLAYERS... this way secret
 		// doors and triggers will only be damaged once.
 		if(toucher.takedamage)
-			T_Damage(toucher, this, this.owner, 1);
+			T_Damage(toucher, this, this.owner, 1, WEP_GRAPPLE.m_id);
 
 		this.velocity = '0 0 0';
 		this.avelocity = '0 0 0';

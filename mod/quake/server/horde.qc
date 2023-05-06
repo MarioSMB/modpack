@@ -209,7 +209,7 @@ void PrecacheMonsters()
 // =================================================================
 void GibMonster(entity this)
 {
-	T_Damage(this, NULL, NULL, 4000);
+	T_Damage(this, NULL, NULL, 4000, DEATH_GENERIC.m_id);
 }
 // =================================================================
 /*
@@ -221,8 +221,8 @@ spawnfunc(monster_zombie);
 void zombie_stand1(entity this);
 void zombie_walk1(entity this);
 void zombie_run1(entity this);
-void zombie_pain(entity this, entity attacker, float damage);
-void zombie_die(entity this, entity inflictor, entity attacker);
+void zombie_pain(entity this, entity attacker, float damage, int deathtype);
+void zombie_die(entity this, entity inflictor, entity attacker, int deathtype);
 void zombie_missile(entity this);
 void monster_use(entity this, entity actor, entity trigger);
 entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)

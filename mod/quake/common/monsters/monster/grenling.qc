@@ -131,7 +131,7 @@ void Gren_Swipe(entity this)
 		return;
 	}
 	float ldmg = (((random() + random()) + random()) * 3);
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_GRENLING.m_id);
 	_sound(this, CHAN_AUTO, "monsters/grenling/grcut.wav", 1, ATTN_NORM);
 	SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
 	SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
@@ -255,7 +255,7 @@ void gren_deathb1(entity this)
 	setsize(this, '-8 -8 -8', '8 8 4');
 }
 
-void gren_die(entity this, entity inflictor, entity attacker)
+void gren_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -40)
 	{
@@ -275,7 +275,7 @@ void gren_die(entity this, entity inflictor, entity attacker)
 		gren_deathb1(this);
 }
 
-void Gren_Pain(entity this, entity attacker, float damage)
+void Gren_Pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if((random() * 70) > damage)
 		return;
@@ -299,8 +299,6 @@ string gren_sight(entity this)
 {
 	return ((random() > 0.5) ? "monsters/grenling/grsight1.wav" : "monsters/grenling/grsight2.wav");
 }
-string gren_deathmessage(entity this) { return "was ripped to shreds by a Grenling"; }
-string grenling_deathmessage(entity this) { return "was torn to pieces by a Grenling"; }
 
 spawnfunc(monster_grenling)
 {
@@ -311,8 +309,6 @@ spawnfunc(monster_gren)
 {
 	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, MON_GRENLING);
-	if(!wasfreed(this))
-		this.deathmessage = gren_deathmessage;
 }
 #endif // SVQC
 
@@ -357,7 +353,6 @@ METHOD(Grenling, mr_setup, bool(Grenling this, entity actor))
 	actor.th_die = gren_die;
 
 	actor.sightsound = gren_sight;
-	actor.deathmessage = grenling_deathmessage;
 
     return true;
 }

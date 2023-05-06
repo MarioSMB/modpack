@@ -10,7 +10,7 @@ void func_hurt_touch(entity this, entity toucher)
 	if(!IS_MONSTER(toucher) && !IS_PLAYER(toucher)) return;
 	if(this.attack_finished > time) return;
 	
-	T_Damage(toucher, this, NULL, this.dmg);
+	T_Damage(toucher, this, NULL, this.dmg, DEATH_VOID.m_id);
 	this.attack_finished = time + this.wait;
 }
 

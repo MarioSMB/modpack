@@ -7,6 +7,7 @@
 #include "../../server/rogue/runes.qh"
 #include "../../server/triggers/triggers.qh"
 #include "../../server/weapons.qh"
+#include "../../server/weapons/common.qh"
 #endif
 
 USING(WepSet, vector);

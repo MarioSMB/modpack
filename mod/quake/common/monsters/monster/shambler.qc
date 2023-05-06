@@ -79,7 +79,7 @@ void sham_smash10(entity this)
 		return;
 		
 	float ldmg =(random() + random() + random()) * 40;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_SHAMBLER.m_id);
 	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
@@ -112,7 +112,7 @@ void ShamClaw(entity this, float side)
 		return;
 		
 	float ldmg =(random() + random() + random()) * 20;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_SHAMBLER.m_id);
 	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	if(side)
@@ -205,7 +205,7 @@ void CastLightning(entity this)
 	//te_lightning1(NULL, org, trace_endpos); // TODO: entity breaks
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos, this, 10);
+	LightningDamage(org, trace_endpos, this, 10, DEATH_MONSTER_SHAMBLER.m_id);
 }
 
 void sham_magic12(entity this) { set_animofs(this, anim_sham_magic, 12, sham_run1); }
@@ -261,7 +261,7 @@ void sham_pain3(entity this) { set_animofs(this, anim_sham_pain, 3, sham_pain4);
 void sham_pain2(entity this) { set_animofs(this, anim_sham_pain, 2, sham_pain3); }
 void sham_pain1(entity this) { set_animofs(this, anim_sham_pain, 1, sham_pain2); }
 
-void sham_pain(entity this, entity attacker, float damage)
+void sham_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	_sound(this, CH_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
 
@@ -304,7 +304,7 @@ void sham_death3(entity this) { set_animofs(this, anim_sham_death, 3, sham_death
 void sham_death2(entity this) { set_animofs(this, anim_sham_death, 2, sham_death3); }
 void sham_death1(entity this) { set_animofs(this, anim_sham_death, 1, sham_death2); }
 
-void sham_die(entity this, entity inflictor, entity attacker)
+void sham_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -60)
@@ -386,7 +386,6 @@ bool ShamCheckAttack(entity this)
 }
 
 string shambler_sight(entity this) { return "shambler/ssight.wav"; }
-string shambler_deathmessage(entity this) { return "was smashed by a Shambler"; }
 
 /*QUAKED monster_shambler(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
@@ -433,7 +432,6 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 
 	actor.sightsound = shambler_sight;
 	actor.checkattack = ShamCheckAttack;
-	actor.deathmessage = shambler_deathmessage;
 
     return true;
 }

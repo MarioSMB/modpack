@@ -11,7 +11,7 @@ void changelevel_touch(entity this, entity toucher)
 
 	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart")))
 	{
-		T_Damage(toucher, this, this, 50000);
+		T_Damage(toucher, this, this, 50000, DEATH_NOEXIT.m_id);
 		return;
 	}
 

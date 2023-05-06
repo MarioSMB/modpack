@@ -127,17 +127,17 @@ void Legond_MissileTouch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;
-		T_Damage(toucher, this, this.owner, damg);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 		this.health = this.health + damg;
 	}
 	if(autocvar_skill == 3)
-		T_RadiusDamage(this, this.owner, 100, toucher);
+		T_RadiusDamage(this, this.owner, 100, this.projectiledeathtype, toucher);
 	if(autocvar_skill == 2)
-		T_RadiusDamage(this, this.owner, 90, toucher);
+		T_RadiusDamage(this, this.owner, 90, this.projectiledeathtype, toucher);
 	if(autocvar_skill == 1)
-		T_RadiusDamage(this, this.owner, 80, toucher);
+		T_RadiusDamage(this, this.owner, 80, this.projectiledeathtype, toucher);
 	else
-		T_RadiusDamage(this, this.owner, 70, toucher);
+		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, toucher);
 	this.origin = this.origin - (8 * normalize(this.velocity));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
@@ -149,6 +149,7 @@ void LaunchRocket(entity this, vector org, vector vec)
 	this.attack_finished = time + 0.8;
 	entity newmis = spawn();
 	newmis.owner = this;
+	newmis.projectiledeathtype = DEATH_MONSTER_LEGOND.m_id;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	_setmodel(newmis, "progs/missile2.mdl");
@@ -220,7 +221,7 @@ void Legond_FireLightning(entity this)
 	vector dir = normalize((this.enemy.origin + '0 0 16') - org);
 	traceline(org, (this.origin + (dir * 600)), true, this);
 	te_lightning2(NULL, org, trace_endpos); // should be this
-	LightningDamage(org, (trace_endpos + (v_forward * 4)), this, 4);
+	LightningDamage(org, (trace_endpos + (v_forward * 4)), this, 4, DEATH_MONSTER_LEGOND.m_id);
 	this.health = this.health + 3;
 	this.enemy.velocity = '0 0 150' + (v_forward * 400);
 	UNSET_ONGROUND(this);
@@ -250,7 +251,7 @@ void Legond_Punch(entity this)
 		return;
 	float ldmg = random() + random() + random() * 9;
 	_sound(this, CHAN_WEAPON, "monsters/legond/legsmak.wav", 1, ATTN_NORM);
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_LEGOND.m_id);
 	this.health = this.health + ldmg;
 	SpawnMeatSpray(this, this.origin + (v_forward * 16), (crandom() * 100) * v_right);
 	SpawnMeatSpray(this, this.origin + (v_forward * 16), (crandom() * 100) * v_right);
@@ -281,7 +282,7 @@ void Legond_SoftPunch(entity this)
 		return;
 	float ldmg = random() + random() + random() * 3; // lol what
 	_sound(this, CHAN_WEAPON, "monsters/legond/legsmak.wav", 1, ATTN_NORM);
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_LEGOND.m_id);
 	this.health = this.health + ldmg;
 	SpawnMeatSpray(this, this.origin + v_forward * 16, (crandom() * 100) * v_right);
 }
@@ -438,7 +439,7 @@ void legond_pain3(entity this) { set_anim(this, 90, legond_pain4); }
 void legond_pain2(entity this) { set_anim(this, 89, legond_pain3); ai_painforward(this, 3); }
 void legond_pain1(entity this) { set_anim(this, 88, legond_pain2); ai_painforward(this, 0); }
 
-void Legond_Pain(entity this, entity attacker, float damage)
+void Legond_Pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if((random() * 275) > damage)
 		return;
@@ -481,14 +482,13 @@ void legond_die5(entity this)
 void legond_die4(entity this) { set_anim(this, 97, legond_die5); this.solid = SOLID_NOT; }
 void legond_die3(entity this) { set_anim(this, 96, legond_die4); }
 void legond_die2(entity this) { set_anim(this, 95, legond_die3); }
-void legond_die1(entity this, entity inflictor, entity attacker)
+void legond_die1(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	set_anim(this, 94, legond_die2);
 	_sound(this, CHAN_AUTO, "monsters/legond/lpain2.wav", 1, ATTN_NORM);
 }
 
 string legond_sight(entity this) { return "monsters/legond/legond.wav"; }
-string legond_deathmessage(entity this) { return "was put to rest by Legond"; }
 
 spawnfunc(monster_legond)
 {
@@ -523,7 +523,6 @@ METHOD(Legond, mr_setup, bool(Legond this, entity actor))
 	actor.th_missile = legond_shoot1;
 
 	actor.sightsound = legond_sight;
-	actor.deathmessage = legond_deathmessage;
 	actor.checkattack = LegondCheckAttack;
 
     return true;

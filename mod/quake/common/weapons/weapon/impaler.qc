@@ -52,7 +52,7 @@ void T_SpearTouch(entity this, entity toucher)
 			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1))
 	{
 		_setmodel(this, "progs/impdef.mdl");
-		T_Damage(toucher, this, this.owner, 50);
+		T_Damage(toucher, this, this.owner, 50, this.projectiledeathtype);
 		if(r < 0.4)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
 		else if(r < 0.7)
@@ -60,7 +60,7 @@ void T_SpearTouch(entity this, entity toucher)
 		else
 			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef3.wav", 1, ATTN_NORM);
 		if(toucher.health > 0)
-			T_Damage(toucher, this, this.owner, 50);
+			T_Damage(toucher, this, this.owner, 50, this.projectiledeathtype);
 		set_movetype(this, MOVETYPE_BOUNCE);
 		this.velocity = this.velocity * 0.35;
 		this.avelocity = '300 300 300';
@@ -72,7 +72,7 @@ void T_SpearTouch(entity this, entity toucher)
 	}
 	else if(((toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTTWEILER) && random() < 0.5) || toucher.monsterdef == MON_ROTFISH)
 	{
-		T_Damage (toucher, this, this.owner, 5000);
+		T_Damage(toucher, this, this.owner, 5000, this.projectiledeathtype);
 		entity missile = spawn();
 		missile.owner = this.owner;
 		set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -84,6 +84,7 @@ void T_SpearTouch(entity this, entity toucher)
 		missile.movedir = missile.velocity;
 		missile.avelocity_z = crandom() * 500;
 		missile.count = 0;
+		missile.projectiledeathtype = WEP_SPEAR.m_id;
 		settouch(missile, T_SpearTouch);
 		toucher.nextthink = time + 4;
 		setthink(toucher, SUB_Remove);
@@ -103,14 +104,14 @@ void T_SpearTouch(entity this, entity toucher)
 		if(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
 		{
 			BecomeBloodSpurt(this, 25);
-			T_Damage(toucher, this, this.owner, 25);
+			T_Damage(toucher, this, this.owner, 25, this.projectiledeathtype);
 			BecomeBloodSpurt(this, 25);
 		}
 		if(!(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
 				|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH))
 		{
 			BecomeBloodSpurt(this, 25);
-			T_Damage(toucher, this, this.owner, 25);
+			T_Damage(toucher, this, this.owner, 25, this.projectiledeathtype);
 			BecomeBloodSpurt(this, 25);
 		}
 		this.enemy = toucher;
@@ -128,7 +129,7 @@ void T_SpearTouch(entity this, entity toucher)
 		if(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
 			|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH)
 		{
-			T_Damage (toucher, this, this.owner, 5000);
+			T_Damage(toucher, this, this.owner, 5000, this.projectiledeathtype);
 			BecomeBloodSpurt(this, 5000);
 		}
 	}
@@ -136,7 +137,7 @@ void T_SpearTouch(entity this, entity toucher)
 	{
 		_setmodel(this, "progs/impdef.mdl");
 		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
-		T_Damage (toucher, this, this.owner, 50);
+		T_Damage(toucher, this, this.owner, 50, this.projectiledeathtype);
 		BecomePurpleExplosion(this, toucher, 50);
 		if(r < 0.4)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
@@ -245,7 +246,7 @@ void ImpaledExplosion(entity this)
 {
 	if(this.enemy.health <= 0)
 	{
-		T_RadiusDamage(this, this.owner, 60, NULL);
+		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
 		BecomeBloodSpurt(this, 60);
 		this.enemy.health = this.enemy.health - 60 - random() * 100;
 		setorigin(this, this.origin - 8 * normalize(this.velocity));
@@ -261,7 +262,7 @@ void ImpaledExplosion(entity this)
 
 void SpearExplosion(entity this)
 {
-	T_RadiusDamage(this, this.owner, 60, NULL);
+	T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
 	setorigin(this, this.origin - 16 * normalize(this.velocity));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
@@ -333,7 +334,7 @@ void SpearThink(entity this)
 				this.classname = "impaler";
 				this.enemy.health = 1;
 				BecomeBloodSpurt(this, 15);
-				T_Damage(this.enemy, this, this.owner, 15);
+				T_Damage(this.enemy, this, this.owner, 15, this.projectiledeathtype);
 				BecomeBloodSpurt(this, 15);
 				entity fork = spawn();
 				fork.solid = SOLID_NOT;
@@ -351,7 +352,7 @@ void SpearThink(entity this)
 	{
 		this.flags = FL_NOTARGET;
 		BecomeBloodSpurt(this, 37);
-		T_Damage(this.enemy, this, this.owner, 37);
+		T_Damage(this.enemy, this, this.owner, 37, this.projectiledeathtype);
 		BecomeBloodSpurt(this, 37);
 	}
 	if(this.enemy.health <= 0 || this.enemy.health > this.cnt || random() < 0.01)
@@ -372,9 +373,9 @@ void SpearThink(entity this)
 	{
 		SpawnBlood(this.origin, '0 0 0', this.count, this.enemy);
 		BecomeBloodSpurt(this, this.count / 2);
-		T_Damage(this.enemy, this, this.owner, this.count / 2);
+		T_Damage(this.enemy, this, this.owner, this.count / 2, this.projectiledeathtype);
 		if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
-			T_Damage(this.enemy, this, this.owner, 5);
+			T_Damage(this.enemy, this, this.owner, 5, this.projectiledeathtype);
 		BecomeBloodSpurt(this, this.count / 2);
 		this.count = 0;
 	}
@@ -472,6 +473,7 @@ void W_FireSpear(entity this)
 	missile.movedir = missile.velocity;
 	missile.avelocity_z = crandom() * 500;
 	missile.count = 0;
+	missile.projectiledeathtype = WEP_SPEAR.m_id;
 	settouch(missile, T_SpearTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);

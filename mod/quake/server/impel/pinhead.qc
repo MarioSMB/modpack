@@ -95,14 +95,14 @@ void claw_pull(entity this)
 	else if(this.enemy.health < 5)
 	{
 		_sound(this, CHAN_VOICE, "enviro/pinhead/pinsuck.wav", 1, ATTN_NORM);
-		T_Damage(this.enemy, this, this.owner, 10000);
+		T_Damage(this.enemy, this, this.owner, 10000, DEATH_TRAP.m_id);
 	}
 	else if(random() < 0.1)
 	{
 		if(random() < 0.5)
 			_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinrip.wav", 0.5, ATTN_NORM);
 		if(this.owner.dmg > 0)
-			T_Damage(this.enemy, this, this.owner, this.owner.dmg);
+			T_Damage(this.enemy, this, this.owner, this.owner.dmg, DEATH_TRAP.m_id);
 	}
 }
 
@@ -138,6 +138,7 @@ void claw_touch(entity this, entity toucher)
 void fire_claw(entity this, vector org, vector dir)
 {
 	entity newmis = launch_spike(this, org, dir);
+	newmis.projectiledeathtype = DEATH_TRAP.m_id;
 	_setmodel(newmis, "progs/claw.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');
 	settouch(newmis, claw_touch);

@@ -34,7 +34,7 @@ void Laser_Touch(entity this, entity toucher)
 	if(toucher.health)
 	{
 		SpawnBlood(org, this.velocity*0.2, 15, toucher);
-		T_Damage(toucher, this, this.owner, 15);
+		T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
 	}
 	else
 		te_gunshot(org);
@@ -51,6 +51,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	
 	entity newmis = new(enforcer_laser);
 	newmis.owner = this;
+	newmis.projectiledeathtype = DEATH_MONSTER_ENFORCER.m_id;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;
@@ -195,7 +196,7 @@ void enf_paind3(entity this) { set_animofs(this, anim_enf_paind, 3, enf_paind4);
 void enf_paind2(entity this) { set_animofs(this, anim_enf_paind, 2, enf_paind3); }
 void enf_paind1(entity this) { set_animofs(this, anim_enf_paind, 1, enf_paind2); }
 
-void enf_pain(entity this, entity attacker, float damage)
+void enf_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	float r = random();
 	if(this.pain_finished > time)
@@ -288,7 +289,7 @@ void enf_fdie3(entity this)
 void enf_fdie2(entity this) { set_animofs(this, anim_enf_fdeath, 2, enf_fdie3); }
 void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); }
 
-void enf_die(entity this, entity inflictor, entity attacker)
+void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -35)
@@ -319,8 +320,6 @@ string enf_sight(entity this)
 		default: case 3: return "enforcer/sight4.wav";
 	}
 }
-
-string enf_deathmessage(entity this) { return "was blasted by an Enforcer"; }
 
 /*QUAKED monster_enforcer(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -367,7 +366,6 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	actor.th_missile = enf_atk1;
 
 	actor.sightsound = enf_sight;
-	actor.deathmessage = enf_deathmessage;
 
 	return true;
 }

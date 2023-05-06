@@ -325,9 +325,9 @@ void FireballTouch(entity this, entity toucher)
 		return;		// don't explode on owner
 
 	if(this.owner.monsterdef == MON_DRAGON)
-		T_RadiusDamage(this, this.owner, 90, this.owner);
+		T_RadiusDamage(this, this.owner, 90, this.projectiledeathtype, this.owner);
 	else
-		T_RadiusDamage(this, this.owner, 30, NULL);
+		T_RadiusDamage(this, this.owner, 30, this.projectiledeathtype, NULL);
 	
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
@@ -344,6 +344,7 @@ void launch_fireball(entity this, vector org, vector dir)
 	fireball.owner = this;
 	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	fireball.solid = SOLID_BBOX;
+	fireball.projectiledeathtype = DEATH_MONSTER_DRAGON.m_id;
 	fireball.classname = "fireball";
 	_setmodel(fireball, "progs/fireball.mdl");
 	setorigin(fireball, org);
@@ -423,7 +424,7 @@ void dragon_tail_touch(entity this, entity toucher)
 	}
 
 	tailDamage = ( random() * 30) + 30;
-	T_Damage(this.enemy, this, this, tailDamage);
+	T_Damage(this.enemy, this, this, tailDamage, DEATH_MONSTER_DRAGON.m_id);
 }
 
 void dragon_tail(entity this)
@@ -438,7 +439,7 @@ void dragon_tail(entity this)
 	vector dir = this.enemy.origin - this.origin;
 	if(vdist(dir, <, 250))
 	{
-		T_Damage(this.enemy, this, this, 30);
+		T_Damage(this.enemy, this, this, 30, DEATH_MONSTER_DRAGON.m_id);
 		dir = normalize(dir);
 		this.enemy.velocity = dir * 500;
 		this.enemy.velocity_z = 350;
@@ -488,7 +489,7 @@ void dragon_painF3(entity this) { set_anim(this, anim_dragon_drgpan6c, dragon_wa
 void dragon_painF2(entity this) { set_anim(this, anim_dragon_drgpan6b, dragon_painF3); dragon_move(this, 12); }
 void dragon_painF1(entity this) { set_anim(this, anim_dragon_drgpan6a, dragon_painF2); dragon_move(this, 12); }
 
-void dragon_pain(entity this, entity attacker, float damage)
+void dragon_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -549,7 +550,7 @@ void dragon_explode(entity this)
 	if(this.dragonDeathState > DDIE_FALLING)
 //		objerror ( "dragon_explode");
 		return;
-		
+
 	if(vdist(this.velocity, <, 100) || (this.flags & FL_INWATER))
 	{	
 		this.dragonDeathState = DDIE_STOPPED;
@@ -568,7 +569,7 @@ void dragon_squish(entity this, entity toucher)
 	if(IS_PLAYER(toucher))
 	{
 		this.classname = "monster_dragon_dead"; // TODO: deathtype support would give us a unique death message here!
-		T_Damage(toucher, this, this, 200);
+		T_Damage(toucher, this, this, 200, DEATH_MONSTER_DRAGON_CRUSH.m_id);
 	}
 	if(!toucher)
 	{
@@ -607,7 +608,7 @@ void dragon_death5(entity this) { set_animofs(this, anim_dragon_drgdth01, 5, dra
 void dragon_death4(entity this) { set_animofs(this, anim_dragon_drgdth01, 4, dragon_death5); dragon_explode(this); }
 void dragon_death3(entity this) { set_animofs(this, anim_dragon_drgdth01, 3, dragon_death4); dragon_explode(this); }
 void dragon_death2(entity this) { set_animofs(this, anim_dragon_drgdth01, 2, dragon_death3); dragon_explode(this); }
-void dragon_death1(entity this, entity inflictor, entity attacker)
+void dragon_death1(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	set_anim(this, anim_dragon_drgdth01, dragon_death2);
 
@@ -681,7 +682,6 @@ void dragon_activate(entity this)
 }
 
 string dragon_sight(entity this) { return "dragon/see.wav"; }
-string dragon_deathmessage(entity this) { return ((this.classname == "monster_dragon_dead") ? "was squashed by the Dragon" : "was annihilated by the Dragon"); }
 
 /*QUAKED monster_dragon (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 */
@@ -721,7 +721,6 @@ spawnfunc(monster_dragon)
 	this.th_die = dragon_death1;
 
 	this.sightsound = dragon_sight;
-	this.deathmessage = dragon_deathmessage;
 	this.monsterdef = MON_DRAGON;
 
 	this.dragonPainSequence = 1;

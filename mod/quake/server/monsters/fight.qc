@@ -154,7 +154,7 @@ ai_melee
 
 =============
 */
-void ai_melee(entity this)
+void ai_melee(entity this, int deathtype)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -163,10 +163,10 @@ void ai_melee(entity this)
 		return;
 
 	float ldmg = (random() + random() + random()) * 3;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }
 
-void ai_melee_side(entity this)
+void ai_melee_side(entity this, int deathtype)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -178,5 +178,5 @@ void ai_melee_side(entity this)
 	if(!CanDamage(this.enemy, this))
 		return;
 	float ldmg = (random() + random() + random()) * 3;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }

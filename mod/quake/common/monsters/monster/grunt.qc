@@ -136,7 +136,7 @@ void army_painc3(entity this) { set_animofs(this, anim_army_painc, 3, army_painc
 void army_painc2(entity this) { set_animofs(this, anim_army_painc, 2, army_painc3); ai_pain(this, 1); }
 void army_painc1(entity this) { set_animofs(this, anim_army_painc, 1, army_painc2); }
 
-void army_pain(entity this, entity attacker, float damage)
+void army_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -176,7 +176,7 @@ void army_fire(entity this)
 	vector dir = en.origin - en.velocity*0.2;
 	dir = normalize(dir - this.origin);
 	
-	FireBullets(this, 4, dir, '0.1 0.1 0');
+	FireBullets(this, 4, dir, '0.1 0.1 0', DEATH_MONSTER_GRUNT.m_id);
 }
 
 
@@ -236,7 +236,7 @@ void army_cdie3(entity this)
 void army_cdie2(entity this) { set_animofs(this, anim_army_deathc, 2, army_cdie3); ai_back(this, 5); }
 void army_cdie1(entity this) { set_animofs(this, anim_army_deathc, 1, army_cdie2); }
 
-void army_die(entity this, entity inflictor, entity attacker)
+void army_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -35)
@@ -322,7 +322,6 @@ bool SoldierCheckAttack(entity this)
 }
 
 string army_sight(entity this) { return "soldier/sight1.wav"; }
-string army_deathmessage(entity this) { return "was shot by a Grunt"; }
 
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -357,7 +356,6 @@ METHOD(Grunt, mr_setup, bool(Grunt this, entity actor))
 
 	actor.sightsound = army_sight;
 	actor.checkattack = SoldierCheckAttack;
-	actor.deathmessage = army_deathmessage;
 
     return true;
 }

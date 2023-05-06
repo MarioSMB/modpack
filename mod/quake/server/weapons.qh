@@ -50,11 +50,11 @@ void s_explode1(entity this); // TODO: shouldn't be referenced directly!
 
 void SpawnMeatSpray(entity this, vector org, vector vel);
 
-void LightningDamage(vector p1, vector p2, entity from, float damage);
+void LightningDamage(vector p1, vector p2, entity from, float damage, int deathtype);
 
 void MakeFlame(entity this, entity toucher);
 
-void SpawnInternalFire(entity this, entity targ);
+entity SpawnInternalFire(entity this, entity targ);
 
 void SpawnFireSpark(entity this);
 
@@ -66,9 +66,9 @@ void BecomePurpleExplosion(entity this, entity directhitentity, float dm);
 
 int W_BestWeapon(entity this, int except);
 
-void FireBullets(entity this, int shotcount, vector dir, vector spread);
+void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype);
 
-void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker);
+void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker, int deathtype);
 
 void ProximityGrenadeTouch(entity this, entity toucher);
 

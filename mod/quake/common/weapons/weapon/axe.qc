@@ -54,7 +54,7 @@ void W_FireAxe(entity this)
 		trace_ent.axhitme = true;
 		if(!MP_IMPEL)
 			SpawnBlood(org, '0 0 0', 20, trace_ent);
-		T_Damage(trace_ent, this, this, 20);
+		T_Damage(trace_ent, this, this, 20, WEP_AXE.m_id);
 	}
 	else
 	{	// hit wall

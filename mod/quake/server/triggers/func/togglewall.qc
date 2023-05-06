@@ -8,7 +8,7 @@ void blocker_touch(entity this, entity toucher)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + 0.5;
-	T_Damage(toucher, this, this, this.dmg);
+	T_Damage(toucher, this, this, this.dmg, DEATH_CRUSH.m_id);
 }
 
 void blocker_use(entity this, entity actor, entity trigger)

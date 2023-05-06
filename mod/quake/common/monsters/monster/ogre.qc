@@ -23,7 +23,7 @@ const int OGRE_NORMAL = BIT(2);
 
 void OgreGrenadeExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 40, NULL);
+	T_RadiusDamage(this, this.owner, 40, this.projectiledeathtype, NULL);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
@@ -62,6 +62,7 @@ void OgreFireGrenade(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = DEATH_MONSTER_OGRE.m_id;
 	missile.classname = "ogre_grenade";
 	if(MP_IMPEL)
 		missile.classname = "grenade"; // NOTE: impel takes priority over rogue here! TODO
@@ -120,7 +121,7 @@ void chainsaw(entity this, float side)
 		return;
 		
 	float ldmg =(random() + random() + random()) * 4;
-	T_Damage(this.enemy, this, this, ldmg);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_OGRE.m_id);
 	
 	if(side)
 	{
@@ -293,7 +294,7 @@ void ogre_paine3(entity this) { set_animofs(this, anim_ogre_paine, 3, ogre_paine
 void ogre_paine2(entity this) { set_animofs(this, anim_ogre_paine, 2, ogre_paine3); ai_pain(this, 10); }
 void ogre_paine1(entity this) { set_animofs(this, anim_ogre_paine, 1, ogre_paine2); }
 
-void ogre_pain(entity this, entity attacker, float damage)
+void ogre_pain(entity this, entity attacker, float damage, int deathtype)
 {
 // don't make multiple pain sounds right after each other
 	if(this.pain_finished > time)
@@ -394,7 +395,7 @@ void ogre_bdie3(entity this)
 void ogre_bdie2(entity this) { set_animofs(this, anim_ogre_bdeath, 2, ogre_bdie3); ai_forward(this, 5); }
 void ogre_bdie1(entity this) { set_animofs(this, anim_ogre_bdeath, 1, ogre_bdie2); }
 
-void ogre_die(entity this, entity inflictor, entity attacker)
+void ogre_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -80)
@@ -509,7 +510,6 @@ bool OgreCheckAttack(entity this)
 }
 
 string ogre_sight(entity this) { return "ogre/ogwake.wav"; }
-string ogre_deathmessage(entity this) { return "was destroyed by an Ogre"; }
 
 /*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush Boss Normal
 The Ogre
@@ -562,7 +562,6 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 
 	actor.sightsound = ogre_sight;
 	actor.checkattack = OgreCheckAttack;
-	actor.deathmessage = ogre_deathmessage;
 
     return true;
 }

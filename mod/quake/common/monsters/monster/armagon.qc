@@ -46,6 +46,7 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = DEATH_MONSTER_ARMAGON.m_id;
 
 // set missile speed
 	missile.velocity = vec * 1000;
@@ -487,7 +488,7 @@ void armagon_die4(entity this)
 }
 void armagon_die3(entity this) { set_animofs(this, anim_armagon_ldie, 1, armagon_die4); armagon_think(this); this.nextthink = time + 0.2; }
 void armagon_die2(entity this) { set_animofs(this, anim_armagon_tranl, 2, armagon_die3); armagon_think(this); this.nextthink = time + 0.2; }
-void armagon_die1(entity this, entity inflictor, entity attacker) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
+void armagon_die1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
 
 void armagon_body_explode2(entity this)
 {
@@ -534,7 +535,7 @@ void armagon_body_explode1(entity this)
 	}
 }
 
-void armagon_pain(entity this, entity attacker, float damage)
+void armagon_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.health <= 0)
 		return;		// allready dying, don't go into pain frame
@@ -584,7 +585,7 @@ void armagon_repulse_attack(entity this)
 			}
 			head = head.chain;
 		}
-		T_RadiusDamage(this, this, 60, this);
+		T_RadiusDamage(this, this, 60, DEATH_MONSTER_ARMAGON.m_id, this);
 		this.state = 0;
 		SUB_AttackFinished(this, 0.1);
 	}
@@ -680,7 +681,6 @@ bool ArmagonCheckAttack(entity this)
 }
 
 string armagon_sight(entity this) { return "armagon/sight.wav"; }
-string armagon_deathmessage(entity this) { return "was outgunned by Armagon"; }
 
 /*QUAKED monster_armagon (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 */
@@ -755,7 +755,6 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 
 	actor.checkattack = ArmagonCheckAttack;
 	actor.sightsound = armagon_sight;
-	actor.deathmessage = armagon_deathmessage;
 
     return true;
 }

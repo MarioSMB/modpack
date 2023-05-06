@@ -18,12 +18,12 @@ void decoy_stand1(entity this)
 		this.th_walk(this);
 }
 
-void decoy_pain(entity this, entity attacker, float damage)
+void decoy_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	decoy_stand1(this);
 }
 
-void decoy_die(entity this, entity inflictor, entity attacker)
+void decoy_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	decoy_stand1(this);
 }

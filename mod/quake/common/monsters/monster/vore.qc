@@ -94,7 +94,7 @@ void shal_death3(entity this) { set_animofs(this, anim_shal_death, 3, shal_death
 void shal_death2(entity this) { set_animofs(this, anim_shal_death, 2, shal_death3); }
 void shal_death1(entity this) { set_animofs(this, anim_shal_death, 1, shal_death2); }
 
-void shalrath_pain(entity this, entity attacker, float damage)
+void shalrath_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -104,7 +104,7 @@ void shalrath_pain(entity this, entity attacker, float damage)
 	this.pain_finished = time + 3;
 }
 
-void shalrath_die(entity this, entity inflictor, entity attacker)
+void shalrath_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -90)
@@ -144,6 +144,7 @@ void ShalMissile(entity this)
 	entity missile = spawn();
 	missile.classname = "vore_ball";
 	missile.owner = this;
+	missile.projectiledeathtype = DEATH_MONSTER_VORE.m_id;
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -182,8 +183,8 @@ void ShalMissileTouch(entity this, entity toucher)
 		return;		// don't explode on owner
 
 	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		T_Damage(toucher, this, this, 110);	
-	T_RadiusDamage(this, this.owner, 40, NULL);
+		T_Damage(toucher, this, this, 110, this.projectiledeathtype);	
+	T_RadiusDamage(this, this.owner, 40, this.projectiledeathtype, NULL);
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
@@ -196,7 +197,6 @@ void ShalMissileTouch(entity this, entity toucher)
 }
 
 string shalrath_sight(entity this) { return "shalrath/sight.wav"; }
-string shalrath_deathmessage(entity this) { return "was exploded by a Vore"; }
 
 /*QUAKED monster_shalrath(1 0 0)(-32 -32 -24)(32 32 48) Ambush
 */
@@ -234,7 +234,6 @@ METHOD(Vore, mr_setup, bool(Vore this, entity actor))
 	actor.th_missile = shal_attack1;
 
 	actor.sightsound = shalrath_sight;
-	actor.deathmessage = shalrath_deathmessage;
 
     return true;
 }

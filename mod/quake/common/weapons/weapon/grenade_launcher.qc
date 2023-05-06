@@ -3,7 +3,7 @@
 #ifdef SVQC
 void GrenadeExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 120, NULL);
+	T_RadiusDamage(this, this.owner, 120, this.projectiledeathtype, NULL);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
@@ -38,7 +38,7 @@ void W_FireGrenade(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-		
+	missile.projectiledeathtype = WEP_GRENADE_LAUNCHER.m_id;
 // set missile speed	
 
 	makevectors(this.v_angle);

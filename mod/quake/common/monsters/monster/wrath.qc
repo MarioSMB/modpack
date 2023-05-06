@@ -117,7 +117,7 @@ void wrath_pn_b03(entity this) { set_animofs(this, anim_wrath_wrthpb01, 3, wrath
 void wrath_pn_b02(entity this) { set_animofs(this, anim_wrath_wrthpb01, 2, wrath_pn_b03); }
 void wrath_pn_b01(entity this) { set_animofs(this, anim_wrath_wrthpb01, 1, wrath_pn_b02); }
 
-void wrath_pain(entity this, entity attacker, float damage)
+void wrath_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -146,7 +146,7 @@ void wrath_die15(entity this)
 	ThrowGib(this, "progs/wrthgib1.mdl", this.health);
 	ThrowGib(this, "progs/wrthgib2.mdl", this.health);
 	ThrowGib(this, "progs/wrthgib3.mdl", this.health);
-	T_RadiusDamage(this, this, 80, NULL);
+	T_RadiusDamage(this, this, 80, DEATH_MONSTER_WRATH.m_id, NULL);
 
 	this.origin = this.origin + '0 0 24';
 
@@ -161,7 +161,7 @@ void wrath_die07(entity this) { set_animofs(this, anim_wrath_wrthdt01, 7, wrath_
 void wrath_die05(entity this) { set_animofs(this, anim_wrath_wrthdt01, 5, wrath_die07); }
 void wrath_die04(entity this) { set_animofs(this, anim_wrath_wrthdt01, 4, wrath_die05); }
 void wrath_die03(entity this) { set_animofs(this, anim_wrath_wrthdt01, 3, wrath_die04); }
-void wrath_die02(entity this, entity inflictor, entity attacker)
+void wrath_die02(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	set_animofs(this, anim_wrath_wrthdt01, 2, wrath_die03);
 	_sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM);
@@ -215,6 +215,7 @@ void WrathMissile(entity this, int AttackNumber)
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = this.enemy;
+	missile.projectiledeathtype = DEATH_MONSTER_WRATH.m_id;
 	settouch(missile, WrathMissileTouch);
 	missile.nextthink = time + 0.1;
 	setthink(missile, WrathHome);
@@ -250,9 +251,9 @@ void WrathMissileTouch(entity this, entity toucher)
 	}
 
 	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		T_Damage(toucher, this, this, 110);	
+		T_Damage(toucher, this, this, 110, this.projectiledeathtype);	
 		
-	T_RadiusDamage(this, this.owner, 20, NULL);
+	T_RadiusDamage(this, this.owner, 20, this.projectiledeathtype, NULL);
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
@@ -265,7 +266,6 @@ void WrathMissileTouch(entity this, entity toucher)
 }
 
 string wrath_sight(entity this) { return "wrath/wsee.wav"; }
-string wrath_deathmessage(entity this) { return "was disintegrated by a Wrath"; }
 
 /*QUAKED monster_wrath (1 0 0) (-16 -16 -24) (16 16 32) Ambush
 */
@@ -302,7 +302,6 @@ METHOD(Wrath, mr_setup, bool(Wrath this, entity actor))
 	actor.th_die = wrath_die02;
 
 	actor.sightsound = wrath_sight;
-	actor.deathmessage = wrath_deathmessage;
 
     return true;
 }

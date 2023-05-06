@@ -33,6 +33,25 @@ string current_cdtrack;
 
 .string killstring;
 
+string AppendItemcodes(string s, entity player);
+
+void LogDeath(string mode, int deathtype, entity killer, entity killed);
+
+void Obituary_SpecialDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2);
+
+float w_deathtype;
+float Obituary_WeaponDeath(
+	entity notif_target,
+	float murder,
+	int deathtype,
+	string s1, string s2);
+
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype);
+
 .float spawn_deferred;
 
 .float field_generator_finished;
@@ -57,13 +76,11 @@ string get_playerhead(entity this);
 // prototypes
 void W_WeaponFrame(entity this);
 void W_SetCurrentAmmo(entity this);
-void player_pain(entity this, entity attacker, float damage);
+void player_pain(entity this, entity attacker, float damage, int deathtype);
 void player_stand1(entity this);
 void spawn_tfog(vector org);
 
 void centerprint_all(string s);
-
-void ClientObituary(entity targ, entity inflictor, entity attacker);
 
 void NextLevel();
 
@@ -76,9 +93,6 @@ void SendCDTrack(entity to, int numb);
 float intermission_exittime;
 
 const int NO_INTERMISSION = BIT(0);
-
-.string deathtype;
-.string(entity this) deathmessage;
 
 void(entity targ, entity attacker) dmatch_score;
 

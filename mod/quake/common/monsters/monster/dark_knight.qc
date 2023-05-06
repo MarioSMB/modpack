@@ -100,7 +100,7 @@ void dknight_startfire(entity this)
 	_sound(this, CHAN_WEAPON, "monsters/dknight/dklight.wav", 1, ATTN_NORM);
 	//te_lightning2(NULL, org, trace_endpos); // should be this
 	SendCSQCLightningBeam(org, trace_endpos);
-	LightningDamage(org, trace_endpos, this, 3);
+	LightningDamage(org, trace_endpos, this, 3, DEATH_MONSTER_DARK_KNIGHT.m_id);
 	this.oldorigin = this.origin;
 }
 
@@ -119,10 +119,10 @@ void dknight_shoot1(entity this) { set_anim(this, 44, dknight_shoot2); ai_face(t
 
 void dknight_runatk11(entity this) { set_anim(this, 27, dknight_run1); ai_charge(this, 10); }
 void dknight_runatk10(entity this) { set_anim(this, 26, dknight_runatk11); ai_charge_side(this); }
-void dknight_runatk9(entity this) { set_anim(this, 25, dknight_runatk10); ai_melee_side(this); }
-void dknight_runatk8(entity this) { set_anim(this, 24, dknight_runatk9); ai_melee_side(this); }
-void dknight_runatk7(entity this) { set_anim(this, 23, dknight_runatk8); ai_melee_side(this); }
-void dknight_runatk6(entity this) { set_anim(this, 22, dknight_runatk7); ai_melee_side(this); }
+void dknight_runatk9(entity this) { set_anim(this, 25, dknight_runatk10); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_runatk8(entity this) { set_anim(this, 24, dknight_runatk9); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_runatk7(entity this) { set_anim(this, 23, dknight_runatk8); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_runatk6(entity this) { set_anim(this, 22, dknight_runatk7); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
 void dknight_runatk5(entity this)
 {
 	set_anim(this, 21, dknight_runatk6);
@@ -131,7 +131,7 @@ void dknight_runatk5(entity this)
 		_sound(this, CHAN_BODY, "monsters/dknight/dkswzap1.wav", 1, ATTN_IDLE);
 	else
 		_sound(this, CHAN_BODY, "monsters/dknight/dkswzap2.wav", 1, ATTN_IDLE);
-	ai_melee_side(this);
+	ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id);
 }
 void dknight_runatk4(entity this) { set_anim(this, 20, dknight_runatk5); ai_charge_side(this); }
 void dknight_runatk3(entity this) { set_anim(this, 19, dknight_runatk4); ai_charge_side(this); }
@@ -140,9 +140,9 @@ void dknight_runatk1(entity this) { set_anim(this, 17, dknight_runatk2); ai_char
 
 void dknight_atk10(entity this) { set_anim(this, 52, dknight_run1); ai_charge(this, 5); }
 void dknight_atk9(entity this) { set_anim(this, 51, dknight_atk10); ai_charge(this, 1); }
-void dknight_atk8(entity this) { set_anim(this, 50, dknight_atk9); ai_charge(this, 3); ai_melee(this); }
-void dknight_atk7(entity this) { set_anim(this, 49, dknight_atk8); ai_charge(this, 1); ai_melee(this); }
-void dknight_atk6(entity this) { set_anim(this, 48, dknight_atk7); ai_charge(this, 4); ai_melee(this); }
+void dknight_atk8(entity this) { set_anim(this, 50, dknight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_atk7(entity this) { set_anim(this, 49, dknight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_atk6(entity this) { set_anim(this, 48, dknight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
 void dknight_atk5(entity this)
 {
 	set_anim(this, 47, dknight_atk6);
@@ -183,7 +183,7 @@ void dknight_painb3(entity this) { set_anim(this, 33, dknight_painb4); }
 void dknight_painb2(entity this) { set_anim(this, 32, dknight_painb3); ai_painforward(this, 3); }
 void dknight_painb1(entity this) { set_anim(this, 31, dknight_painb2); ai_painforward(this, 0); }
 
-void dknight_pain(entity this, entity attacker, float damage)
+void dknight_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	this.oldorigin = this.origin;
 	if(this.pain_finished > time)
@@ -228,7 +228,7 @@ void dknight_dieb3(entity this) { set_anim(this, 88, dknight_dieb4); this.solid 
 void dknight_dieb2(entity this) { set_anim(this, 87, dknight_dieb3); }
 void dknight_dieb1(entity this) { set_anim(this, 86, dknight_dieb2); }
 
-void dknight_die(entity this, entity inflictor, entity attacker)
+void dknight_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -40)
 	{
@@ -273,7 +273,6 @@ string dknight_sight(entity this)
 		default: case 2: return "monsters/dknight/dksight3.wav";
 	}
 }
-string dknight_deathmessage(entity this) { return "was fried by a Dark Knight"; }
 
 spawnfunc(monster_dknight)
 {
@@ -314,7 +313,6 @@ METHOD(DarkKnight, mr_setup, bool(DarkKnight this, entity actor))
 	actor.th_missile = dknightattack;
 
 	actor.sightsound = dknight_sight;
-	actor.deathmessage = dknight_deathmessage;
 
     return true;
 }

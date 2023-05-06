@@ -75,11 +75,11 @@ void knight_run1(entity this)
 
 void knight_runatk11(entity this) { set_animofs(this, anim_knight_runattack, 11, knight_run1); ai_charge(this, 10); }
 void knight_runatk10(entity this) { set_animofs(this, anim_knight_runattack, 10, knight_runatk11); ai_charge_side(this); }
-void knight_runatk9(entity this) { set_animofs(this, anim_knight_runattack, 9, knight_runatk10); ai_melee_side(this); }
-void knight_runatk8(entity this) { set_animofs(this, anim_knight_runattack, 8, knight_runatk9); ai_melee_side(this); }
-void knight_runatk7(entity this) { set_animofs(this, anim_knight_runattack, 7, knight_runatk8); ai_melee_side(this); }
-void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_side(this); }
-void knight_runatk5(entity this) { set_animofs(this, anim_knight_runattack, 5, knight_runatk6); ai_melee_side(this); }
+void knight_runatk9(entity this) { set_animofs(this, anim_knight_runattack, 9, knight_runatk10); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_runatk8(entity this) { set_animofs(this, anim_knight_runattack, 8, knight_runatk9); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_runatk7(entity this) { set_animofs(this, anim_knight_runattack, 7, knight_runatk8); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_runatk5(entity this) { set_animofs(this, anim_knight_runattack, 5, knight_runatk6); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id); }
 void knight_runatk4(entity this) { set_animofs(this, anim_knight_runattack, 4, knight_runatk5); ai_charge_side(this); }
 void knight_runatk3(entity this) { set_animofs(this, anim_knight_runattack, 3, knight_runatk4); ai_charge_side(this); }
 void knight_runatk2(entity this) { set_animofs(this, anim_knight_runattack, 2, knight_runatk3); ai_charge_side(this); }
@@ -95,9 +95,9 @@ void knight_runatk1(entity this)
 
 void knight_atk10(entity this) { set_animofs(this, anim_knight_attackb, 10, knight_run1); ai_charge(this, 5); }
 void knight_atk9(entity this) { set_animofs(this, anim_knight_attackb, 9, knight_atk10); ai_charge(this, 1); }
-void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee(this); }
-void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee(this); }
-void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee(this); }
+void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id); }
+void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id); }
 void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); }
 void knight_atk4(entity this) { set_animofs(this, anim_knight_attackb, 4, knight_atk5); ai_charge(this, 0); }
 void knight_atk3(entity this) { set_animofs(this, anim_knight_attackb, 3, knight_atk4); ai_charge(this, 4); }
@@ -135,7 +135,7 @@ void knight_painb3(entity this) { set_animofs(this, anim_knight_painb, 3, knight
 void knight_painb2(entity this) { set_animofs(this, anim_knight_painb, 2, knight_painb3); ai_painforward(this, 3); }
 void knight_painb1(entity this) { set_animofs(this, anim_knight_painb, 1, knight_painb2); ai_painforward(this, 0); }
 
-void knight_pain(entity this, entity attacker, float damage)
+void knight_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -216,7 +216,7 @@ void knight_dieb2(entity this) { set_animofs(this, anim_knight_deathb, 2, knight
 void knight_dieb1(entity this) { set_animofs(this, anim_knight_deathb, 1, knight_dieb2); }
 
 
-void knight_die(entity this, entity inflictor, entity attacker)
+void knight_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
 	if(this.health < -40)
@@ -280,7 +280,6 @@ void knight_pause1(entity this)
 }
 
 string knight_sight(entity this) { if(!MP_ROGUE || !this.skin) return "knight/ksight.wav"; else return string_null; }
-string knight_deathmessage(entity this) { return "was slashed by a Knight"; }
 
 /*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush Statue
 
@@ -347,7 +346,6 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	}
 
 	actor.sightsound = knight_sight;
-	actor.deathmessage = knight_deathmessage;
 
     return true;
 }

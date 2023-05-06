@@ -33,7 +33,7 @@ void hurt_touch(entity this, entity toucher)
 		if(MP_MG && (this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
 			return;
 		this.solid = SOLID_NOT;
-		T_Damage(toucher, this, this, this.dmg);
+		T_Damage(toucher, this, this, this.dmg, DEATH_VOID.m_id);
 		setthink(this, hurt_on);
 		if(MP_MG)
 			this.nextthink = time + this.wait;

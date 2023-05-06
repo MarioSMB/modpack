@@ -8,7 +8,7 @@ void train_blocked(entity this, entity blocker)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + 0.5;
-	T_Damage(blocker, this, this, this.dmg);
+	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 }
 void train_use(entity this, entity actor, entity trigger)
 {

@@ -126,7 +126,7 @@ void throw_debris(entity this)
 	setsize(missile, '0 0 0', '0 0 0');
 }
 
-void wall_die(entity this, entity inflictor, entity attacker)
+void wall_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	entity targ = find(NULL, targetname, this.target);
 	if(targ.classname == "light")
@@ -196,12 +196,12 @@ void wall_die(entity this, entity inflictor, entity attacker)
 
 void wall_diethink(entity this)
 {
-	wall_die(this, NULL, NULL);
+	wall_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 }
 
 void wall_dieuse(entity this, entity actor, entity trigger)
 {
-	wall_die(this, NULL, NULL);
+	wall_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 }
 
 void wall_touch(entity this, entity toucher)

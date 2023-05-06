@@ -771,7 +771,7 @@ void player_hampain3(entity this) { set_anim(this, 20, player_hampain4); }
 void player_hampain2(entity this) { set_anim(this, 19, player_hampain3); }
 void player_hampain1(entity this, entity attacker) { set_anim(this, 18, player_hampain2); PainSound(this, attacker); this.weaponentity.m_frame = 0; }
 
-void player_pain(entity this, entity attacker, float damage)
+void player_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.weaponentity.m_frame)
 		return;
@@ -1131,9 +1131,9 @@ void GibPlayer(entity this, entity attacker)
 }
 
 void DropRune(entity this);
-void PlayerDie(entity this, entity inflictor, entity attacker)
+void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	ClientObituary(this, inflictor, attacker); // tell the world what happened
+	Obituary(attacker, inflictor, this, deathtype);
 
 	this.powerups &= ~(POWERUP_INVISIBILITY | POWERUP_INVULNERABILITY | POWERUP_SUIT | POWERUP_QUAD);
 	this.invisible_finished = 0;	// don't die as eyes
@@ -1342,7 +1342,7 @@ void player_touch(entity this, entity toucher)
 			}
 
 			if(doDamage)
-				T_Damage(toucher, this.shield_entity, this.shield_entity, 15);
+				T_Damage(toucher, this.shield_entity, this.shield_entity, 15, DEATH_SHIELD.m_id);
 
 //			this.shield_death_time = time + 0.5;
 		}

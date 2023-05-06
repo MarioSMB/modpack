@@ -27,9 +27,9 @@ void sword_run1(entity this)
 void sword_atk10(entity this) { set_animofs(this, anim_sword_attackb1, 10, sword_run1); ai_charge(this, 14); }
 void sword_atk9(entity this) { set_animofs(this, anim_sword_attackb1, 9, sword_atk10); ai_charge(this, 14); }
 void sword_atk8(entity this) { set_animofs(this, anim_sword_attackb1, 8, sword_atk9); ai_charge(this, 14); }
-void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this); }
-void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this); }
-void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this); }
+void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
+void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
+void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
 void sword_atk4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_atk5); ai_charge(this, 14); }
 void sword_atk3(entity this) { set_animofs(this, anim_sword_attackb1, 3, sword_atk4); ai_charge(this, 14); }
 void sword_atk2(entity this) { set_animofs(this, anim_sword_attackb1, 2, sword_atk3); ai_charge(this, 14); }
@@ -73,7 +73,7 @@ void sword_dieb3(entity this) { set_animofs(this, anim_sword_deathb1, 3, sword_d
 void sword_dieb2(entity this) { set_animofs(this, anim_sword_deathb1, 2, sword_dieb3); }
 void sword_dieb1(entity this) { set_animofs(this, anim_sword_deathb1, 1, sword_dieb2); }
 
-void sword_die(entity this, entity inflictor, entity attacker)
+void sword_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // regular death
 	this.effects = 0;
@@ -91,7 +91,7 @@ void sword_pause(entity this)
 	this.delay = 0;
 }
 
-void sword_pain(entity this, entity attacker, float damage)
+void sword_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	this.th_run = sword_run1; 
 	setthink(this, sword_run1);
@@ -99,8 +99,6 @@ void sword_pain(entity this, entity attacker, float damage)
 	this.delay = 0;
 	this.th_pain = func_null;
 }
-
-string sword_deathmessage(entity this) { return "was slit open by a Phantom Swordsman"; }
 
 /*QUAKED monster_sword (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 The Invisible Swordsman
@@ -134,8 +132,6 @@ METHOD(PhantomSwordsman, mr_setup, bool(PhantomSwordsman this, entity actor))
 	actor.th_melee = sword_atk1;
 	actor.th_die = sword_die;
 	actor.th_pain = sword_pain;
-
-	actor.deathmessage = sword_deathmessage;
 
     return true;
 }

@@ -15,7 +15,7 @@ void W_FireSuperShotgun(entity this)
 
 	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
 	vector dir = qc_aim(this, 100000);
-	FireBullets(this, 14, dir, '0.14 0.08 0');
+	FireBullets(this, 14, dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
 }
 
 METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor))

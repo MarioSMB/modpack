@@ -31,14 +31,14 @@ void tdeath_touch(entity this, entity toucher)
 			this.classname = "teledeath2";
 		if(!IS_PLAYER(this.owner))
 		{	// other monsters explode themselves
-			T_Damage(this.owner, this, this, 50000);
+			T_Damage(this.owner, this, this, 50000, DEATH_TELEFRAG.m_id);
 			return;
 		}
 		
 	}
 
 	if(toucher.health)
-		T_Damage(toucher, this, this, 50000);
+		T_Damage(toucher, this, this, 50000, DEATH_TELEFRAG.m_id);
 }
 
 

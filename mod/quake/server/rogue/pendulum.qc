@@ -354,7 +354,7 @@ void pend_touch(entity this, entity toucher)
 		this.attack_finished = time + 1;
 	}
 	
-	T_Damage(toucher, this, this, this.currentammo);
+	T_Damage(toucher, this, this, this.currentammo, DEATH_TRAP.m_id);
 
 	// Fling the impactee in the direction the blade was swinging.	
 	if(this.spawnflags & PEND_Y)
