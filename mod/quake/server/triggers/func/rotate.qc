@@ -654,8 +654,6 @@ spawnfunc(func_rotate_train)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target || this.target == "")
@@ -721,12 +719,12 @@ void movewall_touch(entity this, entity toucher)
 	if(time < this.owner.attack_finished)
 		return;
 
-	if( this.dmg )
+	if(this.dmg)
 	{
 		T_Damage(toucher, this, this.owner, this.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
 	}
-	else if( this.owner.dmg )
+	else if(this.owner.dmg)
 	{
 		T_Damage(toucher, this, this.owner, this.owner.dmg, DEATH_CRUSH.m_id);
 		this.owner.attack_finished = time + 0.5;
@@ -755,12 +753,6 @@ void movewall_blocked(entity this, entity blocker)
 	}
 }
 
-void movewall_think(entity this)
-{
-	this.ltime = time;
-	this.nextthink = time + 0.02;
-}
-
 /*QUAKED func_movewall (0 .5 .8) ? VISIBLE TOUCH NONBLOCKING
 Used to emulate collision on rotating objects.
 
@@ -776,24 +768,22 @@ spawnfunc(func_movewall)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	this.angles = '0 0 0';
-	set_movetype(this, MOVETYPE_PUSH);
+	if (!InitMovingBrushTrigger(this))
+		return;
+
 	if(this.spawnflags & NONBLOCKING)
-		this.solid = SOLID_NOT;
+		set_movetype(this, MOVETYPE_FAKEPUSH);
 	else
-	{
-		this.solid = SOLID_BSP;
 		setblocked(this, movewall_blocked);
-	}
+
 	if(this.spawnflags & TOUCH)
 		settouch(this, movewall_touch);
 
-	_setmodel(this,this.model);
 	if(!(this.spawnflags & VISIBLE))
-		this.model = string_null;
-	setthink(this, movewall_think);
-	this.nextthink = time + 0.02;
-	this.ltime = time;
+		this.effects |= EF_NODRAW;
+
+	this.nextthink = this.ltime + 999999999;
+	setthink(this, SUB_NullThink); // for PushMove
 }
 
 /*QUAKED rotate_object (0 .5 .8) ?
@@ -804,10 +794,10 @@ spawnfunc(rotate_object)
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
 	this.classname = "rotate_object";
-	this.solid = SOLID_BSP; // TODO: this was SOLID_NOT, why did it work in Quake?
+	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NONE);
-	_setmodel (this,this.model);
-	setsize( this, this.mins, this.maxs );
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
 	setthink(this, func_null);
 	this.nextthink = 0;
 }
