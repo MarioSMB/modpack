@@ -8,7 +8,7 @@ MODEL(MON_GREMLIN_HEAD, "progs/h_grem.mdl");
 #endif
 
 CLASS(Gremlin, Monster)
-    ATTRIB(Gremlin, spawnflags, int, 0);
+    ATTRIB(Gremlin, spawnflags, int, MON_FLAG_HIPNOTIC);
     ATTRIB(Gremlin, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Gremlin, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC

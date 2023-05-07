@@ -7,7 +7,7 @@ MODEL(MON_DRAGON, "progs/dragon.mdl");
 #endif
 
 CLASS(Dragon, Monster)
-    ATTRIB(Dragon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN);
+    ATTRIB(Dragon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_ROGUE);
     ATTRIB(Dragon, m_mins, vector, '-32 -32 -24');
     ATTRIB(Dragon, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC

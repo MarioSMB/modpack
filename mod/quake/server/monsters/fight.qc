@@ -100,7 +100,7 @@ bool CheckAttack(entity this)
 	if(random() < chance)
 	{
 		this.th_missile(this);
-		SUB_AttackFinished(this, 2 * random());
+		this.attack_finished = time + (2 * random());
 		return true;
 	}
 

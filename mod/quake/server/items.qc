@@ -1716,6 +1716,81 @@ spawnfunc(misc_rune_indicator)
 	}
 }
 
+// hacked in fallback method for spawning a monster with the horn of conjuring
+// used for horns that somehow spawn without a target
+void horn_spawnmonster(entity item, entity actor)
+{
+	RandomSelection_Init();
+	FOREACH(Monsters, it != MON_Null,
+	{
+		if(!MP_HIPNOTIC && (it.spawnflags & MON_FLAG_HIPNOTIC))
+			continue;
+		if(!MP_ROGUE && (it.spawnflags & MON_FLAG_ROGUE))
+			continue;
+		if(!MP_IMPEL && (it.spawnflags & MON_FLAG_IMPEL))
+			continue;
+		if((it.spawnflags & MONSTER_TYPE_SWIM) && actor.waterlevel < 1)
+			continue;
+		if(it.spawnflags & MONSTER_TYPE_DECOY)
+			continue; // no decoys please!
+		if((it.spawnflags & MONSTER_TYPE_BOSS) || (it.spawnflags & MON_FLAG_STATIONARY) || (it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_UNDEAD))
+			continue;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	Monster mon = RandomSelection_chosen_ent;
+	if(!mon)
+		return;
+
+	entity monster = new(monster);
+	monster.monsterdef = mon;
+	monster.flags |= FL_MONSTER;
+	monster.owner = actor;
+	monster.spawnfunc_checked = true;
+	setmodel(monster, mon.m_model);
+	setsize(monster, mon.m_mins, mon.m_maxs);
+	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
+	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
+	monster.solid = SOLID_SLIDEBOX;
+	set_movetype(monster, MOVETYPE_STEP);
+
+	if(!(monster.flags & FL_SWIM))
+	{
+		IL_PUSH(g_damagedbycontents, monster);
+		monster.damagedbycontents	= true;
+	}
+
+	if(!mon.mr_setup(mon, monster))
+	{
+		delete(monster);
+		return;
+	}
+	monster.health = max(monster.health, 1000);
+	monster.charmer = actor;
+	monster.charmed = 1;
+	monster.angles = '0 0 0';
+	monster.angles_y = actor.angles_y;
+	vector org = item.origin;
+	org.z += -mon.m_mins.z; // offset based on size
+	setorigin(monster, org + '0 0 1');
+	setcefc(monster, monster_customize);
+
+	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
+		droptofloor(monster);
+	
+	tracebox(monster.origin, monster.mins, monster.maxs, monster.origin, MOVE_NOMONSTERS, monster);
+	if(trace_startsolid)
+		LOG_DEBUG("Monster in wall at ", vtos(monster.origin), "\n");
+	monster.takedamage = DAMAGE_AIM;
+	monster.ideal_yaw = monster.angles * '0 1 0';
+	if(!monster.yaw_speed)
+		monster.yaw_speed = 20;
+	monster.view_ofs = '0 0 25';
+	monster.use = monster_use;
+	monster.effects |= EF_DIMLIGHT;
+	setthink(monster, monster_start_go);
+	monster.nextthink = time + 0.1;
+}
+
 /*
 ===============================================================================
 
@@ -1747,9 +1822,8 @@ void powerup_touch(entity this, entity toucher)
 		}
 		else
 		{
-			if((this.classname == "item_artifact_invulnerability") ||
-				(this.classname == "item_artifact_invisibility"))
-				this.nextthink = time + 60*5;
+			if((this.powerups & POWERUP_INVISIBILITY) || (this.powerups & POWERUP_INVISIBILITY))
+				this.nextthink = time + 60 * 5;
 			else
 				this.nextthink = time + 60;
 			
@@ -1763,66 +1837,76 @@ void powerup_touch(entity this, entity toucher)
 	}
 
 	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
-	toucher.powerups |= this.powerups;
+	if(!(this.powerups & POWERUP_HORN_OF_CONJURING))
+		toucher.powerups |= this.powerups;
 	this.model = string_null;
 
-	if(MP_MG)
-		SUB_UseTargets(this, toucher, NULL);
+	SUB_UseTargets(this, toucher, NULL);
+
+	float powerups_maxtime = 30;
+	if(MP_MG && horde_ent)
+		powerups_maxtime = 5;
 
 // do the apropriate action
-	bool cname;
-
-	cname = ((MP_ROGUE) ? (this.netname == "Biosuit") : (this.classname == "item_artifact_envirosuit"));
-	if(cname)
+	if(this.powerups & POWERUP_SUIT)
 	{
 		toucher.rad_time = 1;
-		toucher.radsuit_finished = time + 30;
+		toucher.radsuit_finished = time + 30; // give wetsuits full duration
 		if(MP_MG && coop) // Respawn biosuit in coop, since it might be required for progression
 		{
-			this.target = string_null;
+			this.target = string_null; // but don't fire off targets again
 			setthink(this, SUB_regen);
 			this.nextthink = time + 2.5;
 		}
 	}
 
-	cname = ((MP_ROGUE) ? (this.netname == "Pentagram of Protection") : (this.classname == "item_artifact_invulnerability"));
-	if(cname)
+	if(this.powerups & POWERUP_INVULNERABILITY)
 	{
 		toucher.invincible_time = 1;
-		// Yoder Sept24 2021 Horde Merge
-		if(MP_MG && horde_ent)
-			toucher.invincible_finished = time + 5;
-		else
-			toucher.invincible_finished = time + 30;
+		toucher.invincible_finished = time + powerups_maxtime;
 	}
 
-	cname = ((MP_ROGUE) ? (this.netname == "Ring of Shadows") : (this.classname == "item_artifact_invisibility"));
-	if(cname)
+	if(this.powerups & POWERUP_INVISIBILITY)
 	{
 		toucher.invisible_time = 1;
-		toucher.invisible_finished = time + 30;
+		toucher.invisible_finished = time + powerups_maxtime;
 	}
 
-	cname = ((MP_ROGUE) ? (this.netname == "Quad Damage") : (this.classname == "item_artifact_super_damage"));
-	if(cname)
+	if(this.powerups & POWERUP_QUAD)
 	{
 		toucher.super_time = 1;
-		// Yoder Sept24 2021 Horde Merge
-		if(MP_MG && horde_ent)
-			toucher.super_damage_finished = time + 5;
-		else
-			toucher.super_damage_finished = time + 30;
+		toucher.super_damage_finished = time + powerups_maxtime;
 	}
-	if(this.netname == "item_artifact_field_generator")
+
+	if(this.powerups & POWERUP_FIELDGEN)
 	{
 		toucher.field_generator_health = this.health;
 		toucher.field_generator_time = -150;
-		toucher.field_generator_finished = time + 30;
+		toucher.field_generator_finished = time + powerups_maxtime;
 	}
-	if(!MP_MG)
-		SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+
+	if(this.powerups & POWERUP_WETSUIT)
+	{
+		toucher.wetsuit_time = 1;
+		toucher.wetsuit_finished = time + 30; // give wetsuits full duration
+	}
+
+	if(this.powerups & POWERUP_EMPATHY_SHIELDS)
+	{
+		toucher.empathy_time = 1;
+		toucher.empathy_finished = time + powerups_maxtime;
+	}
+
+	if(this.powerups & POWERUP_HORN_OF_CONJURING)
+	{
+		// horns with a target will use the regular func_spawn method
+		if(!this.target || this.target == "")
+		{
+			// otherwise attempt to spawn in a random monster
+			horn_spawnmonster(this, toucher);
+		}
+	}
 }
 
 

@@ -225,13 +225,7 @@ void dog_pain(entity this, entity attacker, float damage, int deathtype)
 void dog_die9(entity this)
 {
 	set_animofs(this, anim_dog_death, 9, dog_die9);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void dog_die8(entity this) { set_animofs(this, anim_dog_death, 8, dog_die9); }
 void dog_die7(entity this) { set_animofs(this, anim_dog_death, 7, dog_die8); }
@@ -245,13 +239,7 @@ void dog_die1(entity this) { set_animofs(this, anim_dog_death, 1, dog_die2); }
 void dog_dieb9(entity this)
 {
 	set_animofs(this, anim_dog_deathb, 9, dog_dieb9);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void dog_dieb8(entity this) { set_animofs(this, anim_dog_deathb, 8, dog_dieb9); }
 void dog_dieb7(entity this) { set_animofs(this, anim_dog_deathb, 7, dog_dieb8); }

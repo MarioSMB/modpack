@@ -7,7 +7,7 @@ MODEL(MON_WRATH, "progs/wrath.mdl");
 #endif
 
 CLASS(Wrath, Monster)
-    ATTRIB(Wrath, spawnflags, int, 0);
+    ATTRIB(Wrath, spawnflags, int, MON_FLAG_ROGUE);
     ATTRIB(Wrath, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Wrath, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC

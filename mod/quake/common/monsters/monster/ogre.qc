@@ -334,13 +334,7 @@ void ogre_pain(entity this, entity attacker, float damage, int deathtype)
 void ogre_die14(entity this)
 {
 	set_animofs(this, anim_ogre_death, 14, ogre_die14);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void ogre_die13(entity this) { set_animofs(this, anim_ogre_death, 13, ogre_die14); }
 void ogre_die12(entity this) { set_animofs(this, anim_ogre_death, 12, ogre_die13); }
@@ -368,13 +362,7 @@ void ogre_die1(entity this) { set_animofs(this, anim_ogre_death, 1, ogre_die2); 
 void ogre_bdie10(entity this)
 {
 	set_animofs(this, anim_ogre_bdeath, 10, ogre_bdie10);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void ogre_bdie9(entity this) { set_animofs(this, anim_ogre_bdeath, 9, ogre_bdie10); }
 void ogre_bdie8(entity this) { set_animofs(this, anim_ogre_bdeath, 8, ogre_bdie9); }
@@ -505,7 +493,7 @@ bool OgreCheckAttack(entity this)
 	float extra_delay = 2;
 	if(MP_IMPEL)
 		extra_delay = 3;
-	SUB_AttackFinished(this, 1 + extra_delay*random());
+	this.attack_finished = time + (1 * extra_delay * random());
 	return true;
 }
 

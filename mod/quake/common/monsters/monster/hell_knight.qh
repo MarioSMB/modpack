@@ -15,7 +15,7 @@ CLASS(HellKnight, Monster)
     ATTRIB(HellKnight, m_model, Model, MDL_MON_HELL_KNIGHT);
     ATTRIB(HellKnight, m_model_head, Model, MDL_MON_HELL_KNIGHT_HEAD);
 #endif
-    ATTRIB(HellKnight, netname, string, "hellknight");
+    ATTRIB(HellKnight, netname, string, "hknight");
     ATTRIB(HellKnight, monster_name, string, _("Hell Knight"));
 ENDCLASS(HellKnight)
 

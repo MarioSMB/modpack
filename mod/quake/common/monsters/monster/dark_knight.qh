@@ -8,14 +8,14 @@ MODEL(MON_DARK_KNIGHT_HEAD, "progs/h_dkni.mdl");
 #endif
 
 CLASS(DarkKnight, Monster)
-    ATTRIB(DarkKnight, spawnflags, int, MON_FLAG_METAL);
+    ATTRIB(DarkKnight, spawnflags, int, MON_FLAG_METAL | MON_FLAG_IMPEL);
     ATTRIB(DarkKnight, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(DarkKnight, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC
     ATTRIB(DarkKnight, m_model, Model, MDL_MON_DARK_KNIGHT);
     ATTRIB(DarkKnight, m_model_head, Model, MDL_MON_DARK_KNIGHT_HEAD);
 #endif
-    ATTRIB(DarkKnight, netname, string, "dark_knight");
+    ATTRIB(DarkKnight, netname, string, "dknight");
     ATTRIB(DarkKnight, monster_name, string, _("Dark Knight"));
 ENDCLASS(DarkKnight)
 

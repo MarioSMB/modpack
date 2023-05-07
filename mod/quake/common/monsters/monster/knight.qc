@@ -175,13 +175,7 @@ void knight_bow1(entity this) { set_animofs(this, anim_knight_kneel, 1, knight_b
 void knight_die10(entity this)
 {
 	set_animofs(this, anim_knight_death, 10, knight_die10);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void knight_die9(entity this) { set_animofs(this, anim_knight_death, 9, knight_die10); }
 void knight_die8(entity this) { set_animofs(this, anim_knight_death, 8, knight_die9); }
@@ -196,13 +190,7 @@ void knight_die1(entity this) { set_animofs(this, anim_knight_death, 1, knight_d
 void knight_dieb11(entity this)
 {
 	set_animofs(this, anim_knight_deathb, 11, knight_dieb11);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void knight_dieb10(entity this) { set_animofs(this, anim_knight_deathb, 10, knight_dieb11); }
 void knight_dieb9(entity this) { set_animofs(this, anim_knight_deathb, 9, knight_dieb10); }

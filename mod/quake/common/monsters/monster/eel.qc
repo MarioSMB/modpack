@@ -135,7 +135,7 @@ void eel_attack3(entity this) { set_animofs(this, anim_eel_eelswim1, 3, eel_atta
 void eel_attack2(entity this) { set_animofs(this, anim_eel_eelswim1, 2, eel_attack3); ai_charge(this, 8); eel_pitch_change(this);}
 void eel_attack1(entity this) { set_animofs(this, anim_eel_eelswim1, 1, eel_attack2); ai_charge(this, 8); eel_pitch_change(this);}
 
-void eel_death16(entity this) { set_animofs(this, anim_eel_eeldth1, 10, eel_death16); this.solid = SOLID_NOT; }
+void eel_death16(entity this) { set_animofs(this, anim_eel_eeldth1, 10, eel_death16); this.solid = SOLID_NOT; CorpseThink(this); }
 void eel_death15(entity this) { set_animofs(this, anim_eel_eeldth1, 9, eel_death16); droptofloor(this); }
 void eel_death14(entity this) { set_animofs(this, anim_eel_eeldth1, 8, eel_death15); }
 void eel_death13(entity this) { set_animofs(this, anim_eel_eeldth1, 7, eel_death14); }

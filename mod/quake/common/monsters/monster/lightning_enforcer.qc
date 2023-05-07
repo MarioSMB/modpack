@@ -53,7 +53,6 @@ void lenf_atk14(entity this)
 {
 	set_anim(this, 40, lenf_run1);
 	ai_face(this);
-	SUB_CheckRefire(this, lenf_atk1);
 }
 void lenf_atk13(entity this) { set_anim(this, 39, lenf_atk14); ai_face(this); }
 void lenf_atk12(entity this) { set_anim(this, 38, lenf_atk13); ai_face(this); }

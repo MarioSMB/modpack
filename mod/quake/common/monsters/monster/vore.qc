@@ -79,13 +79,7 @@ void shal_pain1(entity this) { set_animofs(this, anim_shal_pain, 1, shal_pain2);
 void shal_death7(entity this)
 {
 	set_animofs(this, anim_shal_death, 7, shal_death7);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void shal_death6(entity this) { set_animofs(this, anim_shal_death, 6, shal_death7); }
 void shal_death5(entity this) { set_animofs(this, anim_shal_death, 5, shal_death6); }

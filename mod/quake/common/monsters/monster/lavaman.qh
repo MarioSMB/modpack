@@ -7,7 +7,7 @@ MODEL(MON_LAVAMAN, "progs/boss.mdl");
 #endif
 
 CLASS(LavaMan, Monster)
-    ATTRIB(LavaMan, spawnflags, int, MON_FLAG_HIDDEN | MON_FLAG_STATIONARY);
+    ATTRIB(LavaMan, spawnflags, int, MON_FLAG_HIDDEN | MON_FLAG_STATIONARY | MON_FLAG_ROGUE);
     ATTRIB(LavaMan, m_mins, vector, '-32 -32 -24');
     ATTRIB(LavaMan, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC

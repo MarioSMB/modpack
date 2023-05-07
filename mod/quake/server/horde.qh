@@ -18,6 +18,15 @@ void SpawnAmmo(entity this);
 .bool army; // Spawn Army? True/fallse
 bool CheckBlockedSpawn(entity spawnpoint);
 
+// spawnflags for info_horde_squad entities
+const int HORDE_FODDER = BIT(0);
+const int HORDE_ARMY = BIT(1);
+const int HORDE_ELITE = BIT(2);
+const int HORDE_BOSS = BIT(3);
+const int HORDE_EASY = BIT(4);
+const int HORDE_HARD = BIT(5);
+const int HORDE_FINALBOSS = BIT(6); // unique to map entities, allows spawning a special monster on wave 9
+
 bool key_spawned; // true/false, determine if key has already been spawned, prevent dupes.
 
 const float SPAWN_RESET_TIME = 5; // amount of time that a spawn point is considered occupied and not valid for use
@@ -41,3 +50,6 @@ string CATEGORY_MONSTER = "monster";
 
 // Yoder Sept24, Horde Merge
 void PrecacheMonsters();
+
+IntrusiveList g_squads;
+STATIC_INIT(g_squads) { g_squads = IL_NEW(); }

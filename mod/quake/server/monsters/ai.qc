@@ -892,7 +892,7 @@ void HuntTarget(entity this)
 	setthink(this, this.th_run);
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
 	this.nextthink = time + 0.1;
-	SUB_AttackFinished(this, 1);	// wait a while before first attack
+	this.attack_finished = time + 1; // initial delay for attacking
 }
 
 void SightSound(entity this)
@@ -1217,7 +1217,10 @@ void ai_stand(entity this)
 		return;
 
 	if(this.pausetime != -1 && time > this.pausetime)
-		this.th_walk(this);
+	{
+		setthink(this, this.th_walk);
+		this.nextthink = time + 0.1;
+	}
 }
 
 /*

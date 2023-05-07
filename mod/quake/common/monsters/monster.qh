@@ -1,6 +1,9 @@
 #pragma once
 
 // special spawn flags
+const int MON_FLAG_HIPNOTIC = BIT(1);
+const int MON_FLAG_ROGUE = BIT(2);
+const int MON_FLAG_IMPEL = BIT(3);
 const int MONSTER_TYPE_FLY = BIT(5);
 const int MONSTER_TYPE_SWIM = BIT(6);
 const int MONSTER_TYPE_BOSS = BIT(7);

@@ -861,6 +861,22 @@ void GetKey(entity this)
 	l.nextthink = time;
 }
 
+vector Horde_GetOffset(int number)
+{
+	switch(number)
+	{
+		case 0: return '40 0 0';
+		case 1: return '0 -40 0';
+		case 2: return '0 40 0';
+		case 3: return '-40 0 0';
+		case 4: return '40 40 0';
+		case 5: return '40 -40 0';
+		case 6: return '-40 40 0';
+		case 7: return '-40 -40 0';
+	}
+	return '0 0 0';
+}
+
 //============================================================================
 /* 
 SpawnSquad2
@@ -869,126 +885,33 @@ Yoder FEB02 2022
 */
 void SpawnSquad2(entity this, string name, vector org, vector temp_angles)
 {
-	if(name == "3 grunt")
+	if(!name || name == "")
 	{
-		if(autocvar_skill > 0)
+		LOG_DEBUG("ERROR: empty squad name!");
+		return;
+	}
+	int monstercount = 0;
+	int argc = tokenize_console(name);
+	for(int j = 0; j < argc; ++j)
+	{
+		int spawncount = stof(argv(j));
+		if(spawncount == 0)
+			continue; // not a number
+		string next = argv(j + 1);
+		Monster mon = Monster_from_name(next);
+		if(mon == MON_Null)
 		{
-			SpawnMonster(this, MON_GRUNT, org + '0 -40 0', temp_angles);
-			SpawnMonster(this, MON_GRUNT, org + '40 40 0', temp_angles);
-			SpawnMonster(this, MON_GRUNT, org + '-40 40 0', temp_angles);
+			LOG_DEBUG("ERROR: invalid squad monster name ", next);
+			j += 1;
+			continue; // continue though just incase it was a misnamed monster
 		}
-		else
+		for(int moncnt = 0; moncnt < spawncount; ++moncnt)
 		{
-			SpawnMonster(this, MON_GRUNT, org + '-40 0 0', temp_angles);
-			SpawnMonster(this, MON_GRUNT, org + '40 0 0', temp_angles);
+			SpawnMonster(this, mon, org + Horde_GetOffset(monstercount), temp_angles);
+			monstercount += 1; // for offsets
 		}
+		j += 1; // skip the next token
 	}
-	else if(name == "2 grunt 1 dog")
-	{
-		SpawnMonster(this, MON_ROTTWEILER, org + '44 0 0', temp_angles);
-		SpawnMonster(this, MON_GRUNT, org + '-40 -40 0', temp_angles);
-		SpawnMonster(this, MON_GRUNT, org + '-40 40 0', temp_angles);
-	}
-	else if(name == "2 dog")
-	{
-		if(autocvar_skill > 0)
-		{
-			SpawnMonster(this, MON_ROTTWEILER, org + '-0 -44 0', temp_angles);
-			SpawnMonster(this, MON_ROTTWEILER, org + '0 44 0', temp_angles);
-		}
-		else
-			SpawnMonster(this, MON_ROTTWEILER, org + '-0 -44 0', temp_angles);
-	}
-	else if(name == "1 enforcer")
-	{
-		SpawnMonster(this, MON_ENFORCER, org + '0 0 0', temp_angles);
-	}
-	else if(name == "2 enforcer")
-	{
-		if(autocvar_skill > 0)
-		{
-			SpawnMonster(this, MON_ENFORCER, org + '40 0 0', temp_angles);
-			SpawnMonster(this, MON_ENFORCER, org + '-40 0 0', temp_angles);	
-		}
-		else
-			SpawnMonster(this, MON_ENFORCER, org + '0 0 0', temp_angles);
-	}
-	else if(name == "1 ogre")
-	{
-		SpawnMonster(this, MON_OGRE, org + '0 0 0', temp_angles);
-	}
-	else if(name == "2 knight")
-	{
-		if(autocvar_skill > 0)
-		{
-			SpawnMonster(this, MON_KNIGHT, org + '40 0 0', temp_angles);
-			SpawnMonster(this, MON_KNIGHT, org + '-40 0 0', temp_angles);
-		}
-		else
-		{
-			SpawnMonster(this, MON_KNIGHT, org + '40 0 0', temp_angles);
-		}
-			
-	}
-	else if(name == "2 zombie")
-	{
-		SpawnMonster(this, MON_ZOMBIE, org + '40 0 0', temp_angles);
-		SpawnMonster(this, MON_ZOMBIE, org + '-40 0 0', temp_angles);
-	}
-	else if(name == "1 wizard")
-		SpawnMonster(this, MON_SCRAG, org + '0 0 0', temp_angles);
-	else if(name == "2 hellknight")
-	{
-		if(autocvar_skill > 0)
-		{
-			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 40 0', temp_angles);
-			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 -40 0', temp_angles);
-		}
-		else
-			SpawnMonster(this, MON_HELL_KNIGHT, org + '0 40 0', temp_angles);
-	}
-	else if(name == "2 knight 1 hellknight")
-	{
-		SpawnMonster(this, MON_HELL_KNIGHT, org + '40 0 0', temp_angles);
-		SpawnMonster(this, MON_KNIGHT, org + '-40 40 0', temp_angles);
-		SpawnMonster(this, MON_KNIGHT, org + '-40 -40 0', temp_angles);
-	}
-	else if(name == "3 wizard")
-	{
-		if(autocvar_skill > 0)
-		{
-			SpawnMonster(this, MON_SCRAG, org + '40 40 40', temp_angles);
-			SpawnMonster(this, MON_SCRAG, org + '-40 40 40', temp_angles);
-			SpawnMonster(this, MON_SCRAG, org + '-40 -40 40', temp_angles);
-		}
-		else
-		{
-			SpawnMonster(this, MON_SCRAG, org + '40 40 40', temp_angles);
-			SpawnMonster(this, MON_SCRAG, org + '-40 40 40', temp_angles);
-		}
-	}
-	else if(name == "shambler")
-		SpawnMonster(this, MON_SHAMBLER, org, temp_angles);
-	else if(name == "double demon")
-	{
-		if(autocvar_skill >= 3 && random() > 0.8)
-		{
-			// double shambler
-			SpawnMonster(this, MON_SHAMBLER, org + '40 40 0', temp_angles);
-			SpawnMonster(this, MON_SHAMBLER, org + '-40 -40 0', temp_angles);
-		}
-		else if(autocvar_skill >= 1)
-		{
-			SpawnMonster(this, MON_FIEND, org + '40 40 0', temp_angles);
-			SpawnMonster(this, MON_FIEND, org + '-40 -40 0', temp_angles);
-		}
-		else
-			SpawnMonster(this, MON_FIEND, org, temp_angles);
-	}
-	else if(name == "shalrath")
-		SpawnMonster(this, MON_VORE, org, temp_angles);	
-	else
-		LOG_DEBUG("ERROR: unrecognized squad name!");
 	
 	spawn_tfog(org);
 }
@@ -1111,113 +1034,69 @@ entity HordeFindSpawnpoint(float squad_type)
 	}
 	return NULL;
 }
+
+entity Horde_GetSquadEntity(entity this, int spawntype)
+{
+	RandomSelection_Init();
+	IL_EACH(g_squads, it.spawnflags & spawntype,
+	{
+		if(autocvar_skill < 3 && (it.spawnflags & HORDE_HARD))
+			continue;
+		if(autocvar_skill > 1 && (it.spawnflags & HORDE_EASY))
+			continue;
+		if((it.spawnflags & HORDE_FINALBOSS) && this.wave != 9)
+			continue;
+		if((it.spawnflags & HORDE_ARMY) && !this.army)
+			continue;
+		if(!(it.spawnflags & HORDE_ARMY) && this.army)
+			continue;
+		// final boss will be given priority over other boss spawns
+		float prio = (it.spawnflags & HORDE_FINALBOSS) ? 2 : 1;
+		RandomSelection_AddEnt(it, 1, prio);
+	});
+	return RandomSelection_chosen_ent;
+}
+
 /*
 SpawnWave2
 
 Instead of finding a spawn point and then spawning a squad,
 decide a squad, and then find a spawn point.
 Yoder February 2nd 2022
-
 */
-
 void SpawnWave2(entity this)
 {
 	int squad_type = 0;
 	string squad_name = string_null; // specific squad name
-	float r; // random roll
 	int squad_cat = 0;
+	entity squad = NULL;
 	
 	//STEP 1: determine what kind of monster is getting spawned
-	if(this.army)
+	if(this.fodder > 0)
 	{
-		if(this.fodder > 0)
-		{
-			r = random() * 4;
-			if(r < 1)
-				squad_name = "3 grunt";
-			else if(r < 2)
-				squad_name = "2 grunt 1 dog";
-			else if(r < 3.5)
-				squad_name = "2 dog";
-			else
-			{
-				squad_name = "1 enforcer";
-				squad_type = HORDE_SQUAD_TYPE_RANGED;
-			}
-
-			squad_cat = HORDE_SQUAD_CAT_FODDER;
-		}
-		else if(this.elites > 0)
-		{
-			squad_type = HORDE_SQUAD_TYPE_RANGED; 
-			r = random() * 2;
-			if(r < 1.5)
-				squad_name = "2 enforcer";
-			else
-				squad_name = "1 ogre";
-			
-			squad_cat = HORDE_SQUAD_CAT_ELITE;
-		}
-		else if(this.bosses > 0)
-		{
-			LOG_DEBUG("ERROR: should not spawn boss squad in army wave");
-			this.bosses = 0;
-			squad_cat = HORDE_SQUAD_CAT_ERROR;
-		}
+		squad = Horde_GetSquadEntity(this, HORDE_FODDER);
+		squad_cat = HORDE_SQUAD_CAT_FODDER;
 	}
-	else // NON-ARMY
+	else if(this.elites > 0)
 	{
-		if(this.fodder > 0)
-		{
-			r = random() * 4;
-			if(r < 2)
-				squad_name = "2 knight";
-			else if(r < 3)
-				squad_name = "2 zombie";
-			else
-			{
-				squad_name = "1 wizard";
-				squad_type = HORDE_SQUAD_TYPE_FLYING;
-			}
-			
-			squad_cat = HORDE_SQUAD_CAT_FODDER;
-		}
-		else if(this.elites > 0)
-		{
-			r = random() * 4;
-			if(r < 1)
-				squad_name = "2 hellknight";
-			else if(r < 2)
-				squad_name = "2 knight 1 hellknight";
-			else if(r < 3)
-			{
-				squad_name = "1 ogre";
-				squad_type = HORDE_SQUAD_TYPE_RANGED;
-			}
-			else
-			{
-				squad_name = "3 wizard";
-				squad_type = HORDE_SQUAD_TYPE_FLYING;
-			}
-			
-			squad_cat = HORDE_SQUAD_CAT_ELITE;
-		}
-		else if(this.bosses > 0)
-		{
-			squad_type = HORDE_SQUAD_TYPE_BOSS;
-			r = random() * 3;
-			if(r < 1)
-				squad_name = "shambler";
-			else if(r < 2.5)
-			{
-				squad_name = "double demon";
-				squad_type = HORDE_SQUAD_TYPE_NORMAL;
-			}
-			else
-				squad_name = "shalrath";
-			
-			squad_cat = HORDE_SQUAD_CAT_BOSS;
-		}
+		squad = Horde_GetSquadEntity(this, HORDE_ELITE);
+		squad_cat = HORDE_SQUAD_CAT_ELITE;
+	}
+	else if(this.bosses > 0)
+	{
+		squad = Horde_GetSquadEntity(this, HORDE_BOSS);
+		squad_cat = HORDE_SQUAD_CAT_BOSS;
+	}
+
+	if(!squad)
+	{
+		LOG_INFO("ERROR: unable to find a squad!");
+		squad_cat = HORDE_SQUAD_CAT_ERROR;
+	}
+	else
+	{
+		squad_name = squad.netname;
+		squad_type = squad.cnt;
 	}
 
 	//STEP 2: find a spawn point for the squad
@@ -1350,6 +1229,44 @@ bool SpawnWavePrep(entity this)
 	return 1;
 }
 
+void horde_squad_setup(entity this)
+{
+	if(!MP_MG) { delete(this); return; }
+
+	if(this.spawnflags & HORDE_FINALBOSS)
+		this.spawnflags |= HORDE_BOSS; // ensure also marked as boss
+
+	if(!this.netname || this.netname == "")
+		objerror(this, "horde_squad missing netname");
+
+	IL_PUSH(g_squads, this);
+}
+
+/*QUAKED info_horde_squad FODDER ARMY ELITE BOSS FINALBOSS
+horde squad data for monster spawn selection
+multiple of the same type can be created to randomly select between them
+*/
+spawnfunc(info_horde_squad)
+{
+	this.cnt = HORDE_SQUAD_TYPE_NORMAL;
+	horde_squad_setup(this);
+}
+spawnfunc(info_horde_squad_ranged)
+{
+	this.cnt = HORDE_SQUAD_TYPE_RANGED;
+	horde_squad_setup(this);
+}
+spawnfunc(info_horde_squad_flying)
+{
+	this.cnt = HORDE_SQUAD_TYPE_FLYING;
+	horde_squad_setup(this);
+}
+spawnfunc(info_horde_squad_boss)
+{
+	this.cnt = HORDE_SQUAD_TYPE_BOSS;
+	horde_squad_setup(this);
+}
+
 void Countdown4(entity this)
 {
 	if((this.wave % 3) == 0)
@@ -1470,12 +1387,124 @@ void Wavecheck_use(entity this, entity actor, entity trigger)
 	Wavecheck(this);
 }
 
+void Horde_SpawnSquadEntity(int spawntype, int spawncat, string list)
+{
+	entity squad = new(horde_squad);
+	squad.netname = list;
+	squad.cnt = spawncat;
+	squad.spawnflags = spawntype;
+	horde_squad_setup(squad);
+}
+
+void Horde_SetupSquads()
+{
+	// if map entities are found they are preferred
+	// otherwise spawn in any that are missing to fill in any gaps
+	bool found = false;
+
+	// army wave setup
+
+	found = false;
+	IL_EACH(g_squads, (it.spawnflags & HORDE_ARMY) && (it.spawnflags & HORDE_FODDER), {found = true; break;});
+	if(!found)
+	{
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "3 grunt");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "2 grunt");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 grunt 1 dog");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 dog");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 dog");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_RANGED, "1 enforcer");
+	}
+
+	found = false;
+	IL_EACH(g_squads, (it.spawnflags & HORDE_ARMY) && (it.spawnflags & HORDE_ELITE), {found = true; break;});
+	if(!found)
+	{
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "2 enforcer");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
+		if(MP_HIPNOTIC)
+		{
+			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 scourge");
+		}
+		if(MP_ROGUE)
+		{
+			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 sword");
+		}
+		if(MP_IMPEL)
+		{
+			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 lenforcer");
+		}
+	}
+
+	// no bosses spawn during army waves
+
+
+	// non-army wave setup
+
+	found = false;
+	IL_EACH(g_squads, !(it.spawnflags & HORDE_ARMY) && (it.spawnflags & HORDE_FODDER), {found = true; break;});
+	if(!found)
+	{
+		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 knight");
+		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 zombie");
+		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_FLYING, "1 wizard");
+		if(MP_HIPNOTIC)
+		{
+			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 gremlin");
+		}
+	}
+
+	found = false;
+	IL_EACH(g_squads, !(it.spawnflags & HORDE_ARMY) && (it.spawnflags & HORDE_ELITE), {found = true; break;});
+	if(!found)
+	{
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 hknight");
+		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 hknight");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 hknight");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "3 wizard");
+		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_EASY, HORDE_SQUAD_TYPE_FLYING, "2 wizard");
+		if(MP_ROGUE)
+		{
+			Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 wrath");
+		}
+		if(MP_IMPEL)
+		{
+			Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 dknight");
+			Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 dknight");
+			Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
+		}
+	}
+
+	found = false;
+	IL_EACH(g_squads, (it.spawnflags & HORDE_BOSS) && !(it.spawnflags & HORDE_FINALBOSS), {found = true; break;});
+	if(!found)
+	{
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 shambler");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "2 demon");
+		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 demon");
+		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 shambler");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 shalrath");
+		if(MP_ROGUE)
+		{
+			Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 wrath");
+			Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 overlord");
+		}
+		if(MP_IMPEL)
+		{
+			Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 juggernaut");
+			Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
+		}
+	}
+}
+
 // setup horde rules
 void SetHorde(entity this)
 {
-	LOG_DEBUG("TEST: It is September 23, 2021!"); // yoder sanity test
 	setthink(this, Countdown);
 	this.nextthink = time + 1;
+
+	Horde_SetupSquads();
 }
 
 // define entity 

@@ -141,7 +141,7 @@ void gren_fast8(entity this)
 {
 	set_anim(this, 71, gren_run1);
 	ai_charge(this, 24);
-	SUB_AttackFinished(this, 2);
+	this.attack_finished = time + 2;
 	GrenAttackFinished(this);
 }
 void gren_fast7(entity this) { set_anim(this, 70, gren_fast8); ai_charge(this, 24); }
@@ -156,7 +156,7 @@ void gren_fastb10(entity this)
 {
 	set_anim(this, 81, gren_run1);
 	ai_charge(this, 24);
-	SUB_AttackFinished(this, 2);
+	this.attack_finished = time + 2;
 }
 void gren_fastb9(entity this) { set_anim(this, 80, gren_fastb10); ai_charge(this, 24); Gren_Swipe(this); }
 void gren_fastb8(entity this) { set_anim(this, 79, gren_fastb9); ai_charge(this, 24); }
@@ -172,7 +172,7 @@ void gren_fastc11(entity this)
 {
 	set_anim(this, 92, gren_run1);
 	ai_charge(this, 24);
-	SUB_AttackFinished(this, 2);
+	this.attack_finished = time + 2;
 	GrenAttackFinished(this);
 }
 void gren_fastc10(entity this) { set_anim(this, 91, gren_fastc11); ai_charge(this, 24); }

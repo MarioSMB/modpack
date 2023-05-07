@@ -276,7 +276,7 @@ void wiz_run3(entity this) { set_animofs(this, anim_wiz_fly, 3, wiz_run4); ai_ru
 void wiz_run2(entity this) { set_animofs(this, anim_wiz_fly, 2, wiz_run3); ai_run(this, 16); }
 void wiz_run1(entity this) { set_animofs(this, anim_wiz_fly, 1, wiz_run2); ai_run(this, 16); Wiz_idle_sound(this); }
 
-void wiz_fast10(entity this) { set_animofs(this, anim_wiz_magatt, 10, wiz_run1); ai_face(this); SUB_AttackFinished(this, 2); WizardAttackFinished(this); }
+void wiz_fast10(entity this) { set_animofs(this, anim_wiz_magatt, 10, wiz_run1); ai_face(this); this.attack_finished = time + 2; WizardAttackFinished(this); }
 void wiz_fast9(entity this) { set_animofs(this, anim_wiz_magatt, 9, wiz_fast10); ai_face(this); }
 void wiz_fast8(entity this) { set_animofs(this, anim_wiz_magatt, 8, wiz_fast9); ai_face(this); }
 void wiz_fast7(entity this) { set_animofs(this, anim_wiz_magatt, 7, wiz_fast8); ai_face(this); }
@@ -295,13 +295,7 @@ void wiz_pain1(entity this) { set_animofs(this, anim_wiz_pain, 1, wiz_pain2); }
 void wiz_death8(entity this)
 {
 	set_animofs(this, anim_wiz_death, 8, wiz_death8);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void wiz_death7(entity this) { set_animofs(this, anim_wiz_death, 7, wiz_death8); }
 void wiz_death6(entity this) { set_animofs(this, anim_wiz_death, 6, wiz_death7); }

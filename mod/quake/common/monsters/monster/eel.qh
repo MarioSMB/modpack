@@ -8,7 +8,7 @@ MODEL(MON_EEL_HEAD, "progs/eelgib.mdl");
 #endif
 
 CLASS(Eel, Monster)
-    ATTRIB(Eel, spawnflags, int, MONSTER_TYPE_SWIM);
+    ATTRIB(Eel, spawnflags, int, MONSTER_TYPE_SWIM | MON_FLAG_ROGUE);
     ATTRIB(Eel, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Eel, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC

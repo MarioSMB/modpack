@@ -57,7 +57,7 @@ void CheckForCharge(entity this)
 		return;		// use regular attack
 
 // charge		
-	SUB_AttackFinished(this, 2);
+	this.attack_finished = time + 2;
 	hknight_char_a1(this);
 
 }
@@ -67,7 +67,7 @@ void CheckContinueCharge(entity this)
 {
 	if(time > this.attack_finished)
 	{
-		SUB_AttackFinished(this, 3);
+		this.attack_finished = time + 3;
 		hknight_run1(this);
 		return;		// done charging
 	}
@@ -146,13 +146,7 @@ void hknight_pain1(entity this)
 void hknight_die12(entity this)
 {
 	set_animofs(this, anim_hknight_death, 12, hknight_die12);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void hknight_die11(entity this) { set_animofs(this, anim_hknight_death, 11, hknight_die12); }
 void hknight_die10(entity this) { set_animofs(this, anim_hknight_death, 10, hknight_die11); }
@@ -169,13 +163,7 @@ void hknight_die1(entity this) { set_animofs(this, anim_hknight_death, 1, hknigh
 void hknight_dieb9(entity this)
 {
 	set_animofs(this, anim_hknight_deathb, 9, hknight_dieb9);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void hknight_dieb8(entity this) { set_animofs(this, anim_hknight_deathb, 8, hknight_dieb9); }
 void hknight_dieb7(entity this) { set_animofs(this, anim_hknight_deathb, 7, hknight_dieb8); }

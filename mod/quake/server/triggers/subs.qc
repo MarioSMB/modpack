@@ -251,39 +251,6 @@ bool InitMovingBrushTrigger(entity this)
 }
 #endif
 
-#ifdef SVQC
-// quake specific handlers
-
-/*
-
-in nightmare mode, all attack_finished times become 0
-some monsters refire twice automatically
-update: not anymore! it makes nightmare too easy
-
-*/
-
-void SUB_AttackFinished(entity this, float normal)
-{
-	this.cnt = 0;		// refire count for nightmare
-	//if(autocvar_skill != 3)
-		this.attack_finished = time + normal;
-}
-
-bool visible(entity this, entity targ);
-
-void SUB_CheckRefire(entity this, void(entity) thinkst)
-{
-	if(autocvar_skill != 3)
-		return;
-	if(this.cnt == 1)
-		return;
-	if(!visible(this, this.enemy))
-		return;
-	this.cnt = 1;
-	setthink(this, thinkst);
-}
-#endif
-
 /*
 ================
 Bitshift emulation

@@ -71,9 +71,6 @@ const int ACTIVE_TOGGLE = 3;
 .float attack_finished;
 .float attack2_finished;
 
-// TODO
-void SUB_AttackFinished(entity this, float normal);
-void SUB_CheckRefire(entity this, void(entity) thinkst);
 bool visible(entity this, entity targ);
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);

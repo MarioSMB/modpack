@@ -8,7 +8,7 @@ MODEL(MON_SPIDER_DROID_HEAD, "progs/spidgib.mdl");
 #endif
 
 CLASS(SpiderDroid, Monster)
-    ATTRIB(SpiderDroid, spawnflags, int, 0);
+    ATTRIB(SpiderDroid, spawnflags, int, MON_FLAG_IMPEL);
     ATTRIB(SpiderDroid, m_mins, vector, '-10 -16 -1');
     ATTRIB(SpiderDroid, m_maxs, vector, '8 16 24');
 #ifdef GAMEQC

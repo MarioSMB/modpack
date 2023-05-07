@@ -65,6 +65,7 @@ void W_FireAxe(entity this)
 
 METHOD(Axe, wr_think, void(entity thiswep, entity actor))
 {
+	// TODO: decouple axe attacks from the player animations
 	float r = random();
 	if(!MP_IMPEL || random() < 0.7)
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);

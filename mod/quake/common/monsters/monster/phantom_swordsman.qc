@@ -42,7 +42,7 @@ void sword_atk1(entity this)
 
 //===========================================================================
 
-void sword_die10(entity this) { set_animofs(this, anim_sword_death1, 10, sword_die10); }
+void sword_die10(entity this) { set_animofs(this, anim_sword_death1, 10, sword_die10); CorpseThink(this); }
 void sword_die9(entity this) { set_animofs(this, anim_sword_death1, 9, sword_die10); }
 void sword_die8(entity this) { set_animofs(this, anim_sword_death1, 8, sword_die9); }
 void sword_die7(entity this)
@@ -57,7 +57,7 @@ void sword_die3(entity this) { set_animofs(this, anim_sword_death1, 3, sword_die
 void sword_die2(entity this) { set_animofs(this, anim_sword_death1, 2, sword_die3); }
 void sword_die1(entity this) { set_animofs(this, anim_sword_death1, 1, sword_die2); }
 
-void sword_dieb11(entity this) { set_animofs(this, anim_sword_deathb1, 11, sword_dieb11); }
+void sword_dieb11(entity this) { set_animofs(this, anim_sword_deathb1, 11, sword_dieb11); CorpseThink(this); }
 void sword_dieb10(entity this) { set_animofs(this, anim_sword_deathb1, 10, sword_dieb11); }
 void sword_dieb9(entity this) { set_animofs(this, anim_sword_deathb1, 9, sword_dieb10); }
 void sword_dieb8(entity this) { set_animofs(this, anim_sword_deathb1, 8, sword_dieb9); }

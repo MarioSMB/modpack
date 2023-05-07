@@ -4,7 +4,7 @@ CLASS(Grapple, Weapon)
 /* ammotype  */ ATTRIB(Grapple, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Grapple, impulse, int, 22);
 /* cnt       */ ATTRIB(Grapple, cnt, int, 242); // hook
-/* spawnflags*/ ATTRIB(Grapple, spawnflags, int, WEP_FLAG_ROGUE);
+/* spawnflags*/ ATTRIB(Grapple, spawnflags, int, WEP_FLAG_ROGUE | WEP_FLAG_NOSTEAL);
 /* modelname */ ATTRIB(Grapple, mdl, string, "grpple");
 /* crosshair */ ATTRIB(Grapple, w_crosshair, string, "gfx/crosshairhook");
 /* crosshair */ ATTRIB(Grapple, w_crosshair_size, float, 0.5);

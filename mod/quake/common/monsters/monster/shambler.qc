@@ -285,13 +285,7 @@ void sham_pain(entity this, entity attacker, float damage, int deathtype)
 void sham_death11(entity this)
 {
 	set_animofs(this, anim_sham_death, 11, sham_death11);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void sham_death10(entity this) { set_animofs(this, anim_sham_death, 10, sham_death11); }
 void sham_death9(entity this) { set_animofs(this, anim_sham_death, 9, sham_death10); }
@@ -381,7 +375,7 @@ bool ShamCheckAttack(entity this)
 		return false;
 		
 	this.attack_state = AS_MISSILE;
-	SUB_AttackFinished(this, 2 + 2*random());
+	this.attack_finished = time + (2 * 2 * random());
 	return true;
 }
 

@@ -158,13 +158,7 @@ void demon1_pain(entity this, entity attacker, float damage, int deathtype)
 void demon1_die9(entity this) 
 {
 	set_animofs(this, anim_demon_death, 9, demon1_die9);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void demon1_die8(entity this) { set_animofs(this, anim_demon_death, 8, demon1_die9); }
 void demon1_die7(entity this) { set_animofs(this, anim_demon_death, 7, demon1_die8); }

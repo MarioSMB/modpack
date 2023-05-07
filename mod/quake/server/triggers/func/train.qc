@@ -53,7 +53,7 @@ void func_train_find(entity this)
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	setorigin(this, targ.origin - this.mins);
-	if(!this.targetname || this.targetname == "" || world.model == "maps/horde1.bsp") // workaround for the broken behaviour of horde1's train
+	if(!this.targetname || this.targetname == "")
 	{	// not triggered, so start immediately
 		this.nextthink = this.ltime + 0.1;
 		setthink(this, train_next);

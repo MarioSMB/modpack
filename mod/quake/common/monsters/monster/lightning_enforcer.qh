@@ -8,14 +8,14 @@ MODEL(MON_LIGHTNING_ENFORCER_HEAD, "progs/h_mega.mdl");
 #endif
 
 CLASS(LightningEnforcer, Monster)
-    ATTRIB(LightningEnforcer, spawnflags, int, 0);
+    ATTRIB(LightningEnforcer, spawnflags, int, MON_FLAG_IMPEL);
     ATTRIB(LightningEnforcer, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(LightningEnforcer, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC
     ATTRIB(LightningEnforcer, m_model, Model, MDL_MON_LIGHTNING_ENFORCER);
     ATTRIB(LightningEnforcer, m_model_head, Model, MDL_MON_LIGHTNING_ENFORCER_HEAD);
 #endif
-    ATTRIB(LightningEnforcer, netname, string, "lightning_enforcer");
+    ATTRIB(LightningEnforcer, netname, string, "lenforcer");
     ATTRIB(LightningEnforcer, monster_name, string, _("Lightning Enforcer"));
 ENDCLASS(LightningEnforcer)
 

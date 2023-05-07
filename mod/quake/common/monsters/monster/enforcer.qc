@@ -140,7 +140,6 @@ void enf_atk14(entity this)
 {
 	set_animofs(this, anim_enf_attack, 10, enf_run1);
 	ai_face(this);
-	SUB_CheckRefire(this, enf_atk1);
 }
 void enf_atk13(entity this) { set_animofs(this, anim_enf_attack, 9, enf_atk14); ai_face(this); }
 void enf_atk12(entity this) { set_animofs(this, anim_enf_attack, 8, enf_atk13); ai_face(this); }
@@ -235,13 +234,7 @@ void enf_pain(entity this, entity attacker, float damage, int deathtype)
 void enf_die14(entity this)
 {
 	set_animofs(this, anim_enf_death, 14, enf_die14);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void enf_die13(entity this) { set_animofs(this, anim_enf_death, 13, enf_die14); }
 void enf_die12(entity this) { set_animofs(this, anim_enf_death, 12, enf_die13); ai_forward(this, 5); }
@@ -266,11 +259,7 @@ void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); }
 void enf_fdie11(entity this)
 {
 	set_animofs(this, anim_enf_fdeath, 11, enf_fdie11);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
+	CorpseThink(this);
 }
 void enf_fdie10(entity this) { set_animofs(this, anim_enf_fdeath, 10, enf_fdie11); }
 void enf_fdie9(entity this) { set_animofs(this, anim_enf_fdeath, 9, enf_fdie10); }

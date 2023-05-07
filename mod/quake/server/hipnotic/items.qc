@@ -1,66 +1,3 @@
-/* Items QuickC program
-	By Jim Dose'  9/13/96
-	Copyright (c)1996 Hipnotic Interactive, Inc.
-	All rights reserved.
-	Distributed (unsupported) on 3.12.97
-*/
-
-/*
-===============================================================================
-
-HIPNOTIC ITEMS
-
-===============================================================================
-*/
-//
-// hip_powerup_touch function
-//
-void hip_powerup_touch(entity this, entity toucher)
-{
-	if(!IS_PLAYER(toucher))
-		return;
-	if(toucher.health <= 0)
-		return;
-
-	string pname = (this.netname != "") ? this.netname : "Powerup";
-	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
-
-	if(deathmatch)
-	{
-		this.mdl = this.model;
-
-//      if((this.classname == "item_artifact_invulnerability") ||
-//         (this.classname == "item_artifact_invisibility"))
-//         this.nextthink = time + 60*5;
-//      else
-		this.nextthink = time + 60;
-
-		setthink(this, SUB_regen);
-	}
-
-	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
-	this.solid = SOLID_NOT;
-	//toucher.items |= this.items;
-	toucher.powerups |= this.powerups;
-	this.model = string_null;
-
-// do the apropriate action
-	if(this.classname == "item_artifact_wetsuit")
-	{
-		toucher.wetsuit_time = 1;
-		toucher.wetsuit_finished = time + 30;
-	}
-	if(this.classname == "item_artifact_empathy_shields")
-	{
-		toucher.empathy_time = 1;
-		toucher.empathy_finished = time + 30;
-	}
-
-	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets
-}
-
-
 /*QUAKED item_artifact_wetsuit (0 .5 .8) (-16 -16 -24) (16 16 32)
 Player takes no damage from electrical attacks and swims faster for 30 seconds
 */
@@ -68,7 +5,7 @@ spawnfunc(item_artifact_wetsuit)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 	
-	settouch(this, hip_powerup_touch);
+	settouch(this, powerup_touch);
 
 	precache_model("progs/wetsuit.mdl");
 	precache_sound("misc/wetsuit.wav");
@@ -91,28 +28,6 @@ spawnfunc(item_artifact_wetsuit)
 ===============================================================================
 */
 
-void horn_touch(entity this, entity toucher)
-{
-	if(!IS_PLAYER(toucher))
-		return;
-
-	if(deathmatch)
-	{
-		this.mdl = this.model;
-
-		this.nextthink = time + 60;
-		setthink(this, SUB_regen);
-	}
-
-	this.solid = SOLID_NOT;
-	this.model = string_null;
-	sprint(toucher, "You got the Horn of Conjuring\n");
-	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NONE);
-	stuffcmd(toucher, "bf\n");
-	//toucher.powerups |= POWERUP_HORN_OF_CONJURING; // TODO: make a proper item out of this?
-	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets
-}
-
 /*QUAKED item_hornofconjuring (0 .5 .8) (-16 -16 0) (16 16 32)
 Horn of Conjuring.
 You must make func_spawn entities connected to this entity
@@ -122,12 +37,13 @@ spawnfunc(item_hornofconjuring)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	settouch(this, horn_touch);
+	settouch(this, powerup_touch);
 
 	precache_model("progs/horn.mdl");
 	precache_sound("hipitems/horn.wav");
 	_setmodel(this, "progs/horn.mdl");
 	this.noise = "hipitems/horn.wav";
+	this.netname = "Horn of Conjuring";
 	this.powerups = POWERUP_HORN_OF_CONJURING;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
@@ -140,7 +56,7 @@ spawnfunc(item_artifact_empathy_shields)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	settouch(this, hip_powerup_touch);
+	settouch(this, powerup_touch);
 
 	precache_model("progs/empathy.mdl");
 	precache_sound("hipitems/empathy.wav");

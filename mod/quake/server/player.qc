@@ -1080,9 +1080,15 @@ void ThrowHead(entity this, string gibname, float dm)
 
 void CorpseThink(entity this)
 {
-	if(!MP_IMPEL)
+	if(!IS_MONSTER(this))
 		return;
-	if(corpse_removal && IS_MONSTER(this))
+
+	if(MP_MG && horde_ent)
+	{
+		setthink(this, MonsterFade);
+		this.nextthink = time + FADETIME;
+	}
+	else if(MP_IMPEL && corpse_removal)
 	{
 		setthink(this, SUB_Remove);
 		this.nextthink = time + 30 + (random () * 30);

@@ -7,13 +7,13 @@ MODEL(MON_PHANTOM_SWORDSMAN, "progs/sword.mdl");
 #endif
 
 CLASS(PhantomSwordsman, Monster)
-    ATTRIB(PhantomSwordsman, spawnflags, int, 0);
+    ATTRIB(PhantomSwordsman, spawnflags, int, MON_FLAG_ROGUE);
     ATTRIB(PhantomSwordsman, m_mins, vector, '-16 -16 -24');
     ATTRIB(PhantomSwordsman, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC
     ATTRIB(PhantomSwordsman, m_model, Model, MDL_MON_PHANTOM_SWORDSMAN);
 #endif
-    ATTRIB(PhantomSwordsman, netname, string, "phantom_swordsman");
+    ATTRIB(PhantomSwordsman, netname, string, "sword");
     ATTRIB(PhantomSwordsman, monster_name, string, _("Phantom Swordsman"));
 ENDCLASS(PhantomSwordsman)
 

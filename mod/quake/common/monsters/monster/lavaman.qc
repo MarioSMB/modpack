@@ -39,7 +39,7 @@ bool LavaManCheckAttack(entity this)
 		return false;
 
 	this.th_missile(this);
-	SUB_AttackFinished(this, 1 + random());
+	this.attack_finished = time + (1 * random());
 	return true;
 }
 

@@ -54,7 +54,7 @@ float LegondCheckAttack(entity this)
 			legond_combob1(this);
 		else
 			legond_light1(this);
-		SUB_AttackFinished(this, 2 * random());
+		this.attack_finished = time + (2 * random());
 		return true;
 	}
 	return false;

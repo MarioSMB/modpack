@@ -8,7 +8,7 @@ MODEL(MON_GRENLING_HEAD, "progs/h_gren.mdl");
 #endif
 
 CLASS(Grenling, Monster)
-    ATTRIB(Grenling, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Grenling, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_IMPEL);
     ATTRIB(Grenling, m_mins, vector, '-26 -26 -25');
     ATTRIB(Grenling, m_maxs, vector, '15 28 20');
 #ifdef GAMEQC

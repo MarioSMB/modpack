@@ -10,3 +10,9 @@ REGISTRY_CHECK(Monsters)
 
 REGISTER_MONSTER(Null, NEW(Monster));
 REGISTRY_DEFINE_GET(Monsters, MON_Null)
+
+Monster Monster_from_name(string s)
+{
+    FOREACH(Monsters, it != MON_Null && it.netname == s, return it);
+    return MON_Null;
+}

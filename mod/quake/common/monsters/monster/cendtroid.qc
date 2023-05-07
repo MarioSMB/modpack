@@ -63,7 +63,7 @@ bool ScourgeCheckAttack(entity this)
 //      return false;
 
 	this.attack_state = AS_MISSILE;
-	SUB_AttackFinished(this, 2 + 2*random());
+	this.attack_finished = time + (2 + 2 * random());
 	return true;
 }
 
@@ -230,7 +230,7 @@ void scourge_atk8(entity this)
 	this.effects |= EF_MUZZLEFLASH;
 	SCOURGE_FireSpikes(this, 56);
 //   SCOURGE_FireSpikes(-56);
-	SUB_AttackFinished(this, 4 * random());
+	this.attack_finished = time + (4 * random());
 }
 void scourge_atk7(entity this) 
 {
@@ -285,7 +285,7 @@ void scourge_atk1(entity this)
 }
 
 void scourge_melee1(entity this);
-void scourge_melee11(entity this) { set_animofs(this, anim_scourge_sting, 11, scourge_run1); ai_face(this); SUB_CheckRefire(this, scourge_melee1); }
+void scourge_melee11(entity this) { set_animofs(this, anim_scourge_sting, 11, scourge_run1); ai_face(this); }
 void scourge_melee10(entity this) { set_animofs(this, anim_scourge_sting, 10, scourge_melee11); ai_face(this); }
 void scourge_melee9(entity this) { set_animofs(this, anim_scourge_sting, 9, scourge_melee10); ai_face(this); }
 void scourge_melee8(entity this) { set_animofs(this, anim_scourge_sting, 8, scourge_melee9); ai_face(this); }
@@ -321,7 +321,7 @@ void scourge_pain(entity this, entity attacker, float damage, int deathtype)
 //============================================================================
 
 
-void scourge_die5(entity this) { set_animofs(this, anim_scourge_death, 5, scourge_die5); }
+void scourge_die5(entity this) { set_animofs(this, anim_scourge_death, 5, scourge_die5); CorpseThink(this); }
 void scourge_die4(entity this) { set_animofs(this, anim_scourge_death, 4, scourge_die5); }
 void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourge_die4); this.solid = SOLID_NOT; }
 void scourge_die2(entity this) { set_animofs(this, anim_scourge_death, 2, scourge_die3); }
@@ -359,7 +359,7 @@ void scourge_die(entity this, entity inflictor, entity attacker, int deathtype)
 void scourge_melee(entity this)
 {
 	scourge_melee1(this);
-	SUB_AttackFinished(this, 2 * random());
+	this.attack_finished = time + (2 * random());
 }
 
 //

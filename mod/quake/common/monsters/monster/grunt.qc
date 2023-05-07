@@ -85,7 +85,6 @@ void army_atk7(entity this)
 {
 	set_animofs(this, anim_army_shoot, 7, army_atk8);
 	ai_face(this);
-	SUB_CheckRefire(this, army_atk1);
 }
 void army_atk6(entity this) { set_animofs(this, anim_army_shoot, 6, army_atk7); ai_face(this); }
 void army_atk5(entity this)
@@ -183,13 +182,7 @@ void army_fire(entity this)
 void army_die10(entity this)
 {
 	set_animofs(this, anim_army_death, 10, army_die10);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void army_die9(entity this) { set_animofs(this, anim_army_death, 9, army_die10); }
 void army_die8(entity this) { set_animofs(this, anim_army_death, 8, army_die9); }
@@ -210,13 +203,7 @@ void army_die1(entity this) { set_animofs(this, anim_army_death, 1, army_die2); 
 void army_cdie11(entity this)
 {
 	set_animofs(this, anim_army_deathc, 11, army_cdie11);
-	if(MP_MG && horde_ent)
-	{
-		setthink(this, MonsterFade);
-		this.nextthink = time + FADETIME;
-	}
-	else
-		CorpseThink(this);
+	CorpseThink(this);
 }
 void army_cdie10(entity this) { set_animofs(this, anim_army_deathc, 10, army_cdie11); }
 void army_cdie9(entity this) { set_animofs(this, anim_army_deathc, 9, army_cdie10); }
@@ -311,7 +298,7 @@ bool SoldierCheckAttack(entity this)
 	if(random() < chance)
 	{
 		this.th_missile(this);
-		SUB_AttackFinished(this, 1 + random());
+		this.attack_finished = time + (1 * random());
 		if(random() < 0.3)
 			this.lefty = !this.lefty;
 
