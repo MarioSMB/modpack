@@ -657,7 +657,8 @@ void GremlinDropBackpack(entity this);
 void gremlin_glook20(entity this)
 {
 	set_animofs(this, anim_gremlin_glook, 20, gremlin_glook20);
-	GremlinDropBackpack(this);
+	if(this.weaponentity.m_weapon && this.weaponentity.m_weapon != WEP_Null)
+		GremlinDropBackpack(this);
 	this.stoleweapon = false;
 	if(this.oldenemy.health > 0)
 	{
@@ -796,6 +797,7 @@ void GremlinDropBackpack(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	item.netname = wep.m_name;
 	item.weapon = wep.m_id;
+	this.weaponentity.m_weapon = WEP_Null;
 
 	item.ammo_shells = max(0, this.ammo_shells);
 	item.ammo_nails = max(0, this.ammo_nails);
@@ -820,7 +822,7 @@ void GremlinDropBackpack(entity this)
 void gremlin_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
-	if(this.weaponentity.m_weapon != WEP_Null)
+	if(this.weaponentity.m_weapon && this.weaponentity.m_weapon != WEP_Null)
 	{
 		GremlinDropBackpack(this);
 		this.stoleweapon = false;
@@ -1510,6 +1512,7 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 	NumGremlins += 1;
 
 	actor.weaponentity = actor; // hack to allow weapon system to work
+	actor.weaponentity.m_weapon = WEP_Null;
 
     actor.health = 100;
     actor.yaw_speed = 40;
