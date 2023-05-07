@@ -205,5 +205,5 @@ REGISTER_STAT(PLASMA_AMMO, int, this.ammo_plasma)
 #ifdef SVQC
 #include "../server/horde.qh"
 #endif
-REGISTER_STAT(HORDE, bool, autocvar_horde)
+REGISTER_STAT(HORDE, bool, (horde_ent) ? true : false)
 REGISTER_STAT(HORDE_WAVE, int, (horde_ent) ? horde_ent.wave : 0)
