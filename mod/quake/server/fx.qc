@@ -356,7 +356,7 @@ void SUB_Freeze(entity this)
 {
 	this.storednextthink = this.nextthink;
 	this.storedthink = getthink(this);
-	this.nextthink = time;
+	this.nextthink = 0;
 	setthink(this, func_null);
 	this.is_frozen = true;
 }
@@ -366,6 +366,7 @@ void SUB_Unfreeze(entity this)
 	this.nextthink = this.storednextthink;
 	setthink(this, this.storedthink);
 	this.storednextthink = -1;
+	this.storedthink = func_null;
 	this.is_frozen = false;
 }
 

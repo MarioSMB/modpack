@@ -266,11 +266,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 		monster.th_missile = zombie_missile;
 		monster.target = string_null; // don't target anything!
 	}
-	else if(!mon.mr_setup(mon, monster))
-	{
-		delete(monster);
-		return NULL;
-	}
+	mon.mr_setup(mon, monster);
 
 	// finish the shared settings
 	setorigin(monster, org + '0 0 1');

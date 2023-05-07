@@ -77,7 +77,7 @@ void monster_start_go(entity this)
 	if(!this.use)
 		this.use = monster_use;
 
-	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE))
+	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE) && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
 	{
 		if(!this.damagedbycontents)
 			IL_PUSH(g_damagedbycontents, this);
@@ -215,7 +215,6 @@ void monster_start(entity this, Monster mon)
 
 	this.flags |= FL_MONSTER;
 	this.monsterdef = mon;
-	this.max_health = this.health;
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { this.flags |= FL_FLY; }
 	// hipnotic
@@ -227,6 +226,8 @@ void monster_start(entity this, Monster mon)
 	setsize(this, mon.m_mins, mon.m_maxs);
 	setcefc(this, monster_customize);
 
+	mon.mr_setup(mon, this);
+
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent
 	// in horde, mosnters shouldn't increase total count until spawned
 	if(MP_MG && autocvar_horde)
@@ -234,14 +235,10 @@ void monster_start(entity this, Monster mon)
 		if(!monster_checkspawnedflag(this))
 			monsters_total += 1;
 	}
-	else if(!(this.flags & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
+	else if(!(this.flags & FL_DECOY))
 		monsters_total += 1;
 
-	if(!mon.mr_setup(mon, this))
-	{
-		delete(this);
-		return;
-	}
+	this.max_health = this.health;
 
 	if(MP_MG && monster_checkspawnedflag(this))
 	{

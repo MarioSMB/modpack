@@ -471,9 +471,6 @@ void t_movetarget(entity this, entity toucher)
 			return; // waiting to walk...
 	}
 
-	if(toucher.monsterdef == MON_OGRE)
-		_sound(toucher, CH_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
-
 	if(this.target && this.target != "")
 	{
 		toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);

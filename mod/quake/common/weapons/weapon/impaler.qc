@@ -13,24 +13,8 @@ void T_SpearTouch(entity this, entity toucher)
 		_setmodel(this, "progs/impstuck.mdl");
 		if(IS_CLIENT(toucher))
 			knockback = 400 - (toucher.armorvalue * 3);
-		else if(toucher.monsterdef == MON_ROTTWEILER)
-			knockback = 550;
-		else if(toucher.monsterdef == MON_ZOMBIE)
-			knockback = 250;
-		else if(toucher.monsterdef == MON_GRUNT)
-			knockback = 450;
-		else if(toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT)
-			knockback = 250;
-		else if(toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
-			knockback = 300;
-		else if(toucher.monsterdef == MON_OGRE)
-			knockback = 100;
-		else if(toucher.monsterdef == MON_HELL_KNIGHT)
-			knockback = 150;
-		else if(toucher.monsterdef == MON_GRENLING)
-			knockback = 550;
-		else if(toucher.monsterdef == MON_VORE)
-			knockback = 100;
+		else if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
+			knockback = max(50, 300 - vlen(this.maxs - this.mins)); 
 		else
 			knockback = 0;
 		if(knockback > 10)

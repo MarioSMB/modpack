@@ -1,5 +1,6 @@
 #include "weapons.qh"
 
+#include "bulletholes.qh"
 #include "combat.qh"
 #include "client.qh"
 #include "impel/impel.qh"
@@ -337,7 +338,6 @@ Used by shotgun, super shotgun, and enemy soldier firing
 Go to the trouble of combining multiple pellets into a single damage call.
 ================
 */
-void placebullethole(vector pos);
 void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
 {
 	bool bullet = false; // hipnotic bullet holes
