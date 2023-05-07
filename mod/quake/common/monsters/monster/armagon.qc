@@ -1,6 +1,11 @@
 #include "armagon.qh"
 
 #ifdef SVQC
+#include "../../../server/triggers/func/exploder.qh"
+#include "../../../server/triggers/func/rotate.qh"
+#endif
+
+#ifdef SVQC
 const int anim_armagon_lwalk = 0; //'0 11 0';
 const int anim_armagon_lw0fir = 12; //'12 24 0';
 const int anim_armagon_lw1fir = 25; //'25 39 0';

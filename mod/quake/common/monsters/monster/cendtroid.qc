@@ -447,7 +447,6 @@ METHOD(Centroid, mr_setup, bool(Centroid this, entity actor))
 	precache_sound2("shambler/smack.wav");
 	precache_sound2("weapons/rocket1i.wav");
 
-	//   actor.th_turn = scourge_turn1;
 	actor.yaw_speed = 60;
 	actor.attack_state = AS_DODGING;
 	actor.state = 0;

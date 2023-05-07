@@ -8,7 +8,11 @@ float autocvar_g_friendlyfire;
 
 .bool damagedbycontents;
 
+entity damage_inflictor; // hipnotic
+
 bool empathyused; // hipnotic
+
+bool discharged; // hipnotic
 
 .bool is_frozen; // defines whether an entity is frozen
 const float FADETIME = 5; // STATIC GLOBAL, how long after death until monsters fade out in horde mode

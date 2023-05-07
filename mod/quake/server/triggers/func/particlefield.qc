@@ -3,6 +3,8 @@
 //float START_OFF = 1;
 const int USE_COUNT = BIT(0);
 
+.float mycolor;
+
 void particlefield_use(entity this, entity actor, entity trigger)
 {
 	if((this.spawnflags & USE_COUNT) && (counter_GetCount(trigger) != this.cnt))

@@ -1,3 +1,8 @@
 #pragma once
 
 #include "door.qh"
+#include "earthquake.qh"
+#include "exploder.qh"
+#include "oncount.qh"
+#include "rotate.qh"
+#include "spawn.qh"

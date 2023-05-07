@@ -3,7 +3,6 @@
 #include "ai.qh"
 #include "../combat.qh"
 #include "../horde.qh"
-#include "../hipnotic/defs.qh"
 #include "../player.qh"
 #include "../triggers/subs.qh"
 #include "../triggers/teleporters.qh"

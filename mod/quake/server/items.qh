@@ -10,6 +10,16 @@ bool autocvar_sv_quake_instance_backpacks = true;
 
 .int aflag;
 
+.float charmed;
+.entity charmer;
+.float huntingcharmer;
+
+.float wetsuit_finished = _STAT(WETSUIT_FINISHED);
+.float wetsuit_time;
+.float empathy_finished;
+.float empathy_time;
+.float empathy_sound;
+
 .int worldtype;
 const int WORLDTYPE_MEDIEVAL = 0;
 const int WORLDTYPE_METAL = 1;

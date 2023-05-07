@@ -1,2 +1,4 @@
 #pragma once
 
+#include "command.qh"
+#include "finale.qh"

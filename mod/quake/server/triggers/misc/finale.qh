@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+const int SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
+
+void UpdateCamera(entity this, entity camera);
+#endif

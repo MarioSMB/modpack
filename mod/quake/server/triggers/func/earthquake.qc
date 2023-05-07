@@ -1,13 +1,6 @@
-/* Earthquake QuickC program
-	 By Jim Dose'  9/13/96
-	 Copyright (c)1996 Hipnotic Interactive, Inc.
-	 All rights reserved.
-	 Distributed (unsupported) on 3.12.97
-*/
-//JIM
-float earthquake;
-bool quakeactive;
+#include "earthquake.qh"
 
+#ifdef SVQC
 void StopEarthQuake()
 {
 	earthquake = 0;
@@ -76,3 +69,4 @@ spawnfunc(func_earthquake)
 	if(!this.dmg)
 		this.dmg = 0.8;
 }
+#endif

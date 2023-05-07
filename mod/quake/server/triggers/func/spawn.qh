@@ -1,0 +1,14 @@
+#pragma once
+
+#ifdef SVQC
+.string spawnfunction;
+.string spawnclassname;
+.float spawnsolidtype;
+.string spawnmodel;
+.void(entity) spawnthink;
+.entity spawnmaster;
+.vector spawnmins;
+.vector spawnmaxs;
+.float spawnsilent;
+.float spawnmulti;
+#endif

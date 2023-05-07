@@ -1,6 +1,10 @@
 #include "proximity_gun.qh"
 
 #ifdef SVQC
+#include "../../../server/triggers/func/spawn.qh"
+#endif
+
+#ifdef SVQC
 void ProximityExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 95, this.projectiledeathtype, NULL);

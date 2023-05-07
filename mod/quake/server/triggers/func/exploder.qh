@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+void multi_explosion(vector loc, float rad, float damage, float dur, float pause, float vol);
+#endif

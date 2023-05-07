@@ -8,6 +8,7 @@
 #include "counter.qc"
 #include "door.qc"
 #include "door_secret.qc"
+#include "earthquake.qc"
 #include "exploder.qc"
 #include "fade.qc"
 #include "hurt.qc"

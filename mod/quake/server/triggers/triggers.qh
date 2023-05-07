@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef SVQC
+const int SPAWNFLAG_SILENT = BIT(4);
+
 const int START_OFF = BIT(0);
 
 .float save_nextthink;
@@ -14,8 +16,11 @@ const int START_OFF = BIT(0);
 
 .vector mangle;
 
+.float duration;
+
 .int count;
 
+.vector dest;
 .vector dest1, dest2;
 
 .string noise4;

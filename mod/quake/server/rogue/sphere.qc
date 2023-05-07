@@ -1,4 +1,4 @@
-// vengeance sphere
+#include "sphere.qh"
 
 // ==============================
 // sphere_impact
@@ -67,8 +67,7 @@ void sphere_think(entity this)
 	
 	if(time > this.delay)
 	{
-		if(this.owner.powerups & POWERUP_V_SPHERE)
-			this.owner.powerups &= ~POWERUP_V_SPHERE;
+		this.owner.powerups &= ~POWERUP_V_SPHERE;
 		sprint( this.owner, "Vengeance Sphere Lost\n");
 		delete(this);
 		return;
@@ -76,8 +75,7 @@ void sphere_think(entity this)
 
 	if(this.owner.health < 1)
 	{
-		if(this.owner.powerups & POWERUP_V_SPHERE)
-			this.owner.powerups &= ~POWERUP_V_SPHERE;
+		this.owner.powerups &= ~POWERUP_V_SPHERE;
 		if(IS_PLAYER(this.owner.enemy))
 		{
 			this.enemy = this.owner.enemy;
@@ -134,7 +132,8 @@ spawnfunc(item_sphere)
 
 	this.noise = "sphere/sphere.wav";
 	this.netname = "Vengeance Sphere";
-	settouch(this, newitems_touch);
+	this.powerups = POWERUP_V_SPHERE;
+	settouch(this, powerup_touch);
 
 	_setmodel(this, "progs/sphere.mdl");
 	setsize(this, '-8 -8 -8', '8 8 8');

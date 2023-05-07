@@ -1,0 +1,5 @@
+#pragma once
+
+entity bulletholes;
+entity lastbullet;
+int numbulletholes;

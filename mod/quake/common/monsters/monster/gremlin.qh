@@ -20,3 +20,9 @@ CLASS(Gremlin, Monster)
 ENDCLASS(Gremlin)
 
 REGISTER_MONSTER(GREMLIN, NEW(Gremlin));
+
+#ifdef SVQC
+.float gorging;
+.float stoleweapon;
+.entity lastvictim;
+#endif

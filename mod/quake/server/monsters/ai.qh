@@ -7,10 +7,20 @@ const int AS_STRAIGHT = 1;
 const int AS_SLIDING = 2;
 const int AS_MELEE = 3;
 const int AS_MISSILE = 4;
+const int AS_DODGING = 5; // hipnotic
 
 const int MONSTER_ATTACK_FRIEND = 32;
 const int SPAWNFLAG_NEARSIGHTED = 8192;
 const int SPAWNFLAG_NO_CONTENTS_DAMAGE = 16384;
+
+const float CHARMED_RADIUS = 1500;
+const float MAX_CHARMER_DISTANCE = 200;
+const float MIN_CHARMER_DISTANCE = 150;
+const float TOOCLOSE_CHARMER_DISTANCE = 120;
+
+const float MIN_ANGLE_DELTA = 10;
+
+.float visible_distance; // weird hipnotic feature
 
 .entity oldenemy;
 

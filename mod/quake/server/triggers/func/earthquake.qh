@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef SVQC
+float earthquake;
+bool quakeactive;
+
+void earthquake_postthink(entity this);
+void earthquake_frame();
+#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+const int FL_DECOY = BIT(20);
+
 const int MONSTER_SPAWNED = 4;
 const int MONSTER_SPAWNED_ANGRY = 8;
 const int MONSTER_SPAWNED_TFOG = 16;

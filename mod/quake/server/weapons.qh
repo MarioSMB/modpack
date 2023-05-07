@@ -2,6 +2,9 @@
 
 int autocvar_sv_cheats;
 
+// laser cannon
+.vector old_velocity;
+
 .bool elec;
 .bool lightningmodel;
 

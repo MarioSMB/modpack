@@ -154,5 +154,22 @@ spawnfunc(trigger_teleport)
 	}
 }
 
+void effect_teleport_use(entity this, entity actor, entity trigger)
+{
+	te_teleport(this.origin);
+
+	sound(this, CH_VOICE, SND_TELE1, 1, ATTN_NORM);
+}
+
+/*QUAKED effect_teleport (0.3 0.1 0.6) (-8 -8 -8) (8 8 8)
+ Create a teleport effect when triggered
+*/
+
+spawnfunc(effect_teleport)
+{
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
+	this.use = effect_teleport_use;
+}
 
 #endif

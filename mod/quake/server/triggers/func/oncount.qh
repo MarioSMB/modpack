@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+float counter_GetCount(entity counter);
+#endif

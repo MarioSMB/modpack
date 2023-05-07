@@ -732,7 +732,7 @@ bool visible(entity this, entity targ)
 		return false; // sight line crossed contents
 	if(trace_fraction == 1)
 	{
-		visible_distance = vlen(spot2 - spot1);
+		this.visible_distance = vlen(spot2 - spot1);
 		return true;
 	}
 
@@ -1059,12 +1059,12 @@ bool FindTarget(entity this)
 		float dist = CHARMED_RADIUS;
 		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && it.health > 0,
 		{
-			if(visible(this, it) && visible_distance < dist)
+			if(visible(this, it) && this.visible_distance < dist)
 			{
 				if(it != this && it != this.charmer && it.charmer != this.charmer)
 				{
 					selected = it;
-					dist = visible_distance;
+					dist = this.visible_distance;
 				}
 			}
 		});
@@ -1479,17 +1479,6 @@ void ai_run(entity this, float dist)
 	//this.enemy_infront = infront(this, this.enemy);
 	this.enemy_range = range(this, this.enemy);
 	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
-
-	//MED
-	if (MP_HIPNOTIC && this.th_turn)
-	{
-		float angledelta = fabs(this.angles_y - this.enemy_yaw);
-		if (angledelta > MIN_ANGLE_DELTA)
-		{
-			this.th_turn(this);
-			return;
-		}
-	}
 	
 	if(this.attack_state == AS_MISSILE)
 	{

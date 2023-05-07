@@ -1,7 +1,6 @@
 #pragma once
 
 #ifdef SVQC
-#include "../../server/hipnotic/defs.qh"
 #include "../../server/player.qh"
 #include "../../server/rogue/lava_wpn.qh"
 #include "../../server/rogue/runes.qh"

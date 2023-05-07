@@ -1,41 +1,6 @@
+#include "rotate.qh"
+
 #ifdef SVQC
-
-const int STATE_ACTIVE      = 0;
-const int STATE_INACTIVE    = 1;
-const int STATE_SPEEDINGUP  = 2;
-const int STATE_SLOWINGDOWN = 3;
-
-const int STATE_CLOSED   = 4;
-const int STATE_OPEN     = 5;
-const int STATE_OPENING  = 6;
-const int STATE_CLOSING  = 7;
-
-const int STATE_WAIT = 0;
-const int STATE_MOVE = 1;
-const int STATE_STOP = 2;
-const int STATE_FIND = 3;
-const int STATE_NEXT = 4;
-
-const int OBJECT_ROTATE 	= 0;
-const int OBJECT_MOVEWALL 	= 1;
-const int OBJECT_SETORIGIN 	= 2;
-
-const int TOGGLE   = BIT(0);
-const int START_ON = BIT(1);
-
-const int ROTATION 		= BIT(0);
-const int ANGLES 		= BIT(1);
-const int STOP 			= BIT(2);
-const int NO_ROTATE 	= BIT(3);
-const int DAMAGE   		= BIT(4);
-const int MOVETIME 		= BIT(5);
-const int SET_DAMAGE 	= BIT(6);
-
-const int VISIBLE 		= BIT(0);
-const int TOUCH 		= BIT(1);
-const int NONBLOCKING 	= BIT(2);
-
-const int STAYOPEN = BIT(0);
 
 /*QUAKED info_rotate (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as the point of rotation for rotatable objects.

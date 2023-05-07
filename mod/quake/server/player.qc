@@ -278,7 +278,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(MP_HIPNOTIC && footsteps == 1 && !gameover)
+	if(MP_HIPNOTIC && autocvar_g_footsteps == 1 && !gameover)
 	{
 		this.spawnsilent = this.spawnsilent + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -311,7 +311,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(MP_IMPEL && footsteps == 2 && !gameover)
+	if(MP_IMPEL && autocvar_g_footsteps == 2 && !gameover)
 	{
 		if(this.waterlevel == 0)
 		{

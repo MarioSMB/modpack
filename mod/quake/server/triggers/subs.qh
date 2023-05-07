@@ -2,6 +2,10 @@
 
 #ifdef SVQC
 
+void SUB_CopyEntity(entity srcent, entity destent);
+
+vector SUB_NormalizeAngles(vector ang);
+
 bool RemovedOutsideCoop(entity this);
 
 bool Inhibit_Coop(entity this);

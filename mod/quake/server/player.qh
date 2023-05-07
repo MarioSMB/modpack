@@ -1,5 +1,7 @@
 #pragma once
 
+bool autocvar_g_footsteps;
+
 .int walkframe;
 
 void player_run(entity this);

@@ -1,5 +1,6 @@
 #ifdef SVQC
 
+.entity tesla_nextent;
 .entity tesla_target;
 int trap_tesla_scan(entity this)
 {
@@ -13,7 +14,7 @@ int trap_tesla_scan(entity this)
 			if(tesla_numtargets == 0)
 				this.tesla_target = it;
 			else
-				prev.next_ent = it;
+				prev.tesla_nextent = it;
 			tesla_numtargets += 1;
 			prev = it;
 			if(tesla_numtargets >= this.count)
@@ -103,7 +104,7 @@ void trap_tesla_think(entity this)
 			{
 				_sound(this, CHAN_AUTO, "hipweap/mjolhit.wav", 1, ATTN_NORM);
 				SpawnTeslaLightning(this, this.tesla_target);
-				this.tesla_target = this.tesla_target.next_ent;
+				this.tesla_target = this.tesla_target.tesla_nextent;
 				numtargets = numtargets - 1;
 			}
 			this.attack_state = 2;

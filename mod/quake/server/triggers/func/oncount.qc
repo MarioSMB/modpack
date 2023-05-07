@@ -1,3 +1,5 @@
+#include "oncount.qh"
+
 #ifdef SVQC
 
 int counter_GetCount(entity counter)

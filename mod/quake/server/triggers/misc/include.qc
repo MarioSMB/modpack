@@ -2,7 +2,9 @@
 
 #include "ambient.qc"
 #include "barrel.qc"
+#include "command.qc"
 #include "corpse.qc"
+#include "finale.qc"
 #include "fireball.qc"
 #include "model.qc"
 #include "rotate.qc"

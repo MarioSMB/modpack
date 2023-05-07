@@ -18,7 +18,7 @@ void random_pick_type(entity this)
 
 	if(randItem < 0.2)
 	{
-		settouch(this, newitems_touch);
+		settouch(this, powerup_touch);
 		this.noise = "shield/pickup.wav";
 		_setmodel(this, "progs/shield.mdl");
 		this.netname = "Power Shield";
@@ -28,7 +28,7 @@ void random_pick_type(entity this)
 	}
 	else if(randItem < 0.4)
 	{
-		settouch(this, newitems_touch);
+		settouch(this, powerup_touch);
 		this.noise = "belt/pickup.wav";
 		_setmodel(this, "progs/beltup.mdl");
 		this.netname = "Anti-Grav Belt";

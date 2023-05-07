@@ -1,0 +1,3 @@
+#pragma once
+
+void sphere_spawn(entity this, entity toucher);

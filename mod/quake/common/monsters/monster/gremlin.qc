@@ -179,9 +179,9 @@ bool GremlinFindTarget(entity this)
 				float res = fabs(it.origin_z - this.origin_z);
 				if(visible(this, it) && res < 80 && !it.gorging)
 				{
-					if(visible_distance < dist)
+					if(this.visible_distance < dist)
 					{
-						dist = visible_distance;
+						dist = this.visible_distance;
 						gorge = it;
 					}
 				}
@@ -194,9 +194,9 @@ bool GremlinFindTarget(entity this)
 				float res = fabs(it.origin_z - this.origin_z);
 				if(visible(this, it) && res < 80 && !it.gorging)
 				{
-					if(visible_distance < dist)
+					if(this.visible_distance < dist)
 					{
-						dist = visible_distance;
+						dist = this.visible_distance;
 						gorge = it;
 					}
 				}
@@ -211,9 +211,9 @@ bool GremlinFindTarget(entity this)
 				float res = fabs(it.origin_z - this.origin_z);
 				if(visible(this, it) && res < 80 && !it.gorging)
 				{
-					if(visible_distance < dist)
+					if(this.visible_distance < dist)
 					{
-						dist = visible_distance;
+						dist = this.visible_distance;
 						gorge = it;
 					}
 				}

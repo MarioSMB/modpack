@@ -1,3 +1,5 @@
+#include "exploder.qh"
+
 #ifdef SVQC
 
 const int USE_PARTICLES = BIT(0);

@@ -1,5 +1,6 @@
-#ifdef SVQC
+#include "spawn.qh"
 
+#ifdef SVQC
 void func_spawn_think(entity this)
 {
 	setthink(this, func_spawn_think);

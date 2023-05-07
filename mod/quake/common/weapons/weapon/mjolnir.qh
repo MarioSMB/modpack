@@ -16,3 +16,7 @@ ENDCLASS(Mjolnir)
 REGISTER_WEAPON(MJOLNIR, NEW(Mjolnir));
 
 //SPAWNFUNC_WEAPON(weapon_shotgun, WEP_MJOLNIR)
+
+#ifdef SVQC
+.bool struck_by_mjolnir;
+#endif

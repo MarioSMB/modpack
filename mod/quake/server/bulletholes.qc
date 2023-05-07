@@ -1,9 +1,4 @@
-/* Bullet holes QuickC program
-	By Jim Dose'  11/20/96
-	Copyright (c)1996 Hipnotic Interactive, Inc.
-	All rights reserved.
-	Distributed (unsupported) on 3.12.97
-*/
+#include "bulletholes.qh"
 
 /*QUAKED wallsprite (0 1 0) (-8 -8 -8) (8 8 8)
 Places a sprite on a wall.  Angles should be opposite of face.
