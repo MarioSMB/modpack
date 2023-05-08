@@ -18,6 +18,8 @@
 	.bool move_qcphysics;
 
 	.int swim_flag;
+
+	void Physics_UpdateStats(entity this);
 #endif
 
 .float teleport_time;

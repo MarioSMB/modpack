@@ -225,17 +225,11 @@ void player_stand1(entity this)
 		return;
 	}
 
-	if(this.weaponentity.m_weapon == WEP_AXE || (this.weaponentity.m_weapon == WEP_MJOLNIR && this.model != "progs/player.mdl"))
+	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
 		this.frame = anim_player_axstnd1 + this.walkframe;
-	}
-	else if(this.weaponentity.m_weapon == WEP_MJOLNIR)
-	{
-		if(this.walkframe >= 12)
-			this.walkframe = 0;
-		this.frame = 6 + this.walkframe;
 	}
 	else
 	{
@@ -246,6 +240,7 @@ void player_stand1(entity this)
 	this.walkframe = this.walkframe + 1;	
 }
 
+.float footstep;
 void player_run(entity this)
 {
 	set_anim(this, anim_player_rockrun1, player_run);
@@ -258,17 +253,11 @@ void player_run(entity this)
 		return;
 	}
 
-	if(this.weaponentity.m_weapon == WEP_AXE || (this.weaponentity.m_weapon == WEP_MJOLNIR && this.model != "progs/player.mdl"))
+	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 6)
 			this.walkframe = 0;
 		this.frame = anim_player_axrun1 + this.walkframe;
-	}
-	else if(this.weaponentity.m_weapon == WEP_MJOLNIR)
-	{
-		if(this.walkframe >= 6)
-			this.walkframe = 0;
-		this.frame = this.walkframe;
 	}
 	else
 	{
@@ -280,16 +269,16 @@ void player_run(entity this)
 
 	if(MP_HIPNOTIC && autocvar_g_footsteps == 1 && !gameover)
 	{
-		this.spawnsilent = this.spawnsilent + vlen(this.origin - this.old_velocity);
+		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
 		if(IS_ONGROUND(this) && this.waterlevel <= 1)
 		{
-			if(this.spawnsilent > 95)
+			if(this.footstep > 95)
 			{
-				if(this.spawnsilent > 190)
-					this.spawnsilent = 0;
+				if(this.footstep > 190)
+					this.footstep = 0;
 				else
-					this.spawnsilent = 0.5 * (this.spawnsilent - 95);
+					this.footstep = 0.5 * (this.footstep - 95);
 
 				float r = random();
 				if(r < 0.14)
@@ -363,312 +352,13 @@ void player_run(entity this)
 	}
 }
 
+// player animations shared among multiple weapons
 void player_shot6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); this.weaponentity.m_frame = 6; }
 void player_shot5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shot6); this.weaponentity.m_frame = 5; }
 void player_shot4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shot5); this.weaponentity.m_frame = 4; }
 void player_shot3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shot4); this.weaponentity.m_frame = 3; }
 void player_shot2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shot3); this.weaponentity.m_frame = 2; }
 void player_shot1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shot2); this.weaponentity.m_frame = 1; this.effects |= EF_MUZZLEFLASH; }
-
-void player_shotimp10(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
-void player_shotimp9(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shotimp10); this.weaponentity.m_frame = 8; }
-void player_shotimp8(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shotimp9); this.weaponentity.m_frame = 7; }
-void player_shotimp7(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shotimp8); this.weaponentity.m_frame = 6; _sound(this, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
-void player_shotimp6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp7); this.weaponentity.m_frame = 6; }
-void player_shotimp5(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp6); this.weaponentity.m_frame = 5; }
-void player_shotimp4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp5); this.weaponentity.m_frame = 4; W_FireSpear(this); }
-void player_shotimp3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp4); this.weaponentity.m_frame = 3; this.effects |= EF_MUZZLEFLASH; }
-void player_shotimp2(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp3); this.weaponentity.m_frame = 2; _sound(this, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
-void player_shotimp1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp2); this.weaponentity.m_frame = 1; }
-
-void player_axe4(entity this) { set_animofs(this, anim_player_axatt1, 4, player_run); this.weaponentity.m_frame = 4; }
-void player_axe3(entity this) { set_animofs(this, anim_player_axatt1, 3, player_axe4); this.weaponentity.m_frame = 3; W_FireAxe(this); }
-void player_axe2(entity this) { set_animofs(this, anim_player_axatt1, 2, player_axe3); this.weaponentity.m_frame = 2; }
-void player_axe1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_axe2); this.weaponentity.m_frame = 1; }
-
-void player_axeb4(entity this) { set_animofs(this, anim_player_axattb1, 4, player_run); this.weaponentity.m_frame = 8; }
-void player_axeb3(entity this) { set_animofs(this, anim_player_axattb1, 3, player_axeb4); this.weaponentity.m_frame = 7; W_FireAxe(this); }
-void player_axeb2(entity this) { set_animofs(this, anim_player_axattb1, 2, player_axeb3); this.weaponentity.m_frame = 6; }
-void player_axeb1(entity this) { set_animofs(this, anim_player_axattb1, 1, player_axeb2); this.weaponentity.m_frame = 5; }
-
-void player_axec4(entity this) { set_animofs(this, anim_player_axattc1, 4, player_run); this.weaponentity.m_frame = 4; }
-void player_axec3(entity this) { set_animofs(this, anim_player_axattc1, 3, player_axec4); this.weaponentity.m_frame = 3; W_FireAxe(this); }
-void player_axec2(entity this) { set_animofs(this, anim_player_axattc1, 2, player_axec3); this.weaponentity.m_frame = 2; }
-void player_axec1(entity this) { set_animofs(this, anim_player_axattc1, 1, player_axec2); this.weaponentity.m_frame = 1; }
-
-void player_axed4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); this.weaponentity.m_frame = 8; }
-void player_axed3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_axed4); this.weaponentity.m_frame = 7; W_FireAxe(this); }
-void player_axed2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_axed3); this.weaponentity.m_frame = 6; }
-void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_axed2); this.weaponentity.m_frame = 5; }
-
-
-//============================================================================
-//ZOID--
-void W_FireGrapple(entity this);
-
-void player_grapple3(entity this);
-void player_grapple5(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); this.weaponentity.m_frame = 1; }
-void player_grapple4(entity this)
-{
-	set_animofs(this, anim_player_deathc1, 4, player_grapple4);
-	this.weaponentity.m_frame = 2;
-	if(!this.hook_out)
-	{
-		player_grapple5(this);
-		return;
-	}
-	if(!this.on_hook || vdist(this.hook.origin - this.origin, <, 5))
-	{
-		player_grapple3(this);
-		return;
-	}
-}
-void player_grapple3(entity this)
-{
-	set_animofs(this, anim_player_axattd1, 3, player_grapple3);
-	this.weaponentity.m_frame = 2;
-	if(!this.hook_out)
-	{
-		player_grapple5(this);
-		return;
-	}
-	if(this.on_hook && vdist(this.hook.origin - this.origin, >=, 50))
-	{
-		player_grapple4(this);
-		return;
-	}
-}
-void player_grapple2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_grapple3); this.weaponentity.m_frame = 2; }
-void player_grapple1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_grapple2); this.weaponentity.m_frame = 1; W_FireGrapple(this); }
-
-//--ZOID
-//============================================================================
-
-void player_rifle6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
-void player_rifle5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_rifle6); }
-void player_rifle4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_rifle5); }
-void player_rifle3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_rifle4); }
-void player_rifle2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_rifle3); }
-void player_rifle1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_rifle2); this.weaponentity.m_frame = 0; this.effects |= EF_MUZZLEFLASH; }
-
-void player_nail2(entity this);
-void player_nail1(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 1, player_nail2);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSpikes(this, 3);
-	this.attack_finished = time + 0.2;
-}
-void player_nail2(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 2, player_nail1);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSpikes(this, -3);
-	this.attack_finished = time + 0.2;
-}
-
-//============================================================================
-
-void W_FireLavaSpikes(entity this, float ox);
-
-void player_lava_nail2(entity this);
-void player_lava_nail1(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 1, player_lava_nail2);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-	{
-		player_run(this);
-		return;
-	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireLavaSpikes(this, 3);
-	this.attack_finished = time + 0.2;
-}
-void player_lava_nail2(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 2, player_lava_nail1);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireLavaSpikes(this, -4);
-	this.attack_finished = time + 0.2;
-}
-
-void player_superlight2(entity this);
-void player_superlight1(entity this)
-{
-	set_animofs(this, anim_player_light1, 1, player_superlight2);
-
-	if(this.ammo_cells < 1)
-	{
-		this.attack_finished = time + 0.5;
-		_sound(this, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
-		this.ammo_cells = 0;
-		W_SetCurrentAmmo(this);
-		return;
-	}
-	this.attack_finished = time + 0.1;
-	_sound(this, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
-	this.effects |= EF_MUZZLEFLASH;
-	if(!this.button0)
-	{
-		player_run(this);
-		return;
-	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLightning(this);
-}
-
-void player_superlight2(entity this)
-{
-	set_animofs(this, anim_player_light1, 2, player_superlight1);
-
-	this.effects |= EF_MUZZLEFLASH;
-	if(!this.button0)
-	{
-		player_run(this);
-		return;
-	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLightning(this);
-	this.attack_finished = time + 0.1;
-}
-
-//============================================================================
-//ooppee - the entire player_light1 had to be reverted back to id1 code so replace the old player_light1 and player_light2 code with this, I deleted the old code.
-
-void player_light2(entity this);
-void player_light1(entity this)
-{
-	set_animofs(this, anim_player_light1, 1, player_light2);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	//if(this.weapon == WEP_PLASMA_GUN.m_id)
-	//{
-		//W_FirePlasma(this);
-		//player_run(this);
-		//return;
-	//}
-	//else
-	//{
-		W_FireLightning(this);
-		this.attack_finished = time + 0.2;
-	//}
-}
-void player_light2(entity this)
-{
-	set_animofs(this, anim_player_light1, 1, player_light1);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	//if(this.weapon != WEP_PLASMA_GUN.m_id)
-	//{
-		W_FireLightning(this);
-		this.attack_finished = time + 0.2;
-	//}
-}
-//ooppee end
-//ooppee the new plasma code it's a whole new addition. This gives the first person weapon a animation. It does however change the Thirdperson (Player model) animation.
-//it previously used the Shaft/Lightning Guns animation. That caused issues due to how short. So I gave it the RPG player model animation. More suiting after all you are
-//launching a fucking energy ball of death lol
-//A HUGE thanks to the guys at inside3d.com forums for guiding me in the right direction to figure this out!
-void W_FirePlasma(entity this);
-
-void player_plasma6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponentity.m_frame = 5; } //ooppee uses the rocket fire animation for thirdperson, it's 6 frames though, not 5 so had to dupe it.
-void player_plasma5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_plasma6); this.weaponentity.m_frame = 5; }
-void player_plasma4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_plasma5); this.weaponentity.m_frame = 4; }
-void player_plasma3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_plasma4); this.weaponentity.m_frame = 3; }
-void player_plasma2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_plasma3); this.weaponentity.m_frame = 2; }
-void player_plasma1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_plasma2); this.weaponentity.m_frame = 1; this.effects |= EF_MUZZLEFLASH; }
-
-//ooppee end
-//============================================================================
-
-
-//MED 10/18/96 added HIPWEAPONS
-//============================================================================
-
-bool hamanim(entity this)
-{
-	return (this.model == "progs/player.mdl");
-}
-
-void player_hammer6(entity this) { set_anim(this, ((hamanim(this)) ? 37 : anim_player_axatt1 + 2), player_run); this.weaponentity.m_frame = 4; }
-void player_hammer5(entity this) { set_anim(this, ((hamanim(this)) ? 36 : anim_player_axatt1 + 2), player_hammer6); this.weaponentity.m_frame = 4; }
-void player_hammer4(entity this) { set_anim(this, ((hamanim(this)) ? 35 : anim_player_axatt1 + 2), player_hammer5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
-void player_hammer3(entity this) { set_anim(this, ((hamanim(this)) ? 34 : anim_player_axatt1 + 2), player_hammer4); this.weaponentity.m_frame = 3; }
-void player_hammer2(entity this) { set_anim(this, ((hamanim(this)) ? 33 : anim_player_axatt1 + 1), player_hammer3); this.weaponentity.m_frame = 2; }
-void player_hammer1(entity this) { set_anim(this, ((hamanim(this)) ? 32 : anim_player_axatt1 + 3), player_hammer2); this.weaponentity.m_frame = 1; }
-
-void player_mjolnir6(entity this) { set_anim(this, ((hamanim(this)) ? 43 : anim_player_axatt1 + 2), player_run); this.weaponentity.m_frame = 4; }
-void player_mjolnir5(entity this) { set_anim(this, ((hamanim(this)) ? 42 : anim_player_axatt1 + 2), player_mjolnir6); this.weaponentity.m_frame = 4; }
-void player_mjolnir4(entity this) { set_anim(this, ((hamanim(this)) ? 31 : anim_player_axatt1 + 2), player_mjolnir5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
-void player_mjolnir3(entity this) { set_anim(this, ((hamanim(this)) ? 40 : anim_player_axatt1 + 2), player_mjolnir4); this.weaponentity.m_frame = 3; }
-void player_mjolnir2(entity this) { set_anim(this, ((hamanim(this)) ? 39 : anim_player_axatt1 + 1), player_mjolnir3); this.weaponentity.m_frame = 2; }
-void player_mjolnir1(entity this) { set_anim(this, ((hamanim(this)) ? 38 : anim_player_axatt1), player_mjolnir2); this.weaponentity.m_frame = 1; }
-
-//============================================================================
-
-//MED 10/18/96 added HIPSWEAPONS
-//void() player_laser1   =[$nailatt1, player_laser2  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=1;this.nextthink = time + 0.09;HIP_FireLaser(0);}
-//void() player_laser2   =[$nailatt2, player_laser4  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=2;this.nextthink = time + 0.09;}
-//void() player_laser3   =[$nailatt1, player_laser4  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=3;this.nextthink = time + 0.09;}
-//void() player_laser4   =[$nailatt2, player_laser5  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=4;this.nextthink = time + 0.09;HIP_FireLaser(1);}
-//void() player_laser5   =[$nailatt1, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=5;this.nextthink = time + 0.09;}
-//void() player_laser6   =[$nailatt2, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=6;this.nextthink = time + 0.09;}
-void player_laser1(entity this);
-void player_laser4(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser1); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 5; this.nextthink = time + 0.1; }
-void player_laser3(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser1); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 4; this.nextthink = time + 0.1; HIP_FireLaser(this, 1); }
-void player_laser2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser3); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 2; this.nextthink = time + 0.1; }
-void player_laser1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser3); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 1; this.nextthink = time + 0.1; HIP_FireLaser(this, 0); }
-
 
 void player_rocket6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponentity.m_frame = 6; }
 void player_rocket5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_rocket6); this.weaponentity.m_frame = 5; }
@@ -763,14 +453,6 @@ void player_axpain3(entity this) { set_animofs(this, anim_player_axpain1, 3, pla
 void player_axpain2(entity this) { set_animofs(this, anim_player_axpain1, 2, player_axpain3); }
 void player_axpain1(entity this, entity attacker) { set_animofs(this, anim_player_axpain1, 1, player_axpain2); PainSound(this, attacker); this.weaponentity.m_frame = 0; }
 
-// hipnotic
-void player_hampain6(entity this) { set_anim(this, 23, player_run); }
-void player_hampain5(entity this) { set_anim(this, 22, player_hampain6); }
-void player_hampain4(entity this) { set_anim(this, 21, player_hampain5); }
-void player_hampain3(entity this) { set_anim(this, 20, player_hampain4); }
-void player_hampain2(entity this) { set_anim(this, 19, player_hampain3); }
-void player_hampain1(entity this, entity attacker) { set_anim(this, 18, player_hampain2); PainSound(this, attacker); this.weaponentity.m_frame = 0; }
-
 void player_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.weaponentity.m_frame)
@@ -782,10 +464,8 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if(this.weaponentity.m_weapon == WEP_AXE || (this.weaponentity.m_weapon == WEP_MJOLNIR && this.model != "progs/player.mdl"))
+	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 		player_axpain1(this, attacker);
-	else if(this.weaponentity.m_weapon == WEP_MJOLNIR)
-		player_hampain1(this, attacker);
 	else
 		player_pain1(this, attacker);
 	if(MP_IMPEL)
@@ -798,9 +478,6 @@ void player_diec1(entity this);
 void player_died1(entity this);
 void player_diee1(entity this);
 void player_die_ax1(entity this);
-
-// hipnotic
-void player_die_ham1(entity this);
 
 /*QUAKED air_bubbles(0 .5 .8)(-8 -8 -8)(8 8 8)
 
@@ -1197,15 +874,9 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
-	if(this.weaponentity.m_weapon == WEP_AXE || (this.weaponentity.m_weapon == WEP_MJOLNIR && this.model != "progs/player.mdl")) // katria has no hammer model
+	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		player_die_ax1(this);
-		return;
-	}
-	else if(this.weaponentity.m_weapon == WEP_MJOLNIR)
-	{
-		this.modelindex = modelindex_hammer; // use hammer model
-		player_die_ham1(this);
 		return;
 	}
 	
@@ -1225,7 +896,7 @@ void set_suicide_frame(entity this)
 {	// used by kill command and disconnect command
 	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl" && this.model != "progs/player_mario.mdl")
 		return;	// already gibbed
-	this.frame = anim_player_deatha1 + (11 - 1); // frame 11, hax
+	this.frame = anim_player_deatha1 + (11 - 1); // animation frames start at 1
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_TOSS);
 	this.deadflag = DEAD_DEAD;
@@ -1299,16 +970,6 @@ void player_die_ax4(entity this) { set_animofs(this, anim_player_axdeth1, 4, pla
 void player_die_ax3(entity this) { set_animofs(this, anim_player_axdeth1, 3, player_die_ax4); }
 void player_die_ax2(entity this) { set_animofs(this, anim_player_axdeth1, 2, player_die_ax3); }
 void player_die_ax1(entity this) { set_animofs(this, anim_player_axdeth1, 1, player_die_ax2); }
-
-// hipnotic animations
-void player_die_ham8(entity this) { set_anim(this, 31, player_die_ham8); PlayerDead(this); }
-void player_die_ham7(entity this) { set_anim(this, 30, player_die_ham8); }
-void player_die_ham6(entity this) { set_anim(this, 29, player_die_ham7); }
-void player_die_ham5(entity this) { set_anim(this, 28, player_die_ham6); }
-void player_die_ham4(entity this) { set_anim(this, 27, player_die_ham5); }
-void player_die_ham3(entity this) { set_anim(this, 26, player_die_ham4); }
-void player_die_ham2(entity this) { set_anim(this, 25, player_die_ham3); }
-void player_die_ham1(entity this) { set_anim(this, 24, player_die_ham2); }
 
 void shield_spawn(entity shieldOwner, vector dir);
 

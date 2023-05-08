@@ -3,16 +3,25 @@
 CLASS(Thunderbolt, Weapon)
 /* ammotype  */ ATTRIB(Thunderbolt, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(Thunderbolt, impulse, int, 8);
-/* cnt       */ ATTRIB(Thunderbolt, cnt, int, 249); // arc
 /* spawnflags*/ ATTRIB(Thunderbolt, spawnflags, int, 0);
+/* ammo */      ATTRIB(Thunderbolt, aflag, int, 15);
 /* modelname */ ATTRIB(Thunderbolt, mdl, string, "light");
 /* crosshair */ ATTRIB(Thunderbolt, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(Thunderbolt, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(Thunderbolt, w_crosshair_color, vector, '1 1 1');
+/* wepimg    */ ATTRIB(Thunderbolt, model2, string, "lightng");
 /* refname   */ ATTRIB(Thunderbolt, netname, string, "lightning");
 /* wepname   */ ATTRIB(Thunderbolt, m_name, string, _("Thunderbolt"));
 
 ENDCLASS(Thunderbolt)
 REGISTER_WEAPON(LIGHTNING, NEW(Thunderbolt));
 
+// defined elsewhere
 //SPAWNFUNC_WEAPON(weapon_lightning, WEP_LIGHTNING)
+
+#ifdef SVQC
+void player_light1(entity this);
+void player_light2(entity this);
+
+void W_FireLightning(entity this);
+#endif

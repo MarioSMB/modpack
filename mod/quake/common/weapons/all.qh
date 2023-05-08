@@ -2,36 +2,27 @@
 
 #include "weapon.qh"
 
+#ifdef GAMEQC
+// TODO: cleaner way to list these?
+noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler lightning plasma lightme laser_gun grenadelauncher multigrenade proximitygun napalm supernailgun lavasupernailgun sshotgun nailgun lavanailgun shotgun hammer axe grapple";
+noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
+noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher multirocketlauncher impaler grenadelauncher multigrenade proximitygun napalm"; // explosives
+noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma lightme"; // energy
+noref string autocvar_cl_quake_weaponpriority2 = "lightning"; // hitscan exact
+noref string autocvar_cl_quake_weaponpriority3 = "lightning sshotgun shotgun"; // hitscan all
+noref string autocvar_cl_quake_weaponpriority4 = "laser_gun grenadelauncher multigrenade napalm supernailgun lavasupernailgun nailgun lavanailgun"; // spam weapons
+noref string autocvar_cl_quake_weaponpriority5 = "impaler grapple"; // movement weapons
+noref string autocvar_cl_quake_weaponpriority6 = "";
+noref string autocvar_cl_quake_weaponpriority7 = "";
+noref string autocvar_cl_quake_weaponpriority8 = "";
+noref string autocvar_cl_quake_weaponpriority9 = "";
+noref int autocvar_cl_quake_weaponimpulsemode = 0;
+noref bool autocvar_cl_quake_weapon_switch_fallback_to_impulse = true;
+#endif
+
 #ifdef SVQC
-// TODO
-void player_axe1(entity this);
-void player_axeb1(entity this);
-void player_axec1(entity this);
-void player_axed1(entity this);
 void player_shot1(entity this);
-void player_nail1(entity this);
-void player_light1(entity this);
 void player_rocket1(entity this);
-void player_lava_nail1(entity this);
-void player_plasma1(entity this); //ooppee addon
-//ZOID--
-void player_grapple1(entity this);
-void player_grapple3(entity this);
-//--ZOID
-
-//MED
-void player_laser1(entity this);
-void player_hammer1(entity this);
-void player_mjolnir1(entity this);
-
-void W_FireMultiGrenade(entity this);
-void W_FireMultiRocket(entity this);
-void W_FirePlasma(entity this); //ooppee addon
-
-// impel
-void player_superlight1(entity this);
-void player_rifle1(entity this);
-void player_shotimp1(entity this);
 #endif
 
 #ifdef SVQC
@@ -72,20 +63,39 @@ WepSet WEPSET_ALL;
 
 #include "all.inc"
 
-//const int WEP_HARDCODED_IMPULSES = 20;
-//REGISTRY_SORT(Weapons)
+// TODO: invert after changes have been made to the hardcoded weapon impulses. Will require moving 'best weapon' impulses
+#define WEP_IMPULSE_BEGIN 230
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
+
+REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
 REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
+    string inaccessible = "";
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
+        if (it == WEP_Null) continue;
+        int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
+        if (imp <= WEP_IMPULSE_END)
+            localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+        else
+            inaccessible = strcat(inaccessible, "\n", it.netname);
     });
-    #ifdef CSQC
-    FOREACH(Weapons, true, it.wr_init(it));
-    #endif
+    if (inaccessible != "" && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
+    weaponorder_byid = "";
+    for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
+        if (REGISTRY_GET(Weapons, i))
+            weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
+    weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
 }
+
+REPLICATE_INIT(bool, cvar_cl_weapon_switch_fallback_to_impulse);
+REPLICATE_INIT(int, cvar_cl_weaponimpulsemode);
+
+REPLICATE_INIT(string, cvar_cl_weaponpriority);
+REPLICATE_INIT(string, cvar_cl_weaponpriorities[10]);
 
 #ifdef GAMEQC
 .string weaponname; // name of .weapon
@@ -94,4 +104,9 @@ STATIC_INIT(register_weapons_done)
 
 vector shotorg_adjust_values(vector vecs);
 void CL_WeaponEntity_SetModel(entity this, string name);
+#endif
+
+#ifdef SVQC
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif

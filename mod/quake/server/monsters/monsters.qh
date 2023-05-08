@@ -1,5 +1,9 @@
 #pragma once
 
+.bool charmed;
+.entity charmer;
+.bool huntingcharmer;
+
 const int FL_DECOY = BIT(20);
 
 const int MONSTER_SPAWNED = 4;
@@ -12,3 +16,7 @@ const int MONSTER_WAITWALK = 4096;
 void monster_use(entity this, entity actor, entity trigger);
 
 bool monster_checkspawnedflag(entity this);
+
+bool monster_customize(entity this, entity client);
+
+void monster_start_go(entity this);

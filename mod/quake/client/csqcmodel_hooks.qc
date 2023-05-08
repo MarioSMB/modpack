@@ -1,4 +1,6 @@
 #include "csqcmodel_hooks.qh"
+
+#include "../common/effects/all.qh"
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>

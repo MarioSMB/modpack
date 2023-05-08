@@ -3,16 +3,24 @@
 CLASS(Nailgun, Weapon)
 /* ammotype  */ ATTRIB(Nailgun, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Nailgun, impulse, int, 4);
-/* cnt       */ ATTRIB(Nailgun, cnt, int, 232); // machinegun
 /* spawnflags*/ ATTRIB(Nailgun, spawnflags, int, 0);
+/* ammo */      ATTRIB(Nailgun, aflag, int, 30);
 /* modelname */ ATTRIB(Nailgun, mdl, string, "nail");
 /* crosshair */ ATTRIB(Nailgun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(Nailgun, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(Nailgun, w_crosshair_color, vector, '1 1 0');
-/* refname   */ ATTRIB(Nailgun, netname, string, "shotgun");
+/* wepimg    */ ATTRIB(Nailgun, model2, string, "nailgun");
+/* refname   */ ATTRIB(Nailgun, netname, string, "nailgun");
 /* wepname   */ ATTRIB(Nailgun, m_name, string, _("Nailgun"));
 
 ENDCLASS(Nailgun)
 REGISTER_WEAPON(NAILGUN, NEW(Nailgun));
 
-//SPAWNFUNC_WEAPON(weapon_nailgun, WEP_NAILGUN)
+SPAWNFUNC_WEAPON(weapon_nailgun, WEP_NAILGUN)
+
+#ifdef SVQC
+void player_nail1(entity this);
+void player_nail2(entity this);
+
+void W_FireSpikes(entity this, float ox);
+#endif

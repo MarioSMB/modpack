@@ -13,6 +13,10 @@ Ripped from DPMod
 vector findbetterlocation (vector org, float mindist);
 #endif
 
+string fixPriorityList(string pl, float from, float to, float subtract, float complete);
+string mapPriorityList(string order, string(string) mapfunc);
+string swapInPriorityList(string order, float i, float j);
+
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
@@ -27,6 +31,10 @@ float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengt
 string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
 float textLengthUpToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
 string textShortenToLength(string theText, int maxLength, textLengthUpToLength_lenFunction_t tw);
+
+string getWrappedLine_remaining;
+string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw);
+string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
 // Some common varargs functions. Lowercase as they match C.
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
@@ -58,6 +66,8 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
+
+float cvar_settemp(string tmp_cvar, string tmp_value);
 
 IntrusiveList g_saved_cvars;
 STATIC_INIT(g_saved_cvars) { g_saved_cvars = IL_NEW(); }

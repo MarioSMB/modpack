@@ -13,6 +13,7 @@ const int SPAWNFLAG_ROCKET = BIT(3);
 entity LaunchLaser(entity this, vector org, vector vec);
 void superlavaspike_touch(entity this, entity toucher);
 void superspike_touch(entity this, entity toucher);
+entity W_FireRocket(entity this);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {

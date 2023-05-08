@@ -1,2 +1,3 @@
 // generated file; do not modify
 #include "all.qh"
+#include "weapon/_mod.qh"

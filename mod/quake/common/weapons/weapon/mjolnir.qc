@@ -1,6 +1,20 @@
 #include "mjolnir.qh"
 
 #ifdef SVQC
+void player_hammer6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); this.weaponentity.m_frame = 4; }
+void player_hammer5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer6); this.weaponentity.m_frame = 4; }
+void player_hammer4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
+void player_hammer3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer4); this.weaponentity.m_frame = 3; }
+void player_hammer2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_hammer3); this.weaponentity.m_frame = 2; }
+void player_hammer1(entity this) { set_anim(this, anim_player_axatt1 + 3, player_hammer2); this.weaponentity.m_frame = 1; }
+
+void player_mjolnir6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); this.weaponentity.m_frame = 4; }
+void player_mjolnir5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir6); this.weaponentity.m_frame = 4; }
+void player_mjolnir4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
+void player_mjolnir3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir4); this.weaponentity.m_frame = 3; }
+void player_mjolnir2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_mjolnir3); this.weaponentity.m_frame = 2; }
+void player_mjolnir1(entity this) { set_anim(this, anim_player_axatt1, player_mjolnir2); this.weaponentity.m_frame = 1; }
+
 void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 {
 	vector f = p2 - p1;
@@ -193,7 +207,7 @@ void HIP_FireMjolnirLightning(entity this)
 //   }
 //   this.punchangle_x = 12;
 
-	this.currentammo = this.ammo_cells = this.ammo_cells - 15;
+	this.ammo_cells = this.ammo_cells - 15;
 
 	HIP_SpawnMjolnirBase(this);
 }
@@ -253,6 +267,11 @@ METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor))
 	else
 		player_mjolnir1(actor);
 	actor.attack_finished = time + RuneApplyHell(0.8, actor);
+}
+METHOD(Mjolnir, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	// while weapon does use ammo, also works fine without!
+	return true;
 }
 METHOD(Mjolnir, wr_suicidemessage, Notification(entity thiswep))
 {

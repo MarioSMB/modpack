@@ -1,6 +1,51 @@
 #include "super_lightning.qh"
 
 #ifdef SVQC
+void player_superlight1(entity this)
+{
+	set_animofs(this, anim_player_light1, 1, player_superlight2);
+
+	if(this.ammo_cells < 1)
+	{
+		this.attack_finished = time + 0.5;
+		_sound(this, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
+		this.ammo_cells = 0;
+		W_SetCurrentAmmo(this);
+		return;
+	}
+	this.attack_finished = time + 0.1;
+	_sound(this, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
+	this.effects |= EF_MUZZLEFLASH;
+	if(!this.button0)
+	{
+		player_run(this);
+		return;
+	}
+	this.weaponentity.m_frame += 1;
+	if(this.weaponentity.m_frame >= 5)
+		this.weaponentity.m_frame = 1;
+	SuperDamageSound(this);
+	W_FireSuperLightning(this);
+}
+
+void player_superlight2(entity this)
+{
+	set_animofs(this, anim_player_light1, 2, player_superlight1);
+
+	this.effects |= EF_MUZZLEFLASH;
+	if(!this.button0)
+	{
+		player_run(this);
+		return;
+	}
+	this.weaponentity.m_frame += 1;
+	if(this.weaponentity.m_frame >= 5)
+		this.weaponentity.m_frame = 1;
+	SuperDamageSound(this);
+	W_FireSuperLightning(this);
+	this.attack_finished = time + 0.1;
+}
+
 void superlightning_rebound(entity this)
 {
 	//this.owner = this.owner;
@@ -91,7 +136,6 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
-			//ThrowMe(this, toucher, damg);
 			if(!IS_PLAYER(toucher))
 				toucher.owner = this.owner;
 			else
@@ -119,7 +163,6 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
-			//ThrowMe(this, toucher, damg);
 			if(!IS_PLAYER(toucher))
 				toucher.owner = this.owner;
 			else
@@ -135,7 +178,6 @@ void LightningTouch(entity this, entity toucher)
 			T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 			if(toucher.takedamage == DAMAGE_AIM)
 				SpawnMeatBounce(this, toucher, damg);
-			//ThrowMe(this, toucher, damg);
 			delete(this);
 		}
 	}
@@ -160,7 +202,7 @@ void W_FireSuperLightning(entity this)
 		T_RadiusDamage(this, this, 35 * cells, DEATH_DISCHARGE.m_id, NULL);
 		return;
 	}
-	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
+	this.ammo_cells = this.ammo_cells - 1;
 	this.punchangle_x = -2;
 	entity missile = new(lightme);
 	missile.owner = missile.realowner = this;
@@ -202,6 +244,11 @@ METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor))
 		actor.ammo_cells = 0;
 		W_SetCurrentAmmo(actor);
 	}
+}
+METHOD(SuperLightning, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_cells >= 1;
+	return ammo_amount;
 }
 METHOD(SuperLightning, wr_suicidemessage, Notification(entity thiswep))
 {

@@ -1,5 +1,9 @@
 #pragma once
 
+int serverflags;
+
+bool postinit;
+
 IntrusiveList g_drawables;
 STATIC_INIT(main)
 {

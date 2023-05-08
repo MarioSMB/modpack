@@ -1,6 +1,17 @@
 #include "impaler.qh"
 
 #ifdef SVQC
+void player_shotimp10(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
+void player_shotimp9(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shotimp10); this.weaponentity.m_frame = 8; }
+void player_shotimp8(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shotimp9); this.weaponentity.m_frame = 7; }
+void player_shotimp7(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shotimp8); this.weaponentity.m_frame = 6; _sound(this, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
+void player_shotimp6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp7); this.weaponentity.m_frame = 6; }
+void player_shotimp5(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp6); this.weaponentity.m_frame = 5; }
+void player_shotimp4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp5); this.weaponentity.m_frame = 4; W_FireSpear(this); }
+void player_shotimp3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp4); this.weaponentity.m_frame = 3; this.effects |= EF_MUZZLEFLASH; }
+void player_shotimp2(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp3); this.weaponentity.m_frame = 2; _sound(this, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
+void player_shotimp1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp2); this.weaponentity.m_frame = 1; }
+
 void T_SpearTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
@@ -444,7 +455,7 @@ void impale(entity this)
 
 void W_FireSpear(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -477,6 +488,11 @@ METHOD(Impaler, wr_think, void(entity thiswep, entity actor))
 {
 	player_shotimp1(actor);
 	actor.attack_finished = time + 1;
+}
+METHOD(Impaler, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_rockets >= 1;
+	return ammo_amount;
 }
 METHOD(Impaler, wr_suicidemessage, Notification(entity thiswep))
 {

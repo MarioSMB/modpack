@@ -1,5 +1,13 @@
 #include "view.qh"
 
+#include "../common/constants.qh"
+#include <common/physics/movetypes/movetypes.qh>
+#include "../common/weapons/all.qh"
+#include "../common/wepent.qh"
+#include "../common/util.qh"
+
+void CSQCModel_InterpolateAnimation_Do(entity this);
+
 // shared across viewmodel effects and dynamic hud code
 vector cl_followmodel_ofs;
 float cl_followmodel_time;
@@ -395,6 +403,12 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else
 		drawframetime = bound(0.000001, time - drawtime, 1);
 	drawtime = time;
+
+	// watch for gametype changes here...
+	// in ParseStuffCMD the cmd isn't executed yet :/
+	// might even be better to add the gametype to TE_CSQC_INIT...?
+	if(!postinit)
+		PostInit();
 
 	if(intermission && !intermission_time)
 		intermission_time = time;

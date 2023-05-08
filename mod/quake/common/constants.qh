@@ -1,0 +1,50 @@
+#pragma once
+
+#include "stats.qh"
+
+// hack needed for xonotic references (helps reduce code duplication!)
+#define PHYS_INVEHICLE(s) 					false
+
+// temporary hack for mission pack logic
+#ifdef SVQC
+	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic
+	#define MP_ROGUE autocvar_sv_missionpack_rogue
+	#define MP_IMPEL autocvar_sv_missionpack_impel
+	#define MP_MG autocvar_sv_missionpack_mg
+#elif defined(CSQC)
+	#define MP_HIPNOTIC (STAT(MISSIONPACKS) & MISSIONPACK_HIPNOTIC)
+	#define MP_ROGUE (STAT(MISSIONPACKS) & MISSIONPACK_ROGUE)
+	#define MP_IMPEL (STAT(MISSIONPACKS) & MISSIONPACK_IMPEL)
+	#define MP_MG (STAT(MISSIONPACKS) & MISSIONPACK_MG)
+#endif
+
+// generic entity flags
+// engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
+#ifdef CSQC
+const int FL_FLY					= 1; /* BIT(0) */
+const int FL_SWIM					= 2; /* BIT(1) */
+const int FL_CLIENT					= 8; /* BIT(2) */	// set for all client edicts
+const int FL_INWATER				= 16; /* BIT(3) */	// for enter / leave water splash
+const int FL_MONSTER				= 32; /* BIT(4) */
+const int FL_GODMODE				= 64; /* BIT(5) */	// player cheat
+const int FL_NOTARGET				= 128; /* BIT(6) */	// player cheat
+const int FL_ITEM					= 256; /* BIT(7) */	// extra wide size for bonus items
+const int FL_ONGROUND				= 512; /* BIT(8) */	// standing on something
+const int FL_PARTIALGROUND			= 1024; /* BIT(9) */	// not all corners are valid
+const int FL_WATERJUMP				= 2048; /* BIT(10) */	// player jumping out of water
+const int FL_JUMPRELEASED			= 4096; /* BIT(11) */	// for jump debouncing
+#endif
+const int FL_WEAPON 				= BIT(12);
+const int FL_POWERUP 				= BIT(13);
+const int FL_PROJECTILE 			= BIT(14);
+const int FL_TOSSED 				= BIT(15);
+const int FL_SPAWNING 				= BIT(16);
+const int FL_PICKUPITEMS 			= BIT(17);
+const int FL_DUCKED 				= BIT(18);
+const int FL_ONSLICK 				= BIT(19);
+
+#if defined(SVQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
+#elif defined(CSQC)
+	#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
+#endif

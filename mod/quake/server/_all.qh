@@ -36,3 +36,4 @@ const string STR_PLAYER = "player";
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
 
 #include "world.qh"
+#include "../common/constants.qh"

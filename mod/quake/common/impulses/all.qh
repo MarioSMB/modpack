@@ -1,0 +1,161 @@
+#pragma once
+
+REGISTRY(IMPULSES, 255)
+REGISTER_REGISTRY(IMPULSES)
+REGISTRY_SORT(IMPULSES)
+
+REGISTRY_DEFINE_GET(IMPULSES, NULL)
+STATIC_INIT(IMPULSES_renumber)
+{
+	FOREACH(IMPULSES, true, it.m_id = i);
+}
+REGISTRY_CHECK(IMPULSES)
+
+.void(entity this) impulse_handle;
+
+#if defined(CSQC)
+#define IMPULSE_ALIAS(alias, id) localcmd("\nalias " #alias " \"", id ,"\"\n")
+#else
+#define IMPULSE_ALIAS(alias, id)
+#endif
+
+#define REGISTER_IMPULSE(id, n) _REGISTER_IMPULSE(IMP_##id, id, n)
+#define _REGISTER_IMPULSE(id, alias, n) \
+	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
+	{ \
+		this.impulse = n; \
+		IMPULSE_ALIAS(alias, "impulse " #n); \
+	}
+
+#define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
+
+void _impCheck(string s, string alias)
+{
+	// this is inside a function to avoid expanding it on compilation everytime
+	if (s == alias)
+		LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s);
+}
+
+#define LEGACY_IMPULSE(alias, id, new) \
+	STATIC_INIT(legacy_##alias) { \
+		string s = new; \
+		_impCheck(s, #alias); \
+		IMPULSE_ALIAS(alias, s); \
+	} \
+	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
+
+#define X(slot, imp) \
+	REGISTER_IMPULSE(weapon_group_##slot, imp) \
+	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
+X(1, 1)
+X(2, 2)
+X(3, 3)
+X(4, 4)
+X(5, 5)
+X(6, 6)
+X(7, 7)
+X(8, 8)
+X(9, 9)
+X(0, 14)
+#undef X
+
+#define X(slot, dir, imp) \
+	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) \
+	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
+X(0, prev, 200)
+X(1, prev, 201)
+X(2, prev, 202)
+X(3, prev, 203)
+X(4, prev, 204)
+X(5, prev, 205)
+X(6, prev, 206)
+X(7, prev, 207)
+X(8, prev, 208)
+X(9, prev, 209)
+
+X(0, best, 210)
+X(1, best, 211)
+X(2, best, 212)
+X(3, best, 213)
+X(4, best, 214)
+X(5, best, 215)
+X(6, best, 216)
+X(7, best, 217)
+X(8, best, 218)
+X(9, best, 219)
+
+X(0, next, 220)
+X(1, next, 221)
+X(2, next, 222)
+X(3, next, 223)
+X(4, next, 224)
+X(5, next, 225)
+X(6, next, 226)
+X(7, next, 227)
+X(8, next, 228)
+X(9, next, 229)
+#undef X
+
+// direct weapons
+
+#define X(i, imp) \
+	REGISTER_IMPULSE(weapon_byid_##i, imp)
+X(0, 230)
+X(1, 231)
+X(2, 232)
+X(3, 233)
+X(4, 234)
+X(5, 235)
+X(6, 236)
+X(7, 237)
+X(8, 238)
+X(9, 239)
+X(10, 240)
+X(11, 241)
+X(12, 242)
+X(13, 243)
+X(14, 244)
+X(15, 245)
+X(16, 246)
+X(17, 247)
+X(18, 248)
+X(19, 249)
+X(20, 250)
+X(21, 251)
+X(22, 252)
+X(23, 253)
+#undef X
+
+REGISTER_IMPULSE(weapon_next_byid, 10)
+LEGACY_IMPULSE(_weapnext_2, 10, "weapon_next_byid")
+
+REGISTER_IMPULSE(weapon_prev_byid, 12)
+LEGACY_IMPULSE(_weapprev_2, 12, "weapon_prev_byid")
+
+REGISTER_IMPULSE(weapon_next_bygroup, 18)
+LEGACY_IMPULSE(_weapnext_0, 18, "weapon_next_bygroup")
+
+REGISTER_IMPULSE(weapon_prev_bygroup, 19)
+LEGACY_IMPULSE(_weapprev_0, 19, "weapon_prev_bygroup")
+
+REGISTER_IMPULSE(weapon_next_bypriority, 15)
+LEGACY_IMPULSE(_weapnext_1, 15, "weapon_next_bypriority")
+
+REGISTER_IMPULSE(weapon_prev_bypriority, 16)
+LEGACY_IMPULSE(_weapprev_1, 16, "weapon_prev_bypriority")
+
+REGISTER_IMPULSE(weapon_last, 11)
+LEGACY_IMPULSE(weaplast, 11, "weapon_last")
+
+REGISTER_IMPULSE(weapon_best, 13)
+LEGACY_IMPULSE(weapbest, 13, "weapon_best")
+
+
+#define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
+#define _CHIMPULSE(id, n) \
+	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
+	{ \
+		this.impulse = n; \
+	}
+
+CHIMPULSE(GIVE_ALL, 99)

@@ -363,6 +363,7 @@ void actor_fire5(entity this)
 		theMachine.nextthink = time + 0.1;
 	}
 }
+entity W_FireRocket(entity this);
 void actor_fire4(entity this) { set_anim(this, anim_actor_rockatt4, actor_fire5); this.nextthink = time + 0.15; }
 void actor_fire3(entity this) { set_anim(this, anim_actor_rockatt3, actor_fire4); this.nextthink = time + 0.15; }
 void actor_fire2(entity this) { set_anim(this, anim_actor_rockatt2, actor_fire3); this.v_angle_x = 0; this.angles_x = 0; this.nextthink = time + 0.15; }

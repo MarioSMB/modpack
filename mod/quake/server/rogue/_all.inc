@@ -2,8 +2,6 @@
 #include "runes.qc"
 #include "motd.qc"
 
-#include "grapple.qc"
-
 #include "new_ai.qc"
 #include "newplats.qc"
 #include "newmisc.qc"

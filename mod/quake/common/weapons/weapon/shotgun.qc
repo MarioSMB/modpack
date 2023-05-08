@@ -7,7 +7,7 @@ void W_FireShotgun(entity this)
 
 	this.punchangle_x = -2;
 
-	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
+	this.ammo_shells = this.ammo_shells - 1;
 	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 6, dir, '0.04 0.04 0', WEP_SHOTGUN.m_id);
 }
@@ -17,6 +17,11 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor))
 	player_shot1(actor);
 	W_FireShotgun(actor);
 	actor.attack_finished = time + RuneApplyHell(0.5, actor);
+}
+METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_shells >= 1;
+	return ammo_amount;
 }
 METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
 {

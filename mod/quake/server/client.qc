@@ -1,5 +1,9 @@
 #include "client.qh"
 
+#include <lib/csqcmodel/sv_model.qh>
+#include <common/csqcmodel_settings.qh>
+#include "../common/physics.qh"
+#include "../common/weapons/weapon/grapple.qh"
 #include "combat.qh"
 #include "fog.qh"
 #include "getreplies.qh"
@@ -88,7 +92,8 @@ void SetChangeParms(entity this)
 		parm11 = this.ammo_lava_nails;
 		parm12 = this.ammo_multi_rockets;
 		parm13 = this.ammo_plasma;
-		parm15 = this.prevweapon;
+		if(this.weaponentity)
+			parm15 = this.weaponentity.cnt;
 		parm16 = this.items;
 	}
 }
@@ -165,7 +170,8 @@ void DecodeLevelParms(entity this)
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
 
-	this.prevweapon = parm15;
+	if(this.weaponentity)
+		this.weaponentity.cnt = parm15;
 	this.items = parm16;
 	this.powerups = 0;
 	if(this.items & IT_ARMOR3)
@@ -1490,11 +1496,6 @@ void PutClientInServer(entity this)
 	this.velocity = '0 0 0';
 
 // oh, this is a hack!
-	if(MP_HIPNOTIC)
-	{
-		_setmodel(this, "progs/playham.mdl");
-		modelindex_hammer = this.modelindex;
-	}
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
 
@@ -1960,9 +1961,9 @@ void PlayerPreThink(entity this)
 			GrappleService(this);
 	}
 
-	if(!MP_ROGUE)
-	if(time > this.attack_finished && this.currentammo == 0 && this.weaponentity.m_weapon != WEP_AXE && this.weaponentity.m_weapon != WEP_MJOLNIR)
-		W_SwitchWeapon(this, W_BestWeapon(this, 0));
+	Weapon wep = this.weaponentity.m_weapon;
+	if(time > this.attack_finished && !wep.wr_checkammo1(wep, this))
+		W_SwitchWeapon(this, w_getbestweapon(this));
 }
 	
 /*
@@ -2017,8 +2018,6 @@ void CheckPowerups(entity this)
 		this.frame = 0;
 		this.modelindex = modelindex_eyes;
 	}
-	else if(this.weaponentity.m_weapon == WEP_MJOLNIR && this.model == "progs/player.mdl")
-		this.modelindex = modelindex_hammer; // don't use eyes
 	else
 		this.modelindex = this.modelindex_player; // don't use eyes
 
@@ -2629,6 +2628,9 @@ void ClientDisconnect(entity this)
 	}
 	set_suicide_frame(this);
 
+	strfree(this.weaponorder_byimpulse);
+	GetCvars(this, this, -1);
+
 	ONREMOVE(this);
 }
 
@@ -2643,7 +2645,7 @@ string AppendItemcodes(string s, entity player)
 {
 	int w = player.weaponentity.m_weapon.m_id;
 	if(w == 0)
-		w = player.prevweapon;
+		w = player.weaponentity.cnt;
 	s = strcat(s, ftos(w));
 	if(PHYS_INPUT_BUTTON_BUTTON_CHAT(player))
 		s = strcat(s, "T");

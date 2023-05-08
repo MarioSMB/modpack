@@ -3,16 +3,18 @@
 CLASS(SuperShotgun, Weapon)
 /* ammotype  */ ATTRIB(SuperShotgun, ammo_type, int, IT_SHELLS);
 /* impulse   */ ATTRIB(SuperShotgun, impulse, int, 3);
-/* cnt       */ ATTRIB(SuperShotgun, cnt, int, 236); // crylink
 /* spawnflags*/ ATTRIB(SuperShotgun, spawnflags, int, 0);
+/* ammo */      ATTRIB(SuperShotgun, aflag, int, 10);
 /* modelname */ ATTRIB(SuperShotgun, mdl, string, "shot2");
 /* crosshair */ ATTRIB(SuperShotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(SuperShotgun, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(SuperShotgun, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(SuperShotgun, model2, string, "sshotgun");
 /* refname   */ ATTRIB(SuperShotgun, netname, string, "sshotgun");
 /* wepname   */ ATTRIB(SuperShotgun, m_name, string, _("Double-Barrelled Shotgun"));
 
 ENDCLASS(SuperShotgun)
 REGISTER_WEAPON(SUPER_SHOTGUN, NEW(SuperShotgun));
 
+// defined elsewhere
 //SPAWNFUNC_WEAPON(weapon_supershotgun, WEP_SUPER_SHOTGUN)

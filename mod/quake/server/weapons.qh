@@ -17,8 +17,6 @@ int autocvar_sv_cheats;
 .int NumProximityGrenades;
 .entity realowner; // not lost between attacks
 
-.int prevweapon;
-
 .float ammo_lava_nails;
 .float ammo_multi_rockets;
 .float ammo_plasma;
@@ -33,13 +31,7 @@ void spawn_extrablood(entity this, entity targ, float damage);
 
 void gibhim(entity this);
 
-void ThrowMe(entity this, entity targ, float dm);
-
 void SuperDamageSound(entity this);
-
-void W_SwitchWeapon(entity this, float to_wep);
-
-bool W_WantsToChangeWeapon(entity this, int old, int new);
 
 void spike_touch(entity this, entity toucher);
 
@@ -66,8 +58,6 @@ void SpawnBlood(vector org, vector vel, float damage, entity targ);
 void BecomeBloodSpurt(entity this, float dm);
 
 void BecomePurpleExplosion(entity this, entity directhitentity, float dm);
-
-int W_BestWeapon(entity this, int except);
 
 void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype);
 

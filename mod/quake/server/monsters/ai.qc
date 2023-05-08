@@ -1431,6 +1431,7 @@ The monster has an enemy it is trying to kill
 =============
 */
 .bool run_straight;
+.float endtime; // reused
 void ai_run(entity this, float dist)
 {
 	this.move_dist = dist;

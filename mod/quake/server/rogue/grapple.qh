@@ -1,6 +1,0 @@
-#pragma once
-
-// New entity fields
-.entity hook; // this is my hook
-.bool on_hook; // we're on it
-.bool hook_out; // it's out

@@ -314,6 +314,46 @@ STATIC_INIT_LATE(PingPLReport_Spawn)
 	pingplreport.nextthink = time;
 }
 
+// TODO do we need all these fields, or should we stop autodetecting runtime
+// changes and just have a console command to update this?
+void ClientInit_misc(entity this);
+bool ClientInit_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
+	return = true;
+	msg_entity = to;
+	// MSG_INIT replacement
+	// TODO: make easier to use
+	Registry_send_all();
+	ClientInit_misc(this);
+}
+void ClientInit_misc(entity this)
+{
+	int channel = MSG_ONE;
+	WriteHeader(channel, ENT_CLIENT_INIT);
+
+	WriteByte(channel, this.count);
+}
+
+void ClientInit_CheckUpdate(entity this)
+{
+	this.nextthink = time;
+	if(this.count != serverflags)
+	{
+		this.count = serverflags;
+		this.SendFlags |= 1;
+	}
+}
+
+STATIC_INIT_LATE(ClientInit_Spawn)
+{
+	entity e = new_pure(clientinit);
+	setthink(e, ClientInit_CheckUpdate);
+	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
+
+	ClientInit_CheckUpdate(e);
+}
+
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
 Only used for the world entity.

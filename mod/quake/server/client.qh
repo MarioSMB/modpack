@@ -1,5 +1,7 @@
 #pragma once
 
+.string weaponorder_byimpulse;
+
 float autocvar_sv_quake_katria = 0.3;
 int autocvar_sv_quake_suicide_limit = 3;
 
@@ -66,7 +68,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype);
 .float fly_sound;
 
 int modelindex_bolt; // aop
-int modelindex_eyes, modelindex_hammer;
+int modelindex_eyes;
 .int modelindex_player;
 
 void player_sound(entity this, int chan, string sample, float atten);

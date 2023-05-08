@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../common/weapons/weapon.qh"
-
 bool autocvar_sv_quake_instance_backpacks = true;
 
 .int powerups;
@@ -9,10 +7,6 @@ bool autocvar_sv_quake_instance_backpacks = true;
 .string mdl;
 
 .int aflag;
-
-.float charmed;
-.entity charmer;
-.float huntingcharmer;
 
 .float wetsuit_finished = _STAT(WETSUIT_FINISHED);
 .float wetsuit_time;
@@ -36,6 +30,8 @@ const int SIGIL_NUMBITS = 6;
 
 const int SIGIL_ALL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5;
 const int SIGIL_ALL_ALL_ALLLL = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4 | SIGIL_E5 | SIGIL_E6;
+
+entity W_Apply_Weaponreplace(entity this, entity wep);
 
 void SendItemPickup(entity this, int item, float amount);
 

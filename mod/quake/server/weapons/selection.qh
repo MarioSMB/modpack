@@ -1,0 +1,29 @@
+#pragma once
+
+.float hasweapon_complain_spam;
+
+bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
+
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing);
+
+#define w_getbestweapon(ent) REGISTRY_GET(Weapons, W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
+
+void W_SwitchWeapon_Force(entity this, Weapon w);
+
+// perform weapon to attack (weaponstate and attack_finished check is here)
+void W_SwitchToOtherWeapon(entity this);
+bool W_SwitchWeapon(entity this, Weapon imp); // returns false if the player does not have the weapon
+void W_SwitchWeapon_TryOthers(entity this, Weapon imp);
+
+void W_CycleWeapon(entity this, string weaponorder, float dir);
+
+void W_NextWeaponOnImpulse(entity this, float imp);
+
+// next weapon
+void W_NextWeapon(entity this, float list);
+
+// prev weapon
+void W_PreviousWeapon(entity this, float list);
+
+// previously used if exists and has ammo, (second) best otherwise
+void W_LastWeapon(entity this);

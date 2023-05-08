@@ -2,20 +2,21 @@
 
 CLASS(Impaler, Weapon)
 /* ammotype  */ ATTRIB(Impaler, ammo_type, int, IT_ROCKETS);
-/* impulse   */ ATTRIB(Impaler, impulse, int, 47);
-/* cnt       */ ATTRIB(Impaler, cnt, int, 248); // shockwave
-/* spawnflags*/ ATTRIB(Impaler, spawnflags, int, WEP_FLAG_IMPEL);
+/* impulse   */ ATTRIB(Impaler, impulse, int, 7);
+/* spawnflags*/ ATTRIB(Impaler, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_IMPEL);
+/* ammo */      ATTRIB(Impaler, aflag, int, 10);
 /* modelname */ ATTRIB(Impaler, mdl, string, "implr");
 /* crosshair */ ATTRIB(Impaler, w_crosshair, string, "gfx/crosshair64");
 /* crosshair */ ATTRIB(Impaler, w_crosshair_size, float, 0.6);
 /* crosshair */ ATTRIB(Impaler, w_crosshair_color, vector, '0 0.75 1');
+/* wepimg    */ ATTRIB(Impaler, model2, string, "srlaunch");
 /* refname   */ ATTRIB(Impaler, netname, string, "impaler");
 /* wepname   */ ATTRIB(Impaler, m_name, string, _("Rocket Powered Impaler"));
 
 ENDCLASS(Impaler)
 REGISTER_WEAPON(SPEAR, NEW(Impaler));
 
-//SPAWNFUNC_WEAPON(weapon_not_a_spear, WEP_SPEAR)
+SPAWNFUNC_WEAPON(weapon_not_a_spear, WEP_SPEAR)
 
 #ifdef SVQC
 void T_SpearTouch(entity this, entity toucher);
@@ -26,4 +27,5 @@ void SpearGo(entity this);
 void SpearThink(entity this);
 void Spear_Bounce_Think(entity this);
 void impale(entity this);
+void W_FireSpear(entity this);
 #endif

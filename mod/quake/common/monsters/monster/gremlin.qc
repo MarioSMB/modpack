@@ -77,7 +77,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_shells, 20);
 			victim.ammo_shells -= amount;
 			this.ammo_shells += amount;
-			this.currentammo = this.ammo_shells;
 			break;
 		}
 		case IT_NAILS:
@@ -85,7 +84,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_nails, 40);
 			victim.ammo_nails -= amount;
 			this.ammo_nails += amount;
-			this.currentammo = this.ammo_nails;
 			break;
 		}
 		case IT_ROCKETS:
@@ -93,7 +91,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_rockets, 5);
 			victim.ammo_rockets -= amount;
 			this.ammo_rockets += amount;
-			this.currentammo = this.ammo_rockets;
 			break;
 		}
 		case IT_CELLS:
@@ -101,7 +98,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_cells, 40);
 			victim.ammo_cells -= amount;
 			this.ammo_cells += amount;
-			this.currentammo = this.ammo_cells;
 			break;
 		}
 		case IT_LAVA_NAILS:
@@ -109,7 +105,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_lava_nails, 40);
 			victim.ammo_lava_nails -= amount;
 			this.ammo_lava_nails += amount;
-			this.currentammo = this.ammo_lava_nails;
 			break;
 		}
 		case IT_MULTI_ROCKETS:
@@ -117,7 +112,6 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_multi_rockets, 40);
 			victim.ammo_multi_rockets -= amount;
 			this.ammo_multi_rockets += amount;
-			this.currentammo = this.ammo_multi_rockets;
 			break;
 		}
 		case IT_PLASMA_AMMO:
@@ -125,11 +119,10 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_plasma, 40);
 			victim.ammo_plasma -= amount;
 			this.ammo_plasma += amount;
-			this.currentammo = this.ammo_plasma;
 			break;
 		}
 	}
-	victim.weaponentity.m_weapon = REGISTRY_GET(Weapons, W_BestWeapon(victim, 0));
+	victim.weaponentity.m_weapon = w_getbestweapon(this);
 	W_SetCurrentAmmo(victim);
 
 	// tag the gremlin as having stolen a weapon
@@ -885,7 +878,8 @@ attack with a weapon
 */
 bool GremlinCheckNoAmmo(entity this)
 {
-	if(this.currentammo > 0)
+	Weapon wep = this.weaponentity.m_weapon;
+	if(wep.wr_checkammo1(wep, this))
 		return true;
 	else
 	{
@@ -945,7 +939,7 @@ fire a rocket
 */
 void Gremlin_FireRocket(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
@@ -989,7 +983,7 @@ fire a nailgun
 */
 void Gremlin_FireNailGun(entity this, float ox)
 {
-	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
+	this.ammo_nails = this.ammo_nails - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
@@ -1011,7 +1005,7 @@ fire a laser cannon
 */
 void Gremlin_FireLaserGun(entity this, float ox)
 {
-	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
+	this.ammo_cells = this.ammo_cells - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
@@ -1032,7 +1026,7 @@ fire a shotgun
 */
 void Gremlin_FireShotgun(entity this)
 {
-	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
+	this.ammo_shells = this.ammo_shells - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/guncock.wav", 1, ATTN_NORM);
@@ -1054,7 +1048,7 @@ fire a shotgun
 */
 void Gremlin_FireSuperShotgun(entity this)
 {
-	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
+	this.ammo_shells = this.ammo_shells - 2;
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);
@@ -1092,7 +1086,7 @@ void Gremlin_FireLightningGun(entity this)
 
 	ai_face(this);
 
-	this.currentammo = this.ammo_cells = this.ammo_cells - 2;
+	this.ammo_cells = this.ammo_cells - 2;
 	vector org = this.origin + '0 0 16';
 
 	vector dir = this.enemy.origin + '0 0 16' - org;
@@ -1119,7 +1113,7 @@ GremlinFireProximityGrenade
 void GremlinFireProximityGrenade(entity this)
 {
 	this.NumProximityGrenades = this.NumProximityGrenades + 1;
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
@@ -1204,7 +1198,7 @@ bool GremlinWeaponAttack(entity this)
 	{
 		gremlin_rocket1(this);
 		OgreFireGrenade(this);
-		this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+		this.ammo_rockets = this.ammo_rockets - 1;
 		this.attack_finished = time + 1;
 	}
 	else if(this.weaponentity.m_weapon == WEP_ROCKET_LAUNCHER)

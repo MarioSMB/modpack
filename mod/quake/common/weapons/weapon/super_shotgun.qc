@@ -3,7 +3,7 @@
 #ifdef SVQC
 void W_FireSuperShotgun(entity this)
 {
-	if(this.currentammo == 1)
+	if(this.ammo_shells == 1)
 	{
 		W_FireShotgun(this);
 		return;
@@ -13,7 +13,7 @@ void W_FireSuperShotgun(entity this)
 
 	this.punchangle_x = -4;
 
-	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
+	this.ammo_shells = this.ammo_shells - 2;
 	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 14, dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
 }
@@ -23,6 +23,11 @@ METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor))
 	player_shot1(actor);
 	W_FireSuperShotgun(actor);
 	actor.attack_finished = time + RuneApplyHell(0.7, actor);
+}
+METHOD(SuperShotgun, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_shells >= 2;
+	return ammo_amount;
 }
 METHOD(SuperShotgun, wr_suicidemessage, Notification(entity thiswep))
 {

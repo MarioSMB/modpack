@@ -1,14 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-#include "../../server/player.qh"
-#include "../../server/rogue/lava_wpn.qh"
-#include "../../server/rogue/runes.qh"
-#include "../../server/triggers/triggers.qh"
-#include "../../server/weapons.qh"
-#include "../../server/weapons/common.qh"
-#endif
-
 USING(WepSet, vector);
 
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
@@ -18,10 +9,10 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, ammo_type, int, 0);
     /** M: impulse   : weapon impulse */
     ATTRIB(Weapon, impulse, int, -1);
-    /** M: cnt       : impulse conversion, xonotic has binds that we want to reuse instead of making our own */
-    ATTRIB(Weapon, cnt, int, -1);
     /** M: flags     : WEPSPAWNFLAG_... combined */
     ATTRIB(Weapon, spawnflags, int, 0);
+    /** M: ammo      : amount of ammo rewarded for picking up the weapon */
+    ATTRIB(Weapon, aflag, int, 0);
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
@@ -30,8 +21,12 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, w_crosshair_size, float, 1);
     /** A: crosshair : per-weapon crosshair color (argument three of "crosshair" field) */
     ATTRIB(Weapon, w_crosshair_color, vector, '0 0 0');
+    /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
+    ATTRIB(Weapon, model2, string, "");
     /** M: refname   : reference name name */
     ATTRIB(Weapon, netname, string, "");
+    /** M: replace   : reference replacement name */
+    ATTRIB(Weapon, weaponreplace, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
 
@@ -39,6 +34,8 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor)) {}
+    /** (SERVER) checks ammo for weapon primary */
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
@@ -63,12 +60,24 @@ const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (muta
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
 #endif
+const int WEP_FLAG_NOHUD         =  BIT(8); // no HUD display, also used to indicate if a weapon is a replacement slot
+const int WEP_FLAG_MELEE         =  BIT(9); // attack is melee swing (for animation)
 const int WEP_FLAG_NOSTEAL       =  BIT(10); // weapon should not be taken by gremlins
 const int WEP_FLAG_HIPNOTIC      =  BIT(11); // from the hipnotic mission pack
 const int WEP_FLAG_ROGUE         =  BIT(12); // from the rogue mission pack
 const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack
 
-#if 0
+// variables:
+string weaponorder_byid;
+
+// functions:
+string W_FixWeaponOrder(string order, float complete);
+string W_NameWeaponOrder(string order);
+string W_NumberWeaponOrder(string order);
+string W_FixWeaponOrder_BuildImpulseList(string o);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
+string W_FixWeaponOrder_ForceComplete(string order);
+
 #ifdef SVQC
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
@@ -83,4 +92,19 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon)
 
 #endif
+
+#ifdef SVQC
+#include "../notifications/all.qh"
+#include "../../server/items.qh"
+#include "../../server/player.qh"
+#include "../../server/rogue/lava_wpn.qh"
+#include "../../server/rogue/runes.qh"
+#include "../../server/triggers/triggers.qh"
+#include "../../server/weapons.qh"
+#include "../../server/weapons/common.qh"
+#endif
+
+#ifdef GAMEQC
+#include "../items/item.qh"
+#include "../models/all.qh"
 #endif

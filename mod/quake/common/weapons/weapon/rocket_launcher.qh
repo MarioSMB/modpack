@@ -3,16 +3,17 @@
 CLASS(RocketLauncher, Weapon)
 /* ammotype  */ ATTRIB(RocketLauncher, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(RocketLauncher, impulse, int, 7);
-/* cnt       */ ATTRIB(RocketLauncher, cnt, int, 239); // devastator
 /* spawnflags*/ ATTRIB(RocketLauncher, spawnflags, int, 0);
+/* ammo */      ATTRIB(RocketLauncher, aflag, int, 5);
 /* modelname */ ATTRIB(RocketLauncher, mdl, string, "rock2");
 /* crosshair */ ATTRIB(RocketLauncher, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(RocketLauncher, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(RocketLauncher, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(RocketLauncher, model2, string, "srlaunch");
 /* refname   */ ATTRIB(RocketLauncher, netname, string, "rocketlauncher");
 /* wepname   */ ATTRIB(RocketLauncher, m_name, string, _("Rocket Launcher"));
 
 ENDCLASS(RocketLauncher)
 REGISTER_WEAPON(ROCKET_LAUNCHER, NEW(RocketLauncher));
 
-//SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_ROCKET_LAUNCHER)
+SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_ROCKET_LAUNCHER)

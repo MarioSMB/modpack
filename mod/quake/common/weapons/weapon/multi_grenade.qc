@@ -83,7 +83,7 @@ void MultiGrenadeTouch(entity this, entity toucher)
 
 void W_FireMultiGrenade(entity this)
 {
-	this.currentammo = this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
+	this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
 	
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
@@ -123,6 +123,11 @@ METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor))
 	player_rocket1(actor);
 	W_FireMultiGrenade(actor);
 	actor.attack_finished = time + RuneApplyHell(0.6, actor);
+}
+METHOD(MultiGrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_multi_rockets >= 1;
+	return ammo_amount;
 }
 METHOD(MultiGrenadeLauncher, wr_suicidemessage, Notification(entity thiswep))
 {

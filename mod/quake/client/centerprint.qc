@@ -1,5 +1,7 @@
 #include "centerprint.qh"
 
+#include "../common/notifications/all.qh"
+
 // CenterPrint (#16)
 
 // These are the functions that draw the text at the center of the screen (e.g. frag messages and server MOTD).

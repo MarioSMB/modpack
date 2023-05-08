@@ -18,3 +18,7 @@ CLASS(Decoy, Monster)
 ENDCLASS(Decoy)
 
 REGISTER_MONSTER(DECOY, NEW(Decoy));
+
+#ifdef SVQC
+void become_decoy(string targ, vector orig);
+#endif

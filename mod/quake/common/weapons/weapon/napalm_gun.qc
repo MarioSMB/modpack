@@ -94,7 +94,7 @@ void NapalmTouch(entity this, entity toucher)
 
 void W_FireNapalm(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 	this.punchangle_x = -2;
 	entity missile = spawn();
@@ -138,6 +138,11 @@ METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor))
 		actor.attack_finished = time + 0.9;
 		actor.cnt = 0;
 	}
+}
+METHOD(NapalmGun, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_rockets >= 1;
+	return ammo_amount;
 }
 METHOD(NapalmGun, wr_suicidemessage, Notification(entity thiswep))
 {

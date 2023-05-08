@@ -1,6 +1,9 @@
 #include "main.qh"
 
+#include "centerprint.qh"
 #include "sbar.qh"
+#include "../common/stats.qh"
+#include "../common/weapons/all.qh"
 
 bool autocvar_developer_csqcentities;
 
@@ -17,6 +20,8 @@ void CSQC_Init()
 				break;
 		maxclients = i;
 	}
+
+	postinit = false;
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -93,25 +98,43 @@ bool CSQC_ConsoleCommand(string command)
 	if(s == "+showaccuracy" || s == "-showaccuracy")
 		return true; // don't handle, just don't do anything
 
+	return false;
+}
+
+void GameCommand(string command)
+{
+	tokenize_console(command);
+
+	// Guide for working with argc arguments by example:
+	// argc:   1    - 2      - 3     - 4
+	// argv:   0    - 1      - 2     - 3
+	// cmd     vote - master - login - password
+	string s = strtolower(argv(0));
 	if(s == "sendcvar")
 	{
 		if (argv(1))
 		{
 			// W_FixWeaponOrder will trash argv, so save what we need.
 			string thiscvar = string_null; strcpy(thiscvar, argv(1));
-			string thisval = cvar_string(thiscvar);
+			string s = cvar_string(thiscvar);
 
-			localcmd("cmd sentcvar ", thiscvar, " \"", thisval, "\"\n");
+			if (thiscvar == "cl_quake_weaponpriority")
+				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
+			else if (substring(thiscvar, 0, 17) == "cl_quake_weaponpriority" && strlen(thiscvar) == 18)
+				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+
+			localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
 			strfree(thiscvar);
-			return true;
+			return;
 		}
 		LOG_INFOF("Incorrect parameters for ^2%s^7", s);
 		LOG_HELP("Usage:^3 cl_cmd sendcvar <cvar>");
 		LOG_HELP("  Where <cvar> is the cvar to send to the server.");
-		return true;
+		return;
 	}
 
-	return false;
+	// nothing above caught the command, must be invalid
+	LOG_INFO(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.");
 }
 
 void Ent_Remove(entity this);
@@ -230,6 +253,23 @@ bool CSQC_Parse_TempEntity()
 
 	// No special logic for this temporary entity; return 0 so the engine can handle it
 	return false;
+}
+
+void PostInit()
+{
+	// this can't be called in CSQC_Init as it'd send cvars too early
+	ReplicateVars_Start();
+
+	postinit = true;
+}
+
+NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
+{
+	serverflags = ReadByte();
+
+	return = true;
+
+	if (!postinit) PostInit();
 }
 
 STATIC_INIT(PlayerSlots_Spawn)

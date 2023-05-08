@@ -2,21 +2,24 @@
 
 CLASS(Mjolnir, Weapon)
 /* ammotype  */ ATTRIB(Mjolnir, ammo_type, int, IT_CELLS);
-/* impulse   */ ATTRIB(Mjolnir, impulse, int, 14);
-/* cnt       */ ATTRIB(Mjolnir, cnt, int, 244); // tuba
-/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HIPNOTIC | WEP_FLAG_NOSTEAL);
+/* impulse   */ ATTRIB(Mjolnir, impulse, int, 0);
+/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_NOSTEAL);
+/* ammo */      ATTRIB(Mjolnir, aflag, int, 30);
 /* modelname */ ATTRIB(Mjolnir, mdl, string, "hammer");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair, string, "gfx/crosshaircrylink");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair_color, vector, '1 0.75 1');
+/* wepimg    */ ATTRIB(Mjolnir, model2, string, "mjolnir");
 /* refname   */ ATTRIB(Mjolnir, netname, string, "hammer");
 /* wepname   */ ATTRIB(Mjolnir, m_name, string, _("Mjolnir"));
 
 ENDCLASS(Mjolnir)
 REGISTER_WEAPON(MJOLNIR, NEW(Mjolnir));
 
-//SPAWNFUNC_WEAPON(weapon_shotgun, WEP_MJOLNIR)
+SPAWNFUNC_WEAPON(weapon_mjolnir, WEP_MJOLNIR)
 
 #ifdef SVQC
 .bool struck_by_mjolnir;
+
+void HIP_FireMjolnir(entity this);
 #endif

@@ -314,7 +314,7 @@ void horde_ammo_touch(entity this, entity toucher)
 		return;
 	
 	// if the player was using their best weapon, change up to the new one if better		
-	int best_weapon = W_BestWeapon(toucher, 0);
+	Weapon best_weapon = w_getbestweapon(toucher);
 	
 	// if player is at max ammo for ammo's type, return
 	if(((this.weapon == 1) && (toucher.ammo_shells >= 100)) || // shotgun
@@ -330,8 +330,8 @@ void horde_ammo_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 
 	// change to a better weapon if appropriate
-	if(toucher.weaponentity.m_weapon.m_id == best_weapon)
-		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
+	if(toucher.weaponentity.m_weapon == best_weapon)
+		W_SwitchWeapon(toucher, w_getbestweapon(toucher));
 
 	// loop through all players and give ammo
 	entity temp_player = find(NULL, classname, "player");

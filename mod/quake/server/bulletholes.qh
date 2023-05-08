@@ -4,4 +4,6 @@ entity bulletholes;
 entity lastbullet;
 int numbulletholes;
 
+.entity lastvictim;
+
 void placebullethole(vector pos);

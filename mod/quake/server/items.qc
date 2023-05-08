@@ -1,10 +1,12 @@
 #include "items.qh"
 
+#include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
 #include "rogue/rogue.qh"
 #include "triggers/subs.qh"
 #include "triggers/triggers.qh"
 #include "weapons.qh"
+#include "weapons/selection.qh"
 
 void SendItemPickup(entity this, int item, float amount)
 {
@@ -17,7 +19,6 @@ void SendItemPickup(entity this, int item, float amount)
 	WriteShort(MSG_ONE, rint(amount));
 }
 
-void W_SwitchWeapon(entity this, float to_wep);
 void W_SetCurrentAmmo(entity this);
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
@@ -377,32 +378,6 @@ void bound_other_ammo(entity this)
 		this.ammo_plasma = 100;
 }
 
-// TODO?
-int RankForWeapon(int w)
-{
-	switch(w)
-	{
-		case WEP_PLASMA_GUN.m_id:			return 1;
-		case WEP_LIGHTNING.m_id: 			return 2;
-		case WEP_MULTI_ROCKET.m_id: 		return 3;
-		case WEP_ROCKET_LAUNCHER.m_id: 		return 4;
-		case WEP_LIGHTME.m_id: 				return 5;
-		case WEP_LASER_CANNON.m_id: 		return 6;
-		case WEP_SPEAR.m_id: 				return 7;
-		case WEP_LAVA_SUPER_NAILGUN.m_id:	return 8;
-		case WEP_SUPER_NAILGUN.m_id: 		return 9;
-		case WEP_MULTI_GRENADE.m_id: 		return 10;
-		case WEP_PROXIMITY_GUN.m_id: 		return 11;
-		case WEP_GRENADE_LAUNCHER.m_id: 	return 12;
-		case WEP_NAPALM.m_id: 				return 13;
-		case WEP_LAVA_NAILGUN.m_id: 		return 14;
-		case WEP_SUPER_SHOTGUN.m_id: 		return 15;
-		case WEP_NAILGUN.m_id: 				return 16;
-		case WEP_MJOLNIR.m_id: 				return 17;
-		default: 							return 18;
-	}
-}
-
 /*
 =============
 Deathmatch_Weapon
@@ -412,21 +387,21 @@ Deathmatch weapon change rules for picking up a weapon
 .int		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 =============
 */
-void Deathmatch_Weapon(entity this, int old, int new)
+void Deathmatch_Weapon(entity this, int old, Weapon newwep)
 {
 	if(MP_ROGUE && this.weaponentity.m_weapon == WEP_GRAPPLE && this.button0)
 		return;
 
-// change this.weapon if desired
-	int or = RankForWeapon(this.weaponentity.m_weapon.m_id);
-	int nr = RankForWeapon(new);
-	if(nr < or)
-		W_SwitchWeapon(this, new);
+	Weapon best = w_getbestweapon(this);
+	if(best == newwep)
+		W_SwitchWeapon(this, newwep);
 }
 
 bool weapon_customize(entity this, entity client)
 {
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	if(STAT(WEAPONS, client) & wep.m_wepset)
+		wep = W_Apply_Weaponreplace(client, wep);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 		return false;
 	return true;
@@ -600,12 +575,26 @@ void EnableComboWeapons(entity this)
 	}
 }
 
+Weapon W_Apply_Weaponreplace(entity this, Weapon wep)
+{
+	FOREACH(Weapons, it != WEP_Null && it != wep && it.weaponreplace == wep.netname,
+	{
+		// if the player already has the weapon, skip it
+		// if the player doesn't have ammo for it, also skip TODO: maybe allow swapping to the special weapons if you don't have ammo?
+		if((STAT(WEAPONS, this) & it.m_wepset) || !it.wr_checkammo1(it, this))
+			continue;
+		wep = it;
+		break; // one replacement at a time please!
+	});
+
+	return wep;
+}
+
 /*
 =============
 weapon_touch
 =============
 */
-int W_BestWeapon(entity this, float except);
 
 void weapon_touch(entity this, entity toucher)
 {
@@ -614,128 +603,29 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	int hadammo = 0;
 	Weapon wep = toucher.weaponentity.m_weapon;
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
 	bool leave = (coop || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
-	
-	switch(this.classname)
+
+	// if we have the weapon already, try for replacements
+	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
+	if(STAT(WEAPONS,toucher) & newwep.m_wepset)
+		newwep = W_Apply_Weaponreplace(toucher, newwep);
+	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset))
+		return;
+
+	wep = newwep;
+	switch(newwep.ammo_type)
 	{
-		case "weapon_nailgun":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(NAILGUN)))
-				return;
-			hadammo = toucher.ammo_nails;			
-			wep = WEP_NAILGUN;
-			toucher.ammo_nails = toucher.ammo_nails + 30;
-			break;
-		}
-		case "weapon_supernailgun":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(SUPER_NAILGUN)))
-				return;
-			hadammo = toucher.ammo_rockets;			
-			wep = WEP_SUPER_NAILGUN;
-			toucher.ammo_nails = toucher.ammo_nails + 30;
-			break;
-		}
-		case "weapon_supershotgun":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(SUPER_SHOTGUN)))
-				return;
-			hadammo = toucher.ammo_rockets;		
-			wep = WEP_SUPER_SHOTGUN;
-			toucher.ammo_shells = toucher.ammo_shells + 5;
-			break;
-		}
-		case "weapon_rocketlauncher":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(ROCKET_LAUNCHER)))
-				return;
-			hadammo = toucher.ammo_rockets;		
-			wep = WEP_ROCKET_LAUNCHER;
-			toucher.ammo_rockets = toucher.ammo_rockets + 5;
-			break;
-		}
-		case "weapon_grenadelauncher":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(GRENADE_LAUNCHER)))
-				return;
-			hadammo = toucher.ammo_rockets;			
-			wep = WEP_GRENADE_LAUNCHER;
-			toucher.ammo_rockets = toucher.ammo_rockets + 5;
-			break;
-		}
-		case "weapon_lightning":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(LIGHTNING)))
-				return;
-			hadammo = toucher.ammo_rockets;			
-			wep = WEP_LIGHTNING;
-			toucher.ammo_cells = toucher.ammo_cells + 15;
-			break;
-		}
-		case "weapon_laser_gun":
-		{
-	      	if(leave && (STAT(WEAPONS, toucher) & WEPSET(LASER_CANNON)))
-				return;
-			hadammo = toucher.ammo_rockets;
-	      	wep = WEP_LASER_CANNON;
-			toucher.ammo_cells = toucher.ammo_cells + 30;
-	      	break;
-		}
-	   	case "weapon_mjolnir":
-		{
-	      	if (leave && (STAT(WEAPONS, toucher) & WEPSET(MJOLNIR)) )
-				return;
-			hadammo = toucher.ammo_rockets;
-	      	wep = WEP_MJOLNIR;
-			toucher.ammo_cells = toucher.ammo_cells + 30;
-	      	break;
-		}
-	   	case "weapon_proximity_gun":
-		{
-	      	if(leave && (STAT(WEAPONS, toucher) & WEPSET(PROXIMITY_GUN)) )
-				return;
-			hadammo = toucher.ammo_rockets;
-	      	wep = WEP_PROXIMITY_GUN;
-			toucher.ammo_rockets = toucher.ammo_rockets + 6;
-	      	break;
-		}
-		case "weapon_lightme":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(LIGHTME)))
-			return;
-			hadammo = toucher.ammo_cells;
-			wep = WEP_LIGHTME;
-			toucher.ammo_cells = toucher.ammo_cells + 12;
-			break;
-		}
-		case "weapon_napalm":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(NAPALM)))
-				return;
-			hadammo = toucher.ammo_rockets;
-			wep = WEP_NAPALM;
-			toucher.ammo_rockets = (toucher.ammo_rockets + 9);
-			break;
-		}
-		case "weapon_not_a_spear":
-		{
-			if(leave && (STAT(WEAPONS, toucher) & WEPSET(SPEAR)))
-				return;
-			hadammo = toucher.ammo_rockets;
-			wep = WEP_SPEAR;
-			toucher.ammo_rockets = toucher.ammo_rockets + 10;
-			break;
-		}
-		default:
-		{
-			objerror(this, "weapon_touch: unknown classname");
-			break;
-		}
+		case IT_SHELLS: toucher.ammo_shells += newwep.aflag; break;
+		case IT_NAILS: toucher.ammo_nails += newwep.aflag; break;
+		case IT_ROCKETS: toucher.ammo_rockets += newwep.aflag; break;
+		case IT_CELLS: toucher.ammo_cells += newwep.aflag; break;
+		case IT_LAVA_NAILS: toucher.ammo_lava_nails += newwep.aflag; break;
+		case IT_MULTI_ROCKETS: toucher.ammo_multi_rockets += newwep.aflag; break;
+		case IT_LAVA_NAILS: toucher.ammo_plasma += newwep.aflag; break;
 	}
 
 	if(!(STAT(WEAPONS, toucher) & wep.m_wepset))
@@ -755,44 +645,10 @@ void weapon_touch(entity this, entity toucher)
 	int old = toucher.weaponentity.m_weapon.m_id;
 	STAT(WEAPONS, toucher) |= wep.m_wepset;
 
-	if(MP_ROGUE)
-		EnableComboWeapons(toucher);
-
-	// PGM - fake picking up the plasma gun.
-	if(!MP_ROGUE) { /* do nothing */ }
-	else if(wep == WEP_LIGHTNING)
-	{
-		if(toucher.ammo_plasma > 0)
-			wep = WEP_PLASMA_GUN;
-	}
-	else if(wep == WEP_ROCKET_LAUNCHER)
-	{
-		if(toucher.ammo_multi_rockets > 0)
-			wep = WEP_MULTI_ROCKET;
-	}
-	else if(wep == WEP_GRENADE_LAUNCHER)
-	{
-		if(toucher.ammo_multi_rockets > 0)
-			wep = WEP_MULTI_GRENADE;
-	}
-	else if(wep == WEP_SUPER_NAILGUN)
-	{
-		if(toucher.ammo_lava_nails > 1)
-			wep = WEP_LAVA_SUPER_NAILGUN;
-	}
-	else if(wep == WEP_NAILGUN)
-	{
-		if(toucher.ammo_lava_nails > 0)
-			wep = WEP_LAVA_NAILGUN;
-	}
-
-	if(W_WantsToChangeWeapon(toucher, old, wep.m_id))
-	{
-		if(!deathmatch)
-			W_SwitchWeapon(toucher, wep.m_id);
-		else
-			Deathmatch_Weapon(toucher, old, wep.m_id);
-	}
+	if(!deathmatch)
+		W_SwitchWeapon(toucher, wep);
+	else
+		Deathmatch_Weapon(toucher, old, wep);
 
 	// Moved up so the targets are fired even in coop, but only once.
 	if(MP_MG)
@@ -828,169 +684,22 @@ void weapon_touch(entity this, entity toucher)
 		SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
+// map-specific hacks
+SPAWNFUNC_WEAPON_COND(weapon_supershotgun, (world.model == "maps/aop2m3.bsp"), WEP_GRENADE_LAUNCHER, WEP_SUPER_SHOTGUN);
 
-/*QUAKED weapon_supershotgun(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
+SPAWNFUNC_WEAPON_COND(weapon_lightning, (world.model == "maps/aop2m2.bsp"), WEP_LIGHTME, WEP_LIGHTNING);
 
-spawnfunc(weapon_grenadelauncher);
-spawnfunc(weapon_supershotgun)
+void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
-	if(world.model == "maps/aop2m3.bsp")
-	{
-		this.classname = "weapon_grenadelauncher";
-		spawnfunc_weapon_grenadelauncher(this);
-		return;
-	}
-	precache_model("progs/g_shot.mdl");
-	_setmodel(this, "progs/g_shot.mdl");
-	this.weapon = WEP_SUPER_SHOTGUN.m_id;
-	this.netname = "Double-barrelled Shotgun";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
+	if(!MP_HIPNOTIC && (wpn.spawnflags & WEP_FLAG_HIPNOTIC)) { delete(this); return; }
+	if(!MP_ROGUE && (wpn.spawnflags & WEP_FLAG_ROGUE)) { delete(this); return; }
+	if(!MP_IMPEL && (wpn.spawnflags & WEP_FLAG_IMPEL)) { delete(this); return; }
 
-/*QUAKED weapon_nailgun(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
-
-spawnfunc(weapon_nailgun)
-{
-	precache_model("progs/g_nail.mdl");
-	_setmodel(this, "progs/g_nail.mdl");
-	this.weapon = WEP_NAILGUN.m_id;
-	this.netname = "Nailgun";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_supernailgun(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
-
-spawnfunc(weapon_supernailgun)
-{
-	precache_model("progs/g_nail2.mdl");
-	_setmodel(this, "progs/g_nail2.mdl");
-	this.weapon = WEP_SUPER_NAILGUN.m_id;
-	this.netname = "Super Nailgun";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_grenadelauncher(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
-
-spawnfunc(weapon_grenadelauncher)
-{
-	precache_model("progs/g_rock.mdl");
-	_setmodel(this, "progs/g_rock.mdl");
-	this.weapon = WEP_GRENADE_LAUNCHER.m_id;
-	this.netname = "Grenade Launcher";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_rocketlauncher(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
-spawnfunc(weapon_not_a_spear);
-
-spawnfunc(weapon_rocketlauncher)
-{
-	precache_model("progs/g_rock2.mdl");
-	_setmodel(this, "progs/g_rock2.mdl");
-	this.weapon = WEP_ROCKET_LAUNCHER.m_id;
-	this.netname = "Rocket Launcher";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-
-/*QUAKED weapon_lightning(0 .5 .8)(-16 -16 0)(16 16 32)
-*/
-spawnfunc(weapon_rifle);
-
-spawnfunc(weapon_lightning)
-{
-	if(world.model == "maps/aop2m2.bsp")
-	{
-		this.classname = "weapon_rifle";
-		spawnfunc_weapon_rifle(this);
-		return;
-	}
-	precache_model("progs/g_light.mdl");
-	_setmodel(this, "progs/g_light.mdl");
-	this.weapon = WEP_LIGHTNING.m_id;
-	this.netname = "Thunderbolt";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_mjolnir (0 .5 .8) (-16 -16 0) (16 16 32)
-*/
-spawnfunc(weapon_mjolnir)
-{
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
-	precache_model ("progs/g_hammer.mdl");
-	_setmodel(this, "progs/g_hammer.mdl");
-	this.weapon = WEP_MJOLNIR.m_id;
-	this.netname = "Mjolnir";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_laser_gun (0 .5 .8) (-16 -16 0) (16 16 32)
-*/
-spawnfunc(weapon_laser_gun)
-{
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
-	precache_model ("progs/g_laserg.mdl");
-	_setmodel(this, "progs/g_laserg.mdl");
-	this.weapon = WEP_LASER_CANNON.m_id;
-	this.netname = "Laser Cannon";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-/*QUAKED weapon_proximity_gun (0 .5 .8) (-16 -16 0) (16 16 32)
-*/
-spawnfunc(weapon_proximity_gun)
-{
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
-	precache_model ("progs/g_prox.mdl");
-	_setmodel(this, "progs/g_prox.mdl");
-	this.weapon = WEP_PROXIMITY_GUN.m_id;
-	this.netname = "Proximity Gun";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-spawnfunc(weapon_lightme)
-{
-	if(!MP_IMPEL) { delete(this); return; }
-
-	precache_model("progs/g_light2.mdl");
-	_setmodel(this, "progs/g_light2.mdl");
-	this.weapon = WEP_LIGHTME.m_id;
-	this.netname = "LG-2 Prototype";
+	string mymdl = strcat("progs/g_", wpn.mdl, ".mdl");
+	precache_model(mymdl); // TODO: model registry
+	_setmodel(this, mymdl);
+	this.weapon = wpn.m_id;
+	this.netname = wpn.m_name;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -1019,34 +728,6 @@ spawnfunc(weapon_rifleupgrade)
 	this.netname = "Laser System Upgrade";
 	settouch(this, pulserifle_touch);
 	setcefc(this, pulserifle_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-spawnfunc(weapon_napalm)
-{
-	if(!MP_IMPEL) { delete(this); return; }
-
-	precache_model("progs/g_rock.mdl");
-	_setmodel(this, "progs/g_rock.mdl");
-	this.weapon = WEP_NAPALM.m_id;
-	this.netname = "Napalm Gun";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
-	setsize(this, '-16 -16 0', '16 16 56');
-	StartItem(this);
-}
-
-spawnfunc(weapon_not_a_spear)
-{
-	if(!MP_IMPEL) { delete(this); return; }
-
-	precache_model("progs/g_implr.mdl");
-	_setmodel(this, "progs/g_implr.mdl");
-	this.weapon = WEP_SPEAR.m_id;
-	this.netname = "Rocket Powered Impaler";
-	settouch(this, weapon_touch);
-	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -1088,7 +769,7 @@ void ammo_touch(entity this, entity toucher)
 		return;
 
 // if the player was using his best weapon, change up to the new one if better		
-	int best = W_BestWeapon(toucher, 0);
+	Weapon best = w_getbestweapon(toucher);
 
 
 // shotgun
@@ -1156,8 +837,8 @@ void ammo_touch(entity this, entity toucher)
 
 // change to a better weapon if appropriate
 
-	if(toucher.weaponentity.m_weapon.m_id == best && W_WantsToChangeWeapon(toucher, 0, 1))
-		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
+	if(toucher.weaponentity.m_weapon == best)
+		W_SwitchWeapon(toucher, w_getbestweapon(toucher));
 
 // if changed current ammo, update it
 	W_SetCurrentAmmo(toucher);
@@ -2286,15 +1967,15 @@ void BackpackTouch(entity this, entity toucher)
 		EnableComboWeapons(toucher);
 
 // change to the weapon
-	if(wep != WEP_Null && W_WantsToChangeWeapon(toucher, old, newitem))
+	if(wep != WEP_Null)
 	{
 		if((toucher.flags & FL_INWATER) && wep == WEP_LIGHTNING)
 			return; // lol
 
 		if(!deathmatch)
-			W_SwitchWeapon(toucher, newitem);
+			W_SwitchWeapon(toucher, wep);
 		else
-			Deathmatch_Weapon(toucher, old, newitem);
+			Deathmatch_Weapon(toucher, old, wep);
 	}
 }
 

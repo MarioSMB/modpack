@@ -1,6 +1,10 @@
 #include "util.qh"
 
 #ifdef GAMEQC
+#include "weapons/all.qh"
+#endif
+
+#ifdef GAMEQC
 /*
 ==================
 findbetterlocation
@@ -186,7 +190,6 @@ string find_last_color_code(string s)
 	return "";
 }
 
-string getWrappedLine_remaining;
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	float cantake;
@@ -400,6 +403,81 @@ void wordwrap_cb(string s, float l, void(string) callback)
 		}
 	}
 	strunzone(s);
+}
+
+string fixPriorityList(string order, float from, float to, float subtract, float complete)
+{
+	string neworder;
+	float i, n, w;
+
+	n = tokenize_console(order);
+	neworder = "";
+	for(i = 0; i < n; ++i)
+	{
+		w = stof(argv(i));
+		if(w == floor(w))
+		{
+			if(w >= from && w <= to)
+				neworder = strcat(neworder, ftos(w), " ");
+			else
+			{
+				w -= subtract;
+				if(w >= from && w <= to)
+					neworder = strcat(neworder, ftos(w), " ");
+			}
+		}
+	}
+
+	if(complete)
+	{
+		n = tokenize_console(neworder);
+		for(w = to; w >= from; --w)
+		{
+			//int wflags = REGISTRY_GET(Weapons, w).spawnflags;
+			for(i = 0; i < n; ++i)
+				if(stof(argv(i)) == w)
+					break;
+			if(i == n) // not found
+				neworder = strcat(neworder, ftos(w), " ");
+		}
+	}
+
+	return substring(neworder, 0, strlen(neworder) - 1);
+}
+
+string mapPriorityList(string order, string(string) mapfunc)
+{
+	string neworder;
+	float n;
+
+	n = tokenize_console(order);
+	neworder = "";
+	for(float i = 0; i < n; ++i)
+		neworder = strcat(neworder, mapfunc(argv(i)), " ");
+
+	return substring(neworder, 0, strlen(neworder) - 1);
+}
+
+string swapInPriorityList(string order, float i, float j)
+{
+	float n = tokenize_console(order);
+
+	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
+	{
+		string s = "";
+		for(float w = 0; w < n; ++w)
+		{
+			if(w == i)
+				s = strcat(s, argv(j), " ");
+			else if(w == j)
+				s = strcat(s, argv(i), " ");
+			else
+				s = strcat(s, argv(w), " ");
+		}
+		return substring(s, 0, strlen(s) - 1);
+	}
+
+	return order;
 }
 
 float compressShotOrigin(vector v)

@@ -3,16 +3,24 @@
 CLASS(SuperNailgun, Weapon)
 /* ammotype  */ ATTRIB(SuperNailgun, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(SuperNailgun, impulse, int, 5);
-/* cnt       */ ATTRIB(SuperNailgun, cnt, int, 238); // hagar
 /* spawnflags*/ ATTRIB(SuperNailgun, spawnflags, int, 0);
+/* ammo */      ATTRIB(SuperNailgun, aflag, int, 30);
 /* modelname */ ATTRIB(SuperNailgun, mdl, string, "nail2");
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair, string, "gfx/crosshairhagar");
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair_size, float, 0.8);
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair_color, vector, '1 1 0.5');
+/* wepimg    */ ATTRIB(SuperNailgun, model2, string, "snailgun");
 /* refname   */ ATTRIB(SuperNailgun, netname, string, "supernailgun");
 /* wepname   */ ATTRIB(SuperNailgun, m_name, string, _("Super Nailgun"));
 
 ENDCLASS(SuperNailgun)
 REGISTER_WEAPON(SUPER_NAILGUN, NEW(SuperNailgun));
 
-//SPAWNFUNC_WEAPON(weapon_supernailgun, WEP_SUPER_NAILGUN)
+SPAWNFUNC_WEAPON(weapon_supernailgun, WEP_SUPER_NAILGUN)
+
+#ifdef SVQC
+void player_supernail2(entity this);
+void player_supernail1(entity this);
+
+void W_FireSuperSpikes(entity this);
+#endif

@@ -3,12 +3,13 @@
 CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_type, int, IT_SHELLS);
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
-/* cnt       */ ATTRIB(Shotgun, cnt, int, 231); // shotgun
 /* spawnflags*/ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NOSTEAL);
+/* ammo */      ATTRIB(Shotgun, aflag, int, 12);
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shot");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Shotgun, model2, string, "shotgun");
 /* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
 /* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
 

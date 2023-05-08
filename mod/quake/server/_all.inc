@@ -1,8 +1,6 @@
 #include "_all.qh"
 
-#include "../common/_all.inc"
-
-#include <lib/csqcmodel/sv_model.qc>
+#include "../common/_all.qh"
 
 // mission pack defs
 #include "rogue/_all.qh"
@@ -18,6 +16,7 @@
 #include "player.qc"
 #include "gamelog.qc"
 #include "getreplies.qc"
+#include "impulse.qc"
 #include "commands.qc"
 #include "chat.qc"
 #include "fog.qc"
@@ -33,3 +32,6 @@
 #include "rogue/_all.inc"
 #include "impel/_all.inc"
 
+#include "../common/_all.inc"
+
+#include <lib/csqcmodel/sv_model.qc>

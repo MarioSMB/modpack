@@ -82,7 +82,7 @@ void ProximityBomb(entity this)
 void W_FireProximityGrenade(entity this)
 {
 	this.NumProximityGrenades += 1;
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 
 	_sound(this, CH_WEAPON_SINGLE, "hipweap/proxbomb.wav", 1, ATTN_NORM);
 
@@ -134,6 +134,11 @@ METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor))
 	player_rocket1(actor);
 	W_FireProximityGrenade(actor);
 	actor.attack_finished = time + 0.6;
+}
+METHOD(ProximityGun, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_rockets >= 1;
+	return ammo_amount;
 }
 METHOD(ProximityGun, wr_suicidemessage, Notification(entity thiswep))
 {

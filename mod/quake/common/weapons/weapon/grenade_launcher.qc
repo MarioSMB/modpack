@@ -28,7 +28,7 @@ void GrenadeTouch(entity this, entity toucher)
 
 void W_FireGrenade(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	this.ammo_rockets = this.ammo_rockets - 1;
 	
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
@@ -72,6 +72,11 @@ METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor))
 	player_rocket1(actor);
 	W_FireGrenade(actor);
 	actor.attack_finished = time + RuneApplyHell(0.6, actor);
+}
+METHOD(GrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	float ammo_amount = actor.ammo_rockets >= 1;
+	return ammo_amount;
 }
 METHOD(GrenadeLauncher, wr_suicidemessage, Notification(entity thiswep))
 {

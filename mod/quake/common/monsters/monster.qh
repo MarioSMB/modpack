@@ -51,3 +51,7 @@ ENDCLASS(Monster)
 #include "../../server/rogue/new_ai.qh"
 #include "../../server/weapons.qh"
 #endif
+#ifdef GAMEQC
+#include "../models/all.qh"
+#include "../items/item.qh"
+#endif

@@ -2,6 +2,7 @@
 
 #include "horde.qh"
 #include "monsters/ai.qh"
+#include "monsters/monsters.qh"
 #include "rogue/runes.qh"
 #include "rogue/teamplay.qh"
 #include "triggers/triggers.qh"

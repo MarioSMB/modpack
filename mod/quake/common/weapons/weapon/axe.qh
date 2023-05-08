@@ -3,8 +3,8 @@
 CLASS(Axe, Weapon)
 /* ammotype  */ ATTRIB(Axe, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Axe, impulse, int, 1);
-/* cnt       */ ATTRIB(Axe, cnt, int, 230); // blaster
-/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NOSTEAL);
+/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL);
+/* ammo */      ATTRIB(Axe, aflag, int, 0);
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");
 /* crosshair */ ATTRIB(Axe, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Axe, w_crosshair_size, float, 0.5);
@@ -16,3 +16,7 @@ ENDCLASS(Axe)
 REGISTER_WEAPON(AXE, NEW(Axe));
 
 //SPAWNFUNC_WEAPON(weapon_axe, WEP_AXE)
+
+#ifdef SVQC
+void W_FireAxe(entity this);
+#endif
