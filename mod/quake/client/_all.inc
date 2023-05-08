@@ -8,6 +8,7 @@
 #include "view.qc"
 #include "crosshair.qc"
 #include "sbar.qc"
+#include "shop.qc"
 #include "centerprint.qc"
 
 #include "../common/_all.inc"

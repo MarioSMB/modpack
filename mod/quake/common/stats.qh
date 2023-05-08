@@ -198,6 +198,11 @@ REGISTER_STAT(EXPTIME, float, this.exptime)
 REGISTER_STAT(SHIELD_TIME, float)
 
 #ifdef SVQC
+float shop_open;
+#endif
+REGISTER_STAT(SHOP_OPEN, float, shop_open)
+
+#ifdef SVQC
 .int ammo_lava_nails;
 .int ammo_multi_rockets;
 .int ammo_plasma;

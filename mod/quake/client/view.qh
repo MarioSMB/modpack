@@ -4,11 +4,12 @@ entity viewmodels;
 
 void HUD_CenterPrint ();
 
+bool cursor_active;
+
 float drawframetime;
 
 float intermission_time;
 
-int cs_project_is_b0rked;
 int vid_width, vid_height;
 float vid_pixelheight;
 

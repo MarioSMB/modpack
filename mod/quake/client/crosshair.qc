@@ -14,11 +14,6 @@ void draw_cursor_normal(vector pos, vector col, float a)
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);
-	if(cs_project_is_b0rked > 0)
-	{
-		vec.x *= vid_conwidth / vid_width;
-		vec.y *= vid_conheight / vid_height;
-	}
 	return vec;
 }
 
@@ -105,7 +100,7 @@ LABEL(normalcolor)
 
 void HUD_Crosshair(entity this)
 {
-	if(!sb_showscores && !intermission && !(STAT(HEALTH) <= 0))
+	if(!sb_showscores && !cursor_active && !intermission && !(STAT(HEALTH) <= 0))
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;

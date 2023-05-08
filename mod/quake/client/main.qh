@@ -2,6 +2,10 @@
 
 int serverflags;
 
+bool alt_held;
+bool shift_held;
+bool ctrl_held;
+
 bool postinit;
 
 IntrusiveList g_drawables;

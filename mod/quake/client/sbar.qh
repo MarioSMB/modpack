@@ -29,8 +29,8 @@ string notify_icons[NOTIFY_MAX_ENTRIES];
 const int WEP_INDEXSTART_HIPNOTIC = 7;
 const int WEP_INDEXSTART_ROGUE = 11;
 
-string Sbar_ItemIcon(string item);
+string Sbar_ItemIcon(int item);
 
 string Sbar_ItemName(int item);
 
-void Sbar_Notify_Push(float amount, string item);
+void Sbar_Notify_Push(float amount, int item);

@@ -1,0 +1,7 @@
+#pragma once
+
+REGISTER_NET_LINKED(ENT_CLIENT_SHOPKEEP)
+
+const int SHOP_COST_WEAPON = 50; // default price of weapons if none is set
+const int SHOP_COST_HEAL = 150;
+const int SHOP_COST_AMMO = 100;

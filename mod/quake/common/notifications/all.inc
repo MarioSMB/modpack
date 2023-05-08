@@ -242,6 +242,8 @@
     MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
 
+    MSG_CENTER_NOTIF(SHOP_OPEN,                         N_ENABLE,     0, 0, "",                         CPID_SHOP, "5.5 0", _("^BGShop is open, speak to the ^F1Gremlin^BG!"), "")
+
     MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")
     MSG_CENTER_NOTIF(POWERDOWN_BIOSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Biosuit expiring"), "")
     MSG_CENTER_NOTIF(POWERDOWN_EMPATHY,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Empathy Shields are running out"), "")

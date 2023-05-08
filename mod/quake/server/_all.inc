@@ -23,6 +23,7 @@
 #include "frametick.qc"
 #include "horde.qc"
 #include "fx.qc"
+#include "shop.qc"
 
 #include "weapons/_mod.inc"
 #include "monsters/_all.inc"

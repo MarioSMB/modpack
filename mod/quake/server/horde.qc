@@ -126,6 +126,13 @@ spawnfunc(info_horde_item)
 	this.wait = false;
 }
 
+// SHOP
+spawnfunc(info_horde_shop)
+{
+	if(!MP_MG) { delete(this); return; }
+	shopkeep_spawn(this);
+}
+
 const int KEY_FIRST = BIT(0);
 const int KEY_SECOND = BIT(1);
 const int KEY_THIRD = BIT(2);
@@ -523,6 +530,7 @@ void horde_key_touch(entity this, entity toucher)
 	horde_key_give(this.items);
 	
 	// find the horde manager and trigger the next wave
+#if 0
 	if(key_spawned)
 	{
 		//LOG_DEBUG("key triggers next wave");
@@ -532,6 +540,7 @@ void horde_key_touch(entity this, entity toucher)
 	}
 	//else
 		//LOG_DEBUG("key shouldn't trigger next wave!");
+#endif
 	delete(this);
 }
 
@@ -1273,6 +1282,7 @@ void Countdown4(entity this)
 		//centerprint_all("Fight!");
 	SpawnWave2(this);
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
+	shop_open = 0;
 }
 void Countdown3(entity this)
 {
@@ -1370,6 +1380,8 @@ void Wavecheck(entity this)
 			GetKey(this);
 
 		this.nextthink = time + 20; // in case the players are slow to find the key
+		shop_open = this.nextthink; // give players some time to shop around too!
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SHOP_OPEN);
 	}
 	else
 	{
@@ -1392,6 +1404,7 @@ void Horde_SpawnSquadEntity(int spawntype, int spawncat, string list)
 	horde_squad_setup(squad);
 }
 
+spawnfunc(info_horde_shop);
 void Horde_SetupSquads()
 {
 	// if map entities are found they are preferred
@@ -1491,6 +1504,29 @@ void Horde_SetupSquads()
 			Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 juggernaut");
 			Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
 		}
+	}
+
+	entity shop = find(NULL, classname, "info_horde_shop");
+	if(!shop)
+	{
+		entity point = find(NULL, classname, "info_horde_key");
+		if(!point)
+		{
+			LOG_INFO("Unable to place a shopkeep, map is broken!");
+			return;
+		}
+		RandomSelection_Init();
+		for(int j = 0; j < 4; ++j)
+		{
+			vector pos = point.origin + '0 0 16';
+			tracebox(pos, '-16 -16 -16', '16 16 16', pos + vec2(randomvec() * 100), MOVE_NOMONSTERS, point);
+			RandomSelection_AddVec(trace_endpos, 1, 1);
+		}
+		shop = new(info_horde_shop);
+		shop.spawnfunc_checked = true;
+		shop.angles_y = rint(crandom() * 360);
+		setorigin(shop, RandomSelection_chosen_vec);
+		spawnfunc_info_horde_shop(shop);
 	}
 }
 

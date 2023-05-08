@@ -2,7 +2,9 @@
 
 #include "centerprint.qh"
 #include "sbar.qh"
+#include "shop.qh"
 #include "../common/stats.qh"
+#include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
 
 bool autocvar_developer_csqcentities;
@@ -74,6 +76,46 @@ STATIC_INIT_LATE(LoadMenuSkinValues)
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 {
+	int evtype = 0;
+	switch(inputType)
+	{
+		case 0: evtype = IE_KEYDOWN; break;
+		case 1: evtype = IE_KEYUP; break;
+		case 2:
+		case 3: evtype = IE_MOUSEABS; break;
+	}
+
+	sui_input_event(evtype, nPrimary, nSecondary, 0);
+
+	switch(evtype)
+	{
+		case IE_KEYDOWN:
+			if(nPrimary == K_ALT)
+				alt_held = true;
+			if(nPrimary == K_CTRL)
+				ctrl_held = true;
+			if(nPrimary == K_SHIFT)
+				shift_held = true;
+			break;
+		case IE_KEYUP:
+			if(nPrimary == K_ALT)
+				alt_held = false;
+			if(nPrimary == K_CTRL)
+				ctrl_held = false;
+			if(nPrimary == K_SHIFT)
+				shift_held = false;
+			break;
+		case IE_MOUSEDELTA:
+			break;
+		case IE_MOUSEABS:
+			_cursor_position.x = nPrimary;
+			_cursor_position.y = nSecondary;
+			break;
+	}
+
+	if(cl_shop_input_event(evtype, nPrimary, nSecondary, 0))
+		return true;
+
 	if(inputType == 3)
 	{
 		mousepos.x = nPrimary;
@@ -94,6 +136,9 @@ bool CSQC_ConsoleCommand(string command)
 {
 	tokenize_console(command);
 	string s = strtolower(argv(0));
+
+	if(cl_shop_command(s))
+		return true;
 
 	if(s == "+showaccuracy" || s == "-showaccuracy")
 		return true; // don't handle, just don't do anything
@@ -326,9 +371,7 @@ NET_HANDLE(TE_CSQC_ITEMPICKUP, bool isNew)
 {
 	int theitem = ReadByte();
 	float amount = ReadShort();
-	string item = Sbar_ItemName(theitem);
-	if(item)
-		Sbar_Notify_Push(amount, item);
+	Sbar_Notify_Push(amount, theitem);
 	return true;
 }
 

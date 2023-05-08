@@ -1,0 +1,7 @@
+#pragma once
+
+bool cl_shop_input_event(float evtype, float scanx, float chary, float devid);
+
+bool cl_shop_command(string cmd);
+
+void cl_shop_draw();

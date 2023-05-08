@@ -508,6 +508,8 @@ void Sbar_Score(int margin)
 	int me = player_localnum; // was -1
 	if(MP_MG && STAT(HORDE))
 	{
+		int score = stoi(getplayerkeyvalue(me, "frags"));
+		Sbar_DrawXNum(vec2(-3*12, -12), score, 3, 12, '1 1 1');
 		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, (((STAT(HORDE_WAVE) % 3) == 0) ? '1 0 0 ' : '1 1 1'));
 	}
 	else if(autocvar_sbar_scorerank && me >= 0 && me < maxclients)
@@ -633,19 +635,19 @@ void Sbar_DeathmatchOverlay()
 		dy += Sbar_PrintScoreboardItem(fragsort[j], vec2(xmin, dy));
 }
 
-string Sbar_ItemIcon(string item)
+string Sbar_ItemIcon(int item)
 {
 	switch(item)
 	{
-		case "shells": return "sb_shells";
-		case "nails": return "sb_nails";
-		case "rockets": return "sb_rocket";
-		case "cells": return "sb_cells";
-		case "lava nails": return "r_ammolava";
-		case "multi rockets": return "r_ammomulti";
-		case "plasma": return "r_ammoplasma";
+		case IT_SHELLS: return "sb_shells";
+		case IT_NAILS: return "sb_nails";
+		case IT_ROCKETS: return "sb_rocket";
+		case IT_CELLS: return "sb_cells";
+		case IT_LAVA_NAILS: return "r_ammolava";
+		case IT_MULTI_ROCKETS: return "r_ammomulti";
+		case IT_PLASMA_AMMO: return "r_ammoplasma";
 	}
-	return item;
+	return string_null;
 }
 
 string Sbar_ItemName(int item)
@@ -678,10 +680,12 @@ int Sbar_ItemStat(int item)
 	return 0;
 }
 
-void Sbar_Notify_Push(float amount, string item)
+void Sbar_Notify_Push(float amount, int item)
 {
 	string icon = Sbar_ItemIcon(item);
-	item = cons(ftos(amount), item);
+	if(!icon)
+		return;
+	string fullname = cons(ftos(amount), Sbar_ItemName(item));
 
 	++notify_count;
 	--notify_index;
@@ -696,7 +700,7 @@ void Sbar_Notify_Push(float amount, string item)
 		strunzone(notify_icons[notify_index]);
 
 	// Allocate new strings
-	notify_items[notify_index] = strzone(item);
+	notify_items[notify_index] = strzone(fullname);
 	notify_icons[notify_index] = strzone(icon);
 	notify_times[notify_index] = time;
 }
@@ -1102,6 +1106,8 @@ void Sbar_Draw()
 		// always draw push notifications?
 		Sbar_DrawNotify();
 
+		if(cursor_active)
+			{} // no special handling
 		if(sb_showscores)
 			Sbar_DrawScoreboard();
 		else if(intermission == 1)
@@ -1163,7 +1169,7 @@ void Sbar_Draw()
 
 				// ammo icon
 				int ammotype = viewmodels.activeweapon.ammo_type;
-				string pic = Sbar_ItemIcon(Sbar_ItemName(ammotype));
+				string pic = Sbar_ItemIcon(ammotype);
 
 				if(pic)
 				{

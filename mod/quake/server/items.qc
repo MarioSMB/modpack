@@ -625,7 +625,7 @@ void weapon_touch(entity this, entity toucher)
 		case IT_CELLS: toucher.ammo_cells += newwep.aflag; break;
 		case IT_LAVA_NAILS: toucher.ammo_lava_nails += newwep.aflag; break;
 		case IT_MULTI_ROCKETS: toucher.ammo_multi_rockets += newwep.aflag; break;
-		case IT_LAVA_NAILS: toucher.ammo_plasma += newwep.aflag; break;
+		case IT_PLASMA_AMMO: toucher.ammo_plasma += newwep.aflag; break;
 	}
 
 	if(!(STAT(WEAPONS, toucher) & wep.m_wepset))
@@ -1920,13 +1920,6 @@ void BackpackTouch(entity this, entity toucher)
 		//newitem = toucher.weapon;
 	int old = toucher.weaponentity.m_weapon.m_id;
 
-	if(!MP_IMPEL)
-	{
-		bound_other_ammo(toucher);
-		if(wep != WEP_Null)
-			STAT(WEAPONS, toucher) |= wep.m_wepset;
-	}
-
 	if(this.ammo_shells)
 		SendItemPickup(toucher, IT_SHELLS, this.ammo_shells);
 	if(this.ammo_rockets)
@@ -1947,19 +1940,11 @@ void BackpackTouch(entity this, entity toucher)
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
-	if(MP_IMPEL)
-	{
-		if(IS_MONSTER(this.owner))
-		{
-			delete(this);
-			W_SetCurrentAmmo(toucher);
-			return;
-		}
-		if(wep != WEP_Null)
-			STAT(WEAPONS, toucher) |= wep.m_wepset;
-		bound_other_ammo(toucher);
-		// continue as normal?
-	}
+	if(wep != WEP_Null)
+		STAT(WEAPONS, toucher) |= wep.m_wepset;
+	bound_other_ammo(toucher);
+
+	// continue as normal?
 // remove the backpack
 	delete(this);
 

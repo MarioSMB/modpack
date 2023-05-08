@@ -95,7 +95,7 @@ void Attack_With_Tail(entity this)
 		return;
 
 	float ldmg = (random() + random() + random()) * 40;
-	T_Damage(this.enemy, this, this, ldmg, this.projectiledeathtype);
+	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_CENTROID.m_id);
 	_sound(this, CH_WEAPON_SINGLE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward * 16, crandom() * 50 * v_right);

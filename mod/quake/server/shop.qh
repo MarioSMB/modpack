@@ -1,0 +1,5 @@
+#pragma once
+
+bool sv_shop_command(entity this, string cmd, float argc);
+
+void shopkeep_spawn(entity this);

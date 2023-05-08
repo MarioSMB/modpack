@@ -1,0 +1,123 @@
+#pragma once
+
+#ifndef SVQC
+
+bool _holding_click;
+vector _cursor_click;
+vector _cursor_position;
+vector _cursor_relative_click;
+vector _cursor_relative_hover;
+
+const int MAX_ACTION_ELEMENTS = 256;
+vector _action_elements_pos[MAX_ACTION_ELEMENTS];
+vector _action_elements_size[MAX_ACTION_ELEMENTS];
+string _action_elements_id[MAX_ACTION_ELEMENTS];
+int _action_elements_index;
+
+bool sui_is_last_clicked(string id);
+
+string sui_get_last_clicked();
+
+bool _sui_draw_initialized;
+
+// as GMQCC lacks __inout globals are used in their place
+string sui_text;
+float sui_cursor;
+vector sui_offset;
+vector sui_pos;
+float sui_char;
+float sui_scan;
+
+void sui_begin(float width, float height);
+
+void sui_end();
+
+const int MAX_FRAMES = 64;
+vector _frames_pos[MAX_FRAMES];
+vector _frames_size[MAX_FRAMES];
+vector _frames_align[MAX_FRAMES];
+int _frame_index;
+
+const int SUI_ALIGN_START = 0;
+const int SUI_ALIGN_CENTER = 1;
+const int SUI_ALIGN_END = 2;
+void sui_set_align(vector align);
+
+void sui_fill(vector pos, vector size, vector color, float alpha, float flags);
+
+void sui_pic(vector pos, vector size, string pic, vector color, float alpha, float flags);
+
+void sui_border_box(vector pos, vector size, float width, vector color, float alpha, float flags);
+
+void sui_drawtext(vector pos, vector size, string text, vector color, float alpha, float flags);
+
+void sui_slider_noop(float value);
+
+float sui_slidercontrol(string id, vector pos, vector size, vector minmaxsteps, float value, void(float value) action);
+
+const int IE_KEYDOWN = 0;	/* Specifies that a key was pressed. Second argument is the scan code. Third argument is the unicode (printable) char value. Fourth argument denotes which keyboard(or mouse, if its a mouse 'scan' key) the event came from. Note that some systems may completely separate scan codes and unicode values, with a 0 value for the unspecified argument. */
+const int IE_KEYUP = 1;	/* Specifies that a key was released. Arguments are the same as IE_KEYDOWN. On some systems, this may be fired instantly after IE_KEYDOWN was fired. */
+const int IE_MOUSEDELTA = 2;	/* Specifies that a mouse was moved (touch screens and tablets typically give IE_MOUSEABS events instead, use _windowed_mouse 0 to test code to cope with either). Second argument is the X displacement, third argument is the Y displacement. Fourth argument is which mouse or touch event triggered the event. */
+const int IE_MOUSEABS = 3;	/* Specifies that a mouse cursor or touch event was moved to a specific location relative to the virtual screen space. Second argument is the new X position, third argument is the new Y position. Fourth argument is which mouse or touch event triggered the event. */
+const int IE_ACCELEROMETER = 4;
+const int IE_FOCUS = 5;	/* Specifies that input focus was given. parama says mouse focus, paramb says keyboard focus. If either are -1, then it is unchanged. */
+const int IE_JOYAXIS = 6;	/* Specifies that what value a joystick/controller axis currently specifies. x=axis, y=value. Will be called multiple times, once for each axis of each active controller. */
+bool sui_input_event(float evtype, float scanx, float chary, float devid);
+
+void sui_push_frame(vector pos, vector size);
+
+void sui_pop_frame();
+
+void sui_reset_frame();
+
+bool sui_is_hovered(string id);
+
+int sui_hover_index(string id);
+
+bool sui_is_held(string id);
+
+int sui_hold_index(string id);
+
+void sui_action_element(vector pos, vector size, string id);
+
+void sui_reset_actions();
+
+void sui_reset_click();
+
+bool sui_click_held();
+
+bool sui_is_clicked(string id);
+
+int sui_click_index(string id);
+
+// expects sui_text and sui_cursor to be set
+void sui_cap_input_length(float maxlen);
+
+// expects sui_text and sui_cursor to be set
+void sui_handle_text_input(float char, float scan);
+
+// expects sui_text and sui_cursor to be set
+void sui_text_input(string id, vector pos, vector size);
+
+// expects sui_offset to be set
+void sui_scrollbar(string id, vector size, vector contentsize, vector scrollbar_widths);
+
+// expects sui_offset to be set
+void sui_scroll_view_begin(string id, vector pos, vector size, vector contentsize, vector scrollbar_widths);
+
+// expects sui_offset to be set
+void sui_list_view_begin(string id, vector pos, vector size, vector itemsize, float numitems, vector scrollbar_widths);
+
+// expects sui_pos to be set
+float sui_list_item();
+
+// expects sui_char and sui_scan to be set
+float sui_get_input();
+
+void sui_list_view_end();
+
+string sui_binder(string id, vector pos, vector size, string name, string command);
+
+void sui_draw_bind_overlay();
+
+#endif

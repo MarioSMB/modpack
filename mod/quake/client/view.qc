@@ -2,6 +2,7 @@
 
 #include "../common/constants.qh"
 #include <common/physics/movetypes/movetypes.qh>
+#include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
 #include "../common/wepent.qh"
 #include "../common/util.qh"
@@ -360,6 +361,12 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
+void draw_drawMousePointer(vector where)
+{
+	string cursor = strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor");
+	drawpic(where - '0.25 0.125 0', cursor, '32 32 0', '1 1 1', 1, 0);
+}
+
 bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
@@ -453,33 +460,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 	HUD_CenterPrint();
 	HUD_Crosshair(this);
 
-	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
-		string w0, h0;
-		w0 = ftos(autocvar_vid_conwidth);
-		h0 = ftos(autocvar_vid_conheight);
-		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//setproperty(VF_FOV, '90 90 0');
-		setproperty(VF_ORIGIN, '0 0 0');
-		setproperty(VF_ANGLES, '0 0 0');
-		setproperty(VF_PERSPECTIVE, 1);
-		vector forward, right, up;
-		MAKE_VECTORS('0 0 0', forward, right, up);
-		vector v1, v2;
-		cvar_set("vid_conwidth", "800");
-		cvar_set("vid_conheight", "600");
-		v1 = cs_project(forward);
-		cvar_set("vid_conwidth", "640");
-		cvar_set("vid_conheight", "480");
-		v2 = cs_project(forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
-		else
-			cs_project_is_b0rked = -1;
-		cvar_set("vid_conwidth", w0);
-		cvar_set("vid_conheight", h0);
-	}
+	sui_begin(vid_conwidth, vid_conheight);
+
+	cl_shop_draw();
+
+	sui_end();
+
+	if(cursor_active && !intermission)
+		draw_drawMousePointer(_cursor_position);
 
 	if(intermission && !completed_time)
 		completed_time = time;

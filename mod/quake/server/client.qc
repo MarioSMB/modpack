@@ -9,6 +9,7 @@
 #include "getreplies.qh"
 #include "player.qh"
 #include "rogue/teamplay.qh"
+#include "shop.qh"
 #include "triggers/teleporters.qh"
 #include "weapons/weaponsystem.qh"
 
@@ -2823,7 +2824,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, attacker_name))
+		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, ""))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -2998,6 +2999,9 @@ void SV_ParseClientCommand(entity this, string command)
 		else sprint(this, "ERROR: unsupported info command");
 		return;
 	}
+
+	if(sv_shop_command(this, cmd_name, argc))
+		return;
 
 	clientcommand(this, command);
 }
