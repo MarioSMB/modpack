@@ -7,7 +7,7 @@ MODEL(MON_ARMAGON, "progs/armalegs.mdl");
 #endif
 
 CLASS(Armagon, Monster)
-    ATTRIB(Armagon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIPNOTIC);
+    ATTRIB(Armagon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIPNOTIC | MON_FLAG_INFIGHT);
     ATTRIB(Armagon, m_mins, vector, '-48 -48 -24');
     ATTRIB(Armagon, m_maxs, vector, '48 48 84');
 #ifdef GAMEQC

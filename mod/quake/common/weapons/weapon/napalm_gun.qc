@@ -80,8 +80,7 @@ void napalmrebound(entity this)
 
 void NapalmTouch(entity this, entity toucher)
 {
-	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.monsterdef != MON_SPIDER_DROID && toucher.monsterdef != MON_ZOMBIE
-			&& toucher.monsterdef != MON_SHAMBLER && toucher.monsterdef != MON_VORE)
+	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && !(toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 	{
 		entity missile = SpawnInternalFire(this, toucher);
 		missile.projectiledeathtype = WEP_NAPALM.m_id;

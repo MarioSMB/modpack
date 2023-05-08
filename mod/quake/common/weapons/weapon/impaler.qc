@@ -19,7 +19,7 @@ void T_SpearTouch(entity this, entity toucher)
 
 	float knockback;
 	float r = random();
-	if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)))
+	if(toucher && toucher.takedamage && (IS_PLAYER(toucher) || IS_MONSTER(toucher)))
 	{
 		_setmodel(this, "progs/impstuck.mdl");
 		if(IS_CLIENT(toucher))
@@ -30,21 +30,17 @@ void T_SpearTouch(entity this, entity toucher)
 			knockback = 0;
 		if(knockback > 10)
 		{
-			if(IS_ONGROUND(toucher))
-			{
-				UNSET_ONGROUND(toucher);
-				setorigin(toucher, toucher.origin + '0 0 1');
-			}
+			UNSET_ONGROUND(toucher);
 			makevectors(this.angles);
 			toucher.velocity = toucher.velocity + v_forward * knockback;
 			toucher.velocity_z = toucher.velocity_z + knockback / 2;
 		}
 	}
-	if(toucher.takedamage 
-		&& (toucher.monsterdef == MON_JUGGERNAUT
-			|| toucher.monsterdef == MON_CHTHON || toucher.monsterdef == MON_SHUB || toucher.monsterdef == MON_LEGOND 
-			|| toucher.monsterdef == MON_KNIGHT || toucher.monsterdef == MON_DARK_KNIGHT || toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_SHAMBLER) 
-			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1))
+	if(toucher && toucher.takedamage 
+		&& ((toucher.monsterdef.spawnflags & MON_FLAG_METAL)
+			|| (toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
+			|| (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)
+			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1)))
 	{
 		_setmodel(this, "progs/impdef.mdl");
 		T_Damage(toucher, this, this.owner, 50, this.projectiledeathtype);
@@ -65,7 +61,7 @@ void T_SpearTouch(entity this, entity toucher)
 		this.nextthink = time + 0.5;
 		this.count = time + 3;
 	}
-	else if(((toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTTWEILER) && random() < 0.5) || toucher.monsterdef == MON_ROTFISH)
+	else if(toucher && toucher.takedamage && toucher.max_health > 0 && (((toucher.max_health <= 80) && random() < 0.5) || toucher.max_health <= 20))
 	{
 		T_Damage(toucher, this, this.owner, 5000, this.projectiledeathtype);
 		entity missile = spawn();
@@ -81,29 +77,24 @@ void T_SpearTouch(entity this, entity toucher)
 		missile.count = 0;
 		missile.projectiledeathtype = WEP_SPEAR.m_id;
 		settouch(missile, T_SpearTouch);
-		toucher.nextthink = time + 4;
-		setthink(toucher, SUB_Remove);
+		missile.nextthink = time + 4;
+		setthink(missile, SUB_Remove);
 		_setmodel(missile, "progs/impstuck.mdl");
 		setsize(missile, '0 0 0', '0 0 0');
 		setorigin(missile, this.origin + v_forward);
 		delete(this);
 	}
-	else if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)) && toucher.armorvalue == 0 && 
-		(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER 
-		|| toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_FIEND 
-		|| toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_GRENLING
-		|| toucher.monsterdef == MON_GRUNT || toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.classname == "wall_explode"))
+	else if(toucher && toucher.takedamage && toucher.armorvalue == 0 && (IS_PLAYER(toucher) || toucher.classname == "wall_explode" || IS_MONSTER(toucher)))
 	{
 		_setmodel(this, "progs/impstuck.mdl");
 		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
-		if(IS_PLAYER(toucher) || toucher.monsterdef == MON_ENFORCER || toucher.monsterdef == MON_LIGHTNING_ENFORCER)
+		if(IS_PLAYER(toucher))
 		{
 			BecomeBloodSpurt(this, 25);
 			T_Damage(toucher, this, this.owner, 25, this.projectiledeathtype);
 			BecomeBloodSpurt(this, 25);
 		}
-		if(!(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
-				|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH))
+		if(toucher.max_health > 80)
 		{
 			BecomeBloodSpurt(this, 25);
 			T_Damage(toucher, this, this.owner, 25, this.projectiledeathtype);
@@ -121,14 +112,13 @@ void T_SpearTouch(entity this, entity toucher)
 		this.mangle_z = this.mangle_z * 0.1 + 10;
 		setthink(this, SpearThink);
 		this.nextthink = time + 0.1;
-		if(toucher.monsterdef == MON_GRENLING || toucher.monsterdef == MON_GRUNT 
-			|| toucher.monsterdef == MON_ROTTWEILER || toucher.monsterdef == MON_SCRAG || toucher.monsterdef == MON_ROTFISH)
+		if(toucher.max_health <= 80)
 		{
 			T_Damage(toucher, this, this.owner, 5000, this.projectiledeathtype);
 			BecomeBloodSpurt(this, 5000);
 		}
 	}
-	else if(toucher.takedamage)
+	else if(toucher && toucher.takedamage)
 	{
 		_setmodel(this, "progs/impdef.mdl");
 		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
@@ -150,7 +140,7 @@ void T_SpearTouch(entity this, entity toucher)
 		this.nextthink = time + 0.5;
 		this.count = time + 3;
 	}
-	else if(toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_CLIENT(toucher) || IS_MONSTER(toucher))
+	else if(toucher && (toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_CLIENT(toucher) || IS_MONSTER(toucher)))
 	{
 		_setmodel(this, "progs/impwall.mdl");
 		BecomePurpleExplosion(this, toucher, 50);
@@ -239,7 +229,7 @@ void ImpaledGibs(entity this)
 
 void ImpaledExplosion(entity this)
 {
-	if(this.enemy.health <= 0)
+	if(this.enemy && this.enemy.health <= 0)
 	{
 		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
 		BecomeBloodSpurt(this, 60);
@@ -318,7 +308,7 @@ void SpearThink(entity this)
 {
 	setorigin(this, this.enemy.origin + this.mangle);
 	this.angles = this.enemy.angles + this.v_angle;
-	if(IS_CLIENT(this.enemy) || this.enemy.monsterdef == MON_ENFORCER || IS_PLAYER(this.enemy) || this.enemy.monsterdef == MON_LIGHTNING_ENFORCER)
+	if(IS_PLAYER(this.enemy))
 	{
 		if(!(this.flags & FL_NOTARGET))
 		{
@@ -475,11 +465,6 @@ void W_FireSpear(entity this)
 	_setmodel(missile, "progs/impaler.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin + (v_forward * 8) + '0 0 16');
-	if(IS_ONGROUND(this))
-	{
-		UNSET_ONGROUND(this);
-		setorigin(this, this.origin + '0 0 1');
-	}
 	this.velocity = this.velocity - (v_forward * (600 - this.armorvalue)) + '0 0 50';
 	this.punchangle_x = -10;
 }

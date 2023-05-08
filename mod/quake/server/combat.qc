@@ -118,7 +118,7 @@ bool CanDamage(entity targ, entity inflictor)
 	traceline(inflictor.origin, targ.origin, MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-#if 0
+#if 1
 	traceline(inflictor.origin, targ.origin + '15 15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
@@ -462,7 +462,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)
 		{
-			if(targ.classname != attacker.classname || targ.monsterdef == MON_GRUNT || targ.monsterdef == MON_ARMAGON)
+			if(targ.classname != attacker.classname || (targ.monsterdef.spawnflags & MON_FLAG_INFIGHT))
 			{
 				if(coop || (MP_MG && autocvar_horde))
 				{

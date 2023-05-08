@@ -8,7 +8,7 @@ MODEL(MON_GRUNT_HEAD, "progs/h_guard.mdl");
 #endif
 
 CLASS(Grunt, Monster)
-    ATTRIB(Grunt, spawnflags, int, 0);
+    ATTRIB(Grunt, spawnflags, int, MON_FLAG_INFIGHT);
     ATTRIB(Grunt, m_mins, vector, '-16 -16 -24');
     ATTRIB(Grunt, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

@@ -1,6 +1,7 @@
 #include "shop.qh"
 
 #include "../common/shop.qh"
+#include "../common/sounds/all.qh"
 
 STATIC_INIT_LATE(shop_init)
 {
@@ -284,6 +285,7 @@ void shopkeep_draw(entity this)
 		return;
 
 	this.shopkeep_delay = 0;
+	_sound(this, CH_TRIGGER_SINGLE, "grem/idle.wav", VOL_BASE, ATTEN_NORM);
 	shop_open();
 }
 

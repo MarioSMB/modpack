@@ -486,7 +486,7 @@ void T_MediumPulseTouch(entity this, entity toucher)
 		damg = 40 + (random() * 20);
 	if(toucher.takedamage)
 	{
-		if(toucher.health <= damg && toucher.monsterdef != MON_JUGGERNAUT
+		if(toucher.health <= damg && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL)
 			&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
 			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)), this.projectiledeathtype);
@@ -494,8 +494,7 @@ void T_MediumPulseTouch(entity this, entity toucher)
 			setorigin(toucher, toucher.origin);
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
-			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
-				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
+			if(toucher.max_health > 100 || (toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -533,7 +532,7 @@ void T_SinglePulseTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
+		if(toucher.health <= 0 && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
 		{
 			if(!IS_PLAYER(toucher))
 			{
@@ -543,8 +542,7 @@ void T_SinglePulseTouch(entity this, entity toucher)
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
 			// TODO: some kind of "heavy" flag?
-			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
-				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
+			if(toucher.max_health > 100)
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -584,15 +582,14 @@ void T_SmallPulseTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-		if(toucher.health <= 0 && toucher.monsterdef != MON_JUGGERNAUT 
+		if(toucher.health <= 0 && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) 
 					&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
 		{
 			toucher.origin_z = toucher.origin_z + 1;
 			setorigin(toucher, toucher.origin);
 			UNSET_ONGROUND(toucher);
 			makevectors(this.v_angle);
-			if(toucher.monsterdef == MON_HELL_KNIGHT || toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_SHAMBLER
-				|| toucher.monsterdef == MON_LEGOND || toucher.monsterdef == MON_BLUD || toucher.monsterdef == MON_VORE)
+			if(toucher.max_health > 100)
 			{
 				toucher.velocity = qc_aim(this, 25);
 				toucher.velocity = '0 0 25' + this.velocity;
@@ -903,18 +900,6 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		v.y = 1000 * crandom();
 		v.z = 2000 + 1000 * random();
 	}
-	else if(targ.monsterdef == MON_OGRE)
-	{
-		v.x = 200 * crandom();
-		v.y = 200 * crandom();
-		v.z = 150 + 50 * random();
-	}
-	else if(targ.monsterdef == MON_HELL_KNIGHT)
-	{
-		v.x = 200 * crandom();
-		v.y = 200 * crandom();
-		v.z = 150 + 50 * random();
-	}
 	else
 	{
 		v.x = 200 * crandom();
@@ -1199,7 +1184,7 @@ void MakeFlame(entity this, entity toucher)
 		BecomeExplosion(this);
 		return;
 	}
-	if(toucher.monsterdef == MON_OGRE || toucher.monsterdef == MON_HELL_KNIGHT)
+	if(random() < 0.5)
 		_setmodel(this, "progs/flameo2.mdl");
 	else
 		_setmodel(this, "progs/flameo.mdl");
@@ -1355,18 +1340,18 @@ void InternalFireThink(entity this)
 	{
 		if(this.enemy.health > 0)
 		{
-			if(this.enemy.monsterdef == MON_OGRE)
+			if(this.enemy.monsterdef == MON_OGRE) // TODO: what the hell
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
 			T_Damage (this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
-			if(this.enemy.monsterdef != MON_JUGGERNAUT && this.enemy.monsterdef != MON_SPIDER_DROID 
+			if(!(this.enemy.monsterdef.spawnflags & MON_FLAG_METAL) 
 					&& this.enemy.classname != "misc_explobox" && this.enemy.classname != "misc_explobox2" && this.enemy.classname != "wall_explode")
 			{
 				_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
-				if(this.enemy.monsterdef == MON_GRENLING || this.enemy.monsterdef == MON_SCRAG || this.enemy.monsterdef == MON_ROTTWEILER)
+				if(this.enemy.max_health < 80)
 				{
 					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
 					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
@@ -1398,7 +1383,7 @@ void InternalFireThink(entity this)
 	{
 		if(this.enemy.health <= 8 && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		{
-			if(this.enemy.monsterdef == MON_OGRE && (this.enemy.health - damg) > -80)
+			if(this.enemy.monsterdef == MON_OGRE && (this.enemy.health - damg) > -80) // TODO
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
@@ -1407,11 +1392,11 @@ void InternalFireThink(entity this)
 			if(this.enemy.health > 0)
 			{
 				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
-				if(this.enemy.monsterdef != MON_JUGGERNAUT || this.enemy.monsterdef != MON_SPIDER_DROID
+				if(!(this.enemy.monsterdef.spawnflags & MON_FLAG_METAL)
 						|| this.enemy.classname != "misc_explobox" || this.enemy.classname != "misc_explobox2" || this.enemy.classname != "wall_explode")
 				{
 					_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
-					if(this.enemy.monsterdef == MON_GRENLING || this.enemy.monsterdef == MON_SCRAG || this.enemy.monsterdef == MON_ROTTWEILER)
+					if(this.enemy.max_health <= 80)
 					{
 						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
 						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
@@ -1454,12 +1439,7 @@ void InternalFireThink(entity this)
 		BecomeExplosion(this);
 		return;
 	}
-	if(this.enemy.monsterdef != MON_ZOMBIE && this.enemy.monsterdef != MON_JUGGERNAUT)
-		setorigin(this, this.enemy.origin);
-	if(this.enemy.monsterdef == MON_ZOMBIE)
-		setorigin(this, this.enemy.origin - v_up * 16);
-	if(this.enemy.monsterdef == MON_JUGGERNAUT)
-		setorigin(this, this.enemy.origin + v_up * 32);
+	setorigin(this, this.enemy.origin);
 	setthink(this, InternalFireThink);
 }
 
@@ -1474,17 +1454,12 @@ entity SpawnInternalFire(entity this, entity targ)
 	missile.nextthink = time + 0.3;
 	setthink(missile, InternalFireThink);
 	missile.classname = "flame";
-	if(targ.monsterdef == MON_OGRE || targ.monsterdef == MON_HELL_KNIGHT)
+	if(random() < 0.5)
 		_setmodel(missile, "progs/flameo2.mdl");
 	else
 		_setmodel(missile, "progs/flameo.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
-	if(targ.monsterdef != MON_ZOMBIE && targ.monsterdef != MON_JUGGERNAUT)
-		setorigin(missile, targ.origin);
-	if(targ.monsterdef == MON_ZOMBIE)
-		setorigin(missile, targ.origin - v_up * 16);
-	if(targ.monsterdef == MON_JUGGERNAUT)
-		setorigin(missile, targ.origin - v_up * 32);
+	setorigin(missile, targ.origin);
 
 	return missile;
 }
