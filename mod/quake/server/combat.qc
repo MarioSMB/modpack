@@ -237,6 +237,8 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			monsters_killed += 1;
 		if(IS_PLAYER(attacker))
 			attacker.frags += 1;
+		if(MP_MG && horde_ent)
+			Horde_GiveScore(HORDE_SCORE_KILL);
 	}
 
 	if(MP_ROGUE)

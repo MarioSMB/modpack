@@ -19,7 +19,7 @@ void shop_buyitem(entity this, string item)
 			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
 			return;
 		}
-		if(T_Heal(this, this.max_health, false))
+		if(T_Heal(this, 100, true))
 		{
 			this.frags -= SHOP_COST_HEAL;
 			_sound(this, CH_TRIGGER_SINGLE, "items/r_item2.wav", 1, ATTN_NORM);
@@ -27,6 +27,42 @@ void shop_buyitem(entity this, string item)
 		}
 		else
 			sprint(this, "Already at maximum health\n");
+		return;
+	}
+
+	if(item == "armor")
+	{
+		if(this.frags < SHOP_COST_ARMOR)
+		{
+			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
+			return;
+		}
+		float type = 0.3, value = 100;
+		int bit = IT_ARMOR1;
+
+		if(this.items & IT_ARMOR1)
+		{
+			type = 0.6;
+			value = 150;
+			bit = IT_ARMOR2;
+		}
+		else if((this.items & IT_ARMOR2) || (this.items & IT_ARMOR3))
+		{
+			type = 0.8;
+			value = 200;
+			bit = IT_ARMOR3;
+		}
+		if(this.armortype * this.armorvalue >= type * value)
+		{
+			sprint(this, "Already at maximum armor\n");
+			return;
+		}
+		this.armortype = type;
+		this.armorvalue = value;
+		this.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		this.items |= bit;
+		_sound(this, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
+		sprint(this, "Armor upgraded\n");
 		return;
 	}
 
@@ -39,15 +75,15 @@ void shop_buyitem(entity this, string item)
 		}
 		// TODO: does not verify that the player actually gained any ammo!
 		this.frags -= SHOP_COST_AMMO;
-		this.ammo_shells += 20; SendItemPickup(this, IT_SHELLS, 20);
-		this.ammo_nails += 30; SendItemPickup(this, IT_NAILS, 30);
-		this.ammo_rockets += 10; SendItemPickup(this, IT_ROCKETS, 10);
-		this.ammo_cells += 15; SendItemPickup(this, IT_CELLS, 15);
+		this.ammo_shells += 30; SendItemPickup(this, IT_SHELLS, 30);
+		this.ammo_nails += 60; SendItemPickup(this, IT_NAILS, 60);
+		this.ammo_rockets += 20; SendItemPickup(this, IT_ROCKETS, 20);
+		this.ammo_cells += 30; SendItemPickup(this, IT_CELLS, 30);
 		if(MP_ROGUE)
 		{
-			this.ammo_lava_nails += 30; SendItemPickup(this, IT_LAVA_NAILS, 30);
-			this.ammo_multi_rockets += 10; SendItemPickup(this, IT_MULTI_ROCKETS, 10);
-			this.ammo_plasma += 20; SendItemPickup(this, IT_PLASMA_AMMO, 20);
+			this.ammo_lava_nails += 60; SendItemPickup(this, IT_LAVA_NAILS, 60);
+			this.ammo_multi_rockets += 20; SendItemPickup(this, IT_MULTI_ROCKETS, 20);
+			this.ammo_plasma += 40; SendItemPickup(this, IT_PLASMA_AMMO, 40);
 		}
 		bound_other_ammo(this);
 		sprint(this, "Ammunition restocked\n");
@@ -134,7 +170,7 @@ bool sv_shop_command(entity this, string cmd, float argc)
 			if(argc == 2)
 				shop_buyitem(this, strtolower(argv(1)));
 			else
-				sprint(this, "Usage: shop itemname\nitemname may be heal to buy health, ammo to buy ammunition or a weapon name (for example, nailgun)\n");
+				sprint(this, "Usage: shop itemname\nitemname may be heal to buy health, armor or ammo to buy ammunition or a weapon name (for example, nailgun)\n");
 			return true;
 		}
 	}

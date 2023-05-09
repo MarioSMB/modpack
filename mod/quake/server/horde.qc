@@ -21,6 +21,14 @@ int HordeGetPlayersAlive()
 	return playercount;
 }
 
+void Horde_GiveScore(int score)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		it.frags += score;
+	});
+}
+
 /*
 ================
 HordeGetMonstersAlive
