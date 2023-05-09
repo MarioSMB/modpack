@@ -118,7 +118,6 @@ METHOD(PhantomSwordsman, mr_setup, bool(PhantomSwordsman this, entity actor))
     TC(PhantomSwordsman, this);
 
 	precache_sound("knight/sword1.wav");
-	precache_sound("knight/ksight.wav");
 	precache_sound("player/axhit2.wav");
 
 	if(!this.delay)

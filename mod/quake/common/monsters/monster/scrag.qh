@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_SCRAG, "progs/wizard.mdl");
 MODEL(MON_SCRAG_HEAD, "progs/h_wizard.mdl");
+
+SOUND(MON_SCRAG_SIGHT, "wizard/wsight");
 #endif
 
 CLASS(Scrag, Monster)
@@ -14,6 +16,7 @@ CLASS(Scrag, Monster)
 #ifdef GAMEQC
     ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
     ATTRIB(Scrag, m_model_head, Model, MDL_MON_SCRAG_HEAD);
+    ATTRIB(Scrag, m_sound, Sound, SND_MON_SCRAG_SIGHT);
 #endif
     ATTRIB(Scrag, netname, string, "wizard");
     ATTRIB(Scrag, monster_name, string, _("Scrag"));

@@ -264,16 +264,6 @@ void dknightattack(entity this)
 	}
 }
 
-string dknight_sight(entity this)
-{
-	switch(floor(random() * 3))
-	{
-		case 0: return "monsters/dknight/dksight1.wav";
-		case 1: return "monsters/dknight/dksight2.wav";
-		default: case 2: return "monsters/dknight/dksight3.wav";
-	}
-}
-
 spawnfunc(monster_dknight)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -286,9 +276,6 @@ METHOD(DarkKnight, mr_setup, bool(DarkKnight this, entity actor))
 {
     TC(DarkKnight, this);
 
-	precache_sound2("monsters/dknight/dksight1.wav");
-	precache_sound2("monsters/dknight/dksight2.wav");
-	precache_sound2("monsters/dknight/dksight3.wav");
 	precache_sound2("monsters/dknight/dklight.wav");
 	precache_sound2("monsters/dknight/dkidle1.wav");
 	precache_sound2("monsters/dknight/dkidle2.wav");
@@ -312,7 +299,13 @@ METHOD(DarkKnight, mr_setup, bool(DarkKnight this, entity actor))
 	actor.th_die = dknight_die;
 	actor.th_missile = dknightattack;
 
-	actor.sightsound = dknight_sight;
+    return true;
+}
+METHOD(DarkKnight, mr_sight, bool(DarkKnight this, entity actor))
+{
+    TC(DarkKnight, this);
+
+	sound(actor, CH_VOICE, SND_MON_DARK_KNIGHT_SIGHT_RANDOM(), 1, ATTN_NORM);
 
     return true;
 }

@@ -4,6 +4,8 @@
 
 #ifdef GAMEQC
 MODEL(MON_LAVAMAN, "progs/boss.mdl");
+
+SOUND(MON_LAVAMAN_SIGHT, "boss1/sight1");
 #endif
 
 CLASS(LavaMan, Monster)
@@ -12,6 +14,7 @@ CLASS(LavaMan, Monster)
     ATTRIB(LavaMan, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC
     ATTRIB(LavaMan, m_model, Model, MDL_MON_LAVAMAN);
+    ATTRIB(LavaMan, m_sound, Sound, SND_MON_LAVAMAN_SIGHT);
 #endif
     ATTRIB(LavaMan, netname, string, "lavaman");
     ATTRIB(LavaMan, monster_name, string, _("LavaMan"));

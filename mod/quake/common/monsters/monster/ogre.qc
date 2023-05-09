@@ -497,8 +497,6 @@ bool OgreCheckAttack(entity this)
 	return true;
 }
 
-string ogre_sight(entity this) { return "ogre/ogwake.wav"; }
-
 /*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush Boss Normal
 The Ogre
 
@@ -527,7 +525,6 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	precache_sound("ogre/ogidle2.wav");
 	precache_sound("ogre/ogpain1.wav");
 	precache_sound("ogre/ogsawatk.wav");
-	precache_sound("ogre/ogwake.wav");
 
 	if(MP_ROGUE)
 	{
@@ -548,7 +545,6 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	actor.th_missile = ogre_nail1;
 	actor.th_pain = ogre_pain;
 
-	actor.sightsound = ogre_sight;
 	actor.checkattack = OgreCheckAttack;
 
     return true;

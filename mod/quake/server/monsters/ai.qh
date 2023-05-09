@@ -30,8 +30,6 @@ const float MIN_ANGLE_DELTA = 10;
 .void(entity this) th_missile;
 .void(entity this) th_melee;
 
-.string(entity this) sightsound;
-
 .bool(entity this) checkattack;
 
 .float lefty;

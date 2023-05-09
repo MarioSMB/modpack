@@ -367,8 +367,6 @@ void blud_die(entity this, entity inflictor, entity attacker, int deathtype)
 	blud_die1(this);
 }
 
-string blud_sight(entity this) { return "monsters/blud/blsight.wav"; }
-
 spawnfunc(monster_blud)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -396,7 +394,6 @@ METHOD(Blud, mr_setup, bool(Blud this, entity actor))
 	precache_sound2("monsters/blud/blidle3.wav");
 	precache_sound2("monsters/blud/blidle4.wav");
 	precache_sound2("monsters/blud/blood.wav");
-	precache_sound2("monsters/blud/blsight.wav");
 	precache_sound2("zombie/z_miss.wav");
 	precache_sound2("zombie/z_hit.wav");
 
@@ -408,8 +405,6 @@ METHOD(Blud, mr_setup, bool(Blud this, entity actor))
 	actor.th_missile = blud_atkb1;
 	actor.th_pain = blud_pain;
 	actor.th_die = blud_die;
-
-	actor.sightsound = blud_sight;
 
     return true;
 }

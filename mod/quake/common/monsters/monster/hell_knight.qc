@@ -424,8 +424,6 @@ void hknight_pause1(entity this)
 	this.nextthink = time + 0.1;
 }
 
-string hknight_sight(entity this) { if(!MP_ROGUE || !this.skin) return "hknight/sight1.wav"; else return string_null; }
-
 /*QUAKED monster_hell_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush Statue
 
 Statue - (rogue only) select this to use the stone skin and have him frozen in place.
@@ -466,7 +464,6 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 	{
 		precache_sound2("hknight/death1.wav");
 		precache_sound2("hknight/pain1.wav");
-		precache_sound2("hknight/sight1.wav");
 		precache_sound2("hknight/idle.wav");
 	}
 	precache_model2("progs/k_spike.mdl");
@@ -504,7 +501,20 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 		actor.th_die = hknight_die;
 	}
 
-	actor.sightsound = hknight_sight;
+    return true;
+}
+METHOD(HellKnight, mr_sight, bool(HellKnight this, entity actor))
+{
+    TC(HellKnight, this);
+
+	if(MP_ROGUE && (actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
+	{
+		actor.enemy = NULL;
+		return false;
+	}
+
+	if(!MP_ROGUE || !actor.skin)
+		sound(actor, CH_VOICE, this.m_sound, 1, ATTN_NORM);
 
     return true;
 }

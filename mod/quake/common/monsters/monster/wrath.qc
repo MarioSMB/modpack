@@ -265,8 +265,6 @@ void WrathMissileTouch(entity this, entity toucher)
 	s_explode1(this);
 }
 
-string wrath_sight(entity this) { return "wrath/wsee.wav"; }
-
 /*QUAKED monster_wrath (1 0 0) (-16 -16 -24) (16 16 32) Ambush
 */
 spawnfunc(monster_wrath)
@@ -285,8 +283,7 @@ METHOD(Wrath, mr_setup, bool(Wrath this, entity actor))
 	precache_model("progs/wrthgib1.mdl");
 	precache_model("progs/wrthgib2.mdl");
 	precache_model("progs/wrthgib3.mdl");
-	
-	precache_sound("wrath/wsee.wav");
+
 	precache_sound("wrath/watt.wav");
 	precache_sound("wrath/wpain.wav");
 	precache_sound("wrath/wdthc.wav");
@@ -300,8 +297,6 @@ METHOD(Wrath, mr_setup, bool(Wrath this, entity actor))
 	actor.th_missile = wrath_attack;
 	actor.th_pain = wrath_pain;
 	actor.th_die = wrath_die02;
-
-	actor.sightsound = wrath_sight;
 
     return true;
 }

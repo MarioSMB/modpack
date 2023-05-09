@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_HELL_KNIGHT, "progs/hknight.mdl");
 MODEL(MON_HELL_KNIGHT_HEAD, "progs/h_hellkn.mdl");
+
+SOUND(MON_HELL_KNIGHT_SIGHT, "hknight/sight1");
 #endif
 
 CLASS(HellKnight, Monster)
@@ -14,6 +16,7 @@ CLASS(HellKnight, Monster)
 #ifdef GAMEQC
     ATTRIB(HellKnight, m_model, Model, MDL_MON_HELL_KNIGHT);
     ATTRIB(HellKnight, m_model_head, Model, MDL_MON_HELL_KNIGHT_HEAD);
+    ATTRIB(HellKnight, m_sound, Sound, SND_MON_HELL_KNIGHT_SIGHT);
 #endif
     ATTRIB(HellKnight, netname, string, "hknight");
     ATTRIB(HellKnight, monster_name, string, _("Hell Knight"));

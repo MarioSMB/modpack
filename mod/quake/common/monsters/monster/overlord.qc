@@ -451,7 +451,6 @@ METHOD(Overlord, mr_setup, bool(Overlord this, entity actor))
 	precache_model("progs/wrthgib3.mdl");
 
 	precache_model("progs/w_ball.mdl");
-	precache_sound("wrath/wsee.wav");
 	precache_sound("wrath/watt.wav");
 	precache_sound("wrath/wpain.wav");
 	precache_sound("wrath/wdthc.wav");

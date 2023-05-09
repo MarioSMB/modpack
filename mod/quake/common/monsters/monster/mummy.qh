@@ -8,7 +8,7 @@ MODEL(MON_MUMMY_HEAD, "progs/h_zombie.mdl");
 #endif
 
 CLASS(Mummy, Monster)
-    ATTRIB(Mummy, spawnflags, int, MON_FLAG_ROGUE);
+    ATTRIB(Mummy, spawnflags, int, MON_FLAG_ROGUE | MONSTER_TYPE_UNDEAD);
     ATTRIB(Mummy, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Mummy, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC

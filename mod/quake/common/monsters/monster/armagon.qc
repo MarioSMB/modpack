@@ -759,7 +759,15 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 	actor.th_pain = armagon_pain;
 
 	actor.checkattack = ArmagonCheckAttack;
-	actor.sightsound = armagon_sight;
+
+    return true;
+}
+METHOD(Armagon, mr_sight, bool(Armagon this, entity actor))
+{
+    TC(Armagon, this);
+
+    // armagon's sight sound is REALLY loud, so we reduce it here
+	_sound(actor, CH_VOICE, "armagon/sight.wav", 1, 0.1);
 
     return true;
 }

@@ -63,7 +63,7 @@ void lavaspike_touch(entity this, entity toucher)
 		}
 		else		// is a monster
 		{
-			if(toucher.monsterdef != MON_LAVAMAN)
+			if(toucher.monsterdef != MON_LAVAMAN) // special case: lava monsters don't take damage from lava weapons
 				T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
 		}
 	}
@@ -118,7 +118,7 @@ void superlavaspike_touch(entity this, entity toucher)
 		}
 		else		// is a monster, do 50% more damage
 		{
-			if(toucher.monsterdef != MON_LAVAMAN)
+			if(toucher.monsterdef != MON_LAVAMAN) // special case: lava monsters don't take damage from lava weapons
 			{
 				T_Damage(toucher, this, this.owner, 30, this.projectiledeathtype);
 			}

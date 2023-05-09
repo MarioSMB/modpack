@@ -677,6 +677,7 @@ vector VelocityForDamage(entity this, float dm)
 		v.z = 200 + 100 * random();
 	}
 
+	// TODO: damageforcescale support
 	if(MP_IMPEL && this.monsterdef == MON_BLUD)
 		v = v * 2;
 	else if(dm > -50)

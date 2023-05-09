@@ -190,8 +190,6 @@ void ShalMissileTouch(entity this, entity toucher)
 	s_explode1(this);
 }
 
-string shalrath_sight(entity this) { return "shalrath/sight.wav"; }
-
 /*QUAKED monster_shalrath(1 0 0)(-32 -32 -24)(32 32 48) Ambush
 */
 spawnfunc(monster_shalrath)
@@ -217,7 +215,6 @@ METHOD(Vore, mr_setup, bool(Vore this, entity actor))
 	precache_sound2("shalrath/death.wav");
 	precache_sound2("shalrath/idle.wav");
 	precache_sound2("shalrath/pain.wav");
-	precache_sound2("shalrath/sight.wav");
 
     actor.health = 400;
     actor.th_stand = shal_stand;
@@ -226,8 +223,6 @@ METHOD(Vore, mr_setup, bool(Vore this, entity actor))
 	actor.th_die = shalrath_die;
 	actor.th_pain = shalrath_pain;
 	actor.th_missile = shal_attack1;
-
-	actor.sightsound = shalrath_sight;
 
     return true;
 }

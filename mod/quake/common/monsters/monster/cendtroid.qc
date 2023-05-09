@@ -418,8 +418,6 @@ void ScourgeTriggerTouch(entity this, entity toucher)
 //   dprint("ouch\n");
 	}
 
-string scourge_sight(entity this) { return "scourge/sight.wav"; }
-
 /*QUAKED monster_scourge (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */
 spawnfunc(monster_scourge)
@@ -441,7 +439,6 @@ METHOD(Centroid, mr_setup, bool(Centroid this, entity actor))
 	precache_sound("scourge/idle.wav");
 	precache_sound("scourge/pain.wav");
 	precache_sound("scourge/pain2.wav");
-	precache_sound("scourge/sight.wav");
 	precache_sound("scourge/tailswng.wav");
 	precache_sound("scourge/walk.wav");
 	precache_sound2("shambler/smack.wav");
@@ -461,7 +458,6 @@ METHOD(Centroid, mr_setup, bool(Centroid this, entity actor))
 	actor.th_missile = scourge_atk1;
 
 	actor.checkattack = ScourgeCheckAttack;
-	actor.sightsound = scourge_sight;
 
     return true;
 }

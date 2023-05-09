@@ -238,7 +238,6 @@ spawnfunc(monster_oldone)
 
 	precache_sound2("boss2/death.wav");
 	precache_sound2("boss2/idle.wav");
-	precache_sound2("boss2/sight.wav");
 	precache_sound2("boss2/pop2.wav");
 
 	this.solid = SOLID_SLIDEBOX;

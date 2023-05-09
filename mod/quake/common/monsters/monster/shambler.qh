@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_SHAMBLER, "progs/shambler.mdl");
 MODEL(MON_SHAMBLER_HEAD, "progs/h_shams.mdl");
+
+SOUND(MON_SHAMBLER_SIGHT, "shambler/ssight");
 #endif
 
 CLASS(Shambler, Monster)
@@ -14,6 +16,7 @@ CLASS(Shambler, Monster)
 #ifdef GAMEQC
     ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
     ATTRIB(Shambler, m_model_head, Model, MDL_MON_SHAMBLER_HEAD);
+    ATTRIB(Shambler, m_sound, Sound, SND_MON_SHAMBLER_SIGHT);
 #endif
     ATTRIB(Shambler, netname, string, "shambler");
     ATTRIB(Shambler, monster_name, string, _("Shambler"));

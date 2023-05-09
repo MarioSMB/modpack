@@ -599,8 +599,6 @@ void zombie_escape_pain(entity this, entity attacker, float damage, int deathtyp
 	zombie_escape(this);
 }
 
-string zombie_sight(entity this) { return "zombie/z_idle.wav"; }
-
 /*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified Lying ambush Sneaky
 
 Crucified - Zombie stays stuck in the wall, moans and writhes.
@@ -623,7 +621,6 @@ spawnfunc(monster_zombie)
 
 	precache_model("progs/zom_gib.mdl");
 
-	precache_sound("zombie/z_idle.wav");
 	precache_sound("zombie/z_idle1.wav");
 	precache_sound("zombie/z_shot1.wav");
 	precache_sound("zombie/z_gib.wav");
@@ -646,8 +643,6 @@ spawnfunc(monster_zombie)
 	this.th_pain = zombie_pain;
 	this.th_die = zombie_die;
 	this.th_missile = zombie_missile;
-
-	this.sightsound = zombie_sight;
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)
 	{

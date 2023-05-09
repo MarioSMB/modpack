@@ -1475,8 +1475,6 @@ void Gremlin_FlipTouch(entity this, entity toucher)
 	this.nextthink = time + 0.1;
 }
 
-string gremlin_sight(entity this) { return "grem/sight1.wav"; }
-
 bool GremlinCheckAttack(entity this);
 
 /*QUAKED monster_gremlin (1 0 0) (-32 -32 -24) (32 32 64) Ambush
@@ -1501,7 +1499,6 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 	precache_sound("grem/pain2.wav");
 	precache_sound("grem/pain3.wav");
 	precache_sound("grem/idle.wav");
-	precache_sound("grem/sight1.wav");
 
 	NumGremlins += 1;
 
@@ -1519,7 +1516,17 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 	actor.th_pain = gremlin_pain;
 
 	actor.checkattack = GremlinCheckAttack;
-	actor.sightsound = gremlin_sight;
+
+    return true;
+}
+METHOD(Gremlin, mr_sight, bool(Gremlin this, entity actor))
+{
+    TC(Gremlin, this);
+
+	if(actor.stoleweapon)
+		return true; // don't play a sound if we have a weapon?
+
+	sound(actor, CH_VOICE, this.m_sound, 1, ATTN_NORM);
 
     return true;
 }

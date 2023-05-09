@@ -114,7 +114,7 @@ void LightningTouch(entity this, entity toucher)
 		this.nextthink = time + 0.1;
 		return;
 	}
-	if(toucher.takedamage && toucher.monsterdef != MON_JUGGERNAUT)
+	if(toucher.takedamage && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL))
 	{
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?

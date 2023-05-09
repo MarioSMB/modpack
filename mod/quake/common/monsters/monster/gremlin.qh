@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_GREMLIN, "progs/grem.mdl");
 MODEL(MON_GREMLIN_HEAD, "progs/h_grem.mdl");
+
+SOUND(MON_GREMLIN_SIGHT, "grem/sight1");
 #endif
 
 CLASS(Gremlin, Monster)
@@ -14,6 +16,7 @@ CLASS(Gremlin, Monster)
 #ifdef GAMEQC
     ATTRIB(Gremlin, m_model, Model, MDL_MON_GREMLIN);
     ATTRIB(Gremlin, m_model_head, Model, MDL_MON_GREMLIN_HEAD);
+    ATTRIB(Gremlin, m_sound, Sound, SND_MON_GREMLIN_SIGHT);
 #endif
     ATTRIB(Gremlin, netname, string, "gremlin");
     ATTRIB(Gremlin, monster_name, string, _("Gremlin"));

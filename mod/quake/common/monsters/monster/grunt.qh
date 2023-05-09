@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_GRUNT, "progs/soldier.mdl");
 MODEL(MON_GRUNT_HEAD, "progs/h_guard.mdl");
+
+SOUND(MON_GRUNT_SIGHT, "soldier/sight1");
 #endif
 
 CLASS(Grunt, Monster)
@@ -14,6 +16,7 @@ CLASS(Grunt, Monster)
 #ifdef GAMEQC
     ATTRIB(Grunt, m_model, Model, MDL_MON_GRUNT);
     ATTRIB(Grunt, m_model_head, Model, MDL_MON_GRUNT_HEAD);
+    ATTRIB(Grunt, m_sound, Sound, SND_MON_GRUNT_SIGHT);
 #endif
     ATTRIB(Grunt, netname, string, "grunt");
     ATTRIB(Grunt, monster_name, string, _("Grunt"));

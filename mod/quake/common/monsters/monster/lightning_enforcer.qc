@@ -216,17 +216,6 @@ void lenf_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 }
 
-string lenf_sight(entity this)
-{
-	switch(floor(random() * 4))
-	{
-		case 0: return "monsters/lenforce/lesight1.wav";
-		case 1: return "monsters/lenforce/lesight2.wav";
-		case 2: return "monsters/lenforce/lesight3.wav";
-		default: case 3: return "monsters/lenforce/lesight4.wav";
-	}
-}
-
 spawnfunc(monster_lenforcer)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -255,10 +244,6 @@ METHOD(LightningEnforcer, mr_setup, bool(LightningEnforcer this, entity actor))
 	precache_sound("monsters/lenforce/lepain2.wav");
 	precache_sound("monsters/lenforce/lepain3.wav");
 	precache_sound("monsters/lenforce/lepain4.wav");
-	precache_sound("monsters/lenforce/lesight1.wav");
-	precache_sound("monsters/lenforce/lesight2.wav");
-	precache_sound("monsters/lenforce/lesight3.wav");
-	precache_sound("monsters/lenforce/lesight4.wav");
 
     actor.health = 120;
 	actor.th_stand = lenf_stand1;
@@ -268,7 +253,13 @@ METHOD(LightningEnforcer, mr_setup, bool(LightningEnforcer this, entity actor))
 	actor.th_die = lenf_die;
 	actor.th_missile = lenf_atk1;
 
-	actor.sightsound = lenf_sight;
+    return true;
+}
+METHOD(LightningEnforcer, mr_sight, bool(LightningEnforcer this, entity actor))
+{
+    TC(LightningEnforcer, this);
+
+	sound(actor, CH_VOICE, SND_MON_LENFORCER_SIGHT_RANDOM(), 1, ATTN_NORM);
 
     return true;
 }

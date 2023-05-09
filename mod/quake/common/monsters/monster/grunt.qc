@@ -308,8 +308,6 @@ bool SoldierCheckAttack(entity this)
 	return false;
 }
 
-string army_sight(entity this) { return "soldier/sight1.wav"; }
-
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
 spawnfunc(monster_army) { monster_start(this, MON_GRUNT); }
@@ -329,7 +327,6 @@ METHOD(Grunt, mr_setup, bool(Grunt this, entity actor))
 	precache_sound("soldier/pain1.wav");
 	precache_sound("soldier/pain2.wav");
 	precache_sound("soldier/sattck1.wav");
-	precache_sound("soldier/sight1.wav");
 
 	precache_sound("player/udeath.wav");		// gib death
 
@@ -341,7 +338,6 @@ METHOD(Grunt, mr_setup, bool(Grunt this, entity actor))
 	actor.th_pain = army_pain;
 	actor.th_die = army_die;
 
-	actor.sightsound = army_sight;
 	actor.checkattack = SoldierCheckAttack;
 
     return true;

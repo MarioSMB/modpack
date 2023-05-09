@@ -379,8 +379,6 @@ bool ShamCheckAttack(entity this)
 	return true;
 }
 
-string shambler_sight(entity this) { return "shambler/ssight.wav"; }
-
 /*QUAKED monster_shambler(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
 spawnfunc(monster_shambler)
@@ -410,7 +408,6 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	precache_sound("shambler/sdeath.wav");
 	precache_sound("shambler/shurt2.wav");
 	precache_sound("shambler/sidle.wav");
-	precache_sound("shambler/ssight.wav");
 	precache_sound("shambler/melee1.wav");
 	precache_sound("shambler/melee2.wav");
 	precache_sound("shambler/smack.wav");
@@ -424,7 +421,6 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	actor.th_missile = sham_magic1;
 	actor.th_pain = sham_pain;
 
-	actor.sightsound = shambler_sight;
 	actor.checkattack = ShamCheckAttack;
 
     return true;

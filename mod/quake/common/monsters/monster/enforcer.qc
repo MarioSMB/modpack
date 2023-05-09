@@ -299,17 +299,6 @@ void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 		enf_fdie1(this);
 }
 
-string enf_sight(entity this)
-{
-	switch(floor(random() * 4))
-	{
-		case 0: return "enforcer/sight1.wav";
-		case 1: return "enforcer/sight2.wav";
-		case 2: return "enforcer/sight3.wav";
-		default: case 3: return "enforcer/sight4.wav";
-	}
-}
-
 /*QUAKED monster_enforcer(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
 spawnfunc(monster_enforcer)
@@ -341,10 +330,6 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	precache_sound2("enforcer/idle1.wav");
 	precache_sound2("enforcer/pain1.wav");
 	precache_sound2("enforcer/pain2.wav");
-	precache_sound2("enforcer/sight1.wav");
-	precache_sound2("enforcer/sight2.wav");
-	precache_sound2("enforcer/sight3.wav");
-	precache_sound2("enforcer/sight4.wav");
 
 	actor.health = 80;
 	actor.th_stand = enf_stand1;
@@ -354,8 +339,14 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	actor.th_die = enf_die;
 	actor.th_missile = enf_atk1;
 
-	actor.sightsound = enf_sight;
-
 	return true;
+}
+METHOD(Enforcer, mr_sight, bool(Enforcer this, entity actor))
+{
+    TC(Enforcer, this);
+
+	sound(actor, CH_VOICE, SND_MON_ENFORCER_SIGHT_RANDOM(), 1, ATTN_NORM);
+
+    return true;
 }
 #endif

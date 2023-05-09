@@ -33,12 +33,12 @@ void W_FireAxe(entity this)
 	
 	vector org = trace_endpos - v_forward * 4;
 
-	if(trace_ent.takedamage && trace_ent.monsterdef != MON_CHTHON) // yoder mod, Jan 05 2021
+	if(trace_ent.takedamage) // yoder mod, Jan 05 2021
 	{
 		if(MP_IMPEL)
 		{
 			float r = random();
-			if(trace_ent.monsterdef == MON_JUGGERNAUT)
+			if(trace_ent.monsterdef == MON_JUGGERNAUT) // special case: axe attacks produce unique sound against juggernauts TODO: handle melee attacks in monster pain code
 				_sound(this, CH_WEAPON_SINGLE, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
 			else if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MON_FLAG_METAL))
 			{

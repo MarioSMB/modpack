@@ -313,8 +313,6 @@ void Demon_JumpTouch(entity this, entity toucher)
 	}
 }
 
-string demon1_sight(entity this) { return "demon/sight2.wav"; }
-
 /*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
 spawnfunc(monster_demon1) { monster_start(this, MON_FIEND); }
@@ -330,7 +328,6 @@ METHOD(Fiend, mr_setup, bool(Fiend this, entity actor))
 	precache_sound("demon/djump.wav");
 	precache_sound("demon/dpain1.wav");
 	precache_sound("demon/idle1.wav");
-	precache_sound("demon/sight2.wav");
 
 	actor.health = 300;
 	actor.th_stand = demon1_stand1;
@@ -341,7 +338,6 @@ METHOD(Fiend, mr_setup, bool(Fiend this, entity actor))
 	actor.th_missile = demon1_jump1;			// jump attack
 	actor.th_pain = demon1_pain;
 
-	actor.sightsound = demon1_sight;
 	actor.checkattack = DemonCheckAttack;
 
 	return true;

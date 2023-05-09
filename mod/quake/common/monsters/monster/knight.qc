@@ -267,8 +267,6 @@ void knight_pause1(entity this)
     this.nextthink = time + 0.1;
 }
 
-string knight_sight(entity this) { if(!MP_ROGUE || !this.skin) return "knight/ksight.wav"; else return string_null; }
-
 /*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush Statue
 
 Statue - (rogue only) select this to use the stone skin and have him frozen in place.
@@ -301,7 +299,6 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	{
 		precache_sound("knight/kdeath.wav");
 		precache_sound("knight/khurt.wav");
-		precache_sound("knight/ksight.wav");
 		precache_sound("knight/idle.wav");
 	}
 	precache_sound("knight/sword1.wav");
@@ -333,7 +330,20 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 		actor.th_die = knight_die;
 	}
 
-	actor.sightsound = knight_sight;
+    return true;
+}
+METHOD(Knight, mr_sight, bool(Knight this, entity actor))
+{
+    TC(Knight, this);
+
+	if(MP_ROGUE && (actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
+	{
+		actor.enemy = NULL;
+		return false;
+	}
+
+	if(!MP_ROGUE || !actor.skin)
+		sound(actor, CH_VOICE, this.m_sound, 1, ATTN_NORM);
 
     return true;
 }

@@ -488,8 +488,6 @@ void legond_die1(entity this, entity inflictor, entity attacker, int deathtype)
 	_sound(this, CHAN_AUTO, "monsters/legond/lpain2.wav", 1, ATTN_NORM);
 }
 
-string legond_sight(entity this) { return "monsters/legond/legond.wav"; }
-
 spawnfunc(monster_legond)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -503,7 +501,6 @@ METHOD(Legond, mr_setup, bool(Legond this, entity actor))
     TC(Legond, this);
 
 	precache_model("progs/missile2.mdl");
-	precache_sound("monsters/legond/legond.wav");
 	precache_sound("monsters/legond/legsmak.wav");
 	precache_sound("monsters/legond/lpain1.wav");
 	precache_sound("monsters/legond/lpain2.wav");
@@ -522,7 +519,6 @@ METHOD(Legond, mr_setup, bool(Legond this, entity actor))
 	actor.th_die = legond_die1;
 	actor.th_missile = legond_shoot1;
 
-	actor.sightsound = legond_sight;
 	actor.checkattack = LegondCheckAttack;
 
     return true;

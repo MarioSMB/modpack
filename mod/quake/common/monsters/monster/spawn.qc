@@ -237,8 +237,6 @@ void tbaby_mitosis(entity targ, entity attacker, float damage, int deathtype)
 	}
 }
 
-string tbaby_sight(entity this) { return "blob/sight1.wav"; }
-
 /*QUAKED monster_tarbaby (1 0 0) (-16 -16 -24) (16 16 24) Ambush Blue Green Spots
 The Spawn (and hellspawn)
 
@@ -256,7 +254,6 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 	precache_sound2("blob/death1.wav");
 	precache_sound2("blob/hit1.wav");
 	precache_sound2("blob/land1.wav");
-	precache_sound2("blob/sight1.wav");
 
     actor.health = 80;
     actor.th_stand = tbaby_stand1;
@@ -265,8 +262,6 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 	actor.th_missile = tbaby_jump1;
 	actor.th_melee = tbaby_jump1;
 	actor.th_die = tbaby_die1;
-
-	actor.sightsound = tbaby_sight;
 
 	if(MP_ROGUE)
 	{

@@ -5,6 +5,14 @@
 #ifdef GAMEQC
 MODEL(MON_LIGHTNING_ENFORCER, "progs/enforcer.mdl");
 MODEL(MON_LIGHTNING_ENFORCER_HEAD, "progs/h_mega.mdl");
+
+SOUND(MON_LENFORCER_SIGHT1, "monsters/lenforce/lesight1");
+SOUND(MON_LENFORCER_SIGHT2, "monsters/lenforce/lesight2");
+SOUND(MON_LENFORCER_SIGHT3, "monsters/lenforce/lesight3");
+SOUND(MON_LENFORCER_SIGHT4, "monsters/lenforce/lesight4");
+Sound SND_MON_LENFORCER_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_LENFORCER_SIGHT1.m_id + floor(prandom() * 4));
+}
 #endif
 
 CLASS(LightningEnforcer, Monster)

@@ -5,6 +5,13 @@
 #ifdef GAMEQC
 MODEL(MON_DARK_KNIGHT, "progs/dknight.mdl");
 MODEL(MON_DARK_KNIGHT_HEAD, "progs/h_dkni.mdl");
+
+SOUND(MON_DARK_KNIGHT_SIGHT1, "monsters/dknight/dksight1");
+SOUND(MON_DARK_KNIGHT_SIGHT2, "monsters/dknight/dksight2");
+SOUND(MON_DARK_KNIGHT_SIGHT3, "monsters/dknight/dksight3");
+Sound SND_MON_DARK_KNIGHT_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_DARK_KNIGHT_SIGHT1.m_id + floor(prandom() * 3));
+}
 #endif
 
 CLASS(DarkKnight, Monster)

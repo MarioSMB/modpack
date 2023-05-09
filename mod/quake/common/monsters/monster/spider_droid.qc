@@ -115,7 +115,6 @@ METHOD(SpiderDroid, mr_setup, bool(SpiderDroid this, entity actor))
 
 	precache_model("progs/spidgib.mdl");
 	precache_model("progs/spid.mdl");
-	precache_sound("monsters/spider/sactiv.wav");
 	precache_sound("monsters/spider/swalk.wav");
 
     actor.health = 50;
@@ -124,6 +123,19 @@ METHOD(SpiderDroid, mr_setup, bool(SpiderDroid this, entity actor))
 	actor.th_run = spider_run1;
 	actor.th_melee = spider_melee;
 	actor.th_die = spider_die;
+
+    return true;
+}
+METHOD(SpiderDroid, mr_sight, bool(SpiderDroid this, entity actor))
+{
+    TC(SpiderDroid, this);
+
+	if(!actor.target || actor.target == "")
+	{
+		spider_wake1(actor);
+		sound(actor, CHAN_AUTO, this.m_sound, 1, ATTN_NORM);
+		return false;
+	}
 
     return true;
 }

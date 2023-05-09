@@ -457,7 +457,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 // react to the damage
 
-	if(IS_MONSTER(targ) && attacker)
+	if(IS_MONSTER(targ) && attacker && !(targ.monsterdef.spawnflags & MON_FLAG_NOAGGRO))
 	{
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)
@@ -492,7 +492,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 						FoundTarget(targ);
 					}
 				}
-				else if(targ.monsterdef != MON_DRAGON)
+				else
 				{
 					if(IS_PLAYER(targ.enemy))
 						targ.oldenemy = targ.enemy;

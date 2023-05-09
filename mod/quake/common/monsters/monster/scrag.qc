@@ -358,8 +358,6 @@ void Wiz_Missile(entity this)
 	wiz_fast1(this);
 }
 
-string wiz_sight(entity this) { return "wizard/wsight.wav"; }
-
 /*QUAKED monster_wizard(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
 spawnfunc(monster_wizard)
@@ -387,7 +385,6 @@ METHOD(Scrag, mr_setup, bool(Scrag this, entity actor))
 	precache_sound("wizard/widle1.wav");
 	precache_sound("wizard/widle2.wav");
 	precache_sound("wizard/wpain.wav");
-	precache_sound("wizard/wsight.wav");
 
     actor.health = 80;
     actor.th_stand = wiz_stand1;
@@ -397,7 +394,6 @@ METHOD(Scrag, mr_setup, bool(Scrag this, entity actor))
 	actor.th_pain = Wiz_Pain;
 	actor.th_die = wiz_die;
 
-	actor.sightsound = wiz_sight;
 	actor.checkattack = WizardCheckAttack;
 
     return true;

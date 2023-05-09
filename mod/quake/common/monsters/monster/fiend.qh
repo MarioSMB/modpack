@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_FIEND, "progs/demon.mdl");
 MODEL(MON_FIEND_HEAD, "progs/h_demon.mdl");
+
+SOUND(MON_FIEND_SIGHT, "demon/sight2");
 #endif
 
 CLASS(Fiend, Monster)
@@ -14,6 +16,7 @@ CLASS(Fiend, Monster)
 #ifdef GAMEQC
     ATTRIB(Fiend, m_model, Model, MDL_MON_FIEND);
     ATTRIB(Fiend, m_model_head, Model, MDL_MON_FIEND_HEAD);
+    ATTRIB(Fiend, m_sound, Sound, SND_MON_FIEND_SIGHT);
 #endif
     ATTRIB(Fiend, netname, string, "demon");
     ATTRIB(Fiend, monster_name, string, _("Fiend"));

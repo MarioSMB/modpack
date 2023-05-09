@@ -295,11 +295,6 @@ void Gren_Pain(entity this, entity attacker, float damage, int deathtype)
 	}
 }
 
-string gren_sight(entity this)
-{
-	return ((random() > 0.5) ? "monsters/grenling/grsight1.wav" : "monsters/grenling/grsight2.wav");
-}
-
 spawnfunc(monster_grenling)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -329,8 +324,6 @@ METHOD(Grenling, mr_setup, bool(Grenling this, entity actor))
 	precache_sound("monsters/grenling/grhover.wav");
 	precache_sound("monsters/grenling/grpain1.wav");
 	precache_sound("monsters/grenling/grpain2.wav");
-	precache_sound("monsters/grenling/grsight1.wav");
-	precache_sound("monsters/grenling/grsight2.wav");
 
     actor.health = 130;
 	float rand = random() * 6;
@@ -352,7 +345,13 @@ METHOD(Grenling, mr_setup, bool(Grenling this, entity actor))
 	actor.th_pain = Gren_Pain;
 	actor.th_die = gren_die;
 
-	actor.sightsound = gren_sight;
+    return true;
+}
+METHOD(Grenling, mr_sight, bool(Grenling this, entity actor))
+{
+    TC(Grenling, this);
+
+	sound(actor, CH_VOICE, SND_MON_GRENLING_SIGHT_RANDOM(), 1, ATTN_NORM);
 
     return true;
 }

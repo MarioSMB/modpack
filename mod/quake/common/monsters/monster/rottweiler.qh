@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_ROTTWEILER, "progs/dog.mdl");
 MODEL(MON_ROTTWEILER_HEAD, "progs/h_dog.mdl");
+
+SOUND(MON_ROTTWEILER_SIGHT, "dog/dsight");
 #endif
 
 CLASS(Rottweiler, Monster)
@@ -14,6 +16,7 @@ CLASS(Rottweiler, Monster)
 #ifdef GAMEQC
     ATTRIB(Rottweiler, m_model, Model, MDL_MON_ROTTWEILER);
     ATTRIB(Rottweiler, m_model_head, Model, MDL_MON_ROTTWEILER_HEAD);
+    ATTRIB(Rottweiler, m_sound, Sound, SND_MON_ROTTWEILER_SIGHT);
 #endif
     ATTRIB(Rottweiler, netname, string, "dog");
     ATTRIB(Rottweiler, monster_name, string, _("Rottweiler"));

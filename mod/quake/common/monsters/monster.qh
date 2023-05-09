@@ -4,6 +4,7 @@
 const int MON_FLAG_HIPNOTIC = BIT(1);
 const int MON_FLAG_ROGUE = BIT(2);
 const int MON_FLAG_IMPEL = BIT(3);
+const int MON_FLAG_NOAGGRO = BIT(4); // not aggro'd by enemy attacks
 const int MONSTER_TYPE_FLY = BIT(5);
 const int MONSTER_TYPE_SWIM = BIT(6);
 const int MONSTER_TYPE_BOSS = BIT(7);
@@ -11,6 +12,7 @@ const int MON_FLAG_EXPLOSIONRESISTANT = BIT(8); // takes half damage from explos
 const int MON_FLAG_STATIONARY = BIT(9); // monster cannot move
 const int MON_FLAG_METAL = BIT(10); // is a full metal soldier
 const int MON_FLAG_INFIGHT = BIT(11); // monster will fight even its own species
+const int MON_FLAG_NOTARGET = BIT(13); // monster should not be targeted at all by other monsters
 const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
 const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
 const int MON_FLAG_HIDDEN = BIT(16);
@@ -28,6 +30,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, netname, string, "");
     /** model */
     ATTRIB(Monster, m_model, entity);
+    /** sightsound */
+    ATTRIB(Monster, m_sound, Sound, SND_Null);
     /** head model */
     ATTRIB(Monster, m_model_head, entity);
     /** hitbox size */
@@ -38,6 +42,14 @@ CLASS(Monster, Object)
     /** (SERVER) setup monster data */
     /* in quake, most functions are stored as entity properties */
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (SERVER) called when a monster spots a target, return false to not hunt the target */
+    METHOD(Monster, mr_sight, bool(Monster this, entity actor))
+    {
+        TC(Monster, this);
+        if(this.m_sound != SND_Null)
+            sound(actor, CH_VOICE, this.m_sound, 1, ATTN_NORM);
+        return true;
+    }
 
 ENDCLASS(Monster)
 

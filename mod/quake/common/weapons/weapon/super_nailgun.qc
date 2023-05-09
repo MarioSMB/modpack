@@ -47,7 +47,7 @@ void superspike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
+	if(toucher.takedamage) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 18, toucher);
 		T_Damage(toucher, this, this.owner, 18, this.projectiledeathtype);

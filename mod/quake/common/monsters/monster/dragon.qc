@@ -681,8 +681,6 @@ void dragon_activate(entity this)
 
 }
 
-string dragon_sight(entity this) { return "dragon/see.wav"; }
-
 /*QUAKED monster_dragon (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 */
 spawnfunc(monster_dragon)
@@ -696,7 +694,6 @@ spawnfunc(monster_dragon)
 	precache_model("progs/drggib02.mdl");
 	precache_model("progs/drggib03.mdl");
 	
-	precache_sound("dragon/see.wav");
 	precache_sound("dragon/active.wav");
 	precache_sound("dragon/attack.wav");
 	precache_sound("dragon/pain.wav");
@@ -720,7 +717,6 @@ spawnfunc(monster_dragon)
 	this.th_pain = dragon_pain;
 	this.th_die = dragon_death1;
 
-	this.sightsound = dragon_sight;
 	this.monsterdef = MON_DRAGON;
 
 	this.dragonPainSequence = 1;

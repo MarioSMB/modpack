@@ -664,8 +664,6 @@ void juggernaut_melee(entity this)
 		juggernaut_melee1(this);
 }
 
-string juggernaut_sight(entity this) { return "monsters/juggers/jlocked.wav"; }
-
 spawnfunc(monster_juggernaut)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -690,7 +688,6 @@ METHOD(Juggernaut, mr_setup, bool(Juggernaut this, entity actor))
 	precache_model("progs/laser.mdl");
 	precache_sound("enforcer/enfstop.wav");
 	precache_sound("monsters/juggers/jbent.wav");
-	precache_sound("monsters/juggers/jlocked.wav");
 	precache_sound("monsters/juggers/jshot.wav");
 	precache_sound("monsters/juggers/jhydro1.wav");
 	precache_sound("monsters/juggers/jhydro2.wav");
@@ -731,8 +728,6 @@ METHOD(Juggernaut, mr_setup, bool(Juggernaut this, entity actor))
 	actor.th_pain = juggernaut_pain;
 	actor.ammo_rockets = 18;
 	actor.ammo_cells = 30;
-
-	actor.sightsound = juggernaut_sight;
 
     return true;
 }

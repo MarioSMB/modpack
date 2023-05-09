@@ -5,15 +5,18 @@
 #ifdef GAMEQC
 MODEL(MON_SPIDER_DROID, "progs/spid.mdl");
 MODEL(MON_SPIDER_DROID_HEAD, "progs/spidgib.mdl");
+
+SOUND(MON_SPIDER_DROID_SIGHT, "monsters/spider/sactiv");
 #endif
 
 CLASS(SpiderDroid, Monster)
-    ATTRIB(SpiderDroid, spawnflags, int, MON_FLAG_IMPEL);
+    ATTRIB(SpiderDroid, spawnflags, int, MON_FLAG_IMPEL | MON_FLAG_NOTARGET | MON_FLAG_METAL);
     ATTRIB(SpiderDroid, m_mins, vector, '-10 -16 -1');
     ATTRIB(SpiderDroid, m_maxs, vector, '8 16 24');
 #ifdef GAMEQC
     ATTRIB(SpiderDroid, m_model, Model, MDL_MON_SPIDER_DROID);
     ATTRIB(SpiderDroid, m_model_head, Model, MDL_MON_SPIDER_DROID_HEAD);
+    ATTRIB(SpiderDroid, m_sound, Sound, SND_MON_SPIDER_DROID_SIGHT);
 #endif
     ATTRIB(SpiderDroid, netname, string, "spider_droid");
     ATTRIB(SpiderDroid, monster_name, string, _("Spider Droid"));

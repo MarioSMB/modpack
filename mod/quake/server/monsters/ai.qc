@@ -892,19 +892,6 @@ void HuntTarget(entity this)
 	this.attack_finished = time + 1; // initial delay for attacking
 }
 
-void SightSound(entity this)
-{
-	if(this.monsterdef == MON_GREMLIN && this.stoleweapon != 0)
-		return; // don't play a sound if we have a weapon?
-
-	float atten = ATTN_NORM;
-	if(this.monsterdef == MON_ARMAGON)
-		atten = 0.1;
-
-	if(this.sightsound)
-		_sound(this, CH_VOICE, this.sightsound(this), 1, atten);
-}
-
 void FoundTarget(entity this)
 {
 	// prevent getting stuck without an enemy (some triggers set the think frame to this)
@@ -936,21 +923,12 @@ void FoundTarget(entity this)
 		this.enemy = NULL;
 		return;
 	}
-	else if(MP_ROGUE && (this.spawnflags & 2) && (this.monsterdef == MON_KNIGHT || this.monsterdef == MON_HELL_KNIGHT) && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
-	{
-		this.enemy = NULL;
-		return;
-	}
-	if(MP_IMPEL && this.monsterdef == MON_SPIDER_DROID && (!this.target || this.target == ""))
-	{
-		spider_wake1(this);
-		_sound(this, CHAN_AUTO, "monsters/spider/sactiv.wav", 1, ATTN_NORM);
-		return;
-	}
-	
-	this.show_hostile = time + 1;		// wake up other monsters
 
-	SightSound(this);
+	Monster mon = this.monsterdef;
+	if(!mon.mr_sight(mon, this))
+		return;
+
+	this.show_hostile = time + 1;		// wake up other monsters
 	HuntTarget(this);
 }
 
@@ -1085,7 +1063,7 @@ bool FindTarget(entity this)
 	if(client.powerups & POWERUP_INVISIBILITY)
 		return false;
 
-	if(client.monsterdef == MON_SPIDER_DROID || client.monsterdef == MON_LEGOND)
+	if(client.monsterdef.spawnflags & MON_FLAG_NOTARGET)
 		return false;
 
 	if(!MP_IMPEL || !angry_monsters)
@@ -1129,7 +1107,7 @@ bool FindTarget(entity this)
 		}
 	}
 
-	if(this.monsterdef != MON_DRAGON)
+	if(!(this.monsterdef.spawnflags & MON_FLAG_NOAGGRO))
 		FoundTarget(this);
 
 	return true;

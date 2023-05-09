@@ -197,8 +197,6 @@ void eel_pain1(entity this, entity attacker, float damage, int deathtype)
 	this.skin = 0;
 }
 
-string eel_sight(entity this) { return "eel/eelc5.wav"; }
-
 /*QUAKED monster_eel (1 0 0) (-16 -16 -24) (16 16 32) Ambush
 */
 spawnfunc(monster_eel)
@@ -219,7 +217,6 @@ METHOD(Eel, mr_setup, bool(Eel this, entity actor))
 	precache_sound("eel/epain3.wav");
 	precache_sound("eel/eactive1.wav");
 	precache_sound("eel/eatt1.wav");
-	precache_sound("eel/eelc5.wav");
 
 	actor.delay = time + random() * 6;
 	actor.weapon = 0;
@@ -231,8 +228,6 @@ METHOD(Eel, mr_setup, bool(Eel this, entity actor))
 	actor.th_die = eel_death;
 	actor.th_pain = eel_pain1;
 	actor.th_melee = eel_attack1;
-
-	actor.sightsound = eel_sight;
 
     return true;
 }

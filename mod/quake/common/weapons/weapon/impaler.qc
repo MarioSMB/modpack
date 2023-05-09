@@ -377,70 +377,45 @@ void Spear_Bounce_Think(entity this)
 
 void impale(entity this)
 {
-	if(this.monsterdef == MON_ENFORCER || this.monsterdef == MON_LIGHTNING_ENFORCER)
-	{
-		_sound(this, CHAN_BODY, "player/udeath.wav", 1, ATTN_NORM);
-		BecomeBloodSpurt(this, 0);
-		_sound(this, CHAN_ITEM, "weapons/impaler/mimpale.wav", 1, ATTN_NORM);
-		BecomeBloodSpurt(this, 0);
-		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_NOT;
-		setthink(this, func_null);
-		this.ammo_shells = 5;
+	if(!IS_PLAYER(this))
+		return;
+
+	this.impaled = true;
+	this.powerups &= ~POWERUP_INVISIBILITY;
+	this.invisible_finished = 0;
+	this.invincible_finished = 0;
+	this.super_damage_finished = 0;
+	this.radsuit_finished = 0;
+	this.modelindex = this.modelindex_player;
+	if(deathmatch || coop)
 		DropBackpack(this);
-		if(random() < 0.2)
-			this.frame = 83;
-		else if(random() < 0.4)
-			this.frame = 79;
-		else if(random() < 0.6)
-			this.frame = 80;
-		else if(random() < 0.8)
-			this.frame = 78;
-		else
-			this.frame = 84;
-	}
-	else
+	this.view_ofs = '0 0 -4';
+	this.nextthink = -1;
+	this.deadflag = DEAD_DEAD;
+	this.solid = SOLID_NOT;
+	UNSET_ONGROUND(this);
+	set_movetype(this, MOVETYPE_NONE);
+	BecomeBloodSpurt(this, 0);
+	DeathSound(this);
+	BecomeBloodSpurt(this, 0);
+	_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
+	BecomeBloodSpurt(this, 0);
+	this.angles_x = this.angles_z = 0;
+	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
-		if(IS_PLAYER(this))
-		{
-			this.impaled = true;
-			this.powerups &= ~POWERUP_INVISIBILITY;
-			this.invisible_finished = 0;
-			this.invincible_finished = 0;
-			this.super_damage_finished = 0;
-			this.radsuit_finished = 0;
-			this.modelindex = this.modelindex_player;
-			if(deathmatch || coop)
-				DropBackpack(this);
-			this.view_ofs = '0 0 -4';
-			this.nextthink = -1;
-			this.deadflag = DEAD_DEAD;
-			this.solid = SOLID_NOT;
-			UNSET_ONGROUND(this);
-			set_movetype(this, MOVETYPE_NONE);
-			BecomeBloodSpurt(this, 0);
-			DeathSound(this);
-			BecomeBloodSpurt(this, 0);
-			_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
-			BecomeBloodSpurt(this, 0);
-			this.angles_x = this.angles_z = 0;
-			if(this.weaponentity.m_weapon == WEP_AXE)
-			{
-				if(random() < 0.3)
-					this.frame = 31;
-				else if(random() < 0.6)
-					this.frame = 35;
-				else
-					this.frame = 42;
-			}
-			else if(random() < 0.3)
-				this.frame = 61;
-			else if(random() < 0.6)
-				this.frame = 71;
-			else
-				this.frame = 87;
-		}
+		if(random() < 0.3)
+			this.frame = 31;
+		else if(random() < 0.6)
+			this.frame = 35;
+		else
+			this.frame = 42;
 	}
+	else if(random() < 0.3)
+		this.frame = 61;
+	else if(random() < 0.6)
+		this.frame = 71;
+	else
+		this.frame = 87;
 }
 
 void W_FireSpear(entity this)

@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_VORE, "progs/shalrath.mdl");
 MODEL(MON_VORE_HEAD, "progs/h_shal.mdl");
+
+SOUND(MON_VORE_SIGHT, "shalrath/sight");
 #endif
 
 CLASS(Vore, Monster)
@@ -14,6 +16,7 @@ CLASS(Vore, Monster)
 #ifdef GAMEQC
     ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
     ATTRIB(Vore, m_model_head, Model, MDL_MON_VORE_HEAD);
+    ATTRIB(Vore, m_sound, Sound, SND_MON_VORE_SIGHT);
 #endif
     ATTRIB(Vore, netname, string, "shalrath");
     ATTRIB(Vore, monster_name, string, _("Vore"));

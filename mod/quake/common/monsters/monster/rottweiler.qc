@@ -343,8 +343,6 @@ bool DogCheckAttack(entity this)
 	return false;
 }
 
-string dog_sight(entity this) { return "dog/dsight.wav"; }
-
 /*QUAKED monster_dog(1 0 0)(-32 -32 -24)(32 32 40) Ambush
 */
 spawnfunc(monster_dog)
@@ -368,7 +366,6 @@ METHOD(Rottweiler, mr_setup, bool(Rottweiler this, entity actor))
 	precache_sound("dog/dattack1.wav");
 	precache_sound("dog/ddeath.wav");
 	precache_sound("dog/dpain1.wav");
-	precache_sound("dog/dsight.wav");
 	precache_sound("dog/idle.wav");
 
     actor.health = 25;
@@ -380,7 +377,6 @@ METHOD(Rottweiler, mr_setup, bool(Rottweiler this, entity actor))
 	actor.th_melee = dog_atta1;
 	actor.th_missile = dog_leap1;
 
-	actor.sightsound = dog_sight;
 	actor.checkattack = DogCheckAttack;
 
     return true;

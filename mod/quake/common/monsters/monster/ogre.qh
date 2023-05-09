@@ -5,6 +5,8 @@
 #ifdef GAMEQC
 MODEL(MON_OGRE, "progs/ogre.mdl");
 MODEL(MON_OGRE_HEAD, "progs/h_ogre.mdl");
+
+SOUND(MON_OGRE_SIGHT, "ogre/ogwake");
 #endif
 
 CLASS(Ogre, Monster)
@@ -14,6 +16,7 @@ CLASS(Ogre, Monster)
 #ifdef GAMEQC
     ATTRIB(Ogre, m_model, Model, MDL_MON_OGRE);
     ATTRIB(Ogre, m_model_head, Model, MDL_MON_OGRE_HEAD);
+    ATTRIB(Ogre, m_sound, Sound, SND_MON_OGRE_SIGHT);
 #endif
     ATTRIB(Ogre, netname, string, "ogre");
     ATTRIB(Ogre, monster_name, string, _("Ogre"));

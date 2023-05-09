@@ -194,7 +194,7 @@ void SpawnBlood(vector org, vector vel, float damage, entity targ)
 			te_gunshot(org);
 		else
 		{
-			if(targ.monsterdef == MON_SPIDER_DROID || targ.monsterdef == MON_JUGGERNAUT)
+			if(targ.monsterdef.spawnflags & MON_FLAG_METAL)
 				particle(org, vel * 0.1, 5, damage * 2);
 			else
 			{
@@ -290,7 +290,7 @@ void TraceAttack(float damage, vector dir, int deathtype)
 
 	vector org = trace_endpos - dir*4;
 
-	if(trace_ent.takedamage && trace_ent.monsterdef != MON_CHTHON) // yoder mod, Jan 05 2021)
+	if(trace_ent.takedamage) // yoder mod, Jan 05 2021)
 	{
 		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
 			SpawnBlood(org, vel*0.2, damage, trace_ent);
@@ -882,11 +882,7 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		return '0 0 0';
 	else if(targ.classname == "missile")
 		return '0 0 0';
-	else if(targ.monsterdef == MON_SHAMBLER && targ.health > 16)
-		return '0 0 0';
-	else if(targ.monsterdef == MON_BLUD && targ.health > 16)
-		return '0 0 0';
-	else if((targ.monsterdef == MON_LEGOND))
+	else if(((targ.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (targ.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)) && targ.health > 16)
 		return '0 0 0';
 	if(targ.classname == "missile")
 	{
@@ -1055,10 +1051,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.monsterdef != MON_JUGGERNAUT)
-					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else
-					particle(trace_endpos, '0 0 100', 225, damage * 4);
+				particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
 		else
@@ -1079,10 +1072,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.monsterdef != MON_JUGGERNAUT)
-					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else
-					particle(trace_endpos, '0 0 100', 225, damage * 4);
+				particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
 		else
@@ -1098,10 +1088,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		{
 			if(trace_ent.takedamage == DAMAGE_AIM)
 			{
-				if(trace_ent.monsterdef != MON_JUGGERNAUT)
-					particle(trace_endpos, '0 0 100', 225, damage*4);
-				else
-					particle(trace_endpos, '0 0 100', 225, damage * 4);
+				particle(trace_endpos, '0 0 100', 225, damage * 4);
 			}
 		}
 		else
@@ -1252,28 +1239,13 @@ void ThrowGib(entity this, string gibname, float dm);
 void InternalFireThink(entity this)
 {
 	float damg = 65 + random() * 75;
-	if(this.enemy.monsterdef == MON_JUGGERNAUT)
+	if((this.enemy.monsterdef.spawnflags & MON_FLAG_METAL) || (this.enemy.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (this.enemy.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 	{
 		if(random() < 0.7)
 		{
 			BecomeExplosion(this);
 			return;
 		}
-	}
-	if(this.enemy.monsterdef == MON_LEGOND)
-	{
-		BecomeExplosion(this);
-		return;
-	}
-	if(this.enemy.monsterdef == MON_SHAMBLER)
-	{
-		BecomeExplosion(this);
-		return;
-	}
-	if(this.enemy.monsterdef == MON_FIEND)
-	{
-		BecomeExplosion(this);
-		return;
 	}
 	if(this.enemy.classname == "misc_explobox")
 	{
@@ -1515,7 +1487,7 @@ void spike_touch(entity this, entity toucher)
 	}
 	
 // hit something that bleeds
-	if(toucher.takedamage && toucher.monsterdef != MON_CHTHON) // yoder mod, jan 05 2021
+	if(toucher.takedamage) // yoder mod, jan 05 2021
 	{
 		spawn_touchblood(this, 9, toucher);
 		T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype);
