@@ -1,0 +1,54 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_COOK,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 becomes the Cook's next dish"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_COOK,                1,  NULL,           INFO_DEATH_SELF_MON_COOK,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_COOK,            DEATH_SELF_MON_COOK,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_COOK, "progs/cook.mdl");
+MODEL(MON_COOK_HEAD, "progs/h_ogre.mdl");
+
+SOUND(MON_COOK_SIGHT, "ogre/ogwake");
+
+SOUND(MON_COOK_WIN1, "cook/daddy");
+SOUND(MON_COOK_WIN2, "cook/cannot");
+SOUND(MON_COOK_WIN3, "cook/mademe");
+SOUND(MON_COOK_WIN4, "cook/pity01");
+Sound SND_MON_COOK_WIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_COOK_WIN1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Cook, Monster)
+    ATTRIB(Cook, spawnflags, int, 0);
+    ATTRIB(Cook, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Cook, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Cook, m_model, Model, MDL_MON_COOK);
+    ATTRIB(Cook, m_model_head, Model, MDL_MON_COOK_HEAD);
+    ATTRIB(Cook, m_sound, Sound, SND_MON_COOK_SIGHT);
+#endif
+    ATTRIB(Cook, netname, string, "cook");
+    ATTRIB(Cook, monster_name, string, _("Cook"));
+ENDCLASS(Cook)
+
+REGISTER_MONSTER(COOK, NEW(Cook));
+
+#ifdef SVQC
+.entity cook_target; // storage entity for the cook's current target
+
+void cook_control1(entity this);
+void cook_control2(entity this);
+void cook_cook(entity this);
+void cook_run1(entity this);
+void cook_notice(entity this);
+void cook_oshake(entity this);
+void cook_oshake3(entity this);
+void cook_flip1(entity this);
+void cook_checkcooks(entity this);
+bool cook_WAVS(entity this);
+void cook_scoot1(entity this);
+void cook_stand(entity this);
+#endif

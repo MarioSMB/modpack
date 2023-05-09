@@ -1,9 +1,9 @@
 // generated file; do not modify
-// TODO: not in quake
 #include "armagon.qc"
 #include "blud.qc"
 #include "cendtroid.qc"
 #include "chthon.qc"
+#include "cook.qc"
 #include "dark_knight.qc"
 #include "decoy.qc"
 #include "dragon.qc"

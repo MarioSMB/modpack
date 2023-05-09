@@ -4,6 +4,7 @@
 #include "blud.qh"
 #include "centroid.qh"
 #include "chthon.qh"
+#include "cook.qh"
 #include "dark_knight.qh"
 #include "decoy.qh"
 #include "dragon.qh"

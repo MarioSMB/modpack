@@ -1,5 +1,7 @@
 #include "ogre.qh"
 
+#include "cook.qh"
+
 #ifdef SVQC
 const int anim_ogre_stand = 0; //'0 8 0'
 const int anim_ogre_walk = 9; //'9 24 0'
@@ -503,7 +505,15 @@ The Ogre
 Boss: (rogue only) use the modified skin and fire multigrenades.
 Normal: use the original skin and fire normal grenades.
 */
-spawnfunc(monster_ogre) { monster_start(this, MON_OGRE); }
+spawnfunc(monster_ogre)
+{
+	if(random() < 0.2 && fexists("progs/cook.mdl"))
+	{
+		monster_start(this, MON_COOK);
+		return;
+	}
+	monster_start(this, MON_OGRE);
+}
 spawnfunc(monster_ogre_marksman)
 {
 	if(MP_ROGUE) { delete(this); return; }
