@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_LENFORCER,                1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was zapped by a Lightning Enforcer"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_LENFORCER,           1,  NULL,           INFO_DEATH_SELF_MON_LENFORCER,          CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_LENFORCER,       DEATH_SELF_MON_LENFORCER,       DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_LIGHTNING_ENFORCER, "progs/enforcer.mdl");
 MODEL(MON_LIGHTNING_ENFORCER_HEAD, "progs/h_mega.mdl");

@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_ROTTWEILER,               1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was mauled by a Rottweiler"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ROTTWEILER,          1,  NULL,           INFO_DEATH_SELF_MON_ROTTWEILER,         CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ROTTWEILER,      DEATH_SELF_MON_ROTTWEILER,      DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_ROTTWEILER, "progs/dog.mdl");
 MODEL(MON_ROTTWEILER_HEAD, "progs/h_dog.mdl");

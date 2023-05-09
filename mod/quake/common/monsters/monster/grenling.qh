@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_GRENLING,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 received a nasty bite from a Grenling"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GRENLING,            1,  NULL,           INFO_DEATH_SELF_MON_GRENLING,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GRENLING,        DEATH_SELF_MON_GRENLING,        DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_GRENLING, "progs/grenling.mdl");
 MODEL(MON_GRENLING_HEAD, "progs/h_gren.mdl");

@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_CENTROID,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 stung by a Centroid"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_CENTROID,            1,  NULL,           INFO_DEATH_SELF_MON_CENTROID,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_CENTROID,        DEATH_SELF_MON_CENTROID,        DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_CENTROID, "progs/scor.mdl");
 MODEL(MON_CENTROID_HEAD, "progs/h_scourg.mdl");

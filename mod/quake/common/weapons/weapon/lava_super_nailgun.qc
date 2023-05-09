@@ -16,7 +16,7 @@ void player_lava_super_nail1(entity this)
 	if(this.weaponentity.m_frame >= 9)
 		this.weaponentity.m_frame = 1;
 	SuperDamageSound(this);
-	W_FireLavaSpikes(this, 3);
+	W_FireSuperLavaSpikes(this);
 	this.attack_finished = time + 0.2;
 }
 void player_lava_super_nail2(entity this)
@@ -31,7 +31,7 @@ void player_lava_super_nail2(entity this)
 	if(this.weaponentity.m_frame >= 9)
 		this.weaponentity.m_frame = 1;
 	SuperDamageSound(this);
-	W_FireLavaSpikes(this, -4);
+	W_FireSuperLavaSpikes(this);
 	this.attack_finished = time + 0.2;
 }
 

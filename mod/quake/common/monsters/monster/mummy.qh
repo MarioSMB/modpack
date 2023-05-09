@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_MUMMY,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was Mummified"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MUMMY,               1,  NULL,           INFO_DEATH_SELF_MON_MUMMY,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MUMMY,           DEATH_SELF_MON_MUMMY,           DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_MUMMY, "progs/mummy.mdl");
 MODEL(MON_MUMMY_HEAD, "progs/h_zombie.mdl");

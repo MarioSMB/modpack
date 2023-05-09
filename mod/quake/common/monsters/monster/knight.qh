@@ -2,6 +2,10 @@
 
 #include "../all.qh"
 
+MSG_INFO_NOTIF(DEATH_SELF_MON_KNIGHT,                   1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slashed by a Knight"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_KNIGHT,              1,  NULL,           INFO_DEATH_SELF_MON_KNIGHT,             CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_KNIGHT,          DEATH_SELF_MON_KNIGHT,          DEATH_MURDER_MONSTER,           "monster")
+
 #ifdef GAMEQC
 MODEL(MON_KNIGHT, "progs/knight.mdl");
 MODEL(MON_KNIGHT_HEAD, "progs/h_knight.mdl");
