@@ -925,7 +925,7 @@ void FoundTarget(entity this)
 	}
 
 	Monster mon = this.monsterdef;
-	if(!mon.mr_sight(mon, this))
+	if(mon.mr_sight && !mon.mr_sight(mon, this))
 		return;
 
 	this.show_hostile = time + 1;		// wake up other monsters

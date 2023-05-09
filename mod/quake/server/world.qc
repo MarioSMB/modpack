@@ -1430,6 +1430,24 @@ void CreatureFrame_All()
 	});
 }
 
+bool autocvar_sv_freezenonclients;
+// hack needed because of an annoying engine bug https://github.com/DarkPlacesEngine/darkplaces/issues/82
+void FixPhysics()
+{
+	if(autocvar_sv_freezenonclients)
+		return;
+
+	IL_EACH(g_moveables, true,
+	{
+		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
+			continue;
+
+		//set_movetype(it, it.move_movetype);
+		// inline the set_movetype function, since this is called a lot
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_QCENTITY : it.move_movetype;
+	});
+}
+
 void StartFrame()
 {
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
@@ -1450,6 +1468,8 @@ void StartFrame()
 
 	if(MP_MG)
 		RunFrameTickEntities(serverframetime);
+
+	FixPhysics();
 
 	CreatureFrame_All();
 	if(deathmatch || coop)
@@ -1628,7 +1648,6 @@ void RunThink(entity this, float dt)
 	time = oldtime;
 }
 
-bool autocvar_sv_freezenonclients;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
