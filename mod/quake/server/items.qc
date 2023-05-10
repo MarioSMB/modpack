@@ -76,7 +76,7 @@ void PlaceItem(entity this)
 	else
 		set_movetype(this, MOVETYPE_TOSS);	
 	this.velocity = '0 0 0';
-	this.origin_z = this.origin_z + 6;
+	setorigin(this, this.origin + '0 0 6');
 	this.m_min = this.mins;
 	this.m_max = this.maxs;
 	setthink(this, FixItem);
@@ -422,6 +422,11 @@ bool pulserifle_customize(entity this, entity client)
 
 void pulserifle_touch(entity this, entity toucher)
 {
+	if(toucher.health <= 0)
+		return;
+	if(!IS_PLAYER(toucher))
+		return;
+	
 	int newitems = 0;
 	bool leave = (coop || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 	switch(this.classname)

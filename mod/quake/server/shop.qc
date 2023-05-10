@@ -92,15 +92,15 @@ void shop_buyitem(entity this, string item)
 	}
 
 	Weapon wep = Weapon_from_name(item);
-	if(STAT(WEAPONS, this) & wep.m_wepset)
-	{
-		sprint(this, "You already have that weapon\n");
-		return;
-	}
-
 	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL))
 	{
 		sprint(this, "Invalid weapon\n");
+		return;
+	}
+
+	if(STAT(WEAPONS, this) & wep.m_wepset)
+	{
+		sprint(this, "You already have that weapon\n");
 		return;
 	}
 
