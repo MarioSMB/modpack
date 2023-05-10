@@ -147,6 +147,9 @@ bool shopkeep_send(entity this, entity to, int sf)
 
 void shopkeep_spawn(entity this)
 {
+	precache_sound("items/r_item2.wav");
+	precache_sound("items/armor1.wav");
+	precache_sound("weapons/pkup.wav");
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_NOT;
 	droptofloor(this);

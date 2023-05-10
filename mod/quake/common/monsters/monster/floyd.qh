@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_FLOYD,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was made obsolete by an Automaton"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_FLOYD,            1,  NULL,           INFO_DEATH_SELF_MON_FLOYD,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_FLOYD,        DEATH_SELF_MON_FLOYD,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_FLOYD, "progs/floyd.mdl");
+MODEL(MON_FLOYD_HEAD, "progs/h_floyd.mdl");
+
+SOUND(MON_FLOYD_SIGHT, "floyd/sight");
+#endif
+
+CLASS(Floyd, Monster)
+    ATTRIB(Floyd, spawnflags, int, MON_FLAG_METAL | MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Floyd, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Floyd, m_maxs, vector, '16 16 64');
+#ifdef GAMEQC
+    ATTRIB(Floyd, m_model, Model, MDL_MON_FLOYD);
+    ATTRIB(Floyd, m_model_head, Model, MDL_MON_FLOYD_HEAD);
+    ATTRIB(Floyd, m_sound, Sound, SND_MON_FLOYD_SIGHT);
+#endif
+    ATTRIB(Floyd, netname, string, "floyd");
+    ATTRIB(Floyd, monster_name, string, _("Floyd"));
+ENDCLASS(Floyd)
+
+REGISTER_MONSTER(FLOYD, NEW(Floyd));
+
+#ifdef SVQC
+const int FLOYD_ROLLING = BIT(1);
+const int FLOYD_ASLEEP = BIT(2);
+#endif

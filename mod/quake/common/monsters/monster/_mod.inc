@@ -10,6 +10,7 @@
 #include "eel.qc"
 #include "enforcer.qc"
 #include "fiend.qc"
+#include "floyd.qc"
 #include "gremlin.qc"
 #include "grenling.qc"
 #include "grunt.qc"

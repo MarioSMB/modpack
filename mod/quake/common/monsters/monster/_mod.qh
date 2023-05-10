@@ -11,6 +11,7 @@
 #include "eel.qh"
 #include "enforcer.qh"
 #include "fiend.qh"
+#include "floyd.qh"
 #include "gremlin.qh"
 #include "grenling.qh"
 #include "grunt.qh"
