@@ -509,7 +509,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 			float points = max(0, 0.5 * vlen(inflictor.origin - org));
 			points = damage - points;
 			if(head == attacker || (head.monsterdef && (head.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)))
-				points *= 0.5; // shambler takes half damage from all explosions
+				points *= 0.5;
 			if(points > 0)
 			{
 				if(CanDamage(head, inflictor))

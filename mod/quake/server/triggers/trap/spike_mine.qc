@@ -78,6 +78,7 @@ void spikemine_Touch(entity this, entity toucher)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	setmodel(this, MDL_EXPLOSION);
+	setsize(this, '0 0 0', '0 0 0');
 	this.solid = SOLID_NOT;
 	s_explode1(this);
 }

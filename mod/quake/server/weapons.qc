@@ -359,6 +359,7 @@ void BecomeExplosion(entity this)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	setmodel(this, MDL_EXPLOSION);
+	setsize(this, '0 0 0', '0 0 0');
 	sound(this, CH_SHOTS, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 	s_explode1(this);
