@@ -75,6 +75,9 @@ spawnfunc(trigger_hurt)
 		this.use = hurt_use;
 	}
 
+	if(!this.message || this.message == "")
+		this.message = "was in the wrong place";
+
 	if(!this.cnt)
 		this.cnt = -1;
 }
