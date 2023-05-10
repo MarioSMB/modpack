@@ -3,12 +3,10 @@
 #include <lib/csqcmodel/sv_model.qh>
 #include <common/csqcmodel_settings.qh>
 #include "../common/physics.qh"
-#include "../common/weapons/weapon/grapple.qh"
 #include "combat.qh"
 #include "fog.qh"
 #include "getreplies.qh"
 #include "player.qh"
-#include "rogue/teamplay.qh"
 #include "shop.qh"
 #include "triggers/teleporters.qh"
 #include "weapons/weaponsystem.qh"
@@ -74,52 +72,34 @@ void SetChangeParms(entity this)
 	this.gravity = 1.0;
 
 	this.health = this.max_health;
-	if(teamplay >= TEAM_CTF) // don't carry items between level in CTF
-		SetNewParms();
-	else
-	{
-		vector myweps = STAT(WEAPONS, this);
-		parm1 = myweps.x;
-		parm2 = myweps.y;
-		parm3 = myweps.z;
-		parm4 = this.armorvalue;
-		parm5 = max(25, this.ammo_shells);
-		parm6 = this.ammo_nails;
-		parm7 = this.ammo_rockets;
-		parm8 = this.ammo_cells;
-		if(this.weaponentity)
-			parm9 = this.weaponentity.m_weapon.m_id;
-		parm10 = this.model_randomizer;
-		parm11 = this.ammo_lava_nails;
-		parm12 = this.ammo_multi_rockets;
-		parm13 = this.ammo_plasma;
-		if(this.weaponentity)
-			parm15 = this.weaponentity.cnt;
-		parm16 = this.items;
-	}
+	vector myweps = STAT(WEAPONS, this);
+	parm1 = myweps.x;
+	parm2 = myweps.y;
+	parm3 = myweps.z;
+	parm4 = this.armorvalue;
+	parm5 = max(25, this.ammo_shells);
+	parm6 = this.ammo_nails;
+	parm7 = this.ammo_rockets;
+	parm8 = this.ammo_cells;
+	if(this.weaponentity)
+		parm9 = this.weaponentity.m_weapon.m_id;
+	parm10 = this.model_randomizer;
+	parm11 = this.ammo_lava_nails;
+	parm12 = this.ammo_multi_rockets;
+	parm13 = this.ammo_plasma;
+	if(this.weaponentity)
+		parm15 = this.weaponentity.cnt;
+	parm16 = this.items;
 }
 
 void SetNewParms()
 {
-	WepSet weps;
-	if(deathmatch && teamplay >= TEAM_CTF)
-	{
-		weps = (WEPSET(SHOTGUN) | WEPSET(AXE) | WEPSET(GRAPPLE));
-		parm1 = weps.x;
-		parm2 = weps.y;
-		parm3 = weps.z;
-		parm4 = 50;
-		parm16 = IT_ARMOR1;
-	}
-	else
-	{
-		weps = (WEPSET(SHOTGUN) | WEPSET(AXE));
-		parm1 = weps.x;
-		parm2 = weps.y;
-		parm3 = weps.z;
-		parm4 = 0;
-		parm16 = 0;
-	}
+	WepSet weps = (WEPSET(SHOTGUN) | WEPSET(AXE));
+	parm1 = weps.x;
+	parm2 = weps.y;
+	parm3 = weps.z;
+	parm4 = 0;
+	parm16 = 0;
 	parm5 = 25;
 	parm6 = 0;
 	parm7 = 0;
@@ -150,9 +130,6 @@ void DecodeLevelParms(entity this)
 	if(world.model == "maps/rstart.bsp" || ((world.model == "maps/r2m1.bsp" || world.model == "maps/aop2m1.bsp") && !deathmatch))
 		SetNewParms(); // reset all stuff on level 8 and new episode
 
-	//if(deathmatch && teamplay >= TEAM_CTF)
-		//SetNewParms(); // engine doesn't do this for us, apparently
-
 	STAT(WEAPONS, this) = vec3(parm1, parm2, parm3);
 	this.armorvalue = parm4;
 	this.ammo_shells = parm5;
@@ -160,12 +137,7 @@ void DecodeLevelParms(entity this)
 	this.ammo_rockets = parm7;
 	this.ammo_cells = parm8;
 	if(this.weaponentity)
-	{
-		if(parm9 == WEP_GRAPPLE.m_id && teamplay < TEAM_CTF)
-			this.weaponentity.m_weapon = WEP_AXE;
-		else
-			this.weaponentity.m_weapon = REGISTRY_GET(Weapons, parm9);
-	}
+		this.weaponentity.m_weapon = REGISTRY_GET(Weapons, parm9);
 	this.model_randomizer = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
@@ -820,7 +792,7 @@ void execute_changelevel(entity this)
 
 #if 0
 	WriteByte(MSG_ALL, SVC_CDTRACK);
-	WriteByte(MSG_ALL, ((MP_HIPNOTIC) ? 9 : 3));
+	WriteByte(MSG_ALL, 3);
 	WriteByte(MSG_ALL, 3);
 #else
 	SendCDTrack(NULL, 3);
@@ -900,8 +872,7 @@ void CopyToBodyQueue(entity ent)
 	body.velocity = ent.velocity;
 	//body.move_qcphysics = false; // not for clones
 	body.flags = 0;
-	if(MP_ROGUE)
-		body.skin = ent.skin;
+	body.skin = ent.skin;
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
 
@@ -945,11 +916,6 @@ void respawn(entity this)
 		SetNewParms();
 		// respawn		
 		PutClientInServer(this);
-		if(MP_ROGUE)
-		{
-			// set the skin correctly
-			TeamSetSkin(this);
-		}
 	}
 	else
 	{
@@ -991,36 +957,23 @@ ClientKill
 Player entered the suicide command
 ============
 */
-void TeamDropFlagOfPlayer(entity player);
-void tag_token_drop();
 void ClientKill(entity this)
 {
 	if(gameover || intermission_running)
 		return;
-	if(autocvar_sv_quake_suicide_limit > 0 && this.suicide_count > autocvar_sv_quake_suicide_limit)
+	if(time < this.suicide_delay)
 	{
-		sprint(this, "You have suicide too much already... Get help.\n");
+		sprint(this, "You must wait before suiciding again... Get help.\n");
 		return;
 	}
-	this.suicide_count += 1;
-	if(MP_ROGUE)
+	this.suicide_delay = time + 5;
+
+	if(this.powerups & POWERUP_V_SPHERE)
 	{
-		TeamDropFlagOfPlayer(this);
-
-		if(tag_token_owner == this)
+		FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
 		{
-			this.health = 0;
-			this.solid = SOLID_NOT;
-			tag_token_drop();
-		}
-
-		if(this.powerups & POWERUP_V_SPHERE)
-		{
-			FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
-			{
-				delete(it);
-			});
-		}
+			delete(it);
+		});
 	}
 
 	bprintf("%s suicides\n", this.netname);
@@ -1131,60 +1084,6 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 			lastspawn = find(lastspawn, classname, "info_player_start");
 		if(lastspawn)
 			return lastspawn;
-	}
-	else if(MP_ROGUE && deathmatch) // TODO: merge with regular deathmatch code!
-	{
-		entity startspot = spot = lastspawn;
-		int t = 0;
-		if(!this.ctf_killed && teamplay >= TEAM_CTF)
-		{
-			if(this.steam == TEAM1)
-			{
-				startspot = spot = team1_lastspawn;
-				t = TEAM1;
-			}
-			else if(this.steam == TEAM2)
-			{
-				startspot = spot = team2_lastspawn;
-				t = TEAM2;
-			}
-		}
-		while(1)
-		{
-			if(t == TEAM1)
-				spot = find(spot, classname, "info_player_team1");
-			else if(t == TEAM2)
-				spot = find(spot, classname, "info_player_team2");
-			else
-				spot = find(spot, classname, "info_player_deathmatch");
-			if(spot)
-			{
-				if(spot == startspot)
-					return startspot;
-				pcount = 0;
-				thing = findradius(spot.origin, 32);
-				while(thing)
-				{
-					if(IS_PLAYER(thing))
-						pcount += 1;
-					thing = thing.chain;
-				}
-				if(pcount == 0)
-				{
-					if(t == TEAM1)
-						team1_lastspawn = spot;
-					else if(t == TEAM2)
-						team2_lastspawn = spot;
-					else
-						lastspawn = spot;
-					return spot;
-				}
-			}
-			else if(t)
-				t = 0; // fix for ctf levels without ctf support
-			else
-				break; // no spawns, just bail out
-		}
 	}
 	else if(deathmatch)
 	{
@@ -1329,15 +1228,10 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 	spot = find(NULL, classname, "info_player_start");
 	if(!spot)
 	{
-		if(MP_IMPEL)
-		{
-			if(!deathmatch)
-				spot = find(NULL, classname, "info_player_deathmatch");
-			if(!spot)
-				error("PutClientInServer: no info_player_start/deathmatch on level");
-		}
-		else
-			error("PutClientInServer: no info_player_start on level");
+		if(!deathmatch)
+			spot = find(NULL, classname, "info_player_deathmatch");
+		if(!spot)
+			error("PutClientInServer: no info_player_start/deathmatch on level");
 	}
 	
 	return spot;
@@ -1407,10 +1301,6 @@ void PutClientInServer(entity this)
 	// rogue fields
 	this.shield_finished = 0;
 	this.antigrav_finished = 0;
-	this.ctf_lastreturnedflag = -10;
-	this.ctf_lastfraggedcarrier = -10;
-	this.ctf_flagsince = -10;
-	this.ctf_lasthurtcarrier = -10;
 
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
@@ -1488,8 +1378,7 @@ void PutClientInServer(entity this)
 			this.ammo_cells = max(12, this.ammo_cells);
 	}
 
-	if(MP_ROGUE)
-		settouch(this, player_touch);
+	settouch(this, player_touch);
 
 	//JIM
 	// Clear out velocity so you're not launched into the air
@@ -1518,9 +1407,6 @@ void PutClientInServer(entity this)
 		fixedmakevectors(this.angles);
 		spawn_tfog(this.origin + v_forward * 20);
 	}
-
-	this.on_hook = false;
-	this.hook_out = false;
 
 	spawn_tdeath(this.origin, this);
 
@@ -1578,12 +1464,9 @@ spawnfunc(testplayerstart)
 /*QUAKED info_player_deathmatch(1 0 1)(-16 -16 -24)(16 16 24)
 potential spawning position for deathmatch games
 */
-void SpawnRunes(entity this);
 spawnfunc(info_player_deathmatch)
 {
 	if(MP_MG && !deathmatch) { delete(this); return; }
-	if(MP_ROGUE)
-		SpawnRunes(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1829,12 +1712,9 @@ void PlayerDeathThink(entity this)
 // wait for any button down
 	if(!this.button3 && !this.button2 && !this.button1 && !this.button0)
 		return;
-	if(MP_IMPEL)
-	{
-		if(this.impaled)
-			return;
-		this.impaled = false;
-	}
+	if(this.impaled)
+		return;
+	this.impaled = false;
 
 	this.button0 = 0;
 	this.button1 = 0;
@@ -1859,12 +1739,7 @@ Called every frame before physics are run
 ================
 */
 void DeathBubbles(entity this, int num_bubbles);
-void TeamCheckLock(entity this);
-void CheckMOTD(entity this);
-void RuneApplyElder(entity who);
-void GrappleService(entity this);
 void GameLogEcho(string s);
-void impel_MOTD(entity this);
 
 .string netname_previous;
 void PlayerPreThink(entity this)
@@ -1886,7 +1761,7 @@ void PlayerPreThink(entity this)
 
 	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
 
-	if(MP_IMPEL && this.exptime != 0)
+	if(this.exptime != 0)
 		return;
 
 	if(intermission_running)
@@ -1900,7 +1775,6 @@ void PlayerPreThink(entity this)
 
 	//JIM
 	// Kill player on Edge of Oblivion
-	if(MP_HIPNOTIC)
 	if((this.origin_z < -1300) && (world.model == "maps/hipdm1.bsp") && (this.health > 0))
 	{
 		if (this.invincible_finished >= time)
@@ -1914,24 +1788,14 @@ void PlayerPreThink(entity this)
 		T_Damage(this, this, NULL, this.health + 1000, DEATH_FALL.m_id);
 	}
 
-	if(MP_ROGUE && earthquake_active && IS_ONGROUND(this))
+	if(earthquake_active && IS_ONGROUND(this))
 	{
 		this.velocity_x = this.velocity_x + (random() * earthquake_intensity * 2) - earthquake_intensity;
 		this.velocity_y = this.velocity_y + (random() * earthquake_intensity * 2) - earthquake_intensity;
 		this.velocity_z = this.velocity_z + (random() * earthquake_intensity * 2) - earthquake_intensity;
 	}
 
-	if(MP_IMPEL && this.motd_time && this.motd_time < time && OPT_MOTD)
-		impel_MOTD(this);
-
 	//makevectors(this.v_angle);		// is this still used
-
-	if(MP_ROGUE)
-	{
-		TeamCheckLock(this);
-
-		CheckMOTD(this);
-	}
 
 	if(this.deadflag >= DEAD_DEAD)
 	{
@@ -1946,20 +1810,12 @@ void PlayerPreThink(entity this)
 	if(this.pausetime != -1 && time < this.pausetime)
 		this.velocity = '0 0 0';
 
-	if(MP_ROGUE)
+	if((this.powerups & POWERUP_ANTIGRAV) && time > this.AGping)
 	{
-		if((this.powerups & POWERUP_ANTIGRAV) && time > this.AGping)
-		{
-			_sound(this, CH_TRIGGER_SINGLE, "belt/use.wav", 0.4, ATTN_NORM);
-			this.AGping = time + 3;
-			if(this.AGping >= (this.antigrav_finished - 3))
-				this.AGping = this.antigrav_finished + 3;
-		}
-
-		RuneApplyElder(this); // regen rune
-
-		if(this.hook_out)
-			GrappleService(this);
+		_sound(this, CH_TRIGGER_SINGLE, "belt/use.wav", 0.4, ATTN_NORM);
+		this.AGping = time + 3;
+		if(this.AGping >= (this.antigrav_finished - 3))
+			this.AGping = this.antigrav_finished + 3;
 	}
 
 	Weapon wep = this.weaponentity.m_weapon;
@@ -2092,7 +1948,6 @@ void CheckPowerups(entity this)
 	}	
 
 // suit
-	if(MP_IMPEL)
 	{
 		if(this.field_generator_finished)
 		{
@@ -2188,7 +2043,7 @@ void CheckPowerups(entity this)
 
 	//JIM
 	// wetsuit
-	if(MP_HIPNOTIC && this.wetsuit_finished)
+	if(this.wetsuit_finished)
 	{
 		this.air_finished = time + 12;		// don't drown
 
@@ -2222,7 +2077,7 @@ void CheckPowerups(entity this)
 
 //MED
 // empathy shields
-	if(MP_HIPNOTIC && this.empathy_finished)
+	if(this.empathy_finished)
 	{
 		// sound and screen flash when items starts to run out
 		if(this.empathy_finished < time + 3)
@@ -2404,30 +2259,28 @@ void PlayerPostThink(entity this)
 
 	if(this.view_ofs == '0 0 0')
 	{
-		if(MP_HIPNOTIC)
-			earthquake_postthink(this);
+		earthquake_postthink(this);
 		CSQCMODEL_AUTOUPDATE(this);
 		return;		// intermission or finale
 	}
 
-	if(MP_HIPNOTIC)
-		earthquake_postthink(this); // !deathmatch?
+	earthquake_postthink(this); // !deathmatch?
 
 	if(this.deadflag == DEAD_NO)
 	{
-		if(MP_ROGUE && cutscene_running)
+		if(cutscene_running)
 			xpackEnding(this);
 
 		// do weapon stuff
 		W_WeaponFrame(this);
 
-		if(MP_IMPEL && this.cnt > 0 && !this.button0)
+		if(this.cnt > 0 && !this.button0)
 		{
 			this.attack_finished = time + 0.8;
 			this.cnt = 0;
 		}
 
-		if(MP_IMPEL && this.rifle_cnt > 0 && !this.button3)
+		if(this.rifle_cnt > 0 && !this.button3)
 		{
 			this.attack_finished = time + 0.8;
 			this.rifle_cnt = 0;
@@ -2538,33 +2391,13 @@ ClientConnect
 called when a player connects to a server
 ============
 */
-void SetMOTD(entity this);
 void ClientConnect(entity this)
 {
 	make_impure(this);
 	this.classname = "player_joining";
-	if(MP_IMPEL && OPT_MOTD)
-	{
-		this.motd_time = time + 3;
-		this.motd_count = 0;
-	}
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
-	this.suicide_count = 0;
-	this.ctf_killed = 0;
-
-	if(MP_ROGUE)
-		SetMOTD(this);
-
-	// set lastteam negative
-	if(MP_ROGUE && teamplay > 0)
-	{
-		if(cvar("gamecfg") & GAMECFG_USE_COLOR)
-			this.steam = this.team; // accept joining player's color if legal
-		else
-			this.steam = -50; // always reassign
-		TeamCheckLock(this);
-	}
+	this.suicide_delay = time + 5;
 
 	static int playerid_last;
 	this.playerid = ++playerid_last;
@@ -2617,16 +2450,8 @@ void ClientDisconnect(entity this)
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	this.effects = 0;
 
-	if(MP_ROGUE)
-	{
-		sphere_remove(this);
-		if(tag_token_owner == this)
-			tag_token_drop();
+	sphere_remove(this);
 
-		TeamDropFlagOfPlayer(this);
-		this.steam = -50;
-		this.team = 0;
-	}
 	set_suicide_frame(this);
 
 	strfree(this.weaponorder_byimpulse);
@@ -2767,8 +2592,6 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, st
 	return false;
 }
 
-void TeamResetCarrier(entity who);
-void TeamAssists(entity targ, entity attacker);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
 	// Sanity check
@@ -2790,9 +2613,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	);
 	#endif
 
-	if(MP_ROGUE)
-		TeamResetCarrier(targ);
-
 	// =======
 	// SUICIDE
 	// =======
@@ -2800,27 +2620,20 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 		{
-			if(deathtype == DEATH_TEAMCHANGE.m_id)
+			switch(DEATH_ENT(deathtype))
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
-			}
-			else
-			{
-				switch(DEATH_ENT(deathtype))
+				case DEATH_MIRRORDAMAGE:
 				{
-					case DEATH_MIRRORDAMAGE:
-					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
-						break;
-					}
-					case DEATH_HURTTRIGGER:
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message);
-						break;
-					default:
-					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
-						break;
-					}
+					Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+					break;
+				}
+				case DEATH_HURTTRIGGER:
+					Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message);
+					break;
+				default:
+				{
+					Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+					break;
 				}
 			}
 		}
@@ -2838,49 +2651,29 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	// ======
 	else if(IS_PLAYER(attacker))
 	{
-		if(attacker.team == targ.team)
+		LogDeath("frag", deathtype, attacker, targ);
+		attacker.frags += 1;
+
+		if(!frag_centermessage_override(attacker, targ, deathtype, attacker_name))
 		{
-			LogDeath("tk", deathtype, attacker, targ);
-			attacker.frags -= 1;
-
-			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
-			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker_name);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DEATH_TEAMKILL, targ.netname, attacker_name);
-
-			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
-			// No need for specific death/weapon messages...
+			Send_Notification(
+				NOTIF_ONE,
+				attacker,
+				MSG_CENTER,
+				CENTER_DEATH_MURDER_FRAG,
+				targ.netname
+			);
+			Send_Notification(
+				NOTIF_ONE,
+				targ,
+				MSG_CENTER,
+				CENTER_DEATH_MURDER_FRAGGED,
+				attacker_name
+			);
 		}
-		else
-		{
-			LogDeath("frag", deathtype, attacker, targ);
-			if(MP_ROGUE && teamplay == TEAM_DMATCH_TAG)
-				dmatch_score(targ, attacker);
-			else
-				attacker.frags += 1;
-			if(MP_ROGUE)
-				TeamAssists(targ, attacker);
 
-			if(!frag_centermessage_override(attacker, targ, deathtype, attacker_name))
-			{
-				Send_Notification(
-					NOTIF_ONE,
-					attacker,
-					MSG_CENTER,
-					CENTER_DEATH_MURDER_FRAG,
-					targ.netname
-				);
-				Send_Notification(
-					NOTIF_ONE,
-					targ,
-					MSG_CENTER,
-					CENTER_DEATH_MURDER_FRAGGED,
-					attacker_name
-				);
-			}
-
-			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name);
-		}
+		if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name))
+			Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name);
 	}
 
 	// =============

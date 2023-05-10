@@ -79,12 +79,9 @@ void shop_buyitem(entity this, string item)
 		this.ammo_nails += 60; SendItemPickup(this, IT_NAILS, 60);
 		this.ammo_rockets += 20; SendItemPickup(this, IT_ROCKETS, 20);
 		this.ammo_cells += 30; SendItemPickup(this, IT_CELLS, 30);
-		if(MP_ROGUE)
-		{
-			this.ammo_lava_nails += 60; SendItemPickup(this, IT_LAVA_NAILS, 60);
-			this.ammo_multi_rockets += 20; SendItemPickup(this, IT_MULTI_ROCKETS, 20);
-			this.ammo_plasma += 40; SendItemPickup(this, IT_PLASMA_AMMO, 40);
-		}
+		this.ammo_lava_nails += 60; SendItemPickup(this, IT_LAVA_NAILS, 60);
+		this.ammo_multi_rockets += 20; SendItemPickup(this, IT_MULTI_ROCKETS, 20);
+		this.ammo_plasma += 40; SendItemPickup(this, IT_PLASMA_AMMO, 40);
 		bound_other_ammo(this);
 		sprint(this, "Ammunition restocked\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);

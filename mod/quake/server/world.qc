@@ -225,9 +225,9 @@ spawnfunc(light_torch_small_walltorch)
 	precache_model("progs/flame.mdl");
 	_setmodel(this, "progs/flame.mdl");
 	bool allow_fire = true;
-	if(MP_ROGUE && (this.spawnflags & 1))
+	if((this.spawnflags & 1))
 		allow_fire = false;
-	if(MP_IMPEL && (this.spawnflags & 2))
+	if((this.spawnflags & 2))
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
@@ -243,7 +243,7 @@ spawnfunc(light_flame_large_yellow)
 	_setmodel(this, "progs/flame2.mdl");
 	this.frame = 1;
 	bool allow_fire = true;
-	if(MP_IMPEL && (this.spawnflags & 2))
+	if((this.spawnflags & 2))
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
@@ -258,7 +258,7 @@ spawnfunc(light_flame_small_yellow)
 	precache_model("progs/flame2.mdl");
 	_setmodel(this, "progs/flame2.mdl");
 	bool allow_fire = true;
-	if(MP_IMPEL && (this.spawnflags & 2))
+	if((this.spawnflags & 2))
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
@@ -273,7 +273,7 @@ spawnfunc(light_flame_small_white)
 	precache_model("progs/flame2.mdl");
 	_setmodel(this, "progs/flame2.mdl");
 	bool allow_fire = true;
-	if(MP_IMPEL && (this.spawnflags & 2))
+	if((this.spawnflags & 2))
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
@@ -1085,8 +1085,6 @@ spawnfunc(worldspawn)
 	// needs to be done so early because of the constants they create
 	static_init();
 
-	teamplay = cvar("teamplay"); // set it super early so other spawnfuncs can access it
-
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //
@@ -1139,7 +1137,7 @@ spawnfunc(worldspawn)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		//matchid = strzone(s);
-		string gtype = ((coop) ? "coop" : ((teamplay >= TEAM_CTF) ? "ctf" : "dm"));
+		string gtype = ((coop) ? "coop" : "dm");
 
 		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, s));
 
@@ -1266,7 +1264,6 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
-void TeamCheckUpdate();
 void NextLevel();
 bool autocvar_quit_when_empty = true;
 void CheckRules_World()
@@ -1310,9 +1307,6 @@ void CheckRules_World()
 			}
 		});
 	}
-
-	if(MP_ROGUE)
-		TeamCheckUpdate();
 }
 
 .float dmgtime;
@@ -1396,7 +1390,7 @@ void CreatureFrame_FallDamage(entity this)
 			}
 			else if(this.jump_flag < -650)
 			{
-				if(MP_IMPEL && this.exptime != 0)
+				if(this.exptime != 0)
 				{
 					if(IS_PLAYER(this))
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
@@ -1456,18 +1450,15 @@ void StartFrame()
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;
-	
-	teamplay = autocvar_teamplay;
+
 	//framecount = framecount + 1;
 
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected; // we don't use remove_unsafely as quake does infact use spikes
 
-	if(MP_HIPNOTIC)
-		earthquake_frame();
+	earthquake_frame();
 
-	if(MP_MG)
-		RunFrameTickEntities(serverframetime);
+	RunFrameTickEntities(serverframetime);
 
 	FixPhysics();
 
@@ -1615,7 +1606,7 @@ void DropToFloor_Handler(entity this)
 
 void droptofloor(entity this)
 {
-	if(MP_MG && (this.spawnflags & DROPTOFLOOR_DISABLE))
+	if((this.spawnflags & DROPTOFLOOR_DISABLE))
 		return;
 	DropToFloor_Handler(this);
 }

@@ -66,8 +66,6 @@ void OgreFireGrenade(entity this)
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_OGRE.m_id;
 	missile.classname = "ogre_grenade";
-	if(MP_IMPEL)
-		missile.classname = "grenade"; // NOTE: impel takes priority over rogue here! TODO
 		
 // set missile speed	
 
@@ -81,7 +79,7 @@ void OgreFireGrenade(entity this)
 
 	missile.angles = vectoangles(missile.velocity);
 	
-	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+	if((this.spawnflags & OGRE_BOSS))
 	{
 		settouch(missile, MultiGrenadeTouch);
 		missile.nextthink = time + 2.5;
@@ -352,7 +350,7 @@ void ogre_die3(entity this)
 {
 	set_animofs(this, anim_ogre_death, 3, ogre_die4);
 	this.solid = SOLID_NOT;
-	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+	if((this.spawnflags & OGRE_BOSS))
 		this.ammo_multi_rockets = 2;
 	else
 		this.ammo_rockets = 2;
@@ -376,7 +374,7 @@ void ogre_bdie3(entity this)
 {
 	set_animofs(this, anim_ogre_bdeath, 3, ogre_bdie4);
 	this.solid = SOLID_NOT;
-	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+	if((this.spawnflags & OGRE_BOSS))
 		this.ammo_multi_rockets = 2;
 	else
 		this.ammo_rockets = 2;
@@ -445,6 +443,7 @@ bool OgreCheckAttack(entity this)
 		if(time < this.attack_finished)
 			return false;
 		
+		// TODO: ogre still fires when enemy isn't visible only in impel?
 		if(!this.enemy_visible)
 			return false;
 	}
@@ -492,9 +491,7 @@ bool OgreCheckAttack(entity this)
 	}
 
 	this.attack_state = AS_MISSILE;
-	float extra_delay = 2;
-	if(MP_IMPEL)
-		extra_delay = 3;
+	float extra_delay = 3;
 	this.attack_finished = time + (1 * extra_delay * random());
 	return true;
 }
@@ -536,15 +533,12 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	precache_sound("ogre/ogpain1.wav");
 	precache_sound("ogre/ogsawatk.wav");
 
-	if(MP_ROGUE)
-	{
-		// none specified - choose random. 25% boss on normal, hard, bloodbath
-		if((actor.spawnflags <= 1) && autocvar_skill > 0 && random() <= 0.25)
-			actor.spawnflags |= OGRE_BOSS;
+	// none specified - choose random. 25% boss on normal, hard, bloodbath
+	if((actor.spawnflags <= 1) && autocvar_skill > 0 && random() <= 0.25)
+		actor.spawnflags |= OGRE_BOSS;
 		
-		if(actor.spawnflags & OGRE_BOSS)
-			actor.skin = 1;
-	}
+	if(actor.spawnflags & OGRE_BOSS)
+		actor.skin = 1;
 
     actor.health = 200;
     actor.th_stand = ogre_stand1;

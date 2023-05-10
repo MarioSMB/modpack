@@ -2,7 +2,6 @@
 
 float autocvar_fraglimit;
 int autocvar_skill;
-int autocvar_teamplay;
 bool autocvar_sv_curl_serverpackages_auto;
 
 // protocol bytes

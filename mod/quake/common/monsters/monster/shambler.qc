@@ -383,7 +383,7 @@ bool ShamCheckAttack(entity this)
 */
 spawnfunc(monster_shambler)
 {
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.2)
+	if(coop == 2 && orig_random(this) < 0.2)
 	{
 		if(orig_random(this) < 0.1)
 			monster_start(this, MON_BLUD);

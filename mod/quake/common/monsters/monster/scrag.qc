@@ -320,15 +320,10 @@ void wiz_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, MDL_MON_SCRAG_HEAD.model_str(), this.health);
-		if(MP_IMPEL)
-		{
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-		}
-		else
-			ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		return;
@@ -341,12 +336,9 @@ void Wiz_Pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(MP_IMPEL && this.pain_finished > time)
 		return;
-	if(!MP_IMPEL)
-		_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 	if(random()*70 > damage)
 		return;		// didn't flinch
-	if(MP_IMPEL)
-		_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 
 	wiz_pain1(this);
 	if(MP_IMPEL)
@@ -362,7 +354,7 @@ void Wiz_Missile(entity this)
 */
 spawnfunc(monster_wizard)
 {
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, MON_GRENLING);
 		return;
@@ -377,8 +369,7 @@ METHOD(Scrag, mr_setup, bool(Scrag this, entity actor))
     TC(Scrag, this);
 
 	precache_model("progs/w_spike.mdl");
-	if(MP_IMPEL)
-		precache_model("progs/grenbone.mdl");
+	precache_model("progs/grenbone.mdl");
 	precache_sound("wizard/hit.wav");		// used by c code
 	precache_sound("wizard/wattack.wav");
 	precache_sound("wizard/wdeath.wav");

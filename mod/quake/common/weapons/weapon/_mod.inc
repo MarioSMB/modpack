@@ -9,7 +9,6 @@
 #include "laser_cannon.qc"
 #include "mjolnir.qc"
 #include "proximity_gun.qc"
-#include "grapple.qc"
 #include "lava_nailgun.qc"
 #include "lava_super_nailgun.qc"
 #include "multi_grenade.qc"

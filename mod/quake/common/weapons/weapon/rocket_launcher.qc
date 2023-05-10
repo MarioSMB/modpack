@@ -40,7 +40,7 @@ METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor))
 {
 	player_rocket1(actor);
 	W_FireRocket(actor);
-	actor.attack_finished = time + RuneApplyHell(0.8, actor);
+	actor.attack_finished = time + 0.8;
 }
 METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

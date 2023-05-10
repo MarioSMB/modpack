@@ -35,7 +35,6 @@ void W_FireAxe(entity this)
 
 	if(trace_ent.takedamage) // yoder mod, Jan 05 2021
 	{
-		if(MP_IMPEL)
 		{
 			float r = random();
 			if(trace_ent.monsterdef == MON_JUGGERNAUT) // special case: axe attacks produce unique sound against juggernauts TODO: handle melee attacks in monster pain code
@@ -72,8 +71,6 @@ void W_FireAxe(entity this)
 			}
 		}
 		trace_ent.axhitme = true;
-		if(!MP_IMPEL)
-			SpawnBlood(org, '0 0 0', 20, trace_ent);
 		T_Damage(trace_ent, this, this, 20, WEP_AXE.m_id);
 	}
 	else
@@ -87,7 +84,7 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor))
 {
 	// TODO: decouple axe attacks from the player animations
 	float r = random();
-	if(!MP_IMPEL || random() < 0.7)
+	if(random() < 0.7)
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 	else
 		_sound(actor, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
@@ -100,7 +97,7 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor))
 				player_axe1(actor);
 			else
 				player_axec1(actor);
-			actor.attack_finished = time + RuneApplyHell(0.8, actor); // long recover
+			actor.attack_finished = time + 0.8; // long recover
 		}
 		else
 		{
@@ -111,9 +108,9 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor))
 				player_axed1(actor);
 					
 			if(actor.axe_hit_chain > 1)
-				actor.attack_finished = time + RuneApplyHell(0.6, actor);
+				actor.attack_finished = time + 0.6;
 			else
-				actor.attack_finished = time + RuneApplyHell(0.4, actor);
+				actor.attack_finished = time + 0.4;
 						
 		}
 	}
@@ -128,9 +125,9 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor))
 		else
 			player_axed1(actor);
 		float fire_delay = 0.5;
-		if(MP_IMPEL && random() < 0.5)
+		if(random() < 0.5)
 			fire_delay = 0.4;
-		actor.attack_finished = time + RuneApplyHell(fire_delay, actor);
+		actor.attack_finished = time + fire_delay;
 	}
 }
 METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))

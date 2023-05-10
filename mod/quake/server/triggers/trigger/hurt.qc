@@ -41,7 +41,7 @@ void hurt_touch(entity this, entity toucher)
 			this.nextthink = time + 1;
 
 		//MED 12/01/96 added count stuff
-		if(MP_HIPNOTIC && this.cnt > 0)
+		if(this.cnt > 0)
 		{
 			this.cnt = this.cnt - 1;
 			if(this.cnt == 0)
@@ -75,7 +75,7 @@ spawnfunc(trigger_hurt)
 		this.use = hurt_use;
 	}
 
-	if(MP_HIPNOTIC && !this.cnt)
+	if(!this.cnt)
 		this.cnt = -1;
 }
 

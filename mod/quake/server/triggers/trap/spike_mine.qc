@@ -56,7 +56,7 @@ void spikemine_Touch(entity this, entity toucher)
 	{
 		if(toucher.classname == "trap_spike_mine")
 			return;
-		if(toucher.classname == "missile")
+		if(toucher.classname == "missile" || toucher.classname == "vore_ball")
 			return;
 		if(toucher.classname == "grenade" || toucher.classname == "ogre_grenade")
 			return;

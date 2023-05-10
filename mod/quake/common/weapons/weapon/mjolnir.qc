@@ -266,7 +266,7 @@ METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor))
 		player_hammer1(actor);
 	else
 		player_mjolnir1(actor);
-	actor.attack_finished = time + RuneApplyHell(0.8, actor);
+	actor.attack_finished = time + 0.8;
 }
 METHOD(Mjolnir, wr_checkammo1, bool(entity thiswep, entity actor))
 {

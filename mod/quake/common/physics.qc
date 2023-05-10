@@ -143,7 +143,7 @@ void WaterMove(entity this, float dt)
 		this.velocity = this.velocity - 0.8 * this.waterlevel * dt * this.velocity;
 
 #ifdef SVQC
-	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	if(STAT(WETSUIT_FINISHED, this) > time)
 	{
 		if(this.waterlevel >= 2)
 		{
@@ -206,7 +206,7 @@ void PM_WaterMove(entity this, float dt)
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(PHYS_MAXSPEED(this), vlen(wishvel));
-	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	if(STAT(WETSUIT_FINISHED, this) > time)
 	{
 		if(this.waterlevel == 2)
 			wishspeed *= 1.25;
@@ -231,7 +231,7 @@ void PM_WaterMove(entity this, float dt)
 		return;
 
 	float accel = ((PHYS_WATERACCELERATE(this)) < 0 ? PHYS_ACCELERATE(this) : PHYS_WATERACCELERATE(this));
-	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	if(STAT(WETSUIT_FINISHED, this) > time)
 	{
 		if(this.waterlevel == 2)
 			accel *= 0.8;

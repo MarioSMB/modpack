@@ -99,8 +99,7 @@ void f_attack1(entity this) { set_animofs(this, anim_fish_attack, 1, f_attack2);
 void f_death21(entity this)
 {
 	set_animofs(this, anim_fish_death, 18, f_death21);
-	if(!MP_HIPNOTIC && !MP_IMPEL)
-		this.solid = SOLID_NOT;
+	this.solid = SOLID_NOT;
 	CorpseThink(this);
 }
 void f_death20(entity this) { set_animofs(this, anim_fish_death, 18, f_death21); }

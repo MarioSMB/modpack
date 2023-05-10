@@ -71,7 +71,7 @@ void PlaceItem(entity this)
 	this.mdl = this.model;		// so it can be restored on respawn
 	this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	if(MP_MG && (this.spawnflags & DROPTOFLOOR_DISABLE))
+	if(this.spawnflags & DROPTOFLOOR_DISABLE)
 		set_movetype(this, MOVETYPE_NONE);
 	else
 		set_movetype(this, MOVETYPE_TOSS);	
@@ -122,7 +122,7 @@ bool T_Heal(entity e, float healamount, bool ignore)
 	healamount = ceil(healamount);
 
 	// AY Dec13 2021, horde rune of hunger
-	if(MP_MG && autocvar_horde && (serverflags & 2))
+	if(autocvar_horde && (serverflags & 2))
 		e.hunger_time = time + HUNGER_MAX;
 
 	e.health = e.health + healamount;
@@ -183,10 +183,9 @@ spawnfunc(item_health)
 	StartItem(this);
 }
 
-bool RuneHasElder(entity who);
 void health_touch(entity this, entity toucher)
 {
-	if(MP_IMPEL && toucher.exptime != 0)
+	if(toucher.exptime != 0)
 		return;
 	if(!IS_PLAYER(toucher))
 		return;
@@ -216,9 +215,9 @@ void health_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 
 	// Megahealth = rot down the player's super health
-	if(this.healtype == 2 && (!MP_ROGUE || !RuneHasElder(toucher)))
+	if(this.healtype == 2)
 	{
-		if(!MP_HIPNOTIC)
+		if(!MP_HIPNOTIC) // TODO: why?
 			toucher.items |= IT_SUPERHEALTH;
 
 		toucher.healthrot_nextcheck = time + 5;
@@ -232,7 +231,7 @@ void health_touch(entity this, entity toucher)
 			this.nextthink = time + 20;
 		setthink(this, SUB_regen);
 	}
-	else if(MP_MG && this.wait)
+	else if(this.wait)
 	{
 		this.enemy = NULL;
 		this.nextthink = time + this.wait;
@@ -389,9 +388,6 @@ Deathmatch weapon change rules for picking up a weapon
 */
 void Deathmatch_Weapon(entity this, int old, Weapon newwep)
 {
-	if(MP_ROGUE && this.weaponentity.m_weapon == WEP_GRAPPLE && this.button0)
-		return;
-
 	Weapon best = w_getbestweapon(this);
 	if(best == newwep)
 		W_SwitchWeapon(this, newwep);
@@ -656,18 +652,13 @@ void weapon_touch(entity this, entity toucher)
 		Deathmatch_Weapon(toucher, old, wep);
 
 	// Moved up so the targets are fired even in coop, but only once.
-	if(MP_MG)
-		SUB_UseTargets(this, toucher, NULL);
+	SUB_UseTargets(this, toucher, NULL);
 
 	if(leave)
 	{
-		if(MP_MG)
-			this.target = string_null;
-		if(MP_IMPEL && this.state == 0)
-		{
-			SUB_UseTargets(this, toucher, NULL);
+		this.target = string_null;
+		if(this.state == 0)
 			this.state = H_ROTTEN;
-		}
 		return;
 	}
 
@@ -679,14 +670,11 @@ void weapon_touch(entity this, entity toucher)
 		this.nextthink = time + 30;
 		setthink(this, SUB_regen);
 	}
-	else if(MP_MG && this.wait)
+	else if(this.wait)
 	{
 		this.nextthink = time + this.wait;
 		setthink(this, SUB_regen);
 	}
-
-	if(!MP_MG)
-		SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
 // map-specific hacks
@@ -853,7 +841,7 @@ void ammo_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 
 	setthink(this, SUB_regen);
-	if(coop && (!MP_MG || this.wait <= 0)) //Wait overrides coop respawn behaviour
+	if(coop && this.wait <= 0) //Wait overrides coop respawn behaviour
 	{
 		this.cnt++;
 		int num_players = 0;
@@ -881,7 +869,7 @@ void ammo_touch(entity this, entity toucher)
 		else if(deathmatch != 2)
 			this.nextthink = time + 30;
 	}
-	else if(MP_MG && this.wait)
+	else if(this.wait)
 	{
 		this.enemy = NULL;
 		this.nextthink = time + this.wait;
@@ -1183,8 +1171,7 @@ void key_touch(entity this, entity toucher)
 		this.model = string_null;
 	}
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
-	if(MP_MG)
-		this.target = string_null; // only fire the trigger once though
+	this.target = string_null; // only fire the trigger once though
 }
 
 bool key_customize(entity this, entity client)
@@ -1310,14 +1297,14 @@ void sigil_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	this.classname = ""; // so rune doors won't find it
-	if(MP_MG && substring(world.model, 0, 6) != "maps/e")
+	if(substring(world.model, 0, 6) != "maps/e")
 	{
 		int lastPickup = SUB_LeftShift(this.spawnflags & SIGIL_ALL, SIGIL_NUMBITS);
     	serverflags |= (this.spawnflags & SIGIL_ALL) | lastPickup;
 	}
 	else
 		serverflags = serverflags | (this.spawnflags & 15);
-	if(MP_MG && autocvar_horde && (this.spawnflags & SIGIL_E2)) // Hunger
+	if(autocvar_horde && (this.spawnflags & SIGIL_E2)) // Hunger
 	{
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
@@ -1570,7 +1557,7 @@ void powerup_touch(entity this, entity toucher)
 			setthink(this, SUB_regen);
 		}
 	}
-	else if(MP_MG && this.wait)
+	else if(this.wait)
 	{
 		this.nextthink = time + this.wait;
 		setthink(this, SUB_regen);
@@ -1585,7 +1572,7 @@ void powerup_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);
 
 	float powerups_maxtime = 30;
-	if(MP_MG && horde_ent)
+	if(horde_ent)
 		powerups_maxtime = 5;
 
 // do the apropriate action
@@ -1593,7 +1580,7 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.rad_time = 1;
 		toucher.radsuit_finished = time + 30; // give wetsuits full duration
-		if(MP_MG && coop) // Respawn biosuit in coop, since it might be required for progression
+		if(coop) // Respawn biosuit in coop, since it might be required for progression
 		{
 			this.target = string_null; // but don't fire off targets again
 			setthink(this, SUB_regen);
@@ -1900,8 +1887,8 @@ void BackpackTouch(entity this, entity toucher)
 	if(this.realowner && toucher != this.realowner && IS_PLAYER(this.realowner))
 		return; // don't let other players grab a backpack they can't see
 
-	if(MP_ROGUE && toucher == this.owner && ((this.nextthink - time) > 119))
-		return; // don't let owner pick up his own backpack for a second
+	//if(toucher == this.owner && ((this.nextthink - time) > 119))
+		//return; // don't let owner pick up his own backpack for a second
 
 	int newitem = this.weapon;
 	Weapon wep = REGISTRY_GET(Weapons, newitem);
@@ -1953,8 +1940,7 @@ void BackpackTouch(entity this, entity toucher)
 // remove the backpack
 	delete(this);
 
-	if(MP_ROGUE)
-		EnableComboWeapons(toucher);
+	EnableComboWeapons(toucher);
 
 // change to the weapon
 	if(wep != WEP_Null)
@@ -1986,7 +1972,7 @@ void DropBackpack(entity this)
 
 	// Yoder Sept24 2021 Horde Merge
 	// don't drop backpacks in horde mode
-	if(MP_MG && horde_ent)
+	if(horde_ent)
 		return; 
 
 	entity item = spawn();
@@ -2023,13 +2009,9 @@ void DropBackpack(entity this)
 	item.velocity_x = -100 +(random() * 200);
 	item.velocity_y = -100 +(random() * 200);
 
-	if(MP_IMPEL)
-	{
-		item.flags |= FL_ITEM;
-		item.owner = this;
-	}
-	else
-		item.flags = FL_ITEM;
+	item.flags |= FL_ITEM;
+	item.owner = this;
+
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");

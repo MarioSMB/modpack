@@ -28,10 +28,10 @@ void door_blocked(entity this, entity blocker)
 {
 	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 
-	if(MP_IMPEL && (!this.model || this.model == ""))
+	if((!this.model || this.model == ""))
 		return;
 
-	if(MP_MG && (this.spawnflags & DOOR_CRUSHER))
+	if((this.spawnflags & DOOR_CRUSHER))
 		return;
 	
 // if a door has a negative wait, it would never come back if blocked,
@@ -72,7 +72,7 @@ void door_go_down(entity this)
 	}
 	
 	this.state = STATE_DOWN;
-	if(MP_MG && this.speed2)
+	if(this.speed2)
 		SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed2, door_hit_bottom);
 	else
 		SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
@@ -237,7 +237,7 @@ void door_touch(entity this, entity toucher)
 	}
 
 	// Yoder sept24, 2021, horde merge
-	if(MP_MG && horde_ent)
+	if(horde_ent)
 		horde_key_spend(this.items);
 	else // standard behaviour
 		toucher.items &= ~this.items;
@@ -503,7 +503,6 @@ Key doors are allways wait -1.
 
 spawnfunc(func_door)
 {
-	vector oldmovedir = this.movedir;
 	SetMovedir(this);
 	SUB_SetWorldtype(this);
 
@@ -555,24 +554,7 @@ spawnfunc(func_door)
 
 	this.pos1 = this.origin;
 
-	if(MP_ROGUE)
-	{
-		// fix cameron's door
-		vector tmpvec = this.movedir;
-		if(tmpvec.x < 0)
-			tmpvec.x = 0 - tmpvec.x;
-		if(tmpvec.y < 0)
-			tmpvec.y = 0 - tmpvec.y;
-		this.pos2 = this.pos1 + this.movedir * (fabs(tmpvec * this.size) - this.lip);
-	}
-	else
-		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-
-	if(MP_MG && oldmovedir)
-	{
-		this.pos2 = this.pos1 + oldmovedir;
-		this.angles = '0 0 0';
-	}
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position

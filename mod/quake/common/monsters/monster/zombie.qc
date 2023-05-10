@@ -38,12 +38,6 @@ void zombie_stand1(entity this) { set_animofs(this, anim_zombie_stand, 1, zombie
 
 void zombie_lurk(entity this)
 {
-	if(!MP_ROGUE)
-	{
-		this.nextthink = time + 0.1 + random() * 0.1;
-		return;
-	}
-
 	if(this.spawnflags & SPAWN_SNEAKY)
 	{
 		// not pausing before attack, but looking for player
@@ -75,8 +69,7 @@ void zombie_cruc2(entity this) { set_animofs(this, anim_zombie_cruc, 2, zombie_c
 void zombie_cruc1(entity this)
 {
 	set_animofs(this, anim_zombie_cruc, 1, zombie_cruc2);
-	if(MP_ROGUE)
-		zombie_lurk(this);
+	zombie_lurk(this);
 	if(random() < 0.1)
 		_sound(this, CH_VOICE, "zombie/idle_w2.wav", 1, ATTN_STATIC);
 }
@@ -250,8 +243,7 @@ void zombie_attc1(entity this) { set_animofs(this, anim_zombie_attc, 1, zombie_a
 void zombie_missile(entity this)
 {
 	float r = random();
-	if(MP_ROGUE)
-		droptofloor(this);
+	droptofloor(this);
 	
 	if(r < 0.3)
 		zombie_atta1(this);
@@ -343,7 +335,7 @@ void zombie_paind5(entity this) { set_animofs(this, anim_zombie_paind, 5, zombie
 void zombie_paind4(entity this) { set_animofs(this, anim_zombie_paind, 4, zombie_paind5); }
 void zombie_paind3(entity this) { set_animofs(this, anim_zombie_paind, 3, zombie_paind4); }
 void zombie_paind2(entity this) { set_animofs(this, anim_zombie_paind, 2, zombie_paind3); }
-void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) droptofloor(this); }
+void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); droptofloor(this); }
 
 void zombie_paine11(entity this);
 void zombie_paine30(entity this) { set_animofs(this, anim_zombie_paine, 30, zombie_run1); }
@@ -370,31 +362,23 @@ void zombie_paine12(entity this)
 	// see if ok to stand up
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
-	if(MP_ROGUE)
-		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
-	if(MP_ROGUE)
-		droptofloor(this);
+	droptofloor(this);
 	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 	if(trace_startsolid)
 	{
 		setthink(this, zombie_paine11);
-		if(MP_IMPEL)
-			this.nextthink = time + 1;
-		else
-			this.solid = SOLID_NOT;
+		this.nextthink = time + 1;
 		return;
 	}
 }
 void zombie_paine11(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 11, zombie_paine12);
-	if(MP_IMPEL)
-	{
-		this.solid = SOLID_NOT;
-		this.nextthink = time + 5;
-		this.health = 60;
-	}
+	this.solid = SOLID_NOT;
+	this.nextthink = time + 5;
+	this.health = 60;
 	// no infighting!
 	if(!IS_PLAYER(this.oldenemy))
 		this.oldenemy = NULL;
@@ -649,7 +633,7 @@ spawnfunc(monster_zombie)
 		set_movetype(this, MOVETYPE_NONE);
 		zombie_cruc1(this);
 	}
-	else if(MP_ROGUE && (this.spawnflags & SPAWN_LYING))
+	else if((this.spawnflags & SPAWN_LYING))
 	{
 		this.solid = SOLID_NOT;
 		this.th_stand = zombie_sleep;
@@ -665,7 +649,7 @@ spawnfunc(monster_zombie)
 
 		monster_start(this, MON_ZOMBIE);
 	}
-	else if(MP_ROGUE && (this.spawnflags & SPAWN_SNEAKY))
+	else if((this.spawnflags & SPAWN_SNEAKY))
 	{
 		set_movetype(this, MOVETYPE_NONE);
 		this.solid = SOLID_NOT;
@@ -692,12 +676,12 @@ spawnfunc(monster_zombie)
 	}
 	else
 	{
-		if(MP_ROGUE && (this.spawnflags & SPAWN_AMBUSH))
+		if((this.spawnflags & SPAWN_AMBUSH))
 			this.spawnflags = SPAWN_LYING;
 		monster_start(this, MON_ZOMBIE);
 	}
 
-	if(MP_HIPNOTIC && (this.spawnflags & SPAWN_LYINGDOWN))
+	if((this.spawnflags & SPAWN_LYINGDOWN))
 		this.th_stand = zombie_lay;
 }
 #endif // SVQC

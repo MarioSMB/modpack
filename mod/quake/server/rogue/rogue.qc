@@ -15,8 +15,6 @@ PRECACHE(Rogue)
 	if(!MP_ROGUE)
 		return;
 
-	RunePrecache();
-
 	precache_sound("enforcer/enfstop.wav");    // shield impact
 	precache_sound("plasma/explode.wav");
 	precache_sound("plasma/flight.wav");			
@@ -49,7 +47,7 @@ PRECACHE(Rogue)
 
 	// weapons
 	// grapple
-	precache_sound("weapons/chain1.wav");
+	//precache_sound("weapons/chain1.wav");
 //	precache_sound("weapons/chain2.wav");
 //	precache_sound("weapons/chain3.wav");
 //	precache_sound("weapons/bounce2.wav");

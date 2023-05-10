@@ -61,7 +61,6 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.enemy = srcent.enemy;
 	destent.flags = srcent.flags;
 	destent.colormap = srcent.colormap;
-	destent.team = srcent.team;
 	destent.max_health = srcent.max_health;
 	destent.teleport_time = srcent.teleport_time;
 	destent.armortype = srcent.armortype;

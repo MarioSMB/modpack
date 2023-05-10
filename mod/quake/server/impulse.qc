@@ -254,19 +254,15 @@ void CheatCommand(entity this)
 	this.items &= ~(IT_ARMOR1 | IT_ARMOR2);
 	this.items |= IT_ARMOR3;
 
-	if(MP_ROGUE)
-	{
-		this.ammo_lava_nails = 200;
-		this.ammo_multi_rockets = 100;
-		this.ammo_plasma = 100;
-	}
-	if(MP_IMPEL)
-		this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
+	this.ammo_lava_nails = 200;
+	this.ammo_multi_rockets = 100;
+	this.ammo_plasma = 100;
+
+	this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
 
 	W_SwitchWeapon(this, w_getbestweapon(this));
 	this.impulse = 0;
-	if(MP_IMPEL)
-		_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 }
 
 void ImpulseCommands(entity this)

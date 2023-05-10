@@ -42,7 +42,7 @@ void W_FireSpikes(entity this, float ox)
 		return;
 	}
 
-	if(MP_IMPEL && this.silencer)
+	if(this.silencer)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/rocketli.wav", 0.2, ATTN_NORM);
 	else
 		_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);

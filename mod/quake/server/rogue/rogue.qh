@@ -4,7 +4,6 @@
 float earthquake_active;
 float earthquake_intensity;
 float cutscene_running;
-entity tag_token_owner;
 
 .float shield_finished, antigrav_finished;
 .float shield_time, antigrav_time;

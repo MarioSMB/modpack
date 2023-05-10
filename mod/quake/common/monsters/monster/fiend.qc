@@ -66,7 +66,7 @@ void demon1_jump11(entity this) { set_animofs(this, anim_demon_leap, 11, demon1_
 void demon1_jump10(entity this)
 {
 	set_animofs(this, anim_demon_leap, 10, demon1_jump1);
-	if(MP_IMPEL && this.exptime != 0)
+	if(this.exptime != 0)
 		return;
 	// physics says we're on ground
 	if(IS_ONGROUND(this))
@@ -86,7 +86,7 @@ void demon1_jump5(entity this) { set_animofs(this, anim_demon_leap, 5, demon1_ju
 void demon1_jump4(entity this)
 {
 	set_animofs(this, anim_demon_leap, 4, demon1_jump5);
-	if(MP_IMPEL && this.health <= 0)
+	if(this.health <= 0)
 	{
 		dprint("demon1_jump4: dead\n");
 		settouch(this, func_null);
@@ -286,9 +286,9 @@ void Demon_Melee(entity this, float side)
 
 void Demon_JumpTouch(entity this, entity toucher)
 {
-	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
+	if(this.health <= 0 || (!this.takedamage))
 		return;
-		
+
 	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
 	{
 		if(vdist(this.velocity, >, 400))
@@ -302,7 +302,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(IS_ONGROUND(this) && (!MP_IMPEL || this.exptime == 0))
+		if(IS_ONGROUND(this) && this.exptime == 0)
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);

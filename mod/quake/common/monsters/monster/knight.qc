@@ -17,7 +17,7 @@ void kn_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if((this.spawnflags & 2)) // statue)
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
 		else
 			_sound(this, CH_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
@@ -142,7 +142,7 @@ void knight_pain(entity this, entity attacker, float damage, int deathtype)
 
 	float r = random();
 	
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+	if((this.spawnflags & 2)) // statue)
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
@@ -211,7 +211,7 @@ void knight_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_knight.mdl", this.health);
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+		if((this.spawnflags & 2)) // statue)
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -227,7 +227,7 @@ void knight_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 
 // regular death
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if((this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
@@ -282,10 +282,10 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 {
     TC(Knight, this);
 
-    if(MP_ROGUE && (actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
+    if((actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
     	actor.spawnflags &= ~2; // TODO: why would mg be setting this?
 
-	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
+	if((actor.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -305,7 +305,7 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	precache_sound("knight/sword2.wav");
 
     actor.health = 75;
-	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
+	if((actor.spawnflags & 2)) // statue
 	{
 		if(actor.frame == 0)
 			actor.frame = 44;
@@ -336,7 +336,7 @@ METHOD(Knight, mr_sight, bool(Knight this, entity actor))
 {
     TC(Knight, this);
 
-	if(MP_ROGUE && (actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
+	if((actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
 	{
 		actor.enemy = NULL;
 		return false;

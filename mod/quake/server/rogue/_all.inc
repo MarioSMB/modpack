@@ -1,7 +1,3 @@
-#include "teamplay.qc"
-#include "runes.qc"
-#include "motd.qc"
-
 #include "new_ai.qc"
 #include "newplats.qc"
 #include "newmisc.qc"
@@ -13,7 +9,6 @@
 #include "random.qc"
 #include "earthq.qc"
 #include "sphere.qc"
-#include "dmatch.qc"
 
 #include "ending.qc"
 #include "timemach.qc"

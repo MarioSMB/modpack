@@ -142,8 +142,6 @@ void ShalMissile(entity this)
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	if(MP_IMPEL)
-		missile.classname = "missile";
 	_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
@@ -194,7 +192,7 @@ void ShalMissileTouch(entity this, entity toucher)
 */
 spawnfunc(monster_shalrath)
 {
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.2)
+	if(coop == 2 && orig_random(this) < 0.2)
 	{
 		monster_start(this, MON_LEGOND);
 		return;

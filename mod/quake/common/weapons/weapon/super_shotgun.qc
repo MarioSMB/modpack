@@ -22,7 +22,7 @@ METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor))
 {
 	player_shot1(actor);
 	W_FireSuperShotgun(actor);
-	actor.attack_finished = time + RuneApplyHell(0.7, actor);
+	actor.attack_finished = time + 0.7;
 }
 METHOD(SuperShotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

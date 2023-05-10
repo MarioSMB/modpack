@@ -267,7 +267,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(MP_HIPNOTIC && autocvar_g_footsteps == 1 && !gameover)
+	if(autocvar_g_footsteps == 1 && !gameover)
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -300,7 +300,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(MP_IMPEL && autocvar_g_footsteps == 2 && !gameover)
+	if(autocvar_g_footsteps == 2 && !gameover)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -415,8 +415,6 @@ void PainSound(entity this, entity attacker)
 		this.axhitme = false;
 		return;
 	}
-	if(!MP_IMPEL)
-		this.pain_finished = time + 0.5;
 
 // don't make multiple pain sounds right after each other
 
@@ -458,7 +456,7 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 	if(this.weaponentity.m_frame)
 		return;
 
-	if(MP_IMPEL && this.pain_finished > time)
+	if(this.pain_finished > time)
 		return;
 
 	if(this.invisible_finished > time)
@@ -468,8 +466,7 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 		player_axpain1(this, attacker);
 	else
 		player_pain1(this, attacker);
-	if(MP_IMPEL)
-		this.pain_finished = time + 0.5;
+	this.pain_finished = time + 0.5;
 }
 
 void player_diea1(entity this);
@@ -545,21 +542,18 @@ void bubble_remove(entity this, entity toucher)
 
 void bubble_bob(entity this)
 {
-	if(MP_ROGUE)
+	// PGM fix - 02/25/97 so bubbles won't go through walls
+	float bubcont = pointcontents(this.origin);
+	if(bubcont == CONTENT_SOLID)
 	{
-		// PGM fix - 02/25/97 so bubbles won't go through walls
-		float bubcont = pointcontents(this.origin);
-		if(bubcont == CONTENT_SOLID)
-		{
-			delete(this);
-			return;
-		}
-		// PGM fix - 02/25/97 so bubbles pop 2 seconds after leaving water
-		else if(bubcont == CONTENT_EMPTY)
-		{
-			if(this.cnt < 16)
-				this.cnt = 16;
-		}
+		delete(this);
+		return;
+	}
+	// PGM fix - 02/25/97 so bubbles pop 2 seconds after leaving water
+	else if(bubcont == CONTENT_EMPTY)
+	{
+		if(this.cnt < 16)
+			this.cnt = 16;
 	}
 
 	this.cnt = this.cnt + 1;
@@ -678,7 +672,7 @@ vector VelocityForDamage(entity this, float dm)
 	}
 
 	// TODO: damageforcescale support
-	if(MP_IMPEL && this.monsterdef == MON_BLUD)
+	if(this.monsterdef == MON_BLUD)
 		v = v * 2;
 	else if(dm > -50)
 	{
@@ -742,13 +736,13 @@ void ThrowHead(entity this, string gibname, float dm)
 	this.avelocity = crandom() * '0 600 0';
 
 	// Yoder Sept24 2021, Horde Merge
-	if(MP_MG && horde_ent && !IS_PLAYER(this))
+	if(horde_ent && !IS_PLAYER(this))
 	{
 		// only monsters gibs should fade away 
 		setthink(this, MonsterFade);
 		self.nextthink = time + 1;
 	}
-	else if(MP_HIPNOTIC)
+	else
 	{
 		this.gorging = true;
 		setthink(this, HeadThink);
@@ -761,12 +755,12 @@ void CorpseThink(entity this)
 	if(!IS_MONSTER(this))
 		return;
 
-	if(MP_MG && horde_ent)
+	if(horde_ent)
 	{
 		setthink(this, MonsterFade);
 		this.nextthink = time + FADETIME;
 	}
-	else if(MP_IMPEL && corpse_removal)
+	else if(corpse_removal)
 	{
 		setthink(this, SUB_Remove);
 		this.nextthink = time + 30 + (random () * 30);
@@ -778,12 +772,9 @@ void GibPlayer(entity this, entity attacker)
 	ThrowHead(this, get_playerhead(this), this.health);
 	ThrowGib(this, "progs/gib1.mdl", this.health);
 	ThrowGib(this, "progs/gib2.mdl", this.health);
-	if(MP_IMPEL)
-	{
-		ThrowGib(this, "progs/rawbone.mdl", this.health);
-		ThrowGib(this, "progs/rawbone.mdl", this.health);
-		ThrowGib(this, "progs/rawbone2.mdl", this.health);
-	}
+	ThrowGib(this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, "progs/rawbone2.mdl", this.health);
 	ThrowGib(this, "progs/gib3.mdl", this.health);
 
 	this.deadflag = DEAD_DEAD;
@@ -800,21 +791,15 @@ void GibPlayer(entity this, entity attacker)
 		return;
 	}
 		
-	if(random() < ((MP_IMPEL) ? 0.1 : 0.5))
+	if(random() < 0.25)
 	{
-		if(MP_IMPEL)
-		{
-			_sound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
-			_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
-		}
-		else
-			_sound(this, CH_VOICE, "player/gib.wav", 1, ATTN_NONE);
+		_sound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 	}
 	else
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 }
 
-void DropRune(entity this);
 void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	Obituary(attacker, inflictor, this, deathtype);
@@ -839,27 +824,13 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.antigrav_finished = 0;
 
 	if(deathmatch || coop)
-	{
 		DropBackpack(this);
-		if(MP_ROGUE)
-		{
-			TeamDropFlagOfPlayer(this);
-			DropRune(this);
-		}
-	}
-
-	if(MP_ROGUE)
-	if(this.ctf_killed == 2)
-		this.ctf_killed = 0;
-	else
-		this.ctf_killed = 1;
 
 	this.view_ofs = '0 0 -8';
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;
 	UNSET_ONGROUND(this);
-	if(MP_IMPEL)
-		this.effects = 0;
+	this.effects = 0;
 	set_movetype(this, MOVETYPE_TOSS);
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
@@ -974,7 +945,6 @@ void player_die_ax1(entity this) { set_animofs(this, anim_player_axdeth1, 1, pla
 
 void shield_spawn(entity shieldOwner, vector dir);
 
-bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage);
 void player_touch(entity this, entity toucher) 
 {
 	if(this.powerups & POWERUP_SHIELD)
@@ -990,13 +960,6 @@ void player_touch(entity this, entity toucher)
 			makevectors(this.angles);
 		    toucher.velocity = v_forward * 500;
 			toucher.velocity_z = 250;
-	
-			bool doDamage = false;		
-			if(TeamArmorDam(toucher, this, this, 15))
-			{
-				if(this.shield_death_time < time)
-					doDamage = true;
-			}
 
 			// if shield has timed out, respawn it.
 			// don't do particles more than twice a second. 
@@ -1009,8 +972,7 @@ void player_touch(entity this, entity toucher)
 				shield_spawn(this, v_forward);
 			}
 
-			if(doDamage)
-				T_Damage(toucher, this.shield_entity, this.shield_entity, 15, DEATH_SHIELD.m_id);
+			T_Damage(toucher, this.shield_entity, this.shield_entity, 15, DEATH_SHIELD.m_id);
 
 //			this.shield_death_time = time + 0.5;
 		}

@@ -73,7 +73,7 @@ void tbaby_jump1(entity this);
 
 void Tar_JumpTouch(entity this, entity toucher)
 {
-	if(MP_IMPEL && (this.health <= 0 || !this.takedamage))
+	if((this.health <= 0 || !this.takedamage))
 		return;
 	if(toucher.takedamage && toucher.classname != this.classname)
 	{

@@ -25,17 +25,14 @@ Returns false if movement should continue
 */
 bool CheckAttack(entity this)
 {
-	if(MP_IMPEL)
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(this.enemy_range != RANGE_MELEE)
 	{
-		if(this.enemy_range == RANGE_FAR)
+		if(!this.th_missile)
 			return false;
-		if(this.enemy_range != RANGE_MELEE)
-		{
-			if(!this.th_missile)
-				return false;
-			if(time < this.attack_finished)
-				return false;
-		}
+		if(time < this.attack_finished)
+			return false;
 	}
 
 	entity targ = this.enemy;
@@ -59,19 +56,6 @@ bool CheckAttack(entity this)
 			this.th_melee(this);
 			return true;
 		}
-	}
-	
-// missile attack
-	if(!MP_IMPEL)
-	{
-		if(!this.th_missile)
-			return false;
-			
-		if(time < this.attack_finished)
-			return false;
-			
-		if(this.enemy_range == RANGE_FAR)
-			return false;
 	}
 
 	float chance;

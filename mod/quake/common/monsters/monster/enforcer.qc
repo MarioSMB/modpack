@@ -27,7 +27,7 @@ void Laser_Touch(entity this, entity toucher)
 		return;
 	}
 	
-	if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+	if(!(this.spawnflags & SPAWNFLAG_SILENT))
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	vector org = this.origin - 8*normalize(this.velocity);
 
@@ -44,7 +44,7 @@ void Laser_Touch(entity this, entity toucher)
 
 entity LaunchLaser(entity this, vector org, vector vec)
 {
-	if(this.monsterdef == MON_ENFORCER || MP_IMPEL)
+	if(this.monsterdef == MON_ENFORCER)
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 
 	vector vec2 = normalize(vec);
@@ -303,12 +303,12 @@ void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 */
 spawnfunc(monster_enforcer)
 {
-	if(MP_IMPEL && world.model == "maps/aop2m2.bsp")
+	if(world.model == "maps/aop2m2.bsp")
 	{
 		monster_start(this, MON_DARK_KNIGHT);
 		return;
 	}
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, MON_LIGHTNING_ENFORCER);
 		return;

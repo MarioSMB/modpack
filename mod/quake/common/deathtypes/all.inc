@@ -15,7 +15,6 @@ REGISTER_DEATHTYPE(ROT,                     DEATH_SELF_ROT,                 NULL
 REGISTER_DEATHTYPE(SHIELD,                  NULL,                           DEATH_MURDER_SHIELD,            "")
 REGISTER_DEATHTYPE(SLIME,                   DEATH_SELF_SLIME,               DEATH_MURDER_SLIME,             "")
 REGISTER_DEATHTYPE(SPHERE,                  DEATH_SELF_SPHERE,              DEATH_MURDER_SPHERE,            "")
-REGISTER_DEATHTYPE(TEAMCHANGE,              DEATH_SELF_TEAMCHANGE,          NULL,                           "")
 REGISTER_DEATHTYPE(TELEFRAG,                NULL,                           DEATH_MURDER_TELEFRAG,          "")
 REGISTER_DEATHTYPE(TRAP,                    DEATH_SELF_TRAP,                DEATH_MURDER_TRAP,              "")
 REGISTER_DEATHTYPE(VOID,                    DEATH_SELF_VOID,                DEATH_MURDER_VOID,              "")

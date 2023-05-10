@@ -187,11 +187,11 @@ METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor))
 {
 	// player_light1 determines choice of W_FireLightning 
 	//      or W_FirePlasma, but same lighting and frames...
-	//actor.attack_finished = time + RuneApplyHell(1.0, actor);//ooppee edited line out
+	//actor.attack_finished = time + 1.0;//ooppee edited line out
 	//player_light1(actor);//ooppee edited line out
 	player_plasma1(actor); //ooppee added
 	W_FirePlasma(actor); //ooppee added
-	actor.attack_finished = time + RuneApplyHell(1.0, actor); //ooppee added (same as above code but needs to be executed AFTER)
+	actor.attack_finished = time + 1.0; //ooppee added (same as above code but needs to be executed AFTER)
 }
 METHOD(PlasmaGun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

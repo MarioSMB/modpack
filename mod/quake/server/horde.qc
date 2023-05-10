@@ -1439,18 +1439,10 @@ void Horde_SetupSquads()
 	{
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "2 enforcer");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
-		if(MP_HIPNOTIC)
-		{
-			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 scourge");
-		}
-		if(MP_ROGUE)
-		{
-			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 sword");
-		}
-		if(MP_IMPEL)
-		{
-			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 lenforcer");
-		}
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 scourge");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 sword");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 lenforcer");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 cook");
 	}
 
 	// no bosses spawn during army waves
@@ -1465,10 +1457,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 knight");
 		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "2 zombie");
 		Horde_SpawnSquadEntity(HORDE_FODDER, HORDE_SQUAD_TYPE_FLYING, "1 wizard");
-		if(MP_HIPNOTIC)
-		{
-			Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 gremlin");
-		}
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 gremlin");
 	}
 
 	found = false;
@@ -1481,16 +1470,11 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "3 wizard");
 		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_EASY, HORDE_SQUAD_TYPE_FLYING, "2 wizard");
-		if(MP_ROGUE)
-		{
-			Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 wrath");
-		}
-		if(MP_IMPEL)
-		{
-			Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 dknight");
-			Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 dknight");
-			Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
-		}
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 wrath");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 dknight");
+		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 dknight");
+		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 cook");
 	}
 
 	found = false;
@@ -1502,16 +1486,10 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 demon");
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 shambler");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 shalrath");
-		if(MP_ROGUE)
-		{
-			Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 wrath");
-			Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 overlord");
-		}
-		if(MP_IMPEL)
-		{
-			Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 juggernaut");
-			Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
-		}
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 wrath");
+		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 overlord");
+		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 juggernaut");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");

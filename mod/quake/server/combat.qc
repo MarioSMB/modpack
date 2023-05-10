@@ -3,8 +3,6 @@
 #include "horde.qh"
 #include "monsters/ai.qh"
 #include "monsters/monsters.qh"
-#include "rogue/runes.qh"
-#include "rogue/teamplay.qh"
 #include "triggers/triggers.qh"
 
 bool IsExplosionDamage;
@@ -45,7 +43,7 @@ vector qc_aim(entity this, float missilespeed)
 
 	traceline(start, end, MOVE_NORMAL, this);
 
-	if(trace_ent && trace_ent.takedamage == DAMAGE_AIM && (!teamplay || this.team <= 0 || this.team != trace_ent.team))
+	if(trace_ent && trace_ent.takedamage == DAMAGE_AIM)
 	{
 		return v_forward;
 	}
@@ -60,8 +58,6 @@ vector qc_aim(entity this, float missilespeed)
 	{
 		if(it == this)
 			continue;
-		if(teamplay && this.team > 0 && this.team == it.team)
-			continue; // don't aim at teammates
 		end.x = it.origin.x + 0.5 * (it.mins.x + it.maxs.x);
 		end.y = it.origin.y + 0.5 * (it.mins.y + it.maxs.y);
 		end.z = it.origin.z + 0.5 * (it.mins.z + it.maxs.z);
@@ -151,16 +147,13 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
 
-	if(MP_HIPNOTIC)
-	{
-		if(targ.charmed)
-			targ.effects &= ~EF_DIMLIGHT;
-		targ.effects &= ~EF_BRIGHTFIELD;
-	}
+	if(targ.charmed)
+		targ.effects &= ~EF_DIMLIGHT;
+	targ.effects &= ~EF_BRIGHTFIELD;
 
 	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
-		if(MP_MG && (targ.classname == "misc_explobox" || targ.classname == "misc_explobox2"))
+		if(targ.classname == "misc_explobox" || targ.classname == "misc_explobox2")
 			targ.enemy = attacker;
 		if(targ.th_die)
 			targ.th_die(targ, inflictor, attacker, deathtype);
@@ -174,7 +167,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	targ.enemy = attacker;
 
 	// Yoder March04 2022, punish team killspree
-	if(MP_MG && autocvar_horde && IS_PLAYER(attacker) && IS_PLAYER(targ))
+	if(horde_ent && IS_PLAYER(attacker) && IS_PLAYER(targ))
 	{
 		LOG_DEBUG("punish teamkill");
 		attacker.killtime = 0;
@@ -185,7 +178,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(IS_MONSTER(targ))
 	{
 		// Yoder Sept24, 2021 Horde Merge
-		if(MP_MG && horde_ent)
+		if(horde_ent)
 		{
 			if(targ.monsterdef && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
 				monsters_killed += 1;
@@ -237,16 +230,14 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			monsters_killed += 1;
 		if(IS_PLAYER(attacker))
 			attacker.frags += 1;
-		if(MP_MG && horde_ent)
+		if(horde_ent)
 			Horde_GiveScore(HORDE_SCORE_KILL);
 	}
 
-	if(MP_ROGUE)
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
 		targ.health = -99;
 
-	if(MP_ROGUE)
-		targ.gravity = 1.0;
+	targ.gravity = 1.0;
 
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
@@ -255,13 +246,13 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	targ.flags &= ~FL_FLY;
 	targ.flags &= ~FL_SWIM;
 
-	if(MP_MG && IS_MONSTER(targ) && autocvar_horde && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+	if(IS_MONSTER(targ) && horde_ent && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		remote_wavecheck(targ);
 
 	if(targ.target && targ.target != "")
 		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
 
-	if(MP_IMPEL && inflictor.classname == "impaler")
+	if(inflictor.classname == "impaler")
 		impale(targ);
 	else if(targ.th_die)
 		targ.th_die(targ, inflictor, attacker, deathtype);
@@ -289,20 +280,21 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 
 	// Yoder add, September 9 2020
-	if(MP_MG && targ.is_frozen)
+	if(targ.is_frozen)
 		return;
 
 	// shub kill crash fix.
+	// TODO
 	if(!MP_MG && targ.monsterdef == MON_SHUB && damage < 9999)
 		return;
 
-	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
+	if(discharged && targ.wetsuit_finished)
 		return;
-	if(MP_ROGUE && targ.classname == "trigger_explosion" && !IsExplosionDamage)
+	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
 	IsExplosionDamage = false;
 
-	if(MP_ROGUE && (targ.powerups & POWERUP_SHIELD))
+	if(targ.powerups & POWERUP_SHIELD)
 	{
 		// allow some damage to pass through
 		damage = shield_hit(targ, inflictor, attacker, damage);
@@ -314,27 +306,19 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(attacker.super_damage_finished > time)
 		damage = damage * 4;
 
-	if(MP_HIPNOTIC)
+	if((targ.powerups & POWERUP_EMPATHY_SHIELDS) && !(inflictor.powerups & POWERUP_EMPATHY_SHIELDS) && (targ != attacker))
 	{
-		if ((targ.powerups & POWERUP_EMPATHY_SHIELDS) && !(inflictor.powerups & POWERUP_EMPATHY_SHIELDS) && (targ != attacker))
-		{
-			empathyused = true;
-			damage = damage/2;
-			T_Damage(attacker, targ, targ, damage, deathtype);
-			empathyused = false;
-		}
+		empathyused = true;
+		damage = damage/2;
+		T_Damage(attacker, targ, targ, damage, deathtype);
+		empathyused = false;
 	}
 
 	damage_inflictor = inflictor; // hipnotic
 
-	if(MP_ROGUE && deathmatch)
-		damage = RuneApplyBlack(damage, attacker);
-
 // save damage based on the target's armor level
 
 	float save = ceil(targ.armortype * damage);
-	if(MP_ROGUE && !TeamArmorDam(targ, inflictor, attacker, damage))
-		save = 0;
 	if(DEATH_IS(deathtype, DEATH_DROWN))
 		save = 0;
 
@@ -371,45 +355,29 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	}
 
-	if(MP_MG)
+	// special case for killable chthon (yoder, december 16 2020)
+	if(targ.monsterdef == MON_CHTHON && (targ.spawnflags & 2)) // is killable chthon
 	{
-		// special case for killable chthon (yoder, december 16 2020)
-		if(targ.monsterdef == MON_CHTHON && (targ.spawnflags & 2)) // is killable chthon
+		if(deathtype == WEP_LIGHTNING.m_id)
 		{
-			if(deathtype == WEP_LIGHTNING.m_id)
-			{
-				// TODO: Spawn blood
-				//LOG_DEBUG("Player has LG! Damage Chthon!");
-			}
-			else
-			{
-				//LOG_DEBUG("player attacked with non-lightning weapon. Do nothing.");
-				return;
-			}
+			// TODO: Spawn blood
+			//LOG_DEBUG("Player has LG! Damage Chthon!");
+		}
+		else
+		{
+			//LOG_DEBUG("player attacked with non-lightning weapon. Do nothing.");
+			return;
 		}
 	}
 
-	if(MP_HIPNOTIC)
+	if(targ.powerups & POWERUP_EMPATHY_SHIELDS)
 	{
-		if(targ.powerups & POWERUP_EMPATHY_SHIELDS)
+		if(targ.empathy_sound < time)
 		{
-			if(targ.empathy_sound < time)
-			{
-				_sound(targ, CH_TRIGGER_SINGLE, "hipitems/empathy2.wav", 1, ATTN_NORM);
-				targ.empathy_sound = time + 0.5;
-			}
+			_sound(targ, CH_TRIGGER_SINGLE, "hipitems/empathy2.wav", 1, ATTN_NORM);
+			targ.empathy_sound = time + 0.5;
 		}
 	}
-
-// team play damage avoidance
-	if(teamplay == 1 && targ != attacker && targ.team > 0 && targ.team == attacker.team)
-		return;
-
-	if(MP_ROGUE && !TeamHealthDam(targ, inflictor, attacker, damage))
-		return; // same team
-
-	if(MP_ROGUE && deathmatch)
-		take = RuneApplyEarth(take, targ);
 
 // coop damage avoidance (if enabled)
 	if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
@@ -420,8 +388,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 		
 // do the damage
-	if(MP_IMPEL && targ.field_generator_finished > time
-		&& inflictor.classname != "grenade" && inflictor.classname != "ogre_grenade" && inflictor.classname != "missile" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
+	if(targ.field_generator_finished > time
+		&& inflictor.classname != "grenade" && inflictor.classname != "ogre_grenade" && inflictor.classname != "missile" && inflictor.classname != "vore_ball" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
 		&& !(!inflictor && targ.watertype == CONTENT_WATER) && !(!inflictor && targ.jump_flag < -650))
 	{
 		if(r < 0.3)
@@ -466,7 +434,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		{
 			if(targ.classname != attacker.classname || (targ.monsterdef.spawnflags & MON_FLAG_INFIGHT))
 			{
-				if(coop || (MP_MG && autocvar_horde))
+				if(coop || autocvar_horde)
 				{
 					// yoder Sept24, 2021
 					// if in horde mode, have enemies obey a reaggro time
@@ -505,7 +473,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
-	if(targ.th_pain && (!MP_IMPEL || showpain))
+	if(targ.th_pain && showpain)
 	{
 		targ.th_pain(targ, attacker, take, deathtype);
 	// nightmare mode monsters don't go into pain frames often
@@ -522,9 +490,9 @@ T_RadiusDamage
 bool inside_radius = false;
 void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore)
 {
-	if(MP_IMPEL && inside_radius)
+	if(inside_radius)
 	{
-		error("T_RadiusDamage: recursive");
+		LOG_FATAL("T_RadiusDamage: recursive");
 		return;
 	}
 	inside_radius = true;

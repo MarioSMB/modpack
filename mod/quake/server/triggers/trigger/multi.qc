@@ -50,7 +50,7 @@ void multi_trigger(entity this)
 		setthink(this, SUB_Remove);
 	}
 
-	if(MP_HIPNOTIC && this.cnt > 0)
+	if(this.cnt > 0)
 	{
 		this.cnt = this.cnt - 1;
 		if(this.cnt == 0)
@@ -163,7 +163,7 @@ spawnfunc(trigger_multiple)
 	else if(!(this.spawnflags & SPAWNFLAG_NOTOUCH))
 			settouch(this, multi_touch);
 
-	if(MP_HIPNOTIC && !this.cnt)
+	if(!this.cnt)
 		this.cnt = -1;
 }
 

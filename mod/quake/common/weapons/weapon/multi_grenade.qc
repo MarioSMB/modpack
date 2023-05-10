@@ -19,7 +19,7 @@ void MiniGrenadeLaunch(entity this, float offsetAngle)
 	missile.owner = this.owner;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.projectiledeathtype = WEP_MULTI_GRENADE.m_id;
+	missile.projectiledeathtype = this.projectiledeathtype;
 		
 // set missile speed	
 	missile.v_angle = this.v_angle;
@@ -93,6 +93,7 @@ void W_FireMultiGrenade(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	missile.projectiledeathtype = WEP_MULTI_GRENADE.m_id;
 		
 // set missile speed	
 	makevectors(this.v_angle);
@@ -122,7 +123,7 @@ METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor))
 {
 	player_rocket1(actor);
 	W_FireMultiGrenade(actor);
-	actor.attack_finished = time + RuneApplyHell(0.6, actor);
+	actor.attack_finished = time + 0.6;
 }
 METHOD(MultiGrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

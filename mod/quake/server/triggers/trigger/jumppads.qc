@@ -13,7 +13,7 @@ void trigger_push_touch(entity this, entity toucher)
 
 	// yoder Sept 24 2021 horde merge
 	
-	if(MP_MG && horde_ent)
+	if(horde_ent)
 	{
 		if(toucher.spawnflags & PUSH_START_OFF) // ignore this spawnflag in horde mode
 			toucher.spawnflags &= ~PUSH_START_OFF;
@@ -22,7 +22,7 @@ void trigger_push_touch(entity this, entity toucher)
 		{
 			if((toucher.classname == "item_artifact_invulnerability") || (toucher.classname == "item_artifact_super_damage"))
 			{
-				if(MP_MG && (this.spawnflags & ADDITIVE_PUSH))
+				if((this.spawnflags & ADDITIVE_PUSH))
 					toucher.velocity = toucher.velocity + (this.speed * this.movedir * 10 * frametime); 
 				else
 					toucher.velocity = this.speed * this.movedir * 10;
@@ -33,9 +33,9 @@ void trigger_push_touch(entity this, entity toucher)
 
 	if(toucher.health > 0 || toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
 	{
-		if(MP_MG && (toucher.flags & FL_INSHELTER))
+		if((toucher.flags & FL_INSHELTER))
 			return;
-		if(MP_MG && (this.spawnflags & ADDITIVE_PUSH)) // yoder add, Jan 28 2021
+		if((this.spawnflags & ADDITIVE_PUSH)) // yoder add, Jan 28 2021
 			toucher.velocity = toucher.velocity + this.speed * this.movedir * 10 * frametime;
 		else
 			toucher.velocity = this.speed * this.movedir * 10;
@@ -69,8 +69,7 @@ speed: velocity of push. (default 1000)
 */
 spawnfunc(trigger_push)
 {
-	if(MP_MG || MP_ROGUE)
-		this.use = trigger_push_use;
+	this.use = trigger_push_use;
 
 	InitTrigger(this);
 	precache_sound("ambience/windfly.wav");
@@ -81,7 +80,7 @@ spawnfunc(trigger_push)
 	this.active = ACTIVE_ACTIVE;
 
 	// we're on a rogue campaign map, disable toggle flag which overlaps with additive, toggling handled automatically
-	if(MP_ROGUE && substring(world.model, 0, 6) == "maps/r")
+	if(substring(world.model, 0, 6) == "maps/r")
 	{
 		// jumppads with the toggle flag aren't active by default unless specified
 		if(!(this.spawnflags & PUSH_ACTIVE) && (this.spawnflags & PUSH_TOGL))
@@ -90,7 +89,7 @@ spawnfunc(trigger_push)
 		return; // avoid mg's handling in this case
 	}
 
-	if(MP_MG && (this.spawnflags & PUSH_START_OFF))
+	if((this.spawnflags & PUSH_START_OFF))
 		this.active = ACTIVE_NOT;
 }
 
@@ -105,7 +104,7 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 
 	// yoder add, July 10th 2020
 	// making it so trigger_monsterjump's with spawnflag 8 only affect monsters with spawnflag 8
-	if(MP_MG && (this.spawnflags & 64))
+	if((this.spawnflags & 64))
 	{
 		if(!(toucher.spawnflags & 64))
 		{
@@ -125,7 +124,7 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 
 	toucher.velocity_z = this.height;
 
-	if(MP_HIPNOTIC && this.cnt > 0)
+	if(this.cnt > 0)
 	{
 		this.cnt -= 1;
 		if(this.cnt == 0)
@@ -154,7 +153,7 @@ spawnfunc(trigger_monsterjump)
 	InitTrigger(this);
 	settouch(this, trigger_monsterjump_touch);
 
-	if(MP_HIPNOTIC && !this.cnt)
+	if(!this.cnt)
 		this.cnt = -1;
 }
 

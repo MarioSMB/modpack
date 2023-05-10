@@ -42,7 +42,7 @@ void dog_bite(entity this)
 
 void Dog_JumpTouch(entity this, entity toucher)
 {
-	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
+	if(this.health <= 0 || !this.takedamage)
 		return;
 		
 	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
@@ -58,7 +58,7 @@ void Dog_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(IS_ONGROUND(this) && (!MP_IMPEL || this.exptime == 0))
+		if(IS_ONGROUND(this) && this.exptime == 0)
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -74,7 +74,7 @@ void Dog_JumpTouch(entity this, entity toucher)
 	}
 
 	settouch(this, func_null);
-	if(MP_IMPEL && this.exptime != 0)
+	if(this.exptime != 0)
 		return;
 
 	setthink(this, dog_run1);
@@ -161,7 +161,7 @@ void dog_leap2(entity this) { set_animofs(this, anim_dog_leap, 2, dog_leap3); ai
 void dog_leap1(entity this)
 {
 	set_animofs(this, anim_dog_leap, 1, dog_leap2);
-	if(MP_IMPEL && this.health <= 0)
+	if(this.health <= 0)
 	{
 		LOG_DEBUG("dog_leap2: dead");
 		settouch(this, func_null);
@@ -257,12 +257,9 @@ void dog_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
-		if(MP_IMPEL)
-		{
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-			ThrowGib(this, "progs/grenbone.mdl", this.health);
-		}
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, "progs/grenbone.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowHead(this, "progs/h_dog.mdl", this.health);
@@ -347,7 +344,7 @@ bool DogCheckAttack(entity this)
 */
 spawnfunc(monster_dog)
 {
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, MON_SPIDER_DROID);
 		return;
@@ -361,8 +358,7 @@ METHOD(Rottweiler, mr_setup, bool(Rottweiler this, entity actor))
 {
     TC(Rottweiler, this);
 
-	if(MP_IMPEL)
-		precache_model("progs/grenbone.mdl");
+	precache_model("progs/grenbone.mdl");
 	precache_sound("dog/dattack1.wav");
 	precache_sound("dog/ddeath.wav");
 	precache_sound("dog/dpain1.wav");

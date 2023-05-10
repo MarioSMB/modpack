@@ -6,13 +6,8 @@ string Sbar_PickWeapon_wepname(Weapon wpn)
 	if(img != "")
 		return img;
 
-	// defaults
-	if(MP_HIPNOTIC)
-		return "laser";
-	else if(MP_ROGUE)
-		return "r_lava";
-	else
-		return "shotgun";
+	// fallback to shotgun icon?
+	return "shotgun";
 }
 
 bool katria_face_exists;
@@ -27,17 +22,10 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/finale");
 	precache_pic("gfx/quake/inter");
 
-	if(MP_ROGUE)
-	{
-		precache_pic("gfx/quake/r_invbar1");
-		precache_pic("gfx/quake/r_invbar2");
-	}
+	precache_pic("gfx/quake/r_invbar1");
+	precache_pic("gfx/quake/r_invbar2");
 
-	precache_pic("gfx/quake/sbar");
-	if(!MP_ROGUE)
-		precache_pic("gfx/quake/ibar");
-
-	FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_HIPNOTIC) && !(it.spawnflags & WEP_FLAG_ROGUE) && !(it.spawnflags & WEP_FLAG_IMPEL),
+	FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_IMPEL),
 	{
 		precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it)));
 		precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it)));
@@ -45,35 +33,9 @@ PRECACHE(Sbar)
 
 	for(int j = 0; j < 5; j++)
 	{
-		FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_HIPNOTIC) && !(it.spawnflags & WEP_FLAG_ROGUE) && !(it.spawnflags & WEP_FLAG_IMPEL),
+		FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_IMPEL),
 		{
 			precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(it)));
-		});
-	}
-
-	if(MP_HIPNOTIC)
-	{
-		FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIPNOTIC),
-		{
-			precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it)));
-			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it)));
-		});
-
-		for(int j = 0; j < 5; j++)
-		{
-			FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIPNOTIC),
-			{
-				precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(it)));
-			});
-		}
-	}
-
-	if(MP_ROGUE)
-	{
-		FOREACH(Weapons, (it.spawnflags & WEP_FLAG_ROGUE),
-		{
-			precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it)));
-			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it)));
 		});
 	}
 
@@ -146,21 +108,15 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/sb_rocket");
 	precache_pic("gfx/quake/sb_cells");
 
-	if(MP_HIPNOTIC)
-	{
-		precache_pic("gfx/quake/sb_wsuit");
-		precache_pic("gfx/quake/sb_eshld");
-	}
+	precache_pic("gfx/quake/sb_wsuit");
+	precache_pic("gfx/quake/sb_eshld");
 
-	if(MP_ROGUE)
-	{
-		precache_pic("gfx/quake/r_shield1");
-		precache_pic("gfx/quake/r_agrav1");
+	precache_pic("gfx/quake/r_shield1");
+	precache_pic("gfx/quake/r_agrav1");
 
-		precache_pic("gfx/quake/r_ammolava");
-		precache_pic("gfx/quake/r_ammomulti");
-		precache_pic("gfx/quake/r_ammoplasma");
-	}
+	precache_pic("gfx/quake/r_ammolava");
+	precache_pic("gfx/quake/r_ammomulti");
+	precache_pic("gfx/quake/r_ammoplasma");
 }
 
 string Sbar_PickWeapon_inva(int cnum)
@@ -506,7 +462,7 @@ void Sbar_Score(int margin)
 	sbar.x -= margin;
 
 	int me = player_localnum; // was -1
-	if(MP_MG && STAT(HORDE))
+	if(STAT(HORDE))
 	{
 		int score = stoi(getplayerkeyvalue(me, "frags"));
 		Sbar_DrawXNum(vec2(-3*12, -12), score, 3, 12, '1 1 1');
@@ -900,15 +856,10 @@ void Sbar_DrawInventory()
 	}
 	oldweapons = myweapons;
 
-	if(MP_ROGUE)
-	{
-		if(WeaponIsFromRogue(viewmodels.activeweapon))
-			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
-		else
-			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
-	}
+	if(WeaponIsFromRogue(viewmodels.activeweapon))
+		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
 	else
-		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
+		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
 
 	// weapons
 	int wep_pos = 0;
@@ -932,58 +883,44 @@ void Sbar_DrawInventory()
 	for(int j = 0; j < 4; j++)
 	{
 		int itemstat;
-		bool alt = (MP_ROGUE && WeaponIsFromRogue(viewmodels.activeweapon));
 		switch(j)
 		{
 			default:
 			case 0: itemstat = getstati(STAT_SHELLS); break;
-			case 1: itemstat = ((alt) ? STAT(LAVA_NAILS) : getstati(STAT_NAILS)); break;
-			case 2: itemstat = ((alt) ? STAT(MULTI_ROCKETS) : getstati(STAT_ROCKETS)); break;
-			case 3: itemstat = ((alt) ? STAT(PLASMA_AMMO) : getstati(STAT_CELLS)); break;
+			case 1: itemstat = ((viewmodels.activeweapon.ammo_type == IT_LAVA_NAILS) ? STAT(LAVA_NAILS) : getstati(STAT_NAILS)); break;
+			case 2: itemstat = ((viewmodels.activeweapon.ammo_type == IT_MULTI_ROCKETS) ? STAT(MULTI_ROCKETS) : getstati(STAT_ROCKETS)); break;
+			case 3: itemstat = ((viewmodels.activeweapon.ammo_type == IT_PLASMA_AMMO) ? STAT(PLASMA_AMMO) : getstati(STAT_CELLS)); break;
 		}
 		Sbar_DrawString(vec2((6 * j + ((j < 2) ? j : 0.5)) * 8, -24), ftos(itemstat));
 	}
 
 	// items
-	if(!MP_HIPNOTIC)
+	// TODO: cleanup this mess
+	// keys
+	if(myitems & IT_KEY1)
+		Sbar_DrawPic(vec2(192 + 1 * 16, -16), "gfx/quake/sb_key1");
+	if(myitems & IT_KEY2)
+		Sbar_DrawPic(vec2(192 + 2 * 16, -16), "gfx/quake/sb_key2");
+	// base powerups
+	for(int j = 2; j < 6; j++)
 	{
-		// TODO: cleanup this mess
-		// keys
-		for(int j = 0; j < 2; j++)
+		if(mypowerups & BIT(j - 2))
 		{
-			if(myitems & BIT(8 + j))
-			{
-				//MED 01/04/97 changed keys
-				if(j > 1)
-					Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
-			}
-		}
-		// base powerups
-		for(int j = 2; j < 6; j++)
-		{
-			if(mypowerups & BIT(j - 2))
-			{
-				if(j > 1)
-					Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
-			}
+			if(j > 1)
+				Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
 		}
 	}
 
-	if(MP_HIPNOTIC)
-	{
-		if(mypowerups & POWERUP_WETSUIT)
-			Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");
-		if(mypowerups & POWERUP_EMPATHY_SHIELDS)
-			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/sb_eshld");
-	}
+	// TODO: unique positions for multiple powerups?
+	if(mypowerups & POWERUP_WETSUIT)
+		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");
+	if(mypowerups & POWERUP_EMPATHY_SHIELDS)
+		Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/sb_eshld");
 
-	if(MP_ROGUE)
-	{
-		if(mypowerups & POWERUP_SHIELD)
-			Sbar_DrawPic('288 -16 0', "gfx/quake/r_shield1");
-		if(mypowerups & POWERUP_ANTIGRAV)
-			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
-	}
+	if(mypowerups & POWERUP_SHIELD)
+		Sbar_DrawPic('288 -16 0', "gfx/quake/r_shield1");
+	if(mypowerups & POWERUP_ANTIGRAV)
+		Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
 
 	// sigils
 	for(int j = 0; j < 4; j++)

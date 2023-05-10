@@ -124,15 +124,6 @@ If the trigger_teleport has a targetname, it will only teleport entities when it
 */
 spawnfunc(trigger_teleport)
 {
-	if(MP_ROGUE && (this.spawnflags & CTF_ONLY))
-	{
-		if(teamplay < TEAM_CTF || teamplay > TEAM_CTF_ALT)
-		{
-			delete(this);
-			return;
-		}
-	}
-
 	InitTrigger(this);
 	settouch(this, teleport_touch);
 	// find the destination 
@@ -147,11 +138,8 @@ spawnfunc(trigger_teleport)
 		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
 	}
 
-	if(MP_IMPEL)
-	{
-		this.nextthink = this.nextthink + 0.5;
-		setthink(this, trigger_start_go);
-	}
+	this.nextthink = this.nextthink + 0.5;
+	setthink(this, trigger_start_go);
 }
 
 void effect_teleport_use(entity this, entity actor, entity trigger)

@@ -8,9 +8,6 @@ void StopEarthQuake()
 
 PRECACHE(EarthQuake)
 {
-	if(!MP_HIPNOTIC)
-		return;
-
 	StopEarthQuake(); // reset it on init
 }
 

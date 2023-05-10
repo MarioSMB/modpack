@@ -187,31 +187,26 @@ SpawnBlood
 */
 void SpawnBlood(vector org, vector vel, float damage, entity targ)
 {
-	if(MP_IMPEL)
+	float r = random();
+	if(targ.takedamage != DAMAGE_AIM || targ.classname == "misc_explobox" || targ.classname == "wall_explode" || targ.classname == "misc_explobox2")
+		te_gunshot(org);
+	else
 	{
-		float r = random();
-		if(targ.takedamage != DAMAGE_AIM || targ.classname == "misc_explobox" || targ.classname == "wall_explode" || targ.classname == "misc_explobox2")
-			te_gunshot(org);
+		if(targ.monsterdef.spawnflags & MON_FLAG_METAL)
+			particle(org, vel * 0.1, 5, damage * 2);
 		else
 		{
-			if(targ.monsterdef.spawnflags & MON_FLAG_METAL)
-				particle(org, vel * 0.1, 5, damage * 2);
+			r = random();
+			if(r < 0.7)
+				particle(org, vel * 0.1, 73, damage * 2);
 			else
 			{
-				r = random();
-				if(r < 0.7)
-					particle(org, vel * 0.1, 73, damage * 2);
-				else
-				{
-					particle(org, vel * 0.1, 79, damage * 1);
-					particle(org, vel * 0.25, 74, damage * 5);
-					particle(org, vel * 0.15, 69, damage * 2);
-				}
+				particle(org, vel * 0.1, 79, damage * 1);
+				particle(org, vel * 0.25, 74, damage * 5);
+				particle(org, vel * 0.15, 69, damage * 2);
 			}
 		}
 	}
-	else
-		particle(org, vel * 0.1, 73, damage * 2);
 }
 
 /*
@@ -330,14 +325,14 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread, int deat
 		{
 			TraceAttack(4, direction, deathtype);
 
-			if(MP_HIPNOTIC && !bullet && !trace_ent)
+			if(!bullet && !trace_ent)
 			{
 				placebullethole(trace_endpos);
 				bullet = true;
 			}
 		}
 
-		shotcount = shotcount - 1;
+		shotcount -= 1;
 	}
 	ApplyMultiDamage(this);
 }
@@ -880,7 +875,7 @@ vector VelocityForJump(entity this, entity targ, float dm)
 
 	if(targ.classname == "spark")
 		return '0 0 0';
-	else if(targ.classname == "missile")
+	else if(targ.classname == "missile" || targ.classname == "vore_ball")
 		return '0 0 0';
 	else if(((targ.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (targ.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)) && targ.health > 16)
 		return '0 0 0';
@@ -1047,15 +1042,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	traceline(p1, p2, false, from);
 	if(trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		if(MP_IMPEL)
-		{
-			if(trace_ent.takedamage == DAMAGE_AIM)
-			{
-				particle(trace_endpos, '0 0 100', 225, damage * 4);
-			}
-		}
-		else
-			particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(trace_ent.takedamage == DAMAGE_AIM)
+			particle(trace_endpos, '0 0 100', 225, damage * 4);
 		T_Damage(trace_ent, from, from, damage, deathtype);
 		if(IS_PLAYER(from))
 		{
@@ -1068,15 +1056,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	traceline(p1 + f, p2 + f, false, from);
 	if(trace_ent != e1 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		if(MP_IMPEL)
-		{
-			if(trace_ent.takedamage == DAMAGE_AIM)
-			{
-				particle(trace_endpos, '0 0 100', 225, damage * 4);
-			}
-		}
-		else
-			particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(trace_ent.takedamage == DAMAGE_AIM)
+			particle(trace_endpos, '0 0 100', 225, damage * 4);
 		T_Damage(trace_ent, from, from, damage, deathtype);
 	}
 	entity e2 = trace_ent;
@@ -1084,15 +1065,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	traceline(p1 - f, p2 - f, false, from);
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		if(MP_IMPEL)
-		{
-			if(trace_ent.takedamage == DAMAGE_AIM)
-			{
-				particle(trace_endpos, '0 0 100', 225, damage * 4);
-			}
-		}
-		else
-			particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(trace_ent.takedamage == DAMAGE_AIM)
+			particle(trace_endpos, '0 0 100', 225, damage * 4);
 		T_Damage(trace_ent, from, from, damage, deathtype);
 	}
 }
@@ -1517,7 +1491,7 @@ PLAYER WEAPON USE
 
 void W_SetCurrentAmmo(entity this)
 {
-	if(MP_IMPEL && this.exptime != 0)
+	if(this.exptime != 0)
 		return;
 	player_run(this);		// get out of any weapon firing states
 
@@ -1538,13 +1512,9 @@ An attack impulse can be triggered now
 ============
 */
 
-
-void RuneApplyBlackNoise(entity who);
-float RuneApplyHell(float tvalue, entity who);
-
 void W_Attack(entity this, bool offhand)
 {
-	if(MP_IMPEL && this.exptime != 0)
+	if(this.exptime != 0)
 		return;
 	if(offhand)
 	{
@@ -1621,8 +1591,6 @@ void W_Attack(entity this, bool offhand)
 
 		return;
 	}
-
-	RuneApplyBlackNoise(this); // make rune noise
 
 	Weapon wep = this.weaponentity.m_weapon;
 	if(wep != WEP_Null)

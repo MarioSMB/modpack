@@ -75,10 +75,7 @@ void W_FireSuperSpikes(entity this)
 	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	newmis.projectiledeathtype = WEP_SUPER_NAILGUN.m_id;
-	if(MP_IMPEL)
-		newmis.classname = "superspike";
-	else
-		newmis.classname = "super_spike";
+	newmis.classname = "super_spike";
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		

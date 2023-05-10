@@ -71,7 +71,7 @@ METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor))
 {
 	player_rocket1(actor);
 	W_FireGrenade(actor);
-	actor.attack_finished = time + RuneApplyHell(0.6, actor);
+	actor.attack_finished = time + 0.6;
 }
 METHOD(GrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

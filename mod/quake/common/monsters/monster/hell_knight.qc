@@ -135,7 +135,7 @@ void hknight_pain2(entity this) { set_animofs(this, anim_hknight_pain, 2, hknigh
 void hknight_pain1(entity this)
 {
 	set_animofs(this, anim_hknight_pain, 1, hknight_pain2);
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if((this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
@@ -181,7 +181,7 @@ void hknight_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		if((this.spawnflags & 2)) // statue
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
 			ThrowGib(this, "progs/statgib2.mdl", this.health);
@@ -198,7 +198,7 @@ void hknight_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 
 // regular death
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if((this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
@@ -343,7 +343,7 @@ void hk_idle_sound(entity this)
 {
 	if(random() < 0.2)
 	{
-		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		if((this.spawnflags & 2)) // statue
 			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_NORM);
 		else
 			_sound(this, CH_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
@@ -352,28 +352,25 @@ void hk_idle_sound(entity this)
 
 void hknight_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	if(MP_IMPEL && (random() * 30) > damage)
+	if((random() * 30) > damage)
 		return;
 
 	if(this.pain_finished > time)
 		return;
 
-	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	if((this.spawnflags & 2)) // statue
 		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
 
-	if(!MP_IMPEL && time - this.pain_finished > 5)
+	if(time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
 		hknight_pain1(this);
 		this.pain_finished = time + 1;
 		return;
 	}
-	
-	if(!MP_IMPEL && (random()*30 > damage) )
-		return;		// didn't flinch
 
-	this.pain_finished = time + ((MP_IMPEL) ? 2 : 1);
+	this.pain_finished = time + 2;
 	hknight_pain1(this);
 }
 
@@ -433,7 +430,7 @@ frame: frame to be frozen in. (default 73)
 */
 spawnfunc(monster_hell_knight)
 {
-	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, MON_DARK_KNIGHT);
 		return;
@@ -447,10 +444,10 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 {
     TC(HellKnight, this);
 
-    if(MP_ROGUE && (actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
+    if((actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
     	actor.spawnflags &= ~2; // TODO: why would mg be setting this?
 
-	if(MP_ROGUE && (actor.spawnflags & 2)) // statue
+	if((actor.spawnflags & 2)) // statue
 	{
 		precache_model("progs/statgib1.mdl");
 		precache_model("progs/statgib2.mdl");
@@ -476,7 +473,7 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 	precache_sound("knight/sword2.wav");
 
 	actor.health = 250;
-    if(MP_ROGUE && (actor.spawnflags & 2)) // statue
+    if((actor.spawnflags & 2)) // statue
 	{
 		if(actor.frame == 0)
 			actor.frame = 73;
@@ -507,7 +504,7 @@ METHOD(HellKnight, mr_sight, bool(HellKnight this, entity actor))
 {
     TC(HellKnight, this);
 
-	if(MP_ROGUE && (actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
+	if((actor.spawnflags & 2) && actor.takedamage == DAMAGE_NO)
 	{
 		actor.enemy = NULL;
 		return false;

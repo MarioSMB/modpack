@@ -16,7 +16,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor))
 {
 	player_shot1(actor);
 	W_FireShotgun(actor);
-	actor.attack_finished = time + RuneApplyHell(0.5, actor);
+	actor.attack_finished = time + 0.5;
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

@@ -1326,10 +1326,6 @@ void Gremlin_Damage(entity targ, entity inflictor, entity attacker, float damage
 		return;
 	}
 
-// team play damage avoidance
-	if((teamplay == 1) && (targ.team > 0) && (targ.team == attacker.team) )
-		return;
-
 // do the damage
 	targ.health -= damage;
 }

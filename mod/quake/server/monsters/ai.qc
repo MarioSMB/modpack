@@ -480,12 +480,12 @@ void t_movetarget(entity this, entity toucher)
 			toucher.th_stand(toucher);
 			return;
 		}
-		else if(MP_MG && this.wait)
+		else if(this.wait)
 		{
 			toucher.pausetime = time + this.wait;
 			toucher.th_stand(toucher);
 		}
-		else if(MP_HIPNOTIC && this.delay)
+		else if(this.delay)
 		{
 			toucher.pausetime = time + this.delay;
 			toucher.th_stand(toucher);
@@ -908,7 +908,7 @@ void FoundTarget(entity this)
 
 	if(IS_PLAYER(this.enemy))
 	{
-		if(MP_HIPNOTIC && this.charmed && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
+		if(this.charmed && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
 		{
 			this.enemy = NULL;
 			return;
@@ -918,7 +918,7 @@ void FoundTarget(entity this)
 		sight_entity = this;
 		sight_entity_time = time;
 	}
-	else if(MP_HIPNOTIC && this.charmed && (this.charmer == this.enemy.charmer))
+	else if(this.charmed && (this.charmer == this.enemy.charmer))
 	{
 		this.enemy = NULL;
 		return;
@@ -980,7 +980,7 @@ bool FindTarget(entity this)
 // spawn flag prior to the ambush flag, and I forgot about it, so the second
 // spawn flag works as well
 	//MED 10/17/96 added charmed stuff
-	if(MP_HIPNOTIC && this.charmed)
+	if(this.charmed)
 	{
 		this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
@@ -1100,7 +1100,7 @@ bool FindTarget(entity this)
 	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
 	{
 		this.enemy = this.enemy.enemy;
-		if(!IS_PLAYER(this.enemy) || (MP_IMPEL && this.enemy.health < 1) || (this.enemy.flags & FL_NOTARGET))
+		if(!IS_PLAYER(this.enemy) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
 		{
 			this.enemy = NULL;
 			return false;
@@ -1174,7 +1174,7 @@ void ai_walk(entity this, float dist)
 
 	t_movetogoal(this, dist);
 
-	if(MP_HIPNOTIC && this.huntingcharmer)
+	if(this.huntingcharmer)
 		this.nextthink = time + ((this.nextthink - time) / 2);
 }
 
@@ -1417,7 +1417,7 @@ void ai_run(entity this, float dist)
 	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
 	{
 		this.enemy = NULL;
-		if(MP_HIPNOTIC && this.charmed)
+		if(this.charmed)
 		{
 			HuntCharmer(this);
 			return;
@@ -1478,14 +1478,14 @@ void ai_run(entity this, float dist)
 		return;
 	}
 
-	if (MP_HIPNOTIC && this.attack_state == AS_DODGING)
+	if (this.attack_state == AS_DODGING)
 	{
 		ai_run_dodge(this);
 		return;
 	}
 
 //MED 11/11/96
-	if(MP_HIPNOTIC && this.run_straight && time > this.endtime)
+	if(this.run_straight && time > this.endtime)
 	{
 		this.run_straight = false;
 		bool axis = t_walkmove(this, this.angles_y, this.move_dist);
