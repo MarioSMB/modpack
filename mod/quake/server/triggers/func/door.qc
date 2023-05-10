@@ -503,6 +503,7 @@ Key doors are allways wait -1.
 
 spawnfunc(func_door)
 {
+	vector oldmovedir = this.movedir;
 	SetMovedir(this);
 	SUB_SetWorldtype(this);
 
@@ -554,7 +555,24 @@ spawnfunc(func_door)
 
 	this.pos1 = this.origin;
 
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+	if(MP_ROGUE)
+	{
+		// fix cameron's door
+		vector tmpvec = this.movedir;
+		if(tmpvec.x < 0)
+			tmpvec.x = 0 - tmpvec.x;
+		if(tmpvec.y < 0)
+			tmpvec.y = 0 - tmpvec.y;
+		this.pos2 = this.pos1 + this.movedir * (fabs(tmpvec * this.size) - this.lip);
+	}
+	else
+		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+
+	if(MP_MG && oldmovedir)
+	{
+		this.pos2 = this.pos1 + oldmovedir;
+		this.angles = '0 0 0';
+	}
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
