@@ -439,7 +439,8 @@ void zombie_pain(entity this, entity attacker, float take, int deathtype)
 	if(attacker.solid == SOLID_BSP || !attacker)
 		return; // if killed by trigger or world, don't reset health
 
-	this.health = 60;		// allways reset health
+	if(deathtype != WEP_CHAINSAW.m_id) // TODO: bypass zombie health weapon flag
+		this.health = 60;		// always reset health
 
 	if(take < 9)
 		return;				// totally ignore

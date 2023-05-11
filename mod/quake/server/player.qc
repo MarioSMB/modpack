@@ -225,6 +225,16 @@ void player_stand1(entity this)
 		return;
 	}
 
+	// TODO wr for this too?
+	if(this.weaponentity.m_weapon == WEP_CHAINSAW)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.m_frame >= 5)
+			this.weaponentity.m_frame = 0;
+		if(this.view_ofs != '0 0 0')
+			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
+	}
+
 	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 12)
@@ -251,6 +261,15 @@ void player_run(entity this)
 		this.walkframe = 0;
 		player_stand1(this);
 		return;
+	}
+
+	if(this.weaponentity.m_weapon == WEP_CHAINSAW)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.m_frame >= 5)
+			this.weaponentity.m_frame = 0;
+		if(this.view_ofs != '0 0 0')
+			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
 
 	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)

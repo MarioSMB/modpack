@@ -25,6 +25,8 @@ void spawn_touchspark(entity this, float damage);
 
 void SpawnDischarge(entity this, float dm);
 
+void SpawnBitSpray(entity this, vector org, vector vel);
+
 void SpawnMeatBounce(entity this, entity targ, float dm);
 
 void spawn_extrablood(entity this, entity targ, float damage);

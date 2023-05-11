@@ -151,6 +151,31 @@ vector wall_velocity(entity this)
 	return vel;
 }
 
+/*
+================
+SpawnBitSpray
+================
+*/
+void SpawnBitSpray(entity this, vector org, vector vel)
+{
+	vector mvel = vel;
+	mvel.z += 250 + 50 * random();
+
+	entity bit = new(gib);
+	set_movetype(bit, MOVETYPE_BOUNCE);
+	bit.owner = this;
+	bit.solid = SOLID_BBOX;
+	bit.angles = vectoangles(mvel);
+	setthink(bit, SUB_Remove);
+	bit.nextthink = time + 6;
+	bit.velocity = mvel;
+	setorigin(bit, org);
+
+	bit.avelocity = '500 300 300';
+
+	_setmodel(bit, "progs/bit.mdl");
+	setsize(bit, '0 0 0', '0 0 0');
+}
 
 /*
 ================
@@ -1503,6 +1528,9 @@ void W_SetCurrentAmmo(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	if(wep != WEP_Null)
 		this.items |= wep.ammo_type;
+
+	if(wep == WEP_CHAINSAW) // TODO: merge into wr_think when wr_think isn't just an attack frame!
+		_sound(this, CH_WEAPON_SINGLE, "weapons/sawidle.wav", 1, ATTN_NORM);
 }
 
 /*

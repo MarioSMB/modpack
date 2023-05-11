@@ -94,7 +94,8 @@ void SetChangeParms(entity this)
 
 void SetNewParms()
 {
-	WepSet weps = (WEPSET(SHOTGUN) | WEPSET(AXE));
+	Weapon start_weapon = (autocvar_horde) ? WEP_CHAINSAW : WEP_AXE;
+	WepSet weps = (WEPSET(SHOTGUN) | start_weapon.m_wepset);
 	parm1 = weps.x;
 	parm2 = weps.y;
 	parm3 = weps.z;
@@ -109,7 +110,7 @@ void SetNewParms()
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
-	parm15 = WEP_AXE.m_id; // always use axe as the alternate weapon
+	parm15 = start_weapon.m_id; // always use axe as the alternate weapon
 }
 
 void DecodeLevelParms(entity this)

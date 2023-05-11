@@ -17,3 +17,4 @@
 #include "super_lightning.qc"
 #include "impaler.qc"
 #include "napalm_gun.qc"
+#include "chainsaw.qc"

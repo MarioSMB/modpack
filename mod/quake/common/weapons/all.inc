@@ -17,6 +17,7 @@
 #include "weapon/super_lightning.qh"
 #include "weapon/impaler.qh"
 #include "weapon/napalm_gun.qh"
+#include "weapon/chainsaw.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 
