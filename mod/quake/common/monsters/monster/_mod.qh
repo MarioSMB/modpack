@@ -8,6 +8,7 @@
 #include "dark_knight.qh"
 #include "decoy.qh"
 #include "dragon.qh"
+#include "edie.qh"
 #include "eel.qh"
 #include "enforcer.qh"
 #include "fiend.qh"

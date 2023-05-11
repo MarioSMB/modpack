@@ -7,6 +7,7 @@
 #include "dark_knight.qc"
 #include "decoy.qc"
 #include "dragon.qc"
+#include "edie.qc"
 #include "eel.qc"
 #include "enforcer.qc"
 #include "fiend.qc"

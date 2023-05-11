@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_EDIE,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was exterminated by an Edie"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_EDIE,                1,  NULL,           INFO_DEATH_SELF_MON_EDIE,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_EDIE,            DEATH_SELF_MON_EDIE,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_EDIE, "progs/edie.mdl");
+MODEL(MON_EDIE_HEAD, "progs/h_ogre.mdl");
+
+SOUND(MON_EDIE_SIGHT, "edie/sight");
+#endif
+
+CLASS(Edie, Monster)
+    ATTRIB(Edie, spawnflags, int, 0);
+    ATTRIB(Edie, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Edie, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Edie, m_model, Model, MDL_MON_EDIE);
+    ATTRIB(Edie, m_model_head, Model, MDL_MON_EDIE_HEAD);
+    ATTRIB(Edie, m_sound, Sound, SND_MON_EDIE_SIGHT);
+#endif
+    ATTRIB(Edie, netname, string, "edie");
+    ATTRIB(Edie, monster_name, string, _("Edie"));
+ENDCLASS(Edie)
+
+REGISTER_MONSTER(EDIE, NEW(Edie));
+
+#ifdef SVQC
+.float multiplier;
+.bool gug_slapped;
+#endif
