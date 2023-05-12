@@ -491,51 +491,6 @@ void BecomeBloodSpurt(entity this, float dm)
 	setorigin(missile, this.origin - v_forward * 8);
 }
 
-void T_MediumPulseTouch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	float damg;
-	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		damg = 55 + (random() * 7);
-	else
-		damg = 40 + (random() * 20);
-	if(toucher.takedamage)
-	{
-		if(toucher.health <= damg && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL)
-			&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
-		{
-			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)), this.projectiledeathtype);
-			toucher.origin_z = toucher.origin_z + 1;
-			setorigin(toucher, toucher.origin);
-			UNSET_ONGROUND(toucher);
-			makevectors(this.v_angle);
-			if(toucher.max_health > 100 || (toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
-			{
-				toucher.velocity = qc_aim(this, 25);
-				toucher.velocity = '0 0 25' + this.velocity;
-			}
-			else
-			{
-				toucher.velocity = qc_aim(this, 500);
-				toucher.velocity = '0 0 150' + this.velocity;
-			}
-			set_movetype(toucher, MOVETYPE_TOSS);
-			toucher.v_angle = this.angles;
-		}
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-	}
-	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, toucher, damg);
-	BecomePurpleExplosion(this, toucher, damg);
-	delete(this);
-}
-
 void T_SinglePulseTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
@@ -545,88 +500,11 @@ void T_SinglePulseTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	float damg;
-	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		damg = 55 + random() * 7;
-	else
-		damg = 35 + random() * 25;
+	float damg = 20 + random() * 7;
 	if(toucher.takedamage)
-	{
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-		if(toucher.health <= 0 && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
-		{
-			if(!IS_PLAYER(toucher))
-			{
-				toucher.origin_z = toucher.origin_z + 1;
-				setorigin(toucher, toucher.origin);
-			}
-			UNSET_ONGROUND(toucher);
-			makevectors(this.v_angle);
-			// TODO: some kind of "heavy" flag?
-			if(toucher.max_health > 100)
-			{
-				toucher.velocity = qc_aim(this, 25);
-				toucher.velocity = '0 0 25' + this.velocity;
-			}
-			else
-			{
-				toucher.velocity = qc_aim(this, 500);
-				toucher.velocity = '0 0 150' + this.velocity;
-			}
-			if(!IS_PLAYER(toucher))
-			{
-				set_movetype(toucher, MOVETYPE_TOSS);
-				toucher.v_angle = this.angles;
-			}
-		}
-	}
-	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, toucher, damg);
-	BecomePurpleExplosion(this, toucher, damg);
-	delete(this);
-}
 
-void T_SmallPulseTouch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	float damg;
-	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
-		damg = 55 + random() * 7;
-	else
-		damg = 35 + random() * 25;
-	if(toucher.takedamage)
-	{
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-		if(toucher.health <= 0 && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) 
-					&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
-		{
-			toucher.origin_z = toucher.origin_z + 1;
-			setorigin(toucher, toucher.origin);
-			UNSET_ONGROUND(toucher);
-			makevectors(this.v_angle);
-			if(toucher.max_health > 100)
-			{
-				toucher.velocity = qc_aim(this, 25);
-				toucher.velocity = '0 0 25' + this.velocity;
-			}
-			else
-			{
-				toucher.velocity = qc_aim(this, 500);
-				toucher.velocity = '0 0 150' + this.velocity;
-			}
-			set_movetype(toucher, MOVETYPE_TOSS);
-			toucher.v_angle = this.angles;
-			return;
-		}
-	}
-	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
-	BecomePurpleExplosion(this, toucher, damg);
+	_sound(this, CH_SHOTS, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	BecomePurpleExplosion(this, toucher, damg);
 	delete(this);
 }
@@ -634,14 +512,10 @@ void T_SmallPulseTouch(entity this, entity toucher)
 void W_FireRifle_SetupShot(entity actor, entity proj, int shotammo, string snd1, string snd2)
 {
 	if(snd1)
-		_sound(actor, CHAN_AUTO, snd1, 1, ATTN_NORM);
+		_sound(actor, CH_SHOTS, snd1, 0.5, ATTN_NORM);
 	if(snd2)
-		_sound(actor, CH_WEAPON_B, snd2, 1, ATTN_NORM);
+		_sound(actor, CH_WEAPON_B, snd2, 0.5, ATTN_NORM);
 
-	if(shotammo)
-		actor.ammo_cells = actor.ammo_cells - shotammo;
-
-	//actor.punchangle_x = -2;
 	proj.owner = actor;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.solid = SOLID_BBOX;
@@ -649,162 +523,13 @@ void W_FireRifle_SetupShot(entity actor, entity proj, int shotammo, string snd1,
 	setsize(proj, '0 0 0', '0 0 0');
 }
 
-void W_FireRifleM(entity this)
+void W_FireRifleTarget(entity this, entity targ)
 {
 	entity missile = new(pulse);
 	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot1.wav");
 
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, this.origin - v_right * 16 + '0 0 8');
-}
-
-void W_FireRifleL(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot1.wav");
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, this.origin + v_right * 16 + '0 0 8');
-}
-
-void W_FireRifleK(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot2.wav");
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, this.origin - v_right * 32 + '0 0 8');
-}
-
-void W_FireRifleJ(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot1.wav");
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, this.origin + v_right * 32 + '0 0 8');
-}
-
-void W_FireRifleI(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot2.wav");
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, ((this.origin - (v_right * 48)) + '0 0 8'));
-}
-
-void W_FireRifleH(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 2, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
-
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_MediumPulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
-}
-
-void W_FireRifleD(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
-
-	missile.enemy = this.enemy;
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_SmallPulseTouch);
-	missile.nextthink = (time + 0.3);
-	setthink(missile, PulseHome);
-	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
-}
-
-void W_FireRifleC(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
-
-	missile.enemy = this.enemy;
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_SmallPulseTouch);
-	missile.nextthink = time + 0.2;
-	setthink(missile, PulseHome);
-	setorigin(missile, ((this.origin + (v_right * 32)) + '0 0 8'));
-}
-
-void W_FireRifleB(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot2.wav");
-
-	missile.enemy = this.enemy;
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_SmallPulseTouch);
-	missile.nextthink = (time + 0.1);
-	setthink(missile, PulseHome);
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-}
-
-void W_FireRifleA(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 3, "weapons/pulse/pulshot1.wav", string_null);
-
-	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	vector vtemp = missile.origin + (v_right * 12) + (v_forward * 64);
-	makevectors(this.v_angle);
-	vector dir = normalize(vtemp - missile.origin);
+	vector dir = normalize(targ.origin - missile.origin);
 	missile.velocity = dir * 1000;
 	missile.angles = vectoangles(missile.velocity);
 	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
@@ -813,59 +538,37 @@ void W_FireRifleA(entity this)
 	setthink(missile, SUB_Remove);
 }
 
-void W_FireRifle2A(entity this)
+void W_PulseRifle(entity this)
 {
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, string_null, string_null);
+	entity selected = NULL;
+	if(this.search_time < time)
+	{
+		makevectors(this.v_angle);
+		float cur_dist = 0;
+		entity head = findradius(this.origin, 500);
+		while(head)
+		{
+			if(!(head.flags & FL_NOTARGET) && IS_MONSTER(head))
+			{
+				if(head.takedamage && head.health > 0 && !(head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && visible(this, head))
+				{
+					float head_dist = vlen2(head.origin - this.origin);
+					vector vec = normalize(head.origin - this.origin);
+					float dot = vec * v_forward;
+					if((!cur_dist || head_dist < cur_dist) && dot > 0.3)
+					{
+						selected = head;
+						cur_dist = head_dist;
+					}
+				}
+			}
+			head = head.chain;
+		}
+		this.search_time = time + 1;
+	}
 
-	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	vector vtemp = missile.origin - (v_right * 12) + (v_forward * 64);
-	makevectors(this.v_angle);
-	vector dir = normalize((vtemp - missile.origin));
-	missile.velocity = dir * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_SinglePulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-}
-
-void W_FireRifle3A(entity this)
-{
-	entity missile = new(pulse);
-	W_FireRifle_SetupShot(this, missile, 0, string_null, string_null);
-
-	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
-	settouch(missile, T_SinglePulseTouch);
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-}
-
-void W_FireRifleTarget(entity this)
-{
-	//this.punchangle_x = -2;
-	this.ammo_cells = this.ammo_cells - 4;
-	W_SetCurrentAmmo(this);
-	entity missile = spawn();
-	missile.owner = this;
-	this.enemy = missile;
-	set_movetype(missile, MOVETYPE_NOCLIP);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "missile";
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	missile.nextthink = time + 3;
-	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/null.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, (this.origin + (v_forward * 8)));
+	if(selected)
+		W_FireRifleTarget(this, selected);
 }
 
 void ExtraBlood(entity targ, vector org, vector vel, float damage)
@@ -1540,78 +1243,7 @@ An attack impulse can be triggered now
 
 void W_Attack(entity this, bool offhand)
 {
-	if(offhand)
-	{
-		if((this.items & IT_PULSEPOWER2) && this.ammo_cells < 4)
-			return;
-		else if((this.items & IT_PULSEPOWER1) && this.ammo_cells < 3)
-			return;
-		else if(this.ammo_cells < 2)
-			return;
-	}
-
 	this.show_hostile = time + 1;	// wake monsters up
-
-	if(offhand)
-	{
-		if(this.items & IT_PULSERIFLE)
-		{
-			if(this.items & IT_PULSEPOWER2)
-			{
-				if(this.ammo_cells < 4)
-				{
-					//W_SwitchWeapon(this, W_BestWeapon(this, 0));
-					return;
-				}
-				if(this.rifle_cnt == 2)
-				{
-					W_FireRifleL(this);
-					W_FireRifleM(this);
-					this.attack2_finished = time + 0.4;
-					this.rifle_cnt = 0;
-				}
-				else if(this.rifle_cnt == 1)
-				{
-					W_FireRifleJ(this);
-					W_FireRifleK(this);
-					this.attack2_finished = time + 0.1;
-					this.rifle_cnt = 2;
-				}
-				else if(this.rifle_cnt == 0)
-				{
-					W_FireRifleH(this);
-					W_FireRifleI(this);
-					this.attack2_finished = time + 0.1;
-					this.rifle_cnt = 1;
-				}
-			}
-			else if(this.items & IT_PULSEPOWER1)
-			{
-				if(this.ammo_cells < 3)
-				{
-					//W_SwitchWeapon(this, W_BestWeapon(this, 0));
-					return;
-				}
-				W_FireRifleTarget(this);
-				W_FireRifleD(this);
-				W_FireRifleC(this);
-				W_FireRifleB(this);
-				this.attack2_finished = time + 0.6;
-			}
-			else if(this.ammo_cells < 2)
-			{
-				//W_SwitchWeapon(this, W_BestWeapon(this, 0));
-				return;
-			}
-			W_FireRifleA(this);
-			W_FireRifle2A(this);
-			W_FireRifle3A(this);
-			this.attack2_finished = time + 0.7;
-			return;
-		}
-
-		return;
-	}
 }
 
 /*
@@ -1668,15 +1300,9 @@ void W_WeaponFrame(entity this)
 			wep.wr_think(wep, this, button_atck);
 	}
 
-	if(!(time < this.attack2_finished) && (this.items & IT_PULSERIFLE))
-	{
-		// offhand attack (pulse rifle)
-		if(this.button3)
-		{
-			SuperDamageSound(this);
-			W_Attack(this, true);
-		}
-	}
+	// TODO: split into a separate entity attached to the player?
+	if(this.items & IT_PULSERIFLE)
+		W_PulseRifle(this);
 
 	// minor stub for Xonotic's weapon entity model detection
 	entity wepent = this.weaponentity;

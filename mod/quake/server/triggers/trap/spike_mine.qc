@@ -35,7 +35,7 @@ void spikemine_Home(entity this)
 			_sound(this, CH_TRIGGER_SINGLE, "hipitems/spikmine.wav", 1, ATTN_NORM);
 		this.enemy = selected;
 		this.search_time = time + 1.3;
-		}
+	}
 	if(this.enemy == NULL)
 	{
 		sound(this, CH_TRIGGER_SINGLE, SND_Null, 1, ATTN_NORM);

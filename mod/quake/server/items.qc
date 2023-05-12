@@ -407,8 +407,6 @@ bool weapon_customize(entity this, entity client)
 bool pulserifle_customize(entity this, entity client)
 {
 	bool have_item = false;
-	if(this.classname == "weapon_rifleupgrade" && (client.items & IT_PULSEPOWER2))
-		have_item = true;
 	if(this.classname == "weapon_rifle" && (client.items & IT_PULSERIFLE))
 		have_item = true;
 	if((deathmatch == 2 || coop) && have_item)
@@ -435,23 +433,6 @@ void pulserifle_touch(entity this, entity toucher)
 			toucher.ammo_cells = toucher.ammo_cells + 24;
 			break;
 		}
-		case "weapon_rifleupgrade":
-		{
-			if(leave && (toucher.items & IT_PULSEPOWER2))
-				return;
-			if(!(toucher.items & IT_PULSERIFLE))
-				return;
-			toucher.ammo_cells = toucher.ammo_cells + 24;
-			if(toucher.items & IT_PULSEPOWER2)
-				newitems = IT_PULSEPOWER2;
-			else if(toucher.items & IT_PULSEPOWER1)
-				newitems = IT_PULSEPOWER2;
-			else if(toucher.items & IT_PULSERIFLE)
-				newitems = IT_PULSEPOWER1;
-			else
-				return;
-			break;
-		}
 		default:
 		{
 			objerror(this, "pulserifle_touch: unknown classname");
@@ -459,37 +440,12 @@ void pulserifle_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.classname == "weapon_rifleupgrade")
-	{
-		if(toucher.items & IT_PULSEPOWER2)
-		{
-			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-			sprint(toucher, "You got ammo out of the upgrade\n");
-		}
-		else if(toucher.items & IT_PULSEPOWER1)
-		{
-			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
-			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-			sprint(toucher, "You got the Level III Laser System upgrade\n");
-		}
-		else if(toucher.items & IT_PULSERIFLE)
-		{
-			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
-			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-			sprint(toucher, "You got the Level II Laser System upgrade\n");
-		}
-		else
-			return;
-	}
-	//else
-		//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, this.netname);
-
 	if(this.classname == "weapon_rifle")
 	{
 		_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		_sound(toucher, CHAN_WEAPON, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
 		if(!(toucher.items & IT_PULSERIFLE))
-			centerprint(toucher, "[ SECONDARY ATTACK ACTIVATED ]\n");
+			centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
 	}
 	else
 		_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
@@ -712,6 +668,7 @@ spawnfunc(weapon_rifle)
 	StartItem(this);
 }
 
+#if 0
 spawnfunc(weapon_rifleupgrade)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -723,25 +680,6 @@ spawnfunc(weapon_rifleupgrade)
 	setcefc(this, pulserifle_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
-}
-
-#if 0
-void Impel_powerup_touch(entity this, entity toucher)
-{
-	if(toucher.classname != "player" || toucher.health <= 0)
-		return;
-	sprint(toucher, sprintf("You got the %s\n", this.netname));
-	if(deathmatch)
-	{
-		this.mdl = this.model;
-		this.nextthink = time + 60;
-		setthink(this, SUB_regen);
-	}
-	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
-	this.solid = SOLID_NOT;
-	this.model = string_null;
-	SUB_UseTargets(this, toucher, NULL);
 }
 #endif
 

@@ -57,6 +57,7 @@ void shop_buyitem(entity this, string item)
 			sprint(this, "Already at maximum armor\n");
 			return;
 		}
+		this.frags -= SHOP_COST_ARMOR;
 		this.armortype = type;
 		this.armorvalue = value;
 		this.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
@@ -85,6 +86,27 @@ void shop_buyitem(entity this, string item)
 		bound_other_ammo(this);
 		sprint(this, "Ammunition restocked\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
+		return;
+	}
+
+	if(item == "rifle")
+	{
+		if(this.frags < SHOP_COST_RIFLE)
+		{
+			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
+			return;
+		}
+
+		if(this.items & IT_PULSERIFLE)
+		{
+			sprint(this, "You already have the Pulse Rifle\n");
+			return;
+		}
+
+		this.frags -= SHOP_COST_RIFLE;
+		this.items |= IT_PULSERIFLE;
+		sprint(this, "Pulse Rifle Sidearm activated\n");
+		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		return;
 	}
 

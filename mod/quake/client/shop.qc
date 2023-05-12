@@ -14,7 +14,7 @@ void shop_close();
 
 float selected_entity_index;
 
-const int EXTRA_ITEMS = 3;
+const int EXTRA_ITEMS = 4;
 
 // plus 1 so we can add heal as a first option
 string weplist[REGISTRY_MAX(Weapons) + EXTRA_ITEMS];
@@ -31,6 +31,8 @@ string Weapon_PrettyName(string wepname)
 		return "Armor";
 	if(wepname == "ammo")
 		return "Ammunition";
+	if(wepname == "rifle")
+		return "Pulse Rifle Sidearm";
 	Weapon wep = Weapon_from_name(wepname);
 	return wep.m_name;
 }
@@ -51,15 +53,21 @@ void entity_list(string id, vector pos, vector size)
 	}
 	wepcount = 0;
 	// initialize the other items first
-	weplist[0] = "heal";
-	wepcost[0] = SHOP_COST_HEAL;
+	weplist[wepcount] = "heal";
+	wepcost[wepcount] = SHOP_COST_HEAL;
 	wepcount += 1;
-	weplist[1] = "armor";
-	wepcost[1] = SHOP_COST_ARMOR;
+	weplist[wepcount] = "armor";
+	wepcost[wepcount] = SHOP_COST_ARMOR;
 	wepcount += 1;
-	weplist[2] = "ammo";
-	wepcost[2] = SHOP_COST_AMMO;
+	weplist[wepcount] = "ammo";
+	wepcost[wepcount] = SHOP_COST_AMMO;
 	wepcount += 1;
+	if(!(STAT(ITEMS) & IT_PULSERIFLE))
+	{
+		weplist[wepcount] = "rifle";
+		wepcost[wepcount] = SHOP_COST_RIFLE;
+		wepcount += 1;
+	}
 	FOREACH(Weapons, it != WEP_Null,
 	{
 		if(STAT(WEAPONS) & it.m_wepset)
