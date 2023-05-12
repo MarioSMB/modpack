@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include "armagon.qh"
 #include "axegrunt.qh"
+#include "bambler.qh"
 #include "blud.qh"
 #include "centroid.qh"
 #include "chthon.qh"

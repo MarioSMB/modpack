@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BAMBLER,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was brutally bashed by a Bambler"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BAMBLER,            1,  NULL,           INFO_DEATH_SELF_MON_BAMBLER,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BAMBLER,        DEATH_SELF_MON_BAMBLER,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BAMBLER, "progs/bambler.mdl");
+MODEL(MON_BAMBLER_HEAD, "progs/h_shams.mdl");
+
+SOUND(MON_BAMBLER_SIGHT, "bambler/ssight");
+#endif
+
+CLASS(Bambler, Monster)
+    ATTRIB(Bambler, spawnflags, int, MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Bambler, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Bambler, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Bambler, m_model, Model, MDL_MON_BAMBLER);
+    ATTRIB(Bambler, m_model_head, Model, MDL_MON_BAMBLER_HEAD);
+    ATTRIB(Bambler, m_sound, Sound, SND_MON_BAMBLER_SIGHT);
+#endif
+    ATTRIB(Bambler, netname, string, "bambler");
+    ATTRIB(Bambler, monster_name, string, _("Bambler"));
+ENDCLASS(Bambler)
+
+REGISTER_MONSTER(BAMBLER, NEW(Bambler));

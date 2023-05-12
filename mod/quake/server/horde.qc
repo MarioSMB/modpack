@@ -302,6 +302,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 		monster.yaw_speed = 20;
 	monster.view_ofs = '0 0 25';
 	monster.use = monster_use;
+	monster.max_health = monster.health;
 
 	monster.enemy = HordeFindTarget(); // find a random living player
 	//monster.enemy = find (NULL, classname, "player");
@@ -878,14 +879,14 @@ vector Horde_GetOffset(int number)
 {
 	switch(number)
 	{
-		case 0: return '40 0 0';
-		case 1: return '0 -40 0';
-		case 2: return '0 40 0';
-		case 3: return '-40 0 0';
-		case 4: return '40 40 0';
-		case 5: return '40 -40 0';
-		case 6: return '-40 40 0';
-		case 7: return '-40 -40 0';
+		case 0: return '44 0 0';
+		case 1: return '0 -44 0';
+		case 2: return '0 44 0';
+		case 3: return '-44 0 0';
+		case 4: return '44 44 0';
+		case 5: return '44 -44 0';
+		case 6: return '-44 44 0';
+		case 7: return '-44 -44 0';
 	}
 	return '0 0 0';
 }
@@ -1479,6 +1480,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 dknight");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 mutant");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 cook");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 bambler");
 	}
 
 	found = false;
@@ -1495,6 +1497,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 wrath");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "1 demon 1 mutant");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 bambler");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");
