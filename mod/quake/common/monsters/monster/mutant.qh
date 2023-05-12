@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MUTANT,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was mutilated by a Mutant"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MUTANT,               1,  NULL,           INFO_DEATH_SELF_MON_MUTANT,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MUTANT,           DEATH_SELF_MON_MUTANT,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MUTANT, "progs/mutant.mdl");
+MODEL(MON_MUTANT_HEAD, "progs/h_mutant.mdl");
+
+SOUND(MON_MUTANT_SIGHT, "mutant/mutsrch1");
+#endif
+
+CLASS(Mutant, Monster)
+    ATTRIB(Mutant, spawnflags, int, 0);
+    ATTRIB(Mutant, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Mutant, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Mutant, m_model, Model, MDL_MON_MUTANT);
+    ATTRIB(Mutant, m_model_head, Model, MDL_MON_MUTANT_HEAD);
+    ATTRIB(Mutant, m_sound, Sound, SND_MON_MUTANT_SIGHT);
+#endif
+    ATTRIB(Mutant, netname, string, "mutant");
+    ATTRIB(Mutant, monster_name, string, _("Mutant"));
+ENDCLASS(Mutant)
+
+REGISTER_MONSTER(MUTANT, NEW(Mutant));

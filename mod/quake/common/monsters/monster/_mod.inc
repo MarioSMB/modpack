@@ -24,6 +24,7 @@
 #include "legond.qc"
 #include "lightning_enforcer.qc"
 #include "mummy.qc"
+#include "mutant.qc"
 #include "ogre.qc"
 #include "overlord.qc"
 #include "phantom_swordsman.qc"

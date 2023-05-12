@@ -24,6 +24,7 @@
 #include "legond.qh"
 #include "lightning_enforcer.qh"
 #include "mummy.qh"
+#include "mutant.qh"
 #include "ogre.qh"
 #include "overlord.qh"
 #include "phantom_swordsman.qh"

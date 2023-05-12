@@ -77,7 +77,7 @@ void axe_chop(entity this, vector dir)
 
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;
-	if(!CanDamage(this, this.enemy))
+	if(!CanDamage(this.enemy, this))
 		return;
 	float ldmg = (random() + random() + random()) * 2;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_AXEGRUNT.m_id);
