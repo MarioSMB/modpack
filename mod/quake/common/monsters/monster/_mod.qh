@@ -1,6 +1,6 @@
 // generated file; do not modify
-// TODO: quake doesn't have the luxury of being picky here!
 #include "armagon.qh"
+#include "axegrunt.qh"
 #include "blud.qh"
 #include "centroid.qh"
 #include "chthon.qh"

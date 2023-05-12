@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_AXEGRUNT,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 got the chop from an Axe Grunt"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_AXEGRUNT,               1,  NULL,           INFO_DEATH_SELF_MON_AXEGRUNT,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_AXEGRUNT,           DEATH_SELF_MON_AXEGRUNT,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_AXEGRUNT, "progs/axegrunt.mdl");
+MODEL(MON_AXEGRUNT_HEAD, "progs/h_guard.mdl");
+
+SOUND(MON_AXEGRUNT_SIGHT, "axegrunt/axgsight");
+#endif
+
+CLASS(AxeGrunt, Monster)
+    ATTRIB(AxeGrunt, spawnflags, int, MON_FLAG_INFIGHT);
+    ATTRIB(AxeGrunt, m_mins, vector, '-16 -16 -24');
+    ATTRIB(AxeGrunt, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(AxeGrunt, m_model, Model, MDL_MON_AXEGRUNT);
+    ATTRIB(AxeGrunt, m_model_head, Model, MDL_MON_AXEGRUNT_HEAD);
+    ATTRIB(AxeGrunt, m_sound, Sound, SND_MON_AXEGRUNT_SIGHT);
+#endif
+    ATTRIB(AxeGrunt, netname, string, "axegrunt");
+    ATTRIB(AxeGrunt, monster_name, string, _("Axe Grunt"));
+ENDCLASS(AxeGrunt)
+
+REGISTER_MONSTER(AXEGRUNT, NEW(AxeGrunt));

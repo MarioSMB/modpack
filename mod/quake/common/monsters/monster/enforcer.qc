@@ -339,6 +339,9 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	actor.th_die = enf_die;
 	actor.th_missile = enf_atk1;
 
+	if(random() >= 0.5)
+		actor.skin = 1;
+
 	return true;
 }
 METHOD(Enforcer, mr_sight, bool(Enforcer this, entity actor))
