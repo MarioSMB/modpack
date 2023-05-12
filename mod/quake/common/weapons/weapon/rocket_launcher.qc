@@ -36,11 +36,15 @@ entity W_FireRocket(entity this)
 	return missile;
 }
 
-METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor))
+METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_rocket1(actor);
-	W_FireRocket(actor);
-	actor.attack_finished = time + 0.8;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_rocket1(actor);
+		W_FireRocket(actor);
+		actor.attack_finished = time + 0.8;
+	}
 }
 METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

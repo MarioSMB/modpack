@@ -80,54 +80,58 @@ void W_FireAxe(entity this)
 	}
 }
 
-METHOD(Axe, wr_think, void(entity thiswep, entity actor))
+METHOD(Axe, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	// TODO: decouple axe attacks from the player animations
-	float r = random();
-	if(random() < 0.7)
-		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
-	else
-		_sound(actor, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
-	if(MP_MG && autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
+	if(fire & 1)
+	//if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		if(actor.axe_hit_chain >= 2 && time < actor.axe_hit_chain_time)
+		// TODO: decouple axe attacks from the player animations
+		float r = random();
+		if(random() < 0.7)
+			_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
+		else
+			_sound(actor, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
+		if(MP_MG && autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
 		{
-			// vertical CHOP
-			if(r < 0.5)
-				player_axe1(actor);
+			if(actor.axe_hit_chain >= 2 && time < actor.axe_hit_chain_time)
+			{
+				// vertical CHOP
+				if(r < 0.5)
+					player_axe1(actor);
+				else
+					player_axec1(actor);
+				actor.attack_finished = time + 0.8; // long recover
+			}
 			else
-				player_axec1(actor);
-			actor.attack_finished = time + 0.8; // long recover
+			{
+				// diagonal SWEEP
+				if(r < 0.5)
+					player_axeb1(actor);
+				else
+					player_axed1(actor);
+						
+				if(actor.axe_hit_chain > 1)
+					actor.attack_finished = time + 0.6;
+				else
+					actor.attack_finished = time + 0.4;
+							
+			}
 		}
 		else
 		{
-			// diagonal SWEEP
-			if(r < 0.5)
+			if(r < 0.25)
+				player_axe1(actor);
+			else if(r<0.5)
 				player_axeb1(actor);
+			else if(r<0.75)
+				player_axec1(actor);
 			else
 				player_axed1(actor);
-					
-			if(actor.axe_hit_chain > 1)
-				actor.attack_finished = time + 0.6;
-			else
-				actor.attack_finished = time + 0.4;
-						
+			float fire_delay = 0.5;
+			if(random() < 0.5)
+				fire_delay = 0.4;
+			actor.attack_finished = time + fire_delay;
 		}
-	}
-	else
-	{
-		if(r < 0.25)
-			player_axe1(actor);
-		else if(r<0.5)
-			player_axeb1(actor);
-		else if(r<0.75)
-			player_axec1(actor);
-		else
-			player_axed1(actor);
-		float fire_delay = 0.5;
-		if(random() < 0.5)
-			fire_delay = 0.4;
-		actor.attack_finished = time + fire_delay;
 	}
 }
 METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))

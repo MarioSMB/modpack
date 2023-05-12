@@ -260,13 +260,17 @@ void HIP_FireMjolnir(entity this)
 	this.attack_finished = time + 0.4;
 }
 
-METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor))
+METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	if(actor.ammo_cells < 30)
-		player_hammer1(actor);
-	else
-		player_mjolnir1(actor);
-	actor.attack_finished = time + 0.8;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		if(actor.ammo_cells < 30)
+			player_hammer1(actor);
+		else
+			player_mjolnir1(actor);
+		actor.attack_finished = time + 0.8;
+	}
 }
 METHOD(Mjolnir, wr_checkammo1, bool(entity thiswep, entity actor))
 {

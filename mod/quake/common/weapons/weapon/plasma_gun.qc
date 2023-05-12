@@ -183,15 +183,19 @@ void W_FirePlasma(entity this)
 	launch_plasma(this, this.origin + v_forward * 24 + this.view_ofs + v_up * -10 , dir); //seven's fix applied
 }
 
-METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor))
+METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	// player_light1 determines choice of W_FireLightning 
-	//      or W_FirePlasma, but same lighting and frames...
-	//actor.attack_finished = time + 1.0;//ooppee edited line out
-	//player_light1(actor);//ooppee edited line out
-	player_plasma1(actor); //ooppee added
-	W_FirePlasma(actor); //ooppee added
-	actor.attack_finished = time + 1.0; //ooppee added (same as above code but needs to be executed AFTER)
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		// player_light1 determines choice of W_FireLightning 
+		//      or W_FirePlasma, but same lighting and frames...
+		//actor.attack_finished = time + 1.0;//ooppee edited line out
+		//player_light1(actor);//ooppee edited line out
+		player_plasma1(actor); //ooppee added
+		W_FirePlasma(actor); //ooppee added
+		actor.attack_finished = time + 1.0; //ooppee added (same as above code but needs to be executed AFTER)
+	}
 }
 METHOD(PlasmaGun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

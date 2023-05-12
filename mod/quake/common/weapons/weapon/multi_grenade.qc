@@ -119,11 +119,15 @@ void W_FireMultiGrenade(entity this)
 	setorigin(missile, this.origin);
 }
 
-METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor))
+METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_rocket1(actor);
-	W_FireMultiGrenade(actor);
-	actor.attack_finished = time + 0.6;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_rocket1(actor);
+		W_FireMultiGrenade(actor);
+		actor.attack_finished = time + 0.6;
+	}
 }
 METHOD(MultiGrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

@@ -12,11 +12,15 @@ void W_FireShotgun(entity this)
 	FireBullets(this, 6, dir, '0.04 0.04 0', WEP_SHOTGUN.m_id);
 }
 
-METHOD(Shotgun, wr_think, void(entity thiswep, entity actor))
+METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_shot1(actor);
-	W_FireShotgun(actor);
-	actor.attack_finished = time + 0.5;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_shot1(actor);
+		W_FireShotgun(actor);
+		actor.attack_finished = time + 0.5;
+	}
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

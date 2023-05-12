@@ -444,10 +444,14 @@ void W_FireSpear(entity this)
 	this.punchangle_x = -10;
 }
 
-METHOD(Impaler, wr_think, void(entity thiswep, entity actor))
+METHOD(Impaler, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_shotimp1(actor);
-	actor.attack_finished = time + 1;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_shotimp1(actor);
+		actor.attack_finished = time + 1;
+	}
 }
 METHOD(Impaler, wr_checkammo1, bool(entity thiswep, entity actor))
 {

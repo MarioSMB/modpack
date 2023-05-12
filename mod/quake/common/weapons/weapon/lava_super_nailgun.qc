@@ -62,10 +62,21 @@ void W_FireSuperLavaSpikes(entity this)
 	this.punchangle_x = -2;
 }
 
-METHOD(LavaSuperNailgun, wr_think, void(entity thiswep, entity actor))
+METHOD(LavaSuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	actor.lavaGunFired = true;
-	player_lava_super_nail1(actor);
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		actor.lava_super_nailgun_fired = true;
+		player_lava_super_nail1(actor);
+	}
+
+	if(!(fire & 1) && actor.lava_super_nailgun_fired && time >= actor.attack_finished)
+	{
+		_sound(actor, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
+		actor.lava_super_nailgun_fired = false;
+	}
+
 }
 METHOD(LavaSuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

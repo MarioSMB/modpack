@@ -236,13 +236,17 @@ void W_FireSuperLightning(entity this)
 	setorigin(missile, this.origin + '0 0 0' - v_forward * 0); // lol what
 }
 
-METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor))
+METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_superlight1(actor);
-	if(actor.ammo_cells < 1)
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		actor.ammo_cells = 0;
-		W_SetCurrentAmmo(actor);
+		player_superlight1(actor);
+		if(actor.ammo_cells < 1)
+		{
+			actor.ammo_cells = 0;
+			W_SetCurrentAmmo(actor);
+		}
 	}
 }
 METHOD(SuperLightning, wr_checkammo1, bool(entity thiswep, entity actor))

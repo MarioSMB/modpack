@@ -67,11 +67,15 @@ void W_FireGrenade(entity this)
 	setorigin(missile, this.origin);
 }
 
-METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor))
+METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_rocket1(actor);
-	W_FireGrenade(actor);
-	actor.attack_finished = time + 0.6;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_rocket1(actor);
+		W_FireGrenade(actor);
+		actor.attack_finished = time + 0.6;
+	}
 }
 METHOD(GrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

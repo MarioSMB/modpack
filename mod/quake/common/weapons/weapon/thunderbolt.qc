@@ -85,11 +85,15 @@ void W_FireLightning(entity this)
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30, WEP_LIGHTNING.m_id);
 }
 
-METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor))
+METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_light1(actor);
-	actor.attack_finished = time + 0.1;
-	_sound(actor, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_light1(actor);
+		actor.attack_finished = time + 0.1;
+		_sound(actor, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+	}
 }
 METHOD(Thunderbolt, wr_checkammo1, bool(entity thiswep, entity actor))
 {

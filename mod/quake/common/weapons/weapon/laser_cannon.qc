@@ -60,9 +60,11 @@ void HIP_FireLaser(entity this, float stat)
 	this.punchangle_x = -1;
 }
 
-METHOD(LaserCannon, wr_think, void(entity thiswep, entity actor))
+METHOD(LaserCannon, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_laser1(actor);
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+		player_laser1(actor);
 }
 METHOD(LaserCannon, wr_checkammo1, bool(entity thiswep, entity actor))
 {

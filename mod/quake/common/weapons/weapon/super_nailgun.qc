@@ -82,9 +82,11 @@ void W_FireSuperSpikes(entity this)
 	this.punchangle_x = -2;
 }
 
-METHOD(SuperNailgun, wr_think, void(entity thiswep, entity actor))
+METHOD(SuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_supernail1(actor);
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+		player_supernail1(actor);
 }
 METHOD(SuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

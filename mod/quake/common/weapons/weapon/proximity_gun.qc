@@ -129,11 +129,15 @@ void W_FireProximityGrenade(entity this)
 	setsize(missile, '-1 -1 -1', '1 1 1');
 }
 
-METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor))
+METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_rocket1(actor);
-	W_FireProximityGrenade(actor);
-	actor.attack_finished = time + 0.6;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_rocket1(actor);
+		W_FireProximityGrenade(actor);
+		actor.attack_finished = time + 0.6;
+	}
 }
 METHOD(ProximityGun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

@@ -122,20 +122,24 @@ void W_FireNapalm(entity this)
 	setorigin(missile, this.origin);
 }
 
-METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor))
+METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	if(actor.cnt < 3)
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_rocket1(actor);
-		W_FireNapalm(actor);
-		actor.attack_finished = time + 0.6;
-		actor.cnt += 1;
-	}
-	else
-	{
-		_sound(actor, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
-		actor.attack_finished = time + 0.9;
-		actor.cnt = 0;
+		if(actor.cnt < 3)
+		{
+			player_rocket1(actor);
+			W_FireNapalm(actor);
+			actor.attack_finished = time + 0.6;
+			actor.cnt += 1;
+		}
+		else
+		{
+			_sound(actor, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+			actor.attack_finished = time + 0.9;
+			actor.cnt = 0;
+		}
 	}
 }
 METHOD(NapalmGun, wr_checkammo1, bool(entity thiswep, entity actor))

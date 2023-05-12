@@ -23,4 +23,6 @@ void player_lava_super_nail1(entity this);
 void player_lava_super_nail2(entity this);
 
 void W_FireSuperLavaSpikes(entity this);
+
+.bool lava_super_nailgun_fired;
 #endif

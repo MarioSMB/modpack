@@ -171,11 +171,15 @@ void W_FireMultiRocket(entity this)
 	MultiRocketLaunch(this, 10, 1);
 }
 
-METHOD(MultiRocketLauncher, wr_think, void(entity thiswep, entity actor))
+METHOD(MultiRocketLauncher, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_rocket1(actor);
-	W_FireMultiRocket(actor);
-	actor.attack_finished = time + 0.8;
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_rocket1(actor);
+		W_FireMultiRocket(actor);
+		actor.attack_finished = time + 0.8;
+	}
 }
 METHOD(MultiRocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
 {

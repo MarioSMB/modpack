@@ -1528,9 +1528,6 @@ void W_SetCurrentAmmo(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	if(wep != WEP_Null)
 		this.items |= wep.ammo_type;
-
-	if(wep == WEP_CHAINSAW) // TODO: merge into wr_think when wr_think isn't just an attack frame!
-		_sound(this, CH_WEAPON_SINGLE, "weapons/sawidle.wav", 1, ATTN_NORM);
 }
 
 /*
@@ -1543,8 +1540,6 @@ An attack impulse can be triggered now
 
 void W_Attack(entity this, bool offhand)
 {
-	if(this.exptime != 0)
-		return;
 	if(offhand)
 	{
 		if((this.items & IT_PULSEPOWER2) && this.ammo_cells < 4)
@@ -1554,10 +1549,7 @@ void W_Attack(entity this, bool offhand)
 		else if(this.ammo_cells < 2)
 			return;
 	}
-	else if(!this.weaponentity.m_weapon.wr_checkammo1(this.weaponentity.m_weapon, this))
-		return;
 
-	makevectors(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
 	if(offhand)
@@ -1620,10 +1612,6 @@ void W_Attack(entity this, bool offhand)
 
 		return;
 	}
-
-	Weapon wep = this.weaponentity.m_weapon;
-	if(wep != WEP_Null)
-		wep.wr_think(wep, this);
 }
 
 /*
@@ -1657,24 +1645,27 @@ Called every frame so impulse events can be handled as well as possible
 */
 void W_WeaponFrame(entity this)
 {
+	if(this.exptime != 0)
+		return;
+
 	if(!(time < this.attack_finished))
 	{
-		if(this.lavaGunFired)
-		{
-			if(this.weaponentity.m_weapon == WEP_LAVA_NAILGUN || this.weaponentity.m_weapon == WEP_LAVA_SUPER_NAILGUN)
-				_sound(this, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
-			this.lavaGunFired = false;
-		}
-
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
+
+		int button_atck = PHYS_INPUT_BUTTON_ATCK(this);
+		Weapon wep = this.weaponentity.m_weapon;
+		makevectors(this.v_angle); // calculate forward angle for velocity
 		
 	// check for attack
-		if(this.button0)
+		if(button_atck && wep.wr_checkammo1(wep, this));
 		{
 			SuperDamageSound(this);
 			W_Attack(this, false);
 		}
+
+		if(wep != WEP_Null)
+			wep.wr_think(wep, this, button_atck);
 	}
 
 	if(!(time < this.attack2_finished) && (this.items & IT_PULSERIFLE))

@@ -65,11 +65,21 @@ void W_FireSaw(entity this)
 	}
 }
 
-METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, int fire))
 {
-	player_chainsaw1(actor);
-	actor.attack_finished = time + 0.55;
-	_sound(actor, CH_SHOTS, "weapons/sawatck.wav", 1, ATTN_NORM);
+	if(fire & 1)
+	//if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		player_chainsaw1(actor);
+		actor.attack_finished = time + 0.55;
+		_sound(actor, CH_SHOTS, "weapons/sawatck.wav", 1, ATTN_NORM);
+	}
+
+	if(!(fire & 1) && time > actor.chainsaw_sound_time)
+	{
+		_sound(actor, CH_WEAPON_SINGLE, "weapons/sawidle.wav", 1, ATTN_NORM);
+		actor.chainsaw_sound_time = time + 0.1;
+	}
 }
 METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
 {
