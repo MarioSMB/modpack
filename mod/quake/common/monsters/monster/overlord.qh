@@ -11,7 +11,7 @@ MODEL(MON_OVERLORD, "progs/s_wrath.mdl");
 #endif
 
 CLASS(Overlord, Monster)
-    ATTRIB(Overlord, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_ROGUE);
+    ATTRIB(Overlord, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_ROGUE);
     ATTRIB(Overlord, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Overlord, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC
