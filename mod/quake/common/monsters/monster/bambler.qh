@@ -8,7 +8,7 @@ REGISTER_DEATHTYPE(MONSTER_BAMBLER,        DEATH_SELF_MON_BAMBLER,        DEATH_
 
 #ifdef GAMEQC
 MODEL(MON_BAMBLER, "progs/bambler.mdl");
-MODEL(MON_BAMBLER_HEAD, "progs/h_shams.mdl");
+MODEL(MON_BAMBLER_HEAD, "progs/h_bams.mdl");
 
 SOUND(MON_BAMBLER_SIGHT, "bambler/ssight");
 #endif

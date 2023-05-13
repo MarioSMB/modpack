@@ -1214,7 +1214,9 @@ bool SpawnWavePrep(entity this)
 		playerscalar = 1;
 	
 	// Boss Count
-	if((temp_wave % 3) == 0)
+	if(temp_wave == 9)
+		this.bosses = 1; // always just one boss for the final boss wave
+	else if((temp_wave % 3) == 0)
 	{
 		this.bosses = floor((temp_wave+1)/4);
 	}
@@ -1498,6 +1500,9 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "1 demon 1 mutant");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 bambler");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 super_chicken");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 guardian");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 legond");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");

@@ -36,6 +36,7 @@
 #include "shub.qc"
 #include "spawn.qc"
 #include "spider_droid.qc"
+#include "super_chicken.qc"
 #include "vore.qc"
 #include "wrath.qc"
 #include "zombie.qc"

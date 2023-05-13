@@ -57,10 +57,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	newmis.effects = EF_DIMLIGHT;
 
 	_setmodel(newmis, "progs/laser.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');		
-
-	if(this.monsterdef == MON_GUARDIAN && !this.owner)
-		newmis.skin = 1; // class check doesn't need rogue check
+	setsize(newmis, '0 0 0', '0 0 0');
 
 	setorigin(newmis, org);
 

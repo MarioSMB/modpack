@@ -1,0 +1,42 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SUPER_CHICKEN,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was zapped by the Super Chicken"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SUPER_CHICKEN,            1,  NULL,           INFO_DEATH_SELF_MON_SUPER_CHICKEN,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SUPER_CHICKEN,        DEATH_SELF_MON_SUPER_CHICKEN,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SUPER_CHICKEN, "progs/chcknbig.mdl");
+
+SOUND(MON_SUPER_CHICKEN_SIGHT, "chicken/sight");
+
+SOUND(MON_SUPER_CHICKEN_BOCK1, "chicken/fire");
+SOUND(MON_SUPER_CHICKEN_BOCK2, "chicken/random1");
+SOUND(MON_SUPER_CHICKEN_BOCK3, "chicken/random2");
+SOUND(MON_SUPER_CHICKEN_BOCK4, "chicken/random3");
+SOUND(MON_SUPER_CHICKEN_BOCK5, "chicken/sight");
+SOUND(MON_SUPER_CHICKEN_BOCK6, "chicken/pickup");
+Sound SND_MON_SUPER_CHICKEN_BOCK_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SUPER_CHICKEN_BOCK1.m_id + floor(prandom() * 6));
+}
+#endif
+
+CLASS(SuperChicken, Monster)
+    ATTRIB(SuperChicken, spawnflags, int, MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(SuperChicken, m_mins, vector, '-48 -48 0');
+    ATTRIB(SuperChicken, m_maxs, vector, '48 48 48');
+#ifdef GAMEQC
+    ATTRIB(SuperChicken, m_model, Model, MDL_MON_SUPER_CHICKEN);
+    ATTRIB(SuperChicken, m_sound, Sound, SND_MON_SUPER_CHICKEN_SIGHT);
+#endif
+    ATTRIB(SuperChicken, netname, string, "super_chicken");
+    ATTRIB(SuperChicken, monster_name, string, _("Super Chicken"));
+ENDCLASS(SuperChicken)
+
+REGISTER_MONSTER(SUPER_CHICKEN, NEW(SuperChicken));
+
+#ifdef SVQC
+void superchicken_run1(entity this);
+void superchicken_walk1(entity this);
+#endif

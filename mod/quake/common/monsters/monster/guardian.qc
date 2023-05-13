@@ -205,6 +205,61 @@ void morph_attack(entity this)
 		morph_knockback01(this);
 }
 
+void GuardianLaser_Touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	
+	if(!(this.spawnflags & SPAWNFLAG_SILENT))
+		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	vector org = this.origin - 8*normalize(this.velocity);
+
+	if(toucher.health)
+	{
+		SpawnBlood(org, this.velocity*0.2, 15, toucher);
+		T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
+	}
+	else
+		te_gunshot(org);
+	
+	delete(this);	
+}
+
+entity LaunchGuardianLaser(entity this, vector org, vector vec)
+{
+	vector vec2 = normalize(vec);
+	
+	entity newmis = new(enforcer_laser);
+	newmis.owner = this;
+	newmis.projectiledeathtype = DEATH_MONSTER_GUARDIAN.m_id;
+	set_movetype(newmis, MOVETYPE_FLY);
+	newmis.solid = SOLID_BBOX;
+	newmis.effects = EF_DIMLIGHT;
+
+	_setmodel(newmis, "progs/laser.mdl");
+	setsize(newmis, '0 0 0', '0 0 0');		
+
+	if(!this.guardian_owner)
+		newmis.skin = 1; // class check doesn't need rogue check
+
+	setorigin(newmis, org);
+
+	newmis.velocity = vec2 * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 5;
+	setthink(newmis, SUB_Remove);
+	settouch(newmis, GuardianLaser_Touch);
+
+	return newmis;
+}
+
 // ========================
 // ranged attack
 // ========================
@@ -217,16 +272,16 @@ void morph_fire(entity this)
 	makevectors(this.angles);
 	vector org = this.origin + v_forward * 30 + v_right * 8.5 + '0 0 16';
 	vector dir = normalize(this.enemy.origin - this.origin);
-	LaunchLaser(this, org, dir);
+	LaunchGuardianLaser(this, org, dir);
 	if(vdist(this.enemy.origin - this.origin, >, 400))
 	{
-		LaunchLaser(this, org, (dir + v_right * 0.04));
-		LaunchLaser(this, org, (dir - v_right * 0.04));
+		LaunchGuardianLaser(this, org, (dir + v_right * 0.04));
+		LaunchGuardianLaser(this, org, (dir - v_right * 0.04));
 	}
 	else
 	{
-		LaunchLaser(this, org, (dir + v_right * 0.10));
-		LaunchLaser(this, org, (dir - v_right * 0.10));	
+		LaunchGuardianLaser(this, org, (dir + v_right * 0.10));
+		LaunchGuardianLaser(this, org, (dir - v_right * 0.10));	
 	}
 }
 

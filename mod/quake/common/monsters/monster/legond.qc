@@ -220,7 +220,7 @@ void Legond_FireLightning(entity this)
 	vector org = ((this.origin + '0 0 12') - (v_right * 8));
 	vector dir = normalize((this.enemy.origin + '0 0 16') - org);
 	traceline(org, (this.origin + (dir * 600)), true, this);
-	te_lightning2(NULL, org, trace_endpos); // should be this
+	SendCSQCLightningBeam(org, trace_endpos);
 	LightningDamage(org, (trace_endpos + (v_forward * 4)), this, 4, DEATH_MONSTER_LEGOND.m_id);
 	this.health = this.health + 3;
 	this.enemy.velocity = '0 0 150' + (v_forward * 400);
@@ -456,7 +456,7 @@ void Legond_Pain(entity this, entity attacker, float damage, int deathtype)
 }
 
 void legond_die24(entity this) { set_anim(this, 109, legond_die24); CorpseThink(this); }
-void legond_die23(entity this) { set_anim(this, 109, legond_die24); if(coop != 2 || world.model == "maps/aopend.bsp") NextLevel(); }
+void legond_die23(entity this) { set_anim(this, 109, legond_die24); if(!horde_ent && (coop != 2 || world.model == "maps/aopend.bsp")) NextLevel(); }
 void legond_die22(entity this) { set_anim(this, 109, legond_die23); }
 void legond_die21(entity this) { set_anim(this, 109, legond_die22); }
 void legond_die20(entity this) { set_anim(this, 109, legond_die21); }
