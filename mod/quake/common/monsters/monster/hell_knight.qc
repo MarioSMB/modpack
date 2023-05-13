@@ -432,10 +432,10 @@ spawnfunc(monster_hell_knight)
 {
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
-		monster_start(this, MON_DARK_KNIGHT);
+		monster_start(this, true, MON_DARK_KNIGHT);
 		return;
 	}
-	monster_start(this, MON_HELL_KNIGHT);
+	monster_start(this, true, MON_HELL_KNIGHT);
 }
 #endif // SVQC
 

@@ -370,7 +370,7 @@ void blud_die(entity this, entity inflictor, entity attacker, int deathtype)
 spawnfunc(monster_blud)
 {
 	if(!MP_IMPEL) { delete(this); return; }
-	monster_start(this, MON_BLUD);
+	monster_start(this, true, MON_BLUD);
 }
 #endif // SVQC
 

@@ -274,7 +274,7 @@ Statue - (rogue only) select this to use the stone skin and have him frozen in p
 delay: time from sight to attack (default 5)
 frame: frame to be frozen in. (default 44)
 */
-spawnfunc(monster_knight) { monster_start(this, MON_KNIGHT); }
+spawnfunc(monster_knight) { monster_start(this, true, MON_KNIGHT); }
 #endif // SVQC
 
 #ifdef SVQC

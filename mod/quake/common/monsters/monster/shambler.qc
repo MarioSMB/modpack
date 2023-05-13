@@ -386,12 +386,12 @@ spawnfunc(monster_shambler)
 	if(coop == 2 && orig_random(this) < 0.2)
 	{
 		if(orig_random(this) < 0.1)
-			monster_start(this, MON_BLUD);
+			monster_start(this, true, MON_BLUD);
 		else
-			monster_start(this, MON_JUGGERNAUT);
+			monster_start(this, true, MON_JUGGERNAUT);
 		return;
 	}
-	monster_start(this, MON_SHAMBLER);
+	monster_start(this, true, MON_SHAMBLER);
 }
 #endif // SVQC
 

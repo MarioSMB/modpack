@@ -346,10 +346,10 @@ spawnfunc(monster_dog)
 {
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
-		monster_start(this, MON_SPIDER_DROID);
+		monster_start(this, true, MON_SPIDER_DROID);
 		return;
 	}
-	monster_start(this, MON_ROTTWEILER);
+	monster_start(this, true, MON_ROTTWEILER);
 }
 #endif // SVQC
 

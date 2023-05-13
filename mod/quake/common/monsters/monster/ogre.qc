@@ -506,16 +506,16 @@ spawnfunc(monster_ogre)
 {
 	if(random() < 0.2 && fexists("progs/cook.mdl"))
 	{
-		monster_start(this, MON_COOK);
+		monster_start(this, true, MON_COOK);
 		return;
 	}
-	monster_start(this, MON_OGRE);
+	monster_start(this, true, MON_OGRE);
 }
 spawnfunc(monster_ogre_marksman)
 {
 	if(MP_ROGUE) { delete(this); return; }
 	this.classname = "monster_ogre_marksman"; // TODO: separate monster?
-	monster_start(this, MON_OGRE);
+	monster_start(this, true, MON_OGRE);
 }
 #endif // SVQC
 

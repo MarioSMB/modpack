@@ -203,7 +203,35 @@ void StartMonster(entity this, entity actor, entity trigger)
 	monster_start_go(this);
 }
 
-void monster_start(entity this, Monster mon)
+void Monster_Appear_Delayed(entity this)
+{
+	monster_start(this, false, this.monsterdef);
+}
+
+void Monster_Appear(entity this, entity actor, entity trigger)
+{
+	float timer = (this.delay) ? this.delay : 0;
+	setthink(this, Monster_Appear_Delayed);
+	this.nextthink = time + timer;
+}
+
+bool Monster_Appear_Check(entity this, Monster monster_id)
+{
+	if(!(monster_id.spawnflags & MON_FLAG_APPEAR))
+		return false;
+	if(this.targetname == "" || !this.targetname)
+		return false;
+
+	setthink(this, func_null);
+	this.monsterdef = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
+	this.nextthink = 0;
+	this.use = Monster_Appear;
+	this.flags = FL_MONSTER; // set so this monster can get butchered
+
+	return true;
+}
+
+void monster_start(entity this, bool check_appear, Monster mon)
 {
 	if(!mon || mon == MON_Null) { return; } // invalid monster
 	if(deathmatch) { delete(this); return; }
@@ -212,6 +240,9 @@ void monster_start(entity this, Monster mon)
 		delete(this);
 		return;
 	}
+
+	if(check_appear && Monster_Appear_Check(this, mon))
+		return;
 
 	this.flags |= FL_MONSTER;
 	this.monsterdef = mon;
@@ -222,9 +253,13 @@ void monster_start(entity this, Monster mon)
 
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_STEP);
+
 	setmodel(this, mon.m_model);
 	setsize(this, mon.m_mins, mon.m_maxs);
 	setcefc(this, monster_customize);
+
+	this.nextthink = this.nextthink + random() * 0.5;
+	setthink(this, monster_start_go);
 
 	mon.mr_setup(mon, this);
 
@@ -248,9 +283,6 @@ void monster_start(entity this, Monster mon)
 		this.solid = SOLID_NOT;
 		return;
 	}
-
-	this.nextthink = this.nextthink + random() * 0.5;
-	setthink(this, monster_start_go);
 }
 
 // Yoder Sept24 2021, Horde Merge

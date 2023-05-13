@@ -195,10 +195,10 @@ spawnfunc(monster_shalrath)
 {
 	if(coop == 2 && orig_random(this) < 0.2)
 	{
-		monster_start(this, MON_LEGOND);
+		monster_start(this, true, MON_LEGOND);
 		return;
 	}
-	monster_start(this, MON_VORE);
+	monster_start(this, true, MON_VORE);
 }
 #endif // SVQC
 

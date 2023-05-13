@@ -298,12 +298,12 @@ void Gren_Pain(entity this, entity attacker, float damage, int deathtype)
 spawnfunc(monster_grenling)
 {
 	if(!MP_IMPEL) { delete(this); return; }
-	monster_start(this, MON_GRENLING);
+	monster_start(this, true, MON_GRENLING);
 }
 spawnfunc(monster_gren)
 {
 	if(!MP_IMPEL) { delete(this); return; }
-	monster_start(this, MON_GRENLING);
+	monster_start(this, true, MON_GRENLING);
 }
 #endif // SVQC
 

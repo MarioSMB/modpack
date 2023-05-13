@@ -1478,7 +1478,7 @@ bool GremlinCheckAttack(entity this);
 spawnfunc(monster_gremlin)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
-	monster_start(this, MON_GREMLIN);
+	monster_start(this, true, MON_GREMLIN);
 }
 #endif // SVQC
 

@@ -356,10 +356,10 @@ spawnfunc(monster_wizard)
 {
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
-		monster_start(this, MON_GRENLING);
+		monster_start(this, true, MON_GRENLING);
 		return;
 	}
-	monster_start(this, MON_SCRAG);
+	monster_start(this, true, MON_SCRAG);
 }
 #endif // SVQC
 

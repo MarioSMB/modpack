@@ -256,7 +256,7 @@ void bam_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 /*QUAKED monster_bambler (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 */
-spawnfunc(monster_bambler) { monster_start(this, MON_BAMBLER); }
+spawnfunc(monster_bambler) { monster_start(this, true, MON_BAMBLER); }
 #endif // SVQC
 
 #ifdef SVQC

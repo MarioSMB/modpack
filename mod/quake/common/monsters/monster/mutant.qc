@@ -314,7 +314,7 @@ void Mutant_JumpTouch(entity this, entity toucher)
 
 /*QUAKED monster_mutant(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
-spawnfunc(monster_mutant) { monster_start(this, MON_MUTANT); }
+spawnfunc(monster_mutant) { monster_start(this, true, MON_MUTANT); }
 #endif // SVQC
 
 #ifdef SVQC

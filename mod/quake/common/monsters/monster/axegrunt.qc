@@ -286,7 +286,7 @@ void axe_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 /*QUAKED monster_axegrunt (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */
-spawnfunc(monster_axegrunt) { monster_start(this, MON_AXEGRUNT); }
+spawnfunc(monster_axegrunt) { monster_start(this, true, MON_AXEGRUNT); }
 #endif // SVQC
 
 #ifdef SVQC

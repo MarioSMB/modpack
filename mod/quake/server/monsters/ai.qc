@@ -886,9 +886,12 @@ void StopHuntingCharmer(entity this)
 void HuntTarget(entity this)
 {
 	this.goalentity = this.enemy;
-	setthink(this, this.th_run);
+	if(this.th_run)
+	{
+		setthink(this, this.th_run);
+		this.nextthink = time + 0.1;
+	}
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
-	this.nextthink = time + 0.1;
 	this.attack_finished = time + 1; // initial delay for attacking
 }
 

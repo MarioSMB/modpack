@@ -72,7 +72,17 @@ void morph_run4(entity this) { set_animofs(this, anim_morph_mfrun01, 4, morph_ru
 void morph_run3(entity this) { set_animofs(this, anim_morph_mfrun01, 3, morph_run4); ai_run(this, 16); }
 void morph_run2(entity this) { set_animofs(this, anim_morph_mfrun01, 2, morph_run3); ai_run(this, 11); }
 	// 33
-void morph_run1(entity this) { set_animofs(this, anim_morph_mfrun01, 1, morph_run2); ai_run(this, 7); }
+void morph_run1(entity this)
+{
+	set_animofs(this, anim_morph_mfrun01, 1, morph_run2);
+	if(this.skin == 2) // canceled out of setup
+	{
+		this.solid = SOLID_SLIDEBOX;
+		this.takedamage = DAMAGE_AIM;		
+		this.skin = 0;
+	}
+	ai_run(this, 7);
+}
 
 // ========================
 // new attack code
@@ -319,12 +329,12 @@ void morph_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 void morph_wake31(entity this)
 {
-	set_animofs(this, anim_morph_start01, 31, morph_stand1); 
+	set_animofs(this, anim_morph_start01, 31, morph_stand1);
 
 	this.solid = SOLID_SLIDEBOX;
 	this.takedamage = DAMAGE_AIM;		
-	this.skin = this.skin - 1;
-	if(this.owner)
+	this.skin -= 1;
+	if(this.guardian_owner)
 	{
 		setthink(this, morph_run1);
 		this.nextthink = time + 0.1;
@@ -365,96 +375,73 @@ void morph_wake1(entity this)
 	set_animofs(this, anim_morph_start01, 1, morph_wake2);
 
 	_sound(this, CH_VOICE, "guard/see1.wav", 1, ATTN_NORM);
-	if(this.owner)
+	if(this.guardian_owner)
 	{
 //		this.solid = SOLID_SLIDEBOX;
 //		this.takedamage = DAMAGE_NO;
 
-		monsters_total += 1;
+		//monsters_total += 1;
   
-		this.owner.childrenSpawned = this.owner.childrenSpawned + 1;
+		this.guardian_owner.childrenSpawned = this.guardian_owner.childrenSpawned + 1;
 	}
 }
 
-void morph_setup(entity theMorph)
+void morph_setup(entity this)
 {
-	theMorph.solid = SOLID_SLIDEBOX;
-	set_movetype(theMorph, MOVETYPE_STEP);
-	theMorph.takedamage = DAMAGE_NO;
-	theMorph.flags |= FL_MONSTER;
-	theMorph.ideal_yaw = theMorph.angles * '0 1 0';
-	if(!theMorph.yaw_speed)
-		theMorph.yaw_speed = 20;
-	theMorph.view_ofs = '0 0 25';
-	theMorph.frame = anim_morph_start01;
+	this.solid = SOLID_SLIDEBOX;
+	set_movetype(this, MOVETYPE_STEP);
+	this.takedamage = DAMAGE_NO;
+	this.flags |= FL_MONSTER;
+	this.ideal_yaw = this.angles * '0 1 0';
+	if(!this.yaw_speed)
+		this.yaw_speed = 20;
+	this.view_ofs = '0 0 25';
+	this.frame = anim_morph_start01;
 
-	if(!theMorph.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, theMorph);
-	theMorph.damagedbycontents	= true;
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
 
-	_setmodel(theMorph, theMorph.model);
+	_setmodel(this, this.mdl);
 
-	setsize(theMorph, VEC_HULL_MIN, VEC_HULL_MAX);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 
-	theMorph.th_stand = morph_stand1;
-	theMorph.th_walk = morph_walk1;
-	theMorph.th_run = morph_run1;
-	theMorph.th_missile = morph_fire1;
-	theMorph.th_melee = morph_attack;
-	theMorph.th_pain = morph_pain;
-	theMorph.th_die = morph_die;
+	this.th_stand = morph_stand1;
+	this.th_walk = morph_walk1;
+	this.th_run = morph_run1;
+	this.th_missile = morph_fire1;
+	this.th_melee = morph_attack;
+	this.th_pain = morph_pain;
+	this.th_die = morph_die;
 
-	if(theMorph.owner)
+	if(this.guardian_owner)
 	{
-		theMorph.effects = 0;
-		theMorph.health = 200;
-		theMorph.spawnflags = theMorph.owner.spawnflags;
+		this.effects = 0;
+		this.health = 200;
+		this.spawnflags = this.guardian_owner.spawnflags;
 	}
 	else
 	{
-		theMorph.effects |= EF_DIMLIGHT;
-		theMorph.health = 2000;
+		this.effects |= EF_DIMLIGHT;
+		this.health = 2000;
 	}
-	
-//	theMorph.frame = $start01;
-	theMorph.skin = 2;
+	this.max_health = this.health;
+
+	this.skin = 2;
 }
 
 bool isSpawnPointEmpty(entity thePoint);
 void morph_wake(entity this)
 {
-	if(isSpawnPointEmpty(this))
-	{
-		morph_setup(this);
-		setthink(this, morph_wake1);
-	}
-	else
-	{
-		setthink(this, morph_wake);
-	}
-	
+	morph_setup(this);
+	setthink(this, morph_wake1);
 	this.nextthink = time + 0.1;
-}
-
-void morph_use(entity this, entity actor, entity trigger)
-{
-//	this.enemy = actor;
-	if(this.delay)
-	{
-		setthink(this, morph_wake);
-		this.nextthink = time + this.delay;
-	}
-	else
-	{
-		setthink(this, morph_wake);
-		this.nextthink = time + 0.1;
-	}
 }
 
 entity overlord_find_dest3();
 void morph_teleport(entity this)
 {
-	if(this.owner)
+	if(this.guardian_owner)
 		return;
 
 	if(this.childrenSpawned > (1 + autocvar_skill))
@@ -465,9 +452,9 @@ void morph_teleport(entity this)
 		return;
 
 	entity theChild = new(monster_morph);
-	theChild.model = this.model;
+	theChild.mdl = this.mdl;
 	theChild.angles = theDest.mangle;
-	theChild.owner = this;
+	theChild.guardian_owner = this;
 	theChild.enemy = this.enemy;
 	theChild.movetarget = this.movetarget;
 	theChild.goalentity = this.goalentity;
@@ -487,29 +474,43 @@ The morphing monster.
 Select the look of the monster (Aztec,Greek,Egyptian).
 If the monster has a targetname (triggered by something) he will rise up out of the floor when triggered.
 */
-spawnfunc(monster_morph)
-{
-	if(!MP_ROGUE) { delete(this); return; }
-	if(deathmatch) { delete(this); return; }
+spawnfunc(monster_morph) { monster_start(this, true, MON_GUARDIAN); }
+#endif
 
-	if(this.spawnflags & MORPH_AZTEC)		// Aztec
+#ifdef SVQC
+METHOD(Guardian, mr_setup, bool(Guardian this, entity actor))
+{
+    TC(Guardian, this);
+
+	// hack to make guardian use an existing skin if none is selected (when one is spawned in, for example)
+	if(!(actor.spawnflags & MORPH_AZTEC) && !(actor.spawnflags & MORPH_EGYPT) && !(actor.spawnflags & MORPH_GREEK))
+	{
+		float r = random();
+		if(r > 0.66)
+			actor.spawnflags |= MORPH_AZTEC;
+		else if(r > 0.33)
+			actor.spawnflags |= MORPH_EGYPT;
+		else
+			actor.spawnflags |= MORPH_GREEK;
+	}
+
+	if(actor.spawnflags & MORPH_AZTEC) // Aztec
 	{
 		precache_model("progs/morph_az.mdl");
-		this.model = "progs/morph_az.mdl";
+		actor.mdl = "progs/morph_az.mdl";
 	}
-	else if(this.spawnflags & MORPH_EGYPT)
-	// Egyptian
+	else if(actor.spawnflags & MORPH_EGYPT) // Egyptian
 	{
 		precache_model("progs/morph_eg.mdl");
-		this.model = "progs/morph_eg.mdl";
+		actor.mdl = "progs/morph_eg.mdl";
 	}
-	else if(this.spawnflags & MORPH_GREEK)	// greek
+	else if(actor.spawnflags & MORPH_GREEK)	// greek
 	{
 		precache_model("progs/morph_gr.mdl");
-		this.model = "progs/morph_gr.mdl";
+		actor.mdl = "progs/morph_gr.mdl";
 	}
-	else
-		objerror(this, "monster_morph: no skin selection!");
+	//else
+		//objerror(actor, "monster_morph: no skin selection!");
 	
 	precache_model2("progs/laser.mdl");
 	precache_sound2("enforcer/enfire.wav");
@@ -517,14 +518,13 @@ spawnfunc(monster_morph)
 	precache_sound2("guard/pain1.wav");
 	precache_sound2("guard/see1.wav");
 
-	this.monsterdef = MON_GUARDIAN;
+	// undo what setup did
+	setmodel(actor, MDL_Null);
+	setsize(actor, '0 0 0', '0 0 0');
 
-	// NOTE: this isn't actually handled as a monster
-	// however, it does count towards the total monster count!
-	monsters_total += 1;
-	if(this.targetname && this.targetname != "")
-		this.use = morph_use;
-	else
-		morph_wake(this);
+	// if we got this far, wake up!!
+	morph_wake(actor);
+
+    return true;
 }
 #endif

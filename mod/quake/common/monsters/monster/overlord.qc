@@ -22,9 +22,9 @@ bool isSpawnPointEmpty(entity thePoint)
 	entity start = neighbors;
 	while(neighbors)
 	{
-		if(neighbors != thePoint)
+		if(neighbors != thePoint && !is_pure(neighbors))
 		{
-			if(neighbors.flags & FL_MONSTER)
+			if(IS_MONSTER(neighbors))
 			{
 				return false;
 			}
@@ -32,7 +32,7 @@ bool isSpawnPointEmpty(entity thePoint)
 			{
 				return false;
 			}
-			else if(getthink(neighbors))
+			else if(getthink(neighbors) && (neighbors.solid == SOLID_BBOX || neighbors.solid == SOLID_BSP || neighbors.solid == SOLID_SLIDEBOX))
 			{
 				return false;
 			}
@@ -434,7 +434,7 @@ BossMode enables the superwrath's powershield and the random teleporting.
 spawnfunc(monster_super_wrath)
 {
 	if(!MP_ROGUE) { delete(this); return; }
-	monster_start(this, MON_OVERLORD);
+	monster_start(this, true, MON_OVERLORD);
 }
 #endif // SVQC
 

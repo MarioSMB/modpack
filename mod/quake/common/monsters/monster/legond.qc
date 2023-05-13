@@ -491,7 +491,7 @@ void legond_die1(entity this, entity inflictor, entity attacker, int deathtype)
 spawnfunc(monster_legond)
 {
 	if(!MP_IMPEL) { delete(this); return; }
-	monster_start(this, MON_LEGOND);
+	monster_start(this, true, MON_LEGOND);
 }
 #endif // SVQC
 

@@ -1285,19 +1285,19 @@ void W_WeaponFrame(entity this)
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
 
-		int button_atck = PHYS_INPUT_BUTTON_ATCK(this);
 		Weapon wep = this.weaponentity.m_weapon;
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		
 	// check for attack
-		if(button_atck && wep.wr_checkammo1(wep, this));
-		{
-			SuperDamageSound(this);
-			W_Attack(this, false);
-		}
-
 		if(wep != WEP_Null)
-			wep.wr_think(wep, this, button_atck);
+		{
+			if(this.button0 && wep.wr_checkammo1(wep, this))
+			{
+				SuperDamageSound(this);
+				W_Attack(this, false);
+			}
+			wep.wr_think(wep, this, this.button0);
+		}
 	}
 
 	// TODO: split into a separate entity attached to the player?

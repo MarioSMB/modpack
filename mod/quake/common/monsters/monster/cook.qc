@@ -646,7 +646,7 @@ bool cook_WAVS(entity this)
 	return (this.cnt > 8);
 }
 
-spawnfunc(monster_cook) { monster_start(this, MON_COOK); }
+spawnfunc(monster_cook) { monster_start(this, true, MON_COOK); }
 #endif // SVQC
 
 #ifdef SVQC

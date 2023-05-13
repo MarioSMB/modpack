@@ -13,7 +13,7 @@ MODEL(MON_GUARDIAN_GREEK, "progs/morph_gr.mdl");
 #endif
 
 CLASS(Guardian, Monster)
-    ATTRIB(Guardian, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_ROGUE);
+    ATTRIB(Guardian, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_ROGUE | MON_FLAG_APPEAR);
     ATTRIB(Guardian, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Guardian, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC
@@ -24,3 +24,7 @@ CLASS(Guardian, Monster)
 ENDCLASS(Guardian)
 
 REGISTER_MONSTER(GUARDIAN, NEW(Guardian));
+
+#ifdef SVQC
+.entity guardian_owner; // pointer to the original guardian for clones
+#endif

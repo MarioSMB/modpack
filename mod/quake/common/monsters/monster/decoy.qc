@@ -66,7 +66,7 @@ void become_decoy(string targ, vector orig)
 	entity decoy = new(monster_decoy);
 	setorigin(decoy, orig);
 	decoy.target = targ;
-	monster_start(decoy, MON_DECOY);
+	monster_start(decoy, true, MON_DECOY);
 }
 
 /*QUAKED monster_decoy (1 0 0) (-16 -16 -24) (16 16 40)
@@ -74,7 +74,7 @@ void become_decoy(string targ, vector orig)
 spawnfunc(monster_decoy)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
-	monster_start(this, MON_DECOY);
+	monster_start(this, true, MON_DECOY);
 }
 #endif // SVQC
 

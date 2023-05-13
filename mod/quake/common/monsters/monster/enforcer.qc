@@ -305,15 +305,15 @@ spawnfunc(monster_enforcer)
 {
 	if(world.model == "maps/aop2m2.bsp")
 	{
-		monster_start(this, MON_DARK_KNIGHT);
+		monster_start(this, true, MON_DARK_KNIGHT);
 		return;
 	}
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
-		monster_start(this, MON_LIGHTNING_ENFORCER);
+		monster_start(this, true, MON_LIGHTNING_ENFORCER);
 		return;
 	}
-	monster_start(this, MON_ENFORCER);
+	monster_start(this, true, MON_ENFORCER);
 }
 #endif // SVQC
 

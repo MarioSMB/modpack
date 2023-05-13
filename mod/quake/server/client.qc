@@ -2281,12 +2281,6 @@ void PlayerPostThink(entity this)
 			this.cnt = 0;
 		}
 
-		if(this.rifle_cnt > 0 && !this.button3)
-		{
-			this.attack_finished = time + 0.8;
-			this.rifle_cnt = 0;
-		}
-
 		// AY 11 Nov 2021, check killspree end
 		if(MP_MG)
 		{

@@ -423,7 +423,7 @@ void ScourgeTriggerTouch(entity this, entity toucher)
 spawnfunc(monster_scourge)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
-	monster_start(this, MON_CENTROID);
+	monster_start(this, true, MON_CENTROID);
 }
 #endif // SVQC
 

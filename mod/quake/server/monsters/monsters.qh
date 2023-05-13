@@ -20,3 +20,5 @@ bool monster_checkspawnedflag(entity this);
 bool monster_customize(entity this, entity client);
 
 void monster_start_go(entity this);
+
+void monster_start(entity this, bool check_appear, Monster mon);

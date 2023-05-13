@@ -383,8 +383,8 @@ void _sui_mouse1_up()
 						break;
 					
 					// Register click
-					_click_actions[_click_action_count] = _action_elements_id[i];
-					_last_clicked_actions[_last_clicked_action_count] = _action_elements_id[i];
+					strcpy(_click_actions[_click_action_count], _action_elements_id[i]);
+					strcpy(_last_clicked_actions[_last_clicked_action_count], _action_elements_id[i]);
 					_click_action_count += 1;
 					_last_clicked_action_count += 1;
 				}

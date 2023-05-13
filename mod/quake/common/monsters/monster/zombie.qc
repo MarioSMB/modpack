@@ -649,7 +649,7 @@ spawnfunc(monster_zombie)
 		if(this.spawnflags & SPAWN_AMBUSH)
 			this.spawnflags = SPAWN_LYING;
 
-		monster_start(this, MON_ZOMBIE);
+		monster_start(this, true, MON_ZOMBIE);
 	}
 	else if((this.spawnflags & SPAWN_SNEAKY))
 	{
@@ -680,7 +680,7 @@ spawnfunc(monster_zombie)
 	{
 		if((this.spawnflags & SPAWN_AMBUSH))
 			this.spawnflags = SPAWN_LYING;
-		monster_start(this, MON_ZOMBIE);
+		monster_start(this, true, MON_ZOMBIE);
 	}
 
 	if((this.spawnflags & SPAWN_LYINGDOWN))

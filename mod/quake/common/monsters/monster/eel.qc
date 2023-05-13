@@ -202,7 +202,7 @@ void eel_pain1(entity this, entity attacker, float damage, int deathtype)
 spawnfunc(monster_eel)
 {
 	if(!MP_ROGUE) { delete(this); return; }
-	monster_start(this, MON_EEL);
+	monster_start(this, true, MON_EEL);
 }
 #endif // SVQC
 

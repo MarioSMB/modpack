@@ -451,7 +451,7 @@ ROLLING: floyd is on his back and helpless. explodes after taking 50 damage.
 
 ASLEEP: floyd will not respond to anything unless he is shot or his targetname is triggered.
 */
-spawnfunc(monster_floyd) { monster_start(this, MON_FLOYD); }
+spawnfunc(monster_floyd) { monster_start(this, true, MON_FLOYD); }
 #endif // SVQC
 
 #ifdef SVQC
