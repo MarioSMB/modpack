@@ -329,49 +329,83 @@ void horde_ammo_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	
+	// if player is at max ammo for ammo's type, return
+	bool pickedup = false;
+
+	if(this.ammo_shells && toucher.ammo_shells < 100)
+	{
+		toucher.ammo_shells += this.ammo_shells;
+		SendItemPickup(toucher, this.items, this.ammo_shells);
+		pickedup = true;
+	}
+	if(this.ammo_nails && toucher.ammo_nails < 200)
+	{
+		toucher.ammo_nails += this.ammo_nails;
+		SendItemPickup(toucher, this.items, this.ammo_nails);
+		pickedup = true;
+	}
+	if(this.ammo_rockets && toucher.ammo_rockets < 100)
+	{
+		toucher.ammo_rockets += this.ammo_rockets;
+		SendItemPickup(toucher, this.items, this.ammo_rockets);
+		pickedup = true;
+	}
+	if(this.ammo_cells && toucher.ammo_cells < 100)
+	{
+		toucher.ammo_cells += this.ammo_cells;
+		SendItemPickup(toucher, this.items, this.ammo_cells);
+		pickedup = true;
+	}
+	if(this.ammo_lava_nails && toucher.ammo_lava_nails < 200)
+	{
+		toucher.ammo_lava_nails += this.ammo_lava_nails;
+		SendItemPickup(toucher, this.items, this.ammo_lava_nails);
+		pickedup = true;
+	}
+	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < 100)
+	{
+		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
+		SendItemPickup(toucher, this.items, this.ammo_multi_rockets);
+		pickedup = true;
+	}
+	if(this.ammo_plasma && toucher.ammo_plasma < 100)
+	{
+		toucher.ammo_plasma += this.ammo_plasma;
+		SendItemPickup(toucher, this.items, this.ammo_plasma);
+		pickedup = true;
+	}
+
+	if(!pickedup)
+		return;
+
 	// if the player was using their best weapon, change up to the new one if better		
 	Weapon best_weapon = w_getbestweapon(toucher);
-	
-	// if player is at max ammo for ammo's type, return
-	if(((this.weapon == 1) && (toucher.ammo_shells >= 100)) || // shotgun
-		((this.weapon == 2) && (toucher.ammo_nails >= 200)) || // nailgun
-		((this.weapon == 3) && (toucher.ammo_rockets >= 100)) || // rockets
-		((this.weapon == 4) && (toucher.ammo_cells >= 100))) // cells
-		return;
-		
-	SendItemPickup(toucher, this.items, this.aflag);
-	
+
 	// ammo touch sound
-	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
+	if(this.noise && this.noise != "")
+		_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	// change to a better weapon if appropriate
 	if(toucher.weaponentity.m_weapon == best_weapon)
 		W_SwitchWeapon(toucher, w_getbestweapon(toucher));
 
 	// loop through all players and give ammo
-	entity temp_player = find(NULL, classname, "player");
-	while(temp_player)
+	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		if(temp_player.health > 0) // only give ammo to living players
-		{
-			if(this.weapon == 1) // shotgun
-				temp_player.ammo_shells += this.aflag;
-			else if(this.weapon == 2) // spikes
-				temp_player.ammo_nails += this.aflag;
-			else if(this.weapon == 3) // rockets
-				temp_player.ammo_rockets += this.aflag;
-			else if(this.weapon == 4) // cells
-				temp_player.ammo_cells += this.aflag;
+		toucher.ammo_shells += this.ammo_shells;
+		toucher.ammo_nails += this.ammo_nails;
+		toucher.ammo_rockets += this.ammo_rockets;
+		toucher.ammo_cells += this.ammo_cells;
+		toucher.ammo_lava_nails += this.ammo_lava_nails;
+		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
+		toucher.ammo_plasma += this.ammo_plasma;
 
-			// temp swap and set bounds
-			bound_other_ammo(temp_player);
+		// temp swap and set bounds
+		bound_other_ammo(it);
 			
-			// temp swap again and set current ammo
-			W_SetCurrentAmmo(temp_player);
-		}
-		temp_player = find(temp_player, classname, "player");
-	}
+		// temp swap again and set current ammo
+		W_SetCurrentAmmo(it);
+	});
 	
 	// remove
 	this.model = string_null;
@@ -397,7 +431,6 @@ void horde_health_touch(entity this, entity toucher)
 	
 	// health touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
 	
 	this.model = string_null;
 	this.solid = SOLID_NOT;
@@ -447,7 +480,6 @@ void horde_armor_touch(entity this, entity toucher)
 	//sprint(toucher, "You got armor\n");
 // armor touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
 	this.owner.wait = false;
 	delete(this);
 }
@@ -534,7 +566,6 @@ void horde_key_touch(entity this, entity toucher)
 	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_KEY_GOT_SELF, keyname);
 	
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
 	
 	horde_key_give(this.items);
 	
@@ -579,6 +610,7 @@ void SpawnAmmo(entity this)
 	if(r <= 7) // shells
 	{
 		item.classname = "item_shells";
+		item.noise = "weapons/lock4.wav";
 		if(is_big)
 		{
 			_setmodel(item, "maps/b_shell1.bsp");
@@ -589,6 +621,7 @@ void SpawnAmmo(entity this)
 			_setmodel(item, "maps/b_shell0.bsp");
 			item.aflag = 20;
 		}
+		item.ammo_shells = item.aflag;
 		item.weapon = 1;
 		item.items = IT_SHELLS;
 		item.netname = "shells";
@@ -596,6 +629,7 @@ void SpawnAmmo(entity this)
 	else if(r <= 14) // spikes
 	{
 		item.classname = "item_spikes";
+		item.noise = "weapons/lock4.wav";
 		if(is_big)
 		{
 			_setmodel(item, "maps/b_nail1.bsp");
@@ -606,6 +640,7 @@ void SpawnAmmo(entity this)
 			_setmodel(item, "maps/b_nail0.bsp");
 			item.aflag = 25;
 		}
+		item.ammo_nails = item.aflag;
 		item.weapon = 2;
 		item.items = IT_NAILS;
 		item.netname = "nails";
@@ -613,6 +648,7 @@ void SpawnAmmo(entity this)
 	else if(r <= 17) // rockets
 	{
 		item.classname = "item_rockets";
+		item.noise = "weapons/lock4.wav";
 		if(is_big)
 		{
 			_setmodel(item, "maps/b_rock1.bsp");
@@ -623,6 +659,7 @@ void SpawnAmmo(entity this)
 			_setmodel(item, "maps/b_rock0.bsp");
 			item.aflag = 5;
 		}
+		item.ammo_rockets = item.aflag;
 		item.weapon = 3;
 		item.items = IT_ROCKETS;
 		item.netname = "rockets";
@@ -630,6 +667,7 @@ void SpawnAmmo(entity this)
 	else // cells
 	{
 		item.classname = "item_cells";
+		item.noise = "weapons/lock4.wav";
 		if(is_big)
 		{
 			_setmodel(item, "maps/b_batt1.bsp");
@@ -640,6 +678,7 @@ void SpawnAmmo(entity this)
 			_setmodel(item, "maps/b_batt0.bsp");
 			item.aflag = 6;
 		}
+		item.ammo_cells = item.aflag;
 		item.weapon = 4;
 		item.items = IT_CELLS;
 		item.netname = "cells";

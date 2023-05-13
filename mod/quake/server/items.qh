@@ -8,6 +8,8 @@ bool autocvar_sv_quake_instance_backpacks = true;
 
 .int aflag;
 
+.bool noalign;
+
 .float wetsuit_finished = _STAT(WETSUIT_FINISHED);
 .float wetsuit_time;
 .float empathy_finished;

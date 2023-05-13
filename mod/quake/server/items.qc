@@ -81,7 +81,8 @@ void PlaceItem(entity this)
 	this.m_max = this.maxs;
 	setthink(this, FixItem);
 	this.nextthink = time + 1; // initial delay
-	droptofloor(this);
+	if(!this.noalign)
+		droptofloor(this);
 }
 
 /*
@@ -189,27 +190,30 @@ void health_touch(entity this, entity toucher)
 		return;
 	if(!IS_PLAYER(toucher))
 		return;
-	
-	if(this.healtype == 2) // Megahealth?  Ignore max_health...
+
+	bool pickedup = false;
+	if(this.healamount)
 	{
-		if(toucher.health >= 250)
-			return;
-		if(!T_Heal(toucher, this.healamount, true))
-			return;
+		if(this.healtype == 2) // Megahealth?  Ignore max_health...
+		{
+			if(toucher.health < 250 && T_Heal(toucher, this.healamount, true))
+				pickedup = true;
+		}
+		else
+		{
+			if(T_Heal(toucher, this.healamount, false))
+				pickedup = true;
+		}
 	}
-	else
-	{
-		if(!T_Heal(toucher, this.healamount, false))
-			return;
-	}
+
+	if(!pickedup)
+		return;
 
 	// NOTE: disabling spammy message as you already know from the HUD that you got it!
 	//sprint(toucher, sprintf("You receive %d health\n", this.healamount));
 	
 // health touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-
-	stuffcmd(toucher, "bf\n");
 	
 	this.model = string_null;
 	this.solid = SOLID_NOT;
@@ -249,6 +253,7 @@ ARMOR
 ===============================================================================
 */
 
+.float armorid; // temporary hack to make spawned items work
 void armor_touch(entity this, entity toucher)
 {
 	if(toucher.health <= 0)
@@ -256,28 +261,20 @@ void armor_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
+	bool pickedup = false;
 	float type = 0.3, value = 100;
 	int bit = IT_ARMOR1;
 
-	if(this.classname == "item_armor1")
+	if(this.armorvalue)
 	{
-		type = 0.3;
-		value = 100;
-		bit = IT_ARMOR1;
+		type = this.armortype;
+		value = this.armorvalue;
+		bit = this.armorid;
+		if(!(toucher.armortype * toucher.armorvalue >= type * value))
+			pickedup = true;
 	}
-	else if(this.classname == "item_armor2")
-	{
-		type = 0.6;
-		value = 150;
-		bit = IT_ARMOR2;
-	}
-	else if(this.classname == "item_armorInv")
-	{
-		type = 0.8;
-		value = 200;
-		bit = IT_ARMOR3;
-	}
-	if(toucher.armortype * toucher.armorvalue >= type * value)
+
+	if(!pickedup)
 		return;
 		
 	toucher.armortype = type;
@@ -311,6 +308,7 @@ spawnfunc(item_armor1)
 	settouch(this, armor_touch);
 	this.armortype = 0.3;
 	this.armorvalue = 100;
+	this.armorid = IT_ARMOR1;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 0;
@@ -326,6 +324,7 @@ spawnfunc(item_armor2)
 	settouch(this, armor_touch);
 	this.armortype = 0.6;
 	this.armorvalue = 150;
+	this.armorid = IT_ARMOR2;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 1;
@@ -342,6 +341,7 @@ spawnfunc(item_armorInv)
 	settouch(this, armor_touch);
 	this.armortype = 0.8;
 	this.armorvalue = 200;
+	this.armorid = IT_ARMOR3;
 	precache_model("progs/armor.mdl");
 	_setmodel(this, "progs/armor.mdl");
 	this.skin = 2;
@@ -701,70 +701,59 @@ void ammo_touch(entity this, entity toucher)
 
 // if the player was using his best weapon, change up to the new one if better		
 	Weapon best = w_getbestweapon(toucher);
+	bool pickedup = false;
 
-
-// shotgun
-	if(this.weapon == 1)
+	if(this.ammo_shells && toucher.ammo_shells < 100)
 	{
-		if(toucher.ammo_shells >= 100)
-			return;
-		toucher.ammo_shells += this.aflag;
+		toucher.ammo_shells += this.ammo_shells;
+		SendItemPickup(toucher, this.items, this.ammo_shells);
+		pickedup = true;
+	}
+	if(this.ammo_nails && toucher.ammo_nails < 200)
+	{
+		toucher.ammo_nails += this.ammo_nails;
+		SendItemPickup(toucher, this.items, this.ammo_nails);
+		pickedup = true;
+	}
+	if(this.ammo_rockets && toucher.ammo_rockets < 100)
+	{
+		toucher.ammo_rockets += this.ammo_rockets;
+		SendItemPickup(toucher, this.items, this.ammo_rockets);
+		pickedup = true;
+	}
+	if(this.ammo_cells && toucher.ammo_cells < 100)
+	{
+		toucher.ammo_cells += this.ammo_cells;
+		SendItemPickup(toucher, this.items, this.ammo_cells);
+		pickedup = true;
+	}
+	if(this.ammo_lava_nails && toucher.ammo_lava_nails < 200)
+	{
+		toucher.ammo_lava_nails += this.ammo_lava_nails;
+		SendItemPickup(toucher, this.items, this.ammo_lava_nails);
+		pickedup = true;
+	}
+	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < 100)
+	{
+		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
+		SendItemPickup(toucher, this.items, this.ammo_multi_rockets);
+		pickedup = true;
+	}
+	if(this.ammo_plasma && toucher.ammo_plasma < 100)
+	{
+		toucher.ammo_plasma += this.ammo_plasma;
+		SendItemPickup(toucher, this.items, this.ammo_plasma);
+		pickedup = true;
 	}
 
-// spikes
-	if(this.weapon == 2)
-	{
-		if(toucher.ammo_nails >= 200)
-			return;
-		toucher.ammo_nails += this.aflag;
-	}
-
-//	rockets
-	if(this.weapon == 3)
-	{
-		if(toucher.ammo_rockets >= 100)
-			return;
-		toucher.ammo_rockets += this.aflag;
-	}
-
-//	cells
-	if(this.weapon == 4)
-	{
-		if(toucher.ammo_cells >= 100)
-			return;
-		toucher.ammo_cells += this.aflag;
-	}
-
-	// lava nails
-	if(this.weapon == 5)
-	{
-		if(toucher.ammo_lava_nails >= 200)
-			return;
-		toucher.ammo_lava_nails += this.aflag;
-	}
-
-	// multi rockets
-	if(this.weapon == 6)
-	{
-		if(toucher.ammo_multi_rockets >= 100)
-			return;
-		toucher.ammo_multi_rockets += this.aflag;
-	}
-
-	// plasma
-	if(this.weapon == 7)
-	{
-		if(toucher.ammo_plasma >= 100)
-			return;
-		toucher.ammo_plasma += this.aflag;
-	}
+	if(!pickedup)
+		return;
 
 	bound_other_ammo(toucher);
 
-	SendItemPickup(toucher, this.items, this.aflag);
-
 // ammo touch sound
-	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
+	if(this.noise && this.noise != "")
+		_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 // change to a better weapon if appropriate
 
@@ -816,9 +805,6 @@ void ammo_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
-
-
-
 const int WEAPON_BIG2 = BIT(0);
 
 /*QUAKED item_shells(0 .5 .8)(0 0 0)(32 32 32) big
@@ -839,9 +825,11 @@ spawnfunc(item_shells)
 		setmodel(this, MDL_ITEM_SHELLS);
 		this.aflag = 20;
 	}
+	this.ammo_shells = this.aflag;
 	this.weapon = 1;
 	this.items = IT_SHELLS;
 	this.netname = "shells";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -864,9 +852,11 @@ spawnfunc(item_spikes)
 		setmodel(this, MDL_ITEM_NAILS);
 		this.aflag = 25;
 	}
+	this.ammo_nails = this.aflag;
 	this.weapon = 2;
 	this.items = IT_NAILS;
 	this.netname = "nails";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -893,9 +883,11 @@ spawnfunc(item_lava_spikes)
 		_setmodel(this, "maps/b_lnail0.bsp");
 		this.aflag = 25;
 	}
+	this.ammo_lava_nails = this.aflag;
 	this.weapon = 5;
 	this.items = IT_LAVA_NAILS;
 	this.netname = "lava nails";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -919,9 +911,11 @@ spawnfunc(item_rockets)
 		setmodel(this, MDL_ITEM_ROCKETS);
 		this.aflag = 5;
 	}
+	this.ammo_rockets = this.aflag;
 	this.weapon = 3;
 	this.items = IT_ROCKETS;
 	this.netname = "rockets";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -949,9 +943,11 @@ spawnfunc(item_multi_rockets)
 		_setmodel(this, "maps/b_mrock0.bsp");
 		this.aflag = 5;
 	}
+	this.ammo_multi_rockets = this.aflag;
 	this.weapon = 6;
 	this.items = IT_MULTI_ROCKETS;
 	this.netname = "multi rockets";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -975,9 +971,11 @@ spawnfunc(item_cells)
 		setmodel(this, MDL_ITEM_CELLS);
 		this.aflag = 6;
 	}
+	this.ammo_cells = this.aflag;
 	this.weapon = 4;
 	this.items = IT_CELLS;
 	this.netname = "cells";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1004,9 +1002,11 @@ spawnfunc(item_plasma)
 		_setmodel(this, "maps/b_plas0.bsp");
 		this.aflag = 6;
 	}
+	this.ammo_plasma = this.aflag;
 	this.weapon = 7;
 	this.items = IT_PLASMA_AMMO;
 	this.netname = "plasma";
+	this.noise = "weapons/lock4.wav";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1036,6 +1036,7 @@ spawnfunc(item_weapon)
 			setmodel(this, MDL_ITEM_SHELLS);
 			this.aflag = 20;
 		}
+		this.ammo_shells = this.aflag;
 		this.weapon = WEP_SHOTGUN.m_id;
 		this.netname = "shells";
 	}
@@ -1054,6 +1055,7 @@ spawnfunc(item_weapon)
 			this.aflag = 20;
 			this.weapon = WEP_NAILGUN.m_id;
 		}
+		this.ammo_rockets = this.aflag;
 		this.netname = "spikes";
 	}
 
@@ -1069,6 +1071,7 @@ spawnfunc(item_weapon)
 			setmodel(this, MDL_ITEM_ROCKETS);
 			this.aflag = 5;
 		}
+		this.ammo_rockets = this.aflag;
 		this.weapon = WEP_ROCKET_LAUNCHER.m_id;
 		this.netname = "rockets";
 	}
