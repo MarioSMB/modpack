@@ -315,7 +315,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	//spawn_tfog(monster.origin);
 	
 	monster.owner = this;
-	if(!(mon.spawnflags & MONSTER_TYPE_UNDEAD)) // don't count zombies toward total goal
+	if(!(monster.flags & FL_CLONE) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD)) // don't count zombies toward total goal
 		monsters_total += 1;
 
 	return monster;

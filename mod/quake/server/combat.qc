@@ -180,7 +180,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		// Yoder Sept24, 2021 Horde Merge
 		if(horde_ent)
 		{
-			if(targ.monsterdef && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
+			if(targ.monsterdef && !(targ.flags & FL_CLONE) && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
 				monsters_killed += 1;
 			
 			// check kill spree
@@ -226,9 +226,9 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			// check to see about spawning a powerup
 			horde_spawn_powerup(targ);
 		}
-		else
+		else if(!(targ.flags & FL_CLONE))
 			monsters_killed += 1;
-		if(IS_PLAYER(attacker))
+		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE))
 			attacker.frags += 1;
 		if(horde_ent)
 			Horde_GiveScore(HORDE_SCORE_KILL);

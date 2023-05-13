@@ -507,6 +507,7 @@ void morph_teleport(entity this)
 		return;
 
 	entity theChild = new(monster_morph);
+	theChild.flags = FL_CLONE; // don't count it in anything
 	theChild.mdl = this.mdl;
 	theChild.angles = theDest.mangle;
 	theChild.guardian_owner = this;

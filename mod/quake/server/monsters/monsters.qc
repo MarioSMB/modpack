@@ -267,10 +267,10 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	// in horde, mosnters shouldn't increase total count until spawned
 	if(MP_MG && autocvar_horde)
 	{
-		if(!monster_checkspawnedflag(this))
+		if(!monster_checkspawnedflag(this) && !(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
 			monsters_total += 1;
 	}
-	else if(!(this.flags & FL_DECOY))
+	else if(!(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
 		monsters_total += 1;
 
 	this.max_health = this.health;

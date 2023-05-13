@@ -213,6 +213,7 @@ void tbaby_mitosis(entity targ, entity attacker, float damage, int deathtype)
     if(random() < 0.35)
 	{
 		entity newSpawn = spawn();
+		newSpawn.flags = FL_CLONE;
 		newSpawn.classname = targ.classname;
 		set_movetype(newSpawn, MOVETYPE_STEP);
 		setsize (newSpawn, '-16 -16 -24', '16 16 40');
