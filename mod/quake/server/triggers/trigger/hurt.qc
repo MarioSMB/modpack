@@ -33,7 +33,7 @@ void hurt_touch(entity this, entity toucher)
 		if(MP_MG && (this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
 			return;
 		this.solid = SOLID_NOT;
-		T_Damage(toucher, this, this, this.dmg, DEATH_VOID.m_id);
+		T_Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id);
 		setthink(this, hurt_on);
 		if(MP_MG)
 			this.nextthink = time + this.wait;
@@ -66,14 +66,13 @@ spawnfunc(trigger_hurt)
 	settouch(this, hurt_touch);
 	if(!this.dmg)
 		this.dmg = 5;
-	if(MP_MG)
-	{
-		if(!this.wait)
-			this.wait = 1;
-		if(this.spawnflags & START_OFF)
-			this.state = 1;
-		this.use = hurt_use;
-	}
+	if(!this.wait)
+		this.wait = 1;
+	if((this.spawnflags & START_OFF) && substring(world.model, 0, 7) == "maps/mg")
+		this.state = 1;
+	else if(this.spawnflags & 1)
+		this.dmg = 10000;
+	this.use = hurt_use;
 
 	if(!this.message || this.message == "")
 		this.message = "was in the wrong place";

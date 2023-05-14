@@ -12,6 +12,7 @@ EFFECT(0, SMOKE_SMALL,              "smoke_small")
 EFFECT(0, SMOKE_LARGE,              "smoke_large")
 
 
+//EFFECT(0, FLAMER,                   "flamethrower")
 EFFECT(0, EF_FLAME,                 "EF_FLAME")
 EFFECT(0, EF_STARDUST,              "EF_STARDUST")
 EFFECT(0, TE_EXPLOSION,             "TE_EXPLOSION")

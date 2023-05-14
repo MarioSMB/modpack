@@ -81,6 +81,8 @@ void W_FireLightning(entity this)
 
 	//te_lightning2(NULL, org, trace_endpos);
 	SendCSQCLightningBeam(org, trace_endpos);
+	// prototype for flamethrower visuals
+	//Send_Effect(EFFECT_FLAMER, this.origin, v_forward*100, 1);
 
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30, WEP_LIGHTNING.m_id);
 }

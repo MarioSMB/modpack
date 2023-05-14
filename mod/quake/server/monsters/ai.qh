@@ -49,6 +49,8 @@ const float MIN_ANGLE_DELTA = 10;
 
 .float move_dist;
 
+bool z_overlap(entity this, entity targ);
+
 bool CanTakedamage(entity e, entity actor);
 
 bool visible(entity this, entity targ);

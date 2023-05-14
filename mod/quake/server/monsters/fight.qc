@@ -49,7 +49,7 @@ bool CheckAttack(entity this)
 	if(trace_inopen && trace_inwater)
 		return false;			// sight line crossed contents
 
-	if(this.enemy_range == RANGE_MELEE)
+	if(this.enemy_range == RANGE_MELEE && z_overlap(this, this.enemy))
 	{	// melee attack
 		if(this.th_melee)
 		{

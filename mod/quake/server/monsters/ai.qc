@@ -611,7 +611,11 @@ void t_followtarget(entity this, entity toucher)
 	  // make the monster tame
 		toucher.oldenemy = toucher.enemy;
 		toucher.enemy = NULL;
-		setthink(toucher, toucher.th_walk);
+		if(toucher.th_walk)
+		{
+			setthink(toucher, toucher.th_walk);
+			toucher.nextthink = time + 0.1;
+		}
 	}
 
 	toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
@@ -620,7 +624,7 @@ void t_followtarget(entity this, entity toucher)
 	toucher.wetsuit_time = time + 2;
 	if(!toucher.movetarget)
 	{
-		if (toucher.oldenemy != NULL)
+		if (toucher.oldenemy)
 		{
 			toucher.enemy = toucher.oldenemy;
 			FoundTarget(toucher);
@@ -629,14 +633,15 @@ void t_followtarget(entity this, entity toucher)
 		else
 		{
 			entity client = t_checkclient(toucher);
-			if (!client)
+			if (client)
 			{
 				toucher.enemy = client;
 				FoundTarget(toucher);
 				return;
 			}
 			toucher.pausetime = -1;
-			toucher.th_stand(toucher);
+			if(toucher.th_stand)
+				toucher.th_stand(toucher);
 		}
 	}
 }
@@ -699,10 +704,19 @@ int range(entity this, entity targ)
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
 
+	vector offset = '1 1 1';
+	if(boxesoverlap(this.absmin - offset, this.absmax + offset, targ.absmin - offset, targ.absmax + offset))
+		return RANGE_MELEE;
+
 	vector ranges = RANGES_NORMAL;
-	if(MP_MG)
-		ranges = (MP_MG && (this.spawnflags & SPAWNFLAG_NEARSIGHTED)) ? ((this.enemy) ? RANGES_NORMAL * 0.8 : RANGES_NEARSIGHTED) : RANGES_NORMAL;
-	
+	if(this.spawnflags & SPAWNFLAG_NEARSIGHTED)
+	{
+		if(this.enemy)
+			ranges = RANGES_NORMAL * 0.8;
+		else
+			ranges = RANGES_NEARSIGHTED;
+	}
+
 	if(vdist(spot1 - spot2, <, ranges.x))
 		return RANGE_MELEE;
 	if(vdist(spot1 - spot2, <, ranges.y))
@@ -749,9 +763,24 @@ bool infront(entity this, entity targ)
 	fixedmakevectors(this.angles);
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
-	float dottarget = ((MP_MG && (this.spawnflags & SPAWNFLAG_NEARSIGHTED)) ? VISIONCONE_NEARSIGHTED : VISIONCONE_NORMAL);
+	float dottarget = VISIONCONE_NORMAL;
+	if(this.spawnflags & SPAWNFLAG_NEARSIGHTED)
+		dottarget = VISIONCONE_NEARSIGHTED;
 	
 	return (dot > dottarget);
+}
+
+/*
+=============
+z_overlaps
+
+returns 1 if the entity's bounds on z overlap those of monster
+for checking if melee attacks are worthwhile
+=============
+*/
+bool z_overlap(entity this, entity targ)
+{
+	return (this.absmin_z < targ.absmax_z && targ.absmin_z < this.absmax_z);
 }
 
 

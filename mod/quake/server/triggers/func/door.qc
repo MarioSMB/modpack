@@ -140,9 +140,14 @@ void door_fire(entity this)
 
 void door_use(entity this, entity actor, entity trigger)
 {
-	this.message = ""; // door message are for touch only
-	this.owner.message = "";	
-	this.enemy.message = "";
+	if((this.items & actor.items) != this.items)
+		return;
+	if(!(this.spawnflags & DOOR_TOGGLE))
+	{
+		this.message = ""; // door message are for touch only
+		this.owner.message = "";	
+		this.enemy.message = "";
+	}
 	door_fire(this.owner);
 }
 
