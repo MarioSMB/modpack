@@ -1,0 +1,15 @@
+#pragma once
+
+#define ANGLEMOD(a) ((a) - 360.0 * floor((a) / 360.0))
+
+.int ai_state;
+const int STATE_STANDING = 0;
+const int STATE_MOVING = 1;
+const int STATE_CHASING = 2;
+const int STATE_ATTACKING = 3;
+const int STATE_HURTING = 4;
+
+.float last_seen_time;
+.float ai_attack_time;
+.bool ai_attacked;
+.vector home;

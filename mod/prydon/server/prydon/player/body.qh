@@ -1,0 +1,9 @@
+#pragma once
+
+void body_pickup(entity this, entity targ);
+
+entity find_body(entity this);
+
+bool drop_body(entity this);
+
+void regain_body(entity this);

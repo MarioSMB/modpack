@@ -1,0 +1,37 @@
+#pragma once
+
+#ifdef CSQC
+float stringwidth(string text, float handleColors, vector sz);
+#endif
+
+#ifdef GAMEQC
+string getworldbasename();
+#endif
+
+// this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
+// NOTE: s IS allowed to be a tempstring
+string wordwrap(string s, float l);
+#ifdef SVQC
+void wordwrap_sprint(entity to, string s, float l);
+#endif
+void wordwrap_cb(string s, float l, void(string) callback);
+
+// Some common varargs functions. Lowercase as they match C.
+//#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
+
+USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
+USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
+#ifdef GAMEQC
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
+#endif
+
+IntrusiveList g_saved_cvars;
+STATIC_INIT(g_saved_cvars) { g_saved_cvars = IL_NEW(); }
+
+#ifndef SVQC
+.string message;
+#endif

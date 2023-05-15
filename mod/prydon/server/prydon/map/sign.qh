@@ -1,0 +1,3 @@
+#pragma once
+
+void donothing(entity this, entity targ);

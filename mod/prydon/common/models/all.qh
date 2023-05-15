@@ -1,0 +1,23 @@
+#pragma once
+
+#include "model.qh"
+
+REGISTRY(Models, BITS(9))
+REGISTER_REGISTRY(Models)
+
+#define MODEL(name, thepath) \
+    string MDL_##name##_get() { return thepath; } \
+    REGISTER(Models, MDL, name, m_id, NEW(Model, MDL_##name##_get))
+
+STATIC_INIT(NULLMDL)
+{
+    precache_model("null");
+}
+
+PRECACHE(Models) {
+    FOREACH(Models, true, it.model_precache(it));
+}
+
+MODEL(Null, "null");
+REGISTRY_DEFINE_GET(Models, MDL_Null)
+#include "all.inc"

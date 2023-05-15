@@ -1,0 +1,34 @@
+#pragma once
+
+int autocvar_teamplay;
+bool autocvar_sv_curl_serverpackages_auto;
+float autocvar_sys_ticrate;
+float autocvar_slowmo;
+//bool autocvar_g_full_getstatus_responses;
+string autocvar_g_xonoticversion;
+bool autocvar__sv_init;
+bool autocvar_quit_when_empty = true;
+float autocvar_timelimit;
+
+float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+
+bool intermission_running;
+
+float servertime, serverprevtime, serverframetime;
+
+bool world_already_spawned;
+int world_initialized;
+bool server_is_dedicated;
+
+void dedicated_print(string input);
+
+void set_anim(entity this, int frm, void(entity) tnk);
+void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
+
+// intrusive lists
+
+IntrusiveList g_moveables;
+STATIC_INIT(defs)
+{
+	g_moveables = IL_NEW();
+}

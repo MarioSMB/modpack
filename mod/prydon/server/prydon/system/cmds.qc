@@ -1,0 +1,64 @@
+
+// Built In functions
+void(vector ang) makevectors			= #1;	// sets v_forward, etc globals
+void(entity e, vector o) setorigin		= #2;
+void(entity e, string m) setmodel		= #3;	// set movetype and solid first
+void(entity e, vector min, vector max) setsize	= #4;
+float() random					= #7;	// returns 0 - 1
+void(entity e, float chan, string samp, float vol, float atten) sound = #8;
+vector(vector v) normalize			= #9;
+void(string e) error				= #10;
+void(string e) objerror				= #11;
+float(vector v) vlen				= #12;
+float(vector v) vectoyaw			= #13;
+entity() spawn					= #14;
+void(entity e) remove				= #15;
+void(vector v1, vector v2, float nomonsters, entity forent) traceline = #16;	
+entity() checkclient				= #17;		// returns a client to look for
+entity(entity start, .string fld, string match) find = #18;
+string(string s) precache_sound			= #19;
+string(string s) precache_model			= #20;
+void(entity client, string s)stuffcmd		= #21;
+entity(vector org, float rad) findradius	= #22;
+void(string s,...) bprint			= #23;
+void(entity client, string s) sprint		= #24;
+void(string s) dprint				= #25;
+string(float f) ftos				= #26;
+string(vector v) vtos				= #27;
+void(entity e) eprint				= #31;		// prints an entire edict
+
+float(float yaw, float dist) walkmove		= #32;		// returns TRUE or FALSE
+float() droptofloor	= #34;		// TRUE if landed on floor
+void(float style, string value) lightstyle	= #35;
+float(float v) rint				= #36;		// round to nearest int
+float(float v) floor				= #37;		// largest integer <= v
+float(float v) ceil				= #38;		// smallest integer >= v
+float(entity e) checkbottom			= #40;		// true if self is on ground
+float(vector v) pointcontents			= #41;		// returns a CONTENT_*
+float(float f) fabs				= #43;
+vector(entity e, float speed) aim		= #44;		// returns the shooting vector
+float(string s) cvar				= #45;		// return cvar.value
+void(string s) localcmd				= #46;		// put string into local que
+entity(entity e) nextent			= #47;		// for looping through all ents
+void(vector o, vector d, float color, float count) particle = #48;// start a particle effect
+void() ChangeYaw 				= #49;		// turn towards self.ideal_yaw
+vector(vector v) vectoangles			= #51;
+void(float to, float f) WriteByte		= #52;
+void(float to, float f) WriteChar		= #53;
+void(float to, float f) WriteShort		= #54;
+void(float to, float f) WriteLong		= #55;
+void(float to, float f) WriteCoord		= #56;
+void(float to, float f) WriteAngle		= #57;
+void(float to, string s) WriteString		= #58;
+void(float to, entity s) WriteEntity		= #59;
+void(float step) movetogoal			= #67;
+string(string s) precache_file			= #68;		// no effect except for -copy
+void(entity e) makestatic			= #69;
+void(string s) changelevel			= #70;
+void(string var, string val) cvar_set		= #72;		// sets cvar.value
+void(entity client, string s, ...) centerprint 	= #73;		// sprint, but in middle
+void(vector pos, string samp, float vol, float atten) ambientsound = #74;
+string(string s) precache_model2		= #75;	// registered version only
+string(string s) precache_sound2		= #76;	// registered version only
+string(string s) precache_file2			= #77;	// registered version only
+void(entity e) setspawnparms			= #78;	// set parm1... to the

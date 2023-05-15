@@ -1,0 +1,11 @@
+#pragma once
+
+void prydon_ClientKill(entity this);
+
+void prydon_ClientConnect(entity this);
+
+void prydon_ClientDisconnect(entity this);
+
+void prydon_PlayerPreThink(entity this);
+
+void prydon_PlayerPostThink(entity this);

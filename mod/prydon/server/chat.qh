@@ -1,0 +1,5 @@
+#pragma once
+
+string formatmessage(entity this, string msg);
+
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);

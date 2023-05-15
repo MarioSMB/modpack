@@ -1,0 +1,16 @@
+#pragma once
+
+// some required common stuff
+#include "triggers.qh"
+#include "subs.qh"
+//#include "platforms.qh"
+//#include "teleporters.qh"
+
+// func
+#include "func/include.qh"
+
+// misc
+#include "misc/include.qh"
+
+// trigger
+#include "trigger/include.qh"

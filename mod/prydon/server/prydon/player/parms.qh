@@ -1,0 +1,11 @@
+#pragma once
+
+void DecodeLevelParms(entity this);
+
+void GetParms(float ver);
+
+void SetParms(entity this);
+
+void prydon_SetNewParms();
+
+void prydon_SetChangeParms(entity this);

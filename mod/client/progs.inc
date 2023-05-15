@@ -11,6 +11,7 @@
 	#include "polytrails.qc"
 #endif
 
-#ifdef QUAKE_ONE
-	#include "../quake/client/progs.inc"
+#define PRYDON
+#ifdef PRYDON
+	#include "../prydon/client/progs.inc"
 #endif
