@@ -72,6 +72,8 @@ void entity_list(string id, vector pos, vector size)
 	{
 		if(STAT(WEAPONS) & it.m_wepset)
 			continue;
+		if(!(STAT(SHOP_WEAPONS) & it.m_wepset))
+			continue;
 		if(it.spawnflags & WEP_FLAG_NOSTEAL)
 			continue; // exclude some weapons!
 		if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))

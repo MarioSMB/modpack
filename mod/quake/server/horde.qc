@@ -1287,6 +1287,8 @@ bool SpawnWavePrep(entity this)
 			it.use(it, NULL, NULL);
 	});
 
+	shop_setup_weapons();
+
 	this.wait = true;
 	return 1;
 }
@@ -1395,19 +1397,17 @@ void Wavecheck(entity this)
 	// debug checking last monster position
 	if(monsters_killed + 3 >= monsters_total)
 	{
-		entity t = find(NULL, category, CATEGORY_MONSTER);
-		while(t)
+		FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
 		{
-			if(t.health > 0)
-				LOG_DEBUGF("Position of monster: %s : %v", t.classname, t.origin);
+			if(it.health > 0)
+				LOG_DEBUGF("Position of monster: %s : %v", it.classname, it.origin);
 			else
-				t.category = string_null;
-			t = find(t, category, CATEGORY_MONSTER);
-		}
+				it.category = string_null;
+		});
 	}
 	
 	// Early exit for kill count
-	if((this.wave % 3 == 0) || (this.wave < 3)) // Be exact?
+	if((this.wave % 3) == 0 || this.wave < 3) // Be exact?
 	{
 		LOG_DEBUG("check monsters killed as boss wave");
 		if(HordeGetMonstersAlive() > 0) // testing the new way

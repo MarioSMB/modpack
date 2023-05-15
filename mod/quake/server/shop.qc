@@ -111,7 +111,7 @@ void shop_buyitem(entity this, string item)
 	}
 
 	Weapon wep = Weapon_from_name(item);
-	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL))
+	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL) || !(shop_weapons & wep.m_wepset))
 	{
 		sprint(this, "Invalid weapon\n");
 		return;
@@ -177,6 +177,29 @@ void shopkeep_spawn(entity this)
 	droptofloor(this);
 	set_movetype(this, MOVETYPE_NONE);
 	Net_LinkEntity(this, false, 0, shopkeep_send);
+}
+
+void shop_setup_weapons()
+{
+	// pick a random selection of weapons for the shop
+	shop_weapons = '0 0 0'; // reset initially
+	for(int j = 0; j < SHOP_WEAPON_COUNT; ++j)
+	{
+		RandomSelection_Init();
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			if(it.spawnflags & WEP_FLAG_NOSTEAL)
+				continue; // exclude some weapons!
+			if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
+				continue;
+			if(!MP_ROGUE && (it.spawnflags & WEP_FLAG_ROGUE))
+				continue;
+			if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
+				continue;
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		shop_weapons |= RandomSelection_chosen_ent.m_wepset;
+	}
 }
 
 // This must be called in SV_ParseClientCommand
