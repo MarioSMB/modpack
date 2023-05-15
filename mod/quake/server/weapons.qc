@@ -1273,7 +1273,7 @@ void W_FireFlower_Touch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;
 	tracebox(this.origin + '0 0 1', this.mins + '0 0 1', this.maxs - '0 0 1', this.origin - '0 0 10', MOVE_NOMONSTERS, this);
-	if(!(trace_startsolid || trace_fraction < 1) || toucher.takedamage)
+	if(trace_startsolid || !(trace_fraction < 1) || toucher.takedamage)
 	{
 		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, this.owner);
 		te_explosion2(this.origin, 228, 5);

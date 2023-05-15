@@ -154,7 +154,7 @@ void cook_control2(entity this)
 				if(random() > 0.4)
 				{
 					this.cnt += 1;
-					if(cook_WAVS(this))
+					if(cook_WAVS(this, this.cnt))
 					{
 						set_anim(this, 34, cook_run1);
 						return;
@@ -324,7 +324,12 @@ void cook_run1(entity this)
 	set_anim(this, 41, cook_run2);
 	ai_run(this, 9);
 	if(random() < 0.2)
-		_sound(this, CH_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE);
+	{
+		if(random() < 0.66)
+			cook_WAVS(this, floor(random() * 8) + 1);
+		else
+			_sound(this, CH_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE);
+	}
 	this.cook_target = NULL;
 }
 
@@ -554,96 +559,96 @@ bool CookCheckAttack(entity this)
 	return false;
 }
 
-bool cook_WAVS4(entity this)
+bool cook_WAVS4(entity this, int index)
 {
-	switch(this.cnt)
+	switch(index)
 	{
-		case 1: _sound(this, CH_WEAPON_SINGLE, "cook/comm3.wav", 1, ATTN_IDLE); break;
-		case 2: _sound(this, CH_WEAPON_SINGLE, "cook/idiot.wav", 1, ATTN_IDLE); break;
-		case 3: _sound(this, CH_WEAPON_SINGLE, "cook/you.wav", 1, ATTN_IDLE); break;
-		case 4: _sound(this, CH_WEAPON_SINGLE, "cook/idiot.wav", 1, ATTN_IDLE); break;
-		case 5: _sound(this, CH_WEAPON_SINGLE, "cook/skull2.wav", 1, ATTN_IDLE); break;
+		case 1: _sound(this, CH_VOICE, "cook/comm3.wav", 1, ATTN_IDLE); break;
+		case 2: _sound(this, CH_VOICE, "cook/idiot.wav", 1, ATTN_IDLE); break;
+		case 3: _sound(this, CH_VOICE, "cook/you.wav", 1, ATTN_IDLE); break;
+		case 4: _sound(this, CH_VOICE, "cook/idiot.wav", 1, ATTN_IDLE); break;
+		case 5: _sound(this, CH_VOICE, "cook/skull2.wav", 1, ATTN_IDLE); break;
 		case 6:
 		{
-			_sound(this, CH_WEAPON_SINGLE, "cook/makemad.wav", 1, ATTN_IDLE);
+			_sound(this, CH_VOICE, "cook/makemad.wav", 1, ATTN_IDLE);
 			cook_ai_jump(this, this.angles, 200, '0 0 230');
 			break;
 		}
-		case 7: _sound(this, CH_WEAPON_SINGLE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
-		case 8: _sound(this, CH_WEAPON_SINGLE, "cook/comm1.wav", 1, ATTN_IDLE); break;
+		case 7: _sound(this, CH_VOICE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
+		case 8: _sound(this, CH_VOICE, "cook/comm1.wav", 1, ATTN_IDLE); break;
 	}
-	return (this.cnt > 8);
+	return (index > 8);
 }
 
-bool cook_WAVS3(entity this)
+bool cook_WAVS3(entity this, int index)
 {
-	switch(this.cnt)
+	switch(index)
 	{
-		case 1: _sound(this, CH_WEAPON_SINGLE, "cook/goway.wav", 1, ATTN_IDLE); break;
-		case 2: _sound(this, CH_WEAPON_SINGLE, "cook/comm2.wav", 1, ATTN_IDLE); break;
-		case 3: _sound(this, CH_WEAPON_SINGLE, "cook/you.wav", 1, ATTN_IDLE); break;
-		case 4: _sound(this, CH_WEAPON_SINGLE, "cook/idiot.wav", 1, ATTN_IDLE); break;
-		case 5: _sound(this, CH_WEAPON_SINGLE, "cook/listen.wav", 1, ATTN_IDLE); break;
+		case 1: _sound(this, CH_VOICE, "cook/goway.wav", 1, ATTN_IDLE); break;
+		case 2: _sound(this, CH_VOICE, "cook/comm2.wav", 1, ATTN_IDLE); break;
+		case 3: _sound(this, CH_VOICE, "cook/you.wav", 1, ATTN_IDLE); break;
+		case 4: _sound(this, CH_VOICE, "cook/idiot.wav", 1, ATTN_IDLE); break;
+		case 5: _sound(this, CH_VOICE, "cook/listen.wav", 1, ATTN_IDLE); break;
 		case 6:
 		{
-			_sound(this, CH_WEAPON_SINGLE, "cook/comm5.wav", 1, ATTN_IDLE);
+			_sound(this, CH_VOICE, "cook/comm5.wav", 1, ATTN_IDLE);
 			cook_ai_jump(this, this.angles, 200, '0 0 230');
 			break;
 		}
-		case 7: _sound(this, CH_WEAPON_SINGLE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
-		case 8: _sound(this, CH_WEAPON_SINGLE, "cook/moron.wav", 1, ATTN_IDLE); break;
+		case 7: _sound(this, CH_VOICE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
+		case 8: _sound(this, CH_VOICE, "cook/moron.wav", 1, ATTN_IDLE); break;
 	}
-	return (this.cnt > 8);
+	return (index > 8);
 }
 
-bool cook_WAVS2(entity this)
+bool cook_WAVS2(entity this, int index)
 {
-	switch(this.cnt)
+	switch(index)
 	{
-		case 1: _sound(this, CH_WEAPON_SINGLE, "cook/whatu.wav", 1, ATTN_IDLE); break;
-		case 2: _sound(this, CH_WEAPON_SINGLE, "cook/you.wav", 1, ATTN_IDLE); break;
-		case 3: _sound(this, CH_WEAPON_SINGLE, "cook/moron.wav", 1, ATTN_IDLE); break;
-		case 4: _sound(this, CH_WEAPON_SINGLE, "ogre/ogidle.wav", 1, ATTN_IDLE); break;
-		case 5: _sound(this, CH_WEAPON_SINGLE, "cook/skull.wav", 1, ATTN_IDLE); break;
+		case 1: _sound(this, CH_VOICE, "cook/whatu.wav", 1, ATTN_IDLE); break;
+		case 2: _sound(this, CH_VOICE, "cook/you.wav", 1, ATTN_IDLE); break;
+		case 3: _sound(this, CH_VOICE, "cook/moron.wav", 1, ATTN_IDLE); break;
+		case 4: _sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE); break;
+		case 5: _sound(this, CH_VOICE, "cook/skull.wav", 1, ATTN_IDLE); break;
 		case 6:
 		{
-			_sound(this, CH_WEAPON_SINGLE, "cook/makemad.wav", 1, ATTN_IDLE);
+			_sound(this, CH_VOICE, "cook/makemad.wav", 1, ATTN_IDLE);
 			cook_ai_jump(this, this.angles, 200, '0 0 240');
 			break;
 		}
-		case 7: _sound(this, CH_WEAPON_SINGLE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
-		case 8: _sound(this, CH_WEAPON_SINGLE, "cook/skull2.wav", 1, ATTN_IDLE); break;
+		case 7: _sound(this, CH_VOICE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
+		case 8: _sound(this, CH_VOICE, "cook/skull2.wav", 1, ATTN_IDLE); break;
 	}
-	return (this.cnt > 8);
+	return (index > 8);
 }
 
-bool cook_WAVS(entity this)
+bool cook_WAVS(entity this, int index)
 {
 	int mysounds = floor(random() * 4);
 	switch(mysounds)
 	{
-		case 1: return cook_WAVS2(this);
-		case 2: return cook_WAVS3(this);
-		case 3: return cook_WAVS4(this);
+		case 1: return cook_WAVS2(this, index);
+		case 2: return cook_WAVS3(this, index);
+		case 3: return cook_WAVS4(this, index);
 	}
 
-	switch(this.cnt)
+	switch(index)
 	{
-		case 1: _sound(this, CH_WEAPON_SINGLE, "cook/comm3.wav", 1, ATTN_IDLE); break;
-		case 2: _sound(this, CH_WEAPON_SINGLE, "cook/comm1.wav", 1, ATTN_IDLE); break;
-		case 3: _sound(this, CH_WEAPON_SINGLE, "cook/comm2.wav", 1, ATTN_IDLE); break;
-		case 4: _sound(this, CH_WEAPON_SINGLE, "ogre/ogidle2.wav", 1, ATTN_IDLE); break;
-		case 5: _sound(this, CH_WEAPON_SINGLE, "cook/comm4.wav", 1, ATTN_IDLE); break;
+		case 1: _sound(this, CH_VOICE, "cook/comm3.wav", 1, ATTN_IDLE); break;
+		case 2: _sound(this, CH_VOICE, "cook/comm1.wav", 1, ATTN_IDLE); break;
+		case 3: _sound(this, CH_VOICE, "cook/comm2.wav", 1, ATTN_IDLE); break;
+		case 4: _sound(this, CH_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE); break;
+		case 5: _sound(this, CH_VOICE, "cook/comm4.wav", 1, ATTN_IDLE); break;
 		case 6:
 		{
-			_sound(this, CH_WEAPON_SINGLE, "cook/makemad.wav", 1, ATTN_IDLE);
+			_sound(this, CH_VOICE, "cook/makemad.wav", 1, ATTN_IDLE);
 			cook_ai_jump(this, this.angles, 200, '0 0 225');
 			break;
 		}
-		case 7: _sound(this, CH_WEAPON_SINGLE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
-		case 8: _sound(this, CH_WEAPON_SINGLE, "cook/comm5.wav", 1, ATTN_IDLE); break;
+		case 7: _sound(this, CH_VOICE, "ogre/ogwake.wav", 1, ATTN_IDLE); break;
+		case 8: _sound(this, CH_VOICE, "cook/comm5.wav", 1, ATTN_IDLE); break;
 	}
-	return (this.cnt > 8);
+	return (index > 8);
 }
 
 spawnfunc(monster_cook) { monster_start(this, true, MON_COOK); }

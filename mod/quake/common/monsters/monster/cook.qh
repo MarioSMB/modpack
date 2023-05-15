@@ -48,7 +48,7 @@ void cook_oshake(entity this);
 void cook_oshake3(entity this);
 void cook_flip1(entity this);
 void cook_checkcooks(entity this);
-bool cook_WAVS(entity this);
+bool cook_WAVS(entity this, int index);
 void cook_scoot1(entity this);
 void cook_stand(entity this);
 #endif
