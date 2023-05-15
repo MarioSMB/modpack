@@ -1303,6 +1303,8 @@ void PutClientInServer(entity this)
 	this.shield_finished = 0;
 	this.antigrav_finished = 0;
 
+	this.fireflower_finished = 0;
+
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
@@ -2163,6 +2165,30 @@ void CheckPowerups(entity this)
 			this.antigrav_finished = 0;
 			this.powerups &= ~POWERUP_ANTIGRAV;
 			this.gravity = 1.0;
+		}
+	}
+
+	if(this.fireflower_finished)
+	{
+		if(this.fireflower_finished < time + 3)
+		{
+			if(this.fireflower_time == 1)
+			{
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_FIREFLOWER);
+				_sound(this, CH_TRIGGER_SINGLE, "items/powerdown_mario.wav", 1, ATTN_NORM);
+				this.fireflower_time = time + 1;
+			}
+
+			if(this.fireflower_time < time)
+				this.fireflower_time = time + 1;
+		}
+
+		if(this.fireflower_finished < time)
+		{
+			this.powerups &= ~POWERUP_FIREFLOWER;
+			this.fireflower_time = 0;
+			this.fireflower_finished = 0;
 		}
 	}
 }

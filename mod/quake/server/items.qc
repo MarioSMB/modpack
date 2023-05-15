@@ -1475,6 +1475,8 @@ void powerup_touch(entity this, entity toucher)
 	// TODO: apply this logic to all powerups?
 	if((this.powerups & POWERUP_V_SPHERE) && (toucher.powerups & POWERUP_V_SPHERE))
 		return; // one per person please
+	if((this.powerups & POWERUP_FIREFLOWER) && (toucher.powerups & POWERUP_FIREFLOWER))
+		return;
 
 	string pname = (this.netname != "") ? this.netname : "Powerup";
 	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
@@ -1592,6 +1594,13 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_V_SPHERE)
 	{
 		sphere_spawn(this, toucher);
+	}
+
+	if(this.powerups & POWERUP_FIREFLOWER)
+	{
+		sprint(toucher, "Secondary attacks enabled!\n");
+		toucher.fireflower_time = 1;
+		toucher.fireflower_finished = time + 30; // always give full duration
 	}
 }
 
@@ -1800,6 +1809,26 @@ spawnfunc(item_artifact_empathy_shields)
 	this.noise = "hipitems/empathy.wav";
 	this.netname = "Empathy Shields";
 	this.powerups = POWERUP_EMPATHY_SHIELDS;
+	setsize(this, '-16 -16 0', '16 16 32');
+	StartItem(this);
+}
+
+/*QUAKED item_powerup_fireflower(0 .5 .8)(-16 -16 -24)(16 16 32)
+Provides a secondary attack of fireballs
+*/
+spawnfunc(item_powerup_fireflower)
+{
+	settouch(this, powerup_touch);
+
+	precache_model("progs/g_fflower.mdl");
+	precache_model("progs/fireball.mdl");
+	precache_sound("items/powerup_mario.wav");
+	precache_sound("items/powerdown_mario.wav");
+	precache_sound("items/mario_attack.wav");
+	this.noise = "items/powerup_mario.wav";
+	_setmodel(this, "progs/g_fflower.mdl");
+	this.netname = "Fire Flower";
+	this.powerups = POWERUP_FIREFLOWER;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }

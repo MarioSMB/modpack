@@ -16,6 +16,9 @@ bool autocvar_sv_quake_instance_backpacks = true;
 .float empathy_time;
 .float empathy_sound;
 
+.float fireflower_time;
+.float fireflower_finished;
+
 .int worldtype;
 const int WORLDTYPE_MEDIEVAL = 0;
 const int WORLDTYPE_METAL = 1;

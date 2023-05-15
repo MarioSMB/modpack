@@ -200,6 +200,13 @@ void PrecacheMonsters()
 	precache_sound("items/protect.wav");
 	precache_sound("items/protect2.wav");
 	precache_sound("items/protect3.wav");
+
+	// fire flower
+	precache_model("progs/g_fflower.mdl");
+	precache_model("progs/fireball.mdl");
+	precache_sound("items/powerup_mario.wav");
+	precache_sound("items/powerdown_mario.wav");
+	precache_sound("items/mario_attack.wav");
 	
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
@@ -1659,7 +1666,7 @@ void horde_spawn_powerup(entity this)
 		setthink(powerup, horde_powerup_think);
 		powerup.nextthink = time + 10;
 		
-		if(random() < 0.25) // spawn pentagram (invulnerability)
+		if(random() < 0.33) // spawn pentagram (invulnerability)
 		{
 			powerup.noise = "items/protect.wav";
 			_setmodel(powerup, "progs/invulner.mdl");
@@ -1667,13 +1674,21 @@ void horde_spawn_powerup(entity this)
 			powerup.powerups = POWERUP_INVULNERABILITY;
 			powerup.classname = "item_artifact_invulnerability";
 		}
-		else // spawn quad damage
+		else if(random() < 0.66) // spawn quad damage
 		{
 			powerup.noise = "items/damage.wav";
 			_setmodel(powerup, "progs/quaddama.mdl");
 			powerup.netname = "Quad Damage";
 			powerup.powerups = POWERUP_QUAD;
 			powerup.classname = "item_artifact_super_damage";
+		}
+		else // spawn fire flower!
+		{
+			powerup.noise = "items/powerup_mario.wav";
+			_setmodel(powerup, "progs/g_fflower.mdl");
+			powerup.netname = "Fire Flower";
+			powerup.powerups = POWERUP_FIREFLOWER;
+			powerup.classname = "item_powerup_fireflower";
 		}
 		//powerup.effects = EF_DIMLIGHT;
 		

@@ -36,3 +36,5 @@ const int POWERUP_ANTIGRAV             = BIT(8);
 const int POWERUP_V_SPHERE             = BIT(9);
 
 const int POWERUP_FIELDGEN             = BIT(10);
+
+const int POWERUP_FIREFLOWER           = BIT(11);

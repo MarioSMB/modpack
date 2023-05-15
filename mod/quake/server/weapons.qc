@@ -1268,6 +1268,42 @@ void NoclipCheat(entity this)
 	}
 }
 
+void W_FireFlower_Touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+	tracebox(this.origin + '0 0 1', this.mins + '0 0 1', this.maxs - '0 0 1', this.origin - '0 0 10', MOVE_NOMONSTERS, this);
+	if(!(trace_startsolid || trace_fraction < 1) || toucher.takedamage)
+	{
+		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, this.owner);
+		te_explosion2(this.origin, 228, 5);
+		delete(this);
+	}
+}
+
+void W_FireFlower_Attack(entity this)
+{
+	_sound(this, CH_WEAPON_B, "items/mario_attack.wav", 1, ATTN_NORM);
+	entity proj = new(fireball);
+	proj.owner = this;
+	set_movetype(proj, MOVETYPE_BOUNCE);
+	proj.projectiledeathtype = WEP_NAPALM.m_id; // placeholder
+	setorigin(proj, this.origin + '0 0 16' + v_right * 15);
+	proj.velocity = v_forward * 500;
+	proj.bouncefactor = 1;
+	settouch(proj, W_FireFlower_Touch);
+	_setmodel(proj, "progs/fireball.mdl");
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	proj.solid = SOLID_CORPSE;
+	proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	//proj.solid = SOLID_BBOX;
+	proj.angles = vectoangles(proj.velocity);
+	proj.enemy = this.enemy;
+	proj.effects = EF_FLAME;
+	setthink(proj, SUB_Remove);
+	proj.nextthink = time + 10;
+}
+
 /*
 ============
 W_WeaponFrame
@@ -1297,6 +1333,16 @@ void W_WeaponFrame(entity this)
 				W_Attack(this, false);
 			}
 			wep.wr_think(wep, this, this.button0);
+		}
+	}
+
+	if(!(time < this.attack2_finished) && this.button3)
+	{
+		makevectors(this.v_angle); // calculate forward angle for velocity
+		if((this.powerups & POWERUP_FIREFLOWER))
+		{
+			W_FireFlower_Attack(this);
+			this.attack2_finished = time + 0.75;
 		}
 	}
 
