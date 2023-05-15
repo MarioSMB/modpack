@@ -1260,7 +1260,7 @@ bool SpawnWavePrep(entity this)
 		playerscalar = 1;
 	
 	// Boss Count
-	if(temp_wave == 9)
+	if(this.wave == 9)
 		this.bosses = 1; // always just one boss for the final boss wave
 	else if((temp_wave % 3) == 0)
 	{
