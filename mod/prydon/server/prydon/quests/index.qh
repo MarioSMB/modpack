@@ -1,0 +1,5 @@
+#pragma once
+
+void SetOldStory(string s, float lv);
+
+float GetOldStory(string s, float f);

@@ -1,0 +1,7 @@
+#pragma once
+
+string unique_itemmodel(float it);
+
+string unique_itemsound(float it);
+
+void uniquestat();

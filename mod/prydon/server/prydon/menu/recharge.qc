@@ -1,84 +1,83 @@
-float() rechargecost =
+#include "recharge.qh"
+
+#include "../subs/math.qh"
+
+float rechargecost(entity this)
 {
-	local float m;
-	if (!(stat_loc & CHARGES))
+	if(!(stat_loc & CHARGES))
 		return 0;
-	if (stat_dur >= stat_max_dur)
+	if(stat_dur >= stat_max_dur)
 		return 0;
 		
-	m = ceil(((stat_max_dur - stat_dur) / stat_max_dur) * stat_price * stat_spell * 1.2);
-	if (self.skill & SKILL_DISCOUNT)
-		m = ceil((0.8 - (self.title_x * 0.05)) * m);
-	if (m <= 1)
+	float m = ceil(((stat_max_dur - stat_dur) / stat_max_dur) * stat_price * stat_spell * 1.2);
+	if(this.skill & SKILL_DISCOUNT)
+		m = ceil((0.8 - (this.title_x * 0.05)) * m);
+	if(m <= 1)
 		m = 1;
 
 	return m;
-};
-void() m_recharge_confirm =
-{
-	local float slot, cost, howm;
-	local vector it;
-	slot = root2(self.weapon);
-	
-	it = GetSlot(self, slot);
-it_simplestat(it);
-	it_itemstat();
-	cost = repaircost();
-	
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
+}
 
-	if (self.button1)
+void m_recharge_confirm(entity this)
+{
+	float slot = root2(this.weapon);
+	
+	vector itslot = GetSlot(this, slot);
+	it_simplestat(this, itslot);
+	it_itemstat(this);
+	float cost = repaircost(this);
+	
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
+
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
-			if(!getgold(cost))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, cost))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-it_simplestat(it);
-				it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_dur = stat_max_dur;
-				SetSlot(self, slot, it_setstat());
-				openmenu(self, m_repair, self.m_subject);
-				self.weapon = 0;
+				SetSlot(this, slot, it_setstat());
+				openmenu(this, m_repair, this.m_subject);
+				this.weapon = 0;
 				return;
 			}	
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		inven(it, fabs(self.equip & self.weapon) + 1);
-		howm = pgold();
-		pprice (howm, cost);
+		inven(this, itslot, fabs(this.equip & this.weapon) + 1);
+		float howm = pgold(this);
+		pprice(this, howm, cost);
 		newline();
 		line();
 	
-		if (self.menu == 1)
+		if(this.menu == 1)
 			WriteString(msg_mode, "Recharge this item?\n\{141}\[\1\] Yes\n \[\2\] No \n");
 		else
 			WriteString(msg_mode, "Recharge this item?\n \[\1\] Yes\n\{141}\[\2\] No \n");
 	}
 }
 
-void() m_recharge =
+void m_recharge(entity this)
 {
+	int i = invenlst(this, this, CHARGES | 1, rechargecost, '5399907 6840690 6776064');
 	
-	local float i;
-
-	i = invenlst(self, CHARGES | 1, rechargecost, '5399907 6840690 6776064');
-	
-	if (i)
+	if(i)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_recharge_confirm, self.m_subject);
+		this.weapon = (2 ** i);
+		openmenu(this, m_recharge_confirm, this.m_subject);
 	}
-};
+}

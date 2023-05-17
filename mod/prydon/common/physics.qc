@@ -1,6 +1,7 @@
 #ifdef SVQC
 	#include "../server/combat.qh"
 	#include "../server/player.qh"
+	#include "../server/prydon/ui/cursor.qh"
 #endif
 
 #ifdef SVQC
@@ -49,20 +50,20 @@ void PM_ClientMovement_UpdateStatus(entity this)
 {
 	// set crouched
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if (PHYS_HEALTH(this) <= 0) {
+	if(PHYS_HEALTH(this) <= 0) {
 		do_crouch = false;
 	}
 
-	if (do_crouch) {
-		if (!IS_DUCKED(this)) {
+	if(do_crouch) {
+		if(!IS_DUCKED(this)) {
 			SET_DUCKED(this);
 			//this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
 			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
-	} else if (IS_DUCKED(this)) {
+	} else if(IS_DUCKED(this)) {
 		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
-		if (!trace_startsolid) {
+		if(!trace_startsolid) {
 			UNSET_DUCKED(this);
 			//this.view_ofs = STAT(PL_VIEW_OFS, this);
 			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
@@ -155,7 +156,7 @@ void PM_ClientMovement_Physics_Swim(entity this, float  dt)
 
 float IsMoveInDirection(vector mv, float ang) // key mix factor
 {
-	if (mv_x == 0 && mv_y == 0)
+	if(mv_x == 0 && mv_y == 0)
 		return 0; // avoid division by zero
 	ang -= RAD2DEG * atan2(mv_y, mv_x);
 	ang = remainder(ang, 360) / 45;
@@ -181,7 +182,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	}
 
 	float k = 32 * (2 * movity - 1);
-	if (k <= 0)
+	if(k <= 0)
 		return;
 
 	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
@@ -193,7 +194,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 
 	float dot = this.velocity * wishdir;
 
-	if (dot > 0) // we can't change direction while slowing down
+	if(dot > 0) // we can't change direction while slowing down
 	{
 		k *= (dot ** PHYS_AIRCONTROL_POWER(this)) * dt;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
@@ -221,7 +222,7 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 
 	accelqw = fabs(accelqw);
 
-	if (GAMEPLAYFIX_Q2AIRACCELERATE)
+	if(GAMEPLAYFIX_Q2AIRACCELERATE)
 		wishspeed0 = wishspeed; // don't need to emulate this Q1 bug
 
 	float vel_straight = this.velocity * wishdir;
@@ -232,14 +233,14 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 	float step = accel * dt * wishspeed0;
 
 	float vel_xy_current  = vlen(vel_xy);
-	if (speedlimit)
+	if(speedlimit)
 		accelqw = AdjustAirAccelQW(accelqw, (speedlimit - bound(wishspeed, vel_xy_current, speedlimit)) / max(1, speedlimit - wishspeed));
 	float vel_xy_forward =  vel_xy_current  + bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
 	float vel_xy_backward = vel_xy_current  - bound(0, wishspeed + vel_xy_current, step) * accelqw - step * (1 - accelqw);
 	vel_xy_backward = max(0, vel_xy_backward); // not that it REALLY occurs that this would cause wrong behaviour afterwards
 	vel_straight =          vel_straight    + bound(0, wishspeed - vel_straight,   step) * accelqw + step * (1 - accelqw);
 
-	if (sidefric < 0 && (vel_perpend*vel_perpend))
+	if(sidefric < 0 && (vel_perpend*vel_perpend))
 		// negative: only apply so much sideways friction to stay below the speed you could get by "braking"
 	{
 		float f = max(0, 1 + dt * wishspeed * sidefric);
@@ -249,7 +250,7 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 		// vel_xy_backward*vel_xy_backward > vel_straight*vel_straight + vel_perpend*vel_perpend
 		// vel_xy_backward*vel_xy_backward > vel_xy * vel_xy
 		// obviously, this cannot be
-		if (themin <= 0)
+		if(themin <= 0)
 			vel_perpend *= f;
 		else
 		{
@@ -262,14 +263,14 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 
 	vel_xy = vel_straight * wishdir + vel_perpend;
 
-	if (speedclamp >= 0)
+	if(speedclamp >= 0)
 	{
 		float vel_xy_preclamp;
 		vel_xy_preclamp = vlen(vel_xy);
-		if (vel_xy_preclamp > 0) // prevent division by zero
+		if(vel_xy_preclamp > 0) // prevent division by zero
 		{
 			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
-			if (vel_xy_current < vel_xy_preclamp)
+			if(vel_xy_current < vel_xy_preclamp)
 				vel_xy *= (vel_xy_current / vel_xy_preclamp);
 		}
 	}
@@ -279,14 +280,14 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 
 void PM_AirAccelerate(entity this, float dt, vector wishdir, float wishspeed)
 {
-	if (wishspeed == 0)
+	if(wishspeed == 0)
 		return;
 
 	vector curvel = this.velocity;
 	curvel_z = 0;
 	float curspeed = vlen(curvel);
 
-	if (wishspeed > curspeed * 1.01)
+	if(wishspeed > curspeed * 1.01)
 		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL(this) * PHYS_MAXSPEED(this) * dt);
 	else
 	{
@@ -300,11 +301,11 @@ void PM_AirAccelerate(entity this, float dt, vector wishdir, float wishspeed)
 
 	float accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL(this) * PHYS_MAXSPEED(this) * dt);
 
-	if (PHYS_WARSOWBUNNY_BACKTOSIDERATIO(this) < 1)
+	if(PHYS_WARSOWBUNNY_BACKTOSIDERATIO(this) < 1)
 	{
 		vector curdir = normalize(curvel);
 		float dot = acceldir * curdir;
-		if (dot < 0)
+		if(dot < 0)
 			acceldir -= (1 - PHYS_WARSOWBUNNY_BACKTOSIDERATIO(this)) * dot * curdir;
 	}
 
@@ -488,25 +489,25 @@ float turn_angle(float a, float b, float amount)
 	b = anglemods(b);
 	float diff = b - a;
 	
-	if (fabs(diff) < amount)
+	if(fabs(diff) < amount)
 	{
 		return b;
 	}
 	
-	if (diff < -180)
+	if(diff < -180)
 	{
 		b += 360;	
 	}
-	else if (diff > 180)
+	else if(diff > 180)
 	{
 		b -= 360;
 	}
 	
-	if (fabs(b - a) < amount)
+	if(fabs(b - a) < amount)
 	{
 		return b;
 	}
-	if (a < b)
+	if(a < b)
 		return a + amount;
 	else
 		return a - amount;	
@@ -544,8 +545,10 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 	// needs to be called before physics are run!
 	if(IS_REAL_CLIENT(this))
 		PM_UpdateButtons(this);
+
+	prydon_SV_PlayerPhysics(this);
 #endif
-	PM_Main(this, PHYS_INPUT_TIMELENGTH);
+	//PM_Main(this, PHYS_INPUT_TIMELENGTH);
 
 #ifdef SVQC
 	this.pm_frametime = frametime;

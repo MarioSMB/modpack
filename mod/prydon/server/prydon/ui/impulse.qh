@@ -1,0 +1,5 @@
+#pragma once
+
+void menu_impulse(entity this);
+
+void h_impulse(entity this);

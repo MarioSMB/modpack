@@ -1,0 +1,3 @@
+#pragma once
+
+float invenlst(entity this, entity who, float stats, float(entity) callback, vector ptitle);

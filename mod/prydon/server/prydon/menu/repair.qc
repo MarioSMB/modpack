@@ -1,70 +1,69 @@
-void() m_repair;
-float() repaircost =
+#include "repair.qh"
+
+#include "../subs/math.qh"
+
+float repaircost(entity this)
 {
-	local float m;
-	if (!(stat_loc & DURABILITY))
+	if(!(stat_loc & DURABILITY))
 		return 0;
-	if (stat_dur >= stat_max_dur)
+	if(stat_dur >= stat_max_dur)
 		return 0;
 		
-	m = ceil(((stat_max_dur - stat_dur) / stat_max_dur) * stat_price * 0.35);
-	if (self.skill & SKILL_DISCOUNT)
-		m = ceil((0.8 - (self.title_x * 0.05)) * m);
-	if (m <= 1)
+	float m = ceil(((stat_max_dur - stat_dur) / stat_max_dur) * stat_price * 0.35);
+	if(this.skill & SKILL_DISCOUNT)
+		m = ceil((0.8 - (this.title_x * 0.05)) * m);
+	if(m <= 1)
 		m = 1;
 
 	return m;
-};
-void() m_repair_confirm =
+}
+void m_repair_confirm(entity this)
 {
-	local float slot, cost, howm;
-	local vector it;
-	slot = root2(self.weapon);
+	float slot = root2(this.weapon);
 	
-	it = GetSlot(self, slot);
-	it_simplestat(it);
-	it_itemstat();
-	cost = repaircost();
+	vector itslot = GetSlot(this, slot);
+	it_simplestat(this, itslot);
+	it_itemstat(this);
+	float cost = repaircost(this);
 	
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
 
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
-			if(!getgold(cost))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, cost))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-				it_simplestat(it);
-				it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_dur = stat_max_dur;
-				SetSlot(self, slot, it_setstat());
-				openmenu(self, m_repair, self.m_subject);
-				self.weapon = 0;
+				SetSlot(this, slot, it_setstat());
+				openmenu(this, m_repair, this.m_subject);
+				this.weapon = 0;
 				return;
 			}	
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-
-		inven(it, fabs(self.equip & self.weapon) + 1);
-		howm = pgold();
-		pprice (howm, cost);
+		inven(this, itslot, fabs(this.equip & this.weapon) + 1);
+		float howm = pgold(this);
+		pprice(this, howm, cost);
 		newline();
 		line();
 	
-		if (self.menu == 1)
+		if(this.menu == 1)
 			WriteString(msg_mode, "Repair this item?\n\{141}\[\1\] Yes\n \[\2\] No \n");
 		else
 			WriteString(msg_mode, "Repair this item?\n \[\1\] Yes\n\{141}\[\2\] No \n");
@@ -72,16 +71,13 @@ void() m_repair_confirm =
 	}
 }
 
-void() m_repair =
+void m_repair(entity this)
 {
-	
-	local float i;
-	
-	i = invenlst(self, DURABILITY | 1, repaircost, '5399920 6383986 0');
-	if (i)
+	int i = invenlst(this, this, DURABILITY | 1, repaircost, '5399920 6383986 0');
+	if(i)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_repair_confirm, self.m_subject);
+		this.weapon = (2 ** i);
+		openmenu(this, m_repair_confirm, this.m_subject);
 	}
 	
-};
+}

@@ -1,3 +1,5 @@
+#include "menu.qh"
+
 /*
 Menus
 
@@ -20,137 +22,134 @@ stats
 
 */
 
-void(entity who, void() menufunc, entity subj) openmenu =
+void openmenu(entity who, void(entity) menufunc, entity subj)
 {
-	if (who.owner)
+	if(who.owner)
 		who = who.owner;
-	if (who.classname != "player")
+	if(!IS_PLAYER(who))
 		return;
 	who.m_subject = subj;
-	who.menu = TRUE;
+	who.menu = true;
 	who.m_refresh = 0;
 	who.weaponmodel = string_null;
-	if (who.vmodel)
+	if(who.vmodel)
 	{
-		remove(who.vmodel);
-		who.vmodel = world;
+		delete(who.vmodel);
+		who.vmodel = NULL;
 	}
 	who.m_func = menufunc;
 	who.m_num = 0;
 	stuffcmd(who, "m_on\n");
-};
+}
 
-void(entity who) closemenu =
+void closemenu(entity who)
 {
-	if (!who)
+	if(!who)
 		return;
 	who.m_refresh = 0;
-	who.m_func = SUB_Null;
-	if (who.m_subject.m_subject == who.player)
-		if (who.m_subject)
-			who.m_subject.m_subject = world;
-	who.m_targ = world; // reset
-	who.m_subject = world;
+	who.m_func = func_null;
+	if(who.m_subject.m_subject == who.player)
+		if(who.m_subject)
+			who.m_subject.m_subject = NULL;
+	who.m_targ = NULL; // reset
+	who.m_subject = NULL;
 	who.menu = 0;
 	who.weaponmodel = string_null;
-	if (who.vmodel)
+	if(who.vmodel)
 	{
-		remove(who.vmodel);
-		who.vmodel = world;
+		delete(who.vmodel);
+		who.vmodel = NULL;
 	}
 	who.m_expire = 0;
-	if (who.classname != "player")
+	if(who.classname != "player")
 		return;
 	stuffcmd(who, "m_off\n");
 	centerprint(who, " ");
+}
 
-};
-
-void() m_prompt =
+void m_prompt(entity this)
 {
-	if (self.m_refresh < time)
-		centerprint(self, self.message);
-};
+	if(this.m_refresh < time)
+		centerprint(this, this.message);
+}
 
-void(entity who, string text, entity subj, float expire) prompt =
+void prompt(entity who, string text, entity subj, float expire)
 {
 	openmenu(who, m_prompt, subj);
-	if (expire)
+	if(expire)
 		who.m_expire = time + expire;
 	else
 		who.m_expire = 0;
 	who.message = text;
-};
+}
 
 
 void m_menu(entity this)
 {
-	local vector v;
-	if (!self.menu)
+	if(!this.menu)
 		return;
 	// check menu dismissal conditions
-	if (self.m_subject)
+	if(this.m_subject)
 	{
-		if (self.m_subject != self)
+		if(this.m_subject != this)
 		{
-			if (self.m_subject.origin != '0 0 0')
+			if(this.m_subject.origin != '0 0 0')
 			{
-				v = self.player.origin - self.m_subject.origin;
-				v_z = 0;
-				if (vlen(v) > 60)
-					self.menu = 0;
+				vector v = this.player.origin - this.m_subject.origin;
+				v.z = 0;
+				if(vdist(v, >, 60))
+					this.menu = 0;
 			}
 		}
 	}
 	else
-		self.menu = 0;
-	if (self.m_expire)
-		if (self.m_expire < time)
-			self.menu = 0;
-	if (self.menu)
+		this.menu = 0;
+	if(this.m_expire)
+		if(this.m_expire < time)
+			this.menu = 0;
+	if(this.menu)
 	{
-		if (self.impulse == 18)
+		if(this.impulse == 18)
 		{
-			self.menu = self.menu - 1;
-			self.m_refresh = 0;
-			self.impulse = -1;
+			this.menu -= 1;
+			this.m_refresh = 0;
+			this.impulse = -1;
 		}
-		else if (self.impulse == 12)
+		else if(this.impulse == 12)
 		{
-			self.menu = self.menu + 1;
-			self.m_refresh = 0;
-			self.impulse = 0;
+			this.menu += 1;
+			this.m_refresh = 0;
+			this.impulse = 0;
 		}
-		else if ((self.impulse > 0) && (self.impulse < 11))
+		else if((this.impulse > 0) && (this.impulse < 11))
 		{
-			self.menu = self.impulse;
-			self.m_refresh = 0;
-			self.impulse = 0;
-			self.button1 = 1;	
+			this.menu = this.impulse;
+			this.m_refresh = 0;
+			this.impulse = 0;
+			this.button1 = 1;	
 		}
-		if (self.button1)
+		if(this.button1)
 		{
-			self.m_refresh = 0;
+			this.m_refresh = 0;
 		}
 		
-		self.m_func();
-		if (self.menu)
+		this.m_func(this);
+		if(this.menu)
 		{
-			if (self.m_refresh)
+			if(this.m_refresh)
 			{
 				
-				if (self.m_refresh < time)
+				if(this.m_refresh < time)
 				{
-					self.m_refresh = time + 49;
-
+					this.m_refresh = time + 49;
 				}
 			}
 			else
-				self.m_refresh = 1;
+				this.m_refresh = 1;
 		}
 		
 	}
 	
-	if (!self.menu)
-		closemenu(self);
-};
+	if(!this.menu)
+		closemenu(this);
+}

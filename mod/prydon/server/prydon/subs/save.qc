@@ -1,6 +1,8 @@
+#include "saves.qh"
 
+#include "data.qh"
 
-void() gamestate_save =
+void gamestate_save()
 {
 	qopenwrite("gamestate.pgg");
 	qwrite(ftos(SAVE_VERSION));
@@ -13,15 +15,13 @@ void() gamestate_save =
 
 	qclose();
 	bprint("Gamestate saved\n");
-};
+}
 
-void() gamestate_load =
+void gamestate_load()
 {
-	float version;
-
 	qopenread("gamestate.pgg");
-	version = stof(qread());
-	if (version != SAVE_VERSION)
+	float version = stof(qread());
+	if(version != SAVE_VERSION)
 	{
 		fileerror = 1;
 		qclose();
@@ -33,49 +33,43 @@ void() gamestate_load =
 	nextmap = strzone(qread());
 	readdata();
 
-	if (fileerror)
+	if(fileerror)
 		nextmap = "curig2";	
 	else
 		qclose();
 	savedata();
-};
+}
 
-
-
-void(float cost) InnSave =
+void InnSave(entity actor, entity trigger, float cost)
 {
-	local entity oself;
-	oself = self;
-	self = other;
-	if (self.owner)
-		self = self.owner;
-	if (mplayer)
+	if(trigger.owner)
+		trigger = trigger.owner;
+	if(mplayer)
 	{
-		if (!getgold(cost))
-			prompt(self, "You don't have enough gold", activator, 0);
+		if(!getgold(trigger, cost))
+			prompt(trigger, "You don't have enough gold", actor, 0);
 		else
 		{
-			self.health = self.max_health;
-			self.mana = self.max_mana;
-			if (fileaccess)
+			trigger.health = trigger.max_health;
+			trigger.mana = trigger.max_mana;
+			if(fileaccess)
 				gamestate_save();
-			closemenu(self);
+			closemenu(trigger);
 		}
 	}
 	else
 	{
-		if (!getgold(cost))
-			prompt(self, "You don't have enough gold", activator, 0);
+		if(!getgold(trigger, cost))
+			prompt(trigger, "You don't have enough gold", actor, 0);
 		else
 		{
-			self.health = self.max_health;
-			self.mana = self.max_mana;
-		//	if (fileaccess)
+			trigger.health = trigger.max_health;
+			trigger.mana = trigger.max_mana;
+		//	if(fileaccess)
 		//		gamestate_save();
-			self.fade = -250;
-			closemenu(self);
-			nextmap = activator.map;
+			trigger.fade = -250;
+			closemenu(trigger);
+			nextmap = actor.map;
 		}
 	}
-	self = oself;
-};
+}

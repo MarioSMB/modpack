@@ -1,5 +1,9 @@
 #include "client.qh"
 
+#include "../stats/stats.qh"
+#include "../subs/combat.qh"
+#include "../ui/_mod.qh"
+
 void prydon_ClientKill(entity this)
 {
 	T_Damage(this, this.player, 50000, 4);
@@ -11,13 +15,13 @@ void prydon_ClientConnect(entity this)
 	this.pin = 0;
 	if(mplayer)
 		Secure_GetPin(this);
-	for (e = find(world, classname, "npc"); e; e = find(e, classname, "npc"))
+	for (e = find(NULL, classname, "npc"); e; e = find(e, classname, "npc"))
 	{
 		if(e.ai & AI_FOLLOW)
 		{
 			if(e.sbarsub)
 				e.sbarsub.follow_npcs = 0;
-			e.sbarsub = world;
+			e.sbarsub = NULL;
 		}
 	}
 	saveversion = SAVE_VERSION;
@@ -112,7 +116,7 @@ void prydon_PlayerPreThink(entity this)
 			if(this.camera)
 				delete(this.camera);
 			this.gotstuff = time;
-			this.camera = world;
+			this.camera = NULL;
 			gameload = 0;
 		}
 	}
@@ -124,17 +128,17 @@ void prydon_PlayerPreThink(entity this)
 		h_camera(this);
 		if(this.cursor)
 			delete(this.cursor);
-		this.cursor = world;
+		this.cursor = NULL;
 	}
 	else
 	{
 		h_cursor(this);
 		h_camera(this);
 		ui_update(this);
-		ui_setitemsolid(SOLID_BBOX);
+		ui_setitemsolid(this, SOLID_BBOX);
 		h_click(this);
 		h_sbar(this);
-		ui_setitemsolid(SOLID_TRIGGER);
+		ui_setitemsolid(this, SOLID_TRIGGER);
 	}
 }
 
@@ -172,7 +176,7 @@ void prydon_PlayerPostThink(entity this)
 	if(this.voice != string_null)
 	{
 		msg_entity = this;
-		soundto(MSG_ONE, this, CH_VOICE, this.voice, VOL_BASE, ATTEN_NONE, 0);
+		soundto(MSG_ONE, this, CH_VOICE, this.voice, VOL_BASE, ATTEN_NONE);
 		this.voice = string_null;
 	}
 }

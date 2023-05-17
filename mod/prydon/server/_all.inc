@@ -19,3 +19,5 @@
 
 #include "monsters/_all.inc"
 #include "triggers/include.qc"
+
+#include "prydon/_mod.inc"

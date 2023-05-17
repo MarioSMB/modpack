@@ -1,153 +1,142 @@
-float() m_buy_callback =
+#include "buy.qh"
+
+#include "../subs/math.qh"
+
+float m_buy_callback(entity this)
 {
-	if (self.skill & SKILL_DISCOUNT)
-		return ceil((0.8 - (self.title_x * 0.05)) * stat_price);
+	if(this.skill & SKILL_DISCOUNT)
+		return ceil((0.8 - (this.title_x * 0.05)) * stat_price);
 	return stat_price;
+}
 
-};
-
-void() m_buy_confirm =
+void m_buy_confirm(entity this)
 {
-	local float slot, howm;
-	local vector r;
-	
-	slot = root2(self.weapon);
-	r = GetSlot(self.m_subject, slot);
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
+	float slot = root2(this.weapon);
+	vector r = GetSlot(this.m_subject, slot);
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
 		
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
-			it_simplestat(r);
-			it_itemstat();
-			if (r != IV_NULL)
+			it_simplestat(this, r);
+			it_itemstat(this);
+			if(r != IV_NULL)
 			{
-				if (!getgold(stat_price))
+				if(!getgold(this, stat_price))
 				{
-					prompt(self, "You don't have enough gold for this", self, 2);
+					prompt(this, "You don't have enough gold for this", this, 2);
 					return;
 				}
-				r = pickupitem(r);
-				if (!r)
+				r = pickupitem(this, r);
+				if(!r)
 				{
-					sound(self.m_subject, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
-					ClearSlot(self.m_subject, slot);
-					closemenu(self);
+					_sound(this.m_subject, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
+					ClearSlot(this.m_subject, slot);
+					closemenu(this);
 					return;
 				}
 				else
 				{
-					prompt(self, "You don't have enough room\nin your inventory", self.m_subject, 2);
+					prompt(this, "You don't have enough room\nin your inventory", this.m_subject, 2);
 				}
 			}
 			return;
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		inven(r, 0);
-		howm = pgold();
-		pprice(howm, stat_price);
+		inven(this, r, 0);
+		float howm = pgold(this);
+		pprice(this, howm, stat_price);
 		newline();
 		line();
-		if (self.menu == 1)
+		if(this.menu == 1)
 			WriteString(msg_mode, "Buy this item?\n\{141}\[\1\] Yes\n \[\2\] No \n");
 		else
 			WriteString(msg_mode, "Buy this item?\n \[\1\] Yes\n\{141}\[\2\] No \n");
 	}
 
-};
+}
 
-
-
-void() m_buy =
+void m_buy(entity this)
 {
-	local float i;
-
-	i = invenlst(self.m_subject, 1, m_buy_callback, '4355449 0 0');
+	int i = invenlst(this, this.m_subject, 1, m_buy_callback, '4355449 0 0');
 	
-	if (i)
+	if(i)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_buy_confirm, self.m_subject);
+		this.weapon = (2 ** i);
+		openmenu(this, m_buy_confirm, this.m_subject);
 	}
-};
+}
 
-
-
-void() m_itembuy =
+void m_itembuy(entity this)
 {
-	local float howm;
-	local vector r;
-	
-	if (self.menu != 1)
-		self.menu = 1;
-	if (self.button1)
+	if(this.menu != 1)
+		this.menu = 1;
+	if(this.button1)
 	{
-
-		self.button1 = 0;
+		this.button1 = 0;
 		
-		if(!getgold(self.m_subject.gp))
+		if(!getgold(this, this.m_subject.gp))
 		{
-			prompt(self, "You don't have enough gold for this", self, 2);
+			prompt(this, "You don't have enough gold for this", this, 2);
 			return;
 		}
-		r = pickupitem(self.m_subject.slot1);
-		it_simplestat(self.m_subject.slot1);
-		if (!r)
+		vector r = pickupitem(this, this.m_subject.slot1);
+		it_simplestat(this, this.m_subject.slot1);
+		if(r == '0 0 0')
 		{
-			sound(self.m_subject, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
-			if (self.m_subject.spawnflags & 1)
+			_sound(this.m_subject, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
+			if(this.m_subject.spawnflags & 1)
 			{
 				// infinite
-				closemenu(self);
+				closemenu(this);
 				return;
 			}
-			else if (self.m_subject.netname)
+			else if(this.m_subject.netname)
 			{
 				// shopitem
-				setmodel(self.m_subject, "");
-				self.m_subject.items = 0;
-				self.m_subject.slot1 = IV_NULL;
-				self.m_subject.gp = 0;
+				_setmodel(this.m_subject, "");
+				this.m_subject.items = 0;
+				this.m_subject.slot1 = IV_NULL;
+				this.m_subject.gp = 0;
 			}
 			else
-				remove(self.m_subject);
-			closemenu(self);
+				delete(this.m_subject);
+			closemenu(this);
 			return;
 		}
 		else
 		{
-			it_simplestat(r);
-it_itemstat();
-			if (self.skill & SKILL_DISCOUNT)
-				givegold(0.8 - (self.title_x * 0.05) * self.m_subject.gp);
+			it_simplestat(this, r);
+			it_itemstat(this);
+			if(this.skill & SKILL_DISCOUNT)
+				givegold(this, 0.8 - (this.title_x * 0.05) * this.m_subject.gp);
 			else
-				givegold(self.m_subject.gp);
+				givegold(this, this.m_subject.gp);
 			
-			prompt(self, "You don't have enough room\nin your inventory", self, 2);
+			prompt(this, "You don't have enough room\nin your inventory", this, 2);
 		}
 		return;
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		inven(self.m_subject.slot1, 0);
+		inven(this, this.m_subject.slot1, 0);
 
-		howm = pgold();
-		pprice(howm, self.m_subject.gp);
+		float howm = pgold(this);
+		pprice(this, howm, this.m_subject.gp);
 		newline();
 		line();
 		WriteString(msg_mode, "\n\{141}\[\1\] Buy    ");
-
 	}
-};
+}

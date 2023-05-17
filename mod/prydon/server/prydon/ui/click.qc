@@ -1,136 +1,138 @@
-float (vector v1, vector v2) difcheck =
-{
-	local float f;
-	f = fabs (v1_z - v2_z) - 16;
-	v1_z = v2_z = 0;
-	if (f < vlen(v1 - v2))
-		return TRUE;
-	return FALSE;
-};
+#include "click.qh"
 
-void() h_click =
+#include "../spells/sstats.qh"
+#include "../spells/sval.qh"
+#include "../subs/subs.qh"
+#include "ui.qh"
+
+bool difcheck(vector v1, vector v2)
 {
-	local vector ang;
-	float runaway, ca, friend;
+	float f = fabs(v1.z - v2.z) - 16;
+	v1.z = v2.z = 0;
+	return (vdist(v1 - v2, >, f));
+}
+
+void h_click(entity this)
+{
+	vector ang;
+	int runaway = 0;
+	bool friend = false;
 //PRYDON_CLIENTCURSOR
 
-	if (self.cursor_active)
+	if(this.cursor_active)
 	{
-		trace_endpos = self.cursor_trace_endpos;
-		trace_ent = self.cursor_trace_ent;
+		trace_endpos = this.cursor_trace_endpos;
+		trace_ent = this.cursor_trace_ent;
 
-		if (!trace_ent)
+		if(!trace_ent)
 		{
-			ang = normalize(self.cursor_trace_endpos - self.cursor_trace_start);
+			ang = normalize(this.cursor_trace_endpos - this.cursor_trace_start);
 					
-			traceline(self.cursor_trace_start, self.cursor_trace_endpos, self.button3, self);
+			traceline(this.cursor_trace_start, this.cursor_trace_endpos, this.button3, this);
 		}
 		else
 		{
 			// MAJOR HACK!
-			if (trace_ent.classname == "func_door2")
+			if(trace_ent.classname == "func_door2")
 			{
 				trace_ent = trace_ent.enemy;
-				if (trace_ent.solid != SOLID_BBOX)
-					trace_ent = world;
+				if(trace_ent.solid != SOLID_BBOX)
+					trace_ent = NULL;
 			}
-			else if (!trace_ent.effects & EF_SELECTABLE)
-				trace_ent = world;
-			if (trace_ent == self.player)
+			else if(!trace_ent.effects & EF_SELECTABLE)
+				trace_ent = NULL;
+			if(trace_ent == this.player)
 				return;
 		}
-		self.cursor_trace_ent = trace_ent;			
+		this.cursor_trace_ent = trace_ent;			
 	}
 	else
 	{
-		trace_ent = ui_over();
+		trace_ent = ui_over(this);
 	
-		if (!trace_ent)
+		if(!trace_ent)
 		{
-			ang = normalize((v_forward * 96) + (v_right * self.cursorpos_x) - (v_up * self.cursorpos_y));
-			traceline(self.origin, self.origin + ang * 2300, self.button3, self);
-			if (trace_startsolid)
-				traceline(self.cursor.origin, self.cursor.origin + ang * 2300, self.button3, self);
-			while(trace_plane_normal_z < 0.7 && trace_ent == world)
+			ang = normalize((v_forward * 96) + (v_right * this.cursorpos_x) - (v_up * this.cursorpos_y));
+			traceline(this.origin, this.origin + ang * 2300, this.button3, this);
+			if(trace_startsolid)
+				traceline(this.cursor.origin, this.cursor.origin + ang * 2300, this.button3, this);
+			while(trace_plane_normal_z < 0.7 && trace_ent == NULL)
 			{
-				traceline(trace_endpos + ang, trace_endpos + ang * 2300, self.button3, self);
+				traceline(trace_endpos + ang, trace_endpos + ang * 2300, this.button3, this);
 				runaway = runaway + 1;
-				if (runaway > 10)
+				if(runaway > 10)
 				{
-					self.cursor_trace_ent = world;
+					this.cursor_trace_ent = NULL;
 					return; // oh, it's just a harmless lil' bunny innit?
 				}
 			}
-			if (trace_ent.classname == "func_fadewalk")
+			if(trace_ent.classname == "func_fadewalk")
 			{
-				if (trace_ent.alpha == 0)
-					traceline(trace_endpos + ang, trace_endpos + ang * 2300, FALSE, trace_ent);
+				if(trace_ent.alpha == 0)
+					traceline(trace_endpos + ang, trace_endpos + ang * 2300, false, trace_ent);
 			}
 		}
-		self.cursor_trace_ent = trace_ent;
+		this.cursor_trace_ent = trace_ent;
 	}
 		
-	if (self.button0)
+	if(this.button0)
 	{
-		if (trace_ent.ui_clicked)
+		if(trace_ent.ui_clicked)
 		{
-			other = self;
-			self = trace_ent;
-			self.ui_clicked(0);
-			self = other;
+			trace_ent.ui_clicked(trace_ent, this, 0);
 		}
 		else
 		{
-			if (self.dbltime == 0)
-				self.dbltime = time + 0.5;
-			else if (self.dbltime < 0)
+			if(this.dbltime == 0)
+				this.dbltime = time + 0.5;
+			else if(this.dbltime < 0)
 			{
 			
-				if ((0 - self.dbltime) >= time)
+				if((0 - this.dbltime) >= time)
 	                        {
-					if (self.player)
-						self.player.menu = TRUE; // set speed
+					if(this.player)
+						this.player.menu = true; // set speed
 				}
 				else
-					self.dbltime = time;
+					this.dbltime = time;
 			}
 	
-			if (self.player)
+			if(this.player)
 			{
-				if (self.player.think != AnimatePlayer) // doing an attack??
+				if(getthink(this.player) != AnimatePlayer) // doing an attack??
 					return; 
 	
-				friend = friendly(trace_ent, self.player);
+				friend = friendly(trace_ent, this.player);
 				
-				if ((!friend) && trace_ent.takedamage)
+				if((!friend) && trace_ent.takedamage)
 				{
-					self.player.gotstuff = self.altaction;
-					self.player.goalentity = trace_ent;
-					if (self.menu)
-						closemenu(self);
+					this.player.gotstuff = this.altaction;
+					this.player.goalentity = trace_ent;
+					if(this.menu)
+						closemenu(this);
 				}
-				else if (trace_ent.action)
+				else if(trace_ent.action)
 				{
-					if (trace_ent.action != donothing)
+					if(trace_ent.action != donothing)
 					{
-						self.player.gotstuff = SP_ACTIVATE;	
-						self.player.goalentity = trace_ent;
+						this.player.gotstuff = SP_ACTIVATE;	
+						this.player.goalentity = trace_ent;
 					}
 				}
 				else
 				{
-					if (difcheck(trace_endpos, self.player.origin))
+					if(difcheck(trace_endpos, this.player.origin))
 					{
-						if (!self.wayp)
-							self.wayp = spawn();
-						self.wayp.model = "";
-						setorigin(self.wayp, trace_endpos + '0 0 22');
-						self.wayp.owner = self;
-						self.player.goalentity = self.wayp;
-						if (self.button3)
-							self.player.gotstuff = self.altaction;
+						if(!this.wayp)
+							this.wayp = spawn();
+						this.wayp.model = "";
+						setorigin(this.wayp, trace_endpos + '0 0 22');
+						this.wayp.owner = this;
+						this.player.goalentity = this.wayp;
+						if(this.button3)
+							this.player.gotstuff = this.altaction;
 						else
-							self.player.gotstuff = SP_GOTO;
+							this.player.gotstuff = SP_GOTO;
 					}
 				}
 			}
@@ -138,98 +140,93 @@ void() h_click =
 	}
 	else
 	{
-		if (self.dbltime > 0)
+		if(this.dbltime > 0)
 		{
-			if (self.dbltime >= time)
-				self.dbltime = 0 - (time + 0.5);
+			if(this.dbltime >= time)
+				this.dbltime = 0 - (time + 0.5);
 			else
-				self.dbltime = 0;
+				this.dbltime = 0;
 		}
-		else if (self.dbltime < 0)
+		else if(this.dbltime < 0)
 		{
-			if ((0 - self.dbltime) < time)
-				self.dbltime = 0;
+			if((0 - this.dbltime) < time)
+				this.dbltime = 0;
 		}
 	}
-	if (self.button2)
+	if(this.button2)
 	{
-
-		if (self.flags & FL_JUMPRELEASED)
+		if(!IS_JUMP_HELD(this))
 		{
-			self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
-			if (trace_ent.ui_clicked)
+			SET_JUMP_HELD(this);
+			if(trace_ent.ui_clicked)
 			{
-				other = self;
-				self = trace_ent;
-				self.ui_clicked(1);
-				self = other;
+				trace_ent.ui_clicked(trace_ent, this, 1);
 			}
-			else if (self.spell)
+			else if(this.spell)
 			{
-
-				friend = friendly(self.player, trace_ent);
+				friend = friendly(this.player, trace_ent);
 				
-				if (self.player)
+				if(this.player)
 				{
-					if (self.player.think != AnimatePlayer) // doing an attack??
+					if(getthink(this.player) != AnimatePlayer) // doing an attack??
 						return; 
-					ca = cast_aground(self.spell);
-					if (ca == 2)
+					int ca = cast_aground(this.spell);
+					if(ca == 2)
 					{
 						// special Item mode
-						if (trace_ent.classname == "item")
+						if(trace_ent.classname == "item")
 						{
-							it_simplestat(trace_ent.slot1);
-							if (stat_it < IT_GOLD)
+							it_simplestat(this, trace_ent.slot1);
+							if(stat_it < IT_GOLD)
 							{
-								if (!trace_ent.menu)
+								if(!trace_ent.menu)
 								{	
-									self.player.gotstuff = self.spell;
-									self.player.goalentity = trace_ent;
-									if (self.menu)
-										closemenu(self);
+									this.player.gotstuff = this.spell;
+									this.player.goalentity = trace_ent;
+									if(this.menu)
+										closemenu(this);
 								}
 							}
 						}
 					}
-					else if (self.spell == SP_HEAL && friend && trace_ent.takedamage)
+					else if(this.spell == SP_HEAL && friend && trace_ent.takedamage)
 					{
-						self.player.gotstuff = self.spell;
-						self.player.goalentity = trace_ent;
-						if (self.menu)
-							closemenu(self);
+						this.player.gotstuff = this.spell;
+						this.player.goalentity = trace_ent;
+						if(this.menu)
+							closemenu(this);
 					}
-					else if (self.spell == SP_SHIELD && friend && trace_ent.takedamage)
+					else if(this.spell == SP_SHIELD && friend && trace_ent.takedamage)
 					{
-						self.player.gotstuff = self.spell;
-						self.player.goalentity = trace_ent;
-						if (self.menu)
-							closemenu(self);
+						this.player.gotstuff = this.spell;
+						this.player.goalentity = trace_ent;
+						if(this.menu)
+							closemenu(this);
 					}
-					else if ((!friend) && trace_ent.takedamage && !ca)
+					else if((!friend) && trace_ent.takedamage && !ca)
 					{
-						self.player.gotstuff = self.spell;
-						self.player.goalentity = trace_ent;
-						if (self.menu)
-							closemenu(self);
+						this.player.gotstuff = this.spell;
+						this.player.goalentity = trace_ent;
+						if(this.menu)
+							closemenu(this);
 					}
-					else if (ca || self.button3)
+					else if(ca || this.button3)
 					{
-						if (!self.wayp)
-							self.wayp = spawn();
-						self.wayp.model = "";
-						self.wayp.owner = self;
-						setorigin(self.wayp, trace_endpos + '0 0 22');
+						if(!this.wayp)
+							this.wayp = spawn();
+						this.wayp.model = "";
+						this.wayp.owner = this;
+						setorigin(this.wayp, trace_endpos + '0 0 22');
 						// do we need this?
-						if (self.button3) 
-							self.player.enemy = self.wayp;
-						self.player.goalentity = self.wayp;
-						self.player.gotstuff = self.spell;
+						if(this.button3) 
+							this.player.enemy = this.wayp;
+						this.player.goalentity = this.wayp;
+						this.player.gotstuff = this.spell;
 					}
 				}
 			}
 		}
 	}
 	else
-		self.flags = self.flags | FL_JUMPRELEASED;
-};
+		UNSET_JUMP_HELD(this);
+}

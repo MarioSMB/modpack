@@ -1,0 +1,9 @@
+#pragma once
+
+void Trigger(entity who, entity snpc, entity splayer, float num);
+
+void generictrigger(entity this, entity actor, entity trigger);
+
+void playertrigger(entity this, entity actor, entity trigger);
+
+void InitTrigger(entity this);

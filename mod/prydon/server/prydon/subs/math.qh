@@ -1,0 +1,9 @@
+#pragma once
+
+float encode(float s1, float s2, float s3);
+
+float decode(float parm, float which);
+
+float recode(float parm, float which, float set);
+
+float root2(float f);

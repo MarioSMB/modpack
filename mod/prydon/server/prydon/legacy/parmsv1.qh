@@ -1,0 +1,3 @@
+#pragma once
+
+void legacy_parmsv1(entity this);

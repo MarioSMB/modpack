@@ -1,0 +1,5 @@
+#pragma once
+
+void bowattack1(entity this);
+
+void cbowattack1(entity this);

@@ -1,12 +1,6 @@
-/*
+#include "randitem.qh"
 
-
-Item generator
-
-
-*/
-
-vector randitem(float base, float val, float shop)
+vector randitem(entity this, float base, float val, float shop)
 {
 	val = ceil(val + (random() * (val/2)) - (val/4));
 	int runawayloop = 0;
@@ -73,7 +67,7 @@ vector randitem(float base, float val, float shop)
 		goto newitem;
 	stat_dur = 1;
 	it_clearstats();
-	it_itemstat();
+	it_itemstat(this);
 	if(stat_id == 2)
 		goto newitem;
 	// reject the item if it's too good
@@ -96,7 +90,7 @@ vector randitem(float base, float val, float shop)
 			stat_pref = ceil(random() * PF_BAD); 
 		else 
 			stat_pref = ceil(random() * PF_GOOD) + PF_BAD; // NUMBER OF GOOD + NUMBER OF BAD
-		it_itemstat();
+		it_itemstat(this);
 		
 	}
 	if(random() > 0.8)
@@ -107,7 +101,7 @@ vector randitem(float base, float val, float shop)
 			stat_suf = ceil(random() * SF_GOOD) + SF_BAD; // NUMBER OF GOOD + NUMBER OF BAD
 		if(stat_suf > 48)
 			stat_suf = stat_suf + 63;
-		it_itemstat();
+		it_itemstat(this);
 	}	
 	// next check if these prefixes/suffixes are valid
 
@@ -128,7 +122,7 @@ vector randitem(float base, float val, float shop)
 			stat_dur = 1;
 		else
 			stat_dur = ceil((val / stat_price) * random());
-		it_itemstat();
+		it_itemstat(this);
 		if(stat_dur > stat_max_dur)
 			stat_dur = stat_max_dur;
 	}
@@ -166,7 +160,7 @@ vector randitem(float base, float val, float shop)
 	{
 		stat_pref = stat_suf = 0;
 		stat_dur = ceil((val / stat_price) * random());
-		it_itemstat();
+		it_itemstat(this);
 		if(stat_dur > stat_max_dur)
 			stat_dur = stat_max_dur;
 	}
@@ -174,7 +168,7 @@ vector randitem(float base, float val, float shop)
 	{
 		stat_pref = stat_suf = 0;
 		stat_dur = ceil((val / stat_price) * random());
-		it_itemstat();
+		it_itemstat(this);
 		if(stat_dur > stat_max_dur)
 			stat_dur = stat_max_dur;
 	}
@@ -278,7 +272,7 @@ vector randitem(float base, float val, float shop)
 		// usually arrows are plain
 		if(random() < 0.9)
 			stat_pref = stat_suf = 0;
-		it_itemstat();
+		it_itemstat(this);
 		stat_dur = ceil(val / stat_price * random() + 5 + random() * stat_max_dur);
 		if(stat_dur > stat_max_dur)
 			stat_dur = stat_max_dur;

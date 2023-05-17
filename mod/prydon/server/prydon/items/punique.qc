@@ -1,3 +1,5 @@
+#include "punique.qh"
+
 void PrintUnique()
 {
 	if(stat_it == IT_ITHAELS_ROBE)

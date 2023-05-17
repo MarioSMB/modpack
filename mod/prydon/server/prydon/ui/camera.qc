@@ -1,109 +1,109 @@
+#include "camera.qh"
 
-
-void() h_camera =
+const int SVC_SETVIEW = 5; // TODO: move to dpdefs where this belongs!
+void h_camera(entity this)
 {
-	local vector view, org;
-	local float dist, len, len2;
-	if (self.button4)
-		self.rotang_y = self.rotang_y + 120 * frametime;
-	if (self.button5)
-		self.rotang_y = self.rotang_y - 120 * frametime;
-	if (self.button6)
+	vector view = '0 0 0', org = '0 0 0';
+	float dist = 0, len = 0, len2 = 0;
+	if(this.button4)
+		this.rotang_y = this.rotang_y + 120 * frametime;
+	if(this.button5)
+		this.rotang_y = this.rotang_y - 120 * frametime;
+	if(this.button6)
 	{
-		self.rotang_z = self.rotang_z + 80 * frametime;
-		if (self.rotang_z > 256)
-			self.rotang_z = 256;
+		this.rotang_z = this.rotang_z + 80 * frametime;
+		if(this.rotang_z > 256)
+			this.rotang_z = 256;
 	}
-	if (self.button7)
+	if(this.button7)
 	{
-		self.rotang_z = self.rotang_z - 80 * frametime;
-		if (self.rotang_z < 64)
-			self.rotang_z = 64;
+		this.rotang_z = this.rotang_z - 80 * frametime;
+		if(this.rotang_z < 64)
+			this.rotang_z = 64;
 	}
-	if (!self.camera)
+	if(!this.camera)
 	{	
-		self.camera = spawn();
-		self.camera.drawonlytoclient = self;
-		self.drawonlytoclient = self;
-		self.camera.solid = SOLID_NOT;
-		self.camera.movetype = MOVETYPE_NOCLIP;
-		setmodel(self.camera, "progs/null.spr");
-		msg_entity = self;
+		this.camera = spawn();
+		this.camera.drawonlytoclient = this;
+		this.drawonlytoclient = this;
+		this.camera.solid = SOLID_NOT;
+		set_movetype(this.camera, MOVETYPE_NOCLIP);
+		_setmodel(this.camera, "progs/null.spr");
+		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.camera);
+		WriteEntity(MSG_ONE, this.camera);
 	}
-	if (self.camera.enemy)
+	if(this.camera.enemy)
 	{
-		org = self.camera.enemy.origin + '0 64 0';
-		view_y = 0;
-		self.rotang_y = view_y;
-		view_x = 0;	
+		org = this.camera.enemy.origin + '0 64 0';
+		view.y = 0;
+		this.rotang_y = view.y;
+		view.x = 0;	
 	}
-	else if (self.camera.goalentity)
+	else if(this.camera.goalentity)
 	{
-		org = self.camera.goalentity.origin;
-		view = vectoangles(self.player.origin - org);
-		self.rotang_y = view_y;
-		view_x = view_x * -1;
+		org = this.camera.goalentity.origin;
+		view = vectoangles(this.player.origin - org);
+		this.rotang_y = view.y;
+		view.x = view.x * -1;
 	}
 	else
 	{
-		view = self.rotang;
-		view_z = 0;
-		dist = self.rotang_z;
+		view = this.rotang;
+		view.z = 0;
+		dist = this.rotang_z;
 	}
 	makevectors(view);
-	if (self.camera.enemy)
+	if(this.camera.enemy)
 	{
-		setorigin(self, org);
-		setorigin(self.camera, org);
+		setorigin(this, org);
+		setorigin(this.camera, org);
 		
 	}
-	else if (self.camera.goalentity)
+	else if(this.camera.goalentity)
 	{
-		setorigin(self.camera, org);
-		setorigin(self, org);
+		setorigin(this.camera, org);
+		setorigin(this, org);
 	}	
-	else if (self.player)
+	else if(this.player)
 	{
 		
-		if (self.ui_panels)
-			org = self.player.origin + v_forward * (0 - dist) - v_right * (dist/2);
+		if(this.ui_panels)
+			org = this.player.origin + v_forward * (0 - dist) - v_right * (dist/2);
 		else
-			org = self.player.origin + v_forward * (0 - dist);
-		if (pointcontents(org) != CONTENT_EMPTY)
+			org = this.player.origin + v_forward * (0 - dist);
+		if(pointcontents(org) != CONTENT_EMPTY)
 		{
-			traceline(self.player.origin, org, TRUE, self);
+			traceline(this.player.origin, org, true, this);
 			org = trace_endpos + v_forward + trace_plane_normal;
 		}
 		else
 		{
-			dist = vlen(org - self.player.origin);
-			traceline(org, self.player.origin, TRUE, self);
-			if (trace_fraction!= 1)
+			dist = vlen(org - this.player.origin);
+			traceline(org, this.player.origin, true, this);
+			if(trace_fraction!= 1)
 			{
 				len = trace_fraction * dist;
-				traceline(self.player.origin, org, TRUE, self);
+				traceline(this.player.origin, org, true, this);
 				len2 = trace_fraction * dist;
 				
-				if (len < 64)
+				if(len < 64)
 				{
-					if (len2 >= 64)
+					if(len2 >= 64)
 						org = trace_endpos + v_forward + trace_plane_normal;
 				}
 			}
 		}
-		setorigin(self.camera, org);
-		setorigin(self, org);
+		setorigin(this.camera, org);
+		setorigin(this, org);
 	}
-	
 
-	self.testorg = self.origin;
-	msg_entity = self;
-	WriteByte (MSG_ONE,10);
-	WriteAngle (MSG_ONE,view_x);
-	WriteAngle (MSG_ONE,view_y);
-	WriteAngle (MSG_ONE,0);
-	self.camera.angles = view;
-	self.camera.angles_z = 0;
-};
+	this.testorg = this.origin;
+	msg_entity = this;
+	WriteByte(MSG_ONE,10);
+	WriteAngle(MSG_ONE,view.x);
+	WriteAngle(MSG_ONE,view.y);
+	WriteAngle(MSG_ONE,0);
+	this.camera.angles = view;
+	this.camera.angles_z = 0;
+}

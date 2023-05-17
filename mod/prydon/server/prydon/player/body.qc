@@ -55,5 +55,5 @@ void regain_body(entity this)
 {
 	entity e = find_body(this);
 	if(e)
-		call(body_pickup, e, this);
+		body_pickup(e, this);
 }

@@ -1,0 +1,9 @@
+#pragma once
+
+int GetSpellLevel(entity e, float espell);
+
+void SetSpellLevel(entity e, float espell, float l);
+
+void AddSpellLevel(entity e, float espell, float level);
+
+bool SelectSpell(entity this, float sp);

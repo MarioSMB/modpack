@@ -1,35 +1,44 @@
-void() storyup =
+#include "ents.qh"
+
+#include "subs.qh"
+
+void storyup_use(entity this, entity actor, entity trigger)
 {
-	local float story;
-	
-	self.use = storyup;
-	if (other == world)
+	if(!trigger)
 		return;
-	story = getstorylevel(self);
+	float story = getstorylevel(this);
 	
-	if (self.lip)
-		story = story + self.lip;
+	if(this.lip)
+		story += this.lip;
 	else
-		story = story + 1;
-	if (setstorylevel(self, story))
+		story += 1;
+	if(setstorylevel(this, story))
 		quest_update();
-	remove(self);
-	
-};
+	delete(this);
+}
 
-void() storyset =
+spawnfunc(storyup)
 {
-	local float story;
-	
-	self.use = storyset;
-	if (other == world)
+	this.use = storyup_use;
+}
+
+void storyset_use(entity this, entity actor, entity trigger)
+{
+	float story;
+
+	if(!trigger)
 		return;
 
-	if (self.spawnflags & 2)
+	if(this.spawnflags & 2)
 		story = 0;
 	else
-		story = self.lip;
-	if (setstorylevel(self, story))
+		story = this.lip;
+	if(setstorylevel(this, story))
 		quest_update();
-	remove(self);
-};
+	delete(this);
+}
+
+spawnfunc(storyset)
+{
+	this.use = storyset_use;
+}

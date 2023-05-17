@@ -1,0 +1,51 @@
+#pragma once
+
+const int MP_INFERIOR = 1;
+const int MP_WEAK = 2;
+const int MP_SICK = 3;
+const int MP_CRIPPLED = 4;
+const int MP_ELDERLY = 5;
+const int MP_CLUMSY = 6;
+const int MP_FAST = 7;
+const int MP_MUSCULAR = 8;
+const int MP_SUPERIOR = 9;
+const int MP_HEALTHY = 10;
+const int MP_FIERY = 11;
+const int MP_VILE = 12;
+const int MP_HELL = 13;
+const int MP_ARMOR = 14;
+const int MP_WARDED = 15;
+const int MP_BURNING = 16;
+const int MP_ENRAGED = 17;
+const int MP_CHARGED = 18;
+const int MP_FROSTY = 19;
+
+const int MP_BAD = 6;
+const int MP_GOOD = 13;
+
+const int MS_PUPIL = 1;
+const int MS_OAF = 2;
+const int MS_LUMMOX = 3;
+const int MS_IMBECILE = 4;
+const int MS_WEAKLING = 5;
+const int MS_DAWDLER = 6;
+const int MS_VAMPIRE = 7;
+const int MS_MASTER = 8;
+const int MS_CHAMPION = 9;
+const int MS_WIZARD = 10;
+const int MS_MAGE = 11;
+const int MS_CLERIC = 12;
+const int MS_CHIEFTAIN = 13;
+const int MS_BESERKER = 14;
+
+const int MS_BAD = 6;
+const int MS_GOOD  = 8;
+
+const int AI_ROAM = 1;
+const int AI_HUNT_PLAYER = 2;
+const int AI_HUNT_MONSTERS = 4;
+const int AI_HUNT = 128;
+const int AI_FOLLOW = 8;
+const int AI_TAKE_ITEMS = 16;
+const int AI_STAY_NEAR = 32;
+const int AI_LUMP = 64;

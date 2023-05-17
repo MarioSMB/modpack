@@ -1,92 +1,94 @@
+#include "dummys.qh"
+
 /*
 +------+
 |Dummys|
 +------+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
 | Scratch                                      Http://www.admdev.com/scratch |
 +=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
-| This file contains remove(self); statements for entities not yet coded.    |
+| This file contains delete(this); statements for entities not yet coded.    |
 | This avoids Quake spewing out pages and pages of error messages when       |
 | loading maps.                                                              |
 +=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
 */
 
 // General Junk
-void() event_lightning          = {remove(self);};
-void() misc_fireball            = {remove(self);};
-void() misc_explobox            = {remove(self);};
-void() misc_explobox2           = {remove(self);};
-void() trap_spikeshooter        = {remove(self);};
-void() trap_shooter             = {remove(self);};
-void() func_bossgate            = {remove(self);};
-void() func_episodegate         = {remove(self);};
-void() func_train               = {remove(self);};
-void() func_button              = {remove(self);};
-void() func_door                = {remove(self);};
-void() func_door_secret         = {remove(self);};
-void() func_plat                = {remove(self);};
-void() info_intermission        = {remove(self);};
-void() info_null                = {remove(self);};
-void() info_teleport_destination= {remove(self);};
+spawnfunc(event_lightning)           { delete(this); }
+spawnfunc(misc_fireball)             { delete(this); }
+spawnfunc(misc_explobox)             { delete(this); }
+spawnfunc(misc_explobox2)            { delete(this); }
+spawnfunc(trap_spikeshooter)         { delete(this); }
+spawnfunc(trap_shooter)              { delete(this); }
+spawnfunc(func_bossgate)             { delete(this); }
+spawnfunc(func_episodegate)          { delete(this); }
+spawnfunc(func_train)                { delete(this); }
+spawnfunc(func_button)               { delete(this); }
+spawnfunc(func_door)                 { delete(this); }
+spawnfunc(func_door_secret)          { delete(this); }
+spawnfunc(func_plat)                 { delete(this); }
+spawnfunc(info_intermission)         { delete(this); }
+spawnfunc(info_null)                 { delete(this); }
+spawnfunc(info_teleport_destination) { delete(this); }
 
 // Triggers
-void() trigger_relay            = {remove(self);};
-void() trigger_multiple         = {remove(self);};
-void() trigger_once             = {remove(self);};
-void() trigger_changelevel      = {remove(self);};
-void() trigger_counter          = {remove(self);};
-void() trigger_teleport         = {remove(self);};
-void() trigger_secret           = {remove(self);};
-void() trigger_setskill         = {remove(self);};
-void() trigger_monsterjump      = {remove(self);};
-void() trigger_onlyregistered   = {remove(self);};
-void() trigger_push             = {remove(self);};
-void() trigger_hurt             = {remove(self);};
+spawnfunc(trigger_relay)             { delete(this); }
+spawnfunc(trigger_multiple)          { delete(this); }
+spawnfunc(trigger_once)              { delete(this); }
+spawnfunc(trigger_changelevel)       { delete(this); }
+spawnfunc(trigger_counter)           { delete(this); }
+spawnfunc(trigger_teleport)          { delete(this); }
+spawnfunc(trigger_secret)            { delete(this); }
+spawnfunc(trigger_setskill)          { delete(this); }
+spawnfunc(trigger_monsterjump)       { delete(this); }
+spawnfunc(trigger_onlyregistered)    { delete(this); }
+spawnfunc(trigger_push)              { delete(this); }
+spawnfunc(trigger_hurt)              { delete(this); }
 
 
-void() info_player_start2       = {};
-void() info_player_deathmatch   = {};
-void() info_player_coop         = {};
+spawnfunc(info_player_start2)        {}
+spawnfunc(info_player_deathmatch)    {}
+spawnfunc(info_player_coop)          {}
 
 // Weapons
-void() weapon_supershotgun      = {remove(self);};
-void() weapon_nailgun           = {remove(self);};
-void() weapon_supernailgun      = {remove(self);};
-void() weapon_grenadelauncher   = {remove(self);};
-void() weapon_rocketlauncher    = {remove(self);};
-void() weapon_lightning         = {remove(self);};
+spawnfunc(weapon_supershotgun)       { delete(this); }
+spawnfunc(weapon_nailgun)            { delete(this); }
+spawnfunc(weapon_supernailgun)       { delete(this); }
+spawnfunc(weapon_grenadelauncher)    { delete(this); }
+spawnfunc(weapon_rocketlauncher)     { delete(this); }
+spawnfunc(weapon_lightning)          { delete(this); }
 
 // Monsters
-void() monster_enforcer         = {remove(self);};
-void() monster_ogre             = {remove(self);};
-void() monster_demon1           = {remove(self);};
-void() monster_shambler         = {remove(self);};
-void() monster_knight           = {remove(self);};
-void() monster_army             = {remove(self);};
-void() monster_wizard           = {remove(self);};
-void() monster_dog              = {remove(self);};
-void() monster_zombie           = {remove(self);};
-void() monster_boss             = {remove(self);};
-void() monster_tarbaby          = {remove(self);};
-void() monster_hell_knight      = {remove(self);};
-void() monster_fish             = {remove(self);};
-void() monster_shalrath         = {remove(self);};
-void() monster_oldone           = {remove(self);};
+spawnfunc(monster_enforcer)          { delete(this); }
+spawnfunc(monster_ogre)              { delete(this); }
+spawnfunc(monster_demon1)            { delete(this); }
+spawnfunc(monster_shambler)          { delete(this); }
+spawnfunc(monster_knight)            { delete(this); }
+spawnfunc(monster_army)              { delete(this); }
+spawnfunc(monster_wizard)            { delete(this); }
+spawnfunc(monster_dog)               { delete(this); }
+spawnfunc(monster_zombie)            { delete(this); }
+spawnfunc(monster_boss)              { delete(this); }
+spawnfunc(monster_tarbaby)           { delete(this); }
+spawnfunc(monster_hell_knight)       { delete(this); }
+spawnfunc(monster_fish)              { delete(this); }
+spawnfunc(monster_shalrath)          { delete(this); }
+spawnfunc(monster_oldone)            { delete(this); }
 
-void() item_health              = {remove(self);};
-void() item_megahealth_rot      = {remove(self);};
-void() item_armor1              = {remove(self);};
-void() item_armor2              = {remove(self);};
-void() item_armorInv            = {remove(self);};
-void() item_shells              = {remove(self);};
-void() item_spikes              = {remove(self);};
-void() item_rockets             = {remove(self);};
-void() item_cells               = {remove(self);};
-void() item_key1                = {remove(self);};
-void() item_key2                = {remove(self);};
-void() item_artifact_invulnerability = {remove(self);};
-void() item_artifact_envirosuit = {remove(self);};
-void() item_artifact_invisibility = {remove(self);};
-void() item_artifact_super_damage = {remove(self);};
+spawnfunc(item_health)               { delete(this); }
+spawnfunc(item_megahealth_rot)       { delete(this); }
+spawnfunc(item_armor1)               { delete(this); }
+spawnfunc(item_armor2)               { delete(this); }
+spawnfunc(item_armorInv)             { delete(this); }
+spawnfunc(item_shells)               { delete(this); }
+spawnfunc(item_spikes)               { delete(this); }
+spawnfunc(item_rockets)              { delete(this); }
+spawnfunc(item_cells)                { delete(this); }
+spawnfunc(item_key1)                 { delete(this); }
+spawnfunc(item_key2)                 { delete(this); }
+spawnfunc(item_artifact_invulnerability)  { delete(this); }
+spawnfunc(item_artifact_envirosuit)  { delete(this); }
+spawnfunc(item_artifact_invisibility)  { delete(this); }
+spawnfunc(item_artifact_super_damage)  { delete(this); }
 
-void() entity_rock = {remove(self); };
-void() light_environment = {remove(self);};
+spawnfunc(entity_rock)  { delete(this); }
+spawnfunc(light_environment)  { delete(this); }

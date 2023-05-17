@@ -1,0 +1,11 @@
+#pragma once
+
+float hour, day, night, lasthour;
+
+const float TIME_MULTIPLIER = 2;
+
+void set_tod();
+
+string lightlev(float p);
+
+void QueryDayNight();

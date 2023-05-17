@@ -2,9 +2,17 @@
 
 #include "client.qh"
 #include "gamelog.qh"
+#include "prydon/map/world.qh"
 #include "prydon/system/main.qh"
 
 void main() { /* unused */ }
+
+void SendCSQCLightningBeam(vector v1, vector v2)
+{
+	WriteHeader(MSG_BROADCAST, TE_CSQC_LIGHTNING);
+	WriteVector(MSG_BROADCAST, v1);
+	WriteVector(MSG_BROADCAST, v2);
+}
 
 /** print(), but only print if the server is not local */
 void dedicated_print(string input)
@@ -488,7 +496,7 @@ spawnfunc(worldspawn)
 
     bool wantrestart = false;
 	{
-		if (!server_is_dedicated)
+		if(!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
 			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
@@ -505,8 +513,8 @@ spawnfunc(worldspawn)
 			string pk3csprogs = "csprogs-" WATERMARK ".dat";
 			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
 			string select = "csprogs.dat";
-			if (fexists(pk3csprogs)) select = pk3csprogs;
-			if (cvar_string("csqc_progname") != select)
+			if(fexists(pk3csprogs)) select = pk3csprogs;
+			if(cvar_string("csqc_progname") != select)
 			{
 				cvar_set("csqc_progname", select);
 				wantrestart = true;
@@ -514,24 +522,24 @@ spawnfunc(worldspawn)
 			// Check for updates on startup
 			// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
 			int sentinel = fopen("progs.txt", FILE_READ);
-			if (sentinel >= 0)
+			if(sentinel >= 0)
 			{
 				string switchversion = fgets(sentinel);
 				fclose(sentinel);
-				if (switchversion != "" && switchversion != WATERMARK)
+				if(switchversion != "" && switchversion != WATERMARK)
 				{
 					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
 					// if it doesn't exist, assume either:
 					//   a) the current program was overwritten
 					//   b) this is a client only update
 					string newprogs = sprintf("progs-%s.dat", switchversion);
-					if (fexists(newprogs))
+					if(fexists(newprogs))
 					{
 						cvar_set("sv_progs", newprogs);
 						wantrestart = true;
 					}
 					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
-					if (fexists(newcsprogs))
+					if(fexists(newcsprogs))
 					{
 						cvar_set("csqc_progname", newcsprogs);
 						wantrestart = true;
@@ -539,7 +547,7 @@ spawnfunc(worldspawn)
 				}
 			}
 		}
-		if (wantrestart)
+		if(wantrestart)
 		{
 			LOG_INFOF("Restart requested\n");
 			changelevel(mapname);
@@ -560,6 +568,8 @@ spawnfunc(worldspawn)
 	// needs to be done so early because of the constants they create
 	static_init();
 
+	prydon_worldspawn();
+
 	teamplay = cvar("teamplay"); // set it super early so other spawnfuncs can access it
 
 	static_init_late();
@@ -577,22 +587,22 @@ spawnfunc(worldspawn)
 	}
 
 	// fill sv_curl_serverpackages from .serverpackage files
-	if (autocvar_sv_curl_serverpackages_auto)
+	if(autocvar_sv_curl_serverpackages_auto)
 	{
 		string s = "csprogs-" WATERMARK ".txt";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
 			string pkg = argv(i);
-			if (startsWith(pkg, "csprogs-")) continue;
-			if (endsWith(pkg, "-serverpackage.txt")) continue;
-			if (endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
+			if(startsWith(pkg, "csprogs-")) continue;
+			if(endsWith(pkg, "-serverpackage.txt")) continue;
+			if(endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
 			s = cons(s, pkg);
 		}
 		// add automatically managed files to the list
 		#define X(match) MACRO_BEGIN { \
 			int fd = search_begin(match, true, false); \
-			if (fd >= 0) \
+			if(fd >= 0) \
 			{ \
 				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
 				{ \
@@ -665,7 +675,7 @@ spawnfunc(__init_dedicated_server)
 	// assign reflectively to avoid "assignment to world" warning
     for (int i = 0, n = numentityfields(); i < n; ++i) {
         string k = entityfieldname(i);
-        if (k == "classname") {
+        if(k == "classname") {
             // safeguard against various stuff ;)
             putentityfieldstring(i, this, "worldspawn");
             break;
@@ -681,7 +691,7 @@ spawnfunc(__init_dedicated_server)
 void StartFrame()
 {
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
-	if (sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
+	if(sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
 	serverprevtime = servertime;
 	servertime = time;
@@ -697,6 +707,145 @@ void StartFrame()
 
 	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));
+}
+
+void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
+{
+	const float eps = 0.0625;
+	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return;
+	if (trace_fraction < 1)
+	{
+		// hit something
+		// adjust origin in the other direction...
+		setorigin(e, e.origin - by * (1 - trace_fraction));
+	}
+}
+
+bool WarpZoneLib_MoveOutOfSolid(entity e)
+{
+	vector o = e.origin;
+	traceline(o, o, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return false;
+
+	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+	if (!trace_startsolid)
+		return true;
+
+	vector m0 = e.mins;
+	vector m1 = e.maxs;
+	e.mins = '0 0 0';
+	e.maxs = '0 0 0';
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins_x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs_x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins_y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs_y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins_z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs_z = m1.z;
+	setorigin(e, e.origin);
+
+	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+	{
+		setorigin(e, o);
+		return false;
+	}
+
+	return true;
+}
+
+bool WarpZoneLib_MoveOutOfSolid(entity e);
+#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
+
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
+
+bool autocvar_sv_mapformat_is_quake3;
+bool autocvar_sv_mapformat_is_quake2;
+
+// deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
+void DropToFloor_Handler(entity this)
+{
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
+
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+			set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
+		move_out_of_solid(this);
+	}
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+					set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
+				move_out_of_solid(this);
+			}
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+	}
+}
+
+void droptofloor(entity this)
+{
+	DropToFloor_Handler(this);
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
@@ -750,7 +899,7 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+			if(getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
 				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});

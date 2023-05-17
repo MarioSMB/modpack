@@ -1,0 +1,7 @@
+#pragma once
+
+float LvlForExp(float exponent);
+
+float ExpForLevel(float lvel);
+
+float GiveExp(entity att, entity targ, float expu);

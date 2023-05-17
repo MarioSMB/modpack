@@ -1,0 +1,9 @@
+#pragma once
+
+void EquipCheck(entity this, float loc, float skip);
+
+bool Equip(entity this, float slot);
+
+bool Unequip(entity this, float slot, float recheck);
+
+void UnequipAll(entity this);

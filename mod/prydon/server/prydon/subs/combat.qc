@@ -1,3 +1,9 @@
+#include "combat.qh"
+
+#include "../stats/exp.qh"
+#include "../stats/stats.qh"
+#include "subs.qh"
+
 void SpawnBlood(vector org, vector vel, float damage)
 {
 	particle(org, vel*0.1, 73, damage*2);
@@ -5,7 +11,6 @@ void SpawnBlood(vector org, vector vel, float damage)
 
 void T_Damage(entity attacker, entity targ, float dam, float magdam)
 {
-	local float r;
 	if(!targ.takedamage)
 		return;
 
@@ -15,7 +20,7 @@ void T_Damage(entity attacker, entity targ, float dam, float magdam)
 	if(targ.flags & FL_GODMODE)
 		return;
 		
-	r = 0;
+	float r = 0;
 	
 	if(!magdam)
 	{
@@ -128,10 +133,10 @@ void T_Damage(entity attacker, entity targ, float dam, float magdam)
 	targ.health = targ.health - dam;
 	if(targ.ai)
 	{
-		if(targ.think == AnimatePlayer)
+		if(getthink(targ) == AnimatePlayer)
 		{
 			targ.enemy = attacker.player;
-			targ.goalentity = world;
+			targ.goalentity = NULL;
 		}
 	}
 	if(attacker)
@@ -150,18 +155,18 @@ void T_Damage(entity attacker, entity targ, float dam, float magdam)
 			//call(targ.die, targ);
 		}
 		if(attacker)
-			GiveExp(attacker, targ, targ.exp);
+			GiveExp(attacker, targ, targ.experience);
 	}
 	else
 	{
 		targ = targ.player;
 		if(targ.pain)
-			call(targ.pain, targ);
+			targ.pain(targ, attacker, NULL);
 			
 		if(magdam != 2) // no screams for poison
 			if(targ.noise3)
 				if(random() < 0.5)
-					sound(targ, CHAN_VOICE, targ.noise3, 1, ATTN_NORM);
+					_sound(targ, CH_VOICE, targ.noise3, 1, ATTN_NORM);
 	}
 
 	
@@ -197,22 +202,17 @@ void FireDamage(entity attacker, entity targ, float dam)
 
 void ColdDamage(entity attacker, entity targ, float dam)
 {
-	float res, f;
 	if(targ.player)
 		targ = targ.player;
-	f = (dam / 2) * random() + (dam / 2);
+	float f = (dam / 2) * random() + (dam / 2);
 	T_Damage(attacker, targ, f, 4);
 	if(targ.cold_time < time)
 	{	
-		sound(targ, CHAN_AUTO, "spells/freeze.wav", 1, ATTN_NORM);
+		_sound(targ, CHAN_AUTO, "spells/freeze.wav", 1, ATTN_NORM);
 	
-		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte (MSG_BROADCAST, TE_TELEPORT);
-		WriteCoord (MSG_BROADCAST, targ.origin_x);
-		WriteCoord (MSG_BROADCAST, targ.origin_y);
-		WriteCoord (MSG_BROADCAST, targ.origin_z);
+		te_teleport(targ.origin);
 	}
-	res = (targ.owner.lvl - attacker.owner.lvl) / 10;
+	float res = (targ.owner.lvl - attacker.owner.lvl) / 10;
 	
 	res = res + (res * (targ.owner.res_mag / 100));
 	res = res + (res * (targ.owner.res_cold / 100));
@@ -224,24 +224,20 @@ void ColdDamage(entity attacker, entity targ, float dam)
 
 	targ.cold_time = time + 5 + (2 * (1/res));
 	targ.cold_factor = targ.cold_factor * res;
-	call(updateskins, targ);
-	
+	updateskins(targ);
 }
 
-
-void (entity attacker, entity targ, float dam) MagicDamage =
+void MagicDamage(entity attacker, entity targ, float dam)
 {
-
 	if(targ.player)
 		targ = targ.player;
 
 	T_Damage(attacker, targ, dam, 5);
-	targ.effects = targ.effects | EF_MUZZLEFLASH;
+	targ.effects |= EF_MUZZLEFLASH;
 }
 
-void(entity attacker, entity targ, float dam) PoisonDamage = 
+void PoisonDamage(entity attacker, entity targ, float dam)
 {
-	local entity e;
 	if(targ.player)
 		targ = targ.player;
 	if(targ.poison_count > 0)
@@ -251,59 +247,59 @@ void(entity attacker, entity targ, float dam) PoisonDamage =
 	}
 	else
 	{
-		targ.poison_count =  dam;
+		targ.poison_count = dam;
 		targ.poison_factor = 1;
 	}
 	targ.poison_inflictor = attacker;
 
-	sound(e, CHAN_AUTO, "wizard/hit.wav", 1, ATTN_NORM);
-	
+	_sound(targ, CHAN_AUTO, "wizard/hit.wav", 1, ATTN_NORM);
 }
 
-void(entity attacker, entity targ, float dam) LightningDamage = 
+void LightningDamage(entity attacker, entity targ, float dam)
 {
-	local float f;
-	local vector v, o;
 	if(targ.player)
 		targ = targ.player;
 	if(!targ)
 		return;
 		
-	targ.effects = targ.effects | EF_MUZZLEFLASH;
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, targ);
-	v = targ.maxs - targ.mins;
-	o = targ.origin + targ.mins;
-	WriteCoord(MSG_BROADCAST, o_x + (v_x * random()) );
-	WriteCoord(MSG_BROADCAST, o_y + (v_y * random()) );
-	WriteCoord(MSG_BROADCAST, o_z + v_z);
-	WriteCoord(MSG_BROADCAST, o_x + (v_x * random()) );
-	WriteCoord(MSG_BROADCAST, o_y + (v_y * random()) );
-	WriteCoord(MSG_BROADCAST, o_z);
-	f = ceil(random() * dam);
+	targ.effects |= EF_MUZZLEFLASH;
+
+	vector v = targ.maxs - targ.mins;
+	vector o = targ.origin + targ.mins;
+	vector org1;
+	org1.x = o.x = (v.x * random());
+	org1.y = o.y = (v.y * random());
+	org1.z = o.z = v.z;
+	vector org2;
+	org2.x = o.x + (v.x * random());
+	org2.y = o.y + (v.y * random());
+	org2.z = o.z;
+
+	SendCSQCLightningBeam(org1, org2);
+
+	int f = ceil(random() * dam);
 	if(!f)
 		f = 1;
-	sound(targ, CHAN_AUTO, "spells/lhit.wav", 1, ATTN_NORM);
+	_sound(targ, CHAN_AUTO, "spells/lhit.wav", 1, ATTN_NORM);
 	T_Damage(attacker, targ, f, 3);
 }
-float(float a, float b) hitcheck =
+
+bool hitcheck(float a, float b)
 {
 	if(a < 1)
 	{
-		b = b + (1 - a);
+		b += (1 - a);
 		a = 1;
 	}
 	else if(b < 1)
 	{
-		a = a + (1 -  b);
+		a += (1 -  b);
 		b = 1;
 	}
 
-	if((a / b) * 0.3 < random())
-		return true;
-	return false;
+	return ((a / b) * 0.3 < random());
 }
+
 bool MagicHit(entity inflictor, entity attacker, entity targ) // projectiles (TODO: something)
 {
 	if(friendly(attacker, targ))
@@ -346,7 +342,7 @@ bool MagicHit(entity inflictor, entity attacker, entity targ) // projectiles (TO
 bool Hit(entity attacker, entity targ, float special)
 {
 	entity realtarg = targ;
-	if(targ.spec & SPEC_MELEE_IMMUNE && special == SKILL_MELEE)
+	if((targ.spec & SPEC_MELEE_IMMUNE) && special == SKILL_MELEE)
 		return false;
 	if(targ.spec & SPEC_MISSILE_IMMUNE)
 	{
@@ -366,7 +362,7 @@ bool Hit(entity attacker, entity targ, float special)
 	if(targ.ai)
 	{
 		targ.enemy = attacker;
-		targ.goalentity = world;
+		targ.goalentity = NULL;
 	}
 	
 	targ = targ.owner;
@@ -387,7 +383,7 @@ bool Hit(entity attacker, entity targ, float special)
 		{
 			if(random () < 0.5)
 				DamageEquipment(targ, 0);
-			sound(realtarg, CHAN_AUTO, "player/block.wav", 1, ATTN_NORM);
+			_sound(realtarg, CHAN_AUTO, "player/block.wav", 1, ATTN_NORM);
 			return false;
 		}
 		if(attacker.skill & special)

@@ -1,71 +1,71 @@
-void(float lev) bribe_go =
+#include "bribe.qh"
+
+void bribe_go(entity this, float lev)
 {
-	local entity e, m;
-	
-	if (self.owner.gp < (50 / lev))
+	if(this.owner.gp < (50 / lev))
 	{
-		sprint(self.owner, "not enough gold\n");
+		sprint(this.owner, "not enough gold\n");
 		return;
 	}
-	if (self.enemy.spawnflags & 1)
+	if(this.enemy.spawnflags & 1)
 	{
-		sprint(self.owner, "invalid target\n");
+		sprint(this.owner, "invalid target\n");
 		return;
 	
 	}
-	if (self.enemy.ai == 0)
+	if(this.enemy.ai == 0)
 	{
-		sprint(self.owner, "invalid target\n");
+		sprint(this.owner, "invalid target\n");
 		return;
 	
 	}
 	/*
-	if (self.enemy.frags > self.owner.frags)
+	if(this.enemy.frags > this.owner.frags)
 	{
-		sprint(self.owner, "invalid target\n");
+		sprint(this.owner, "invalid target\n");
 		return;
 	
 	}
 	*/
 	
-	if (!self.team)
+	if(!this.team)
 	{
-		e = self.enemy;
+		entity e = this.enemy;
 
-		e.goalentity = world;
-		e.enemy = world;
+		e.goalentity = NULL;
+		e.enemy = NULL;
 		e.classname = "helper";
 		e.quest_time = e.ai;
 		e.ai = AI_FOLLOW | AI_HUNT_MONSTERS;
 		e.questlog = e.team;
 		e.bribe_time = time + (10 * lev);
-		e.team = self.team;
-		e.sbarsub = self; // bleh
-		e.bribe_count = self.bribe_count;
-		self.bribe_count = self.bribe_count + 1;
+		e.team = this.team;
+		e.sbarsub = this; // bleh
+		e.bribe_count = this.bribe_count;
+		this.bribe_count = this.bribe_count + 1;
 		e.summon_count = -1;
-		e.m_targ = self;
+		e.m_targ = this;
 		e.effects = e.effects | EF_BLUE;
 		
-		if (self.bribe_count > lev)
+		if(this.bribe_count > lev)
 		{
-			m = find(world, classname, "helper");
+			entity m = find(NULL, classname, "helper");
 			while(m)
 			{
-				if (m.m_targ == self)
+				if(m.m_targ == this)
 				{
-					if (m.summon_count == -1)
+					if(m.summon_count == -1)
 					{
-						if (m.bribe_count == 0)
+						if(m.bribe_count == 0)
 						{
-							m.goalentity = world;
-							m.enemy = world;
+							m.goalentity = NULL;
+							m.enemy = NULL;
 							m.classname = "monster";
 							m.ai = m.quest_time;
 							m.effects = m.effects - (m.effects & EF_BLUE);
 							m.team = m.questlog;
-							self.bribe_count = self.bribe_count - 1;
-							if (self.bribe_count <= lev)
+							this.bribe_count = this.bribe_count - 1;
+							if(this.bribe_count <= lev)
 								break;
 						}
 						else
@@ -77,4 +77,4 @@ void(float lev) bribe_go =
 		}				
 			
 	}
-};
+}

@@ -30,7 +30,7 @@ void Projectile_DrawTrail(entity this, vector to)
 	this.trail_oldorigin = to;
 	this.trail_oldtime = time;
 
-	if (this.traileffect)
+	if(this.traileffect)
 	{
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
 		boxparticles(particleeffectnum(REGISTRY_GET(Effects, this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);

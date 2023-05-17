@@ -1,0 +1,5 @@
+#pragma once
+
+void poisonball_hit(entity this, entity toucher);
+
+void poisonball_go(entity this, float lev);

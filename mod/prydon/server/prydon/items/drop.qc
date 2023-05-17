@@ -1,3 +1,5 @@
+#include "drop.qh"
+
 void dropitem(entity this, vector itslot)
 {
 	if(!itslot.x)
@@ -13,11 +15,11 @@ void dropitem(entity this, vector itslot)
 	newitem.slot1 = itslot;
 
 	newitem.avelocity = random() *  '0 300 0' + '0 0 600';
-	sound(newitem, CHAN_BODY, "items/flip.wav", 1, ATTN_NORM);
-	it_simplestat(itslot);
+	_sound(newitem, CHAN_BODY, "items/flip.wav", 1, ATTN_NORM);
+	it_simplestat(this, itslot);
 	if(stat_it == IT_GOLD || stat_it == IT_BOOK)
 		newitem.frame = 2;
-	item(newitem);
+	spawnfunc_item(newitem);
 }
  
 void dropgold(entity this, float g)
@@ -45,10 +47,10 @@ void dropallitems(entity this)
 	{
 		if(this.droprandom & (2 ** i))
 		{
-			if (random() > 0.6)
+			if(random() > 0.6)
 			{
 				itslot = GetSlot(this, i);
-				dropitem(randitem(itslot.x, itemvalue + this.value, false));
+				dropitem(this, randitem(this, itslot.x, itemvalue + this.value, false));
 			}
 		}
 		else

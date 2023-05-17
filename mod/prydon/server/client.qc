@@ -3,6 +3,7 @@
 #include "chat.qh"
 #include "combat.qh"
 #include "prydon/player/client.qh"
+#include "prydon/player/parms.qh"
 #include "prydon/player/spawn.qh"
 
 void SetChangeParms(entity this)
@@ -81,17 +82,17 @@ Called every frame before physics are run
 void PlayerPreThink(entity this)
 {
 	// Check for nameless players
-	if (this.netname != this.netname_previous)
+	if(this.netname != this.netname_previous)
 	{
-		if (isInvisibleString(this.netname))
+		if(isInvisibleString(this.netname))
 		{
 			this.netname = strzone(sprintf("Player#%d", this.playerid));
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
-		if (autocvar_sv_eventlog) {
+		if(autocvar_sv_eventlog) {
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", this.netname));
         }
-		if (this.netname_previous) strunzone(this.netname_previous);
+		if(this.netname_previous) strunzone(this.netname_previous);
 		this.netname_previous = strzone(this.netname);
 	}
 
@@ -188,7 +189,7 @@ void SV_ParseClientCommand(entity this, string command)
 	float i;
 	for (i = 0; i < len; ++i)
 		command2 = strcat(command2, chr2str(str2chr(command, i)));
-	if (command != command2) return;
+	if(command != command2) return;
 
 	float argc = tokenize_console(command);
 
@@ -235,7 +236,7 @@ void SV_ParseClientCommand(entity this, string command)
 	{
 		string thecmd = cvar_string(strcat("sv_info_", argv(1)));
 
-		if (thecmd) wordwrap_sprint(this, thecmd, 1000);
+		if(thecmd) wordwrap_sprint(this, thecmd, 1000);
 		else sprint(this, "ERROR: unsupported info command");
 		return;
 	}

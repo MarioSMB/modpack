@@ -31,11 +31,11 @@ void changeyaw(entity this)
 #if 1
 	float current = anglemods(this.angles_y);
 
-	if (current == this.ideal_yaw)
+	if(current == this.ideal_yaw)
 		return;
 
 	float move = this.ideal_yaw - current;
-	if (this.ideal_yaw > current)
+	if(this.ideal_yaw > current)
 	{
 		if(move >= 180)
 			move -= 360;
@@ -432,7 +432,7 @@ void t_movetarget(entity this, entity toucher)
 	if(this.target && this.target != "")
 	{
 		toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
-		if (!toucher.movetarget)
+		if(!toucher.movetarget)
 		{
 			toucher.pausetime = -1;
 			return;

@@ -1,6 +1,10 @@
+#include "spells.qh"
+
+#include "../spells/_mod.qh"
+
 void display_effect(float sp, float lev)
 {
-	local float dm;
+	float dm;
 	// 10 chars only :|
 	if(sp == SP_FIREBALL)
 	{
@@ -110,7 +114,7 @@ void m_spells(entity this, float off)
 			closemenu(this);
 			return;
 		}
-		if(SelectSpell(this.menu + off))
+		if(SelectSpell(this, this.menu + off))
 		{
 			closemenu(this);
 			return;
@@ -119,12 +123,12 @@ void m_spells(entity this, float off)
 		
 	if(this.m_refresh >= time)
 		return;
-	pstart();	
+	pstart(this);	
 
 	for(int i=1; i < 9; i = i + 1)
 	{
 		int lv = GetSpellLevel(this.m_subject, i + off);
-		poption(i, lv);
+		poption(this, i, lv);
 		if(lv)
 		{
 			PrintSpellName(i + off);
@@ -135,7 +139,7 @@ void m_spells(entity this, float off)
 			newline();
 			p6(32, 32 ,32, 'M', 'P', ':');
 			pnum(mana_for_spell(i+off,lv));
-			int rn = spell_range(i+off);
+			int rn = spell_range(this, i+off);
 			if(rn != BIG_DISTANCE)
 			{
 				pad(10);
@@ -151,7 +155,7 @@ void m_spells(entity this, float off)
 	}
 	line();
 	
-	poption(9, TRUE);	
+	poption(this, 9, true);	
 	p4('E', 'x', 'i', 't');
 	pad(30);
 	newline();

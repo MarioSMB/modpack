@@ -1,14 +1,15 @@
-float(float val) rank =
+#include "rank.qh"
+
+float rank(float val)
 {
-
 	return floor(val / 15);
-};
+}
 
-nosave float rank_s, rank_d, rank_a, rank_m, rank_l, rank_v, rank_total;
+float rank_s = 0, rank_d = 0, rank_a = 0, rank_m = 0, rank_l = 0, rank_v = 0, rank_total = 0;
 
 // this speeds things up, only setting when we need it (a lot like itemstat)
 // could be even faster by making these fields
-void(entity e) set_ranks =
+void set_ranks(entity e)
 {
 	rank_s = rank(e.str);
 	rank_d = rank(e.dex);
@@ -20,83 +21,78 @@ void(entity e) set_ranks =
 
 }
 
-vector() gettitle =
+vector gettitle()
 {
  // for later
-	vector ans;
-	float s, d, a, m, l, v, div;
-	div = floor(rank_total / 4) + 1;
+	vector ans = '0 0 0';
+	float div = floor(rank_total / 4) + 1;
 	
-	s = floor(rank_s / div) & 3;
-	d = floor(rank_d / div) & 3;
-	a = floor(rank_a / div) & 3;
-	m = floor(rank_m / div) & 3;
-	l = floor(rank_l / div) & 3;
-	v = floor(rank_v / div) & 3;
-	if (div >= 7)
+	float s = floor(rank_s / div) & 3;
+	float d = floor(rank_d / div) & 3;
+	float a = floor(rank_a / div) & 3;
+	float m = floor(rank_m / div) & 3;
+	float l = floor(rank_l / div) & 3;
+	float v = floor(rank_v / div) & 3;
+	if(div >= 7)
 	{
-		if (rank_total >= 50)
-			ans_x = 6;
+		if(rank_total >= 50)
+			ans.x = 6;
 		else
-			ans_x = 5;
+			ans.x = 5;
 	}
 	else
-		ans_x = div - 1;
+		ans.x = div - 1;
 		
 
-	ans_y = s + d * 4 + a * 16 + m * 64 + v * 256 + l * 1024;
+	ans.y = s + d * 4 + a * 16 + m * 64 + v * 256 + l * 1024;
 	return ans;
 	
-};
+}
 
-
-float (.float fld) cost_to_increase =
+float cost_to_increase(.float fld)
 {
-	if (rank_total >= 50)
+	if(rank_total >= 50)
 		return 255;
-	else if ((float)fld == (float)str)
+	else if(fld == str)
 		return 1 + floor((rank_m + rank_a + rank_l/2) / 2);
-	else if ((float)fld == (float)dex)
+	else if(fld == dex)
 		return 1 + floor((rank_m + rank_l + rank_v/2) / 2);
-	else if ((float)fld == (float)agil)
+	else if(fld == agil)
 		return 1 + floor((rank_s + rank_v + rank_m/2) / 2);
-	else if ((float)fld == (float)mag)
+	else if(fld == mag)
 		return 1 + floor((rank_s + rank_d + rank_v/2) / 2);
-	else if ((float)fld == (float)vit)
+	else if(fld == vit)
 		return 1 + floor((rank_m + rank_d + rank_a/2) / 2);
-	else if ((float)fld == (float)luck)
+	else if(fld == luck)
 		return 1 + floor((rank_s + rank_m + rank_d/2) / 2);
-	
-};
+	return 0;
+}
 
-
-void() titleupdate =
+void titleupdate(entity this)
 {
-	vector t;
+	set_ranks(this);
 	
-	set_ranks(self);
-	
-	t = gettitle();
+	vector t = gettitle();
 
-	if (t != self.title)
+	if(t != this.title)
 	{
-		TitleStat(self.title);
-		UseItem(-1);
+		TitleStat(this.title);
+		UseItem(this, -1);
 		TitleStat(t);
-		UseItem(1);
+		UseItem(this, 1);
 
-		if (self.title != '0 0 -1')
+		if(this.title != '0 0 -1')
 		{
 			// DON'T KEEP TELLING ME THIS.
-			if ((self.flags & FL_CLIENT) || ((self.ai & AI_FOLLOW) && self.classname != "helper"))
+			if(IS_CLIENT(this) || ((this.ai & AI_FOLLOW) && this.classname != "helper"))
 			{
 	
-				bprint(self.netname);
+				bprint(this.netname);
 				bprint(" has recieved the title ");
 				BprintClass(t);
 				bprint("\n");
 			}
 		}
-		self.title = t;
+		this.title = t;
 	}
-};
+}

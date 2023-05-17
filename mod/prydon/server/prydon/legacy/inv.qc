@@ -1,10 +1,10 @@
-void() legacy_inventory =
+#include "inv.qh"
+
+void legacy_inventory(entity this)
 {
-	local float i;
-	
-	for (i=1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		inv_autoplace(self, GetSlot(self, i), INV_PLAYERSIZE);
+		inv_autoplace(this, GetSlot(this, i), INV_PLAYERSIZE);
 	}
 
-};
+}

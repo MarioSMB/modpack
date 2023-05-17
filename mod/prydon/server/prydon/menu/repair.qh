@@ -1,0 +1,5 @@
+#pragma once
+
+void m_repair(entity this);
+
+float repaircost(entity this);

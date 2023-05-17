@@ -43,7 +43,7 @@ const float VOL_MUFFLED = 0.35;
 		MACRO_BEGIN \
 		{ \
 			entity __e = e; \
-			/*if (sound_allowed(MSG_BROADCAST, __e))*/ \
+			/*if(sound_allowed(MSG_BROADCAST, __e))*/ \
 				sound7(__e, c, s, v, a, 0, 0); \
 		} MACRO_END
 #else
@@ -70,7 +70,7 @@ const float VOL_MUFFLED = 0.35;
 		int __chan = chan; \
 		string __samp = samp; \
 		bool auto = false; \
-		if (__chan > 0) __e = e; \
+		if(__chan > 0) __e = e; \
 		else \
 		{ \
 			auto = true; \
@@ -85,7 +85,7 @@ const float VOL_MUFFLED = 0.35;
 		setorigin(__e, o); \
 		setsize(__e, '0 0 0', '0 0 0'); \
 		sound7(__e, __chan, __samp, vol, atten, speed, sf); \
-		if (!auto) \
+		if(!auto) \
 		{ \
 			setorigin(__e, old_origin); \
 			setsize(__e, old_mins, old_maxs); \
@@ -103,7 +103,7 @@ CLASS(Sound, Object)
 	#define Sound_fixpath(this) _Sound_fixpath((this).sound_str())
 	string _Sound_fixpath(string base)
 	{
-		if (base == "") return string_null;
+		if(base == "") return string_null;
 #ifdef SVQC
 		return strcat(base, ".wav");  // let the client engine decide
 #else
@@ -112,7 +112,7 @@ CLASS(Sound, Object)
 			x(ogg) \
 			x(flac) \
 			/**/
-		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
+		#define tryext(ext) { string s = strcat(base, "." #ext); if(fexists(strcat("sound/", s))) return s; }
 		extensions(tryext);
 		LOG_WARNF("Missing sound: \"%s\"", strcat("sound/", base));
 		#undef tryext
@@ -124,7 +124,7 @@ CLASS(Sound, Object)
 	{
 	    TC(Sound, this);
 		string s = Sound_fixpath(this);
-		if (!s) return;
+		if(!s) return;
 		profile(sprintf("precache_sound(\"%s\")", s));
 		precache_sound(s);
 	}

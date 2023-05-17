@@ -1,98 +1,111 @@
-void() gochangelevel =
+#include "exit.qh"
+
+#include "../subs/math.qh"
+#include "../subs/reqs.qh"
+
+void gochangelevel(entity this, entity actor, entity trigger)
 {
-	if (!RequirementsMet(self, other))
+	if(!RequirementsMet(this, trigger))
 	{
-		if (self.attack_finished < time)
+		if(this.attack_finished < time)
 		{
-			sound(self, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
-			sprint(other.owner, "locked\n");
-			self.attack_finished = time + 1;
+			_sound(this, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
+			sprint(trigger.owner, "locked\n");
+			this.attack_finished = time + 1;
 		}
 		return;
 	}
-	if (self.impulse)
-		serverflags = recode(serverflags, 3, self.impulse);
-	changelevel(self.message);
-};
+	if(this.impulse)
+		serverflags = recode(serverflags, 3, this.impulse);
+	changelevel(this.message);
+}
 
-
-void() exit =
+void gochangelevel_action(entity this, entity targ)
 {
-	precache_sound ("misc/locked.wav");
-	if (!self.netname)
-		self.netname = "Exit";
-	self.effects = EF_SELECTABLE;
-	setmodel(self, self.model);
-	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_BBOX;
-	setorigin(self, self.origin);
-	if (self.spawnflags & 1)
+	gochangelevel(this, NULL, targ);
+}
+
+spawnfunc(exit)
+{
+	precache_sound("misc/locked.wav");
+	if(!this.netname)
+		this.netname = "Exit";
+	this.effects = EF_SELECTABLE;
+	_setmodel(this, this.model);
+	set_movetype(this, MOVETYPE_NONE);
+	this.solid = SOLID_BBOX;
+	setorigin(this, this.origin);
+	if(this.spawnflags & 1)
 	{
-		self.modelindex = 0;
-		self.model = "";
+		this.modelindex = 0;
+		this.model = "";
 	}
-	self.use = gochangelevel;
+	this.use = gochangelevel;
 	
-	if (self.message)
-		self.action = gochangelevel;
+	if(this.message)
+		this.action = gochangelevel_action;
 	else
-		self.action = donothing;
+		this.action = donothing;
+}
 
-};
-
-void() nospawncheck =
+void nospawncheck(entity this)
 {
 	//FIXME
-	//if (cvar("noexit"))
-	//	sound(self, CHAN_AUTO, "spells/slow.wav", 1, ATTN_NORM);
+	//if(cvar("noexit"))
+	//	sound(this, CHAN_AUTO, "spells/slow.wav", 1, ATTN_NORM);
 	//cvar_set("noexit", "0");
 }
-void() gowarp =
-{
-	if (self.attack_finished > time)
-		return;
-	self.attack_finished = time + 1;
 
-	if (!RequirementsMet(self, other))
+void gowarp(entity this, entity actor, entity trigger)
+{
+	if(this.attack_finished > time)
+		return;
+	this.attack_finished = time + 1;
+
+	if(!RequirementsMet(this, trigger))
 	{
-		sound(self, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
-		sprint(other.owner, "locked\n");
+		_sound(this, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
+		sprint(trigger.owner, "locked\n");
 		return;
 	}
-	localcmd(self.message);
-	localcmd("\n");
-	self.think = nospawncheck;
-	self.nextthink = time + 0.01;
-};
+	// TODO: dangerous
+	localcmd(strcat(this.message, "\n"));
+	setthink(this, nospawncheck);
+	this.nextthink = time + 0.01;
+}
 
-void() func_invisible =
+void gowarp_action(entity this, entity targ)
 {
-	setmodel(self, self.model);
-	self.solid = SOLID_BBOX;
-	self.model = "";
-};
-void() warp =
+	gowarp(this, NULL, targ);
+}
+
+spawnfunc(func_invisible)
 {
-	if(self.story_min || self.story_max)
-		precache_sound ("misc/locked.wav");
-	if (!self.netname)
-		self.netname = "Warp";
-	self.effects = EF_SELECTABLE;
-	setmodel(self, self.model);
-	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_BBOX;
-	setorigin(self, self.origin);
-	if (self.spawnflags & 1)
+	_setmodel(this, this.model);
+	this.solid = SOLID_BBOX;
+	this.model = "";
+}
+
+spawnfunc(warp)
+{
+	if(this.story_min || this.story_max)
+		precache_sound("misc/locked.wav");
+	if(!this.netname)
+		this.netname = "Warp";
+	this.effects = EF_SELECTABLE;
+	_setmodel(this, this.model);
+	set_movetype(this, MOVETYPE_NONE);
+	this.solid = SOLID_BBOX;
+	setorigin(this, this.origin);
+	if(this.spawnflags & 1)
 	{
-		self.modelindex = 0;
-		self.model = "";
+		this.modelindex = 0;
+		this.model = "";
 	}
-	self.use = gowarp;
+	this.use = gowarp;
 	
-	if (self.message)
-		self.action = gowarp;
+	if(this.message)
+		this.action = gowarp_action;
 	else
-		self.action = donothing;
-};
-
-
+		this.action = donothing;
+}

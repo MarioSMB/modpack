@@ -1,0 +1,5 @@
+#include "dur.qc"
+#include "equip.qc"
+#include "invmap.qc"
+#include "pickup.qc"
+#include "subs.qc"

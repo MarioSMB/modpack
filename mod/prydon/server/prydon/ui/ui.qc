@@ -1,19 +1,14 @@
+#include "ui.qh"
 
-
-
-vector UI_TOPLEFT = '-96 -72 0';
-
-void() hovertest =
+void hovertest(entity this, entity actor)
 {
-	WriteString(msg_mode, trace_ent.model);
-};
+	WriteString(msg_mode, this.model);
+}
 
-entity(string spr, void(float alt) clickfunc, vector sz, vector org, entity p) ui_create =
+entity ui_create(entity this, string spr, void(entity, entity, float) clickfunc, vector sz, vector org, entity p)
 {
-	local entity e, m;
-	
-	e = spawn();
-	setmodel(e, spr);
+	entity e = spawn();
+	_setmodel(e, spr);
 	sz = sz * 0.5;
 	e.mins = '0 0 0' - sz;
 	e.maxs = sz;
@@ -21,7 +16,7 @@ entity(string spr, void(float alt) clickfunc, vector sz, vector org, entity p) u
 	e.ui_clicked = clickfunc;
 	e.ui_parent = p;
 	
-	if (p)
+	if(p)
 	{
 		e.testorg = org + p.mins - e.mins;
 		e.testorg_z = p.testorg_z - 2;
@@ -34,182 +29,174 @@ entity(string spr, void(float alt) clickfunc, vector sz, vector org, entity p) u
 	}
 	//e.testorg_z = 0;
 	// find the last ui element
-	m = self;
+	entity m = this;
 	
 	while(m.ui)
 		m = m.ui;
 	m.ui = e;
-	if (vmfc)
-		e.viewmodelforclient = self;
+	if(vmfc)
+		e.viewmodelforclient = this;
 		
-	if (clickfunc)
-		m.effects = m.effects | EF_SELECTABLE;
+	if(clickfunc)
+		m.effects |= EF_SELECTABLE;
 	e.ui_hover = hovertest;
 	return e;
+}
 
-};
-
-
-void(entity e) ui_destroy =
+void ui_destroy(entity this, entity e)
 {
-	local entity m, n;
-	m = self;
+	entity m = this;
 	
-	while (m.ui && m.ui != e)
+	while(m.ui && m.ui != e)
 	{
 		 m = m.ui;
 	}
 
 	m.ui = e.ui;
-	m = self.ui;
-	while (m)
+	m = this.ui;
+	while(m)
 	{
-		n = m.ui;
-		if (m.ui_parent == e)
-			ui_destroy(m);
+		entity n = m.ui;
+		if(m.ui_parent == e)
+			ui_destroy(this, m);
 		m = n;
 	}
 
-	remove(e);	
-};
+	delete(e);	
+}
 
-void() ui_clear =
+void ui_clear(entity this)
 {
-	local entity e, s;
+	entity e = this.ui;
 	
-	e = self.ui;
-	
-	while (e)
+	while(e)
 	{
-		s = e;
+		entity s = e;
 		e = e.ui;
-		remove(s);
+		delete(s);
 	}
-	self.ui = world;
-};
-void(entity e, vector v) ui_setposition =
+	this.ui = NULL;
+}
+
+void ui_setposition(entity this, entity e, vector v)
 {
-	local vector view;
-	local entity t;
-	
-	t = e.ui_parent;
+	vector view;
+	entity t = e.ui_parent;
 	while(t)
 	{
 		v = v + e.ui_parent.testorg;
 		t = t.ui_parent;
 	}
 		
-	if (vmfc)
+	if(vmfc)
 	{
-		view_x = v_z + 96; view_y = v_x * -1; view_z = v_y * -1;
+		view_x = v.z + 96; view_y = v.x * -1; view_z = v.y * -1;
 		setorigin(e, view);
-		e.viewmodelforclient = self;
+		e.viewmodelforclient = this;
 		//e.effects = e.effects | EF_NODEPTHTEST;
 
 	}
 	else
 	{
-		view = (v_forward * (96 + v_z)) + (v_right * v_x) + (v_up * (0 - v_y));
-		traceline(self.origin, self.origin + view, TRUE, self);
+		view = (v_forward * (96 + v.z)) + (v_right * v.x) + (v_up * (0 - v.y));
+		traceline(this.origin, this.origin + view, true, this);
 		setorigin(e, trace_endpos);
 		e.scale = trace_fraction;
-		e.angles = self.camera.angles;
+		e.angles = this.camera.angles;
 	}
-};
-void() ui_update =
+}
+
+void ui_update(entity this)
 {
-	local entity e;
-	if (self.cursor)
-		ui_setposition(self.cursor, self.cursorpos);
+	if(this.cursor)
+		ui_setposition(this, this.cursor, this.cursorpos);
 		
-	e = self.ui;	
+	entity e = this.ui;	
 	while(e)
 	{
-		ui_setposition(e, e.testorg);
+		ui_setposition(this, e, e.testorg);
 		e = e.ui;
 	}
-};
-entity() ui_over =
-{
-	vector cabsmin, cabsmax, org;
-	local entity e, r, default;
-	default = world;
+}
 
-	r = self.ui;
+entity ui_over(entity this)
+{
+	entity defval = NULL;
+
+	entity r = this.ui;
 	while(r)
 	{
-
-		e = r.ui_parent;
-		org = r.testorg;
-		while (e)
+		entity e = r.ui_parent;
+		vector org = r.testorg;
+		while(e)
 		{
 			org = org + e.testorg;
 			e = e.ui_parent;
 		}
-		cabsmin = org + r.mins;
-		cabsmax = org + r.maxs;
-		if ((self.cursorpos_x > cabsmin_x) && (self.cursorpos_x < cabsmax_x))
+		vector cabsmin = org + r.mins;
+		vector cabsmax = org + r.maxs;
+		if((this.cursorpos_x > cabsmin_x) && (this.cursorpos_x < cabsmax_x))
 		{
-			if ((self.cursorpos_y > cabsmin_y) && (self.cursorpos_y < cabsmax_y))
+			if((this.cursorpos_y > cabsmin_y) && (this.cursorpos_y < cabsmax_y))
 			{
-				if (r.ui_clicked)
+				if(r.ui_clicked)
 					return r;
-				default = r;
+				defval = r;
 			}
 		}
 		r = r.ui;
 	}
-	return default;
-};
-vector() inv_ui_to_inv =
+	return defval;
+}
+
+vector inv_ui_to_inv(entity this, entity targ)
 {
-	local entity e;
-	local vector v;
-	e = self;
-	if (e.ui_parent)
+	entity e = this;
+	if(e.ui_parent)
 		e = e.ui_parent;
-	v = other.cursorpos - e.testorg - INV_GFX_START;
-	if (v_x < 0)
+	vector v = targ.cursorpos - e.testorg - INV_GFX_START;
+	if(v.x < 0)
 		return INV_INVALID;
-	if (v_y < 0)
+	if(v.y < 0)
 		return INV_INVALID; // FIXME, what about the top slots?
-	if (v_x > INV_PLAYERSIZE_x * INV_ICON_SIZE)
+	if(v.x > INV_PLAYERSIZE_x * INV_ICON_SIZE)
 		return INV_INVALID;
-	if (v_y > INV_PLAYERSIZE_y * INV_ICON_SIZE)
+	if(v.y > INV_PLAYERSIZE_y * INV_ICON_SIZE)
 		return INV_INVALID;
 	v = v * (1/INV_ICON_SIZE);
-	v_x = floor(v_x);
-	v_y = floor(v_y);
-	v_z = 0;
+	v.x = floor(v.x);
+	v.y = floor(v.y);
+	v.z = 0;
 	return v;
 	
-};
-void(float alt) buttontest =
+}
+
+void buttontest(entity this, entity targ, float alt)
 {
 	bprint("Ha! it works!\n");
-	self.testorg = other.cursorpos - self.ui_parent.testorg;
-	
-};
+	this.testorg = targ.cursorpos - this.ui_parent.testorg;
+}
 
-void() ui_showinventory =
+#if 0
+void ui_showinventory(entity this)
 {
-	local entity inv;
-	local vector v, sz;
+	vector v = '0 0 0';
 	ui_clear();
-	self.ui_panels = 1;
-	inv = ui_create("gfx/inv.spr", nullfunc, '96 144 0','0 0 0', world);
-	for(v_x = 0; v_x < INV_PLAYERSIZE_x; v_x = v_x + 1)
+	this.ui_panels = 1;
+	entity inv = ui_create("gfx/inv.spr", func_null, '96 144 0','0 0 0', NULL);
+	for(v.x = 0; v.x < INV_PLAYERSIZE_x; v.x = v.x + 1)
 	{
-		for (v_y = 0; v_y < INV_PLAYERSIZE_y; v_y = v_y + 1)
+		for (v.y = 0; v.y < INV_PLAYERSIZE_y; v.y = v.y + 1)
 		{
-			if (inv_getitem(self, v_x, v_y))
+			if(inv_getitem(this, v.x, v.y))
 			{
-				sz = stat_size;
+				vector sz = stat_size;
 				sz = sz * 11;
-				sz_z = 0;
+				sz.z = 0;
 				ui_create(it_itemicon(stat_it), buttontest, sz, INV_GFX_START + v * INV_ICON_SIZE, inv);
 			}
 		}
 	}
-};
+}
+#endif
 // quick bar  LARGE 266x54   SMALL 40 x 8

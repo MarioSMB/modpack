@@ -1,3 +1,7 @@
+#include "split.qh"
+
+#include "../subs/math.qh"
+
 void m_split(entity this)
 {
 	float n;
@@ -10,7 +14,7 @@ void m_split(entity this)
 		n = 0;
 	else
 		n = this.menu;
-	vector it = GetSlot(this.m_subject, root2(this.weapon));
+	vector itslot = GetSlot(this.m_subject, root2(this.weapon));
 	
 	if(this.button1)
 	{
@@ -19,8 +23,8 @@ void m_split(entity this)
 	}
 	else if(this.button0 || this.button2)
 	{
-		it_simplestat(it);
-		it_itemstat();
+		it_simplestat(this, itslot);
+		it_itemstat(this);
 		if(stat_loc & STACKABLE)
 		{
 			if(this.m_num >= stat_dur)
@@ -36,7 +40,7 @@ void m_split(entity this)
 			stat_dur = stat_dur - this.m_num;
 			SetSlot(this.m_subject, root2(this.weapon), it_setstat());
 			stat_dur = this.m_num;
-			int slot = inv_hasitem(IV_NULL, 1, 0);
+			int slot = inv_hasitem(this, IV_NULL, 1, 0);
 			if(!slot)
 				dropitem(this.m_subject, it_setstat());
 			else
@@ -50,7 +54,7 @@ void m_split(entity this)
 		if(!this.m_refresh)
 			this.misc = this.misc - (this.misc & MISC_UPDATE_BLINK);
 			
-		inven(it, fabs(this.m_subject.equip & this.weapon) + 1);
+		inven(this, itslot, fabs(this.m_subject.equip & this.weapon) + 1);
 		padlines(9);
 		
 		p8('Q', 'u', 'a', 'n', 't', 'i', 't', 'y');

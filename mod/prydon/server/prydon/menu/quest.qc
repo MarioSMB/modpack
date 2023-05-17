@@ -1,82 +1,80 @@
+#include "quest.qh"
+
+#include "../quests/_mod.qh"
+
 // maximum quests per page
-float MAX_QUESTS = 3;
+const int MAX_QUESTS = 3;
 
-void() m_quest =
+void m_quest(entity this)
 {
-	local string n;
-	local float i;
-	
-	local entity e;
-
-	if (self.menu > 3)
-		self.menu = 1;
-	else if (self.menu < 1)
-		self.menu = 3;
+	int i = 0;
+	entity e;
+	if(this.menu > 3)
+		this.menu = 1;
+	else if(this.menu < 1)
+		this.menu = 3;
 		
-	self.questlog = 0;
+	this.questlog = 0;
 	mstring_clear();
-	mstring_add("Quest Log\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n");
-	
+	mstring_add(this, "Quest Log\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n");
 
-	
-	if (i >= self.m_num && i - self.m_num < MAX_QUESTS)
+	if(i >= this.m_num && i - this.m_num < MAX_QUESTS)
 	{
-		mstring_add(mainstorystring(mainstory));
-		i = i + 1;
+		mstring_add(this, mainstorystring(mainstory));
+		i += 1;
 	}
-	if (i >= self.m_num && i - self.m_num < MAX_QUESTS)
+	if(i >= this.m_num && i - this.m_num < MAX_QUESTS)
 	{
-		if (rndquest)
+		if(rndquest)
 		{
-			rq_questlog();
-			i = i + 1;
+			rq_questlog(this);
+			i += 1;
 		}
 	}	
-	e = find(world, classname, "quest");
+	e = find(NULL, classname, "quest");
 	while(e)
 	{
-		n = getqueststring(e);
-		if (n)
+		string n = getqueststring(e);
+		if(n)
 		{
-			if (i >= self.m_num && i - self.m_num < MAX_QUESTS)
-				mstring_add(n);
-			i = i + 1;
+			if(i >= this.m_num && i - this.m_num < MAX_QUESTS)
+				mstring_add(this, n);
+			i += 1;
 		}
 		e = find(e, classname, "quest");
 	}
 	
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
-			self.m_num = self.m_num + MAX_QUESTS;
-			if (self.m_num > i)
-				self.m_num = 0;
+			this.m_num = this.m_num + MAX_QUESTS;
+			if(this.m_num > i)
+				this.m_num = 0;
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			self.m_num = self.m_num - MAX_QUESTS;
-			if (self.m_num < 0)
-				self.m_num = i - (i - (floor(i/MAX_QUESTS) * MAX_QUESTS));
+			this.m_num = this.m_num - MAX_QUESTS;
+			if(this.m_num < 0)
+				this.m_num = i - (i - (floor(i/MAX_QUESTS) * MAX_QUESTS));
 		}
 		else
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh > time)
+	if(this.m_refresh > time)
 		return;
 
-
 	// next page?
-	if (self.menu == 1)
-		mstring_add("\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n\{141}\[\1\] Next Page    \n \[\2\] Previous Page\n \[\3\] Exit         \n");
-	else if (self.menu == 2)
-		mstring_add("\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n \[\1\] Next Page    \n\{141}\[\2\] Previous Page\n \[\3\] Exit         \n");
-	else if (self.menu == 3)
-		mstring_add("\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n \[\1\] Next Page    \n \[\2\] Previous Page\n\{141}\[\3\] Exit         \n");
+	if(this.menu == 1)
+		mstring_add(this, "\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n\{141}\[\1\] Next Page    \n \[\2\] Previous Page\n \[\3\] Exit         \n");
+	else if(this.menu == 2)
+		mstring_add(this, "\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n \[\1\] Next Page    \n\{141}\[\2\] Previous Page\n \[\3\] Exit         \n");
+	else if(this.menu == 3)
+		mstring_add(this, "\n\<\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\>\n\n \[\1\] Next Page    \n \[\2\] Previous Page\n\{141}\[\3\] Exit         \n");
 
-	mstring_print();
-};
+	mstring_print(this);
+}

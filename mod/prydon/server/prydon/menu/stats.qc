@@ -1,60 +1,63 @@
-// shitty hack
+#include "stats.qh"
+
+#include "../stats/_mod.qh"
+
+// hack
 
 // this file is all frelled up, gettitle takes no parms, so it cant work right with m_subject
 
 .float field_to_increase;
 .vector newtitle;
 
-
-void() m_stats_confirm =
+void m_stats_confirm(entity this)
 {
-	var .float fld;
+	.float fld;
 	float cost;
 	
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
-	if (self.button1)
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
+	if(this.button1)
 	{
-		if (self.menu == 2)
+		if(this.menu == 2)
 		{
-			Unstat();
-			if (self.field_to_increase == 1)
+			Unstat(this);
+			if(this.field_to_increase == 1)
 				fld = str;
-			else if (self.field_to_increase == 2)
+			else if(this.field_to_increase == 2)
 				fld = dex;
-			else if (self.field_to_increase == 3)
+			else if(this.field_to_increase == 3)
 				fld = mag;
-			else if (self.field_to_increase == 4)
+			else if(this.field_to_increase == 4)
 				fld = vit;
-			else if (self.field_to_increase == 5)
+			else if(this.field_to_increase == 5)
 				fld = luck;
-			else if (self.field_to_increase == 6)
+			else if(this.field_to_increase == 6)
 				fld = agil;
 			else
 			{
-				Restat();
+				Restat(this);
 				return;
 			}
-			if (self.m_subject.fld < 255)
+			if(this.m_subject.fld < 255)
 			{
 				cost = cost_to_increase(fld);
-				if (self.m_subject.ptd >= cost)
+				if(this.m_subject.ptd >= cost)
 				{
-					self.m_subject.ptd = self.m_subject.ptd - cost;
-					self.m_subject.fld = self.m_subject.fld + 1;
+					this.m_subject.ptd = this.m_subject.ptd - cost;
+					this.m_subject.fld = this.m_subject.fld + 1;
 				}
 			}
-			Restat();
+			Restat(this);
 		}
-		openmenu(self, m_stats, self.m_subject);
+		openmenu(this, m_stats, this.m_subject);
 
 	}
 	
-	if (self.m_refresh >= time)
+	if(this.m_refresh >= time)
 		return;
-	pstart();
+	pstart(this);
         //  1    2    3    4    5    6    7    8
 	p8('D', 'o', 'i', 'n', 'g', ' ', 't', 'h');
 	p8('i', 's', ' ', 'w', 'i', 'l', 'l', ' ');
@@ -64,142 +67,141 @@ void() m_stats_confirm =
 	newline();
 	line();
 	red = RED_ON;
-	PrintClass(self.m_subject.title);
+	PrintClass(this.m_subject.title);
 	newline();
-	TitleStat(self.m_subject.title);
-	stats_report(IV_NULL, 0);
+	TitleStat(this.m_subject.title);
+	stats_report(this, IV_NULL, 0);
 	line();
 
 	p2('t', 'o');
 	newline();
 	line();
 	red = RED_ON;
-	PrintClass(self.newtitle);
+	PrintClass(this.newtitle);
 	newline();
-	TitleStat(self.newtitle);
-	stats_report(IV_NULL, 0);
+	TitleStat(this.newtitle);
+	stats_report(this, IV_NULL, 0);
 	
 	line();
 	p6('A', 'd', 'd', ' ', '1', ' ');
-	if (self.field_to_increase == 1)
+	if(this.field_to_increase == 1)
 	{
 		p8('S', 't', 'r', 'e', 'n', 'g', 't', 'h');
 		p1('?');
 	}
-	else if (self.field_to_increase == 2)
+	else if(this.field_to_increase == 2)
 	{
 		p8('D', 'e', 'x', 't', 'e', 'r', 'i', 't');
 		p2('y', '?');
 	}
-	else if (self.field_to_increase == 3)
+	else if(this.field_to_increase == 3)
 	{
 		p8('I', 'n', 't', 'e', 'l', 'l', 'i', 'g');
 		p5('e', 'n', 'c', 'e', '?');
 	}
-	else if (self.field_to_increase == 4)
+	else if(this.field_to_increase == 4)
 	{
 		p8('V', 'i', 't', 'a', 'l', 'i', 't', 'y');
 		p1('?');
 	}
-	else if (self.field_to_increase == 5)
+	else if(this.field_to_increase == 5)
 		p5('L', 'u', 'c', 'k', '?');
-	else if (self.field_to_increase == 6)
+	else if(this.field_to_increase == 6)
 		p8('A', 'g', 'i', 'l', 'i', 't', 'y', '?');
 	newline();
-	poption(1, TRUE);
+	poption(this,1, true);
 	p3('N', 'o', ' ');
 	newline();
-	poption(2, TRUE);
+	poption(this,2, true);
 	p3('Y', 'e', 's');
 
 	p1(0);
 	
-};
-void(entity e) PrintDamage =
+}
+void PrintDamage(entity e)
 {
-	local float damlw, damh, mgic;
-	
-	damlw = e.daml;
-	damh = e.dama + damlw;
-	mgic = 0;
-	if (e.skill & SKILL_MELEE)
+	float damlw = e.daml;
+	float damh = e.dama + damlw;
+	float mgic = 0;
+	if(e.skill & SKILL_MELEE)
 	{
-		if (e.altaction & 63 == SP_FIGHT_MELEE)
+		if(e.altaction & 63 == SP_FIGHT_MELEE)
 		{
 			damlw = damlw + damlw * ((e.title_x + 1) / 7);
 			damh = damh + damh * ((e.title_x + 1) / 7);
 			mgic = 2;
 		}
 	}
-	if (e.skill & SKILL_BOW)
+	if(e.skill & SKILL_BOW)
 	{
-		if ((e.altaction & 63 == SP_FIGHT_BOW) || (e.altaction & 63 == SP_FIGHT_CBOW))
+		if((e.altaction & 63 == SP_FIGHT_BOW) || (e.altaction & 63 == SP_FIGHT_CBOW))
 		{
 			damlw = damlw + damlw * ((e.title_x + 1) / 7);
 			damh = damh + damh * ((e.title_x + 1) / 7);
 			mgic = 2;
 		}
 	}
-	if (e.skill & SKILL_THROW)
+	if(e.skill & SKILL_THROW)
 	{
-		if ((e.altaction & 63 == SP_THROW) || (e.altaction & 63 == SP_THROW_CHAKRAM))
+		if((e.altaction & 63 == SP_THROW) || (e.altaction & 63 == SP_THROW_CHAKRAM))
 		{
 			damlw = damlw + damlw * ((e.title_x + 1) / 7);
 			damh = damh + damh * ((e.title_x + 1) / 7);
 			mgic = 2;
 		}
 	}
-	if (e.poidam)
+	if(e.poidam)
 	{
 		damlw = damlw + e.poidam;
 		damh = damh + e.poidam;
 		mgic = 1;
 	}
-	if (e.lit)
+	if(e.lit)
 	{
 		damlw = damlw + 1;
 		damh = damh + e.lit;
 		mgic = 1;
 	}
-	if (e.fire)
+	if(e.fire)
 	{
 		damlw = damlw + floor(e.fire/2);
 		damh = damh + e.fire;
 		mgic = 1;
 	}
-	if (e.cold)
+	if(e.cold)
 	{
 		damlw = damlw + floor(e.cold/2);
 		damh = damh + e.cold;
 		mgic = 1;
 	}
-	if (e.magic)
+	if(e.magic)
 	{
 		damlw = damlw + e.magic;
 		damh = damh + e.magic;
 		mgic = 1;
 	}
-	if (mgic == 1)
+	if(mgic == 1)
 		red = RED_GOLD;
-	else if (mgic == 2)
+	else if(mgic == 2)
 		red = RED_ON;
 	pnum(damlw);
 	red = 0;
 	
 	p1(45);
-	if (mgic == 1)
+	if(mgic == 1)
 		red = RED_GOLD;
-	else if (mgic == 2)
+	else if(mgic == 2)
 		red = RED_ON;
 	pnum(damh);
 	red = 0;
-};
-void(entity e) updateable_stats =
+}
+
+void updateable_stats(entity e)
 {
-float cost;
+	float cost;
 // ---------------------------------------------------------
 	cost = cost_to_increase(str);
-	poption(1, e.ptd >= cost);
+	poption(e, 1, e.ptd >= cost);
 	p8('S', 't', 'r', 'e', 'n', 'g', 't', 'h');
 	pad(18);
 	pnum(e.str);
@@ -211,7 +213,7 @@ float cost;
 	newline();
 // ---------------------------------------------------------
 	cost = cost_to_increase(dex);
-	poption(2, e.ptd >= cost);
+	poption(e, 2, e.ptd >= cost);
 
 	p8('D', 'e', 'x', 't', 'e', 'r', 'i', 't');
 	p1('y');
@@ -225,7 +227,7 @@ float cost;
 	newline();
 // ---------------------------------------------------------
 	cost = cost_to_increase(mag);
-	poption(3, e.ptd >= cost);
+	poption(e, 3, e.ptd >= cost);
 	p4('I', 'n', 't', 'e');
 	p8('l', 'l', 'i', 'g', 'e', 'n', 'c', 'e');
 	pad(18);
@@ -238,7 +240,7 @@ float cost;
 	newline();
 // ---------------------------------------------------------
 	cost = cost_to_increase(vit);
-	poption(4, e.ptd >= cost);
+	poption(e, 4, e.ptd >= cost);
 	p8('V', 'i', 't', 'a', 'l', 'i', 't', 'y');
 	pad(18);
 	pnum(e.vit);
@@ -250,7 +252,7 @@ float cost;
 	newline();
 // ---------------------------------------------------------
 	cost = cost_to_increase(luck);
-	poption(5, e.ptd >= cost);
+	poption(e, 5, e.ptd >= cost);
 	p4('L', 'u', 'c', 'k');
 	pad(18);
 	pnum(e.luck);
@@ -262,7 +264,7 @@ float cost;
 	newline();
 // ---------------------------------------------------------
 	cost = cost_to_increase(agil);
-	poption(6, e.ptd >= cost);
+	poption(e, 6, e.ptd >= cost);
 	p7('A', 'g', 'i', 'l', 'i', 't', 'y');
 	pad(18);
 	pnum(e.agil);
@@ -273,11 +275,9 @@ float cost;
 	pad(30);
 	newline();
 // ---------------------------------------------------------
+}
 
-};
-
-
-void(entity e) regular_stats =
+void regular_stats(entity e)
 {
 
 // ---------------------------------------------------------
@@ -346,78 +346,69 @@ void(entity e) regular_stats =
 	pad(30);
 	newline();
 // ---------------------------------------------------------
+}
 
-};
-
-
-
-
-void() m_stats =
+void m_stats(entity this)
 {
-	var .float fld;
-	float cost;
-	entity e;
-	
-	e = self.m_subject;
+	.float fld;
+	entity e = this.m_subject;
 	
 	vector t;
-	Unstat();
+	Unstat(this);
 	set_ranks(e);
 	
-	if (self.menu < 1)
-		self.menu = 7;
-	else if (self.menu > 7)
-		self.menu = 1;
-	if (!e.ptd)
-		self.menu = 7;
-	if (self.button1)
+	if(this.menu < 1)
+		this.menu = 7;
+	else if(this.menu > 7)
+		this.menu = 1;
+	if(!e.ptd)
+		this.menu = 7;
+	if(this.button1)
 	{
-		self.m_refresh = 0;
-		self.button1 = 0;
-		if (self.menu == 7)
+		this.m_refresh = 0;
+		this.button1 = 0;
+		if(this.menu == 7)
 		{
-			closemenu(self);
-			Restat();
+			closemenu(this);
+			Restat(this);
 			return;
 		}
-		else if (e.ptd > 0)
+		else if(e.ptd > 0)
 		{
-			if (self.menu == 1)
+			if(this.menu == 1)
 				fld = str;
-			else if (self.menu == 2)
+			else if(this.menu == 2)
 				fld = dex;
-			else if (self.menu == 3)
+			else if(this.menu == 3)
 				fld = mag;
-			else if (self.menu == 4)
+			else if(this.menu == 4)
 				fld = vit;
-			else if (self.menu == 5)
+			else if(this.menu == 5)
 				fld = luck;
-			else if (self.menu == 6)
+			else if(this.menu == 6)
 				fld = agil;
 			else
 			{
-				Restat();
+				Restat(this);
 				return;
 			}
-			if (e.fld < 255)
+			if(e.fld < 255)
 			{
-			
-
 				set_ranks(e);
-				cost = cost_to_increase(fld);
-				if (e.ptd >= cost)
+				float cost = cost_to_increase(fld);
+				if(e.ptd >= cost)
 				{
-					e.fld = e.fld + 1;
+					e.(fld) += 1;
 					set_ranks(e);
 					t = gettitle();
-					if (t != e.title)
+					if(t != e.title)
 					{
-						e.fld = e.fld - 1;
+						e.(fld) -= 1;
 						set_ranks(e);
 						e.newtitle = t;
-						e.field_to_increase = self.menu;
-						Restat();
-						openmenu(self, m_stats_confirm, e);
+						e.field_to_increase = this.menu;
+						Restat(this);
+						openmenu(this, m_stats_confirm, e);
 						return;
 					}
 					else
@@ -429,11 +420,11 @@ void() m_stats =
 			
 		}	
 	}
-	Restat();
-	if (self.m_refresh >= time)
+	Restat(this);
+	if(this.m_refresh >= time)
 		return;
 	// show the player his stats and allows ptd
-	pstart();
+	pstart(this);
 	red = RED_ON;
 	PrintClass(e.title);
 	newline();
@@ -498,11 +489,11 @@ void() m_stats =
 	
 	p4('E', 'x', 'p', ' ');
 	pad(6);
-	pnum(e.exp);
+	pnum(e.experience);
 	pad(14);
 	p8('N', 'e', 'x', 't', ' ', 'L', 'v', 'l');
 	pad(23);
-	if (e.lvl < MAX_CHAR_LEVEL)
+	if(e.lvl < MAX_CHAR_LEVEL)
 		pnum(ExpForLevel(e.lvl));
 	else
 		p3('N', '/', 'A');
@@ -511,10 +502,10 @@ void() m_stats =
 	newline();
 	line();
 
-	if (e.ptd)
+	if(e.ptd)
 	{
 		updateable_stats(e);
-		e.options = e.options | OPT_SEEN_PTD;
+		e.options |= OPT_SEEN_PTD;
 		red = RED_ON;
 		p8('P', 'o', 'i', 'n', 't', 's', ' ', 'l');
 		p8('e', 'f', 't', ' ', 't', 'o', ' ', 'd');
@@ -527,10 +518,8 @@ void() m_stats =
 	else
 		regular_stats(e);
 	line();
-	poption(7, TRUE);
+	poption(e, 7, true);
 	p4('E', 'x', 'i', 't');
 	pad(30);
 	p1(0);
-	
-};
-
+}

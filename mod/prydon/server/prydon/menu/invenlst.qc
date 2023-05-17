@@ -1,121 +1,122 @@
-float(entity who, float stats, float() callback, vector ptitle) invenlst =
-{
-	float end, begin, c, i, total, mslot;
-	vector f;
+#include "invenlst.qh"
 
-	if (self.menu < 1)
-		self.menu = 10;
-	else if (self.menu > 10)
-		self.menu = 1;
-	total = 0;
-	mslot = 0;
+float invenlst(entity this, entity who, float stats, float(entity) callback, vector ptitle)
+{
+	int end = 0;
+	int total = 0;
+	int mslot = 0;
+
+	if(this.menu < 1)
+		this.menu = 10;
+	else if(this.menu > 10)
+		this.menu = 1;
 	
-	begin = TOTAL_SLOTS;
-	for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	int begin = TOTAL_SLOTS;
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		f = GetSlot(who, i);
-		it_simplestat(f);
-		it_itemstat();
+		vector f = GetSlot(who, i);
+		it_simplestat(this, f);
+		it_itemstat(this);
 		
-		if (callback())
+		if(callback(this))
 		{
-			total = total + 1;
-			if (total > self.m_num)
-				if (i < begin)
+			total += 1;
+			if(total > this.m_num)
+				if(i < begin)
 					begin = i;
-			if (i > end)
+			if(i > end)
 				end = i;
-			if ((self.menu + self.m_num) == total)
+			if((this.menu + this.m_num) == total)
 				mslot = i;
 		}
 	}
-	if (self.menu < 9)
+	if(this.menu < 9)
 	{
-		if (!mslot)
+		if(!mslot)
 		{
-			if (self.impulse == -1)
+			if(this.impulse == -1)
 			{
-				self.menu = self.menu - 1;
-				self.m_refresh = 0;
-				if (self.menu < 1)
-					self.menu = 10;
+				this.menu -= 1;
+				this.m_refresh = 0;
+				if(this.menu < 1)
+					this.menu = 10;
 			}
 			else	
-				self.menu = self.menu + 1;
+				this.menu += 1;
 		}
 	}
-	else if (self.menu == 9)
+	else if(this.menu == 9)
 	{
-		if (total <= 8)
+		if(total <= 8)
 		{
-			if (self.impulse == -1)
+			if(this.impulse == -1)
 			{
-				self.menu = self.menu - 1;
-				self.m_refresh = 0;
-				if (self.menu < 1)
-					self.menu = 10;
+				this.menu -= 1;
+				this.m_refresh = 0;
+				if(this.menu < 1)
+					this.menu = 10;
 			}
 			else	
-				self.menu = self.menu + 1;
+				this.menu += 1;
 		}
 	}
 	
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 9)
+		this.button1 = 0;
+		if(this.menu == 9)
 		{
-			if (total > 8)
+			if(total > 8)
 			{
-				self.m_num = self.m_num + 8;
-				if (self.m_num >= TOTAL_SLOTS)
-					self.m_num = 0;
+				this.m_num += 8;
+				if(this.m_num >= TOTAL_SLOTS)
+					this.m_num = 0;
 			}
 		}
-		else if (self.menu == 10)
+		else if(this.menu == 10)
 		{
-			closemenu(self);
+			closemenu(this);
 			return 0;
 		}
 		else
 		{
-			it_simplestat(GetSlot(who, mslot));
-			it_itemstat();
-			if (callback())
+			it_simplestat(this, GetSlot(who, mslot));
+			it_itemstat(this);
+			if(callback(this))
 				return mslot;
 		}
 	}
-	if (self.m_refresh >= time)
+	if(this.m_refresh >= time)
 		return 0;
-	pstart();
-	if (ptitle != '0 0 0')
+	pstart(this);
+	if(ptitle != '0 0 0')
 	{
 		pvstr(ptitle);
 		newline();
-		if (stats & 1)
-			pgold();
+		if(stats & 1)
+			pgold(this);
 		line();
 	}
 	total = 0;
-	for (i = begin; i <= end; i = i + 1)
+	for(int i = begin; i <= end; i = i + 1)
 	{
-		f = GetSlot(who, i);
-		it_simplestat(f);
-		it_itemstat();
-		c = callback();
+		vector f = GetSlot(who, i);
+		it_simplestat(this,f);
+		it_itemstat(this);
+		float c = callback(this);
 		
-		if (c)
+		if(c)
 		{
-			total = total + 1;
-			if (total > 8)
+			total += 1;
+			if(total > 8)
 				break;
 			newline();
-			poption(total, TRUE);	
+			poption(this, total, true);	
 			
-			if (who.equip & pow2(i))
+			if(who.equip & (2 ** i))
 				red = RED_ON;		
 			PrintItemName();
-			if (stats & 1)
+			if(stats & 1)
 			{
 				pad(33);
 				pnum(c);
@@ -123,16 +124,16 @@ float(entity who, float stats, float() callback, vector ptitle) invenlst =
 			}
 			pad(40);
 
-			if (stats & (DURABILITY | STACKABLE | CHARGES))
+			if(stats & (DURABILITY | STACKABLE | CHARGES))
 			{
 				newline();
 				pad(5);
-				if (stats & STACKABLE)
+				if(stats & STACKABLE)
 				{
 					p8('Q', 'u', 'a', 'n', 't', 'i', 't', 'y');
 					p1(' ');
 				}
-				else if (stats & CHARGES)
+				else if(stats & CHARGES)
 					p8('C', 'h', 'a', 'r', 'g', 'e', 's', ' ');
 				else
 				{
@@ -144,65 +145,61 @@ float(entity who, float stats, float() callback, vector ptitle) invenlst =
 				pnum(stat_max_dur);
 				pad (40);
 			}
-
 		}
-
 	}
-	if (self.menu > total)
+	if(this.menu > total)
 	{
-		if (self.impulse == -1)
-			self.menu = total;
-		else if (self.m_num)
-			self.menu = 9;
+		if(this.impulse == -1)
+			this.menu = total;
+		else if(this.m_num)
+			this.menu = 9;
 		else 
-			self.menu = 10;
+			this.menu = 10;
 	}
 	newline();
-	if (ptitle)
+	if(ptitle)
 		padlines(11);
 	else
 		padlines(10);
 	line();
 	
-	if (total > 8)
+	if(total > 8)
 	{
-		poption(9, TRUE);
+		poption(this, 9, true);
 		p8('N', 'e', 'x', 't', ' ', 'P', 'a', 'g');
 		p1('e');
 		pad(40);
 		newline();
 	}
-	else if (self.m_num)
+	else if(this.m_num)
 	{
-		poption(9, TRUE);
+		poption(this, 9, true);
 		p8('P', 'r', 'e', 'v', 'i', 'o', 'u', 's');
 		p5(' ', 'P', 'a', 'g', 'e');
 		pad(40);
 		newline();
 	}
-	poption(10, TRUE);
+	poption(this, 10, true);
 	p4('E', 'x', 'i', 't');
 	pad(40);
 	p1(0);
 	return 0;
-	
-};
+}
 
-float() m_invenlstcallback =
+bool m_invenlstcallback(entity this)
 {
-	if (stat_it)
-		return 1;
-	
-};
-void() m_invenlst =
-{
-	local float i;
+	if(stat_it)
+		return true;
+	return false;
+}
 
-	i = invenlst(self.m_subject, 0, m_invenlstcallback, '0 0 0');
+void m_invenlst(entity this)
+{
+	int i = invenlst(this, this.m_subject, 0, m_invenlstcallback, '0 0 0');
 	
-	if (i)
+	if(i)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_inven, self.m_subject);
+		this.weapon = (2 ** i);
+		openmenu(this, m_inven, this.m_subject);
 	}
-};
+}

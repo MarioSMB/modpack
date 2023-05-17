@@ -103,77 +103,14 @@ PRECACHE(font_init)
 	drawfont = FONT_USER + 1; // TODO: belongs in a separate init function!
 }
 
-float turn_angle(float a, float b, float amount)
-{
-	a = anglemods(a);
-	b = anglemods(b);
-	float diff = b - a;
-	
-	if (fabs(diff) < amount)
-	{
-		return b;
-	}
-	
-	if (diff < -180)
-	{
-		b += 360;	
-	}
-	else if (diff > 180)
-	{
-		b -= 360;
-	}
-	
-	if (fabs(b - a) < amount)
-	{
-		return b;
-	}
-	if (a < b)
-		return a + amount;
-	else
-		return a - amount;	
-}
-
-float angle_diff_signed(float a, float b)
-{
-	float diff = (a - b + 180) % 360 - 180;
-	if(diff < -180)
-		diff += 360;
-	if(diff > 180)
-		diff += 360;
-	// if (fabs(diff) > 180) printf("diff %f, a %f, b %f\n", diff, a, b);
-	return diff;
-}
-
-float angle_diff(float a, float b)
-{
-	return fabs((a - b + 180) % 360 - 180);
-}
-
-vector player_model_angles;
-void CSQCPlayer_SmoothAngle(entity this)
-{
-	if(IS_DEAD(this))
-		return;
-
-	if(vdist(vec2(this.velocity), >, 0))
-	{
-		vector wanted_angles = vectoangles(vec2(this.velocity));
-		float framescale = ((IS_ONGROUND(this)) ? 1200 : 500);
-
-		player_model_angles.y = turn_angle(player_model_angles_y, wanted_angles_y, frametime * framescale);
-	}
-
-	this.angles.y = player_model_angles.y;
-}
-
 void Custom_SetCamera()
 {
 	vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 	float vh = PHYS_VIEWHEIGHT(NULL);
 	entity e = csqcplayer;
-	if (e)
+	if(e)
 	{
-		if (servercommandframe == 0 || clientcommandframe == 0)
+		if(servercommandframe == 0 || clientcommandframe == 0)
 		{
 			InterpolateOrigin_Do(e);
 			e.view_ofs = '0 0 1' * vh;
@@ -195,7 +132,7 @@ void Custom_SetCamera()
 			InterpolateOrigin_Do(e);
 			e.iflags = flg;
 
-			if (csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
+			if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
 			{
 				vector o = e.origin;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
@@ -213,9 +150,9 @@ void Custom_SetCamera()
 
 			CSQCPlayer_SetMinsMaxs(e);
 
-			//if (!IS_DEAD(e))
+			//if(!IS_DEAD(e))
 				//e.angles.y = input_angles.y;
-			CSQCPlayer_SmoothAngle(e);
+			//CSQCPlayer_SmoothAngle(e);
 		}
 
 		// relink
@@ -223,9 +160,9 @@ void Custom_SetCamera()
 	}
 
 	const entity view = CSQCModel_server2csqc(player_localentnum - 1);
-	if (view)
+	if(view)
 	{
-		if (view != csqcplayer)
+		if(view != csqcplayer)
 		{
 			InterpolateOrigin_Do(view);
 			view.view_ofs = '0 0 1' * vh;

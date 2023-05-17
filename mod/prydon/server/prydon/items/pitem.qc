@@ -1,3 +1,7 @@
+#include "pitem.qh"
+
+#include "../spells/pspell.qh"
+
 void PrintItemName()
 {
 	if(stat_pref && stat_id)

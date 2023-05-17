@@ -1,3 +1,5 @@
 #pragma once
 
-void shopitem(entity this);
+spawnfunc(item);
+
+spawnfunc(shopitem);

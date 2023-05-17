@@ -1,118 +1,124 @@
-void() h_sbar =
+#include "sbar.qh"
+
+#include "../spells/pspell.qh"
+#include "../subs/subs.qh"
+
+bool BROKEN = true;
+void h_sbar(entity this)
 {
-	if (self.menu)
+	if(this.menu)
+		return;
+	if(BROKEN)
 		return;
 
-	trace_ent = self.cursor_trace_ent;
-	if (trace_ent.classname == "func_door2")
+	trace_ent = this.cursor_trace_ent;
+	if(trace_ent.classname == "func_door2")
 	{
 		trace_ent = trace_ent.enemy;
-		if (trace_ent.solid != SOLID_BBOX)
-			trace_ent = world;
+		if(trace_ent.solid != SOLID_BBOX)
+			trace_ent = NULL;
 	}
 
-	if (!trace_ent)
+	if(!trace_ent)
 	{
-		if (!self.ptd)
+		if(!this.ptd)
 		{
-			if (!self.questlog || (self.options & OPT_NOQUEST_UPDATE))
+			if(!this.questlog || (this.options & OPT_NOQUEST_UPDATE))
 			{
-				if (!self.sbarsub)
+				if(!this.sbarsub)
 				{
-					if ((!self.spell) || (self.options & OPT_HIDESPELLS))
+					if((!this.spell) || (this.options & OPT_HIDESPELLS))
 					{
-						if (self.m_refresh > time)
+						if(this.m_refresh > time)
 							return;
 							
-						self.m_refresh = time + 1;
-						centerprint(self, "");
+						this.m_refresh = time + 1;
+						centerprint(this, "");
 					}
 				}
 			}
 		}
 	}
-	if (trace_ent != self.sbarsub)
+	if(trace_ent != this.sbarsub)
 	{
-		if (!self.cursor_active)
-			if (self.sbarsub)
-				self.sbarsub.effects = self.sbarsub.effects - (self.sbarsub.effects & EF_FULLBRIGHT);
-		self.sbarsub = trace_ent;
+		if(!this.cursor_active)
+			if(this.sbarsub)
+				this.sbarsub.effects = this.sbarsub.effects - (this.sbarsub.effects & EF_FULLBRIGHT);
+		this.sbarsub = trace_ent;
 	}
-	else if (self.m_refresh > time)
+	else if(this.m_refresh > time)
 		return;
 		
-	self.m_refresh = time + 1;
+	this.m_refresh = time + 1;
 
-	pstart();
+	pstart(this);
 	padlines(11);
 	
-	if (!(self.options & OPT_NOQUEST_UPDATE))
+	if(!(this.options & OPT_NOQUEST_UPDATE))
 	{
-		if (self.questlog)
+		if(this.questlog)
 		{
-			if (self.quest_time < time)
+			if(this.quest_time < time)
 			{
 				p8('Q', 'u', 'e', 's', 't', ' ', 'U', 'p');
 				p4('d', 'a', 't', 'e');
-				if (self.questlog == 1)
-					sound2(self, "player/quest.wav");
-				self.questlog = 2;
+				if(this.questlog == 1)
+					sound2(this, "player/quest.wav");
+				this.questlog = 2;
 				newline();
 			}
 		}
 	}
-	if (self.ptd)
+	if(this.ptd)
 	{
-		if (!(self.options & OPT_SEEN_PTD)) // ugly hack
+		if(!(this.options & OPT_SEEN_PTD)) // ugly hack
 		{
-			if (self.misc & MISC_UPDATE_BLINK)
+			if(this.misc & MISC_UPDATE_BLINK)
 				red = RED_ON;
 			p8('N', 'e', 'w', ' ', 'S', 't', 'a', 't');
 			p1('s');
 			newline();
 		}
 	}
-	if (!(self.options & OPT_HIDESPELLS))
+	if(!(this.options & OPT_HIDESPELLS))
 	{
-		if (self.spell)
+		if(this.spell)
 		{
 	
 			p7('S', 'p', 'e', 'l', 'l', ':', ' ');
-			PrintSpellName(self.spell);
+			PrintSpellName(this.spell);
 			newline();
 		}
 	}
 
-	if (trace_ent.ui_hover)
+	if(trace_ent.ui_hover)
 	{
-		other = self;
-		trace_ent.ui_hover();
-		self = other;
+		trace_ent.ui_hover(trace_ent, this);
 	}
-	else if (trace_ent.classname == "item")
+	else if(trace_ent.classname == "item")
 	{
-		if (trace_ent.slot1_x)
+		if(trace_ent.slot1_x)
 		{
-			if (!self.cursor_active)
-				trace_ent.effects = trace_ent.effects | EF_FULLBRIGHT;
-			it_simplestat(trace_ent.slot1);
+			if(!this.cursor_active)
+				trace_ent.effects |= EF_FULLBRIGHT;
+			it_simplestat(this, trace_ent.slot1);
 			PrintItemName();
 		}
 		pend();
 	}
-	else if (trace_ent.solid == SOLID_SLIDEBOX && trace_ent.spawnflags & 1)
+	else if(trace_ent.solid == SOLID_SLIDEBOX && trace_ent.spawnflags & 1)
 	{
-		if (!self.cursor_active)
-			trace_ent.effects = trace_ent.effects | EF_FULLBRIGHT;
+		if(!this.cursor_active)
+			trace_ent.effects |= EF_FULLBRIGHT;
 
 		progressbar(trace_ent.health/trace_ent.max_health, 15);
 		WriteString(msg_mode, trace_ent.owner.netname);
 	}
-	else if (trace_ent.ai & (AI_FOLLOW | AI_HUNT_PLAYER))
+	else if(trace_ent.ai & (AI_FOLLOW | AI_HUNT_PLAYER))
 	{
-		if (trace_ent.takedamage)
+		if(trace_ent.takedamage)
 		{
-			if (trace_ent.finalangle_x)
+			if(trace_ent.finalangle_x)
 			{
 				PrintMonsterName(trace_ent);
 				newline();
@@ -131,13 +137,13 @@ void() h_sbar =
 				newline();
 				WriteString(msg_mode, trace_ent.netname);
 			}
-			if (!self.cursor_active)
-				trace_ent.effects = trace_ent.effects | EF_FULLBRIGHT;
+			if(!this.cursor_active)
+				trace_ent.effects |= EF_FULLBRIGHT;
 		}
 		else
 			pend();
 	}
-	else if (trace_ent.classname == "dummy")
+	else if(trace_ent.classname == "dummy")
 	{
 		PrintClass(trace_ent.owner.title);
 		p2(' ', '(');
@@ -146,14 +152,12 @@ void() h_sbar =
 		newline();
 		WriteString(msg_mode, trace_ent.owner.netname);
 	}
-	else if (trace_ent.action)
+	else if(trace_ent.action)
 	{
 		WriteString(msg_mode, trace_ent.netname);
-		if (!self.cursor_active)
-			trace_ent.effects = trace_ent.effects | EF_FULLBRIGHT;
+		if(!this.cursor_active)
+			trace_ent.effects |= EF_FULLBRIGHT;
 	}
 	else 
 		pend();
-
-			
-};
+}

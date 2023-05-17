@@ -1,0 +1,17 @@
+#pragma once
+
+void rq_chatstrings(entity e, vector v);
+
+string rewardstring(entity e);
+
+void rq_cancel(entity actor);
+
+void rq_recieve(entity e, entity actor);
+
+void rq_rescue(entity e);
+
+void rq_mondie(entity e);
+
+void rq_reward(entity e, entity actor);
+
+void rq_createdialog(entity this);

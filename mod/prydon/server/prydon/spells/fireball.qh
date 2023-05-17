@@ -1,0 +1,5 @@
+#pragma once
+
+void ball_hit(entity this, entity toucher);
+
+void fireball_go(entity this, float lev);

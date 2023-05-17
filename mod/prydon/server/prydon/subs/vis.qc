@@ -1,52 +1,46 @@
-.float realmodelindex;
+#include "vis.qh"
 
-void(entity m) hide =
+void hide(entity m)
 {
-	if (m.solid == SOLID_NOT || m.solid == SOLID_BSP)
+	if(m.solid == SOLID_NOT || m.solid == SOLID_BSP)
 		return;
 		
-	if (m.modelindex != 0)
+	if(m.modelindex != 0)
 		m.realmodelindex = m.modelindex;
 	m.modelindex = 0;
-};
+}
 
-void(entity f) show =
+void show(entity f)
 {
-	local vector mn, mx;
-	
-	if (f.solid == SOLID_NOT || f.solid == SOLID_BSP)
+	if(f.solid == SOLID_NOT || f.solid == SOLID_BSP)
 		return;
-		
-	if (f.realmodelindex)
+
+	if(f.realmodelindex)
 	{
 		f.modelindex = f.realmodelindex;
-		
-		if (f.model)
+		if(f.model)
 		{
-			mn = f.mins;
-			mx = f.maxs;
-			setmodel(f, f.model);
+			vector mn = f.mins;
+			vector mx = f.maxs;
+			_setmodel(f, f.model);
 			setsize(f, mn, mx);
-
 		}
-
 	}
-};
+}
 
-void() dovis =
+// TODO: some nasty things to this
+void dovis()
 {
-	local entity e, m, f;
-
-	m = nextent(world);
+	entity m = nextent(NULL);
 	while(m)
 	{
 		hide(m);
 		m = nextent(m);
 	}
-	e = find(world, classname, "player");
+	entity e = find(NULL, classname, "player");
 	while(e)
 	{
-		f = findradius(e.player.origin, 512);
+		entity f = findradius(e.player.origin, 512);
 		while(f)
 		{
 			show(f);
@@ -54,4 +48,4 @@ void() dovis =
 		}
 		e = find(e, classname, "player");
 	}
-};
+}

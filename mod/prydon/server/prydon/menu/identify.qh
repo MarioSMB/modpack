@@ -1,0 +1,5 @@
+#pragma once
+
+const float IDENTIFY_COST = 4;
+
+void m_identify(entity this);

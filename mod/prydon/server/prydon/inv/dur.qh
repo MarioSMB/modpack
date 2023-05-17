@@ -1,0 +1,21 @@
+#pragma once
+
+int itemcount(entity this, float itslot);
+
+bool takeamount(entity this, float itslot, float pref, float suf, float howmuch);
+
+void replenish_dur(entity this);
+
+bool getgold(entity this, int howmuch);
+
+void givegold(entity this, int howmuch);
+
+bool takeammo(entity this, float itslot);
+
+bool TakeCharges(entity this, float sp);
+
+void DamageEquipment(entity who, float weps);
+
+bool takesomething(vector itslot, entity e);
+
+bool hassomething(vector itslot, entity e);

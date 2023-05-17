@@ -1,71 +1,69 @@
+#include "quest.qh"
 
-void() quest = 
+#include "index.qh"
+
+spawnfunc(quest)
 {
-	local entity z;
-
 	//load stored values
-	self.classname = "quest";
+	this.classname = "quest";
 
-	if (!self.story_name)
+	if(!this.story_name)
 	{
 		// try to auto detect old story ents
-		if (self.impulse > 15)
-			self.story_name = "opt1";
-		else if (self.story_min > 15)
-			self.story_name = "opt1";
-		else if (self.story_max > 15)
-			self.story_name = "opt1";
+		if(this.impulse > 15)
+			this.story_name = "opt1";
+		else if(this.story_min > 15)
+			this.story_name = "opt1";
+		else if(this.story_max > 15)
+			this.story_name = "opt1";
 		else
-			self.story_name = "main";
-		self.targetname = self.story_name;
+			this.story_name = "main";
+		this.targetname = this.story_name;
 	}
 	
-	self.lip = GetOldStory(self.targetname, self.lip);
+	this.lip = GetOldStory(this.targetname, this.lip);
 
 	// remove redundant ents
-	z = find(world, classname, "quest");
+	entity z = find(NULL, classname, "quest");
 	while(z)
 	{
-		if (z != self)
+		if(z != this)
 		{
-			if (self.targetname)
+			if(this.targetname)
 			{
-				if (z.targetname == self.targetname)
+				if(z.targetname == this.targetname)
 				{
-					if (self.impulse == z.impulse)
+					if(this.impulse == z.impulse)
 					{
-						self.lip = z.lip;
-						remove(z);
+						this.lip = z.lip;
+						delete(z);
 					}
 				}
 			}
-			if (z.story_name == self.story_name)
+			if(z.story_name == this.story_name)
 			{
-				if (self.impulse == z.impulse)
+				if(this.impulse == z.impulse)
 				{
-					self.lip = z.lip;
-					remove(z);
+					this.lip = z.lip;
+					delete(z);
 				}
 			}
 		}
 		z = find(z, classname, "quest");
 	}
-	if (!fileaccess)
+	if(!fileaccess)
 	{
-		if (self.spawnflags & 1)
-			self.lip = 0;
+		if(this.spawnflags & 1)
+			this.lip = 0;
 	}
-};
+}
 
-
-void(float lv, string name, string storage) spawnstory =
+void spawnstory(float lv, string name, string storage)
 {
-	local entity e;
-	
-	e = spawn();
+	entity e = spawn();
 	e.lip = lv;
 	e.story_name = name;
 	e.targetname = storage;
 	SetOldStory(storage, lv);
-	call (quest, e);
-};
+	spawnfunc_quest(e);
+}

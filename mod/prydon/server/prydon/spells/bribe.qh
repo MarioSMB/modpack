@@ -1,0 +1,3 @@
+#pragma once
+
+void bribe_go(entity this, float lev);

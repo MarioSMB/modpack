@@ -1,3 +1,8 @@
+#include "unique.qh"
+
+#include "../quests/questitem.qh"
+#include "../spells/sval.qh"
+
 string unique_itemmodel(float it)
 {
 	if(it == IT_ITHAELS_ROBE)

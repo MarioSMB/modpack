@@ -1,44 +1,42 @@
+#include "dead.qh"
 
-
-void() m_dead =
+void m_dead(entity this)
 {
-	local float i;
-	
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
 
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 2 || mplayer)
+		this.button1 = 0;
+		if(this.menu == 2 || mplayer)
 		{
-			closemenu(self);
-			self.player = world;
-			self.misc = self.misc | MISC_RESPAWN;
-			PutClientInServer();
-			self.health = self.max_health;			
+			closemenu(this);
+			this.player = NULL;
+			this.misc |= MISC_RESPAWN;
+			PutClientInServer(this);
+			this.health = this.max_health;			
 			return;
 		}
 		else
 		{
-			closemenu(self);
+			closemenu(this);
 			localcmd("restart\n");
 		}
 	}
 	
-	if (self.m_refresh >= time)
+	if(this.m_refresh >= time)
 		return;
-	if (mplayer)
+	if(mplayer)
 	{
-		centerprint(self, "You have perished.\n\n\{141}\[\1\] Naked run    \n");
+		centerprint(this, "You have perished.\n\n\{141}\[\1\] Naked run    \n");
 	}
 	else
 	{
-		if (self.menu == 1)
-			centerprint(self, "You have perished.\n\n\{141}\[\1\] Restart level\n \[\2\] Naked run    \n");
+		if(this.menu == 1)
+			centerprint(this, "You have perished.\n\n\{141}\[\1\] Restart level\n \[\2\] Naked run    \n");
 		else
-			centerprint(self, "You have perished.\n\n \[\1\] Restart level\n\{141}\[\2\] Naked run    \n");
+			centerprint(this, "You have perished.\n\n \[\1\] Restart level\n\{141}\[\2\] Naked run    \n");
 	}
-};
+}

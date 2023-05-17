@@ -1,57 +1,58 @@
+#include "gold.qh"
 
-void() m_dropgold =
+void m_dropgold(entity this)
 {
-	float n;
+	int n = 0;
 	
-	if (self.menu < 1)
-		self.menu = 10;
-	else if (self.menu > 10)
-		self.menu = 1;
-	if (self.menu == 10)
+	if(this.menu < 1)
+		this.menu = 10;
+	else if(this.menu > 10)
+		this.menu = 1;
+	if(this.menu == 10)
 		n = 0;
 	else
-		n = self.menu;
+		n = this.menu;
 		
-	if (self.button1)
+	if(this.button1)
 	{
-		if (self.m_num < self.gp)
-			self.m_num = self.m_num * 10 + n;
+		if(this.m_num < this.gp)
+			this.m_num = this.m_num * 10 + n;
 	}
-	else if (self.button0 || self.button2)
+	else if(this.button0 || this.button2)
 	{
-		if (self.m_num > self.gp)
+		if(this.m_num > this.gp)
 		{
-			prompt(self, "You don't have enough gold for this", self, 2);
+			prompt(this, "You don't have enough gold for this", this, 2);
 			return;
 		}
-		dropgold(self.m_num);
-		self.m_subject.gp = self.m_subject.gp - self.m_num;
-		closemenu(self);
+		dropgold(this, this.m_num);
+		this.m_subject.gp = this.m_subject.gp - this.m_num;
+		closemenu(this);
 	}
 	
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		if (!self.m_refresh)
-			self.misc = self.misc - (self.misc & MISC_UPDATE_BLINK);
+		if(!this.m_refresh)
+			this.misc &= ~MISC_UPDATE_BLINK;
 			
-		pstart();
+		pstart(this);
 		p5('D', 'r', 'o', 'p', ' ');
 		p4('G', 'o', 'l', 'd');
 		newline();
 		line();
-		pgold();
+		pgold(this);
 		line();
 		p8('Q', 'u', 'a', 'n', 't', 'i', 't', 'y');
 		p2(':', ' ');
-		if (self.m_num)
-			pnum(self.m_num);
+		if(this.m_num)
+			pnum(this.m_num);
 		red = RED_ON;
-		if (self.misc & MISC_UPDATE_BLINK)
+		if(this.misc & MISC_UPDATE_BLINK)
 			p1(11);
 		else
 			pnum(n);
 		red = 0;
 		p1(0);
-		self.m_refresh = time + 1;
+		this.m_refresh = time + 1;
 	}
 }

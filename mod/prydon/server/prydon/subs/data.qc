@@ -1,29 +1,30 @@
-nosave var float datasaved = 0;
+#include "data.qh"
 
-void(entity e) writeinventory =
+#include "math.qh"
+#include "../quests/_mod.qh"
+
+void writeinventory(entity e)
 {
-	float i;
 	qwrite("save_inven");
-	if (e.targetname)
+	if(e.targetname)
 		qwrite(e.targetname);
 	else
 		qwrite(e.netname);
-	for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 		qwrite(vtos(GetSlot(e, i)));
 	qwrite(ftos(e.gp));
-};
-void(entity e) writequest =
+}
+
+void writequest(entity e)
 {
 	qwrite("quest");
 	qwrite(ftos(e.lip));
 	qwrite(e.story_name);
-};
-void() questitem;
-void() readquestitem =
+}
+
+void readquestitem(entity this)
 {
-	local entity e;
-	
-	e = spawn();
+	entity e = spawn();
 	e.classname = "questitem";
 	e.slot1 = stov(qread());
 	e.finalangle = stov(qread());
@@ -82,11 +83,11 @@ void() readquestitem =
 	e.magic_reduced = stof(qread());
 	e.menu = stof(qread());
 	e.visibility = stof(qread());
-	
-	call(questitem, e);
-	
-};
-void(entity e) writequestitem =
+
+	spawnfunc_questitem(e);
+}
+
+void writequestitem(entity e)
 {
 	qwrite("questitem");
 	qwrite(vtos(e.slot1));
@@ -133,7 +134,7 @@ void(entity e) writequestitem =
 	qwrite(ftos(e.attacker_cold));
 	qwrite(ftos(e.attacker_poison));
 	qwrite(ftos(e.piercing));
-	if (e.req_lvl)
+	if(e.req_lvl)
 		qwrite(ftos(e.req_lvl));
 	else
 		qwrite(ftos(e.frags));
@@ -149,20 +150,18 @@ void(entity e) writequestitem =
 	qwrite(ftos(e.magic_reduced));
 	qwrite(ftos(e.menu));
 	qwrite(ftos(e.visibility));
+}
 
-};
-
-void() writedata =
+void writedata()
 {
-	local entity e;
-	e = nextent(world);
-	while (e)
+	entity e = nextent(NULL);
+	while(e)
 	{
-		if (e.misc & MISC_SAVE_INVENTORY)
+		if(e.misc & MISC_SAVE_INVENTORY)
 			writeinventory(e);
-		if (e.classname == "quest")
+		if(e.classname == "quest")
 			writequest(e);
-		if (e.classname == "questitem")
+		if(e.classname == "questitem")
 			writequestitem(e);
 		e = nextent(e);
 	}
@@ -171,78 +170,71 @@ void() writedata =
 	qwrite(vtos(rq_vars));
 	
 	qwrite("enddata");
-};
+}
 
-void() readinventory =
+void readinventory()
 {
-	local entity e;
-	local float i;
-	
-	e = spawn();
+	entity e = spawn();
 	e.classname = "save_inven";
 	e.targetname = strzone(qread());
-	for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 		SetSlot(e, i, stov(qread()));
 	e.gp = stof(qread());
 	e.misc = MISC_SAVE_INVENTORY;
-};
+}
 
-void() datacheck =
+void datacheck(entity this)
 {
-	local entity t;
-	local float i;
-	
-	if (self.misc & MISC_SAVE_INVENTORY)
+	if(this.misc & MISC_SAVE_INVENTORY)
 	{
-		t = find(world, classname, "save_inven");
+		entity t = find(NULL, classname, "save_inven");
 		while(t)
 		{
-			if (t.targetname == self.targetname || t.targetname == self.netname)
+			if(t.targetname == this.targetname || t.targetname == this.netname)
 			{
-				for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
-					SetSlot(self, i, GetSlot(t, i));
-				self.gp = t.gp;
-				strunzone(t.targetname);
-				remove(t);
+				for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
+					SetSlot(this, i, GetSlot(t, i));
+				this.gp = t.gp;
+				strfree(t.targetname);
+				delete(t);
 				break;
 			}
 			t = find(t, classname, "save_inven");
 		}
 	}
-};
-void() readdata =
+}
+
+void readdata()
 {
-	local string s;
-	local float f;
 	while(1)
 	{
-		s = qread();
-		if (s == "quest")
+		string s = qread();
+		if(s == "quest")
 		{
-			f = stof(qread());
+			float f = stof(qread());
 			s = strzone(qread());
 			spawnstory(f, s, s);
 		}
-		else if (s == "save_inven")
+		else if(s == "save_inven")
 			readinventory();
-		else if (s == "questitem")
-			readquestitem();
-		else if (s == "enddata")
+		else if(s == "questitem")
+			readquestitem(world);
+		else if(s == "enddata")
 			return;
-		else if (s == "randquest")
+		else if(s == "randquest")
 		{
 			rndquest = stov(qread());
 			rq_vars = stov(qread());
 		}
-		if (fileerror)
+		if(fileerror)
 			return;
 	}
-};
-void() loaddata =
-{
-	local float c;
+}
 
-	
+void loaddata()
+{
+	float c;
+
 	mainstory = decode(serverflags, 1);
 	c = cvar("gamecfg");
 	opt1 = decode(c, 1);
@@ -254,37 +246,36 @@ void() loaddata =
 	opt6 = decode(c, 3);
 	runtime = cvar("sv_aim");	
 	c = cvar("nomonsters");
-	rndquest_x = decode(c, 1);
-	rndquest_y = decode(c, 2);
-	rndquest_z = decode(c, 3);
+	rndquest.x = decode(c, 1);
+	rndquest.y = decode(c, 2);
+	rndquest.z = decode(c, 3);
 	c = cvar("samelevel");
-	rq_vars_x = decode(c, 1);
-	rq_vars_y = decode(c, 2);
-	rq_vars_z = decode(c, 3);
+	rq_vars.x = decode(c, 1);
+	rq_vars.y = decode(c, 2);
+	rq_vars.z = decode(c, 3);
 	
-	if (fileaccess)
+	if(fileaccess)
 	{
 		qopenread("gamedata.pgg");
-		if (SAVE_VERSION == stof(qread()))
+		if(SAVE_VERSION == stof(qread()))
 			readdata();
 		qclose();
 	}
-};
+}
 
-
-void() savedata =
+void savedata()
 {
-	if (datasaved)
+	if(datasaved)
 		return;
-	datasaved = 1;
-	if (fileaccess)
+	datasaved = true;
+	if(fileaccess)
 	{
 		qopenwrite("gamedata.pgg");
 		qwrite(ftos(SAVE_VERSION));
 		writedata();
 		qclose();
 	}	
-	if (!world.map)
+	if(!world.map)
 	{
 		opt1 = getstorybyname("opt1");
 		opt2 = getstorybyname("opt2");
@@ -297,8 +288,8 @@ void() savedata =
 	cvar_set("gamecfg", ftos(encode(opt1, opt2, opt3)));
 	cvar_set("savedgamecfg", ftos(encode(opt4, opt5, opt6)));
 	
-	cvar_set("nomonsters", ftos(encode(rndquest_x, rndquest_y, rndquest_z)));
-	cvar_set("samelevel", ftos(encode(rq_vars_x, rq_vars_y, rq_vars_z)));
+	cvar_set("nomonsters", ftos(encode(rndquest.x, rndquest.y, rndquest.z)));
+	cvar_set("samelevel", ftos(encode(rq_vars.x, rq_vars.y, rq_vars.z)));
 	
 	//serverflags = encode(mainstory, averagelvl, world.impulse);
-};
+}

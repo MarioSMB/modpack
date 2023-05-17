@@ -1,0 +1,21 @@
+#pragma once
+
+void SUB_CalcAngleMove(entity this, vector destangle, float tspeed, void(entity) func);
+
+void SUB_CalcAngleMoveDone(entity this);
+
+void door2_closed(entity this);
+
+void door2_close(entity this);
+
+void door2_closing(entity this);
+
+void door2_opened(entity this);
+
+void door2_open(entity this, entity actor, entity trigger);
+
+void door2_touch(entity this, entity toucher);
+
+void door2_init(entity this);
+
+void default_rotate(entity this);

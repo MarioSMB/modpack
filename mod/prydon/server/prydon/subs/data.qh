@@ -1,0 +1,23 @@
+#pragma once
+
+bool datasaved = false;
+
+void writeinventory(entity e);
+
+void writequest(entity e);
+
+void readquestitem(entity this);
+
+void writequestitem(entity e);
+
+void writedata();
+
+void readinventory();
+
+void datacheck(entity this);
+
+void readdata();
+
+void loaddata();
+
+void savedata();

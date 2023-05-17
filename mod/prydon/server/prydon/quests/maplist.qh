@@ -1,0 +1,9 @@
+#pragma once
+
+int total_maps = 0;
+
+float getrandmap(float fl);
+
+string getmapname(float n);
+
+float getmapdiff(float n);

@@ -1,9 +1,14 @@
+#include "triggers.qh"
+
+#include "../subs/reqs.qh"
+#include "../subs/trigger.qh"
+
 void trigger_touch(entity this, entity toucher)
 {
 	if(toucher.classname == "npc" && (this.spawnflags & 1))
-		generictrigger(this, toucher);
+		generictrigger(this, NULL, toucher);
 	if(toucher.classname == "dummy" && (this.spawnflags & 2))
-		generictrigger(this, toucher);
+		generictrigger(this, NULL, toucher);
 }
 
 spawnfunc(trigger_other)
@@ -13,7 +18,7 @@ spawnfunc(trigger_other)
 		delete(this);
 		return;
 	}
-	if (!(this.spawnflags))
+	if(!(this.spawnflags))
 		this.spawnflags = 3;
 
 	InitTrigger(this);

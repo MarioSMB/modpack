@@ -1,12 +1,17 @@
-void(vector it, float eq) stats_report =
+#include "inven.qh"
+
+#include "../spells/_mod.qh"
+#include "../subs/math.qh"
+
+void stats_report(entity this, vector itslot, float eq)
 {
-	if (stat_it >= 127)
+	if(stat_it >= 127)
 	{
 		p8('U', 'n', 'i', 'q', 'u', 'e', ' ', 'I');
 		p3('t', 'e', 'm');
 		newline();
 	}
-	if (!stat_id)
+	if(!stat_id)
 	{
 		red = RED_ON;
 		p8('U', 'n', 'i', 'd', 'e', 'n', 't', 'i');
@@ -14,38 +19,38 @@ void(vector it, float eq) stats_report =
 		newline();
 		return;
 	}
-	else if (stat_id != 1)
+	else if(stat_id != 1)
 	{
 		p8('W', 'i', 'l', 'l', ' ', 'r', 'e', 't');
 		p3('u', 'r', 'n');
 		newline();
 		p6('i', 't', 'e', 'm', ' ', '#');
-		pnum(it_x);
+		pnum(itslot.x);
 		p1(',');
-		pnum(it_y);
+		pnum(itslot.y);
 		p1(',');
-		pnum(it_z);
+		pnum(itslot.z);
 		
 		p6(' ', 'l', 'a', 't', 'e', 'r');
 		newline();
 	
 	}
-	if (eq)
+	if(eq)
 	{
-		if (stat_loc & EQUIPABLE)
+		if(stat_loc & EQUIPABLE)
 		{
 			p8('E', 'q', 'u', 'i', 'p', 'p', 'e', 'd');
 			p2(':', ' ');
-			if (eq == 1)
+			if(eq == 1)
 				p2('N', 'O');
 			else
 				p3('Y', 'E', 'S'); 
 			newline();
 		}
 	}
-	if (stat_loc & RIGHTARM)
+	if(stat_loc & RIGHTARM)
 	{
-		if (stat_action)
+		if(stat_action)
 		{
 			PrintSpellName(stat_action & 63);
 			p7(' ', 'A', 't', 't', 'a', 'c', 'k');
@@ -53,9 +58,9 @@ void(vector it, float eq) stats_report =
 		}
 	
 	}
-	if (stat_loc & DURABILITY)
+	if(stat_loc & DURABILITY)
 	{
-		if (stat_dur == 0)
+		if(stat_dur == 0)
 			red = 128;
 		p8 ('D', 'u', 'r', 'a', 'b', 'i', 'l', 'i');
 		p3 ('t', 'y', ' ');
@@ -65,9 +70,9 @@ void(vector it, float eq) stats_report =
 		pnum(stat_max_dur);
 		newline();
 	}
-	else if (stat_loc & STACKABLE)
+	else if(stat_loc & STACKABLE)
 	{
-		if (stat_dur == 0)
+		if(stat_dur == 0)
 			red = 128;
 		p8 ('Q', 'u', 'a', 'n', 't', 'i', 't', 'y');
 		p1(' ');
@@ -77,7 +82,7 @@ void(vector it, float eq) stats_report =
 		pnum(stat_max_dur);
 		newline();
 	}
-	else if (stat_loc & CHARGES)
+	else if(stat_loc & CHARGES)
 	{
 		p8 ('C', 'h', 'a', 'r', 'g', 'e', 's', ' ');
 		pnum(stat_dur);
@@ -88,29 +93,29 @@ void(vector it, float eq) stats_report =
 		pnum(mana_for_spell(stat_action & 63, stat_spell_level));
 		newline();
 	}
-	else if (stat_spec & SPEC_INDESTRUCTIBLE)
+	else if(stat_spec & SPEC_INDESTRUCTIBLE)
 	{
 		p8('I', 'n', 'd', 'e', 's', 't', 'r', 'u');
 		p6('c', 't', 'a', 'b', 'l', 'e');
 		newline();
 	}
-	if ((stat_loc & TWO_HAND) == TWO_HAND)
+	if((stat_loc & TWO_HAND) == TWO_HAND)
 	{
 		p8('T', 'w', 'o', ' ', 'H', 'a', 'n', 'd');
 		p2('e', 'd');
 		newline();
 	}
 
-	if (stat_def)
+	if(stat_def)
 	{
 		p8('D', 'e', 'f', 'e', 'n', 's', 'e', ' ');
 		pnum(stat_def);
 		newline();
 	}
-	if (stat_daml)
+	if(stat_daml)
 	{
 		pnum(stat_daml);
-		if (stat_dama)
+		if(stat_dama)
 		{
 			p4(' ', 't', 'o', ' ');
 			pnum(stat_daml+stat_dama);
@@ -118,43 +123,43 @@ void(vector it, float eq) stats_report =
 		p7(' ', 'D', 'a', 'm', 'a', 'g', 'e');
 		newline();
 	}
-	if (stat_tohit)
+	if(stat_tohit)
 	{
 		pnum(stat_tohit);
 		p8('%', ' ', 'T', 'o', ' ', 'h', 'i', 't');
 		newline();
 	}
-	if (stat_dodge)
+	if(stat_dodge)
 	{
 		pnum(stat_dodge);
 		p7('%', ' ', 'D', 'o', 'd', 'g', 'e');
 		newline();
 	}
-	if (stat_block)
+	if(stat_block)
 	{
 		pnum(stat_block);
 		p7('%', ' ', 'B', 'l' , 'o', 'c', 'k');
 		newline();
 
 	}
-	if (stat_critical)
+	if(stat_critical)
 	{
 		pnum(stat_critical);
 		p8('%', ' ', 'C', 'r', 'i', 't', 'i', 'c');
 		p6('a', 'l', ' ', 'H', 'i', 't');
 		newline();
 	}
-	if (stat_piercing)
+	if(stat_piercing)
 	{
 		pnum(stat_piercing);
 		p8('%', ' ', 'P', 'i', 'e', 'r', 'c', 'i');
 		p6('n', 'g', ' ', 'H', 'i', 't');
 		newline();
 	}
-	if (stat_visibility)
+	if(stat_visibility)
 	{
 
-		if (stat_visibility > 0)
+		if(stat_visibility > 0)
 		{
 			pnum(stat_visibility);
 			p8('%', ' ', 'I', 'n', 'c', 'r', 'e', 'a');
@@ -168,7 +173,7 @@ void(vector it, float eq) stats_report =
 		p6('b', 'i', 'l', 'i', 't', 'y');
 		newline();
 	}
-	if (stat_toall)
+	if(stat_toall)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_toall);
@@ -177,7 +182,7 @@ void(vector it, float eq) stats_report =
 		p2('e', 's');
 		newline();
 	}
-	if (stat_str)
+	if(stat_str)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_str);
@@ -185,7 +190,7 @@ void(vector it, float eq) stats_report =
 		p1('h');
 		newline();
 	}
-	if (stat_dex)
+	if(stat_dex)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_dex);
@@ -193,7 +198,7 @@ void(vector it, float eq) stats_report =
 		p2('t', 'y');
 		newline();
 	}
-	if (stat_mag)
+	if(stat_mag)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_mag);
@@ -201,7 +206,7 @@ void(vector it, float eq) stats_report =
 		p5('g', 'e', 'n', 'c', 'e');
 		newline();
 	}
-	if (stat_vit)
+	if(stat_vit)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_vit);
@@ -209,28 +214,28 @@ void(vector it, float eq) stats_report =
 		p1('y');
 		newline();
 	}
-	if (stat_luck)
+	if(stat_luck)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_luck);
 		p5(' ', 'L', 'u', 'c', 'k');
 		newline();
 	}
-	if (stat_agil)
+	if(stat_agil)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_agil);
 		p8(' ', 'A', 'g', 'i', 'l', 'i', 't', 'y');
 		newline();
 	}
-	if (stat_mana)
+	if(stat_mana)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_mana);
 		p8(' ', 't', 'o', ' ', 'm', 'a', 'n', 'a');
 		newline();
 	}
-	if (stat_health)
+	if(stat_health)
 	{
 		p5('A', 'd', 'd', 's', ' ');
 		pnum(stat_health);
@@ -238,7 +243,7 @@ void(vector it, float eq) stats_report =
 		p2('t', 'h');
 		newline();
 	}
-	if (stat_fire)
+	if(stat_fire)
 	{
 		p7('H', 'i', 't', ' ', 'a', 'd', 'd');
 		p2('s', ' ');
@@ -251,7 +256,7 @@ void(vector it, float eq) stats_report =
 		newline();
 	
 	}
-	if (stat_poison)
+	if(stat_poison)
 	{
 		p7('H', 'i', 't', ' ', 'a', 'd', 'd');
 		p2('s', ' ');
@@ -260,7 +265,7 @@ void(vector it, float eq) stats_report =
 		p6('d', 'a', 'm', 'a', 'g', 'e');
 		newline();
 	}
-	if (stat_lit)
+	if(stat_lit)
 	{
 		p7('H', 'i', 't', ' ', 'a', 'd', 'd');
 		p4('s', ' ', '1', '-');
@@ -270,7 +275,7 @@ void(vector it, float eq) stats_report =
 		p1('e');
 		newline();
 	}
-	if (stat_cold)
+	if(stat_cold)
 	{
 		p7('H', 'i', 't', ' ', 'a', 'd', 'd');
 		p2('s', ' ');
@@ -283,7 +288,7 @@ void(vector it, float eq) stats_report =
 		newline();
 	
 	}
-	if (stat_magic)
+	if(stat_magic)
 	{
 		p7('H', 'i', 't', ' ', 'a', 'd', 'd');
 		p2('s', ' ');
@@ -292,11 +297,11 @@ void(vector it, float eq) stats_report =
 		p5('a', 'm', 'a', 'g', 'e');	
 		newline();
 	}
-	if (stat_spell)
+	if(stat_spell)
 	{
-		if (GetSpellLevel(self, stat_spell) >= 7)
+		if(GetSpellLevel(this, stat_spell) >= 7)
 			red = RED_ON;
-		if (stat_loc & SPELL)
+		if(stat_loc & SPELL)
 		{
 			p8('C', 'a', 's', 't', 's', ' ', 'l', 'e');
 			p4('v', 'e', 'l', ' ');
@@ -312,7 +317,7 @@ void(vector it, float eq) stats_report =
 		PrintSpellName(stat_spell & 63);
 		newline();
 	}
-	if (stat_resist_all)
+	if(stat_resist_all)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'A');
 		p2('l', 'l');
@@ -320,7 +325,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();
 	}
-	if (stat_resist_fire)
+	if(stat_resist_fire)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'F');
 		p4('i', 'r', 'e', ' ');
@@ -328,7 +333,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();
 	}
-	if (stat_resist_lit)
+	if(stat_resist_lit)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'L');
 		p8('i', 'g', 'h', 't', 'n', 'i', 'n', 'g');
@@ -337,7 +342,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();	
 	}
-	if (stat_resist_poison)
+	if(stat_resist_poison)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'P');
 		p6('o', 'i', 's', 'o', 'n', ' ');
@@ -345,7 +350,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();	
 	}
-	if (stat_resist_cold)
+	if(stat_resist_cold)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'C');
 		p4('o', 'l', 'd', ' ');
@@ -353,7 +358,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();
 	}
-	if (stat_resist_magic)
+	if(stat_resist_magic)
 	{
 		p8('R', 'e', 's', 'i', 's', 't', ' ', 'M');
 		p5('a', 'g', 'i', 'c', ' ');
@@ -361,7 +366,7 @@ void(vector it, float eq) stats_report =
 		p1('%');
 		newline();	
 	}
-	if (stat_attacker_dam)
+	if(stat_attacker_dam)
 	{
 		pnum(stat_attacker_dam);
 		p8('%', ' ', 'D', 'a', 'm', 'a', 'g', 'e');
@@ -369,7 +374,7 @@ void(vector it, float eq) stats_report =
 		p1('d');
 		newline();
 	}
-	if (stat_attacker_fire)
+	if(stat_attacker_fire)
 	{
 		p8('A', 't', 't', 'a', 'c', 'k', 'e', 'r');
 		p7(' ', 't', 'a', 'k', 'e', 's', ' ');
@@ -380,7 +385,7 @@ void(vector it, float eq) stats_report =
 		p4('m', 'a', 'g', 'e');
 		newline();
 	}
-	if (stat_attacker_lit)
+	if(stat_attacker_lit)
 	{
 		p8('A', 't', 't', 'a', 'c', 'k', 'e', 'r');
 		p8(' ', 't', 'a', 'k', 'e', 's', ' ', '1');
@@ -391,7 +396,7 @@ void(vector it, float eq) stats_report =
 		p1('e');
 		newline();
 	}
-	if (stat_attacker_cold)
+	if(stat_attacker_cold)
 	{
 		p8('A', 't', 't', 'a', 'c', 'k', 'e', 'r');
 		p7(' ', 't', 'a', 'k', 'e', 's', ' ');
@@ -402,7 +407,7 @@ void(vector it, float eq) stats_report =
 		p4('m', 'a', 'g', 'e');
 		newline();
 	}
-	if (stat_attacker_poison)
+	if(stat_attacker_poison)
 	{
 		p8('A', 't', 't', 'a', 'c', 'k', 'e', 'r');
 		p7(' ', 't', 'a', 'k', 'e', 's', ' ');
@@ -411,7 +416,7 @@ void(vector it, float eq) stats_report =
 		p6('D', 'a', 'm', 'a', 'g', 'e');
 		newline();
 	}
-	if (stat_magic_reduced)
+	if(stat_magic_reduced)
 	{
 		p8('M', 'a', 'g', 'i', 'c', ' ', 'D', 'a');
 		p8('m', 'a', 'g', 'e', ' ', 'R', 'e', 'd');
@@ -419,7 +424,7 @@ void(vector it, float eq) stats_report =
 		pnum(stat_magic_reduced);
 		newline();
 	}
-	if (stat_damage_reduced)
+	if(stat_damage_reduced)
 	{
 		p2('D', 'a');
 		p8('m', 'a', 'g', 'e', ' ', 'R', 'e', 'd');
@@ -427,15 +432,15 @@ void(vector it, float eq) stats_report =
 		pnum(stat_damage_reduced);
 		newline();
 	}
-	if (stat_spec)
+	if(stat_spec)
 	{
-		if (stat_spec & SPEC_STEAL_LIFE)
+		if(stat_spec & SPEC_STEAL_LIFE)
 		{
 			p8('H', 'i', 't', ' ', 's', 't', 'e', 'a');
 			p7('l', 's', ' ', 'l', 'i', 'f', 'e');
 			newline();
 		}
-		if (stat_spec & SPEC_KNOCKBACK)
+		if(stat_spec & SPEC_KNOCKBACK)
 		{
 			p8('H', 'i', 't', ' ', 'k', 'n', 'o', 'c');
 			p8('k', 's', ' ', 't', 'a', 'r', 'g', 'e');
@@ -443,20 +448,20 @@ void(vector it, float eq) stats_report =
 			newline();
 		}
 
-		if (stat_spec & SPEC_STEAL_MANA)
+		if(stat_spec & SPEC_STEAL_MANA)
 		{
 			p8('H', 'i', 't', ' ', 's', 't', 'e', 'a');
 			p7('l', 's', ' ', 'm', 'a', 'n', 'a');
 			newline();
 		}
-		if (stat_spec & SPEC_REPLENISH)
+		if(stat_spec & SPEC_REPLENISH)
 		{
-			if (stat_loc & DURABILITY)
+			if(stat_loc & DURABILITY)
 			{
 				p8('S', 'e', 'l', 'f', ' ', 'R', 'e', 'p');
 				p4('a', 'i', 'r', 's');
 			}
-			else if (stat_loc & CHARGES)
+			else if(stat_loc & CHARGES)
 			{
 				p8('R', 'e', 'p', 'l', 'e', 'n', 'i', 's');
 				p8('h', 'e', 's', ' ', 'C', 'h', 'a', 'r');
@@ -470,13 +475,13 @@ void(vector it, float eq) stats_report =
 			}
 			newline();
 		}
-		if (stat_spec & SPEC_DAZE)
+		if(stat_spec & SPEC_DAZE)
 		{
 			p8('H', 'i', 't', ' ', 'c', 'a', 'u', 's');
 			p7('e', 's', ' ', 'd', 'a', 'z', 'e');
 			newline();
 		}
-		if (stat_spec & SPEC_MORTAL_WOUND)
+		if(stat_spec & SPEC_MORTAL_WOUND)
 		{
 			p8('3', '0', '%', ' ', 'c', 'h', 'a', 'n');
 			p8('c', 'e', ' ', 'o', 'f', ' ', 'M', 'o');
@@ -484,156 +489,156 @@ void(vector it, float eq) stats_report =
 			p2('n', 'd');
 			newline();
 		}
-		if (stat_spec & SPEC_TWO_HITS)
+		if(stat_spec & SPEC_TWO_HITS)
 		{
 			p8('H', 'i', 't', 's', ' ', 'T', 'w', 'i');
 			p2('c', 'e');
 			newline();
 		}
-		if (stat_spec & SPEC_MAIM)
+		if(stat_spec & SPEC_MAIM)
 		{
 			p8('3', '0', '%', ' ', 'c', 'h', 'a', 'n');
 			p8('c', 'e', ' ', 'o', 'f', ' ', 'M', 'a');
 			p5('i', 'm', 'i', 'n', 'g');
 			newline();
 		}
-		if (stat_spec & SPEC_MELEE_IMMUNE)
+		if(stat_spec & SPEC_MELEE_IMMUNE)
 		{
 			p8('I', 'm', 'm', 'u', 'n', 'e', ' ', 't');
 			p8('o', ' ', 'M', 'e', 'l', 'e', 'e', ' ');
 			p4('H', 'i', 't', 's');
 		}
-		if (stat_spec & SPEC_MISSILE_IMMUNE)
+		if(stat_spec & SPEC_MISSILE_IMMUNE)
 		{
 			p8('I', 'm', 'm', 'u', 'n', 'e', ' ', 't');
 			p8('o', ' ', 'M', 'i', 's', 's', 'l', 'e');
 			p5(' ', 'H', 'i', 't', 's');
 		}
 	}
-	if (stat_skill)
+	if(stat_skill)
 	{
-		if (stat_skill & SKILL_EXPERIENCE)
+		if(stat_skill & SKILL_EXPERIENCE)
 		{
 			p8('I', 'n', 'c', 'r', 'e', 'a', 's', 'e');
 			p8('d', ' ', 'E', 'x', 'p', 'e', 'r', 'i');
 			p4('e', 'n', 'c', 'e');
 			newline();
 		}
-		if (stat_skill & SKILL_MELEE)
+		if(stat_skill & SKILL_MELEE)
 		{
 			p8('I', 'n', 'c', 'r', 'e', 'a', 's', 'e');
 			p8('d', ' ', 'M', 'e', 'l', 'e', 'e', ' ');
 			p6('D', 'a', 'm', 'a', 'g', 'e');
 			newline();
 		}
-		if (stat_skill & SKILL_BOW)
+		if(stat_skill & SKILL_BOW)
 		{
 			p8('I', 'n', 'c', 'r', 'e', 'a', 's', 'e');
 			p8('d', ' ', 'A', 'r', 'r', 'o', 'w', ' ');
 			p6('D', 'a', 'm', 'a', 'g', 'e');
 			newline();
 		}
-		if (stat_skill & SKILL_THROW)
+		if(stat_skill & SKILL_THROW)
 		{
 			p8('I', 'n', 'c', 'r', 'e', 'a', 's', 'e');
 			p8('d', ' ', 'T', 'h', 'r', 'o', 'w', ' ');
 			p6('D', 'a', 'm', 'a', 'g', 'e');
 			newline();
 		}
-		if (stat_skill & SKILL_SPELLS)
+		if(stat_skill & SKILL_SPELLS)
 		{
 			p8('I', 'n', 'c', 'r', 'e', 'a', 's', 'e');
 			p8('d', ' ', 'S', 'p', 'e', 'l', 'l', ' ');
 			p6('D', 'a', 'm', 'a', 'g', 'e');
 			newline();
 		}
-		if (stat_skill & SKILL_REPAIR)
+		if(stat_skill & SKILL_REPAIR)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('R', 'e', 'p', 'a', 'i', 'r', ' ', 'S');
 			p4('k', 'i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_IDENTIFY)
+		if(stat_skill & SKILL_IDENTIFY)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('I', 'd', 'e', 'n', 't', 'i', 'f', 'y');
 			p6(' ', 'S', 'k', 'i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_SPRINT)
+		if(stat_skill & SKILL_SPRINT)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('S', 'p', 'r', 'i', 'n', 't', ' ', 'S');
 			p4('k', 'i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_BRAWL)
+		if(stat_skill & SKILL_BRAWL)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('B', 'r', 'a', 'w', 'l', ' ', 'S', 'k');
 			p3('i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_RELOAD)
+		if(stat_skill & SKILL_RELOAD)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('R', 'e', 'l', 'o', 'a', 'd', ' ', 'S');
 			p4('k', 'i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_FLAME_ARROW)
+		if(stat_skill & SKILL_FLAME_ARROW)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('F', 'i', 'r', 'e', ' ', 'A', 'r', 'r');
 			p8('o', 'w', ' ', 'S', 'k', 'i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_DISCOUNT)
+		if(stat_skill & SKILL_DISCOUNT)
 		{
 			p8('S', 'h', 'o', 'p', ' ', 'D', 'i', 's');
 			p5('c', 'o', 'u', 'n', 't');
 			newline();
 		}
-		if (stat_skill & SKILL_BRIBE)
+		if(stat_skill & SKILL_BRIBE)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('B', 'r', 'i', 'b', 'e', ' ', 'S', 'k');
 			p3('i', 'l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_POTION)
+		if(stat_skill & SKILL_POTION)
 		{
 			p8('P', 'o', 't', 'i', 'o', 'n', ' ', 'T');
 			p8('r', 'a', 'n', 's', 'm', 'u', 't', 'a');
 			p4('t', 'i', 'o', 'n');	
 			newline();
 		}
-		if (stat_skill & SKILL_JUMP)
+		if(stat_skill & SKILL_JUMP)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('L', 'e', 'a', 'p', ' ', 'S', 'k', 'i');
 			p2('l', 'l');
 			newline();
 		}
-		if (stat_skill & SKILL_FRENZY)
+		if(stat_skill & SKILL_FRENZY)
 		{
-			if (it)
+			if(itslot)
 				p7('G', 'r', 'a', 'n', 't', 's', ' ');
 			p8('F', 'r', 'e', 'n', 'z', 'y', ' ', 'S');
 			p4('k', 'i', 'l', 'l');
 			newline();
 		}
 	}
-	if (stat_health_regen)
+	if(stat_health_regen)
 	{
 		p1('+');
 		pnum(stat_health_regen);
@@ -642,7 +647,7 @@ void(vector it, float eq) stats_report =
 		p4('t', 'i', 'o', 'n');
 		newline();
 	}
-	if (stat_mana_regen)
+	if(stat_mana_regen)
 	{
 		p1('+');
 		pnum(stat_mana_regen);
@@ -651,9 +656,9 @@ void(vector it, float eq) stats_report =
 		p2('o', 'n');
 		newline();
 	}
-	if (stat_aspeed)
+	if(stat_aspeed)
 	{
-		if (stat_aspeed > 0)
+		if(stat_aspeed > 0)
 		{
 			pnum(stat_aspeed);
 			p8('%', ' ', 'I', 'n', 'c', 'r', 'e', 'a');
@@ -672,10 +677,9 @@ void(vector it, float eq) stats_report =
 	}
 
 	
-	if (stat_req_str)
+	if(stat_req_str)
 	{
-
-		if (self.str < stat_req_str)
+		if(this.str < stat_req_str)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -685,9 +689,9 @@ void(vector it, float eq) stats_report =
 		newline();
 	}
 
-	if (stat_req_dex)
+	if(stat_req_dex)
 	{
-		if (self.dex < stat_req_dex)
+		if(this.dex < stat_req_dex)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -696,9 +700,9 @@ void(vector it, float eq) stats_report =
 		p2('t', 'y');
 		newline();
 	}
-	if (stat_req_mag)
+	if(stat_req_mag)
 	{
-		if (self.mag < stat_req_mag)
+		if(this.mag < stat_req_mag)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -707,9 +711,9 @@ void(vector it, float eq) stats_report =
 		p5('g', 'e', 'n', 'c', 'e');
 		newline();
 	}
-	if (stat_req_vit)
+	if(stat_req_vit)
 	{
-		if (self.vit < stat_req_vit)
+		if(this.vit < stat_req_vit)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -718,9 +722,9 @@ void(vector it, float eq) stats_report =
 		p1('y');
 		newline();
 	}
-	if (stat_req_luck)
+	if(stat_req_luck)
 	{
-		if (self.luck < stat_req_luck)
+		if(this.luck < stat_req_luck)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -728,9 +732,9 @@ void(vector it, float eq) stats_report =
 		p5(' ', 'L', 'u', 'c', 'k');
 		newline();
 	}
-	if (stat_req_agil)
+	if(stat_req_agil)
 	{
-		if (self.agil < stat_req_agil)
+		if(this.agil < stat_req_agil)
 			red = RED_ON;
 		p8('R', 'e', 'q', 'u', 'i', 'r', 'e', 's');
 		p1(' ');
@@ -738,25 +742,25 @@ void(vector it, float eq) stats_report =
 		p8(' ', 'A', 'g', 'i', 'l', 'i', 't', 'y');
 		newline();
 	}
-	if (stat_req_lvl)
+	if(stat_req_lvl)
 	{
-		if (self.lvl < stat_req_lvl)
+		if(this.lvl < stat_req_lvl)
 			red = RED_ON;
 		p8('M', 'u', 's', 't', ' ', 'b', 'e', ' ');
 		p6('L', 'e', 'v', 'e', 'l', ' ');
 		pnum(stat_req_lvl);
 		newline();
 	}
-	if (stat_req_class)
+	if(stat_req_class)
 	{
-		if (self.title_y != stat_req_class_y)
+		if(this.title_y != stat_req_class_y)
 			red = RED_ON;
 		p8('O', 'n', 'l', 'y', ' ', 'u', 's', 'a');
 		p7('b', 'l', 'e', ' ', 'b', 'y', ' ');
 		PrintClass(stat_req_class);
 		newline();
 	}
-	if (stat_target)
+	if(stat_target)
 	{
 		p8('S', 'p', 'e', 'c', 'i', 'a', 'l', ' ');
 		p5('P', 'o', 'w', 'e', 'r');
@@ -765,198 +769,186 @@ void(vector it, float eq) stats_report =
 }
 
 
-void (vector it, float eq) inven =
+void inven(entity this, vector itslot, float eq)
 {
-	pstart();
-	it_simplestat(it);
-	it_itemstat();
+	pstart(this);
+	it_simplestat(this, itslot);
+	it_itemstat(this);
 	PrintItemName();
 	newline();
 	line();
-	stats_report(it, eq);
-	if (vmfc)
+	stats_report(this, itslot, eq);
+	if(vmfc)
 	{
-		if (!self.vmodel)
-			self.vmodel = spawn();
-		self.vmodel.viewmodelforclient = self;
-		self.vmodel.effects = self.vmodel.effects | EF_NODEPTHTEST;
-		itemapplyeffects(self.vmodel);
-		self.vmodel.effects = self.vmodel.effects | EF_NODEPTHTEST;
-		self.vmodel.frame = 1;
+		if(!this.vmodel)
+			this.vmodel = spawn();
+		this.vmodel.viewmodelforclient = this;
+		this.vmodel.effects |= EF_NODEPTHTEST;
+		itemapplyeffects(this.vmodel);
+		this.vmodel.effects |= EF_NODEPTHTEST;
+		this.vmodel.frame = 1;
 	}
 	else
 	{
-		self.weaponmodel = itemmodel(stat_it);
-		self.weaponframe = 1;
+		this.weaponmodel = itemmodel(stat_it);
+		this.weaponframe = 1;
 	}
 
 	line();
-};
+}
 
 void setitems(entity this)
 {
-	local float g, i;
-	g = 0;
-	
-	for(i = 1; i< 8; i =i + 1)
+	int g = 0;
+
+	for(int i = 1; i< 8; i =i + 1)
 	{
-		if (GetSlot(self, i))
-			g = g | pow2(i);
+		if(GetSlot(this, i))
+			g = g | (2 ** i);
 	}
-	if (GetSlot(self, 8))
-		g = g | QI_SLOT8;
-	if (self.player)
+	if(GetSlot(this, 8))
+		g |= QI_SLOT8;
+	if(this.player)
 	{
-		if (self.player.poison_count > 0)
-			g = g | QI_POISON;
-		if (self.player.cold_time > time)
-			g = g | QI_FROZEN; 
+		if(this.player.poison_count > 0)
+			g |= QI_POISON;
+		if(this.player.cold_time > time)
+			g |= QI_FROZEN; 
 	}
 		
-	self.items = g;
-};
+	this.items = g;
+}
 
 
-void() m_inven =
+void m_inven(entity this)
 {
-	local float r, f;
-	local vector it;
-	local entity e;
-	
-	it = GetSlot(self.m_subject, root2(self.weapon));
+	vector itslot = GetSlot(this.m_subject, root2(this.weapon));
 
-	if (self.menu < 1)
-		self.menu = 6;
-	else if (self.menu > 6)
-		self.menu = 1;
+	if(this.menu < 1)
+		this.menu = 6;
+	else if(this.menu > 6)
+		this.menu = 1;
 
-	r = self.menu;
+	float r = this.menu;
+	float f;
 
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (r == 1)
+		this.button1 = 0;
+		if(r == 1)
 		{
-			e = self;
-			self = self.m_subject;
-			it_simplestat(it);
-			it_itemstat();
-			if (stat_loc & EQUIPABLE)
+			it_simplestat(this, itslot);
+			it_itemstat(this);
+			if(stat_loc & EQUIPABLE)
 			{
-				if (self.equip & e.weapon)
-					Unequip(root2(e.weapon), 1);
-				else if (!Equip(root2(e.weapon)))
-					sprint(e, "Can't!\n");
+				if(this.m_subject.equip & this.weapon)
+					Unequip(this.m_subject, root2(this.weapon), 1);
+				else if(!Equip(this.m_subject, root2(this.weapon)))
+					sprint(this, "Can't!\n");
 				// fixme
 				// 	go errrn!
 			}
-			if (stat_loc & USABLE)
-				Use(root2(e.weapon));
-			self = e;
-			
-			
+			if(stat_loc & USABLE)
+				Use(this.m_subject, root2(this.weapon));
 		}
-		else if (r == 2)
+		else if(r == 2)
 		{
-			f = root2(self.weapon);
+			f = root2(this.weapon);
 			f = f + 1;
-			if (f > TOTAL_SLOTS)
+			if(f > TOTAL_SLOTS)
 				f = 1;
-			self.weapon = pow2(f);
-			it = GetSlot(self.m_subject, f);
+			this.weapon = (2 ** f);
+			itslot = GetSlot(this.m_subject, f);
 		}
-		else if (r == 3)
+		else if(r == 3)
 		{
-			f = root2(self.weapon);
+			f = root2(this.weapon);
 			f = f - 1;
-			if (f < 1)
+			if(f < 1)
 				f = TOTAL_SLOTS;
-			self.weapon = pow2(f);
-			it = GetSlot(self.m_subject, f);
+			this.weapon = (2 ** f);
+			itslot = GetSlot(this.m_subject, f);
 		}
-		else if (r == 4)
+		else if(r == 4)
 		{
-			f = root2(self.weapon);
-			e = self;
-			self = self.m_subject;
-			Unequip(f, 1); // if equipped
+			f = root2(this.weapon);
+			Unequip(this.m_subject, f, 1); // if equipped
 		
-			dropitem(it);
-			ClearSlot(self, f);
-			self = e;
-			it = IV_NULL;
+			dropitem(this.m_subject, itslot);
+			ClearSlot(this.m_subject, f);
+			itslot = IV_NULL;
 		}
-		else if (r == 5)
+		else if(r == 5)
 		{
-			it_simplestat(it);
-			it_itemstat();
-			if (stat_loc & STACKABLE)
-				openmenu(self, m_split, self.m_subject);
+			it_simplestat(this, itslot);
+			it_itemstat(this);
+			if(stat_loc & STACKABLE)
+				openmenu(this, m_split, this.m_subject);
 			return;
 		}
-		else if (r == 6)
+		else if(r == 6)
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		inven(it, fabs(self.m_subject.equip & self.weapon) + 1);
+		inven(this, itslot, fabs(this.m_subject.equip & this.weapon) + 1);
 		padlines(9);
-		if (stat_loc & EQUIPABLE)
+		if(stat_loc & EQUIPABLE)
 		{
-			if (self.m_subject.equip & self.weapon)
+			if(this.m_subject.equip & this.weapon)
 			{
-				if (self.menu == 1)
+				if(this.menu == 1)
 					WriteString(msg_mode, "\n\{141}\[\1\] Unequip      \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 2)
+				else if(this.menu == 2)
 					WriteString(msg_mode, "\n \[\1\] Unequip      \n\{141}\[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 3)
+				else if(this.menu == 3)
 					WriteString(msg_mode, "\n \[\1\] Unequip      \n \[\2\] Next Item    \n\{141}\[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 4)
+				else if(this.menu == 4)
 					WriteString(msg_mode, "\n \[\1\] Unequip      \n \[\2\] Next Item    \n \[\3\] Previous Item\n\{141}\[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 5)
+				else if(this.menu == 5)
 					WriteString(msg_mode, "\n \[\1\] Unequip      \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n\{141}\[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 6)
+				else if(this.menu == 6)
 					WriteString(msg_mode, "\n \[\1\] Unequip      \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n\{141}\[\6\] Exit         \n");
 
 			}
 			else
 			{
-				if (self.menu == 1)
+				if(this.menu == 1)
 					WriteString(msg_mode, "\n\{141}\[\1\] Equip        \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 2)
+				else if(this.menu == 2)
 					WriteString(msg_mode, "\n \[\1\] Equip        \n\{141}\[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 3)
+				else if(this.menu == 3)
 					WriteString(msg_mode, "\n \[\1\] Equip        \n \[\2\] Next Item    \n\{141}\[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 4)
+				else if(this.menu == 4)
 					WriteString(msg_mode, "\n \[\1\] Equip        \n \[\2\] Next Item    \n \[\3\] Previous Item\n\{141}\[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 5)
+				else if(this.menu == 5)
 					WriteString(msg_mode, "\n \[\1\] Equip        \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n\{141}\[\5\] Split        \n \[\6\] Exit         \n");
-				else if (self.menu == 6)
+				else if(this.menu == 6)
 					WriteString(msg_mode, "\n \[\1\] Equip        \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n\{141}\[\6\] Exit         \n");
 
 			}			
 		}
 		else
 		{
-			if (self.menu == 1)
+			if(this.menu == 1)
 				WriteString(msg_mode, "\n\{141}\[\1\] Use          \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-			else if (self.menu == 2)
+			else if(this.menu == 2)
 				WriteString(msg_mode, "\n \[\1\] Use          \n\{141}\[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-			else if (self.menu == 3)
+			else if(this.menu == 3)
 				WriteString(msg_mode, "\n \[\1\] Use          \n \[\2\] Next Item    \n\{141}\[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-			else if (self.menu == 4)
+			else if(this.menu == 4)
 				WriteString(msg_mode, "\n \[\1\] Use          \n \[\2\] Next Item    \n \[\3\] Previous Item\n\{141}\[\4\] Drop         \n \[\5\] Split        \n \[\6\] Exit         \n");
-			else if (self.menu == 5)
+			else if(this.menu == 5)
 				WriteString(msg_mode, "\n \[\1\] Use          \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n\{141}\[\5\] Split        \n \[\6\] Exit         \n");
-			else if (self.menu == 6)
+			else if(this.menu == 6)
 				WriteString(msg_mode, "\n \[\1\] Use          \n \[\2\] Next Item    \n \[\3\] Previous Item\n \[\4\] Drop         \n \[\5\] Split        \n\{141}\[\6\] Exit         \n");
 
 		}
 	}
-};
+}
 /*
  \[\1\] Equip        \n
  \[\2\] Next Item    \n

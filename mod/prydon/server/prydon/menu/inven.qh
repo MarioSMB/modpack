@@ -1,0 +1,7 @@
+#pragma once
+
+void inven(entity this, vector itslot, float eq);
+
+void m_inven(entity this);
+
+void stats_report(entity this, vector itslot, float eq);

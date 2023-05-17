@@ -1,0 +1,3 @@
+#pragma once
+
+void h_camera(entity this);

@@ -6,15 +6,14 @@ void h_stuff(entity this)
 	{
 		if(this.fade > 0)
 		{
-			// TODO
-			stuffcmd(this, sprintf("v_cshift 0 0 0 %d; volume %d\n", this.fade, 1 - (this.fade / 255)));
+			stuffcmd(this, sprintf("v_cshift 0 0 0 %d\n", this.fade));
 			
 			this.fade = this.fade - 10;
 			this.fadetime = time + 0.1;
 		}
 		else if(this.fade < 0)
 		{
-			stuffcmd(this, sprintf("v_cshift 0 0 0 %d; volume %d\n", this.fade + 245, this.fade / -255));
+			stuffcmd(this, sprintf("v_cshift 0 0 0 %d\n", this.fade + 245));
 			
 			this.fade = this.fade + 10;
 			this.fadetime = time + 0.1;
@@ -39,9 +38,7 @@ void h_stuff(entity this)
 		if(lastmap == 1)
 			this.fade = 250;
 		else
-			stuffcmd(this, "v_cshift 0 0 0 0; volume 1\n");
-		if(lastmap <= 1 || this.sounds)
-			stuffcmd(this, "exec prydon.cfg\n");
+			stuffcmd(this, "v_cshift 0 0 0 0\n");
 		this.gotstuff = 0;
 		if(fileaccess)
 		{

@@ -1,140 +1,138 @@
+#include "bow.qh"
 
-void() arrow_touch =
+#include "../spells/spells.qh"
+#include "../spells/sval.qh"
+#include "../subs/combat.qh"
+#include "../subs/subs.qh"
+
+void arrow_touch(entity this, entity toucher)
 {
-	local entity oself;
-	oself = self;
-	
-	if (other == self.owner)
+	if(toucher == this.owner)
 		return;
 
-	if (other.takedamage)
-		if (!friendly(self.enemy, other))
-			if (self.fire)
-				FireDamage(self.enemy, other, self.fire);
-	if (Hit(self.enemy, other, SKILL_BOW))
+	if(toucher.takedamage)
+		if(!friendly(this.enemy, toucher))
+			if(this.fire)
+				FireDamage(this.enemy, toucher, this.fire);
+	if(Hit(this.enemy, toucher, SKILL_BOW))
 	{
-
-		self = oself;
-		sound(self, CHAN_AUTO, "player/arrowhit.wav", 1, ATTN_NORM);
-		remove(self);
+		_sound(this, CHAN_AUTO, "player/arrowhit.wav", 1, ATTN_NORM);
+		delete(this);
 	}
-	else if (other == world)
+	else if(!toucher)
 	{
-		if (self.enemy.classname == "dummy")
+		if(this.enemy.classname == "dummy")
 		{
-			self.velocity = '0 0 0';
-			self.touch = SUB_Null;
-			self.owner = world;
-			self.think = death_fade;
-			self.alpha = 1;
-			self.nextthink = time + 8;
+			this.velocity = '0 0 0';
+			settouch(this, func_null);
+			this.owner = NULL;
+			setthink(this, death_fade);
+			this.alpha = 1;
+			this.nextthink = time + 8;
 		}
 		else
-			remove(self);
+			delete(this);
 	}
 	else
 	{
-		self = oself;
-		self.owner = other;
-		self.velocity = self.dest1;
-		self.think = fix_velocity;
-		self.ltime = self.nextthink;
-		self.nextthink = time;
+		this.owner = toucher;
+		this.velocity = this.dest1;
+		setthink(this, fix_velocity);
+		this.ltime = this.nextthink;
+		this.nextthink = time;
 	}
-};
+}
 
-void() firearrow =
+void firearrow(entity this)
 {
-	local entity e;
-	if (self.classname == "dummy")
+	if(this.classname == "dummy")
 	{
-		if (!takeammo(IT_ARROWS)) // arrows
+		if(!takeammo(this.owner, IT_ARROWS)) // arrows
 		{
-			sprint(self.owner, "Out of arrows\n");
+			sprint(this.owner, "Out of arrows\n");
 			return;
 		}
 	}
-	sound(self, CHAN_BODY, "player/arrowuse.wav", 1, ATTN_NORM);
-	e = launch_projectile(0, 500, BIG_DISTANCE, "progs/arrow.mdl");
-	e.touch = arrow_touch;
-};
+	_sound(this, CHAN_BODY, "player/arrowuse.wav", 1, ATTN_NORM);
+	entity e = launch_projectile(this, 0, 500, BIG_DISTANCE, "progs/arrow.mdl");
+	settouch(e, arrow_touch);
+}
 
-void() firefirearrow =
+void firefirearrow(entity this)
 {
-	local entity e;
-	float lev, dam;
-	if (self.classname == "dummy")
+	if(this.classname == "dummy")
 	{
-		if (!takeammo(IT_ARROWS)) // arrows
+		if(!takeammo(this.owner, IT_ARROWS)) // arrows
 		{
-			sprint(self.owner, "Out of arrows\n");
+			sprint(this.owner, "Out of arrows\n");
 			return;
 		}
 	}
-	sound(self, CHAN_BODY, "player/arrowuse.wav", 1, ATTN_NORM);
-	e = launch_projectile(0, 500, BIG_DISTANCE, "progs/arrow.mdl");
-	lev = GetSpellLevel(self.owner, SP_FLAME_ARROW);
-	dam = lev * lev * 5;
+	_sound(this, CHAN_BODY, "player/arrowuse.wav", 1, ATTN_NORM);
+	entity e = launch_projectile(this, 0, 500, BIG_DISTANCE, "progs/arrow.mdl");
+	float lev = GetSpellLevel(this.owner, SP_FLAME_ARROW);
+	float dam = lev * lev * 5;
 	e.fire = e.fire + dam;
 	e.effects = EF_DIMLIGHT;
 	e.skin = 1;
-	e.touch = arrow_touch;
-};
+	settouch(e, arrow_touch);
+}
 
-
-void () bow_frames = [0, bow_frames]
+void bow_frames(entity this)
 {
-	
+	set_anim(this, 0, bow_frames);
 		
-	self.frame = self.jumpframes + self.walkframe;
+	this.frame = this.jumpframes + this.walkframe;
 
-	if (self.frame >= self.bowframes)
+	if(this.frame >= this.bowframes)
 	{
-		self.walkframe = 0;
-		self.think = AnimatePlayer;
-		self.nextthink = time + 0.1;
+		this.walkframe = 0;
+		setthink(this, AnimatePlayer);
+		this.nextthink = time + 0.1;
 	}
 	else
-		self.walkframe = self.walkframe + 1;
-	face(1);
-	if (self.walkframe == 3)
+		this.walkframe = this.walkframe + 1;
+	face(this, 1);
+	if(this.walkframe == 3)
 	{
-		if (self.gotstuff == SP_FLAME_ARROW)
-			firefirearrow();
+		if(this.gotstuff == SP_FLAME_ARROW)
+			firefirearrow(this);
 		else
-			firearrow();
+			firearrow(this);
 	}
-};
+}
 
-void() bowattack1 =
+void bowattack1(entity this)
 {
-	self.walkframe = 1;
-	bow_frames();
-};
+	this.walkframe = 1;
+	bow_frames(this);
+}
 
-void () cbow_frames = [0, cbow_frames]
+void cbow_frames(entity this)
 {
-	self.frame = self.doubleattack + self.walkframe;
+	set_anim(this, 0, cbow_frames);
+	this.frame = this.doubleattack + this.walkframe;
 
-	if (self.frame >= self.cbowframes)
+	if(this.frame >= this.cbowframes)
 	{
-		self.walkframe = 0;
-		self.think = AnimatePlayer;
-		self.nextthink = time + 0.1;
+		this.walkframe = 0;
+		setthink(this, AnimatePlayer);
+		this.nextthink = time + 0.1;
 	}
 	else
-		self.walkframe = self.walkframe + 1;
-	face(1);
-	if (self.walkframe == 3)
+		this.walkframe = this.walkframe + 1;
+	face(this, 1);
+	if(this.walkframe == 3)
 	{
-		if (self.gotstuff == SP_FLAME_ARROW)
-			firefirearrow();
+		if(this.gotstuff == SP_FLAME_ARROW)
+			firefirearrow(this);
 		else
-			firearrow();
+			firearrow(this);
 	}
-};
-void() cbowattack1 = 
+}
+
+void cbowattack1(entity this)
 {
-	self.walkframe = 1;
-	cbow_frames();
-};
+	this.walkframe = 1;
+	cbow_frames(this);
+}

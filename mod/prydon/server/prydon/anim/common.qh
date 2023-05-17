@@ -1,0 +1,5 @@
+#pragma once
+
+void face(entity this, float figure_aspeed);
+
+bool range_check(entity this, float sp, entity e);

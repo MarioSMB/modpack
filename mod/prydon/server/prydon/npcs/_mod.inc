@@ -1,0 +1,6 @@
+#include "dialog.qc"
+#include "monster.qc"
+#include "mspawn.qc"
+#include "mval.qc"
+#include "npcs.qc"
+#include "pmonster.qc"

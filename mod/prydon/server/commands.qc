@@ -25,8 +25,8 @@ void IRCSay(string msgstr)
 
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if (!IS_CLIENT(client)) return false;
-	else if (must_be_real && !IS_REAL_CLIENT(client)) return false;
+	if(!IS_CLIENT(client)) return false;
+	else if(must_be_real && !IS_REAL_CLIENT(client)) return false;
 
 	return true;
 }
@@ -34,7 +34,7 @@ float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 // is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number)
 {
-	if ((tmp_number < 1) || (tmp_number > maxclients)) return false;
+	if((tmp_number < 1) || (tmp_number > maxclients)) return false;
 	else return true;
 }
 
@@ -50,18 +50,18 @@ entity GetIndexedEntity(float argc, float start_index)
 	index = start_index;
 	selection = NULL;
 
-	if (argc > start_index)
+	if(argc > start_index)
 	{
-		if (substring(argv(index), 0, 1) == "#")
+		if(substring(argv(index), 0, 1) == "#")
 		{
 			tmp_string = substring(argv(index), 1, -1);
 			++index;
 
-			if (tmp_string != "")  // is it all one token? like #1
+			if(tmp_string != "")  // is it all one token? like #1
 			{
 				tmp_number = stof(tmp_string);
 			}
-			else if (argc > index)  // no, it's two tokens? # 1
+			else if(argc > index)  // no, it's two tokens? # 1
 			{
 				tmp_number = stof(argv(index));
 				++index;
@@ -77,7 +77,7 @@ entity GetIndexedEntity(float argc, float start_index)
 			++index;
 		}
 
-		if (VerifyClientNumber(tmp_number))
+		if(VerifyClientNumber(tmp_number))
 		{
 			selection = edict_num(tmp_number);  // yes, it was a number
 		}
@@ -107,12 +107,12 @@ void cmd_stuffto(float argc)
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
 
 #ifdef STUFFTO_ENABLED
-	if (argv(2))
+	if(argv(2))
 	{
 		entity client = GetIndexedEntity(argc, 1);
 		float accepted = VerifyClientEntity(client, true, false);
 
-		if (accepted > 0)
+		if(accepted > 0)
 		{
 			stuffcmd(client, strcat("\n", argv(next_token), "\n"));
 			LOG_INFO(strcat("Command: \"", argv(next_token), "\" sent to ", client.netname, " (", argv(1), ").\n"));
@@ -181,7 +181,7 @@ void GameCommand(string command)
 	{
 		string thecmd = cvar_string(strcat("sv_info_", argv(1)));
 
-		if (thecmd) wordwrap_sprint(NULL, thecmd, 1000);
+		if(thecmd) wordwrap_sprint(NULL, thecmd, 1000);
 		else LOG_INFO("ERROR: unsupported info command");
 		return;
 	}

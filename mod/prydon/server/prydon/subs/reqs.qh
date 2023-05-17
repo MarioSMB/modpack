@@ -1,0 +1,5 @@
+#pragma once
+
+int CheckStory(entity e);
+
+bool RequirementsMet(entity sub, entity test);

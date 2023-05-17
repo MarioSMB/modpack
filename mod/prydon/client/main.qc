@@ -11,7 +11,7 @@ void CSQC_Init()
 	{
 		int i = 0;
 		for ( ; i < 255; ++i)
-			if (getplayerkeyvalue(i, "viewentity") == "")
+			if(getplayerkeyvalue(i, "viewentity") == "")
 				break;
 		maxclients = i;
 	}
@@ -52,7 +52,7 @@ STATIC_INIT_LATE(LoadMenuSkinValues)
 		while((s = fgets(fh)))
 		{
 			int n = tokenize_console(s);
-			if (n < 2)
+			if(n < 2)
 				continue;
 			if(substring(argv(0), 0, 2) == "//")
 				continue;
@@ -118,9 +118,9 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	}
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if (this.enttype)
+	if(this.enttype)
 	{
-		if (t != this.enttype || isnew)
+		if(t != this.enttype || isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
@@ -130,7 +130,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	}
 	else
 	{
-		if (!isnew)
+		if(!isnew)
 		{
 			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
 			isnew = true;
@@ -140,15 +140,15 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, {
-		if (isnew) this.classname = it.netname;
-		if (autocvar_developer_csqcentities)
+		if(isnew) this.classname = it.netname;
+		if(autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		//MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
 	});
 	time = savetime;
-	if (!done)
+	if(!done)
 	{
 		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 	}
@@ -178,13 +178,13 @@ void Ent_Remove(entity this)
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove(entity this)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
-	if (wasfreed(this))
+	if(autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if(wasfreed(this))
 	{
 		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
 		return;
 	}
-	if (this.enttype) Ent_Remove(this);
+	if(this.enttype) Ent_Remove(this);
 	delete(this);
 }
 
@@ -193,7 +193,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
+	if(autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
 	centerprint_hud(strMessage);
 }
 
@@ -206,12 +206,12 @@ bool CSQC_Parse_TempEntity()
 	int nTEID = ReadByte();
 
 	FOREACH(TempEntities, it.m_id == nTEID, {
-		if (autocvar_developer_csqcentities)
+		if(autocvar_developer_csqcentities)
 			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
 		return it.m_read(NULL, NULL, true);
 	});
 
-	if (autocvar_developer_csqcentities)
+	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
 	// No special logic for this temporary entity; return 0 so the engine can handle it
@@ -225,4 +225,29 @@ STATIC_INIT(PlayerSlots_Spawn)
 		entity e = playerslots[j] = new_pure(playerslot);
 		e.sv_entnum = j;
 	}
+}
+
+.vector vorg1, vorg2;
+void Lightning_Draw(entity this)
+{
+	string tex;
+	//tex = "particles/lgbeam";
+	tex = "particles/gauntletbeam";
+
+	Draw_CylindricLine(this.vorg1, this.vorg2, 6, tex, 0.25, -time * 3, '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
+}
+
+NET_HANDLE(TE_CSQC_LIGHTNING, bool isNew)
+{
+	Net_Accept(lightning);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.15;
+	this.draw = Lightning_Draw;
+	if (isNew) IL_PUSH(g_drawables, this);
+	this.drawmask = MASK_NORMAL;
+
+	this.vorg1 = ReadVector();
+	this.vorg2 = ReadVector();
+
+	return true;
 }

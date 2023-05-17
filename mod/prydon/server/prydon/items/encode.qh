@@ -1,0 +1,11 @@
+#pragma once
+
+vector it_setstat();
+
+void it_simplestat(entity this, vector itslot);
+
+void it_clearstats();
+
+vector decodeitem();
+
+void encodeitem(entity this, vector itslot);

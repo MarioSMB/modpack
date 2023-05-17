@@ -1,8 +1,13 @@
+#include "use.qh"
 
-bool canuse(vector it)
+#include "../spells/_mod.qh"
+#include "../stats/stats.qh"
+#include "../subs/trigger.qh"
+
+bool canuse(entity this, vector itslot)
 {
-	it_simplestat(it);
-	it_itemstat();
+	it_simplestat(this, itslot);
+	it_itemstat(this);
 	
 	if((stat_dur) <= 0 && (stat_loc & (DURABILITY | STACKABLE)))
 		return false;
@@ -48,7 +53,7 @@ bool UseItem(entity this, float sign)
 {
 	// itemstat must be done!
 	// (normally canuse will do it)
-	GenStat(-1);	
+	GenStat(this, -1);	
 	if(stat_health)
 		this.max_health = this.max_health + (stat_health * sign);
 	if(stat_str)
@@ -171,7 +176,7 @@ bool UseItem(entity this, float sign)
 		}
 	}
 
-	GenStat(1);
+	GenStat(this, 1);
 	if(stat_loc & BODY)
 	{
 		if(this.player)
@@ -328,18 +333,18 @@ bool Use(entity this, int slot)
 {
 	vector itslot = GetSlot(this, slot);
 	
-	if(canuse(itslot))
+	if(canuse(this, itslot))
 	{
 		if(stat_loc & USE_ON_ITEM)
 		{
-			this.weapon = pow2(slot);
+			this.weapon = (2 ** slot);
 			openmenu(this, m_useon, this);
 		}
 		else if(stat_loc & USABLE)
 		{
 			if(UseItem(this, 1))
 			{
-				sound(this, CHAN_AUTO, itemsound(stat_it), 1, ATTN_NORM);	
+				_sound(this, CHAN_AUTO, itemsound(stat_it), 1, ATTN_NORM);	
 				if(!(stat_loc & INFINITE))
 				{
 					if(stat_loc & STACKABLE)

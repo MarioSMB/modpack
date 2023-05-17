@@ -14,3 +14,5 @@
 #include "view.qc"
 #include "sbar.qc"
 #include "centerprint.qc"
+
+#include "prydon/_mod.inc"

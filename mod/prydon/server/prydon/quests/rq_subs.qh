@@ -1,0 +1,33 @@
+#pragma once
+
+float rq_templateforquest(vector v);
+
+vector rq_itemforquest(vector v);
+
+string rq_modelforquest(entity this, vector v);
+
+string rq_npcnameforquest(vector v);
+
+void rq_villantype(entity this, vector v);
+
+void rq_npcsetreward(entity e);
+
+entity rq_getscenario(vector v);
+
+float rq_objectives();
+
+void rq_docomplete();
+
+bool rq_iscomplete();
+
+float rq_difficulty(vector v);
+
+void rq_doaccept(entity snpc, entity splayer);
+
+void rq_advance(float obj);
+
+float rq_shouldreward(entity snpc, entity splayer);
+
+vector rq_generate();
+
+void rq_goalpoint(entity this);

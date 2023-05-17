@@ -1,94 +1,96 @@
+#include "map.qh"
 
-void() item_touch =
+#include "../subs/reqs.qh"
+
+void item_touch(entity this, entity toucher)
 {
-	if (other == world)
+	if(!toucher)
 	{
-		it_simplestat(self.slot1);
-		sound(self, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
-		self.avelocity = '0 0 0';
-		self.angles_z = self.angles_x = 0;
-		self.frame = 0;
-		self.touch = SUB_Null;
-		if (self.gp)
-			self.action = openitembuy;
+		it_simplestat(this, this.slot1);
+		_sound(this, CHAN_BODY, itemsound(stat_it), 1, ATTN_NORM);
+		this.avelocity = '0 0 0';
+		this.angles_z = this.angles_x = 0;
+		this.frame = 0;
+		settouch(this, func_null);
+		if(this.gp)
+			this.action = openitembuy;
 		else
-			self.action = action_pickup;
+			this.action = action_pickup;
 	}
-	else if (self.flags & FL_ONGROUND)
+	else if(IS_ONGROUND(this))
 	{
-		if (self.gp)
-			self.action = openitembuy;
+		if(this.gp)
+			this.action = openitembuy;
 		else
-			self.action = action_pickup;
+			this.action = action_pickup;
 	}
-};
+}
 
-
-
-void() item =
+spawnfunc(item)
 {
-	self.classname = "item";
-	if (CheckStory(self))
+	this.classname = "item";
+	if(CheckStory(this))
 	{
-		remove(self);
+		delete(this);
 		return;
 	}
-	legacy_item(0);
-	it_simplestat(self.slot1);
+	legacy_item(this, 0);
+	it_simplestat(this, this.slot1);
 	
-	if (!stat_it && !self.fallz)
+	if(!stat_it && !this.fallz)
 	{
-		remove(self);
+		delete(this);
 		return;
 	}
-	itemapplyeffects(self);
+	itemapplyeffects(this);
 	
-	setsize (self, '-16 -16 0', '16 16 5');
-	self.flags = FL_ITEM;		// make extra wide
-	self.solid = SOLID_TRIGGER;
-	self.movetype = MOVETYPE_TOSS;
-	self.effects = self.effects | EF_SELECTABLE;
-	self.touch = item_touch;
-	if (self.menu)
-		self.gp = self.menu;
-};
+	setsize (this, '-16 -16 0', '16 16 5');
+	this.flags = FL_ITEM;		// make extra wide
+	this.solid = SOLID_TRIGGER;
+	set_movetype(this, MOVETYPE_TOSS);
+	this.effects |= EF_SELECTABLE;
+	settouch(this, item_touch);
+	if(this.menu)
+		this.gp = this.menu;
+}
 
-void() shopitem =
+spawnfunc(shopitem)
 {
-	if (!self.angles_y)
-		self.angles_y = random() * 360;
+	if(!this.angles_y)
+		this.angles_y = random() * 360;
 		
-	if (self.fallz)
+	if(this.fallz)
 	{
-		legacy_item(1);
-		self.slot1 = randitem(self.slot1_x, itemvalue, self.fallz);
-		if (self.fallz & 1)
+		legacy_item(this, 1);
+		this.slot1 = randitem(this, this.slot1_x, itemvalue, this.fallz);
+		if(this.fallz & 1)
 		{
-			if (!self.netname)
-				self.netname = "wepshop";
+			if(!this.netname)
+				this.netname = "wepshop";
 		}
-		else if (self.fallz & 2)
+		else if(this.fallz & 2)
 		{
-			if (!self.netname)
-				self.netname = "magshop";
+			if(!this.netname)
+				this.netname = "magshop";
 		}
 	}
 	else
-		legacy_item(0);
-	it_simplestat(self.slot1);
-	it_itemstat();
-	if (!self.gp)
-		self.gp = stat_price; // fixme
-	item();
-};
-void() armoryitem =
-{
-	self.fallz = self.fallz | 1;
-	shopitem();
-};
-void() magicitem =
-{
-	self.fallz = self.fallz | 2;
-	shopitem();
-};
+		legacy_item(this, 0);
+	it_simplestat(this, this.slot1);
+	it_itemstat(this);
+	if(!this.gp)
+		this.gp = stat_price; // fixme
+	spawnfunc_item(this);
+}
 
+spawnfunc(armoryitem)
+{
+	this.fallz |= 1;
+	spawnfunc_shopitem(this);
+}
+
+spawnfunc(magicitem)
+{
+	this.fallz |= 2;
+	spawnfunc_shopitem(this);
+}

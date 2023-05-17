@@ -1,5 +1,10 @@
 #include "anim.qh"
 
+#include "ai.qh"
+#include "common.qh"
+#include "../spells/cast.qh"
+#include "../subs/subs.qh"
+
 void AnimatePlayer(entity this)
 {
 	if(this.player)
@@ -7,173 +12,168 @@ void AnimatePlayer(entity this)
 		
 	setthink(this, AnimatePlayer);
 	this.nextthink = time;
-	CSQCMODEL_AUTOUPDATE(this);
-	if (this.groundentity)
-		this.flags = this.flags | FL_PARTIALGROUND;
-	if (pointcontents(this.origin - '0 0 22') == CONTENT_LAVA)
+	if(this.groundentity)
+		this.flags |= FL_PARTIALGROUND;
+	if(pointcontents(this.origin - '0 0 22') == CONTENT_LAVA)
 	{
-		bprint(this.owner.netname);
-		bprint(" fell into the lava\n");
-		PlayerDie(FALSE);
+		bprintf("%s fell into the lava\n", this.owner.netname);
+		PlayerDie(this, false);
 		
 		return;
 	}
-	else if (this.owner.health <= 0)
+	else if(this.owner.health <= 0)
 	{
-		bprint(this.owner.netname);
-		bprint(" died mysteriously\n");
-		PlayerDie(FALSE);
+		bprintf("%s died mysteriously\n", this.owner.netname);
+		PlayerDie(this, false);
 		return;
 	}	
-	if (!this.flags & FL_ONGROUND)
+	if(!IS_ONGROUND(this))
 		this.fallz = this.velocity_z;
-	else if (this.fallz)
+	else if(this.fallz)
 	{
 		if(this.fallz < -500)
 		{
 			bprintf("%s fell to his death\n", this.owner.netname);
-			PlayerDie(this, FALSE);
+			PlayerDie(this, false);
 			return;
 		}
 		this.fallz = 0;
 	}
-	if (this.classname == "dummy" || this.classname == "helper")
+	if(this.classname == "dummy" || this.classname == "helper")
 	{
-		entity t = find(NULL, classname, "helper");
-		while(t)
+		FOREACH_ENTITY_CLASS("helper", true,
 		{
-			t.solid = SOLID_TRIGGER;
-			setorigin(t, t.origin);
-			t = find(t, classname, "helper");
-		}
+			it.solid = SOLID_TRIGGER;
+			setorigin(it, it.origin); // relink?
+		});
 	}
-	if (this.cold_time < time)
+	if(this.cold_time < time)
 	{
-		if (this.cold_factor != 1)
+		if(this.cold_factor != 1)
 		{
 			this.cold_factor = 1;
 			this.pausetime = time;
 		}
 	}
 
-	if (this.sbarsub && this.goalentity != this.sbarsub)
+	if(this.sbarsub && this.goalentity != this.sbarsub)
 	{
-		if (vlen(this.sbarsub.origin - this.origin) > 256)
-			end_hunt();
+		if(vdist(this.sbarsub.origin - this.origin, >, 256))
+			end_hunt(this);
 	}
 	setorigin(this, this.origin); // force retouch triggers
-	if (this.goalentity)
+	if(this.goalentity)
 	{
 		entity e = this.goalentity;
 		vector org = e.origin;
-		if (org == '0 0 0')
+		if(org == '0 0 0')
 		{
 			org = (e.absmin + e.absmax) * 0.5;
 			org_z = this.origin_z;
 		}
 		vector old = this.origin;
 		org_z = (old_z + org_z * 3) * 0.25;
-		if (this.goalentity.deadflag)
+		if(this.goalentity.deadflag)
 		{
 			this.enemy = NULL;
-			end_hunt();
+			end_hunt(this);
 		}
 		else
 		{
-			if (range_check(this.gotstuff, this.goalentity))
+			if(range_check(this, this.gotstuff, this.goalentity))
 			{
 			
-				if (this.daze_time > time)
+				if(this.daze_time > time)
 				{
-					if (random() < 0.1)
+					if(random() < 0.1)
 					{
-						if (random() < 0.1)
+						if(random() < 0.1)
 						{
-							spell_cast(this.goalentity, this.gotstuff);
+							spell_cast(this, this.goalentity, this.gotstuff);
 						}
 						else
 							this.angles_y = random() * 360;
 					}
-					end_hunt();
+					end_hunt(this);
 				}
 				else
 				{
-					spell_cast(this.goalentity, this.gotstuff);
-					end_hunt();
+					spell_cast(this, this.goalentity, this.gotstuff);
+					end_hunt(this);
 				}
 			}
-			else if ((trace_ent == this.goalentity) &&  vlen(trace_endpos - this.origin) < 24)
+			else if((trace_ent == this.goalentity) && vdist(trace_endpos - this.origin, <, 24))
 			{
-				if (this.daze_time > time)
+				if(this.daze_time > time)
 				{
-					if (random() < 0.1)
+					if(random() < 0.1)
 					{
-						if (random() < 0.1)
+						if(random() < 0.1)
 						{
-							spell_cast(this.goalentity, this.gotstuff);
+							spell_cast(this, this.goalentity, this.gotstuff);
 						}
 						else
 							this.angles_y = random() * 360;
 					}
-					end_hunt();
+					end_hunt(this);
 				}
 				else
 				{
-					spell_cast(this.goalentity, this.gotstuff);
-					end_hunt();
+					spell_cast(this, this.goalentity, this.gotstuff);
+					end_hunt(this);
 				}
 			}
-			else if (!(this.owner.button3))
+			else if(!(this.owner.button3))
 			{
-				if (this.daze_time > time)
+				if(this.daze_time > time)
 				{
-					if (this.pausetime < time)
-						this.fade = this.fade - 15 + random() * 30;
-					if (this.fade < -90)
+					if(this.pausetime < time)
+						this.fade -= 15 + random() * 30;
+					if(this.fade < -90)
 						this.fade = -90;
-					else if (this.fade > 90)
+					else if(this.fade > 90)
 						this.fade = 90;
-					if (!moveit(vectoyaw(org - this.origin) - this.fade, 0))
-						end_hunt();
+					if(!moveit(this, vectoyaw(org - this.origin) - this.fade, 0))
+						end_hunt(this);
 					else
 						this.dbltime = 0;
 				}
 				else
 				{
-					if(!moveit(vectoyaw(org - this.origin), this.menu))
-						end_hunt();
+					if(!moveit(this, vectoyaw(org - this.origin), this.menu))
+						end_hunt(this);
 					else
 						this.dbltime = 0;
 				}
 			}
 			else
 			{
-				face(0);
-				end_hunt();
+				face(this, 0);
+				end_hunt(this);
 			}
 		}
 
 	}
-	else if (this.m_subject)
+	else if(this.m_subject)
 	{
 		this.frame = 0;
-		if (this.m_subject.owner.m_subject != this)
+		if(this.m_subject.owner.m_subject != this)
 			this.m_subject = NULL;
 		this.angles_y = vectoyaw(this.m_subject.origin - this.origin);
 	}
-	else if (this.ai)
+	else if(this.ai)
 	{
-		handle_ai();
+		handle_ai(this);
 	}
-	else if (this.dbltime)
+	else if(this.dbltime)
 	{
-		if (this.pausetime < time)
+		if(this.pausetime < time)
 		{
-			CycleFrames(this.attackframes+1, this.poseframes);
+			CycleFrames(this, this.attackframes+1, this.poseframes);
 			this.pausetime = time + 0.1 * (1/this.cold_factor);
 		}
 	}
-	else if (this.classname != "dummy")
+	else if(this.classname != "dummy")
 	{
 		// to lessen the load, standing monsters have have less frequent thinks
 		// until they aren't standing :)
@@ -183,17 +183,15 @@ void AnimatePlayer(entity this)
 	else
 		this.frame = 0;
 	
-	updatevwep();
-	updateskins();
+	updatevwep(this);
+	updateskins(this);
 	
-	if (this.classname == "dummy" || this.classname == "helper")
+	if(this.classname == "dummy" || this.classname == "helper")
 	{
-		t = find(NULL, classname, "helper");
-		while(t)
+		FOREACH_ENTITY_CLASS("helper", true,
 		{
-			t.solid = SOLID_BBOX;
-			setorigin(t, t.origin);
-			t = find(t, classname, "helper");
-		}
+			it.solid = SOLID_BBOX;
+			setorigin(it, it.origin); // relink?
+		});
 	}
 }

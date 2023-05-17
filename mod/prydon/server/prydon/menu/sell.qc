@@ -1,8 +1,9 @@
 #include "sell.qh"
 
 #include "../items/map.qh"
+#include "../subs/math.qh"
 
-float saleprice()
+float saleprice(entity this)
 {
 	return ceil(stat_price * 0.5);
 }
@@ -16,7 +17,7 @@ float dropshopitem(entity this, vector itslot)
 			it.slot1 = itslot;
 			it.items = 0;
 			it.droprandom = 0;
-			shopitem(it);
+			spawnfunc_shopitem(it);
 			return true;
 		}
 	});
@@ -37,14 +38,14 @@ void m_sell_confirm(entity this)
 		this.button1 = 0;
 		if(this.menu == 1)
 		{
-			it_simplestat(itslot);
-			it_itemstat();
-			if(!dropshopitem(itslot))
-				pushitem(this.m_subject, pickupitem(itslot));
-			float g = saleprice();
-			Unequip(root2(this.weapon), 1);
+			it_simplestat(this, itslot);
+			it_itemstat(this);
+			if(!dropshopitem(this, itslot))
+				pushitem(this.m_subject, pickupitem(this, itslot));
+			float g = saleprice(this);
+			Unequip(this, root2(this.weapon), 1);
 			ClearSlot(this, root2(this.weapon));
-			givegold(g);				
+			givegold(this, g);				
 			openmenu(this, m_sell, this.m_subject);
 			return;				
 		}
@@ -57,11 +58,11 @@ void m_sell_confirm(entity this)
 	}
 	if(this.m_refresh < time)
 	{
-		inven(itslot, fabs(this.equip & this.weapon) + 1);
+		inven(this, itslot, fabs(this.equip & this.weapon) + 1);
 
 		p8('S', 'e', 'l', 'l', 's', ' ', 'f', 'o');
 		p2('r', ' ');
-		pnum(saleprice());
+		pnum(saleprice(this));
 		p5(' ', 'G', 'o', 'l', 'd');
 		newline();
 
@@ -76,7 +77,7 @@ void m_sell_confirm(entity this)
 
 void m_sell(entity this)
 {
-	int i = invenlst(this, 1, saleprice, '5465452 7077888 0');
+	int i = invenlst(this, this, 1, saleprice, '5465452 7077888 0');
 	if(i)
 	{
 		this.weapon = (2 ** i);

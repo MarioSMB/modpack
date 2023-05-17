@@ -1,109 +1,113 @@
+#include "useon.qh"
 
-nosave float source;
+#include "../subs/math.qh"
 
-float() canuseon =
+float source;
+
+bool canuseon(entity this)
 {
-	if (source == IT_IDSCROLL)
+	if(source == IT_IDSCROLL)
 	{
-		if (!stat_id)
-			return TRUE;
+		if(!stat_id)
+			return true;
 	}
-	else if (source == IT_OIL_OF_REPAIR)
+	else if(source == IT_OIL_OF_REPAIR)
 	{
-		if (stat_dur < stat_max_dur)
-			if (stat_loc & DURABILITY)
-				return TRUE;
+		if(stat_dur < stat_max_dur)
+			if(stat_loc & DURABILITY)
+				return true;
 	}
-	else if (source == IT_OIL)
+	else if(source == IT_OIL)
 	{
-		if (stat_it < IT_GOLD)
-		if (!stat_suf)
-			if (stat_loc & EQUIPABLE)
-				return TRUE;
+		if(stat_it < IT_GOLD)
+		if(!stat_suf)
+			if(stat_loc & EQUIPABLE)
+				return true;
 	}
-	else if (source == IT_OIL2)
+	else if(source == IT_OIL2)
 	{
-		if (stat_it < IT_GOLD)
-		if (!stat_pref)
-			if (stat_loc & EQUIPABLE)
-				return TRUE;
+		if(stat_it < IT_GOLD)
+		if(!stat_pref)
+			if(stat_loc & EQUIPABLE)
+				return true;
 	}
-	return FALSE;
+	return false;
 	
-};
+}
 
-void() m_useon =
+void m_useon(entity this)
 {
-	local float source_slot, i, source_suf, source_pref, re_equip;
+	float i;
+	bool re_equip = false;
 
-	source_slot = root2(self.weapon);
-	it_simplestat(GetSlot(self, source_slot));
+	int source_slot = root2(this.weapon);
+	it_simplestat(this, GetSlot(this, source_slot));
 	source = stat_it;
-	source_suf = stat_suf; // for OIL
-	source_pref = stat_pref;
-	if (source == IT_OIL_OF_REPAIR)
-		i = invenlst(self, DURABILITY, canuseon, '0 0 0');
+	float source_suf = stat_suf; // for OIL
+	float source_pref = stat_pref;
+	if(source == IT_OIL_OF_REPAIR)
+		i = invenlst(this, this, DURABILITY, canuseon, '0 0 0');
 	else
-		i = invenlst(self, 0, canuseon, '0 0 0');
+		i = invenlst(this, this, 0, canuseon, '0 0 0');
 		
-	if (i)
+	if(i)
 	{
-		openmenu(self, m_inven, self);
-		it_simplestat(GetSlot(self, i));
-		it_itemstat();	
-		if (!canuseon())
+		openmenu(this, m_inven, this);
+		it_simplestat(this, GetSlot(this, i));
+		it_itemstat(this);	
+		if(!canuseon(this))
 		{
-			sprint(self, "Can't!\n");
+			sprint(this, "Can't!\n");
 			return;
 		}
-		if (source == IT_IDSCROLL)			
+		if(source == IT_IDSCROLL)			
 		{
 			stat_id = 1;
-			SetSlot(self, i, it_setstat());
+			SetSlot(this, i, it_setstat());
 		}
-		else if (source == IT_OIL_OF_REPAIR)
+		else if(source == IT_OIL_OF_REPAIR)
 		{
 			stat_dur = stat_dur + 5;
-			if (stat_dur >= stat_max_dur)
+			if(stat_dur >= stat_max_dur)
 				stat_dur = stat_max_dur;
-			SetSlot(self, i, it_setstat());
+			SetSlot(this, i, it_setstat());
 		}
-		else if (source == IT_OIL)
+		else if(source == IT_OIL)
 		{
-			if (self.equip & pow2(i))
+			if(this.equip & (2 ** i))
 			{
-				Unequip(i, 1);
+				Unequip(this, i, 1);
 				re_equip = 1;
 			}
-			it_simplestat(GetSlot(self, i));
+			it_simplestat(this, GetSlot(this, i));
 			stat_suf = source_suf;
 			
-			SetSlot(self, i, it_setstat());
-			if (re_equip)
-				Equip(i);
+			SetSlot(this, i, it_setstat());
+			if(re_equip)
+				Equip(this, i);
 		}
-		else if (source == IT_OIL2)
+		else if(source == IT_OIL2)
 		{
-			if (self.equip & pow2(i))
+			if(this.equip & (2 ** i))
 			{
-				Unequip(i, 1);
+				Unequip(this, i, 1);
 				re_equip = 1;
 			}
-			it_simplestat(GetSlot(self, i));
+			it_simplestat(this, GetSlot(this, i));
 			stat_pref = source_pref;
-			SetSlot(self, i, it_setstat());
-			if (re_equip)
-				Equip(i);
+			SetSlot(this, i, it_setstat());
+			if(re_equip)
+				Equip(this, i);
 		}
-		sound(self, CHAN_AUTO, itemsound(source), 1, ATTN_NORM);	
-		self.weapon = pow2(i);
+		_sound(this, CHAN_AUTO, itemsound(source), 1, ATTN_NORM);	
+		this.weapon = (2 ** i);
 		
-		it_simplestat(GetSlot(self, source_slot));
+		it_simplestat(this, GetSlot(this, source_slot));
 		stat_dur = stat_dur - 1;
-		if (stat_dur > 0)
-			SetSlot(self, source_slot, it_setstat());
+		if(stat_dur > 0)
+			SetSlot(this, source_slot, it_setstat());
 		else
-			ClearSlot(self, source_slot);
+			ClearSlot(this, source_slot);
 		return;
 	}
-};
+}

@@ -1,0 +1,5 @@
+#pragma once
+
+void PlayerDie(entity this, bool bodydeath);
+
+void death_fade(entity this);

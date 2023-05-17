@@ -38,7 +38,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 		ch = str2chr(theText, pos);
 		if(ch >= '0' && ch <= '9')
 			return 1; // ^[0-9] color code found
-		else if (ch == 'x')
+		else if(ch == 'x')
 			tag_start = pos - 1; // ^x tag found
 		else
 			return 0;
@@ -136,7 +136,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 string find_last_color_code(string s)
 {
 	int start = strstrofs(s, "^", 0);
-	if (start == -1) // no caret found
+	if(start == -1) // no caret found
 		return "";
 	int len = strlen(s)-1;
 	int i;
@@ -146,11 +146,11 @@ string find_last_color_code(string s)
 			continue;
 
 		int carets = 1;
-		while (i-carets >= start && substring(s, i-carets, 1) == "^")
+		while(i-carets >= start && substring(s, i-carets, 1) == "^")
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets & 1)
+		if(carets & 1)
 		{
 			if(i+1 <= len)
 			if(IS_DIGIT(substring(s, i+1, 1)))
@@ -195,7 +195,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
+			else if(tw("^7", theFontSize) == 0)
 				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
@@ -204,7 +204,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
-			else if (tw("^7", theFontSize) == 0)
+			else if(tw("^7", theFontSize) == 0)
 				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
@@ -241,7 +241,7 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
+			else if(tw("^7") == 0)
 				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
@@ -250,7 +250,7 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
-			else if (tw("^7") == 0)
+			else if(tw("^7") == 0)
 				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
@@ -313,20 +313,20 @@ void wordwrap_cb(string s, float l, void(string) callback)
 	lleft = l;
 	for (i = 0;i < strlen(s);++i)
 	{
-		if (substring(s, i, 2) == "\\n")
+		if(substring(s, i, 2) == "\\n")
 		{
 			callback("\n");
 			lleft = l;
 			++i;
 		}
-		else if (substring(s, i, 1) == "\n")
+		else if(substring(s, i, 1) == "\n")
 		{
 			callback("\n");
 			lleft = l;
 		}
-		else if (substring(s, i, 1) == " ")
+		else if(substring(s, i, 1) == " ")
 		{
-			if (lleft > 0)
+			if(lleft > 0)
 			{
 				callback(" ");
 				lleft = lleft - 1;
@@ -344,11 +344,11 @@ void wordwrap_cb(string s, float l, void(string) callback)
 				//       two cases have been handled above.
 			{
 				c = substring(s, j, 1);
-				if (c == " ")
+				if(c == " ")
 					break;
-				if (c == "\\")
+				if(c == "\\")
 					break;
-				if (c == "\n")
+				if(c == "\n")
 					break;
 				// we need to keep this tempstring alive even if substring is
 				// called repeatedly, so call strcat even though we're not
@@ -356,7 +356,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 				callback("");
 			}
 			wlen = j - i;
-			if (lleft < wlen)
+			if(lleft < wlen)
 			{
 				callback("\n");
 				lleft = l;
@@ -454,7 +454,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	created_saved_value = 0;
 
-	if (!(tmp_cvar || tmp_value))
+	if(!(tmp_cvar || tmp_value))
 	{
 		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !");
 		return 0;

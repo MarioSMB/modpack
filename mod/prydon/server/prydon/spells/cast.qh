@@ -1,0 +1,7 @@
+#pragma once
+
+.entity warp_target;
+
+void spell_fire(entity this, float sp);
+
+void spell_cast(entity this, entity towhom, float m);

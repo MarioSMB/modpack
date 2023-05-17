@@ -1,0 +1,13 @@
+#pragma once
+
+.void(entity this) altdie;
+
+void spawngib(entity this, string gibmodel);
+
+void barrel_poison(entity this);
+
+void barrel_nova(entity this);
+
+void barrel_explode(entity this);
+
+void barrel_die(entity this, float bodydeath);

@@ -1,14 +1,20 @@
 #include "parms.qh"
 
+#include "../spells/spells.qh"
+#include "../spells/sval.qh"
+#include "../stats/rank.qh"
+#include "../stats/stats.qh"
+#include "../subs/_mod.qh"
+
 void prydon_SetNewParms()
 {
-	ENGINE_EVENT();
+	entity this = __self;
 	if(!this)
 		return;
 	this.health = 27;
 	this.max_health = 25;
 	this.mana = 2;
-	this.exp = 1;
+	this.experience = 1;
 	this.str = 0;
 	this.dex = 0;
 	this.mag = 0;
@@ -58,7 +64,7 @@ void SetParms(entity this)
 	parm_save(this.max_health, 256);
 	parm_save(this.mana, 256);
 	parm_save(this.questlog/2, 2);
-	parm_save(this.exp, 1048576);
+	parm_save(this.experience, 1048576);
 	parm_save(this.str, 256);
 	parm_save(this.mag, 256);
 	parm_save(this.dex, 256);
@@ -73,7 +79,7 @@ void SetParms(entity this)
 	parm_save(this.gp, 32768);
 	parm_save(this.equip, 65536);
 	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
-		encodeitem(GetSlot(this, i));
+		encodeitem(this, GetSlot(this, i));
 
 	dprint_lhbitparms_space(0, 23);
 	parm_save_end();

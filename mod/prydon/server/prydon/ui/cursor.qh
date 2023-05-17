@@ -1,0 +1,5 @@
+#pragma once
+
+void h_cursor(entity this);
+
+void prydon_SV_PlayerPhysics(entity this);

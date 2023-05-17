@@ -1,0 +1,15 @@
+#pragma once
+
+void dprint_lhbitparms_space(float startindex, float endindex);
+
+void parm_save_begin(entity this);
+
+bool parm_load_begin(entity this);
+
+float parm_load(float radix);
+
+void parm_save(float val, float radix);
+
+void parm_load_end();
+
+void parm_save_end();

@@ -1,0 +1,5 @@
+#pragma once
+
+entity get_questitem(float n);
+
+spawnfunc(questitem);

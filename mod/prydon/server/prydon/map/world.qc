@@ -1,15 +1,18 @@
-STATIC_INIT_EARLY(worldspawn)
+#include "world.qh"
+
+#include "../subs/data.qh"
+#include "../subs/math.qh"
+
+void prydon_worldspawn()
 {
-	extend();
 	if(mapname == "start")
 	{
 		changelevel("curig2"); // DEMO CHANGE
 	}
 	else
 	{
-		localcmd("host_framerate 0\n");
+		cvar_settemp("host_framerate", "0");
 		lastmap = decode(serverflags, 3);
-
 	}
 	
 	if(nextent(nextent(NULL)) != NULL)

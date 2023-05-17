@@ -1,5 +1,7 @@
 #include "stash.qh"
 
+#include "../subs/data.qh"
+
 void close_monitor(entity this)
 {
 	float f;
@@ -56,7 +58,7 @@ spawnfunc(stash_chest)
 	set_movetype(this, MOVETYPE_TOSS);
 	this.solid	= SOLID_BBOX;
 	this.action = opensign;
-	this.think = close_monitor;
+	setthink(this, close_monitor);
 	this.nextthink = time + 1;
 	this.misc = MISC_SAVE_INVENTORY;
 	datacheck(this);

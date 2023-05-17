@@ -1,3 +1,8 @@
+#include "skill.qh"
+
+#include "../spells/spells.qh"
+#include "../spells/sval.qh"
+
 void m_skill(entity this)
 {
 	float r, opt, skillmax, sspec, lev, dam;
@@ -34,7 +39,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_IDENTIFY))
+				if(SelectSpell(this, SP_IDENTIFY))
 				{
 					closemenu(this);
 					return;
@@ -46,7 +51,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_SPRINT))
+				if(SelectSpell(this, SP_SPRINT))
 				{
 					closemenu(this);
 					return;
@@ -58,7 +63,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_BRAWL))
+				if(SelectSpell(this, SP_BRAWL))
 				{
 					closemenu(this);
 					return;
@@ -76,7 +81,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_FLAME_ARROW))
+				if(SelectSpell(this, SP_FLAME_ARROW))
 				{
 					closemenu(this);
 					return;
@@ -88,7 +93,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_BRIBE))
+				if(SelectSpell(this, SP_BRIBE))
 				{
 					closemenu(this);
 					return;
@@ -100,7 +105,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_JUMP))
+				if(SelectSpell(this, SP_JUMP))
 				{
 					closemenu(this);
 					return;
@@ -112,7 +117,7 @@ void m_skill(entity this)
 		{
 			if(r == opt)
 			{
-				if(SelectSpell(SP_FRENZY))
+				if(SelectSpell(this, SP_FRENZY))
 				{
 					closemenu(this);
 					return;
@@ -129,18 +134,18 @@ void m_skill(entity this)
 	}
 	if(this.m_refresh < time)
 	{
-		pstart();
+		pstart(this);
 		red = RED_ON;
 		PrintClass(this.m_subject.title);
 		newline();
 		line();
 		TitleStat(this.m_subject.title);
-		stats_report(IV_NULL, 0);
+		stats_report(this, IV_NULL, 0);
 		line();
 		opt = 1;
 		if(sspec & SKILL_REPAIR)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p6('R', 'e', 'p', 'a', 'i', 'r');
 			pad(30);
 			newline();
@@ -148,7 +153,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_IDENTIFY)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p8('I', 'd', 'e', 'n', 't', 'i', 'f', 'y');
 			pad(30);
 			newline();
@@ -160,7 +165,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_SPRINT)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p6('S', 'p', 'r', 'i', 'n', 't');
 			pad(30);
 			newline();
@@ -175,7 +180,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_BRAWL)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p5('B', 'r', 'a', 'w', 'l');
 			pad(30);
 			newline();
@@ -194,7 +199,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_RELOAD)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p6('R', 'e', 'l', 'o', 'a', 'd');
 			pad(30);
 			newline();
@@ -202,7 +207,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_FLAME_ARROW)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p8('F', 'i', 'r', 'e', ' ', 'A', 'r', 'r');
 			p2('o', 'w');
 			dam = lev * lev * 5;
@@ -222,7 +227,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_BRIBE)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p5('B', 'r', 'i', 'b', 'e');
 			pad(30);
 			newline();
@@ -236,7 +241,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_JUMP)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p4('L', 'e', 'a', 'p');
 			pad(30);
 			newline();
@@ -244,7 +249,7 @@ void m_skill(entity this)
 		}
 		if(sspec & SKILL_FRENZY)
 		{
-			poption(opt, TRUE);
+			poption(this, opt, true);
 			p6('F', 'r', 'e', 'n', 'z', 'y');
 			pad(30);
 			newline();
@@ -255,7 +260,7 @@ void m_skill(entity this)
 			newline();
 			opt = opt + 1;
 		}
-		poption(opt, TRUE);
+		poption(this, opt, true);
 		p4('E', 'x', 'i', 't');
 		pad(30);
 		p1(0);

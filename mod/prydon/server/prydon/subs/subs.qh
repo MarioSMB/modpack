@@ -1,0 +1,23 @@
+#pragma once
+
+entity find_spot(entity this);
+
+void Precache_Set(entity this, string modelname);
+
+bool friendly(entity e1, entity e2);
+
+void CycleFrames(entity this, float a, float z);
+
+bool infront(entity this, entity targ);
+
+bool visible(entity this, entity e);
+
+void fix_velocity(entity this);
+
+entity launch_projectile(entity this, float ofs, float sped, float range, string mdel);
+
+entity find_spot(entity this);
+
+void sound2(entity e, string snd);
+
+void setdmusic(string msc);

@@ -1,0 +1,300 @@
+#pragma once
+
+const int IT_CLOTH = 1;
+const int IT_LAMMELLAR = 2;
+const int IT_CHAIN_MAIL = 3;
+const int IT_BREAST_PLATE = 4;
+const int IT_KNIFE = 5;
+const int IT_DAGGER = 6;
+const int IT_SABRE = 7;
+const int IT_RAPIER = 8;
+const int IT_BROADSWORD = 9;
+const int IT_CLUB = 10;
+const int IT_MACE = 11;
+const int IT_STAFF = 12;
+const int IT_SCEPTER = 13;
+const int IT_HATCHET = 14;
+const int IT_AXE = 15;
+const int IT_WAR_AXE = 16;
+const int IT_SHORT_BOW = 17;
+const int IT_LONG_BOW = 18;
+const int IT_WAR_BOW = 19;
+const int IT_THROWKNIFE= 20;
+const int IT_BUCKLER = 21;
+const int IT_SHIELD = 22;
+const int IT_AEGIS = 23;
+const int IT_SKULL_CAP = 24;
+const int IT_HELM = 25;
+const int IT_GREAT_HELM = 26;
+const int IT_BOOTS = 27;
+const int IT_GREAVES = 28;
+const int IT_AMULET = 29;
+const int IT_ARROWS = 30;
+const int IT_SPEARS = 31;
+//--------
+const int IT_ROBE = 32;
+const int IT_LEATHER = 33;
+const int IT_RING_MAIL = 34;
+const int IT_SCALE_MAIL = 35;
+const int IT_ARMET = 36;
+const int IT_SALLET = 37;
+const int IT_RONDACHE = 38;
+const int IT_KITE_SHIELD = 39;
+const int IT_SCUTUM = 40;
+const int IT_MATTOCK = 41;
+const int IT_HAMMER = 42;
+const int IT_FLAIL = 43;
+const int IT_FALCHION = 44;
+const int IT_KRIS = 45;
+const int IT_CROSSBOW = 46;
+const int IT_TRIDENT = 47;
+const int IT_LANCE = 48;
+const int IT_HALBERD = 49;
+const int IT_SCYTHE = 50;
+const int IT_CLAW = 51;
+const int IT_SLING = 52;
+const int IT_ROD = 53;
+const int IT_WAND = 54;
+const int IT_CHAKRAM = 55;
+const int IT_THROW_AXE = 56;
+const int IT_DART = 57;
+const int IT_JAVELIN = 58;
+const int IT_NAGINATA = 59;
+const int IT_KATANA = 60;
+const int IT_SAI = 61;
+const int IT_NUNCHAKU = 62;
+const int IT_SHIRUKEN = 63;
+//--------
+const int IT_GOLD = 64;
+const int IT_LESSER_HEAL = 65;
+const int IT_HEAL_POTION = 66;
+const int IT_GREATER_HEAL = 67;
+const int IT_LESSER_MANA = 68;
+const int IT_MANA_POTION = 69;
+const int IT_GREATER_MANA = 70;
+const int IT_CURE = 71; // cure swapped with elixir
+// cure, ale
+
+const int IT_BOOK = 72;
+const int IT_SCROLL = 73;
+const int IT_IDSCROLL = 74;
+const int IT_OIL_OF_REPAIR = 75;
+const int IT_OIL = 76;
+const int IT_OIL2 = 77; // ugh, this could be merged with IT_OIL - getting the pref from dur
+const int IT_GOLD_ELIXIR = 78;
+const int IT_ELIXIR = 79;
+const int IT_ALE = 80;
+const int IT_UNIQUE1 = 95; // reserved
+
+
+// item 63 reserved.
+// quest items 91-317
+
+const int BASEITEMS = 80;
+
+const int IT_ITHAELS_ROBE = 253;
+const int IT_STONEFLESH = 254;
+const int IT_ICEBINK = 255;
+const int IT_GRUESKIN = 256;
+const int IT_THE_GUARDIAN = 257;
+const int IT_BLACKMAIL = 258;
+const int IT_HELLPLATE = 259;
+const int IT_SOULSHEATH = 260;
+const int IT_WIZARDSPIKE = 261;
+const int IT_FINGERBONE = 262;
+const int IT_THROATSLITTER = 263;
+const int IT_BITTER_SPIKE = 264;
+const int IT_BRANWENS_BANE = 265;
+const int IT_BONESCRAPE = 266;
+const int IT_THE_SKEWER_OF_ANTHEG = 267;
+const int IT_RIPSAW = 268;
+const int IT_DOOMBRINGER = 269;
+const int IT_DRAGON_HEWER = 270;
+const int IT_NIGHTCLUB = 271;
+const int IT_POINTY_STICK = 272;
+const int IT_CRUSHER = 273;
+const int IT_BASHER = 274;
+const int IT_THE_GNARLED_BRANCH = 275;
+const int IT_KNOTTED_SPIRE = 276;
+const int IT_THE_FIREPOKER = 277;
+const int IT_THUNDERCLAP = 278;
+const int IT_THE_MANGLER = 279;
+const int IT_CADFAELS_CLEAVER = 280;
+const int IT_SKULLSPLITTER = 281;
+const int IT_BLADED_TERROR = 282;
+const int IT_DEATHS_EMISSARY = 283;
+const int IT_COLDCUTTER = 284;
+const int IT_FLESHSTINGER = 285;
+const int IT_ELVEN_BOW = 286;
+const int IT_ASSASIN_BOW = 287;
+const int IT_WITCHSTRING = 288;
+const int IT_WRAITHWEAVER = 289;
+const int IT_BLIGHT_BOW = 290;
+const int IT_DRAGON_TEETH = 291;
+const int IT_RAJAS_SILVER = 292;
+const int IT_THE_WARD = 293;
+const int IT_DEMON_GUARD = 294;
+const int IT_DYLANS_DEFENDER = 295;
+const int IT_STORMSHIELD = 296;
+const int IT_AGELESS_AEGIS_OF_THE_AGES = 297;
+const int IT_SPIKEWALL = 298;
+const int IT_PRETTY_HAT = 299;
+const int IT_HEADBUCKET = 300;
+const int IT_STEELSKULL = 301;
+const int IT_HASCERON = 302;
+const int IT_DEMONHEAD = 303;
+const int IT_BANEDINS_CROWN = 304;
+const int IT_FOOTGARDE = 305;
+const int IT_GORERIDER = 306;
+const int IT_IRONHEEL = 307;
+const int IT_BYRONS_BANE = 308;
+const int IT_PANDORA_PENDANT = 309;
+const int IT_MINDS_EYE = 310;
+const int IT_DREADSPIKE_ARROWS = 311;
+const int IT_SURESHOT_ARROWS = 312;
+const int IT_IMPALER_SPEARS = 313;
+const int IT_WARSTRIKE_SPEARS = 314;
+const int IT_NAMUS_RELIC = 315;
+const int IT_ARIANNAS_BLESSING = 316;
+
+/// Data masks (for the inventory)
+const int ID_DUR = 1;
+const int ID_SUF = 2;
+const int ID_PREF = 4;
+const int ID_AUX = 8; // aux item code.
+const int ID_MICRO = 16;
+
+
+vector IV_NULL = '0 0 0';
+// used for random quests
+vector IV_BOOK = '72 1 0';
+vector IV_ELIXIR = '71 1 0';
+//vector IV_AMULET = '29 1 0';
+vector IV_3ALES = '80 1 3';
+
+
+const int PF_BROKEN = 1;
+const int PF_DAMAGED = 2;
+const int PF_CURSED = 3;
+const int PF_FLAMMABLE = 4;
+const int PF_RUSTED = 5;
+const int PF_BRITTLE = 6;
+const int PF_CHEAP = 7;
+const int PF_UNWIELDY = 8;
+const int PF_RUGGED = 9;
+const int PF_SHARP = 10;
+const int PF_QUALITY = 11;
+const int PF_LUCKY = 12;
+const int PF_SUPERIOR = 13;
+const int PF_WIZARDS = 14;
+const int PF_ACCURATE = 15;
+const int PF_DEADLY = 16;
+const int PF_WARRIORS = 17;
+const int PF_ULTIMATE = 18;
+const int PF_SILVER = 19;
+const int PF_VIGOROUS = 20;
+const int PF_HEAVY = 21;
+const int PF_THIEFS = 22;
+const int PF_BRUTAL = 23;
+const int PF_FIERY = 24;
+const int PF_LIGHT = 25;
+const int PF_RAPID = 26;
+const int PF_KOR = 27;
+const int PF_GOLDEN = 28;
+const int PF_THINKERS = 29;
+const int PF_TITANS = 30;
+const int PF_GROUNDED = 31;
+const int PF_TYRS = 32;
+const int PF_ORSHAS = 33;
+const int PF_IVES = 34;
+const int PF_NIYALS = 35;
+
+const int PF_BAD = 8;
+const int PF_GOOD = 26;
+
+const int SF_FOOL = 1;
+const int SF_WEAK = 2;
+const int SF_CLUMSY = 3;
+const int SF_SLOW = 4;
+const int SF_MISFORTUNE = 5;
+const int SF_FRAGILITY = 6;
+const int SF_CORRUPTION = 7;
+const int SF_PIT = 8;
+const int SF_FROST = 9;
+const int SF_VITALITY = 10;
+const int SF_VAMPIRE = 11;
+const int SF_LUCK = 12;
+const int SF_STRENGTH = 13;
+const int SF_INTELLIGENCE = 14;
+const int SF_AGILITY = 15;
+const int SF_REGEN = 16;
+const int SF_DEXTERITY = 17;
+const int SF_POISON = 18;
+const int SF_LEECH = 19;
+const int SF_PROTECTION = 20;
+const int SF_HEALTH = 21;
+const int SF_GIANTS = 22;
+const int SF_HEAVENS = 23;
+const int SF_STARS = 24;
+const int SF_MANA = 25;
+const int SF_HERETIC = 26;
+const int SF_FLAME = 27;
+const int SF_QUALITY = 28;
+const int SF_BEAR = 29;
+const int SF_WIZARDRY = 30;
+const int SF_BASHING = 31;
+const int SF_HASTE = 32;
+const int SF_FIGHTING = 33;
+const int SF_SLAUGHTER = 34;
+const int SF_VIM = 35;
+const int SF_ACCURACY = 36;
+const int SF_MAGI = 37;
+const int SF_AGES = 38;
+const int SF_MEDICINE = 39;
+const int SF_SPIKES = 40;
+const int SF_FIRE = 41;
+const int SF_SHOCK = 42;
+const int SF_BOUNTY = 43;
+const int SF_MIND = 44;
+const int SF_POWER = 45;
+const int SF_KINGS = 46;
+const int SF_EASE = 47;
+const int SF_BLIGHT = 48;
+const int SF_SPELL = 111; // add to an SP value...
+
+const int SF_BAD = 8;
+const int SF_GOOD = 55;
+
+
+
+// removed
+//const int PF_USELESS = 4; // map to Broken
+//const int PF_OVERPRICED = 27; // map to 0
+//const int PF_VILE = 31; // don't map, too poweful!
+//const int SF_THORNS = 39; // SF_SPIKES
+//const int SF_SPEED = 26; // SF_HASTE
+//const int SF_ILLNESS = 9; // SF_??
+
+/*
+const int IC_ARMORY = 1;
+const int IC_MAGICSHOP = 2;
+const int IC_CLOTHARMOR = 4; // robe, cloth, leather, llammelar
+const int IC_METALARMOR = 8;
+const int IC_SPEARS = 16; // spears
+const int IC_AMMO = 32; // arrows
+const int IC_POTIONS = 64; // includes oils
+const int IC_BOWS = 128;
+const int IC_BOOTS = 256;
+const int IC_SWORDS = 512;
+const int IC_KNIVES = 1024;
+const int IC_AXES = 2048;
+const int IC_BLUNT = 4096;
+const int IC_ORIENTAL = 8192;
+const int IC_HATS = 16384;
+const int IC_THROW = 32768; // throwaxes/throw knives
+const int IC_BOOKS = 65536; // scrolls too
+const int IC_WANDS = 131072; 
+const int IC_WEAPONS = 262144;
+const int IC_MAGWEPS = 524288;
+const int IC_SHIELDS = 1048576;
+*/

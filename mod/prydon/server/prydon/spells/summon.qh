@@ -1,0 +1,3 @@
+#pragma once
+
+void summon_go(entity this, float lev);

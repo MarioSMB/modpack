@@ -1,0 +1,5 @@
+#pragma once
+
+int decompress_spell_value(float espell, float sp1, float sp2);
+
+void decompress_spells(entity e);

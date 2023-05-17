@@ -1,0 +1,21 @@
+// temporary hack to save a lot of time
+#include "_mod.qh"
+
+#include "defs.qc"
+#include "precache.qc"
+
+#include "anim/_mod.inc"
+#include "class/_mod.inc"
+#include "inv/_mod.inc"
+#include "items/_mod.inc"
+#include "legacy/_mod.inc"
+#include "map/_mod.inc"
+#include "menu/_mod.inc"
+#include "npcs/_mod.inc"
+#include "player/_mod.inc"
+#include "quests/_mod.inc"
+#include "spells/_mod.inc"
+#include "stats/_mod.inc"
+#include "subs/_mod.inc"
+#include "system/_mod.inc"
+#include "ui/_mod.inc"

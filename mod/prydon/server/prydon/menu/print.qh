@@ -1,0 +1,45 @@
+#pragma once
+
+float msg_mode;
+
+void p1(float c1);
+
+void p2(float c1, float c2);
+
+void p3(float c1, float c2, float c3);
+
+void p4(float c1, float c2, float c3, float c4);
+
+void p5(float c1, float c2, float c3, float c4, float c5);
+
+void p6(float c1, float c2, float c3, float c4, float c5, float c6);
+
+void p7(float c1, float c2, float c3, float c4, float c5, float c6, float c7);
+
+void p8(float c1, float c2, float c3, float c4, float c5, float c6, float c7, float c8);
+
+void pvstr(vector v);
+
+void pnum(float n);
+
+void pad(float spc);
+
+void newline();
+
+void padlines(float ln);
+
+void line();
+
+void pend();
+
+void pstart(entity this);
+
+void bstart();
+
+void progressbar(float percent, float width);
+
+void poption(entity this, float n, float e);
+
+float pgold(entity this);
+
+void pprice(entity this, float got, float howmuch);

@@ -1,0 +1,9 @@
+#pragma once
+
+void mstring_clear();
+
+void mstring_add(entity this, string h);
+
+void mstring_addop(entity this);
+
+void mstring_print(entity this);

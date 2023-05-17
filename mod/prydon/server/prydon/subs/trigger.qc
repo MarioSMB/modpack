@@ -1,177 +1,176 @@
+#include "trigger.qh"
 
-void(string h) menutrigger =
+#include "../quests/rq_dialog.qh"
+#include "reqs.qh"
+#include "saves.qh"
+
+void menutrigger(string h, entity actor, entity trigger)
 {
-	if (h == "m_sell")
-		openmenu(s_player, m_sell, activator);
-	else if (h == "m_repair")
-		openmenu(s_player, m_repair, activator);
-	else if (h == "m_exit")
+	if(h == "m_sell")
+		openmenu(s_player, m_sell, actor);
+	else if(h == "m_repair")
+		openmenu(s_player, m_repair, actor);
+	else if(h == "m_exit")
 		closemenu(s_player);
-	else if (h == "m_reset")
-		activator.m_targ = activator.m_subject;
-	else if (h == "m_save")
-		InnSave(5);
-	else if (h == "m_identify")
-		openmenu(s_player, m_identify, activator);
-	else if (h == "m_save2") // save w/no gp
-		InnSave(0);
+	else if(h == "m_reset")
+		actor.m_targ = actor.m_subject;
+	else if(h == "m_save")
+		InnSave(actor, trigger, 5);
+	else if(h == "m_identify")
+		openmenu(s_player, m_identify, actor);
+	else if(h == "m_save2") // save w/no gp
+		InnSave(actor, trigger, 0);
 // USELESS JUNK BEGIN
-	else if (h == "m_inven")
-		openmenu(s_player, m_invenlst, activator);
-	else if (h == "m_spells1")
-		openmenu(s_player, m_spells1, activator);
-	else if (h == "m_spells2")
-		openmenu(s_player, m_spells2, activator);
-	else if (h == "m_mainmenu")
-		openmenu(s_player, m_mainmenu, activator);
-	else if (h == "m_stats")
-		openmenu(s_player, m_stats, activator);
-	else if (h == "m_skill")
-		openmenu(s_player, m_skill, activator);
+	else if(h == "m_inven")
+		openmenu(s_player, m_invenlst, actor);
+	else if(h == "m_spells1")
+		openmenu(s_player, m_spells1, actor);
+	else if(h == "m_spells2")
+		openmenu(s_player, m_spells2, actor);
+	else if(h == "m_mainmenu")
+		openmenu(s_player, m_mainmenu, actor);
+	else if(h == "m_stats")
+		openmenu(s_player, m_stats, actor);
+	else if(h == "m_skill")
+		openmenu(s_player, m_skill, actor);
 // USELESS JUNK END
-	else if (h == "m_restock")
-		openmenu(s_player, m_restock, activator);
-	else if (h == "m_deposit")
-		openmenu(s_player, m_deposit, activator);
-	else if (h == "m_withdraw")
-		openmenu(s_player, m_withdraw, activator);
-	else if (h == "m_buy")
-		openmenu(s_player, m_buy, activator);
-	else if (h == "m_recharge")
-		openmenu(s_player, m_recharge, activator);
+	else if(h == "m_restock")
+		openmenu(s_player, m_restock, actor);
+	else if(h == "m_deposit")
+		openmenu(s_player, m_deposit, actor);
+	else if(h == "m_withdraw")
+		openmenu(s_player, m_withdraw, actor);
+	else if(h == "m_buy")
+		openmenu(s_player, m_buy, actor);
+	else if(h == "m_recharge")
+		openmenu(s_player, m_recharge, actor);
 // Random Quest stuff -- DO NOT USE
-	else if (h == "rq_accept")
-		rq_accept(activator);
-	else if (h == "rq_cancel")
-		rq_cancel();
-	else if (h == "rq_mondie")
-		rq_mondie();
-	else if (h == "rq_rescue")
-		rq_rescue(activator);
-	else if (h == "rq_reward")
-		rq_reward(s_player);
-	else if (h == "rq_recieve")
-		rq_recieve(s_player);
-};
+	else if(h == "rq_accept")
+		rq_accept(actor);
+	else if(h == "rq_cancel")
+		rq_cancel(actor);
+	else if(h == "rq_mondie")
+		rq_mondie(actor);
+	else if(h == "rq_rescue")
+		rq_rescue(actor);
+	else if(h == "rq_reward")
+		rq_reward(s_player, actor);
+	else if(h == "rq_recieve")
+		rq_recieve(s_player, actor);
+}
 
-float(entity who, string s, float i) DoTrigger =
+bool DoTrigger(entity who, string s, float i, entity actor, entity trigger)
 {
-	local float total;
-	local entity n;
-	
-	total = 0;
-	if (!s)
+	int total = 0;
+	if(!s)
 		return 0;
-	n = find(world, targetname, s);
+	entity n = find(NULL, targetname, s);
 	while(n)
 	{
-
-		if (RequirementsMet(n, s_player))
+		if(RequirementsMet(n, s_player))
 		{
-			if (n.rand_trig)
+			if(n.rand_trig)
 			{
 				total = total + 1;
-				if (i == total)
+				if(i == total)
 				{
-					if (n.use)
-						call(n.use, n);
+					if(n.use)
+						n.use(n, actor, trigger);
 					return i;
 				}
 			}
-			else if (!i)
-				if (n.use)
-					call(n.use, n);
+			else if(!i)
+				if(n.use)
+					n.use(n, actor, trigger);
 		}	
 		n = find(n, targetname, s);
 	}
-	if (total > 0)
+	if(total > 0)
 	{
-		if (!i)
+		if(!i)
 		{
 			i = floor(random() * total) + 1;
-			if (who.rand_sel > 0)
+			if(who.rand_sel > 0)
 			{
-				DoTrigger(who, s, who.rand_sel);
+				DoTrigger(who, s, who.rand_sel, actor, trigger);
 				return who.rand_sel;
 			}
-			else if (who.rand_sel == -1)
+			else if(who.rand_sel == -1)
 				who.rand_sel = i;
-			DoTrigger(who, s, i);
+			DoTrigger(who, s, i, actor, trigger);
 			return i;
 		}
 	}
-	menutrigger(s);
+	menutrigger(s, actor, trigger);
 	return 0;
-};
-void(entity who, entity snpc, entity splayer, float num) Trigger =
+}
+
+void Trigger(entity who, entity snpc, entity splayer, float num)
 {
 	s_player = splayer;
+	entity targ = snpc;
 	
-	if (who.subject)
+	if(who.subject)
 	{
-		if (who.subject == "s_player")
-			activator = splayer;
-		else if (who.subject == "s_npc")
-			activator = snpc;
+		if(who.subject == "s_player")
+			targ = splayer;
+		else if(who.subject == "s_npc")
+			targ = snpc;
 		else
-			activator = find(world, targetname, who.subject);
+			targ = find(NULL, targetname, who.subject);
 	}
-	else
-		activator = snpc;
-	other = splayer;
 	
-	if (!num)
+	if(!num)
 	{
-		DoTrigger(who, who.target, 0);
-		DoTrigger(who, who.target1, 0);
-		DoTrigger(who, who.target2, 0);
-		DoTrigger(who, who.target3, 0);
-		DoTrigger(who, who.target4, 0);
-		DoTrigger(who, who.target5, 0);
-		DoTrigger(who, who.target6, 0);
-		DoTrigger(who, who.target7, 0);
-		DoTrigger(who, who.target8, 0);
+		DoTrigger(who, who.target, 0, targ, splayer);
+		DoTrigger(who, who.target1, 0, targ, splayer);
+		DoTrigger(who, who.target2, 0, targ, splayer);
+		DoTrigger(who, who.target3, 0, targ, splayer);
+		DoTrigger(who, who.target4, 0, targ, splayer);
+		DoTrigger(who, who.target5, 0, targ, splayer);
+		DoTrigger(who, who.target6, 0, targ, splayer);
+		DoTrigger(who, who.target7, 0, targ, splayer);
+		DoTrigger(who, who.target8, 0, targ, splayer);
 	}
-	else if (num == 1)
-		DoTrigger(who, who.target1, 0);
-	else if (num == 2)
-		DoTrigger(who, who.target2, 0);
-	else if (num == 3)
-		DoTrigger(who, who.target3, 0);
-	else if (num == 4)
-		DoTrigger(who, who.target4, 0);
-	else if (num == 5)
-		DoTrigger(who, who.target5, 0);
-	else if (num == 6)
-		DoTrigger(who, who.target6, 0);
-	else if (num == 7)
-		DoTrigger(who, who.target7, 0);
-	else if (num == 8)
-		DoTrigger(who, who.target8, 0);
-};
+	else if(num == 1)
+		DoTrigger(who, who.target1, 0, targ, splayer);
+	else if(num == 2)
+		DoTrigger(who, who.target2, 0, targ, splayer);
+	else if(num == 3)
+		DoTrigger(who, who.target3, 0, targ, splayer);
+	else if(num == 4)
+		DoTrigger(who, who.target4, 0, targ, splayer);
+	else if(num == 5)
+		DoTrigger(who, who.target5, 0, targ, splayer);
+	else if(num == 6)
+		DoTrigger(who, who.target6, 0, targ, splayer);
+	else if(num == 7)
+		DoTrigger(who, who.target7, 0, targ, splayer);
+	else if(num == 8)
+		DoTrigger(who, who.target8, 0, targ, splayer);
+}
 
-void() generictrigger = 
+void generictrigger(entity this, entity actor, entity trigger)
 {
-	Trigger(self, other, self, 0);
-};
+	Trigger(this, trigger, this, 0);
+}
 
-void() playertrigger=
+void playertrigger(entity this, entity actor, entity trigger)
 {
-	local entity e;
-	e = self.m_subject;
-	if (self.classname == "dummy")
-		self.m_subject = self;
+	entity e = this.m_subject;
+	if(this.classname == "dummy")
+		this.m_subject = this;
 		
-	Trigger(self, self, other, 4);
-	if (self.m_subject == self)
-		self.m_subject = e;
-};
+	Trigger(this, this, trigger, 4);
+	if(this.m_subject == this)
+		this.m_subject = e;
+}
 
-void() InitTrigger =
+void InitTrigger(entity this)
 {
-	self.solid = SOLID_TRIGGER;
-	setmodel (self, self.model);	// set size and link into world
-	self.movetype = MOVETYPE_NONE;
-	self.modelindex = 0;
-	self.model = "";
-};
+	this.solid = SOLID_TRIGGER;
+	_setmodel(this, this.model);	// set size and link into world
+	set_movetype(this, MOVETYPE_NONE);
+	this.modelindex = 0;
+	this.model = "";
+}

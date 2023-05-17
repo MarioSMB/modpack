@@ -1,0 +1,5 @@
+#pragma once
+
+void monster_randomize(entity this);
+
+spawnfunc(monster);

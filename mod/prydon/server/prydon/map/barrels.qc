@@ -1,16 +1,19 @@
-.void() altdie;
+#include "barrels.qh"
 
-void(string gibmodel) spawngib =
+#include "../spells/nova.qh"
+#include "../spells/psnball.qh"
+#include "../subs/_mod.qh"
+
+void spawngib(entity this, string gibmodel)
 {
-	local entity e;
-	e = spawn();
-	setmodel(e, gibmodel);
-	e.think = SUB_Remove;
+	entity e = spawn();
+	_setmodel(e, gibmodel);
+	setthink(e, SUB_Remove);
 	e.nextthink = time + 1 + random() * 5;
 	
-	setorigin(e, (self.absmin + self.absmax) * 0.5);
+	setorigin(e, (this.absmin + this.absmax) * 0.5);
 	setsize(e, '0 0 0', '0 0 0');
-	e.movetype = MOVETYPE_BOUNCE;
+	set_movetype(e, MOVETYPE_BOUNCE);
 	e.solid = SOLID_NOT;
 	e.avelocity_x = random() * 600 - 300;
 	e.avelocity_y = random() * 600 - 300;
@@ -18,171 +21,157 @@ void(string gibmodel) spawngib =
 	e.velocity_x = random() * 300 - 150;
 	e.velocity_y = random() * 300 - 150;
 	e.velocity_z = random() * 80 + 100;
-};
-
-void() barrel_poison =
-{
-	local float n;
-	for(n = 0; n < 3; n = n + 1)
-		spawngib(self.bkup_model);
-	generictrigger();
-	sound(self, CHAN_AUTO, self.noise4, 1, ATTN_NORM);
-	other = world;
-	self.owner = self;
-	self.poidam = 30;
-	self.enemy = self;
-	self.takedamage = DAMAGE_NO;
-	poisonball_hit();
 }
 
-void() barrel_nova =
+void barrel_poison(entity this)
 {
-	local float n;
-	for(n = 0; n < 3; n = n + 1)
-		spawngib(self.bkup_model);
-	generictrigger();
-	sound(self, CHAN_AUTO, self.noise4, 1, ATTN_NORM);
-	self.takedamage = DAMAGE_NO;
-	nova_go(0);
-	remove(self);
+	for(int n = 0; n < 3; n = n + 1)
+		spawngib(this, this.bkup_model);
+	generictrigger(this, NULL, NULL);
+	_sound(this, CHAN_AUTO, this.noise4, 1, ATTN_NORM);
+	this.owner = this;
+	this.poidam = 30;
+	this.enemy = this;
+	this.takedamage = DAMAGE_NO;
+	poisonball_hit(this, NULL);
 }
-void() barrel_explode =
+
+void barrel_nova(entity this)
 {
-	local entity e, oself;
-	local float n;
-	oself = self;
-	self.tohit = 100;
-	for(n = 0; n < 3; n = n + 1)
-		spawngib(self.bkup_model);
-	generictrigger();
-	sound(self, CHAN_AUTO, self.noise4, 1, ATTN_NORM);	
-	e = findradius(self.origin, 110);
+	for(int n = 0; n < 3; n = n + 1)
+		spawngib(this, this.bkup_model);
+	generictrigger(this, NULL, NULL);
+	_sound(this, CHAN_AUTO, this.noise4, 1, ATTN_NORM);
+	this.takedamage = DAMAGE_NO;
+	nova_go(this, 0);
+	delete(this);
+}
+void barrel_explode(entity this)
+{
+	this.tohit = 100;
+	for(int n = 0; n < 3; n = n + 1)
+		spawngib(this, this.bkup_model);
+	generictrigger(this, NULL, NULL);
+	_sound(this, CHAN_AUTO, this.noise4, 1, ATTN_NORM);	
+	entity e = findradius(this.origin, 110);
 	while(e)
 	{
-		if (e.takedamage)
+		if(e.takedamage)
 		{
-			if (!friendly(e, oself))
+			if(!friendly(e, this))
 			{
-				oself.fire = 5;
-				MagicHit(oself, e);
+				this.fire = 5;
+				MagicHit(this, this, e);
 			}
 		}
 		e = e.chain;
 	}
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord (MSG_BROADCAST, oself.origin_x);
-	WriteCoord (MSG_BROADCAST, oself.origin_y);
-	WriteCoord (MSG_BROADCAST, oself.origin_z);
+	te_explosion(this.origin);
 
-	remove(oself);
+	delete(this);
 }
 
-void(float bodydeath) barrel_die =
+void barrel_die(entity this, float bodydeath)
 {
-	float i;
-	if (self.altdie)
+	if(this.altdie)
 	{
-		self.think = self.altdie;
-		self.nextthink = time;
+		setthink(this, this.altdie);
+		this.nextthink = time;
 		return;
 	}
 	
-	dropallitems();
-	for(i = 0; i < 3; i = i + 1)
-		spawngib(self.bkup_model);
-	sound(self, CHAN_AUTO, self.noise4, 1, ATTN_NORM);
-	generictrigger();
-	remove(self);
-};
+	dropallitems(this);
+	for(int i = 0; i < 3; i = i + 1)
+		spawngib(this, this.bkup_model);
+	_sound(this, CHAN_AUTO, this.noise4, 1, ATTN_NORM);
+	generictrigger(this, NULL, NULL);
+	delete(this);
+}
 
-void() barrel =
+spawnfunc(barrel)
 {
-	float r;
-	if (CheckStory(self))
+	if(CheckStory(this))
 	{
-		remove(self);
+		delete(this);
 		return;
 	}
-	if (!self.model)
-		self.model = "progs/barrel.mdl";
-	precache_model(self.model);
-	if (!self.noise4)
-		self.noise4 = "misc/barrel.wav";
-	precache_sound(self.noise4);
-	self.effects = EF_SELECTABLE;
-	if (!self.bkup_model)
-		self.bkup_model = "progs/shrap.mdl";
-	precache_model(self.bkup_model);
-	setmodel(self, self.model);
-	setsize(self, VEC_HULL_MIN, VEC_HULL_MAX);
+	if(!this.model)
+		this.model = "progs/barrel.mdl";
+	precache_model(this.model);
+	if(!this.noise4)
+		this.noise4 = "misc/barrel.wav";
+	precache_sound(this.noise4);
+	this.effects = EF_SELECTABLE;
+	if(!this.bkup_model)
+		this.bkup_model = "progs/shrap.mdl";
+	precache_model(this.bkup_model);
+	_setmodel(this, this.model);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	
-	self.classname	= "barrel";
-	if (!self.netname)
-		self.netname = "barrel";
-	self.health = 1;
-	self.max_health = 1;
-	self.owner = self;
-	self.player = self;
-	self.movetype	= MOVETYPE_TOSS;
-	self.solid	= SOLID_BBOX;
-	if (!self.team)
-		self.team = 2;
-	self.takedamage = DAMAGE_YES;
-	self.flags = 0;
-	self.die = barrel_die;
+	this.classname	= "barrel";
+	if(!this.netname)
+		this.netname = "barrel";
+	this.health = 1;
+	this.max_health = 1;
+	this.owner = this;
+	this.player = this;
+	set_movetype(this, MOVETYPE_TOSS);
+	this.solid	= SOLID_BBOX;
+	if(!this.team)
+		this.team = 2;
+	this.takedamage = DAMAGE_YES;
+	this.flags = 0;
+	this.die = barrel_die;
 	// first possible trap
-	if (self.droprandom)
+	if(this.droprandom)
 	{
-		if (random() < 0.1)
+		if(random() < 0.1)
 		{
-			r = random();
-			if (r < 0.4)
-				self.altdie = barrel_explode;
-			else if (r < 0.7)
-				self.altdie = barrel_poison;
+			float r = random();
+			if(r < 0.4)
+				this.altdie = barrel_explode;
+			else if(r < 0.7)
+				this.altdie = barrel_poison;
 			else
-				self.altdie = barrel_nova;
+				this.altdie = barrel_nova;
 		}
 	}
-	self.frags = 1;
-	self.dodge = 1;
+	this.frags = 1;
+	this.dodge = 1;
+}
 
-};
-
-
-void() hitwall =
+spawnfunc(hitwall)
 {
-	if (CheckStory(self))
+	if(CheckStory(this))
 	{
-		remove(self);
+		delete(this);
 		return;
 	}
-	if (!self.bkup_model)
-		self.bkup_model = "progs/shrap.mdl";
-	legacy_fixinv();
+	if(!this.bkup_model)
+		this.bkup_model = "progs/shrap.mdl";
+	legacy_fixinv(this);
 
-	precache_model(self.bkup_model);
-	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
-	self.solid = SOLID_BSP;
-	setmodel (self, self.model);
-	if (!self.max_health)
-		self.max_health = 1;
-	if (!self.health)
-		self.health = self.max_health;
-	if (!self.team)
-		self.team = 2;
-	self.takedamage = DAMAGE_YES;
-	if (self.spawnflags)
+	precache_model(this.bkup_model);
+	this.angles = '0 0 0';
+	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
+	this.solid = SOLID_BSP;
+	_setmodel(this, this.model);
+	if(!this.max_health)
+		this.max_health = 1;
+	if(!this.health)
+		this.health = this.max_health;
+	if(!this.team)
+		this.team = 2;
+	this.takedamage = DAMAGE_YES;
+	if(this.spawnflags)
 	{
-		self.pain = generictrigger;
-		self.flags = self.flags | FL_GODMODE;
+		this.pain = generictrigger;
+		this.flags |= FL_GODMODE;
 	}
-	self.effects = EF_SELECTABLE;
-	self.die = barrel_die;	
-	self.owner = self;
-	self.player = self;
-	self.frags = 1;
-	self.dodge = 1;
-};
+	this.effects = EF_SELECTABLE;
+	this.die = barrel_die;	
+	this.owner = this;
+	this.player = this;
+	this.frags = 1;
+	this.dodge = 1;
+}

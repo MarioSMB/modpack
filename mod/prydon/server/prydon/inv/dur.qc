@@ -1,272 +1,244 @@
-float(float it) itemcount =
+#include "dur.qh"
+
+#include "../items/encode.qh"
+#include "subs.qh"
+
+int itemcount(entity this, float itslot)
 {
-	float g, i;
+	int g = 0;
 	
-	for(i=1; i<9; i = i + 1)
+	for(int i=1; i<9; i = i + 1)
 	{
-		it_simplestat(GetSlot(self, i));
-		if (stat_it == it)
-			g = g + stat_dur;
+		it_simplestat(this, GetSlot(this, i));
+		if(stat_it == itslot)
+			g += stat_dur;
 
 	}
 	return g;
-};
+}
 
-
-float(float it, float pref, float suf, float howmuch) takeamount =
+bool takeamount(entity this, float itslot, float pref, float suf, float howmuch)
 {
-	float g, i;
-	
-	if (howmuch < 0)
-		return FALSE;
-	else if (howmuch == 0)
-		return TRUE;
+	if(howmuch < 0)
+		return false;
+	else if(howmuch == 0)
+		return true;
 		
-	g = itemcount(it);
+	int g = itemcount(this, itslot);
 	
-	if (howmuch > g)
-		return FALSE; // not enough
+	if(howmuch > g)
+		return false; // not enough
 	
-	for (i=8; i > 0; i = i - 1)
+	for(int i=8; i > 0; i = i - 1)
 	{
-		it_simplestat(GetSlot(self, i));
-		if (stat_it == it && stat_pref == pref && stat_suf == suf)
+		it_simplestat(this, GetSlot(this, i));
+		if(stat_it == itslot && stat_pref == pref && stat_suf == suf)
 		{
 			g = stat_dur;
 			stat_dur = stat_dur - howmuch;
-			if (stat_dur <= 0)
+			if(stat_dur <= 0)
 			{
-				ClearSlot(self, i);
-				howmuch = howmuch - g;
+				ClearSlot(this, i);
+				howmuch -= g;
 			}
 			else
 			{
-				SetSlot(self, i, it_setstat());
-				return TRUE;
+				SetSlot(this, i, it_setstat());
+				return true;
 			}
-			if (howmuch <= 0)
-				return TRUE;
+			if(howmuch <= 0)
+				return true;
 		}
 	}
-	return TRUE;
-};
+	return true;
+}
 
-void() replenish_dur =
+void replenish_dur(entity this)
 {
-	float i;
-	for( i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		if (self.equip & pow2(i))
+		if(this.equip & (2 ** i))
 		{
-			it_simplestat(GetSlot(self, i));
-			it_itemstat();
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
 			
-			if (stat_spec & SPEC_REPLENISH)
+			if(stat_spec & SPEC_REPLENISH)
 			{
 				stat_dur = stat_dur + 1;
-				if (stat_dur > stat_max_dur)
+				if(stat_dur > stat_max_dur)
 					stat_dur = stat_max_dur;
-				if (stat_loc & AMMO)
-					self.armorvalue = stat_dur;
+				if(stat_loc & AMMO)
+					this.armorvalue = stat_dur;
 			}
 		}
 	}
 
 }
 
-float(float howmuch) getgold =
+bool getgold(entity this, int howmuch)
 {
-
-	if (self.skill & SKILL_DISCOUNT)
+	if(this.skill & SKILL_DISCOUNT)
 	{
-		howmuch = ceil((0.8 - (self.title_x * 0.05)) * howmuch);
+		howmuch = ceil((0.8 - (this.title_x * 0.05)) * howmuch);
 	}
-	if (howmuch > self.gp)
-		return FALSE;
+	if(howmuch > this.gp)
+		return false;
 	howmuch = ceil(howmuch);
-	self.gp = self.gp - howmuch;
-	if (self.options & OPT_VERBOSE)
+	this.gp = this.gp - howmuch;
+	if(this.options & OPT_VERBOSE)
 	{
-		sprint(self, "Lost ");
-		sprint(self, ftos(howmuch));
-		sprint(self, " gold\n");
+		sprint(this, sprintf("Lost %d gold\n", howmuch));
 	}
-	return TRUE;
-};
+	return true;
+}
 
-void(float howmuch) givegold =
+void givegold(entity this, int howmuch)
 {
-	if (howmuch <= 0)
+	if(howmuch <= 0)
 		return;
 	howmuch = ceil(howmuch);
-	self.gp = self.gp + howmuch;
-	if (self.options & OPT_VERBOSE)
+	this.gp = this.gp + howmuch;
+	if(this.options & OPT_VERBOSE)
 	{
-		sprint(self, "Acquired ");
-		sprint(self, ftos(howmuch));
-		sprint(self, " gold\n");
+		sprint(this, sprintf("Acquired %d gold\n", howmuch));
 	}
-};
+}
 
-float(float it) takeammo =
+bool takeammo(entity this, float itslot)
 {
 	// first find the slot of the arrows / scroll
-	local float i, succeeded;
-	local entity e;
-	e = self;
-	self = self.owner;
-	succeeded = 0;
-	for(i=1; i<= TOTAL_SLOTS; i = i + 1)
+	bool succeeded = false;
+	for(int i=1; i<= TOTAL_SLOTS; i = i + 1)
 	{
-		if (self.equip & pow2(i))
+		if(this.equip & (2 ** i))
 		{
-			
-			it_simplestat(GetSlot(self, i));
-			it_itemstat();
-			if (stat_it == it)
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
+			if(stat_it == itslot)
 			{
-				
-				if (stat_dur > 0)
+				if(stat_dur > 0)
 				{
 					stat_dur = stat_dur - 1;
-					self.armorvalue = stat_dur;
-					SetSlot(self, i, it_setstat());
-					succeeded = 1;
+					this.armorvalue = stat_dur;
+					SetSlot(this, i, it_setstat());
+					succeeded = true;
 				}
-				if (stat_dur <= 0)
+				if(stat_dur <= 0)
 				{
-					if (stat_spec & SPEC_REPLENISH)
+					if(stat_spec & SPEC_REPLENISH)
 					{
 						stat_dur = 0;
-						SetSlot(self, i, it_setstat());
+						SetSlot(this, i, it_setstat());
 						return succeeded;
 					}
 					else
 					{
-						if (self.flags & FL_CLIENT)
+						if(IS_CLIENT(this))
 						{
-							msg_entity = self;
+							msg_entity = this;
 							WriteByte(MSG_ONE, 8);
 							PrintItemName();
 							WriteString(MSG_ONE, " has run out\n");
 						}
-						Unequip(i, 1);
-						ClearSlot(self, i);
+						Unequip(this, i, 1);
+						ClearSlot(this, i);
 						// TEST
-						AutoEquip(inv_hasitem(it * '1 0 0', 1, 0));
+						AutoEquip(this, inv_hasitem(this, itslot * '1 0 0', 1, 0));
 						return succeeded;
 					}
 				}
-				self = e;
 				return succeeded;
 			}
 		}
 	}
-	self = e;
-	return FALSE;		
-};
+	return false;		
+}
 
 
-float(float sp) TakeCharges =
+bool TakeCharges(entity this, float sp)
 {
 	// first find the slot of the arrows / scroll
-	local float i;
-	local entity e;
-	e = self;
-	self = self.owner;
-	
-	for(i=1; i<=TOTAL_SLOTS; i = i + 1)
+	for(int i=1; i<=TOTAL_SLOTS; i = i + 1)
 	{
-		if (self.equip & pow2(i))
+		if(this.equip & (2 ** i))
 		{
-			it_simplestat(GetSlot(self, i));
-			it_itemstat();
-			if ((stat_action & 63) == sp)
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
+			if((stat_action & 63) == sp)
 			{
-				if (stat_loc & CHARGES) 
+				if(stat_loc & CHARGES) 
 				{
 					
-					self.armorvalue = stat_dur;
-					if (stat_dur == 1)
+					this.armorvalue = stat_dur;
+					if(stat_dur == 1)
 					{
 						stat_dur = 0;
-						if (self.flags & FL_CLIENT)
+						if(this.flags & FL_CLIENT)
 						{
-							msg_entity = self;
+							msg_entity = this;
 							WriteByte(MSG_ONE, 8);
 							PrintItemName();
 							WriteString(MSG_ONE, " has run out\n");
 						}
-						SetSlot(self, i, it_setstat());
-						//if (!(stat_spec & SPEC_REPLENISH))				
+						SetSlot(this, i, it_setstat());
+						//if(!(stat_spec & SPEC_REPLENISH))				
 						//	Unequip(i, 1);
-						self = e;
-						return TRUE;
+						return true;
 					}
-					else if (stat_dur <= 0)
+					else if(stat_dur <= 0)
 					{
-						self = e;
-						return FALSE;
+						return false;
 					}
 					stat_dur = stat_dur - 1;
-					SetSlot(self, i, it_setstat());
-					self = e;
-					return TRUE;
+					SetSlot(this, i, it_setstat());
+					return true;
 				}
 			}
 		}
 	}
-	self = e;
-	return TRUE;		
-};
-void(entity who, float weps) DamageEquipment =
+	return true;		
+}
+
+void DamageEquipment(entity who, float weps)
 {
-	float i;
-	local entity oself;
-	
-	if (random() < 0.8)
+	if(random() < 0.8)
 		return;
 		
-	for(i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		if (who.equip & pow2(i))
+		if(who.equip & (2 ** i))
 		{
-			it_simplestat(GetSlot(who, i));
-			it_itemstat();
-			if (stat_loc & DURABILITY)
+			it_simplestat(who, GetSlot(who, i));
+			it_itemstat(who);
+			if(stat_loc & DURABILITY)
 			{
-				if ((weps && stat_daml) || (!weps && stat_def))
+				if((weps && stat_daml) || (!weps && stat_def))
 				{
-					if (random() < 0.1)
+					if(random() < 0.1)
 					{
 						stat_dur = stat_dur - 1;
-						if (stat_dur <= 0)
+						if(stat_dur <= 0)
 						{
-							
-							
-							oself = self;
-							self = who;
-							Unequip(i, 1);
-							it_simplestat(GetSlot(who, i));
-							it_itemstat();
+							Unequip(who, i, 1);
+							it_simplestat(who, GetSlot(who, i));
+							it_itemstat(who);
 							stat_dur = 0;
-							self = oself;
 							
 							SetSlot(who, i, it_setstat());
-							if (who.flags & FL_CLIENT)
+							if(IS_CLIENT(who))
 							{
 								msg_entity = who;
 								WriteByte(MSG_ONE, 8);
 								PrintItemName();
 								WriteString(MSG_ONE, " has broken\n");
 							}
-							sound(who.player, CHAN_BODY, "player/break.wav", 1, ATTN_NORM);
+							_sound(who.player, CHAN_BODY, "player/break.wav", 1, ATTN_NORM);
 						}
 						else
 						{
-							if (stat_dur == ceil(stat_max_dur  * 0.15))
+							if(stat_dur == ceil(stat_max_dur  * 0.15))
 							{
-								if (who.flags & FL_CLIENT)
+								if(IS_CLIENT(who))
 								{
 									msg_entity = who;
 									WriteByte(MSG_ONE, 8);
@@ -281,116 +253,89 @@ void(entity who, float weps) DamageEquipment =
 			}
 		}
 	}
-};
-
-float(vector it, entity e) takesomething =
-{
-	local entity oself;
-	float i;
-	it_simplestat(it);
-	it_itemstat();
-	
-	oself = self;
-	
-	self = e;
-		
-	if (stat_it == IT_GOLD)
-	{
-		if (getgold(stat_dur))
-		{
-			self = oself;
-			return TRUE;
-	}
-		else
-		{
-			self = oself;
-			return FALSE;
-		}
-	}
-	else if (stat_loc & STACKABLE)
-	{
-	
-		if (takeamount(stat_it, stat_pref, stat_suf, stat_dur))
-		{
-			self = oself;
-			return TRUE;
-		}
-		else
-		{
-			self = oself;
-			return FALSE;
-		}
-	}
-	else
-	{
-	
-		i = inv_hasitem(it, TRUE, 0);
-		if (i)
-		{
-			Unequip(i, 1);
-			ClearSlot(self, i);
-			self = oself;
-			return TRUE;
-		}
-		else
-			return FALSE;
-	}
-
-
 }
 
-float (vector it, entity e) hassomething =
+bool takesomething(vector itslot, entity e)
 {
-	local entity oself;
-	local float i;
-
-	it_simplestat(it);
-	it_itemstat();
-	i = stat_dur;
-	oself = self;
-	self = e;
-	
+	it_simplestat(e, itslot);
+	it_itemstat(e);
 		
-	if (stat_it == IT_GOLD)
+	if(stat_it == IT_GOLD)
 	{
-		if (self.gp >= stat_dur)
+		if(getgold(e, stat_dur))
 		{
-			self = oself;
-			return TRUE;
+			return true;
 		}
 		else
 		{
-			self = oself;
-			return FALSE;
+			return false;
 		}
-
 	}
-	else if (stat_loc & STACKABLE)
+	else if(stat_loc & STACKABLE)
 	{
-		if (itemcount(stat_it) >= i)
+		if(takeamount(e, stat_it, stat_pref, stat_suf, stat_dur))
 		{
-			self = oself;
-			return TRUE;
+			return true;
 		}
 		else
 		{
-			self = oself;
-			return FALSE;
+			return false;
 		}
 	}
 	else
 	{
-		i = inv_hasitem(it, 1, 0);
-		if (i)
+		int i = inv_hasitem(e, itslot, true, 0);
+		if(i)
 		{
-			self = oself;
-			return TRUE;
+			Unequip(e, i, 1);
+			ClearSlot(e, i);
+			return true;
+		}
+		else
+			return false;
+	}
+}
+
+bool hassomething(vector itslot, entity e)
+{
+	it_simplestat(e, itslot);
+	it_itemstat(e);
+	int i = stat_dur;
+
+	if(stat_it == IT_GOLD)
+	{
+		if(e.gp >= stat_dur)
+		{
+			return true;
 		}
 		else
 		{
-			self = oself;
-			return FALSE;
+			return false;
+		}
+
+	}
+	else if(stat_loc & STACKABLE)
+	{
+		if(itemcount(e, stat_it) >= i)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		i = inv_hasitem(e, itslot, 1, 0);
+		if(i)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
-};
+}

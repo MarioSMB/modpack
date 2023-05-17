@@ -1,0 +1,3 @@
+#pragma once
+
+void doambient(entity this, string soundfile, float volume);

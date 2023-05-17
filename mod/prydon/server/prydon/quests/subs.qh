@@ -1,0 +1,11 @@
+#pragma once
+
+float getstorybyname(string n);
+
+float getstorylevel(entity e);
+
+float setstorylevel(entity e, float story);
+
+void quest_update();
+
+string getqueststring(entity e);

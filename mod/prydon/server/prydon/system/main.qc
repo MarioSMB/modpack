@@ -1,5 +1,7 @@
 #include "main.qh"
 
+#include "../subs/_mod.qh"
+
 void prydon_StartFrame()
 {
 	if(world.map)

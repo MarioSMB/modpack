@@ -1,0 +1,14 @@
+#pragma once
+
+void become_monster(entity this, entity e);
+
+void monster_spawn_go(entity this);
+
+spawnfunc(monster_skuttler);
+spawnfunc(monster_scarite);
+spawnfunc(monster_guanite);
+spawnfunc(monster_drak);
+spawnfunc(monster_horror);
+spawnfunc(monster_evile_wizard);
+spawnfunc(monster_hideous_goblin);
+spawnfunc(sewer_monster);

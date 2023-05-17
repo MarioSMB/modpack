@@ -1,0 +1,11 @@
+#pragma once
+
+vector GetSlot(entity e, float slot);
+
+void SetSlot(entity e, float slot, vector itslot);
+
+void ClearSlot(entity e, float slot);
+
+int inv_hasitem(entity this, vector itslot, float start, float check);
+
+void randomize_inventory(entity e);

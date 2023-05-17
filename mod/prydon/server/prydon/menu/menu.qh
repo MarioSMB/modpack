@@ -1,0 +1,7 @@
+#pragma once
+
+void openmenu(entity who, void(entity) menufunc, entity subj);
+
+void prompt(entity who, string text, entity subj, float expire);
+
+void closemenu(entity who);

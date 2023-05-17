@@ -1,6 +1,9 @@
 #include "spawn.qh"
 
 #include "parms.qh"
+#include "../quests/rq_npcs.qh"
+#include "../stats/stats.qh"
+#include "../subs/_mod.qh"
 
 // Player Starts
 spawnfunc(info_player_start) 
@@ -9,11 +12,10 @@ spawnfunc(info_player_start)
 	set_movetype(this, MOVETYPE_TOSS);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	if(RequirementsMet(this, NULL))
-		rq_spawnnpc();
+		rq_spawnnpc(this);
 
 	IL_PUSH(g_spawnpoints, this);
 }
-
 
 entity find_spawn(entity this)
 {
@@ -37,7 +39,7 @@ entity find_spawn(entity this)
 		if(spawn_spot.target)
 			Trigger(spawn_spot, this, this, 0);
 
-		tracebox(spawn_point.origin, spawn_point.mins, spawn_point.maxs, spawn_point.origin, MOVE_NOMONSTERS, spawn_point);
+		tracebox(spawn_spot.origin, spawn_spot.mins, spawn_spot.maxs, spawn_spot.origin, MOVE_NOMONSTERS, spawn_spot);
 		if(trace_startsolid)
 		{
 			spawn_spot = find_spot(spawn_spot);
@@ -59,26 +61,26 @@ void ClientSpawn(entity this)
 	this.testorg = this.origin;
 	this.rotang = spawn_spot.angles + '0 90 0';
 	this.altaction = SP_FIGHT_MELEE;
-	if (!this.rotang_x)
+	if(!this.rotang_x)
 		this.rotang_x = 60;
-	if (!this.rotang_z)
+	if(!this.rotang_z)
 		this.rotang_z = 194;
 		
-	if (!this.player)
+	if(!this.player)
 		this.player = spawn();
 	this.player.angles = spawn_spot.angles;
 	this.player.owner = this;
 	this.leftarm = this.rightarm = IV_NULL;
 	_setmodel(this.player, "progs/human.mdl");
 	this.player.solid = SOLID_SLIDEBOX;
-	this.player.movetype = MOVETYPE_STEP;
+	set_movetype(this.player, MOVETYPE_STEP);
 	setsize(this.player, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.player.classname = "dummy";
 	this.player.effects = EF_SELECTABLE;
 	
 	setthink(this.player, AnimatePlayer);
 	this.player.nextthink = time;
-	CSQCMODEL_AUTOINIT(this.player);
+	//CSQCMODEL_AUTOINIT(this.player);
 	this.player.use = playertrigger;
 	this.player.targetname = "player";
 	this.player.takedamage = DAMAGE_AIM;
@@ -122,7 +124,7 @@ void prydon_PutClientInServer(entity this)
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.flags = FL_CLIENT;
-	if (!this.health)
+	if(!this.health)
 		this.health = 1;
 	
 	_setmodel(this, "progs/null.spr");

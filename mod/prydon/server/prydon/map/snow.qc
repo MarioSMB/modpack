@@ -1,4 +1,6 @@
-float TE_SNOW = 14;
+#include "snow.qh"
+
+#include "../subs/reqs.qh"
 
 void snow_drift(entity this)
 {
@@ -6,10 +8,12 @@ void snow_drift(entity this)
 	this.velocity_y = random() * 20 - 10;
 	this.nextthink = time + 0.1 + random();
 }
+
 void snow_removetouch(entity this, entity toucher)
 {
 	delete(this);
 }
+
 void snow_think(entity this)
 {
 	entity e;
@@ -33,19 +37,7 @@ void snow_think(entity this)
 			return;
 	}
 
-	if(snowtype == 1) // Tomaz / Cheap Hack, etc.
-	{
-		WriteByte  (MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte  (MSG_BROADCAST, TE_SNOW);
-		WriteCoord (MSG_BROADCAST, this.absmin_x);
-		WriteCoord (MSG_BROADCAST, this.absmin_y);
-		WriteCoord (MSG_BROADCAST, this.absmin_z);
-		WriteCoord (MSG_BROADCAST, this.absmax_x);
-		WriteCoord (MSG_BROADCAST, this.absmax_y);
-		WriteCoord (MSG_BROADCAST, this.absmax_z);
-		WriteShort (MSG_BROADCAST, this.fade);
-	}
-	else if(snowtype == 2) // DP
+	if(snowtype == 2) // DP
 	{
 		te_particlesnow(this.absmin, this.absmax, '0 0 -80', this.fade * 10, 12);
 	}
@@ -55,7 +47,7 @@ void snow_think(entity this)
 		while(f)
 		{
 			e = spawn();
-			setmodel(e, "progs/s_snow.spr");
+			_setmodel(e, "progs/s_snow.spr");
 			e.solid = SOLID_TRIGGER;
 			settouch(e, snow_removetouch);
 			setthink(e, snow_drift);

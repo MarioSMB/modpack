@@ -1,3 +1,7 @@
+#include "tree.qh"
+
+#include "../subs/reqs.qh"
+
 spawnfunc(tree)
 {
 	if(CheckStory(this))

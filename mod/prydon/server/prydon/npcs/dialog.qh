@@ -1,0 +1,5 @@
+#pragma once
+
+void dialog(entity this, entity actor, entity trigger);
+
+void opendialog(entity this, entity targ);

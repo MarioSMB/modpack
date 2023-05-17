@@ -1,61 +1,49 @@
-void() m_withdraw =
-{
-	local float i;
-	local vector r;
+#include "stash.qh"
 
-	i = invenlst(self.m_subject, 0, m_invenlstcallback, '5728628 6841458 6387456');
+void m_withdraw(entity this)
+{
+	int i = invenlst(this, this.m_subject, 0, m_invenlstcallback, '5728628 6841458 6387456');
 	
-	if (i)
+	if(i)
 	{
-		r = GetSlot(self.m_subject, i);
-		if (r)
+		vector r = GetSlot(this.m_subject, i);
+		if(r)
 		{
-			r = pickupitem(r);
-			if (!r)
+			r = pickupitem(this, r);
+			if(!r)
 			{
-				ClearSlot(self.m_subject, i);
-				self.m_refresh = 0;
+				ClearSlot(this.m_subject, i);
+				this.m_refresh = 0;
 			}
 			else
 			{
-				prompt(self, "You don't have enough room\nin your inventory", self.m_subject, 2);
+				prompt(this, "You don't have enough room\nin your inventory", this.m_subject, 2);
 			}
 		}
 	}
-};
+}
 
-
-
-
-void() m_deposit =
+void m_deposit(entity this)
 {
-	local float i;
-	local vector r;
-	local entity e;
-
-
-	i = invenlst(self, 0, m_invenlstcallback, '4482416 7304041 7602176');
+	int i = invenlst(this, this, 0, m_invenlstcallback, '4482416 7304041 7602176');
 	
-	if (i)
+	if(i)
 	{
-		r = GetSlot(self, i);
-		if (r)
+		vector r = GetSlot(this, i);
+		if(r)
 		{
-			e = self;
-			self = self.m_subject;
-			r = pickupitem(r);
-			self = e;
+			r = pickupitem(this.m_subject, r);
 			
-			if (!r)
+			if(!r)
 			{
-				Unequip(i, 0);
-				ClearSlot(self, i);
-				self.m_refresh = 0;
+				Unequip(this, i, 0);
+				ClearSlot(this, i);
+				this.m_refresh = 0;
 			}
 			else
 			{
-				prompt(self, "This object can't carry anymore", self.m_subject, 2);
+				prompt(this, "This object can't carry anymore", this.m_subject, 2);
 			}
 		}
 	}
-};
+}

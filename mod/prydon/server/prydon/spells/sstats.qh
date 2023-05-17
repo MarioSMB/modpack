@@ -1,0 +1,5 @@
+float spell_range(entity this, float g);
+
+int cast_aground(float sp);
+
+float mana_for_spell(float sp, float lv);

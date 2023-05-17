@@ -1,0 +1,5 @@
+#pragma once
+
+void m_spells1(entity this);
+
+void m_spells2(entity this);

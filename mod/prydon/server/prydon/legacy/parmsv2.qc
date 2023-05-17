@@ -1,42 +1,48 @@
-void() legacy_parmsv2 =
+#include "parmsv2.qh"
+
+#include "../spells/spells.qh"
+#include "../stats/exp.qh"
+#include "../subs/parms.qh"
+
+void legacy_parmsv2(entity this)
 {	
 /* Prydon 1.5 */
-	float i;
-
-	if (parm_load_begin())
+	if(parm_load_begin(this))
 	{
-		if (fileaccess)
-		{
+		if(fileaccess)
 			qread(); // read past pin
-		}
-		self.health = 		parm_load(256);
-		self.max_health = 	parm_load(256);
-		self.mana =		parm_load(256);
-		self.questlog =		parm_load(2) * 2;
-		self.exp = 		parm_load(1048576);
-		self.str = 		parm_load(256);
-		self.mag =		parm_load(256);
-		self.dex = 		parm_load(256);
-		self.vit = 		parm_load(256);
-		self.agil = 		parm_load(256);
-		self.luck =		parm_load(256);
-		self.ptd =		parm_load(128);
-		self.options =          parm_load(32);
 
-		for (i = 1; i <= 16; i = i + 1)
-			SetSpellLevel(self, i, parm_load(8));
+		this.health = 		parm_load(256);
+		this.max_health = 	parm_load(256);
+		this.mana =		parm_load(256);
+		this.questlog =		parm_load(2) * 2;
+		this.experience = 		parm_load(1048576);
+		this.str = 		parm_load(256);
+		this.mag =		parm_load(256);
+		this.dex = 		parm_load(256);
+		this.vit = 		parm_load(256);
+		this.agil = 		parm_load(256);
+		this.luck =		parm_load(256);
+		this.ptd =		parm_load(128);
+		this.options =          parm_load(32);
+
+		for(int i = 1; i <= 16; i = i + 1)
+			SetSpellLevel(this, i, parm_load(8));
 		
-		self.spell =		parm_load(64);
-		self.gp =		parm_load(32768);
-		self.equip =		parm_load(65536);
-		for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
-			SetSlot(self, i, decodeitem());
+		this.spell =		parm_load(64);
+		this.gp =		parm_load(32768);
+		this.equip =		parm_load(65536);
+		for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
+			SetSlot(this, i, decodeitem());
 	
 		parm_load_end();
 	}
 	else
+	{
+		__self = this;
 		SetNewParms();
-	if (!self.exp)
-		self.exp = 1;
-	self.lvl = LvlForExp(self.exp);
+	}
+	if(!this.experience)
+		this.experience = 1;
+	this.lvl = LvlForExp(this.experience);
 }

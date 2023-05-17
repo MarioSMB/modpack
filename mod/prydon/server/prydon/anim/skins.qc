@@ -1,22 +1,23 @@
+#include "skins.qh"
 
-void() updateskins =
+void updateskins(entity this)
 {
-	if (self.misc & MISC_FULL_SKINS)
+	if(this.misc & MISC_FULL_SKINS)
 	{
 		// fix me, hard coded hackage
-		if (self.cold_time > time)
-			self.skin = self.oldskin;
-		else if (self.poison_count > 0 )
-			self.skin = self.oldskin + 7;
+		if(this.cold_time > time)
+			this.skin = this.oldskin;
+		else if(this.poison_count > 0 )
+			this.skin = this.oldskin + 7;
 		else
-			self.skin = self.oldskin + 14;
+			this.skin = this.oldskin + 14;
 	}
-	else if (self.misc & MISC_NO_SKINS)
-		self.skin = self.oldskin;
-	else if (self.cold_time > time)
-		self.skin = 0;
-	else if (self.poison_count > 0 )
-		self.skin = 1;
+	else if(this.misc & MISC_NO_SKINS)
+		this.skin = this.oldskin;
+	else if(this.cold_time > time)
+		this.skin = 0;
+	else if(this.poison_count > 0 )
+		this.skin = 1;
 	else
-		self.skin = 2 + self.oldskin;
-};
+		this.skin = 2 + this.oldskin;
+}

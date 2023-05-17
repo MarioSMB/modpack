@@ -1,0 +1,20 @@
+#pragma once
+
+const string q_0 = "\bFind Ariana in Pendinas, South of\nCapel Curig, and bring her to safety.\b\n\n";
+const string q_1 = "\bFind Cornan in the sewers.\b\n\n";
+const string q_2 = "\bFind the source of the\ninfestation in the sewers and\neliminate it.\b\n\n";
+const string q_3 = "\bFind Ariana in Pendinas, South of\nCapel Curig, and bring her to safety.\b\n\n";
+const string q_4 = "\bAsk Sadoc about the strange barrier.\b\n\n";
+const string q_5 = "\bLocate the hermit Idris in the\nSnowdon mountains.\b\n\n";
+const string q_6 = "\bFind Idris's spell book in the\nmines and return it.\b";
+const string q_7 = "\bFind Ariana in Pendinas, South of\nCapel Curig, and bring her to safety.\b\n\n";
+const string q_8 = "\bEliminate the troops occupying Pendinas.\b\n\n";
+const string q_9 = "\bSeek revenge on the Circle of Mages\nhiding in crypts below the Pendinas chapel.\b\n\n";
+const string q_10 = "\bJourney to Castle Bere.\b\n\n";
+const string q_11 = "\bKill the abomination that was\nonce your father.\b\n\n";
+const string q_12 = "\bPass through the Prydon Gate.\b\n\n";
+const string q_13 = "\bFind Ariana's soul in Hades.\b\n\n";
+const string q_14 = "\bDestroy Thanatos.\b\n\n";
+const string q_15 = "";
+
+string mainstorystring(float n);

@@ -1,0 +1,19 @@
+#pragma once
+
+void SpawnBlood(vector org, vector vel, float damage);
+
+void T_Damage(entity attacker, entity targ, float dam, float magdam);
+
+void FireDamage(entity attacker, entity targ, float dam);
+
+void ColdDamage(entity attacker, entity targ, float dam);
+
+void MagicDamage(entity attacker, entity targ, float dam);
+
+void PoisonDamage(entity attacker, entity targ, float dam);
+
+void LightningDamage(entity attacker, entity targ, float dam);
+
+bool MagicHit(entity inflictor, entity attacker, entity targ);
+
+bool Hit(entity attacker, entity targ, float special);

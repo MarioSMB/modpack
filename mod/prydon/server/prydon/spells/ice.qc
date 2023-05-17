@@ -1,25 +1,25 @@
+#include "ice.qh"
 
-void() ice_go =
+void ice_go(entity this)
 {
-	setmodel(self, "progs/icicle.mdl");
-	setsize(self, '0 0 0', '0 0 0');
-	self.velocity = self.dest1;
-	self.angles = vectoangles(self.dest1);
-	sound(self, CHAN_WEAPON, "spells/launch.wav", 1, ATTN_NORM);
-	self.think = SUB_Remove; self.nextthink = time + 5;
-	self.movetype = MOVETYPE_FLY;
-	self.solid = SOLID_BBOX;
-	self.touch = ball_hit;
-	self.enemy = self.owner;
+	_setmodel(this, "progs/icicle.mdl");
+	setsize(this, '0 0 0', '0 0 0');
+	this.velocity = this.dest1;
+	this.angles = vectoangles(this.dest1);
+	_sound(this, CH_WEAPON_SINGLE, "spells/launch.wav", 1, ATTN_NORM);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 5;
+	set_movetype(this, MOVETYPE_FLY);
+	this.solid = SOLID_BBOX;
+	settouch(this, ball_hit);
+	this.enemy = this.owner;
 }
 
-void(float lev) iceblast_go =
+void iceblast_go(entity this, float lev)
 {
-	local entity e;
-	local float dm, b, ofs, dly;
-	local vector org, traj;
+	float dm, b, ofs, dly;
 	
-	if (lev <= 1)
+	if(lev <= 1)
 	{
 		b = 1;
 		ofs = 0;
@@ -30,30 +30,31 @@ void(float lev) iceblast_go =
 		b = lev * 3;	
 		ofs = 50 - (2 * lev);
 		dly = 5  / lev;
-		if (dly < 1)
+		if(dly < 1)
 			dly = 1;
 	}
-	makevectors(self.enemy.origin - self.origin);
-	traj = normalize('0 0 -1' + (v_forward * 0.5));
+	makevectors(this.enemy.origin - this.origin);
+	vector traj = normalize('0 0 -1' + (v_forward * 0.5));
 	
-	traceline(self.enemy.origin, self.enemy.origin + traj * -400, TRUE, self);
-	if (lev == 0)
+	traceline(this.enemy.origin, this.enemy.origin + traj * -400, true, this);
+	if(lev == 0)
 		dm = 5;
 	else
 		dm = ceil((lev * lev * 1.4 + 4) / b);
 	while(b > 0)
 	{
-		e = spawn();
-		org_z = trace_endpos_z;
-		org_y = (random() * ofs * 2) - ofs + trace_endpos_y;
-		org_x = (random() * ofs * 2) - ofs + trace_endpos_x;
+		entity e = spawn();
+		vector org;
+		org.z = trace_endpos.z;
+		org.y = (random() * ofs * 2) - ofs + trace_endpos.y;
+		org.x = (random() * ofs * 2) - ofs + trace_endpos.x;
 		setorigin(e, org);
 		e.cold  = dm;
-		e.think = ice_go;
+		setthink(e, ice_go);
 		e.nextthink = time + dly * random();
-		e.enemy = self;
-		e.owner = self;
+		e.enemy = this;
+		e.owner = this;
 		e.dest1 = traj * 400;
 		b = b - 1;
 	}
-};
+}

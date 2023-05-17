@@ -1,0 +1,5 @@
+#pragma once
+
+void chest_open(entity this, entity targ);
+
+void chestopen(entity this, entity actor, entity trigger);

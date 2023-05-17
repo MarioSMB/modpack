@@ -1,6 +1,7 @@
 #pragma once
 
 int maxclients;
+void droptofloor(entity this);
 
 const string STR_PLAYER = "player";
 //const string STR_SPECTATOR = "spectator";

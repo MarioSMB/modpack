@@ -7,23 +7,23 @@ string formatmessage(entity this, string msg)
 	vector cursor = trace_endpos;
 	entity cursor_ent = trace_ent;
 
-	while (1) {
-		if (n < 1)
+	while(1) {
+		if(n < 1)
 			break; // too many replacements
 
 		n = n - 1;
 		float p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
 		float p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
-		if (p1 < 0)
+		if(p1 < 0)
 			p1 = p2;
 
-		if (p2 < 0)
+		if(p2 < 0)
 			p2 = p1;
 
 		p = min(p1, p2);
 
-		if (p < 0)
+		if(p < 0)
 			break;
 
 		string replacement = substring(msg, p, 2);
@@ -81,18 +81,18 @@ bool autocvar_g_chat_flood_notify_flooder;
  */
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
-	if (!privatesay && substring(msgin, 0, 1) == " ")
+	if(!privatesay && substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(source, msgin);
 
     string colorstr;
-	if (!IS_PLAYER(source))
+	if(!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else
 		colorstr = "";
 
-    if (!source)
+    if(!source)
 		colorstr = "";
 
 	/*
@@ -107,7 +107,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	*/
 
     string namestr = "";
-    if (source)
+    if(source)
         namestr = source.netname;
 
     string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
@@ -115,7 +115,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
     string msgstr, cmsgstr;
     string privatemsgprefix = string_null;
     int privatemsgprefixlen = 0;
-	if (msgin == "") {
+	if(msgin == "") {
         msgstr = cmsgstr = "";
 	} else {
 		if(privatesay)
@@ -193,7 +193,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				flood = 2;
 			}
 
-			if (time >= source.(flood_field))
+			if(time >= source.(flood_field))
 			{
 				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
 			}
@@ -205,7 +205,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else
 		{
-			if (time >= source.(flood_field))
+			if(time >= source.(flood_field))
 				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
 			else
 				flood = 1;
@@ -248,7 +248,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 	else if(flood == 1)
 	{
-		if (autocvar_g_chat_flood_notify_flooder)
+		if(autocvar_g_chat_flood_notify_flooder)
 		{
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
 			ret = 0;
@@ -272,14 +272,14 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
-			//if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			//if(!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			sprint(privatesay, msgstr);
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
 		else
 		{
-            if (source) {
+            if(source) {
                 sprint(source, sourcemsgstr);
                 dedicated_print(msgstr); // send to server console too
             }

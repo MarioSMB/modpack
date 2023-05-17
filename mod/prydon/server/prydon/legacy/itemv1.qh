@@ -1,0 +1,3 @@
+#pragma once
+
+vector legacy_itemv1(float itslot);

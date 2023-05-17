@@ -1,0 +1,9 @@
+#pragma once
+
+void set_ranks(entity e);
+
+vector gettitle();
+
+float cost_to_increase(.float fld);
+
+void titleupdate(entity this);

@@ -1,93 +1,96 @@
+#include "npcs.qh"
 
+#include "../quests/rq_npcs.qh"
+#include "../stats/stats.qh"
+#include "../subs/_mod.qh"
 
-void() npc =
+spawnfunc(npc)
 {
-	if (CheckStory(self))
+	if(CheckStory(this))
 	{
-		remove(self);
+		delete(this);
 		return;
 	}
-	legacy_npc();
+	legacy_npc(this);
 
-	if (self.classname == "npc")
-		randomize_inventory(self);
-	datacheck();	
-	if (self.spawnflags & 1)
-		if (music)
-			if (!self.theme)
-				self.theme = "music/boss.wav";
-	if (!self.model)
-		self.model = rq_npcmodel(floor(random() * 15));
-	self.oldskin = self.skin;
-	if (!self.noise)
-		self.noise = "player/swing.wav";
+	if(this.classname == "npc")
+		randomize_inventory(this);
+	datacheck(this);	
+	if(this.spawnflags & 1)
+		if(music)
+			if(!this.theme)
+				this.theme = "music/boss.wav";
+	if(!this.model)
+		this.model = rq_npcmodel(this, floor(random() * 15));
+	this.oldskin = this.skin;
+	if(!this.noise)
+		this.noise = "player/swing.wav";
 
-	if (cache)
+	if(cache)
 	{
-		precache_model(self.model);
-		if (self.bkup_model)
-			precache_model(self.bkup_model);
+		precache_model(this.model);
+		if(this.bkup_model)
+			precache_model(this.bkup_model);
 
-		if (self.noise)
-			precache_sound(self.noise);
-		if (self.noise1)
-			precache_sound(self.noise1);
-		if (self.noise2)
-			precache_sound(self.noise2);
-		if (self.noise3)
-			precache_sound(self.noise3);
-		if (self.noise4)
-			precache_sound(self.noise4);
-		if (self.voice)
-			precache_sound(self.voice);
-		if (self.theme)
-			precache_sound(self.theme);
+		if(this.noise)
+			precache_sound(this.noise);
+		if(this.noise1)
+			precache_sound(this.noise1);
+		if(this.noise2)
+			precache_sound(this.noise2);
+		if(this.noise3)
+			precache_sound(this.noise3);
+		if(this.noise4)
+			precache_sound(this.noise4);
+		if(this.voice)
+			precache_sound(this.voice);
+		if(this.theme)
+			precache_sound(this.theme);
 	}
-	setmodel(self, self.model);
+	_setmodel(this, this.model);
 
-
-	if (self.size_x > 100)
-		setsize(self, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	if(this.size_x > 100)
+		setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	else
-		setsize(self, VEC_HULL_MIN, VEC_HULL_MAX);
+		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 
-	if (!self.netname)
-		self.netname = rq_npcname(floor(random() * 256)) ;
-	if (!self.ai)
-		self.ai = AI_ROAM;
+	if(!this.netname)
+		this.netname = rq_npcname(floor(random() * 256)) ;
+	if(!this.ai)
+		this.ai = AI_ROAM;
 
-	self.owner = self;
-	self.player = self;
-	if (!self.max_health)
-		self.max_health = 5;
-	Restat();
+	this.owner = this;
+	this.player = this;
+	if(!this.max_health)
+		this.max_health = 5;
+	Restat(this);
 	
-	self.health = self.max_health;
-//	if (netplay)
-//		self.ai = self.ai - (self.ai & AI_ROAM); // no wandering in netplay
-	if (self.wad)
-		if (!(self.ai & AI_LUMP))
-			self.ai = self.ai | AI_STAY_NEAR;
-	if (!self.altaction)
-		self.altaction = SP_FIGHT_MELEE;
-	self.gotstuff 	= self.altaction;
-	self.movetype	= MOVETYPE_STEP;
-	self.solid	= SOLID_SLIDEBOX;
-	self.takedamage	= DAMAGE_AIM;
-	self.oldorigin	= self.origin;
-	set_frames(self);
-	if (!self.speed)
-		self.speed = 1;
-	self.die = PlayerDie;
-	self.use = playertrigger;
-	self.mana = self.max_mana;
-	self.mana_regen = self.mana_regen + 5;
-	if (self.message)
+	this.health = this.max_health;
+//	if(netplay)
+//		this.ai = this.ai - (this.ai & AI_ROAM); // no wandering in netplay
+	if(this.wad)
+		if(!(this.ai & AI_LUMP))
+			this.ai |= AI_STAY_NEAR;
+	if(!this.altaction)
+		this.altaction = SP_FIGHT_MELEE;
+	this.gotstuff 	= this.altaction;
+	set_movetype(this, MOVETYPE_STEP);
+	this.solid	= SOLID_SLIDEBOX;
+	this.takedamage	= DAMAGE_AIM;
+	this.oldorigin	= this.origin;
+	set_frames(this);
+	if(!this.speed)
+		this.speed = 1;
+	this.die = PlayerDie;
+	this.use = playertrigger;
+	this.mana = this.max_mana;
+	this.mana_regen = this.mana_regen + 5;
+	if(this.message)
 	{
-		self.effects = self.effects | EF_SELECTABLE;
-		self.action = opendialog;
+		this.effects |= EF_SELECTABLE;
+		this.action = opendialog;
 	}
-	else if (self.ai & (AI_HUNT_PLAYER | AI_FOLLOW))
-		self.effects = self.effects | EF_SELECTABLE;
-	AnimatePlayer();
-};
+	else if(this.ai & (AI_HUNT_PLAYER | AI_FOLLOW))
+		this.effects |= EF_SELECTABLE;
+	AnimatePlayer(this);
+}

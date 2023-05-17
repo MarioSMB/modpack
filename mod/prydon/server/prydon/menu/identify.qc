@@ -1,63 +1,61 @@
-float IDENTIFY_COST = 4;
-void() m_identify;
+#include "identify.qh"
 
-float() m_identifycallback =
+#include "../subs/math.qh"
+
+float m_identifycallback(entity this)
 {
-	if (!stat_id)
+	if(!stat_id)
 		return IDENTIFY_COST;
 	return 0;
-};
+}
 
-void() m_identify_confirm =
+void m_identify_confirm(entity this)
 {
-	local float slot, howm;
-	local vector it;
-
-	slot = root2(self.weapon);
+	float slot = root2(this.weapon);
 	
-	it = GetSlot(self, slot);
-	it_simplestat(it);
-	it_itemstat();
+	vector itslot = GetSlot(this, slot);
+	it_simplestat(this, itslot);
+	it_itemstat(this);
 	
-	if (self.menu < 1)
-		self.menu = 2;
-	else if (self.menu > 2)
-		self.menu = 1;
+	if(this.menu < 1)
+		this.menu = 2;
+	else if(this.menu > 2)
+		this.menu = 1;
 
-	if (self.button1)
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
-			if(!getgold(IDENTIFY_COST))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, IDENTIFY_COST))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-				it_simplestat(it);
-				it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_id = 1;
-				SetSlot(self, slot, it_setstat());
-				closemenu(self);
-				openmenu(self, m_inven, self);
+				SetSlot(this, slot, it_setstat());
+				closemenu(this);
+				openmenu(this, m_inven, this);
 				return;
 			}	
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			openmenu(self, m_identify, self.m_subject);
+			openmenu(this, m_identify, this.m_subject);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-		inven(it, fabs(self.equip & self.weapon) + 1);
-		howm = pgold();
-		pprice(howm, IDENTIFY_COST);
+		inven(this, itslot, fabs(this.equip & this.weapon) + 1);
+		float howm = pgold(this);
+		pprice(this, howm, IDENTIFY_COST);
 		
 		newline();
 		line();
 	
-		if (self.menu == 1)
+		if(this.menu == 1)
 			WriteString(msg_mode, "Identify this item?\n\{141}\[\1\] Yes\n \[\2\] No \n");
 		else
 			WriteString(msg_mode, "Identify this item?\n \[\1\] Yes\n\{141}\[\2\] No \n");
@@ -65,15 +63,12 @@ void() m_identify_confirm =
 	}
 }
 
-void() m_identify =
+void m_identify(entity this)
 {
-	
-	local float i;
-	
-	i = invenlst(self, 1, m_identifycallback, '4809829 7238761 6715648');
-	if (i)
+	int theslot = invenlst(this, this, 1, m_identifycallback, '4809829 7238761 6715648');
+	if(theslot)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_identify_confirm, self.m_subject);	
+		this.weapon = (2 ** theslot);
+		openmenu(this, m_identify_confirm, this.m_subject);	
 	}
-};
+}

@@ -2,7 +2,7 @@
 
 void DecodeLevelParms(entity this);
 
-void GetParms(float ver);
+void GetParms(entity this, float ver);
 
 void SetParms(entity this);
 

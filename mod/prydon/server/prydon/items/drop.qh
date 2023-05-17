@@ -1,0 +1,7 @@
+#pragma once
+
+void dropitem(entity this, vector itslot);
+ 
+void dropgold(entity this, float g);
+
+void dropallitems(entity this);

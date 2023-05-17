@@ -1,0 +1,5 @@
+#pragma once
+
+void throw1(entity this);
+
+void chakram1(entity this);

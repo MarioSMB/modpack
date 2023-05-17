@@ -1,0 +1,7 @@
+#pragma once
+
+bool canuse(entity this, vector itslot);
+
+bool UseItem(entity this, float sign);
+
+bool Use(entity this, int slot);

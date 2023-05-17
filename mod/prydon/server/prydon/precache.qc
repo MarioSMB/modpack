@@ -1,3 +1,7 @@
+#include "precache.qh"
+
+#include "items/itemstat.qh"
+
 PRECACHE(precaches)
 {
 	precache_model("progs/player.mdl");

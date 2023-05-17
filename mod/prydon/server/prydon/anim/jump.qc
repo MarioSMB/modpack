@@ -1,31 +1,35 @@
+#include "jump.qh"
 
-void() jump_frames = [0, jump_frames]
+#include "common.qh"
+
+void jump_frames(entity this)
 {
-	self.frame = self.castframes + self.walkframe;
-	updatevwep();
-	if (self.flags & FL_ONGROUND)
+	set_anim(this, 0, jump_frames);
+	this.frame = this.castframes + this.walkframe;
+	updatevwep(this);
+	if(IS_ONGROUND(this))
 	{
-		self.walkframe = 0;
-	
-		self.think = AnimatePlayer;
-		self.nextthink = time + 0.1;
+		this.walkframe = 0;
+
+		setthink(this, AnimatePlayer);
+		this.nextthink = time + 0.1;
 		return;
 	}
-	else if (self.walkframe < 4)
-		self.walkframe = self.walkframe + 1;
-	else if (self.velocity_z < 0)
+	else if(this.walkframe < 4)
+		this.walkframe = this.walkframe + 1;
+	else if(this.velocity_z < 0)
 	{
-		if (self.frame < self.jumpframes)
-			self.walkframe = self.walkframe + 1;
+		if(this.frame < this.jumpframes)
+			this.walkframe = this.walkframe + 1;
 	}
 }
 
-void() jump1 = 
+void jump1(entity this)
 {
-	face(0);
-	self.walkframe = 1;
-	self.flags = self.flags - (self.flags & FL_ONGROUND);
-	makevectors(self.angles);
-	self.velocity = '0 0 350' + v_forward * 300;
-	jump_frames();
-};
+	face(this, 0);
+	this.walkframe = 1;
+	UNSET_ONGROUND(this);
+	makevectors(this.angles);
+	this.velocity = '0 0 350' + v_forward * 300;
+	jump_frames(this);
+}

@@ -1,3 +1,7 @@
+#include "encode.qh"
+
+#include "../subs/parms.qh"
+
 vector it_setstat()
 {
 	vector v;
@@ -7,7 +11,7 @@ vector it_setstat()
 	return v;	
 }
 
-void it_simplestat(vector itslot)
+void it_simplestat(entity this, vector itslot)
 {
 	it_clearstats();
 	stat_it = itslot.x;
@@ -69,9 +73,9 @@ vector decodeitem()
 	return it_setstat();
 }
 
-void encodeitem(vector it)
+void encodeitem(entity this, vector itslot)
 {
-	it_simplestat(it);
+	it_simplestat(this, itslot);
 	parm_save(stat_id != 0, 2);
 	if(stat_it > 63)
 	{

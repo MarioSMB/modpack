@@ -1,123 +1,124 @@
+#include "attack.qh"
 
+#include "common.qh"
+#include "../subs/combat.qh"
+#include "../subs/subs.qh"
 
-float() attack_animation =
+float attack_animation(entity this)
 {
-	local float b, f;
+	float b, f;
 	
-	self.frame = self.frame + 1;
-	if (self.misc & MISC_DOUBLEATTACK)
+	this.frame = this.frame + 1;
+	if(this.misc & MISC_DOUBLEATTACK)
 	{
-		b = (self.doubleattack - self.throwframes) / self.dblattkscenes;
-		f = (self.frame - self.throwframes) - 1;
+		b = (this.doubleattack - this.throwframes) / this.dblattkscenes;
+		f = (this.frame - this.throwframes) - 1;
 		f = (f - (floor(f / b) * b)) + 1;
 	}
 	else
 	{
-		b = (self.attackframes - self.deathframes) / self.attackscenes;
-		f = (self.frame - self.deathframes) - 1;
+		b = (this.attackframes - this.deathframes) / this.attackscenes;
+		f = (this.frame - this.deathframes) - 1;
 		f = (f - (floor(f / b) * b)) + 1;
 	}
-	if (f == 1)
-		if (self.noise)
-			sound(self, CHAN_VOICE, self.noise, 1, ATTN_NORM);
+	if(f == 1)
+		if(this.noise)
+			_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 
 
-	if (f >= b)
+	if(f >= b)
 	{
-		self.think = AnimatePlayer;
-		self.nextthink = time + 0.1;
+		setthink(this, AnimatePlayer);
+		this.nextthink = time + 0.1;
 	}
 
-	face(1);
-	if (f == self.hitframe)
-		if (range_check(SP_FIGHT_MELEE, self.enemy))
-			return TRUE;
-	if (self.owner.spec & SPEC_TWO_HITS)
+	face(this, 1);
+	if(f == this.hitframe)
+		if(range_check(this, SP_FIGHT_MELEE, this.enemy))
+			return true;
+	if(this.owner.spec & SPEC_TWO_HITS)
 	{
-		if (f == (self.hitframe + 1))
-			if (range_check(SP_FIGHT_MELEE, self.enemy))
-				return TRUE;
+		if(f == (this.hitframe + 1))
+			if(range_check(this, SP_FIGHT_MELEE, this.enemy))
+				return true;
 	}
 	return 0;
-};
-void() attack_selectscene =
+}
+
+void attack_selectscene(entity this)
 {
-	local float b;
-	if (self.misc & MISC_DOUBLEATTACK)
+	float b;
+	if(this.misc & MISC_DOUBLEATTACK)
 	{
-		b = (self.doubleattack - self.throwframes) / self.dblattkscenes;
-		self.frame = self.doubleattack - ((ceil(random() * self.dblattkscenes) * b));
+		b = (this.doubleattack - this.throwframes) / this.dblattkscenes;
+		this.frame = this.doubleattack - ((ceil(random() * this.dblattkscenes) * b));
 	}
 	else
 	{
-		b = (self.attackframes - self.deathframes) / self.attackscenes;
-		self.frame = self.attackframes - ((ceil(random() * self.attackscenes) * b));
+		b = (this.attackframes - this.deathframes) / this.attackscenes;
+		this.frame = this.attackframes - ((ceil(random() * this.attackscenes) * b));
 	}
-};
+}
 
-
-void() attack_frames = 
+void attack_frames(entity this)
 {
-	self.think = attack_frames;
-	self.nextthink = time + 0.1;
+	setthink(this, attack_frames);
+	this.nextthink = time + 0.1;
 	
-	if (attack_animation())
-		if(Hit(self, self.enemy, SKILL_MELEE))
-			sound(self, CHAN_AUTO, "player/hit.wav", 1, ATTN_NORM);
-};
+	if(attack_animation(this))
+		if(Hit(this, this.enemy, SKILL_MELEE))
+			_sound(this, CHAN_AUTO, "player/hit.wav", 1, ATTN_NORM);
+}
 
-void() attack1 = 
+void attack1(entity this)
 {
-	attack_selectscene();
-	attack_frames();
-	self.dbltime = 1;
-};
+	attack_selectscene(this);
+	attack_frames(this);
+	this.dbltime = 1;
+}
 
-void() frenzy_frames =
+void frenzy_frames(entity this)
 {
-	self.think = frenzy_frames;
-	self.nextthink = time + 0.1;
+	setthink(this, frenzy_frames);
+	this.nextthink = time + 0.1;
 	
-	if(attack_animation())
+	if(attack_animation(this))
 	{
-		if(Hit(self, self.enemy, SKILL_MELEE))
+		if(Hit(this, this.enemy, SKILL_MELEE))
 		{
-			sound(self, CHAN_AUTO, "player/hit.wav", 1, ATTN_NORM);
-			self.frenzy_factor = self.frenzy_factor + self.owner.title_x + 1;
-			self.frenzy_time = time + 5;
+			_sound(this, CHAN_AUTO, "player/hit.wav", 1, ATTN_NORM);
+			this.frenzy_factor = this.frenzy_factor + this.owner.title_x + 1;
+			this.frenzy_time = time + 5;
 		}
 	}
-};
+}
 
-void() frenzy1 = 
+void frenzy1(entity this)
 {
-	attack_selectscene();
-	frenzy_frames();
-	self.dbltime = 1;
-};
+	attack_selectscene(this);
+	frenzy_frames(this);
+	this.dbltime = 1;
+}
 
-
-
-void() brawl_frames =
+void brawl_frames(entity this)
 {
-	self.think = brawl_frames;
-	self.nextthink = time + 0.1;
-	
-	local entity e;
-	if (attack_animation())
+	setthink(this, brawl_frames);
+	this.nextthink = time + 0.1;
+
+	if(attack_animation(this))
 	{
-		e = findradius(self.origin, 68);
+		entity e = findradius(this.origin, 68);
 		while(e)
 		{
-			if (e.takedamage)
+			if(e.takedamage)
 			{
-				if (infront(e))
+				if(infront(this, e))
 				{
-					if (!friendly(e, self))
+					if(!friendly(e, this))
 					{
-						if(Hit(self, e, SKILL_BRAWL))
+						if(Hit(this, e, SKILL_BRAWL))
 						{
-							sound(self, CHAN_WEAPON, "player/hit.wav", 1, ATTN_NORM);
+							_sound(this, CH_WEAPON_SINGLE, "player/hit.wav", 1, ATTN_NORM);
 						}
 					}
 				}
@@ -126,21 +127,21 @@ void() brawl_frames =
 		}
 		// ugly slash sprite
 		e = spawn();
-		setmodel(e, "progs/cresent.spr");
-		makevectors(self.angles);
-		setorigin(e, self.origin + v_forward * 32);
+		_setmodel(e, "progs/cresent.spr");
+		makevectors(this.angles);
+		setorigin(e, this.origin + v_forward * 32);
 		e.alpha = 0.2;
 		e.angles_x = 90;
-		e.angles_y = self.angles_y;
+		e.angles_y = this.angles_y;
 		e.angles_z = 0;
-		e.think = SUB_Remove;
+		setthink(e, SUB_Remove);
 		e.nextthink = time + 0.1;
 	}
-};
+}
 
-void() brawl1 = 
+void brawl1(entity this)
 {
-	attack_selectscene();
-	brawl_frames();
-	self.dbltime = 1;
-};
+	attack_selectscene(this);
+	brawl_frames(this);
+	this.dbltime = 1;
+}

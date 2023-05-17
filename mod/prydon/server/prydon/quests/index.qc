@@ -1,39 +1,39 @@
+#include "index.qh"
 
-void(string s, float lv) SetOldStory =
+void SetOldStory(string s, float lv)
 {
-	if (s == "main")
+	if(s == "main")
 		mainstory = lv;
-	else if (s == "opt1")
+	else if(s == "opt1")
 		opt1 = lv;
-	else if (s == "opt2")
+	else if(s == "opt2")
 		opt2 = lv;
-	else if (s == "opt3")
+	else if(s == "opt3")
 		opt3 = lv;
-	else if (s == "opt4")
+	else if(s == "opt4")
 		opt4 = lv;
-	else if (s == "opt5")
+	else if(s == "opt5")
 		opt5 = lv;
-	else if (s == "opt6")
+	else if(s == "opt6")
 		opt6 = lv;
-};
+}
 
-float (string s, float f) GetOldStory =
+float GetOldStory(string s, float f)
 {
-	if (s == "main")
+	if(s == "main")
 		return mainstory;
-	else if (s == "opt1")
+	else if(s == "opt1")
 		return opt1;
-	else if (s == "opt2")
+	else if(s == "opt2")
 		return opt2;
-	else if (s == "opt3")
+	else if(s == "opt3")
 		return opt3;	
-	else if (s == "opt4")
+	else if(s == "opt4")
 		return opt4;
-	else if (s == "opt5")
+	else if(s == "opt5")
 		return opt5;
-	else if (s == "opt6")
+	else if(s == "opt6")
 		return opt6;
 	else
 		return f;
-		
-};
+}

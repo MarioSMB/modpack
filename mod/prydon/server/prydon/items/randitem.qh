@@ -1,0 +1,3 @@
+#pragma once
+
+vector randitem(entity this, float base, float val, float shop);

@@ -1,27 +1,29 @@
-// false runaway loop error avoidance
-void(float loc, float skip) EquipCheck =
-{
-	local float i, change;
-	local vector it;
+#include "equip.qh"
 
+#include "../stats/stats.qh"
+
+// false runaway loop error avoidance
+void EquipCheck(entity this, float loc, float skip)
+{
+	bool change = false;
 	do
 	{
-		change = 0;
-		for (i = 1; i <= TOTAL_SLOTS; i = i + 1)
+		change = false;
+		for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 		{
-			if (i != skip)
+			if(i != skip)
 			{
 				
-				it = GetSlot(self, i);
-				if (!canuse(it))
+				vector itslot = GetSlot(this, i);
+				if(!canuse(this, itslot))
 				{
-					if(Unequip(i, 0))
-						change = 1;
+					if(Unequip(this, i, 0))
+						change = true;
 				}
-				else if (LOC & stat_loc & loc)
+				else if(LOC & stat_loc & loc)
 				{
-					if(Unequip(i, 0))
-						change = 1;
+					if(Unequip(this, i, 0))
+						change = true;
 				}
 			}
 		}
@@ -30,70 +32,63 @@ void(float loc, float skip) EquipCheck =
 	while(change);
 }
 
-
-
-float(float slot) Equip =
+bool Equip(entity this, float slot)
 {
-	local vector it;
-	it = GetSlot(self, slot);
+	vector itslot = GetSlot(this, slot);
 	
-	if (canuse(it) && (stat_loc & EQUIPABLE))
+	if(canuse(this, itslot) && (stat_loc & EQUIPABLE))
 	{
-		EquipCheck(stat_loc, slot);
-		if (canuse(it))
+		EquipCheck(this, stat_loc, slot);
+		if(canuse(this, itslot))
 		{
-			sound(self, CHAN_AUTO, itemsound(stat_it), 1, ATTN_NORM);
-			it_simplestat(it);
-			it_itemstat();
-			if (UseItem(1))
+			_sound(this, CHAN_AUTO, itemsound(stat_it), 1, ATTN_NORM);
+			it_simplestat(this, itslot);
+			it_itemstat(this);
+			if(UseItem(this, 1))
 			{
-				self.equip = self.equip | pow2(slot);
-				boundstats(self);
-				return TRUE;
+				this.equip |= (2 ** slot);
+				boundstats(this);
+				return true;
 			}
 		}
 	}
-	return FALSE;
-};
+	return false;
+}
 
-
-float(float slot, float recheck) Unequip =
+bool Unequip(entity this, float slot, float recheck)
 {
-	local float f;
-	f = pow2(slot);
+	float f = (2 ** slot);
 	
-	if (self.equip & f)
+	if(this.equip & f)
 	{
-		it_simplestat(GetSlot(self, slot));
-		it_itemstat();
+		it_simplestat(this, GetSlot(this, slot));
+		it_itemstat(this);
 		
-		UseItem(-1);
-		boundstats(self);
-		self.equip = self.equip - f;
-		if (recheck)
-			EquipCheck(stat_loc, slot);
-		return TRUE;
+		UseItem(this, -1);
+		boundstats(this);
+		this.equip = this.equip - f;
+		if(recheck)
+			EquipCheck(this, stat_loc, slot);
+		return true;
 	}
-	return FALSE;
-	
-};
-void() UnequipAll =
-{
-	local float f, i;
-	f = 1;
-	
-	for (i = i; i <= TOTAL_SLOTS; i = i + 1)
-	{
-		if (self.equip & f)
-		{
-			it_simplestat(GetSlot(self, i));
-it_itemstat();
-			UseItem(-1);
-		}
-		f = f * 2;
-	}
-	
-	boundstats(self);
-	self.equip = 0;
+	return false;
+}
 
-};
+void UnequipAll(entity this)
+{
+	int f = 1;
+	
+	for(int i = 0; i <= TOTAL_SLOTS; ++i)
+	{
+		if(this.equip & f)
+		{
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
+			UseItem(this, -1);
+		}
+		f *= 2;
+	}
+	
+	boundstats(this);
+	this.equip = 0;
+}

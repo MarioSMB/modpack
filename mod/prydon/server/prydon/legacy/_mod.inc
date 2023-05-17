@@ -1,0 +1,8 @@
+#include "inv.qc"
+#include "items.qc"
+#include "itemv1.qc"
+#include "npc.qc"
+#include "parmsv0.qc"
+#include "parmsv1.qc"
+#include "parmsv2.qc"
+#include "spells.qc"

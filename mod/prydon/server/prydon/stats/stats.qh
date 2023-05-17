@@ -1,0 +1,9 @@
+#pragma once
+
+void boundstats(entity e);
+
+void GenStat(entity this, float sign);
+
+void Restat(entity this);
+
+void Unstat(entity this);

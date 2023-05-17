@@ -1,0 +1,5 @@
+#include "dur.qh"
+#include "equip.qh"
+#include "invmap.qh"
+#include "pickup.qh"
+#include "subs.qh"

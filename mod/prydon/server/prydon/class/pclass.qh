@@ -1,0 +1,9 @@
+#pragma once
+
+void PrintClass(vector cl);
+
+string ClassPreString(vector cl);
+
+string ClassString(vector cl);
+
+void BprintClass(vector cl);

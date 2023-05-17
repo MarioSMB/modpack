@@ -1,0 +1,7 @@
+#pragma once
+
+const vector UI_TOPLEFT = '-96 -72 0';
+
+void ui_update(entity this);
+
+entity ui_over(entity this);

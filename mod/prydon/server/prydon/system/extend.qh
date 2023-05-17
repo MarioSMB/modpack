@@ -1,0 +1,18 @@
+#pragma once
+
+int snowtype; // 0 = QuakeC sprites, 1 = TQ flavor, 2 = DP flavor
+bool fileaccess;
+bool vmfc; // viewmodelforclient
+
+float filehandle;
+bool fileerror = false;
+
+string qread();
+
+void qwrite(string r);
+
+void qopenread(string fname);
+
+void qopenwrite(string fname);
+
+void qclose();

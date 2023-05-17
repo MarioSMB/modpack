@@ -1,0 +1,3 @@
+#pragma once
+
+void create_fx(entity this, float fram, float sp);

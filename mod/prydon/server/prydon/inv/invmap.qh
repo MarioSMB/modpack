@@ -1,0 +1,33 @@
+#pragma once
+
+float inv_get(entity e, float i, float j);
+
+void inv_set(entity e, float i, float j, float val);
+
+void inv_fill(entity e, float val);
+
+float inv_nextsquare(entity e, vector start, vector sz);
+
+void inv_setnextsquare(entity e, vector start, vector sz, float f);
+
+void inv_filldummies(entity e, vector start, vector sz);
+
+bool inv_getitem(entity e, float itx, float ity);
+
+void inv_createmap(entity e, vector sz);
+
+void inv_firstitem(entity e);
+
+bool inv_nextitem(entity e, vector sz);
+
+bool inv_checkitem(entity e, vector org, vector sz);
+
+bool boxcollision(vector box1, vector b1max, vector box2, vector b2max);
+
+vector inv_itemsinarea(entity e, vector org, vector sz);
+
+void inv_placeitem(entity e, float locx, float locy);
+
+void inv_clearitem(entity e, vector org);
+
+bool inv_autoplace(entity e, vector itslot, vector sz);

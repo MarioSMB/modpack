@@ -1,80 +1,72 @@
-void(entity e) boundstats =
+#include "stats.qh"
+
+#include "../spells/spells.qh"
+#include "rank.qh"
+
+void boundstats(entity e)
 {
-	local entity o;
-	
-	if (e.health > e.max_health)
+	if(e.health > e.max_health)
 		e.health = e.max_health;
-	else if (e.health < 0)
+	else if(e.health < 0)
 		e.health = 0;
-	if (e.mana > e.max_mana)
+	if(e.mana > e.max_mana)
 		e.mana = e.max_mana;
-	else if (e.mana < 0)
+	else if(e.mana < 0)
 		e.mana = 0;
-	if (e.classname == "player")
+	if(IS_PLAYER(e))
 	{
-		if (GetSpellLevel(e, e.spell) < 1)
+		if(GetSpellLevel(e, e.spell) < 1)
 		{
-			o = self;
-			self = e;
-			SelectSpell(0);
-			self = o;
+			SelectSpell(e, 0);
 		}
 	}
-};
-void(float sign) GenStat =
-{
-	if (self.classname == "player")
-		if (self.max_health < 25)
-			self.max_health = 25;// prevent erosion from bugs
-	self.max_health = self.max_health + (self.vit + ceil(self.lvl * 0.5)) * sign;
-	self.max_mana = self.max_mana + (self.mag + ceil(self.lvl * 0.5)) * sign;
-	self.tohit = self.tohit + (50 + rint(self.dex / 3) + rint(self.luck / 3)) * sign;
-	self.dodge = self.dodge + (50 + rint(self.agil/2)) * sign;
-	self.ac = self.ac + (self.lvl * 2) * sign;
-	self.daml = self.daml + (ceil(self.str * 0.2) + 1) * sign;
-	self.dama = self.dama + 1 * sign;
-	self.aspeed = self.aspeed + floor(self.agil * 0.2) * sign;
-};
+}
 
-
-void() Restat =
+void GenStat(entity this, float sign)
 {
-	float i;
-	titleupdate();
+	if(IS_PLAYER(this))
+		if(this.max_health < 25)
+			this.max_health = 25;// prevent erosion from bugs
+	this.max_health = this.max_health + (this.vit + ceil(this.lvl * 0.5)) * sign;
+	this.max_mana = this.max_mana + (this.mag + ceil(this.lvl * 0.5)) * sign;
+	this.tohit = this.tohit + (50 + rint(this.dex / 3) + rint(this.luck / 3)) * sign;
+	this.dodge = this.dodge + (50 + rint(this.agil/2)) * sign;
+	this.ac = this.ac + (this.lvl * 2) * sign;
+	this.daml = this.daml + (ceil(this.str * 0.2) + 1) * sign;
+	this.dama = this.dama + 1 * sign;
+	this.aspeed = this.aspeed + floor(this.agil * 0.2) * sign;
+}
+
+void Restat(entity this)
+{
+	titleupdate(this);
+
+	GenStat(this, 1);
 	
-	
-	GenStat(1);
-	
-	for(i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		if (self.equip & pow2(i))
+		if(this.equip & (2 ** i))
 		{
-			it_simplestat(GetSlot(self, i));
-			it_itemstat();
-			UseItem(1);
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
+			UseItem(this, 1);
 		}
 	}
 
-	
-	boundstats(self);
+	boundstats(this);
+}
 
-};
-
-void() Unstat =
+void Unstat(entity this)
 {
-	float i;
-
-	for(i = 1; i <= TOTAL_SLOTS; i = i + 1)
+	for(int i = 1; i <= TOTAL_SLOTS; i = i + 1)
 	{
-		if (self.equip & pow2(i))
+		if(this.equip & (2 ** i))
 		{
-			it_simplestat(GetSlot(self, i));
-			it_itemstat();
-			UseItem(-1);
+			it_simplestat(this, GetSlot(this, i));
+			it_itemstat(this);
+			UseItem(this, -1);
 		}
 	}
 
-	GenStat(-1);
-	
-};
-
+	GenStat(this, -1);
+}

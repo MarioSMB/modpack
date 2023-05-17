@@ -1,0 +1,3 @@
+#pragma once
+
+void evile_go(entity this);

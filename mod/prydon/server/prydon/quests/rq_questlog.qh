@@ -1,0 +1,3 @@
+#pragma once
+
+void rq_questlog(entity this);

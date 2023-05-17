@@ -1,0 +1,9 @@
+#pragma once
+
+.vector average_origin;
+
+bool moveit(entity this, float yaw, float run);
+
+void end_hunt(entity this);
+
+void handle_ai(entity this);

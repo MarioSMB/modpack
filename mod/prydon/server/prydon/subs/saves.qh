@@ -1,0 +1,5 @@
+#pragma once
+
+void gamestate_load();
+
+void InnSave(entity actor, entity trigger, float cost);

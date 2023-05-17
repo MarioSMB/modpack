@@ -1,0 +1,14 @@
+#pragma once
+
+int rq_npcs;
+int spawnednpc;
+
+string rq_npcname(float f);
+
+string rq_npcmodel(entity this, float n);
+
+entity rq_spawnmonster(entity thi);
+
+entity rq_spawnnpc_go(entity this, float spawnpoint, float type);
+
+void rq_spawnnpc(entity this);

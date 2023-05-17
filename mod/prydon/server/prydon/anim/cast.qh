@@ -1,0 +1,3 @@
+#pragma once
+
+void cast1(entity this);

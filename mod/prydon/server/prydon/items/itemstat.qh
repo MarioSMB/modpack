@@ -1,0 +1,13 @@
+#pragma once
+
+vector it_itemsize(float itslot);
+
+string itemmodel(float itslot);
+
+string it_itemicon(float itslot);
+
+void itemapplyeffects(entity e);
+
+string itemsound(float itslot);
+
+void it_itemstat(entity this);

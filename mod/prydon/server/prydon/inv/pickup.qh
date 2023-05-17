@@ -1,0 +1,11 @@
+#pragma once
+
+bool AutoEquip(entity this, float slot);
+
+void openitembuy(entity this, entity targ);
+
+void action_pickup(entity this, entity targ);
+
+vector pickupitem(entity this, vector itslot);
+
+void pushitem(entity this, vector itslot);

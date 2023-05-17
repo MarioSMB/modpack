@@ -1,41 +1,45 @@
-void() cast_frames =
+#include "cast.qh"
+
+#include "common.qh"
+#include "../spells/cast.qh"
+#include "../spells/spfx.qh"
+
+void cast_frames(entity this)
 {
-	local float b, f, n;
-	self.think = cast_frames;
-	self.nextthink = time + 0.1;
-	self.frame = self.frame + 1;
+	setthink(this, cast_frames);
+	this.nextthink = time + 0.1;
+	this.frame = this.frame + 1;
 	
-	b = (self.castframes - self.poseframes) / self.castscenes;
-	f = (self.frame - self.poseframes) - 1;
+	float b = (this.castframes - this.poseframes) / this.castscenes;
+	float f = (this.frame - this.poseframes) - 1;
 	f = (f - (floor(f / b) * b)) + 1;
-	n = f - (b - 5);
+	float n = f - (b - 5);
 	
-	if (f >= b)
+	if(f >= b)
 	{
-		self.think = AnimatePlayer;
-		self.nextthink = time + 0.1;
+		setthink(this, AnimatePlayer);
+		this.nextthink = time + 0.1;
 	}
-	if (n > 0)
+	if(n > 0)
 	{
-		if (n == 1)
+		if(n == 1)
 		{
-			if (range_check(self.gotstuff, self.enemy))
-				spell_fire(self.gotstuff);
+			if(range_check(this, this.gotstuff, this.enemy))
+				spell_fire(this, this.gotstuff);
 		}
-		create_fx(n, self.gotstuff);
+		create_fx(this, n, this.gotstuff);
 	}
-	face(1);
-};
+	face(this, 1);
+}
 
-void() cast_selectscene =
+void cast_selectscene(entity this)
 {
-	local float b;
-	b = (self.castframes - self.poseframes) / self.castscenes;
-	self.frame = self.castframes - ((ceil(random() * self.castscenes) * b));
-};
+	float b = (this.castframes - this.poseframes) / this.castscenes;
+	this.frame = this.castframes - ((ceil(random() * this.castscenes) * b));
+}
 
-void() cast1 = 
+void cast1(entity this)
 {
-	cast_selectscene();
-	cast_frames();
-};
+	cast_selectscene(this);
+	cast_frames(this);
+}

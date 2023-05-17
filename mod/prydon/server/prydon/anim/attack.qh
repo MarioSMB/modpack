@@ -1,0 +1,7 @@
+#pragma once
+
+void attack1(entity this);
+
+void frenzy1(entity this);
+
+void brawl1(entity this);

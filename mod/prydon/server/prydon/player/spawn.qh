@@ -1,3 +1,5 @@
 #pragma once
 
 void prydon_PutClientInServer(entity this);
+
+entity find_spawn(entity this);

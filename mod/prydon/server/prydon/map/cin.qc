@@ -1,161 +1,195 @@
+#include "cin.qh"
 
-void() goalpoint =
-{
-	self.use = goalpoint;
-	self.action = generictrigger;
-	
-	if (activator == world)
-		return;
-	activator.enemy = self;
-	activator.goalentity = self;
-	activator.menu = self.spawnflags & 1;
-};
+#include "../subs/_mod.qh"
 
-void() setai =
+void goalpoint_use(entity this, entity actor, entity trigger)
 {
-	self.use = setai;
-	if (activator == world)
+	if(!actor)
 		return;
-	activator.team = self.team;
-	activator.ai = self.ai;
-};
-
-void() setmusic =
-{
-	if (cache)
-		precache_sound(self.theme);
-		
-	self.use = setmusic;
-	if (activator == world)
-		return;
-	
-	if (!RequirementsMet(self, activator))
-		return;
-	setdmusic(self.theme);
+	actor.enemy = this;
+	actor.goalentity = this;
+	actor.menu = this.spawnflags & 1;
 }
 
-void() setaction =
+void goalpoint_action(entity this, entity targ)
 {
-	self.use = setaction;
-	if (activator == world)
-		return;
-	if (!RequirementsMet(self, activator))
-		return;
-	if (self.altaction)
-		activator.gotstuff = activator.altaction = self.altaction;
-	if (self.spell)
-		activator.spell = self.spell;
-	if (self.target)
-		activator.goalentity = find(world,targetname, self.target);
-};
+	generictrigger(this, NULL, targ);
+}
 
-void() setcamera =
+spawnfunc(goalpoint)
 {
-	self.use = setcamera;
-	if (other == world)
+	this.use = goalpoint_use;
+	this.action = goalpoint_action;
+}
+
+void setai_use(entity this, entity actor, entity trigger)
+{
+	if(!actor)
 		return;
-	if (activator.owner.camera)
+	actor.team = this.team;
+	actor.ai = this.ai;
+}
+
+spawnfunc(setai)
+{
+	this.use = setai_use;
+}
+
+void setmusic_use(entity this, entity actor, entity trigger)
+{
+	if(!actor)
+		return;
+	if(!RequirementsMet(this, actor))
+		return;
+	setdmusic(this.theme);
+}
+
+spawnfunc(setmusic)
+{
+	if(cache)
+		precache_sound(this.theme);
+		
+	this.use = setmusic_use;
+}
+
+void setaction_use(entity this, entity actor, entity trigger)
+{
+	if(!actor)
+		return;
+	if(!RequirementsMet(this, actor))
+		return;
+	if(this.altaction)
+		actor.gotstuff = actor.altaction = this.altaction;
+	if(this.spell)
+		actor.spell = this.spell;
+	if(this.target)
+		actor.goalentity = find(NULL,targetname, this.target);
+}
+
+spawnfunc(setaction)
+{
+	this.use = setaction_use;
+}
+
+void setcamera_use(entity this, entity actor, entity trigger)
+{
+	if(!trigger)
+		return;
+	if(actor.owner.camera)
 	{
-		if (self.spawnflags)
+		if(this.spawnflags)
 		{
-			activator.owner.camera.goalentity = world;
-			if (activator.owner.camera.mangle != '0 0 0')
+			actor.owner.camera.goalentity = NULL;
+			if(actor.owner.camera.mangle != '0 0 0')
 			{
-				activator.owner.rotang = activator.owner.camera.mangle;
-				activator.owner.camera.mangle = '0 0 0';
+				actor.owner.rotang = actor.owner.camera.mangle;
+				actor.owner.camera.mangle = '0 0 0';
 			}
 		}
 		else
 		{
-			if (activator.owner.camera.mangle == '0 0 0')
-				activator.owner.camera.mangle = activator.owner.rotang;
-			activator.owner.camera.goalentity = self;
+			if(actor.owner.camera.mangle == '0 0 0')
+				actor.owner.camera.mangle = actor.owner.rotang;
+			actor.owner.camera.goalentity = this;
 			
 		}
 	}
-};
+}
 
-
-void() setplayer =
+spawnfunc(setcamera)
 {
-	self.use = setplayer;
-	if (activator == world)
+	this.use = setcamera_use;
+}
+
+void setplayer_use(entity this, entity actor, entity trigger)
+{
+	if(!actor)
 		return;
-	activator.owner.player = find(world, targetname, self.target);
-	activator.owner.player.owner = activator;
-	activator = activator.owner.player;
-};
+	actor.owner.player = find(NULL, targetname, this.target);
+	actor.owner.player.owner = actor;
+	actor = actor.owner.player;
+}
 
+spawnfunc(setplayer)
+{
+	this.use = setplayer_use;
+}
 
-
-void() takestuff =
+void takestuff_use(entity this, entity actor, entity trigger)
 {
 	float success;
 
-	if (self.items)
-	{
-		self.slot1 = legacy_itemv1(self.items);
-		self.items = 0;
-	}
-	self.use = takestuff;
-	if (other == world)
+	if(!trigger)
 		return;
-	if (other.owner)
-		other = other.owner;
+	if(trigger.owner)
+		trigger = trigger.owner;
 		
-	if (self.spawnflags)
+	if(this.spawnflags)
 	{
-		success = hassomething(self.slot1, other);
-		if (success)
-			Trigger(self, activator, other, 1);
+		success = hassomething(this.slot1, trigger);
+		if(success)
+			Trigger(this, actor, trigger, 1);
 		else
-			Trigger(self, activator, other, 2);
+			Trigger(this, actor, trigger, 2);
 	}
 	else
 	{
-		success = takesomething(self.slot1, other);
-		if (success)
+		success = takesomething(this.slot1, trigger);
+		if(success)
 		{
-			Trigger(self, activator, other, 1);
-			self = activator;
-			pickupitem(self.slot1);
+			Trigger(this, actor, trigger, 1);
+			pickupitem(this, actor.slot1);
 		}
 		else
-			Trigger(self, activator, other, 2);
+			Trigger(this, actor, trigger, 2);
 	}
 	
-};
+}
 
-void() dropstuff =
+spawnfunc(takestuff)
 {
-	entity o;
+	if(this.items)
+	{
+		this.slot1 = legacy_itemv1(this.items);
+		this.items = 0;
+	}
+	this.use = takestuff_use;
+}
 
-	o = self;
-	self.use = dropstuff;
-	if (!other)
+void dropstuff_use(entity this, entity actor, entity trigger)
+{
+	if(!trigger)
 		return;
 
 	// hack
-	call(dropallitems, activator);
-};
+	dropallitems(actor);
+}
 
-void(entity src, entity dest, float sgn) statmod_apply =
+spawnfunc(dropstuff)
+{
+	this.use = dropstuff_use;
+}
+
+void statmod_apply(entity src, entity dest, float sgn)
 {
 	(dest.(src.mod_field)) = (dest.(src.mod_field)) + src.value * sgn;
-	 
-};
+}
 
-void() setstats =
+void setstats_use(entity this, entity actor, entity trigger)
 {
-	self.use = setstats;
-	if (activator == world)
+	if(!actor)
 		return;
-	if (!RequirementsMet(self, activator))
+	if(!RequirementsMet(this, actor))
 		return;
-	statmod_apply (self, activator, 1);
-};
+	statmod_apply(this, actor, 1);
+}
 
-void() script =
+spawnfunc(setstats)
+{
+	this.use = setstats_use;
+}
+
+spawnfunc(script)
 {
 	// script
 	// entry point (typically targetname, can be other stuff)
@@ -165,5 +199,4 @@ void() script =
 	// ...number
 	// action target
 	// exit/next (.targets)
-
-};
+}

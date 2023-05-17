@@ -1,138 +1,137 @@
+#include "die.qh"
 
-void() death_fade =
+#include "../stats/stats.qh"
+#include "../subs/subs.qh"
+#include "../subs/trigger.qh"
+
+void death_fade(entity this)
 {
-	if (self.alpha <= 0.06)
+	if(this.alpha <= 0.06)
 	{
-		self.model = "";
-		remove(self);
+		this.model = "";
+		delete(this);
 	}
 	else
 	{
-		self.alpha = self.alpha - 0.03;
-		self.nextthink = time + 0.02;
+		this.alpha = this.alpha - 0.03;
+		this.nextthink = time + 0.02;
 	}
-};
-void() death_frames = 
+}
+void death_frames(entity this)
 {
-	local float f, b;
+	setthink(this, death_frames);
+	this.nextthink = time + 0.1;
 	
-	self.think = death_frames;
-	self.nextthink = time + 0.1;
-	
-	self.frame = self.frame + 1;
-	b = (self.deathframes - self.runframes) / self.deathscenes;
-	f = (self.frame - self.runframes) - 1;
+	this.frame = this.frame + 1;
+	float b = (this.deathframes - this.runframes) / this.deathscenes;
+	float f = (this.frame - this.runframes) - 1;
 	f = (f - (floor(f / b) * b)) + 1;
 
-	if (f >= b)
+	if(f >= b)
 	{
-		if (self.classname == "body")
+		if(this.classname == "body")
 		{
-			self.think = SUB_Null;
+			setthink(this, func_null);
+			this.nextthink = 0;
 			return;
 		}
-		self.think = death_fade;
-		self.alpha = 1;
-		self.nextthink = time + 8;
+		setthink(this, death_fade);
+		this.alpha = 1;
+		this.nextthink = time + 8;
 	}
-};
-void() death_selectscene =
+}
+void death_selectscene(entity this)
 {
-	local float b;
-	b = (self.deathframes - self.runframes) / self.deathscenes;
-	self.frame = self.deathframes - ((ceil(random() * self.deathscenes) * b));
-};
+	float b = (this.deathframes - this.runframes) / this.deathscenes;
+	this.frame = this.deathframes - ((ceil(random() * this.deathscenes) * b));
+}
 
-
-void() death1 = 
+void death1(entity this) 
 {
-	death_selectscene();
-	death_frames();
-};
+	death_selectscene(this);
+	death_frames(this);
+}
 
-void(float bodydeath) PlayerDie =
+void PlayerDie(entity this, bool bodydeath)
 {
-	float i;
-	if (self.player)
-		self = self.player;
+	int i;
+	if(this.player)
+		this = this.player;
 		
-	if (self.camera)
+	if(this.camera)
 	{
-		remove(self.camera);
-		self.camera = world;
+		delete(this.camera);
+		this.camera = NULL;
 	}
-	if (self.wayp)
+	if(this.wayp)
 	{
-		remove(self.wayp);
-		self.wayp = world;
+		delete(this.wayp);
+		this.wayp = NULL;
 	}
-	if (self.spellprop)
+	if(this.spellprop)
 	{
-		remove(self.spellprop);
-		self.spellprop = world;
+		delete(this.spellprop);
+		this.spellprop = NULL;
 	}
-	if (self.owner.classname == "player")
-		openmenu(self.owner, m_dead, self.owner);
-	if (self.classname == "helper")
-		if (self.sbarsub)
-			self.sbarsub.summon_count = self.sbarsub.summon_count - 1;
-	if (self.ai & AI_FOLLOW)
-		if (self.sbarsub)
-			self.sbarsub.follow_npcs = self.sbarsub.follow_npcs - 1;
-	self.owner.health = 0;
-	self.health = 0;
-	self.takedamage = DAMAGE_NO;
-	self.owner.takedamage = DAMAGE_NO;
-	self.effects = 0;
+	if(this.owner.classname == "player")
+		openmenu(this.owner, m_dead, this.owner);
+	if(this.classname == "helper")
+		if(this.sbarsub)
+			this.sbarsub.summon_count = this.sbarsub.summon_count - 1;
+	if(this.ai & AI_FOLLOW)
+		if(this.sbarsub)
+			this.sbarsub.follow_npcs = this.sbarsub.follow_npcs - 1;
+	this.owner.health = 0;
+	this.health = 0;
+	this.takedamage = DAMAGE_NO;
+	this.owner.takedamage = DAMAGE_NO;
+	this.effects = 0;
 	
-	if (self.theme)
+	if(this.theme)
 		setdmusic(world.noise2);
-	if (self.killtarget)
-		self.target = self.killtarget;
+	if(this.killtarget)
+		this.target = this.killtarget;
 		
-	if (self.target)
+	if(this.target)
 	{
-		other = self.enemy;
-		generictrigger();
+		generictrigger(this, NULL, this.enemy);
 	}
-	if (bodydeath)
+	if(bodydeath)
 	{
-		if (!drop_body())
+		if(!drop_body(this))
 		{
-			dropallitems();
-			if (self.cold_time > time)
+			dropallitems(this);
+			if(this.cold_time > time)
 			{
 				for(i = 0; i < 3; i = i + 1)
-					spawngib("progs/frozen.mdl");
+					spawngib(this, "progs/frozen.mdl");
 				for(i = 0; i < 3; i = i + 1)
-					spawngib("progs/frozen2.mdl");
+					spawngib(this, "progs/frozen2.mdl");
 				for(i = 0; i < 3; i = i + 1)
-					spawngib("progs/frozen3.mdl");
-				sound(self, CHAN_VOICE, "spells/shatter.wav", 1, ATTN_NORM);
-				remove(self);
+					spawngib(this, "progs/frozen3.mdl");
+				_sound(this, CH_VOICE, "spells/shatter.wav", 1, ATTN_NORM);
+				delete(this);
 				return;
 			}
-			self.deadflag = 1;
+			this.deadflag = 1;
 	
-			self.flags = 0;
-			self.solid = SOLID_NOT;
-			self.movetype = MOVETYPE_TOSS;
+			this.flags = 0;
+			this.solid = SOLID_NOT;
+			set_movetype(this, MOVETYPE_TOSS);
 		}
-		self = self.owner;
-		Unstat();
-		self.equip = 0;
-		self.gp = 0;
-		for (i = 1; i <= TOTAL_SLOTS; i = i +1)
-			ClearSlot(self, i);
-		Restat();
-		self = self.player;
+		Unstat(this.owner);
+		this.owner.equip = 0;
+		this.owner.gp = 0;
+		for(i = 1; i <= TOTAL_SLOTS; i = i +1)
+			ClearSlot(this.owner, i);
+		Restat(this.owner);
 	}
-	death1();
-	self.owner.player = world;
-	self.player = self;
+	death1(this);
+	this.owner.player = NULL;
+	this.player = this;
 
-	if (self.noise4)
-		sound(self, CHAN_VOICE, self.noise4, 1, ATTN_NORM);
+	if(this.noise4)
+		_sound(this, CH_VOICE, this.noise4, 1, ATTN_NORM);
 
-	self.owner = self;	
-};
+	this.owner = this;	
+}

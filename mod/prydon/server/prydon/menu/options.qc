@@ -1,63 +1,65 @@
-void (float i) pcheckbox =
+#include "options.qh"
+
+void pcheckbox(float check)
 {
 	pad(27);
-	if (i)
+	if(check)
 		p3(16, 156, 17);
 	else
 		p3(16, 32, 17);
-};
+}
 
-void () m_opitions =
+void m_options(entity this)
 {
-	if (self.menu < 1)
-		self.menu = 5;
-	else if (self.menu > 5)
-		self.menu = 1;
-	if (self.button1)
+	if(this.menu < 1)
+		this.menu = 5;
+	else if(this.menu > 5)
+		this.menu = 1;
+	if(this.button1)
 	{
-		if (self.menu == 5)
+		if(this.menu == 5)
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
-		if (self.options & pow2(self.menu))
-			self.options = self.options - pow2(self.menu);
+		int moption = (2 ** this.menu);
+		if(this.options & moption)
+			this.options &= ~moption;
 		else
-			self.options = self.options | pow2(self.menu);	
+			this.options |= moption;	
 	
 	}
-	if (self.m_refresh >= time)
+	if(this.m_refresh >= time)
 		return;
 	// show the player his stats and allows ptd
-	pstart();
-	
-	
-	poption(1, TRUE);
+	pstart(this);
+
+	poption(this, 1, true);
 	p8('A', 'l', 'w', 'a', 'y', 's', ' ', 'S');
 	p8('h', 'o', 'w', ' ', 'S', 'p', 'e', 'l');
 	p1('l');
-	pcheckbox(!(self.options & 1));
+	pcheckbox(!(this.options & 1));
 	newline();
 	
-	poption(2, TRUE);
+	poption(this, 2, true);
 	p8('M', 'o', 'u', 's', 'e', ' ', 'R', 'o');
 	p8('t', 'a', 't', 'e', '/', 'Z', 'o', 'o');
 	p1('m');
-	pcheckbox(!(self.options & 2));
+	pcheckbox(!(this.options & 2));
 	newline();
 	
-	poption(3, TRUE);
+	poption(this, 3, true);
 	p8('Q', 'u', 'e', 's', 't', ' ', 'N', 'o');
 	p4('t', 'i', 'c', 'e');
-	pcheckbox(!(self.options & 4));
+	pcheckbox(!(this.options & 4));
 	newline();
 	
-	poption(4, TRUE);
+	poption(this, 4, true);
 	p7('V', 'e', 'r', 'b', 'o', 's', 'e');
-	pcheckbox(self.options & OPT_VERBOSE);
+	pcheckbox(this.options & OPT_VERBOSE);
 	newline();
 	
-	poption(5, TRUE);
+	poption(this, 5, true);
 	p4('E', 'x', 'i', 't');
 	pad(30);
 	p1(0);
@@ -66,4 +68,4 @@ void () m_opitions =
  \[\2\] Mouse Rotate/Zoom \[ \]\n
  \[\3\] Quest Notice      \[ \]\n
 */
-};
+}

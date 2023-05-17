@@ -1,0 +1,109 @@
+#pragma once
+
+const string rq1_ca = "I've lost my overdue library\nbook in ";
+const string rq1_cb = ". Will you\nplease find it?\n";
+const string rq1_qa = "Locate a missing book in ";
+const string rq1_qb = " and\nreturn it to it's owner";
+const string rq1_cc = "Thank you so much for returning\nthe book!\n";
+
+const string rq2_ca = "Our town healer is missing!\n He's in ";
+const string rq2_cb = "! Please\nrescue him!";
+const string rq2_qa = "Find the lost healer in ";
+const string rq2_qb = " and\nreturn him home";
+const string rq2_cc = "Many thanks for rescuing\nthe healer\n";
+
+const string rq3_ca = "We need a healer to come\nto our town, quickly. There's\none in ";
+const string rq3_cb = " that may help.\nWill you please bring him here?";
+const string rq3_qa = "Ask a healer in ";
+const string rq3_qb = " to\nhelp the needy";
+const string rq3_cc = "The healer can now treat\nthe injured! Thank you\n";
+
+const string rq4_ca = "An evile wizard has been\nterrorizing the town for days\nHe's hiding in ";
+const string rq4_cb = ". Will you\nplease save us from him?";
+const string rq4_qa = "Destroy the evile wizard in ";
+const string rq4_qb = ".";
+const string rq4_cc = "With the evile wizard gone,\nperhaps the town will return to peace.\n";
+
+const string rq5_ca = "I need to go to ";
+const string rq5_cb = " and\n require an escort to make it\nthere safely. Will you help?";
+const string rq5_qa = "Escort the villager to ";
+const string rq5_qb = ".";
+const string rq5_cc = "Thanks for escorting me\nYou are indeed a great adventurer.\n";
+
+const string rq6_ca = "I borrowed this book from someone\nin ";
+const string rq6_cb = ". If you return it to him for me,\nhe will most certainly reward you.";
+const string rq6_qa = "Return the borrowed book to a\ncollector in ";
+const string rq6_qb = ".";
+const string rq6_cc = "Thanks for giving me back this book\nIt's my favorite one.";
+
+const string rq7_ca = "There's an evile wizard in ";
+const string rq7_cb = "\nthat killed my son. Take me to him so I\n can exact my revenge!";
+const string rq7_qa = "Bring the villager to destroy the\nevile wizard located in ";
+const string rq7_qb = ".";
+const string rq7_cc = "We did it! My son is avenged!\n";
+
+const string rq8_ca = "An evile wizard stole my favorite\nbook! How unlucky is that? He's\nprobably reading it in ";
+const string rq8_cb = "\nright now. Will you please go get it\nback?";
+const string rq8_qa = "Recover the stolen book from an evile\nwizard in ";
+const string rq8_qb = " and return\nit to it's owner.";
+const string rq8_cc = "Thank you so much for returning\nthe book!\n";
+
+const string rq9_ca = "My daughter has been kidnapped by\na hideous goblin who took her to\n";
+const string rq9_cb = ". Please, will you\nrescue her?";
+const string rq9_qa = "Rescue the kidnapped daughter in\n";
+const string rq9_qb = " from the hideous\ngoblin.";
+const string rq9_cc = "I don't have much to offer\nbut you saved my baby, I thank you\neternally.\n";
+
+const string rq10_ca = "I have a mild case of the plague.\nThere's an alchemist in ";
+const string rq10_cb = "\nthat has created a special elixir to\ncure me. Will you please go retrieve it\nfor me? ";
+const string rq10_qa = "Retrieve the elixir from an alchemist in\n";
+const string rq10_qb = " to cure\nthe plague victim.";
+const string rq10_cc = "I'm cured! Thank you so much!\n";
+
+const string rq11_ca = "My friends and I were out\npartying in ";
+const string rq11_cb = "\nand we sorta left our ale out there.\nCan you *hick* go get at least 3\nbottles back here?";
+const string rq11_qa = "Find three bottles of ale in ";
+const string rq11_qb = "\nand return it to a drunk in town";
+const string rq11_cc = "Thanks for hooking me up with the brew!\n";
+
+const string rq12_ca = "My brother left his compass and map\nhere when he went out for a walk in\n";
+const string rq12_cb = ". I'm afraid he's gotten lost. Will\nyou please go look for him?";
+const string rq12_qa = "Find the lost brother in ";
+const string rq12_qb = "\nand return him home.";
+const string rq12_cc = "Thanks for finding my brother. He's\nnot too bright, you know.";
+
+const string rq13_ca = "I need a blacksmith to make me new\nhinges. There's one in ";
+const string rq13_cb = "\nthat can help. Will you go ask him for\nme?";
+const string rq13_qa = "Locate a blacksmith in ";
+const string rq13_qb = " and\nask him to make hinges.";
+const string rq13_cc = "Excellent work! Now my cabinet doors\nwon't fall off!";
+
+const string rq14_ca = "I am on a pilgrimage to\n";
+const string rq14_cb = ". If you aid me\nin my journey, I will reward you";
+const string rq14_qa = "Escort a pilgrim to ";
+const string rq14_qb = ".";
+const string rq14_cc = "Bless you for your help.\nYou will not be forgotten in my prayers.\n";
+
+const int MAX_RQ = 13;
+
+/* Add strings, add info below, add index to questlog, add index to dialog */
+
+const int RQ_ITEMS = 4;
+const int RQ_MONSTERS = 8;
+const int RQ_GIVE_NPC = 16;
+const int RQ_PICKUP_NPC = 32;
+const int RQ_RESCUE_NPC = 64;
+const int RQ_OBJECTIVES = 252;
+const int RQ_FIGHT = 256;
+const int RQ_ESCORT = 512; // doesn't add objectives
+const int RQ_ALT = 1024;
+const int RQ_GIVE_ITEM = 2048;
+const int RQ_DEADGUY = 4096;
+
+// scavenger hunt?
+// trade?
+const int MT_HOSTILE = 2;
+const int MT_FRIENDLY = 1;
+const int MT_BOTH = 3;
+
+int rq_objquan;

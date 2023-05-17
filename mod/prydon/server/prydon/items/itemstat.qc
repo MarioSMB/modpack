@@ -1,11 +1,13 @@
+#include "itemstat.qh"
 
-float (float it) itemskin =
+#include "../spells/spells.qh"
+#include "../spells/sval.qh"
+
+int itemskin(float itslot)
 {
-	local float n;
-	
-	if(it == IT_BOOK)
+	if(itslot == IT_BOOK)
 	{
-		n = stat_suf - SF_SPELL;
+		float n = stat_suf - SF_SPELL;
 		if(n < 1)
 			n = 0;
 		else if(n == SP_TELEPORT)
@@ -18,527 +20,526 @@ float (float it) itemskin =
 			n = SP_TELEPORT;
 		return n;
 	}
-	else if(it == IT_NIGHTCLUB)
+	else if(itslot == IT_NIGHTCLUB)
 		return 1;
 	return 0;
 }
 
-
-vector it_itemsize(float it)
+vector it_itemsize(float itslot)
 {
 	// should return x and y inventory size
 	// z should be data flags
 	
-	if(it == IT_CLOTH)
+	if(itslot == IT_CLOTH)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_LAMMELLAR)
+	else if(itslot == IT_LAMMELLAR)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_CHAIN_MAIL)
+	else if(itslot == IT_CHAIN_MAIL)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_BREAST_PLATE)
+	else if(itslot == IT_BREAST_PLATE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_KNIFE)
+	else if(itslot == IT_KNIFE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_DAGGER)
+	else if(itslot == IT_DAGGER)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SABRE)
+	else if(itslot == IT_SABRE)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR			
-	else if(it == IT_RAPIER)
+	else if(itslot == IT_RAPIER)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_BROADSWORD)
+	else if(itslot == IT_BROADSWORD)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_CLUB)
+	else if(itslot == IT_CLUB)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_MACE)
+	else if(itslot == IT_MACE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_STAFF)
+	else if(itslot == IT_STAFF)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SCEPTER)
+	else if(itslot == IT_SCEPTER)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_HATCHET)
+	else if(itslot == IT_HATCHET)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_AXE)
+	else if(itslot == IT_AXE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_WAR_AXE)
+	else if(itslot == IT_WAR_AXE)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SHORT_BOW)
+	else if(itslot == IT_SHORT_BOW)
 		return '1 3 6'; // ID_PREF | ID_SUF
-	else if(it == IT_LONG_BOW)
+	else if(itslot == IT_LONG_BOW)
 		return '1 3 6'; // ID_PREF | ID_SUF		
-	else if(it == IT_WAR_BOW)
+	else if(itslot == IT_WAR_BOW)
 		return '1 3 6'; // ID_PREF | ID_SUF
-	else if(it == IT_THROWKNIFE)
+	else if(itslot == IT_THROWKNIFE)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_BUCKLER)
+	else if(itslot == IT_BUCKLER)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SHIELD)
+	else if(itslot == IT_SHIELD)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR			
-	else if(it == IT_AEGIS)
+	else if(itslot == IT_AEGIS)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR	
-	else if(it == IT_SKULL_CAP)
+	else if(itslot == IT_SKULL_CAP)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR							
-	else if(it == IT_HELM)
+	else if(itslot == IT_HELM)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR							
-	else if(it == IT_GREAT_HELM)
+	else if(itslot == IT_GREAT_HELM)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR							
 	// boots removed
 	// amulet removed
-	else if(it == IT_ARROWS)
+	else if(itslot == IT_ARROWS)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_SPEARS)
+	else if(itslot == IT_SPEARS)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR		
-	else if(it == IT_ROBE)
+	else if(itslot == IT_ROBE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_LEATHER)
+	else if(itslot == IT_LEATHER)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_RING_MAIL)
+	else if(itslot == IT_RING_MAIL)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SCALE_MAIL)
+	else if(itslot == IT_SCALE_MAIL)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_ARMET)
+	else if(itslot == IT_ARMET)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SALLET)
+	else if(itslot == IT_SALLET)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_RONDACHE)
+	else if(itslot == IT_RONDACHE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_KITE_SHIELD)
+	else if(itslot == IT_KITE_SHIELD)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SCUTUM)
+	else if(itslot == IT_SCUTUM)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR				
-	else if(it == IT_MATTOCK)
+	else if(itslot == IT_MATTOCK)
 		return '2 2 7'; // FIXME
-	else if(it == IT_HAMMER)
+	else if(itslot == IT_HAMMER)
 		return '2 2 7'; // FIXME
-	else if(it == IT_FLAIL)
+	else if(itslot == IT_FLAIL)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_FALCHION)
+	else if(itslot == IT_FALCHION)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_KRIS)
+	else if(itslot == IT_KRIS)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_CROSSBOW)
+	else if(itslot == IT_CROSSBOW)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_TRIDENT)
+	else if(itslot == IT_TRIDENT)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_LANCE)
+	else if(itslot == IT_LANCE)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_HALBERD)
+	else if(itslot == IT_HALBERD)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SCYTHE)
+	else if(itslot == IT_SCYTHE)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_CLAW)
+	else if(itslot == IT_CLAW)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SLING)
+	else if(itslot == IT_SLING)
 		return '1 1 0'; // NOTHING!
-	else if(it == IT_ROD)
+	else if(itslot == IT_ROD)
 		return '1 3 3'; // ID_SUF | ID_DUR
-	else if(it == IT_WAND)
+	else if(itslot == IT_WAND)
 		return '1 3 3'; // ID_SUF | ID_DUR
-	else if(it == IT_CHAKRAM)
+	else if(itslot == IT_CHAKRAM)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_THROW_AXE)
+	else if(itslot == IT_THROW_AXE)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_DART)
+	else if(itslot == IT_DART)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_JAVELIN)
+	else if(itslot == IT_JAVELIN)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_NAGINATA)
+	else if(itslot == IT_NAGINATA)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_KATANA)
+	else if(itslot == IT_KATANA)
 		return '1 4 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SAI)
+	else if(itslot == IT_SAI)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_NUNCHAKU)
+	else if(itslot == IT_NUNCHAKU)
 		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
-	else if(it == IT_SHIRUKEN)
+	else if(itslot == IT_SHIRUKEN)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_GOLD)
+	else if(itslot == IT_GOLD)
 		return '2 1 1'; // ID_DUR FIXME		
-	else if(it == IT_LESSER_HEAL)
+	else if(itslot == IT_LESSER_HEAL)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_HEAL_POTION)
+	else if(itslot == IT_HEAL_POTION)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_GREATER_HEAL)
+	else if(itslot == IT_GREATER_HEAL)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_LESSER_MANA)
+	else if(itslot == IT_LESSER_MANA)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_MANA_POTION)
+	else if(itslot == IT_MANA_POTION)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_GREATER_MANA)
+	else if(itslot == IT_GREATER_MANA)
 		return '1 1 16'; // ID_MICRO
-	else if(it == IT_CURE)
+	else if(itslot == IT_CURE)
 		return '1 1 16'; // ID_MICRO	
-	else if(it == IT_BOOK)
+	else if(itslot == IT_BOOK)
 		return '1 2 2'; // ID_SUF
-	else if(it == IT_SCROLL)
+	else if(itslot == IT_SCROLL)
 		return '1 2 2'; // ID_SUF
-	else if(it == IT_IDSCROLL)
+	else if(itslot == IT_IDSCROLL)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_OIL_OF_REPAIR)
+	else if(itslot == IT_OIL_OF_REPAIR)
 		return '1 2 1'; // ID_DUR
-	else if(it == IT_OIL)
+	else if(itslot == IT_OIL)
 		return '1 2 2'; // ID_SUF
-	else if(it == IT_OIL2)
+	else if(itslot == IT_OIL2)
 		return '1 2 4'; // ID_PREF
-	else if(it == IT_GOLD_ELIXIR)
+	else if(itslot == IT_GOLD_ELIXIR)
 		return '1 1 0';
-	else if(it == IT_ELIXIR)
+	else if(itslot == IT_ELIXIR)
 		return '2 1 2'; // ID_SUF
-	else if(it == IT_ALE)
+	else if(itslot == IT_ALE)
 		return '1 2 1'; // ID_DUR
-//	else if(it == IT_SICKLE)
+//	else if(itslot == IT_SICKLE)
 //		return '2 2 7'; // ID_PREF | ID_SUF | ID_DUR
 	else 
 		return '2 2 7';
 
 }
 
-string itemmodel(float it)
+string itemmodel(float itslot)
 {
-	if(it < IT_ROBE) // speed improvement
+	if(itslot < IT_ROBE) // speed improvement
 	{
-		if(!it)
+		if(!itslot)
 			return "";
-		else if(it == IT_CLOTH)
+		else if(itslot == IT_CLOTH)
 			return "progs/leath.mdl";
-		else if(it == IT_LAMMELLAR)
+		else if(itslot == IT_LAMMELLAR)
 			return "progs/leath.mdl";
-		else if(it == IT_CHAIN_MAIL)
+		else if(itslot == IT_CHAIN_MAIL)
 			return "progs/mail.mdl";
-		else if(it == IT_BREAST_PLATE)
+		else if(itslot == IT_BREAST_PLATE)
 			return "progs/mail.mdl";
-		else if(it == IT_KNIFE)
+		else if(itslot == IT_KNIFE)
 			return "progs/knife.mdl";
-		else if(it == IT_DAGGER)
+		else if(itslot == IT_DAGGER)
 			return "progs/dagger.mdl";
-		else if(it == IT_SABRE)
+		else if(itslot == IT_SABRE)
 			return "progs/sabre.mdl";
-		else if(it == IT_RAPIER)
+		else if(itslot == IT_RAPIER)
 			return "progs/rapier.mdl";
-		else if(it == IT_BROADSWORD)
+		else if(itslot == IT_BROADSWORD)
 			return "progs/brdsword.mdl";
-		else if(it == IT_CLUB)
+		else if(itslot == IT_CLUB)
 			return "progs/club.mdl";
-		else if(it == IT_MACE)
+		else if(itslot == IT_MACE)
 			return "progs/mace.mdl";
-		else if(it == IT_STAFF)
+		else if(itslot == IT_STAFF)
 			return "progs/staff.mdl";
-		else if(it == IT_SCEPTER)
+		else if(itslot == IT_SCEPTER)
 			return "progs/scepter.mdl";
-		else if(it == IT_HATCHET)
+		else if(itslot == IT_HATCHET)
 			return "progs/hatchet.mdl";
-		else if(it == IT_AXE)
+		else if(itslot == IT_AXE)
 			return "progs/axe.mdl";
-		else if(it == IT_WAR_AXE)
+		else if(itslot == IT_WAR_AXE)
 			return "progs/waraxe.mdl";
-		else if(it == IT_SHORT_BOW)
+		else if(itslot == IT_SHORT_BOW)
 			return "progs/shortbow.mdl";
-		else if(it == IT_LONG_BOW)
+		else if(itslot == IT_LONG_BOW)
 			return "progs/longbow.mdl";
-		else if(it == IT_WAR_BOW)
+		else if(itslot == IT_WAR_BOW)
 			return "progs/warbow.mdl";
-		else if(it == IT_THROWKNIFE)
+		else if(itslot == IT_THROWKNIFE)
 			return "progs/thrwknfe.mdl";
-		else if(it == IT_BUCKLER)
+		else if(itslot == IT_BUCKLER)
 			return "progs/buckler.mdl";
-		else if(it == IT_SHIELD)
+		else if(itslot == IT_SHIELD)
 			return "progs/ashield.mdl";
-		else if(it == IT_AEGIS)
+		else if(itslot == IT_AEGIS)
 			return "progs/aegis.mdl";
-		else if(it == IT_SKULL_CAP)
+		else if(itslot == IT_SKULL_CAP)
 			return "progs/helm.mdl";
-		else if(it == IT_HELM)
+		else if(itslot == IT_HELM)
 			return "progs/helm.mdl";
-		else if(it == IT_GREAT_HELM)
+		else if(itslot == IT_GREAT_HELM)
 			return "progs/helm.mdl";
-		else if(it == IT_BOOTS)
+		else if(itslot == IT_BOOTS)
 			return "progs/boots.mdl";
-		else if(it == IT_GREAVES)
+		else if(itslot == IT_GREAVES)
 			return "progs/greaves.mdl";
-		else if(it == IT_AMULET)
+		else if(itslot == IT_AMULET)
 			return "progs/amulet.mdl";
-		else if(it == IT_ARROWS)
+		else if(itslot == IT_ARROWS)
 			return "progs/quiver.mdl";
-		else if(it == IT_SPEARS)
+		else if(itslot == IT_SPEARS)
 			return "progs/spear.mdl";
 	}
-	else if(it < IT_GOLD)
+	else if(itslot < IT_GOLD)
 	{
-		if(it == IT_ROBE)
+		if(itslot == IT_ROBE)
 			return "progs/leath.mdl";
-		else if(it == IT_LEATHER)
+		else if(itslot == IT_LEATHER)
 			return "progs/leath.mdl";
-		else if(it == IT_RING_MAIL)
+		else if(itslot == IT_RING_MAIL)
 			return "progs/mail.mdl";
-		else if(it == IT_SCALE_MAIL)
+		else if(itslot == IT_SCALE_MAIL)
 			return "progs/mail.mdl";
-		else if(it == IT_ARMET)
+		else if(itslot == IT_ARMET)
 			return "progs/helm.mdl";
-		else if(it == IT_SALLET)
+		else if(itslot == IT_SALLET)
 			return "progs/helm.mdl";
-		else if(it == IT_RONDACHE)
+		else if(itslot == IT_RONDACHE)
 			return "progs/rondache.mdl";
-		else if(it == IT_KITE_SHIELD)
-			return "progs/kite.mdl";
-		else if(it == IT_SCUTUM)
+		else if(itslot == IT_KITE_SHIELD)
+			return "progs/kitslote.mdl";
+		else if(itslot == IT_SCUTUM)
 			return "progs/tower.mdl";
-		else if(it == IT_MATTOCK)
+		else if(itslot == IT_MATTOCK)
 			return "progs/mattock.mdl";
-		else if(it == IT_HAMMER)
+		else if(itslot == IT_HAMMER)
 			return "progs/hammer.mdl";
-		else if(it == IT_FLAIL)
+		else if(itslot == IT_FLAIL)
 			return "progs/flail.mdl";
-		else if(it == IT_FALCHION)
+		else if(itslot == IT_FALCHION)
 			return "progs/falchion.mdl";
-		else if(it == IT_KRIS)
+		else if(itslot == IT_KRIS)
 			return "progs/kris.mdl";
-		else if(it == IT_CROSSBOW)
+		else if(itslot == IT_CROSSBOW)
 			return "progs/crossbow.mdl";
-		else if(it == IT_TRIDENT)
+		else if(itslot == IT_TRIDENT)
 			return "progs/trident.mdl";
-		else if(it == IT_LANCE)
+		else if(itslot == IT_LANCE)
 			return "progs/lance.mdl";
-		else if(it == IT_HALBERD)
+		else if(itslot == IT_HALBERD)
 			return "progs/halberd.mdl";
-		else if(it == IT_SCYTHE)
+		else if(itslot == IT_SCYTHE)
 			return "progs/scythe.mdl";
-		else if(it == IT_CLAW)
+		else if(itslot == IT_CLAW)
 			return "progs/claw.mdl";
-		else if(it == IT_SLING)
+		else if(itslot == IT_SLING)
 			return "progs/sling.mdl";
-		else if(it == IT_ROD)
+		else if(itslot == IT_ROD)
 			return "progs/rod.mdl";
-		else if(it == IT_WAND)
+		else if(itslot == IT_WAND)
 			return "progs/wand.mdl";
-		else if(it == IT_CHAKRAM)
+		else if(itslot == IT_CHAKRAM)
 			return "progs/chakram.mdl";
-		else if(it == IT_THROW_AXE)
+		else if(itslot == IT_THROW_AXE)
 			return "progs/throwaxe.mdl";
-		else if(it == IT_DART)
+		else if(itslot == IT_DART)
 			return "progs/dart.mdl";
-		else if(it == IT_JAVELIN)
+		else if(itslot == IT_JAVELIN)
 			return "progs/javelin.mdl";
-		else if(it == IT_NAGINATA)
+		else if(itslot == IT_NAGINATA)
 			return "progs/naginata.mdl";
-		else if(it == IT_KATANA)
+		else if(itslot == IT_KATANA)
 			return "progs/katana.mdl";
-		else if(it == IT_SAI)
+		else if(itslot == IT_SAI)
 			return "progs/sai.mdl";
-		else if(it == IT_NUNCHAKU)
+		else if(itslot == IT_NUNCHAKU)
 			return "progs/nunchaku.mdl";
-		else if(it == IT_SHIRUKEN)
+		else if(itslot == IT_SHIRUKEN)
 			return "progs/shiruken.mdl";
 	}
 	else
 	{
-		if(it == IT_GOLD)
+		if(itslot == IT_GOLD)
 			return "progs/money.mdl";
-		else if(it == IT_LESSER_HEAL)
+		else if(itslot == IT_LESSER_HEAL)
 			return "progs/hpot.mdl";
-		else if(it == IT_HEAL_POTION)
+		else if(itslot == IT_HEAL_POTION)
 			return "progs/hpot.mdl";
-		else if(it == IT_GREATER_HEAL)
+		else if(itslot == IT_GREATER_HEAL)
 			return "progs/hpot.mdl";
-		else if(it == IT_LESSER_MANA)
+		else if(itslot == IT_LESSER_MANA)
 			return "progs/mpot.mdl";
-		else if(it == IT_MANA_POTION)
+		else if(itslot == IT_MANA_POTION)
 			return "progs/mpot.mdl";
-		else if(it == IT_GREATER_MANA)
+		else if(itslot == IT_GREATER_MANA)
 			return "progs/mpot.mdl";
-		else if(it == IT_ELIXIR)
+		else if(itslot == IT_ELIXIR)
 			return "progs/elixir.mdl";
-		else if(it == IT_BOOK)
+		else if(itslot == IT_BOOK)
 			return "progs/book.mdl";
-		else if(it == IT_SCROLL)
+		else if(itslot == IT_SCROLL)
 			return "progs/scroll.mdl";
-		else if(it == IT_IDSCROLL)
+		else if(itslot == IT_IDSCROLL)
 			return "progs/scroll.mdl";
-		else if(it == IT_OIL_OF_REPAIR)
+		else if(itslot == IT_OIL_OF_REPAIR)
 			return "progs/oil.mdl";
-		else if(it == IT_OIL)
+		else if(itslot == IT_OIL)
 			return "progs/oil.mdl";
-		else if(it == IT_OIL2)
+		else if(itslot == IT_OIL2)
 			return "progs/oil.mdl";
-		else if(it == IT_GOLD_ELIXIR)
+		else if(itslot == IT_GOLD_ELIXIR)
 			return "progs/gelixir.mdl";
-		else if(it == IT_CURE)
+		else if(itslot == IT_CURE)
 			return "progs/cpot.mdl";
-		else if(it == IT_ALE)
+		else if(itslot == IT_ALE)
 			return "progs/mbottle.mdl";
 	}
-	return unique_itemmodel(it);
+	return unique_itemmodel(itslot);
 
 }
 
-string it_itemicon(float it)
+string it_itemicon(float itslot)
 {
-	if(it < IT_ROBE) // speed improvement
+	if(itslot < IT_ROBE) // speed improvement
 	{
 
-		if(it == IT_CLOTH)
+		if(itslot == IT_CLOTH)
 			return "gfx/leath.spr";
-		else if(it == IT_LAMMELLAR)
+		else if(itslot == IT_LAMMELLAR)
 			return "gfx/leath.spr";
-		else if(it == IT_CHAIN_MAIL)
+		else if(itslot == IT_CHAIN_MAIL)
 			return "gfx/mail.spr";
-		else if(it == IT_BREAST_PLATE)
+		else if(itslot == IT_BREAST_PLATE)
 			return "gfx/mail.spr";
-		else if(it == IT_KNIFE)
+		else if(itslot == IT_KNIFE)
 			return "gfx/knife.spr";
-		else if(it == IT_DAGGER)
+		else if(itslot == IT_DAGGER)
 			return "gfx/dagger.spr";
-		else if(it == IT_SABRE)
+		else if(itslot == IT_SABRE)
 			return "gfx/sabre.spr";
-		else if(it == IT_RAPIER)
+		else if(itslot == IT_RAPIER)
 			return "gfx/rapier.spr";
-		else if(it == IT_BROADSWORD)
+		else if(itslot == IT_BROADSWORD)
 			return "gfx/sword.spr";
-		else if(it == IT_CLUB)
+		else if(itslot == IT_CLUB)
 			return "gfx/club.spr";
-		else if(it == IT_MACE)
+		else if(itslot == IT_MACE)
 			return "gfx/mace.spr";
-		else if(it == IT_STAFF)
+		else if(itslot == IT_STAFF)
 			return "gfx/staff.spr";
-		else if(it == IT_SCEPTER)
+		else if(itslot == IT_SCEPTER)
 			return "gfx/scepter.spr";
-		else if(it == IT_HATCHET)
+		else if(itslot == IT_HATCHET)
 			return "gfx/hatchet.spr";
-		else if(it == IT_AXE)
+		else if(itslot == IT_AXE)
 			return "gfx/axe.spr";
-		else if(it == IT_WAR_AXE)
+		else if(itslot == IT_WAR_AXE)
 			return "gfx/waraxe.spr";
-		else if(it == IT_SHORT_BOW)
+		else if(itslot == IT_SHORT_BOW)
 			return "gfx/shortbow.spr";
-		else if(it == IT_LONG_BOW)
+		else if(itslot == IT_LONG_BOW)
 			return "gfx/longbow.spr";
-		else if(it == IT_WAR_BOW)
+		else if(itslot == IT_WAR_BOW)
 			return "gfx/warbow.spr";
-		else if(it == IT_THROWKNIFE)
+		else if(itslot == IT_THROWKNIFE)
 			return "gfx/thrwknfe.spr";
-		else if(it == IT_BUCKLER)
+		else if(itslot == IT_BUCKLER)
 			return "gfx/buckler.spr";
-		else if(it == IT_SHIELD)
+		else if(itslot == IT_SHIELD)
 			return "gfx/ashield.spr";
-		else if(it == IT_AEGIS)
+		else if(itslot == IT_AEGIS)
 			return "gfx/aegis.spr";
-		else if(it == IT_SKULL_CAP)
+		else if(itslot == IT_SKULL_CAP)
 			return "gfx/helm.spr";
-		else if(it == IT_HELM)
+		else if(itslot == IT_HELM)
 			return "gfx/helm.spr";
-		else if(it == IT_GREAT_HELM)
+		else if(itslot == IT_GREAT_HELM)
 			return "gfx/helm.spr";
-		else if(it == IT_ARROWS)
+		else if(itslot == IT_ARROWS)
 			return "gfx/quiver.spr";
-		else if(it == IT_SPEARS)
+		else if(itslot == IT_SPEARS)
 			return "gfx/spear.spr";
 	}
-	else if(it < IT_GOLD)
+	else if(itslot < IT_GOLD)
 	{
-		if(it == IT_ROBE)
+		if(itslot == IT_ROBE)
 			return "gfx/leath.spr";
-		else if(it == IT_LEATHER)
+		else if(itslot == IT_LEATHER)
 			return "gfx/leath.spr";
-		else if(it == IT_RING_MAIL)
+		else if(itslot == IT_RING_MAIL)
 			return "gfx/mail.spr";
-		else if(it == IT_SCALE_MAIL)
+		else if(itslot == IT_SCALE_MAIL)
 			return "gfx/mail.spr";
-		else if(it == IT_ARMET)
+		else if(itslot == IT_ARMET)
 			return "gfx/helm.spr";
-		else if(it == IT_SALLET)
+		else if(itslot == IT_SALLET)
 			return "gfx/helm.spr";
-		else if(it == IT_RONDACHE)
+		else if(itslot == IT_RONDACHE)
 			return "gfx/rondache.spr";
-		else if(it == IT_KITE_SHIELD)
+		else if(itslot == IT_KITE_SHIELD)
 			return "gfx/kite.spr";
-		else if(it == IT_SCUTUM)
+		else if(itslot == IT_SCUTUM)
 			return "gfx/tower.spr";
-		else if(it == IT_MATTOCK)
+		else if(itslot == IT_MATTOCK)
 			return "gfx/mattock.spr";
-		else if(it == IT_HAMMER)
+		else if(itslot == IT_HAMMER)
 			return "gfx/hammer.spr";
-		else if(it == IT_FLAIL)
+		else if(itslot == IT_FLAIL)
 			return "gfx/flail.spr";
-		else if(it == IT_FALCHION)
+		else if(itslot == IT_FALCHION)
 			return "gfx/falchion.spr";
-		else if(it == IT_KRIS)
+		else if(itslot == IT_KRIS)
 			return "gfx/kris.spr";
-		else if(it == IT_CROSSBOW)
+		else if(itslot == IT_CROSSBOW)
 			return "gfx/cbow.spr";
-		else if(it == IT_TRIDENT)
+		else if(itslot == IT_TRIDENT)
 			return "gfx/trident.spr";
-		else if(it == IT_LANCE)
+		else if(itslot == IT_LANCE)
 			return "gfx/lance.spr";
-		else if(it == IT_HALBERD)
+		else if(itslot == IT_HALBERD)
 			return "gfx/halberd.spr";
-		else if(it == IT_SCYTHE)
+		else if(itslot == IT_SCYTHE)
 			return "gfx/scythe.spr";
-		else if(it == IT_CLAW)
+		else if(itslot == IT_CLAW)
 			return "gfx/claw.spr";
-		else if(it == IT_SLING)
+		else if(itslot == IT_SLING)
 			return "gfx/sling.spr";
-		else if(it == IT_ROD)
+		else if(itslot == IT_ROD)
 			return "gfx/rod.spr";
-		else if(it == IT_WAND)
+		else if(itslot == IT_WAND)
 			return "gfx/wand.spr";
-		else if(it == IT_CHAKRAM)
+		else if(itslot == IT_CHAKRAM)
 			return "gfx/chakram.spr";
-		else if(it == IT_THROW_AXE)
+		else if(itslot == IT_THROW_AXE)
 			return "gfx/throwaxe.spr";
-		else if(it == IT_DART)
+		else if(itslot == IT_DART)
 			return "gfx/dart.spr";
-		else if(it == IT_JAVELIN)
+		else if(itslot == IT_JAVELIN)
 			return "gfx/javelin.spr";
-		else if(it == IT_NAGINATA)
+		else if(itslot == IT_NAGINATA)
 			return "gfx/naginata.spr";
-		else if(it == IT_KATANA)
+		else if(itslot == IT_KATANA)
 			return "gfx/katana.spr";
-		else if(it == IT_SAI)
+		else if(itslot == IT_SAI)
 			return "gfx/sai.spr";
-		else if(it == IT_NUNCHAKU)
+		else if(itslot == IT_NUNCHAKU)
 			return "gfx/nunchaku.spr";
-		else if(it == IT_SHIRUKEN)
+		else if(itslot == IT_SHIRUKEN)
 			return "gfx/shiruken.spr";
 	}
 	else
 	{
-		if(it == IT_GOLD)
+		if(itslot == IT_GOLD)
 			return "gfx/money.spr";
-		else if(it == IT_LESSER_HEAL)
+		else if(itslot == IT_LESSER_HEAL)
 			return "gfx/hpot.spr";
-		else if(it == IT_HEAL_POTION)
+		else if(itslot == IT_HEAL_POTION)
 			return "gfx/hpot.spr";
-		else if(it == IT_GREATER_HEAL)
+		else if(itslot == IT_GREATER_HEAL)
 			return "gfx/hpot.spr";
-		else if(it == IT_LESSER_MANA)
+		else if(itslot == IT_LESSER_MANA)
 			return "gfx/mpot.spr";
-		else if(it == IT_MANA_POTION)
+		else if(itslot == IT_MANA_POTION)
 			return "gfx/mpot.spr";
-		else if(it == IT_GREATER_MANA)
+		else if(itslot == IT_GREATER_MANA)
 			return "gfx/mpot.spr";
-		else if(it == IT_ELIXIR)
+		else if(itslot == IT_ELIXIR)
 			return "gfx/elixir.spr";
-		else if(it == IT_BOOK)
+		else if(itslot == IT_BOOK)
 			return "gfx/book.spr";
-		else if(it == IT_SCROLL)
+		else if(itslot == IT_SCROLL)
 			return "gfx/scroll.spr";
-		else if(it == IT_IDSCROLL)
+		else if(itslot == IT_IDSCROLL)
 			return "gfx/scroll.spr";
-		else if(it == IT_OIL_OF_REPAIR)
+		else if(itslot == IT_OIL_OF_REPAIR)
 			return "gfx/oil.spr";
-		else if(it == IT_OIL)
+		else if(itslot == IT_OIL)
 			return "gfx/oil.spr";
-		else if(it == IT_OIL2)
+		else if(itslot == IT_OIL2)
 			return "gfx/oil.spr";
-		else if(it == IT_GOLD_ELIXIR)
+		else if(itslot == IT_GOLD_ELIXIR)
 			return "gfx/cpot.spr"; // FIXME
-		else if(it == IT_CURE)
+		else if(itslot == IT_CURE)
 			return "gfx/cpot.spr";
-		else if(it == IT_ALE)
+		else if(itslot == IT_ALE)
 			return "gfx/oil.spr"; // FIXME
-	
 	}
 	return "gfx/rondache.spr"; // unknown
 
 }
+
 const vector COLOR_RUST = '0.58 0.27 0';
 const vector COLOR_SILVER = '1.25 1.25 1.25'; // brighter
 const vector COLOR_ORANGE = '1 0.5 0';
@@ -548,14 +549,13 @@ const vector COLOR_GREEN = '0 1 0';
 const vector COLOR_RED = '1 0 0';
 const vector COLOR_ELBLUE = '0.5 1 1';
 
-
 void itemapplyeffects(entity e)
 {
 // colormod support.
 	vector c = '0 0 0';
 	int colors = 0;
 	
-	setmodel(e, itemmodel(stat_it));
+	_setmodel(e, itemmodel(stat_it));
 	
 	if(stat_pref == PF_RUSTED)
 	{
@@ -617,184 +617,182 @@ void itemapplyeffects(entity e)
 		e.colormod = '1 1 1';
 }
 
-
-string(float it) itemsound =
+string itemsound(float itslot)
 {
-
-	if(it < IT_ROBE) // speed improvement
+	if(itslot < IT_ROBE) // speed improvement
 	{
-		if(!it)
+		if(!itslot)
 			return "";
-		else if(it == IT_CLOTH)
+		else if(itslot == IT_CLOTH)
 			return "items/cloth.wav";
-		else if(it == IT_LAMMELLAR)
+		else if(itslot == IT_LAMMELLAR)
 			return "items/cloth.wav";
-		else if(it == IT_CHAIN_MAIL)
+		else if(itslot == IT_CHAIN_MAIL)
 			return "items/armor1.wav";
-		else if(it == IT_BREAST_PLATE)
+		else if(itslot == IT_BREAST_PLATE)
 			return "items/armor1.wav";
-		else if(it == IT_KNIFE)
+		else if(itslot == IT_KNIFE)
 			return "items/sword.wav";
-		else if(it == IT_DAGGER)
+		else if(itslot == IT_DAGGER)
 			return "items/sword.wav";
-		else if(it == IT_SABRE)
+		else if(itslot == IT_SABRE)
 			return "items/sword.wav";
-		else if(it == IT_RAPIER)
+		else if(itslot == IT_RAPIER)
 			return "items/sword.wav";
-		else if(it == IT_BROADSWORD)
+		else if(itslot == IT_BROADSWORD)
 			return "items/sword.wav";
-		else if(it == IT_CLUB)
+		else if(itslot == IT_CLUB)
 			return "items/club.wav";
-		else if(it == IT_MACE)
+		else if(itslot == IT_MACE)
 			return "items/club.wav";
-		else if(it == IT_STAFF)
+		else if(itslot == IT_STAFF)
 			return "items/club.wav";
-		else if(it == IT_SCEPTER)
+		else if(itslot == IT_SCEPTER)
 			return "items/club.wav";
-		else if(it == IT_HATCHET)
+		else if(itslot == IT_HATCHET)
 			return "items/axe.wav";
-		else if(it == IT_AXE)
+		else if(itslot == IT_AXE)
 			return "items/axe.wav";
-		else if(it == IT_WAR_AXE)
+		else if(itslot == IT_WAR_AXE)
 			return "items/axe.wav";
-		else if(it == IT_SHORT_BOW)
+		else if(itslot == IT_SHORT_BOW)
 			return "items/bow.wav";
-		else if(it == IT_LONG_BOW)
+		else if(itslot == IT_LONG_BOW)
 			return "items/bow.wav";
-		else if(it == IT_WAR_BOW)
+		else if(itslot == IT_WAR_BOW)
 			return "items/bow.wav";
-		else if(it == IT_THROWKNIFE)
+		else if(itslot == IT_THROWKNIFE)
 			return "items/sword.wav";
-		else if(it == IT_BUCKLER)
+		else if(itslot == IT_BUCKLER)
 			return "items/shield.wav";
-		else if(it == IT_SHIELD)
+		else if(itslot == IT_SHIELD)
 			return "items/shield.wav";
-		else if(it == IT_AEGIS)
+		else if(itslot == IT_AEGIS)
 			return "items/shield.wav";
-		else if(it == IT_SKULL_CAP)
+		else if(itslot == IT_SKULL_CAP)
 			return "items/helm.wav";
-		else if(it == IT_HELM)
+		else if(itslot == IT_HELM)
 			return "items/helm.wav";
-		else if(it == IT_GREAT_HELM)
+		else if(itslot == IT_GREAT_HELM)
 			return "items/helm.wav";
-		else if(it == IT_BOOTS)
+		else if(itslot == IT_BOOTS)
 			return "items/booties.wav";
-		else if(it == IT_GREAVES)
+		else if(itslot == IT_GREAVES)
 			return "items/helm.wav";
-		else if(it == IT_AMULET)
+		else if(itslot == IT_AMULET)
 			return "items/amulet.wav";
-		else if(it == IT_ARROWS)
+		else if(itslot == IT_ARROWS)
 			return "items/arrows.wav";
-		else if(it == IT_SPEARS)
+		else if(itslot == IT_SPEARS)
 			return "items/arrows.wav";
 	}
-	else if(it < IT_GOLD)
+	else if(itslot < IT_GOLD)
 	{
 
-		if(it == IT_ROBE)
+		if(itslot == IT_ROBE)
 			return "items/cloth.wav";
-		else if(it == IT_LEATHER)
+		else if(itslot == IT_LEATHER)
 			return "items/cloth.wav";
-		else if(it == IT_RING_MAIL)
+		else if(itslot == IT_RING_MAIL)
 			return "items/armor1.wav";
-		else if(it == IT_SCALE_MAIL)
+		else if(itslot == IT_SCALE_MAIL)
 			return "items/armor1.wav";
-		else if(it == IT_ARMET)
+		else if(itslot == IT_ARMET)
 			return "items/helm.wav";
-		else if(it == IT_SALLET)
+		else if(itslot == IT_SALLET)
 			return "items/helm.wav";
-		else if(it == IT_RONDACHE)
+		else if(itslot == IT_RONDACHE)
 			return "items/shield.wav";
-		else if(it == IT_KITE_SHIELD)
+		else if(itslot == IT_KITE_SHIELD)
 			return "items/shield.wav";
-		else if(it == IT_SCUTUM)
+		else if(itslot == IT_SCUTUM)
 			return "items/shield.wav";
-		else if(it == IT_MATTOCK)
+		else if(itslot == IT_MATTOCK)
 			return "items/axe.wav";
-		else if(it == IT_HAMMER)
+		else if(itslot == IT_HAMMER)
 			return "items/axe.wav";
-		else if(it == IT_FLAIL)
+		else if(itslot == IT_FLAIL)
 			return "items/axe.wav";
-		else if(it == IT_FALCHION)
+		else if(itslot == IT_FALCHION)
 			return "items/sword.wav";
-		else if(it == IT_KRIS)
+		else if(itslot == IT_KRIS)
 			return "items/sword.wav";
-		else if(it == IT_CROSSBOW)
+		else if(itslot == IT_CROSSBOW)
 			return "items/bow.wav";
-		else if(it == IT_TRIDENT)
+		else if(itslot == IT_TRIDENT)
 			return "items/club.wav";
-		else if(it == IT_LANCE)
+		else if(itslot == IT_LANCE)
 			return "items/club.wav";
-		else if(it == IT_HALBERD)
+		else if(itslot == IT_HALBERD)
 			return "items/club.wav";
-		else if(it == IT_SCYTHE)
+		else if(itslot == IT_SCYTHE)
 			return "items/club.wav";
-		else if(it == IT_CLAW)
+		else if(itslot == IT_CLAW)
 			return "items/sword.wav";
-		else if(it == IT_SLING)
+		else if(itslot == IT_SLING)
 			return "items/bow.wav";
-		else if(it == IT_ROD)
+		else if(itslot == IT_ROD)
 			return "items/club.wav";
-		else if(it == IT_WAND)
+		else if(itslot == IT_WAND)
 			return "items/club.wav";
-		else if(it == IT_CHAKRAM)
+		else if(itslot == IT_CHAKRAM)
 			return "items/sword.wav";
-		else if(it == IT_THROW_AXE)
+		else if(itslot == IT_THROW_AXE)
 			return "items/axe.wav";
-		else if(it == IT_DART)
+		else if(itslot == IT_DART)
 			return "items/sword.wav";
-		else if(it == IT_JAVELIN)
+		else if(itslot == IT_JAVELIN)
 			return "items/arrows.wav";
-		else if(it == IT_NAGINATA)
+		else if(itslot == IT_NAGINATA)
 			return "items/sword.wav";
-		else if(it == IT_KATANA)
+		else if(itslot == IT_KATANA)
 			return "items/sword.wav";
-		else if(it == IT_SAI)
+		else if(itslot == IT_SAI)
 			return "items/sword.wav";
-		else if(it == IT_NUNCHAKU)
+		else if(itslot == IT_NUNCHAKU)
 			return "items/arrows.wav";
-		else if(it == IT_SHIRUKEN)
+		else if(itslot == IT_SHIRUKEN)
 			return "items/sword.wav";
 
 	}
 	else
 	{
-		if(it == IT_GOLD)
+		if(itslot == IT_GOLD)
 			return "items/gold.wav";
-		else if(it == IT_LESSER_HEAL)
+		else if(itslot == IT_LESSER_HEAL)
 			return "items/potion.wav";
-		else if(it == IT_HEAL_POTION)
+		else if(itslot == IT_HEAL_POTION)
 			return "items/potion.wav";
-		else if(it == IT_GREATER_HEAL)
+		else if(itslot == IT_GREATER_HEAL)
 			return "items/potion.wav";
-		else if(it == IT_LESSER_MANA)
+		else if(itslot == IT_LESSER_MANA)
 			return "items/potion.wav";
-		else if(it == IT_MANA_POTION)
+		else if(itslot == IT_MANA_POTION)
 			return "items/potion.wav";
-		else if(it == IT_GREATER_MANA)
+		else if(itslot == IT_GREATER_MANA)
 			return "items/potion.wav";
-		else if(it == IT_ELIXIR)
+		else if(itslot == IT_ELIXIR)
 			return "items/potion.wav";
-		else if(it == IT_BOOK)
+		else if(itslot == IT_BOOK)
 			return "items/scroll.wav";
-		else if(it == IT_SCROLL)
+		else if(itslot == IT_SCROLL)
 			return "items/scroll.wav";
-		else if(it == IT_IDSCROLL)
+		else if(itslot == IT_IDSCROLL)
 			return "items/scroll.wav";
-		else if(it == IT_OIL_OF_REPAIR)
+		else if(itslot == IT_OIL_OF_REPAIR)
 			return "items/potion.wav";
-		else if(it == IT_OIL)
+		else if(itslot == IT_OIL)
 			return "items/potion.wav";
-		else if(it == IT_OIL2)
+		else if(itslot == IT_OIL2)
 			return "items/potion.wav";
-		else if(it == IT_GOLD_ELIXIR)
+		else if(itslot == IT_GOLD_ELIXIR)
 			return "items/potion.wav";
-		else if(it == IT_CURE)
+		else if(itslot == IT_CURE)
 			return "items/potion.wav";
-		else if(it == IT_ALE)
+		else if(itslot == IT_ALE)
 			return "items/potion.wav";
 	}
-	return unique_itemsound(it);
+	return unique_itemsound(itslot);
 }
 
 void it_itemstat(entity this)

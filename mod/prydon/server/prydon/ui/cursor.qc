@@ -1,127 +1,125 @@
-float CAMERA_SCALE = 0.5; // rotation scale down
-float() cursorframe =
+#include "cursor.qh"
+
+#include "../spells/sval.qh"
+#include "../subs/subs.qh"
+
+const float CAMERA_SCALE = 0.5; // rotation scale down
+float cursorframe(entity this)
 {
-	local float s;
+	int s = this.spell & 63;
 	
-	s = self.spell & 63;
-	
-	if (!s)
+	if(!s)
 	{
-		if (friendly(self.player, self.sbarsub))
+		if(friendly(this.player, this.sbarsub))
 			return 16;
-		if (self.altaction == SP_FIGHT_MELEE)
+		if(this.altaction == SP_FIGHT_MELEE)
 			return 17; // melee frame
-		else if (self.altaction == SP_FIGHT_BOW)
+		else if(this.altaction == SP_FIGHT_BOW)
 			return 18;
-		else if (self.altaction == SP_FIGHT_CBOW)
+		else if(this.altaction == SP_FIGHT_CBOW)
 			return 18;
-		else if (self.altaction && self.altaction < 16)
-			return self.altaction - 1;
+		else if(this.altaction && this.altaction < 16)
+			return this.altaction - 1;
 		else
 			return 17; // generic I guess
 		// TODO: Make a THROW frame
 	}
-	if (s < 16)
+	if(s < 16)
 		return s - 1;
-	else if (s >= SP_SPRINT && s <= SP_IDENTIFY)
-		return s - SP_SPRINT + 19;	
-};
+	else if(s >= SP_SPRINT && s <= SP_IDENTIFY)
+		return s - SP_SPRINT + 19;
+	return 0;
+}
 
-void() h_cursor =
+void h_cursor(entity this)
 {
-	local vector ang, view;
-	local float len;
 	//PRYDON_CLIENTCURSOR
-	if (self.cursor_active)
+	if(this.cursor_active)
 	{
-		if (self.cursor)
+		if(this.cursor)
 		{
-			remove(self.cursor);
-			self.cursor = world;
+			delete(this.cursor);
+			this.cursor = NULL;
 		}
-		self.cursorpos_x = self.cursor_screen_x * 96;
-		self.cursorpos_y = self.cursor_screen_y * 72;
+		this.cursorpos_x = this.cursor_screen_x * 96;
+		this.cursorpos_y = this.cursor_screen_y * 72;
 	}
 	else
 	{
 		
-		if (!self.cursor)
+		if(!this.cursor)
 		{
-			self.cursor = spawn();
-			self.cursor.drawonlytoclient = self;
-			setmodel(self.cursor, "progs/cursor.spr"); // ugly temp model
+			this.cursor = spawn();
+			this.cursor.drawonlytoclient = this;
+			_setmodel(this.cursor, "progs/cursor.spr"); // ugly temp model
 		}
-		self.cursor.frame = cursorframe();
-		view = self.rotang;
-		view_z = 0;
-		if (self.origin != self.testorg)
+		this.cursor.frame = cursorframe(this);
+		vector view = this.rotang;
+		view.z = 0;
+		if(this.origin != this.testorg)
 		{
-			ang = vectoangles(self.origin - self.testorg) - view;
-			len = vlen(self.origin - self.testorg);
-			ang_x = ang_z = 0;
-			len = len * -1;
+			vector ang = vectoangles(this.origin - this.testorg) - view;
+			float len = vlen(this.origin - this.testorg) * -1;
+			ang.x = ang.z = 0;
 			makevectors(ang);
-			self.cursorpos_y = self.cursorpos_y + v_forward_x * len;
-			self.cursorpos_x = self.cursorpos_x + v_forward_y * len;
-			//setorigin(self, self.testorg);
+			this.cursorpos_y = this.cursorpos_y + v_forward_x * len;
+			this.cursorpos_x = this.cursorpos_x + v_forward_y * len;
+			//setorigin(this, this.testorg);
 		}
 	}
-	if (self.options & OPT_NOMOUSE_CAM || self.ui_panels)
+	if((this.options & OPT_NOMOUSE_CAM) || this.ui_panels)
 	{
-		if (self.cursorpos_y > 72)
-			self.cursorpos_y = 72;
-		else if (self.cursorpos_y < -72)
-			self.cursorpos_y = -72;
-		if (self.cursorpos_x > 96)
-			self.cursorpos_x = 96;
-		else if (self.cursorpos_x < -96)
-			self.cursorpos_x = -96;
-		if (!vmfc)
-			if (self.ui_panels)
-				self.rotang_z = 256;
+		if(this.cursorpos_y > 72)
+			this.cursorpos_y = 72;
+		else if(this.cursorpos_y < -72)
+			this.cursorpos_y = -72;
+		if(this.cursorpos_x > 96)
+			this.cursorpos_x = 96;
+		else if(this.cursorpos_x < -96)
+			this.cursorpos_x = -96;
+		if(!vmfc)
+			if(this.ui_panels)
+				this.rotang_z = 256;
 	}
 	else
 	{
-		if (self.cursorpos_y > 72)
+		if(this.cursorpos_y > 72)
 		{
-			self.rotang_z = self.rotang_z - (self.cursorpos_y - 72);
-			if (self.rotang_z < 64)
-				self.rotang_z = 64;
-			self.cursorpos_y = 72;
+			this.rotang_z = this.rotang_z - (this.cursorpos_y - 72);
+			if(this.rotang_z < 64)
+				this.rotang_z = 64;
+			this.cursorpos_y = 72;
 		}
-		else if (self.cursorpos_y < -72)
+		else if(this.cursorpos_y < -72)
 		{
-			self.rotang_z = self.rotang_z - (self.cursorpos_y + 72);
-			if (self.rotang_z > 256)
-				self.rotang_z = 256;
-			self.cursorpos_y = -72;
+			this.rotang_z = this.rotang_z - (this.cursorpos_y + 72);
+			if(this.rotang_z > 256)
+				this.rotang_z = 256;
+			this.cursorpos_y = -72;
 		}
-		if (self.cursorpos_x > 96)
+		if(this.cursorpos_x > 96)
 		{
-			self.rotang_y = self.rotang_y - (self.cursorpos_x - 96) * CAMERA_SCALE;
-			self.cursorpos_x = 96;
+			this.rotang_y = this.rotang_y - (this.cursorpos_x - 96) * CAMERA_SCALE;
+			this.cursorpos_x = 96;
 		}
-		else if (self.cursorpos_x < -96)
+		else if(this.cursorpos_x < -96)
 		{
-			self.rotang_y = self.rotang_y - (self.cursorpos_x + 96) * CAMERA_SCALE;
-			self.cursorpos_x = -96;
+			this.rotang_y = this.rotang_y - (this.cursorpos_x + 96) * CAMERA_SCALE;
+			this.cursorpos_x = -96;
 		}
 	}
-};
-
+}
 
 // DP hack man
 .vector movement;
 
-void() SV_PlayerPhysics =
+void prydon_SV_PlayerPhysics(entity this)
 {
-	float spscl;
-	spscl = 200 / (cvar("sv_maxspeed") / 320) ;
-	
-	setorigin(self, self.testorg);
-	self.cursorpos_y = self.cursorpos_y - self.movement_x / spscl;
-	self.cursorpos_x = self.cursorpos_x + self.movement_y / spscl;
-	
-	h_cursor();
+	float spscl = 200 / (PHYS_MAXSPEED(this) / 320);
 
-};
+	setorigin(this, this.testorg);
+	this.cursorpos_y = this.cursorpos_y - this.movement_x / spscl;
+	this.cursorpos_x = this.cursorpos_x + this.movement_y / spscl;
+
+	h_cursor(this);
+}

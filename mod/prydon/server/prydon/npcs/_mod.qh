@@ -1,0 +1,6 @@
+#include "dialog.qh"
+#include "monster.qh"
+#include "mspawn.qh"
+#include "mval.qh"
+#include "npcs.qh"
+#include "pmonster.qh"

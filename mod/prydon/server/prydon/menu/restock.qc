@@ -1,101 +1,101 @@
-void() m_restock;
-float() restockcost =
+#include "restock.qh"
+
+#include "../subs/math.qh"
+
+float restockcost(entity this)
 {
-	local float m;
-	if (!(stat_loc & STACKABLE))
+	if(!(stat_loc & STACKABLE))
 		return 0;
-	if (stat_dur >= stat_max_dur)
+	if(stat_dur >= stat_max_dur)
 		return 0;
-	m = ceil((1 / stat_max_dur) * stat_price * 1.5);
-	if (self.skill & SKILL_DISCOUNT)
-		m = (0.8 - (self.title_x * 0.05) * m);
+	float m = ceil((1 / stat_max_dur) * stat_price * 1.5);
+	if(this.skill & SKILL_DISCOUNT)
+		m = (0.8 - (this.title_x * 0.05) * m);
 	
-	if (m <= 1)
+	if(m <= 1)
 		m = 1;
 	return m;
-};
-void() m_restock_confirm =
-{
-	local float slot, cost, howm;
-	local vector it;
-	slot = root2(self.weapon);
-	
-	it = GetSlot(self, slot);
-	it_simplestat(it);
-	it_itemstat();
-	cost = restockcost();
-	
-	if (self.menu < 1)
-		self.menu = 4;
-	else if (self.menu > 4)
-		self.menu = 1;
+}
 
-	if (self.button1)
+void m_restock_confirm(entity this)
+{
+	int howm;
+	float slot = root2(this.weapon);
+	vector itslot = GetSlot(this, slot);
+	it_simplestat(this, itslot);
+	it_itemstat(this);
+	float cost = restockcost(this);
+	
+	if(this.menu < 1)
+		this.menu = 4;
+	else if(this.menu > 4)
+		this.menu = 1;
+
+	if(this.button1)
 	{
-		self.button1 = 0;
-		if (self.menu == 1)
+		this.button1 = 0;
+		if(this.menu == 1)
 		{
 			howm = 1;
-			if(!getgold(howm * cost))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, howm * cost))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-				it_simplestat(it);
-it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_dur = stat_dur + howm;
-				SetSlot(self, slot, it_setstat());
+				SetSlot(this, slot, it_setstat());
 
 			}	
 		}
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 		{
-			if ((stat_max_dur - stat_dur) < 10)
+			if((stat_max_dur - stat_dur) < 10)
 				howm = (stat_max_dur - stat_dur);
 			else
 				howm = 10;
 				
-			if(!getgold(howm * cost))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, howm * cost))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-it_simplestat(it);
-				it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_dur = stat_dur + howm;
-				SetSlot(self, slot, it_setstat());
+				SetSlot(this, slot, it_setstat());
 			}	
 		}
-		else if (self.menu == 3)
+		else if(this.menu == 3)
 		{
 			howm = (stat_max_dur - stat_dur);
-			if ((cost * howm) > self.gp)
+			if((cost * howm) > this.gp)
 			{
-				howm = floor(self.gp / cost);
+				howm = floor(this.gp / cost);
 			}
-			if(!getgold(howm * cost))
-				prompt(self, "You don't have enough gold for this", self, 2);
+			if(!getgold(this, howm * cost))
+				prompt(this, "You don't have enough gold for this", this, 2);
 			else
 			{
-				it_simplestat(it);
-it_itemstat();
+				it_simplestat(this, itslot);
+				it_itemstat(this);
 				stat_dur = stat_dur + howm;
-				SetSlot(self, slot, it_setstat());
-				openmenu(self, m_restock, self.m_subject);
-				self.weapon = 0;
+				SetSlot(this, slot, it_setstat());
+				openmenu(this, m_restock, this.m_subject);
+				this.weapon = 0;
 				return;
 			}	
 		}
 		else
 		{
-			closemenu(self);
+			closemenu(this);
 			return;
 		}
 	}
-	if (self.m_refresh < time)
+	if(this.m_refresh < time)
 	{
-
-		inven(it, fabs(self.equip & self.weapon) + 1);
-		howm = pgold();
-		pprice(howm, cost);
+		inven(this, itslot, fabs(this.equip & this.weapon) + 1);
+		howm = pgold(this);
+		pprice(this, howm, cost);
 		
 		p4 (' ', 'E', 'A', '.');
 		newline();
@@ -104,27 +104,24 @@ it_itemstat();
 /*
  \[\1\] Buy 1 \n \[\2\] Buy 10\n \[\3\] Fill  \n \[\4\] Cancel\n
 */
-		if (self.menu == 1)
+		if(this.menu == 1)
 			WriteString(msg_mode, "\{141}\[\1\] Buy 1 \n \[\2\] Buy 10\n \[\3\] Fill  \n \[\4\] Cancel\n");
-		else if (self.menu == 2)
+		else if(this.menu == 2)
 			WriteString(msg_mode, " \[\1\] Buy 1 \n\{141}\[\2\] Buy 10\n \[\3\] Fill  \n \[\4\] Cancel\n");
-		else if (self.menu == 3)
+		else if(this.menu == 3)
 			WriteString(msg_mode, " \[\1\] Buy 1 \n \[\2\] Buy 10\n\{141}\[\3\] Fill  \n \[\4\] Cancel\n");
-		else if (self.menu == 4)
+		else if(this.menu == 4)
 			WriteString(msg_mode, " \[\1\] Buy 1 \n \[\2\] Buy 10\n \[\3\] Fill  \n\{141}\[\4\] Cancel\n");
 	}
 }
 
-void() m_restock =
+void m_restock(entity this)
 {
+	int i = invenlst(this, this, STACKABLE | 1, restockcost, '5399923 7630691 7012352');
 	
-	local float i;
-
-	i = invenlst(self, STACKABLE | 1, restockcost, '5399923 7630691 7012352');
-	
-	if (i)
+	if(i)
 	{
-		self.weapon = pow2(i);
-		openmenu(self, m_restock_confirm, self.m_subject);
+		this.weapon = (2 ** i);
+		openmenu(this, m_restock_confirm, this.m_subject);
 	}
-};
+}

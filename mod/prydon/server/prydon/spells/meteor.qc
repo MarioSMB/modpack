@@ -1,44 +1,46 @@
+#include "meteor.qh"
 
-void() meteor_hit =
+#include "../subs/combat.qh"
+#include "../subs/subs.qh"
+
+void meteor_hit(entity this, entity toucher)
 {
-	local entity e, oself;
-	local float n;
-	n = 35 * self.frags * self.frags + 60;
-	oself = self;
+	float n = 35 * this.frags * this.frags + 60;
 	
-	e = findradius(self.origin, n);
+	entity e = findradius(this.origin, n);
 	while(e)
 	{
-		if (e.takedamage)
+		if(e.takedamage)
 		{
-			if (!friendly(e, oself))
+			if(!friendly(e, this))
 			{
-				oself.fire = (n - vlen(e.origin - oself.origin) * 0.3) + 5;
+				this.fire = (n - vlen(e.origin - this.origin) * 0.3) + 5;
 				// ugh
 				
-				MagicHit(oself, e);
+				MagicHit(this, this.enemy, e);
 			}
 		}
 		e = e.chain;
 	}
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord (MSG_BROADCAST, oself.origin_x);
-	WriteCoord (MSG_BROADCAST, oself.origin_y);
-	WriteCoord (MSG_BROADCAST, oself.origin_z);
-	remove(oself);
+	te_explosion(this.origin);
+	delete(this);
 }
 
-void() meteor_go =
+void meteor_hitthink(entity this)
 {
-	setmodel(self, "progs/meteor.mdl");
-	self.avelocity = (random() *  '3000 0 0' + random() * '0 3000 0' + random() * '0 0 3000') - '1500 1500 1500';
-	setsize(self, '0 0 0', '0 0 0');
-	self.velocity = self.finalangle;
-	self.movetype = MOVETYPE_FLY;
-	self.solid = SOLID_BBOX;
-	self.touch = meteor_hit;
-	self.think = meteor_hit;
-	self.nextthink = self.ac + 2;
-	self.enemy = self.owner;
-};
+	meteor_hit(this, NULL);
+}
+
+void meteor_go(entity this)
+{
+	_setmodel(this, "progs/meteor.mdl");
+	this.avelocity = (random() *  '3000 0 0' + random() * '0 3000 0' + random() * '0 0 3000') - '1500 1500 1500';
+	setsize(this, '0 0 0', '0 0 0');
+	this.velocity = this.finalangle;
+	set_movetype(this, MOVETYPE_FLY);
+	this.solid = SOLID_BBOX;
+	settouch(this, meteor_hit);
+	setthink(this, meteor_hitthink);
+	this.nextthink = this.ac + 2;
+	this.enemy = this.owner;
+}

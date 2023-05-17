@@ -1,54 +1,62 @@
-void () chestopen =
-{
-	if (!RequirementsMet(self, other))
-	{
+#include "chests.qh"
 
-		if (self.attack_finished < time)
+#include "../subs/_mod.qh"
+
+void chest_open(entity this, entity targ)
+{
+	if(!RequirementsMet(this, targ))
+	{
+		if(this.attack_finished < time)
 		{
-			sound(self, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
-			sprint(other.owner, "locked\n");
-			self.attack_finished = time + 1;
+			_sound(this, CHAN_AUTO, "misc/locked.wav", 1, ATTN_NORM);
+			sprint(targ.owner, "locked\n");
+			this.attack_finished = time + 1;
 		}
 		return;
 	}
-	sound(self, CHAN_AUTO, self.noise, 1, ATTN_NORM);
-	self.frame = 1;
-	dropallitems();
-	self.action = nullfunc;
-	self.use = nullfunc;
-	generictrigger();
-};
+	_sound(this, CHAN_AUTO, this.noise, 1, ATTN_NORM);
+	this.frame = 1;
+	dropallitems(this);
+	this.action = func_null;
+	this.use = func_null;
+	generictrigger(this, NULL, targ);
+}
 
-void () chest =
+void chestopen(entity this, entity actor, entity trigger)
 {
-	if (!self.model)
-		self.model = "progs/chest.mdl";
-	precache_model(self.model);
-	if (!self.noise)
-		self.noise = "misc/chest.wav";
-	precache_sound(self.noise);
-	precache_sound ("misc/locked.wav");
-	setmodel(self, self.model);
-	setsize(self, '-16 -16 0', '16 16 16');
-	self.effects = EF_SELECTABLE;
-	self.classname	= "chest";
-	if (!self.netname)
-		self.netname = "Chest";
-	legacy_fixinv();
+	chest_open(this, trigger); // TODO: actor?
+}
 
-	datacheck();
+spawnfunc(chest)
+{
+	if(!this.model)
+		this.model = "progs/chest.mdl";
+	precache_model(this.model);
+	if(!this.noise)
+		this.noise = "misc/chest.wav";
+	precache_sound(this.noise);
+	precache_sound("misc/locked.wav");
+	_setmodel(this, this.model);
+	setsize(this, '-16 -16 0', '16 16 16');
+	this.effects = EF_SELECTABLE;
+	this.classname	= "chest";
+	if(!this.netname)
+		this.netname = "Chest";
+	legacy_fixinv(this);
+
+	datacheck(this);
 	
-	self.owner = self;
-	self.movetype	= MOVETYPE_TOSS;
-	self.solid	= SOLID_BBOX;
-	if (CheckStory(self) == 1)
+	this.owner = this;
+	set_movetype(this, MOVETYPE_TOSS);
+	this.solid	= SOLID_BBOX;
+	if(CheckStory(this) == 1)
 	{
-		self.frame = 1;
-		self.action = nullfunc;
-		self.use = nullfunc;
+		this.frame = 1;
+		this.action = func_null;
+		this.use = func_null;
 	}
-	else if (self.targetname)
-		self.use = chestopen;
+	else if(this.targetname)
+		this.use = chestopen;
 	else
-		self.action = chestopen;
-};
+		this.action = chest_open;
+}
