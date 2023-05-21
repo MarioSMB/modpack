@@ -148,7 +148,7 @@ bool CSQC_ConsoleCommand(string command)
 
 void GameCommand(string command)
 {
-	tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -175,6 +175,35 @@ void GameCommand(string command)
 		LOG_INFOF("Incorrect parameters for ^2%s^7", s);
 		LOG_HELP("Usage:^3 cl_cmd sendcvar <cvar>");
 		LOG_HELP("  Where <cvar> is the cvar to send to the server.");
+		return;
+	}
+
+	if(s == "settemp")
+	{
+		if(argc >= 3)
+		{
+			float f = cvar_settemp(argv(1), argv(2));
+			if(f == 1)
+				LOG_TRACE("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.");
+			else if(f == -1)
+				LOG_TRACE("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".");
+			// else cvar_settemp itself errors out
+
+			return;
+		}
+		LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		return;
+	}
+
+	if(s == "settemp_restore")
+	{
+		float i = cvar_settemp_restore();
+
+		if(i)
+			LOG_TRACE("Restored ", ftos(i), " temporary cvar settings to their original values.");
+		else
+			LOG_TRACE("Nothing to restore.");
+
 		return;
 	}
 

@@ -165,6 +165,35 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "settemp")
+	{
+		if(argc >= 3)
+		{
+			float f = cvar_settemp(argv(1), argv(2));
+			if(f == 1)
+				LOG_TRACE("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.");
+			else if(f == -1)
+				LOG_TRACE("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".");
+			// else cvar_settemp itself errors out
+
+			return;
+		}
+		LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		return;
+	}
+
+	if(cmdname == "settemp_restore")
+	{
+		float i = cvar_settemp_restore();
+
+		if(i)
+			LOG_TRACE("Restored ", ftos(i), " temporary cvar settings to their original values.");
+		else
+			LOG_TRACE("Nothing to restore.");
+
+		return;
+	}
+
 	if(cmdname == "find")
 	{
 		FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
