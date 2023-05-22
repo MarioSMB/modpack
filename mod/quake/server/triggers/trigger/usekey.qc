@@ -18,7 +18,7 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 			centerprint(actor, this.message);
 		else
 		{
-			if(this.owner.items == IT_KEY1)
+			if(this.items == IT_KEY1)
 			{
 				if(world.worldtype == WORLDTYPE_BASE)
 					centerprint(actor, "You need the silver keycard");
@@ -26,19 +26,19 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 					centerprint(actor, "You need the silver runekey");
 				else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 					centerprint(actor, "You need the silver key");
-				else
-				{
-					if(world.worldtype == WORLDTYPE_BASE)
-						centerprint(actor, "You need the gold keycard");
-					else if(world.worldtype == WORLDTYPE_METAL)
-						centerprint(actor, "You need the gold runekey");
-					else if(world.worldtype == WORLDTYPE_MEDIEVAL)
-						centerprint(actor, "You need the gold key");
-				}
-				_sound(this, CH_INFO, this.noise3, 1, ATTN_NORM);
-				return;
+			}
+			else if(this.items == IT_KEY2)
+			{
+				if(world.worldtype == WORLDTYPE_BASE)
+					centerprint(actor, "You need the gold keycard");
+				else if(world.worldtype == WORLDTYPE_METAL)
+					centerprint(actor, "You need the gold runekey");
+				else if(world.worldtype == WORLDTYPE_MEDIEVAL)
+					centerprint(actor, "You need the gold key");
 			}
 		}
+		_sound(this, CH_INFO, this.noise3, 1, ATTN_NORM);
+		return;
 	}
 
 	actor.items &= ~this.items;
