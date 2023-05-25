@@ -35,8 +35,6 @@
 * Extra commands for map navigation, including findmap to search the list more indepth, and gotorandom to switch to a completely random map
 * %j and %k in chat will show the last killed player and last player to kill you, respectively
 * snap command for 'snapping' good moments in matches (places a marker in the demo if you're recording it)
-* Rifle can once again headshot players, yay
-* Ignore command to keep spammers out of your personal chat log for a match
 * Ability to load in custom item models and sounds cleanly with a replacement path option
 * Ability to replace monster model paths, to easily load in custom models
 * Akimbo mutator for all your dual wielding needs
@@ -49,10 +47,8 @@
 * Spawn Invisible mutator, to give spawning players a chance without making them completely invulnerable
 * Option to keep players from spawning at the same spawnpoint twice
 * Zombie Apocalypse mutator, which spawns random monsters around the map constantly
-* Command to permanently mute troublesome players
 * Option to change all or individual player's size
 * Options to replace any entity on maps
 * Option to require players to have stats enabled, allows blocking players via whitelists and blacklists and even keeping players out with too much elo
 * Teammate collisions, pass through teammates instead of bumping into them!
 * tp command, so admins can sneak up on troublesome players!
-* Command to permanently prevent certain players from voting

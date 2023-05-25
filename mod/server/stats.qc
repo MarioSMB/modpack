@@ -147,10 +147,7 @@ MUTATOR_HOOKFUNCTION(require_stats, ClientConnect)
 
 	if(autocvar_g_require_stats >= 1)
 	if(stats_CheckPlayer(player))
-	{
-		CS(player).muted = true;
 		CS(player).version_mismatch = true;
-	}
 }
 
 MUTATOR_HOOKFUNCTION(require_stats, PutClientInServer)
