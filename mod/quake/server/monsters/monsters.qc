@@ -281,6 +281,8 @@ void monster_start(entity this, bool check_appear, Monster mon)
 		this.oldsolid = this.solid;
 		this.effects |= EF_NODRAW;
 		this.solid = SOLID_NOT;
+		setthink(this, func_null);
+		this.nextthink = 0;
 		return;
 	}
 }
