@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GOROTH,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was dominated by Goroth"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GOROTH,            1,  NULL,           INFO_DEATH_SELF_MON_GOROTH,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GOROTH,        DEATH_SELF_MON_GOROTH,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GOROTH, "progs/goroth.mdl");
+
+SOUND(MON_GOROTH_SIGHT, "goroth/gorwake");
+#endif
+
+CLASS(Goroth, Monster)
+    ATTRIB(Goroth, spawnflags, int, MONSTER_TYPE_BOSS);
+    ATTRIB(Goroth, m_mins, vector, '-192 -192 -48');
+    ATTRIB(Goroth, m_maxs, vector, '192 192 576');
+#ifdef GAMEQC
+    ATTRIB(Goroth, m_model, Model, MDL_MON_GOROTH);
+    ATTRIB(Goroth, m_sound, Sound, SND_MON_GOROTH_SIGHT);
+#endif
+    ATTRIB(Goroth, netname, string, "goroth");
+    ATTRIB(Goroth, monster_name, string, _("Goroth"));
+ENDCLASS(Goroth)
+
+REGISTER_MONSTER(GOROTH, NEW(Goroth));

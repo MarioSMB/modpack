@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_VOLKERH,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's blood was feasted upon by Volkerh"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_VOLKERH,            1,  NULL,           INFO_DEATH_SELF_MON_VOLKERH,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_VOLKERH,        DEATH_SELF_MON_VOLKERH,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_VOLKERH, "progs/volkerh.mdl");
+
+SOUND(MON_VOLKERH_SIGHT, "volkerh/volwake");
+#endif
+
+CLASS(Volkerh, Monster)
+    ATTRIB(Volkerh, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY);
+    ATTRIB(Volkerh, m_mins, vector, '-83 -94 0');
+    ATTRIB(Volkerh, m_maxs, vector, '83 94 582');
+#ifdef GAMEQC
+    ATTRIB(Volkerh, m_model, Model, MDL_MON_VOLKERH);
+    ATTRIB(Volkerh, m_sound, Sound, SND_MON_VOLKERH_SIGHT);
+#endif
+    ATTRIB(Volkerh, netname, string, "volkerh");
+    ATTRIB(Volkerh, monster_name, string, _("Volkerh"));
+ENDCLASS(Volkerh)
+
+REGISTER_MONSTER(VOLKERH, NEW(Volkerh));

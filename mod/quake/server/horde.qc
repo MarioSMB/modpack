@@ -290,6 +290,8 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	}
 	mon.mr_setup(mon, monster);
 
+	monster.health = min(monster.health, 2000); // limit health to avoid sponges
+
 	// finish the shared settings
 	setorigin(monster, org + '0 0 1');
 
@@ -1549,6 +1551,8 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 guardian");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 legond");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 overlord");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 goroth");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");
