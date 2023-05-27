@@ -10,26 +10,33 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Prepare
+        run: ./update.sh
         env:
           CI: true
-        run: ./update.sh
+          ARCHIVE: 1
 
       - name: Build
+        run: ./build.sh
         env:
           TERM: xterm
-        run: ./build.sh
+          ARCHIVE: 1
+      
+      - name: Set artifact name
+        run: |
+          git fetch --tags
+          echo "ARTIFACT_NAME=progs-$(git describe --tags --dirty='~' --always)" >> $GITHUB_ENV
 
       - name: Store artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: artifacts
+          name: ${{ env.ARTIFACT_NAME }}
           path: |
             compiled/*
-            xonotic/qcsrc/*.pk3
           if-no-files-found: error
+          # retention-days: 14
 
       - name: Publish a release
         if: startsWith(github.ref, 'refs/tags/')
@@ -38,4 +45,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           files: |
             compiled/*
-            xonotic/qcsrc/*.pk3
