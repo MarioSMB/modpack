@@ -47,6 +47,6 @@ mkdir -vp $(dirname "$0")/compiled
 mv -v *.lno $(dirname "$0")/compiled
 mv -v *.dat $(dirname "$0")/compiled
 
-cp -v ./$base/qcsrc/csprogs-*.pk3 ./compiled
+cp -v $base/qcsrc/csprogs-*.pk3 ./compiled
 
 tput bold; tput setaf 3; echo "Now you can look at the compiled files inside $(dirname "$0")/compiled directory."
