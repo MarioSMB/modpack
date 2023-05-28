@@ -1292,14 +1292,14 @@ void W_FireFlower_Attack(entity this)
 	proj.velocity = v_forward * 500;
 	proj.bouncefactor = 1;
 	settouch(proj, W_FireFlower_Touch);
-	_setmodel(proj, "progs/fireball.mdl");
+	setmodel(proj, MDL_LAVABALL);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.solid = SOLID_CORPSE;
 	proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	//proj.solid = SOLID_BBOX;
 	proj.angles = vectoangles(proj.velocity);
 	proj.enemy = this.enemy;
-	proj.effects = EF_FLAME;
+	//proj.effects = EF_FLAME;
 	setthink(proj, SUB_Remove);
 	proj.nextthink = time + 10;
 }
