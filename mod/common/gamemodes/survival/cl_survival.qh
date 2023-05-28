@@ -1,3 +1,0 @@
-#pragma once
-
-void HUD_Mod_Survival(vector pos, vector mySize);
