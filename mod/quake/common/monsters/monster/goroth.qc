@@ -523,7 +523,7 @@ METHOD(Goroth, mr_setup, bool(Goroth this, entity actor))
 
     actor.health = 6000;
     if(horde_ent)
-    	actor.scale = 0.2;
+    	actor.scale = 0.18;
     else
     	actor.scale = 1;
 
