@@ -716,18 +716,18 @@ void vol_gib(entity this)
 	
 	vector oldo = this.origin;
 
-	float posz = 0;
-	while(posz <= (390 * this.scale))
+	float posz = 78; // was 0
+	while(posz <= 390)
 	{
-		float posx = (-62 * this.scale);
-		while(posx <= (62 * this.scale))
+		float posx = 0; // was -62
+		while(posx <= 62)
 		{
-			float posy = (-62 * this.scale);
-			while(posy <= (62 * this.scale))
+			float posy = 0; // was -62
+			while(posy <= 62)
 			{
-				this.origin_x = oldo.x + posx;
-				this.origin_y = oldo.y + posy;
-				this.origin_z = oldo.z + posz;
+				this.origin_x = oldo.x + (posx * this.scale);
+				this.origin_y = oldo.y + (posy * this.scale);
+				this.origin_z = oldo.z + (posz * this.scale);
 
 				float r = random();
 				if(r < 0.3)				
@@ -736,11 +736,11 @@ void vol_gib(entity this)
 					ThrowGib(this, "progs/gib2.mdl", -100);
 				else
 					ThrowGib(this, "progs/gib3.mdl", -100);
-				posy += (31 * this.scale);
+				posy += 31;
 			}
-			posx += (31 * this.scale);
+			posx += 31;
 		}
-		posz += (78 * this.scale);
+		posz += 78;
 	}
 	delete(this);
 }

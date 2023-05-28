@@ -439,18 +439,18 @@ void gor_gib(entity this)
 	_sound(this, CHAN_BODY, "boss2/pop2.wav", 1, ATTN_NORM);
 	vector oldo = this.origin;
 
-	float posz = (-48 * this.scale);
-	while(posz <= (256 * this.scale))
+	float posz = 0; // was -48
+	while(posz <= 256)
 	{
-		float posx = (-96 * this.scale);
-		while(posx <= (512 * this.scale))
+		float posx = 0; // was -96
+		while(posx <= 512)
 		{
-			float posy = (-96 * this.scale);
-			while(posy <= (96 * this.scale))
+			float posy = 0; // was -96
+			while(posy <= 96)
 			{
-				this.origin_x = oldo.x + posx;
-				this.origin_y = oldo.y + posy;
-				this.origin_z = oldo.z + posz;
+				this.origin_x = oldo.x + (posx * this.scale);
+				this.origin_y = oldo.y + (posy * this.scale);
+				this.origin_z = oldo.z + (posz * this.scale);
 
 				float r = random();
 				if(r < 0.3)				
@@ -459,11 +459,11 @@ void gor_gib(entity this)
 					ThrowGib(this, "progs/gib2.mdl", -100);
 				else
 					ThrowGib(this, "progs/gib3.mdl", -100);
-				posy += (48 * this.scale);
+				posy += 48;
 			}
-			posx += (48 * this.scale);
+			posx += 128;
 		}
-		posz += (128 * this.scale);
+		posz += 128;
 	}
 	te_lavasplash(this.origin - '320 0 256');
 	delete(this);
