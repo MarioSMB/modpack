@@ -273,7 +273,6 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
-	org.z += -mon.m_mins.z; // offset based on size
 	// TODO: zombie logic too messy to work with mr_setup for now!
 	if(mon == MON_ZOMBIE)
 	{
@@ -293,6 +292,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	monster.health = min(monster.health, 2000); // limit health to avoid sponges
 
 	// finish the shared settings
+	org.z += -monster.mins.z; // offset based on size
 	setorigin(monster, org + '0 0 1');
 
 	setcefc(monster, monster_customize);
@@ -318,7 +318,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	setthink(monster, FoundTarget);
 		
 	//monster.nextthink = monster.nextthink + 0.1;
-	monster.nextthink = time + 0.1;
+	monster.nextthink = time;
 	
 	spawn_tdeath_fast(monster.origin, monster);
 	//spawn_tfog(monster.origin);
