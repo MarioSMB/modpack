@@ -1263,7 +1263,7 @@ bool SpawnWavePrep(entity this)
 	
 	// Boss Count
 	if(this.wave == 9)
-		this.bosses = 1; // always just one boss for the final boss wave
+		this.bosses = this.count; // use the horde manager's count for final boss count
 	else if((temp_wave % 3) == 0)
 	{
 		this.bosses = floor((temp_wave+1)/4);
@@ -1613,9 +1613,9 @@ spawnfunc(horde_manager)
 	this.wait = 1; // waiting before next wave?
 	this.delay = 9; // max number of  squads to spawn in a wave
 	this.wave = 0;
-	
-	//if(!horde)
-	//	horde = 1; // in case CVAR isn't already set
+
+	if(!this.count)
+		this.count = 1; // number of final bosses on wave 9
 }
 
 void PowerupFade(entity this)
