@@ -4,5 +4,4 @@
 #include "jailbreak/module.inc"
 #include "runematch/module.inc"
 #include "snafu/module.inc"
-#include "survival/module.inc"
 #include "vip/module.inc"

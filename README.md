@@ -43,7 +43,8 @@ Note: PATH is one of the following depending on your system
 Nothing should *ever* be added to the main installation folder of Xonotic, use these paths!
 
 1. Run this from a terminal in the modpack folder: `./update.sh`
-2. Run this from a terminal in the modpack folder: `./build.sh`
+2. Run this from a terminal in the modpack folder: `./build.sh` <br/>
+For speed up compilation, if you want to execute without compression (without `csprogs-*.pk3` file): `ZIP=: ./build.sh`
 3. Copy the compiled .dat files from modpack to `PATH/data`
 4. Download the content packs to `PATH/data` and make sure they're available on your map download server
 
