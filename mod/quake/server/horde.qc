@@ -289,7 +289,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	}
 	mon.mr_setup(mon, monster);
 
-	monster.health = min(monster.health, 2000); // limit health to avoid sponges
+	monster.health = min(monster.health, 1750); // limit health to avoid sponges
 
 	// finish the shared settings
 	org.z += -monster.mins.z; // offset based on size
@@ -1552,6 +1552,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 legond");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 overlord");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 goroth");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 blud");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 	}
 

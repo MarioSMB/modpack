@@ -447,13 +447,14 @@ void armagon_die14(entity this)
 {
 	set_animofs(this, anim_armagon_ldie, 12, armagon_die14);
 	armagon_think(this);
-	multi_explosion( this.origin + '0 0 80', 20, 10, 3, 0.1, 0.5);
+	multi_explosion(this.origin + '0 0 80', 20, 10, 3, 0.1, 0.5);
 	// legs
 	this.nextthink = -1;
 	set_movetype(this, MOVETYPE_NONE);
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
-	setsize (this, '-32 -32 -24', '32 32 32' );
+	setsize(this, '-32 -32 -24', '32 32 32' );
+	CorpseThink(this); // before flags are set to 0!
 	this.flags = 0;
 	this.gorging = true;
 	this.wait = time + 5;
@@ -468,6 +469,7 @@ void armagon_die14(entity this)
 	setthink(body, armagon_body_explode1);
 	body.nextthink = time + 0.1;
 	body.gorging = true;
+
 }
 void armagon_die13(entity this) { set_animofs(this, anim_armagon_ldie, 11, armagon_die14); armagon_think(this); this.nextthink = time + 0.2; }
 void armagon_die12(entity this) { set_animofs(this, anim_armagon_ldie, 10, armagon_die13); armagon_think(this); this.nextthink = time + 0.2; }
@@ -488,7 +490,7 @@ void armagon_die4(entity this)
 	set_animofs(this, anim_armagon_ldie, 2, armagon_die5);
 	armagon_think(this);
 	multi_explosion( this.origin + '0 0 48', 48, 10, 6, 0.3, 0.3);
-	_sound(this, CH_TRIGGER, "armagon/death.wav", 1, ATTN_NONE);
+	_sound(this, CH_TRIGGER, "armagon/death.wav", 1, 0.1);
 	this.nextthink = time + 0.2;
 }
 void armagon_die3(entity this) { set_animofs(this, anim_armagon_ldie, 1, armagon_die4); armagon_think(this); this.nextthink = time + 0.2; }
@@ -671,10 +673,9 @@ bool ArmagonCheckAttack(entity this)
 
 	float ang = this.angles_y + this.fixangle;
 	float delta = this.ideal_yaw - ang;
-	float dist = vlen(spot2-spot1);
-	if((fabs(delta) > 10 && (dist > 200)) || !IS_PLAYER(this.enemy))
+	if((fabs(delta) > 10 && (vdist(spot2 - spot1, >, 200))) || !IS_PLAYER(this.enemy))
 		return false;
-	if(dist < 400)
+	if(vdist(spot2 - spot1, <, 400))
 	{  // melee attack
 		this.th_melee(this);
 		return true;
