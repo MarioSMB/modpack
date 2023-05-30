@@ -1008,6 +1008,9 @@ STATIC_INIT_EARLY(missionpacks)
 
 spawnfunc(worldspawn)
 {
+	if(world.model == "maps/quake.bsp")
+		serverflags = 0; // clean up serverflags!
+
 	startingserverflags = serverflags;
 
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
@@ -1203,6 +1206,7 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
+	#if 0
 		if(MP_MG)
 			mapname = "mgstart";
 		else if(MP_IMPEL)
@@ -1213,6 +1217,9 @@ void GotoFirstMap(entity this)
 			mapname = "hipstart";
 		else
 			mapname = "start";
+	#else
+		mapname = "quake";
+	#endif
 		GotoNextMap();
 
 		return;
@@ -1287,8 +1294,10 @@ void CheckRules_World()
 	{
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
 		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch 
-			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp" && world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp")
+			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp"
+			&& world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp" && world.model != "maps/quake.bsp")
 		{
+		#if 0
 			if(MP_MG)
 				localcmd("\nmap mgstart\n");
 			else if(MP_IMPEL)
@@ -1299,6 +1308,9 @@ void CheckRules_World()
 				localcmd("\nmap rstart\n");
 			else
 				localcmd("\nmap start\n");
+		#else
+			changelevel("quake");
+		#endif
 		}
 		else
 			NextLevel();

@@ -513,7 +513,6 @@ spawnfunc(monster_ogre)
 }
 spawnfunc(monster_ogre_marksman)
 {
-	if(MP_ROGUE) { delete(this); return; }
 	this.classname = "monster_ogre_marksman"; // TODO: separate monster?
 	monster_start(this, true, MON_OGRE);
 }
@@ -534,9 +533,9 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	precache_sound("ogre/ogsawatk.wav");
 
 	// none specified - choose random. 25% boss on normal, hard, bloodbath
-	if((actor.spawnflags <= 1) && autocvar_skill > 0 && random() <= 0.25)
+	if((actor.spawnflags <= 1) && autocvar_skill > 0 && random() <= 0.25 && substring(world.model, 0, 6) == "maps/r")
 		actor.spawnflags |= OGRE_BOSS;
-		
+
 	if(actor.spawnflags & OGRE_BOSS)
 		actor.skin = 1;
 

@@ -9,11 +9,14 @@ void changelevel_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart")))
+	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart" && mapname != "quake")))
 	{
 		T_Damage(toucher, this, this, 50000, DEATH_NOEXIT.m_id);
 		return;
 	}
+
+	if(!fexists(strcat("maps/", this.map, ".bsp")))
+		return;
 
 	toucher.chlevel_targ = this;
 

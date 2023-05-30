@@ -115,7 +115,7 @@ void SetNewParms()
 
 void DecodeLevelParms(entity this)
 {
-	if(world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB))
+	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB))
 		SetNewParms();		// take away all stuff on starting new episode
 
 	// Yoder Oct25, reset weapons between map loads
@@ -750,13 +750,14 @@ void IntermissionThink(entity this)
 	ExitIntermission();
 }
 
-float autocvar_sv_quake_autoreset;
+float autocvar_sv_quake_autoreset = 10;
 void server_delayed_reset(entity this)
 {
 	if(deathmatch)
 		return; // don't wanna do a hard reset in these cases
 
 	// kicks everyone and resets the server!
+#if 0
 	string themap = "start";
 	if(MP_HIPNOTIC)
 		themap = "hipstart";
@@ -766,8 +767,11 @@ void server_delayed_reset(entity this)
 		themap = "aopstart";
 	else if(MP_MG)
 		themap = "mgstart";
-
 	localcmd("\nmap ", themap, "\n");
+#else
+	string themap = "quake";
+	changelevel(themap);
+#endif
 }
 
 void server_reset()
