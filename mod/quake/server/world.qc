@@ -1009,7 +1009,10 @@ STATIC_INIT_EARLY(missionpacks)
 spawnfunc(worldspawn)
 {
 	if(world.model == "maps/quake.bsp")
+	{
+		cvar_set("horde", "0"); // no horde either!
 		serverflags = 0; // clean up serverflags!
+	}
 
 	startingserverflags = serverflags;
 

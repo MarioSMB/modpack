@@ -4,6 +4,8 @@
 
 float autocvar_sv_quake_katria = 0.3;
 
+float autocvar_sv_quake_kill_delay = 5;
+
 bool autocvar_g_playerclip_collisions;
 
 bool autocvar_samelevel;

@@ -750,7 +750,7 @@ void IntermissionThink(entity this)
 	ExitIntermission();
 }
 
-float autocvar_sv_quake_autoreset = 10;
+float autocvar_sv_quake_autoreset = 30;
 void server_delayed_reset(entity this)
 {
 	if(deathmatch)
@@ -971,7 +971,7 @@ void ClientKill(entity this)
 		sprint(this, "You must wait before suiciding again... Get help.\n");
 		return;
 	}
-	this.suicide_delay = time + 5;
+	this.suicide_delay = time + autocvar_sv_quake_kill_delay;
 
 	if(this.powerups & POWERUP_V_SPHERE)
 	{
