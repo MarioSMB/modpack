@@ -4,8 +4,8 @@
 PRECACHE(Shock_PreCache)
 {
 	precache_sound2("enforcer/enfstop.wav");   // electric zap (for water hit)
-	precache_sound("dsfirxpl.wav");   // for plasma hit
-	precache_sound("dsplasma.wav");    // plasma firing
+	precache_sound("weapons/dsfirxpl.wav");   // for plasma hit
+	precache_sound("weapons/dsplasma.wav");    // plasma firing
 	precache_model("progs/pbullet.mdl");      // Plasma bullet model
 	precache_model("progs/g_shock.mdl");     // Plasma gun item
 	precache_model("progs/v_shock.mdl");     // Plasma being used
@@ -74,7 +74,7 @@ void T_ShockTouch(entity this, entity toucher)
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 	// Sound from Doom...
-	_sound(this, CH_WEAPON_SINGLE, "dsfirxpl.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/dsfirxpl.wav", 1, ATTN_NORM);
 	ShockExplosion(this);
 }
 
@@ -88,7 +88,7 @@ void W_FireShock(entity this)
 	this.ammo_cells -= 1;
 
 	// Taken from Doom...
-	_sound(this, CH_WEAPON_SINGLE, "dsplasma.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/dsplasma.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
