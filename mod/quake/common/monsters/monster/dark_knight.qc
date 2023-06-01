@@ -119,10 +119,10 @@ void dknight_shoot1(entity this) { set_anim(this, 44, dknight_shoot2); ai_face(t
 
 void dknight_runatk11(entity this) { set_anim(this, 27, dknight_run1); ai_charge(this, 10); }
 void dknight_runatk10(entity this) { set_anim(this, 26, dknight_runatk11); ai_charge_side(this); }
-void dknight_runatk9(entity this) { set_anim(this, 25, dknight_runatk10); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
-void dknight_runatk8(entity this) { set_anim(this, 24, dknight_runatk9); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
-void dknight_runatk7(entity this) { set_anim(this, 23, dknight_runatk8); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
-void dknight_runatk6(entity this) { set_anim(this, 22, dknight_runatk7); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_runatk9(entity this) { set_anim(this, 25, dknight_runatk10); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
+void dknight_runatk8(entity this) { set_anim(this, 24, dknight_runatk9); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
+void dknight_runatk7(entity this) { set_anim(this, 23, dknight_runatk8); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
+void dknight_runatk6(entity this) { set_anim(this, 22, dknight_runatk7); ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
 void dknight_runatk5(entity this)
 {
 	set_anim(this, 21, dknight_runatk6);
@@ -131,7 +131,7 @@ void dknight_runatk5(entity this)
 		_sound(this, CHAN_BODY, "monsters/dknight/dkswzap1.wav", 1, ATTN_IDLE);
 	else
 		_sound(this, CHAN_BODY, "monsters/dknight/dkswzap2.wav", 1, ATTN_IDLE);
-	ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id);
+	ai_melee_side(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60);
 }
 void dknight_runatk4(entity this) { set_anim(this, 20, dknight_runatk5); ai_charge_side(this); }
 void dknight_runatk3(entity this) { set_anim(this, 19, dknight_runatk4); ai_charge_side(this); }
@@ -140,9 +140,9 @@ void dknight_runatk1(entity this) { set_anim(this, 17, dknight_runatk2); ai_char
 
 void dknight_atk10(entity this) { set_anim(this, 52, dknight_run1); ai_charge(this, 5); }
 void dknight_atk9(entity this) { set_anim(this, 51, dknight_atk10); ai_charge(this, 1); }
-void dknight_atk8(entity this) { set_anim(this, 50, dknight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
-void dknight_atk7(entity this) { set_anim(this, 49, dknight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
-void dknight_atk6(entity this) { set_anim(this, 48, dknight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id); }
+void dknight_atk8(entity this) { set_anim(this, 50, dknight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
+void dknight_atk7(entity this) { set_anim(this, 49, dknight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
+void dknight_atk6(entity this) { set_anim(this, 48, dknight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_DARK_KNIGHT.m_id, 60); }
 void dknight_atk5(entity this)
 {
 	set_anim(this, 47, dknight_atk6);

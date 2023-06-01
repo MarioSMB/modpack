@@ -138,26 +138,26 @@ ai_melee
 
 =============
 */
-void ai_melee(entity this, int deathtype)
+void ai_melee(entity this, int deathtype, int melee_range)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
 
-	if(vdist(this.enemy.origin - this.origin, >, 60))
+	if(vdist(this.enemy.origin - this.origin, >, melee_range))
 		return;
 
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }
 
-void ai_melee_side(entity this, int deathtype)
+void ai_melee_side(entity this, int deathtype, int melee_range)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
 
 	ai_charge_side(this);
 
-	if(vdist(this.enemy.origin - this.origin, >, 60))
+	if(vdist(this.enemy.origin - this.origin, >, melee_range))
 		return;
 	if(!CanDamage(this.enemy, this))
 		return;

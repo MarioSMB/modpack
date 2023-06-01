@@ -1498,6 +1498,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 cook");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 floyd");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 edie");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 bender");
 	}
 
 	// no bosses spawn during army waves

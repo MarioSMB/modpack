@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BENDER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 bit Bender's shiny metal ass"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BENDER,               1,  NULL,           INFO_DEATH_SELF_MON_BENDER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BENDER,           DEATH_SELF_MON_BENDER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BENDER, "progs/bender.mdl");
+MODEL(MON_BENDER_HEAD, "progs/h_bender.mdl");
+
+SOUND(MON_BENDER_SIGHT, "bend/idle2");
+#endif
+
+CLASS(Bender, Monster)
+    ATTRIB(Bender, spawnflags, int, 0);
+    ATTRIB(Bender, m_mins, vector, '-12 -14 -24');
+    ATTRIB(Bender, m_maxs, vector, '12 14 26');
+#ifdef GAMEQC
+    ATTRIB(Bender, m_model, Model, MDL_MON_BENDER);
+    ATTRIB(Bender, m_model_head, Model, MDL_MON_BENDER_HEAD);
+    ATTRIB(Bender, m_sound, Sound, SND_MON_BENDER_SIGHT);
+#endif
+    ATTRIB(Bender, netname, string, "bender");
+    ATTRIB(Bender, monster_name, string, _("Bender"));
+ENDCLASS(Bender)
+
+REGISTER_MONSTER(BENDER, NEW(Bender));

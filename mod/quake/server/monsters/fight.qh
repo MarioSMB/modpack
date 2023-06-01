@@ -8,6 +8,6 @@ void ai_charge(entity this, float d);
 
 void ai_charge_side(entity this);
 
-void ai_melee(entity this, int deathtype);
+void ai_melee(entity this, int deathtype, int melee_range);
 
-void ai_melee_side(entity this, int deathtype);
+void ai_melee_side(entity this, int deathtype, int melee_range);

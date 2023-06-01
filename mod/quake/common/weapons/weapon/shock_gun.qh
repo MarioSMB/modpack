@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(ShockGun, Weapon)
+/* ammotype  */ ATTRIB(ShockGun, ammo_type, int, IT_CELLS);
+/* impulse   */ ATTRIB(ShockGun, impulse, int, 8);
+/* spawnflags*/ ATTRIB(ShockGun, spawnflags, int, WEP_FLAG_NOHUD);
+/* ammo */      ATTRIB(ShockGun, aflag, int, 16);
+/* modelname */ ATTRIB(ShockGun, mdl, string, "shock");
+/* crosshair */ ATTRIB(ShockGun, w_crosshair, string, "gfx/crosshaircrylink");
+/* crosshair */ ATTRIB(ShockGun, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(ShockGun, w_crosshair_color, vector, '0.25 0.5 0.75');
+/* refname   */ ATTRIB(ShockGun, netname, string, "shock");
+/* replace   */ ATTRIB(ShockGun, weaponreplace, string, "lightning");
+/* wepname   */ ATTRIB(ShockGun, m_name, string, _("Shock Gun"));
+
+ENDCLASS(ShockGun)
+REGISTER_WEAPON(SHOCK_GUN, NEW(ShockGun));
+
+SPAWNFUNC_WEAPON(weapon_plasmagun, WEP_SHOCK_GUN)

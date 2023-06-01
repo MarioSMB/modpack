@@ -27,9 +27,9 @@ void sword_run1(entity this)
 void sword_atk10(entity this) { set_animofs(this, anim_sword_attackb1, 10, sword_run1); ai_charge(this, 14); }
 void sword_atk9(entity this) { set_animofs(this, anim_sword_attackb1, 9, sword_atk10); ai_charge(this, 14); }
 void sword_atk8(entity this) { set_animofs(this, anim_sword_attackb1, 8, sword_atk9); ai_charge(this, 14); }
-void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
-void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
-void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this, DEATH_MONSTER_SWORD.m_id); }
+void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
+void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
+void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
 void sword_atk4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_atk5); ai_charge(this, 14); }
 void sword_atk3(entity this) { set_animofs(this, anim_sword_attackb1, 3, sword_atk4); ai_charge(this, 14); }
 void sword_atk2(entity this) { set_animofs(this, anim_sword_attackb1, 2, sword_atk3); ai_charge(this, 14); }

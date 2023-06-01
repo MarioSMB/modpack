@@ -18,3 +18,4 @@
 #include "impaler.qc"
 #include "napalm_gun.qc"
 #include "chainsaw.qc"
+#include "shock_gun.qc"

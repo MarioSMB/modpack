@@ -2,18 +2,6 @@
 
 #ifdef SVQC
 
-void superchicken_ai_melee(entity this, int deathtype)
-{
-	if(!this.enemy)
-		return;		// removed before stroke
-
-	if(vdist(this.enemy.origin - this.origin, >, 128))
-		return;
-
-	float ldmg = (random() + random() + random()) * 3;
-	T_Damage(this.enemy, this, this, ldmg, deathtype);
-}
-
 void superchicken_stand(entity this) { set_anim(this, 0, superchicken_stand); ai_stand(this); }
 
 void superchicken_walk7(entity this) { set_anim(this, 17, superchicken_walk1); ai_walk(this, 8); }
@@ -26,12 +14,12 @@ void superchicken_walk1(entity this) { set_anim(this, 11, superchicken_walk2); a
 
 void superchicken_peck10(entity this) { set_anim(this, 10, superchicken_run1); }
 void superchicken_peck9(entity this) { set_anim(this, 9, superchicken_peck10); }
-void superchicken_peck8(entity this) { set_anim(this, 8, superchicken_peck9); superchicken_ai_melee(this, 50); ai_face(this); }
-void superchicken_peck7(entity this) { set_anim(this, 7, superchicken_peck8); superchicken_ai_melee(this, 50); ai_face(this); }
-void superchicken_peck6(entity this) { set_anim(this, 6, superchicken_peck7); superchicken_ai_melee(this, 50); ai_face(this); _sound(this, CH_VOICE, "chicken/peck.wav", 1, ATTEN_LARGE); }
-void superchicken_peck5(entity this) { set_anim(this, 5, superchicken_peck6); superchicken_ai_melee(this, 50); ai_face(this); }
-void superchicken_peck4(entity this) { set_anim(this, 4, superchicken_peck5); superchicken_ai_melee(this, 50); ai_face(this); }
-void superchicken_peck3(entity this) { set_anim(this, 3, superchicken_peck4); superchicken_ai_melee(this, 50); _sound(this, CH_VOICE, "chicken/peck.wav", 1, ATTEN_LARGE); }
+void superchicken_peck8(entity this) { set_anim(this, 8, superchicken_peck9); ai_melee(this, 50, 128); ai_face(this); }
+void superchicken_peck7(entity this) { set_anim(this, 7, superchicken_peck8); ai_melee(this, 50, 128); ai_face(this); }
+void superchicken_peck6(entity this) { set_anim(this, 6, superchicken_peck7); ai_melee(this, 50, 128); ai_face(this); _sound(this, CH_VOICE, "chicken/peck.wav", 1, ATTEN_LARGE); }
+void superchicken_peck5(entity this) { set_anim(this, 5, superchicken_peck6); ai_melee(this, 50, 128); ai_face(this); }
+void superchicken_peck4(entity this) { set_anim(this, 4, superchicken_peck5); ai_melee(this, 50, 128); ai_face(this); }
+void superchicken_peck3(entity this) { set_anim(this, 3, superchicken_peck4); ai_melee(this, 50, 128); _sound(this, CH_VOICE, "chicken/peck.wav", 1, ATTEN_LARGE); }
 void superchicken_peck2(entity this) { set_anim(this, 2, superchicken_peck3); ai_face(this); }
 void superchicken_peck1(entity this) { set_anim(this, 1, superchicken_peck2); ai_face(this); }
 
