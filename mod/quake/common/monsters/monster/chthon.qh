@@ -13,7 +13,7 @@ SOUND(MON_CHTHON_SIGHT, "boss1/sight1");
 #endif
 
 CLASS(Chthon, Monster)
-    ATTRIB(Chthon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_STATIONARY | MON_FLAG_NOTARGET);
+    ATTRIB(Chthon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_STATIONARY | MON_FLAG_NOTARGET | MON_FLAG_EXPLOSIONRESISTANT);
     ATTRIB(Chthon, m_mins, vector, '-128 -128 -24');
     ATTRIB(Chthon, m_maxs, vector, '128 128 256');
 #ifdef GAMEQC

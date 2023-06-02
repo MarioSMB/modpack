@@ -362,11 +362,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		{
 			// TODO: Spawn blood
 			//LOG_DEBUG("Player has LG! Damage Chthon!");
-		}
-		else
-		{
-			//LOG_DEBUG("player attacked with non-lightning weapon. Do nothing.");
-			return;
+			take *= 2;
 		}
 	}
 
