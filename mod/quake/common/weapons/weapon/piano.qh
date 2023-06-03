@@ -3,7 +3,7 @@
 CLASS(Piano, Weapon)
 /* ammotype  */ ATTRIB(Piano, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Piano, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NOHUD);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_NOSTEAL);
 /* ammo */      ATTRIB(Piano, aflag, int, 30);
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");
