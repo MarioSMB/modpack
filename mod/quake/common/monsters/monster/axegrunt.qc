@@ -200,9 +200,9 @@ void axe_die7(entity this) { set_animofs(this, anim_axegrunt_axdeth, 7, axe_die8
 void axe_die6(entity this) { set_animofs(this, anim_axegrunt_axdeth, 6, axe_die7); }
 void axe_die5(entity this) { set_animofs(this, anim_axegrunt_axdeth, 5, axe_die6); }
 void axe_die4(entity this) { set_animofs(this, anim_axegrunt_axdeth, 4, axe_die5); }
-void axe_die3(entity this) { set_animofs(this, anim_axegrunt_axdeth, 3, axe_die4); this.solid = SOLID_NOT; setorigin(this, this.origin);}
+void axe_die3(entity this) { set_animofs(this, anim_axegrunt_axdeth, 3, axe_die4); }
 void axe_die2(entity this) { set_animofs(this, anim_axegrunt_axdeth, 2, axe_die3); }
-void axe_die1(entity this) { set_animofs(this, anim_axegrunt_axdeth, 1, axe_die2); }
+void axe_die1(entity this) { set_animofs(this, anim_axegrunt_axdeth, 1, axe_die2); this.solid = SOLID_NOT; }
 
 void axe_diea11(entity this) { set_animofs(this, anim_axegrunt_deatha, 11, axe_diea11); CorpseThink(this); }
 void axe_diea10(entity this) { set_animofs(this, anim_axegrunt_deatha, 10, axe_diea11); }
@@ -212,9 +212,9 @@ void axe_diea7(entity this) { set_animofs(this, anim_axegrunt_deatha, 7, axe_die
 void axe_diea6(entity this) { set_animofs(this, anim_axegrunt_deatha, 6, axe_diea7); }
 void axe_diea5(entity this) { set_animofs(this, anim_axegrunt_deatha, 5, axe_diea6); }
 void axe_diea4(entity this) { set_animofs(this, anim_axegrunt_deatha, 4, axe_diea5); }
-void axe_diea3(entity this) { set_animofs(this, anim_axegrunt_deatha, 3, axe_diea4); this.solid = SOLID_NOT; setorigin(this, this.origin); }
+void axe_diea3(entity this) { set_animofs(this, anim_axegrunt_deatha, 3, axe_diea4); }
 void axe_diea2(entity this) { set_animofs(this, anim_axegrunt_deatha, 2, axe_diea3); }
-void axe_diea1(entity this) { set_animofs(this, anim_axegrunt_deatha, 1, axe_diea2); }
+void axe_diea1(entity this) { set_animofs(this, anim_axegrunt_deatha, 1, axe_diea2); this.solid = SOLID_NOT; }
 
 void axe_diec15(entity this) { set_animofs(this, anim_axegrunt_deathc, 15, axe_diec15); this.nextthink = time + 0.075; CorpseThink(this); }
 void axe_diec14(entity this) { set_animofs(this, anim_axegrunt_deathc, 14, axe_diec15); this.nextthink = time + 0.075; }
@@ -228,9 +228,9 @@ void axe_diec7(entity this) { set_animofs(this, anim_axegrunt_deathc, 7, axe_die
 void axe_diec6(entity this) { set_animofs(this, anim_axegrunt_deathc, 6, axe_diec7); this.nextthink = time + 0.1; ai_painforward(this, 8); }
 void axe_diec5(entity this) { set_animofs(this, anim_axegrunt_deathc, 5, axe_diec6); this.nextthink = time + 0.075; ai_painforward(this, 8); }
 void axe_diec4(entity this) { set_animofs(this, anim_axegrunt_deathc, 4, axe_diec5); this.nextthink = time + 0.075; ai_painforward(this, 9); }
-void axe_diec3(entity this) { set_animofs(this, anim_axegrunt_deathc, 3, axe_diec4); this.nextthink = time + 0.075; ai_painforward(this, 9); this.solid = SOLID_NOT; setorigin(this, this.origin); }
+void axe_diec3(entity this) { set_animofs(this, anim_axegrunt_deathc, 3, axe_diec4); this.nextthink = time + 0.075; ai_painforward(this, 9); }
 void axe_diec2(entity this) { set_animofs(this, anim_axegrunt_deathc, 2, axe_diec3); this.nextthink = time + 0.075; ai_painforward(this, 12); }
-void axe_diec1(entity this) { set_animofs(this, anim_axegrunt_deathc, 1, axe_diec2); this.nextthink = time + 0.075; ai_painforward(this, 12); }
+void axe_diec1(entity this) { set_animofs(this, anim_axegrunt_deathc, 1, axe_diec2); this.nextthink = time + 0.075; ai_painforward(this, 12); this.solid = SOLID_NOT; }
 
 void axe_died9(entity this) { set_animofs(this, anim_axegrunt_deathd, 9, axe_died9); CorpseThink(this); }
 void axe_died8(entity this) { set_animofs(this, anim_axegrunt_deathd, 8, axe_died9); }
@@ -238,9 +238,9 @@ void axe_died7(entity this) { set_animofs(this, anim_axegrunt_deathd, 7, axe_die
 void axe_died6(entity this) { set_animofs(this, anim_axegrunt_deathd, 6, axe_died7); }
 void axe_died5(entity this) { set_animofs(this, anim_axegrunt_deathd, 5, axe_died6); }
 void axe_died4(entity this) { set_animofs(this, anim_axegrunt_deathd, 4, axe_died5); }
-void axe_died3(entity this) { set_animofs(this, anim_axegrunt_deathd, 3, axe_died4); this.solid = SOLID_NOT; setorigin(this, this.origin); }
+void axe_died3(entity this) { set_animofs(this, anim_axegrunt_deathd, 3, axe_died4); }
 void axe_died2(entity this) { set_animofs(this, anim_axegrunt_deathd, 2, axe_died3); }
-void axe_died1(entity this) { set_animofs(this, anim_axegrunt_deathd, 1, axe_died2); }
+void axe_died1(entity this) { set_animofs(this, anim_axegrunt_deathd, 1, axe_died2); this.solid = SOLID_NOT; }
 
 void axe_diee9(entity this) { set_animofs(this, anim_axegrunt_deathe, 9, axe_diee9); CorpseThink(this); }
 void axe_diee8(entity this) { set_animofs(this, anim_axegrunt_deathe, 8, axe_diee9); }
@@ -248,9 +248,9 @@ void axe_diee7(entity this) { set_animofs(this, anim_axegrunt_deathe, 7, axe_die
 void axe_diee6(entity this) { set_animofs(this, anim_axegrunt_deathe, 6, axe_diee7); }
 void axe_diee5(entity this) { set_animofs(this, anim_axegrunt_deathe, 5, axe_diee6); }
 void axe_diee4(entity this) { set_animofs(this, anim_axegrunt_deathe, 4, axe_diee5); }
-void axe_diee3(entity this) { set_animofs(this, anim_axegrunt_deathe, 3, axe_diee4); this.solid = SOLID_NOT; setorigin(this, this.origin); }
+void axe_diee3(entity this) { set_animofs(this, anim_axegrunt_deathe, 3, axe_diee4); }
 void axe_diee2(entity this) { set_animofs(this, anim_axegrunt_deathe, 2, axe_diee3); }
-void axe_diee1(entity this) { set_animofs(this, anim_axegrunt_deathe, 1, axe_diee2); }
+void axe_diee1(entity this) { set_animofs(this, anim_axegrunt_deathe, 1, axe_diee2); this.solid = SOLID_NOT; }
 
 void axe_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

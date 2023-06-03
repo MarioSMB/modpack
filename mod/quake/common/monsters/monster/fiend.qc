@@ -163,7 +163,7 @@ void demon1_die9(entity this)
 void demon1_die8(entity this) { set_animofs(this, anim_demon_death, 8, demon1_die9); }
 void demon1_die7(entity this) { set_animofs(this, anim_demon_death, 7, demon1_die8); }
 void demon1_die6(entity this) { set_animofs(this, anim_demon_death, 6, demon1_die7); }
-void demon1_die5(entity this) { set_animofs(this, anim_demon_death, 5, demon1_die6); this.solid = SOLID_NOT; }
+void demon1_die5(entity this) { set_animofs(this, anim_demon_death, 5, demon1_die6); }
 void demon1_die4(entity this) { set_animofs(this, anim_demon_death, 4, demon1_die5); }
 void demon1_die3(entity this) { set_animofs(this, anim_demon_death, 3, demon1_die4); }
 void demon1_die2(entity this) { set_animofs(this, anim_demon_death, 2, demon1_die3); }
@@ -171,6 +171,7 @@ void demon1_die1(entity this)
 {
 	set_animofs(this, anim_demon_death, 1, demon1_die2);
 	_sound(this, CH_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 void demon_die(entity this, entity inflictor, entity attacker, int deathtype)

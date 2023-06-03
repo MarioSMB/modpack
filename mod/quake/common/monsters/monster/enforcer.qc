@@ -246,12 +246,11 @@ void enf_die4(entity this) { set_animofs(this, anim_enf_death, 4, enf_die5); ai_
 void enf_die3(entity this)
 {
 	set_animofs(this, anim_enf_death, 3, enf_die4);
-	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
 void enf_die2(entity this) { set_animofs(this, anim_enf_death, 2, enf_die3); }
-void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); }
+void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); this.solid = SOLID_NOT; }
 
 void enf_fdie11(entity this)
 {
@@ -268,12 +267,11 @@ void enf_fdie4(entity this) { set_animofs(this, anim_enf_fdeath, 4, enf_fdie5); 
 void enf_fdie3(entity this)
 {
 	set_animofs(this, anim_enf_fdeath, 3, enf_fdie4);
-	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
 void enf_fdie2(entity this) { set_animofs(this, anim_enf_fdeath, 2, enf_fdie3); }
-void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); }
+void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); this.solid = SOLID_NOT; }
 
 void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
@@ -335,9 +333,6 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	actor.th_pain = enf_pain;
 	actor.th_die = enf_die;
 	actor.th_missile = enf_atk1;
-
-	if(random() >= 0.5)
-		actor.skin = 1;
 
 	return true;
 }

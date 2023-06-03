@@ -773,9 +773,9 @@ void vol_death7(entity this) { set_animofs(this, anim_volkerh_death, 7, vol_deat
 void vol_death6(entity this) { set_animofs(this, anim_volkerh_death, 6, vol_death7); }
 void vol_death5(entity this) { set_animofs(this, anim_volkerh_death, 5, vol_death6); }
 void vol_death4(entity this) { set_animofs(this, anim_volkerh_death, 4, vol_death5); }
-void vol_death3(entity this) { set_animofs(this, anim_volkerh_death, 3, vol_death4); this.solid = SOLID_NOT; }
+void vol_death3(entity this) { set_animofs(this, anim_volkerh_death, 3, vol_death4); }
 void vol_death2(entity this) { set_animofs(this, anim_volkerh_death, 2, vol_death3); }
-void vol_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_volkerh_death, 1, vol_death2); _sound(this, CH_VOICE, "volkerh/voldie.wav", 1, ATTN_NORM); }
+void vol_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_volkerh_death, 1, vol_death2); _sound(this, CH_VOICE, "volkerh/voldie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
 void vol_wake(entity this, entity actor, entity trigger)
 {

@@ -487,9 +487,9 @@ void gor_death7(entity this) { set_animofs(this, anim_goroth_death, 7, gor_death
 void gor_death6(entity this) { set_animofs(this, anim_goroth_death, 6, gor_death7); }
 void gor_death5(entity this) { set_animofs(this, anim_goroth_death, 5, gor_death6); }
 void gor_death4(entity this) { set_animofs(this, anim_goroth_death, 4, gor_death5); }
-void gor_death3(entity this) { set_animofs(this, anim_goroth_death, 3, gor_death4); this.solid = SOLID_NOT;}
+void gor_death3(entity this) { set_animofs(this, anim_goroth_death, 3, gor_death4); }
 void gor_death2(entity this) { set_animofs(this, anim_goroth_death, 2, gor_death3); }
-void gor_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_goroth_death, 1, gor_death2); _sound(this, CH_VOICE, "goroth/gordie.wav", 1, ATTN_NORM);}
+void gor_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_goroth_death, 1, gor_death2); _sound(this, CH_VOICE, "goroth/gordie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
 void gor_wake(entity this, entity actor, entity trigger)
 {

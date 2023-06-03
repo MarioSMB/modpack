@@ -156,7 +156,7 @@ void mutant_die9(entity this) { set_animofs(this, anim_mutant_death, 9, mutant_d
 void mutant_die8(entity this) { set_animofs(this, anim_mutant_death, 8, mutant_die9); }
 void mutant_die7(entity this) { set_animofs(this, anim_mutant_death, 7, mutant_die8); }
 void mutant_die6(entity this) { set_animofs(this, anim_mutant_death, 6, mutant_die7); }
-void mutant_die5(entity this) { set_animofs(this, anim_mutant_death, 5, mutant_die6); this.solid = SOLID_NOT; }
+void mutant_die5(entity this) { set_animofs(this, anim_mutant_death, 5, mutant_die6); }
 void mutant_die4(entity this) { set_animofs(this, anim_mutant_death, 4, mutant_die5); }
 void mutant_die3(entity this) { set_animofs(this, anim_mutant_death, 3, mutant_die4); }
 void mutant_die2(entity this) { set_animofs(this, anim_mutant_death, 2, mutant_die3); }
@@ -164,6 +164,7 @@ void mutant_die1(entity this)
 {
 	set_animofs(this, anim_mutant_death, 1, mutant_die2);
 	_sound(this, CH_VOICE, "mutant/mutdeth1.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 void mutant_die(entity this, entity inflictor, entity attacker, int deathtype)

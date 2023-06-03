@@ -62,12 +62,12 @@ void juggernaut_death10(entity this)
 void juggernaut_death9(entity this) { set_anim(this, 104, juggernaut_death10); DropBackpack(this); }
 void juggernaut_death8(entity this) { set_anim(this, 103, juggernaut_death9); }
 void juggernaut_death7(entity this) { set_anim(this, 102, juggernaut_death8); }
-void juggernaut_death6(entity this) { set_anim(this, 101, juggernaut_death7); this.solid = SOLID_NOT; }
+void juggernaut_death6(entity this) { set_anim(this, 101, juggernaut_death7); }
 void juggernaut_death5(entity this) { set_anim(this, 100, juggernaut_death6); }
 void juggernaut_death4(entity this) { set_anim(this, 99, juggernaut_death5); ai_back(this, 4); }
 void juggernaut_death3(entity this) { set_anim(this, 98, juggernaut_death4); }
 void juggernaut_death2(entity this) { set_anim(this, 97, juggernaut_death3); ai_back(this, 4); }
-void juggernaut_death1(entity this) { set_anim(this, 96, juggernaut_death2); }
+void juggernaut_death1(entity this) { set_anim(this, 96, juggernaut_death2); this.solid = SOLID_NOT; }
 
 void juggernaut_die2(entity this)
 {

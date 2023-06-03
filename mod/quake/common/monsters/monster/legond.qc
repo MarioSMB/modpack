@@ -479,13 +479,14 @@ void legond_die5(entity this)
 	set_anim(this, 98, legond_die6);
 	_sound(this, CHAN_AUTO, "monsters/legond/ldeath.wav", 1, ATTN_NORM);
 }
-void legond_die4(entity this) { set_anim(this, 97, legond_die5); this.solid = SOLID_NOT; }
+void legond_die4(entity this) { set_anim(this, 97, legond_die5); }
 void legond_die3(entity this) { set_anim(this, 96, legond_die4); }
 void legond_die2(entity this) { set_anim(this, 95, legond_die3); }
 void legond_die1(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	set_anim(this, 94, legond_die2);
 	_sound(this, CHAN_AUTO, "monsters/legond/lpain2.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 spawnfunc(monster_legond)

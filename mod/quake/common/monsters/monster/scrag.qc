@@ -301,7 +301,7 @@ void wiz_death7(entity this) { set_animofs(this, anim_wiz_death, 7, wiz_death8);
 void wiz_death6(entity this) { set_animofs(this, anim_wiz_death, 6, wiz_death7); }
 void wiz_death5(entity this) { set_animofs(this, anim_wiz_death, 5, wiz_death6); }
 void wiz_death4(entity this) { set_animofs(this, anim_wiz_death, 4, wiz_death5); }
-void wiz_death3(entity this) { set_animofs(this, anim_wiz_death, 3, wiz_death4); this.solid = SOLID_NOT; }
+void wiz_death3(entity this) { set_animofs(this, anim_wiz_death, 3, wiz_death4); }
 void wiz_death2(entity this) { set_animofs(this, anim_wiz_death, 2, wiz_death3); }
 void wiz_death1(entity this)
 {
@@ -311,6 +311,7 @@ void wiz_death1(entity this)
 	this.velocity_z = 100 + 100*random();
 	UNSET_ONGROUND(this);
 	_sound(this, CH_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 void wiz_die(entity this, entity inflictor, entity attacker, int deathtype)

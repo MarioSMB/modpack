@@ -331,12 +331,12 @@ void mummy_paine12(entity this)
 	if(trace_startsolid)
 	{
 		setthink(this, mummy_paine11);
-		this.solid = SOLID_NOT;
+		this.solid = SOLID_CORPSE;
 		return;
 	}
 }
 void mummy_paine11(entity this) { set_animofs(this, anim_mummy_paine, 11, mummy_paine12); this.nextthink = this.nextthink + 5; }
-void mummy_paine10(entity this) { set_animofs(this, anim_mummy_paine, 10, mummy_paine11); _sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+void mummy_paine10(entity this) { set_animofs(this, anim_mummy_paine, 10, mummy_paine11); _sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM); }
 void mummy_paine9(entity this) { set_animofs(this, anim_mummy_paine, 9, mummy_paine10); ai_pain(this, 2); }
 void mummy_paine8(entity this) { set_animofs(this, anim_mummy_paine, 8, mummy_paine9); ai_pain(this, 1); }
 void mummy_paine7(entity this) { set_animofs(this, anim_mummy_paine, 7, mummy_paine8); ai_pain(this, 1); }
@@ -345,7 +345,7 @@ void mummy_paine5(entity this) { set_animofs(this, anim_mummy_paine, 5, mummy_pa
 void mummy_paine4(entity this) { set_animofs(this, anim_mummy_paine, 4, mummy_paine5); ai_pain(this, 3); }
 void mummy_paine3(entity this) { set_animofs(this, anim_mummy_paine, 3, mummy_paine4); ai_pain(this, 5); }
 void mummy_paine2(entity this) { set_animofs(this, anim_mummy_paine, 2, mummy_paine3); ai_pain(this, 8); }
-void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); this.solid = SOLID_CORPSE; }
 
 void mummy_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
@@ -442,7 +442,7 @@ METHOD(Mummy, mr_setup, bool(Mummy this, entity actor))
 	if(actor.spawnflags & SPAWN_LYING)
 	{
 		setsize(actor, '-16 -16 -24', '16 16 -16');
-		actor.solid = SOLID_NOT;
+		actor.solid = SOLID_CORPSE;
 		actor.th_stand = mummy_sleep;
 		actor.th_run = mummy_wake;
 		actor.th_walk = mummy_wake;

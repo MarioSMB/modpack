@@ -94,14 +94,18 @@ void PlasmaTouch(entity this, entity toucher)
 		return;
 	}
 
-	float damg = 80 + random()*20;
 	_sound(this, CH_WEAPON_SINGLE, "plasma/explode.wav", 1, ATTN_NORM);
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
+		float damg = 80 + random()*20;
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+			damg *= 0.5;	// mostly immune
+		if(toucher.resist_cells != 0)
+			damg = Resist_Damage(toucher, IT_CELLS, damg);
+		Resist_Plasma(toucher, this.origin);
+		if(damg > 0)
+			T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
 	// don't do radius damage to the toucher, because all the damage

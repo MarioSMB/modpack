@@ -376,7 +376,7 @@ void zombie_paine12(entity this)
 void zombie_paine11(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 11, zombie_paine12);
-	this.solid = SOLID_NOT;
+	this.solid = SOLID_CORPSE;
 	this.nextthink = time + 5;
 	this.health = 60;
 	// no infighting!
@@ -389,7 +389,7 @@ void zombie_paine10(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 10, zombie_paine11);
 	_sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM);
-	this.solid = SOLID_NOT;
+	this.solid = SOLID_CORPSE;
 }
 void zombie_paine9(entity this) { set_animofs(this, anim_zombie_paine, 9, zombie_paine10); ai_pain(this, 2); }
 void zombie_paine8(entity this) { set_animofs(this, anim_zombie_paine, 8, zombie_paine9); ai_pain(this, 1); }
@@ -404,6 +404,7 @@ void zombie_paine1(entity this)
 	set_animofs(this, anim_zombie_paine, 1, zombie_paine2);
 	_sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM);
 	this.health = 60;
+	this.solid = SOLID_CORPSE;
 }
 
 void zombie_die(entity this, entity inflictor, entity attacker, int deathtype)
@@ -637,7 +638,7 @@ spawnfunc(monster_zombie)
 	}
 	else if((this.spawnflags & SPAWN_LYING))
 	{
-		this.solid = SOLID_NOT;
+		this.solid = SOLID_CORPSE;
 		this.th_stand = zombie_sleep;
 		this.th_run = zombie_wake;
 		this.th_walk = zombie_wake;
@@ -654,7 +655,7 @@ spawnfunc(monster_zombie)
 	else if((this.spawnflags & SPAWN_SNEAKY))
 	{
 		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_NOT;
+		this.solid = SOLID_CORPSE;
 		this.th_stand = zombie_cruc1;
 		this.th_run = zombie_escape;
 		this.th_walk = zombie_escape;

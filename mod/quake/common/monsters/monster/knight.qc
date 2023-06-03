@@ -183,9 +183,9 @@ void knight_die7(entity this) { set_animofs(this, anim_knight_death, 7, knight_d
 void knight_die6(entity this) { set_animofs(this, anim_knight_death, 6, knight_die7); }
 void knight_die5(entity this) { set_animofs(this, anim_knight_death, 5, knight_die6); }
 void knight_die4(entity this) { set_animofs(this, anim_knight_death, 4, knight_die5); }
-void knight_die3(entity this) { set_animofs(this, anim_knight_death, 3, knight_die4); this.solid = SOLID_NOT; }
+void knight_die3(entity this) { set_animofs(this, anim_knight_death, 3, knight_die4); }
 void knight_die2(entity this) { set_animofs(this, anim_knight_death, 2, knight_die3); }
-void knight_die1(entity this) { set_animofs(this, anim_knight_death, 1, knight_die2); }
+void knight_die1(entity this) { set_animofs(this, anim_knight_death, 1, knight_die2); this.solid = SOLID_NOT; }
 
 void knight_dieb11(entity this)
 {
@@ -199,9 +199,9 @@ void knight_dieb7(entity this) { set_animofs(this, anim_knight_deathb, 7, knight
 void knight_dieb6(entity this) { set_animofs(this, anim_knight_deathb, 6, knight_dieb7); }
 void knight_dieb5(entity this) { set_animofs(this, anim_knight_deathb, 5, knight_dieb6); }
 void knight_dieb4(entity this) { set_animofs(this, anim_knight_deathb, 4, knight_dieb5); }
-void knight_dieb3(entity this) { set_animofs(this, anim_knight_deathb, 3, knight_dieb4); this.solid = SOLID_NOT; }
+void knight_dieb3(entity this) { set_animofs(this, anim_knight_deathb, 3, knight_dieb4); }
 void knight_dieb2(entity this) { set_animofs(this, anim_knight_deathb, 2, knight_dieb3); }
-void knight_dieb1(entity this) { set_animofs(this, anim_knight_deathb, 1, knight_dieb2); }
+void knight_dieb1(entity this) { set_animofs(this, anim_knight_deathb, 1, knight_dieb2); this.solid = SOLID_NOT; }
 
 
 void knight_die(entity this, entity inflictor, entity attacker, int deathtype)

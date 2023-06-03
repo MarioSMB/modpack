@@ -349,7 +349,6 @@ void ogre_die4(entity this) { set_animofs(this, anim_ogre_death, 4, ogre_die5); 
 void ogre_die3(entity this)
 {
 	set_animofs(this, anim_ogre_death, 3, ogre_die4);
-	this.solid = SOLID_NOT;
 	if((this.spawnflags & OGRE_BOSS))
 		this.ammo_multi_rockets = 2;
 	else
@@ -357,7 +356,7 @@ void ogre_die3(entity this)
 	DropBackpack(this);
 }
 void ogre_die2(entity this) { set_animofs(this, anim_ogre_death, 2, ogre_die3); }
-void ogre_die1(entity this) { set_animofs(this, anim_ogre_death, 1, ogre_die2); }
+void ogre_die1(entity this) { set_animofs(this, anim_ogre_death, 1, ogre_die2); this.solid = SOLID_NOT; }
 
 void ogre_bdie10(entity this)
 {

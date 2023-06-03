@@ -165,6 +165,7 @@ void wrath_die02(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	set_animofs(this, anim_wrath_wrthdt01, 2, wrath_die03);
 	_sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT; // so players can get away while it explodes!
 }
 
 /*

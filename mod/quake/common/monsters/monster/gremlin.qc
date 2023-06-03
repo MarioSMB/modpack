@@ -740,14 +740,14 @@ void gremlin_die10(entity this) { set_animofs(this, anim_gremlin_death, 10, grem
 void gremlin_die9(entity this) { set_animofs(this, anim_gremlin_death, 9, gremlin_die10); ai_forward(this, 2); }
 void gremlin_die8(entity this) { set_animofs(this, anim_gremlin_death, 8, gremlin_die9); ai_forward(this, 1); }
 void gremlin_die7(entity this) { set_animofs(this, anim_gremlin_death, 7, gremlin_die8); ai_forward(this, 2); }
-void gremlin_die6(entity this) { set_animofs(this, anim_gremlin_death, 6, gremlin_die7); this.solid = SOLID_NOT; }
+void gremlin_die6(entity this) { set_animofs(this, anim_gremlin_death, 6, gremlin_die7); }
 void gremlin_die5(entity this) { set_animofs(this, anim_gremlin_death, 5, gremlin_die6); ai_forward(this, 1); }
 void gremlin_die4(entity this) { set_animofs(this, anim_gremlin_death, 4, gremlin_die5); ai_forward(this, 2); }
 void gremlin_die3(entity this) { set_animofs(this, anim_gremlin_death, 3, gremlin_die4); ai_forward(this, 1); }
 void gremlin_die2(entity this) { set_animofs(this, anim_gremlin_death, 2, gremlin_die3); ai_forward(this, 2); }
-void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM); }
+void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
-void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); this.solid = SOLID_NOT; }
+void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); }
 void gremlin_flip7(entity this)
 {
 	set_animofs(this, anim_gremlin_flip, 7, gremlin_flip7);
@@ -771,6 +771,7 @@ void gremlin_flip1(entity this)
 	this.velocity = '0 0 350' - (v_forward * 200);
 	UNSET_ONGROUND(this);
 	_sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 /*

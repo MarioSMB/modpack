@@ -26,10 +26,13 @@ void player_chainsaw1(entity this) { set_animofs(this, anim_player_shotatt1, 1, 
 
 void W_FireSaw(entity this)
 {
-	makevectors (this.v_angle);
+	makevectors(this.v_angle);
 	vector source = this.origin + this.view_ofs - v_up*6;
-	traceline (source, source + v_forward*64, false, this);
-	if (trace_fraction == 1.0)
+	int oldsolid = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	traceline(source, source + v_forward*64, MOVE_NORMAL, this);
+	this.dphitcontentsmask = oldsolid;
+	if(trace_fraction == 1.0)
 		return;
 	
 	vector org = trace_endpos - v_forward*4;
@@ -61,7 +64,7 @@ void W_FireSaw(entity this)
 	else
 	{	// hit wall
 		_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
-		te_gunshot(org);
+		te_superspike(org);
 	}
 }
 

@@ -30,8 +30,9 @@ entity W_FireRocket(entity this)
 	setthink(missile, SUB_Remove);
 
 	_setmodel(missile, "progs/missile.mdl");
-	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin + v_forward*8 + '0 0 16');
+	setsize(missile, '0 0 0', '0 0 0');
+	vector org = this.origin + '0 0 16'; // v_forward * 8, not used because it goes through mobs!
+	setorigin(missile, org);
 
 	return missile;
 }

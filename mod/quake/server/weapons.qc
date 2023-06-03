@@ -7,6 +7,7 @@
 #include "impulse.qh"
 #include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
+#include "monsters/ai_ammoresist.qh"
 
 /*
 */
@@ -151,101 +152,9 @@ vector wall_velocity(entity this)
 	return vel;
 }
 
-/*
-================
-SpawnBitSpray
-================
-*/
-void SpawnBitSpray(entity this, vector org, vector vel)
-{
-	vector mvel = vel;
-	mvel.z += 250 + 50 * random();
-
-	entity bit = new(gib);
-	set_movetype(bit, MOVETYPE_BOUNCE);
-	bit.owner = this;
-	bit.solid = SOLID_BBOX;
-	bit.angles = vectoangles(mvel);
-	setthink(bit, SUB_Remove);
-	bit.nextthink = time + 6;
-	bit.velocity = mvel;
-	setorigin(bit, org);
-
-	bit.avelocity = '500 300 300';
-
-	_setmodel(bit, "progs/bit.mdl");
-	setsize(bit, '0 0 0', '0 0 0');
-}
-
-/*
-================
-SpawnMeatSpray
-================
-*/
-void SpawnMeatSpray(entity this, vector org, vector vel)
-{
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_BOUNCE);
-	missile.solid = SOLID_NOT;
-
-	fixedmakevectors(this.angles);
-
-	missile.velocity = vel;
-	missile.velocity_z = missile.velocity_z + 250 + 50*random();
-
-	missile.avelocity = '3000 1000 2000';
-	
-// set missile duration
-	missile.nextthink = time + 1;
-	setthink(missile, SUB_Remove);
-
-	_setmodel(missile, "progs/zom_gib.mdl");
-	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, org);
-}
-
-/*
-================
-SpawnBlood
-================
-*/
-void SpawnBlood(vector org, vector vel, float damage, entity targ)
-{
-	float r = random();
-	if(targ.takedamage != DAMAGE_AIM || targ.classname == "misc_explobox" || targ.classname == "wall_explode" || targ.classname == "misc_explobox2")
-		te_gunshot(org);
-	else
-	{
-		if(targ.monsterdef.spawnflags & MON_FLAG_METAL)
-			particle(org, vel * 0.1, 5, damage * 2);
-		else
-		{
-			r = random();
-			if(r < 0.7)
-				particle(org, vel * 0.1, 73, damage * 2);
-			else
-			{
-				particle(org, vel * 0.1, 79, damage * 1);
-				particle(org, vel * 0.25, 74, damage * 5);
-				particle(org, vel * 0.15, 69, damage * 2);
-			}
-		}
-	}
-}
-
-/*
-================
-spawn_touchblood
-================
-*/
-void spawn_touchblood(entity this, float damage, entity targ)
-{
-	vector vel = wall_velocity(this) * 0.2;
-	SpawnBlood(this.origin + vel * 0.01, vel, damage, targ);
-}
 
 
+#if 0
 /*
 ==============================================================================
 
@@ -271,6 +180,8 @@ void ApplyMultiDamage(entity this)
 {
 	if(!multi_ent)
 		return;
+	if(multi_ent.resist_shells > 0)
+		multi_damage = Resist_Damage(multi_ent, IT_SHELLS, multi_damage);
 	T_Damage(multi_ent, this, this, multi_damage, multi_deathtype);
 }
 
@@ -361,6 +272,37 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread, int deat
 	}
 	ApplyMultiDamage(this);
 }
+#else
+void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
+{
+	float bullet_speed;
+	if(IS_PLAYER(this))
+	{
+		makevectors(this.v_angle);
+		bullet_speed = 2000;
+	}
+	else
+	{
+		makevectors(this.angles);
+		bullet_speed = 800 + (autocvar_skill * 150);
+	}
+	vector src_origin = this.origin;
+	src_origin.z = this.absmin_z + this.size_z * 0.7;
+
+	traceline(src_origin, src_origin + v_forward, MOVE_NORMAL, this);
+	src_origin = trace_endpos;
+
+	for(int j = 0; j < shotcount; ++j)
+	{
+		float var_speed = crandom() * 10 + bullet_speed;
+		vector spread_dir = dir + (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
+		entity missile = launch_spike(this, src_origin, spread_dir);
+		missile.classname = "bullet"; // hack
+		missile.velocity = spread_dir * var_speed;
+		missile.projectiledeathtype = deathtype;
+	}
+}
+#endif
 
 
 /*
@@ -371,24 +313,7 @@ ROCKETS
 ==============================================================================
 */
 
-void s_explode6(entity this) { set_anim(this, 5, SUB_Remove); }
-void s_explode5(entity this) { set_anim(this, 4, s_explode6); }
-void s_explode4(entity this) { set_anim(this, 3, s_explode5); }
-void s_explode3(entity this) { set_anim(this, 2, s_explode4); }
-void s_explode2(entity this) { set_anim(this, 1, s_explode3); }
-void s_explode1(entity this) { set_anim(this, 0, s_explode2); }
 
-void BecomeExplosion(entity this)
-{
-	set_movetype(this, MOVETYPE_NONE);
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	setmodel(this, MDL_EXPLOSION);
-	setsize(this, '0 0 0', '0 0 0');
-	sound(this, CH_SHOTS, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	this.solid = SOLID_NOT;
-	s_explode1(this);
-}
 
 void T_MissileTouch(entity this, entity toucher)
 {
@@ -407,6 +332,9 @@ void T_MissileTouch(entity this, entity toucher)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
+		if(toucher.resist_rockets != 0)
+			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
+		Resist_Rockets(toucher, this.origin);
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
@@ -502,7 +430,12 @@ void T_SinglePulseTouch(entity this, entity toucher)
 	}
 	float damg = 20 + random() * 7;
 	if(toucher.takedamage)
+	{
+		if(toucher.resist_cells != 0)
+			damg = Resist_Damage(toucher, IT_CELLS, damg);
+		Resist_Plasma(toucher, this.origin);
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+	}
 
 	_sound(this, CH_SHOTS, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	BecomePurpleExplosion(this, toucher, damg);
@@ -767,13 +700,20 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	vector f = p2 - p1;
 	normalize(f);
 	f = vec3(0 - f.y, f.x, 0) * 16;
+	float ldmg = damage;
 
 	traceline(p1, p2, false, from);
 	if(trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
+		if(trace_ent.resist_cells != 0)
+		{
+			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
+			Resist_Lightning(from, trace_ent, trace_endpos);
+		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
-			particle(trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage(trace_ent, from, from, damage, deathtype);
+			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(ldmg > 0)
+			T_Damage(trace_ent, from, from, ldmg, deathtype);
 		if(IS_PLAYER(from))
 		{
 			if(IS_PLAYER(trace_ent))
@@ -781,22 +721,36 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		}
 	}
 	entity e1 = trace_ent;
+	ldmg = damage;
 
 	traceline(p1 + f, p2 + f, false, from);
 	if(trace_ent != e1 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
+		if(trace_ent.resist_cells != 0)
+		{
+			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
+			Resist_Lightning(from, trace_ent, trace_endpos);
+		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
-			particle(trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage(trace_ent, from, from, damage, deathtype);
+			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(ldmg > 0)
+			T_Damage(trace_ent, from, from, ldmg, deathtype);
 	}
 	entity e2 = trace_ent;
+	ldmg = damage;
 
 	traceline(p1 - f, p2 - f, false, from);
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
+		if(trace_ent.resist_cells != 0)
+		{
+			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
+			Resist_Lightning(from, trace_ent, trace_endpos);
+		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
-			particle(trace_endpos, '0 0 100', 225, damage * 4);
-		T_Damage(trace_ent, from, from, damage, deathtype);
+			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(ldmg > 0)
+			T_Damage(trace_ent, from, from, ldmg, deathtype);
 	}
 }
 
@@ -1192,8 +1146,22 @@ void spike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage) // yoder mod, jan 05 2021
 	{
-		spawn_touchblood(this, 9, toucher);
-		T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype);
+		float damg = 9;
+		if(this.classname == "bullet")
+		{
+			damg = 4;
+			if(toucher.resist_shells != 0)
+				damg = Resist_Damage(toucher, IT_SHELLS, damg);
+			Resist_Shells(toucher, this.origin, this.velocity, damg);
+		}
+		else
+		{
+			if(toucher.resist_nails != 0)
+				damg = Resist_Damage(toucher, IT_NAILS, damg);
+			Resist_Nails(toucher, this.origin);
+		}
+		spawn_touchblood(this, damg, toucher);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 	else
 	{
@@ -1201,6 +1169,8 @@ void spike_touch(entity this, entity toucher)
 			te_wizspike(this.origin);
 		else if(this.classname == "knight_spike")
 			te_knightspike(this.origin);
+		else if(this.classname == "bullet")
+			te_gunshot(this.origin);
 		else
 			te_spike(this.origin);
 	}

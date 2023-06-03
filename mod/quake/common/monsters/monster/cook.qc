@@ -463,7 +463,6 @@ void cook_die4(entity this)
 void cook_die3(entity this)
 {
 	set_anim(this, 73, cook_die4);
-	this.solid = SOLID_NOT;
 }
 
 void cook_die2(entity this)
@@ -484,6 +483,7 @@ void cook_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
 	set_anim(this, 71, cook_die2);
+	this.solid = SOLID_NOT;
 }
 
 void cook_pong(entity this)

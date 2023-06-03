@@ -120,11 +120,12 @@ void f_death6(entity this) { set_animofs(this, anim_fish_death, 6, f_death7); }
 void f_death5(entity this) { set_animofs(this, anim_fish_death, 5, f_death6); }
 void f_death4(entity this) { set_animofs(this, anim_fish_death, 4, f_death5); }
 void f_death3(entity this) { set_animofs(this, anim_fish_death, 3, f_death4); }
-void f_death2(entity this) { set_animofs(this, anim_fish_death, 2, f_death3); this.solid = SOLID_NOT; }
+void f_death2(entity this) { set_animofs(this, anim_fish_death, 2, f_death3); }
 void f_death1(entity this, entity inflictor, entity attacker)
 {
 	set_animofs(this, anim_fish_death, 1, f_death2);
 	_sound(this, CH_VOICE, "fish/death.wav", 1, ATTN_NORM);
+	this.solid = SOLID_NOT;
 }
 
 void f_pain9(entity this) { set_animofs(this, anim_fish_swim, 9, f_run1); ai_pain(this, 6); }

@@ -294,9 +294,9 @@ void sham_death7(entity this) { set_animofs(this, anim_sham_death, 7, sham_death
 void sham_death6(entity this) { set_animofs(this, anim_sham_death, 6, sham_death7); }
 void sham_death5(entity this) { set_animofs(this, anim_sham_death, 5, sham_death6); }
 void sham_death4(entity this) { set_animofs(this, anim_sham_death, 4, sham_death5); }
-void sham_death3(entity this) { set_animofs(this, anim_sham_death, 3, sham_death4); this.solid = SOLID_NOT; }
+void sham_death3(entity this) { set_animofs(this, anim_sham_death, 3, sham_death4); }
 void sham_death2(entity this) { set_animofs(this, anim_sham_death, 2, sham_death3); }
-void sham_death1(entity this) { set_animofs(this, anim_sham_death, 1, sham_death2); }
+void sham_death1(entity this) { set_animofs(this, anim_sham_death, 1, sham_death2); this.solid = SOLID_NOT; }
 
 void sham_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

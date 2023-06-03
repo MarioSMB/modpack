@@ -265,7 +265,7 @@ void lavaman_death5(entity this) { set_animofs(this, anim_lavaman_death1, 5, lav
 void lavaman_death4(entity this) { set_animofs(this, anim_lavaman_death1, 4, lavaman_death5); }
 void lavaman_death3(entity this) { set_animofs(this, anim_lavaman_death1, 3, lavaman_death4); }
 void lavaman_death2(entity this) { set_animofs(this, anim_lavaman_death1, 2, lavaman_death3); }
-void lavaman_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_lavaman_death1, 1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
+void lavaman_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_lavaman_death1, 1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
 void lavaman_touch(entity this, entity toucher)
 {

@@ -323,9 +323,9 @@ void scourge_pain(entity this, entity attacker, float damage, int deathtype)
 
 void scourge_die5(entity this) { set_animofs(this, anim_scourge_death, 5, scourge_die5); CorpseThink(this); }
 void scourge_die4(entity this) { set_animofs(this, anim_scourge_death, 4, scourge_die5); }
-void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourge_die4); this.solid = SOLID_NOT; }
+void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourge_die4); }
 void scourge_die2(entity this) { set_animofs(this, anim_scourge_death, 2, scourge_die3); }
-void scourge_die1(entity this) { set_animofs(this, anim_scourge_death, 1, scourge_die2); this.spawnsilent = 0; scourge_think(this); }
+void scourge_die1(entity this) { set_animofs(this, anim_scourge_death, 1, scourge_die2); this.spawnsilent = 0; scourge_think(this); this.solid = SOLID_NOT; }
 
 void scourge_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

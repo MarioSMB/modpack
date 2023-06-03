@@ -506,6 +506,8 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 			points = damage - points;
 			if(head == attacker || (head.monsterdef && (head.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)))
 				points *= 0.5;
+			if(head.monsterdef && (head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && points > (head.health * 0.25))
+				points = 120; // always gib zombies
 			if(points > 0)
 			{
 				if(CanDamage(head, inflictor))

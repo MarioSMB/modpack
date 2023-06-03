@@ -193,12 +193,11 @@ void army_die4(entity this) { set_animofs(this, anim_army_death, 4, army_die5); 
 void army_die3(entity this)
 {
 	set_animofs(this, anim_army_death, 3, army_die4);
-	this.solid = SOLID_NOT;
 	this.ammo_shells = 5;
 	DropBackpack(this);
 }
 void army_die2(entity this) { set_animofs(this, anim_army_death, 2, army_die3); }
-void army_die1(entity this) { set_animofs(this, anim_army_death, 1, army_die2); }
+void army_die1(entity this) { set_animofs(this, anim_army_death, 1, army_die2); this.solid = SOLID_NOT; }
 
 void army_cdie11(entity this)
 {
@@ -215,13 +214,12 @@ void army_cdie4(entity this) { set_animofs(this, anim_army_deathc, 4, army_cdie5
 void army_cdie3(entity this)
 {
 	set_animofs(this, anim_army_deathc, 3, army_cdie4);
-	this.solid = SOLID_NOT;
 	this.ammo_shells = 5;
 	DropBackpack(this);
 	ai_back(this, 4);
 }
 void army_cdie2(entity this) { set_animofs(this, anim_army_deathc, 2, army_cdie3); ai_back(this, 5); }
-void army_cdie1(entity this) { set_animofs(this, anim_army_deathc, 1, army_cdie2); }
+void army_cdie1(entity this) { set_animofs(this, anim_army_deathc, 1, army_cdie2); this.solid = SOLID_NOT; }
 
 void army_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

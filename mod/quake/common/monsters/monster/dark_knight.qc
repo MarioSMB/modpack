@@ -212,9 +212,9 @@ void dknight_die7(entity this) { set_anim(this, 82, dknight_die8); }
 void dknight_die6(entity this) { set_anim(this, 81, dknight_die7); }
 void dknight_die5(entity this) { set_anim(this, 80, dknight_die6); }
 void dknight_die4(entity this) { set_anim(this, 79, dknight_die5); }
-void dknight_die3(entity this) { set_anim(this, 78, dknight_die4); this.solid = SOLID_NOT; }
+void dknight_die3(entity this) { set_anim(this, 78, dknight_die4); }
 void dknight_die2(entity this) { set_anim(this, 77, dknight_die3); }
-void dknight_die1(entity this) { set_anim(this, 76, dknight_die2); }
+void dknight_die1(entity this) { set_anim(this, 76, dknight_die2); this.solid = SOLID_NOT; }
 
 void dknight_dieb11(entity this) { set_anim(this, 96, dknight_dieb11); CorpseThink(this); }
 void dknight_dieb10(entity this) { set_anim(this, 95, dknight_dieb11); }
@@ -224,9 +224,9 @@ void dknight_dieb7(entity this) { set_anim(this, 92, dknight_dieb8); }
 void dknight_dieb6(entity this) { set_anim(this, 91, dknight_dieb7); }
 void dknight_dieb5(entity this) { set_anim(this, 90, dknight_dieb6); }
 void dknight_dieb4(entity this) { set_anim(this, 89, dknight_dieb5); }
-void dknight_dieb3(entity this) { set_anim(this, 88, dknight_dieb4); this.solid = SOLID_NOT; }
+void dknight_dieb3(entity this) { set_anim(this, 88, dknight_dieb4); }
 void dknight_dieb2(entity this) { set_anim(this, 87, dknight_dieb3); }
-void dknight_dieb1(entity this) { set_anim(this, 86, dknight_dieb2); }
+void dknight_dieb1(entity this) { set_anim(this, 86, dknight_dieb2); this.solid = SOLID_NOT; }
 
 void dknight_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

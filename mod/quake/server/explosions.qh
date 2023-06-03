@@ -1,0 +1,18 @@
+#pragma once
+
+const int EXPLODE_SMALL = 1;
+const int EXPLODE_MED = 2;
+const int EXPLODE_BIG = 3;
+const int EXPLODE_PLASMA_SMALL = 11;
+const int EXPLODE_PLASMA_MED = 12;
+const int EXPLODE_PLASMA_BIG = 13;
+const int EXPLODE_POISON_SMALL = 21;
+const int EXPLODE_POISON_MED = 22;
+const int EXPLODE_POISON_BIG = 23;
+const int EXPLODE_ELECT_SMALL = 31;
+const int EXPLODE_ELECT_MED = 32;
+const int EXPLODE_ELECT_BIG = 33;
+const int EXPLODE_ICE_BIG = 38;
+const int EXPLODE_BURST_SMOKE = 41;
+const int EXPLODE_BURST_FLAME = 42;
+const int EXPLODE_BURST_POISON = 43;

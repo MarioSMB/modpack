@@ -168,12 +168,11 @@ void lenf_die4(entity this) { set_anim(this, 44, lenf_die5); ai_forward(this, 14
 void lenf_die3(entity this)
 {
 	set_anim(this, 43, lenf_die4);
-	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
 void lenf_die2(entity this) { set_anim(this, 42, lenf_die3); }
-void lenf_die1(entity this) { set_anim(this, 41, lenf_die2); }
+void lenf_die1(entity this) { set_anim(this, 41, lenf_die2); this.solid = SOLID_NOT; }
 
 void lenf_fdie11(entity this) { set_anim(this, 65, lenf_fdie11); CorpseThink(this); }
 void lenf_fdie10(entity this) { set_anim(this, 64, lenf_fdie11); }
@@ -186,12 +185,11 @@ void lenf_fdie4(entity this) { set_anim(this, 58, lenf_fdie5); }
 void lenf_fdie3(entity this)
 {
 	set_anim(this, 57, lenf_fdie4);
-	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
 void lenf_fdie2(entity this) { set_anim(this, 56, lenf_fdie3); }
-void lenf_fdie1(entity this) { set_anim(this, 55, lenf_fdie2); }
+void lenf_fdie1(entity this) { set_anim(this, 55, lenf_fdie2); this.solid = SOLID_NOT; }
 
 void lenf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
@@ -235,8 +233,6 @@ METHOD(LightningEnforcer, mr_setup, bool(LightningEnforcer this, entity actor))
 {
     TC(LightningEnforcer, this);
 
-	precache_model("progs/enforcer.mdl");
-	precache_model("progs/h_mega.mdl");
 	precache_sound("monsters/lenforce/ledeath1.wav");
 	precache_sound("monsters/lenforce/ledeath2.wav");
 	precache_sound("monsters/lenforce/leidle1.wav");
@@ -252,6 +248,8 @@ METHOD(LightningEnforcer, mr_setup, bool(LightningEnforcer this, entity actor))
 	actor.th_pain = lenf_pain;
 	actor.th_die = lenf_die;
 	actor.th_missile = lenf_atk1;
+
+	actor.skin = 1;
 
     return true;
 }

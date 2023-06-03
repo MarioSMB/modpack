@@ -1,0 +1,26 @@
+#pragma once
+
+.float resist_shells, resist_nails, resist_rockets, resist_cells;
+.float save_resist_shells, save_resist_nails, save_resist_rockets, save_resist_cells;
+
+.float lightning_timer;	// Cool down for LG resist effect
+
+float Resist_Damage(entity targ, int resist_type, float damage);
+
+void Resist_CheckRange(entity targ);
+
+void Resist_Save(entity targ);
+
+void Resist_ChangeType(entity targ, bool artype);
+
+void Resist_Axe(entity targ, vector org);
+
+void Resist_Shells(entity targ, vector org, vector vel, float damage);
+
+void Resist_Nails(entity targ, vector org);
+
+void Resist_Rockets(entity targ, vector org);
+
+void Resist_Lightning(entity this, entity targ, vector org);
+
+void Resist_Plasma(entity targ, vector org);
