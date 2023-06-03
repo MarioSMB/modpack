@@ -1231,6 +1231,9 @@ void W_SetCurrentAmmo(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	if(wep != WEP_Null)
 		this.items |= wep.ammo_type;
+
+	if(wep != WEP_PIANO)
+		this.weaponentity.piano_prevwep = this.weaponentity.m_weapon; // for piano
 }
 
 /*

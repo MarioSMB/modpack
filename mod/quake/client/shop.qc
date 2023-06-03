@@ -41,6 +41,8 @@ void shop_buyselected()
 {
 	LOG_DEBUG("Buying ", weplist[selected_entity_index]);
 	localcmd(sprintf("cmd shop %s\n", weplist[selected_entity_index]));
+	if(csqcplayer) // just play it from the player so we don't have to look for the gremlin!
+		_sound(csqcplayer, CH_TRIGGER_SINGLE, "grem/sight1.wav", VOL_BASE, ATTEN_NORM);
 	shop_close();
 }
 
@@ -120,6 +122,23 @@ void cl_shop_draw()
 		return;
 
 	if(STAT(SHOP_OPEN) < time)
+	{
+		shop_close();
+		return;
+	}
+
+	bool closetoshop = false;
+	vector myorigin = (csqcplayer) ? csqcplayer.origin : view_origin;
+	IL_EACH(g_drawables, it.classname == "ENT_CLIENT_SHOPKEEP",
+	{
+		if(vdist(it.origin - myorigin, <, 100))
+		{
+			closetoshop = true;
+			break;
+		}
+	});
+
+	if(!closetoshop)
 	{
 		shop_close();
 		return;

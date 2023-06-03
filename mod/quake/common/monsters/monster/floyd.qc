@@ -321,7 +321,8 @@ void floyd_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -35 || random() > 0.75 || (this.spawnflags & FLOYD_ROLLING))
 	{
 		this.takedamage = DAMAGE_NO;
-		floyd_explode(this);
+		setthink(this, floyd_explode);
+		this.nextthink = time; // add a delay so there isn't a recursive explosion
 	}
 	else // regular death
 	{

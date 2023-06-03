@@ -19,3 +19,4 @@
 #include "napalm_gun.qc"
 #include "chainsaw.qc"
 #include "shock_gun.qc"
+#include "piano.qc"

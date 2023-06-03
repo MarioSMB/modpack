@@ -19,6 +19,7 @@
 #include "weapon/napalm_gun.qh"
 #include "weapon/chainsaw.qh"
 #include "weapon/shock_gun.qh"
+#include "weapon/piano.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

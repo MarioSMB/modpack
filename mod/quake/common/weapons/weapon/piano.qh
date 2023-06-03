@@ -1,0 +1,28 @@
+#pragma once
+
+CLASS(Piano, Weapon)
+/* ammotype  */ ATTRIB(Piano, ammo_type, int, IT_NAILS);
+/* impulse   */ ATTRIB(Piano, impulse, int, 5);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NOHUD);
+/* ammo */      ATTRIB(Piano, aflag, int, 30);
+/* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
+/* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Piano, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(Piano, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(Piano, model2, string, "snailgun");
+/* refname   */ ATTRIB(Piano, netname, string, "piano");
+/* wepname   */ ATTRIB(Piano, m_name, string, _("Piano"));
+
+ENDCLASS(Piano)
+REGISTER_WEAPON(PIANO, NEW(Piano));
+
+//SPAWNFUNC_WEAPON(weapon_piano, WEP_PIANO)
+
+#ifdef SVQC
+.entity piano_prevwep; // for starting jingle
+
+void player_woodpiano_randomplayleft(entity this);
+void player_woodpiano_randomplayright(entity this);
+
+void W_FireWoodPiano(entity this);
+#endif

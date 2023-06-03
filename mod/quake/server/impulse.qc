@@ -258,7 +258,7 @@ void CheatCommand(entity this)
 	this.ammo_multi_rockets = 100;
 	this.ammo_plasma = 100;
 
-	this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
+	//this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
 
 	W_SwitchWeapon(this, w_getbestweapon(this));
 	this.impulse = 0;
