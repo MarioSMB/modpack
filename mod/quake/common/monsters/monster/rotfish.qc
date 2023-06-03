@@ -60,7 +60,7 @@ void f_run1(entity this)
 	set_animofs(this, anim_fish_swim, 1, f_run2);
 	ai_run(this, 12);
 	if(random() < 0.5)
-		_sound(this, CH_VOICE, "fish/idle.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, ((this.model == "progs/dopefish.mdl") ? "dopefish/idle.wav" : "fish/idle.wav"), 1, ATTN_NORM);
 }
 
 void fish_melee(entity this)
@@ -70,8 +70,8 @@ void fish_melee(entity this)
 
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;
-		
-	_sound(this, CH_VOICE, "fish/bite.wav", 1, ATTN_NORM);
+
+	_sound(this, CH_VOICE, ((this.model == "progs/dopefish.mdl") ? "dopefish/bite.wav" : "fish/bite.wav"), 1, ATTN_NORM);
 	float ldmg = (random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_ROTFISH.m_id);
 }
@@ -124,7 +124,7 @@ void f_death2(entity this) { set_animofs(this, anim_fish_death, 2, f_death3); }
 void f_death1(entity this, entity inflictor, entity attacker)
 {
 	set_animofs(this, anim_fish_death, 1, f_death2);
-	_sound(this, CH_VOICE, "fish/death.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, ((this.model == "progs/dopefish.mdl") ? "dopefish/death.wav" : "fish/death.wav"), 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 }
 
@@ -176,6 +176,15 @@ METHOD(Rotfish, mr_setup, bool(Rotfish this, entity actor))
 	precache_sound2("fish/death.wav");
 	precache_sound2("fish/bite.wav");
 	precache_sound2("fish/idle.wav");
+
+	if(random() <= 0.1 && fexists("progs/dopefish.mdl"))
+	{
+		precache_sound2("dopefish/death.wav");
+		precache_sound2("dopefish/bite.wav");
+		precache_sound2("dopefish/idle.wav");
+		precache_model("progs/dopefish.mdl");
+		_setmodel(actor, "progs/dopefish.mdl");
+	}
 
     actor.health = 25;
     actor.th_stand = f_stand1;

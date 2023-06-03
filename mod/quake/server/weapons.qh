@@ -21,6 +21,9 @@ int autocvar_sv_cheats;
 .float ammo_multi_rockets;
 .float ammo_plasma;
 
+.bool reflectlightning;
+.bool reflectplasma;
+
 void spawn_touchspark(entity this, float damage);
 
 void SpawnDischarge(entity this, float dm);
@@ -48,6 +51,8 @@ void s_explode1(entity this); // TODO: shouldn't be referenced directly!
 void SpawnMeatSpray(entity this, vector org, vector vel);
 
 void LightningDamage(vector p1, vector p2, entity from, float damage, int deathtype);
+
+void LightningReflection(vector lstart, entity lsource, float ldamage, int deathtype);
 
 void MakeFlame(entity this, entity toucher);
 

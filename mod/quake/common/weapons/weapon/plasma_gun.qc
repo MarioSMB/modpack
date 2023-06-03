@@ -127,7 +127,7 @@ void PlasmaLaunch(entity this)
 	setthink(this, SUB_Remove);
 }
 
-void launch_plasma(entity this, vector org, vector dir)
+entity launch_plasma(entity this, vector org, vector dir)
 {
 	entity missile = new(plasma);
 	missile.owner = this;
@@ -158,6 +158,8 @@ void launch_plasma(entity this, vector org, vector dir)
 // set missile duration
 	setthink(missile, PlasmaLaunch);
 	missile.nextthink = time + 0.1;
+
+	return missile;
 }
 
 void W_FirePlasma(entity this)

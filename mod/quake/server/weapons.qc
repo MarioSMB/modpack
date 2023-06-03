@@ -719,6 +719,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			if(IS_PLAYER(trace_ent))
 				trace_ent.velocity_z = trace_ent.velocity_z + 400;
 		}
+		if(trace_ent.reflectlightning)
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
 	}
 	entity e1 = trace_ent;
 	ldmg = damage;
@@ -735,6 +737,9 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, from, ldmg, deathtype);
+
+		if(trace_ent.reflectlightning)
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
 	}
 	entity e2 = trace_ent;
 	ldmg = damage;
@@ -751,6 +756,37 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, from, ldmg, deathtype);
+
+		if(trace_ent.reflectlightning)
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
+	}
+}
+
+//----------------------------------------------------------------------
+// New ability to spawn lighting strikes in random directions
+//----------------------------------------------------------------------
+entity launch_plasma(entity this, vector org, vector dir); // TODO
+void LightningReflection(vector lstart, entity lsource, float ldamage, int deathtype)
+{
+	// Setup a random XYZ direction (+/-)
+	vector lfinish = lstart + randomvec() * 1000;
+	
+	// Trace line in random direction
+	traceline(lstart, lfinish, false, lsource);
+	
+	// Random chance of a plasma/lightning bolt!
+	if(random() < 0.5)
+	{
+		vector dir = normalize(trace_endpos - lstart);
+		entity missile = launch_plasma(lsource, lstart, dir);
+		missile.projectiledeathtype = DEATH_TRAP.m_id;
+	}
+	else
+	{
+		// Draw lighting beam (32 model unit chunks)
+		SendCSQCLightningBeam(lstart, trace_endpos);
+		// Check for damage with new lightning beam
+		LightningDamage(lstart, trace_endpos, NULL, ldamage, deathtype);
 	}
 }
 
