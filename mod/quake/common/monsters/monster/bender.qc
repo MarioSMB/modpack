@@ -128,7 +128,7 @@ void bend_atk2(entity this) { set_animofs(this, anim_bender_atk, 2, bend_atk3); 
 void bend_atk1(entity this)
 {
 	set_animofs(this, anim_bender_atk, 1, bend_atk2);
-	_sound(this, CH_WEAPON_SINGLE, "bend/idle1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "bend/atk1.wav", 1, ATTN_NORM);
 	ai_face(this);
 	bend_shot(this, 0);
 }
@@ -303,6 +303,7 @@ METHOD(Bender, mr_setup, bool(Bender this, entity actor))
 
 	precache_sound("enforcer/enfstop.wav"); 
 	precache_sound("hknight/attack1.wav");
+	precache_sound("bend/atk1.wav");
 	precache_sound("bend/idle.wav");
 	precache_sound("bend/idle0.wav");
 	precache_sound("bend/idle1.wav");
