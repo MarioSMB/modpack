@@ -1484,6 +1484,8 @@ void StartFrame()
 
 	RunFrameTickEntities(serverframetime);
 
+	status_effects_SV_StartFrame();
+
 	FixPhysics();
 
 	CreatureFrame_All();

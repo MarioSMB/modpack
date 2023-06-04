@@ -319,7 +319,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 // save damage based on the target's armor level
 
 	float save = ceil(targ.armortype * damage);
-	if(DEATH_IS(deathtype, DEATH_DROWN))
+	if(DEATH_IS(deathtype, DEATH_DROWN) || DEATH_IS(deathtype, DEATH_POISONED) || DEATH_IS(deathtype, DEATH_BURNING))
 		save = 0;
 
 	float take = ceil(damage-save);
@@ -516,6 +516,14 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 						T_Damage(head, inflictor, attacker, points, deathtype);
 					else
 						T_Damage(head, inflictor, attacker, points, deathtype | HITTYPE_SPLASH);
+					if(attacker.poisonous && IS_PLAYER(head))
+					{
+						float poisontime = floor(autocvar_skill + 3 + 2*random());
+						// Air tanks help reduce poison debuff duration
+						//if(targ.moditems & IT_ARTAIRTANK)
+							//poisontime = floor(poisontime * 0.5);
+						StatusEffects_apply(STATUSEFFECT_Poisoned, head, time + poisontime, 0);
+					}
 				}
 			}
 		}

@@ -1,3 +1,4 @@
+REGISTER_DEATHTYPE(BURNING,                 DEATH_SELF_BURNING,             NULL,                           "")
 REGISTER_DEATHTYPE(CRUSH,                   DEATH_SELF_CRUSH,               NULL,                           "")
 REGISTER_DEATHTYPE(DISCHARGE,               DEATH_SELF_DISCHARGE,           DEATH_MURDER_DISCHARGE,         "")
 REGISTER_DEATHTYPE(DROWN,                   DEATH_SELF_DROWN,               DEATH_MURDER_DROWN,             "")
@@ -10,6 +11,7 @@ REGISTER_DEATHTYPE(KILL,                    DEATH_SELF_SUICIDE,             NULL
 REGISTER_DEATHTYPE(LAVA,                    DEATH_SELF_LAVA,                DEATH_MURDER_LAVA,              "")
 REGISTER_DEATHTYPE(MIRRORDAMAGE,            DEATH_SELF_BETRAYAL,            NULL,                           "")
 REGISTER_DEATHTYPE(NOEXIT,                  DEATH_SELF_NOEXIT,              NULL,                           "")
+REGISTER_DEATHTYPE(POISONED,                DEATH_SELF_POISONED,            NULL,                           "")
 REGISTER_DEATHTYPE(PULSERIFLE,              DEATH_SELF_PULSERIFLE,          NULL,                           "")
 REGISTER_DEATHTYPE(ROT,                     DEATH_SELF_ROT,                 NULL,                           "")
 REGISTER_DEATHTYPE(SHIELD,                  NULL,                           DEATH_MURDER_SHIELD,            "")

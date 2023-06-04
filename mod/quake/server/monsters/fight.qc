@@ -148,6 +148,16 @@ void ai_melee(entity this, int deathtype, int melee_range)
 
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
+
+	// Check for poisonous blades!
+	if(this.poisonous && IS_PLAYER(this.enemy))
+	{
+		float poisontime = floor(autocvar_skill + 3 + 2*random());
+		// Air tanks help reduce poison debuff duration
+		//if(targ.moditems & IT_ARTAIRTANK)
+			//poisontime = floor(poisontime * 0.5);
+		StatusEffects_apply(STATUSEFFECT_Poisoned, this.enemy, time + poisontime, 0);
+	}
 }
 
 void ai_melee_side(entity this, int deathtype, int melee_range)
@@ -163,4 +173,14 @@ void ai_melee_side(entity this, int deathtype, int melee_range)
 		return;
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
+
+	// Check for poisonous blades!
+	if(this.poisonous && IS_PLAYER(this.enemy))
+	{
+		float poisontime = floor(autocvar_skill + 3 + 2*random());
+		// Air tanks help reduce poison debuff duration
+		//if(targ.moditems & IT_ARTAIRTANK)
+			//poisontime = floor(poisontime * 0.5);
+		StatusEffects_apply(STATUSEFFECT_Poisoned, this.enemy, time + poisontime, 0);
+	}
 }

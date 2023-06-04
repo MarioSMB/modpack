@@ -111,6 +111,7 @@
     MSG_INFO_NOTIF(DEATH_MURDER_VOID,                       N_CONSOLE,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was thrown into a world of hurt by ^BG%s"), "")
 
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 helps the other team"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_BURNING,                      N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 burned up"), "")
     MSG_INFO_NOTIF(DEATH_SELF_CRUSH,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was squashed"), "")
     MSG_INFO_NOTIF(DEATH_SELF_DISCHARGE,                    N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 discharged into the liquid"), "")
     MSG_INFO_NOTIF(DEATH_SELF_DROWN,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 sleeps with the rotfishes"), "")
@@ -119,6 +120,7 @@
     MSG_INFO_NOTIF(DEATH_SELF_GENERIC,                      N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 died"), "")
     MSG_INFO_NOTIF(DEATH_SELF_LAVA,                         N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 turned into hot slag"), "")
     MSG_INFO_NOTIF(DEATH_SELF_NOEXIT,                       N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 tried to leave"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_POISONED,                     N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was poisoned"), "")
     MSG_INFO_NOTIF(DEATH_SELF_PULSERIFLE,                   N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 pointed their Armor Laser System in the wrong direction"), "")
     MSG_INFO_NOTIF(DEATH_SELF_ROT,                          N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 lost too much blood"), "")
     MSG_INFO_NOTIF(DEATH_SELF_SLIME,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slimed"), "")
@@ -174,6 +176,7 @@
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_EMPATHY,      N_ENABLE,  1, 0, "s1",             CPID_Null,              "0 0",  BOLD(_("^K1You feel ^BG%s^K1's pain!")), "")
 
     MSG_CENTER_NOTIF(DEATH_SELF_BETRAYAL,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were punished for attacking your team mates!")), "")
+    MSG_CENTER_NOTIF(DEATH_SELF_BURNING,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You burned to death!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CRUSH,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were crushed!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CHEAT,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You unfairly eliminated yourself!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_DROWN,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't catch your breath!")), "")
@@ -184,6 +187,7 @@
     MSG_CENTER_NOTIF(DEATH_SELF_LAVA,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't stand the heat!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_MONSTER,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were killed by a monster!")), BOLD(_("^K1You need to watch out for monsters!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NOEXIT,                 N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1There is no escape")), "")
+    MSG_CENTER_NOTIF(DEATH_SELF_POISONED,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You died to poison!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_PULSERIFLE,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Watch where you aim that thing!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_ROT,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You lost too much blood")), BOLD(_("^K1You need to preserve your health")))
     MSG_CENTER_NOTIF(DEATH_SELF_SHOOTING_STAR,          N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You became a shooting star!")), "")
@@ -247,6 +251,7 @@
     MSG_MULTI_NOTIF(DEATH_MURDER_VOID,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_VOID,                 NULL)
 
     MSG_MULTI_NOTIF(DEATH_SELF_BETRAYAL,                N_ENABLE,  NULL,           INFO_DEATH_SELF_BETRAYAL,               CENTER_DEATH_SELF_BETRAYAL)
+    MSG_MULTI_NOTIF(DEATH_SELF_BURNING,                 N_ENABLE,  NULL,           INFO_DEATH_SELF_BURNING,                CENTER_DEATH_SELF_BURNING)
     MSG_MULTI_NOTIF(DEATH_SELF_CRUSH,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_CRUSH,                  CENTER_DEATH_SELF_CRUSH)
     MSG_MULTI_NOTIF(DEATH_SELF_DROWN,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_DROWN,                  CENTER_DEATH_SELF_DROWN)
     MSG_MULTI_NOTIF(DEATH_SELF_DISCHARGE,               N_ENABLE,  NULL,           INFO_DEATH_SELF_DISCHARGE,              CENTER_DEATH_SELF_DISCHARGE)
@@ -255,6 +260,7 @@
     MSG_MULTI_NOTIF(DEATH_SELF_GENERIC,                 N_ENABLE,  NULL,           INFO_DEATH_SELF_GENERIC,                CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(DEATH_SELF_LAVA,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_LAVA,                   CENTER_DEATH_SELF_LAVA)
     MSG_MULTI_NOTIF(DEATH_SELF_NOEXIT,                  N_ENABLE,  NULL,           INFO_DEATH_SELF_NOEXIT,                 CENTER_DEATH_SELF_NOEXIT)
+    MSG_MULTI_NOTIF(DEATH_SELF_POISONED,                N_ENABLE,  NULL,           INFO_DEATH_SELF_POISONED,               CENTER_DEATH_SELF_POISONED)
     MSG_MULTI_NOTIF(DEATH_SELF_PULSERIFLE,              N_ENABLE,  NULL,           INFO_DEATH_SELF_PULSERIFLE,             CENTER_DEATH_SELF_PULSERIFLE)
     MSG_MULTI_NOTIF(DEATH_SELF_ROT,                     N_ENABLE,  NULL,           INFO_DEATH_SELF_ROT,                    CENTER_DEATH_SELF_ROT)
     MSG_MULTI_NOTIF(DEATH_SELF_SLIME,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_SLIME,                  CENTER_DEATH_SELF_SLIME)

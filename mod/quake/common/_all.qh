@@ -31,6 +31,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "sounds/all.qh"
 #include "deathtypes/all.qh"
 
+#include "status_effects/_mod.qh"
 #include "items/item.qh"
 #include "monsters/_mod.qh"
 #include "weapons/_mod.qh"

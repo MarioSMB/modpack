@@ -244,6 +244,14 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	if(check_appear && Monster_Appear_Check(this, mon))
 		return;
 
+	if(this.statuseffects && this.statuseffects.owner == this)
+	{
+		StatusEffects_clearall(this.statuseffects);
+		StatusEffects_update(this);
+	}
+	else
+		this.statuseffects = NULL;
+
 	this.flags |= FL_MONSTER;
 	this.monsterdef = mon;
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }

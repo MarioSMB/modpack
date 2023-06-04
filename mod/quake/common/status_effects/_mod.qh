@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include "all.qh"
+#include "status_effects.qh"
+#ifdef CSQC
+    #include "cl_status_effects.qh"
+#endif
+#ifdef SVQC
+    #include "sv_status_effects.qh"
+#endif
+
+#include "status_effect/_mod.qh"

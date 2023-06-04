@@ -14,6 +14,8 @@ bool empathyused; // hipnotic
 
 bool discharged; // hipnotic
 
+.bool poisonous;
+
 .bool is_frozen; // defines whether an entity is frozen
 const float FADETIME = 5; // STATIC GLOBAL, how long after death until monsters fade out in horde mode
 

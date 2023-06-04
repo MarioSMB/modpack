@@ -15,6 +15,7 @@
 #include "effects/all.qc"
 #include "notifications/all.qc"
 
+#include "status_effects/_mod.inc"
 #include "weapons/_mod.inc"
 #include "impulses/_mod.inc"
 #include "monsters/_mod.inc"

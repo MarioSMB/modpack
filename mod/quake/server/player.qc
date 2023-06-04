@@ -832,6 +832,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.effects = 0;
 	this.modelindex = this.modelindex_player;	// don't use eyes
 
+	status_effects_PlayerDies(this);
+
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;

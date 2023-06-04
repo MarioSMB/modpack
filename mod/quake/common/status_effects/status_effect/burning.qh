@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+SOUND(Burning_Remove, "desertfactory/steam_burst");
+#endif
+CLASS(Burning, StatusEffects)
+    ATTRIB(Burning, netname, string, "burning");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Burning, m_name, string, _("Burning"));
+    ATTRIB(Burning, m_icon, string, "buff_inferno");
+#endif
+    ATTRIB(Burning, m_color, vector, '1 0.62 0');
+    ATTRIB(Burning, m_hidden, bool, true);
+    ATTRIB(Burning, m_lifetime, float, 10);
+#ifdef GAMEQC
+    ATTRIB(Burning, m_sound_rm, Sound, SND_Burning_Remove);
+#endif
+ENDCLASS(Burning)
+REGISTER_STATUSEFFECT(Burning, NEW(Burning));
+
+#ifdef SVQC
+.float burning_time;
+#endif

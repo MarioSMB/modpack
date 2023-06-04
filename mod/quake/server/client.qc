@@ -1387,6 +1387,8 @@ void PutClientInServer(entity this)
 
 	settouch(this, player_touch);
 
+	status_effects_PutClientInServer(this);
+
 	//JIM
 	// Clear out velocity so you're not launched into the air
 	// when you respawn.
@@ -2474,6 +2476,8 @@ void ClientDisconnect(entity this)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	this.effects = 0;
+
+	status_effects_ClientDisconnect(this);
 
 	sphere_remove(this);
 

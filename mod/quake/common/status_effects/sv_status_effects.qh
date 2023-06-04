@@ -1,0 +1,9 @@
+#pragma once
+
+void status_effects_SV_StartFrame();
+
+void status_effects_PlayerDies(entity this);
+
+void status_effects_PutClientInServer(entity this);
+
+bool status_effects_ClientDisconnect(entity this);

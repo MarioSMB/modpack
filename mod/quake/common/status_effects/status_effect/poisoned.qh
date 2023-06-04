@@ -1,0 +1,21 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Poisoned, StatusEffects)
+    ATTRIB(Poisoned, netname, string, "poisoned");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Poisoned, m_name, string, _("Poisoned"));
+    ATTRIB(Poisoned, m_icon, string, "buff_inferno");
+#endif
+    ATTRIB(Poisoned, m_color, vector, '0.32 1 0.31');
+    ATTRIB(Poisoned, m_hidden, bool, true);
+    ATTRIB(Poisoned, m_lifetime, float, 10);
+ENDCLASS(Poisoned)
+REGISTER_STATUSEFFECT(Poisoned, NEW(Poisoned));
+
+#ifdef SVQC
+.float poisoned_time;
+#endif

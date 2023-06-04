@@ -3,6 +3,7 @@
 #include "../common/constants.qh"
 #include <common/physics/movetypes/movetypes.qh>
 #include "../common/sui_sys.qh"
+#include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/wepent.qh"
 #include "../common/util.qh"
@@ -459,6 +460,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Sbar_Draw();
 	HUD_CenterPrint();
 	HUD_Crosshair(this);
+
+	status_effects_HUD_Powerups_add();
 
 	sui_begin(vid_conwidth, vid_conheight);
 

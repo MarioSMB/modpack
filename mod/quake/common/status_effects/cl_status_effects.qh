@@ -1,0 +1,3 @@
+#pragma once
+
+void status_effects_HUD_Powerups_add();
