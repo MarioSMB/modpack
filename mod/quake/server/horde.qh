@@ -2,6 +2,8 @@
 
 bool autocvar_horde;
 
+bool have_hordehub;
+
 int keys_silver; // number of silver keys the players are carrying
 int keys_gold; // number of gold keys the players are carrying
 
@@ -49,6 +51,8 @@ void remote_wavecheck(entity this); // trigger wavecheck from outside the base e
 
 .string category; // to do find operations by type
 string CATEGORY_MONSTER = "monster";
+
+string HordeRandomMap();
 
 // Yoder Sept24, Horde Merge
 void PrecacheMonsters();

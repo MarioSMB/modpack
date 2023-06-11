@@ -3,6 +3,40 @@
 #include "triggers/teleporters.qh"
 
 /*
+============
+HORDE random map pick
+
+added Aug31, 2021
+============
+*/
+string autocvar_sv_worldbasename;
+string HordeRandomMap()
+{
+#if 0
+	//dprint("go with next map in progression\n");
+	if(mapname == "horde1")
+		return "horde2";
+	else if(mapname == "horde2")
+		return "horde3";
+	else if(mapname == "horde3")
+		return "horde4";
+	else
+		return "horde1";
+#endif
+
+	if(have_hordehub)
+		return "horde";
+
+	RandomSelection_Init();
+	for(int j = 0; j < 7; j++)
+	{
+		string themap = strcat("horde", ftos(j + 1));
+		RandomSelection_AddString(themap, (autocvar_sv_worldbasename != themap), 1);
+	}
+	return RandomSelection_chosen_string;
+}
+
+/*
 ================
 HordeGetPlayersAlive
 
@@ -1603,6 +1637,8 @@ spawnfunc(horde_manager)
 	
 	precache_sound("misc/talk.wav");
 	PrecacheMonsters();
+
+	have_hordehub = fexists("maps/horde.bsp");
 	
 	horde_ent = this; // set global reference to the horde manager
 	
