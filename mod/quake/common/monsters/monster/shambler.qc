@@ -357,7 +357,7 @@ bool ShamCheckAttack(entity this)
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
 
-	if(vlen(spot1 - spot2) > 600)
+	if(vdist(spot1 - spot2, >, 600))
 		return false;
 
 	traceline(spot1, spot2, false, this);

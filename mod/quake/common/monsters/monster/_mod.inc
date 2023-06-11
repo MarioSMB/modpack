@@ -26,6 +26,7 @@
 #include "lavaman.qc"
 #include "legond.qc"
 #include "lightning_enforcer.qc"
+#include "minotaur.qc"
 #include "mummy.qc"
 #include "mutant.qc"
 #include "ogre.qc"

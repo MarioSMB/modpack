@@ -1,0 +1,19 @@
+#pragma once
+
+.bool minion_active;
+
+.float minion_baseattack;	// Block base attack within melee range
+.float minion_count;		// Current active amount of minions
+.float minion_maxcount;	// Maximum amount of active minions
+.float minion_trigger;		// Spawn counter for trigger event
+.float minion_maxtrigger;	// Spawn total for trigger event
+.string miniontarget;		// targetname string for trigger event
+.float minion_throwspeed;  // Starting forward speed of ball
+.float minion_throwextra;	// Extra random forward speed of ball
+.float minion_throwside;	// Extra sideways momentum (+/-)
+.entity minion_test;		// Test entity for minion collision
+const int MIN_MAXACTIVE = 5;		// Maximum amount active at once
+const int MIN_MAXTRIGGER = 5;		// How many spawns before triggering
+const float MIN_THROWSPD = 200;		// Monster jump speed
+const float MIN_THROWRND = 50;		// Some randomness
+const float MIN_THROWSIDE = 50;		// Sideways movement (+/-)

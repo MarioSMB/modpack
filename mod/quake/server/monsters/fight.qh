@@ -1,5 +1,7 @@
 #pragma once
 
+.bool attack_rage;
+
 bool CheckAttack(entity this);
 
 void ai_face(entity this);
@@ -7,6 +9,8 @@ void ai_face(entity this);
 void ai_charge(entity this, float d);
 
 void ai_charge_side(entity this);
+
+bool ai_checkmelee(entity this, float attackdist, float attackzaxis);
 
 void ai_melee(entity this, int deathtype, int melee_range);
 

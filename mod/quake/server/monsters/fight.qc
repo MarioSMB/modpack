@@ -132,6 +132,27 @@ void ai_charge_side(entity this)
 	t_walkmove(this, heading, 20);
 }
 
+/*======================================================================
+ ai_checkmelee
+  Check if the monster (this) can attack enemy (target)
+  and returns TRUE if the monster is within XYZ range
+======================================================================*/
+bool ai_checkmelee(entity this, float attackdist, float attackzaxis)
+{
+	// Setup default
+	if(attackzaxis <= 0)
+		attackzaxis = 48;
+	
+	// Calculate distance and z axis difference seperate
+	vector spot1 = this.enemy.origin; //SUB_orgEnemyTarget();
+	vector spot2 = this.origin;
+	float zdiff = fabs(spot1.z - spot2.z);
+	spot1.z = spot2.z = 0;				// Flatten Z axis before vector length
+
+	// Is the enemy too far away and the zaxis is wrong (too low/high)
+	return (vdist(spot1 - spot2, <=, attackdist) && zdiff <= 48);
+}
+
 /*
 =============
 ai_melee
@@ -143,21 +164,11 @@ void ai_melee(entity this, int deathtype, int melee_range)
 	if(!this.enemy)
 		return;		// removed before stroke
 
-	if(vdist(this.enemy.origin - this.origin, >, melee_range))
-		return;
+	if(!ai_checkmelee(this, melee_range, false))
+		return; // Too far away
 
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
-
-	// Check for poisonous blades!
-	if(this.poisonous && IS_PLAYER(this.enemy))
-	{
-		float poisontime = floor(autocvar_skill + 3 + 2*random());
-		// Air tanks help reduce poison debuff duration
-		//if(targ.moditems & IT_ARTAIRTANK)
-			//poisontime = floor(poisontime * 0.5);
-		StatusEffects_apply(STATUSEFFECT_Poisoned, this.enemy, time + poisontime, 0);
-	}
 }
 
 void ai_melee_side(entity this, int deathtype, int melee_range)
@@ -167,20 +178,10 @@ void ai_melee_side(entity this, int deathtype, int melee_range)
 
 	ai_charge_side(this);
 
-	if(vdist(this.enemy.origin - this.origin, >, melee_range))
-		return;
+	if(!ai_checkmelee(this, melee_range, false))
+		return; // Too far away
 	if(!CanDamage(this.enemy, this))
 		return;
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
-
-	// Check for poisonous blades!
-	if(this.poisonous && IS_PLAYER(this.enemy))
-	{
-		float poisontime = floor(autocvar_skill + 3 + 2*random());
-		// Air tanks help reduce poison debuff duration
-		//if(targ.moditems & IT_ARTAIRTANK)
-			//poisontime = floor(poisontime * 0.5);
-		StatusEffects_apply(STATUSEFFECT_Poisoned, this.enemy, time + poisontime, 0);
-	}
 }

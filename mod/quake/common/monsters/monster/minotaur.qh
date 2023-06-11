@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MINOTAUR,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was gored by a Minotaur"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MINOTAUR,            1,  NULL,           INFO_DEATH_SELF_MON_MINOTAUR,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MINOTAUR,        DEATH_SELF_MON_MINOTAUR,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MINOTAUR, "progs/mon_minotaur.mdl");
+MODEL(MON_MINOTAUR_HEAD, "progs/h_minotaur.mdl");
+
+SOUND(MON_MINOTAUR_SIGHT, "minotaur/sight1");
+#endif
+
+CLASS(Minotaur, Monster)
+    ATTRIB(Minotaur, spawnflags, int, 0);
+    ATTRIB(Minotaur, m_mins, vector, '-24 -24 -24');
+    ATTRIB(Minotaur, m_maxs, vector, '24 24 48');
+#ifdef GAMEQC
+    ATTRIB(Minotaur, m_model, Model, MDL_MON_MINOTAUR);
+    ATTRIB(Minotaur, m_model_head, Model, MDL_MON_MINOTAUR_HEAD);
+    ATTRIB(Minotaur, m_sound, Sound, SND_MON_MINOTAUR_SIGHT);
+#endif
+    ATTRIB(Minotaur, netname, string, "minotaur");
+    ATTRIB(Minotaur, monster_name, string, _("Minotaur"));
+ENDCLASS(Minotaur)
+
+REGISTER_MONSTER(MINOTAUR, NEW(Minotaur));

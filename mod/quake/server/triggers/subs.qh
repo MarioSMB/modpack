@@ -49,3 +49,7 @@ void initialize_field_db()
 
 float SUB_LeftShift(float num, float bits);
 float SUB_RightShift(float num, float bits);
+
+#ifdef SVQC
+vector attack_vector(vector attack_dir);
+#endif

@@ -99,6 +99,8 @@ void PlasmaTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		float damg = 80 + random()*20;
+		if(IS_MONSTER(this.realowner))
+			damg = 30;
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg *= 0.5;	// mostly immune
 		if(toucher.resist_cells != 0)
@@ -110,11 +112,33 @@ void PlasmaTouch(entity this, entity toucher)
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, toucher);
+	float rdmg = 70;
+	if(IS_MONSTER(this.realowner))
+		rdmg = 20; // lower base damage for monsters
+	T_RadiusDamage(this, this.owner, rdmg, this.projectiledeathtype, toucher);
 
 	te_explosion2(this.origin, 244, 3);
 
-	PlasmaGroundOut(this);
+	// Check for any plasma reflection? (player only function)
+	if(IS_PLAYER(this.owner) && toucher.reflectplasma)
+	{
+		vector org = this.origin;
+		vector dir;
+		// Random chance that plasma will reflect straight back
+		if(random() < 0.2 && this.owner) 
+			dir = normalize(this.owner.origin - org);
+		else
+		{
+			// Pick random location instead
+			vector vec = org + randomvec() * 1000;
+			dir = normalize(vec - org);
+		}
+		// Switch around this to make sure reflection happens once
+		entity newmis = launch_plasma(toucher, org, dir);
+		newmis.projectiledeathtype = DEATH_TRAP.m_id; // TODO: reflection deathtype
+	}
+	else if(IS_PLAYER(this.realowner)) // only do an area explosion if it wasn't reflected?
+		PlasmaGroundOut(this);
 	delete(this);
 }
 
@@ -131,6 +155,7 @@ entity launch_plasma(entity this, vector org, vector dir)
 {
 	entity missile = new(plasma);
 	missile.owner = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_PLASMA_GUN.m_id;

@@ -7,6 +7,8 @@ const int START_OFF = BIT(0);
 
 .float save_nextthink;
 
+.float movespeed; // ad hack
+
 .float gravity;
 
 .float distance;

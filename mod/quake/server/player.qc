@@ -709,7 +709,7 @@ vector VelocityForDamage(entity this, float dm)
 	return v;
 }
 
-void ThrowGib(entity this, string gibname, float dm)
+entity ThrowGib(entity this, string gibname, float dm)
 {
 	entity gib = spawn();
 	setorigin(gib, this.origin);
@@ -726,6 +726,7 @@ void ThrowGib(entity this, string gibname, float dm)
 	gib.nextthink = time + 10 + random()*10;
 	gib.frame = 0;
 	gib.flags = 0;
+	return gib;
 }
 
 void HeadThink(entity this)

@@ -269,6 +269,11 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	this.nextthink = this.nextthink + random() * 0.5;
 	setthink(this, monster_start_go);
 
+	this.resist_shells = 0;
+	this.resist_nails = 0;
+	this.resist_rockets = 0;
+	this.resist_cells = 0;
+
 	mon.mr_setup(mon, this);
 
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent

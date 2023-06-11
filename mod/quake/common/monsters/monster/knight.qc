@@ -305,6 +305,7 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	precache_sound("knight/sword2.wav");
 
     actor.health = 75;
+    actor.poisonous = true;
 	if((actor.spawnflags & 2)) // statue
 	{
 		if(actor.frame == 0)

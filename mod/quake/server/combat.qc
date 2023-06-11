@@ -423,6 +423,18 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 // react to the damage
 
+	if(IS_MONSTER(attacker) && attacker.poisonous && IS_PLAYER(targ))
+	{
+		float poisontime = floor(autocvar_skill + 3 + 2*random());
+		// Air tanks help reduce poison debuff duration
+		//if(targ.moditems & IT_ARTAIRTANK)
+			//poisontime = floor(poisontime * 0.5);
+		// only add more poison if there isn't already a longer timer running!
+		float curtime = StatusEffects_gettime(STATUSEFFECT_Poisoned, targ);
+		if((time + poisontime) > curtime)
+			StatusEffects_apply(STATUSEFFECT_Poisoned, targ, time + poisontime, 0);
+	}
+
 	if(IS_MONSTER(targ) && attacker && !(targ.monsterdef.spawnflags & MON_FLAG_NOAGGRO))
 	{
 	// get mad unless of the same class(except for soldiers)
@@ -516,14 +528,6 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 						T_Damage(head, inflictor, attacker, points, deathtype);
 					else
 						T_Damage(head, inflictor, attacker, points, deathtype | HITTYPE_SPLASH);
-					if(attacker.poisonous && IS_PLAYER(head))
-					{
-						float poisontime = floor(autocvar_skill + 3 + 2*random());
-						// Air tanks help reduce poison debuff duration
-						//if(targ.moditems & IT_ARTAIRTANK)
-							//poisontime = floor(poisontime * 0.5);
-						StatusEffects_apply(STATUSEFFECT_Poisoned, head, time + poisontime, 0);
-					}
 				}
 			}
 		}

@@ -26,6 +26,7 @@
 #include "lavaman.qh"
 #include "legond.qh"
 #include "lightning_enforcer.qh"
+#include "minotaur.qh"
 #include "mummy.qh"
 #include "mutant.qh"
 #include "ogre.qh"

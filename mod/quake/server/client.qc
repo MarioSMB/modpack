@@ -2435,6 +2435,8 @@ void ClientConnect(entity this)
 
 	this.disableclientprediction = -1;
 
+	StatusEffectsStorage_attach(this);
+
 	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
 	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));
 
@@ -2476,6 +2478,8 @@ void ClientDisconnect(entity this)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	this.effects = 0;
+
+	StatusEffectsStorage_delete(this);
 
 	status_effects_ClientDisconnect(this);
 

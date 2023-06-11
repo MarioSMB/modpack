@@ -17,4 +17,4 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype);
 
 void ThrowHead(entity this, string gibname, float dm);
 
-void ThrowGib(entity this, string gibname, float dm);
+entity ThrowGib(entity this, string gibname, float dm);

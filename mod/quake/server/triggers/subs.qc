@@ -471,3 +471,20 @@ float SUB_RightShift(float num, float bits)
 	}
 	return num;
 }
+
+#ifdef SVQC
+//======================================================================
+// Most of the monsters have an attack_offset setup to spawn their
+// proejctiles in the right location relative to their gun model
+// This function expects the makevectors has been done already
+// makevectors (self.angles); <--- if missing, vector will be rubbish!
+//----------------------------------------------------------------------
+vector attack_vector(vector attack_dir)
+{
+	vector retvec;
+	retvec = v_forward * attack_dir.x;
+	retvec = retvec + (v_right * attack_dir.y);
+	retvec = retvec + (v_up * attack_dir.z);
+	return retvec;
+}
+#endif

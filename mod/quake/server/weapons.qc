@@ -927,7 +927,7 @@ void SpawnInternalFire2(entity this)
 	this.nextthink = time + 0.1;
 	setthink(this, NapalmCheckEnemyDead);
 }
-void ThrowGib(entity this, string gibname, float dm);
+entity ThrowGib(entity this, string gibname, float dm);
 
 void InternalFireThink(entity this)
 {

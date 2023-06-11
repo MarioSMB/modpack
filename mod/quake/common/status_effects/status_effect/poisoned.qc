@@ -20,3 +20,11 @@ METHOD(Poisoned, m_tick, void(StatusEffects this, entity actor))
     SUPER(Poisoned).m_tick(this, actor);
 }
 #endif
+
+#ifdef CSQC
+METHOD(Poisoned, m_tick, void(StatusEffects this, entity actor))
+{
+    drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '0.56 0.99 0.55', 0.1, DRAWFLAG_NORMAL);
+    SUPER(Poisoned).m_tick(this, actor);
+}
+#endif
