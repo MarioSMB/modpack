@@ -194,13 +194,16 @@ bool PlayerInList(entity player, string list)
 }
 
 string autocvar_sv_allow_customplayermodels_speciallist = "";
+string autocvar_sv_allow_customplayermodels_idlist = "";
 
 bool have_katria;
 bool have_mario;
-STATIC_INIT(check_katria)
+bool have_goat;
+STATIC_INIT(check_models)
 {
 	have_katria = fexists("progs/player_katria.mdl");
 	have_mario = fexists("progs/player_mario.mdl");
+	have_goat = fexists("progs/player_goat.mdl");
 }
 
 string get_playermodel(entity this)
@@ -209,6 +212,11 @@ string get_playermodel(entity this)
 	{
 		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
 			return "progs/player_mario.mdl";
+	}
+	if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "")
+	{
+		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+			return "progs/player_goat.mdl";
 	}
 	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
 		return "progs/player_katria.mdl";
@@ -239,6 +247,18 @@ string get_deathsound(entity this, int chance)
 			case 3: return "player_mario/death3.wav";
 			case 4: return "player_mario/death4.wav";
 			case 5: return "player_mario/death5.wav";
+		}
+	}
+	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+	{
+		switch(chance)
+		{
+			default:
+			case 1: return "player_goat/death1.wav";
+			case 2: return "player_goat/death2.wav";
+			case 3: return "player_goat/death3.wav";
+			case 4: return "player_goat/death4.wav";
+			case 5: return "player_goat/death5.wav";
 		}
 	}
 	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
@@ -284,6 +304,18 @@ string get_painsound(entity this, int chance)
 			default: return "player_mario/pain6.wav";
 		}
 	}
+	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+	{
+		switch(chance)
+		{
+			case 1: return "player_goat/pain1.wav";
+			case 2: return "player_goat/pain2.wav";
+			case 3: return "player_goat/pain3.wav";
+			case 4: return "player_goat/pain4.wav";
+			case 5: return "player_goat/pain5.wav";
+			default: return "player_goat/pain6.wav";
+		}
+	}
 	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
 	{
 		switch(chance)
@@ -318,6 +350,8 @@ void player_sound(entity this, int chan, string sample, float atten)
 	string soundpath;
 	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
 		soundpath = "player_mario/";
+	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+		soundpath = "player_goat/";
 	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
 		soundpath =  "player_katria/";
 	else

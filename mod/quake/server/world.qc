@@ -403,6 +403,15 @@ PRECACHE(Junk)
 	precache_sound("player_mario/gasp2.wav");		// taking breath
 	precache_sound("player_mario/h2odeath.wav");		// drowning death
 
+	precache_sound("player_goat/plyrjmp8.wav");		// player jump
+	precache_sound("player_goat/land.wav");			// player landing
+	precache_sound("player_goat/land2.wav");		// player hurt landing
+	precache_sound("player_goat/drown1.wav");		// drowning pain
+	precache_sound("player_goat/drown2.wav");		// drowning pain
+	precache_sound("player_goat/gasp1.wav");		// gasping for air
+	precache_sound("player_goat/gasp2.wav");		// taking breath
+	precache_sound("player_goat/h2odeath.wav");		// drowning death
+
 	precache_sound(QUAKE_TALKSOUND);			// talk
 	precache_sound("player/teledth1.wav");		// telefrag
 	precache_sound("weapons/lock4.wav");		// ammo pick up
@@ -442,6 +451,13 @@ PRECACHE(Junk)
 	precache_sound("player_mario/pain5.wav");
 	precache_sound("player_mario/pain6.wav");
 
+	precache_sound("player_goat/pain1.wav");
+	precache_sound("player_goat/pain2.wav");
+	precache_sound("player_goat/pain3.wav");
+	precache_sound("player_goat/pain4.wav");
+	precache_sound("player_goat/pain5.wav");
+	precache_sound("player_goat/pain6.wav");
+
 // player death sounds
 	precache_sound("player/death1.wav");
 	precache_sound("player/death2.wav");
@@ -461,6 +477,12 @@ PRECACHE(Junk)
 	precache_sound("player_mario/death4.wav");
 	precache_sound("player_mario/death5.wav");
 
+	precache_sound("player_goat/death1.wav");
+	precache_sound("player_goat/death2.wav");
+	precache_sound("player_goat/death3.wav");
+	precache_sound("player_goat/death4.wav");
+	precache_sound("player_goat/death5.wav");
+
 // ax sounds	
 	precache_sound("weapons/ax1.wav");			// ax swoosh
 	precache_sound("player/axhit1.wav");		// ax hit meat
@@ -469,6 +491,8 @@ PRECACHE(Junk)
 	precache_sound("player_katria/axhit1.wav");
 
 	precache_sound("player_mario/axhit1.wav");
+
+	precache_sound("player_goat/axhit1.wav");
 
 	precache_sound("player/h2ojump.wav");		// player jumping into water
 	precache_sound("player/slimbrn2.wav");		// player enter slime
@@ -485,12 +509,16 @@ PRECACHE(Junk)
 	precache_sound("player_mario/lburn1.wav");		// lava burn
 	precache_sound("player_mario/lburn2.wav");		// lava burn
 
+	precache_sound("player_goat/lburn1.wav");		// lava burn
+	precache_sound("player_goat/lburn2.wav");		// lava burn
+
 	precache_sound("misc/water1.wav");			// swimming
 	precache_sound("misc/water2.wav");			// swimming
 
 	precache_model("progs/player.mdl");
 	precache_model("progs/player_katria.mdl");
 	precache_model("progs/player_mario.mdl");
+	precache_model("progs/player_goat.mdl");
 	precache_model("progs/eyes.mdl");
 	precache_model("progs/h_player.mdl");
 	precache_model("progs/h_player_katria.mdl");
