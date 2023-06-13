@@ -2,6 +2,7 @@
 
 #include "horde.qh"
 #include "monsters/ai.qh"
+#include "monsters/ai_minions.qh"
 #include "monsters/monsters.qh"
 #include "triggers/triggers.qh"
 
@@ -228,6 +229,8 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		}
 		else if(!(targ.flags & FL_CLONE))
 			monsters_killed += 1;
+		if(targ.flags & FL_MINION)
+			update_minioncount(targ.owner, -1);
 		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE))
 			attacker.frags += 1;
 		if(horde_ent)

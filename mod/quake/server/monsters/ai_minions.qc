@@ -142,7 +142,7 @@ bool find_minionspace(vector org)
 		if(IS_PLAYER(minstuff))
 		{
 			foundclient = false;
-			minstuff = NULL;
+			break;
 		}
 		minstuff = minstuff.chain;
 	}
@@ -178,7 +178,78 @@ void Explode_Egg(entity this)
 	// Safely remove egg
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.1;
-}	
+}
+
+entity minion_spawn(entity own, vector org, Monster mon)
+{
+	entity targ = own.enemy;
+
+	if(!mon || mon == MON_Null || (mon.spawnflags & MONSTER_TYPE_DECOY))
+		return NULL;
+
+	update_minioncount(own, 1);
+
+	entity monster = new(monster);
+	monster.monsterdef = mon;
+	monster.spawnfunc_checked = true;
+	//monster.angles = own.angles;
+	monster.enemy = targ;
+	monster.minion_active = true;
+	monster.solid = SOLID_SLIDEBOX;
+	set_movetype(monster, MOVETYPE_STEP);
+	monster.flags = FL_MONSTER | FL_CLONE | FL_MINION; // TODO: clone is temporary to prevent monster counts being affected!
+
+	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
+	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
+
+	if(!(monster.flags & FL_SWIM))
+	{
+		IL_PUSH(g_damagedbycontents, monster);
+		monster.damagedbycontents	= true;
+	}
+	//setup_minionsupport(monster);
+
+	// perform enemy-type specific loading
+	// TODO: copy model from existing monster?
+	setmodel(monster, mon.m_model);
+	setsize(monster, mon.m_mins, mon.m_maxs);
+
+	// TODO: zombie logic too messy to work with mr_setup for now!
+	if(mon == MON_ZOMBIE)
+	{
+		monster.classname = "monster_zombie";
+		//org += '0 0 32';
+		monster.health = 60;
+		monster.th_stand = zombie_stand1;
+		monster.th_walk = zombie_walk1;
+		monster.th_run = zombie_run1;
+		monster.th_pain = zombie_pain;
+		monster.th_die = zombie_die;
+		monster.th_missile = zombie_missile;
+		monster.target = string_null; // don't target anything!
+	}
+	mon.mr_setup(mon, monster);
+
+	setorigin(monster, org);
+
+	setcefc(monster, monster_customize);
+
+	//if(!(mon.spawnflags & MONSTER_TYPE_FLY))
+		//droptofloor(monster);
+
+	monster.takedamage = DAMAGE_AIM;
+	if(!monster.yaw_speed)
+		monster.yaw_speed = 20;
+	monster.view_ofs = '0 0 25';
+	monster.use = monster_use;
+	monster.max_health = monster.health;
+
+	monster.nextthink = time;
+	setthink(monster, FoundTarget);
+	monster.owner = own;
+
+	return monster;
+}
 
 //----------------------------------------------------------------------
 // Once the egg has landed via Grenade Touch function
@@ -228,6 +299,8 @@ void Hatch_Egg(entity this)
 	else if(this.owner.classtype == CT_MONSHAL)
 		minion_voreling(this.oldorigin, this.enemy);
 #endif
+	entity minion = minion_spawn(this.owner, this.oldorigin, this.owner.monsterdef);
+	this.owner = minion; // TODO?
 
 	// Skip a couple of frames
 	setthink(this, Explode_Egg);

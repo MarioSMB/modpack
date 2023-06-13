@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GARGOYLE,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was burned by a Gargoyle"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GARGOYLE,            1,  NULL,           INFO_DEATH_SELF_MON_GARGOYLE,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GARGOYLE,        DEATH_SELF_MON_GARGOYLE,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GARGOYLE, "progs/mon_gargoyle.mdl");
+MODEL(MON_GARGOYLE_HEAD, "progs/h_gargoyle.mdl");
+
+SOUND(MON_GARGOYLE_SIGHT, "gargoyle/sight1");
+#endif
+
+CLASS(Gargoyle, Monster)
+    ATTRIB(Gargoyle, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Gargoyle, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Gargoyle, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Gargoyle, m_model, Model, MDL_MON_GARGOYLE);
+    ATTRIB(Gargoyle, m_model_head, Model, MDL_MON_GARGOYLE_HEAD);
+    ATTRIB(Gargoyle, m_sound, Sound, SND_MON_GARGOYLE_SIGHT);
+#endif
+    ATTRIB(Gargoyle, netname, string, "gargoyle");
+    ATTRIB(Gargoyle, monster_name, string, _("Gargoyle"));
+ENDCLASS(Gargoyle)
+
+REGISTER_MONSTER(GARGOYLE, NEW(Gargoyle));

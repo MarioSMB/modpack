@@ -278,6 +278,8 @@ void monster_start(entity this, bool check_appear, Monster mon)
 
 	mon.mr_setup(mon, this);
 
+	setup_minionsupport(this);
+
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent
 	// in horde, mosnters shouldn't increase total count until spawned
 	if(MP_MG && autocvar_horde)

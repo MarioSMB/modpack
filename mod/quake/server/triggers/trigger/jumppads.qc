@@ -15,8 +15,8 @@ void trigger_push_touch(entity this, entity toucher)
 	
 	if(horde_ent)
 	{
-		if(toucher.spawnflags & PUSH_START_OFF) // ignore this spawnflag in horde mode
-			toucher.spawnflags &= ~PUSH_START_OFF;
+		if(this.spawnflags & PUSH_START_OFF) // ignore this spawnflag in horde mode
+			this.spawnflags &= ~PUSH_START_OFF;
 		
 		if(!IS_PLAYER(toucher))
 		{

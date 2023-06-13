@@ -326,7 +326,8 @@ void T_MissileTouch(entity this, entity toucher)
 		return;
 	}
 
-	float damg = 100 + random()*20;
+	float mydmg = (this.dmg) ? this.dmg : 100;
+	float damg = mydmg + random() * (mydmg * 0.2);
 	
 	if(toucher.health)
 	{
@@ -340,7 +341,7 @@ void T_MissileTouch(entity this, entity toucher)
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 120, this.projectiledeathtype, toucher);
+	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
 
 //	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);

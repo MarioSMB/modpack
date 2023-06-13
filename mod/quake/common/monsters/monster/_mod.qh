@@ -15,6 +15,7 @@
 #include "enforcer.qh"
 #include "fiend.qh"
 #include "floyd.qh"
+#include "gargoyle.qh"
 #include "goroth.qh"
 #include "gremlin.qh"
 #include "grenling.qh"

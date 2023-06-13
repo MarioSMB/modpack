@@ -15,6 +15,7 @@
 #include "enforcer.qc"
 #include "fiend.qc"
 #include "floyd.qc"
+#include "gargoyle.qc"
 #include "goroth.qc"
 #include "gremlin.qc"
 #include "grenling.qc"

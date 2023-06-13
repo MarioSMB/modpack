@@ -13,14 +13,14 @@ void repeater_use(entity this, entity actor, entity trigger)
 	if(this.spawnflags & REPEATER_ON)
 	{
 		// turn off
-		this.spawnflags = this.spawnflags - REPEATER_ON;
+		this.spawnflags &= ~REPEATER_ON;
 		this.nextthink = 0;
 		setthink(this, func_null);
 	}
 	else
 	{
 		// turn on
-		this.spawnflags = this.spawnflags + REPEATER_ON;
+		this.spawnflags |= REPEATER_ON;
 		this.nextthink = time + this.wait + (this.pausetime * random());
 		setthink(this, repeater_think);
 	}

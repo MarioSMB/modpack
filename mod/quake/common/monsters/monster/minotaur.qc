@@ -1,5 +1,7 @@
 #include "minotaur.qh"
 
+#include "gargoyle.qh"
+
 /*==============================================================================
 MINOTAUR (Hexen2 model by Raven Software) (The Shuffler from Marcher MOD)
 also known as "The Nethergoat: Spawnmaster of the Elder World"
@@ -531,7 +533,7 @@ void mino_magic1(entity this)
 //----------------------------------------------------------------------
 void mino_sumeffect(entity this)
 {
-	__pointparticles(_particleeffectnum("spawn_event_neutral"), this.origin + '0 0 64', '0 0 0', 1);
+	__pointparticles(_particleeffectnum("TE_PLASMABURN"), this.origin + '0 0 64', '0 0 0', 1);
 }
 
 //----------------------------------------------------------------------
@@ -610,7 +612,7 @@ void mino_summon7(entity this)
 	// If the spawn locaiton all clear, spawn something!
 	if(this.minotaur_summonflag)
 	{
-		//minion_gargoyle(this, this.pos1, this.enemy);
+		minion_spawn(this, this.pos1, MON_GARGOYLE);
 		this.pos2 = this.pos1 - '0 0 16';	// Origin of gargoyle
 		mino_sumball(this, 0);
 	}
@@ -625,8 +627,8 @@ void mino_summon3(entity this)
 	mino_sumeffect(this);
 	_sound(this, CHAN_BODY, "minotaur/attack1long.wav", 1, ATTN_NORM);
 }
-void mino_summon2(entity this) { set_animofs(this, anim_minotaur_howl, 3, mino_summon3); ai_face(this);}
-void mino_summon1(entity this) { set_animofs(this, anim_minotaur_howl, 1, mino_summon2); ai_face(this); this.pain_finished = time + 2;}
+void mino_summon2(entity this) { set_animofs(this, anim_minotaur_howl, 3, mino_summon3); ai_face(this); }
+void mino_summon1(entity this) { set_animofs(this, anim_minotaur_howl, 1, mino_summon2); ai_face(this); this.pain_finished = time + 2; }
 
 //----------------------------------------------------------------------
 // Both type of minotaurs go through the same magic function
@@ -642,15 +644,10 @@ void mino_magic(entity this)
 		if(this.spawnflags & MON_MINOTAUR_MINIONS)
 		{
 			// has the gargoyle limit been reached?
-			if(query_minionactive(this))
+			if(query_minionactive(this) > 0)
 				mino_summon1(this);
 			else
-			{
-				if(this.minion_baseattack > 0)
-					mino_magic1(this);
-				else
-					mino_run(this);
-			}
+				mino_magic1(this);
 		}
 		// White Minotaur attacks with plasma
 		else

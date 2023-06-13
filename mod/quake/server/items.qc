@@ -1424,11 +1424,7 @@ void horn_spawnmonster(entity item, entity actor)
 		monster.damagedbycontents	= true;
 	}
 
-	if(!mon.mr_setup(mon, monster))
-	{
-		delete(monster);
-		return;
-	}
+	mon.mr_setup(mon, monster);
 	monster.health = max(monster.health, 1000);
 	monster.charmer = actor;
 	monster.charmed = 1;
@@ -1438,6 +1434,7 @@ void horn_spawnmonster(entity item, entity actor)
 	org.z += -mon.m_mins.z; // offset based on size
 	setorigin(monster, org + '0 0 1');
 	setcefc(monster, monster_customize);
+	setup_minionsupport(monster);
 
 	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
 		droptofloor(monster);

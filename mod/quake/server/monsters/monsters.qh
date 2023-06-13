@@ -6,6 +6,7 @@
 
 const int FL_DECOY = BIT(20);
 const int FL_CLONE = BIT(21);
+const int FL_MINION = BIT(22);
 
 const int MONSTER_SPAWNED = 4;
 const int MONSTER_SPAWNED_ANGRY = 8;
