@@ -1036,11 +1036,9 @@ STATIC_INIT_EARLY(missionpacks)
 
 spawnfunc(worldspawn)
 {
+	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
-	{
-		cvar_set("horde", "0"); // no horde either!
 		serverflags = 0; // clean up serverflags!
-	}
 
 	startingserverflags = serverflags;
 

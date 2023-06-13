@@ -18,6 +18,7 @@
 #include "pushable.qc"
 #include "rotate.qc"
 #include "rubble.qc"
+#include "skill.qc"
 #include "spawn.qc"
 #include "togglewall.qc"
 #include "toss.qc"
