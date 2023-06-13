@@ -262,7 +262,9 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_STEP);
 
-	setmodel(this, mon.m_model);
+	// allow maps to define custom models
+	if(!this.model || this.model == "")
+		setmodel(this, mon.m_model);
 	setsize(this, mon.m_mins, mon.m_maxs);
 	setcefc(this, monster_customize);
 
