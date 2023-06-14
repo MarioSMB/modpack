@@ -396,8 +396,8 @@ void Deathmatch_Weapon(entity this, int old, Weapon newwep)
 bool weapon_customize(entity this, entity client)
 {
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
-	if(STAT(WEAPONS, client) & wep.m_wepset)
-		wep = W_Apply_Weaponreplace(client, wep);
+	//if(STAT(WEAPONS, client) & wep.m_wepset)
+		//wep = W_Apply_Weaponreplace(client, wep);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 		return false;
 	return true;
@@ -568,8 +568,8 @@ void weapon_touch(entity this, entity toucher)
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	if(STAT(WEAPONS,toucher) & newwep.m_wepset)
-		newwep = W_Apply_Weaponreplace(toucher, newwep);
+	//if(STAT(WEAPONS,toucher) & newwep.m_wepset)
+		//newwep = W_Apply_Weaponreplace(toucher, newwep);
 	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset))
 		return;
 

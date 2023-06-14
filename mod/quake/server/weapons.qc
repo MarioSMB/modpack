@@ -433,8 +433,10 @@ void T_SinglePulseTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		if(toucher.resist_cells != 0)
+		{
 			damg = Resist_Damage(toucher, IT_CELLS, damg);
-		Resist_Plasma(toucher, this.origin);
+			Resist_Plasma(toucher, this.origin);
+		}
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 
