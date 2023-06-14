@@ -986,7 +986,7 @@ bool FindTarget(entity this)
 	entity client = NULL;
 
 	// First, if we are attacking friends, try to find another friend
-	if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND))
+	if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND) && this.target && this.target != "" && substring(world.model, 0, 7) == "maps/mg")
 	{
 		RandomSelection_Init();
 		FOREACH_ENTITY_STRING(targetname, this.target,
@@ -1095,7 +1095,7 @@ bool FindTarget(entity this)
 	if(client.powerups & POWERUP_INVISIBILITY)
 		return false;
 
-	if(client.monsterdef.spawnflags & MON_FLAG_NOTARGET)
+	if(this.monsterdef.spawnflags & MON_FLAG_NOTARGET)
 		return false;
 
 	if(!MP_IMPEL || !angry_monsters)

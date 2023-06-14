@@ -48,6 +48,7 @@ void multi_trigger(entity this)
 		settouch(this, func_null);
 		this.nextthink = time + 0.1;
 		setthink(this, SUB_Remove);
+		return;
 	}
 
 	if(this.cnt > 0)
