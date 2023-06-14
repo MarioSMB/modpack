@@ -290,13 +290,17 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	monster.spawnfunc_checked = true;
 	monster.angles = temp_angles; 
 	monster.solid = SOLID_SLIDEBOX;
-	set_movetype(monster, MOVETYPE_STEP);
 	//monster.target = "horde_manager";
 	monster.flags = FL_MONSTER;
 	//monster.alpha = 1; // only set monster alpha after they're a corpse
 
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
+
+	if(monster.flags & FL_FLY)
+		set_movetype(monster, MOVETYPE_NONE);
+	else
+		set_movetype(monster, MOVETYPE_STEP);
 
 	if(!(monster.flags & FL_SWIM))
 	{

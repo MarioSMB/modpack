@@ -1416,7 +1416,10 @@ void horn_spawnmonster(entity item, entity actor)
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
 	monster.solid = SOLID_SLIDEBOX;
-	set_movetype(monster, MOVETYPE_STEP);
+	if(monster.flags & FL_FLY)
+		set_movetype(monster, MOVETYPE_NONE);
+	else
+		set_movetype(monster, MOVETYPE_STEP);
 
 	if(!(monster.flags & FL_SWIM))
 	{

@@ -260,7 +260,10 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
 
 	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
+	if(this.flags & FL_FLY)
+		set_movetype(this, MOVETYPE_NONE);
+	else
+		set_movetype(this, MOVETYPE_STEP);
 
 	// allow maps to define custom models
 	if(!this.model || this.model == "")

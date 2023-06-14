@@ -196,11 +196,15 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	monster.enemy = targ;
 	monster.minion_active = true;
 	monster.solid = SOLID_SLIDEBOX;
-	set_movetype(monster, MOVETYPE_STEP);
 	monster.flags = FL_MONSTER | FL_CLONE | FL_MINION; // TODO: clone is temporary to prevent monster counts being affected!
 
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
+
+	if(monster.flags & FL_FLY)
+		set_movetype(monster, MOVETYPE_NONE);
+	else
+		set_movetype(monster, MOVETYPE_STEP);
 
 	if(!(monster.flags & FL_SWIM))
 	{

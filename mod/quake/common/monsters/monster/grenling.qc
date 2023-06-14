@@ -224,6 +224,7 @@ void gren_death2(entity this) { set_anim(this, 108, gren_death3); }
 void gren_death1(entity this)
 {
 	set_anim(this, 107, gren_death2);
+	set_movetype(this, MOVETYPE_TOSS);
 	this.velocity_x = -200 + (400 * random());
 	this.velocity_y = -200 + (400 * random());
 	this.velocity_z = 100 + (100 * random());

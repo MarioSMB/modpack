@@ -306,6 +306,7 @@ void wiz_death2(entity this) { set_animofs(this, anim_wiz_death, 2, wiz_death3);
 void wiz_death1(entity this)
 {
 	set_animofs(this, anim_wiz_death, 1, wiz_death2);
+	set_movetype(this, MOVETYPE_TOSS);
 	this.velocity_x = -200 + 400*random();
 	this.velocity_y = -200 + 400*random();
 	this.velocity_z = 100 + 100*random();
