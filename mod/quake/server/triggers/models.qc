@@ -24,7 +24,8 @@ spawnfunc(func_illusionary)
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
-	_setmodel(this, this.model);
+	SetBrushEntityModelNoLOD(this);
+	CSQCMODEL_AUTOINIT(this);
 	//_makestatic_hidden(this);
 }
 
