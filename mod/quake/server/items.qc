@@ -69,7 +69,8 @@ plants the object on the floor
 void PlaceItem(entity this)
 {
 	this.mdl = this.model;		// so it can be restored on respawn
-	this.flags = FL_ITEM;		// make extra wide
+	if(!(this.items & IT_KEY1) && !(this.items & IT_KEY2))
+		this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
 	if(this.spawnflags & DROPTOFLOOR_DISABLE)
 		set_movetype(this, MOVETYPE_NONE);

@@ -104,8 +104,10 @@ void PlasmaTouch(entity this, entity toucher)
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg *= 0.5;	// mostly immune
 		if(toucher.resist_cells != 0)
+		{
 			damg = Resist_Damage(toucher, IT_CELLS, damg);
-		Resist_Plasma(toucher, this.origin);
+			Resist_Plasma(toucher, this.origin);
+		}
 		if(damg > 0)
 			T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
