@@ -202,7 +202,7 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
 
 	if(monster.flags & FL_FLY)
-		set_movetype(monster, MOVETYPE_NONE);
+		set_movetype(monster, MOVETYPE_QCENTITY);
 	else
 		set_movetype(monster, MOVETYPE_STEP);
 

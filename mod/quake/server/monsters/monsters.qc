@@ -261,7 +261,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 
 	this.solid = SOLID_SLIDEBOX;
 	if(this.flags & FL_FLY)
-		set_movetype(this, MOVETYPE_NONE);
+		set_movetype(this, MOVETYPE_QCENTITY);
 	else
 		set_movetype(this, MOVETYPE_STEP);
 

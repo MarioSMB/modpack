@@ -298,7 +298,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
 
 	if(monster.flags & FL_FLY)
-		set_movetype(monster, MOVETYPE_NONE);
+		set_movetype(monster, MOVETYPE_QCENTITY);
 	else
 		set_movetype(monster, MOVETYPE_STEP);
 

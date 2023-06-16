@@ -11,11 +11,11 @@ void counter_use(entity this, entity actor, entity trigger)
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-		this.enemy = actor;
 		// yoder Sept24, 2021, Horde Merge
 		if(MP_MG && (this.spawnflags & COUNTER_LOOPS))
 			this.count = this.cnt;
-		multi_trigger(this);
+		this.enemy = actor;
+		SUB_UseTargets(this, actor, trigger);
 	}
 	else
 	{
