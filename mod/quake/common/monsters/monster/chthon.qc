@@ -297,7 +297,8 @@ void boss_awake(entity this, entity actor, entity trigger)
 		this.health = 4000;
 		this.max_health = this.health;
 		this.use = monster_use; // prevent from being re-triggered into boss_awake state
-		this.th_pain = boss_pain; // Yoder add, September 9 2020
+		if(world.model == "maps/mgend.bsp") // special damage states
+			this.th_pain = boss_pain; // Yoder add, September 9 2020
 	}
 	// end of Yoder add
 
