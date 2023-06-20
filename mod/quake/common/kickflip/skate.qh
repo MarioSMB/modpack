@@ -16,8 +16,6 @@ const int JUMP_STAMINA_COST = 30;		//jumping costs stamina
 const int PUSH_STAMINA_COST = 30;		//pushing off costs stamina
 
 #ifdef SVQC
-bool skate_active;
-
 .int diff_grinds;
 
 .float health_regen_time;

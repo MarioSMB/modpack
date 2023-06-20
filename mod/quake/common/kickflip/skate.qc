@@ -201,7 +201,7 @@ void skate_fall(entity this)
 	_sound(this, CH_VOICE, "player/land2.wav", 1, ATTN_NORM);
 
 	this.pausetime = time + 4;
-	if(this.jump_flag <= -500)
+	if(this.jump_flag <= -750)
 	{
 		this.walkframe = 62;
 		T_Damage(this, NULL, NULL, 5, DEATH_FALL.m_id);
@@ -812,7 +812,7 @@ void water_die(entity this)
 
 void skate_spawn(entity this)
 {
-	STAT(SKATING, this) = skate_active;
+	STAT(SKATING, this) = (world.worldtype == WORLDTYPE_SKATE);
 	STAT(STAMINA, this) = 100;
 	this.buttonjump_held = false;
 	STAT(BOARD_FALLING, this) = false;

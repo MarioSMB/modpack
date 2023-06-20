@@ -1121,6 +1121,8 @@ spawnfunc(worldspawn)
 	// custom map attributes
 	if(this.model == "maps/e1m8.bsp")
 		cvar_set("sv_gravity", "100");
+	else if(world.worldtype == WORLDTYPE_SKATE)
+		cvar_set("sv_gravity", "700");
 	else
 		cvar_set("sv_gravity", "800");
 

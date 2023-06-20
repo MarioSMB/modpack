@@ -60,7 +60,7 @@ void SetChangeParms(entity this)
 		setspawnparms(this);
 		return;
 	}
-	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB))
+	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SKATE)
 	{
 		SetNewParms();
 		return;
@@ -378,7 +378,7 @@ Returns the entity to view from
 */
 entity FindIntermission(entity this)
 {
-	if(skate_active)
+	if(world.worldtype == WORLDTYPE_SKATE)
 		return NULL; // stay at player view
 // look for info_intermission first
 	RandomSelection_Init();
@@ -1091,14 +1091,6 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 		if(coop) // fix for singleplayer
 			return NULL; // didn't find anything....
 	}
-	else if(skate_active)
-	{
-		lastspawn = find(lastspawn, classname, "info_player_skate");
-		if(!lastspawn)
-			lastspawn = find(lastspawn, classname, "info_player_start");
-		if(lastspawn)
-			return lastspawn;
-	}
     else if(coop)
 	{
 		if(MP_MG)
@@ -1559,11 +1551,6 @@ spawnfunc(info_player_coop)
 		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
 			this.state = COOP_SPAWN_ACTIVE;
 	}
-}
-
-spawnfunc(info_player_skate)
-{
-	skate_active = true;
 }
 
 /*
