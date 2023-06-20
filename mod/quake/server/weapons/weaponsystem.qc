@@ -20,7 +20,7 @@ void CL_Weaponentity_Think(entity this)
 		delete(this);
 		return;
 	}
-	if (this.owner.health <= 0)
+	if (this.owner.health <= 0 || STAT(SKATING, this.owner))
 	{
 		// owner died; disappear
 		this.model = "";

@@ -221,8 +221,18 @@ void player_stand1(entity this)
 	if(this.velocity_x || this.velocity_y)
 	{
 		this.walkframe=0;
+		if(STAT(SKATING, this))
+			push_off_anim(this);
 		player_run(this);
 		return;
+	}
+
+	if(STAT(SKATING, this))
+	{
+		skate_walkframes(this);
+		this.frame = 0 + this.walkframe;
+		this.walkframe += 1;
+		return; // no weapon logic
 	}
 
 	// TODO wr for this too?
@@ -258,8 +268,19 @@ void player_run(entity this)
 	this.weaponentity.m_frame = 0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
-		this.walkframe = 0;
+		if(!STAT(SKATING, this))
+			this.walkframe = 0;
 		player_stand1(this);
+		return;
+	}
+
+	if(STAT(SKATING, this))
+	{
+		skate_walkframes(this);
+		if(this.push_time + 2 < time)
+			push_off_anim(this);
+		this.frame = 0 + this.walkframe;
+		this.walkframe += 1;
 		return;
 	}
 
@@ -286,7 +307,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover)
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this))
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -319,7 +340,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this))
 	{
 		if(this.waterlevel == 0)
 		{
@@ -481,7 +502,9 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	if(STAT(SKATING, this))
+		PainSound(this, NULL);
+	else if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
 		player_axpain1(this, attacker);
 	else
 		player_pain1(this, attacker);
@@ -857,7 +880,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
 
-	if(this.health < -40)
+	if(this.health < -40 || STAT(SKATING, this))
 	{
 		GibPlayer(this, attacker);
 		return;
@@ -888,7 +911,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 void set_suicide_frame(entity this)
 {	// used by kill command and disconnect command
-	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl" && this.model != "progs/player_mario.mdl" && this.model != "progs/player_goat.mdl")
+	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl"
+		&& this.model != "progs/player_mario.mdl" && this.model != "progs/player_goat.mdl" && this.model != "progs/skater.mdl")
 		return;	// already gibbed
 	this.frame = anim_player_deatha1 + (11 - 1); // animation frames start at 1
 	this.solid = SOLID_NOT;

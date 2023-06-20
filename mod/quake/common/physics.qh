@@ -26,6 +26,12 @@
 
 .float exptime; // impel
 
+// skate
+.vector jump_vel;
+#define PHYS_BOARD_FALLING(s) 				STAT(BOARD_FALLING, s)
+#define PHYS_STAMINA(s) 					STAT(STAMINA, s)
+#define PHYS_SKATING(s) 					STAT(SKATING, s)
+
 // button mapping
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)

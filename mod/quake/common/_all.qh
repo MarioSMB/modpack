@@ -36,6 +36,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "monsters/_mod.qh"
 #include "weapons/_mod.qh"
 #include "impulses/all.qh"
+#include "kickflip/_mod.qh"
 
 #include "wepent.qh"
 

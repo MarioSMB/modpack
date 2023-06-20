@@ -1941,6 +1941,9 @@ void DropBackpack(entity this)
 	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
 			return;	// nothing in it
 
+	if(STAT(SKATING, this))
+		return; // skaters don't drop loot!
+
 	// Yoder Sept24 2021 Horde Merge
 	// don't drop backpacks in horde mode
 	if(horde_ent)

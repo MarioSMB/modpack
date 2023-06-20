@@ -1104,16 +1104,22 @@ void Sbar_Draw()
 				// health
 				Sbar_DrawNum('136 0 0', itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
 
-				// ammo icon
-				int ammotype = viewmodels.activeweapon.ammo_type;
-				string pic = Sbar_ItemIcon(ammotype);
-
-				if(pic)
+				if(STAT(SKATING))
 				{
-					Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
-					Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, Sbar_ItemStat(ammotype) <= 10);
+					Sbar_DrawNum('248 0 0', itos(rint(STAT(STAMINA))), 3, STAT(STAMINA) <= 10);
 				}
+				else
+				{
+					// ammo icon
+					int ammotype = viewmodels.activeweapon.ammo_type;
+					string pic = Sbar_ItemIcon(ammotype);
 
+					if(pic)
+					{
+						Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
+						Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, Sbar_ItemStat(ammotype) <= 10);
+					}
+				}
 
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 				if(maxclients > 1 || !coop)

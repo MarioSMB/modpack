@@ -1328,7 +1328,10 @@ void W_WeaponFrame(entity this)
 	if(this.exptime != 0)
 		return;
 
-	if(!(time < this.attack_finished))
+	if(STAT(SKATING, this))
+		skate_fire(this);
+
+	if(!STAT(SKATING, this) && !(time < this.attack_finished))
 	{
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
@@ -1348,7 +1351,7 @@ void W_WeaponFrame(entity this)
 		}
 	}
 
-	if(!(time < this.attack2_finished) && this.button3)
+	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3)
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		if((this.powerups & POWERUP_FIREFLOWER))

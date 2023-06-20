@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+#if 0
+int current_track;
+#endif
+#endif

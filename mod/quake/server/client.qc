@@ -208,6 +208,8 @@ STATIC_INIT(check_models)
 
 string get_playermodel(entity this)
 {
+	if(STAT(SKATING, this))
+		return "progs/skater.mdl";
 	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
 	{
 		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
@@ -225,6 +227,8 @@ string get_playermodel(entity this)
 
 string get_playerhead(entity this)
 {
+	if(STAT(SKATING, this))
+		return "progs/h_player.mdl";
 	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
 	{
 		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
@@ -237,6 +241,8 @@ string get_playerhead(entity this)
 
 string get_deathsound(entity this, int chance)
 {
+	if(STAT(SKATING, this))
+		return "player/death1.wav"; // not actually used
 	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
 	{
 		switch(chance)
@@ -292,6 +298,8 @@ string get_deathsound(entity this, int chance)
 
 string get_painsound(entity this, int chance)
 {
+	if(STAT(SKATING, this))
+		return "player/pain6.wav";
 	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
 	{
 		switch(chance)
@@ -348,7 +356,9 @@ string get_painsound(entity this, int chance)
 void player_sound(entity this, int chan, string sample, float atten)
 {
 	string soundpath;
-	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+	if(STAT(SKATING, this))
+		soundpath = "player/";
+	else if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
 		soundpath = "player_mario/";
 	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
 		soundpath = "player_goat/";
@@ -368,6 +378,8 @@ Returns the entity to view from
 */
 entity FindIntermission(entity this)
 {
+	if(skate_active)
+		return NULL; // stay at player view
 // look for info_intermission first
 	RandomSelection_Init();
 	bool found = false;
@@ -808,29 +820,33 @@ void execute_changelevel(entity this)
 
 	entity pos = FindIntermission(this);
 
-	if(pos)
+	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		FOREACH_CLIENT(IS_PLAYER(it),
+		it.view_ofs = '0 0 0';
+		if(pos)
 		{
-			it.view_ofs = '0 0 0';
 			it.angles = it.v_angle = pos.mangle;
 			it.fixangle = true;		// turn this way immediately
-			it.nextthink = time + 0.5;
-			it.takedamage = DAMAGE_NO;
-			it.solid = SOLID_NOT;
-			it.flags |= FL_NOTARGET; // fix a silly monster bug
-			//it.health = -2342; // can't do this because of parms
-			set_movetype(it, MOVETYPE_NONE);
-			if(MP_MG)
-			{
-				intermission_clear_powerups(it);
-				FogPushSettingsFrom(it, pos, 0);
-			}
+		}
+		it.nextthink = time + 0.5;
+		it.takedamage = DAMAGE_NO;
+		it.solid = SOLID_NOT;
+		it.flags |= FL_NOTARGET; // fix a silly monster bug
+		//it.health = -2342; // can't do this because of parms
+		set_movetype(it, MOVETYPE_NONE);
+		if(MP_MG)
+		{
+			intermission_clear_powerups(it);
+			FogPushSettingsFrom(it, pos, 0);
+		}
+		if(pos)
+		{
 			//it.modelindex = 0;
 			setmodel(it, MDL_Null);
+			setsize(it, VEC_HULL_MIN, VEC_HULL_MAX);
 			setorigin(it, pos.origin);
-		});
-	}
+		}
+	});
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
 
@@ -1074,6 +1090,14 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 
 		if(coop) // fix for singleplayer
 			return NULL; // didn't find anything....
+	}
+	else if(skate_active)
+	{
+		lastspawn = find(lastspawn, classname, "info_player_skate");
+		if(!lastspawn)
+			lastspawn = find(lastspawn, classname, "info_player_start");
+		if(lastspawn)
+			return lastspawn;
 	}
     else if(coop)
 	{
@@ -1397,6 +1421,8 @@ void PutClientInServer(entity this)
 	// when you respawn.
 	this.velocity = '0 0 0';
 
+	skate_spawn(this);
+
 // oh, this is a hack!
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
@@ -1533,6 +1559,11 @@ spawnfunc(info_player_coop)
 		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
 			this.state = COOP_SPAWN_ACTIVE;
 	}
+}
+
+spawnfunc(info_player_skate)
+{
+	skate_active = true;
 }
 
 /*
@@ -1732,6 +1763,8 @@ void PlayerDeathThink(entity this)
 	this.button1 = 0;
 	this.button2 = 0;
 	this.button3 = 0;
+	this.button4 = 0;
+	this.button5 = 0;
 	// Yoder Sept24, 2021
 	if(MP_MG && horde_ent)
 	{
@@ -2333,6 +2366,14 @@ void PlayerPostThink(entity this)
 				
 				this.killspree = 0; // reset killspree
 			}
+		}
+
+		Regenerate_Health(this);
+		Regenerate_Stamina(this);
+		if(STAT(BOARD_FALLING, this) && this.pausetime > time)
+		{
+			this.angles = this.mangle;
+			this.push_fast_time = 0;
 		}
 
 		CheckPowerups(this);

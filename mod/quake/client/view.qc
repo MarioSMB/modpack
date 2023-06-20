@@ -216,7 +216,7 @@ vector bobmodel_ofs(entity view)
 
 void viewmodel_animate(entity this)
 {
-	if (autocvar_chase_active || STAT(HEALTH) <= 0) return;
+	if (autocvar_chase_active || STAT(HEALTH) <= 0 || STAT(SKATING)) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
@@ -250,7 +250,7 @@ void viewmodel_draw(entity this)
 {
 	CSQCModel_InterpolateAnimation_Do(this);
 
-	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
+	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active || STAT(SKATING)) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	Weapon wep = this.activeweapon;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
@@ -368,6 +368,81 @@ void draw_drawMousePointer(vector where)
 	drawpic(where - '0.25 0.125 0', cursor, '32 32 0', '1 1 1', 1, 0);
 }
 
+float eventchase_current_distance;
+float eventchase_running;
+int WantEventchase(entity this, bool want_vehiclechase)
+{
+	if(STAT(SKATING))
+		return 1;
+	return 0;
+}
+
+void View_EventChase(entity this)
+{
+	// event chase camera
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(autocvar_chase_active == -2)
+			cvar_set("chase_active", "0");
+
+		int eventchase = WantEventchase(this, false);
+		if (eventchase)
+		{
+			eventchase_running = true;
+
+			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
+			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
+
+			// detect maximum viewoffset and use it
+			vector view_offset = '0 0 24';
+
+			if(view_offset)
+			{
+				traceline(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, this);
+				if(trace_fraction == 1) { current_view_origin += view_offset; }
+				else { current_view_origin.z += max(0, (trace_endpos.z - current_view_origin.z) - autocvar_cl_eventchase_maxs.z); }
+			}
+
+			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
+			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
+			// -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+			if(!autocvar_chase_active) { cvar_set("chase_active", "-1"); }
+
+			// make the camera smooth back
+			float chase_distance = 100;
+
+			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
+				eventchase_current_distance += autocvar_cl_eventchase_speed * (chase_distance - eventchase_current_distance) * frametime; // slow down the further we get
+			else if(eventchase_current_distance != chase_distance)
+				eventchase_current_distance = chase_distance;
+
+			vector forward, right, up;
+			MAKE_VECTORS(view_angles, forward, right, up);
+
+			vector eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
+			tracebox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
+
+			// If the boxtrace fails, revert back to line tracing.
+			if(trace_startsolid)
+			{
+				eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
+				traceline(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
+				setproperty(VF_ORIGIN, (trace_endpos - (forward * autocvar_cl_eventchase_mins.z)));
+			}
+			else { setproperty(VF_ORIGIN, trace_endpos); }
+
+			setproperty(VF_ANGLES, view_angles);
+		}
+
+		if (eventchase <= 0 && autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
+		{
+			eventchase_running = false;
+			cvar_set("chase_active", "0");
+			eventchase_current_distance = 0; // start from 0 next time
+		}
+	}
+}
+
 bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
@@ -396,6 +471,12 @@ void CSQC_UpdateView(entity this, float w, float h)
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	CSQCPlayer_SetCamera();
+
+	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+	if(!local_player)
+		local_player = this; // fall back!
+
+	View_EventChase(local_player);
 
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
 	if(autocvar_r_drawviewmodel)

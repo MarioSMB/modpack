@@ -93,6 +93,8 @@
 
 // MSG_INFO_NOTIFICATIONS
 
+    MSG_INFO_NOTIF(COMPETITION_START,                       N_CONSOLE,  0, 0, "",   "",        "",                     _("^BGFreestyle Competition has started!"), "")
+
     MSG_INFO_NOTIF(CONNECTING,                              N_CONSOLE,  1, 0, "s1", "",        "",                     _("^BG%s^BG is connecting..."), "")
     MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",        "",                     _("^BG%s^F3 entered the game"), "")
 
@@ -166,6 +168,8 @@
 // MSG_CENTER_NOTIFICATIONS
     //MSG_CENTER_NOTIF(ALONE,                             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F4You are now alone!"), "")
 
+    MSG_CENTER_NOTIF(COMPETITION_START,                 N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^BGFreestyle Competition has started!")), "")
+
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  BOLD(_("^BGFight!")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN_BOSSWAVE,          N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  BOLD(_("^K1Boss wave!")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f1",             CPID_ROUND,             "1 f2", strcat(_("^BGRound %s starts in"), "\n", BOLD("^COUNT")), "")
@@ -235,6 +239,7 @@
 
 // MSG_MULTI_NOTIFICATIONS
     //MSG_MULTI_NOTIF(COUNTDOWN_BEGIN,                    N_ENABLE,  ANNCE_BEGIN,    NULL,                                   CENTER_COUNTDOWN_BEGIN)
+    MSG_MULTI_NOTIF(COMPETITION_START,                  N_ENABLE,  NULL,           INFO_COMPETITION_START,                CENTER_COMPETITION_START)
 
     MSG_MULTI_NOTIF(DEATH_MURDER_CRUSH,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_CRUSH,                NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_DROWN,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_DROWN,                NULL)

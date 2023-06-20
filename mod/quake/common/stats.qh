@@ -218,3 +218,15 @@ REGISTER_STAT(PLASMA_AMMO, int, this.ammo_plasma)
 #endif
 REGISTER_STAT(HORDE, bool, (horde_ent) ? true : false)
 REGISTER_STAT(HORDE_WAVE, int, (horde_ent) ? horde_ent.wave : 0)
+
+#ifdef SVQC
+#include "kickflip/skate.qh"
+#endif
+REGISTER_STAT(BOARD_FALLING, bool)
+REGISTER_STAT(SKATING, bool)
+REGISTER_STAT(STAMINA, float)
+REGISTER_STAT(TRICK, int)
+REGISTER_STAT(SKATESPEED, float, this.skatespeed)
+REGISTER_STAT(PUSH_FAST_TIME, float, this.push_fast_time)
+REGISTER_STAT(GRIND_START_TIME, float, this.grind_start_time)
+REGISTER_STAT(GRIND_STOP_TIME, float, this.grind_stop_time)

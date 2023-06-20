@@ -110,6 +110,22 @@ void PlayerJump(entity this)
 	SET_JUMP_HELD(this);
 
 	UNSET_ONGROUND(this);
+
+	if(PHYS_SKATING(this))
+	{
+		if(PHYS_STAMINA(this) > JUMP_STAMINA_COST && !PHYS_BOARD_FALLING(this))
+		{
+		#ifdef SVQC
+			PHYS_STAMINA(this) -= JUMP_STAMINA_COST;
+			_sound(this, CH_PLAYER, "player/skatejmp.wav", 1, ATTN_NORM);
+			this.walkframe = 13;
+			this.buttonjump_held = true;
+		#endif
+			this.velocity_z += 270;
+			this.jump_vel = this.velocity;
+		}
+		return;
+	}
 	
 #ifdef SVQC
 	//this.button2 = 0;
@@ -389,8 +405,11 @@ void PM_Main(entity this, float dt)
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
 		PlayerJump(this);
-	else
+	else if(!PHYS_SKATING(this) || IS_ONGROUND(this))
 		UNSET_JUMP_HELD(this);
+
+	if(PHYS_SKATING(this))
+		skate_drive(this);
 
 	WaterMove(this, dt);
 

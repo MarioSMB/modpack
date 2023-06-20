@@ -1,0 +1,8 @@
+#pragma once
+
+#ifdef SVQC
+bool comp_started;
+float comp_timelimit;
+
+void comp_check_time();
+#endif

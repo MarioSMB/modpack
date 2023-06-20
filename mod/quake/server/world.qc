@@ -561,6 +561,15 @@ PRECACHE(Junk)
 	precache_sound("weapons/sawridle.wav");	//chainsaw idle
 	precache_sound("weapons/sawatck.wav");		//chainsaw attack
 	precache_sound("weapons/sawguts.wav");		//chainsaw hit guts
+
+	//Squirt precaches
+	precache_sound("player/skatejmp.wav");		// player skate jump
+	precache_sound("player/skatelnd.wav");		// player skate landing
+	precache_sound("player/skaterol.wav");		// skateboard rolling on floor
+	precache_sound("player/skategnd.wav");		// skateboard grind sound
+	precache_model("progs/skater.mdl");		// skater model
+	precache_sound("player/yeah1.wav");          		// yeah sound after trick
+	precache_sound("player/yeah2.wav");          		// ...
 }
 
 string cvar_changes, cvar_purechanges;
@@ -1429,7 +1438,10 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	// check to see if player landed and play landing sound	
-	if(this.jump_flag) // moving or has moved
+	// check to see if player landed and play landing sound
+	if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
+		skate_land(this);
+	else if(this.jump_flag) // moving or has moved
 	{
 		if(this.jump_flag < -300 && IS_ONGROUND(this) && this.health > 0)
 		{
@@ -1517,6 +1529,8 @@ void StartFrame()
 	CreatureFrame_All();
 	if(deathmatch || coop)
 		CheckRules_World();
+
+	comp_check_time();
 
 	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));

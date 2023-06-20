@@ -1,0 +1,61 @@
+#pragma once
+
+const int TRICK_KICKFLIP = 1;
+const int TRICK_GRIND = 2;
+const int TRICK_GRAP = 3;
+const int TRICK_FRONTONEEIGHTY = 4;
+const int TRICK_THREESIXFLIP = 5;
+const int TRICK_BACKROT = 6;
+
+//.diff_grinds is set to one of theese
+const int GRIND_NORMAL = 1;			//looks like no animation
+const int GRIND_BOARDSLIDE = 2;
+const int GRIND_BACKBOARDSLIDE = 3;
+
+const int JUMP_STAMINA_COST = 30;		//jumping costs stamina
+const int PUSH_STAMINA_COST = 30;		//pushing off costs stamina
+
+#ifdef SVQC
+bool skate_active;
+
+.int diff_grinds;
+
+.float health_regen_time;
+.float stamina_regen_time;
+
+.int second_trick;
+
+.bool buttonjump_held; // hack to allow jump key to act as a trick key
+
+.bool key_trick1, key_trick2, key_trick3;
+
+.float push_time;			//time of last push-off
+.float push_fast_time;		//push-off manually and hard
+.float grind_start_time;		//time that player started last grind
+.float grind_stop_time;		//time the player got back into air
+.float busting;			//busting a trick
+
+.float spawn_time;
+
+void push_off_anim(entity this);
+
+void skate_walkframes(entity this);
+
+void Regenerate_Health(entity this);
+
+void Regenerate_Stamina(entity this);
+
+void water_die(entity this);
+
+void skate_land(entity this);
+
+void skate_fire(entity this);
+
+void skate_spawn(entity this);
+#endif
+
+.float skatespeed;
+
+bool onrail(entity this);
+
+void skate_drive(entity this);
