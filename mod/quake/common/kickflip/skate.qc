@@ -252,7 +252,7 @@ void skate_land(entity this)
 
 	if(this.watertype == CONTENT_WATER)
 		_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
-	else if(this.jump_flag < -650) //fell down
+	else if(this.jump_flag < -750) //fell down
 	{
 		//sprint(this, sprintf("%s fell down.\n", this.netname));	
 		STAT(TRICK, this) = 0;			//no good landing no trick points !
