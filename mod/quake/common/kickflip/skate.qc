@@ -766,7 +766,10 @@ void skate_drive(entity this)
 #ifdef SVQC
 void Regenerate_Health(entity this)
 {
-	if(this.health_regen_time < time)
+	//if(!STAT(SKATING, this))
+		//return;
+
+	if(this.health_regen_time < time && this.health < 100)
 	{
 		float old_health = this.health;
 		this.health += 1;
@@ -783,6 +786,9 @@ void Regenerate_Health(entity this)
 
 void Regenerate_Stamina(entity this)
 {
+	if(!STAT(SKATING, this))
+		return;
+
 	if(this.stamina_regen_time < time)
 	{
 		STAT(STAMINA, this) += 2;

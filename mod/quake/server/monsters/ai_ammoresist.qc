@@ -145,7 +145,7 @@ void Resist_Rockets(entity targ, vector org)
 	}
 }
 
-void Resist_Lightning(entity this, entity targ, vector org)
+void Resist_Lightning(entity targ, vector org)
 {
 	if(targ.health > 0 && targ.pain_finished < time && targ.resist_cells < 1)
 	{
@@ -154,9 +154,9 @@ void Resist_Lightning(entity this, entity targ, vector org)
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
 	}	
 	// Don't spawn smoke constantly (let the sprite finish)
-	if(this.lightning_timer < time)
+	if(targ.lightning_timer < time)
 	{
-		this.lightning_timer = time + 0.3;
+		targ.lightning_timer = time + 0.3;
 		SpawnExplosion(EXPLODE_BURST_SMOKE, org, "");
 	}
 	// Spawn a random smoke particle and chance of blood

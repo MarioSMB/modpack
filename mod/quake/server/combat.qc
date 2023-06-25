@@ -234,7 +234,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE))
 			attacker.frags += 1;
 		if(horde_ent)
-			Horde_GiveScore(HORDE_SCORE_KILL);
+			Horde_GiveScore(HORDE_TEAMSCORE_KILL);
 	}
 
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
@@ -438,7 +438,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			StatusEffects_apply(STATUSEFFECT_Poisoned, targ, time + poisontime, 0);
 	}
 
-	if(IS_MONSTER(targ) && attacker && !(targ.monsterdef.spawnflags & MON_FLAG_NOAGGRO))
+	if(IS_MONSTER(targ) && attacker && !(targ.monsterdef.spawnflags & MON_FLAG_NOAGGRO) && !(targ.monsterdef.spawnflags & MON_FLAG_NOTARGET) && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 	{
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)

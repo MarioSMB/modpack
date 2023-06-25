@@ -220,13 +220,14 @@ void WrathMissile(entity this, int AttackNumber)
 	settouch(missile, WrathMissileTouch);
 	missile.nextthink = time + 0.1;
 	setthink(missile, WrathHome);
+	missile.cnt = time + 10;
 	
 	this.attack_finished = time + 2;
 }
 
 void WrathHome(entity this)
 {
-	if(this.enemy.health < 1)
+	if(this.enemy.health < 1 || time > this.cnt)
 	{
 		delete(this);
 		return;

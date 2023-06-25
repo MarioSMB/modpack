@@ -21,6 +21,6 @@ void Resist_Nails(entity targ, vector org);
 
 void Resist_Rockets(entity targ, vector org);
 
-void Resist_Lightning(entity this, entity targ, vector org);
+void Resist_Lightning(entity targ, vector org);
 
 void Resist_Plasma(entity targ, vector org);

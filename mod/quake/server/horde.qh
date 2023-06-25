@@ -20,7 +20,7 @@ void SpawnAmmo(entity this);
 .bool army; // Spawn Army? True/fallse
 bool CheckBlockedSpawn(entity spawnpoint);
 
-const int HORDE_SCORE_KILL = 1; // one point given to each player when a monster is killed
+const int HORDE_TEAMSCORE_KILL = 1; // one point given to each player when a monster is killed
 
 // spawnflags for info_horde_squad entities
 const int HORDE_FODDER = BIT(0);

@@ -486,7 +486,7 @@ void W_PulseRifle(entity this)
 		{
 			if(!(head.flags & FL_NOTARGET) && IS_MONSTER(head))
 			{
-				if(head.takedamage && head.health > 0 && !(head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && visible(this, head))
+				if(head.takedamage && head.health > 0 && !(head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && !head.charmed && visible(this, head))
 				{
 					float head_dist = vlen2(head.origin - this.origin);
 					vector vec = normalize(head.origin - this.origin);
@@ -711,7 +711,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
-			Resist_Lightning(from, trace_ent, trace_endpos);
+			Resist_Lightning(trace_ent, trace_endpos);
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
@@ -734,7 +734,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
-			Resist_Lightning(from, trace_ent, trace_endpos);
+			Resist_Lightning(trace_ent, trace_endpos);
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
@@ -753,7 +753,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
-			Resist_Lightning(from, trace_ent, trace_endpos);
+			Resist_Lightning(trace_ent, trace_endpos);
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);

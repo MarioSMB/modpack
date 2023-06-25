@@ -241,6 +241,10 @@ void PrecacheMonsters()
 	precache_sound("items/powerup_mario.wav");
 	precache_sound("items/powerdown_mario.wav");
 	precache_sound("items/mario_attack.wav");
+
+	// horn
+	precache_model("progs/horn.mdl");
+	precache_sound("hipitems/horn.wav");
 	
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
@@ -1733,13 +1737,21 @@ void horde_spawn_powerup(entity this)
 			powerup.powerups = POWERUP_QUAD;
 			powerup.classname = "item_artifact_super_damage";
 		}
-		else // spawn fire flower!
+		else if(random() < 0.33) // spawn fire flower!
 		{
 			powerup.noise = "items/powerup_mario.wav";
 			_setmodel(powerup, "progs/g_fflower.mdl");
 			powerup.netname = "Fire Flower";
 			powerup.powerups = POWERUP_FIREFLOWER;
 			powerup.classname = "item_powerup_fireflower";
+		}
+		else
+		{
+			powerup.noise = "hipitems/horn.wav";
+			_setmodel(powerup, "progs/horn.mdl");
+			powerup.netname = "Horn of Conjuring";
+			powerup.powerups = POWERUP_HORN_OF_CONJURING;
+			powerup.classname = "item_hornofconjuring";
 		}
 		//powerup.effects = EF_DIMLIGHT;
 		

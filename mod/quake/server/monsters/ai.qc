@@ -1064,7 +1064,7 @@ bool FindTarget(entity this)
 	{
 		entity selected = NULL;
 		float dist = CHARMED_RADIUS;
-		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && it.health > 0,
+		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD),
 		{
 			if(visible(this, it) && this.visible_distance < dist)
 			{

@@ -1707,6 +1707,7 @@ void RunThink(entity this, float dt)
 	time = oldtime;
 }
 
+.float charmed_healthcheck;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
@@ -1716,6 +1717,15 @@ void Physics_Frame()
 	{
 		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
+
+		// TODO: better location for this hack
+		if(IS_MONSTER(it) && it.charmed && it.health > 0 && time > it.charmed_healthcheck)
+		{
+			it.charmed_healthcheck = time + 0.25;
+			it.health -= 1;
+			if(it.health <= 0)
+				T_Damage(it, NULL, NULL, 1, DEATH_GENERIC.m_id);
+		}
 
 		//set_movetype(it, it.move_movetype);
 		// inline the set_movetype function, since this is called a lot

@@ -1426,7 +1426,8 @@ void horn_spawnmonster(entity item, entity actor)
 	entity monster = new(monster);
 	monster.monsterdef = mon;
 	monster.flags |= FL_MONSTER;
-	monster.owner = actor;
+	//monster.owner = actor;
+	monster.colormod = '0 1 0';
 	monster.spawnfunc_checked = true;
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
@@ -1446,6 +1447,7 @@ void horn_spawnmonster(entity item, entity actor)
 
 	mon.mr_setup(mon, monster);
 	monster.health = max(monster.health, 1000);
+	monster.max_health = monster.health;
 	monster.charmer = actor;
 	monster.charmed = 1;
 	monster.angles = '0 0 0';
