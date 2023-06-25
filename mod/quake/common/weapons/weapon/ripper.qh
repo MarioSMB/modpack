@@ -3,7 +3,7 @@
 CLASS(Ripper, Weapon)
 /* ammotype  */ ATTRIB(Ripper, ammo_type, int, IT_SHELLS);
 /* impulse   */ ATTRIB(Ripper, impulse, int, 3);
-/* spawnflags*/ ATTRIB(Ripper, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Ripper, spawnflags, int, WEP_FLAG_NOSTEAL);
 /* ammo */      ATTRIB(Ripper, aflag, int, 15);
 /* modelname */ ATTRIB(Ripper, mdl, string, "buzzsaw");
 /* crosshair */ ATTRIB(Ripper, w_crosshair, string, "gfx/crosshairrocketlauncher");

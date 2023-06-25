@@ -14,7 +14,7 @@ SOUND(MON_BENDER_SIGHT, "bend/idle2");
 #endif
 
 CLASS(Bender, Monster)
-    ATTRIB(Bender, spawnflags, int, 0);
+    ATTRIB(Bender, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(Bender, m_mins, vector, '-12 -14 -24');
     ATTRIB(Bender, m_maxs, vector, '12 14 26');
 #ifdef GAMEQC
