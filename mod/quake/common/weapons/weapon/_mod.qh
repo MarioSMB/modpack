@@ -20,3 +20,4 @@
 #include "chainsaw.qh"
 #include "shock_gun.qh"
 #include "piano.qh"
+#include "ripper.qh"

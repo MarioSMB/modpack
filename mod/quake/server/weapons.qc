@@ -1115,6 +1115,7 @@ entity SpawnInternalFire(entity this, entity targ)
 {
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_NONE);
+	missile.projectiledeathtype = this.projectiledeathtype;
 	missile.solid = SOLID_NOT;
 	missile.owner = this;
 	missile.enemy = targ;

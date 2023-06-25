@@ -23,7 +23,7 @@ Sound SND_MON_SUPER_CHICKEN_BOCK_RANDOM() {
 #endif
 
 CLASS(SuperChicken, Monster)
-    ATTRIB(SuperChicken, spawnflags, int, MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(SuperChicken, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT);
     ATTRIB(SuperChicken, m_mins, vector, '-48 -48 0');
     ATTRIB(SuperChicken, m_maxs, vector, '48 48 48');
 #ifdef GAMEQC

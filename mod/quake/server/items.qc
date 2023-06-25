@@ -639,8 +639,24 @@ SPAWNFUNC_WEAPON_COND(weapon_supershotgun, (world.model == "maps/aop2m3.bsp"), W
 
 SPAWNFUNC_WEAPON_COND(weapon_lightning, (world.model == "maps/aop2m2.bsp"), WEP_LIGHTME, WEP_LIGHTNING);
 
+Weapon W_RandomizeWeapon(Weapon wpn)
+{
+	RandomSelection_Init();
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if(it.ammo_type != wpn.ammo_type)
+			continue;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+
+	return RandomSelection_chosen_ent;
+}
+
 void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
+	if(autocvar_skill == 3)
+		wpn = W_RandomizeWeapon(wpn);
+
 	if(!MP_HIPNOTIC && (wpn.spawnflags & WEP_FLAG_HIPNOTIC)) { delete(this); return; }
 	if(!MP_ROGUE && (wpn.spawnflags & WEP_FLAG_ROGUE)) { delete(this); return; }
 	if(!MP_IMPEL && (wpn.spawnflags & WEP_FLAG_IMPEL)) { delete(this); return; }
@@ -1903,6 +1919,7 @@ void BackpackTouch(entity this, entity toucher)
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
+	STAT(WEAPONS, toucher) |= STAT(WEAPONS, this);
 	if(wep != WEP_Null)
 		STAT(WEAPONS, toucher) |= wep.m_wepset;
 	bound_other_ammo(toucher);
@@ -1955,6 +1972,7 @@ void DropBackpack(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
+	STAT(WEAPONS, item) = STAT(WEAPONS, this);
 
 	item.ammo_shells = this.ammo_shells;
 	item.ammo_nails = this.ammo_nails;

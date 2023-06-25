@@ -321,11 +321,6 @@ void SpearThink(entity this)
 				BecomeBloodSpurt(this, 15);
 				T_Damage(this.enemy, this, this.owner, 15, this.projectiledeathtype);
 				BecomeBloodSpurt(this, 15);
-				entity fork = spawn();
-				fork.solid = SOLID_NOT;
-				setorigin(fork, this.origin - v_forward * 10);
-				fork.nextthink = time;
-				setthink(fork, func_null);
 				this.solid = SOLID_NOT;
 				this.nextthink = time + 0.1;
 				setthink(this, SpearGo);

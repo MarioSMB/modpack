@@ -215,9 +215,11 @@ void player_run(entity this);
 
 void player_stand1(entity this)
 {
+	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_axstnd1, player_stand1);
 
-	this.weaponentity.m_frame = 0;
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW)
+		this.weaponentity.m_frame = 0;
 	if(this.velocity_x || this.velocity_y)
 	{
 		this.walkframe=0;
@@ -236,7 +238,13 @@ void player_stand1(entity this)
 	}
 
 	// TODO wr for this too?
-	if(this.weaponentity.m_weapon == WEP_CHAINSAW)
+	if(wep == WEP_RIPPER)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.m_frame > 7)
+			this.weaponentity.m_frame = 0;
+	}
+	if(wep == WEP_CHAINSAW)
 	{
 		this.weaponentity.m_frame += 1;
 		if(this.weaponentity.m_frame >= 5)
@@ -245,7 +253,7 @@ void player_stand1(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
 
-	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
@@ -263,9 +271,11 @@ void player_stand1(entity this)
 .float footstep;
 void player_run(entity this)
 {
+	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_rockrun1, player_run);
 
-	this.weaponentity.m_frame = 0;
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW)
+		this.weaponentity.m_frame = 0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
 		if(!STAT(SKATING, this))
@@ -284,7 +294,13 @@ void player_run(entity this)
 		return;
 	}
 
-	if(this.weaponentity.m_weapon == WEP_CHAINSAW)
+	if(wep == WEP_RIPPER)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.m_frame > 7)
+			this.weaponentity.m_frame = 0;
+	}
+	if(wep == WEP_CHAINSAW)
 	{
 		this.weaponentity.m_frame += 1;
 		if(this.weaponentity.m_frame >= 5)
@@ -293,7 +309,7 @@ void player_run(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
 
-	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 6)
 			this.walkframe = 0;

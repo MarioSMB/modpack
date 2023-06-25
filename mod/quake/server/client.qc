@@ -1096,6 +1096,7 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 		if(MP_MG)
 		{
 			// choose a point that is active
+			RandomSelection_Init();
 			FOREACH_ENTITY_CLASS("info_player_coop", it.state == COOP_SPAWN_ACTIVE,
 			{
 				RandomSelection_AddEnt(it, 1, 1);
@@ -1292,10 +1293,7 @@ void PutClientInServer(entity this)
 	entity spot = SelectSpawnPoint(this, false);
 
 	this.classname = STR_PLAYER;
-	if(autocvar_skill == 3 && !deathmatch)
-		this.health = 50;
-	else
-		this.health = 100;
+	this.health = 100;
 	this.takedamage = DAMAGE_AIM;
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_WALK);

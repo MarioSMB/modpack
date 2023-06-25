@@ -231,8 +231,76 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 	return true;
 }
 
+void monster_nightmare_start(entity this, bool check_appear, Monster mon)
+{
+	entity monster = spawn();
+	monster.classname = "monster";
+	setorigin(monster, this.origin);
+	monster.angles = this.angles;
+	monster.target = this.target;
+	monster.targetname = this.targetname;
+	monster.nightmare_checked = true;
+
+	// copy some basic spawnflags TODO: since some monsters have custom flags, there must be a generic way to do this!
+#if 0
+	if(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE)
+		monster.spawnflags |= SPAWNFLAG_NO_CONTENTS_DAMAGE;
+	if(this.spawnflags & MONSTER_SPAWNED_ANGRY)
+		monster.spawnflags |= MONSTER_SPAWNED_ANGRY;
+	if(this.spawnflags & MONSTER_SPAWNED_TFOG)
+		monster.spawnflags |= MONSTER_SPAWNED_TFOG;
+	if(this.spawnflags & MONSTER_ATTACK_FRIEND)
+		monster.spawnflags |= MONSTER_ATTACK_FRIEND;
+	if(this.spawnflags & MONSTER_WAITWALK)
+		monster.spawnflags |= MONSTER_WAITWALK;
+	if(this.spawnflags & MONSTER_SPAWNED)
+		monster.spawnflags |= MONSTER_SPAWNED;
+#else
+	monster.spawnflags = this.spawnflags;
+#endif
+
+	RandomSelection_Init();
+	FOREACH(Monsters, it != MON_Null,
+	{
+		if(it.spawnflags & MONSTER_TYPE_DECOY)
+			continue;
+		if(it.spawnflags & MON_FLAG_HIDDEN)
+			continue;
+		if(it.spawnflags & MONSTER_TYPE_UNDEAD)
+			continue;
+		if(it.spawnflags & MONSTER_TYPE_BOSS)
+			continue;
+		if(it.spawnflags & MONSTER_TYPE_SWIM)
+			continue;
+		if((it.spawnflags & MONSTER_TYPE_FLY) && !(mon.spawnflags & MONSTER_TYPE_FLY))
+			continue;
+		if((mon.spawnflags & MONSTER_TYPE_FLY) && !(it.spawnflags & MONSTER_TYPE_FLY))
+			continue;
+		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, monster);
+		if(trace_startsolid)
+			continue;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+
+	if(!RandomSelection_chosen_ent)
+	{
+		LOG_DEBUG("Spawning the same monster again, no space for anything else?!");
+		RandomSelection_chosen_ent = mon; // emergency fallback in the case of something not being found, strips unique spawnflags but oh well
+	}
+
+	delete(this);
+
+	monster_start(monster, check_appear, RandomSelection_chosen_ent);
+}
+
 void monster_start(entity this, bool check_appear, Monster mon)
 {
+	if(!autocvar_horde && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD))
+	{
+		monster_nightmare_start(this, check_appear, mon);
+		return;
+	}
+
 	if(!mon || mon == MON_Null) { return; } // invalid monster
 	if(deathmatch) { delete(this); return; }
 	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
