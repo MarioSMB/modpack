@@ -718,7 +718,7 @@ METHOD(Juggernaut, mr_setup, bool(Juggernaut this, entity actor))
 	_setmodel(actor, actor.mdl);
 	setsize(actor, this.m_mins, this.m_maxs);
 
-    actor.health = 2000;
+    actor.health = 1000;
 	actor.th_stand = juggernaut_idle;
 	actor.th_walk = juggernaut_walk1;
 	actor.th_run = juggernaut_run1;
