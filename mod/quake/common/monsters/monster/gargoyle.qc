@@ -46,7 +46,7 @@ void garg_idle1(entity this)
 {
 	set_animofs(this, anim_gargoyle_fly, 2, garg_idle2);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, ((random() > 0.5) ? "gargoyle/idle1.wav" : "gargoyle/idle2.wav"), 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "gargoyle/idle1.wav", 1, ATTN_IDLE);
 	ai_stand(this);
 }
 
@@ -64,7 +64,7 @@ void garg_walk1(entity this)
 {
 	set_animofs(this, anim_gargoyle_fly, 1, garg_walk2);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, ((random() > 0.5) ? "gargoyle/idle1.wav" : "gargoyle/idle2.wav"), 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "gargoyle/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 8);
 }
 
@@ -82,7 +82,7 @@ void garg_run1(entity this)
 {
 	set_animofs(this, anim_gargoyle_fly, 1, garg_run2);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, ((random() > 0.5) ? "gargoyle/idle1.wav" : "gargoyle/idle2.wav"), 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "gargoyle/idle1.wav", 1, ATTN_IDLE);
 	if(this.attachment && this.attachment.state)
 		garg_fbfinish(this);
 	// Switch direction of strafing (random duration)
@@ -211,7 +211,7 @@ void garg_perch1(entity this)
 	set_animofs(this, anim_gargoyle_perch, 2, garg_perch2);
 	ai_stand(this);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, ((random() > 0.5) ? "gargoyle/idle1.wav" : "gargoyle/idle2.wav"), 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "gargoyle/idle1.wav", 1, ATTN_IDLE);
 }
 
 //----------------------------------------------------------------------
@@ -514,7 +514,6 @@ METHOD(Gargoyle, mr_setup, bool(Gargoyle this, entity actor))
 	precache_model("progs/proj_gargoyle.mdl");
 
 	precache_sound("gargoyle/idle1.wav");
-	precache_sound("gargoyle/idle2.wav");
 	precache_sound("gargoyle/perch1.wav");
 	precache_sound("gargoyle/perch2.wav");
 	precache_sound("gargoyle/attack1.wav");
