@@ -100,13 +100,12 @@ METHOD(Decoy, mr_setup, bool(Decoy this, entity actor))
 	actor.th_pain = decoy_pain;
 	actor.th_die = decoy_die;
 
-	// TODO: multiplayer?
-	entity pl = NULL;
+	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		pl = it;
-		break;
+		RandomSelection_AddEnt(it, 1, 1);
 	});
+	entity pl = RandomSelection_chosen_ent;
 	if(pl)
 	{
 		_setmodel(actor, get_playermodel(pl));
