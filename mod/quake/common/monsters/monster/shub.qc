@@ -118,9 +118,12 @@ void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 		setmodel(it, MDL_Null);
 		setorigin(it, pos.origin);
 	});
-	
+
 	// make fake versions of all players as standins, and move the real
 	// players to the intermission spot
+
+	// used later to tell if a telefragging player should appear
+	this.count = (deathtype == DEATH_TELEFRAG.m_id);
 	
 	// wait for 1 second
 	entity timer = spawn();
@@ -152,8 +155,9 @@ void finale_3(entity this)
 	shub.enemy = this.enemy;
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
-	_sound(shub, CH_VOICE, "boss2/death.wav", 1, ATTN_NORM);
+	_sound(shub, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_NORM);
 	lightstyle(0, "abcdefghijklmlkjihgfedcb");	
+	delete(this);
 }
 
 void finale_4(entity this)
@@ -161,7 +165,7 @@ void finale_4(entity this)
 	//entity shub = this.owner;
 
 	// throw tons of meat chunks
-	_sound(this, CH_VOICE, "boss2/pop2.wav", 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "boss2/pop2.wav", 1, ATTN_NORM);
 	
 	vector oldo = this.origin;
 
@@ -195,16 +199,19 @@ void finale_4(entity this)
 	WriteByte(MSG_ALL, SVC_FINALE);
 	WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
 
-// put a player model down
-	entity n = spawn();
-	if(this.enemy)
-		_setmodel(n, get_playermodel(this.enemy));
-	else
-		_setmodel(n, "progs/player.mdl");
-	oldo = oldo - '32 264 0';
-	setorigin(n, oldo);
-	n.angles = '0 290 0';
-	n.frame = 1;
+// put a player model down, but only if it was a telefrag!
+	if(this.count)
+	{
+		entity n = spawn();
+		if(this.enemy)
+			_setmodel(n, get_playermodel(this.enemy));
+		else
+			_setmodel(n, "progs/player.mdl");
+		oldo = oldo - '32 264 0';
+		setorigin(n, oldo);
+		n.angles = '0 290 0';
+		n.frame = 1;
+	}
 
 	delete(this);
 
@@ -230,34 +237,27 @@ void finale_4(entity this)
 
 /*QUAKED monster_oldone(1 0 0)(-16 -16 -24)(16 16 32)
 */
-spawnfunc(monster_oldone)
-{
-	if(deathmatch) { delete(this); return; }
+spawnfunc(monster_oldone) { monster_start(this, true, MON_SHUB); }
+#endif // SVQC
 
-	precache_model2("progs/oldone.mdl");
+#ifdef SVQC
+METHOD(Shub, mr_setup, bool(Shub this, entity actor))
+{
+	TC(Shub, this);
 
 	precache_sound2("boss2/death.wav");
 	precache_sound2("boss2/idle.wav");
 	precache_sound2("boss2/pop2.wav");
 
-	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
-	
-	_setmodel(this, "progs/oldone.mdl");
-	setsize(this, '-160 -128 -24', '160 128 256');
+	actor.health = 40000;
+	actor.th_stand = old_idle1;
+	actor.th_walk = old_idle1;
+	actor.th_run = old_idle1;
+	actor.nextthink = time + 0.1;	
+	actor.takedamage = DAMAGE_YES;
+	actor.th_pain = func_null;
+	actor.th_die = finale_1;
 
-	this.health = 40000;		// kill by telefrag
-	this.max_health = this.health;
-	setthink(this, old_idle1);
-	this.nextthink = time + 0.1;	
-	this.takedamage = DAMAGE_YES;
-	this.th_pain = func_null;
-	this.th_die = finale_1;
-
-	this.monsterdef = MON_SHUB;
-	
-	// NOTE: this isn't actually handled as a monster
-	// however, it does count towards the total monster count!
-	monsters_total += 1;
+	return true;
 }
 #endif

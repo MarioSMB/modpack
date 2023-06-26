@@ -7,7 +7,7 @@ MODEL(MON_SHUB, "progs/oldone.mdl");
 #endif
 
 CLASS(Shub, Monster)
-    ATTRIB(Shub, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_STATIONARY);
+    ATTRIB(Shub, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_STATIONARY | MON_FLAG_NOTARGET | MON_FLAG_NOAGGRO);
     ATTRIB(Shub, m_mins, vector, '-160 -128 -24');
     ATTRIB(Shub, m_maxs, vector, '160 128 256');
 #ifdef GAMEQC
