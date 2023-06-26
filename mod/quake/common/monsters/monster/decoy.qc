@@ -107,7 +107,12 @@ METHOD(Decoy, mr_setup, bool(Decoy this, entity actor))
 		pl = it;
 		break;
 	});
-	actor.colormap = pl.colormap;
+	if(pl)
+	{
+		_setmodel(actor, get_playermodel(pl));
+		setsize(actor, VEC_HULL_MIN, VEC_HULL_MAX);
+		actor.colormap = pl.colormap;
+	}
 
     return true;
 }

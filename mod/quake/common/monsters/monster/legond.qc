@@ -511,7 +511,7 @@ METHOD(Legond, mr_setup, bool(Legond this, entity actor))
 	precache_sound("monsters/legond/lswipe.wav");
 	precache_sound("monsters/legond/lidle.wav");
 
-    actor.health = 3000;
+    actor.health = 2000;
 	actor.th_stand = legond_stand1;
 	actor.th_walk = legond_walk1;
 	actor.th_run = legond_run1;

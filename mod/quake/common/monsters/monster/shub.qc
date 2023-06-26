@@ -204,9 +204,15 @@ void finale_4(entity this)
 	{
 		entity n = spawn();
 		if(this.enemy)
+		{
 			_setmodel(n, get_playermodel(this.enemy));
+			n.colormap = this.enemy.colormap;
+		}
 		else
+		{
 			_setmodel(n, "progs/player.mdl");
+			n.colormap = 1024;
+		}
 		oldo = oldo - '32 264 0';
 		setorigin(n, oldo);
 		n.angles = '0 290 0';
@@ -249,7 +255,7 @@ METHOD(Shub, mr_setup, bool(Shub this, entity actor))
 	precache_sound2("boss2/idle.wav");
 	precache_sound2("boss2/pop2.wav");
 
-	actor.health = 40000;
+	actor.health = 4000;
 	actor.th_stand = old_idle1;
 	actor.th_walk = old_idle1;
 	actor.th_run = old_idle1;

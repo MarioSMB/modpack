@@ -273,27 +273,15 @@ void boss_missile(entity this, vector p)
 
 void boss_awake(entity this)
 {
-	this.takedamage = DAMAGE_NO;
-	
-	if(autocvar_skill == 0)
-		this.health = 1;
-	else
-		this.health = 3;
-
 	// Yoder add, June 14, 2020
 	// Checking a spawnflag to see if chthon is killable
-	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
-	{
-		this.takedamage = DAMAGE_AIM;
-		this.th_die = boss_die;
-		this.health = 4000;
-		this.max_health = this.health;
-		this.use = monster_use; // prevent from being re-triggered into boss_awake state
-		if(world.model == "maps/mgend.bsp") // special damage states
-			this.th_pain = boss_pain; // Yoder add, September 9 2020
-	}
-	// end of Yoder add
+	this.takedamage = DAMAGE_AIM;
+	this.th_die = boss_die;
+	this.health = 3000;
 	this.max_health = this.health;
+	this.use = monster_use; // prevent from being re-triggered into boss_awake state
+	if(world.model == "maps/mgend.bsp") // special damage states
+		this.th_pain = boss_pain; // Yoder add, September 9 2020
 
 	te_lavasplash(this.origin);
 
@@ -397,12 +385,15 @@ void lightning_use(entity this, entity actor, entity trigger)
 	if(le1.state == STATE_TOP && e.health > 0)
 	{
 		_sound(e, CH_VOICE, "boss1/pain.wav", 1, ATTN_NORM);
-		e.health = e.health - 1;
-		if(e.health >= 2)
+		if(autocvar_skill == 0)
+			e.health -= 3000;
+		else
+			e.health -= 1000;
+		if(e.health >= 2000)
 			boss_shocka1(e);
-		else if(e.health == 1)
+		else if(e.health > 0)
 			boss_shockb1(e);
-		else if(e.health == 0)
+		else
 			boss_shockc1(e);
 	}	
 }

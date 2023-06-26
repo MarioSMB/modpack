@@ -38,7 +38,7 @@ void tdeath_touch(entity this, entity toucher)
 	}
 
 	if(toucher.health)
-		T_Damage(toucher, this, this, 50000, DEATH_TELEFRAG.m_id);
+		T_Damage(toucher, this, this.owner, 50000, DEATH_TELEFRAG.m_id);
 }
 
 
