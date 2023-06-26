@@ -13,6 +13,7 @@ const int MON_FLAG_EXPLOSIONRESISTANT = BIT(8); // takes half damage from explos
 const int MON_FLAG_STATIONARY = BIT(9); // monster cannot move
 const int MON_FLAG_METAL = BIT(10); // is a full metal soldier
 const int MON_FLAG_INFIGHT = BIT(11); // monster will fight even its own species
+const int MON_FLAG_PASSTARGET = BIT(12); // monster will run right through its target, useful for bumping into them
 const int MON_FLAG_NOTARGET = BIT(13); // monster should not be targeted at all by other monsters
 const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
 const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)

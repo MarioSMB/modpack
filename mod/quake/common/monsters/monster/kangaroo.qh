@@ -1,0 +1,26 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_KANGAROO,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was brutally kicked by a Kangaroo"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_KANGAROO,               1,  NULL,           INFO_DEATH_SELF_MON_KANGAROO,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_KANGAROO,           DEATH_SELF_MON_KANGAROO,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_KANGAROO, "progs/kangaroo.mdl");
+MODEL(MON_KANGAROO_HEAD, "progs/gib1.mdl");
+#endif
+
+CLASS(Kangaroo, Monster)
+    ATTRIB(Kangaroo, spawnflags, int, MON_FLAG_INFIGHT | MON_FLAG_PASSTARGET);
+    ATTRIB(Kangaroo, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Kangaroo, m_maxs, vector, '16 16 32');
+#ifdef GAMEQC
+    ATTRIB(Kangaroo, m_model, Model, MDL_MON_KANGAROO);
+    ATTRIB(Kangaroo, m_model_head, Model, MDL_MON_KANGAROO_HEAD);
+#endif
+    ATTRIB(Kangaroo, netname, string, "kangaroo");
+    ATTRIB(Kangaroo, monster_name, string, _("Kangaroo"));
+ENDCLASS(Kangaroo)
+
+REGISTER_MONSTER(KANGAROO, NEW(Kangaroo));

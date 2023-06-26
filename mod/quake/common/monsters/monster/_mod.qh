@@ -23,6 +23,7 @@
 #include "guardian.qh"
 #include "hell_knight.qh"
 #include "juggernaut.qh"
+#include "kangaroo.qh"
 #include "knight.qh"
 #include "lavaman.qh"
 #include "legond.qh"

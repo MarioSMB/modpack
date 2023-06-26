@@ -23,6 +23,7 @@
 #include "guardian.qc"
 #include "hell_knight.qc"
 #include "juggernaut.qc"
+#include "kangaroo.qc"
 #include "knight.qc"
 #include "lavaman.qc"
 #include "legond.qc"

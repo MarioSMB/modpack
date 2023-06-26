@@ -383,7 +383,8 @@ void t_movetogoal(entity this, float dist)
 
 	// if the next step hits the enemy, return immediately
 	vector rdist = '1 1 1' * dist;
-	if(this.enemy && boxesoverlap(this.goalentity.absmin, this.goalentity.absmax, this.absmin - rdist, this.absmax + rdist))
+	if(!(this.monsterdef.spawnflags & MON_FLAG_PASSTARGET) && this.enemy
+		&& boxesoverlap(this.goalentity.absmin, this.goalentity.absmax, this.absmin - rdist, this.absmax + rdist))
 		return;
 
 	// bump around...
