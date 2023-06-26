@@ -312,7 +312,7 @@ void dragon_walk1(entity this)
 	this.dragonPainSequence = 1;
 	dragon_move(this, 17);
 	if(random() < 0.2)
-		_sound(this, CH_VOICE, "dragon/active.wav", 0.6, ATTN_IDLE);
+		_sound(this, CH_TRIGGER_SINGLE, "dragon/active.wav", 0.6, ATTN_IDLE);
 }
 
 // ===================================
@@ -366,7 +366,7 @@ void launch_fireball(entity this, vector org, vector dir)
 // ===========================================
 void dragon_fireball(entity this)
 {
-	_sound(this, CH_VOICE, "dragon/attack.wav", 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "dragon/attack.wav", 1, ATTN_NORM);
 
 	makevectors(this.angles);
 	vector org = this.origin + v_forward*112 + v_up*32;
@@ -500,7 +500,7 @@ void dragon_pain(entity this, entity attacker, float damage, int deathtype)
 	{
 		dragon_stop_attack(this);
 
-		_sound(this, CH_VOICE, "dragon/pain.wav", 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, "dragon/pain.wav", 1, ATTN_NORM);
 		this.pain_finished = time + 2;
 		
 		if(this.dragonPainSequence == 1)
@@ -578,8 +578,6 @@ void dragon_squish(entity this, entity toucher)
 	}
 }
 
-
-
 void dragon_death21(entity this)
 {
 	set_animofs(this, anim_dragon_drgdth01, 21, dragon_death21);
@@ -618,13 +616,15 @@ void dragon_death1(entity this, entity inflictor, entity attacker, int deathtype
 	
 	this.dragonDeathState = DDIE_FALLING;	
 	this.use = func_null;
+	this.gravity = 0.25; // slow fall
+	set_movetype(this, MOVETYPE_TOSS);
 	makevectors(this.angles);
 	this.velocity = 300 * v_forward - 40 * v_up;
 	UNSET_ONGROUND(this);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	settouch(this, dragon_squish);
 
-	_sound(this, CH_VOICE, "dragon/death.wav", 1, ATTN_NONE);
+	_sound(this, CH_TRIGGER_SINGLE, "dragon/death.wav", 1, ATTN_NONE);
 	this.dragonAttacking = false;
 }
 
@@ -650,22 +650,6 @@ void dragon_use(entity this, entity actor, entity trigger)
 // ===================================
 void dragon_activate(entity this)
 {
-	this.takedamage = DAMAGE_AIM;
-	this.ideal_yaw = this.angles * '0 1 0';
-	if(!this.yaw_speed)
-		this.yaw_speed = 10;
-	this.view_ofs = '0 0 25';
-
-	this.flags |= FL_FLY;
-	this.flags |= FL_MONSTER;
-
-	if(!this.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, this);
-	this.damagedbycontents	= true;
-
-	if(!t_walkmove(this, 0, 0))
-		LOG_DEBUGF("flymonster %s in wall at %v\n", this.classname, this.origin);
-	
 	if(this.target && this.target != "")
 	{
 		this.movetarget = find(NULL, targetname, this.target);
@@ -678,7 +662,6 @@ void dragon_activate(entity this)
 		this.use = dragon_use;
 	else
 		dragon_use(this, NULL, NULL);	
-
 }
 
 /*QUAKED monster_dragon (1 0 0) (-32 -32 -24) (32 32 64) Ambush
@@ -687,8 +670,15 @@ spawnfunc(monster_dragon)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
+	monster_start(this, true, MON_DRAGON);
+}
+#endif // SVQC
 
-	precache_model("progs/dragon.mdl");
+#ifdef SVQC
+METHOD(Dragon, mr_setup, bool(Dragon this, entity actor))
+{
+	TC(Dragon, this);
+
 	precache_model("progs/fireball.mdl");
 	precache_model("progs/drggib01.mdl");
 	precache_model("progs/drggib02.mdl");
@@ -699,35 +689,27 @@ spawnfunc(monster_dragon)
 	precache_sound("dragon/pain.wav");
 	precache_sound("dragon/death.wav");
 
-	this.classname = "monster_dragon"; // needed for dying state
-	this.dragonInRoom = DT_ROOM_A;
-	this.dragonInTransit = 0;
-	this.dragonAttacking = false;
-	this.playerInRoom = DT_ROOM_A;
-	this.playerInTransit = 0;
-	
-	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
+	actor.classname = "monster_dragon"; // needed for dying state
+	actor.dragonInRoom = DT_ROOM_A;
+	actor.dragonInTransit = 0;
+	actor.dragonAttacking = false;
+	actor.playerInRoom = DT_ROOM_A;
+	actor.playerInTransit = 0;
 
-	_setmodel(this, "progs/dragon.mdl");
-	setsize(this, '-32 -32 -24', '32 32 64');
-	this.health = 3000 + (1000 * autocvar_skill);
-	
-	this.th_run = dragon_walk1;
-	this.th_pain = dragon_pain;
-	this.th_die = dragon_death1;
+	actor.th_stand = dragon_activate;
+	actor.th_walk = dragon_activate;
+	actor.th_run = dragon_walk1;
+	actor.th_pain = dragon_pain;
+	actor.th_die = dragon_death1;
+	actor.dragonPainSequence = 1;
 
-	this.monsterdef = MON_DRAGON;
+	actor.health = 2000 + (500 * autocvar_skill);
 
-	this.dragonPainSequence = 1;
-
-	// NOTE: this isn't actually handled as a monster
-	// however, it does count towards the total monster count!
-	monsters_total += 1;
-	this.nextthink = time + 0.1;
-	setthink(this, dragon_activate);
+	return true;
 }
+#endif
 
+#ifdef SVQC
 // =================================================
 // dragon trigger
 //-- OBSOLETE!!

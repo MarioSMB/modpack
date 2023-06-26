@@ -641,8 +641,10 @@ SPAWNFUNC_WEAPON_COND(weapon_lightning, (world.model == "maps/aop2m2.bsp"), WEP_
 
 Weapon W_RandomizeWeapon(Weapon wpn)
 {
+	if(wpn == WEP_AXE || wpn == WEP_SHOTGUN)
+		return wpn;
 	RandomSelection_Init();
-	FOREACH(Weapons, it != WEP_Null,
+	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN,
 	{
 		if(it.ammo_type != wpn.ammo_type)
 			continue;

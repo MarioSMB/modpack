@@ -37,7 +37,7 @@ void disc_touch(entity this, entity toucher)
 	{
 		spawn_touchblood(this, 45, toucher);
 		if(this.origin_z >= toucher.origin_z + 20 && disc_shouldbehead(this, toucher))
-			T_Damage(toucher, this, this.realowner, 145, this.projectiledeathtype);
+			T_Damage(toucher, this, this.realowner, 105, this.projectiledeathtype);
 		else
 			T_Damage(toucher, this, this.realowner, 45, this.projectiledeathtype);
 		delete(this);

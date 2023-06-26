@@ -597,16 +597,15 @@ If crucified, stick the bounding box 12 pixels back into a wall to look right.
 If lying_down in hipnotic, the zombie will be lying down when spawned and will rise up
 when awakened by the player.
 */
-spawnfunc(monster_zombie)
+spawnfunc(monster_zombie) { monster_start(this, true, MON_ZOMBIE); }
+#endif // SVQC
+
+#ifdef SVQC
+METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 {
-	// thanks to the strange logic zombies use, we sadly must do the handling manually
-	// TODO: merge this and bosses into a supported way to call monster_start!
-	if(deathmatch) { delete(this); return; }
+    TC(Zombie, this);
 
-	Monster mon = MON_ZOMBIE;
-	this.monsterdef = mon;
-
-	precache_model("progs/zom_gib.mdl");
+    precache_model("progs/zom_gib.mdl");
 
 	precache_sound("zombie/z_idle1.wav");
 	precache_sound("zombie/z_shot1.wav");
@@ -618,83 +617,65 @@ spawnfunc(monster_zombie)
 	precache_sound("zombie/z_hit.wav");
 	precache_sound("zombie/idle_w2.wav");
 
-	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
-	setmodel(this, mon.m_model);
-	setsize(this, mon.m_mins, mon.m_maxs);
+	actor.health = 60;
+	actor.th_stand = zombie_stand1;
+	actor.th_walk = zombie_walk1;
+	actor.th_run = zombie_run1;
+	actor.th_pain = zombie_pain;
+	actor.th_die = zombie_die;
+	actor.th_missile = zombie_missile;
 
-	this.health = 60;
-	this.th_stand = zombie_stand1;
-	this.th_walk = zombie_walk1;
-	this.th_run = zombie_run1;
-	this.th_pain = zombie_pain;
-	this.th_die = zombie_die;
-	this.th_missile = zombie_missile;
-
-	if(this.spawnflags & SPAWN_CRUCIFIED)
+	if(actor.spawnflags & SPAWN_CRUCIFIED)
 	{
-		set_movetype(this, MOVETYPE_NONE);
-		zombie_cruc1(this);
+		actor.solid = SOLID_NOT;
+		set_movetype(actor, MOVETYPE_NONE);
+		actor.th_stand = zombie_cruc1;
+		actor.th_walk = zombie_cruc1;
+		actor.th_run = zombie_cruc1;
+		actor.th_pain = func_null;
+		actor.th_missile = func_null;
+		zombie_cruc1(actor);
 	}
-	else if((this.spawnflags & SPAWN_LYING))
+	else if((actor.spawnflags & SPAWN_LYING))
 	{
-		this.solid = SOLID_CORPSE;
-		this.th_stand = zombie_sleep;
-		this.th_run = zombie_wake;
-		this.th_walk = zombie_wake;
-		this.th_pain = zombie_wake_pain;
-		this.th_missile = zombie_wake;
-		setsize(this, '-16 -16 -24', '16 16 -16');
+		actor.solid = SOLID_CORPSE;
+		actor.th_stand = zombie_sleep;
+		actor.th_run = zombie_wake;
+		actor.th_walk = zombie_wake;
+		actor.th_pain = zombie_wake_pain;
+		actor.th_missile = zombie_wake;
+		setsize(actor, '-16 -16 -24', '16 16 -16');
 
 		// HOLY HACK, BATMAN! - Don't blame me. Check out FindTarget in ai.qc!
-		if(this.spawnflags & SPAWN_AMBUSH)
-			this.spawnflags = SPAWN_LYING;
-
-		monster_start(this, true, MON_ZOMBIE);
+		if(actor.spawnflags & SPAWN_AMBUSH)
+			actor.spawnflags = SPAWN_LYING;
 	}
-	else if((this.spawnflags & SPAWN_SNEAKY))
+	else if((actor.spawnflags & SPAWN_SNEAKY))
 	{
-		set_movetype(this, MOVETYPE_NONE);
-		this.solid = SOLID_CORPSE;
-		this.th_stand = zombie_cruc1;
-		this.th_run = zombie_escape;
-		this.th_walk = zombie_escape;
-		this.th_pain = zombie_escape_pain;
-		this.th_missile = zombie_escape;
+		set_movetype(actor, MOVETYPE_NONE);
+		actor.solid = SOLID_CORPSE;
+		actor.th_stand = zombie_cruc1;
+		actor.th_run = zombie_escape;
+		actor.th_walk = zombie_escape;
+		actor.th_pain = zombie_escape_pain;
+		actor.th_missile = zombie_escape;
 
-		if(!this.delay)
-			this.delay = 3;
+		if(!actor.delay)
+			actor.delay = 3;
 
-		this.ideal_yaw = this.angles * '0 1 0';
-		if(!this.yaw_speed)
-			this.yaw_speed = 20;
-		this.view_ofs = '0 0 25';
-		this.flags |= FL_MONSTER;
-		this.th_stand(this);
-		this.nextthink = this.nextthink + random() * 0.5;
-		if(!this.damagedbycontents)
-			IL_PUSH(g_damagedbycontents, this);
-		this.damagedbycontents	= true;
-		monsters_total += 1;
+		actor.ideal_yaw = actor.angles * '0 1 0';
+		if(!actor.yaw_speed)
+			actor.yaw_speed = 20;
+		actor.view_ofs = '0 0 25';
 	}
 	else
 	{
-		if((this.spawnflags & SPAWN_AMBUSH))
-			this.spawnflags = SPAWN_LYING;
-		monster_start(this, true, MON_ZOMBIE);
+		if((actor.spawnflags & SPAWN_AMBUSH))
+			actor.spawnflags = SPAWN_LYING;
 	}
 
-	if((this.spawnflags & SPAWN_LYINGDOWN))
-		this.th_stand = zombie_lay;
-}
-#endif // SVQC
-
-#ifdef SVQC
-METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
-{
-    TC(Zombie, this);
-
-    // does nothing until it can be ported across
+	if((actor.spawnflags & SPAWN_LYINGDOWN))
+		actor.th_stand = zombie_lay;
 
     return true;
 }

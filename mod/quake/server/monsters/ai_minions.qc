@@ -218,20 +218,6 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
 
-	// TODO: zombie logic too messy to work with mr_setup for now!
-	if(mon == MON_ZOMBIE)
-	{
-		monster.classname = "monster_zombie";
-		//org += '0 0 32';
-		monster.health = 60;
-		monster.th_stand = zombie_stand1;
-		monster.th_walk = zombie_walk1;
-		monster.th_run = zombie_run1;
-		monster.th_pain = zombie_pain;
-		monster.th_die = zombie_die;
-		monster.th_missile = zombie_missile;
-		monster.target = string_null; // don't target anything!
-	}
 	mon.mr_setup(mon, monster);
 
 	setorigin(monster, org);

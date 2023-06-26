@@ -16,7 +16,7 @@ SOUND(MON_DRAGON_SIGHT, "dragon/see");
 #endif
 
 CLASS(Dragon, Monster)
-    ATTRIB(Dragon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_HIDDEN | MON_FLAG_ROGUE | MON_FLAG_NOTARGET | MON_FLAG_NOAGGRO);
+    ATTRIB(Dragon, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_HIDDEN | MON_FLAG_ROGUE);
     ATTRIB(Dragon, m_mins, vector, '-32 -32 -24');
     ATTRIB(Dragon, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC

@@ -271,22 +271,14 @@ void boss_missile(entity this, vector p)
 		boss_idle1(this);
 }
 
-void boss_awake(entity this, entity actor, entity trigger)
+void boss_awake(entity this)
 {
-	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
 	this.takedamage = DAMAGE_NO;
-	
-	_setmodel(this, "progs/boss.mdl");
-	setsize(this, '-128 -128 -24', '128 128 256');
 	
 	if(autocvar_skill == 0)
 		this.health = 1;
 	else
 		this.health = 3;
-
-	this.max_health = this.health;
-	this.enemy = actor;
 
 	// Yoder add, June 14, 2020
 	// Checking a spawnflag to see if chthon is killable
@@ -301,6 +293,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 			this.th_pain = boss_pain; // Yoder add, September 9 2020
 	}
 	// end of Yoder add
+	this.max_health = this.health;
 
 	te_lavasplash(this.origin);
 
@@ -310,11 +303,14 @@ void boss_awake(entity this, entity actor, entity trigger)
 
 /*QUAKED monster_boss(1 0 0)(-128 -128 -24)(128 128 256)
 */
-spawnfunc(monster_boss)
-{
-	if(deathmatch) { delete(this); return; }
+spawnfunc(monster_boss) { monster_start(this, true, MON_CHTHON); }
+#endif // SVQC
 
-	precache_model("progs/boss.mdl");
+#ifdef SVQC
+METHOD(Chthon, mr_setup, bool(Chthon this, entity actor))
+{
+	TC(Chthon, this);
+
 	precache_model("progs/lavaball.mdl");
 
 	precache_sound("weapons/rocket1i.wav");
@@ -324,16 +320,13 @@ spawnfunc(monster_boss)
 	precache_sound("boss1/pain.wav");
 	precache_sound("boss1/death.wav");
 
-	// NOTE: this isn't actually handled as a monster
-	// however, it does count towards the total monster count!
-	monsters_total += 1;
+	boss_awake(actor);
 
-	this.use = boss_awake;
-	this.monsterdef = MON_CHTHON; // for monster lookups
+	return true;
 }
+#endif
 
-//===========================================================================
-
+#ifdef SVQC
 entity le1, le2;
 float lightning_end;
 

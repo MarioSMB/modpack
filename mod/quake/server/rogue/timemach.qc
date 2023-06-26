@@ -139,7 +139,6 @@ void time_pain(entity this, entity attacker, float take, int deathtype)
 		this.th_pain = func_null;
 		this.th_die = func_null;
 		cutscene_running = true;
-		return;
 	}
 }
 

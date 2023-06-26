@@ -189,23 +189,6 @@ spawnfunc(info_horde_key)
 //============================================================================
 void PrecacheMonsters()
 {
-	// zombies
-	precache_model("progs/zombie.mdl");
-	precache_model("progs/h_zombie.mdl");
-	precache_model("progs/zom_gib.mdl");
-
-	precache_sound("zombie/z_idle.wav");
-	precache_sound("zombie/z_idle1.wav");
-	precache_sound("zombie/z_shot1.wav");
-	precache_sound("zombie/z_gib.wav");
-	precache_sound("zombie/z_pain.wav");
-	precache_sound("zombie/z_pain1.wav");
-	precache_sound("zombie/z_fall.wav");
-	precache_sound("zombie/z_miss.wav");
-	precache_sound("zombie/z_hit.wav");
-	precache_sound("zombie/idle_w2.wav");	
-
-	
 	// ammo
 	precache_model("maps/b_shell1.bsp");
 	precache_model("maps/b_shell0.bsp");
@@ -277,13 +260,6 @@ void GibMonster(entity this)
 SpawnMonster
 ================
 */
-spawnfunc(monster_zombie);
-void zombie_stand1(entity this);
-void zombie_walk1(entity this);
-void zombie_run1(entity this);
-void zombie_pain(entity this, entity attacker, float damage, int deathtype);
-void zombie_die(entity this, entity inflictor, entity attacker, int deathtype);
-void zombie_missile(entity this);
 void monster_use(entity this, entity actor, entity trigger);
 entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 {
@@ -315,20 +291,6 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
-	// TODO: zombie logic too messy to work with mr_setup for now!
-	if(mon == MON_ZOMBIE)
-	{
-		monster.classname = "monster_zombie";
-		//org += '0 0 32';
-		monster.health = 60;
-		monster.th_stand = zombie_stand1;
-		monster.th_walk = zombie_walk1;
-		monster.th_run = zombie_run1;
-		monster.th_pain = zombie_pain;
-		monster.th_die = zombie_die;
-		monster.th_missile = zombie_missile;
-		monster.target = string_null; // don't target anything!
-	}
 	mon.mr_setup(mon, monster);
 
 	setup_minionsupport(monster);
