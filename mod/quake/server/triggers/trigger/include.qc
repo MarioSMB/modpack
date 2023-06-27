@@ -21,4 +21,5 @@
 #include "shelter_portal.qc"
 #include "teleport.qc"
 #include "usekey.qc"
+#include "viewloc.qc"
 #include "waterfall.qc"

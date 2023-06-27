@@ -568,7 +568,7 @@ spawnfunc(func_door)
 	else
 		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
-	if(MP_MG && oldmovedir)
+	if(MP_MG && oldmovedir != '0 0 0')
 	{
 		this.pos2 = this.pos1 + oldmovedir;
 		this.angles = '0 0 0';

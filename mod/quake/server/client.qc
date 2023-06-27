@@ -1311,6 +1311,8 @@ void PutClientInServer(entity this)
 	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
 
+	this.viewloc = NULL;
+
 	this.weaponframe = 0;
 	this.weaponmodel = "";
 
@@ -1378,6 +1380,7 @@ void PutClientInServer(entity this)
 
 		spot = FindIntermission(this);
 		this.angles = this.v_angle = spot.mangle;
+		this.angles_z = 0; // never spawn tilted even if the spot says to
 		this.fixangle = true;
 		setorigin(this, spot.origin);
 		this.weaponentity.m_weapon = WEP_Null;
@@ -1389,6 +1392,7 @@ void PutClientInServer(entity this)
 
 	this.origin = spot.origin + '0 0 1';
 	this.angles = vec2(spot.angles);
+	this.angles_z = 0; // never spawn tilted even if the spot says to
 	this.fixangle = true;		// turn this way immediately
 
 	if(MP_MG && coop && STAT(WEAPONS, spot))

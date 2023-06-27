@@ -4,6 +4,9 @@ REGISTER_NET_TEMP(TE_CSQC_PINGPLREPORT)
 
 REGISTER_NET_TEMP(TE_CSQC_LIGHTNING)
 
+REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC)
+REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
+
 REGISTER_NET_TEMP(TE_CSQC_ITEMPICKUP)
 
 REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
@@ -23,8 +26,10 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
 #include "constants.qh"
 #include "shop.qh"
+#include "viewloc.qh"
 
 #include "physics.qh"
+
 
 #include "effects/all.qh"
 #include "models/all.qh"
@@ -37,6 +42,10 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "weapons/_mod.qh"
 #include "impulses/all.qh"
 #include "kickflip/_mod.qh"
+
+#ifdef CSQC
+#include "../server/triggers/trigger/viewloc.qh"
+#endif
 
 #include "wepent.qh"
 

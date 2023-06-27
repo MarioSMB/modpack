@@ -1,5 +1,7 @@
 #include "crosshair.qh"
 
+#include "../common/viewloc.qh"
+
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
 	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
@@ -100,7 +102,7 @@ LABEL(normalcolor)
 
 void HUD_Crosshair(entity this)
 {
-	if(!sb_showscores && !cursor_active && !intermission && !(STAT(HEALTH) <= 0))
+	if(!sb_showscores && !cursor_active && !intermission && !(STAT(HEALTH) <= 0) && (!csqcplayer.viewloc || (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM)))
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
@@ -110,6 +112,8 @@ void HUD_Crosshair(entity this)
 		string wcross_style;
 		float wcross_alpha, wcross_resolution;
 		wcross_style = autocvar_crosshair;
+		if (csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM) && autocvar_crosshair_2d != "")
+			wcross_style = autocvar_crosshair_2d;
 		if (wcross_style == "0")
 			return;
 		wcross_resolution = autocvar_crosshair_size;
@@ -123,7 +127,9 @@ void HUD_Crosshair(entity this)
 		//int shottype;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			wcross_origin = viewloc_mousepos;
+		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
 			traceline(player_org, player_org + 32768 * view_forward, MOVE_WORLDONLY, NULL);

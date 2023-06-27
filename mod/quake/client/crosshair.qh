@@ -7,12 +7,12 @@
 
 bool autocvar_crosshair_enabled;
 string autocvar_crosshair;
+string autocvar_crosshair_2d = "54";
 float autocvar_crosshair_size;
 float autocvar_crosshair_alpha;
 bool autocvar_crosshair_effect_scalefade;
 float autocvar_crosshair_effect_time;
 //bool autocvar_crosshair_hittest_blur;
-float autocvar__menu_alpha;
 bool autocvar_crosshair_dot;
 int autocvar_crosshair_dot_color_custom;
 string autocvar_crosshair_dot_color;

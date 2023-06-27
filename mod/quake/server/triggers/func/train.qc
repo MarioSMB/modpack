@@ -30,11 +30,28 @@ void train_wait(entity this)
 	setthink(this, train_next);
 }
 
+void train_next_use(entity this, entity actor, entity trigger)
+{
+	train_next(this);
+}
+
 void train_next(entity this)
 {
 	entity	targ;
 
 	targ = find(NULL, targetname, this.target);
+	// hack from target quake
+	if(targ.netname && targ.netname != "")
+	{
+		this.targetname = targ.netname;
+		this.wait = -1;
+		targ.netname = "";
+		this.use = train_next_use;
+		this.target = targ.target;
+		this.speed = 80; // why?
+		return;
+	}
+	this.use = train_use;
 	this.target = targ.target;
 	if(!this.target || this.target == "")
 		objerror(this, "train_next: no next target");
@@ -43,7 +60,8 @@ void train_next(entity this)
 	else
 		this.wait = 0;
 	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
-	SUB_CalcMove(this, targ.origin - this.mins, TSPEED_LINEAR, this.speed, train_wait);
+	float newspeed = (targ.speed) ? targ.speed : this.speed;
+	SUB_CalcMove(this, targ.origin - this.mins, TSPEED_LINEAR, newspeed, train_wait);
 }
 
 void func_train_find(entity this)
@@ -82,8 +100,13 @@ spawnfunc(func_train)
 	if(!this.dmg)
 		this.dmg = 2;
 
-	if (!InitMovingBrushTrigger(this))
-		return;
+	//if (!InitMovingBrushTrigger(this))
+		//return;
+	this.solid = SOLID_BSP;
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
+	setorigin(this, this.origin);
+	set_movetype(this, MOVETYPE_PUSH);
 	this.effects |= EF_LOWPRECISION;
 
 	if(this.sounds == 0)

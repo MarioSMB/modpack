@@ -26,6 +26,12 @@ vector autocvar_cl_eventchase_mins = '-12 -12 -8';
 bool autocvar_r_drawviewmodel;
 vector autocvar_cl_gunoffset;
 
+float autocvar_menu_mouse_speed;
+
+vector viewloc_mousepos;
+
+float autocvar__menu_alpha; // updated by the menu VM, useful to tell when the menu is being drawn
+
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 

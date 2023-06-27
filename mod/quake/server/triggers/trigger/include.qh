@@ -1,3 +1,4 @@
 #pragma once
 
 #include "multi.qh"
+#include "viewloc.qh"

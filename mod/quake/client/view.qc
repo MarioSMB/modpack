@@ -5,8 +5,10 @@
 #include "../common/sui_sys.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
+#include "../common/viewloc.qh"
 #include "../common/wepent.qh"
 #include "../common/util.qh"
+#include "../server/triggers/trigger/viewloc.qh"
 
 void CSQCModel_InterpolateAnimation_Do(entity this);
 
@@ -357,7 +359,10 @@ float autocvar_fov;
 void View_UpdateFov()
 {
 	vector fov;
-	fov = GetViewLocationFOV(autocvar_fov);
+	if(csqcplayer && csqcplayer.viewloc)
+		fov = GetViewLocationFOV(110); // enforce 110 fov, so things don't look odd
+	else
+		fov = GetViewLocationFOV(autocvar_fov);
 
 	setproperty(VF_FOV, fov);
 }
@@ -373,6 +378,8 @@ float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(STAT(SKATING))
+		return 1;
+	if(this.viewloc)
 		return 1;
 	return 0;
 }
@@ -423,6 +430,7 @@ void View_EventChase(entity this)
 			tracebox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
+			if(!this.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (forward * eventchase_current_distance));
@@ -431,7 +439,8 @@ void View_EventChase(entity this)
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
-			setproperty(VF_ANGLES, view_angles);
+			if(!this.viewloc)
+				setproperty(VF_ANGLES, view_angles);
 		}
 
 		if (eventchase <= 0 && autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
@@ -440,6 +449,29 @@ void View_EventChase(entity this)
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
+	}
+}
+
+void ViewLocation_Mouse()
+{
+	viewloc_mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	viewloc_mousepos.x = bound(0, viewloc_mousepos.x, vid_conwidth);
+	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
+
+	//float cursor_alpha = 1 - autocvar__menu_alpha;
+	//cursor_type = CURSOR_NORMAL;
+	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+}
+
+void HUD_Mouse(entity player)
+{
+	if(autocvar__menu_alpha == 1)
+		return;
+
+	if(!cursor_active)
+	{
+		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
 	}
 }
 
@@ -552,6 +584,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(cursor_active && !intermission)
 		draw_drawMousePointer(_cursor_position);
+
+	HUD_Mouse(local_player);
 
 	if(intermission && !completed_time)
 		completed_time = time;

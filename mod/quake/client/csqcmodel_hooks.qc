@@ -5,10 +5,6 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
-// quake specific
-void viewloc_SetTags(entity this) { }
-void viewloc_SetViewLocation() { }
-
 entityclass(Projectile);
 classfield(Projectile).int traileffect;
 

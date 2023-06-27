@@ -1,0 +1,20 @@
+#pragma once
+
+
+const int VIEWLOC_NOSIDESCROLL = BIT(0); // NOTE: currently unimplemented
+const int VIEWLOC_FREEAIM = BIT(1);
+const int VIEWLOC_FREEMOVE = BIT(2);
+const int VIEWLOC_CAM_TRACK = BIT(3);
+const int VIEWLOC_CAM_NOANGLE = BIT(4);
+const int VIEWLOC_CAM_SNAP_HARD = BIT(5);
+const int VIEWLOC_CAM_SNAP_UNLOCK = BIT(6);
+const int VIEWLOC_CAM_SNAP_CLOSE = BIT(7);
+
+.entity viewloc;
+
+#ifdef CSQC
+.entity goalentity;
+.entity enemy;
+.vector movedir;
+.float count;
+#endif

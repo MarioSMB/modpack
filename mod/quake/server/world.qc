@@ -1454,7 +1454,7 @@ void CreatureFrame_FallDamage(entity this)
 			}
 			else if(this.jump_flag < -650)
 			{
-				if(this.exptime != 0)
+				if(this.exptime != 0 || this.viewloc)
 				{
 					if(IS_PLAYER(this))
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);

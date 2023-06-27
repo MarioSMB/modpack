@@ -1,0 +1,14 @@
+#pragma once
+
+// view location map object, intended for side-scrolling stages with a fixed camera position
+
+.entity viewloc; // points to the trigger_viewlocation networked entity
+
+void viewloc_PlayerPhysics(entity this);
+
+#ifdef CSQC
+
+void viewloc_SetViewLocation();
+void viewloc_SetTags(entity this);
+
+#endif

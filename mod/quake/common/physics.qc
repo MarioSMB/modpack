@@ -80,7 +80,7 @@ void PlayerJump(entity this)
 	if(this.waterlevel >= 2)
 	{
 		if(this.watertype == CONTENT_WATER)
-			this.velocity_z = 100;
+			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
 		else if(this.watertype == CONTENT_SLIME)
 			this.velocity_z = 80;
 		else
@@ -101,7 +101,11 @@ void PlayerJump(entity this)
 		return;
 	}
 
-	if(!IS_ONGROUND(this))
+	bool doublejump = false;
+	if(this.viewloc && this.waterlevel >= 2)
+		doublejump = true;
+
+	if(!IS_ONGROUND(this) && !doublejump)
 		return;
 
 	if(IS_JUMP_HELD(this))
@@ -110,6 +114,15 @@ void PlayerJump(entity this)
 	SET_JUMP_HELD(this);
 
 	UNSET_ONGROUND(this);
+
+	float mjumpheight = 270;
+	if(this.viewloc)
+	{
+		if(this.waterlevel >= 2)
+			mjumpheight *= 0.7;
+		else
+			mjumpheight *= 1.5;
+	}
 
 	if(PHYS_SKATING(this))
 	{
@@ -121,7 +134,7 @@ void PlayerJump(entity this)
 			this.walkframe = 13;
 			this.buttonjump_held = true;
 		#endif
-			this.velocity_z += 270;
+			this.velocity_z += mjumpheight;
 			this.jump_vel = this.velocity;
 		}
 		return;
@@ -132,7 +145,7 @@ void PlayerJump(entity this)
 // player jumping sound
 	player_sound(this, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 #endif
-	this.velocity_z = this.velocity_z + 270;
+	this.velocity_z = this.velocity_z + mjumpheight;
 }
 
 /*
@@ -217,7 +230,9 @@ void PM_WaterMove(entity this, float dt)
 
 	vector wishvel;
 	wishvel = v_forward * this.movement_x + v_right * this.movement_y + '0 0 1' * this.movement_z;
-	if (wishvel == '0 0 0')
+	if (this.viewloc)
+		wishvel.z = -160;    // drift anyway
+	else if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
 	vector wishdir = normalize(wishvel);
@@ -327,7 +342,8 @@ void PM_AirAccelerate(entity this, float dt, vector wishvel, float wishspeed)
 	float addspeed = wishspd - currentspeed;
 	if(addspeed <= 0)
 		return;
-	float accelspeed = (PHYS_AIRACCELERATE(this) < 0 ? PHYS_ACCELERATE(this) : PHYS_AIRACCELERATE(this))
+	float airaccel = (this.viewloc) ? 20 : PHYS_AIRACCELERATE(this);
+	float accelspeed = (airaccel < 0 ? PHYS_ACCELERATE(this) : airaccel)
 			* (GAMEPLAYFIX_Q2AIRACCELERATE ? wishspd : wishspeed) * dt;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
@@ -389,6 +405,8 @@ void PM_Main(entity this, float dt)
 
 	if(this.move_movetype == MOVETYPE_NONE)
 		return;
+
+	viewloc_PlayerPhysics(this);
 
 	SV_check_punch(this, dt);
 

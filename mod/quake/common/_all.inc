@@ -10,6 +10,7 @@
 
 #include "physics.qc"
 #include "sui_sys.qc"
+#include "viewloc.qc"
 
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
@@ -20,6 +21,11 @@
 #include "impulses/_mod.inc"
 #include "monsters/_mod.inc"
 #include "kickflip/_mod.inc"
+
+// TODO
+#ifdef CSQC
+#include "../server/triggers/trigger/viewloc.qc"
+#endif
 
 #include "wepent.qc"
 #endif
