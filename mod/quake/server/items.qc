@@ -1604,6 +1604,12 @@ void powerup_touch(entity this, entity toucher)
 		toucher.antigrav_time = 1;
 		toucher.antigrav_finished = time + 45; // give antigrav full duration
 		toucher.gravity = 0.25;
+		if(coop) // Respawn antigrav in coop, since it might be required for progression
+		{
+			this.target = string_null; // but don't fire off targets again
+			setthink(this, SUB_regen);
+			this.nextthink = time + 2.5;
+		}
 	}
 
 	if(this.powerups & POWERUP_SHIELD)

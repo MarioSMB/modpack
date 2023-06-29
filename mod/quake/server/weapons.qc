@@ -66,7 +66,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 	else
 	{
 //      this.dmg = 0.66 * this.dmg;
-		this.dmg = 0.9 * this.dmg;
+		this.dmg *= 0.9;
 //      this.speed = 0.95 * this.speed;
 		this.velocity = oldvel + (2 * trace_plane_normal);
 		this.velocity = normalize(this.velocity);
