@@ -941,7 +941,7 @@ void FoundTarget(entity this)
 
 	if(IS_PLAYER(this.enemy))
 	{
-		if(this.charmed && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
+		if(this.charmed) // && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
 		{
 			this.enemy = NULL;
 			return;
@@ -951,7 +951,7 @@ void FoundTarget(entity this)
 		sight_entity = this;
 		sight_entity_time = time;
 	}
-	else if(this.charmed && (this.charmer == this.enemy.charmer))
+	else if(this.charmed && this.enemy.charmed) //&& (this.charmer == this.enemy.charmer))
 	{
 		this.enemy = NULL;
 		return;

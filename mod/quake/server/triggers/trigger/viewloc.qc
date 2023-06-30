@@ -19,7 +19,7 @@ void viewloc_think(entity this)
 #endif
 
 #if 1
-	FOREACH_CLIENT(!it.viewloc && IS_PLAYER(it),
+	FOREACH_CLIENT(!it.viewloc && IS_PLAYER(it) && (time - it.spawn_time) > 1,
 	{
 		if(boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax)) // quick
 		{
