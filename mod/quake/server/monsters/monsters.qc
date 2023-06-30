@@ -234,6 +234,8 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 Monster monster_randomize(entity this, Monster mon)
 {
 	this.nightmare_checked = true;
+	if(world.model == "maps/eod7.bsp")
+		return mon; // map is broken currently with random mobs TODO
 
 	RandomSelection_Init();
 	FOREACH(Monsters, it != MON_Null,
