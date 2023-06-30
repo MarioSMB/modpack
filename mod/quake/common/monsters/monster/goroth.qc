@@ -525,7 +525,7 @@ METHOD(Goroth, mr_setup, bool(Goroth this, entity actor))
     if(horde_ent)
     	actor.scale = 0.18;
     else
-    	actor.scale = 1;
+    	actor.scale = 0.75;
 
 	actor.th_stand = gor_stand1;
 	actor.th_walk = gor_walk1;
