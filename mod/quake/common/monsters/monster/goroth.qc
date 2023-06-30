@@ -194,6 +194,7 @@ void GorothSmashMissile(entity this, vector dir, float rmv_t)
 	entity gmis = spawn();
 	gmis.owner = this;
 	gmis.solid = SOLID_NOT;
+	gmis.projectiledeathtype = DEATH_MONSTER_GOROTH.m_id;
 	set_movetype(gmis, MOVETYPE_FLY);
 	gmis.effects = EF_DIMLIGHT;
 	setsize(gmis, '0 0 0', '0 0 0');
