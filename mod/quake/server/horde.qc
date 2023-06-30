@@ -406,13 +406,13 @@ void horde_ammo_touch(entity this, entity toucher)
 	// loop through all players and give ammo
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		toucher.ammo_shells += this.ammo_shells;
-		toucher.ammo_nails += this.ammo_nails;
-		toucher.ammo_rockets += this.ammo_rockets;
-		toucher.ammo_cells += this.ammo_cells;
-		toucher.ammo_lava_nails += this.ammo_lava_nails;
-		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
-		toucher.ammo_plasma += this.ammo_plasma;
+		it.ammo_shells += this.ammo_shells;
+		it.ammo_nails += this.ammo_nails;
+		it.ammo_rockets += this.ammo_rockets;
+		it.ammo_cells += this.ammo_cells;
+		it.ammo_lava_nails += this.ammo_lava_nails;
+		it.ammo_multi_rockets += this.ammo_multi_rockets;
+		it.ammo_plasma += this.ammo_plasma;
 
 		// temp swap and set bounds
 		bound_other_ammo(it);

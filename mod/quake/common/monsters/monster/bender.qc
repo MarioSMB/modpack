@@ -202,7 +202,7 @@ void bend_pain(entity this, entity attacker, float damage, int deathtype)
 	}
 }
 
-void bend_die13(entity this) { set_animofs(this, anim_bender_die, 13, bend_die13); }
+void bend_die13(entity this) { set_animofs(this, anim_bender_die, 13, bend_die13); CorpseThink(this); }
 void bend_die12(entity this) { set_animofs(this, anim_bender_die, 12, bend_die13); }
 void bend_die11(entity this) { set_animofs(this, anim_bender_die, 11, bend_die12); }
 void bend_die10(entity this) { set_animofs(this, anim_bender_die, 10, bend_die11); }
@@ -226,7 +226,7 @@ void bend_die1(entity this)
 	this.solid = SOLID_NOT;
 }
 
-void bend_diea14(entity this) { set_animofs(this, anim_bender_diea, 14, bend_diea14); }
+void bend_diea14(entity this) { set_animofs(this, anim_bender_diea, 14, bend_diea14); CorpseThink(this); }
 void bend_diea13(entity this) { set_animofs(this, anim_bender_diea, 13, bend_diea14); }
 void bend_diea12(entity this) { set_animofs(this, anim_bender_diea, 12, bend_diea13); }
 void bend_diea11(entity this) { set_animofs(this, anim_bender_diea, 11, bend_diea12); }

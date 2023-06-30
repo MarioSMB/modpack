@@ -747,7 +747,7 @@ void gremlin_die3(entity this) { set_animofs(this, anim_gremlin_death, 3, gremli
 void gremlin_die2(entity this) { set_animofs(this, anim_gremlin_death, 2, gremlin_die3); ai_forward(this, 2); }
 void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
-void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); }
+void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); CorpseThink(this); }
 void gremlin_flip7(entity this)
 {
 	set_animofs(this, anim_gremlin_flip, 7, gremlin_flip7);

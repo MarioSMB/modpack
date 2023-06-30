@@ -1543,7 +1543,7 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_SUIT)
 	{
 		toucher.rad_time = 1;
-		toucher.radsuit_finished = time + 30; // give wetsuits full duration
+		toucher.radsuit_finished = time + 30; // full duration
 		if(coop) // Respawn biosuit in coop, since it might be required for progression
 		{
 			this.target = string_null; // but don't fire off targets again
@@ -1574,19 +1574,19 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.field_generator_health = this.health;
 		toucher.field_generator_time = -150;
-		toucher.field_generator_finished = time + powerups_maxtime;
+		toucher.field_generator_finished = time + 30; // full duration
 	}
 
 	if(this.powerups & POWERUP_WETSUIT)
 	{
 		toucher.wetsuit_time = 1;
-		toucher.wetsuit_finished = time + 30; // give wetsuits full duration
+		toucher.wetsuit_finished = time + 30; // full duration
 	}
 
 	if(this.powerups & POWERUP_EMPATHY_SHIELDS)
 	{
 		toucher.empathy_time = 1;
-		toucher.empathy_finished = time + powerups_maxtime;
+		toucher.empathy_finished = time + 30; // full duration
 	}
 
 	if(this.powerups & POWERUP_HORN_OF_CONJURING)
@@ -1602,7 +1602,7 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_ANTIGRAV)
 	{
 		toucher.antigrav_time = 1;
-		toucher.antigrav_finished = time + 45; // give antigrav full duration
+		toucher.antigrav_finished = time + 45; // full duration
 		toucher.gravity = 0.25;
 		if(coop) // Respawn antigrav in coop, since it might be required for progression
 		{
