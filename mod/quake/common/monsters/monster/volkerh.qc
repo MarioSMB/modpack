@@ -781,6 +781,7 @@ void vol_wake(entity this, entity actor, entity trigger)
 {
 	_sound(this, CH_VOICE, "volkerh/volwake.wav", 1, ATTN_NORM);
 	this.voltaunt_timer = time + 12;
+	this.enemy = actor;
 }
 
 spawnfunc(monster_volkerh) { monster_start(this, true, MON_VOLKERH); }

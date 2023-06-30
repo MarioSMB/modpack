@@ -43,14 +43,20 @@ void GorothTaunt(entity this)
 	float r = random();
 	
 	if(r < 0.33)
+	{
 		_sound(this, CH_VOICE, "goroth/gortaunt1.wav", 1, ATTN_NORM);
 		this.gortaunt_timer = time + 5;
+	}
 	if(r >= 0.33 && r < 0.66)
+	{
 		_sound(this, CH_VOICE, "goroth/gortaunt2.wav", 1, ATTN_NORM);
 		this.gortaunt_timer = time + 10;
+	}
 	if(r >= 0.66)
+	{
 		_sound(this, CH_VOICE, "goroth/gortaunt3.wav", 1, ATTN_NORM);
 		this.gortaunt_timer = time + 7;
+	}
 }
 
 void gor_stand1(entity this);
@@ -495,6 +501,7 @@ void gor_wake(entity this, entity actor, entity trigger)
 {
 	_sound(this, CH_VOICE, "goroth/gorwake.wav", 1, ATTN_NORM);
 	this.gortaunt_timer = time + 10;
+	this.enemy = actor;
 }
 
 spawnfunc(monster_goroth) { monster_start(this, true, MON_GOROTH); }
