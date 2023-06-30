@@ -808,11 +808,11 @@ METHOD(Volkerh, mr_setup, bool(Volkerh this, entity actor))
 	precache_sound("volkerh/volmag3.wav");
 	precache_sound("volkerh/voldie.wav");
 
-    actor.health = 6000;
+    actor.health = 3000;
     if(horde_ent)
     	actor.scale = 0.2;
     else
-    	actor.scale = 1;
+    	actor.scale = 0.75;
 
 	actor.th_stand = vol_stand1;
 	actor.th_walk = vol_walk1;
