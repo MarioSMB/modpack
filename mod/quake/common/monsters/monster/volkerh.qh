@@ -13,7 +13,7 @@ SOUND(MON_VOLKERH_SIGHT, "volkerh/volwake");
 #endif
 
 CLASS(Volkerh, Monster)
-    ATTRIB(Volkerh, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY);
+    ATTRIB(Volkerh, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_APPEAR);
     ATTRIB(Volkerh, m_mins, vector, '-83 -94 0');
     ATTRIB(Volkerh, m_maxs, vector, '83 94 582');
 #ifdef GAMEQC
