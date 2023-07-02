@@ -47,8 +47,8 @@ void roo_run10(entity this)
 		this.angles_y = MoveToAngle(this.angles_y, this.angles_y + ((random() < 0.5) * 2 - 1) * 40, 1000);
 	else
 		this.angles_y = MoveToAngle(this.angles_y, this.angles_y + random() * 40 - 20, 1000);
-	if(vdist(this.origin - this.enemy.origin, >, 384))
-		setthink(this, roo_stand1);
+	//if(vdist(this.origin - this.enemy.origin, >, 384))
+		//setthink(this, roo_stand1);
 }
 void roo_run9(entity this) { set_anim(this, 13, roo_run10); roo_run(this, 18); }
 void roo_run8(entity this) { set_anim(this, 12, roo_run9); roo_run(this, 22); }
@@ -62,26 +62,8 @@ void roo_run1(entity this) { set_anim(this, 6, roo_run2); roo_run(this, 12); }
 
 void roo_stand(entity this)
 {
-	entity trav = findradius(this.origin, 1024);
-	while(trav)
-	{
-		if(trav.classname == "player")
-		{
-			this.enemy = trav;
-			setthink(this, this.th_run);
-			return;
-		}
-		trav = trav.chain;
-	}
-	if(random() * 10 >= 7)
-	{
-		if((this.enemy = find(NULL, classname, "player")))
-		{
-			this.enemy = trav;
-			setthink(this, this.th_run);
-			return;
-		}
-	}
+	// NOTE: not calling ai_stand here as ai_walk is already handled manually
+	FindTarget(this);
 }
 
 void roo_pain(entity this, entity attacker, float damage, int deathtype)
