@@ -286,6 +286,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.is_frozen)
 		return;
 
+	if(targ.charmed && (IS_PLAYER(attacker) || attacker == targ.charmer || attacker.charmer == targ.charmer))
+		return; // no hurting our pets!
+
 	// shub kill crash fix.
 	// TODO
 	if(!MP_MG && targ.monsterdef == MON_SHUB && damage < 9999)

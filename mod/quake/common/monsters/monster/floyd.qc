@@ -471,6 +471,15 @@ METHOD(Floyd, mr_setup, bool(Floyd this, entity actor))
 	precache_sound2("floyd/fire.wav");
 	precache_sound2("floyd/death.wav");
 	precache_sound2("enforcer/enfstop.wav");
+
+	// random chance outside of horde to be on side!
+	if(!horde_ent && !actor.spawnflags && random() <= 0.1)
+	{
+		if(random() > 0.5)
+			actor.spawnflags |= FLOYD_ROLLING;
+		else
+			actor.spawnflags |= FLOYD_ASLEEP;
+	}
     
     if(actor.spawnflags & FLOYD_ROLLING)
     {

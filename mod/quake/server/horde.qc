@@ -1111,7 +1111,7 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 			continue;
 		if(autocvar_skill > 1 && (it.spawnflags & HORDE_EASY))
 			continue;
-		if((it.spawnflags & HORDE_FINALBOSS) && this.wave != 9)
+		if((it.spawnflags & HORDE_FINALBOSS) && ((this.wave % 9) != 0))
 			continue;
 		if((it.spawnflags & HORDE_ARMY) && !this.army)
 			continue;
@@ -1267,7 +1267,7 @@ bool SpawnWavePrep(entity this)
 		playerscalar = 1;
 	
 	// Boss Count
-	if(this.wave == 9)
+	if((this.wave % 9) == 0)
 		this.bosses = this.count; // use the horde manager's count for final boss count
 	else if((temp_wave % 3) == 0)
 	{

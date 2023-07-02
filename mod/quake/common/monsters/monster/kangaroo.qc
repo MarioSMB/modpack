@@ -125,6 +125,8 @@ void roo_touch(entity this, entity toucher)
 {
 	if(this.health <= 0 || (!this.takedamage))
 		return;
+	if(this.charmed && (IS_PLAYER(toucher) || toucher == this.charmer || toucher.charmer == this.charmer))
+		return;
 
 	if(toucher.takedamage && this.attack_finished < time && toucher.pain_finished < time)
 	{
