@@ -1,3 +1,9 @@
 #pragma once
 
+.float vsphere_last;
+
 void sphere_spawn(entity this, entity toucher);
+
+void sphere_attack(entity this, entity targ);
+
+void sphere_remove(entity this);

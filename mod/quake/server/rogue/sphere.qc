@@ -6,11 +6,11 @@
 void sphere_impact(entity this, entity toucher)
 {
 	if(toucher.health)
-		T_Damage(toucher, this, this, 1000, this.projectiledeathtype);
+		T_Damage(toucher, this, this.owner, 150, this.projectiledeathtype);
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this, 300, this.projectiledeathtype, toucher);
+	T_RadiusDamage(this, this.owner, 150, this.projectiledeathtype, toucher);
 
 //	sound (this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	setorigin(this, this.origin - 8 * normalize(this.velocity));
@@ -22,14 +22,8 @@ void sphere_impact(entity this, entity toucher)
 
 void sphere_remove(entity this)
 {
-	bool message_shown = false;
-	FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
+	IL_EACH(g_vspheres, it.owner == this,
 	{
-		if(!message_shown)
-		{
-			message_shown = true;
-			bprintf("%s is denied Vengeance.\n", it.owner.netname);
-		}
 		delete(it);
 	});
 }
@@ -37,21 +31,26 @@ void sphere_remove(entity this)
 // ==============================
 // sphere_attack
 // ==============================
-void sphere_attack(entity this)
+void sphere_chase(entity this)
 {
-	this.solid = SOLID_TRIGGER;
-	settouch(this, sphere_impact);
-
-	if(this.enemy.health < 1)
+	if(this.enemy.health < 1 || wasfreed(this.enemy) || wasfreed(this.owner))
 	{
-		sprint(this.owner, "You are denied Vengeance");
 		delete(this);
 		return;
 	}
-
 	ai_track(this, this.enemy, 650);
 	this.nextthink = time + 0.1;
-	setthink(this, sphere_attack);
+	setthink(this, sphere_chase);
+}
+
+void sphere_attack(entity this, entity targ)
+{
+	this.enemy = targ;
+
+	this.solid = SOLID_TRIGGER;
+	settouch(this, sphere_impact);
+
+	sphere_chase(this);
 }
 
 // ==============================
@@ -59,35 +58,20 @@ void sphere_attack(entity this)
 // ==============================
 void sphere_think(entity this)
 {
-	if(this.shieldSoundTime < time)
-	{
-		_sound( this, CH_VOICE, "sphere/sphere.wav", 1, ATTN_NORM);
-		this.shieldSoundTime = time + 4;
-	}
-	
 	if(time > this.delay)
 	{
-		this.owner.powerups &= ~POWERUP_V_SPHERE;
-		sprint( this.owner, "Vengeance Sphere Lost\n");
 		delete(this);
 		return;
 	}
 
-	if(this.owner.health < 1)
+	if(this.shieldSoundTime < time)
 	{
-		this.owner.powerups &= ~POWERUP_V_SPHERE;
-		if(IS_PLAYER(this.owner.enemy))
-		{
-			this.enemy = this.owner.enemy;
-			sphere_attack(this);
-			return;
-		}
-		if(IS_PLAYER(this.owner.enemy.owner)) // wtf lol
-		{
-			this.enemy = this.owner.enemy.owner; // mikee would be proud
-			sphere_attack(this);
-			return;
-		}
+		_sound(this, CH_WEAPON_SINGLE, "sphere/sphere.wav", 1, ATTN_NORM);
+		this.shieldSoundTime = time + 4;
+	}
+
+	if(this.owner.health < 1 || wasfreed(this.owner))
+	{
 		delete(this);
 		return;
 	}
@@ -101,22 +85,23 @@ void sphere_think(entity this)
 // ==============================
 // sphere_spawn
 // ==============================
-void sphere_spawn(entity this, entity toucher)
+void sphere_spawn(entity item, entity player)
 {
 	entity missile = new(Vengeance);
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 //	missile.solid = SOLID_BBOX;
 	missile.solid = SOLID_NOT;
-	missile.owner = toucher;
+	missile.owner = player;
 	missile.weapon = 0;
 	missile.delay = time + 30;
 	missile.projectiledeathtype = DEATH_SPHERE.m_id;
 	_setmodel(missile, "progs/sphere.mdl");
 	setsize(missile, '0 0 0', '0 0 0');     
-	setorigin(missile, this.origin);
+	setorigin(missile, item.origin);
 	missile.avelocity = '40 40 40';
 	setthink(missile, sphere_think);
-	missile.nextthink = time + 0.1;
+	missile.nextthink = time + 0.1 + random();
+	IL_PUSH(g_vspheres, missile);
 }
 
 /*QUAKED item_sphere (0 0 1) (-8 -8 -8) (8 8 8) ?

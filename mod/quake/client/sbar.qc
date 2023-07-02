@@ -210,9 +210,14 @@ void Sbar_DrawCharacter(vector thepos, int num)
 	Sbar_DrawString(thepos, sprintf("%c", num));
 }
 
+void Sbar_DrawAlphaPic_Color(vector thepos, string pic, float thealpha, vector thecolor)
+{
+	drawpic(sbar + thepos, pic, drawgetimagesize(pic), thecolor, thealpha, DRAWFLAG_NORMAL);
+}
+
 void Sbar_DrawAlphaPic(vector thepos, string pic, float thealpha)
 {
-	drawpic(sbar + thepos, pic, drawgetimagesize(pic), '1 1 1', thealpha, DRAWFLAG_NORMAL);
+	Sbar_DrawAlphaPic_Color(thepos, pic, thealpha, '1 1 1');
 }
 
 void Sbar_DrawPic(vector thepos, string pic)
@@ -220,8 +225,13 @@ void Sbar_DrawPic(vector thepos, string pic)
 	Sbar_DrawAlphaPic(thepos, pic, 1 * autocvar_sbar_alpha_fg);
 }
 
+void Sbar_DrawPic_Color(vector thepos, string pic, vector thecolor)
+{
+	Sbar_DrawAlphaPic_Color(thepos, pic, 1 * autocvar_sbar_alpha_fg, thecolor);
+}
+
 const int STAT_MINUS = 10; // num frame for '-' stats digit
-void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, bool thecolor, int lettersize, vector letterscale)
+void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, int thecolor, int lettersize, vector letterscale)
 {
 	int numlen = strlen(num);
 	if(numlen < digits)
@@ -236,17 +246,18 @@ void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, bool thecolo
 			theframe = "colon";
 		else
 			theframe = chr2str(it);
-		string thepic = Sbar_PickNum(thecolor, theframe);
+		string thepic = Sbar_PickNum(thecolor == 1, theframe);
+		vector piccolor = (thecolor == 2) ? '0 1 1' : '1 1 1';
 		if(!letterscale)
-			Sbar_DrawPic(thepos, thepic);
+			Sbar_DrawPic_Color(thepos, thepic, piccolor);
 		else
-			drawpic(sbar + thepos, thepic, letterscale, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(sbar + thepos, thepic, letterscale, piccolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		thepos.x += lettersize;
 	});
 }
 
-void Sbar_DrawNum(vector thepos, string num, int digits, bool thecolor)
+void Sbar_DrawNum(vector thepos, string num, int digits, int thecolor)
 {
 	Sbar_DrawNum_lettersize(thepos, num, digits, thecolor, 24, '0 0 0');
 }
@@ -998,7 +1009,7 @@ void Sbar_DrawFace()
 		pic = Sbar_FacePrefix("face_inv2");
 	else if(mypowerups & POWERUP_QUAD)
 		pic = Sbar_FacePrefix("face_quad");
-	else if(mypowerups & POWERUP_INVISIBILITY)
+	else if((mypowerups & POWERUP_INVISIBILITY) || ((mypowerups & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0))
 		pic = Sbar_FacePrefix("face_invis");
 	else if(mypowerups & POWERUP_INVULNERABILITY)
 		pic = Sbar_FacePrefix("face_invul2");
@@ -1102,7 +1113,15 @@ void Sbar_Draw()
 				Sbar_DrawFace();
 
 				// health
-				Sbar_DrawNum('136 0 0', itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
+				int myhealth = rint(STAT(HEALTH));
+				int hpcolor = (STAT(HEALTH) <= 25);
+				bool have_fieldgen = ((STAT(POWERUPS) & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0);
+				if(have_fieldgen)
+				{
+					myhealth += rint(STAT(FIELDGEN_HEALTH));
+					hpcolor = 2;
+				}
+				Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
 
 				if(STAT(SKATING))
 				{

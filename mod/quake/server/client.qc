@@ -7,6 +7,7 @@
 #include "fog.qh"
 #include "getreplies.qh"
 #include "player.qh"
+#include "rogue/sphere.qh"
 #include "shop.qh"
 #include "triggers/teleporters.qh"
 #include "weapons/weaponsystem.qh"
@@ -992,13 +993,7 @@ void ClientKill(entity this)
 	}
 	this.suicide_delay = time + autocvar_sv_quake_kill_delay;
 
-	if(this.powerups & POWERUP_V_SPHERE)
-	{
-		FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
-		{
-			delete(it);
-		});
-	}
+	sphere_remove(this);
 
 	bprintf("%s suicides\n", this.netname);
 
@@ -1996,6 +1991,7 @@ void CheckPowerups(entity this)
 				this.powerups &= ~POWERUP_FIELDGEN;
 				this.field_generator_finished = 0;
 				this.field_generator_time = 0;
+				this.field_generator_health = 0;
 				_sound(this, CHAN_AUTO, "weapons/field/genstop.wav", 1, ATTN_NORM);
 			}
 			else if(this.field_generator_finished < time + 10)
@@ -2493,7 +2489,6 @@ ClientDisconnect
 called when a player disconnects from a server
 ============
 */
-void sphere_remove(entity this);
 void ClientDisconnect(entity this)
 {
 	if(gameover)

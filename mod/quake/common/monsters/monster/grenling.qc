@@ -250,6 +250,7 @@ void gren_deathb1(entity this)
 	this.velocity_x = -200 + (400 * random());
 	this.velocity_y = -200 + (400 * random());
 	this.velocity_z = 100 + (100 * random());
+	set_movetype(this, MOVETYPE_TOSS);
 	UNSET_ONGROUND(this);
 	_sound(this, CHAN_VOICE, "monsters/grenling/grdie2.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;

@@ -208,10 +208,13 @@ REGISTER_STAT(SHOP_WEAPONS, vector, shop_weapons)
 .int ammo_lava_nails;
 .int ammo_multi_rockets;
 .int ammo_plasma;
+.float field_generator_health;
 #endif
 REGISTER_STAT(LAVA_NAILS, int, this.ammo_lava_nails)
 REGISTER_STAT(MULTI_ROCKETS, int, this.ammo_multi_rockets)
 REGISTER_STAT(PLASMA_AMMO, int, this.ammo_plasma)
+
+REGISTER_STAT(FIELDGEN_HEALTH, float, this.field_generator_health)
 
 #ifdef SVQC
 #include "../server/horde.qh"

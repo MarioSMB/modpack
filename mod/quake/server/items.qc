@@ -1494,8 +1494,6 @@ void powerup_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	// TODO: apply this logic to all powerups?
-	if((this.powerups & POWERUP_V_SPHERE) && (toucher.powerups & POWERUP_V_SPHERE))
-		return; // one per person please
 	if((this.powerups & POWERUP_FIREFLOWER) && (toucher.powerups & POWERUP_FIREFLOWER))
 		return;
 
@@ -1535,10 +1533,6 @@ void powerup_touch(entity this, entity toucher)
 
 	SUB_UseTargets(this, toucher, NULL);
 
-	float powerups_maxtime = 30;
-	if(horde_ent)
-		powerups_maxtime = 5;
-
 // do the apropriate action
 	if(this.powerups & POWERUP_SUIT)
 	{
@@ -1555,38 +1549,38 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_INVULNERABILITY)
 	{
 		toucher.invincible_time = 1;
-		toucher.invincible_finished = time + powerups_maxtime;
+		toucher.invincible_finished = time + ((horde_ent) ? 5 : 30);
 	}
 
 	if(this.powerups & POWERUP_INVISIBILITY)
 	{
 		toucher.invisible_time = 1;
-		toucher.invisible_finished = time + powerups_maxtime;
+		toucher.invisible_finished = time + ((horde_ent) ? 5 : 30);
 	}
 
 	if(this.powerups & POWERUP_QUAD)
 	{
 		toucher.super_time = 1;
-		toucher.super_damage_finished = time + powerups_maxtime;
+		toucher.super_damage_finished = time + ((horde_ent) ? 5 : 30);
 	}
 
 	if(this.powerups & POWERUP_FIELDGEN)
 	{
 		toucher.field_generator_health = this.health;
 		toucher.field_generator_time = -150;
-		toucher.field_generator_finished = time + 30; // full duration
+		toucher.field_generator_finished = time + ((horde_ent) ? 15 : 30);
 	}
 
 	if(this.powerups & POWERUP_WETSUIT)
 	{
 		toucher.wetsuit_time = 1;
-		toucher.wetsuit_finished = time + 30; // full duration
+		toucher.wetsuit_finished = time + 30;
 	}
 
 	if(this.powerups & POWERUP_EMPATHY_SHIELDS)
 	{
 		toucher.empathy_time = 1;
-		toucher.empathy_finished = time + 30; // full duration
+		toucher.empathy_finished = time + ((horde_ent) ? 15 : 30);
 	}
 
 	if(this.powerups & POWERUP_HORN_OF_CONJURING)
@@ -1602,7 +1596,7 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_ANTIGRAV)
 	{
 		toucher.antigrav_time = 1;
-		toucher.antigrav_finished = time + 45; // full duration
+		toucher.antigrav_finished = time + 45;
 		toucher.gravity = 0.25;
 		if(coop) // Respawn antigrav in coop, since it might be required for progression
 		{
@@ -1615,12 +1609,14 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_SHIELD)
 	{
 		toucher.shield_time = 1;
-		toucher.shield_finished = time + powerups_maxtime;
+		toucher.shield_finished = time + ((horde_ent) ? 15 : 30);
 	}
 
 	if(this.powerups & POWERUP_V_SPHERE)
 	{
 		sphere_spawn(this, toucher);
+		sphere_spawn(this, toucher);
+		toucher.vsphere_last = time + 0.5; // give player a chance to see they have them!
 	}
 
 	if(this.powerups & POWERUP_FIREFLOWER)
@@ -1742,11 +1738,11 @@ spawnfunc(item_powerup_shield)
 
 	settouch(this, powerup_touch);
 
-	precache_model ("progs/shield.mdl");
-	precache_model ("progs/p_shield.mdl");
-	precache_sound ("shield/pickup.wav");
-	precache_sound ("shield/hit.wav");
-	precache_sound ("shield/fadeout.wav");
+	precache_model("progs/shield.mdl");
+	precache_model("progs/p_shield.mdl");
+	precache_sound("shield/pickup.wav");
+	precache_sound("shield/hit.wav");
+	precache_sound("shield/fadeout.wav");
 	this.noise = "shield/pickup.wav";
 	_setmodel(this, "progs/shield.mdl");
 	this.netname = "Power Shield";
@@ -1764,10 +1760,10 @@ spawnfunc(item_powerup_belt)
 	
 	settouch(this, powerup_touch);
 
-	precache_model ("progs/beltup.mdl");
-	precache_sound ("belt/pickup.wav");
-	precache_sound ("belt/use.wav");
-	precache_sound ("belt/fadeout.wav");
+	precache_model("progs/beltup.mdl");
+	precache_sound("belt/pickup.wav");
+	precache_sound("belt/use.wav");
+	precache_sound("belt/fadeout.wav");
 	this.noise = "belt/pickup.wav";
 	_setmodel(this, "progs/beltup.mdl");
 	this.netname = "Anti-Grav Belt";
@@ -1832,8 +1828,8 @@ spawnfunc(item_artifact_empathy_shields)
 	precache_sound("hipitems/empathy.wav");
 	precache_sound("hipitems/empathy2.wav");
 	precache_sound("items/suit2.wav");
-	_setmodel(this, "progs/empathy.mdl");
 	this.noise = "hipitems/empathy.wav";
+	_setmodel(this, "progs/empathy.mdl");
 	this.netname = "Empathy Shields";
 	this.powerups = POWERUP_EMPATHY_SHIELDS;
 	setsize(this, '-16 -16 0', '16 16 32');

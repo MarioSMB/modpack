@@ -4,6 +4,7 @@
 #include "monsters/ai.qh"
 #include "monsters/ai_minions.qh"
 #include "monsters/monsters.qh"
+#include "rogue/sphere.qh"
 #include "triggers/triggers.qh"
 
 bool IsExplosionDamage;
@@ -320,6 +321,17 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		empathyused = false;
 	}
 
+	// vengeance sphere handling
+	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last)
+	{
+		IL_EACH(g_vspheres, it.owner == targ && !it.enemy,
+		{
+			sphere_attack(it, attacker);
+			targ.vsphere_last = time + 0.5; // prevent firing them all at once!
+			break;
+		});
+	}
+
 	damage_inflictor = inflictor; // hipnotic
 
 // save damage based on the target's armor level
@@ -400,7 +412,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			_sound(targ, CHAN_ITEM, "weapons/field/genhit2.wav", 1, ATTN_NORM);
 		else
 			_sound(targ, CHAN_ITEM, "weapons/field/genhit3.wav", 1, ATTN_NORM);
-		targ.field_generator_health = targ.field_generator_health - take;
+		targ.field_generator_health -= take;
 		showpain = false;
 		take = 0;
 		targ.effects |= EF_BRIGHTFIELD;

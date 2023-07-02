@@ -228,7 +228,34 @@ void PrecacheMonsters()
 	// horn
 	precache_model("progs/horn.mdl");
 	precache_sound("hipitems/horn.wav");
-	
+
+	// vsphere
+	precache_model("progs/sphere.mdl");
+	precache_sound("sphere/sphere.wav");
+
+	// fieldgen
+	precache_model("progs/fieldgen.mdl");
+	precache_sound("weapons/field/genlev.wav");
+	precache_sound("weapons/field/genpulse.wav");
+	precache_sound("weapons/field/genhit1.wav");
+	precache_sound("weapons/field/genhit2.wav");
+	precache_sound("weapons/field/genhit3.wav");
+	precache_sound("weapons/field/genactiv.wav");
+	precache_sound("weapons/field/genstop.wav");
+
+	// shield
+	precache_model("progs/shield.mdl");
+	precache_model("progs/p_shield.mdl");
+	precache_sound("shield/pickup.wav");
+	precache_sound("shield/hit.wav");
+	precache_sound("shield/fadeout.wav");
+
+	// empathy shields
+	precache_model("progs/empathy.mdl");
+	precache_sound("hipitems/empathy.wav");
+	precache_sound("hipitems/empathy2.wav");
+	precache_sound("items/suit2.wav");
+
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
 	{
@@ -1658,6 +1685,86 @@ void horde_powerup_think(entity this)
 	}
 }
 
+void horde_setup_powerup(entity this, int powerup)
+{
+	switch(powerup)
+	{
+		case POWERUP_INVULNERABILITY:
+		{
+			this.noise = "items/protect.wav";
+			_setmodel(this, "progs/invulner.mdl");
+			this.netname = "Pentagram of Protection";
+			this.powerups = POWERUP_INVULNERABILITY;
+			this.classname = "item_artifact_invulnerability";
+			break;
+		}
+		case POWERUP_QUAD:
+		{
+			this.noise = "items/damage.wav";
+			_setmodel(this, "progs/quaddama.mdl");
+			this.netname = "Quad Damage";
+			this.powerups = POWERUP_QUAD;
+			this.classname = "item_artifact_super_damage";
+			break;
+		}
+		case POWERUP_FIREFLOWER:
+		{
+			this.noise = "items/powerup_mario.wav";
+			_setmodel(this, "progs/g_fflower.mdl");
+			this.netname = "Fire Flower";
+			this.powerups = POWERUP_FIREFLOWER;
+			this.classname = "item_powerup_fireflower";
+			break;
+		}
+		case POWERUP_HORN_OF_CONJURING:
+		{
+			this.noise = "hipitems/horn.wav";
+			_setmodel(this, "progs/horn.mdl");
+			this.netname = "Horn of Conjuring";
+			this.powerups = POWERUP_HORN_OF_CONJURING;
+			this.classname = "item_hornofconjuring";
+			break;
+		}
+		case POWERUP_V_SPHERE:
+		{
+			this.noise = "sphere/sphere.wav";
+			_setmodel(this, "progs/sphere.mdl");
+			this.netname = "Vengeance Sphere";
+			this.powerups = POWERUP_V_SPHERE;
+			this.classname = "item_sphere";
+			break;
+		}
+		case POWERUP_FIELDGEN:
+		{
+			this.noise = "weapons/field/genactiv.wav";
+			_setmodel(this, "progs/fieldgen.mdl");
+			this.netname = "Force Field Generator";
+			this.powerups = POWERUP_FIELDGEN;
+			this.classname = "item_artifact_field_generator";
+			this.health = 100;
+			break;
+		}
+		case POWERUP_SHIELD:
+		{
+			this.noise = "shield/pickup.wav";
+			_setmodel(this, "progs/shield.mdl");
+			this.netname = "Power Shield";
+			this.powerups = POWERUP_SHIELD;
+			this.classname = "item_powerup_shield";
+			break;
+		}
+		case POWERUP_EMPATHY_SHIELDS:
+		{
+			this.noise = "hipitems/empathy.wav";
+			_setmodel(this, "progs/empathy.mdl");
+			this.netname = "Empathy Shields";
+			this.powerups = POWERUP_EMPATHY_SHIELDS;
+			this.classname = "item_artifact_empathy_shields";
+			break;
+		}
+	}
+}
+
 void horde_spawn_powerup(entity this)
 {
 	if(!powerup_chance)
@@ -1677,45 +1784,23 @@ void horde_spawn_powerup(entity this)
 		powerup.solid = SOLID_TRIGGER;
 		set_movetype(powerup, MOVETYPE_BOUNCE);
 		powerup.velocity = '0 0 300';
-		
+	
 		//powerup.velocity_x = crandom() * 64;
 		//powerup.velocity_y = crandom() * 64;
 		settouch(powerup, powerup_touch);
 		setthink(powerup, horde_powerup_think);
 		powerup.nextthink = time + 10;
-		
-		if(random() < 0.33) // spawn pentagram (invulnerability)
-		{
-			powerup.noise = "items/protect.wav";
-			_setmodel(powerup, "progs/invulner.mdl");
-			powerup.netname = "Pentagram of Protection";
-			powerup.powerups = POWERUP_INVULNERABILITY;
-			powerup.classname = "item_artifact_invulnerability";
-		}
-		else if(random() < 0.66) // spawn quad damage
-		{
-			powerup.noise = "items/damage.wav";
-			_setmodel(powerup, "progs/quaddama.mdl");
-			powerup.netname = "Quad Damage";
-			powerup.powerups = POWERUP_QUAD;
-			powerup.classname = "item_artifact_super_damage";
-		}
-		else if(random() < 0.33) // spawn fire flower!
-		{
-			powerup.noise = "items/powerup_mario.wav";
-			_setmodel(powerup, "progs/g_fflower.mdl");
-			powerup.netname = "Fire Flower";
-			powerup.powerups = POWERUP_FIREFLOWER;
-			powerup.classname = "item_powerup_fireflower";
-		}
-		else
-		{
-			powerup.noise = "hipitems/horn.wav";
-			_setmodel(powerup, "progs/horn.mdl");
-			powerup.netname = "Horn of Conjuring";
-			powerup.powerups = POWERUP_HORN_OF_CONJURING;
-			powerup.classname = "item_hornofconjuring";
-		}
+
+		RandomSelection_Init();
+		RandomSelection_AddFloat(POWERUP_INVULNERABILITY, 1, 1);
+		RandomSelection_AddFloat(POWERUP_QUAD, 1, 1);
+		RandomSelection_AddFloat(POWERUP_FIREFLOWER, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_V_SPHERE, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_HORN_OF_CONJURING, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_FIELDGEN, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_SHIELD, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_EMPATHY_SHIELDS, 0.5, 1);
+		horde_setup_powerup(powerup, RandomSelection_chosen_float);
 		//powerup.effects = EF_DIMLIGHT;
 		
 		setsize(powerup, '-12 -12 -12', '12 12 12');
