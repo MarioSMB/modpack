@@ -39,6 +39,12 @@ void roo_stand3(entity this) { set_anim(this, 3, roo_stand4); }
 void roo_stand2(entity this) { set_anim(this, 2, roo_stand3); }
 void roo_stand1(entity this) { set_anim(this, 1, roo_stand2); roo_stand(this); }
 
+void roo_hurt5(entity this) { set_anim(this, 1, roo_run1); }
+void roo_hurt4(entity this) { set_anim(this, 1, roo_hurt5); }
+void roo_hurt3(entity this) { set_anim(this, 1, roo_hurt4); }
+void roo_hurt2(entity this) { set_anim(this, 1, roo_hurt3); }
+void roo_hurt1(entity this) { set_anim(this, 1, roo_hurt2); }
+
 void roo_run10(entity this)
 {
 	set_anim(this, 14, roo_run1);
@@ -69,7 +75,9 @@ void roo_stand(entity this)
 void roo_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	SpawnBlood(this.origin, '0 0 -5', 100, this);
-	roo_stand1(this);
+	if(random() > 0.6)
+		return; // chance to not be stunned
+	roo_hurt1(this);
 }
 
 void roo_run(entity this, float dist)
