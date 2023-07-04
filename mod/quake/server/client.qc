@@ -149,7 +149,10 @@ void DecodeLevelParms(entity this)
 	this.ammo_plasma = parm13;
 
 	if(this.weaponentity)
+	{
 		this.weaponentity.currentspell = parm14;
+		this.weaponentity.skin = parm14;
+	}
 	if(this.weaponentity)
 		this.weaponentity.cnt = parm15;
 	this.items = parm16;
