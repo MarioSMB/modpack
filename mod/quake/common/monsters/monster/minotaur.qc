@@ -372,11 +372,13 @@ void minotaur_remove_attachment(entity this)
 		setthink(this.attachment, SUB_Remove);
 		this.attachment.nextthink = time + 0.1;
 	}
+	this.attachment = NULL;
 	if(this.attachment2)
 	{
 		setthink(this.attachment2, SUB_Remove);
 		this.attachment2.nextthink = time + 0.1;
 	}
+	this.attachment2 = NULL;
 }
 
 //----------------------------------------------------------------------

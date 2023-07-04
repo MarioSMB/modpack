@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SKULLWIZARD,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was blown apart by a Skull Wizard"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SKULLWIZARD,               1,  NULL,           INFO_DEATH_SELF_MON_SKULLWIZARD,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SKULLWIZARD,           DEATH_SELF_MON_SKULLWIZARD,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SKULLWIZARD, "progs/mon_skullwiz.mdl");
+MODEL(MON_SKULLWIZARD_HEAD, "progs/h_skullwiz.mdl");
+
+SOUND(MON_SKULLWIZARD_SIGHT, "skullwiz/sight");
+#endif
+
+CLASS(SkullWizard, Monster)
+    ATTRIB(SkullWizard, spawnflags, int, 0);
+    ATTRIB(SkullWizard, m_mins, vector, '-16 -16 -24');
+    ATTRIB(SkullWizard, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(SkullWizard, m_model, Model, MDL_MON_SKULLWIZARD);
+    ATTRIB(SkullWizard, m_model_head, Model, MDL_MON_SKULLWIZARD_HEAD);
+    ATTRIB(SkullWizard, m_sound, Sound, SND_MON_SKULLWIZARD_SIGHT);
+#endif
+    ATTRIB(SkullWizard, netname, string, "skullwiz");
+    ATTRIB(SkullWizard, monster_name, string, _("Skull Wizard"));
+ENDCLASS(SkullWizard)
+
+REGISTER_MONSTER(SKULLWIZARD, NEW(SkullWizard));

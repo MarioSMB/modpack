@@ -1199,8 +1199,6 @@ The monster is walking its beat
 */
 void ai_walk(entity this, float dist)
 {
-	this.move_dist = dist;
-
 	// check for noticing a player
 	if(FindTarget(this))
 		return;
@@ -1368,18 +1366,18 @@ ai_run_slide
 Strafe sideways, but stay at approximately the same range
 =============
 */
-void ai_run_slide(entity this)
+void ai_run_slide(entity this, float dist)
 {
 	this.ideal_yaw = this.enemy_yaw;
 	changeyaw(this);
 	float ofs = (this.lefty) ? 90 : -90;
 	
-	if(t_walkmove(this, this.ideal_yaw + ofs, this.move_dist))
+	if(t_walkmove(this, this.ideal_yaw + ofs, dist))
 		return;
 		
 	this.lefty = 1 - this.lefty;
 	
-	t_walkmove(this, this.ideal_yaw - ofs, this.move_dist);
+	t_walkmove(this, this.ideal_yaw - ofs, dist);
 }
 
 
@@ -1392,7 +1390,7 @@ Strafe sideways, but continue moving towards the enemy
 Used by the Scourge.
 =============
 */
-void ai_run_dodge(entity this)
+void ai_run_dodge(entity this, float dist)
 {
 /*
 // attempt to jump over missiles
@@ -1419,7 +1417,7 @@ void ai_run_dodge(entity this)
 
 	float newyaw = this.enemy_yaw + ofs;
 	this.ideal_yaw = this.enemy_yaw;
-	if(t_walkmove(this, newyaw, this.move_dist))
+	if(t_walkmove(this, newyaw, dist))
 	{
 		changeyaw(this);
 		return;
@@ -1429,7 +1427,7 @@ void ai_run_dodge(entity this)
 	this.ltime = time + 0.8;
 	newyaw = this.enemy_yaw - ofs;
 	this.ideal_yaw = this.enemy_yaw;
-	t_walkmove(this, newyaw, this.move_dist);
+	t_walkmove(this, newyaw, dist);
 	changeyaw(this);
 }
 
@@ -1445,7 +1443,6 @@ The monster has an enemy it is trying to kill
 .float endtime; // reused
 void ai_run(entity this, float dist)
 {
-	this.move_dist = dist;
 // see if the enemy is dead
 	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
 	{
@@ -1507,13 +1504,13 @@ void ai_run(entity this, float dist)
 		
 	if(this.attack_state == AS_SLIDING)
 	{
-		ai_run_slide(this);
+		ai_run_slide(this, dist);
 		return;
 	}
 
 	if (this.attack_state == AS_DODGING)
 	{
-		ai_run_dodge(this);
+		ai_run_dodge(this, dist);
 		return;
 	}
 
@@ -1521,7 +1518,7 @@ void ai_run(entity this, float dist)
 	if(this.run_straight && time > this.endtime)
 	{
 		this.run_straight = false;
-		bool axis = t_walkmove(this, this.angles_y, this.move_dist);
+		bool axis = t_walkmove(this, this.angles_y, dist);
 		if (!axis)
 		{
 			this.endtime = time + 3;

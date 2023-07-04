@@ -65,7 +65,7 @@ void SpawnExplosion(int sprite_type, vector org, string expl_sound)
 	newmis.nextthink = time + 4;
 
 	// Play any explosion sounds on temporary entity
-	if(expl_sound != "")
+	if(expl_sound && expl_sound != "")
 		_sound(newmis, CH_WEAPON_SINGLE, expl_sound, 1, ATTN_NORM);
 }
 
@@ -81,7 +81,7 @@ void BecomeExplosion(entity this)
 	this.solid = SOLID_NOT;
 	_setmodel(this, "");
 	setsize(this, '0 0 0', '0 0 0');
-	SpawnExplosion(EXPLODE_SMALL, this.origin, "");
+	SpawnExplosion(EXPLODE_SMALL, this.origin, this.noise);
 	this.nextthink = time + 0.6;
 	setthink(this, SUB_Remove);
 }

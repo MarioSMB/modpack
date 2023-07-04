@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_LOSTSOUL,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was found by a Lost Soul"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_LOSTSOUL,               1,  NULL,           INFO_DEATH_SELF_MON_LOSTSOUL,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_LOSTSOUL,           DEATH_SELF_MON_LOSTSOUL,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_LOSTSOUL, "progs/mon_lostsoul.mdl");
+
+//SOUND(MON_LOSTSOUL_SIGHT, "lostsoul/sight1");
+#endif
+
+CLASS(LostSoul, Monster)
+    ATTRIB(LostSoul, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_HIDDEN);
+    ATTRIB(LostSoul, m_mins, vector, '-16 -16 -24');
+    ATTRIB(LostSoul, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(LostSoul, m_model, Model, MDL_MON_LOSTSOUL);
+    ATTRIB(LostSoul, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(LostSoul, netname, string, "lostsoul");
+    ATTRIB(LostSoul, monster_name, string, _("Lost Soul"));
+ENDCLASS(LostSoul)
+
+REGISTER_MONSTER(LOSTSOUL, NEW(LostSoul));

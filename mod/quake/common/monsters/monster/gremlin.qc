@@ -254,8 +254,6 @@ The monster is walking it's beat
 */
 void gremlin_walk(entity this, float dist)
 {
-	this.move_dist = dist;
-
 	// check for noticing a player
 	if(GremlinFindTarget(this))
 		return;
@@ -298,8 +296,6 @@ void gremlin_run(entity this, float dist)
 {
 	if(this.watertype == CONTENT_LAVA) // do damage
 		T_Damage(this, NULL, NULL, 2000, DEATH_LAVA.m_id);
-
-	this.move_dist = dist;
 
 	if(this.stoleweapon)
 		this.frame = this.frame + anim_gremlin_grun - anim_gremlin_run;

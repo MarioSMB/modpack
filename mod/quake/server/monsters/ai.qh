@@ -47,8 +47,6 @@ const float MIN_ANGLE_DELTA = 10;
 .int enemy_range;
 .float enemy_yaw;
 
-.float move_dist;
-
 bool z_overlap(entity this, entity targ);
 
 bool CanTakedamage(entity e, entity actor);
@@ -81,9 +79,9 @@ void ai_run_melee(entity this);
 
 void ai_run_missile(entity this);
 
-void ai_run_slide(entity this);
+void ai_run_slide(entity this, float dist);
 
-void ai_run_dodge(entity this);
+void ai_run_dodge(entity this, float dist);
 
 void ai_run(entity this, float dist);
 

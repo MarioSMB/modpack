@@ -2,6 +2,8 @@
 
 bool autocvar_horde;
 
+string autocvar_horde_test = "";
+
 bool have_hordehub;
 
 int keys_silver; // number of silver keys the players are carrying

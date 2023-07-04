@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_DROLE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was decimated by a Drole"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_DROLE,               1,  NULL,           INFO_DEATH_SELF_MON_DROLE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_DROLE,           DEATH_SELF_MON_DROLE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_DROLE, "progs/mon_drole.mdl");
+MODEL(MON_DROLE_HEAD, "progs/h_drole.mdl");
+
+SOUND(MON_DROLE_SIGHT, "drole/sight");
+#endif
+
+CLASS(Drole, Monster)
+    ATTRIB(Drole, spawnflags, int, 0);
+    ATTRIB(Drole, m_mins, vector, '-24 -24 -24');
+    ATTRIB(Drole, m_maxs, vector, '24 24 40');
+#ifdef GAMEQC
+    ATTRIB(Drole, m_model, Model, MDL_MON_DROLE);
+    ATTRIB(Drole, m_model_head, Model, MDL_MON_DROLE_HEAD);
+    ATTRIB(Drole, m_sound, Sound, SND_MON_DROLE_SIGHT);
+#endif
+    ATTRIB(Drole, netname, string, "drole");
+    ATTRIB(Drole, monster_name, string, _("Drole"));
+ENDCLASS(Drole)
+
+REGISTER_MONSTER(DROLE, NEW(Drole));

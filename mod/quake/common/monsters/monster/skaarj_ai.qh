@@ -1,0 +1,55 @@
+#pragma once
+
+#ifdef SVQC
+.float sk_strafe_finished;
+.float sk_dodge_finished;
+.float sk_painanim_finished;
+.float sk_run_finished;
+.float sk_strafe_yaw;
+
+.float skaarj_fight_finished;
+
+// AI states. Some states may share the same animation sequence
+// not really used at the end
+const int SK_ST_RUN = 1;
+const int SK_ST_RUNFIRE = 2;
+const int SK_ST_RUN_CHARGE = 3;
+const int SK_ST_RUNFIRE_CHARGE = 4;
+const int SK_ST_FIGHT = 5;
+const int SK_ST_DODGE_LEFT = 6;
+const int SK_ST_DODGE_RIGHT = 7;
+const int SK_ST_STRAFE_LEFT = 8;
+const int SK_ST_STRAFE_RIGHT = 9;
+const int SK_ST_STRAFEFIRE_LEFT = 10;
+const int SK_ST_STRAFEFIRE_RIGHT = 11;
+
+// TODO: circular includes might prevent us from linking it directly?
+void skaarj_leftdodge1(entity this);
+void skaarj_rightdodge1(entity this);
+
+bool sk_checkprojectiles(entity this);
+
+bool sk_checkenemy(entity this);
+
+bool sk_checkrefire(entity this);
+
+bool sk_checkrunfire(entity this);
+
+bool sk_trycharge(entity this);
+
+bool sk_tryrun(entity this);
+
+bool sk_trymelee(entity this);
+
+bool sk_tryspin(entity this);
+
+void sk_fight(entity this, float dist);
+
+void sk_side(entity this, float dist, float yaw);
+
+void sk_strafe(entity this, float dist, float yaw);
+
+void sk_run_charge(entity this, float dist);
+
+void sk_run(entity this, float dist);
+#endif

@@ -2162,7 +2162,8 @@ void CheckPowerups(entity this)
 
 		if(this.shield_finished < time)
 		{
-			sprint(this, "Shield lost.\n");
+			if(!(MP_MG && autocvar_horde))
+				sprint(this, "Shield lost.\n");
 			this.shield_finished = 0;
 			this.powerups &= ~POWERUP_SHIELD;
 		}
@@ -2188,7 +2189,8 @@ void CheckPowerups(entity this)
 		
 		if(this.antigrav_finished < time)
 		{
-			sprint(this, "Antigrav Lost.\n");
+			if(!(MP_MG && autocvar_horde))
+				sprint(this, "Antigrav Lost.\n");
 			this.antigrav_finished = 0;
 			this.powerups &= ~POWERUP_ANTIGRAV;
 			this.gravity = 1.0;

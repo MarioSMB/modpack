@@ -1011,17 +1011,19 @@ void player_touch(entity this, entity toucher)
 {
 	if(this.powerups & POWERUP_SHIELD)
 	{
-		if(IS_PLAYER(toucher))
+		if(IS_MONSTER(toucher))
 		{
 			makevectors(this.angles);
 			vector vec = normalize(toucher.origin - this.origin);
 			float dot = vec * v_forward;
         	if(dot < 0.3)
 				return;
+
+			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
 				
 			makevectors(this.angles);
-		    toucher.velocity = v_forward * 500;
-			toucher.velocity_z = 250;
+		    toucher.velocity = v_forward * (500 * pushforce);
+			toucher.velocity_z = (250 * pushforce);
 
 			// if shield has timed out, respawn it.
 			// don't do particles more than twice a second. 
@@ -1034,7 +1036,7 @@ void player_touch(entity this, entity toucher)
 				shield_spawn(this, v_forward);
 			}
 
-			T_Damage(toucher, this.shield_entity, this.shield_entity, 15, DEATH_SHIELD.m_id);
+			T_Damage(toucher, this.shield_entity, this, 15, DEATH_SHIELD.m_id);
 
 //			this.shield_death_time = time + 0.5;
 		}

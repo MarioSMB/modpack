@@ -299,6 +299,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
+	if(IS_PLAYER(targ) && inflictor.classname == "Vengeance")
+		return;
 	IsExplosionDamage = false;
 
 	if(targ.powerups & POWERUP_SHIELD)
@@ -322,7 +324,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	// vengeance sphere handling
-	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last)
+	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last && vdist(attacker.origin - targ.origin, >, 250))
 	{
 		IL_EACH(g_vspheres, it.owner == targ && !it.enemy,
 		{

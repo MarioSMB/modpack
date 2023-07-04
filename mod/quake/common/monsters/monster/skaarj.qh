@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SKAARJ,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was riddled full of holes by a Skaarj"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SKAARJ,               1,  NULL,           INFO_DEATH_SELF_MON_SKAARJ,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SKAARJ,           DEATH_SELF_MON_SKAARJ,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SKAARJ, "progs/skaarj.mdl");
+MODEL(MON_SKAARJ_HEAD, "progs/gib3.mdl");
+
+SOUND(MON_SKAARJ_SIGHT, "skaarj/syl13sk");
+#endif
+
+CLASS(Skaarj, Monster)
+    ATTRIB(Skaarj, spawnflags, int, 0);
+    ATTRIB(Skaarj, m_mins, vector, '-16 -16 -38');
+    ATTRIB(Skaarj, m_maxs, vector, '16 16 26');
+#ifdef GAMEQC
+    ATTRIB(Skaarj, m_model, Model, MDL_MON_SKAARJ);
+    ATTRIB(Skaarj, m_model_head, Model, MDL_MON_SKAARJ_HEAD);
+    ATTRIB(Skaarj, m_sound, Sound, SND_MON_SKAARJ_SIGHT);
+#endif
+    ATTRIB(Skaarj, netname, string, "skaarj");
+    ATTRIB(Skaarj, monster_name, string, _("Skaarj"));
+ENDCLASS(Skaarj)
+
+REGISTER_MONSTER(SKAARJ, NEW(Skaarj));
