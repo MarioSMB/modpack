@@ -218,7 +218,7 @@ void player_stand1(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_axstnd1, player_stand1);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW)
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK)
 		this.weaponentity.m_frame = 0;
 	if(this.velocity_x || this.velocity_y)
 	{
@@ -252,6 +252,27 @@ void player_stand1(entity this)
 		if(this.view_ofs != '0 0 0')
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
+	if(wep == WEP_SPELLBOOK)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.swappingspell)
+		{
+			if(this.weaponentity.m_frame > 12)
+			{
+				this.weaponentity.m_frame = 23;
+				this.weaponentity.currentspell += 1;
+				if(this.weaponentity.currentspell > SPELL_LAST)
+					this.weaponentity.currentspell = SPELL_FIRST;
+				this.weaponentity.skin = this.weaponentity.currentspell; // TODO: merge them? might want a spell registry!
+				this.weaponentity.swappingspell = false;
+			}
+		}
+		else
+		{
+			if(this.weaponentity.m_frame >= 48)
+				this.weaponentity.m_frame = 28;
+		}
+	}
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
@@ -274,7 +295,7 @@ void player_run(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_rockrun1, player_run);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW)
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK)
 		this.weaponentity.m_frame = 0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
@@ -307,6 +328,27 @@ void player_run(entity this)
 			this.weaponentity.m_frame = 0;
 		if(this.view_ofs != '0 0 0')
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
+	}
+	if(wep == WEP_SPELLBOOK)
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.swappingspell)
+		{
+			if(this.weaponentity.m_frame > 12)
+			{
+				this.weaponentity.m_frame = 23;
+				this.weaponentity.currentspell += 1;
+				if(this.weaponentity.currentspell > SPELL_LAST)
+					this.weaponentity.currentspell = SPELL_FIRST;
+				this.weaponentity.skin = this.weaponentity.currentspell; // TODO: merge them? might want a spell registry!
+				this.weaponentity.swappingspell = false;
+			}
+		}
+		else
+		{
+			if(this.weaponentity.m_frame >= 48)
+				this.weaponentity.m_frame = 28;
+		}
 	}
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)

@@ -1124,9 +1124,9 @@ void Sbar_Draw()
 				Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
 
 				if(STAT(SKATING))
-				{
 					Sbar_DrawNum('248 0 0', itos(rint(STAT(STAMINA))), 3, STAT(STAMINA) <= 10);
-				}
+				else if(viewmodels.activeweapon == WEP_SPELLBOOK)
+					Sbar_DrawNum('248 0 0', itos(rint(STAT(MANA))), 3, STAT(MANA) <= 10);
 				else
 				{
 					// ammo icon

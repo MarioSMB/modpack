@@ -83,9 +83,17 @@ void spikemine_Touch(entity this, entity toucher)
 	s_explode1(this);
 }
 
+void spikemine_explode(entity this)
+{
+	spikemine_Touch(this, this.enemy);
+}
+
 void spikemine_Die(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	spikemine_Touch(this, attacker);
+	this.takedamage = DAMAGE_NO;
+	this.enemy = attacker;
+	setthink(this, spikemine_explode);
+	this.nextthink = time;
 }
 
 /*

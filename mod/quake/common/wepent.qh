@@ -3,6 +3,8 @@
 REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
 REGISTER_NET_TEMP(CLIENT_WEPENT)
 
+.int currentspell;
+
 #ifdef SVQC
 
 	bool wepent_send(entity this, entity to, int sf);
@@ -21,6 +23,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 #ifdef CSQC
 	.int m_wepent_slot;
+
+	.int m_skin;
 
 	.Weapon activeweapon;
 #endif

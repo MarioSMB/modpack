@@ -100,6 +100,8 @@ Stay facing the enemy
 */
 void ai_face(entity this)
 {
+	if(!this.enemy)
+		return;
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
 	changeyaw(this);
 }

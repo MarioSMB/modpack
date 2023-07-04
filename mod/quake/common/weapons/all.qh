@@ -4,7 +4,7 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler lightning plasma shock lightme laser_gun grenadelauncher multigrenade proximitygun napalm supernailgun lavasupernailgun piano ripper sshotgun nailgun lavanailgun shotgun hammer chainsaw axe";
+noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler lightning plasma shock lightme laser_gun grenadelauncher multigrenade proximitygun napalm spellbook supernailgun lavasupernailgun piano ripper sshotgun nailgun lavanailgun shotgun hammer chainsaw axe";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher multirocketlauncher impaler grenadelauncher multigrenade proximitygun napalm"; // explosives
 noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme"; // energy

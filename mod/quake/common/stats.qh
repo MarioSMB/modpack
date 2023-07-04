@@ -233,3 +233,5 @@ REGISTER_STAT(SKATESPEED, float, this.skatespeed)
 REGISTER_STAT(PUSH_FAST_TIME, float, this.push_fast_time)
 REGISTER_STAT(GRIND_START_TIME, float, this.grind_start_time)
 REGISTER_STAT(GRIND_STOP_TIME, float, this.grind_stop_time)
+
+REGISTER_STAT(MANA, float)

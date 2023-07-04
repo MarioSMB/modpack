@@ -24,6 +24,14 @@ MACRO_END
 	{ WriteByte(chan, this.m_frame); }, \
 	{ CSQCModel_InterpolateAnimation_1To2_PreNote(viewmodels, BIT(23)); viewmodels.frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note(viewmodels, BIT(23), true); CSQCModel_InterpolateAnimation_Do(viewmodels); }) \
     \
+    PROP(false, currentspell, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.currentspell); }, \
+	{ viewmodels.currentspell = ReadByte(); }) \
+    \
+    PROP(false, skin, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.skin); }, \
+	{ viewmodels.m_skin = ReadShort(); }) \
+    \
 	/**/
 
 #ifdef SVQC

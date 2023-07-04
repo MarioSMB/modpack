@@ -254,20 +254,26 @@ void viewmodel_draw(entity this)
 
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active || STAT(SKATING)) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	int wepskin = this.m_skin;
 	Weapon wep = this.activeweapon;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
 		&~ (EF_FULLBRIGHT); // can mask team color, so get rid of it
+	bool swapskin = this.skin != wepskin;
 	this.drawmask = mask;
 	this.alpha = a;
+	this.skin = wepskin;
 	this.csqcmodel_effects = fx;
 	CSQCModel_Effects_Apply(this);
 	if(a >= 0)
 	{
 		string name = wep.mdl;
+		string newname = wep.wr_viewmodel(wep, this);
+		if(newname)
+			name = newname;
 		bool swap = name != this.name_last;
-		if (swap)
+		if (swap || swapskin)
 		{
 			CSQCModel_InterpolateAnimation_1To2_PreNote(this, BIT(23));
 			CSQCModel_InterpolateAnimation_1To2_Note(this, BIT(23), true);
@@ -291,6 +297,8 @@ STATIC_INIT(viewmodel) {
 
     // forces lerping to work at 10 fps, needed for smooth weapon animations
     cvar_settemp("cl_lerpanim_maxdelta_framegroups", "0.1");
+    // random fix for collision issues
+    cvar_settemp("mod_q1bsp_polygoncollisions", "0");
 }
 
 // visual overlay while in liquids

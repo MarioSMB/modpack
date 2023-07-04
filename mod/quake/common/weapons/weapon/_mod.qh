@@ -21,3 +21,4 @@
 #include "shock_gun.qh"
 #include "piano.qh"
 #include "ripper.qh"
+#include "spellbook.qh"

@@ -1,0 +1,48 @@
+#pragma once
+
+CLASS(Spellbook, Weapon)
+/* ammotype  */ ATTRIB(Spellbook, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Spellbook, impulse, int, 0);
+/* spawnflags*/ ATTRIB(Spellbook, spawnflags, int, WEP_FLAG_NOSTEAL);
+/* ammo */      ATTRIB(Spellbook, aflag, int, 0);
+/* modelname */ ATTRIB(Spellbook, mdl, string, "book");
+/* crosshair */ ATTRIB(Spellbook, w_crosshair, string, "gfx/crosshaircrylink");
+/* crosshair */ ATTRIB(Spellbook, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(Spellbook, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Spellbook, model2, string, "mjolnir");
+/* refname   */ ATTRIB(Spellbook, netname, string, "spellbook");
+/* wepname   */ ATTRIB(Spellbook, m_name, string, _("Spellbook"));
+
+ENDCLASS(Spellbook)
+REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
+
+//SPAWNFUNC_WEAPON(weapon_spellbook, WEP_SPELLBOOK)
+
+#ifdef SVQC
+.float mana_regen_time;
+
+.bool swappingspell;
+
+const float MANA_REGEN_RATE = 0.25;
+
+//.int currentspell;
+#endif
+const int SPELL_FIRST = 0;
+const int SPELL_SWORD = 0;
+const float SPELL_COST_SWORD = 15;
+const int SPELL_FROST = 1;
+const float SPELL_COST_FROST = 5;
+const int SPELL_ICECANNON = 2;
+const float SPELL_COST_ICECANNON = 30;
+const int SPELL_VORELING = 3;
+const float SPELL_COST_VORELING = 40;
+const int SPELL_BONESHARD = 4;
+const float SPELL_COST_BONESHARD = 20;
+const int SPELL_CURSE = 5;
+const float SPELL_COST_CURSE = 30;
+const int SPELL_EXPLOSION = 6;
+const float SPELL_COST_EXPLOSION = 30;
+const int SPELL_SERPENT = 7;
+const float SPELL_COST_SERPENT = 40;
+const int SPELL_LAST = 7;
+

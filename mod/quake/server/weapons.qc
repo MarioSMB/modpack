@@ -334,8 +334,10 @@ void T_MissileTouch(entity this, entity toucher)
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
 		if(toucher.resist_rockets != 0)
+		{
 			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
-		Resist_Rockets(toucher, this.origin);
+			Resist_Rockets(toucher, this.origin);
+		}
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 

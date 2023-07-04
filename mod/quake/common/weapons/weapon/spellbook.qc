@@ -1,0 +1,1212 @@
+#include "spellbook.qh"
+
+#ifdef SVQC
+PRECACHE(Spellbook)
+{
+	precache_model("progs/g_book.mdl");
+	precache_model("progs/v_book.mdl");
+
+	// sword
+	precache_model("progs/sword.mdl");
+	precache_sound("weapons/sword_swing.wav");
+
+	// frost
+	precache_model("progs/ice_expl1.spr");
+	precache_sound("weapons/punch_ice2.wav");
+
+	// ice cannon
+	precache_model("progs/ice_shard.mdl");
+	precache_model("progs/ice_fragment1.mdl");
+	precache_model("progs/ice_fragment2.mdl");
+	precache_model("progs/ice_fragment3.mdl");
+	precache_sound("weapons/ice_cannon_shot.wav");
+	precache_sound("weapons/ice_shatter.wav");
+
+	// voreling
+	precache_model("progs/voreling_rune.spr");
+	precache_sound("weapons/summon_vorelings.wav");
+
+	// rune
+	precache_model("progs/bone_rune.spr");
+	precache_sound("weapons/skel_rune.wav");
+
+	// curse
+	precache_model("progs/skull_pike_1.mdl");
+	precache_model("progs/skull_pike_2.mdl");
+	precache_model("progs/fire_rune.spr");
+	precache_model("progs/flame2.mdl");
+	precache_model("progs/skull.mdl");
+	precache_sound("weapons/skull_attack.wav");
+
+	// explosion
+	precache_sound("weapons/launch_fireball.wav");
+
+	precache_model("progs/bone_shard.mdl");
+	precache_sound("weapons/rune_cast.wav");
+	precache_sound("weapons/page_flip.wav");
+}
+
+void Regenerate_Mana(entity this)
+{
+	if(this.mana_regen_time < time && STAT(MANA, this) < 100)
+	{
+		STAT(MANA, this) += 1;
+		
+		if(STAT(MANA, this) > 100)
+			STAT(MANA, this) = 100;
+	
+		this.mana_regen_time = time + MANA_REGEN_RATE;
+	}
+}
+
+bool rune_checkspace(entity this)
+{
+	makevectors(this.v_angle);
+	vector src = this.origin + v_forward * 150;
+
+	tracebox(src, '-64 -64 0', '64 64 4', src, MOVE_NOMONSTERS, this);
+
+	return trace_startsolid;
+}
+
+const int anim_sword_stand = 0; //'0 0 0'
+const int anim_sword_runb = 1; //'1 8 0'
+const int anim_sword_attackb = 9; //'9 18 0'
+const int anim_sword_death = 19; //'19 28 0'
+const int anim_sword_deathb = 29; //'29 40 0'
+
+void killsword(entity this)
+{
+	droptofloor(this);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 3;
+}
+
+void sworddieb11(entity this) { set_animofs(this, anim_sword_deathb, 11, killsword); }
+void sworddieb10(entity this)
+{
+	set_animofs(this, anim_sword_deathb, 10, sworddieb11);
+	_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
+}
+void sworddieb9(entity this) { set_animofs(this, anim_sword_deathb, 9, sworddieb10); }
+void sworddieb8(entity this) { set_animofs(this, anim_sword_deathb, 8, sworddieb9); }
+void sworddieb7(entity this)
+{
+	set_animofs(this, anim_sword_deathb, 7, sworddieb8);
+	//_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
+}
+void sworddieb6(entity this) { set_animofs(this, anim_sword_deathb, 6, sworddieb7); }
+void sworddieb5(entity this) { set_animofs(this, anim_sword_deathb, 5, sworddieb6); }
+void sworddieb4(entity this) { set_animofs(this, anim_sword_deathb, 4, sworddieb5); }
+void sworddieb3(entity this) { set_animofs(this, anim_sword_deathb, 3, sworddieb4); }
+void sworddieb2(entity this) { set_animofs(this, anim_sword_deathb, 2, sworddieb3); }
+void sworddieb1(entity this) { set_animofs(this, anim_sword_deathb, 1, sworddieb2); }
+
+void sworddie10(entity this) { set_animofs(this, anim_sword_death, 10, killsword); }
+void sworddie9(entity this)
+{
+	set_animofs(this, anim_sword_death, 9, sworddie10);
+	_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 0.5, ATTN_NORM);
+}
+void sworddie8(entity this) { set_animofs(this, anim_sword_death, 8, sworddie9); }
+void sworddie7(entity this)
+{
+	set_animofs(this, anim_sword_death, 7, sworddie8);
+	//_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
+}
+void sworddie6(entity this) { set_animofs(this, anim_sword_death, 6, sworddie7); }
+void sworddie5(entity this) { set_animofs(this, anim_sword_death, 5, sworddie6); }
+void sworddie4(entity this) { set_animofs(this, anim_sword_death, 4, sworddie5); }
+void sworddie3(entity this) { set_animofs(this, anim_sword_death, 3, sworddie4); }
+void sworddie2(entity this) { set_animofs(this, anim_sword_death, 2, sworddie3); }
+void sworddie1(entity this) { set_animofs(this, anim_sword_death, 1, sworddie2); }
+
+void choosesworddeath(entity this)
+{
+	if(random() < 0.5)
+		sworddieb1(this);
+	else
+		sworddie1(this);
+	set_movetype(this, MOVETYPE_TOSS);
+}
+
+void animatesword10(entity this) { set_animofs(this, anim_sword_attackb, 10, choosesworddeath); ai_face(this); }
+void animatesword9(entity this) { set_animofs(this, anim_sword_attackb, 9, animatesword10); ai_face(this); }
+void animatesword8(entity this) { set_animofs(this, anim_sword_attackb, 8, animatesword9); ai_face(this); }
+void animatesword7(entity this) { set_animofs(this, anim_sword_attackb, 7, animatesword8); ai_face(this); }
+void animatesword6(entity this) { set_animofs(this, anim_sword_attackb, 6, animatesword7); ai_face(this); }
+void animatesword5(entity this) { set_animofs(this, anim_sword_attackb, 5, animatesword6); ai_face(this); }
+void animatesword4(entity this) { set_animofs(this, anim_sword_attackb, 4, animatesword5); ai_face(this); }
+void animatesword3(entity this)
+{
+	set_animofs(this, anim_sword_attackb, 3, animatesword4);
+	ai_face(this);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sword_swing.wav", 1, ATTN_NORM);
+}
+void animatesword2(entity this) { set_animofs(this, anim_sword_attackb, 2, animatesword3); ai_face(this); }
+void animatesword1(entity this)
+{
+	set_animofs(this, anim_sword_attackb, 1, animatesword2);
+	ai_face(this);
+	//_sound(this, CH_WEAPON_SINGLE, "weapons/sword_swing.wav", 1, ATTN_NORM);
+}
+
+.float swing_prev;
+.entity swing_alreadyhit;
+void sword_melee_think(entity this)
+{
+	// declarations
+	float i, f, swing, swing_factor, swing_damage, meleetime;
+	entity target_victim;
+	vector targpos;
+
+	makevectors(this.realowner.angles); // update values for v_* vectors
+
+	// calculate swing percentage based on time
+	meleetime = 0.15;
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
+	f = ((1 - swing) * 10);
+
+	// if okay, perform the traces needed for this frame
+	for(i=this.swing_prev; i < f; ++i)
+	{
+		swing_factor = ((1 - (i / 10)) * 2 - 1);
+
+		targpos = (this.realowner.origin + this.realowner.view_ofs
+			+ (v_forward * 160)
+			+ (v_up * swing_factor * 50)
+			+ (v_right * swing_factor * 160));
+
+		traceline(this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner);
+
+		// draw lightning beams for debugging
+	#if 0
+		te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		te_customflash(targpos, 40,  2, '1 1 1');
+	#endif
+
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
+			&& (trace_ent.takedamage != DAMAGE_NO)
+			&& (trace_ent != this.swing_alreadyhit))
+		{
+			target_victim = trace_ent; // so it persists through other calls
+
+			swing_damage = (5 * min(1, swing_factor + 1));
+
+			T_Damage(target_victim, this.realowner, this.realowner.owner, 40, WEP_SPELLBOOK.m_id);
+			target_victim.axhitme = true;
+
+			// draw large red flash for debugging
+		#if 0
+			te_customflash(targpos, 200, 2, '15 0 0');
+		#endif
+
+			this.swing_alreadyhit = target_victim;
+			continue; // move along to next trace
+		}
+	}
+
+	if(time >= this.cnt + meleetime)
+	{
+		// melee is finished
+		delete(this);
+		return;
+	}
+	else
+	{
+		// set up next frame
+		this.swing_prev = i;
+		this.nextthink = time;
+	}
+}
+
+void sword_melee_start(entity actor)
+{
+	entity meleetemp = new_pure(meleetemp);
+	meleetemp.realowner = actor;
+	setthink(meleetemp, sword_melee_think);
+	meleetemp.nextthink = time + 0.5;
+}
+
+void W_Spell_Sword(entity this)
+{
+	makevectors(this.angles);
+	vector targ = this.origin + v_forward * 24;
+	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
+
+	entity sword = spawn();
+	sword.classname = "sword";
+	_setmodel(sword, "progs/sword.mdl");
+	setsize(sword, '0 0 0', '0 0 0');
+	setorigin(sword, targ);
+	sword.solid = SOLID_NOT;
+	set_movetype(sword, MOVETYPE_FLY);
+	//droptofloor(sword);
+	setthink(sword, animatesword1);
+	sword.nextthink = time + 0.1;
+	sword.effects = EF_LOWPRECISION | EF_ADDITIVE;
+	sword.angles = this.angles;
+	sword.owner = this;
+	sword.realowner = this;
+	sword.glowmod = '1 1 0';
+	sword.colormod = '1 1 0';
+	sword.view_ofs = '0 0 16';
+	sword.alpha = 0.5;
+
+	sword_melee_start(sword);
+}
+
+void inc_icesprite_frames(entity this)
+{
+	this.solid = SOLID_NOT;
+	this.velocity = '0 0 0';
+
+	if(this.frame == 9)
+	{
+		delete(this);
+		return;
+	}
+
+	this.frame += 1;
+	setthink(this, inc_icesprite_frames);
+	this.nextthink = time + 0.1;
+}
+
+void icespike_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+
+	if(toucher.solid == SOLID_TRIGGER)
+		return;	// trigger field, do nothing
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	
+// hit something that bleeds
+	if(toucher.takedamage) // yoder mod, jan 05 2021
+	{
+		float damg = 10;
+		spawn_touchblood(this, damg, toucher);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+		setthink(this, inc_icesprite_frames);
+		this.nextthink = time + 0.1;
+	}
+	else
+		te_wizspike(this.origin);
+
+	delete(this);
+
+}
+
+void W_Spell_Frost(entity this)
+{
+	makevectors(this.v_angle);
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
+
+	vector dir = qc_aim(this, 1000);
+	entity missile = launch_spike(this, this.origin + '0 0 16', dir);
+	missile.projectiledeathtype = WEP_SPELLBOOK.m_id;
+	_setmodel(missile, "progs/ice_expl1.spr");
+	setsize(missile, '0 0 0', '0 0 0');
+	missile.angles_z = floor(random() * 180);
+	missile.frame = 1;
+	settouch(missile, icespike_touch);
+
+	this.punchangle_x = -2;
+}
+
+/*
+================
+SpawnChunk
+================
+*/
+void SpawnChunk(vector org, vector vel, float col, float num_parts)
+{
+	particle(org, vel*0.02, col, num_parts);
+}
+
+void draw_ice_frost(entity this)
+{
+	if(this.velocity == '0 0 0')
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = this.cnt;
+		return;
+	}
+	
+	if(this.cnt < time)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		return;
+	}
+	
+	SpawnChunk(this.origin, v_up * -400, 10, 8);
+	setthink(this, draw_ice_frost);
+	this.nextthink = time + 0.05;
+}
+
+void ThrowIce(entity this)
+{
+	int quant = 6;
+
+	while(quant > 0)
+	{
+		float r = random();		
+		entity newmis = spawn();
+		newmis.classname = "iceshardsplatter";
+		newmis.owner = this;
+		newmis.solid = SOLID_NOT;
+		if(r > 0.6)
+			_setmodel(newmis, "progs/ice_fragment1.mdl");
+		else if(r < 0.3)
+			_setmodel(newmis, "progs/ice_fragment2.mdl");
+		else
+			_setmodel(newmis, "progs/ice_fragment3.mdl");
+
+		setsize(newmis, '0 0 0', '0 0 0'); 
+		newmis.cnt = time + 4 + (random() * 2);
+		setthink(newmis, draw_ice_frost);
+		newmis.nextthink = time + 0.05;
+		setorigin(newmis, this.origin);
+		set_movetype(newmis, MOVETYPE_BOUNCE);
+		newmis.angles_x = (random()*360);
+		newmis.angles_y = (random()*360);
+		newmis.angles_z = (random()*360);				
+		newmis.velocity_x = 150 - (random()*300);
+		newmis.velocity_y = 150 - (random()*300);
+		newmis.velocity_z = 250 - (random()*500);
+		newmis.avelocity_x = (random()*40);
+		newmis.avelocity_y = (random()*40);
+		newmis.avelocity_z = (random()*40);		
+		quant -= 1;
+	}
+}
+
+void frost_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+
+	if(toucher.solid == SOLID_TRIGGER)
+		return;	// trigger field, do nothing
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	
+// hit something that bleeds
+	if(toucher.takedamage) // yoder mod, jan 05 2021
+	{
+		float damg = 60;
+		spawn_touchblood(this, damg, toucher);
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+		ThrowIce(this);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/ice_shatter.wav", 1, ATTN_NORM);	
+	}
+	else
+		te_wizspike(this.origin);
+
+	delete(this);
+}
+
+void W_Spell_IceCannon(entity this)
+{
+	makevectors(this.v_angle);
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/ice_cannon_shot.wav", 1, ATTN_NORM);
+
+	vector dir = qc_aim(this, 1000);
+	entity missile = launch_spike(this, this.origin + '0 0 16', dir);
+	missile.projectiledeathtype = WEP_SPELLBOOK.m_id;
+	_setmodel(missile, "progs/ice_shard.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	missile.angles_z = floor(random() * 180);
+	missile.frame = 1;
+	missile.cnt = time + 6;
+	settouch(missile, frost_touch);
+	setthink(missile, draw_ice_frost);
+	missile.nextthink = time + 0.05;
+
+	this.punchangle_x = -2;
+}
+
+void summon_vorelings(entity this)
+{
+	__pointparticles(_particleeffectnum("spawn_event_red"), this.origin, '0 0 0', 1);
+	_sound(this.realowner, CHAN_AUTO, "weapons/summon_vorelings.wav", 1, ATTN_STATIC);
+	int moncount = 4;
+	vector dir = this.pos1;
+	dir.z = 0;
+	dir = normalize(dir);
+
+	for(int j = 0; j < moncount; ++j)
+	{
+		vector offset = '0 0 0';
+		switch(j)
+		{
+			default:
+			case 0: offset = '64 0 0'; break;
+			case 1: offset = '-64 0 0'; break;
+			case 2: offset = '0 64 0'; break;
+			case 3: offset = '0 -64 0'; break;
+		}
+
+		entity mon = horn_spawnmonster(this.origin + offset, this.realowner, MON_VORELING);
+		if(!mon)
+			continue; // dunno how but just incase!
+		mon.angles_y += random() * 359;
+		mon.health = 100; // slight buffer since their health ticks down fast
+		mon.max_health = mon.health;
+		SpawnChunk(mon.origin, this.pos2 * 400, 0, 10);
+	}
+
+	delete(this);
+}
+
+entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon);
+void W_Spell_Voreling(entity this)
+{
+	makevectors(this.v_angle);
+	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 150, MOVE_NOMONSTERS, this);
+	vector src = trace_endpos;
+	__pointparticles(_particleeffectnum("spawn_point_red"), src, '0 0 0', 1);
+
+	entity rune = spawn();
+	rune.owner = this;
+	rune.realowner = this;
+	rune.solid = SOLID_NOT;
+	rune.classname = "vl_rune";
+	_setmodel(rune, "progs/voreling_rune.spr");
+	setsize(rune, '-64 -64 0', '64 64 1');
+	rune.angles = '90 90 0';
+	rune.pos1 = v_forward;
+	rune.pos2 = v_up;
+	set_movetype(rune, MOVETYPE_TOSS);
+	setorigin(rune, src);
+	setthink(rune, summon_vorelings);
+	rune.nextthink = time + 2;
+	droptofloor(rune);
+	setorigin(rune, rune.origin + '0 0 4'); // offset slightly so it always shows
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rune_cast.wav", 1, ATTN_NORM);
+}
+
+.entity arms_spawned;
+void remove_arms(entity this)
+{
+	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
+	{
+		delete(it);
+	});
+
+	this.realowner.arms_spawned = NULL;
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.1;
+}
+
+bool boner_visible(entity this)
+{
+	entity player = this.realowner;
+	traceline(player.origin + player.view_ofs, this.origin, MOVE_NOMONSTERS, player);
+
+	return (trace_fraction == 1);
+}
+
+void arms_angles(entity this)
+{
+	entity pl = this.realowner;
+	if(boner_visible(this))
+	{
+		makevectors(pl.v_angle);
+		vector dir = qc_aim(pl, 1000);
+		traceline(pl.origin + pl.view_ofs, pl.origin + pl.view_ofs + dir * 1000, MOVE_NORMAL, pl);
+		dir = normalize(trace_endpos - this.origin);
+		this.angles = vectoangles(dir);
+	}
+	else
+		this.angles = pl.v_angle;
+	setthink(this, arms_angles);
+	if(time > this.cnt)
+		setthink(this, SUB_Remove);
+	this.nextthink = time + 0.1;
+}
+
+void fire_bone_shard(entity this)
+{
+	IL_EACH(g_arms, it.realowner == this && it.classname == "arms",
+	{
+		_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
+		makevectors(this.v_angle);
+		vector dir = qc_aim(this, 1000);
+		if(boner_visible(it))
+		{
+			traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + dir * 1000, MOVE_NORMAL, this);
+			dir = normalize(trace_endpos - it.origin);
+		}
+		it.velocity = dir * 1000;
+		it.angles = vectoangles(dir);
+		it.classname = "flying_arm";
+		it.owner = this; // for super spikes
+		settouch(it, superspike_touch);
+		it.nextthink = time + 5;
+		setthink(it, SUB_Remove);
+		break; // one at a time!
+	});
+}
+
+void summon_arms(entity this)
+{
+	entity player = this.realowner;
+	__pointparticles(_particleeffectnum("spawn_point_blue"), this.origin, '0 0 0', 1);
+	_sound(this, CHAN_AUTO, "weapons/skel_rune.wav", 1, ATTN_STATIC);
+
+	int quant = 20;
+	while(quant > 0)
+	{
+		entity arms = spawn();
+		arms.classname = "arms";
+		arms.realowner = player;
+		arms.owner = player;
+		arms.solid = SOLID_BBOX;
+		arms.projectiledeathtype = WEP_SPELLBOOK.m_id;
+		arms.cnt = time + 7; // just incase the rune itself doesn't remove them!
+		set_movetype(arms, MOVETYPE_FLYMISSILE);
+		_setmodel(arms, "progs/bone_shard.mdl");			
+		setsize(arms, '0 0 0', '0 0 0'); 
+		setorigin(arms, this.origin);
+		setthink(arms, arms_angles);
+		arms.nextthink = time + 0.1;
+		
+		arms.origin_x = this.origin_x + 64 - (random()*128);
+		arms.origin_y = this.origin_y + 64 - (random()*128);	
+		arms.origin_z = this.origin_z + 16 + (random() * 16);
+		arms.angles = player.angles;
+		IL_PUSH(g_arms, arms);
+		quant -= 1;
+	}
+
+	setthink(this, remove_arms);
+	this.nextthink = time + 5; // 5 seconds of fun
+}
+
+void summon_skeleton_arms(entity this)
+{
+	makevectors(this.v_angle);
+	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 150, MOVE_NOMONSTERS, this);
+	vector src = trace_endpos;
+	__pointparticles(_particleeffectnum("spawn_point_blue"), src, '0 0 0', 1);
+
+	entity rune = spawn();
+	rune.owner = this;
+	rune.realowner = this;
+	rune.solid = SOLID_NOT;
+	rune.classname = "skel_rune";
+	_setmodel(rune, "progs/bone_rune.spr");
+	setsize(rune, '-64 -64 0', '64 64 1');
+	rune.angles = '90 90 0';
+	rune.pos1 = v_forward;
+	rune.pos2 = v_up;
+	set_movetype(rune, MOVETYPE_TOSS);
+	setorigin(rune, src);
+	setthink(rune, summon_arms);
+	rune.nextthink = time + 1.5;
+	droptofloor(rune);
+	setorigin(rune, rune.origin + '0 0 4'); // offset slightly so it always shows
+
+	this.arms_spawned = rune;
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rune_cast.wav", 1, ATTN_NORM);
+}
+
+void W_Spell_BoneShard(entity this)
+{
+	if(!this.arms_spawned)
+	{
+		if(STAT(MANA, this) < SPELL_COST_BONESHARD)
+			return;
+		if(!rune_checkspace(this))
+		{
+			// TODO: alert the caster?
+			this.attack_finished = time + 0.2; // slight delay to avoid server spam
+			return;
+		}
+		STAT(MANA, this) -= SPELL_COST_BONESHARD;
+		summon_skeleton_arms(this);
+		this.attack_finished = time + 1.7; // rune spawning delay
+	}
+	else
+	{
+		entity rune = this.arms_spawned;
+		if(vdist(rune.origin - this.origin, >, 800))
+			return; // need to be close to cast it!
+		this.attack_finished = time + 0.15;
+		fire_bone_shard(this);
+	}
+}
+
+/*
+================
+Homing Skull, adapted from ShalMissile
+================
+*/
+.int attempts;
+void SkullMissileTouch(entity this, entity toucher);
+void SkullMissHome(entity this);
+void seek_and_fire1(entity this)
+{
+	if(this.attempts >= 3 || time > this.cnt)
+	{
+		delete(this);
+		return;
+	}
+
+	this.enemy = NULL;
+	entity head = findradius(this.origin, 800);			
+	while(head)
+	{
+		if(IS_MONSTER(head) && head.health > 0 && !head.charmed)
+		{
+			if(visible(this, head))
+			{
+				this.enemy = head;			
+				this.angles_y = vectoyaw(this.enemy.origin - this.origin);
+			}
+		}
+		head = head.chain;
+	}
+
+	setthink(this, seek_and_fire1);
+	this.nextthink = time + 1;
+	if(!this.enemy)
+		return;
+
+	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
+	float flytime = 0.1;
+
+	this.effects |= EF_MUZZLEFLASH;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/skull_attack.wav", 1, ATTN_NORM);
+
+	entity missile = spawn();
+	missile.owner = this;
+	missile.realowner = this.realowner;
+
+	missile.solid = SOLID_BBOX;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	_setmodel(missile, "progs/skull.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+
+	missile.cnt = time + 5;
+	missile.origin = this.origin + '0 0 52';
+	missile.enemy = this.enemy;
+	missile.angles_y = vectoyaw(this.enemy.origin - missile.origin);
+	missile.velocity = dir * 600;
+	missile.nextthink = flytime + time;
+	setthink(missile, SkullMissHome);
+	settouch(missile, SkullMissileTouch);
+}
+
+void seek_and_fire2(entity this)
+{
+	if(time > this.cnt)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		return;
+	}
+
+	this.enemy = NULL;
+	entity head = findradius(this.origin, 800);			
+	while(head)
+	{
+		if(IS_MONSTER(head) && head.health > 0 && !head.charmed)
+		{
+			if(visible(this, head))
+				this.enemy = head;		
+		}
+		head = head.chain;
+	}
+
+	if(!this.enemy)
+	{
+		setthink(this, seek_and_fire2);
+		this.nextthink = time + 1;
+		return;
+	}
+
+	this.angles_y = vectoyaw(this.enemy.origin - this.origin);
+	
+	_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
+
+	entity bone_miss = spawn();
+	bone_miss.owner = this.realowner;
+	bone_miss.realowner = this.realowner;
+	set_movetype(bone_miss, MOVETYPE_FLYMISSILE);
+	bone_miss.solid = SOLID_BBOX;
+	bone_miss.classname = "bone_shard";
+
+// set missile speed	
+	vector shard_ang = normalize(this.enemy.origin - this.origin);
+	
+	bone_miss.velocity = shard_ang * 1000;	
+	bone_miss.angles = vectoangles(bone_miss.velocity);
+
+	settouch(bone_miss, superspike_touch);
+
+// set missile duration
+	bone_miss.nextthink = time + 5;
+	setthink(bone_miss, SUB_Remove);
+
+	_setmodel(bone_miss, "progs/bone_shard.mdl");
+	setsize(bone_miss, '0 0 0', '0 0 0');	
+	setorigin(bone_miss, this.origin + '0 0 48');
+	
+	setthink(this, seek_and_fire2);
+	this.nextthink = time + 0.33;
+}
+
+void SkullMissHome(entity this)
+{
+	vector vtemp = this.enemy.origin + '0 0 10';
+	
+	if(this.enemy.health < 1 || time > this.cnt || vdist(this.enemy.origin - this.origin, <, 10)) // safety net, they can get stuck inside enemies!
+	{
+		delete(this);
+		return;
+	}
+	
+//	ai_face();
+	
+	vector dir = normalize(vtemp - this.origin);
+	this.angles_y = vectoyaw(this.enemy.origin - this.origin);	
+//	this.angles = dir;
+	this.velocity = dir * 450;
+	this.nextthink = time + 0.05;
+	setthink(this, SkullMissHome);	
+}
+
+void SkullMissileTouch(entity this, entity toucher)
+{
+	if(this.owner && this.owner.classname == "skull_post")
+		this.owner.attempts += 1;
+
+	if(toucher == this.owner || toucher == this.realowner)
+		return;		// don't explode on owner
+
+	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+		T_Damage(toucher, this, this.realowner, 110, WEP_SPELLBOOK.m_id);	
+	T_RadiusDamage(this, this.realowner, 50, WEP_SPELLBOOK.m_id, NULL);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+
+	te_explosion(this.origin);
+
+	if(this.owner && this.owner.classname == "skull_post" && this.owner.nextthink > (time + 0.5))
+	{
+		setthink(this.owner, seek_and_fire1);
+		this.owner.nextthink = time + 0.5;
+	}
+
+	this.velocity = '0 0 0';
+	settouch(this, func_null);
+	_setmodel(this, "progs/s_explod.spr");
+	setsize(this, '0 0 0', '0 0 0');
+	this.solid = SOLID_NOT;
+	s_explode1(this);
+}
+
+void flame_touch(entity this, entity toucher)
+{
+	if(!toucher || !toucher.takedamage)
+		return;
+		
+	if(this.classname == "groundfire")
+	{
+		if(toucher.pain_finished < time)
+		{
+			T_Damage(toucher, this, this.realowner, 7, WEP_SPELLBOOK.m_id);
+			toucher.pain_finished = time + 0.333;
+		}
+	}
+}
+
+void fire_particles(entity this)
+{
+	if(this.cnt < time)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time + 0.1;
+		return;
+	}
+	SpawnChunk(this.origin + '0 0 8', v_up * 100, 72, 3);
+	SpawnChunk(this.origin + '0 0 8', v_up * 100, 235, 3);
+	setthink(this, fire_particles);
+	this.nextthink = time + 0.2;
+}
+
+void summon_curse(entity this)
+{
+	__pointparticles(_particleeffectnum("spawn_event_red"), this.origin, '0 0 0', 1);
+
+	int quant = 8;
+	while(quant > 0)
+	{
+		entity flame = spawn();
+		flame.classname = "groundfire";
+		flame.owner = this;
+		flame.realowner = this.realowner;
+		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
+		flame.solid = SOLID_TRIGGER;
+		_setmodel(flame, "progs/flame2.mdl");
+		flame.frame = 0;
+		setsize(flame, '0 0 -16', '0 0 0'); 
+		flame.cnt = time + 4 + (random() * 2); 
+		settouch(flame, flame_touch);
+		setthink(flame, fire_particles);
+		flame.nextthink = time + 0.05;
+		setorigin(flame, this.origin);
+		flame.origin_x = flame.origin_x + 64 - (random()*128);
+		flame.origin_y = flame.origin_y + 64 - (random()*128);
+		flame.origin_z = flame.origin_z + 8 + (random() * 8);
+		setorigin(flame, flame.origin);
+		set_movetype(flame, MOVETYPE_NONE);
+		quant -= 1;
+	}
+
+	entity post = spawn();
+	set_movetype(post, MOVETYPE_NONE);
+	post.realowner = this.realowner;
+	post.owner = this.realowner;
+	post.classname = "skull_post";
+	post.velocity = '0 0 0';
+#if 0
+	if(random() < 0.5)
+	{
+#endif
+		_setmodel(post, "progs/skull_pike_1.mdl");
+		setthink(post, seek_and_fire1);
+#if 0
+	}
+	else
+	{
+		_setmodel(post, "progs/skull_pike_2.mdl");
+		setthink(post, seek_and_fire2);
+	}
+#endif
+	setorigin(post, this.origin);
+	post.angles_y = random() * 360;
+	post.cnt = time + 6;
+	post.solid = SOLID_NOT;
+	post.nextthink = time + 0.1;
+
+	delete(this);
+}
+
+void W_Spell_Curse(entity this)
+{
+	makevectors(this.v_angle);
+	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 150, MOVE_NOMONSTERS, this);
+	vector src = trace_endpos;
+	__pointparticles(_particleeffectnum("spawn_point_red"), src, '0 0 0', 1);
+
+	entity rune = spawn();
+	rune.owner = this;
+	rune.realowner = this;
+	rune.solid = SOLID_NOT;
+	rune.classname = "vl_rune";
+	_setmodel(rune, "progs/fire_rune.spr");
+	setsize(rune, '-64 -64 0', '64 64 1');
+	rune.angles = '90 90 0';
+	set_movetype(rune, MOVETYPE_TOSS);
+	setorigin(rune, src);
+	setthink(rune, summon_curse);
+	rune.nextthink = time + 2;
+	droptofloor(rune);
+	setorigin(rune, rune.origin + '0 0 4'); // offset slightly so it always shows
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rune_cast.wav", 1, ATTN_NORM);
+}
+
+void meteor_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+
+	float mydmg = (this.dmg) ? this.dmg : 100;
+	float damg = mydmg + random() * (mydmg * 0.2);
+	
+	if(toucher.health)
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+
+	// don't do radius damage to the toucher, because all the damage
+	// was done in the impact
+	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
+
+//	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	this.origin = this.origin - 8 * normalize(this.velocity);
+
+	//Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
+	__pointparticles(_particleeffectnum("laser_impact"), this.origin, '0 0 0', 1);
+
+	delete(this);
+}
+
+void summon_meteors(entity this)
+{
+	if(time > this.cnt)
+	{
+		delete(this);
+		return;
+	}
+	this.nextthink = time + 0.1;
+	setthink(this, summon_meteors);
+
+	int meteors = floor(random() * 3) + 1; // 1-3 at a time
+	for(int j = 0; j < meteors; ++j)
+	{
+		entity flame = spawn();
+		flame.solid = SOLID_BBOX;
+		flame.owner = this.realowner;
+		flame.realowner = this.realowner;
+		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
+		flame.classname = "missile";
+		set_movetype(flame, MOVETYPE_FLYMISSILE);
+		setorigin(flame, this.origin);
+		flame.origin_x = flame.origin_x + 64 - (random()*128);
+		flame.origin_y = flame.origin_y + 64 - (random()*128);
+		vector dir = normalize(this.pos1 - this.origin);
+		flame.velocity = dir * 500;
+		flame.angles = vectoangles(dir);
+		setmodel(flame, MDL_LAVABALL);
+		setsize(flame, '0 0 0', '0 0 0');
+		flame.scale = max(0.3, random());
+		flame.dmg = 15 * flame.scale;
+		setthink(flame, SUB_Remove);
+		flame.nextthink = time + 5;
+		settouch(flame, meteor_touch);
+		_sound(flame, CH_WEAPON_SINGLE, "weapons/launch_fireball.wav", 0.5, ATTN_NORM);
+	}
+}
+
+void W_Spell_Explosion(entity this)
+{
+	makevectors(this.v_angle);
+	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 250, MOVE_NOMONSTERS, this);
+	vector targpos = trace_endpos;
+	tracebox(targpos, '-64 -64 0', '64 64 4', targpos + '0 0 1200', MOVE_NOMONSTERS, this);
+	vector runepos = trace_endpos;
+
+	__pointparticles(_particleeffectnum("spawn_point_red"), runepos, '0 0 0', 1);
+
+	entity rune = spawn();
+	rune.owner = this;
+	rune.realowner = this;
+	rune.solid = SOLID_NOT;
+	rune.classname = "meteor_rune";
+	_setmodel(rune, "progs/fire_rune.spr");
+	setsize(rune, '-64 -64 0', '64 64 1');
+	rune.angles = '-90 90 0';
+	rune.pos1 = targpos;
+	set_movetype(rune, MOVETYPE_NONE);
+	setorigin(rune, runepos);
+	setthink(rune, summon_meteors);
+	rune.nextthink = time + 2;
+	rune.cnt = time + 4 + 2; // 2 for the summoning time
+	setorigin(rune, rune.origin + '0 0 4'); // offset slightly so it always shows
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rune_cast.wav", 1, ATTN_NORM);
+}
+
+void summon_heal(entity this)
+{
+	if(time > this.cnt)
+	{
+		delete(this);
+		return;
+	}
+
+	setthink(this, summon_heal);
+	this.nextthink = time + 0.1;
+
+	bool didheal = false;
+
+	// TODO: allows boosting health quite high, maybe nerf? going to 100 would make it hard to see any bonus!?
+	FOREACH_ENTITY_RADIUS(this.origin, 64, IS_PLAYER(it) && it.health > 0 && it.health < 150 && it.exptime == 0,
+	{
+		if(T_Heal(it, 1, true))
+		{
+			if(it.health > 150)
+				it.health = 150;
+			didheal = true;
+		}
+	});
+	if(didheal)
+	{
+		__pointparticles(_particleeffectnum("healing_fx"), this.origin, '0 0 0', 1);
+		//_sound(this, CH_TRIGGER_SINGLE, "items/health1.wav", 1, ATTN_NORM);
+	}
+	else if(time > this.count)
+	{
+		// ping effects anyway sometimes to show it's a healing area
+		__pointparticles(_particleeffectnum("healing_fx"), this.origin, '0 0 0', 1);
+		this.count = time + 0.75;
+	}
+}
+
+void W_Spell_Serpent(entity this)
+{
+	makevectors(this.v_angle);
+	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 200, MOVE_NOMONSTERS, this);
+	vector src = trace_endpos;
+	__pointparticles(_particleeffectnum("spawn_point_blue"), src, '0 0 0', 1);
+
+	entity rune = spawn();
+	rune.owner = this;
+	rune.realowner = this;
+	rune.solid = SOLID_NOT;
+	rune.classname = "heal_rune";
+	_setmodel(rune, "progs/bone_rune.spr");
+	setsize(rune, '-64 -64 0', '64 64 1');
+	rune.angles = '90 90 0';
+	set_movetype(rune, MOVETYPE_TOSS);
+	setorigin(rune, src);
+	setthink(rune, summon_heal);
+	rune.nextthink = time + 2;
+	rune.cnt = time + 4 + 2; // 2 for the summoning time
+	droptofloor(rune);
+	setorigin(rune, rune.origin + '0 0 4'); // offset slightly so it always shows
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rune_cast.wav", 1, ATTN_NORM);
+}
+
+void W_FireSpellbook(entity this)
+{
+	if(STAT(MANA, this) <= 0)
+		return; // early out
+
+	switch(this.weaponentity.currentspell)
+	{
+		case SPELL_SWORD:
+		{
+			if(STAT(MANA, this) < SPELL_COST_SWORD)
+				return;
+			STAT(MANA, this) -= SPELL_COST_SWORD;
+			this.attack_finished = time + 1;
+			W_Spell_Sword(this);
+			break;
+		}
+		case SPELL_FROST:
+		{
+			if(STAT(MANA, this) < SPELL_COST_FROST)
+				return;
+			STAT(MANA, this) -= SPELL_COST_FROST;
+			this.attack_finished = time + 0.3;
+			W_Spell_Frost(this);
+			break;
+		}	
+		case SPELL_ICECANNON:
+		{
+			if(STAT(MANA, this) < SPELL_COST_ICECANNON)
+				return;
+			STAT(MANA, this) -= SPELL_COST_ICECANNON;
+			this.attack_finished = time + 1.5;
+			W_Spell_IceCannon(this);
+			break;
+		}	
+		case SPELL_VORELING:
+		{
+			if(STAT(MANA, this) < SPELL_COST_VORELING)
+				return;
+			if(!rune_checkspace(this))
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
+			STAT(MANA, this) -= SPELL_COST_VORELING;
+			this.attack_finished = time + 3;
+			W_Spell_Voreling(this);
+			break;
+		}
+		case SPELL_BONESHARD:
+		{
+			// attack delays handled by the spell itthis
+			W_Spell_BoneShard(this);
+			break;
+		}
+		case SPELL_CURSE:
+		{
+			if(STAT(MANA, this) < SPELL_COST_CURSE)
+				return;
+			if(!rune_checkspace(this))
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
+			STAT(MANA, this) -= SPELL_COST_CURSE;
+			this.attack_finished = time + 3;
+			W_Spell_Curse(this);
+			break;
+		}
+		case SPELL_EXPLOSION:
+		{
+			if(STAT(MANA, this) < SPELL_COST_EXPLOSION)
+				return;
+			STAT(MANA, this) -= SPELL_COST_EXPLOSION;
+			this.attack_finished = time + 1.5;
+			W_Spell_Explosion(this);
+			break;
+		}
+		case SPELL_SERPENT:
+		{
+			if(STAT(MANA, this) < SPELL_COST_SERPENT)
+				return;
+			STAT(MANA, this) -= SPELL_COST_SERPENT;
+			this.attack_finished = time + 1.5;
+			W_Spell_Serpent(this);
+			break;
+		}
+	}
+}
+
+METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
+{
+	if(fire & 1)
+	if(thiswep.wr_checkammo1(thiswep, actor))
+	{
+		//player_magic1(actor);
+		W_FireSpellbook(actor);
+	}
+
+	if(actor.button3)
+	if(time > actor.attack2_finished)
+	{
+		_sound(actor, CH_WEAPON_SINGLE, "weapons/page_flip.wav", 1, ATTN_NORM);
+		actor.weaponentity.m_frame = 0;
+		actor.weaponentity.swappingspell = true;
+		actor.attack_finished = time + 1.3; // also prevent primary fire during this time
+		actor.attack2_finished = time + 1.3; // slight delay between swapping, also prevents fireballs!
+	}
+}
+METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+	return true; // doesn't use ammo in the traditional sense
+}
+METHOD(Spellbook, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+#endif

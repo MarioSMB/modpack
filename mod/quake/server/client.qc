@@ -89,6 +89,8 @@ void SetChangeParms(entity this)
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
 	if(this.weaponentity)
+		parm14 = this.weaponentity.currentspell;
+	if(this.weaponentity)
 		parm15 = this.weaponentity.cnt;
 	parm16 = this.items;
 }
@@ -111,6 +113,7 @@ void SetNewParms()
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
+	parm14 = 0;
 	parm15 = start_weapon.m_id; // always use axe as the alternate weapon
 }
 
@@ -145,6 +148,8 @@ void DecodeLevelParms(entity this)
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
 
+	if(this.weaponentity)
+		this.weaponentity.currentspell = parm14;
 	if(this.weaponentity)
 		this.weaponentity.cnt = parm15;
 	this.items = parm16;
@@ -1410,6 +1415,8 @@ void PutClientInServer(entity this)
 	// when you respawn.
 	this.velocity = '0 0 0';
 
+	STAT(MANA, this) = 100;
+
 	skate_spawn(this);
 
 // oh, this is a hack!
@@ -2309,6 +2316,7 @@ Called every frame after physics are run
 ================
 */
 void xpackEnding(entity this);
+void Regenerate_Mana(entity this);
 void PlayerPostThink(entity this)
 {
 	Player_Physics(this);
@@ -2357,6 +2365,7 @@ void PlayerPostThink(entity this)
 
 		Regenerate_Health(this);
 		Regenerate_Stamina(this);
+		Regenerate_Mana(this);
 		if(STAT(BOARD_FALLING, this) && this.pausetime > time)
 		{
 			this.angles = this.mangle;

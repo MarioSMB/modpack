@@ -49,5 +49,6 @@
 #include "super_chicken.qc"
 #include "volkerh.qc"
 #include "vore.qc"
+#include "voreling.qc"
 #include "wrath.qc"
 #include "zombie.qc"

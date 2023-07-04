@@ -1402,28 +1402,32 @@ spawnfunc(misc_rune_indicator)
 
 // hacked in fallback method for spawning a monster with the horn of conjuring
 // used for horns that somehow spawn without a target
-void horn_spawnmonster(entity item, entity actor)
+entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 {
-	RandomSelection_Init();
-	FOREACH(Monsters, it != MON_Null,
+	if(!mon || mon == MON_Null)
 	{
-		if(!MP_HIPNOTIC && (it.spawnflags & MON_FLAG_HIPNOTIC))
-			continue;
-		if(!MP_ROGUE && (it.spawnflags & MON_FLAG_ROGUE))
-			continue;
-		if(!MP_IMPEL && (it.spawnflags & MON_FLAG_IMPEL))
-			continue;
-		if((it.spawnflags & MONSTER_TYPE_SWIM) && actor.waterlevel < 1)
-			continue;
-		if(it.spawnflags & MONSTER_TYPE_DECOY)
-			continue; // no decoys please!
-		if((it.spawnflags & MONSTER_TYPE_BOSS) || (it.spawnflags & MON_FLAG_STATIONARY) || (it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_UNDEAD))
-			continue;
-		RandomSelection_AddEnt(it, 1, 1);
-	});
-	Monster mon = RandomSelection_chosen_ent;
-	if(!mon)
-		return;
+		RandomSelection_Init();
+		FOREACH(Monsters, it != MON_Null,
+		{
+			if(!MP_HIPNOTIC && (it.spawnflags & MON_FLAG_HIPNOTIC))
+				continue;
+			if(!MP_ROGUE && (it.spawnflags & MON_FLAG_ROGUE))
+				continue;
+			if(!MP_IMPEL && (it.spawnflags & MON_FLAG_IMPEL))
+				continue;
+			if((it.spawnflags & MONSTER_TYPE_SWIM) && actor.waterlevel < 1)
+				continue;
+			if(it.spawnflags & MONSTER_TYPE_DECOY)
+				continue; // no decoys please!
+			if((it.spawnflags & MONSTER_TYPE_BOSS) || (it.spawnflags & MON_FLAG_STATIONARY) || (it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_UNDEAD))
+				continue;
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		mon = RandomSelection_chosen_ent;
+	}
+
+	if(!mon || mon == MON_Null)
+		return NULL;
 
 	entity monster = new(monster);
 	monster.monsterdef = mon;
@@ -1454,7 +1458,7 @@ void horn_spawnmonster(entity item, entity actor)
 	monster.charmed = 1;
 	monster.angles = '0 0 0';
 	monster.angles_y = actor.angles_y;
-	vector org = item.origin;
+	vector org = spawnpos;
 	org.z += -mon.m_mins.z; // offset based on size
 	setorigin(monster, org + '0 0 1');
 	setcefc(monster, monster_customize);
@@ -1475,6 +1479,7 @@ void horn_spawnmonster(entity item, entity actor)
 	monster.effects |= EF_DIMLIGHT;
 	setthink(monster, monster_start_go);
 	monster.nextthink = time + 0.1;
+	return monster;
 }
 
 /*
@@ -1589,7 +1594,7 @@ void powerup_touch(entity this, entity toucher)
 		if(!this.target || this.target == "")
 		{
 			// otherwise attempt to spawn in a random monster
-			horn_spawnmonster(this, toucher);
+			horn_spawnmonster(this.origin, toucher, MON_Null);
 		}
 	}
 

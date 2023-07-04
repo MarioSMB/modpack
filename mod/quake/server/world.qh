@@ -43,9 +43,11 @@ void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because w
 IntrusiveList g_damagedbycontents;
 IntrusiveList g_moveables;
 IntrusiveList g_vspheres;
+IntrusiveList g_arms;
 STATIC_INIT(defs)
 {
 	g_damagedbycontents = IL_NEW();
 	g_moveables = IL_NEW();
 	g_vspheres = IL_NEW();
+	g_arms = IL_NEW();
 }
