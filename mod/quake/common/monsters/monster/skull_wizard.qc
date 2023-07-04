@@ -31,6 +31,7 @@ const int MON_SKULLWIZ_MINIONS = 4;
 .int skullwizard_summonflag;
 .entity attachment;
 .float distance;
+.float last_teleport;
 
 .int idlebusy;
 const int SKULLW_STAND = 1;
@@ -341,6 +342,7 @@ void skullw_tele1(entity this)
 {
 	set_animofs(this, anim_skullwiz_spellb, 3, skullw_tele2);
 	this.pain_finished = time + 1;				// no pain during teleportation
+	this.last_teleport = time + 5; // no spam please!
 	if(random() < 0.5)
 		_sound(this, CH_VOICE, "skullwiz/blinkspk1.wav", 1, ATTN_NORM);
 	else
@@ -810,7 +812,7 @@ bool SkullWizCheckAttack(entity this)
 	//----------------------------------------------------------------------
 	// Teleport away if player too close
 	//----------------------------------------------------------------------
-	if(this.enemy_range <= RANGE_NEAR && !this.bodystatic)
+	if(this.enemy_range <= RANGE_NEAR && !this.bodystatic && time > this.last_teleport)
 	{
 		this.attack_state = AS_MELEE;
 		return true;
