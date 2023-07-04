@@ -269,9 +269,6 @@ void viewmodel_draw(entity this)
 	if(a >= 0)
 	{
 		string name = wep.mdl;
-		string newname = wep.wr_viewmodel(wep, this);
-		if(newname)
-			name = newname;
 		bool swap = name != this.name_last;
 		if (swap || swapskin)
 		{

@@ -46,8 +46,6 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
     /** (CLIENT) impact effect for weapon explosion */
     METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
-    /** (CLIENT) weapon specific view model */
-    METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
 ENDCLASS(Weapon)
 
 // weapon flags
