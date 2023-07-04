@@ -1053,7 +1053,7 @@ void player_touch(entity this, entity toucher)
 {
 	if(this.powerups & POWERUP_SHIELD)
 	{
-		if(IS_MONSTER(toucher))
+		if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
 		{
 			makevectors(this.angles);
 			vector vec = normalize(toucher.origin - this.origin);
