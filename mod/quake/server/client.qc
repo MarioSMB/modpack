@@ -163,6 +163,9 @@ void DecodeLevelParms(entity this)
 		this.armortype = 0.6;
 	else if(this.items & IT_ARMOR1)
 		this.armortype = 0.3;
+
+	// no parms left! let's just count from when they join
+	this.parm_idlesince = time;
 }
 
 bool findinlist_abbrev(string tofind, string list)
@@ -2360,6 +2363,53 @@ void PlayerPostThink(entity this)
 	}
 
 	earthquake_postthink(this); // !deathmatch?
+
+	if (autocvar_sv_maxidle > 0)
+	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if (IS_REAL_CLIENT(this))
+	if (IS_PLAYER(this))
+	if (!intermission_running) // NextLevel() kills all centerprints after setting this true
+	{
+		int totalClients = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
+		{
+			++totalClients;
+		});
+
+		if (totalClients < autocvar_sv_maxidle_minplayers)
+		{
+			// idle kick disabled
+			this.parm_idlesince = time;
+		}
+		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		{
+			if (this.idlekick_lasttimeleft)
+			{
+				this.idlekick_lasttimeleft = 0;
+				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_IDLING);
+			}
+		}
+		else
+		{
+			float maxidle_time = autocvar_sv_maxidle;
+			float timeleft = ceil(maxidle_time - (time - this.parm_idlesince));
+			float countdown_time = max(min(10, maxidle_time - 1), ceil(maxidle_time * 0.33)); // - 1 to support maxidle_time <= 10
+			if (timeleft == countdown_time && !this.idlekick_lasttimeleft)
+			{
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
+			}
+			if (timeleft <= 0) {
+				if (dropclient_schedule(this))
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
+				return;
+			}
+			else if (timeleft <= countdown_time) {
+				if (timeleft != this.idlekick_lasttimeleft)
+					play2(this, SND(TALK2));
+				this.idlekick_lasttimeleft = timeleft;
+			}
+		}
+	}
 
 	if(this.deadflag == DEAD_NO)
 	{

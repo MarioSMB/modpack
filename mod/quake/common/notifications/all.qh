@@ -32,6 +32,7 @@ string Get_Notif_TypeName(MSG net_type)
 }
 
 ENUMCLASS(CPID)
+	CASE(CPID, IDLING)
 	CASE(CPID, TIMEIN)
 	CASE(CPID, ITEM)
 	CASE(CPID, KEY)

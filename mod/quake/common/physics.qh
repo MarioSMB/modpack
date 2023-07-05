@@ -39,10 +39,42 @@
 #define PHYS_INPUT_BUTTON_ZOOM(s)           PHYS_INPUT_BUTTON_BUTTON4(s)
 #define PHYS_INPUT_BUTTON_CROUCH(s)         PHYS_INPUT_BUTTON_BUTTON5(s)
 #define PHYS_INPUT_BUTTON_HOOK(s)           PHYS_INPUT_BUTTON_BUTTON6(s)
+#define PHYS_INPUT_BUTTON_INFO(s)           PHYS_INPUT_BUTTON_BUTTON7(s) // button7 is FREE
+#define PHYS_INPUT_BUTTON_DRAG(s)           PHYS_INPUT_BUTTON_BUTTON8(s)
+#define PHYS_INPUT_BUTTON_USE(s)            PHYS_INPUT_BUTTON_BUTTON_USE(s)
+#define PHYS_INPUT_BUTTON_CHAT(s)           PHYS_INPUT_BUTTON_BUTTON_CHAT(s)
+#define PHYS_INPUT_BUTTON_PRYDON(s)         PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)
+#define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
+#define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
+#define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_MINIGAME(s)		PHYS_INPUT_BUTTON_BUTTON12(s)
 
 #define IS_JUMP_HELD(s)                     (!((s).flags & FL_JUMPRELEASED))
 #define SET_JUMP_HELD(s)                    ((s).flags &= ~FL_JUMPRELEASED)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
+
+// if more buttons are needed, start using impulse bits as buttons
+
+#define PHYS_INPUT_BUTTON_BACKWARD(s)       (PHYS_INPUT_MOVEVALUES(s).x < 0)
+#define PHYS_INPUT_BUTTON_FORWARD(s)        (PHYS_INPUT_MOVEVALUES(s).x > 0)
+#define PHYS_INPUT_BUTTON_LEFT(s)           (PHYS_INPUT_MOVEVALUES(s).y < 0)
+#define PHYS_INPUT_BUTTON_RIGHT(s)          (PHYS_INPUT_MOVEVALUES(s).y > 0)
+
+// used for special commands and idle checking, not from the engine
+// TODO: cache
+#define PHYS_INPUT_BUTTON_MASK(s) ( \
+	  (BIT(0) * PHYS_INPUT_BUTTON_ATCK(s)) \
+	| (BIT(1) * PHYS_INPUT_BUTTON_JUMP(s)) \
+	| (BIT(2) * PHYS_INPUT_BUTTON_ATCK2(s)) \
+	| (BIT(3) * PHYS_INPUT_BUTTON_ZOOM(s)) \
+	| (BIT(4) * PHYS_INPUT_BUTTON_CROUCH(s)) \
+	| (BIT(5) * PHYS_INPUT_BUTTON_HOOK(s)) \
+	| (BIT(6) * PHYS_INPUT_BUTTON_USE(s)) \
+	| (BIT(7) * PHYS_INPUT_BUTTON_BACKWARD(s)) \
+	| (BIT(8) * PHYS_INPUT_BUTTON_FORWARD(s)) \
+	| (BIT(9) * PHYS_INPUT_BUTTON_LEFT(s)) \
+	| (BIT(10) * PHYS_INPUT_BUTTON_RIGHT(s)) \
+	)
 
 #define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
 #define PHYS_PL_MIN(s)						STAT(PL_MIN, s)

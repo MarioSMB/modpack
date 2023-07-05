@@ -13,6 +13,19 @@ void Physics_UpdateStats(entity this)
 	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
 	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
 }
+
+.vector movement_old;
+.vector v_angle_old;
+.int buttons_old;
+void sys_phys_monitor(entity this, float dt)
+{
+	int buttons = PHYS_INPUT_BUTTON_MASK(this);
+	if (autocvar_sv_maxidle > 0) {
+		if (buttons != this.buttons_old
+		    || this.movement != this.movement_old
+		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
+	}
+}
 #endif
 
 void PM_FixClient(entity this)
@@ -404,6 +417,13 @@ void PM_RollView(entity this)
 void PM_Main(entity this, float dt)
 {
 	PM_FixClient(this);
+
+#ifdef SVQC
+	sys_phys_monitor(this, dt);
+	this.movement_old = this.movement;
+	this.v_angle_old = this.v_angle;
+	this.buttons_old = PHYS_INPUT_BUTTON_MASK(this);
+#endif
 
 	if(this.move_movetype == MOVETYPE_NONE)
 		return;

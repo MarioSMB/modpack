@@ -6,6 +6,12 @@ float autocvar_sv_quake_katria = 0.3;
 
 float autocvar_sv_quake_kill_delay = 5;
 
+float autocvar_sv_maxidle;
+int autocvar_sv_maxidle_minplayers;
+
+.float idlekick_lasttimeleft;
+.float parm_idlesince;
+
 bool autocvar_g_playerclip_collisions;
 
 bool autocvar_samelevel;
