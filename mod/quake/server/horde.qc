@@ -1823,7 +1823,6 @@ void horde_spawn_powerup(entity this)
 		powerup.nextthink = time + 10;
 
 		RandomSelection_Init();
-		#if 0
 		RandomSelection_AddFloat(POWERUP_INVULNERABILITY, 1, 1);
 		RandomSelection_AddFloat(POWERUP_QUAD, 1, 1);
 		RandomSelection_AddFloat(POWERUP_FIREFLOWER, 0.5, 1);
@@ -1832,7 +1831,6 @@ void horde_spawn_powerup(entity this)
 		RandomSelection_AddFloat(POWERUP_FIELDGEN, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_SHIELD, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_EMPATHY_SHIELDS, 0.5, 1);
-		#endif
 		RandomSelection_AddFloat(POWERUP_JUMPBOOTS, 0.5, 1);
 		horde_setup_powerup(powerup, RandomSelection_chosen_float);
 		//powerup.effects = EF_DIMLIGHT;
