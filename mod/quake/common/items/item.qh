@@ -38,3 +38,5 @@ const int POWERUP_V_SPHERE             = BIT(9);
 const int POWERUP_FIELDGEN             = BIT(10);
 
 const int POWERUP_FIREFLOWER           = BIT(11);
+
+const int POWERUP_JUMPBOOTS            = BIT(12);

@@ -75,6 +75,8 @@
 
 	#define IS_DEAD(s)                          (((s).classname == "ENT_CLIENT_MODEL") ? (s).csqcmodel_isdead : ((s).health <= 0))
 
+	#define IS_PLAYER(s)                        ((s).isplayermodel & ISPLAYER_PLAYER)
+
 	#define PHYS_INPUT_ANGLES(s)                input_angles
 // TODO
 	#define PHYS_WORLD_ANGLES(s)                input_angles

@@ -1330,6 +1330,10 @@ void PutClientInServer(entity this)
 	this.antigrav_finished = 0;
 
 	this.fireflower_finished = 0;
+	this.fireflower_time = 0;
+
+	this.jboots_finished = 0;
+	this.jboots_time = 0;
 
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
@@ -2228,6 +2232,30 @@ void CheckPowerups(entity this)
 			this.powerups &= ~POWERUP_FIREFLOWER;
 			this.fireflower_time = 0;
 			this.fireflower_finished = 0;
+		}
+	}
+
+	if(this.jboots_finished)
+	{
+		if(this.jboots_finished < time + 3)
+		{
+			if(this.jboots_time == 1)
+			{
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_JUMPBOOTS);
+				_sound(this, CH_TRIGGER_SINGLE, "items/jboots_timed.wav", 1, ATTN_NORM);
+				this.jboots_time = time + 1;
+			}
+
+			if(this.jboots_time < time)
+				this.jboots_time = time + 1;
+		}
+
+		if(this.jboots_finished < time)
+		{
+			this.powerups &= ~POWERUP_JUMPBOOTS;
+			this.jboots_time = 0;
+			this.jboots_finished = 0;
 		}
 	}
 }

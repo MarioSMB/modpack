@@ -108,7 +108,7 @@ void PlayerJump(entity this)
 	if(!IS_ONGROUND(this) && !doublejump)
 		return;
 
-	if(IS_JUMP_HELD(this))
+	if(IS_JUMP_HELD(this) && !(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS))
 		return;		// don't pogo stick
 
 	SET_JUMP_HELD(this);
@@ -116,6 +116,8 @@ void PlayerJump(entity this)
 	UNSET_ONGROUND(this);
 
 	float mjumpheight = 270;
+	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
+		mjumpheight *= 1.5;
 	if(this.viewloc)
 	{
 		if(this.waterlevel >= 2)
@@ -449,12 +451,89 @@ void PM_Main(entity this, float dt)
 	PM_AirMove(this, dt);
 }
 
+void player_touch(entity this, entity toucher) 
+{
+	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
+	{
+	#ifdef SVQC
+		if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	#elif defined(CSQC)
+		if(IS_PLAYER(toucher))
+	#endif
+		{
+			if(tracebox_hits_box(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), toucher.origin + toucher.mins, toucher.origin + toucher.maxs))
+			{
+				setorigin(this, this.origin + '0 0 2'); // make sure onground doesn't catch us later
+
+				float mjumpheight = 300;
+				if(PHYS_INPUT_BUTTON_JUMP(this))
+				{
+					mjumpheight *= 1.5;
+					SET_JUMP_HELD(this);
+				}
+
+				UNSET_ONGROUND(this);
+				this.velocity_z = mjumpheight;
+		#ifdef SVQC
+				this.oldvelocity_z = this.velocity_z;
+
+				//animdecide_setaction(this, ANIMACTION_JUMP, true);
+
+				float thedamage = 200;
+				T_Damage(toucher, this, this, thedamage, DEATH_CRUSH.m_id);
+				_sound(this, CH_TRIGGER_SINGLE, "items/goomba.wav", 1, ATTN_NORM);
+		#endif
+				return;
+			}
+		}
+	}
+#ifdef SVQC
+	if(this.powerups & POWERUP_SHIELD)
+	{
+		if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
+		{
+			makevectors(this.angles);
+			vector vec = normalize(toucher.origin - this.origin);
+			float dot = vec * v_forward;
+        	if(dot < 0.3)
+				return;
+
+			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
+				
+			makevectors(this.angles);
+		    toucher.velocity = v_forward * (500 * pushforce);
+			toucher.velocity_z = (250 * pushforce);
+
+			// if shield has timed out, respawn it.
+			// don't do particles more than twice a second. 
+			if(this.shield_death_time < time)
+			{
+    	        _sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	
+				te_explosion2(toucher.origin, 230, 5);
+
+				shield_spawn(this, v_forward);
+			}
+
+			T_Damage(toucher, this.shield_entity, this, 15, DEATH_SHIELD.m_id);
+
+//			this.shield_death_time = time + 0.5;
+		}
+	}
+#endif
+}
+
 #if defined(SVQC)
 void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
+#ifdef CSQC
+	if(gettouch(this) != player_touch)
+		settouch(this, player_touch);
+#endif
+
 	PM_Main(this, PHYS_INPUT_TIMELENGTH);
 
 #ifdef SVQC

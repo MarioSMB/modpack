@@ -7,7 +7,7 @@ PRECACHE(Spellbook)
 	precache_model("progs/v_book.mdl");
 
 	// sword
-	precache_model("progs/sword.mdl");
+	precache_model("progs/spell_sword.mdl");
 	precache_sound("weapons/sword_swing.wav");
 
 	// frost
@@ -236,7 +236,7 @@ void W_Spell_Sword(entity this)
 
 	entity sword = spawn();
 	sword.classname = "sword";
-	_setmodel(sword, "progs/sword.mdl");
+	_setmodel(sword, "progs/spell_sword.mdl");
 	setsize(sword, '0 0 0', '0 0 0');
 	setorigin(sword, targ);
 	sword.solid = SOLID_NOT;
@@ -500,6 +500,7 @@ void W_Spell_Voreling(entity this)
 }
 
 .entity arms_spawned;
+.bool attack_held;
 void remove_arms(entity this)
 {
 	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
@@ -630,6 +631,8 @@ void W_Spell_BoneShard(entity this)
 {
 	if(!this.arms_spawned)
 	{
+		if(this.attack_held)
+			return;
 		if(STAT(MANA, this) < SPELL_COST_BONESHARD)
 			return;
 		if(!rune_checkspace(this))
@@ -648,6 +651,7 @@ void W_Spell_BoneShard(entity this)
 		if(vdist(rune.origin - this.origin, >, 800))
 			return; // need to be close to cast it!
 		this.attack_finished = time + 0.15;
+		this.attack_held = true;
 		fire_bone_shard(this);
 	}
 }
@@ -1184,6 +1188,9 @@ void W_FireSpellbook(entity this)
 
 METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 {
+	if(!(fire & 1))
+		actor.attack_held = false;
+
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{

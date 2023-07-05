@@ -1049,39 +1049,3 @@ void player_die_ax1(entity this) { set_animofs(this, anim_player_axdeth1, 1, pla
 
 void shield_spawn(entity shieldOwner, vector dir);
 
-void player_touch(entity this, entity toucher) 
-{
-	if(this.powerups & POWERUP_SHIELD)
-	{
-		if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
-		{
-			makevectors(this.angles);
-			vector vec = normalize(toucher.origin - this.origin);
-			float dot = vec * v_forward;
-        	if(dot < 0.3)
-				return;
-
-			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
-				
-			makevectors(this.angles);
-		    toucher.velocity = v_forward * (500 * pushforce);
-			toucher.velocity_z = (250 * pushforce);
-
-			// if shield has timed out, respawn it.
-			// don't do particles more than twice a second. 
-			if(this.shield_death_time < time)
-			{
-    	        _sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
-	
-				te_explosion2(toucher.origin, 230, 5);
-
-				shield_spawn(this, v_forward);
-			}
-
-			T_Damage(toucher, this.shield_entity, this, 15, DEATH_SHIELD.m_id);
-
-//			this.shield_death_time = time + 0.5;
-		}
-	}
-}
-

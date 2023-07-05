@@ -67,6 +67,16 @@ int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
 
+#ifdef GAMEQC
+float trace_hits_box_1d(float end, float thmi, float thma);
+
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+#endif
+
 float cvar_settemp(string tmp_cvar, string tmp_value);
 
 int cvar_settemp_restore();

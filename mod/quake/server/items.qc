@@ -1630,6 +1630,12 @@ void powerup_touch(entity this, entity toucher)
 		toucher.fireflower_time = 1;
 		toucher.fireflower_finished = time + 30; // always give full duration
 	}
+
+	if(this.powerups & POWERUP_JUMPBOOTS)
+	{
+		toucher.jboots_time = 1;
+		toucher.jboots_finished = time + 30;
+	}
 }
 
 
@@ -1859,6 +1865,28 @@ spawnfunc(item_powerup_fireflower)
 	this.powerups = POWERUP_FIREFLOWER;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
+}
+
+spawnfunc(item_jboots)
+{
+	settouch(this, powerup_touch);
+
+	precache_model("progs/jumpblue.mdl");
+	precache_sound("items/jboots_got_timed.wav");
+	precache_sound("items/jboots_timed.wav");
+	precache_sound("items/goomba.wav");
+	this.noise = "items/jboots_got_timed.wav";
+	_setmodel(this, "progs/jumpblue.mdl");
+	this.netname = "Jump Boots";
+	this.powerups = POWERUP_JUMPBOOTS;
+	setsize(this, '-16 -16 0', '16 16 32');
+	StartItem(this);
+}
+
+spawnfunc(item_jboots_timed)
+{
+	// we don't have super jump boots, just allow spawns to work
+	spawnfunc_item_jboots(this);
 }
 
 /*

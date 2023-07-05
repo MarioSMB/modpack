@@ -256,6 +256,12 @@ void PrecacheMonsters()
 	precache_sound("hipitems/empathy2.wav");
 	precache_sound("items/suit2.wav");
 
+	// jump boots
+	precache_model("progs/jumpblue.mdl");
+	precache_sound("items/jboots_got_timed.wav");
+	precache_sound("items/jboots_timed.wav");
+	precache_sound("items/goomba.wav");
+
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
 	{
@@ -1778,6 +1784,15 @@ void horde_setup_powerup(entity this, int powerup)
 			this.classname = "item_artifact_empathy_shields";
 			break;
 		}
+		case POWERUP_JUMPBOOTS:
+		{
+			this.noise = "items/jboots_got_timed.wav";
+			_setmodel(this, "progs/jumpblue.mdl");
+			this.netname = "Jump Boots";
+			this.powerups = POWERUP_JUMPBOOTS;
+			this.classname = "item_jboots";
+			break;
+		}
 	}
 }
 
@@ -1808,6 +1823,7 @@ void horde_spawn_powerup(entity this)
 		powerup.nextthink = time + 10;
 
 		RandomSelection_Init();
+		#if 0
 		RandomSelection_AddFloat(POWERUP_INVULNERABILITY, 1, 1);
 		RandomSelection_AddFloat(POWERUP_QUAD, 1, 1);
 		RandomSelection_AddFloat(POWERUP_FIREFLOWER, 0.5, 1);
@@ -1816,6 +1832,8 @@ void horde_spawn_powerup(entity this)
 		RandomSelection_AddFloat(POWERUP_FIELDGEN, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_SHIELD, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_EMPATHY_SHIELDS, 0.5, 1);
+		#endif
+		RandomSelection_AddFloat(POWERUP_JUMPBOOTS, 0.5, 1);
 		horde_setup_powerup(powerup, RandomSelection_chosen_float);
 		//powerup.effects = EF_DIMLIGHT;
 		
