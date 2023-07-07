@@ -452,6 +452,7 @@ void lost_growangle(entity this)
 	this.angles_y += this.lefty;
 }
 
+void lost_pain(entity this, entity attacker, float damage, int deathtype);
 void lost_grow10(entity this)
 {
 	set_animofs(this, anim_lost_grow, 10, lost_run1);
@@ -480,6 +481,7 @@ void lost_grow10(entity this)
 		this.th_run = lost_run1;
 		this.th_melee = lost_melee1;
 		this.th_missile = lost_charge1;
+		this.th_pain = lost_pain;
 		
 		// Start charging at player if not dead and got an enemy
 		if(this.health > 0 && this.enemy)
@@ -504,6 +506,7 @@ void lost_grow(entity this)
 {
 	// Only call wakeup function once
 	this.th_stand = this.th_walk = this.th_run = func_null;
+	this.th_pain = func_null;
 	if(random() < 0.5)
 		this.lefty = 36;
 	else

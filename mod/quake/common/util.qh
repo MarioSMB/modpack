@@ -67,6 +67,10 @@ int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
 
+#ifdef SVQC
+void SetMovetypeFollow(entity ent, entity e);
+#endif
+
 #ifdef GAMEQC
 float trace_hits_box_1d(float end, float thmi, float thma);
 

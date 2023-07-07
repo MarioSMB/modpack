@@ -274,6 +274,7 @@ void gargoyle_growangle(entity this)
 	this.angles_y = this.angles_y + this.lefty;
 }
 
+void garg_pain(entity this, entity attacker, float damage, int deathtype);
 void gargoyle_grow10(entity this)
 {
 	set_animofs(this, anim_gargoyle_grow, 10, garg_run1);
@@ -296,6 +297,7 @@ void gargoyle_grow10(entity this)
 		this.th_walk = garg_walk1;
 		this.th_run = garg_run1;
 		this.th_missile = garg_fire1;
+		this.th_pain = garg_pain;
 	}
 }
 void gargoyle_grow9(entity this) { set_animofs(this, anim_gargoyle_grow, 9, gargoyle_grow10); gargoyle_growangle(this); }
@@ -312,6 +314,7 @@ void gargoyle_grow(entity this)
 {
 	// Only call wakeup function once
 	this.th_stand = this.th_walk = this.th_run = func_null;
+	this.th_pain = func_null;
 	if(random() < 0.5)
 		this.lefty = 36;
 	else

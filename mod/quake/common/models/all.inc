@@ -19,3 +19,7 @@ MODEL(ITEM_GOLDKEYCARD,                   	"progs/b_g_key.mdl");
 MODEL(LAVABALL,                             "progs/lavaball.mdl");
 
 MODEL(EXPLOSION,                            "progs/s_explod.spr");
+
+MODEL(RUNE_VORELING,                        "progs/voreling_rune.spr");
+MODEL(RUNE_BONE,                            "progs/bone_rune.spr");
+MODEL(RUNE_FIRE,                            "progs/fire_rune.spr");

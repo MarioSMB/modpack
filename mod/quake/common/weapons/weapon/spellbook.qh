@@ -20,10 +20,14 @@ REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
 
 #ifdef SVQC
 .float mana_regen_time;
+.float mana_regen_boost;
 
-.bool swappingspell;
+.int swappingspell;
 
 const float MANA_REGEN_RATE = 0.25;
+
+
+.entity spell_shield;
 
 //.int currentspell;
 #endif
@@ -31,18 +35,18 @@ const int SPELL_FIRST = 0;
 const int SPELL_SWORD = 0;
 const float SPELL_COST_SWORD = 15;
 const int SPELL_FROST = 1;
-const float SPELL_COST_FROST = 5;
+const float SPELL_COST_FROST = 30;
 const int SPELL_ICECANNON = 2;
-const float SPELL_COST_ICECANNON = 30;
+const float SPELL_COST_ICECANNON = 20;
 const int SPELL_VORELING = 3;
-const float SPELL_COST_VORELING = 40;
+const float SPELL_COST_VORELING = 30;
 const int SPELL_BONESHARD = 4;
 const float SPELL_COST_BONESHARD = 20;
 const int SPELL_CURSE = 5;
 const float SPELL_COST_CURSE = 30;
 const int SPELL_EXPLOSION = 6;
-const float SPELL_COST_EXPLOSION = 30;
+const float SPELL_COST_EXPLOSION = 20;
 const int SPELL_SERPENT = 7;
-const float SPELL_COST_SERPENT = 40;
+const float SPELL_COST_SERPENT = 25;
 const int SPELL_LAST = 7;
 

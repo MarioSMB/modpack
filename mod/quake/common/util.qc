@@ -641,6 +641,30 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 }
 #endif
 
+#ifdef SVQC
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = e.classname;
+	ent.aiment_deadflag = e.deadflag;
+
+	if(IS_PLAYER(ent.aiment))
+	{
+		entity pl = ent.aiment;
+		ent.view_ofs.x = bound(pl.mins.x + 4, ent.view_ofs.x, pl.maxs.x - 4);
+		ent.view_ofs.y = bound(pl.mins.y + 4, ent.view_ofs.y, pl.maxs.y - 4);
+		ent.view_ofs.z = bound(pl.mins.z + 4, ent.view_ofs.z, pl.maxs.z - 4);
+	}
+}
+#endif
+
 float cvar_settemp(string tmp_cvar, string tmp_value)
 {
 	float created_saved_value;

@@ -13,3 +13,5 @@ Sound SND_TELE_RANDOM() {
 SOUND(ROCKET_EXPLOSION, "weapons/r_exp3");
 
 SOUND(TALK2, "misc/talk2");
+
+SOUND(RUNE_CAST, "weapons/rune_cast");

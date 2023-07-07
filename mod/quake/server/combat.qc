@@ -398,6 +398,17 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
+	if(targ.spell_shield && targ != attacker && (inflictor || attacker))
+	{
+		// we need a valid enemy here for the effect to work
+		makevectors(targ.angles);
+		entity from = (inflictor) ? inflictor : attacker;
+		vector vec = normalize(from.origin - targ.origin);
+		float dot = (vec * v_forward);
+		if(dot > 0.3)
+			take *= 0.5;
+	}
+
 // coop damage avoidance (if enabled)
 	if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
 	{

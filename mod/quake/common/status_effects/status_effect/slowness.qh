@@ -1,0 +1,17 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Slowness, StatusEffects)
+    ATTRIB(Slowness, netname, string, "slowness");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Slowness, m_name, string, _("Slowness"));
+    ATTRIB(Slowness, m_icon, string, "buff_disability");
+#endif
+    ATTRIB(Slowness, m_color, vector, '0.67 0.84 1');
+    ATTRIB(Slowness, m_hidden, bool, true);
+    ATTRIB(Slowness, m_lifetime, float, 10);
+ENDCLASS(Slowness)
+REGISTER_STATUSEFFECT(Slowness, NEW(Slowness));

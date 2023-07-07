@@ -88,8 +88,7 @@ void SetChangeParms(entity this)
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
-	if(this.weaponentity)
-		parm14 = this.weaponentity.currentspell;
+	parm14 = this.currentspell;
 	if(this.weaponentity)
 		parm15 = this.weaponentity.cnt;
 	parm16 = this.items;
@@ -148,11 +147,9 @@ void DecodeLevelParms(entity this)
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
 
+	this.currentspell = parm14;
 	if(this.weaponentity)
-	{
-		this.weaponentity.currentspell = parm14;
 		this.weaponentity.skin = parm14;
-	}
 	if(this.weaponentity)
 		this.weaponentity.cnt = parm15;
 	this.items = parm16;
@@ -1349,6 +1346,7 @@ void PutClientInServer(entity this)
 	CL_SpawnWeaponentity(this);
 	this.weaponentity.weaponname = "";
 	this.weaponentity.m_weapon = WEP_Null;
+	this.weaponentity.skin = this.currentspell;
 
 	DecodeLevelParms(this);
 

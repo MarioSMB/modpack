@@ -213,6 +213,46 @@ PLAYER
 
 void player_run(entity this);
 
+void spellbook_frame(entity this)
+{
+	//Weapon wep = this.weaponentity.m_weapon;
+	//if(wep == WEP_SPELLBOOK)
+	//{
+		if(this.weaponentity.swappingspell == -1)
+			this.weaponentity.m_frame -= 1;
+		else
+			this.weaponentity.m_frame += 1;
+		if(this.weaponentity.swappingspell == 1)
+		{
+			if(this.weaponentity.m_frame > 12)
+			{
+				this.weaponentity.m_frame = 23;
+				this.currentspell += 1;
+				if(this.currentspell > SPELL_LAST)
+					this.currentspell = SPELL_FIRST;
+				this.weaponentity.skin = this.currentspell; // TODO: merge them? might want a spell registry!
+				this.weaponentity.swappingspell = 0;
+			}
+		}
+		else if(this.weaponentity.swappingspell == -1)
+		{
+			if(this.weaponentity.m_frame < 0)
+			{
+				this.weaponentity.m_frame = 23;
+				this.currentspell -= 1;
+				if(this.currentspell < SPELL_FIRST)
+					this.currentspell = SPELL_LAST;
+				this.weaponentity.swappingspell = 0;
+			}
+		}
+		else
+		{
+			if(this.weaponentity.m_frame >= 48)
+				this.weaponentity.m_frame = 28;
+		}
+	//}
+}
+
 void player_stand1(entity this)
 {
 	Weapon wep = this.weaponentity.m_weapon;
@@ -253,26 +293,7 @@ void player_stand1(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
 	if(wep == WEP_SPELLBOOK)
-	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.swappingspell)
-		{
-			if(this.weaponentity.m_frame > 12)
-			{
-				this.weaponentity.m_frame = 23;
-				this.weaponentity.currentspell += 1;
-				if(this.weaponentity.currentspell > SPELL_LAST)
-					this.weaponentity.currentspell = SPELL_FIRST;
-				this.weaponentity.skin = this.weaponentity.currentspell; // TODO: merge them? might want a spell registry!
-				this.weaponentity.swappingspell = false;
-			}
-		}
-		else
-		{
-			if(this.weaponentity.m_frame >= 48)
-				this.weaponentity.m_frame = 28;
-		}
-	}
+		spellbook_frame(this);
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
@@ -330,26 +351,7 @@ void player_run(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 	}
 	if(wep == WEP_SPELLBOOK)
-	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.swappingspell)
-		{
-			if(this.weaponentity.m_frame > 12)
-			{
-				this.weaponentity.m_frame = 23;
-				this.weaponentity.currentspell += 1;
-				if(this.weaponentity.currentspell > SPELL_LAST)
-					this.weaponentity.currentspell = SPELL_FIRST;
-				this.weaponentity.skin = this.weaponentity.currentspell; // TODO: merge them? might want a spell registry!
-				this.weaponentity.swappingspell = false;
-			}
-		}
-		else
-		{
-			if(this.weaponentity.m_frame >= 48)
-				this.weaponentity.m_frame = 28;
-		}
-	}
+		spellbook_frame(this);
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{

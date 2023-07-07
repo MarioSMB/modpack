@@ -263,6 +263,9 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 
 bool t_walkmove(entity this, float yaw, float dist)
 {
+	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
+		dist *= 0.5;
+
 #if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return false;
@@ -377,6 +380,9 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
+	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
+		dist *= 0.5;
+
 #if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
