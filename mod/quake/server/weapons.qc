@@ -1345,7 +1345,7 @@ void W_WeaponFrame(entity this)
 	// check for attack
 		if(wep != WEP_Null)
 		{
-			if(this.button0 && wep.wr_checkammo1(wep, this))
+			if(this.button0 && wep != WEP_SPELLBOOK && wep.wr_checkammo1(wep, this))
 			{
 				SuperDamageSound(this);
 				W_Attack(this, false);

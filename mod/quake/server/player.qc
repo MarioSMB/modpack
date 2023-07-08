@@ -219,9 +219,9 @@ void spellbook_frame(entity this)
 	//if(wep == WEP_SPELLBOOK)
 	//{
 		if(this.weaponentity.swappingspell == -1)
-			this.weaponentity.m_frame -= 1;
+			this.weaponentity.m_frame -= 2;
 		else
-			this.weaponentity.m_frame += 1;
+			this.weaponentity.m_frame += 2;
 		if(this.weaponentity.swappingspell == 1)
 		{
 			if(this.weaponentity.m_frame > 12)

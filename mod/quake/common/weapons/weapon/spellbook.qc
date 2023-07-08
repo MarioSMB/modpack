@@ -1108,7 +1108,7 @@ void W_Spell_Explosion(entity this)
 	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_Null);
 	setthink(rune, rune_meteors_rise);
 	rune.nextthink = time + 0.7;
-	rune.cnt = time + 4 + 2; // 2 for the summoning time
+	rune.cnt = time + 6 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
 }
 
@@ -1277,8 +1277,8 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 			actor.weaponentity.m_frame = 0;
 			actor.weaponentity.swappingspell = 1;
 		}
-		actor.attack_finished = time + 1.3; // also prevent primary fire during this time
-		actor.attack2_finished = time + 1.3; // slight delay between swapping, also prevents fireballs!
+		actor.attack_finished = time + 0.65; // also prevent primary fire during this time
+		actor.attack2_finished = time + 0.65; // slight delay between swapping, also prevents fireballs!
 	}
 }
 METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor))
