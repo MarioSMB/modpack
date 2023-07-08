@@ -497,12 +497,15 @@ void icefield_think(entity this)
 		}
 	}
 
-	FOREACH_ENTITY_RADIUS(this.origin, this.count, it.takedamage && it.health > 0 && time > it.icefield_lasttouch,
+	if(time < this.icefield_lasttouch)
+		return;
+	this.icefield_lasttouch = time + 1;
+
+	FOREACH_ENTITY_RADIUS(this.origin, this.count, it.takedamage && it.health > 0,
 	{
 		if(IS_PLAYER(it))
 		{
 			it.mana_regen_boost = time + 1;
-			it.icefield_lasttouch = time + 1;
 			Send_Effect(EFFECT_RUNE_FROST_REGEN, it.origin, '0 0 0', 1);
 			continue;
 		}
@@ -511,7 +514,6 @@ void icefield_think(entity this)
 		T_Damage(it, this, this.realowner, 15, WEP_SPELLBOOK.m_id);
 		StatusEffects_apply(STATUSEFFECT_Slowness, it, time + 3, 0);
 		ThrowIce(it);
-		it.icefield_lasttouch = time + 1;
 	});
 }
 
