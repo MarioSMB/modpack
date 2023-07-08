@@ -1060,9 +1060,12 @@ void summon_meteors(entity this)
 		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
 		flame.classname = "missile";
 		set_movetype(flame, MOVETYPE_FLYMISSILE);
-		setorigin(flame, this.origin);
-		flame.origin_x = flame.origin_x + 96 - (random()*128);
-		flame.origin_y = flame.origin_y + 96 - (random()*128);
+		//setorigin(flame, this.origin);
+		//flame.origin_x = flame.origin_x + 96 - (random()*128);
+		//flame.origin_y = flame.origin_y + 96 - (random()*128);
+		flame.origin = this.origin + randomvec() * 96;
+		flame.origin_z = this.origin_z;
+		setorigin(flame, flame.origin);
 		vector dir = normalize(this.pos1 - this.origin);
 		flame.velocity = dir * 500;
 		flame.angles = vectoangles(dir);
