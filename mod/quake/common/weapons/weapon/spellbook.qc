@@ -308,7 +308,7 @@ void W_Spell_Sword(entity this)
 	shield.angles = this.angles;
 	SetMovetypeFollow(shield, this);
 	setthink(shield, shield_remove);
-	shield.nextthink = time + 1;
+	shield.nextthink = time + 1.5;
 	shield.effects = EF_LOWPRECISION | EF_ADDITIVE;
 	shield.owner = this;
 	shield.realowner = this;
@@ -1177,7 +1177,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_FROST)
 				return;
 			STAT(MANA, this) -= SPELL_COST_FROST;
-			this.attack_finished = time + 0.3;
+			this.attack_finished = time + 1;
 			W_Spell_Frost(this);
 			break;
 		}	
