@@ -218,12 +218,9 @@ void spellbook_frame(entity this)
 	//Weapon wep = this.weaponentity.m_weapon;
 	//if(wep == WEP_SPELLBOOK)
 	//{
-		if(this.weaponentity.swappingspell == -1)
-			this.weaponentity.m_frame -= 2;
-		else
-			this.weaponentity.m_frame += 2;
 		if(this.weaponentity.swappingspell == 1)
 		{
+			this.weaponentity.m_frame += 3;
 			if(this.weaponentity.m_frame > 12)
 			{
 				this.weaponentity.m_frame = 23;
@@ -236,6 +233,7 @@ void spellbook_frame(entity this)
 		}
 		else if(this.weaponentity.swappingspell == -1)
 		{
+			this.weaponentity.m_frame -= 3;
 			if(this.weaponentity.m_frame < 0)
 			{
 				this.weaponentity.m_frame = 23;
@@ -247,6 +245,7 @@ void spellbook_frame(entity this)
 		}
 		else
 		{
+			this.weaponentity.m_frame += 1;
 			if(this.weaponentity.m_frame >= 48)
 				this.weaponentity.m_frame = 28;
 		}

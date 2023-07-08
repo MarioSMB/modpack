@@ -1061,14 +1061,14 @@ void summon_meteors(entity this)
 		flame.classname = "missile";
 		set_movetype(flame, MOVETYPE_FLYMISSILE);
 		setorigin(flame, this.origin);
-		flame.origin_x = flame.origin_x + 64 - (random()*128);
-		flame.origin_y = flame.origin_y + 64 - (random()*128);
+		flame.origin_x = flame.origin_x + 96 - (random()*128);
+		flame.origin_y = flame.origin_y + 96 - (random()*128);
 		vector dir = normalize(this.pos1 - this.origin);
 		flame.velocity = dir * 500;
 		flame.angles = vectoangles(dir);
 		setmodel(flame, MDL_LAVABALL);
 		setsize(flame, '0 0 0', '0 0 0');
-		flame.scale = max(0.3, random());
+		flame.scale = max(0.25, random());
 		flame.dmg = 15 * flame.scale;
 		setthink(flame, SUB_Remove);
 		flame.nextthink = time + 5;
@@ -1108,6 +1108,7 @@ void W_Spell_Explosion(entity this)
 	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_Null);
 	setthink(rune, rune_meteors_rise);
 	rune.nextthink = time + 0.7;
+	rune.scale = 1.5;
 	rune.cnt = time + 6 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
 }
@@ -1277,8 +1278,8 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 			actor.weaponentity.m_frame = 0;
 			actor.weaponentity.swappingspell = 1;
 		}
-		actor.attack_finished = time + 0.65; // also prevent primary fire during this time
-		actor.attack2_finished = time + 0.65; // slight delay between swapping, also prevents fireballs!
+		actor.attack_finished = time + 0.5; // also prevent primary fire during this time
+		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
 }
 METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor))
