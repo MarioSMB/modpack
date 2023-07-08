@@ -1085,6 +1085,7 @@ void rune_meteors_risethink(entity this)
 	if(this.origin_z >= this.pos2_z)
 	{
 		setorigin(this, this.pos2);
+		this.scale = 1.5;
 		set_movetype(this, MOVETYPE_NONE);
 		summon_meteors(this);
 		return;
@@ -1111,7 +1112,7 @@ void W_Spell_Explosion(entity this)
 	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_Null);
 	setthink(rune, rune_meteors_rise);
 	rune.nextthink = time + 0.7;
-	rune.scale = 1.5;
+	//rune.scale = 1.5;
 	rune.cnt = time + 6 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
 }
