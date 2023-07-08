@@ -7,6 +7,7 @@
 #include "counter.qc"
 #include "decoy_use.qc"
 #include "explosion.qc"
+#include "fog.qc"
 #include "hurt.qc"
 #include "jumppads.qc"
 #include "multi.qc"

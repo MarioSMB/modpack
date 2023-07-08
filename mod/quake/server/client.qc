@@ -4,12 +4,12 @@
 #include <common/csqcmodel_settings.qh>
 #include "../common/physics.qh"
 #include "combat.qh"
-#include "fog.qh"
 #include "getreplies.qh"
 #include "player.qh"
 #include "rogue/sphere.qh"
 #include "shop.qh"
 #include "triggers/teleporters.qh"
+#include "triggers/trigger/fog.qh"
 #include "weapons/weaponsystem.qh"
 
 /*

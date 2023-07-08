@@ -1,9 +1,7 @@
 #include "fog.qh"
 
-#include "triggers/subs.qh"
-
+#ifdef SVQC
 const int FORCE_SET_FOG = 1;
-
 
 void stuffcmd_digit(entity this, float f)
 {
@@ -263,7 +261,7 @@ spawnfunc(trigger_fog_transition)
 	// Just remove ourself if we're in multiplayer.
 	if(coop || deathmatch) 
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -272,4 +270,4 @@ spawnfunc(trigger_fog_transition)
 	settouch(this, trigger_fog_transition_touch);
     InitTrigger(this);
 }
-
+#endif

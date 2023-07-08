@@ -8,3 +8,4 @@
 #include "fireball.qc"
 #include "model.qc"
 #include "rotate.qc"
+#include "wallsprite.qc"

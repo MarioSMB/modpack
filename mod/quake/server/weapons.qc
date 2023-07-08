@@ -1,6 +1,5 @@
 #include "weapons.qh"
 
-#include "bulletholes.qh"
 #include "combat.qh"
 #include "client.qh"
 #include "impel/impel.qh"
@@ -152,127 +151,6 @@ vector wall_velocity(entity this)
 	return vel;
 }
 
-
-
-#if 0
-/*
-==============================================================================
-
-MULTI-DAMAGE
-
-Collects multiple small damages into a single damage
-
-==============================================================================
-*/
-
-entity	multi_ent;
-float	multi_damage;
-int multi_deathtype;
-
-void ClearMultiDamage()
-{
-	multi_ent = NULL;
-	multi_damage = 0;
-	multi_deathtype = 0;
-}
-
-void ApplyMultiDamage(entity this)
-{
-	if(!multi_ent)
-		return;
-	if(multi_ent.resist_shells > 0)
-		multi_damage = Resist_Damage(multi_ent, IT_SHELLS, multi_damage);
-	T_Damage(multi_ent, this, this, multi_damage, multi_deathtype);
-}
-
-void AddMultiDamage(entity hit, float damage, int deathtype)
-{
-	if(!hit)
-		return;
-	
-	if(hit != multi_ent)
-	{
-		ApplyMultiDamage(hit);
-		multi_damage = damage;
-		multi_ent = hit;
-	}
-	else
-		multi_damage = multi_damage + damage;
-}
-
-/*
-==============================================================================
-
-BULLETS
-
-==============================================================================
-*/
-
-/*
-================
-TraceAttack
-================
-*/
-void TraceAttack(float damage, vector dir, int deathtype)
-{
-	vector vel = normalize(dir + v_up*crandom() + v_right*crandom());
-	vel = vel + 2*trace_plane_normal;
-	vel = vel * 200;
-
-	vector org = trace_endpos - dir*4;
-
-	if(trace_ent.takedamage) // yoder mod, Jan 05 2021)
-	{
-		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
-			SpawnBlood(org, vel*0.2, damage, trace_ent);
-		else
-			te_gunshot(org); // secret doors need bumps too!
-		AddMultiDamage(trace_ent, damage, deathtype);
-	}
-	else
-		te_gunshot(org);
-}
-
-/*
-================
-FireBullets
-
-Used by shotgun, super shotgun, and enemy soldier firing
-Go to the trouble of combining multiple pellets into a single damage call.
-================
-*/
-void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
-{
-	bool bullet = false; // hipnotic bullet holes
-
-	makevectors(this.v_angle);
-
-	vector src = this.origin + v_forward*10;
-	src.z = this.absmin_z + this.size_z * 0.7;
-
-	ClearMultiDamage();
-	multi_deathtype = deathtype;
-	while(shotcount > 0)
-	{
-		vector direction = dir + crandom() * spread.x * v_right + crandom() * spread.y * v_up;
-
-		traceline(src, src + direction * 2048, MOVE_NORMAL, this);
-		if(trace_fraction != 1.0 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
-		{
-			TraceAttack(4, direction, deathtype);
-
-			if(!bullet && !trace_ent)
-			{
-				placebullethole(trace_endpos);
-				bullet = true;
-			}
-		}
-
-		shotcount -= 1;
-	}
-	ApplyMultiDamage(this);
-}
-#else
 void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
 {
 	float bullet_speed;
@@ -302,7 +180,6 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread, int deat
 		missile.projectiledeathtype = deathtype;
 	}
 }
-#endif
 
 
 /*

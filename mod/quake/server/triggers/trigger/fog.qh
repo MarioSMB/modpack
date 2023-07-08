@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef SVQC
 .float fog_density;
 .vector fog_color;
 .entity fog_active_fog_trigger;
@@ -8,3 +9,4 @@
 bool FogPushSettingsFrom(entity client, entity source, float transitionTime);
 
 void SetFog(entity client, float density, vector color, float transitionTime);
+#endif

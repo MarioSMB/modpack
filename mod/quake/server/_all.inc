@@ -7,7 +7,6 @@
 #include "impel/_all.qh"
 
 //#include "defs.qc"
-#include "bulletholes.qc"
 #include "combat.qc"
 #include "items.qc"
 #include "weapons.qc"
@@ -19,7 +18,6 @@
 #include "impulse.qc"
 #include "commands.qc"
 #include "chat.qc"
-#include "fog.qc"
 #include "frametick.qc"
 #include "horde.qc"
 #include "fx.qc"
