@@ -327,7 +327,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	// vengeance sphere handling
-	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last && vdist(attacker.origin - targ.origin, >, 250))
+	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last)
 	{
 		IL_EACH(g_vspheres, it.owner == targ && !it.enemy,
 		{

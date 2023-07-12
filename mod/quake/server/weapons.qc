@@ -727,7 +727,7 @@ void MakeFlame(entity this, entity toucher)
 {
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner.owner, 16, this.projectiledeathtype);
+		T_Damage(toucher, this, this.owner, 16, this.projectiledeathtype);
 		BecomeExplosion(this);
 		return;
 	}
@@ -768,7 +768,8 @@ void SpawnFireSpark(entity this)
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.owner = this;
+	missile.owner = this.owner;
+	missile.realowner = this.owner;
 	missile.classname = "flame";
 	missile.projectiledeathtype = WEP_NAPALM.m_id;
 	missile.velocity = VelocityForDamage(this, 0);
@@ -793,7 +794,7 @@ void NapalmCheckEnemyDead(entity this)
 		return;
 	}
 	setorigin(this, this.enemy.origin);
-	this.cnt = this.cnt + 0.1;
+	this.cnt += 0.1;
 	if(this.cnt > 5)
 	{
 		BecomeExplosion(this);
@@ -814,6 +815,11 @@ entity ThrowGib(entity this, string gibname, float dm);
 void InternalFireThink(entity this)
 {
 	float damg = 65 + random() * 75;
+	if(!this.enemy)
+	{
+		BecomeExplosion(this);
+		return;
+	}
 	if((this.enemy.monsterdef.spawnflags & MON_FLAG_METAL) || (this.enemy.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (this.enemy.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 	{
 		if(random() < 0.7)
@@ -821,6 +827,11 @@ void InternalFireThink(entity this)
 			BecomeExplosion(this);
 			return;
 		}
+	}
+	if(IS_PLAYER(this.enemy) || !this.enemy.takedamage)
+	{
+		BecomeExplosion(this);
+		return;
 	}
 	if(this.enemy.classname == "misc_explobox")
 	{
@@ -838,11 +849,6 @@ void InternalFireThink(entity this)
 		return;
 	}
 	if(this.enemy.health <= 0)
-	{
-		BecomeExplosion(this);
-		return;
-	}
-	if(!this.enemy)
 	{
 		BecomeExplosion(this);
 		return;
@@ -883,17 +889,17 @@ void InternalFireThink(entity this)
 			return;
 		}
 	}
-	if(this.enemy.health <= 48 && this.owner.owner.super_damage_finished > time && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+	if(this.enemy.health <= 48 && this.owner.super_damage_finished > time && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 	{
 		if(this.enemy.health > 0)
 		{
 			if(this.enemy.monsterdef == MON_OGRE) // TODO: what the hell
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
+				T_Damage(this.enemy, this, this.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
-			T_Damage (this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
+			T_Damage(this.enemy, this, this.owner, damg, this.projectiledeathtype);
 			if(!(this.enemy.monsterdef.spawnflags & MON_FLAG_METAL) 
 					&& this.enemy.classname != "misc_explobox" && this.enemy.classname != "misc_explobox2" && this.enemy.classname != "wall_explode")
 			{
@@ -932,13 +938,13 @@ void InternalFireThink(entity this)
 		{
 			if(this.enemy.monsterdef == MON_OGRE && (this.enemy.health - damg) > -80) // TODO
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
+				T_Damage(this.enemy, this, this.owner, damg, this.projectiledeathtype);
 				BecomeExplosion(this);
 				return;
 			}
 			if(this.enemy.health > 0)
 			{
-				T_Damage(this.enemy, this, this.owner.owner, damg, this.projectiledeathtype);
+				T_Damage(this.enemy, this, this.owner, damg, this.projectiledeathtype);
 				if(!(this.enemy.monsterdef.spawnflags & MON_FLAG_METAL)
 						|| this.enemy.classname != "misc_explobox" || this.enemy.classname != "misc_explobox2" || this.enemy.classname != "wall_explode")
 				{
@@ -974,13 +980,13 @@ void InternalFireThink(entity this)
 			}
 		}
 	}
-	T_Damage(this.enemy, this, this.owner.owner, 7 + random() * 4, this.projectiledeathtype);
+	T_Damage(this.enemy, this, this.owner, 7 + random() * 4, this.projectiledeathtype);
 	if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
 		this.enemy.health = 6;
 	this.nextthink = time + 0.25;
 	if(this.cnt == 0)
 		flameanimate1(this);
-	this.cnt = this.cnt + 1;
+	this.cnt += 1;
 	if(this.cnt >= 18)
 	{
 		BecomeExplosion(this);
@@ -996,7 +1002,8 @@ entity SpawnInternalFire(entity this, entity targ)
 	set_movetype(missile, MOVETYPE_NONE);
 	missile.projectiledeathtype = this.projectiledeathtype;
 	missile.solid = SOLID_NOT;
-	missile.owner = this;
+	missile.owner = this.owner;
+	missile.realowner = this.owner;
 	missile.enemy = targ;
 	missile.effects = EF_DIMLIGHT;
 	missile.nextthink = time + 0.3;

@@ -7,17 +7,7 @@ void NapalmFlameThink(entity this)
 {
 	if(!(this.flags & FL_INWATER) && this.cnt == 0)
 	{
-		if(this.watertype == CONTENT_WATER)
-		{
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_SLIME)
-		{
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_LAVA)
+		if(this.watertype == CONTENT_WATER || this.watertype == CONTENT_SLIME || this.watertype == CONTENT_LAVA)
 		{
 			BecomeExplosion(this);
 			return;
@@ -33,12 +23,12 @@ void NapalmFlameThink(entity this)
 	while(head)
 	{
 		if(head.takedamage)
-			T_Damage(head, this, this.owner.owner, 2 + (random() * 4), this.projectiledeathtype);
+			T_Damage(head, this, this.owner, 2 + (random() * 4), this.projectiledeathtype);
 		head = head.chain;
 	}
 	inside_nradius = false;
 	this.nextthink = time + 0.35;
-	this.cnt = this.cnt + 1;
+	this.cnt += 1;
 	if(this.cnt >= 10 + random() * 5)
 	{
 		this.cnt = 0;
@@ -52,19 +42,7 @@ void napalmrebound(entity this)
 {
 	if(!(this.flags & FL_INWATER))
 	{
-		if(this.watertype == CONTENT_WATER)
-		{
-			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_SLIME)
-		{
-			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-			BecomeExplosion(this);
-			return;
-		}
-		if(this.watertype == CONTENT_LAVA)
+		if(this.watertype == CONTENT_WATER || this.watertype == CONTENT_SLIME || this.watertype == CONTENT_LAVA)
 		{
 			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 			BecomeExplosion(this);
@@ -98,6 +76,7 @@ void W_FireNapalm(entity this)
 	this.punchangle_x = -2;
 	entity missile = spawn();
 	missile.owner = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_NAPALM.m_id;
