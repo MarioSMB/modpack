@@ -183,6 +183,9 @@ void LightningTouch(entity this, entity toucher)
 	}
 	else
 	{
+		// if we're already rebounding, abort to avoid doubling back!
+		if(time < this.nextthink && getthink(this) == superlightning_rebound)
+			return;
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);
 		this.ltime = this.nextthink;
