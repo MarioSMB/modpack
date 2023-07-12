@@ -100,10 +100,7 @@ void superlightning_rebound(entity this)
 void LightningTouch(entity this, entity toucher)
 {
 	if(toucher.solid == SOLID_TRIGGER)
-	{
-		LOG_INFO("Touched a trigger!");
 		return;
-	}
 	if(pointcontents(this.origin) == CONTENT_SKY)
 	{
 		delete(this);
@@ -186,7 +183,6 @@ void LightningTouch(entity this, entity toucher)
 	}
 	else
 	{
-		LOG_INFO("Bouncing off something");
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);
 		this.ltime = this.nextthink;
