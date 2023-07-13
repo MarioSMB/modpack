@@ -703,7 +703,7 @@ void movewall_blocked(entity this, entity blocker)
 
 	this.owner.attack_finished = time + 0.5;
 
-	if(this.owner.classname == "func_rotate_door")
+	if(this.owner.classname == "func_rotate_door" && !(this.spawnflags & NONBLOCKING))
 		rotate_door_group_reversedirection(this.owner);
 
 	if(this.dmg)
