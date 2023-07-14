@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 void stop_alarm(entity this, entity actor, entity trigger)
 {
 	if(random() < 0.5)
@@ -33,3 +35,5 @@ spawnfunc(sound_alarm)
 	precache_sound2("enviro/security/onalarm4.wav");
 	this.use = play_alarm;
 }
+
+#endif

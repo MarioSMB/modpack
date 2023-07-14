@@ -1,0 +1,17 @@
+#pragma once
+
+// TYPES
+
+const int DN_N_WAIT 	= BIT(0);
+const int PLT_TOGGLE 	= BIT(1);
+const int ELEVATOR 		= BIT(2);
+const int START_AT_TOP 	= BIT(3);
+const int PLAT2 		= BIT(4);
+const int PLAT2_BOTTOM 	= BIT(5);
+
+float ELV_BUTN_DIR;	// was   = 0
+
+.float plat2Called;
+.float plat2LastMove;
+.float plat2GoTime;
+.float plat2GoTo;

@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 void particle_think(entity this)
 {
 	float thinktime, intensity;
@@ -57,3 +59,5 @@ spawnfunc(misc_pixel)
 	this.currentammo = this.currentammo / 100;
 	this.weapon = this.weapon / 100;
 }
+
+#endif

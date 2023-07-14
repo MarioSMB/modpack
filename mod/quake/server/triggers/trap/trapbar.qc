@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 void bar_spin1(entity this);
 void bar_spin6(entity this) { set_anim(this, 5, bar_spin1); }
 void bar_spin5(entity this) { set_anim(this, 4, bar_spin6); }
@@ -103,3 +105,5 @@ spawnfunc(trapbar)
 	this.th_pain = trapbar_pain;
 	bar_spin1(this);
 }
+
+#endif

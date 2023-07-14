@@ -1,13 +1,10 @@
 #include "new_ai.qc"
 #include "newplats.qc"
 #include "newmisc.qc"
-#include "elevatr.qc"
-#include "pendulum.qc"
 #include "lightnin.qc"
 #include "shield.qc"
 #include "lava_wpn.qc"
 #include "random.qc"
-#include "earthq.qc"
 #include "sphere.qc"
 
 #include "ending.qc"

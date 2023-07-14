@@ -6,6 +6,7 @@
 #include "command.qc"
 #include "counter.qc"
 #include "decoy_use.qc"
+#include "earthquake.qc"
 #include "explosion.qc"
 #include "fog.qc"
 #include "hurt.qc"

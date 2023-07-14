@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 bool claw_hasowner(entity this)
 {
 #if 0
@@ -223,3 +225,5 @@ spawnfunc(misc_pinhead)
 	this.nextthink = random();
 	setthink(this, pinhead_think);
 }
+
+#endif

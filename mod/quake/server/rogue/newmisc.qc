@@ -35,7 +35,7 @@ spawnfunc(light_candle)
 void rubble_touch(entity this, entity toucher)
 {
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
-	if(vdist(this.velocity, >, 0))
+	if(this.velocity != '0 0 0')
 		T_Damage(toucher, this, this, 10, DEATH_TRAP.m_id);
 }
 
@@ -60,7 +60,7 @@ void rubble_throw(entity this)
 	setthink(rubble, SUB_Remove);
 	rubble.nextthink = time + 30;
 	
-	if (this.spawnflags & 1)
+	if(this.spawnflags & 1)
 		rubble.skin = 1;
 	else
 		rubble.skin = 0;

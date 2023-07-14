@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 spawnfunc(misc_gib2)
 {
 	if(!MP_IMPEL) { delete(this); return; }
@@ -51,3 +53,5 @@ spawnfunc(misc_gib)
 	setorigin(this, this.origin);
 	droptofloor(this);
 }
+
+#endif

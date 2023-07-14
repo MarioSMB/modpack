@@ -1,5 +1,0 @@
-#pragma once
-
-bool angry_monsters;
-bool corpse_removal;
-.entity other2;

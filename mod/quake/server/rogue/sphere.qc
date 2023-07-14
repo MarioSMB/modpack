@@ -110,7 +110,7 @@ The Vengeance Sphere. DEATHMATCH ONLY.
 spawnfunc(item_sphere)
 {
 	if(!MP_ROGUE) { delete(this); return; }
-	if(!deathmatch) { delete(this); return; }
+	//if(!deathmatch) { delete(this); return; }
 
 	precache_model("progs/sphere.mdl");
 	precache_sound("sphere/sphere.wav");

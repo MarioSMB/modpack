@@ -27,6 +27,11 @@ bool gameover;
 
 .bool nightmare_checked;
 
+// impel stuff
+bool angry_monsters;
+bool corpse_removal;
+.entity other2;
+
 bool world_already_spawned;
 int world_initialized;
 bool server_is_dedicated;

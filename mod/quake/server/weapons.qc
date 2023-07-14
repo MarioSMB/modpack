@@ -2,11 +2,11 @@
 
 #include "combat.qh"
 #include "client.qh"
-#include "impel/impel.qh"
 #include "impulse.qh"
 #include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
 #include "monsters/ai_ammoresist.qh"
+#include "world.qh"
 
 /*
 */

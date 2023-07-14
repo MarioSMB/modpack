@@ -58,7 +58,6 @@ ENDCLASS(Monster)
 #ifdef SVQC
 #include "../../server/client.qh"
 #include "../../server/combat.qh"
-#include "../../server/impel/impel.qh"
 #include "../../server/items.qh"
 #include "../../server/monsters/ai.qh"
 #include "../../server/monsters/fight.qh"

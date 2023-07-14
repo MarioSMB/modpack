@@ -1,4 +1,6 @@
-// elevator button
+#ifdef SVQC
+
+#include "../../rogue/newplats.qh"
 
 const int ELVTR_DOWN = BIT(0);
 
@@ -136,3 +138,5 @@ spawnfunc(func_elvtr_button)
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 }
+
+#endif

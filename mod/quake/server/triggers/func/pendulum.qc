@@ -1,4 +1,4 @@
-// pendulum
+#ifdef SVQC
 
 const int anim_pend_frame1 = 0;
 const int anim_pend_frame2 = 1;
@@ -450,3 +450,5 @@ spawnfunc(pendulum)
 		setthink(this, pend_swing1);
 	}
 }
+
+#endif

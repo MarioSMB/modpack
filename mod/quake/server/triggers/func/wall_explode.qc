@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 .float walltype;
 
 void DebrisBounceSound(entity this, entity toucher)
@@ -249,3 +251,5 @@ spawnfunc(wall_explode)
 		this.th_die = wall_die;
 	}
 }
+
+#endif

@@ -4,7 +4,6 @@
 
 // mission pack defs
 #include "rogue/_all.qh"
-#include "impel/_all.qh"
 
 //#include "defs.qc"
 #include "combat.qc"
@@ -30,7 +29,6 @@
 
 // mission packs
 #include "rogue/_all.inc"
-#include "impel/_all.inc"
 
 #include "../common/_all.inc"
 
