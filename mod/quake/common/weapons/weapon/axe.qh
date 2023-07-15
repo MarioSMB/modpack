@@ -3,7 +3,7 @@
 CLASS(Axe, Weapon)
 /* ammotype  */ ATTRIB(Axe, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Axe, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL);
+/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD);
 /* ammo */      ATTRIB(Axe, aflag, int, 0);
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");
 /* crosshair */ ATTRIB(Axe, w_crosshair, string, "gfx/crosshairlaser");

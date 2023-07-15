@@ -817,7 +817,7 @@ void HeadThink(entity this)
    	if(world.worldtype != WORLDTYPE_BASE && this.gorging)
 	{
 	  	if(random() < 0.1)
-		 	_sound(this, 6, "misc/flys.wav", 0.7, ATTN_STATIC);
+		 	_sound(this, CH_PLAYER_SINGLE, "misc/flys.wav", 0.7, ATTN_STATIC);
 	}
 }
 

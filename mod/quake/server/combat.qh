@@ -14,6 +14,8 @@ bool empathyused; // hipnotic
 
 bool discharged; // hipnotic
 
+.string deathtarget; // hack from ad
+
 .bool poisonous;
 
 .bool is_frozen; // defines whether an entity is frozen

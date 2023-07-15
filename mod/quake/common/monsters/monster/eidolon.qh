@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_EIDOLON,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was pulverized by the Sculptor"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_EIDOLON,               1,  NULL,           INFO_DEATH_SELF_MON_EIDOLON,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_EIDOLON,           DEATH_SELF_MON_EIDOLON,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_EIDOLON, "progs/mon_bosseidolon.mdl");
+
+SOUND(MON_EIDOLON_SIGHT, "eidolon/sight");
+#endif
+
+CLASS(Eidolon, Monster)
+    ATTRIB(Eidolon, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_APPEAR);
+    ATTRIB(Eidolon, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Eidolon, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Eidolon, m_model, Model, MDL_MON_EIDOLON);
+    ATTRIB(Eidolon, m_sound, Sound, SND_MON_EIDOLON_SIGHT);
+#endif
+    ATTRIB(Eidolon, netname, string, "eidolon");
+    ATTRIB(Eidolon, monster_name, string, _("Eidolon"));
+ENDCLASS(Eidolon)
+
+REGISTER_MONSTER(EIDOLON, NEW(Eidolon));

@@ -1025,6 +1025,54 @@ entity SpawnInternalFire(entity this, entity targ)
 
 //=============================================================================
 
+void BionicExplode(entity this)
+{
+	T_RadiusDamage(this, this.owner, 65, this.projectiledeathtype, NULL); // tonedown
+
+	te_explosion2(this.origin, 100, 12);
+
+	_sound(this, CH_WEAPON_SINGLE, "weapons/resist_rocket.wav", 1, ATTN_NORM);
+
+	delete(this);
+}
+
+
+//*******************************************************************
+//* stick_spike - sticks a spike where it stops  (stolen from CSPIKE)
+//*******************************************************************
+void stick_spike(entity this, vector org, vector dir)
+{
+	entity newmis = spawn();
+	newmis.classname = "bio_explosion";
+	newmis.owner = this.owner;
+	newmis.realowner = this.realowner;
+	newmis.projectiledeathtype = this.projectiledeathtype;
+
+	// make it not solid and stop it
+	set_movetype(newmis, MOVETYPE_NONE);
+	newmis.solid = SOLID_NOT;
+
+	// set angle of rest based on direction it came in from
+	newmis.angles = vectoangles(dir);
+
+	// back out spike a little to show more of it
+	vector facing = (-8)*normalize(dir);
+	vector neworg = org + facing;
+
+	//blitzcode for exploding charges..
+	newmis.nextthink = time + 1;      // timed charges
+	setthink(newmis, BionicExplode);
+	//end blitzcode
+	
+	_setmodel(newmis, "progs/bone_shard.mdl");
+	setsize(newmis, '0 0 0', '0 0 0');		
+	setorigin(newmis, neworg);
+
+	// no velocities
+	newmis.avelocity = '0 0 0';
+	newmis.velocity = '0 0 0';
+}
+
 
 /*
 ===============
@@ -1072,7 +1120,7 @@ void spike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage) // yoder mod, jan 05 2021
 	{
-		float damg = 9;
+		float damg = ((this.dmg) ? this.dmg : 9);
 		if(this.classname == "bullet")
 		{
 			damg = 4;
@@ -1088,10 +1136,23 @@ void spike_touch(entity this, entity toucher)
 		}
 		spawn_touchblood(this, damg, toucher);
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+
+		if(this.classname == "bio")
+		{
+			T_RadiusDamage(this, this.owner, 40, this.projectiledeathtype, NULL); // tonedown
+			te_explosion2(this.origin, 100, 10);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/resist_rocket.wav", 0.8, ATTN_NORM);
+		}
 	}
 	else
 	{
-		if(this.classname == "wizard_spike")
+		if(this.classname == "bio")
+		{
+			te_blood(this.origin, this.velocity, 3);
+			stick_spike(this, this.origin, this.velocity);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
+		}
+		else if(this.classname == "wizard_spike")
 			te_wizspike(this.origin);
 		else if(this.classname == "knight_spike")
 			te_knightspike(this.origin);
@@ -1102,7 +1163,6 @@ void spike_touch(entity this, entity toucher)
 	}
 
 	delete(this);
-
 }
 
 
@@ -1232,7 +1292,8 @@ void W_WeaponFrame(entity this)
 			if(this.button0 && wep != WEP_SPELLBOOK && wep.wr_checkammo1(wep, this))
 			{
 				SuperDamageSound(this);
-				W_Attack(this, false);
+				if(wep != WEP_AXE) // allow stealthy slices!
+					W_Attack(this, false);
 			}
 			wep.wr_think(wep, this, this.button0);
 		}

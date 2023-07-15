@@ -253,8 +253,19 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(IS_MONSTER(targ) && horde_ent && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		remote_wavecheck(targ);
 
+	// TODO: reset target? not sure if this is needed!
+	//string oldtarg = targ.target;
+	if(targ.deathtarget && targ.deathtarget != "")
+	{
+		entity dtarg = find(NULL, targetname, targ.deathtarget);
+		if(dtarg)
+			targ.target = targ.deathtarget;
+	}
+
 	if(targ.target && targ.target != "")
 		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
+
+	//targ.target = oldtarg;
 
 	if(inflictor.classname == "impaler")
 		impale(targ);

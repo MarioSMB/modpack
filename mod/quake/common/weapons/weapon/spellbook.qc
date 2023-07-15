@@ -552,6 +552,10 @@ void summon_vorelings(entity this)
 	dir.z = 0;
 	dir = normalize(dir);
 
+	Monster chosen = MON_VORELING;
+	if(random() <= 0.1)
+		chosen = MON_GOATLING;
+
 	for(int j = 0; j < moncount; ++j)
 	{
 		vector offset = '0 0 0';
@@ -564,7 +568,7 @@ void summon_vorelings(entity this)
 			case 3: offset = '0 -64 0'; break;
 		}
 
-		entity mon = horn_spawnmonster(this.origin + offset, this.realowner, MON_VORELING);
+		entity mon = horn_spawnmonster(this.origin + offset, this.realowner, chosen);
 		if(!mon)
 			continue; // dunno how but just incase!
 		mon.angles_y += random() * 359;
@@ -1175,7 +1179,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_SWORD)
 				return;
 			STAT(MANA, this) -= SPELL_COST_SWORD;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Sword(this);
 			break;
 		}
@@ -1184,7 +1188,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_FROST)
 				return;
 			STAT(MANA, this) -= SPELL_COST_FROST;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Frost(this);
 			break;
 		}	
@@ -1193,7 +1197,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_ICECANNON)
 				return;
 			STAT(MANA, this) -= SPELL_COST_ICECANNON;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_IceCannon(this);
 			break;
 		}	
@@ -1208,7 +1212,7 @@ void W_FireSpellbook(entity this)
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_VORELING;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Voreling(this);
 			break;
 		}
@@ -1229,7 +1233,7 @@ void W_FireSpellbook(entity this)
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_CURSE;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Curse(this);
 			break;
 		}
@@ -1238,7 +1242,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_EXPLOSION)
 				return;
 			STAT(MANA, this) -= SPELL_COST_EXPLOSION;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Explosion(this);
 			break;
 		}
@@ -1247,7 +1251,7 @@ void W_FireSpellbook(entity this)
 			if(STAT(MANA, this) < SPELL_COST_SERPENT)
 				return;
 			STAT(MANA, this) -= SPELL_COST_SERPENT;
-			this.attack_finished = time + 1;
+			this.attack_finished = time + 0.66;
 			W_Spell_Serpent(this);
 			break;
 		}

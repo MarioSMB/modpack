@@ -22,6 +22,8 @@
 #include "weapon/piano.qh"
 #include "weapon/ripper.qh"
 #include "weapon/spellbook.qh"
+#include "weapon/biogun.qh"
+#include "weapon/fish.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

@@ -1,0 +1,18 @@
+#pragma once
+
+CLASS(Fish, Weapon)
+/* ammotype  */ ATTRIB(Fish, ammo_type, int, IT_ROCKETS);
+/* impulse   */ ATTRIB(Fish, impulse, int, 6);
+/* spawnflags*/ ATTRIB(Fish, spawnflags, int, WEP_FLAG_NOHUD);
+/* ammo */      ATTRIB(Fish, aflag, int, 5);
+/* modelname */ ATTRIB(Fish, mdl, string, "feesh");
+/* crosshair */ ATTRIB(Fish, w_crosshair, string, "gfx/crosshair50");
+/* crosshair */ ATTRIB(Fish, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Fish, w_crosshair_color, vector, '1 0.5 0.5');
+/* refname   */ ATTRIB(Fish, netname, string, "fish");
+/* wepname   */ ATTRIB(Fish, m_name, string, _("Mighty Norse Throwing Fish"));
+
+ENDCLASS(Fish)
+REGISTER_WEAPON(FISH, NEW(Fish));
+
+//SPAWNFUNC_WEAPON(weapon_fish, WEP_FISH)

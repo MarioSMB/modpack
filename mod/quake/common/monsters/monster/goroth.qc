@@ -398,6 +398,7 @@ void gor_ball6(entity this)
 	vector vec = normalize (this.enemy.origin - org);
 
 	entity newmis = launch_spike(this, org, vec);
+	newmis.projectiledeathtype = DEATH_MONSTER_GOROTH.m_id;
 	_setmodel(newmis, "progs/gorball.mdl");
 	newmis.scale = this.scale;
 	newmis.avelocity = '200 100 300';

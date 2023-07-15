@@ -1335,6 +1335,9 @@ void PutClientInServer(entity this)
 	this.jboots_finished = 0;
 	this.jboots_time = 0;
 
+	// Cut off any still running player sounds.
+	stopsound(this, CH_PLAYER_SINGLE);
+
 	if(!this.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;

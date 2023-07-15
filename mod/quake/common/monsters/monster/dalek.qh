@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_DALEK,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was exterminated by a Dalek"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_DALEK,               1,  NULL,           INFO_DEATH_SELF_MON_DALEK,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_DALEK,           DEATH_SELF_MON_DALEK,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_DALEK, "progs/dalek.mdl");
+
+SOUND(MON_DALEK_SIGHT, "dalek/dalek");
+#endif
+
+CLASS(Dalek, Monster)
+    ATTRIB(Dalek, spawnflags, int, MON_FLAG_INFIGHT);
+    ATTRIB(Dalek, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Dalek, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Dalek, m_model, Model, MDL_MON_DALEK);
+    ATTRIB(Dalek, m_sound, Sound, SND_MON_DALEK_SIGHT);
+#endif
+    ATTRIB(Dalek, netname, string, "dalek");
+    ATTRIB(Dalek, monster_name, string, _("Dalek"));
+ENDCLASS(Dalek)
+
+REGISTER_MONSTER(DALEK, NEW(Dalek));

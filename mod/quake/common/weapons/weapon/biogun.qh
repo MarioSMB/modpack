@@ -1,0 +1,26 @@
+#pragma once
+
+CLASS(Biogun, Weapon)
+/* ammotype  */ ATTRIB(Biogun, ammo_type, int, IT_NAILS);
+/* impulse   */ ATTRIB(Biogun, impulse, int, 4);
+/* spawnflags*/ ATTRIB(Biogun, spawnflags, int, 0);
+/* ammo */      ATTRIB(Biogun, aflag, int, 30);
+/* modelname */ ATTRIB(Biogun, mdl, string, "biogun");
+/* crosshair */ ATTRIB(Biogun, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(Biogun, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(Biogun, w_crosshair_color, vector, '1 0.75 0');
+/* wepimg    */ ATTRIB(Biogun, model2, string, "nailgun");
+/* refname   */ ATTRIB(Biogun, netname, string, "biogun");
+/* wepname   */ ATTRIB(Biogun, m_name, string, _("Biogun"));
+
+ENDCLASS(Biogun)
+REGISTER_WEAPON(BIOGUN, NEW(Biogun));
+
+//SPAWNFUNC_WEAPON(weapon_biogun, WEP_BIOGUN)
+
+#ifdef SVQC
+void player_bio1(entity this);
+void player_bio2(entity this);
+
+void W_FireBio(entity this, float ox);
+#endif
