@@ -9,6 +9,7 @@ CLASS(Fish, Weapon)
 /* crosshair */ ATTRIB(Fish, w_crosshair, string, "gfx/crosshair50");
 /* crosshair */ ATTRIB(Fish, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Fish, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Fish, model2, string, "rlaunch");
 /* refname   */ ATTRIB(Fish, netname, string, "fish");
 /* wepname   */ ATTRIB(Fish, m_name, string, _("Mighty Norse Throwing Fish"));
 
