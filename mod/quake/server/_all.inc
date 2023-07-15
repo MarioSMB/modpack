@@ -22,6 +22,7 @@
 #include "fx.qc"
 #include "shop.qc"
 #include "explosions.qc"
+#include "vote.qc"
 
 #include "weapons/_mod.inc"
 #include "monsters/_all.inc"

@@ -1,5 +1,8 @@
 #pragma once
 
+const int CMD_REQUEST_COMMAND = 1; // copied from xonotic commands system
+const int CMD_REQUEST_USAGE = 2;
+
 .string weaponorder_byimpulse;
 
 float autocvar_sv_quake_katria = 0.3;

@@ -10,6 +10,7 @@
 #include "shop.qh"
 #include "triggers/teleporters.qh"
 #include "triggers/trigger/fog.qh"
+#include "vote.qh"
 #include "weapons/weaponsystem.qh"
 
 /*
@@ -1587,6 +1588,8 @@ void NextLevel()
 
 	entity o = NULL;
 
+	VoteReset(true);
+
 	if(MP_MG)
 	{
 	// find a trigger changelevel
@@ -2611,6 +2614,8 @@ void ClientDisconnect(entity this)
 	strfree(this.weaponorder_byimpulse);
 	GetCvars(this, this, -1);
 
+	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
 	ONREMOVE(this);
 }
 
@@ -2919,6 +2924,12 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "noclip")
 	{
 		NoclipCheat(this);
+		return;
+	}
+
+	if(cmd_name == "vote")
+	{
+		VoteCommand(CMD_REQUEST_COMMAND, this, argc, command);
 		return;
 	}
 

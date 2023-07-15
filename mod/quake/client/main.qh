@@ -6,6 +6,19 @@ bool alt_held;
 bool shift_held;
 bool ctrl_held;
 
+int binddb;
+
+string vote_called_vote;
+bool vote_waiting;
+bool vote_waiting_for_me;
+
+bool autocvar_hud_showbinds;
+bool autocvar_hud_showbinds_limit;
+
+string _getcommandkey(string text, string command, bool forcename);
+#define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
+#define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
+
 bool postinit;
 
 IntrusiveList g_drawables;

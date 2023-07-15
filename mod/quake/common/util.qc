@@ -405,6 +405,158 @@ void wordwrap_cb(string s, float l, void(string) callback)
 	strunzone(s);
 }
 
+string translate_key(string key)
+{
+	if (prvm_language == "en") return key;
+
+	if (substring(key, 0, 1) == "<")
+	{
+		if (key == "<KEY NOT FOUND>") return _("<KEY NOT FOUND>");
+		if (key == "<UNKNOWN KEYNUM>") return _("<UNKNOWN KEYNUM>");
+	}
+
+	switch(key)
+	{
+		case "TAB":				return _("TAB");
+		case "ENTER":			return _("ENTER");
+		case "ESCAPE":			return _("ESCAPE");
+		case "SPACE":			return _("SPACE");
+
+		case "BACKSPACE":		return _("BACKSPACE");
+		case "UPARROW":			return _("UPARROW");
+		case "DOWNARROW":		return _("DOWNARROW");
+		case "LEFTARROW":		return _("LEFTARROW");
+		case "RIGHTARROW":		return _("RIGHTARROW");
+
+		case "ALT":				return _("ALT");
+		case "CTRL":			return _("CTRL");
+		case "SHIFT":			return _("SHIFT");
+
+		case "INS":				return _("INS");
+		case "DEL":				return _("DEL");
+		case "PGDN":			return _("PGDN");
+		case "PGUP":			return _("PGUP");
+		case "HOME":			return _("HOME");
+		case "END":				return _("END");
+
+		case "PAUSE":			return _("PAUSE");
+
+		case "NUMLOCK":			return _("NUMLOCK");
+		case "CAPSLOCK":		return _("CAPSLOCK");
+		case "SCROLLOCK":		return _("SCROLLOCK");
+
+		case "SEMICOLON":		return _("SEMICOLON");
+		case "TILDE":			return _("TILDE");
+		case "BACKQUOTE":		return _("BACKQUOTE");
+		case "QUOTE":			return _("QUOTE");
+		case "APOSTROPHE":		return _("APOSTROPHE");
+		case "BACKSLASH":		return _("BACKSLASH");
+	}
+
+	if (substring(key, 0, 1) == "F")
+	{
+		string subkey = substring(key, 1, -1);
+		if (IS_DIGIT(substring(key, 3, 1))) // check only first digit
+		{
+			return sprintf(_("F%d"), stof(subkey));
+		}
+		// continue in case there is another key name starting with F
+	}
+
+	if (substring(key, 0, 3) == "KP_")
+	{
+		string subkey = substring(key, 3, -1);
+		if (IS_DIGIT(substring(key, 3, 1))) // check only first digit
+		{
+			return sprintf(_("KP_%d"), stof(subkey));
+		}
+
+		switch(subkey)
+		{
+			case "INS":				return sprintf(_("KP_%s"), _("INS"));
+			case "END":				return sprintf(_("KP_%s"), _("END"));
+			case "DOWNARROW":		return sprintf(_("KP_%s"), _("DOWNARROW"));
+			case "PGDN":			return sprintf(_("KP_%s"), _("PGDN"));
+			case "LEFTARROW":		return sprintf(_("KP_%s"), _("LEFTARROW"));
+			case "RIGHTARROW":		return sprintf(_("KP_%s"), _("RIGHTARROW"));
+			case "HOME":			return sprintf(_("KP_%s"), _("HOME"));
+			case "UPARROW":			return sprintf(_("KP_%s"), _("UPARROW"));
+			case "PGUP":			return sprintf(_("KP_%s"), _("PGUP"));
+			case "PERIOD":			return sprintf(_("KP_%s"), _("PERIOD"));
+			case "DEL":				return sprintf(_("KP_%s"), _("DEL"));
+			case "DIVIDE":			return sprintf(_("KP_%s"), _("DIVIDE"));
+			case "SLASH":			return sprintf(_("KP_%s"), _("SLASH"));
+			case "MULTIPLY":		return sprintf(_("KP_%s"), _("MULTIPLY"));
+			case "MINUS":			return sprintf(_("KP_%s"), _("MINUS"));
+			case "PLUS":			return sprintf(_("KP_%s"), _("PLUS"));
+			case "ENTER":			return sprintf(_("KP_%s"), _("ENTER"));
+			case "EQUALS":			return sprintf(_("KP_%s"), _("EQUALS"));
+			default:				return key;
+		}
+	}
+
+	if (key == "PRINTSCREEN") return _("PRINTSCREEN");
+
+	if (substring(key, 0, 5) == "MOUSE")
+		return sprintf(_("MOUSE%d"), stof(substring(key, 5, -1)));
+
+	if (key == "MWHEELUP") return _("MWHEELUP");
+	if (key == "MWHEELDOWN") return _("MWHEELDOWN");
+
+	if (substring(key, 0,3) == "JOY")
+		return sprintf(_("JOY%d"), stof(substring(key, 3, -1)));
+
+	if (substring(key, 0,3) == "AUX")
+		return sprintf(_("AUX%d"), stof(substring(key, 3, -1)));
+
+	if (substring(key, 0, 4) == "X360_")
+	{
+		string subkey = substring(key, 4, -1);
+		switch(subkey)
+		{
+			case "DPAD_UP":					return sprintf(_("X360_%s"), _("DPAD_UP"));
+			case "DPAD_DOWN":				return sprintf(_("X360_%s"), _("DPAD_DOWN"));
+			case "DPAD_LEFT":				return sprintf(_("X360_%s"), _("DPAD_LEFT"));
+			case "DPAD_RIGHT":				return sprintf(_("X360_%s"), _("DPAD_RIGHT"));
+			case "START":					return sprintf(_("X360_%s"), _("START"));
+			case "BACK":					return sprintf(_("X360_%s"), _("BACK"));
+			case "LEFT_THUMB":				return sprintf(_("X360_%s"), _("LEFT_THUMB"));
+			case "RIGHT_THUMB":				return sprintf(_("X360_%s"), _("RIGHT_THUMB"));
+			case "LEFT_SHOULDER":			return sprintf(_("X360_%s"), _("LEFT_SHOULDER"));
+			case "RIGHT_SHOULDER":			return sprintf(_("X360_%s"), _("RIGHT_SHOULDER"));
+			case "LEFT_TRIGGER":			return sprintf(_("X360_%s"), _("LEFT_TRIGGER"));
+			case "RIGHT_TRIGGER":			return sprintf(_("X360_%s"), _("RIGHT_TRIGGER"));
+			case "LEFT_THUMB_UP":			return sprintf(_("X360_%s"), _("LEFT_THUMB_UP"));
+			case "LEFT_THUMB_DOWN":			return sprintf(_("X360_%s"), _("LEFT_THUMB_DOWN"));
+			case "LEFT_THUMB_LEFT":			return sprintf(_("X360_%s"), _("LEFT_THUMB_LEFT"));
+			case "LEFT_THUMB_RIGHT":		return sprintf(_("X360_%s"), _("LEFT_THUMB_RIGHT"));
+			case "RIGHT_THUMB_UP":			return sprintf(_("X360_%s"), _("RIGHT_THUMB_UP"));
+			case "RIGHT_THUMB_DOWN":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_DOWN"));
+			case "RIGHT_THUMB_LEFT":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_LEFT"));
+			case "RIGHT_THUMB_RIGHT":		return sprintf(_("X360_%s"), _("RIGHT_THUMB_RIGHT"));
+			default:						return key;
+		}
+	}
+
+	if (substring(key, 0, 4) == "JOY_")
+	{
+		string subkey = substring(key, 4, -1);
+		switch(subkey)
+		{
+			case "UP":			return sprintf(_("JOY_%s"), _("UP"));
+			case "DOWN":		return sprintf(_("JOY_%s"), _("DOWN"));
+			case "LEFT":		return sprintf(_("JOY_%s"), _("LEFT"));
+			case "RIGHT":		return sprintf(_("JOY_%s"), _("RIGHT"));
+			default:			return key;
+		}
+	}
+
+	if (substring(key, 0, 8) == "MIDINOTE")
+		return sprintf(_("MIDINOTE%d"), stof(substring(key, 8, -1)));
+
+	return key;
+}
+
 string fixPriorityList(string order, float from, float to, float subtract, float complete)
 {
 	string neworder;

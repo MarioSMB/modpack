@@ -20,6 +20,17 @@ float autocvar_sbar_notify_fontsize = 0.8;
 const int NOTIFY_MAX_ENTRIES = 10;
 const float NOTIFY_ICON_MARGIN = 0.02;
 
+// vote panel, ported from Xonotic
+int vote_yescount;
+int vote_nocount;
+int vote_needed;
+int vote_highlighted; // currently selected vote
+
+int vote_active; // is there an active vote?
+int vote_prev; // previous state of vote_active to check for a change
+float vote_alpha;
+float vote_change; // "time" when vote_active changed
+
 int notify_index;
 int notify_count;
 float notify_times[NOTIFY_MAX_ENTRIES];

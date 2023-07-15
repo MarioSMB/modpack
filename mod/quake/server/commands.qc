@@ -165,6 +165,12 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "vote")
+	{
+		VoteCommand(CMD_REQUEST_COMMAND, NULL, argc, command);
+		return;
+	}
+
 	if(cmdname == "settemp")
 	{
 		if(argc >= 3)

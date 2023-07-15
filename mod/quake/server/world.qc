@@ -4,6 +4,7 @@
 #include "gamelog.qh"
 #include "horde.qh"
 #include "triggers/func/earthquake.qh"
+#include "vote.qh"
 
 void dropclient_do(entity this)
 {
@@ -1471,9 +1472,12 @@ Exit deathmatch games upon conditions
 ============
 */
 void NextLevel();
+void VoteThink();
 bool autocvar_quit_when_empty = true;
 void CheckRules_World()
 {
+	VoteThink();
+
 	if(gameover)	// someone else quit the game already
 		return;
 		

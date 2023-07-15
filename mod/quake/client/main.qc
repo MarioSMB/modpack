@@ -29,6 +29,13 @@ void CSQC_Init()
 	static_init();
 	static_init_late();
 	static_init_precache();
+
+	binddb = db_create();
+}
+
+void Shutdown()
+{
+	db_close(binddb);
 }
 
 string draw_currentSkin;
@@ -207,6 +214,27 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(s == "handlevote")
+	{
+		int vote_selection;
+		string vote_string;
+
+		if (InterpretBoolean(argv(1)))
+		{
+			vote_selection = 2;
+			vote_string = "yes";
+		}
+		else
+		{
+			vote_selection = 1;
+			vote_string = "no";
+		}
+
+		if (vote_selection)
+			localcmd(strcat("cmd vote ", vote_string, "\n"));
+		return;
+	}
+
 	// nothing above caught the command, must be invalid
 	LOG_INFO(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.");
 }
@@ -357,6 +385,58 @@ STATIC_INIT(PlayerSlots_Spawn)
 
 // optional stuff
 
+string _getcommandkey(string cmd_name, string command, bool forcename)
+{
+	string keys;
+	float n, j, k, l = 0;
+
+	if (!autocvar_hud_showbinds)
+		return cmd_name;
+
+	keys = db_get(binddb, command);
+	if (keys == "")
+	{
+		bool joy_active = cvar("joy_active");
+		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
+		for(j = 0; j < n; ++j)
+		{
+			k = stof(argv(j));
+			if(k != -1)
+			{
+				string key = keynumtostring(k);
+				if(!joy_active && substring(key, 0, 3) == "JOY")
+					continue;
+
+				key = translate_key(key);
+
+				if (keys == "")
+					keys = key;
+				else
+					keys = strcat(keys, ", ", key);
+
+				++l;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
+					break;
+			}
+
+		}
+		if (keys == "")
+			keys = "NO_KEY";
+		db_put(binddb, command, keys);
+	}
+
+	if (keys == "NO_KEY") {
+		if (autocvar_hud_showbinds > 1)
+			return sprintf(_("%s (not bound)"), cmd_name);
+		else
+			return cmd_name;
+	}
+	else if (autocvar_hud_showbinds > 1 || forcename)
+		return sprintf("%s (%s)", cmd_name, keys);
+	else
+		return keys;
+}
+
 NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 {
 	int i = ReadByte();
@@ -459,4 +539,39 @@ NET_HANDLE(ENT_CLIENT_TOGGLEWALL, bool isnew)
 	this.entremove = togglewall_remove;
 
 	InterpolateOrigin_Note(this);
+}
+
+NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
+{
+	make_pure(this);
+
+	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
+
+	if(!(nags & BIT(2)))
+	{
+		strfree(vote_called_vote);
+		vote_active = 0;
+	}
+	else
+	{
+		vote_active = 1;
+	}
+
+	if(nags & BIT(6))
+	{
+		vote_yescount = ReadByte();
+		vote_nocount = ReadByte();
+		vote_needed = ReadByte();
+		vote_highlighted = ReadChar();
+	}
+
+	if(nags & BIT(7))
+	{
+		strcpy(vote_called_vote, ReadString());
+	}
+
+	return = true;
+
+	vote_waiting = (nags & BIT(2));
+	vote_waiting_for_me = (nags & BIT(3));
 }

@@ -36,6 +36,8 @@ string getWrappedLine_remaining;
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw);
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
+string translate_key(string key);
+
 // Some common varargs functions. Lowercase as they match C.
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))

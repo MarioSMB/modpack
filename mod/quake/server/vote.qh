@@ -1,0 +1,66 @@
+#pragma once
+
+bool autocvar_sv_vote_call;
+bool autocvar_sv_vote_change;
+string autocvar_sv_vote_commands;
+bool autocvar_sv_vote_debug;
+bool autocvar_sv_vote_gamestart;
+int autocvar_sv_vote_limit;
+float autocvar_sv_vote_majority_factor;
+float autocvar_sv_vote_majority_factor_of_voted;
+bool autocvar_sv_vote_master;
+bool autocvar_sv_vote_master_callable;
+string autocvar_sv_vote_master_commands;
+string autocvar_sv_vote_master_password;
+int autocvar_sv_vote_master_playerlimit;
+bool autocvar_sv_vote_no_stops_vote;
+//string autocvar_sv_vote_only_commands;
+bool autocvar_sv_vote_singlecount;
+float autocvar_sv_vote_stop;
+float autocvar_sv_vote_timeout;
+float autocvar_sv_vote_wait;
+
+string autocvar_g_voteban_list;
+
+// definitions for command selection between progs
+const float VC_ASGNMNT_BOTH = 1;
+const float VC_ASGNMNT_CLIENTONLY = 2;
+const float VC_ASGNMNT_SERVERONLY = 3;
+
+// vote selection definitions
+const float VOTE_SELECT_ABSTAIN = -2;
+const float VOTE_SELECT_REJECT = -1;
+const float VOTE_SELECT_NULL = 0;
+const float VOTE_SELECT_ACCEPT = 1;
+
+// different statuses of the current vote
+const float VOTE_NULL = 0;
+const float VOTE_NORMAL = 1;
+const float VOTE_MASTER = 2;
+
+// global vote information declarations
+entity vote_caller;         // original caller of the current vote
+string vote_caller_name;    // name of the vote caller
+int vote_called;            // stores status of current vote (See VOTE_*)
+float vote_endtime;         // time when the vote is finished
+int vote_accept_count;      // total amount of players who accept the vote (counted by VoteCount() function)
+int vote_reject_count;      // same as above, but rejected
+int vote_abstain_count;     // same as above, but abstained
+int vote_needed_overall;    // total amount of players NEEDED for a vote to pass (based on sv_vote_majority_factor)
+.bool vote_master;          // flag for if the player has vote master privileges
+.float vote_waittime;       // flag for how long the player must wait before they can vote again
+.int vote_selection;        // flag for which vote selection the player has made (See VOTE_SELECT_*)
+string vote_called_command; // command sent by client
+string vote_called_display; // visual string of command sent by client
+string vote_parsed_command; // command which is fixed after being parsed
+string vote_parsed_display; // visual string which is fixed after being parsed
+
+// allow functions to be used in other code like world.qc and teamplay.qc
+void VoteThink();
+void VoteReset(bool verbose);
+void VoteCommand(int request, entity caller, int argc, string vote_command);
+
+// warmup and nagger stuff
+entity nagger;
+void VoteCount(float first_count);
+void Nagger_Init();
