@@ -159,6 +159,8 @@ void fishthink(entity this)
 
 void fishmissile(entity this)
 {
+	this.ammo_rockets -= 1;
+
 	entity fish = spawn();
 	fish.owner = this;
 	fish.projectiledeathtype = WEP_FISH.m_id;
