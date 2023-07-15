@@ -27,7 +27,10 @@ void W_FireAxe(entity this)
 {
 	makevectors(this.v_angle);
 	vector source = this.origin + '0 0 16';
+	int oldsolid = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	traceline(source, source + v_forward*64, false, this);
+	this.dphitcontentsmask = oldsolid;
 	if(trace_fraction == 1.0)
 		return;
 	

@@ -337,6 +337,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		empathyused = false;
 	}
 
+	// jump boots: half damage from attackers below the target
+	if((targ.powerups & POWERUP_JUMPBOOTS) && (targ.origin_z > attacker.origin_z || targ.origin_z > inflictor.origin_z) && targ != attacker)
+		damage *= 0.5;
+
 	// vengeance sphere handling
 	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last)
 	{

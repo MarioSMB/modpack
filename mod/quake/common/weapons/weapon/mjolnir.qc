@@ -81,6 +81,8 @@ void HIP_LightningThink(entity this)
 		{
 			if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_PLAYER(head)))
 			{
+				if(autocvar_g_friendlyfire_virtual && IS_PLAYER(head))
+					continue;
 //            if(visible(head) &&(head!=this.owner.owner) &&(head.health>0))
 				if((head!=this.owner.owner) &&(head.health>0) && (visible(this, head)))
 				{
@@ -218,7 +220,10 @@ void HIP_FireMjolnir(entity this)
 	vector source = this.origin + '0 0 16';
 
 	makevectors(this.v_angle);
+	int oldsolid = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	traceline(source, source + v_forward*32, false, this);
+	this.dphitcontentsmask = oldsolid;
 	if(trace_fraction == 1.0 &&(this.ammo_cells >= 15))
 	{
 		source = source + v_forward*32;
