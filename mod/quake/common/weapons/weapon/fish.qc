@@ -201,6 +201,9 @@ void fishmissile(entity this)
 
 void fishcharge(entity this)
 {
+	if(this.health < 1 || intermission_running)
+		return;
+
 	if(this.fish_time > (SUPERFISHTIME + 3))
 		this.fish_time = SUPERFISHTIME + 3;
 	this.fish_time += 0.1;

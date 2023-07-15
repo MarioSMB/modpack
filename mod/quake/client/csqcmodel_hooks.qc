@@ -166,8 +166,7 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	bool is_playermodel = (this.model == "progs/player.mdl" || this.model == "progs/player_katria.mdl"
-									|| this.model == "progs/player_mario.mdl" || this.model == "progs/player_goat.mdl" || this.model == "progs/skater.mdl"
+	bool is_playermodel = (			substring(this.model, 0, 12) == "progs/player" || this.model == "progs/skater.mdl"
 									|| substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 									(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);

@@ -970,8 +970,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 void set_suicide_frame(entity this)
 {	// used by kill command and disconnect command
-	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl"
-		&& this.model != "progs/player_mario.mdl" && this.model != "progs/player_goat.mdl" && this.model != "progs/skater.mdl")
+	if(substring(this.model, 0, 12) != "progs/player" && this.model != "progs/skater.mdl")
 		return;	// already gibbed
 	this.frame = anim_player_deatha1 + (11 - 1); // animation frames start at 1
 	this.solid = SOLID_NOT;
