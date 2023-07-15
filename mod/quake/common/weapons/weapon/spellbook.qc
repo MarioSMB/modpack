@@ -553,7 +553,7 @@ void summon_vorelings(entity this)
 	dir = normalize(dir);
 
 	Monster chosen = MON_VORELING;
-	if(random() <= 0.1)
+	if(random() <= 0.2)
 		chosen = MON_GOATLING;
 
 	for(int j = 0; j < moncount; ++j)
