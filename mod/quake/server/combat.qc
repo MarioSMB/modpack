@@ -421,7 +421,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		vector vec = normalize(from.origin - targ.origin);
 		float dot = (vec * v_forward);
 		if(dot > 0.3)
-			take *= 0.33;
+			take *= 0.5;
 	}
 
 // coop damage avoidance (if enabled)

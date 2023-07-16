@@ -33,7 +33,8 @@ const float MANA_REGEN_RATE = 0.25;
 #endif
 const int SPELL_FIRST = 0;
 const int SPELL_SWORD = 0;
-const float SPELL_COST_SWORD = 15;
+const float SPELL_COST_SWORD = 6;
+const float SPELL_COST_SHIELD = 14;
 const int SPELL_FROST = 1;
 const float SPELL_COST_FROST = 30;
 const int SPELL_ICECANNON = 2;

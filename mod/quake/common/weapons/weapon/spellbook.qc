@@ -1,5 +1,30 @@
 #include "spellbook.qh"
 
+#ifdef GAMEQC
+entity tracetossent;
+
+vector rune_getspot(entity this)
+{
+	makevectors(this.v_angle);
+	vector src = this.origin + this.view_ofs;
+	vector rmin = '-48 -48 0', rmax = '48 48 4';
+
+	if (!tracetossent)
+		tracetossent = new(tracetossent);
+	tracetossent.owner = this;
+	setsize(tracetossent, rmin, rmax);
+	setorigin(tracetossent, src);
+
+	tracetossent.velocity = v_forward * 600;
+	tracetoss(tracetossent, this);
+
+	if(trace_startsolid || vdist(trace_endpos - src, <, 32))
+		return '0 0 0'; // error case
+
+	return trace_endpos;
+}
+#endif
+
 #ifdef SVQC
 PRECACHE(Spellbook)
 {
@@ -67,32 +92,21 @@ void Regenerate_Mana(entity this)
 	}
 }
 
-bool rune_checkspace(entity this)
+entity rune_summon(entity this, vector spot, Model rune_model, entity eff)
 {
 	makevectors(this.v_angle);
-	vector src = this.origin + v_forward * 150;
-
-	tracebox(src, '-64 -64 0', '64 64 4', src, MOVE_NOMONSTERS, this);
-
-	return trace_startsolid;
-}
-
-entity rune_summon(entity this, Model rune_model, entity eff)
-{
-	makevectors(this.v_angle);
-	tracebox(this.origin + this.view_ofs, '-64 -64 0', '64 64 4', this.origin + this.view_ofs + v_forward * 150, MOVE_NOMONSTERS, this);
-	vector src = trace_endpos;
+	vector src = spot;
 
 	entity rune = new(rune);
 	rune.owner = rune.realowner = this;
 	rune.solid = SOLID_NOT;
 	setmodel(rune, rune_model);
-	setsize(rune, '-64 -64 0', '64 64 1');
+	setsize(rune, '-48 -48 0', '48 48 4');
 	rune.pos1 = v_forward;
 	rune.pos2 = v_up;
 	rune.angles = '90 90 0';
 	set_movetype(rune, MOVETYPE_TOSS);
-	tracebox(src, '-64 -64 0', '64 64 4', src - '0 0 2048', MOVE_NOMONSTERS, this);
+	tracebox(src + '0 0 1', '-48 -48 0', '48 48 4', src - '0 0 2048', MOVE_NOMONSTERS, this);
 	setorigin(rune, trace_endpos + '0 0 4'); // offset slightly so it always shows
 
 	sound(this, CH_WEAPON_SINGLE, SND_RUNE_CAST, 1, ATTN_NORM);
@@ -269,17 +283,13 @@ void shield_remove(entity this)
 	delete(this);
 }
 
-void W_Spell_Sword(entity this)
+void summon_sword(entity this, vector spot)
 {
-	makevectors(this.angles);
-	vector targ = this.origin + v_forward * 24;
-	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
-
 	entity sword = spawn();
 	sword.classname = "sword";
 	_setmodel(sword, "progs/spell_sword.mdl");
 	setsize(sword, '0 0 0', '0 0 0');
-	setorigin(sword, targ);
+	setorigin(sword, spot);
 	sword.solid = SOLID_NOT;
 	//set_movetype(sword, MOVETYPE_FLY);
 	sword.angles = this.angles;
@@ -296,26 +306,49 @@ void W_Spell_Sword(entity this)
 	sword.alpha = 0.5;
 
 	sword_melee_start(this, sword);
+}
 
+void summon_shield(entity this, vector spot)
+{
 	entity shield = spawn();
-	this.spell_shield = shield;
 	shield.classname = "shield";
 	_setmodel(shield, "progs/spell_shield.mdl");
 	setsize(shield, '0 0 0', '0 0 0');
-	setorigin(shield, targ);
+	setorigin(shield, spot);
 	shield.solid = SOLID_CORPSE;
 	//set_movetype(shield, MOVETYPE_FLY);
 	shield.angles = this.angles;
 	SetMovetypeFollow(shield, this);
 	setthink(shield, shield_remove);
-	shield.nextthink = time + 1.5;
-	shield.effects = EF_LOWPRECISION | EF_ADDITIVE;
+	shield.nextthink = time + 20;
+	shield.effects = EF_ADDITIVE;
 	shield.owner = this;
 	shield.realowner = this;
 	shield.glowmod = '1 1 0';
 	shield.colormod = '1 1 0';
 	//shield.view_ofs = '0 0 16';
-	shield.alpha = 0.5;
+	shield.alpha = 0.33;
+
+	this.spell_shield = shield;
+}
+
+void W_Spell_Sword(entity this)
+{
+	if(STAT(MANA, this) < SPELL_COST_SWORD)
+		return;
+	STAT(MANA, this) -= SPELL_COST_SWORD;
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
+	vector targ = this.origin + forward * 24;
+	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
+	this.attack_finished = time + 0.66;
+	summon_sword(this, targ);
+
+	if(this.spell_shield || STAT(MANA, this) < SPELL_COST_SHIELD)
+		return;
+	STAT(MANA, this) -= SPELL_COST_SHIELD;
+	targ = this.origin + forward * 16 + right * -48;
+	summon_shield(this, targ);
 }
 
 /*
@@ -442,7 +475,7 @@ void summon_cyclone(entity rune)
 	setorigin(ent, rune.origin);
 	ent.realowner = rune.realowner; // not setting owner, we want interaction!
 	ent.classname = "cyclone";
-	setsize(ent, '-48 -48 0', '48 48 64');
+	setsize(ent, '-40 -40 0', '40 40 48');
 	ent.solid = SOLID_TRIGGER;
 	settouch(ent, cyclone_touch);
 	ent.cnt = time + 6;
@@ -451,9 +484,9 @@ void summon_cyclone(entity rune)
 	ent.projectiledeathtype = WEP_SPELLBOOK.m_id;
 }
 
-void W_Spell_Frost(entity this)
+void W_Spell_Frost(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
 	setthink(rune, summon_cyclone);
 	rune.nextthink = time + 1.5;
 	rune.colormod = '0 0.5 1';
@@ -527,7 +560,7 @@ void summon_icefield(entity this)
 	setorigin(field, this.origin);
 	field.owner = this;
 	field.realowner = this.realowner;
-	field.cnt = time + 15;
+	field.cnt = time + 20;
 	setthink(field, icefield_think);
 	field.nextthink = time;
 	vector tmin = this.mins * myscale, tmax = this.maxs * myscale;
@@ -535,9 +568,9 @@ void summon_icefield(entity this)
 	_sound(field, CHAN_AUTO, "weapons/ice_shatter.wav", 1, ATTN_STATIC);
 }
 
-void W_Spell_IceCannon(entity this)
+void W_Spell_IceCannon(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_BLUE);
 	setthink(rune, summon_icefield);
 	rune.nextthink = time + 1.5;
 	rune.colormod = '0 0.25 1';
@@ -546,8 +579,7 @@ void W_Spell_IceCannon(entity this)
 void summon_vorelings(entity this)
 {
 	__pointparticles(_particleeffectnum("spawn_event_red"), this.origin, '0 0 0', 1);
-	_sound(this.realowner, CHAN_AUTO, "weapons/summon_vorelings.wav", 1, ATTN_STATIC);
-	int moncount = 4;
+	_sound(this, CHAN_AUTO, "weapons/summon_vorelings.wav", 1, ATTN_STATIC);
 	vector dir = this.pos1;
 	dir.z = 0;
 	dir = normalize(dir);
@@ -556,7 +588,11 @@ void summon_vorelings(entity this)
 	if(random() <= 0.2)
 		chosen = MON_GOATLING;
 
-	for(int j = 0; j < moncount; ++j)
+	vector org = this.origin + (this.mins + this.maxs) * 0.5;
+	traceline(org, org + '0 0 32', MOVE_NOMONSTERS, this);
+	org = trace_endpos; // slight offset to avoid clipping
+
+	for(int j = 0; j < 4; ++j)
 	{
 		vector offset = '0 0 0';
 		switch(j)
@@ -568,7 +604,12 @@ void summon_vorelings(entity this)
 			case 3: offset = '0 -64 0'; break;
 		}
 
-		entity mon = horn_spawnmonster(this.origin + offset, this.realowner, chosen);
+		int oldsolid = this.dphitcontentsmask;
+		this.dphitcontentsmask = DPCONTENTS_SOLID;
+		tracebox(org, chosen.m_mins, chosen.m_maxs, org + offset, MOVE_NOMONSTERS, this);
+		this.dphitcontentsmask = oldsolid;
+
+		entity mon = horn_spawnmonster(trace_endpos, this.realowner, chosen);
 		if(!mon)
 			continue; // dunno how but just incase!
 		mon.angles_y += random() * 359;
@@ -581,9 +622,9 @@ void summon_vorelings(entity this)
 }
 
 entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon);
-void W_Spell_Voreling(entity this)
+void W_Spell_Voreling(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_VORELING, EFFECT_RUNE_PUFF_RED);
+	entity rune = rune_summon(this, spot, MDL_RUNE_VORELING, EFFECT_RUNE_PUFF_RED);
 	setthink(rune, summon_vorelings);
 	rune.nextthink = time + 2;
 }
@@ -625,6 +666,11 @@ void arms_angles(entity this)
 	}
 	else
 		this.angles = pl.v_angle;
+	// taken from item code
+	float bobheight = 7 + 5 * sin((time - this.spawn_time) * 2);
+	if(bobheight != this.origin_z - this.oldorigin_z)
+		this.origin_z = this.oldorigin_z + bobheight;
+
 	setthink(this, arms_angles);
 	if(time > this.cnt)
 		setthink(this, SUB_Remove);
@@ -699,10 +745,12 @@ void summon_arms(entity this)
 		setorigin(arms, this.origin);
 		setthink(arms, arms_angles);
 		arms.nextthink = time + 0.1;
+		arms.spawn_time = time + (1 * random()); // slight offset so they don't all move at once!
 		
 		arms.origin_x = this.origin_x + 64 - (random()*128);
 		arms.origin_y = this.origin_y + 64 - (random()*128);	
 		arms.origin_z = this.origin_z + 16 + (random() * 16);
+		arms.oldorigin = arms.origin;
 		arms.angles = player.angles;
 		IL_PUSH(g_arms, arms);
 		quant -= 1;
@@ -713,9 +761,9 @@ void summon_arms(entity this)
 	this.cnt = time + 10;
 }
 
-void summon_skeleton_arms(entity this)
+void summon_skeleton_arms(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
 	setthink(rune, summon_arms);
 	rune.nextthink = time + 1;
 
@@ -730,14 +778,15 @@ void W_Spell_BoneShard(entity this)
 			return;
 		if(STAT(MANA, this) < SPELL_COST_BONESHARD)
 			return;
-		if(!rune_checkspace(this))
+		vector spot = rune_getspot(this);
+		if(spot == '0 0 0')
 		{
 			// TODO: alert the caster?
 			this.attack_finished = time + 0.2; // slight delay to avoid server spam
 			return;
 		}
 		STAT(MANA, this) -= SPELL_COST_BONESHARD;
-		summon_skeleton_arms(this);
+		summon_skeleton_arms(this, spot);
 		this.attack_finished = time + 1.2; // rune spawning delay
 	}
 	else
@@ -745,7 +794,7 @@ void W_Spell_BoneShard(entity this)
 		entity rune = this.arms_spawned;
 		if(vdist(rune.origin - this.origin, >, 1000))
 			return; // need to be close to cast it!
-		this.attack_finished = time + 0.15;
+		this.attack_finished = time + 0.05;
 		this.attack_held = true;
 		fire_bone_shard(this);
 	}
@@ -967,7 +1016,7 @@ void summon_curse(entity this)
 		_setmodel(flame, "progs/flame2.mdl");
 		flame.frame = 0;
 		setsize(flame, '0 0 -16', '0 0 0'); 
-		flame.cnt = time + 12 + (random() * 2); 
+		flame.cnt = time + 17 + (random() * 2); 
 		settouch(flame, flame_touch);
 		setthink(flame, fire_particles);
 		flame.nextthink = time + 0.05;
@@ -1002,18 +1051,19 @@ void summon_curse(entity this)
 #endif
 	setorigin(post, this.origin);
 	post.angles_y = random() * 360;
-	post.cnt = time + 15;
+	post.cnt = time + 20;
 	post.solid = SOLID_NOT;
 	post.nextthink = time + 0.1;
 
 	delete(this);
 }
 
-void W_Spell_Curse(entity this)
+void W_Spell_Curse(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_RED);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_RED);
 	setthink(rune, summon_curse);
 	rune.nextthink = time + 2;
+	rune.colormod = '1 0.5 0';
 }
 
 void meteor_touch(entity this, entity toucher)
@@ -1108,18 +1158,18 @@ void rune_meteors_rise(entity this)
 	setthink(this, rune_meteors_risethink);
 	this.nextthink = time;
 
-	tracebox(this.origin, '-64 -64 0', '64 64 4', this.origin + '0 0 1200', MOVE_NOMONSTERS, this);
+	tracebox(this.origin, '-48 -48 0', '48 48 4', this.origin + '0 0 1200', MOVE_NOMONSTERS, this);
 	this.pos2 = trace_endpos;
 	this.angles = '-90 90 0';
 }
 
-void W_Spell_Explosion(entity this)
+void W_Spell_Explosion(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_FIRE, EFFECT_Null);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_Null);
 	setthink(rune, rune_meteors_rise);
 	rune.nextthink = time + 0.7;
 	//rune.scale = 1.5;
-	rune.cnt = time + 6 + 2; // 2 for the summoning time
+	rune.cnt = time + 7 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
 }
 
@@ -1159,12 +1209,13 @@ void summon_heal(entity this)
 	}
 }
 
-void W_Spell_Serpent(entity this)
+void W_Spell_Serpent(entity this, vector spot)
 {
-	entity rune = rune_summon(this, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
 	setthink(rune, summon_heal);
 	rune.nextthink = time + 1.5;
 	rune.cnt = time + 10 + 1.5; // 2 for the summoning time
+	rune.colormod = '1 0.25 0';
 }
 
 void W_FireSpellbook(entity this)
@@ -1172,14 +1223,11 @@ void W_FireSpellbook(entity this)
 	if(STAT(MANA, this) <= 0)
 		return; // early out
 
+	vector spot = '0 0 0';
 	switch(this.currentspell)
 	{
 		case SPELL_SWORD:
 		{
-			if(STAT(MANA, this) < SPELL_COST_SWORD)
-				return;
-			STAT(MANA, this) -= SPELL_COST_SWORD;
-			this.attack_finished = time + 0.66;
 			W_Spell_Sword(this);
 			break;
 		}
@@ -1187,25 +1235,40 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_FROST)
 				return;
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
 			STAT(MANA, this) -= SPELL_COST_FROST;
 			this.attack_finished = time + 0.66;
-			W_Spell_Frost(this);
+			W_Spell_Frost(this, spot);
 			break;
 		}	
 		case SPELL_ICECANNON:
 		{
 			if(STAT(MANA, this) < SPELL_COST_ICECANNON)
 				return;
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
 			STAT(MANA, this) -= SPELL_COST_ICECANNON;
 			this.attack_finished = time + 0.66;
-			W_Spell_IceCannon(this);
+			W_Spell_IceCannon(this, spot);
 			break;
 		}	
 		case SPELL_VORELING:
 		{
 			if(STAT(MANA, this) < SPELL_COST_VORELING)
 				return;
-			if(!rune_checkspace(this))
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
 				this.attack_finished = time + 0.2; // slight delay to avoid server spam
@@ -1213,7 +1276,7 @@ void W_FireSpellbook(entity this)
 			}
 			STAT(MANA, this) -= SPELL_COST_VORELING;
 			this.attack_finished = time + 0.66;
-			W_Spell_Voreling(this);
+			W_Spell_Voreling(this, spot);
 			break;
 		}
 		case SPELL_BONESHARD:
@@ -1226,7 +1289,8 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_CURSE)
 				return;
-			if(!rune_checkspace(this))
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
 				this.attack_finished = time + 0.2; // slight delay to avoid server spam
@@ -1234,25 +1298,39 @@ void W_FireSpellbook(entity this)
 			}
 			STAT(MANA, this) -= SPELL_COST_CURSE;
 			this.attack_finished = time + 0.66;
-			W_Spell_Curse(this);
+			W_Spell_Curse(this, spot);
 			break;
 		}
 		case SPELL_EXPLOSION:
 		{
 			if(STAT(MANA, this) < SPELL_COST_EXPLOSION)
 				return;
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
 			STAT(MANA, this) -= SPELL_COST_EXPLOSION;
 			this.attack_finished = time + 0.66;
-			W_Spell_Explosion(this);
+			W_Spell_Explosion(this, spot);
 			break;
 		}
 		case SPELL_SERPENT:
 		{
 			if(STAT(MANA, this) < SPELL_COST_SERPENT)
 				return;
+			spot = rune_getspot(this);
+			if(spot == '0 0 0')
+			{
+				// TODO: alert the caster?
+				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				return;
+			}
 			STAT(MANA, this) -= SPELL_COST_SERPENT;
 			this.attack_finished = time + 0.66;
-			W_Spell_Serpent(this);
+			W_Spell_Serpent(this, spot);
 			break;
 		}
 	}
