@@ -15,6 +15,11 @@
 #endif
 
 #ifdef SVQC
+	.vector custom_mins;
+	.vector custom_maxs;
+	.vector custom_viewofs;
+	.float custom_scale;
+
 	.bool move_qcphysics;
 
 	.int swim_flag;

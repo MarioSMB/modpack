@@ -1441,9 +1441,20 @@ void PutClientInServer(entity this)
 	_setmodel(this, get_playermodel(this));
 	this.modelindex_player = this.modelindex;
 
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
-	
-	this.view_ofs = '0 0 22';
+	if(this.custom_scale)
+		this.scale = this.custom_scale;
+	else
+		this.scale = 0;
+
+	if(this.custom_mins != '0 0 0' && this.custom_maxs != '0 0 0')
+		setsize(this, this.custom_mins, this.custom_maxs);
+	else
+		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+
+	if(this.custom_viewofs != '0 0 0')
+		this.view_ofs = this.custom_viewofs;
+	else
+		this.view_ofs = '0 0 22';
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	player_stand1(this);

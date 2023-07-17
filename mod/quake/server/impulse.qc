@@ -227,6 +227,13 @@ IMPULSE(weapon_best)
 	W_SwitchWeapon(this, w_getbestweapon(this));
 }
 
+IMPULSE(weapon_reload)
+{
+	if (this.health <= 0) return;
+	if (this.weaponentity.m_weapon != WEP_SPELLBOOK) return;
+	this.spellbook_altfire = !(this.spellbook_altfire);
+}
+
 void CheatCommand(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)

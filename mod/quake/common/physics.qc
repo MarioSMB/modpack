@@ -3,9 +3,6 @@
 #endif
 
 #ifdef SVQC
-.vector custom_mins;
-.vector custom_maxs;
-.vector custom_viewofs;
 
 void Physics_UpdateStats(entity this)
 {

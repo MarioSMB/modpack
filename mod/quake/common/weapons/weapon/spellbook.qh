@@ -30,6 +30,8 @@ const int SPELL_RUNE_LIMIT = 2;
 
 .entity spell_shield;
 
+.bool spellbook_altfire;
+
 void W_Spellbook_ClearSpells(entity this);
 
 //.int currentspell;
