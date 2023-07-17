@@ -3,6 +3,9 @@
 #endif
 
 #ifdef SVQC
+.vector custom_mins;
+.vector custom_maxs;
+
 void Physics_UpdateStats(entity this)
 {
 	if(intermission_running)
@@ -10,8 +13,16 @@ void Physics_UpdateStats(entity this)
 	else
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
 
-	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
-	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
+	if(this.custom_mins != '0 0 0' && this.custom_maxs != '0 0 0')
+	{
+		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.custom_mins;
+		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = this.custom_maxs;
+	}
+	else
+	{
+		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
+		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
+	}
 }
 
 .vector movement_old;

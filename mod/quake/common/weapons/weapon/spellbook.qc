@@ -1051,6 +1051,8 @@ void summon_curse(entity this)
 	post.owner = this.realowner;
 	post.classname = "skull_post";
 	post.velocity = '0 0 0';
+	post.angles = '0 0 0';
+	post.avelocity = '0 0 0';
 #if 0
 	if(random() < 0.5)
 	{
