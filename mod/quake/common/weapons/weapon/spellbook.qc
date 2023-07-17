@@ -92,7 +92,7 @@ void Regenerate_Mana(entity this)
 	}
 }
 
-entity rune_summon(entity this, vector spot, Model rune_model, entity eff)
+entity rune_summon(entity this, vector spot, Model rune_model, entity eff, int spell_type)
 {
 	makevectors(this.v_angle);
 	vector src = spot;
@@ -100,6 +100,7 @@ entity rune_summon(entity this, vector spot, Model rune_model, entity eff)
 	entity rune = new(rune);
 	rune.owner = rune.realowner = this;
 	rune.solid = SOLID_NOT;
+	rune.currentspell = spell_type;
 	setmodel(rune, rune_model);
 	setsize(rune, '-48 -48 0', '48 48 4');
 	rune.pos1 = v_forward;
@@ -113,7 +114,22 @@ entity rune_summon(entity this, vector spot, Model rune_model, entity eff)
 	if(eff != EFFECT_Null)
 		Send_Effect(eff, rune.origin, '0 0 0', 1);
 
+	IL_PUSH(g_runes, rune);
+
 	return rune;
+}
+
+bool rune_checklimit(entity this, int spell_type)
+{
+	// NOTE: requires the rune to still exist for the entirety of the effect
+	// TODO: spell-specific check; vorelings should have a limit too!!
+	int runecount = 0;
+	IL_EACH(g_runes, it.realowner == this && it.currentspell == spell_type,
+	{
+		runecount += 1;
+	});
+	// TODO: spell-specific limits? only 1 heal at a time etc!
+	return (runecount < SPELL_RUNE_LIMIT);
 }
 
 const int anim_sword_stand = 0; //'0 0 0'
@@ -486,7 +502,7 @@ void summon_cyclone(entity rune)
 
 void W_Spell_Frost(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE, SPELL_FROST);
 	setthink(rune, summon_cyclone);
 	rune.nextthink = time + 1.5;
 	rune.colormod = '0 0.5 1';
@@ -570,7 +586,7 @@ void summon_icefield(entity this)
 
 void W_Spell_IceCannon(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_BLUE, SPELL_ICECANNON);
 	setthink(rune, summon_icefield);
 	rune.nextthink = time + 1.5;
 	rune.colormod = '0 0.25 1';
@@ -624,7 +640,7 @@ void summon_vorelings(entity this)
 entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon);
 void W_Spell_Voreling(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_VORELING, EFFECT_RUNE_PUFF_RED);
+	entity rune = rune_summon(this, spot, MDL_RUNE_VORELING, EFFECT_RUNE_PUFF_RED, SPELL_VORELING);
 	setthink(rune, summon_vorelings);
 	rune.nextthink = time + 2;
 }
@@ -763,7 +779,7 @@ void summon_arms(entity this)
 
 void summon_skeleton_arms(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE, SPELL_BONESHARD);
 	setthink(rune, summon_arms);
 	rune.nextthink = time + 1;
 
@@ -1029,7 +1045,7 @@ void summon_curse(entity this)
 		quant -= 1;
 	}
 
-	entity post = spawn();
+	entity post = this; // repurpose rune so that we can count it towards the limit
 	set_movetype(post, MOVETYPE_NONE);
 	post.realowner = this.realowner;
 	post.owner = this.realowner;
@@ -1054,13 +1070,11 @@ void summon_curse(entity this)
 	post.cnt = time + 20;
 	post.solid = SOLID_NOT;
 	post.nextthink = time + 0.1;
-
-	delete(this);
 }
 
 void W_Spell_Curse(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_RED);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_RED, SPELL_CURSE);
 	setthink(rune, summon_curse);
 	rune.nextthink = time + 2;
 	rune.colormod = '1 0.5 0';
@@ -1165,9 +1179,9 @@ void rune_meteors_rise(entity this)
 
 void W_Spell_Explosion(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_Null);
+	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_Null, SPELL_EXPLOSION);
 	setthink(rune, rune_meteors_rise);
-	rune.nextthink = time + 0.7;
+	rune.nextthink = time + 0.33;
 	//rune.scale = 1.5;
 	rune.cnt = time + 7 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
@@ -1211,11 +1225,22 @@ void summon_heal(entity this)
 
 void W_Spell_Serpent(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE);
+	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE, SPELL_SERPENT);
 	setthink(rune, summon_heal);
 	rune.nextthink = time + 1.5;
 	rune.cnt = time + 10 + 1.5; // 2 for the summoning time
 	rune.colormod = '1 0.25 0';
+}
+
+void W_Spellbook_ClearSpells(entity this)
+{
+	if(this.spell_shield)
+		delete(this.spell_shield);
+	this.spell_shield = NULL;
+
+	if(this.arms_spawned)
+		remove_arms(this.arms_spawned);
+	this.arms_spawned = NULL;
 }
 
 void W_FireSpellbook(entity this)
@@ -1235,6 +1260,8 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_FROST)
 				return;
+			if(!rune_checklimit(this, SPELL_FROST))
+				return;
 			spot = rune_getspot(this);
 			if(spot == '0 0 0')
 			{
@@ -1250,6 +1277,8 @@ void W_FireSpellbook(entity this)
 		case SPELL_ICECANNON:
 		{
 			if(STAT(MANA, this) < SPELL_COST_ICECANNON)
+				return;
+			if(!rune_checklimit(this, SPELL_ICECANNON))
 				return;
 			spot = rune_getspot(this);
 			if(spot == '0 0 0')
@@ -1289,6 +1318,8 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_CURSE)
 				return;
+			if(!rune_checklimit(this, SPELL_CURSE))
+				return;
 			spot = rune_getspot(this);
 			if(spot == '0 0 0')
 			{
@@ -1305,6 +1336,8 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_EXPLOSION)
 				return;
+			if(!rune_checklimit(this, SPELL_EXPLOSION))
+				return;
 			spot = rune_getspot(this);
 			if(spot == '0 0 0')
 			{
@@ -1320,6 +1353,8 @@ void W_FireSpellbook(entity this)
 		case SPELL_SERPENT:
 		{
 			if(STAT(MANA, this) < SPELL_COST_SERPENT)
+				return;
+			if(!rune_checklimit(this, SPELL_SERPENT))
 				return;
 			spot = rune_getspot(this);
 			if(spot == '0 0 0')

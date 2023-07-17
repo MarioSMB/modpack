@@ -927,6 +927,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.shield_finished = 0;
 	this.antigrav_finished = 0;
 
+	W_Spellbook_ClearSpells(this);
+
 	if(deathmatch || coop)
 		DropBackpack(this);
 

@@ -26,8 +26,11 @@ REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
 
 const float MANA_REGEN_RATE = 0.25;
 
+const int SPELL_RUNE_LIMIT = 2;
 
 .entity spell_shield;
+
+void W_Spellbook_ClearSpells(entity this);
 
 //.int currentspell;
 #endif

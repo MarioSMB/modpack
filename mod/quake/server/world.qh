@@ -53,10 +53,12 @@ IntrusiveList g_damagedbycontents;
 IntrusiveList g_moveables;
 IntrusiveList g_vspheres;
 IntrusiveList g_arms;
+IntrusiveList g_runes;
 STATIC_INIT(defs)
 {
 	g_damagedbycontents = IL_NEW();
 	g_moveables = IL_NEW();
 	g_vspheres = IL_NEW();
 	g_arms = IL_NEW();
+	g_runes = IL_NEW();
 }
