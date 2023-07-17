@@ -28,6 +28,8 @@ const float MANA_REGEN_RATE = 0.25;
 
 const int SPELL_RUNE_LIMIT = 2;
 
+const int SPELL_BONESHARD_MAXBONES = 20;
+
 .entity spell_shield;
 
 .bool spellbook_altfire;

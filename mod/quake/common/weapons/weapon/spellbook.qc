@@ -12,6 +12,7 @@ vector rune_getspot(entity this)
 	if (!tracetossent)
 		tracetossent = new(tracetossent);
 	tracetossent.owner = this;
+	tracetossent.dphitcontentsmask = DPCONTENTS_SOLID;
 	setsize(tracetossent, rmin, rmax);
 	setorigin(tracetossent, src);
 
@@ -716,6 +717,33 @@ void fire_bone_shard(entity this)
 	});
 }
 
+void summon_boneshard(entity rune)
+{
+	entity player = rune.realowner;
+
+	entity arms = spawn();
+	arms.classname = "arms";
+	arms.realowner = player;
+	arms.owner = player;
+	arms.solid = SOLID_BBOX;
+	arms.projectiledeathtype = WEP_SPELLBOOK.m_id;
+	arms.cnt = rune.cnt + 1; // just incase the rune itself doesn't remove them!
+	set_movetype(arms, MOVETYPE_FLYMISSILE);
+	_setmodel(arms, "progs/bone_shard.mdl");			
+	setsize(arms, '0 0 0', '0 0 0'); 
+	setorigin(arms, rune.origin);
+	setthink(arms, arms_angles);
+	arms.nextthink = time + 0.1;
+	arms.spawn_time = time + (1 * random()); // slight offset so they don't all move at once!
+		
+	arms.origin_x = rune.origin_x + 64 - (random()*128);
+	arms.origin_y = rune.origin_y + 64 - (random()*128);	
+	arms.origin_z = rune.origin_z + 16 + (random() * 16);
+	arms.oldorigin = arms.origin;
+	arms.angles = player.angles;
+	IL_PUSH(g_arms, arms);
+}
+
 void arms_think(entity this)
 {
 	if(time > this.cnt || vdist(this.owner.origin - this.origin, >, 1000))
@@ -723,58 +751,32 @@ void arms_think(entity this)
 		remove_arms(this);
 		return;
 	}
-	bool have_arms = false;
-	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
-	{
-		have_arms = true;
-		break; // no need to keep looping if we have valid arms
-	});
-	if(!have_arms)
-	{
-		setthink(this, remove_arms);
-		this.nextthink = time + 0.2;
-		return;
-	}
 	this.nextthink = time + 0.1;
 	setthink(this, arms_think);
+	int armcount = 0;
+	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
+	{
+		armcount += 1;
+	});
+	if(armcount < SPELL_BONESHARD_MAXBONES)
+		summon_boneshard(this);
 }
 
 void summon_arms(entity this)
 {
-	entity player = this.realowner;
 	__pointparticles(_particleeffectnum("spawn_point_blue"), this.origin, '0 0 0', 1);
 	_sound(this, CHAN_AUTO, "weapons/skel_rune.wav", 1, ATTN_STATIC);
 
-	int quant = 20;
+	int quant = SPELL_BONESHARD_MAXBONES;
 	while(quant > 0)
 	{
-		entity arms = spawn();
-		arms.classname = "arms";
-		arms.realowner = player;
-		arms.owner = player;
-		arms.solid = SOLID_BBOX;
-		arms.projectiledeathtype = WEP_SPELLBOOK.m_id;
-		arms.cnt = time + 10; // just incase the rune itself doesn't remove them!
-		set_movetype(arms, MOVETYPE_FLYMISSILE);
-		_setmodel(arms, "progs/bone_shard.mdl");			
-		setsize(arms, '0 0 0', '0 0 0'); 
-		setorigin(arms, this.origin);
-		setthink(arms, arms_angles);
-		arms.nextthink = time + 0.1;
-		arms.spawn_time = time + (1 * random()); // slight offset so they don't all move at once!
-		
-		arms.origin_x = this.origin_x + 64 - (random()*128);
-		arms.origin_y = this.origin_y + 64 - (random()*128);	
-		arms.origin_z = this.origin_z + 16 + (random() * 16);
-		arms.oldorigin = arms.origin;
-		arms.angles = player.angles;
-		IL_PUSH(g_arms, arms);
+		summon_boneshard(this);
 		quant -= 1;
 	}
 
 	setthink(this, arms_think);
 	this.nextthink = time + 0.1;
-	this.cnt = time + 10;
+	this.cnt = time + 20;
 }
 
 void summon_skeleton_arms(entity this, vector spot)
