@@ -112,3 +112,6 @@ const int FL_INSHELTER = 32768; // for marking entities as sheltered from trigge
 
 IntrusiveList g_clones;
 STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }

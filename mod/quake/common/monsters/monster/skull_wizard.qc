@@ -26,6 +26,8 @@ const int MONAI_SKULLWINVIS = 2;		// Invisible
 const int MON_SKULLWIZ_GUARDIAN = 2;	// Special version guarding the runes
 const int MON_SKULLWIZ_MINIONS = 4;
 
+.int blink_fails; // safety measure
+
 .bool bodystatic; // Prevents skull wizard from teleporting
 
 .int skullwizard_summonflag;
@@ -121,26 +123,26 @@ void skullw_walk(entity this)
 }
 
 void skullw_run1(entity this);
-void skullw_run14(entity this) { set_animofs(this, anim_skullwiz_stand, 19, skullw_run1); ai_run(this, 0); }
-void skullw_run13(entity this) { set_animofs(this, anim_skullwiz_stand, 17, skullw_run14); ai_run(this, 0); }
-void skullw_run12(entity this) { set_animofs(this, anim_skullwiz_stand, 15, skullw_run13); ai_run(this, 0); }
-void skullw_run11(entity this) { set_animofs(this, anim_skullwiz_stand, 13, skullw_run12); ai_run(this, 0); }
-void skullw_run10(entity this) { set_animofs(this, anim_skullwiz_stand, 11, skullw_run11); ai_face(this); ai_run(this, 0); }
-void skullw_run9(entity this) { set_animofs(this, anim_skullwiz_stand, 9, skullw_run10); ai_face(this); ai_run(this, 0); }
-void skullw_run8(entity this) { set_animofs(this, anim_skullwiz_stand, 7, skullw_run9); ai_run(this, 0); }
-void skullw_run7(entity this) { set_animofs(this, anim_skullwiz_stand, 5, skullw_run8); ai_run(this, 0); }
-void skullw_run6(entity this) { set_animofs(this, anim_skullwiz_stand, 3, skullw_run7); ai_face(this); ai_run(this, 0); }
-void skullw_run5(entity this) { set_animofs(this, anim_skullwiz_stand, 12, skullw_run6); ai_face(this); ai_run(this, 0); }
-void skullw_run4(entity this) { set_animofs(this, anim_skullwiz_stand, 14, skullw_run5); ai_run(this, 0); }
-void skullw_run3(entity this) { set_animofs(this, anim_skullwiz_stand, 16, skullw_run4); ai_run(this, 0); }
-void skullw_run2(entity this) { set_animofs(this, anim_skullwiz_stand, 18, skullw_run3); ai_face(this); ai_run(this, 0); }
+void skullw_run14(entity this) { set_animofs(this, anim_skullwiz_stand, 19, skullw_run1); ai_run(this, 3); }
+void skullw_run13(entity this) { set_animofs(this, anim_skullwiz_stand, 17, skullw_run14); ai_run(this, 3); }
+void skullw_run12(entity this) { set_animofs(this, anim_skullwiz_stand, 15, skullw_run13); ai_run(this, 4); }
+void skullw_run11(entity this) { set_animofs(this, anim_skullwiz_stand, 13, skullw_run12); ai_run(this, 5); }
+void skullw_run10(entity this) { set_animofs(this, anim_skullwiz_stand, 11, skullw_run11); ai_face(this); ai_run(this, 5); }
+void skullw_run9(entity this) { set_animofs(this, anim_skullwiz_stand, 9, skullw_run10); ai_face(this); ai_run(this, 2); }
+void skullw_run8(entity this) { set_animofs(this, anim_skullwiz_stand, 7, skullw_run9); ai_run(this, 2); }
+void skullw_run7(entity this) { set_animofs(this, anim_skullwiz_stand, 5, skullw_run8); ai_run(this, 2); }
+void skullw_run6(entity this) { set_animofs(this, anim_skullwiz_stand, 3, skullw_run7); ai_face(this); ai_run(this, 2); }
+void skullw_run5(entity this) { set_animofs(this, anim_skullwiz_stand, 12, skullw_run6); ai_face(this); ai_run(this, 4); }
+void skullw_run4(entity this) { set_animofs(this, anim_skullwiz_stand, 14, skullw_run5); ai_run(this, 4); }
+void skullw_run3(entity this) { set_animofs(this, anim_skullwiz_stand, 16, skullw_run4); ai_run(this, 5); }
+void skullw_run2(entity this) { set_animofs(this, anim_skullwiz_stand, 18, skullw_run3); ai_face(this); ai_run(this, 5); }
 void skullw_run1(entity this)
 {
 	set_animofs(this, anim_skullwiz_stand, 1, skullw_run2);
 	ai_face(this);
 	if(random() > 0.8)
 		_sound(this, CH_VOICE, ((random() > 0.5) ? "skullwiz/idle1.wav" : "skullwiz/idle2.wav"), 1, ATTN_IDLE);
-	ai_run(this, 0);
+	ai_run(this, 5);
 }
 
 //============================================================================
@@ -159,6 +161,8 @@ void skullw_tfin1(entity this)
 {
 	set_animofs(this, anim_skullwiz_tele, 9, skullw_tfin2);
 	this.velocity = '0 0 0';
+	this.effects &= ~EF_NODRAW;
+	this.solid = SOLID_SLIDEBOX;				// Standard monster movement
 	// Always phase in facing the enemy
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
 	this.angles_y = this.ideal_yaw;
@@ -168,89 +172,63 @@ void skullw_tfin1(entity this)
 //----------------------------------------------------------------------
 // Find new teleport location
 //----------------------------------------------------------------------
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 void skullw_blink(entity this)
 {
-	float dist = 0;
+	vector oldpos = this.origin;
+	vector extrasize = '1 1 1' * 1200;
+	entity targ = this.enemy;
 
-	bool blinkfinished = true;
-	int blinkcount = 0;
-	vector angle_vec = '0 0 0', org = '0 0 0', org_ofs = '0 0 0';
-	org_ofs.z = this.height;
-	this.oldorigin = this.origin;
-	
-	// Trace upwards to find ceiling or maximum teleport height
-	traceline(this.origin, this.origin+org_ofs, true, this);
-	org_ofs = trace_endpos;
-	
-	// Loop around for possible locations
-	while(blinkfinished)
+	if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 10, 64, 256, true))
 	{
-		blinkcount += 1;		// next loop
-		angle_vec.y = random() * 360;		// Random direction
-		makevectors(angle_vec);				// make vector
-		
-		// Generate random angle and trace teleport direction
-		dist = 256 + (random() * 512);
-		org = org_ofs + (v_forward * dist);
-		traceline(org_ofs, org, true, this);
-		
-		// Check distance is far enough away from enemy
-		// Move away from any walls (traceline is surface contact)
-		dist = vlen(trace_endpos - org_ofs) - 32;
-		org = org_ofs + (v_forward * dist);
-
-		// Is the enemy far enough away?
-		if(vdist(this.enemy.origin - org, >, 192))
-		{
-			// Trace down to floor below new point
-			traceline(org, org - '0 0 512', true, this);
-			org = trace_endpos + this.view_ofs;
-			
-			// The teleport fuction is working with a radius command
-			// and this will ignore walls and just find any position
-			// in all directions. This can lead to the skull wizard
-			// teleporting behind walls or other parts of the map!
-			// This can be prevent in two ways:
-			// 1) linesight between skull wizard and player
-			// - can leads to less interesting locations (always insight)
-			// 2) linesight between new location and old
-			// - This allows skull wizard to teleport around corner
-			//   and still be within the same area!
-			//
-			// Trace through monsters and check trace fraction
-			traceline(org, this.origin, true, this);
-			if(trace_fraction == 1)
-				blinkfinished = false;
-		}
-
-		// Been looping too long, back to original location
-		if(blinkcount > 10)
-		{
-			blinkfinished = false;
-			org = this.origin;
-		}
+		vector a = vectoangles(targ.origin - this.origin);
+		this.angles = '0 1 0' * a.y;
+		this.fixangle = true;
+		te_explosion2(this.origin, 100, 1);
+		this.effects &= ~EF_NODRAW;
+		this.blink_fails = 0;
+		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1024', MOVE_NORMAL, this);
+		setorigin(this, trace_endpos);
+		skullw_tfin1(this);
+		return;
 	}
-	
-	// Move to new location
-	this.solid = SOLID_SLIDEBOX;				// Standard monster movement
-	setorigin(this, org);						// move to new location
-	
-	// Test if new location is solid?
-	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
-	if(trace_startsolid)
+
+	makevectors(targ.angles);
+	tracebox(CENTER_OR_VIEWOFS(targ), this.mins, this.maxs, CENTER_OR_VIEWOFS(targ) + ((v_forward * -1) * 200), MOVE_NOMONSTERS, this);
+
+	vector newpos = trace_endpos;
+
+	if(trace_fraction < 1)
 	{
+		this.blink_fails += 1;
 		this.solid = SOLID_NOT;					// No world interaction yet
 		this.effects |= EF_NODRAW;
-		setorigin(this, this.oldorigin);		// restore original location
-		this.nextthink = time + 1;				// Keep checking
-		setthink(this, skullw_blink);
+		newpos = oldpos;
+		if(this.blink_fails < 3)
+		{
+			this.nextthink = time + 1;				// Keep checking
+			setthink(this, skullw_blink);
+			return;
+		}
 	}
-	else
-	{
-		this.effects &= ~EF_NODRAW;
-		skullw_tfin1(this);
-	}
+	tracebox(newpos, this.mins, this.maxs, newpos - '0 0 1024', MOVE_NORMAL, this);
+	newpos = trace_endpos;
+
+	setorigin(this, newpos);
+	vector a = vectoangles(targ.origin - this.origin);
+	a.x = -a.x;
+	this.angles_x = a.x;
+	this.angles_y = a.y;
+	this.fixangle = true;
+
+	this.effects &= ~EF_NODRAW;
+	this.blink_fails = 0;
+	te_explosion2(this.origin, 100, 1);
+	skullw_tfin1(this);
 }
+#undef CENTER_OR_VIEWOFS
 
 //----------------------------------------------------------------------
 // Cycle around teleport chain lists instead
@@ -266,8 +244,7 @@ void skullw_waitforlink(entity this)
 		|| this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET) || (this.charmed && (IS_PLAYER(this.enemy) || this.charmer == this.enemy)))
 	{
 		// Move to new location
-		this.solid = SOLID_SLIDEBOX;				// Standard monster movement
-	
+
 		// Test if new location is solid?
 		tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(trace_startsolid)
@@ -896,6 +873,9 @@ METHOD(SkullWizard, mr_setup, bool(SkullWizard this, entity actor))
     actor.health = 120;
 	actor.th_pain = skullw_pain;
 	actor.th_die = skullw_die;
+
+	if(actor.height <= 0)
+		actor.height = SKULLW_HEIGHT;
 
 	if(actor.bodyphased == MONAI_SKULLWINVIS)
 	{

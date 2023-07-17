@@ -1495,6 +1495,7 @@ The normal starting point for a level.
 */
 spawnfunc(info_player_start)
 {
+	IL_PUSH(g_spawnpoints, this);
 }
 
 
@@ -1503,6 +1504,7 @@ Only used on start map for the return point from an episode.
 */
 spawnfunc(info_player_start2)
 {
+	IL_PUSH(g_spawnpoints, this);
 }
 
 /*QUAKED info_player_start_hub (1 0 0) (-16 -16 -24) (16 16 24)
@@ -1510,6 +1512,7 @@ Only used on start map for the return point from an episode.
 */
 spawnfunc(info_player_start_hub)
 {
+	IL_PUSH(g_spawnpoints, this);
 }
 
 /*
@@ -1525,6 +1528,17 @@ potential spawning position for deathmatch games
 spawnfunc(info_player_deathmatch)
 {
 	if(MP_MG && !deathmatch) { delete(this); return; }
+	IL_PUSH(g_spawnpoints, this);
+}
+
+spawnfunc(info_player_team1)
+{
+	spawnfunc_info_player_deathmatch(this);
+}
+
+spawnfunc(info_player_team2)
+{
+	spawnfunc_info_player_deathmatch(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1579,6 +1593,8 @@ spawnfunc(info_player_coop)
 		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
 			this.state = COOP_SPAWN_ACTIVE;
 	}
+
+	IL_PUSH(g_spawnpoints, this);
 }
 
 /*

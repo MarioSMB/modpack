@@ -1583,6 +1583,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 bambler");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 kangaroo");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 drole");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 skullwiz");
 	}
 
 	found = false;

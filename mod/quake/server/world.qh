@@ -36,6 +36,9 @@ bool world_already_spawned;
 int world_initialized;
 bool server_is_dedicated;
 
+bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos);
+bool MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+
 void dropclient_do(entity this);
 
 bool dropclient_schedule(entity this);
