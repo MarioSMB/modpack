@@ -601,7 +601,7 @@ void summon_vorelings(entity this)
 	dir = normalize(dir);
 
 	Monster chosen = MON_VORELING;
-	if(this.spellbook_altfire || random() <= 0.2)
+	if(this.realowner.spellbook_altfire || random() <= 0.2)
 		chosen = MON_GOATLING;
 
 	vector org = this.origin + (this.mins + this.maxs) * 0.5;
