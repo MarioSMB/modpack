@@ -1994,7 +1994,7 @@ DropBackpack
 */
 void DropBackpack(entity this)
 {
-	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
+	if(STAT(WEAPONS, this) == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
 			return;	// nothing in it
 
 	if(STAT(SKATING, this))
