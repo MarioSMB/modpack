@@ -177,12 +177,12 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	}
 
 // bump the monster counter
-	if(IS_MONSTER(targ))
+	if(IS_MONSTER(targ) && !targ.charmed)
 	{
 		// Yoder Sept24, 2021 Horde Merge
 		if(horde_ent)
 		{
-			if(targ.monsterdef && !(targ.flags & FL_CLONE) && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && !targ.charmed) // zombies don't count
+			if(targ.monsterdef && !(targ.flags & FL_CLONE) && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
 				monsters_killed += 1;
 			
 			// check kill spree
