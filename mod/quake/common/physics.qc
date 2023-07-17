@@ -5,11 +5,14 @@
 #ifdef SVQC
 .vector custom_mins;
 .vector custom_maxs;
+.vector custom_viewofs;
 
 void Physics_UpdateStats(entity this)
 {
 	if(intermission_running)
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 0';
+	else if(this.custom_viewofs != '0 0 0')
+		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = this.custom_viewofs;
 	else
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
 
