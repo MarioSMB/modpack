@@ -2620,6 +2620,8 @@ void ClientDisconnect(entity this)
 
 	sphere_remove(this);
 
+	W_Spellbook_ClearSpells(this);
+
 	set_suicide_frame(this);
 
 	strfree(this.weaponorder_byimpulse);
