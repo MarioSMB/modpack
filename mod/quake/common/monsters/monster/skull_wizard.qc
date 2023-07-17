@@ -793,6 +793,8 @@ void skullw_die(entity this, entity inflictor, entity attacker, int deathtype)
 		ThrowHead(this, "progs/h_skullwiz.mdl", -1);
 		entity gib = ThrowGib(this, "progs/w_skullbook.mdl", -1);
 		gib.skin = this.skin;
+		STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
+		DropBackpack(this);
 		return;
 	}
 	// Regular death, collapse and fade away
