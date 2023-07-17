@@ -131,7 +131,7 @@ void cl_shop_draw()
 	vector myorigin = (csqcplayer) ? csqcplayer.origin : view_origin;
 	IL_EACH(g_drawables, it.classname == "ENT_CLIENT_SHOPKEEP",
 	{
-		if(vdist(it.origin - myorigin, <, 100))
+		if(vdist(it.origin - myorigin, <, 200))
 		{
 			closetoshop = true;
 			break;
@@ -315,7 +315,7 @@ void shopkeep_draw(entity this)
 	if(this.shopkeep_delay > time)
 		return;
 
-	if(vdist(this.origin - player.origin, >, 50))
+	if(vdist(this.origin - player.origin, >, 150))
 		return;
 
 	this.shopkeep_delay = 0;

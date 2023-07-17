@@ -1053,6 +1053,7 @@ void summon_curse(entity this)
 	post.velocity = '0 0 0';
 	post.angles = '0 0 0';
 	post.avelocity = '0 0 0';
+	post.colormod = '0 0 0';
 #if 0
 	if(random() < 0.5)
 	{
