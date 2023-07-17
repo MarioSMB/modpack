@@ -751,7 +751,7 @@ void arms_think(entity this)
 		remove_arms(this);
 		return;
 	}
-	this.nextthink = time + 0.1;
+	this.nextthink = time + 0.5;
 	setthink(this, arms_think);
 	int armcount = 0;
 	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
@@ -768,7 +768,7 @@ void summon_arms(entity this)
 	_sound(this, CHAN_AUTO, "weapons/skel_rune.wav", 1, ATTN_STATIC);
 
 	setthink(this, arms_think);
-	this.nextthink = time + 0.5;
+	this.nextthink = time + 0.1;
 	this.cnt = time + 20;
 }
 
