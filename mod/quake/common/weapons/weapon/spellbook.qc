@@ -751,7 +751,7 @@ void arms_think(entity this)
 		remove_arms(this);
 		return;
 	}
-	this.nextthink = time + 0.5;
+	this.nextthink = time + 0.25;
 	setthink(this, arms_think);
 	int armcount = 0;
 	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
