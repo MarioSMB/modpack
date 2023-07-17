@@ -767,13 +767,6 @@ void summon_arms(entity this)
 	__pointparticles(_particleeffectnum("spawn_point_blue"), this.origin, '0 0 0', 1);
 	_sound(this, CHAN_AUTO, "weapons/skel_rune.wav", 1, ATTN_STATIC);
 
-	int quant = SPELL_BONESHARD_MAXBONES;
-	while(quant > 0)
-	{
-		summon_boneshard(this);
-		quant -= 1;
-	}
-
 	setthink(this, arms_think);
 	this.nextthink = time + 0.1;
 	this.cnt = time + 20;
