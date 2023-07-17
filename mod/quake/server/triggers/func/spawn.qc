@@ -43,7 +43,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	if(horn_active)
 	{
 		spawnentity.charmer = actor;
-		spawnentity.charmed = 1;
+		spawnentity.charmed = true;
 		spawnentity.colormod = '0 1 0';
 		spawnentity.health = max(spawnentity.health, 1000);
 	}
@@ -67,11 +67,11 @@ void spawn_use(entity this, entity actor, entity trigger)
 		// spawn the telefrag effect
 //      if(this.spawnsilent == 0)
 //         spawn_tdeath(spawnentity.origin, spawnentity);
-		if(horn_active)
-		{
-			spawnentity.effects |= EF_DIMLIGHT;
+		//if(horn_active)
+		//{
+			//spawnentity.effects |= EF_DIMLIGHT;
 //         spawnentity.effects = spawnentity.effects | EF_BRIGHTFIELD;
-		}
+		//}
 	}
 	if((this.spawnmulti == 0) && !horn_active)
 		delete(this);

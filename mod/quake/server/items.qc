@@ -1455,7 +1455,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	monster.health = max(monster.health, 1000);
 	monster.max_health = monster.health;
 	monster.charmer = actor;
-	monster.charmed = 1;
+	monster.charmed = true;
 	monster.angles = '0 0 0';
 	monster.angles_y = actor.angles_y;
 	vector org = spawnpos;
@@ -1476,7 +1476,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 		monster.yaw_speed = 20;
 	monster.view_ofs = '0 0 25';
 	monster.use = monster_use;
-	monster.effects |= EF_DIMLIGHT;
+	//monster.effects |= EF_DIMLIGHT;
 	setthink(monster, monster_start_go);
 	monster.nextthink = time + 0.1;
 	return monster;
