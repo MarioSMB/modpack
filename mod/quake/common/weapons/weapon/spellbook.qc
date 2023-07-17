@@ -1181,7 +1181,7 @@ void W_Spell_Explosion(entity this, vector spot)
 	setthink(rune, rune_meteors_rise);
 	rune.nextthink = time + 0.33;
 	//rune.scale = 1.5;
-	rune.cnt = time + 7 + 2; // 2 for the summoning time
+	rune.cnt = time + 20 + 2; // 2 for the summoning time
 	rune.pos1 = rune.origin;
 }
 
