@@ -768,7 +768,7 @@ void summon_arms(entity this)
 	_sound(this, CHAN_AUTO, "weapons/skel_rune.wav", 1, ATTN_STATIC);
 
 	setthink(this, arms_think);
-	this.nextthink = time + 0.1;
+	this.nextthink = time + 0.25;
 	this.cnt = time + 20;
 }
 
