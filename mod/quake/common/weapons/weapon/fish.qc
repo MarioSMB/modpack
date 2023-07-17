@@ -61,7 +61,7 @@ void shockwave(vector point, float radius, float kick)
 	entity e = findradius(point, radius);
 	while(e)
 	{
-		if(e.move_movetype != MOVETYPE_NONE && e.classname != "door")
+		if(e.takedamage && e.move_movetype != MOVETYPE_NONE && e.classname != "door")
 		{
 			vector temp = e.origin - point;
 			if(vdist(temp, <, radius))
