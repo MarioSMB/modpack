@@ -746,6 +746,9 @@ void skullw_explode(entity this)
 	ThrowGib(this, "progs/h_skullwiz.mdl", -1);
 	entity gib = ThrowGib(this, "progs/w_skullbook.mdl", -1);
 	gib.skin = this.skin;
+
+	STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
+	DropBackpack(this);
 }
 
 void skullw_death14(entity this)
