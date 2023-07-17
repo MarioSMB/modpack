@@ -202,7 +202,7 @@ float shop_open;
 vector shop_weapons;
 #endif
 REGISTER_STAT(SHOP_OPEN, float, shop_open)
-REGISTER_STAT(SHOP_WEAPONS, vector, shop_weapons)
+REGISTER_STAT(SHOP_WEAPONS, vectori, shop_weapons)
 
 #ifdef SVQC
 .int ammo_lava_nails;
@@ -227,7 +227,6 @@ REGISTER_STAT(HORDE_WAVE, int, (horde_ent) ? horde_ent.wave : 0)
 #endif
 REGISTER_STAT(BOARD_FALLING, bool)
 REGISTER_STAT(SKATING, bool)
-REGISTER_STAT(STAMINA, float)
 REGISTER_STAT(TRICK, int)
 REGISTER_STAT(SKATESPEED, float, this.skatespeed)
 REGISTER_STAT(PUSH_FAST_TIME, float, this.push_fast_time)

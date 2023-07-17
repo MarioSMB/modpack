@@ -128,9 +128,8 @@ void skate_fire(entity this)
 
 	if(this.button5 && this.push_fast_time < time && IS_ONGROUND(this) && (this.velocity_x || this.velocity_y))
 	{
-		if(STAT(STAMINA, this) > PUSH_STAMINA_COST && !STAT(BOARD_FALLING, this) && STAT(TRICK, this) != TRICK_GRIND)//don't push while falling
+		if(!STAT(BOARD_FALLING, this) && STAT(TRICK, this) != TRICK_GRIND)//don't push while falling
 		{
-			STAT(STAMINA, this) -= PUSH_STAMINA_COST;
 			_sound(this, CHAN_BODY, "player/skaterol.wav", 1, ATTN_NORM);
 			this.push_fast_time = time + 2;
 			this.walkframe = 20;
@@ -784,22 +783,6 @@ void Regenerate_Health(entity this)
 	}
 }
 
-void Regenerate_Stamina(entity this)
-{
-	if(!STAT(SKATING, this))
-		return;
-
-	if(this.stamina_regen_time < time)
-	{
-		STAT(STAMINA, this) += 2;
-		
-		if(STAT(STAMINA, this) > 100)
-			STAT(STAMINA, this) = 100;
-
-		this.stamina_regen_time = time + 0.1;
-	}
-}
-
 void water_die(entity this)
 {
 	makevectors(this.angles);
@@ -819,7 +802,6 @@ void water_die(entity this)
 void skate_spawn(entity this)
 {
 	STAT(SKATING, this) = (world.worldtype == WORLDTYPE_SKATE);
-	STAT(STAMINA, this) = 100;
 	this.buttonjump_held = false;
 	STAT(BOARD_FALLING, this) = false;
 	STAT(TRICK, this) = 0;

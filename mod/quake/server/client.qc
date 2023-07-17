@@ -2449,7 +2449,6 @@ void PlayerPostThink(entity this)
 		}
 
 		Regenerate_Health(this);
-		Regenerate_Stamina(this);
 		Regenerate_Mana(this);
 		if(STAT(BOARD_FALLING, this) && this.pausetime > time)
 		{

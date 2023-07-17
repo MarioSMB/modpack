@@ -12,9 +12,6 @@ const int GRIND_NORMAL = 1;			//looks like no animation
 const int GRIND_BOARDSLIDE = 2;
 const int GRIND_BACKBOARDSLIDE = 3;
 
-const int JUMP_STAMINA_COST = 30;		//jumping costs stamina
-const int PUSH_STAMINA_COST = 30;		//pushing off costs stamina
-
 #ifdef SVQC
 .int diff_grinds;
 
@@ -40,8 +37,6 @@ void push_off_anim(entity this);
 void skate_walkframes(entity this);
 
 void Regenerate_Health(entity this);
-
-void Regenerate_Stamina(entity this);
 
 void water_die(entity this);
 

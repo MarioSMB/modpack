@@ -141,10 +141,9 @@ void PlayerJump(entity this)
 
 	if(PHYS_SKATING(this))
 	{
-		if(PHYS_STAMINA(this) > JUMP_STAMINA_COST && !PHYS_BOARD_FALLING(this))
+		if(!PHYS_BOARD_FALLING(this))
 		{
 		#ifdef SVQC
-			PHYS_STAMINA(this) -= JUMP_STAMINA_COST;
 			_sound(this, CH_PLAYER, "player/skatejmp.wav", 1, ATTN_NORM);
 			this.walkframe = 13;
 			this.buttonjump_held = true;

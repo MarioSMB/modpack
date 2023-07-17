@@ -29,7 +29,6 @@
 // skate
 .vector jump_vel;
 #define PHYS_BOARD_FALLING(s) 				STAT(BOARD_FALLING, s)
-#define PHYS_STAMINA(s) 					STAT(STAMINA, s)
 #define PHYS_SKATING(s) 					STAT(SKATING, s)
 
 // button mapping
