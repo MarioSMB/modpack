@@ -22,8 +22,8 @@ bool discharged; // hipnotic
 const float FADETIME = 5; // STATIC GLOBAL, how long after death until monsters fade out in horde mode
 
 .float aggro_time; // when a monster is aggro'd, set this value to the time. Future aggro's check against this.
-const float AGGRO_MIN = 1; // how long to wait before allowing a new Aggro
-const float AGGRO_ADD = 1; // random additional wait
+const float AGGRO_MIN = 5; // how long to wait before allowing a new Aggro
+const float AGGRO_ADD = 2; // random additional wait
 
 .float killtime; // game time at which player got their last killed
 .int killspree; // player's current killing spree
