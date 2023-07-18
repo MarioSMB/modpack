@@ -2,7 +2,7 @@
 
 #include "../all.qh"
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_EDIE,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was exterminated by an Edie"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_EDIE,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was violently gunned down by an Edie"), "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_EDIE,                1,  NULL,           INFO_DEATH_SELF_MON_EDIE,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_EDIE,            DEATH_SELF_MON_EDIE,            DEATH_MURDER_MONSTER,           "monster")
 

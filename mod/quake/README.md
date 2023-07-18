@@ -27,6 +27,8 @@ On server launch, you'll need to set a few cvars to make everything work:
 `registered 1`  
 `sv_playerphysicsqc 1`  
 `sv_gameplayfix_droptofloorstartsolid 1`  
+`sv_gameplayfix_q1bsptracelinereportstexture 0`  
+`mod_q1bsp_polygoncollisions 0`  
 `exec physicsq.cfg`  
 
 

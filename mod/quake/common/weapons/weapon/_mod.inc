@@ -24,3 +24,4 @@
 #include "piano.qc"
 #include "ripper.qc"
 #include "spellbook.qc"
+#include "tuba.qc"

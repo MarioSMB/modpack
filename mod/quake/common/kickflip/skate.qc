@@ -767,6 +767,8 @@ void Regenerate_Health(entity this)
 {
 	//if(!STAT(SKATING, this))
 		//return;
+	if(StatusEffects_active(STATUSEFFECT_Poisoned, this))
+		return; // no regen while poisoned!!
 
 	if(this.health_regen_time < time && this.health < 100)
 	{

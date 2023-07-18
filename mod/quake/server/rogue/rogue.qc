@@ -4,6 +4,7 @@
 
 STATIC_INIT(rogue_fixguardian)
 {
+	cvar_settemp("sv_gameplayfix_q1bsptracelinereportstexture", "0"); // fixes a collision bug in Xonotic
 	if(!MP_ROGUE)
 		return;
 	// copied fix from darkplaces, which disables this setting when rogue game is detected

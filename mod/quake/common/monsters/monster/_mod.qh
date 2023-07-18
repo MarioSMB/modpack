@@ -36,6 +36,7 @@
 #include "minotaur.qh"
 #include "mummy.qh"
 #include "mutant.qh"
+#include "octa.qh"
 #include "ogre.qh"
 #include "overlord.qh"
 #include "phantom_swordsman.qh"

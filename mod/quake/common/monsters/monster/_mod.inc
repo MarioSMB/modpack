@@ -36,6 +36,7 @@
 #include "minotaur.qc"
 #include "mummy.qc"
 #include "mutant.qc"
+#include "octa.qc"
 #include "ogre.qc"
 #include "overlord.qc"
 #include "phantom_swordsman.qc"

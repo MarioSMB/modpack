@@ -228,7 +228,7 @@ void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WOR
 	if(toucher.takedamage) // if it bleeds...
 	{
 		//spawn_touchblood (1);
-		T_Damage(toucher, this, this.owner, 27, WEP_PIANO.m_id); // DIRECT Damage
+		T_Damage(toucher, this, this.owner, 27, this.projectiledeathtype); // DIRECT Damage
 
 		Become_Burst_6Sided_BrightYellow_Explosion(this);
 		return;         
@@ -257,6 +257,7 @@ void W_FireWoodPiano(entity this) // Fire Music Note + Play Audio Chord---------
 	//this.punchangle_x = 1;
 
 	entity musicnote = spawn();
+	musicnote.projectiledeathtype = WEP_PIANO.m_id;
 	musicnote.owner = this;
 	set_movetype(musicnote, MOVETYPE_BOUNCE);
 	musicnote.solid = SOLID_BBOX;
@@ -297,7 +298,7 @@ void W_FireWoodPiano(entity this) // Fire Music Note + Play Audio Chord---------
 		musicnote.avelocity = '0  90 0'; // Roll
 		musicnote.velocity = musicnote.velocity*1 + (v_right* 20) + (v_up* 1); // Don't add .Velocity* (it's already defined above!)
 		
-		setsize(musicnote, '0 0 0', '0 0 0');		
+		setsize(musicnote, '0 0 0', '0 0 0');
 		setorigin(musicnote, this.origin + v_forward*12 + '0 0 -8' + v_right* -8); 
 	}
 			

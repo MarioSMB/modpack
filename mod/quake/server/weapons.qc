@@ -222,7 +222,8 @@ void T_MissileTouch(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
 
-//	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	if(this.classname == "tubanote") // TODO: why is this not used by rockets?
+		sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);

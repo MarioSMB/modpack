@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_OCTA,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was inked by an Octa"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_OCTA,               1,  NULL,           INFO_DEATH_SELF_MON_OCTA,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_OCTA,           DEATH_SELF_MON_OCTA,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_OCTA, "progs/madfox/mon_octa_extra.mdl");
+
+SOUND(MON_OCTA_SIGHT, "tronyn/mon_bigfish_bite");
+#endif
+
+CLASS(Octa, Monster)
+    ATTRIB(Octa, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Octa, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Octa, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Octa, m_model, Model, MDL_MON_OCTA);
+    ATTRIB(Octa, m_sound, Sound, SND_MON_OCTA_SIGHT);
+#endif
+    ATTRIB(Octa, netname, string, "octa");
+    ATTRIB(Octa, monster_name, string, _("Octa"));
+ENDCLASS(Octa)
+
+REGISTER_MONSTER(OCTA, NEW(Octa));

@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Tuba, Weapon)
+/* ammotype  */ ATTRIB(Tuba, ammo_type, int, IT_ROCKETS);
+/* impulse   */ ATTRIB(Tuba, impulse, int, 7);
+/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, 0);
+/* ammo */      ATTRIB(Tuba, aflag, int, 7);
+/* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
+/* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairshotgun");
+/* crosshair */ ATTRIB(Tuba, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(Tuba, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Tuba, model2, string, "shotgun");
+/* refname   */ ATTRIB(Tuba, netname, string, "shotgun");
+/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
+
+ENDCLASS(Tuba)
+REGISTER_WEAPON(TUBA, NEW(Tuba));
+
+//SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
