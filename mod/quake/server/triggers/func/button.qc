@@ -96,7 +96,7 @@ void button_touch(entity this, entity toucher)
 		else
 		{
 			// Yoder Sept24, 2021 Horde merge
-			if(horde_ent)
+			if(horde_ent || autocvar_sv_quake_globalkeys)
 			{
 				horde_key_spend(this.items);
 				settouch(this, func_null);

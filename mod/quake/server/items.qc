@@ -1114,7 +1114,7 @@ void key_touch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
-	if(toucher.items & this.items)
+	if(!autocvar_sv_quake_globalkeys && (toucher.items & this.items))
 		return;
 
 	string keyname = (this.netname != "") ? this.netname : "key";
@@ -1123,7 +1123,6 @@ void key_touch(entity this, entity toucher)
 
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
-	toucher.items |= this.items;
 
 	if(!coop)
 	{	
@@ -1132,6 +1131,13 @@ void key_touch(entity this, entity toucher)
 	}
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 	this.target = string_null; // only fire the trigger once though
+	if(autocvar_sv_quake_globalkeys)
+	{
+		horde_key_give(this.items);
+		delete(this);
+	}
+	else
+		toucher.items |= this.items;
 }
 
 bool key_customize(entity this, entity client)

@@ -56,6 +56,10 @@ string CATEGORY_MONSTER = "monster";
 
 string HordeRandomMap();
 
+void horde_key_give_all(int key_item);
+
+void horde_key_give(int key_item);
+
 // Yoder Sept24, Horde Merge
 void PrecacheMonsters();
 

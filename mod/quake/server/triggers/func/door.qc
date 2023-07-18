@@ -237,7 +237,7 @@ void door_touch(entity this, entity toucher)
 	}
 
 	// Yoder sept24, 2021, horde merge
-	if(horde_ent)
+	if(horde_ent || autocvar_sv_quake_globalkeys)
 		horde_key_spend(this.items);
 	else // standard behaviour
 		toucher.items &= ~this.items;
