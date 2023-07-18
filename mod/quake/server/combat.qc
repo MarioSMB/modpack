@@ -373,11 +373,13 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 // figure momentum add
-	if((inflictor != NULL) &&(targ.move_movetype == MOVETYPE_WALK) )
+	if((inflictor != NULL) &&(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
 	{
-		vector dir = targ.origin -(inflictor.absmin + inflictor.absmax) * 0.5;
+		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
-		targ.velocity = targ.velocity + dir*damage*8;
+		targ.velocity += dir * damage * 8;
+		targ.velocity_z += 1;
+		UNSET_ONGROUND(targ);
 	}
 
 // check for godmode or invincibility

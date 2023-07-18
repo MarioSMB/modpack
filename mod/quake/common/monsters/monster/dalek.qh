@@ -13,7 +13,7 @@ SOUND(MON_DALEK_SIGHT, "dalek/dalek");
 #endif
 
 CLASS(Dalek, Monster)
-    ATTRIB(Dalek, spawnflags, int, MON_FLAG_INFIGHT);
+    ATTRIB(Dalek, spawnflags, int, MON_FLAG_INFIGHT | MON_FLAG_METAL);
     ATTRIB(Dalek, m_mins, vector, '-16 -16 -24');
     ATTRIB(Dalek, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

@@ -20,6 +20,8 @@ void W_FireTuba(entity this)
 	this.punchangle_x = -2;
 	this.ammo_rockets -= 1;
 
+	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
+
 	vector org = gettaginfo(this.weaponentity, 0);
 	vector offset = org + v_up * 10 + v_right * 5 + v_forward * 14;
 	if(time > this.weaponentity.tuba_smoketime)
@@ -29,6 +31,7 @@ void W_FireTuba(entity this)
 		this.weaponentity.tuba_smoketime = time + 0.25;
 	}
 
+#if 0
 	// copied from piano
 	entity musicnote = spawn();
 	musicnote.owner = this;
@@ -55,6 +58,7 @@ void W_FireTuba(entity this)
 	settouch(musicnote, T_MissileTouch);
 
 	musicnote.velocity = v_forward * 200 + v_up * 600;
+#endif
 
 	// create a special entity for the sound so we can remove it
 	// otherwise the sound will loop forever!
