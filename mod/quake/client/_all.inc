@@ -10,6 +10,7 @@
 #include "sbar.qc"
 #include "shop.qc"
 #include "centerprint.qc"
+#include "shownames.qc"
 
 #include "../common/_all.inc"
 

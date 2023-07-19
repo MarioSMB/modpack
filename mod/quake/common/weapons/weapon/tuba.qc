@@ -15,6 +15,43 @@ void tubasound_remove(entity this)
 	delete(this);
 }
 
+void tuba_note_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+
+	float mydmg = 30;
+	float damg = mydmg + random() * (mydmg * 0.2);
+	
+	if(toucher.health)
+	{
+		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
+			damg = damg * 0.5;	// mostly immune
+		if(toucher.resist_rockets != 0)
+		{
+			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
+			Resist_Rockets(toucher, this.origin);
+		}
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+	}
+
+	// don't do radius damage to the toucher, because all the damage
+	// was done in the impact
+	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
+
+	//sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	//this.origin = this.origin - 8 * normalize(this.velocity);
+	this.origin = findbetterlocation(this.origin, 32);
+
+	Become_Burst_6Sided_BrightYellow_Explosion(this);
+}
+
 void W_FireTuba(entity this)
 {
 	this.punchangle_x = -2;
@@ -31,7 +68,6 @@ void W_FireTuba(entity this)
 		this.weaponentity.tuba_smoketime = time + 0.25;
 	}
 
-#if 0
 	// copied from piano
 	entity musicnote = spawn();
 	musicnote.owner = this;
@@ -47,7 +83,7 @@ void W_FireTuba(entity this)
 
 	musicnote.nextthink = time + 2.5; // Remove/Explode Time
 	//musicnote.think = SUB_Remove; 
-	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);
+	setthink(musicnote, Become_Burst_6Sided_BrightYellow_Explosion);
 	_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl");
 	setsize(musicnote, '-3 -3 -3', '3 3 3');
 	musicnote.avelocity = '0 90 0'; // Roll
@@ -55,10 +91,9 @@ void W_FireTuba(entity this)
 	tracebox(this.origin, musicnote.mins, musicnote.maxs, offset, MOVE_NORMAL, this);
 
 	setorigin(musicnote, trace_endpos);
-	settouch(musicnote, T_MissileTouch);
+	settouch(musicnote, tuba_note_touch);
 
 	musicnote.velocity = v_forward * 200 + v_up * 600;
-#endif
 
 	// create a special entity for the sound so we can remove it
 	// otherwise the sound will loop forever!

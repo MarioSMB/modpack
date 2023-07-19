@@ -1,0 +1,23 @@
+#pragma once
+
+bool autocvar_hud_shownames;
+float autocvar_hud_shownames_crosshairdistance;
+float autocvar_hud_shownames_crosshairdistance_time;
+float autocvar_hud_shownames_crosshairdistance_antioverlap;
+bool autocvar_hud_shownames_self;
+float autocvar_hud_shownames_aspect;
+float autocvar_hud_shownames_fontsize;
+int autocvar_hud_shownames_decolorize;
+float autocvar_hud_shownames_alpha;
+bool autocvar_hud_shownames_resize;
+float autocvar_hud_shownames_mindistance;
+float autocvar_hud_shownames_maxdistance;
+bool autocvar_hud_shownames_antioverlap;
+float autocvar_hud_shownames_antioverlap_minalpha = 0.4;
+float autocvar_hud_shownames_offset;
+
+entityclass(ShowNames);
+classfield(ShowNames) .float fadedelay;
+classfield(ShowNames) .float pointtime;
+
+void Draw_ShowNames_All();

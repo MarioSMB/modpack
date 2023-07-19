@@ -9,6 +9,7 @@
 #include "../common/wepent.qh"
 #include "../common/util.qh"
 #include "../server/triggers/trigger/viewloc.qh"
+#include "shownames.qh"
 
 void CSQCModel_InterpolateAnimation_Do(entity this);
 
@@ -578,6 +579,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Sbar_Draw();
 	HUD_CenterPrint();
 	HUD_Crosshair(this);
+	Draw_ShowNames_All();
 
 	status_effects_HUD_Powerups_add();
 
