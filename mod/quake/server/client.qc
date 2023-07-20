@@ -13,6 +13,8 @@
 #include "vote.qh"
 #include "weapons/weaponsystem.qh"
 
+.entity chatbubbleentity;
+
 /*
 =============================================================================
 
@@ -377,6 +379,52 @@ void player_sound(entity this, int chan, string sample, float atten)
 	else
 		soundpath = "player/";
 	_sound(this, chan, strcat(soundpath, sample), 1, atten);
+}
+
+void ChatBubbleThink(entity this)
+{
+	this.nextthink = time;
+	if ((this.owner.alpha < 0) || this.owner.chatbubbleentity != this)
+	{
+		if(this.owner) // but why can that ever be NULL?
+			this.owner.chatbubbleentity = NULL;
+		delete(this);
+		return;
+	}
+
+	this.mdl = "";
+
+	if ( this.owner.health > 0 && !this.owner.elec && IS_PLAYER(this.owner) )
+	{
+		if (PHYS_INPUT_BUTTON_CHAT(this.owner))
+			this.mdl = "models/misc/chatbubble.spr";
+	}
+
+	if ( this.model != this.mdl )
+		_setmodel(this, this.mdl);
+
+}
+
+void UpdateChatBubble(entity this)
+{
+	if (this.alpha < 0)
+		return;
+	// spawn a chatbubble entity if needed
+	if (!this.chatbubbleentity)
+	{
+		this.chatbubbleentity = new(chatbubbleentity);
+		this.chatbubbleentity.owner = this;
+		this.chatbubbleentity.exteriormodeltoclient = this;
+		setthink(this.chatbubbleentity, ChatBubbleThink);
+		this.chatbubbleentity.nextthink = time;
+		setmodel(this.chatbubbleentity, MDL_CHAT); // precision set below
+		//setorigin(this.chatbubbleentity, this.origin + '0 0 15' + this.maxs_z * '0 0 1');
+		setorigin(this.chatbubbleentity, '0 0 12' + this.maxs_z * '0 0 1');
+		setattachment(this.chatbubbleentity, this, "");  // sticks to moving player better, also conserves bandwidth
+		this.chatbubbleentity.mdl = this.chatbubbleentity.model;
+		//this.chatbubbleentity.model = "";
+		this.chatbubbleentity.effects = EF_LOWPRECISION;
+	}
 }
 
 /*
@@ -2488,7 +2536,10 @@ void PlayerPostThink(entity this)
 		CheckHealthRot(this);
 
 		if(IS_PLAYER(this))
+		{
 			DrownPlayer(this);
+			UpdateChatBubble(this);
+		}
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -2642,6 +2693,9 @@ void ClientDisconnect(entity this)
 
 	strfree(this.weaponorder_byimpulse);
 	GetCvars(this, this, -1);
+
+	//this.flags &= ~FL_CLIENT;
+	if (this.chatbubbleentity) delete(this.chatbubbleentity);
 
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 

@@ -18,6 +18,7 @@
 #include "enforcer.qc"
 #include "fiend.qc"
 #include "floyd.qc"
+#include "fury_knight.qc"
 #include "gargoyle.qc"
 #include "goatling.qc"
 #include "goroth.qc"

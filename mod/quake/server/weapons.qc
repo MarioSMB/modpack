@@ -1153,7 +1153,7 @@ void spike_touch(entity this, entity toucher)
 			stick_spike(this, this.origin, this.velocity);
 			_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
 		}
-		else if(this.classname == "wizard_spike")
+		else if(this.classname == "wizard_spike" || this.classname == "dfury_spike")
 			te_wizspike(this.origin);
 		else if(this.classname == "knight_spike")
 			te_knightspike(this.origin);

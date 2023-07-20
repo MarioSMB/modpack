@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_FURY_KNIGHT,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was sliced by a Fury Knight"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_FURY_KNIGHT,               1,  NULL,           INFO_DEATH_SELF_MON_FURY_KNIGHT,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_FURY_KNIGHT,           DEATH_SELF_MON_FURY_KNIGHT,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_FURY_KNIGHT, "progs/mon_dfury.mdl");
+MODEL(MON_FURY_KNIGHT_HEAD, "progs/h_dfury.mdl");
+
+SOUND(MON_FURY_KNIGHT_SIGHT, "dknight/dfury_sight");
+#endif
+
+CLASS(FuryKnight, Monster)
+    ATTRIB(FuryKnight, spawnflags, int, 0);
+    ATTRIB(FuryKnight, m_mins, vector, '-16 -16 -24');
+    ATTRIB(FuryKnight, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(FuryKnight, m_model, Model, MDL_MON_FURY_KNIGHT);
+    ATTRIB(FuryKnight, m_model_head, Model, MDL_MON_FURY_KNIGHT_HEAD);
+    ATTRIB(FuryKnight, m_sound, Sound, SND_MON_FURY_KNIGHT_SIGHT);
+#endif
+    ATTRIB(FuryKnight, netname, string, "dfury");
+    ATTRIB(FuryKnight, monster_name, string, _("Fury Knight"));
+ENDCLASS(FuryKnight)
+
+REGISTER_MONSTER(FURY_KNIGHT, NEW(FuryKnight));

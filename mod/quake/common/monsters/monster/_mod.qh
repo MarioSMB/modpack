@@ -18,6 +18,7 @@
 #include "enforcer.qh"
 #include "fiend.qh"
 #include "floyd.qh"
+#include "fury_knight.qh"
 #include "gargoyle.qh"
 #include "goatling.qh"
 #include "goroth.qh"

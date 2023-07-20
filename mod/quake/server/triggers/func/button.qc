@@ -64,7 +64,7 @@ void button_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	if(MP_MG)
+	if(MP_MG && this.items)
 	{
 		if(time < this.attack_finished)
 			return;
