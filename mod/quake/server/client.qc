@@ -366,6 +366,17 @@ string get_painsound(entity this, int chance)
 	return "player/pain6.wav";
 }
 
+void playersound(entity this, int chan, string sample, float vol, float atten)
+{
+	if(this.spawnsilent)
+	{
+		float r = random() * (random() * 3);
+		sound7(this, chan, sample, vol, atten, 100 / r, 0);
+	}
+	else
+		_sound(this, chan, sample, vol, atten);
+}
+
 void player_sound(entity this, int chan, string sample, float atten)
 {
 	string soundpath;
@@ -379,18 +390,7 @@ void player_sound(entity this, int chan, string sample, float atten)
 		soundpath =  "player_katria/";
 	else
 		soundpath = "player/";
-	if(this.spawnsilent)
-		sound7(this, chan, strcat(soundpath, sample), 1, atten, 100 / random(), 0);
-	else
-		_sound(this, chan, strcat(soundpath, sample), 1, atten);
-}
-
-void playersound(entity this, int chan, string sample, float vol, float atten)
-{
-	if(this.spawnsilent)
-		sound7(this, chan, sample, vol, atten, 100 / random(), 0);
-	else
-		_sound(this, chan, sample, vol, atten);
+	playersound(this, chan, strcat(soundpath, sample), 1, atten);
 }
 
 void ChatBubbleThink(entity this)
