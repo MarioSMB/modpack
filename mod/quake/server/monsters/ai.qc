@@ -1021,7 +1021,7 @@ bool FindTarget(entity this)
 	//MED 10/17/96 added charmed stuff
 	if(this.charmed)
 	{
-		this.effects |= EF_DIMLIGHT;
+		//this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
 		{
 			UpdateCharmerGoal(this);
