@@ -1303,7 +1303,7 @@ bool SpawnWavePrep(entity this)
 		playerscalar = 1;
 	
 	// Boss Count
-	if((this.wave % 9) == 0)
+	if(autocvar_skill != 3 && (this.wave % 9) == 0)
 		this.bosses = this.count; // use the horde manager's count for final boss count
 	else if((temp_wave % 3) == 0)
 	{
