@@ -21,7 +21,7 @@ void player_bio1(entity this)
 	if(!this.button0)
 		{player_run(this);return;}
 	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
+	if(this.weaponentity.m_frame >= 6)
 		this.weaponentity.m_frame = 1;
 	SuperDamageSound(this);
 	W_FireBio(this, 3);
@@ -37,7 +37,7 @@ void player_bio2(entity this)
 	if(!this.button0)
 		{player_run(this);return;}
 	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
+	if(this.weaponentity.m_frame >= 6)
 		this.weaponentity.m_frame = 1;
 	SuperDamageSound(this);
 	W_FireBio(this, -3);

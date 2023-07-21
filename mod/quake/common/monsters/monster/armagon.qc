@@ -733,19 +733,19 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
     if(autocvar_skill == 0)
 	{
 		actor.yaw_speed = 5;
-		actor.health = 2000;
+		actor.health = 3000;
 		actor.worldtype = 0.9;
 	}
 	else if(autocvar_skill == 1)
 	{
 		actor.yaw_speed = 9;
-		actor.health = 2500;
+		actor.health = 3500;
 		actor.worldtype = 0.85;
 	}
 	else
 	{
 		actor.yaw_speed = 12;
-		actor.health = 3500;
+		actor.health = 4500;
 		actor.worldtype = 0.75;
 	}
 	actor.state = 0;

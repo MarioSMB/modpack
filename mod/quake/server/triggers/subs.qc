@@ -160,10 +160,6 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.stoleweapon = srcent.stoleweapon;
 	destent.spawnfunction = srcent.spawnfunction;
 	destent.spawnthink = srcent.spawnthink;
-	destent.spawnmodel = srcent.spawnmodel;
-	destent.spawnsolidtype = srcent.spawnsolidtype;
-	destent.spawnmins = srcent.spawnmins;
-	destent.spawnmaxs = srcent.spawnmaxs;
 	destent.spawnclassname = srcent.spawnclassname;
 }
 

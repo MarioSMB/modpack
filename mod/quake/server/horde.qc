@@ -1137,6 +1137,8 @@ entity HordeFindSpawnpoint(float squad_type)
 
 entity Horde_GetSquadEntity(entity this, int spawntype)
 {
+	// finalbosses will spawn every 3 waves on nightmare! 9 otherwise
+	int fbosswave = (autocvar_skill == 3) ? 3 : 9;
 	RandomSelection_Init();
 	IL_EACH(g_squads, it.spawnflags & spawntype,
 	{
@@ -1144,13 +1146,14 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 			continue;
 		if(autocvar_skill > 1 && (it.spawnflags & HORDE_EASY))
 			continue;
-		if((it.spawnflags & HORDE_FINALBOSS) && ((this.wave % 9) != 0))
+		if((it.spawnflags & HORDE_FINALBOSS) && ((this.wave % fbosswave) != 0))
 			continue;
 		if((it.spawnflags & HORDE_ARMY) && !this.army)
 			continue;
 		if(!(it.spawnflags & HORDE_ARMY) && this.army)
 			continue;
 		// final boss will be given priority over other boss spawns
+		// TODO: less priority on nightmare?
 		float prio = (it.spawnflags & HORDE_FINALBOSS) ? 2 : 1;
 		RandomSelection_AddEnt(it, 1, prio);
 	});
@@ -1621,6 +1624,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 goroth");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 blud");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 eidolon");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 armagon");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 	}
 

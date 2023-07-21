@@ -1586,6 +1586,12 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.wetsuit_time = 1;
 		toucher.wetsuit_finished = time + 30;
+		if(coop) // Respawn biosuit in coop, since it might be required for progression
+		{
+			this.target = string_null; // but don't fire off targets again
+			setthink(this, SUB_regen);
+			this.nextthink = time + 2.5;
+		}
 	}
 
 	if(this.powerups & POWERUP_EMPATHY_SHIELDS)

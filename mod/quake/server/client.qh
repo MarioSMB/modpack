@@ -89,6 +89,9 @@ void player_sound(entity this, int chan, string sample, float atten);
 string get_playermodel(entity this);
 string get_playerhead(entity this);
 
+.float spawnsilent; // silent but deadly
+void playersound(entity this, int chan, string sample, float vol, float atten);
+
 // prototypes
 void W_WeaponFrame(entity this);
 void W_SetCurrentAmmo(entity this);

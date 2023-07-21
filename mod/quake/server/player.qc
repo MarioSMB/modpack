@@ -474,7 +474,7 @@ void PainSound(entity this, entity attacker)
 
 	if(attacker.classname == "teledeath")
 	{
-		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 
@@ -533,7 +533,7 @@ void PainSound(entity this, entity attacker)
 	this.noise = get_painsound(this, rs);
 
 	if(this.noise && this.noise != "")
-		_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
+		playersound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 }
 
 void player_pain6(entity this) { set_animofs(this, anim_player_pain1, 6, player_run); }
@@ -740,7 +740,7 @@ void DeathSound(entity this)
 	int rs = rint((random() * 4) + 1);
 	this.noise = get_deathsound(this, rs);
 
-	_sound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
+	playersound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
 }
 
 
@@ -883,23 +883,23 @@ void GibPlayer(entity this, entity attacker)
 
 	if(attacker.classname == "teledeath")
 	{
-		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 
 	if(attacker.classname == "teledeath2")
 	{
-		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 		
 	if(random() < 0.25)
 	{
-		_sound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
-		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		playersound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 	}
 	else
-		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 }
 
 void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)

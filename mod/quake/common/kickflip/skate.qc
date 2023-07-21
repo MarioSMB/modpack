@@ -151,7 +151,7 @@ void skate_fire(entity this)
 
 	if(!IS_ONGROUND(this) && !(this.busting))	//player in air making stunt !!!
 	{							//use the normal jumping sound for stunts
-		_sound(this, CH_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
+		playersound(this, CH_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
 		
 		//check key combinations first...
 		if(this.button3 && this.button0)
@@ -250,7 +250,7 @@ void skate_land(entity this)
 		return;		//just a little gap in the reel. No landing
 
 	if(this.watertype == CONTENT_WATER)
-		_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+		playersound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
 	else if(this.jump_flag < -750) //fell down
 	{
 		//sprint(this, sprintf("%s fell down.\n", this.netname));	
@@ -266,7 +266,7 @@ void skate_land(entity this)
 	}
 	else
 	{
-		_sound(this, CH_VOICE, "player/skatelnd.wav", 1, ATTN_NORM);		
+		playersound(this, CH_VOICE, "player/skatelnd.wav", 1, ATTN_NORM);		
 	}
 	
 	if(STAT(TRICK, this))					//player busted a trick !

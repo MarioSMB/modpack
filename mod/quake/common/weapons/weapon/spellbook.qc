@@ -314,7 +314,7 @@ void summon_sword(entity this, vector spot)
 	//droptofloor(sword);
 	setthink(sword, animatesword1);
 	sword.nextthink = time + 0.1;
-	sword.effects = EF_LOWPRECISION | EF_ADDITIVE;
+	sword.effects = EF_LOWPRECISION | EF_ADDITIVE | EF_NOSHADOW;
 	sword.owner = this;
 	sword.realowner = this;
 	sword.glowmod = '1 1 0';
@@ -338,7 +338,7 @@ void summon_shield(entity this, vector spot)
 	SetMovetypeFollow(shield, this);
 	setthink(shield, shield_remove);
 	shield.nextthink = time + 20;
-	shield.effects = EF_ADDITIVE;
+	shield.effects = EF_ADDITIVE | EF_NOSHADOW;
 	shield.owner = this;
 	shield.realowner = this;
 	shield.glowmod = '1 1 0';
@@ -360,6 +360,8 @@ void W_Spell_Sword(entity this)
 	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
 	this.attack_finished = time + 0.66;
 	summon_sword(this, targ);
+	if(this.spell_shield)
+		this.spell_shield.nextthink = time + 20; // refresh shield every sword attack!
 
 	if(this.spell_shield || STAT(MANA, this) < SPELL_COST_SHIELD)
 		return;
@@ -551,11 +553,11 @@ void icefield_think(entity this)
 		return;
 	this.icefield_lasttouch = time + 1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, this.count, it.takedamage && it.health > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, this.count, it.takedamage && it.health > 0 && !it.charmed,
 	{
 		if(IS_PLAYER(it))
 		{
-			it.mana_regen_boost = time + 1;
+			it.mana_regen_boost = time + 5;
 			Send_Effect(EFFECT_RUNE_FROST_REGEN, it.origin, '0 0 0', 1);
 			continue;
 		}
@@ -685,8 +687,9 @@ void arms_angles(entity this)
 		this.angles = pl.v_angle;
 	// taken from item code
 	float bobheight = 7 + 5 * sin((time - this.spawn_time) * 2);
-	if(bobheight != this.origin_z - this.oldorigin_z)
-		this.origin_z = this.oldorigin_z + bobheight;
+	vector oldorg = this.arms_spawned.origin + this.pos1;
+	if(bobheight != this.origin_z - oldorg.z)
+		this.origin_z = oldorg.z + bobheight;
 
 	setthink(this, arms_angles);
 	if(time > this.cnt)
@@ -725,7 +728,8 @@ void summon_boneshard(entity rune)
 	arms.classname = "arms";
 	arms.realowner = player;
 	arms.owner = player;
-	arms.solid = SOLID_BBOX;
+	arms.arms_spawned = rune; // keep track separately for position updates
+	arms.solid = SOLID_CORPSE;
 	arms.projectiledeathtype = WEP_SPELLBOOK.m_id;
 	arms.cnt = rune.cnt + 1; // just incase the rune itself doesn't remove them!
 	set_movetype(arms, MOVETYPE_FLYMISSILE);
@@ -735,11 +739,13 @@ void summon_boneshard(entity rune)
 	setthink(arms, arms_angles);
 	arms.nextthink = time + 0.1;
 	arms.spawn_time = time + (1 * random()); // slight offset so they don't all move at once!
-		
-	arms.origin_x = rune.origin_x + 64 - (random()*128);
-	arms.origin_y = rune.origin_y + 64 - (random()*128);	
-	arms.origin_z = rune.origin_z + 16 + (random() * 16);
-	arms.oldorigin = arms.origin;
+
+	vector offset;
+	offset.x = 64 - (random() * 128);
+	offset.y = 64 - (random() * 128);
+	offset.z = 16 + (random() * 16);
+	arms.pos1 = offset;
+	arms.origin = rune.origin + offset;
 	arms.angles = player.angles;
 	IL_PUSH(g_arms, arms);
 }

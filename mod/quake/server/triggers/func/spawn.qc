@@ -12,41 +12,43 @@ void spawn_use(entity this, entity actor, entity trigger)
 	entity spawnentity;
 	bool horn_active = (trigger.powerups & POWERUP_HORN_OF_CONJURING); // check the TRIGGER, as a player holding a horn might stumble upon a regular monster spawner!
 
-	if((this.spawnmulti == 1) || (horn_active))
+	if(this.spawnmulti || horn_active)
 	{
 		// spawn the new entity
 		spawnentity = spawn();
 		// copy the master mold
 		SUB_CopyEntity(this.spawnmaster,spawnentity);
+		spawnentity.flags |= FL_CLONE; // mark as clone so it doesn't add to the monster counts
 	}
 	else
 		spawnentity = this.spawnmaster;
 
-	spawnentity.flags &= ~FL_NOTARGET;
-	// restore the model
-	spawnentity.model = spawnentity.spawnmodel;
-	//restore solid flag
-	spawnentity.solid = spawnentity.spawnsolidtype;
-	//restore thinking function
-	setthink(spawnentity, spawnentity.spawnthink);
-	_setmodel(spawnentity, spawnentity.model);
-	setorigin(spawnentity, spawnentity.origin);
-	spawnentity.mins = spawnentity.spawnmins;
-	spawnentity.maxs = spawnentity.spawnmaxs;
-	setsize(spawnentity, spawnentity.mins, spawnentity.maxs);
+	if(horn_active)
+	{
+		spawnentity.charmer = actor;
+		spawnentity.charmed = true;
+	}
+
+	int olddm = deathmatch;
+	deathmatch = 0;
+	if(spawnentity.spawnthink) // maybe we should error out if this doesn't exist...
+		spawnentity.spawnthink(spawnentity);
+
+	deathmatch = olddm;
+
+	if(horn_active)
+	{
+		spawnentity.colormod = '0 1 0';
+		spawnentity.health = max(spawnentity.health, 1000);
+		spawnentity.max_health = spawnentity.health;
+	}
+
 	// spawn the teleport effect
 	if(this.spawnsilent == 0)
 		spawn_tfog(spawnentity.origin);
 //   horn_active = 0;
 //   horn_charmer = find(NULL, classname, "player");
 	// call spawnentity think function
-	if(horn_active)
-	{
-		spawnentity.charmer = actor;
-		spawnentity.charmed = true;
-		spawnentity.colormod = '0 1 0';
-		spawnentity.health = max(spawnentity.health, 1000);
-	}
 //   if(spawnentity.think)
 //      {
 //      spawnentity.nextthink = time+0.1;
@@ -60,20 +62,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 //         spawnentity.nextthink = 1;
 //      }
 	// check to see if it is a monster
-	if(IS_MONSTER(spawnentity))
-	{
-		if((this.spawnmulti != 0) && !horn_active)
-			monsters_total += 1;
-		// spawn the telefrag effect
-//      if(this.spawnsilent == 0)
-//         spawn_tdeath(spawnentity.origin, spawnentity);
-		//if(horn_active)
-		//{
-			//spawnentity.effects |= EF_DIMLIGHT;
-//         spawnentity.effects = spawnentity.effects | EF_BRIGHTFIELD;
-		//}
-	}
-	if((this.spawnmulti == 0) && !horn_active)
+	if(!this.spawnmulti && !horn_active)
 		delete(this);
 }
 
@@ -88,19 +77,7 @@ entity func_spawn_spawnmob(entity this, void(entity) sfunc, string class)
 	mon.spawnclassname = class;
 	mon.classname = mon.spawnclassname;
 
-	// call the named spawn function
-	sfunc(mon);
-	mon.spawnmodel = mon.model;
-	mon.spawnmins = mon.mins;
-	mon.spawnmaxs = mon.maxs;
-	_setmodel(mon, "");
-	setsize(mon, mon.spawnmins, mon.spawnmaxs);
-	//save off solid flag
-	mon.spawnsolidtype = mon.solid;
-	mon.solid = SOLID_NOT;
-	//save off think func and
-	//get rid of his thinking
-	mon.spawnthink = getthink(mon);
+	mon.spawnthink = sfunc;
 	setthink(mon, func_spawn_think);
 	mon.nextthink = time + 1;
 
@@ -128,30 +105,23 @@ spawnfunc(func_spawn)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
+	_setmodel(this, "");
+	setsize(this, '0 0 0', '0 0 0');
+
 	initialize_field_db();
 
 	entity monster;
-	int temptotal_monsters;
 
-	// save off deathmatch and zero it out
-	int tempdeathmatch = deathmatch;
-	deathmatch = 0;
 	if(!this.spawnfunction || this.spawnfunction == "")
 	{
 		float spawnchance = random();
 		monster = this;
-
-		// save off monster count so it doesn't get f'ed up
-		temptotal_monsters = monsters_total;
 
 		if(spawnchance < 0.5 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_dog, "monster_dog"); }
 		if(spawnchance < 0.8 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_ogre, "monster_ogre"); }
 		if(spawnchance < 0.92 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_demon1, "monster_demon1"); }
 		if(spawnchance < 0.97 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_zombie, "monster_zombie"); }
 		if(monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_shambler, "monster_shambler"); }
-
-		// make sure monster count is correct
-		monsters_total = temptotal_monsters + 1;
 	}
 	else
 	{
@@ -162,7 +132,6 @@ spawnfunc(func_spawn)
 		SUB_CopyEntity(this, mon);
 
 		// save off monster count so it doesn't get f'ed up
-		temptotal_monsters = monsters_total;
 		if(!mon.spawnclassname || mon.spawnclassname == "")
 			objerror(mon, "No spawnclassname defined");
 
@@ -173,37 +142,15 @@ spawnfunc(func_spawn)
 			value = strcat("target_spawn_helper", value);
 		putentityfieldstring(target_spawn_spawnfunc_field, mon, value);
 
-		mon.target_spawn_spawnfunc(mon);
-		if(mon.spawnmulti != 0)
-		{
-			// make sure monster count is correct
-			monsters_total = temptotal_monsters;
-		}
-		mon.spawnmodel = mon.model;
-		mon.spawnmins = mon.mins;
-		mon.spawnmaxs = mon.maxs;
-		_setmodel(mon, "");
-		mon.model = "";
-		setsize(mon, mon.spawnmins, mon.spawnmaxs);
-		//save off solid flag
-		mon.spawnsolidtype = mon.solid;
-		mon.solid = SOLID_NOT;
 		//save off think func and
 		//get rid of his thinking
-		mon.spawnthink = getthink(mon);
+		mon.spawnthink = mon.target_spawn_spawnfunc;
 		setthink(mon, func_spawn_think);
 		mon.nextthink = time + 1;
 		monster = mon;
 	}
-	deathmatch = tempdeathmatch;
-	this.solid = SOLID_NOT;
-	set_movetype(this, MOVETYPE_NONE);
-	this.modelindex = 0;
-	this.model = "";
-	_setmodel (this, this.model);  // set size and link into world
 	this.use = spawn_use;
 	this.spawnmaster = monster;
-	monster.flags |= FL_NOTARGET;
 }
 
 /*QUAKED func_spawn_small (0 .5 .8) (-16 -16 -24) (16 16 40) big/ambush megahealth

@@ -207,6 +207,7 @@ bool PlayerInList(entity player, string list)
 
 string autocvar_sv_allow_customplayermodels_speciallist = "";
 string autocvar_sv_allow_customplayermodels_idlist = "";
+string autocvar_sv_allow_customplayermodels_silent = "";
 
 bool have_katria;
 bool have_mario;
@@ -378,7 +379,18 @@ void player_sound(entity this, int chan, string sample, float atten)
 		soundpath =  "player_katria/";
 	else
 		soundpath = "player/";
-	_sound(this, chan, strcat(soundpath, sample), 1, atten);
+	if(this.spawnsilent)
+		sound7(this, chan, strcat(soundpath, sample), 1, atten, 100 / random(), 0);
+	else
+		_sound(this, chan, strcat(soundpath, sample), 1, atten);
+}
+
+void playersound(entity this, int chan, string sample, float vol, float atten)
+{
+	if(this.spawnsilent)
+		sound7(this, chan, sample, vol, atten, 100 / random(), 0);
+	else
+		_sound(this, chan, sample, vol, atten);
 }
 
 void ChatBubbleThink(entity this)
@@ -1489,6 +1501,11 @@ void PutClientInServer(entity this)
 
 	_setmodel(this, get_playermodel(this));
 	this.modelindex_player = this.modelindex;
+
+	if(autocvar_sv_allow_customplayermodels_silent != "" && random() > 0.5 && PlayerInList(this, autocvar_sv_allow_customplayermodels_silent))
+		this.spawnsilent = true;
+	else
+		this.spawnsilent = false;
 
 	if(this.custom_scale)
 		this.scale = this.custom_scale;
