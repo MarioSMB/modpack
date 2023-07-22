@@ -88,7 +88,8 @@ void armagon_launch_laser(entity this, float ofs)
 		vec = v_forward;
 	this.effects = this.effects | EF_MUZZLEFLASH;
 
-	HIP_LaunchLaser(this, src, vec, 0);
+	entity newmis = HIP_LaunchLaser(this, src, vec, 0);
+	newmis.projectiledeathtype = DEATH_MONSTER_ARMAGON.m_id;
 }
 
 void armagon_turn(entity this, float angdelta, float delta)
