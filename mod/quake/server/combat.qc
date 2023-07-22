@@ -153,7 +153,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		targ.effects &= ~EF_DIMLIGHT;
 	targ.effects &= ~EF_BRIGHTFIELD;
 
-	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
+	if(!IS_MONSTER(targ) && (targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE))
 	{	// doors, triggers, etc
 		if(targ.classname == "misc_explobox" || targ.classname == "misc_explobox2")
 			targ.enemy = attacker;
@@ -177,10 +177,10 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	}
 
 // bump the monster counter
-	if(IS_MONSTER(targ) && !targ.charmed)
+	if(IS_MONSTER(targ))
 	{
 		// Yoder Sept24, 2021 Horde Merge
-		if(horde_ent)
+		if(horde_ent && !targ.charmed)
 		{
 			if(targ.monsterdef && !(targ.flags & FL_CLONE) && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)) // zombies don't count
 				monsters_killed += 1;
@@ -232,9 +232,9 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			monsters_killed += 1;
 		if(targ.flags & FL_MINION)
 			update_minioncount(targ.owner, -1);
-		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE))
+		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE) && !targ.charmed)
 			attacker.frags += 1;
-		if(horde_ent)
+		if(horde_ent && !targ.charmed)
 			Horde_GiveScore(HORDE_TEAMSCORE_KILL);
 	}
 
@@ -250,7 +250,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	targ.flags &= ~FL_FLY;
 	targ.flags &= ~FL_SWIM;
 
-	if(IS_MONSTER(targ) && horde_ent && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+	if(IS_MONSTER(targ) && horde_ent && !targ.charmed && !(targ.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		remote_wavecheck(targ);
 
 	// TODO: reset target? not sure if this is needed!

@@ -1099,7 +1099,7 @@ void Gremlin_FireLightningGun(entity this)
 	//te_lightning2(NULL, org, trace_endpos); // should be this
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos + (dir * 4), this, 30, WEP_LIGHTNING.m_id);
+	LightningDamage(org, trace_endpos + (dir * 4), this, 30, DEATH_MONSTER_GREMLIN.m_id);
 }
 
 /*

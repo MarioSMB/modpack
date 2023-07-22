@@ -296,7 +296,8 @@ STATIC_INIT(viewmodel) {
     // forces lerping to work at 10 fps, needed for smooth weapon animations
     cvar_settemp("cl_lerpanim_maxdelta_framegroups", "0.1");
     // random fix for collision issues
-    cvar_settemp("mod_q1bsp_polygoncollisions", "0");
+    // breaks some maps, fixes clips... tough call!
+    //cvar_settemp("mod_q1bsp_polygoncollisions", "0");
 }
 
 // visual overlay while in liquids

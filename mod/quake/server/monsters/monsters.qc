@@ -121,7 +121,10 @@ void monster_start_go(entity this)
 				return;
 			}
 		}
-		this.goalentity = this.movetarget = find(NULL, targetname, this.target);
+		//this.goalentity = this.movetarget = find(NULL, targetname, this.target);
+		entity targ = find(NULL, targetname, this.target);
+		if(targ && targ.classname == "path_corner")
+			this.goalentity = this.movetarget = targ;
 		if(!this.movetarget || this.movetarget.classname != "path_corner")
 		{
 			//LOG_DEBUG("Monster can't find target at ", vtos(this.origin), "\n");
