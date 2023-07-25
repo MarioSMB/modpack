@@ -7,7 +7,7 @@ void trigger_decoy_touch(entity this, entity toucher)
 	settouch(this, func_null);
 	this.nextthink = time + 0.1;
 	setthink(this, SUB_Remove);
-	SUB_UseTargets(this, NULL, toucher); // TODO? doesn't set activator
+	SUB_UseTargets(this, toucher.realowner, toucher);
 }
 
 /*QUAKED trigger_decoy_use (.5 .5 .5) ?

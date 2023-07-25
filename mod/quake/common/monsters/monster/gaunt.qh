@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GAUNT,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was blasted by a Gaunt"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GAUNT,            1,  NULL,           INFO_DEATH_SELF_MON_GAUNT,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GAUNT,        DEATH_SELF_MON_GAUNT,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GAUNT, "progs/mon_gaunt.mdl");
+MODEL(MON_GAUNT_HEAD, "progs/h_gaunt.mdl");
+
+SOUND(MON_GAUNT_SIGHT, "gaunt/sight");
+#endif
+
+CLASS(Gaunt, Monster)
+    ATTRIB(Gaunt, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Gaunt, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Gaunt, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Gaunt, m_model, Model, MDL_MON_GAUNT);
+    ATTRIB(Gaunt, m_model_head, Model, MDL_MON_GAUNT_HEAD);
+    ATTRIB(Gaunt, m_sound, Sound, SND_MON_GAUNT_SIGHT);
+#endif
+    ATTRIB(Gaunt, netname, string, "gaunt");
+    ATTRIB(Gaunt, monster_name, string, _("Gaunt"));
+ENDCLASS(Gaunt)
+
+REGISTER_MONSTER(GAUNT, NEW(Gaunt));

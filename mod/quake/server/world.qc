@@ -487,6 +487,17 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
 			continue;
 
+		// TODO: see if something like this would fix monsters teleporting behind walls
+	#if 0
+		// special rule: must be visible from original position
+		if(frompos)
+		{
+			traceline(e.origin, mstart, MOVE_NOMONSTERS, e);
+			if(trace_fraction != 1)
+				continue;
+		}
+	#endif
+
 		// rule 4: we must "see" some spawnpoint or item
 		entity sp = NULL;
 		if(frompos)

@@ -1172,7 +1172,8 @@ METHOD(Eidolon, mr_setup, bool(Eidolon this, entity actor))
 	// Attack E - Lightning at summoning crystal - range attack
 	precache_sound ("eidolon/attacke.wav");
 
-	actor.skin = 1; // rocky skin
+	if(random() > 0.5)
+		actor.skin = 1; // rocky skin
 	//actor.takedamage = DAMAGE_NO;
 	//actor.pain_finished = time + 999999;
 

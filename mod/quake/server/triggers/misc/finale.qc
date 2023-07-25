@@ -47,22 +47,19 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 	//setup decoy
 	if(!(this.spawnflags & 2))
 	{
-		if(this.spawnflags & 1)
+		entity pl = actor;
+		if(!pl)
 		{
-			entity pl = NULL;
+			RandomSelection_Init();
 			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				pl = it;
-				break;
+				RandomSelection_AddEnt(it, 1, 1);
 			});
-			entity targ = find(NULL, targetname, this.mdl);
-			become_decoy(targ.target, pl.origin);
+			pl = RandomSelection_chosen_ent;
 		}
-		else
-		{
-			entity targ = find(NULL, targetname, this.mdl);
-			become_decoy(targ.target, targ.origin);
-		}
+		entity targ = find(NULL, targetname, this.mdl);
+		vector org = (this.spawnflags & 1) ? pl.origin : targ.origin;
+		become_decoy(targ.target, org, pl);
 	}
 
 	FOREACH_CLIENT(IS_PLAYER(it),

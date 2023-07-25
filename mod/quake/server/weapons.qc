@@ -56,7 +56,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 		if(this.lastvictim == toucher)
 			this.dmg = this.dmg / 2;
 		spawn_touchblood(this, this.dmg, toucher);
-		T_Damage(toucher, this, this.lastvictim, this.dmg, WEP_LASER_CANNON.m_id);
+		T_Damage(toucher, this, this.lastvictim, this.dmg, this.projectiledeathtype);
 	}
 	else if((this.cnt == 3) ||(random()<0.15))
 	{
@@ -115,6 +115,7 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	missile.solid = SOLID_BBOX;
 	if(light)
 		missile.effects = EF_DIMLIGHT;
+	missile.projectiledeathtype = WEP_LASER_CANNON.m_id;
 
 	_setmodel(missile, "progs/lasrspik.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
@@ -1159,6 +1160,12 @@ void spike_touch(entity this, entity toucher)
 			te_knightspike(this.origin);
 		else if(this.classname == "bullet")
 			te_gunshot(this.origin);
+		else if(this.classname == "judge_spike")
+		{
+			_sound(this, CH_WEAPON_SINGLE, "judge/magic_hit.wav", 1, ATTN_NORM);
+			T_RadiusDamage(this, this.owner, this.dmg, this.projectiledeathtype, this.owner); // tonedown
+			te_explosion2(this.origin, 100, 5);
+		}
 		else
 			te_spike(this.origin);
 	}
@@ -1241,15 +1248,14 @@ void W_FireFlower_Touch(entity this, entity toucher)
 	}
 }
 
-void W_FireFlower_Attack(entity this)
+entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 {
-	_sound(this, CH_WEAPON_B, "items/mario_attack.wav", 1, ATTN_NORM);
 	entity proj = new(fireball);
 	proj.owner = this;
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = WEP_NAPALM.m_id; // placeholder
-	setorigin(proj, this.origin + '0 0 16' + v_right * 15);
-	proj.velocity = v_forward * 500;
+	setorigin(proj, org);
+	proj.velocity = dir * pspeed;
 	proj.bouncefactor = 1;
 	settouch(proj, W_FireFlower_Touch);
 	setmodel(proj, MDL_LAVABALL);
@@ -1262,6 +1268,14 @@ void W_FireFlower_Attack(entity this)
 	//proj.effects = EF_FLAME;
 	setthink(proj, SUB_Remove);
 	proj.nextthink = time + 10;
+	return proj;
+}
+
+void W_FireFlower_Attack(entity this)
+{
+	_sound(this, CH_WEAPON_B, "items/mario_attack.wav", 1, ATTN_NORM);
+	traceline(this.origin + '0 0 16', this.origin + '0 0 16' + v_right * 15, MOVE_NOMONSTERS, this);
+	Launch_Fireball(this, trace_endpos, v_forward, 500);
 }
 
 /*
@@ -1279,18 +1293,18 @@ void W_WeaponFrame(entity this)
 	if(STAT(SKATING, this))
 		skate_fire(this);
 
+	Weapon wep = this.weaponentity.m_weapon;
 	if(!STAT(SKATING, this) && !(time < this.attack_finished))
 	{
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
 
-		Weapon wep = this.weaponentity.m_weapon;
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		
 	// check for attack
 		if(wep != WEP_Null)
 		{
-			if(this.button0 && wep != WEP_SPELLBOOK && wep.wr_checkammo1(wep, this))
+			if(this.button0 && !(wep.spawnflags & WEP_FLAG_NOAGGRO) && wep.wr_checkammo1(wep, this))
 			{
 				SuperDamageSound(this);
 				if(wep != WEP_AXE) // allow stealthy slices!
@@ -1300,7 +1314,14 @@ void W_WeaponFrame(entity this)
 		}
 	}
 
-	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3)
+	// TODO: handle secondary attacks properly!
+	if(wep == WEP_PORTAL_GUN && !(time < this.attack2_finished) && this.button3)
+	{
+		makevectors(this.v_angle);
+		wep.wr_think(wep, this, 0);
+	}
+
+	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3 && !(wep.spawnflags & WEP_FLAG_SECONDARY))
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		if((this.powerups & POWERUP_FIREFLOWER))

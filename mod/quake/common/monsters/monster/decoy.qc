@@ -61,11 +61,12 @@ void decoy_walk1(entity this)
 	this.walkframe = this.walkframe + 1;
 }
 
-void become_decoy(string targ, vector orig)
+void become_decoy(string targ, vector orig, entity player)
 {
 	entity decoy = new(monster_decoy);
 	setorigin(decoy, orig);
 	decoy.target = targ;
+	decoy.realowner = player;
 	monster_start(decoy, true, MON_DECOY);
 }
 
@@ -100,12 +101,16 @@ METHOD(Decoy, mr_setup, bool(Decoy this, entity actor))
 	actor.th_pain = decoy_pain;
 	actor.th_die = decoy_die;
 
-	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it),
+	entity pl = actor.realowner;
+	if(!pl)
 	{
-		RandomSelection_AddEnt(it, 1, 1);
-	});
-	entity pl = RandomSelection_chosen_ent;
+		RandomSelection_Init();
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		pl = RandomSelection_chosen_ent;
+	}
 	if(pl)
 	{
 		_setmodel(actor, get_playermodel(pl));

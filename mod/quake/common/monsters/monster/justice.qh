@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_JUSTICE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was cut down by The Sword of Justice"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_JUSTICE,               1,  NULL,           INFO_DEATH_SELF_MON_JUSTICE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_JUSTICE,           DEATH_SELF_MON_JUSTICE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_JUSTICE, "progs/mon_justice.mdl");
+MODEL(MON_JUSTICE_HEAD, "progs/h_justice.mdl");
+
+SOUND(MON_JUSTICE_SIGHT, "justice/sight1");
+#endif
+
+CLASS(Justice, Monster)
+    ATTRIB(Justice, spawnflags, int, 0);
+    ATTRIB(Justice, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Justice, m_maxs, vector, '16 16 56');
+#ifdef GAMEQC
+    ATTRIB(Justice, m_model, Model, MDL_MON_JUSTICE);
+    ATTRIB(Justice, m_model_head, Model, MDL_MON_JUSTICE_HEAD);
+    ATTRIB(Justice, m_sound, Sound, SND_MON_JUSTICE_SIGHT);
+#endif
+    ATTRIB(Justice, netname, string, "justice");
+    ATTRIB(Justice, monster_name, string, _("Sword of Justice"));
+ENDCLASS(Justice)
+
+REGISTER_MONSTER(JUSTICE, NEW(Justice));

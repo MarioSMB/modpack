@@ -52,4 +52,6 @@ float SUB_RightShift(float num, float bits);
 
 #ifdef SVQC
 vector attack_vector(vector attack_dir);
+
+float SUB_Elevation(entity this, float theta, vector sorg, vector mdest, float zspeed);
 #endif

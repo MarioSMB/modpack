@@ -156,7 +156,7 @@ void Draw_ShowNames(entity this)
 
 void Draw_ShowNames_All()
 {
-	if (!autocvar_hud_shownames) return;
+	if (!autocvar_hud_shownames || intermission) return;
 	LL_EACH(shownames_ent, true, {
 		entity view = CSQCModel_server2csqc(i);
 		if (!view)

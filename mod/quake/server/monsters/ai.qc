@@ -777,6 +777,75 @@ bool infront(entity this, entity targ)
 	return (dot > dottarget);
 }
 
+/*======================================================================
+ viswide (target entity)
+  check to see if sightline is blocked by other monsters
+  extra wide check using 3 traces, +/- 16 left/right and origin
+  All three traces have to complete for a positive result
+======================================================================*/
+bool visblocked_wide(entity this, entity targ, vector s_ofset, vector t_ofset)
+{
+	vector spot3;
+	vector tr_line = '0 0 0';
+	bool tr_leftmon = false, tr_rightmon = false;
+	fixedmakevectors(this.angles);
+
+	// Traceline 1 - MIDDLE
+	vector spot1 = this.origin + s_ofset_x * v_forward + s_ofset_y * v_right + s_ofset_z * v_up;
+	vector spot2 = targ.origin + t_ofset;
+	traceline (spot1, spot2, false, this);
+	
+	// Is trace entity the same as the target entity?
+	if(trace_ent == targ)
+		tr_line.x = 1;
+	// Check for liquid surface block condition
+	// Only need to do this once for the central traceline
+	// If this fails then the left/right should as well
+	if(trace_inopen && trace_inwater)
+		tr_line.x = 0;
+
+	// Traceline 2 - 32 units LEFT
+	spot3 = spot1 - (v_right * 16);
+	traceline(spot3, spot2, false, this);
+	// Work out if clear shot, hit world or another entity
+	if(trace_ent == targ)
+		tr_line.y = 1;
+	else if(trace_ent)
+		tr_leftmon = true;
+
+	// Traceline 3 - 32 units RIGHT
+	spot3 = spot1 + (v_right * 16);
+	traceline(spot3, spot2, false, this);
+	// Work out if clear shot, hit world or another entity
+	if(trace_ent == targ)
+		tr_line.z = 1;
+	else if(trace_ent)
+		tr_rightmon = true;
+
+	// Default = no clear shot (keep aim/moving)
+	bool tr_result = true;
+	// SIMPLE 3 complete traces = nothing blocking visibility
+	if(tr_line.x + tr_line.y + tr_line.z == 3)
+		tr_result = false;
+	// Central trace is good but either side has hit something?
+	else if(tr_line.x)
+	{
+		// Hit a monster on either side = always fail!
+		if(tr_leftmon || tr_rightmon)
+			tr_result = true;
+		// The crssbow bolt is fired from the LEFT side, only right can be clear
+		//else if(this.monsterdef == MON_DCROSSBOW)
+		//{
+		//	if(tr_line.y == 0 && tr_line.z == 1) tr_result = false;
+		//}
+		// Default - space available on either side
+		else if(tr_line.y + tr_line.z == 1)
+			tr_result = false;
+	}
+
+	return tr_result;
+}
+
 /*
 =============
 z_overlaps

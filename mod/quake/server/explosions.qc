@@ -33,9 +33,9 @@ void SpawnExplosion(int sprite_type, vector org, string expl_sound)
 	else if(sprite_type == EXPLODE_PLASMA_MED || sprite_type == EXPLODE_PLASMA_BIG)
 		__pointparticles(_particleeffectnum("electro_combo"), org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_POISON_SMALL)
-		__pointparticles(_particleeffectnum("arc_bolt_explode"), org, '0 0 0', 1);
+		te_explosion2(org, 175, 15);
 	else if(sprite_type == EXPLODE_POISON_MED || sprite_type == EXPLODE_POISON_BIG)
-		__pointparticles(_particleeffectnum("explosion_medium"), org, '0 0 0', 1);
+		te_explosion2(org, 170, 20);
 	else if(sprite_type == EXPLODE_ELECT_SMALL || sprite_type == EXPLODE_ELECT_MED || sprite_type == EXPLODE_ELECT_BIG)
 		__pointparticles(_particleeffectnum("electro_ballexplode"), org, '0 0 0', 1);
 	// This must be pre-cached by entity using it!

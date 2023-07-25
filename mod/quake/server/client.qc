@@ -2965,6 +2965,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	}
 }
 
+void exploder_think(entity this)
+{
+	te_explosion2(this.origin, this.count, this.cnt);
+	delete(this);
+}
+
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void NoclipCheat(entity this);
 void SV_ParseClientCommand(entity this, string command)
@@ -3040,6 +3046,19 @@ void SV_ParseClientCommand(entity this, string command)
 		sprint(this, strcat("Texture: ", trace_dphittexturename, "\n"));
 		sprint(this, strcat("Texture flag: ", ftos(trace_dphitq3surfaceflags), "\n"));
 		sprint(this, sprintf("Entity: %s (%d)\n", trace_ent.classname, etof(trace_ent)));
+		return;
+	}
+
+	if(cmd_name == "explosion2")
+	{
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 100, MOVE_NORMAL, this);
+		entity exploder = new(exploder);
+		setthink(exploder, exploder_think);
+		exploder.count = stof(argv(1));
+		exploder.cnt = stof(argv(2));
+		exploder.nextthink = time + 0.5; // give them enough time to close the console!
+		setorigin(exploder, trace_endpos);
 		return;
 	}
 

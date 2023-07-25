@@ -45,12 +45,40 @@ bool isSpawnPointEmpty(entity thePoint)
 	return true;
 }
 
-entity overlord_find_dest3()
+entity overlord_find_newdest(entity this)
+{
+	entity point = new(overlord_tempdest);
+	setthink(point, SUB_Remove);
+	point.nextthink = time + 0.1; // we only need it for a single frame!
+	setsize(point, this.mins, this.maxs);
+	vector extrasize = '1 1 1' * 1200;
+
+	if(MoveToRandomLocationWithinBounds(point, this.absmin - extrasize, this.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 10, 64, 256, true))
+	{
+		// no special treatment needed, we're just using it as a position!
+		point.mangle = '0 1 0' * point.angles_y;
+		point.angles = '0 0 0';
+		return point;
+	}
+
+	// we tried
+	delete(point);
+	return NULL;
+}
+
+entity overlord_find_dest3(entity this)
 {
 	entity furthestDest = NULL;
 	entity bestDest = NULL;
 	float theDist = 0;
-	entity thePlayer = find(NULL, classname, "player");
+	entity thePlayer = NULL;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		if(!thePlayer || vlen2(it.origin - this.origin) < vlen2(thePlayer.origin - this.origin))
+			thePlayer = it;
+	});
 	entity curDest = NULL;
 
 	makevectors(thePlayer.angles);
@@ -58,12 +86,13 @@ entity overlord_find_dest3()
 	while(1)
 	{
 		curDest = find(curDest, classname, "info_overlord_destination");
-		if(curDest == NULL)
+		if(!curDest)
 		{
-			if(bestDest != NULL)
+			if(bestDest)
 				return bestDest;
-
-			return furthestDest;
+			if(furthestDest)
+				return furthestDest;
+			return overlord_find_newdest(this);
 		}
 
 		if(isSpawnPointEmpty(curDest))
@@ -136,7 +165,7 @@ void overlord_teleport(entity this)
 		return;
 
 //    theDest = overlord_find_dest();
-	entity theDest = overlord_find_dest3();
+	entity theDest = overlord_find_dest3(this);
 	if(theDest == NULL)
 		return;
 
@@ -461,6 +490,10 @@ METHOD(Overlord, mr_setup, bool(Overlord this, entity actor))
 	
 //    if(actor.spawnflags & 2)
 //       actor.powerups = POWERUP_SHIELD;
+
+	// uncomment for a potentially broken fight
+	//if(autocvar_skill == 3)
+		//actor.spawnflags |= 2;
 	actor.th_stand = overlord_stand1;
 	actor.th_walk = overlord_walk01;
 	actor.th_run = overlord_run01;

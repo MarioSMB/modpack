@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_JUDICATOR,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was judged unworthy by The Judicator"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_JUDICATOR,               1,  NULL,           INFO_DEATH_SELF_MON_JUDICATOR,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_JUDICATOR,           DEATH_SELF_MON_JUDICATOR,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_JUDICATOR, "progs/mon_judge.mdl");
+MODEL(MON_JUDICATOR_HEAD, "progs/h_judge.mdl");
+
+SOUND(MON_JUDICATOR_SIGHT, "judge/sight1");
+#endif
+
+CLASS(Judicator, Monster)
+    ATTRIB(Judicator, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_APPEAR);
+    ATTRIB(Judicator, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Judicator, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Judicator, m_model, Model, MDL_MON_JUDICATOR);
+    ATTRIB(Judicator, m_model_head, Model, MDL_MON_JUDICATOR_HEAD);
+    ATTRIB(Judicator, m_sound, Sound, SND_MON_JUDICATOR_SIGHT);
+#endif
+    ATTRIB(Judicator, netname, string, "judicator");
+    ATTRIB(Judicator, monster_name, string, _("Judicator"));
+ENDCLASS(Judicator)
+
+REGISTER_MONSTER(JUDICATOR, NEW(Judicator));

@@ -120,6 +120,14 @@ void ai_charge(entity this, float d)
 	t_movetogoal(this, d);		// done in C code...
 }
 
+//----------------------------------------------------------------------
+// ai_chargenoturn (generic)
+//----------------------------------------------------------------------
+void ai_chargenoturn(entity this, float dist)
+{
+	t_movetogoal(this, dist);
+}
+
 void ai_charge_side(entity this)
 {
 // aim to the left of the enemy for a flyby

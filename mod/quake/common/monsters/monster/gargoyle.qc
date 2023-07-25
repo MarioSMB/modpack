@@ -378,6 +378,9 @@ void garg_death1(entity this) { set_animofs(this, anim_gargoyle_death, 1, garg_d
 //----------------------------------------------------------------------
 void garg_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	// Make sure any wings sound is silenced
+	_sound(this, CHAN_ITEM, "", 1, ATTN_NORM);
+
 	// Statues don't die!
 	if(this.spawnflags & MON_GARGOYLE_STATUE)
 		return;
@@ -395,9 +398,9 @@ void garg_die(entity this, entity inflictor, entity attacker, int deathtype)
 			//particle_explode(this.origin-'0 0 16', 50+random()*50, 2, this.lip, PARTICLE_BURST_UPWARD);
 			vector partpos = this.origin + '0 0 16';
 			if(this.poisonous)
-				__pointparticles(_particleeffectnum("nade_green_explode"), partpos, '0 0 0', 1);
+				te_explosion2(partpos, 50, 20);
 			else
-				__pointparticles(_particleeffectnum("nade_red_explode"), partpos, '0 0 0', 1);
+				te_explosion2(partpos, 225, 10);
 			makevectors(this.angles);
 			float explef = EXPLODE_BIG;
 			if(this.poisonous)
@@ -421,9 +424,6 @@ void garg_die(entity this, entity inflictor, entity attacker, int deathtype)
 			ThrowGib(this, "progs/gib_gargwing2.mdl", this.health);
 		return;
 	}
-	
-	// Make sure any wings sound is silenced
-	_sound(this, CHAN_ITEM, "", 1, ATTN_NORM);
 	
 	// If not gibbed, then drop to ground
 	_sound(this, CH_VOICE, "gargoyle/death1.wav", 1, ATTN_NORM);

@@ -565,11 +565,11 @@ void mino_sumball(entity this, float dbframe)
 	this.attachment.alpha = this.attachment.lip;
 	//particle_explode(this.pos2, 5+random()*10, 3, this.part_style, PARTICLE_BURST_MINOTAUR);
 	if(this.poisonous)
-		__pointparticles(_particleeffectnum("nade_green_explode"), this.pos2, '0 0 0', 1);
+		te_explosion2(this.pos2, 50, 20);
 	else if(this.spawnflags & MON_MINOTAUR_MINIONS)
-		__pointparticles(_particleeffectnum("nade_red_explode"), this.pos2, '0 0 0', 1);
+		te_explosion2(this.pos2, 225, 10);
 	else
-		__pointparticles(_particleeffectnum("nade_blue_explode"), this.pos2, '0 0 0', 1);
+		te_explosion2(this.pos2, 200, 25);
 }
 
 //----------------------------------------------------------------------
@@ -587,11 +587,11 @@ void mino_summon15(entity this)
 	if(this.minotaur_summonflag)
 	{
 		if(this.poisonous)
-			__pointparticles(_particleeffectnum("nade_green_explode"), this.pos2, '0 0 0', 1);
+			te_explosion2(this.pos2, 50, 20);
 		else if(this.spawnflags & MON_MINOTAUR_MINIONS)
-			__pointparticles(_particleeffectnum("nade_red_explode"), this.pos2, '0 0 0', 1);
+			te_explosion2(this.pos2, 225, 10);
 		else
-			__pointparticles(_particleeffectnum("nade_blue_explode"), this.pos2, '0 0 0', 1);
+			te_explosion2(this.pos2, 200, 25);
 	}
 }
 void mino_summon14(entity this) { set_animofs(this, anim_minotaur_howl, 27, mino_summon15); mino_sumeffect(this); mino_sumball(this, 7); }

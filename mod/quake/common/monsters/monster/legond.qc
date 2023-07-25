@@ -122,7 +122,7 @@ void Legond_MissileTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	float damg = (80 + (random() * 20));
+	float damg = (70 + (random() * 20));
 	if(toucher.health)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
@@ -130,14 +130,7 @@ void Legond_MissileTouch(entity this, entity toucher)
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 		this.health = this.health + damg;
 	}
-	if(autocvar_skill == 3)
-		T_RadiusDamage(this, this.owner, 100, this.projectiledeathtype, toucher);
-	if(autocvar_skill == 2)
-		T_RadiusDamage(this, this.owner, 90, this.projectiledeathtype, toucher);
-	if(autocvar_skill == 1)
-		T_RadiusDamage(this, this.owner, 80, this.projectiledeathtype, toucher);
-	else
-		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, toucher);
+	T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, toucher);
 	this.origin = this.origin - (8 * normalize(this.velocity));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
@@ -155,7 +148,7 @@ void LaunchRocket(entity this, vector org, vector vec)
 	_setmodel(newmis, "progs/missile2.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');
 	setorigin(newmis, org);
-	newmis.velocity = normalize(vec) * 700;
+	newmis.velocity = normalize(vec) * 500;
 	newmis.angles = vectoangles(newmis.velocity);
 	newmis.nextthink = (time + 5);
 	setthink(newmis, SUB_Remove);
@@ -216,14 +209,16 @@ void Legond_FireLightning(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
 	ai_face(this);
+	fixedmakevectors(this.angles);
 	_sound(this, CHAN_ITEM, "monsters/legond/lpull.wav", 1, ATTN_NORM);
-	vector org = ((this.origin + '0 0 12') - (v_right * 8));
+	vector org = this.origin + '0 0 12';
+	org += v_right * 8;
 	vector dir = normalize((this.enemy.origin + '0 0 16') - org);
 	traceline(org, (this.origin + (dir * 600)), true, this);
-	SendCSQCLightningBeam(org, trace_endpos);
+	SendCSQCLightningBeam(org + '0 0 16', trace_endpos);
 	LightningDamage(org, (trace_endpos + (v_forward * 4)), this, 4, DEATH_MONSTER_LEGOND.m_id);
-	this.health = this.health + 3;
-	this.enemy.velocity = '0 0 150' + (v_forward * 400);
+	//this.health += 3;
+	//this.velocity = '0 0 150' + (v_forward * 400);
 	UNSET_ONGROUND(this);
 }
 void legond_light13(entity this) { set_anim(this, 39, legond_run1); ai_face(this); }
@@ -249,13 +244,14 @@ void Legond_Punch(entity this)
 		return;
 	if(!CanDamage(this.enemy, this))
 		return;
+	fixedmakevectors(this.angles);
 	float ldmg = random() + random() + random() * 9;
 	_sound(this, CHAN_WEAPON, "monsters/legond/legsmak.wav", 1, ATTN_NORM);
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_LEGOND.m_id);
-	this.health = this.health + ldmg;
+	//this.health = this.health + ldmg;
 	SpawnMeatSpray(this, this.origin + (v_forward * 16), (crandom() * 100) * v_right);
 	SpawnMeatSpray(this, this.origin + (v_forward * 16), (crandom() * 100) * v_right);
-	this.enemy.velocity = '0 0 150' + (v_forward * 350);
+	//this.velocity = '0 0 150' + (v_forward * 350);
 	UNSET_ONGROUND(this);
 }
 

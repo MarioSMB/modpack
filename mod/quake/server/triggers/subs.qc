@@ -473,7 +473,7 @@ float SUB_RightShift(float num, float bits)
 // Most of the monsters have an attack_offset setup to spawn their
 // proejctiles in the right location relative to their gun model
 // This function expects the makevectors has been done already
-// makevectors (self.angles); <--- if missing, vector will be rubbish!
+// makevectors (this.angles); <--- if missing, vector will be rubbish!
 //----------------------------------------------------------------------
 vector attack_vector(vector attack_dir)
 {
@@ -482,5 +482,69 @@ vector attack_vector(vector attack_dir)
 	retvec = retvec + (v_right * attack_dir.y);
 	retvec = retvec + (v_up * attack_dir.z);
 	return retvec;
+}
+
+/*======================================================================
+ SUB_Elevation
+  Calculates the Elevation for Z Aware monsters
+  * Original code by Preach (https://tomeofpreach.wordpress.com/)
+  * Added support for variable origin locations and proj speeds
+  * Added support for distance scaling linked to skill levels
+======================================================================*/
+float SUB_Elevation(entity this, float theta, vector sorg, vector mdest, float zspeed)
+{
+	Monster mon = this.monsterdef;
+	vector ofs;
+
+	// Place projectile destination at player head level
+	//if(this.monsterdef == MON_SPIDER)
+		//mdest += '0 0 -16';
+	//else
+		mdest += '0 0 12';
+
+	// Work out vector distance between source and destination
+	// Normalize the distance and create a percentage of that
+	// This is a skill based calculation so the aiming gets better
+	// The grenade is aimed infront of target so that it bounces
+	// No check for vertical difference so it bad going up height!
+	// Zombie, poison spiders zaware calculation is fine, exception!
+	if(!(mon.spawnflags & MONSTER_TYPE_UNDEAD)) //&& mon != MON_SPIDER && mon != MON_BOGLORD)
+	{
+		vector vec = mdest - sorg;
+		float dist = vlen(vec);
+		vec = normalize(vec);
+		float sperc = 0.45 + autocvar_skill * 0.15;
+		vector eorg = sorg + (vec * (dist * sperc));
+		ofs = eorg - sorg;
+	}
+	else
+		ofs = mdest - sorg;
+		
+	//calculate how far we are firing
+	//	ofs = mdest - sorg;
+	float az = ofs.z;
+	ofs.z = 0;
+	float ay = vlen(ofs);
+ 
+	// Map gravity is a global variable defined in world.qc
+	//find the coefficients of the quadratic in tan(theta)
+	float a = 0.5 * autocvar_sv_gravity * ay * ay / (zspeed * zspeed);
+	float b = -ay;
+	float c = a + az;
+ 
+	//check if the destination is too far to reach
+	if((b * b) < (4 * a * c))
+		return 30;
+
+	//calculate the tan value of the given theta
+	float tan_theta = tan(theta);
+
+	//reuse ang to create the improved firing direction
+	theta = atan2(a * tan_theta * tan_theta - c, 2 * a * tan_theta + b);
+
+	//constrain the values to stop anything too mad happening
+	while(theta > 90)
+		theta -= 180;
+	return theta;
 }
 #endif

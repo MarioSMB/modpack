@@ -938,7 +938,7 @@ void seek_and_fire2(entity this)
 	setorigin(bone_miss, this.origin + '0 0 48');
 	
 	setthink(this, seek_and_fire2);
-	this.nextthink = time + 1;
+	this.nextthink = time + 2;
 }
 
 void SkullMissHome(entity this)

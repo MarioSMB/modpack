@@ -61,6 +61,8 @@ void ChooseTurn(entity this, vector dest);
 
 void changeyaw(entity this);
 
+bool visblocked_wide(entity this, entity targ, vector s_ofset, vector t_ofset);
+
 bool infront(entity this, entity targ);
 
 int range(entity this, entity targ);

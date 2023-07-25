@@ -252,12 +252,29 @@ void spellbook_frame(entity this)
 	//}
 }
 
+.bool reversed;
+void portalgun_frame(entity this)
+{
+	if(this.weaponentity.reversed)
+	{
+		this.weaponentity.m_frame -= 1;
+		if(this.weaponentity.m_frame <= 0)
+			this.weaponentity.reversed = false;
+	}
+	else
+	{
+		this.weaponentity.m_frame += 1;
+		if(this.weaponentity.m_frame >= 8)
+			this.weaponentity.reversed = true;
+	}
+}
+
 void player_stand1(entity this)
 {
 	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_axstnd1, player_stand1);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK)
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK && wep != WEP_PORTAL_GUN)
 		this.weaponentity.m_frame = 0;
 	if(this.velocity_x || this.velocity_y)
 	{
@@ -293,6 +310,8 @@ void player_stand1(entity this)
 	}
 	if(wep == WEP_SPELLBOOK)
 		spellbook_frame(this);
+	if(wep == WEP_PORTAL_GUN)
+		portalgun_frame(this);
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
@@ -315,7 +334,7 @@ void player_run(entity this)
 	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_rockrun1, player_run);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK)
+	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK && wep != WEP_PORTAL_GUN)
 		this.weaponentity.m_frame = 0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
@@ -351,6 +370,8 @@ void player_run(entity this)
 	}
 	if(wep == WEP_SPELLBOOK)
 		spellbook_frame(this);
+	if(wep == WEP_PORTAL_GUN)
+		portalgun_frame(this);
 
 	if(wep.spawnflags & WEP_FLAG_MELEE)
 	{
@@ -862,7 +883,7 @@ void CorpseThink(entity this)
 		setthink(this, MonsterFade);
 		this.nextthink = time + FADETIME;
 	}
-	else if(corpse_removal)
+	else if(corpse_removal || (this.flags & FL_CLONE)) // always get rid of minions (TODO minion flag)
 	{
 		setthink(this, SUB_Remove);
 		this.nextthink = time + 30 + (random () * 30);

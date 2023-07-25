@@ -4,14 +4,14 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler lightning plasma shock lightme laser_gun grenadelauncher multigrenade fish proximitygun tuba napalm spellbook supernailgun biogun lavasupernailgun piano ripper sshotgun nailgun lavanailgun shotgun hammer chainsaw axe";
+noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler lightning plasma shock lightme laser_gun grenadelauncher multigrenade fish proximitygun tuba napalm portalgun spellbook supernailgun biogun lavasupernailgun piano ripper sshotgun nailgun lavanailgun shotgun hammer chainsaw axe";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher multirocketlauncher impaler grenadelauncher multigrenade fish biogun proximitygun tuba napalm"; // explosives
 noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme"; // energy
-noref string autocvar_cl_quake_weaponpriority2 = "lightning"; // hitscan exact
+noref string autocvar_cl_quake_weaponpriority2 = "lightning portalgun"; // hitscan exact
 noref string autocvar_cl_quake_weaponpriority3 = "lightning sshotgun shotgun"; // hitscan all
 noref string autocvar_cl_quake_weaponpriority4 = "laser_gun shock grenadelauncher multigrenade fish napalm supernailgun biogun tuba lavasupernailgun piano nailgun lavanailgun chainsaw"; // spam weapons
-noref string autocvar_cl_quake_weaponpriority5 = "impaler"; // movement weapons
+noref string autocvar_cl_quake_weaponpriority5 = "impaler portalgun"; // movement weapons
 noref string autocvar_cl_quake_weaponpriority6 = "";
 noref string autocvar_cl_quake_weaponpriority7 = "";
 noref string autocvar_cl_quake_weaponpriority8 = "";

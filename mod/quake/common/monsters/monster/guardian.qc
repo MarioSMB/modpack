@@ -471,7 +471,7 @@ void morph_setup(entity this)
 
 	if(this.guardian_owner)
 	{
-		this.effects = 0;
+		this.effects = EF_STARDUST;
 		this.health = 200;
 		this.spawnflags = this.guardian_owner.spawnflags;
 	}
@@ -493,20 +493,22 @@ void morph_wake(entity this)
 	this.nextthink = time + 0.1;
 }
 
-entity overlord_find_dest3();
+entity overlord_find_dest3(entity this);
 void morph_teleport(entity this)
 {
-	if(this.guardian_owner)
+	if(this.guardian_owner || (this.flags & FL_CLONE))
 		return;
 
 	if(this.childrenSpawned > (1 + autocvar_skill))
 		return;
 		
-	entity theDest = overlord_find_dest3();
+	entity theDest = overlord_find_dest3(this);
 	if(!theDest)
 		return;
 
 	entity theChild = new(monster_morph);
+	theChild.monsterdef = this.monsterdef;
+	//theChild.effects = EF_STARDUST;
 	theChild.flags = FL_CLONE; // don't count it in anything
 	theChild.mdl = this.mdl;
 	theChild.angles = theDest.mangle;
