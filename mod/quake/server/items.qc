@@ -1457,11 +1457,11 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 		monster.damagedbycontents	= true;
 	}
 
+	monster.charmed = true;
+	monster.charmer = actor;
 	mon.mr_setup(mon, monster);
 	monster.health = max(monster.health, 1000);
 	monster.max_health = monster.health;
-	monster.charmer = actor;
-	monster.charmed = true;
 	monster.angles = '0 0 0';
 	monster.angles_y = actor.angles_y;
 	vector org = spawnpos;
