@@ -3062,7 +3062,7 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
-	if(cmd_name == "spawnmonster")
+	if(cmd_name == "addmob")
 	{
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
