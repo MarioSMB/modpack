@@ -482,6 +482,7 @@ void SpawnDischarge(entity this, float dm)
 }
 
 .float modelindex_elec;
+.entity attachment;
 void gibhim(entity this)
 {
 	float r;
