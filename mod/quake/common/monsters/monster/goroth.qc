@@ -531,7 +531,7 @@ METHOD(Goroth, mr_setup, bool(Goroth this, entity actor))
 	precache_sound("goroth/gorrock.wav");
 
     actor.health = 2000;
-    if(horde_ent)
+    if(horde_ent || actor.charmed)
     	actor.scale = 0.18;
     else if(!actor.scale)
     	actor.scale = 0.75;

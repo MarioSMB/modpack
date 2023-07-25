@@ -497,7 +497,14 @@ void gibhim(entity this)
 		else
 			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
 		if(!IS_PLAYER(this))
+		{
 			this.modelindex_elec = this.modelindex;
+			if(this.attachment)
+			{
+				this.attachment.modelindex_elec = this.attachment.modelindex;
+				this.attachment.modelindex = modelindex_bolt;
+			}
+		}
 		this.modelindex = modelindex_bolt;
 		this.frame = 0;
 		this.elec = true;
@@ -531,6 +538,11 @@ void gibhim(entity this)
 		{
 			this.modelindex = this.modelindex_elec;
 			this.modelindex_elec = 0;
+		}
+		if(!IS_PLAYER(this) && this.attachment && this.attachment.modelindex_elec)
+		{
+			this.attachment.modelindex = this.attachment.modelindex_elec;
+			this.attachment.modelindex_elec = 0;
 		}
 		this.effects = EF_DIMLIGHT;
 		this.elec = false;
