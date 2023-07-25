@@ -360,8 +360,8 @@ void W_Spell_Sword(entity this)
 	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
 	this.attack_finished = time + 0.66;
 	summon_sword(this, targ);
-	if(this.spell_shield)
-		this.spell_shield.nextthink = time + 20; // refresh shield every sword attack!
+	//if(this.spell_shield)
+		//this.spell_shield.nextthink = time + 20; // refresh shield every sword attack!
 
 	if(this.spell_shield || STAT(MANA, this) < SPELL_COST_SHIELD)
 		return;
@@ -1376,6 +1376,10 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 {
 	if(!(fire & 1))
 		actor.attack_held = false;
+
+	// refresh shield while we have spellbook out!
+	if(actor.spell_shield)
+		actor.spell_shield.nextthink = time + 20;
 
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
