@@ -811,6 +811,7 @@ void W_Spell_BoneShard(entity this)
 		entity rune = this.arms_spawned;
 		if(vdist(rune.origin - this.origin, >, 1000))
 			return; // need to be close to cast it!
+		rune.cnt = time + 20; // reset timer on it with each attack!
 		this.attack_finished = time + 0.05;
 		this.attack_held = true;
 		fire_bone_shard(this);
@@ -853,7 +854,7 @@ void seek_and_fire1(entity this)
 	this.enemy = targ;
 
 	setthink(this, seek_and_fire1);
-	this.nextthink = time + 1;
+	this.nextthink = time + 2;
 	if(!this.enemy)
 		return;
 
@@ -903,12 +904,11 @@ void seek_and_fire2(entity this)
 		head = head.chain;
 	}
 
+	setthink(this, seek_and_fire2);
+	this.nextthink = time + 2;
+
 	if(!this.enemy)
-	{
-		setthink(this, seek_and_fire2);
-		this.nextthink = time + 1;
 		return;
-	}
 
 	this.angles_y = vectoyaw(this.enemy.origin - this.origin);
 	
@@ -936,9 +936,6 @@ void seek_and_fire2(entity this)
 	_setmodel(bone_miss, "progs/bone_shard.mdl");
 	setsize(bone_miss, '0 0 0', '0 0 0');	
 	setorigin(bone_miss, this.origin + '0 0 48');
-	
-	setthink(this, seek_and_fire2);
-	this.nextthink = time + 2;
 }
 
 void SkullMissHome(entity this)

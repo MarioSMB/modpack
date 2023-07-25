@@ -3062,6 +3062,24 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "spawnmonster")
+	{
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
+		string arg = argv(1);
+		Monster mon = MON_Null;
+		if(arg != "")
+		{
+			FOREACH(Monsters, it.netname == arg,
+			{
+				mon = it;
+				break;
+			});
+		}
+		horn_spawnmonster(trace_endpos, this, mon);
+		return;
+	}
+
 	if(cmd_name == "say" || cmd_name == "say_team")
 	{
 		if(argc >= 2) Say(this, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
