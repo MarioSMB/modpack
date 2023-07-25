@@ -25,6 +25,8 @@ const int anim_gremlin_grun = 164; //'164 178 0';
 int NumGremlins;
 int NumSpawnGremlins;
 
+.entity attachment;
+
 /*
 ===========
 GremlinAttemptWeaponSteal
@@ -355,7 +357,9 @@ void gremlin_run(entity this, float dist)
 			{
 				if(this.t_length == 1)
 				{
-					delete(this.trigger_field);
+					if(this.attachment)
+						delete(this.attachment);
+					this.attachment = NULL;
 					this.goalentity = this.enemy;
 					this.t_length = 0;
 				}
@@ -366,8 +370,8 @@ void gremlin_run(entity this, float dist)
 			{
 				if(vdist(this.enemy.origin - this.origin, <, 150))
 				{
-					this.trigger_field = spawn();
-					setsize(this.trigger_field,'-1 -1 -1','1 1 1');
+					this.attachment = spawn();
+					setsize(this.attachment,'-1 -1 -1','1 1 1');
 					this.t_length = 1;
 				}
 			}
@@ -375,7 +379,8 @@ void gremlin_run(entity this, float dist)
 			{
 				if(vdist(this.enemy.origin - this.origin, >, 250))
 				{
-					delete(this.trigger_field);
+					if(this.attachment)
+						delete(this.attachment);
 					this.goalentity = this.enemy;
 					this.t_length = 0;
 //               this.attack_state = AS_SLIDING;
@@ -404,9 +409,9 @@ void gremlin_run(entity this, float dist)
 							if(c == 10)
 								done = true;
 						}
-						setorigin(this.trigger_field, end);
+						setorigin(this.attachment, end);
 					}
-					this.goalentity = this.trigger_field;
+					this.goalentity = this.attachment;
 					this.ideal_yaw = vectoyaw(normalize(this.goalentity.origin-this.origin));
 					changeyaw(this);
 					t_movetogoal(this, dist);      // done in C code...

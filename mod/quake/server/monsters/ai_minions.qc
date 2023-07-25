@@ -196,6 +196,9 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	monster.enemy = targ;
 	monster.minion_active = true;
 	monster.solid = SOLID_SLIDEBOX;
+	monster.charmed = own.charmed;
+	monster.charmer = own.charmer;
+	monster.colormod = own.colormod;
 	monster.flags = FL_MONSTER | FL_CLONE | FL_MINION; // TODO: clone is temporary to prevent monster counts being affected!
 
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
@@ -223,6 +226,9 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	setorigin(monster, org);
 
 	setcefc(monster, monster_customize);
+
+	if(monster.charmed)
+		monster.health = max(monster.health, 1000);
 
 	//if(!(mon.spawnflags & MONSTER_TYPE_FLY))
 		//droptofloor(monster);

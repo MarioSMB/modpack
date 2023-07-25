@@ -810,7 +810,7 @@ METHOD(Volkerh, mr_setup, bool(Volkerh this, entity actor))
 	precache_sound("volkerh/voldie.wav");
 
     actor.health = 3000;
-    if(horde_ent)
+    if(horde_ent || actor.charmed)
     	actor.scale = 0.2;
     else
     	actor.scale = 0.75;

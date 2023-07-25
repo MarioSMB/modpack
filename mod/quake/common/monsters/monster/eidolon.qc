@@ -1084,7 +1084,7 @@ void eidolon_start(entity this)
 	// Setup boss waves and overall health
 	this.bosswave = 1;
 	this.bosswavetotal = 5;
-	this.bosswaveqty = ((horde_ent) ? 250 : 500);
+	this.bosswaveqty = ((horde_ent || this.charmed) ? 250 : 500);
 	this.max_health = this.bosswavetotal * this.bosswaveqty;
 	// Setup boss wave HP + trigger event
 	eidolon_WaveSetupHP(this);

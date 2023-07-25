@@ -18,6 +18,8 @@ const int anim_armagon_ldie = 86; //'86 97 0';
 const float ATTN_ARMAGON = 0.5;
 const float SERVO_VOLUME = 0.5;
 
+.entity attachment;
+
 void armagon_launch_missile(entity this, float ofs, float turn)
 {
 	float dist;
@@ -111,10 +113,11 @@ void armagon_overright1(entity this);
 
 void armagon_think(entity this)
 {
-	setorigin(this.trigger_field, this.origin);
-	this.trigger_field.angles = this.angles;
-	this.trigger_field.frame = this.frame;
-	this.trigger_field.angles_y = this.trigger_field.angles_y + this.fixangle;
+	setorigin(this.attachment, this.origin);
+	this.attachment.colormod = this.colormod;
+	this.attachment.angles = this.angles;
+	this.attachment.frame = this.frame;
+	this.attachment.angles_y = this.attachment.angles_y + this.fixangle;
 	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
 	this.ideal_yaw = this.enemy_yaw;
 	float delta = this.ideal_yaw - this.angles_y;
@@ -151,10 +154,11 @@ void armagon_think(entity this)
 
 void armagon_walkthink(entity this)
 {
-	setorigin(this.trigger_field, this.origin);
-	this.trigger_field.angles = this.angles;
-	this.trigger_field.frame = this.frame;
-	this.trigger_field.angles_y = this.trigger_field.angles_y + this.fixangle;
+	setorigin(this.attachment, this.origin);
+	this.attachment.angles = this.angles;
+	this.attachment.colormod = this.colormod;
+	this.attachment.frame = this.frame;
+	this.attachment.angles_y = this.attachment.angles_y + this.fixangle;
 	changeyaw(this);
 	float delta = 0;
 	this.cnt = 0;
@@ -202,10 +206,11 @@ void armagon_overleft_think(entity this)
 
 	changeyaw(this);
 	t_walkmove(this, this.angles_y, 14);
-	setorigin(this.trigger_field, this.origin);
-	this.trigger_field.angles = this.angles;
-	this.trigger_field.frame = this.frame;
-	this.trigger_field.angles_y = this.trigger_field.angles_y + this.fixangle;
+	setorigin(this.attachment, this.origin);
+	this.attachment.colormod = this.colormod;
+	this.attachment.angles = this.angles;
+	this.attachment.frame = this.frame;
+	this.attachment.angles_y = this.attachment.angles_y + this.fixangle;
 	if(this.count == 0)
 	{
 		this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
@@ -235,10 +240,11 @@ void armagon_overright_think(entity this)
 
 	changeyaw(this);
 	t_walkmove(this, this.angles_y, 14);
-	setorigin(this.trigger_field, this.origin);
-	this.trigger_field.angles = this.angles;
-	this.trigger_field.frame = this.frame;
-	this.trigger_field.angles_y = this.trigger_field.angles_y + this.fixangle;
+	setorigin(this.attachment, this.origin);
+	this.attachment.colormod = this.colormod;
+	this.attachment.angles = this.angles;
+	this.attachment.frame = this.frame;
+	this.attachment.angles_y = this.attachment.angles_y + this.fixangle;
 	if(this.count == 0)
 	{
 		this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
@@ -461,7 +467,7 @@ void armagon_die14(entity this)
 	this.wait = time + 5;
 
 	//body
-	entity body = this.trigger_field;
+	entity body = this.attachment;
 	body.nextthink = -1;
 	set_movetype(this, MOVETYPE_NONE);
 	body.takedamage = DAMAGE_NO;
@@ -724,9 +730,10 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 	setorigin(body, actor.origin - '0 0 64');
 
 	body.solid = SOLID_NOT;
+	body.colormod = actor.colormod;
 	set_movetype(body, MOVETYPE_STEP);
-	actor.trigger_field = body;
-	body.trigger_field = actor;
+	actor.attachment = body;
+	body.attachment = actor;
 	_setmodel(body, "progs/armabody.mdl");
 
 	actor.fixangle = 0; // TODO: figure out why this is needed and if it should be on all monsters
