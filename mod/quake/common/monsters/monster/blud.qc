@@ -36,7 +36,7 @@ void Blud_JumpTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		float ldmg = ((random() + random()) + random()) * 20;
-		T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_BLUD.m_id);
+		T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_BLUD.m_id);
 		_sound(this, CHAN_BODY, "monsters/blud/blood.wav", 1, ATTN_NORM);
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
 		SpawnMeatSpray(this, (this.origin + (v_forward * 16)), ((crandom() * 100) * v_right));
