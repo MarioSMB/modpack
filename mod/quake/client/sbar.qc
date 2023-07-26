@@ -379,6 +379,39 @@ void Sbar_SoloScoreboard()
 
 	// print the time
 	Sbar_DrawString(vec2(8 + maxlen*8, 12), timestr);
+
+	// port of the intermission display of monster kills
+	if(STAT(HORDE))
+	{
+		vector oldsbar = sbar;
+		sbar.x = (vid_conwidth - 320) >> 1;
+		sbar.y = (vid_conheight - 200) >> 1;
+
+		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter", drawgetimagesize("gfx/quake/inter"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+		Sbar_DrawNum('180 64 0', timestr, strlen(timestr), 0);
+
+	// LA: Display as "a" instead of "a/b" if b is 0
+		if(STAT(SECRETS_TOTAL))
+		{
+			Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+			Sbar_DrawPic('232 104 0', "gfx/quake/num_slash");
+			Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, 0);
+		}
+		else
+			Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+
+		if(totalmonsters)
+		{
+			Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+			Sbar_DrawPic('232 144 0', "gfx/quake/num_slash");
+			Sbar_DrawNum('240 144 0', itos(totalmonsters), 3, 0);
+		}
+		else
+			Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+
+		sbar = oldsbar;
+	}
 }
 
 /*
