@@ -65,11 +65,6 @@ void ui_setitemsolid(entity this, float st)
 		it.solid = st;
 		setorigin(it, it.origin);
 	});
-	FOREACH_ENTITY_CLASS("item", it.enemy == this,
-	{
-		it.solid = st;
-		setorigin(it, it.origin);
-	});
 }
 void prydon_PlayerPreThink(entity this)
 {

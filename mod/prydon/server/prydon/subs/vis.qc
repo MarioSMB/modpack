@@ -1,51 +1,20 @@
 #include "vis.qh"
 
-void hide(entity m)
-{
-	if(m.solid == SOLID_NOT || m.solid == SOLID_BSP)
-		return;
-		
-	if(m.modelindex != 0)
-		m.realmodelindex = m.modelindex;
-	m.modelindex = 0;
-}
-
-void show(entity f)
-{
-	if(f.solid == SOLID_NOT || f.solid == SOLID_BSP)
-		return;
-
-	if(f.realmodelindex)
-	{
-		f.modelindex = f.realmodelindex;
-		if(f.model)
-		{
-			vector mn = f.mins;
-			vector mx = f.maxs;
-			_setmodel(f, f.model);
-			setsize(f, mn, mx);
-		}
-	}
-}
-
-// TODO: some nasty things to this
 void dovis()
 {
-	entity m = nextent(NULL);
-	while(m)
+	IL_EACH(g_moveables, !IS_PLAYER(it) && it.solid != SOLID_NOT && it.solid != SOLID_BSP,
 	{
-		hide(m);
-		m = nextent(m);
-	}
-	entity e = find(NULL, classname, "player");
-	while(e)
+		it.effects |= EF_NODRAW;
+	});
+
+	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		entity f = findradius(e.player.origin, 512);
+		entity f = findradius(it.origin, 512);
 		while(f)
 		{
-			show(f);
+			if(!IS_PLAYER(f) && f.solid != SOLID_NOT && f.solid != SOLID_BSP)
+				f.effects &= ~EF_NODRAW;
 			f = f.chain;
 		}
-		e = find(e, classname, "player");
-	}
+	});
 }
