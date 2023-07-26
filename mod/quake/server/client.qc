@@ -1350,6 +1350,27 @@ void RunPostPutClientInServer(entity this)
 	if(!FogPushSettingsFrom(player, spot, 0))
 		FogPushSettingsFrom(player, NULL, 0);
 
+	if(horde_ent && time > HORDE_START_DELAY && player.just_joined)
+	{
+		player.health = 0;
+		player.takedamage = DAMAGE_NO;
+		player.solid = SOLID_NOT;
+		set_movetype(player, MOVETYPE_NONE);
+		player.deadflag = DEAD_DEAD;
+		setmodel(player, MDL_Null);
+		player.view_ofs = '0 0 -8'; // not 0 because PlayerPreThink would return out
+		player.velocity = '0 0 0';
+
+		spot = FindIntermission(player);
+		player.angles = player.v_angle = spot.mangle;
+		player.angles_z = 0; // never spawn tilted even if the spot says to
+		player.fixangle = true;
+		setorigin(player, spot.origin);
+		bprintf("%s ^1will join when the next wave begins\n", player.netname);
+	}
+
+	player.just_joined = false;
+
 	delete(this);
 }
 
@@ -2654,6 +2675,8 @@ void ClientConnect(entity this)
 	this.netname_previous = strzone(this.netname);
 
 	this.disableclientprediction = -1;
+
+	this.just_joined = true;
 
 	StatusEffectsStorage_attach(this);
 

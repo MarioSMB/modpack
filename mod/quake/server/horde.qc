@@ -13,8 +13,6 @@ void HordeRecord()
 	{
 		top_score = newscore;
 		db_put(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/topscore/", ftos(horde_skill)), ftos(newscore));
-		float thescore = stof(db_get(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/topscore/", ftos(horde_skill))));
-		LOG_INFOF("Score is %d, DB is %d, world is %s, skill is %d", thescore, ServerProgsDB, autocvar_sv_worldbasename, horde_skill);
 	}
 }
 
@@ -1711,7 +1709,6 @@ spawnfunc(horde_manager)
 
 	horde_skill = autocvar_skill;
 	top_score = stof(db_get(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/topscore/", ftos(horde_skill))));
-	LOG_INFOF("Score is %d, DB is %d, world is %s, skill is %d", top_score, ServerProgsDB, autocvar_sv_worldbasename, horde_skill);
 	
 	this.wait = 1; // waiting before next wave?
 	this.delay = 9; // max number of  squads to spawn in a wave

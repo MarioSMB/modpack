@@ -974,7 +974,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 			setorigin(this, spot.origin);
 			set_movetype(this, MOVETYPE_NONE);
 			this.weaponentity.m_weapon = WEP_Null;
-			_setmodel(this, "");
+			setmodel(this, MDL_Null);
 		}
 		return;
 	}

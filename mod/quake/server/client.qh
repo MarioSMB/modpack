@@ -25,6 +25,8 @@ string intermissiontext;
 
 .float suicide_delay;
 
+.bool just_joined;
+
 bool autocvar_registered = true; // to prevent being locked out of gpl levels
 
 const int COOP_ONLY = 32768; // yoder add, Jan 16 2021; Only spawn in coop. Used by items and monsters

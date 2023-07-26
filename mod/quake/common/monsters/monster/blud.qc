@@ -60,7 +60,7 @@ void blud_atkc1(entity this)
 	set_anim(this, 23, blud_atkc2);
 	if(this.health <= 0)
 	{
-		dprint("blud_atkc1: dead\n");
+		LOG_DEBUG("blud_atkc1: dead");
 		settouch(this, func_null);
 		setthink(this, blud_die1);
 		return;

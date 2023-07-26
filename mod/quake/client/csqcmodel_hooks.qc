@@ -172,4 +172,9 @@ void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islo
 	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
 
 	CSQCModel_Effects_PostUpdate(this);
+
+	if(isplayer && !is_playermodel)
+		this.csqcmodel_isdead = true;
+	else
+		this.csqcmodel_isdead = false;
 }
