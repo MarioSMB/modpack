@@ -1350,7 +1350,7 @@ void RunPostPutClientInServer(entity this)
 	if(!FogPushSettingsFrom(player, spot, 0))
 		FogPushSettingsFrom(player, NULL, 0);
 
-	if(horde_ent && time > HORDE_START_DELAY && player.just_joined)
+	if(horde_ent && time > (HORDE_START_DELAY + 15) && player.just_joined)
 	{
 		player.health = 0;
 		player.takedamage = DAMAGE_NO;
