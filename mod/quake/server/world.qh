@@ -3,6 +3,7 @@
 float autocvar_fraglimit;
 int autocvar_skill;
 bool autocvar_sv_curl_serverpackages_auto;
+string autocvar_sessionid;
 
 // protocol bytes
 const int SVC_CUTSCENE = 34;
@@ -35,6 +36,9 @@ bool corpse_removal;
 bool world_already_spawned;
 int world_initialized;
 bool server_is_dedicated;
+
+// database
+float ServerProgsDB;
 
 bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, int attempts, float maxaboveground, float minviewdistance, bool frompos);
 bool MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);

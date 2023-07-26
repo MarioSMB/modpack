@@ -962,9 +962,20 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
 
-	if(this.health < -40 || STAT(SKATING, this))
+	if(this.health < -40 || STAT(SKATING, this) || horde_ent)
 	{
 		GibPlayer(this, attacker);
+		if(horde_ent)
+		{
+			entity spot = FindIntermission(this);
+			this.angles = this.v_angle = spot.mangle;
+			this.angles_z = 0; // never spawn tilted even if the spot says to
+			this.fixangle = true;
+			setorigin(this, spot.origin);
+			set_movetype(this, MOVETYPE_NONE);
+			this.weaponentity.m_weapon = WEP_Null;
+			_setmodel(this, "");
+		}
 		return;
 	}
 

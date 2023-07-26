@@ -234,3 +234,8 @@ REGISTER_STAT(GRIND_START_TIME, float, this.grind_start_time)
 REGISTER_STAT(GRIND_STOP_TIME, float, this.grind_stop_time)
 
 REGISTER_STAT(MANA, float)
+
+#ifdef SVQC
+int top_score;
+#endif
+REGISTER_STAT(TOP_SCORE, int, top_score)

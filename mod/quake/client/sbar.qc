@@ -344,9 +344,13 @@ void Sbar_SoloScoreboard()
 	//int minutes = rint(t / 60);
 	//int seconds = rint(t - 60*floor(t/60));
 
+	int totalmonsters = STAT(MONSTERS_TOTAL);
+	if(STAT(HORDE) && STAT(TOP_SCORE))
+		totalmonsters = STAT(TOP_SCORE);
+
 	// monsters and secrets are now both on the top row
-	if(STAT(MONSTERS_TOTAL))
-		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), STAT(MONSTERS_TOTAL)));
+	if(totalmonsters)
+		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), totalmonsters));
 	else if(STAT(MONSTERS_KILLED)) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
 		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)));
 
@@ -802,11 +806,15 @@ void Sbar_IntermissionOverlay()
 	else
 		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
 
-	if(STAT(MONSTERS_TOTAL))
+	int totalmonsters = STAT(MONSTERS_TOTAL);
+	if(STAT(HORDE) && STAT(TOP_SCORE))
+		totalmonsters = STAT(TOP_SCORE);
+
+	if(totalmonsters)
 	{
 		Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
 		Sbar_DrawPic('232 144 0', "gfx/quake/num_slash");
-		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_TOTAL)), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(totalmonsters), 3, 0);
 	}
 	else
 		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);

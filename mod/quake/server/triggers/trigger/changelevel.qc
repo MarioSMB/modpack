@@ -48,7 +48,7 @@ void changelevel_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);
 
 	// massive hack to work around collision issues!
-	if(substring(this.map, 0, 4) == "targ")
+	if(this.map == "cchorde1" || substring(this.map, 0, 4) == "targ")
 		cvar_set("mod_q1bsp_polygoncollisions", "0");
 	else
 		cvar_set("mod_q1bsp_polygoncollisions", "1");

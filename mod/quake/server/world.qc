@@ -1432,6 +1432,8 @@ spawnfunc(worldspawn)
 	// needs to be done so early because of the constants they create
 	static_init();
 
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
+
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //
@@ -2061,4 +2063,31 @@ void EndFrame()
 	Physics_Frame();
 
 	IL_ENDFRAME();
+}
+
+void RestoreGame()
+{
+	// Loaded from a save game
+	// some things then break, so let's work around them...
+
+	// Progs DB (capture records)
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
+}
+
+void Shutdown()
+{
+	if(world_initialized > 0)
+	{
+		world_initialized = 0;
+
+		LOG_TRACE("Saving persistent data...");
+
+		db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
+		db_close(ServerProgsDB);
+		LOG_TRACE("Saving persistent data... done!");
+	}
+	else if(world_initialized == 0)
+	{
+		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data");
+	}
 }
