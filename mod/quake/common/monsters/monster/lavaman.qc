@@ -421,7 +421,7 @@ spawnfunc(monster_lava_man)
 	monsters_total += 1;
 
 	// cause the lavaman to rise from the lava when triggered.
-	if(this.spawnflags & 2)
+	if((this.spawnflags & 2) && this.targetname && this.targetname != "")
 	{
 		this.use = lavaman_awake;
 		return;

@@ -280,7 +280,7 @@ void boss_awake(entity this)
 	this.health = 3000;
 	this.max_health = this.health;
 	this.use = monster_use; // prevent from being re-triggered into boss_awake state
-	if(world.model == "maps/mgend.bsp") // special damage states
+	if(world.model == "maps/mgend.bsp" && !this.charmed) // special damage states
 		this.th_pain = boss_pain; // Yoder add, September 9 2020
 
 	te_lavasplash(this.origin);

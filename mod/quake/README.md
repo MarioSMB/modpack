@@ -8,13 +8,24 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.fps.gratis/zzz-quake1_12.pk3
+ - http://dl.xonotic.fps.gratis/zzz-quake1-assets_01.pk3
+ - http://dl.xonotic.fps.gratis/zzz-quake1-extras_08.pk3
+ - http://dl.xonotic.fps.gratis/q1-campaign_01.pk3
 
 Optional mission packs:
- - http://dl.xonotic.fps.gratis/zzz-quake1-mp1_07.pk3
- - http://dl.xonotic.fps.gratis/zzz-quake1-mp2_04.pk3
- - http://dl.xonotic.fps.gratis/zzz-quake1-mp3_01.pk3
- - http://dl.xonotic.fps.gratis/zzz-quake1-mp4_02.pk3
+ - http://dl.xonotic.fps.gratis/q1-horde_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-hipnotic_02.pk3
+ - http://dl.xonotic.fps.gratis/q1-rogue_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-impel_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-bbelief_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-cn_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-coldlight_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-contract_02.pk3
+ - http://dl.xonotic.fps.gratis/q1-dopa_04.pk3
+ - http://dl.xonotic.fps.gratis/q1-eod_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-sot_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-targetquake_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-terra_01.pk3
 
 
 Usage
