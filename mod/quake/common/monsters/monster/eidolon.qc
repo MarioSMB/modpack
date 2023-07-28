@@ -61,7 +61,7 @@ bool eidolon_FindTarget(entity this)
 		RandomSelection_Init();
 		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
 		{
-			if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET))
+			if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
 			{
 				traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
 				if(trace_fraction != 1)
@@ -945,7 +945,10 @@ void eidolon_free2(entity this)
 		if(this.enemy)
 			setthink(this, this.th_run);
 		else
+		{
+			this.goalentity = this.movetarget = this.movelast;
 			setthink(this, this.th_walk);
+		}
 	}
 	this.frame = anim_eidolon_howl + this.walkframe;
 }

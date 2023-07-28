@@ -33,7 +33,7 @@ void boss_face(entity this)
 		{
 			FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
 			{
-				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET))
+				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
 				{
 					traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
 					if(trace_fraction != 1)
