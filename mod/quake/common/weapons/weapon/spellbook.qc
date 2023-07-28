@@ -1039,12 +1039,12 @@ void summon_curse(entity this)
 		flame.origin_y = flame.origin_y + 64 - (random()*128);
 		flame.origin_z = flame.origin_z + 8 + (random() * 8);
 		setorigin(flame, flame.origin);
-		set_movetype(flame, MOVETYPE_NONE);
+		set_movetype(flame, MOVETYPE_TOSS);
 		quant -= 1;
 	}
 
 	entity post = this; // repurpose rune so that we can count it towards the limit
-	set_movetype(post, MOVETYPE_NONE);
+	set_movetype(post, MOVETYPE_TOSS);
 	post.realowner = this.realowner;
 	post.owner = this.realowner;
 	post.classname = "skull_post";

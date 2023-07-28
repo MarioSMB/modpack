@@ -153,9 +153,11 @@ void finale_2(entity this)
 	vector org = shub.origin - '0 100 0';
 	setorigin(this, org);
 
-	te_teleport(org);
-
-	sound(shub, CH_VOICE, SND_TELE1, 1, ATTN_NORM);
+	if(this.count)
+	{
+		te_teleport(org);
+		sound(shub, CH_VOICE, SND_TELE1, 1, ATTN_NORM);
+	}
 	
 	this.nextthink = time + 2;
 	setthink(this, finale_3);

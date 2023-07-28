@@ -2053,6 +2053,7 @@ void DropBackpack(entity this)
 	item.velocity_y = -100 +(random() * 200);
 
 	item.flags |= FL_ITEM;
+	item.effects |= EF_FULLBRIGHT;
 	item.owner = this;
 
 	item.solid = SOLID_TRIGGER;
