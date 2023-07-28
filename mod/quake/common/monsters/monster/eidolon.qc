@@ -55,11 +55,29 @@ bool eidolon_FindTarget(entity this)
 		return false;
 
 	// Find a client in current PVS
-	entity client = t_checkclient(this);
+	entity client;
+	if(this.charmed)
+	{
+		RandomSelection_Init();
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+		{
+			if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET))
+			{
+				traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
+				if(trace_fraction != 1)
+					continue;
+				RandomSelection_AddEnt(it, 1, 1);
+			}
+		});
+		client = RandomSelection_chosen_ent;
+	}
+	else
+		client = t_checkclient(this);
 	
 	// Go through all the exception(s)
 	if(!client) return false;
-	if(!IS_PLAYER(client)) return false;
+	if(!IS_PLAYER(client) && !this.charmed) return false;
+	if(!IS_MONSTER(client) && this.charmed)
 	if(client.flags & FL_NOTARGET) return false;
 	if(client.powerups & POWERUP_INVISIBILITY) return false;
 	
@@ -269,6 +287,8 @@ void eidolon_move(entity this, int fstate)
 	// Time to walk or run?
 	else if(fstate == EIDOLON_RUN && this.enemy)
 		ai_run(this, 6);
+	else if(fstate == EIDOLON_WALK)
+		ai_walk(this, 4);
 }
 
 void eidolon_walk1(entity this) { set_animofs(this, anim_eidolon_walk, 1, eidolon_walk1); eidolon_move(this, EIDOLON_WALK); }
