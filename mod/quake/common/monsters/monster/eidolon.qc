@@ -233,7 +233,8 @@ void eidolon_move(entity this, int fstate)
 		// Wrong angle difference? keep turning
 		if(eidolon_angcheck(this, this.enemy.origin, 10))
 			changeyaw(this);
-		else {
+		else
+		{
 			// Close the beginning or the end of the animation?
 			if(this.walkframe < 4 || this.walkframe > 20) 
 				setthink(this, this.th_stand);
@@ -1065,7 +1066,10 @@ void eidolon_tether_follow(entity this)
 		return;
 	setthink(this, eidolon_tether_follow);
 	this.nextthink = time + 0.1;
-	setorigin(this, this.owner.origin);
+	if(this.owner.charmed && this.owner.charmer)
+		setorigin(this, this.owner.charmer.origin);
+	else
+		setorigin(this, this.owner.origin);
 }
 
 void eidolon_start(entity this)

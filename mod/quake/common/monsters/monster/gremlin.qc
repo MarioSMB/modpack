@@ -277,7 +277,7 @@ void gremlin_stand(entity this)
 	if(FindTarget(this))
 		return;
 
-	if(time > this.pausetime)
+	if(this.pausetime != -1 && time > this.pausetime)
 	{
 		this.th_walk(this);
 		return;
