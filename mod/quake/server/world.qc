@@ -1657,7 +1657,7 @@ void CheckRules_World()
 		return;
 	}
 
-	if(fraglimit)
+	if(fraglimit && deathmatch)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{

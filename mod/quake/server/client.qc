@@ -957,6 +957,9 @@ void set_suicide_frame(entity this);
 // respawned elsewhere
 void CopyToBodyQueue(entity ent)
 {
+	if(ent.model == "")
+		return;
+
 	entity body = new(bodyqueue);
 	body.angles = ent.angles;
 	body.model = ent.model;

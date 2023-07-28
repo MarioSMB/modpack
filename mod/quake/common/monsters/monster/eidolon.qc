@@ -204,7 +204,7 @@ void eidolon_idle(entity this)
 		// Slow animation speed, trapped inside cage
 		this.nextthink = time + 0.1;
 		// Found a player, now track them around the room
-		if(IS_PLAYER(this.enemy))
+		if(IS_PLAYER(this.enemy) || IS_MONSTER(this.enemy))
 		{
 			if(eidolon_angcheck(this, this.enemy.origin, 60)) 
 				setthink(this, this.th_walk);
@@ -287,8 +287,6 @@ void eidolon_move(entity this, int fstate)
 	// Time to walk or run?
 	else if(fstate == EIDOLON_RUN && this.enemy)
 		ai_run(this, 6);
-	else if(fstate == EIDOLON_WALK)
-		ai_walk(this, 4);
 }
 
 void eidolon_walk1(entity this) { set_animofs(this, anim_eidolon_walk, 1, eidolon_walk1); eidolon_move(this, EIDOLON_WALK); }
@@ -944,7 +942,10 @@ void eidolon_free2(entity this)
 		this.th_run = eidolon_run1;
 		this.yaw_speed = 20;			// Average Speed
 		Resist_ChangeType(this, false);	// Default resistance
-		setthink(this, this.th_run);		// Start running!
+		if(this.enemy)
+			setthink(this, this.th_run);
+		else
+			setthink(this, this.th_walk);
 	}
 	this.frame = anim_eidolon_howl + this.walkframe;
 }
