@@ -245,6 +245,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
+	targ.use = func_null;
 
 	// fall to ground
 	targ.flags &= ~FL_FLY;

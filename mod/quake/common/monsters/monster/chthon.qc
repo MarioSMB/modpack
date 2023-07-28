@@ -29,10 +29,31 @@ void boss_face(entity this)
 	if(!this.enemy)
 	{
 		RandomSelection_Init();
-		FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0,
+		if(this.charmed)
 		{
-			RandomSelection_AddEnt(it, 1, 1);
-		});
+			FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+			{
+				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET))
+				{
+					traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
+					if(trace_fraction != 1)
+						continue;
+					RandomSelection_AddEnt(it, 1, 1);
+				}
+			});
+		}
+		else
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET),
+			{
+				// enable for line of sight chthon
+				//traceline(this.origin + '0 0 16', it.origin, true, this);
+				//if(trace_fraction != 1)
+					//continue;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+		}
+			
 		this.enemy = RandomSelection_chosen_ent;
 
 		setthink(this, boss_missile1); // return to attack state
@@ -202,7 +223,6 @@ void boss_death10(entity this)
 {
 	// being removed, don't need new frame
 	//set_animofs(this, anim_boss_death, 9, boss_death10);
-	monsters_killed += 1;
 	SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
 }
@@ -267,7 +287,7 @@ void boss_missile(entity this, vector p)
 	_sound(this, CH_SHOTS, "boss1/throw.wav", 1, ATTN_NORM);
 
 // check for dead enemy
-	if(this.enemy.health <= 0)
+	if(!this.enemy || this.enemy.health <= 0)
 		boss_idle1(this);
 }
 

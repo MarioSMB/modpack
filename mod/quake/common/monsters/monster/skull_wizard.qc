@@ -172,7 +172,6 @@ void skullw_tfin1(entity this)
 //----------------------------------------------------------------------
 // Find new teleport location
 //----------------------------------------------------------------------
-#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 void skullw_blink(entity this)
 {
 	vector oldpos = this.origin;
@@ -231,7 +230,6 @@ void skullw_blink(entity this)
 	te_explosion2(this.origin, 100, 1);
 	skullw_tfin1(this);
 }
-#undef CENTER_OR_VIEWOFS
 
 //----------------------------------------------------------------------
 // Cycle around teleport chain lists instead

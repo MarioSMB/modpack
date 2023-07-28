@@ -4,6 +4,13 @@
 const int anim_old_old = 0; //'0 45 0'
 const int anim_old_shake = 46; //'46 65 0'
 
+void shub_lightstyle(entity this, int lightnum, string lightid)
+{
+	if(this.charmed || world.model != "maps/end.bsp")
+		return;
+	lightstyle(lightnum, lightid);
+}
+
 //void old_stand(entity this) { set_animofs(this, anim_old_old, 1, old_stand); }
 
 void old_idle1(entity this);
@@ -56,36 +63,36 @@ void old_idle1(entity this) { set_animofs(this, anim_old_old, 1, old_idle2); }
 
 void old_thrash1(entity this);
 void old_thrash20(entity this) { set_animofs(this, anim_old_shake, 20, old_thrash20); finale_4(this); }
-void old_thrash19(entity this) { set_animofs(this, anim_old_shake, 19, old_thrash20); lightstyle(0, "a"); }
-void old_thrash18(entity this) { set_animofs(this, anim_old_shake, 18, old_thrash19); lightstyle(0, "b"); }
-void old_thrash17(entity this) { set_animofs(this, anim_old_shake, 17, old_thrash18); lightstyle(0, "c"); }
-void old_thrash16(entity this) { set_animofs(this, anim_old_shake, 16, old_thrash17); lightstyle(0, "g"); }
+void old_thrash19(entity this) { set_animofs(this, anim_old_shake, 19, old_thrash20); shub_lightstyle(this, 0, "a"); }
+void old_thrash18(entity this) { set_animofs(this, anim_old_shake, 18, old_thrash19); shub_lightstyle(this, 0, "b"); }
+void old_thrash17(entity this) { set_animofs(this, anim_old_shake, 17, old_thrash18); shub_lightstyle(this, 0, "c"); }
+void old_thrash16(entity this) { set_animofs(this, anim_old_shake, 16, old_thrash17); shub_lightstyle(this, 0, "g"); }
 void old_thrash15(entity this)
 {
 	set_animofs(this, anim_old_shake, 15, old_thrash16);
-	lightstyle(0, "m");
+	shub_lightstyle(this, 0, "m");
 	this.cnt += 1;
 	if(this.cnt < 3)
 		setthink(this, old_thrash1);
 }
-void old_thrash14(entity this) { set_animofs(this, anim_old_shake, 14, old_thrash15); lightstyle(0, "m"); }
-void old_thrash13(entity this) { set_animofs(this, anim_old_shake, 13, old_thrash14); lightstyle(0, "k"); }
-void old_thrash12(entity this) { set_animofs(this, anim_old_shake, 12, old_thrash13); lightstyle(0, "i"); }
-void old_thrash11(entity this) { set_animofs(this, anim_old_shake, 11, old_thrash12); lightstyle(0, "g"); }
-void old_thrash10(entity this) { set_animofs(this, anim_old_shake, 10, old_thrash11); lightstyle(0, "e"); }
-void old_thrash9(entity this) { set_animofs(this, anim_old_shake, 9, old_thrash10); lightstyle(0, "c"); }
-void old_thrash8(entity this) { set_animofs(this, anim_old_shake, 8, old_thrash9); lightstyle(0, "a"); }
-void old_thrash7(entity this) { set_animofs(this, anim_old_shake, 7, old_thrash8); lightstyle(0, "c"); }
-void old_thrash6(entity this) { set_animofs(this, anim_old_shake, 6, old_thrash7); lightstyle(0, "e"); }
-void old_thrash5(entity this) { set_animofs(this, anim_old_shake, 5, old_thrash6); lightstyle(0, "g"); }
-void old_thrash4(entity this) { set_animofs(this, anim_old_shake, 4, old_thrash5); lightstyle(0, "i"); }
-void old_thrash3(entity this) { set_animofs(this, anim_old_shake, 3, old_thrash4); lightstyle(0, "k"); }
-void old_thrash2(entity this) { set_animofs(this, anim_old_shake, 2, old_thrash3); lightstyle(0, "k"); }
-void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); lightstyle(0, "m"); }
+void old_thrash14(entity this) { set_animofs(this, anim_old_shake, 14, old_thrash15); shub_lightstyle(this, 0, "m"); }
+void old_thrash13(entity this) { set_animofs(this, anim_old_shake, 13, old_thrash14); shub_lightstyle(this, 0, "k"); }
+void old_thrash12(entity this) { set_animofs(this, anim_old_shake, 12, old_thrash13); shub_lightstyle(this, 0, "i"); }
+void old_thrash11(entity this) { set_animofs(this, anim_old_shake, 11, old_thrash12); shub_lightstyle(this, 0, "g"); }
+void old_thrash10(entity this) { set_animofs(this, anim_old_shake, 10, old_thrash11); shub_lightstyle(this, 0, "e"); }
+void old_thrash9(entity this) { set_animofs(this, anim_old_shake, 9, old_thrash10); shub_lightstyle(this, 0, "c"); }
+void old_thrash8(entity this) { set_animofs(this, anim_old_shake, 8, old_thrash9); shub_lightstyle(this, 0, "a"); }
+void old_thrash7(entity this) { set_animofs(this, anim_old_shake, 7, old_thrash8); shub_lightstyle(this, 0, "c"); }
+void old_thrash6(entity this) { set_animofs(this, anim_old_shake, 6, old_thrash7); shub_lightstyle(this, 0, "e"); }
+void old_thrash5(entity this) { set_animofs(this, anim_old_shake, 5, old_thrash6); shub_lightstyle(this, 0, "g"); }
+void old_thrash4(entity this) { set_animofs(this, anim_old_shake, 4, old_thrash5); shub_lightstyle(this, 0, "i"); }
+void old_thrash3(entity this) { set_animofs(this, anim_old_shake, 3, old_thrash4); shub_lightstyle(this, 0, "k"); }
+void old_thrash2(entity this) { set_animofs(this, anim_old_shake, 2, old_thrash3); shub_lightstyle(this, 0, "k"); }
+void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); shub_lightstyle(this, 0, "m"); }
 
 //============================================================================
 
-void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
+void finale_intermission(entity this)
 {
 	intermission_exittime = time + 10000000;	// never allow exit
 	intermission_running = 1;
@@ -93,13 +100,10 @@ void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 	server_reset();
 
 	// find the intermission spot
-	entity pos = find(NULL, classname, "info_intermission");
-	if(!pos)
-		error("no info_intermission");
+	entity pos = FindIntermission(this);
 	entity pl = find(NULL, classname, "misc_teleporttrain");
-	if(!pl)
-		error("no teleporttrain");
-	delete(pl);
+	if(pl)
+		delete(pl);
 
 	WriteByte(MSG_ALL, SVC_FINALE);
 	WriteString(MSG_ALL, "");
@@ -107,7 +111,8 @@ void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		it.view_ofs = '0 0 0';
-		it.angles = it.v_angle = pos.mangle;
+		if(pos)
+			it.angles = it.v_angle = pos.mangle;
 		it.fixangle = true;		// turn this way immediately
 		it.map = this.map;
 		it.nextthink = time + 0.5;
@@ -116,14 +121,21 @@ void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 		set_movetype(it, MOVETYPE_NONE);
 		//it.modelindex = 0;
 		setmodel(it, MDL_Null);
-		setorigin(it, pos.origin);
+		if(pos)
+			setorigin(it, pos.origin);
 	});
+}
+
+void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(!this.charmed)
+		finale_intermission(this);
 
 	// make fake versions of all players as standins, and move the real
 	// players to the intermission spot
 
 	// used later to tell if a telefragging player should appear
-	this.count = (deathtype == DEATH_TELEFRAG.m_id);
+	this.count = (!this.charmed && deathtype == DEATH_TELEFRAG.m_id);
 	
 	// wait for 1 second
 	entity timer = spawn();
@@ -156,7 +168,7 @@ void finale_3(entity this)
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
 	_sound(shub, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_NORM);
-	lightstyle(0, "abcdefghijklmlkjihgfedcb");	
+	shub_lightstyle(this, 0, "abcdefghijklmlkjihgfedcb");	
 	delete(this);
 }
 
@@ -195,41 +207,43 @@ void finale_4(entity this)
 		}
 		zz = zz + 96;
 	}
-	// start the end text
-	WriteByte(MSG_ALL, SVC_FINALE);
-	WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
-
-// put a player model down, but only if it was a telefrag!
-	if(this.count)
+	if(!this.charmed)
 	{
-		entity n = spawn();
-		if(this.enemy)
+		// start the end text
+		WriteByte(MSG_ALL, SVC_FINALE);
+		WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
+		// put a player model down, but only if it was a telefrag!
+		if(this.count)
 		{
-			_setmodel(n, get_playermodel(this.enemy));
-			n.colormap = this.enemy.colormap;
+			entity n = spawn();
+			if(this.enemy)
+			{
+				_setmodel(n, get_playermodel(this.enemy));
+				n.colormap = this.enemy.colormap;
+			}
+			else
+			{
+				_setmodel(n, "progs/player.mdl");
+				n.colormap = 1024;
+			}
+			oldo = oldo - '32 264 0';
+			setorigin(n, oldo);
+			n.angles = '0 290 0';
+			n.frame = 1;
 		}
-		else
-		{
-			_setmodel(n, "progs/player.mdl");
-			n.colormap = 1024;
-		}
-		oldo = oldo - '32 264 0';
-		setorigin(n, oldo);
-		n.angles = '0 290 0';
-		n.frame = 1;
+
+		// switch cd track
+	#if 0
+		WriteByte(MSG_ALL, SVC_CDTRACK);
+		WriteByte(MSG_ALL, 3);
+		WriteByte(MSG_ALL, 3);
+	#else
+		SendCDTrack(NULL, 3);
+	#endif
 	}
+	shub_lightstyle(this, 0, "m");
 
 	delete(this);
-
-// switch cd track
-#if 0
-	WriteByte(MSG_ALL, SVC_CDTRACK);
-	WriteByte(MSG_ALL, 3);
-	WriteByte(MSG_ALL, 3);
-#else
-	SendCDTrack(NULL, 3);
-#endif
-	lightstyle(0, "m");
 
 	// NOTE: disabled as classic engines do not support credits (TODO: xonotic does? maybe make use of it!)
 	// instead of sitting here forever, run the quake ex credits and send the user back to start

@@ -37,3 +37,5 @@ const string STR_PLAYER = "player";
 
 #include "world.qh"
 #include "../common/constants.qh"
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))

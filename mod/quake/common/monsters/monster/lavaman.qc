@@ -51,8 +51,13 @@ void lavaman_hunt(entity this)
 	if(this.enemy.health <= 0)
 	{
 		vector viewPoint = this.origin + '0 0 96';
-		entity possibleEnemy = find(this.enemy, classname, "player");
-		traceline(viewPoint, possibleEnemy.origin, true, NULL);
+		entity possibleEnemy;
+		if(this.charmed)
+			possibleEnemy = findflags(this.enemy, flags, FL_MONSTER);
+		else
+			possibleEnemy = find(this.enemy, classname, "player");
+
+		traceline(viewPoint, possibleEnemy.origin, true, this);
 		if(trace_fraction == 1)
 			this.enemy = possibleEnemy;
 	}
@@ -87,7 +92,7 @@ void lavaman_rise1(entity this) { set_animofs(this, anim_lavaman_rise1, 1, lavam
 // ============
 void lavaman_stand(entity this)
 {
-	if(this.enemy)
+	if(this.enemy && this.enemy.health > 0)
 		LavaManCheckAttack(this);
 	else
 		lavaman_hunt(this);
