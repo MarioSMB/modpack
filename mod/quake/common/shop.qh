@@ -8,4 +8,5 @@ const int SHOP_COST_ARMOR = 100;
 const int SHOP_COST_AMMO = 100;
 const int SHOP_COST_RIFLE = 100;
 
+const int EXTRA_ITEMS = 4;
 const int SHOP_WEAPON_COUNT = 3;

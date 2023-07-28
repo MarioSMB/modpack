@@ -176,9 +176,11 @@ void skullw_tfin1(entity this)
 void skullw_blink(entity this)
 {
 	vector oldpos = this.origin;
-	vector extrasize = '1 1 1' * 1200;
 	entity targ = this.enemy;
 
+	// enable for random location teleportation (may break maps)
+#if 0
+	vector extrasize = '1 1 1' * 1200;
 	if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
 											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
 											Q3SURFACEFLAG_SKY, 10, 64, 256, true))
@@ -194,6 +196,7 @@ void skullw_blink(entity this)
 		skullw_tfin1(this);
 		return;
 	}
+#endif
 
 	makevectors(targ.angles);
 	tracebox(CENTER_OR_VIEWOFS(targ), this.mins, this.maxs, CENTER_OR_VIEWOFS(targ) + ((v_forward * -1) * 200), MOVE_NOMONSTERS, this);
