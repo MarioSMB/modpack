@@ -198,10 +198,10 @@ REGISTER_STAT(EXPTIME, float, this.exptime)
 REGISTER_STAT(SHIELD_TIME, float)
 
 #ifdef SVQC
-float shop_open;
+float shop_opentime;
 vector shop_weapons;
 #endif
-REGISTER_STAT(SHOP_OPEN, float, shop_open)
+REGISTER_STAT(SHOP_OPEN, float, shop_opentime)
 REGISTER_STAT(SHOP_WEAPONS, vectori, shop_weapons)
 
 #ifdef SVQC

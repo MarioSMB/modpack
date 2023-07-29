@@ -1037,6 +1037,7 @@ void FoundTarget(entity this)
 		return;
 
 	this.show_hostile = time + 1;		// wake up other monsters
+	this.aggro_time = time; // stay on target for a bit
 	HuntTarget(this);
 }
 
@@ -1177,7 +1178,7 @@ bool FindTarget(entity this)
 	if(!MP_IMPEL || !angry_monsters)
 	{
 		int r = range(this, client);
-		if(r == RANGE_FAR)
+		if(r == RANGE_FAR && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS)) // give bosses a further range
 			return false;
 			
 		if(!visible(this, client))

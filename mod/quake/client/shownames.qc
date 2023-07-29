@@ -1,5 +1,7 @@
 #include "shownames.qh"
 
+#include "../common/ent_cs.qh"
+
 // this.isactive = player is in range and coordinates are up to date
 // this.origin = player origin
 // this.fadedelay = time to wait before name tag starts fading in for enemies
@@ -140,7 +142,7 @@ void Draw_ShowNames(entity this)
 	// antioverlap debug code
 	//else drawfill(this.box_org - this.box_ofs, this.box_ofs * 2, '1 1 1', a / 2, DRAWFLAG_NORMAL);
 
-	string s = getplayerkeyvalue(this.sv_entnum, "name");
+	string s = entcs_GetName(this.sv_entnum);
 	if (autocvar_hud_shownames_decolorize == 2)
 		s = strdecolorize(s);
 	drawfontscale = '1 1 0' * resize;

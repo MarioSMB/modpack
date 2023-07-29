@@ -1399,7 +1399,7 @@ void Countdown4(entity this)
 		//centerprint_all("Fight!");
 	SpawnWave2(this);
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
-	shop_open = 0;
+	shop_opentime = 0;
 }
 void Countdown3(entity this)
 {
@@ -1495,7 +1495,7 @@ void Wavecheck(entity this)
 			GetKey(this);
 
 		this.nextthink = time + 20; // in case the players are slow to find the key
-		shop_open = this.nextthink; // give players some time to shop around too!
+		shop_opentime = this.nextthink; // give players some time to shop around too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SHOP_OPEN);
 	}
 	else

@@ -43,70 +43,6 @@ bool eidolon_angcheck(entity this, vector targorg, float angdiff)
 }
 
 //----------------------------------------------------------------------
-// Need own find player function because of arena size
-// Also setup all parameters ready to start combat quicker
-//----------------------------------------------------------------------
-bool eidolon_FindTarget(entity this)
-{
-	// Get the obvious exception(s) done first
-	if(this.health < 1)
-		return false;
-	if(intermission_running > 0)
-		return false;
-
-	// Find a client in current PVS
-	entity client;
-	if(this.charmed)
-	{
-		RandomSelection_Init();
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
-		{
-			if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
-			{
-				traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
-				if(trace_fraction != 1)
-					continue;
-				RandomSelection_AddEnt(it, 1, 1);
-			}
-		});
-		client = RandomSelection_chosen_ent;
-	}
-	else
-		client = t_checkclient(this);
-	
-	// Go through all the exception(s)
-	if(!client) return false;
-	if(!IS_PLAYER(client) && !this.charmed) return false;
-	if(!IS_MONSTER(client) && this.charmed)
-	if(client.flags & FL_NOTARGET) return false;
-	if(client.powerups & POWERUP_INVISIBILITY) return false;
-	
-	// Check range and visibility of player
-	this.enemy_visible = visible(this, client);
-	if(!this.enemy_visible) return false;
-	if(!infront(this, client)) return false;
-
-	// Finally found something
-	this.enemy = client;
-	this.oldorigin = this.origin;		// Save origin
-	this.goalentity = this.enemy;		// Focus on enemy
-	// Setup turning angle towards new enemy
-	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
-
-	// Stage 1 is trapped, boss cannot attack or run
-	if(this.style == EIDOLON_PHASE1)
-		return false;
-
-	// Move straight into run+attack
-	this.nextthink = time + 0.1;
-	setthink(this, this.th_run);		// Start running
-	this.attack_finished = time + 1;
-
-	// We have a winner!
-	return true;	
-}
-
-//----------------------------------------------------------------------
 // Setup wave HP and trigger boundaries
 //----------------------------------------------------------------------
 void eidolon_WaveSetupHP(entity this)
@@ -197,7 +133,7 @@ void eidolon_idle(entity this)
 	this.frame = anim_eidolon_stand + this.walkframe;
 	
 	// Keep looking for a player
-	eidolon_FindTarget(this);
+	FindTarget(this);
 	
 	if(this.style == EIDOLON_PHASE1)
 	{
@@ -262,7 +198,7 @@ void eidolon_move(entity this, int fstate)
 	else if(this.style == EIDOLON_PHASE2 && fstate == EIDOLON_WALK)
 	{
 		// Check for player
-		if(eidolon_FindTarget(this))
+		if(FindTarget(this))
 			return;
 
 		// Reached origin point yet?

@@ -43,9 +43,9 @@ spawnfunc(info_intermission)
 {
 }
 
-void intermission_clear_powerups(entity this)
+void clear_powerups(entity this)
 {
-	this.powerups &= ~(POWERUP_QUAD | POWERUP_INVISIBILITY | POWERUP_INVULNERABILITY | POWERUP_SUIT);
+	this.powerups = 0;
 	this.super_damage_finished = 0;
 	this.super_time = 0;
 	this.invisible_finished = 0;
@@ -54,6 +54,21 @@ void intermission_clear_powerups(entity this)
 	this.invincible_time = 0;
 	this.radsuit_finished = 0;
 	this.rad_time = 0;
+	this.antigrav_finished = 0;
+	this.antigrav_time = 0;
+	this.jboots_finished = 0;
+	this.jboots_time = 0;
+	this.fireflower_finished = 0;
+	this.fireflower_time = 0;
+	this.shield_finished = 0;
+	this.shield_time = 0;
+	this.wetsuit_finished = 0;
+	this.wetsuit_time = 0;
+	this.field_generator_finished = 0;
+	this.field_generator_time = 0;
+	this.field_generator_health = 0;
+	this.empathy_finished = 0;
+	this.empathy_time = 0;
 }
 
 bool reset_flag;
@@ -907,7 +922,7 @@ void execute_changelevel(entity this)
 		set_movetype(it, MOVETYPE_NONE);
 		if(MP_MG)
 		{
-			intermission_clear_powerups(it);
+			clear_powerups(it);
 			FogPushSettingsFrom(it, pos, 0);
 		}
 		if(pos)
@@ -1391,14 +1406,9 @@ void PutClientInServer(entity this)
 	this.flags = FL_CLIENT;
 	this.air_finished = time + 12;
 	this.dmg = 2;   		// initial water damage
-	this.super_damage_finished = 0;
-	this.radsuit_finished = 0;
-	this.invisible_finished = 0;
-	this.invincible_finished = 0;
+	clear_powerups(this);
 	this.healthrot_nextcheck = 0;
-	this.field_generator_finished = 0;
 	this.effects = EF_TELEPORT_BIT;
-	this.invincible_time = 0;
 
 	this.viewloc = NULL;
 
@@ -1406,20 +1416,8 @@ void PutClientInServer(entity this)
 	this.weaponmodel = "";
 
 	// hipnotic fields
-	this.wetsuit_finished = 0;
-	this.empathy_finished = 0;
 	this.gravity = 1.0;
 	this.gorging = false;
-
-	// rogue fields
-	this.shield_finished = 0;
-	this.antigrav_finished = 0;
-
-	this.fireflower_finished = 0;
-	this.fireflower_time = 0;
-
-	this.jboots_finished = 0;
-	this.jboots_time = 0;
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
@@ -2673,6 +2671,8 @@ void ClientConnect(entity this)
 	static int playerid_last;
 	this.playerid = ++playerid_last;
 
+	entcs_attach(this);
+
 	this.flags |= FL_CLIENT;
 
 	this.netname_previous = strzone(this.netname);
@@ -2736,6 +2736,7 @@ void ClientDisconnect(entity this)
 
 	strfree(this.weaponorder_byimpulse);
 	GetCvars(this, this, -1);
+	entcs_detach(this);
 
 	//this.flags &= ~FL_CLIENT;
 	if (this.chatbubbleentity) delete(this.chatbubbleentity);
@@ -3129,7 +3130,7 @@ void SV_ParseClientCommand(entity this, string command)
 
 void setcolor(entity this, int clr)
 {
-#if 0
+#if 1
 	this.clientcolors = clr;
 	this.team = (clr & 15) + 1;
 #else

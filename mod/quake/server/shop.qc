@@ -6,7 +6,7 @@ void shop_buyitem(entity this, string item)
 {
 	if(!IS_PLAYER(this) || this.health <= 0)
 		return;
-	if(shop_open < time)
+	if(shop_opentime < time)
 	{
 		sprint(this, "You can only buy items after a boss wave\n");
 		return;

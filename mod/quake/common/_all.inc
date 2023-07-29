@@ -11,6 +11,7 @@
 #include "physics.qc"
 #include "sui_sys.qc"
 #include "viewloc.qc"
+#include "ent_cs.qc"
 
 #include "deathtypes/all.qc"
 #include "effects/all.qc"

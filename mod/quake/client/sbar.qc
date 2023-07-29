@@ -1,5 +1,7 @@
 #include "sbar.qh"
 
+#include "../common/ent_cs.qh"
+
 string Sbar_PickWeapon_wepname(Weapon wpn)
 {
 	string img = wpn.model2;
@@ -310,7 +312,7 @@ void Sbar_SortFrags()
 	scoreboardlines = 0;
 	for(int j = 0; j < maxclients; j++)
 	{
-		if(getplayerkeyvalue(j, "name"))
+		if(entcs_GetName(j) != "")
 		{
 			fragsort[scoreboardlines] = j;
 			scoreboardlines++;
@@ -321,8 +323,8 @@ void Sbar_SortFrags()
 	{
 		for(int j = 0; j < scoreboardlines - 1 - k; j++)
 		{
-			int ffs = stof(getplayerkeyvalue(j, "frags"));
-			int ff2 = stof(getplayerkeyvalue(j + 1, "frags"));
+			int ffs = entcs_GetClientFrags(j);
+			int ff2 = entcs_GetClientFrags(j + 1);
 			if(ffs < ff2)
 			{
 				int currentscore = fragsort[j];
@@ -423,7 +425,7 @@ Sbar_DeathmatchOverlay
 float Sbar_PrintScoreboardItem(int fscore, vector thepos)
 {
 	bool myself = false;
-	float thescore = stof(getplayerkeyvalue(fscore, "frags"));
+	float thescore = entcs_GetClientFrags(fscore);
 
 	if(fscore == player_localnum) // - 1 or + 1, idk
 		myself = true;
@@ -431,20 +433,21 @@ float Sbar_PrintScoreboardItem(int fscore, vector thepos)
 	// draw colors behind score
 	vector thecolor;
 	vector pos;
+	int f = entcs_GetClientColors(fscore);
 
-	thecolor = stov(getplayerkeyvalue(fscore, "bottomcolor"));
+	thecolor = colormapPaletteColor(f % 16, 1);
 	pos = vec2(thepos.x + 9 * 8 * SBAR_MAXWIDTH, thepos.y + 1);
 	drawfill(pos, vec2(40 * SBAR_MAXWIDTH, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-	thecolor = stov(getplayerkeyvalue(fscore, "topcolor"));
+	thecolor = colormapPaletteColor(floor(f / 16), 0);
 	pos = vec2(thepos.x + 9 * 8 * SBAR_MAXWIDTH, thepos.y + 4);
 	drawfill(pos, vec2(40 * SBAR_MAXWIDTH, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print the text
 	bool have_playerslots = (playerslots[fscore] != NULL);
-	float theping = ((have_playerslots) ? playerslots[fscore].ping : stof(getplayerkeyvalue(fscore, "ping")));
-	float thepl = ((have_playerslots) ? playerslots[fscore].ping_packetloss : stof(getplayerkeyvalue(fscore, "pl")));
-	string thename = getplayerkeyvalue(fscore, "name");
+	float theping = ((have_playerslots) ? playerslots[fscore].ping : 0);
+	float thepl = ((have_playerslots) ? playerslots[fscore].ping_packetloss : 0);
+	string thename = entcs_GetName(fscore);
 	if(theping || thepl)
 		drawcolorcodedstring2(thepos, sprintf("%4d %3d %5d %c%s", bound(0, theping, 9999), bound(0, thepl, 99), thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else
@@ -516,7 +519,7 @@ void Sbar_Score(int margin)
 	int me = player_localnum; // was -1
 	if(STAT(HORDE))
 	{
-		int score = stoi(getplayerkeyvalue(me, "frags"));
+		int score = entcs_GetClientFrags(me);
 		Sbar_DrawXNum(vec2(-3*12, -12), score, 3, 12, '1 1 1');
 		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, (((STAT(HORDE_WAVE) % 3) == 0) ? '1 0 0 ' : '1 1 1'));
 	}
@@ -530,20 +533,20 @@ void Sbar_Score(int margin)
 		//
 		// find leading score other than ourselves, to calculate distribution
 		// find our place in the scoreboard
-		int score = stoi(getplayerkeyvalue(me, "frags"));
+		int score = entcs_GetClientFrags(me);
 		int j = 0, otherleader = -1, place = 1;
 		for(j = 0, otherleader = -1, place = 1; j < maxclients; j++)
 		{
-			if(getplayerkeyvalue(j, "name") && j != me)
+			if(entcs_GetName(j) != "" && j != me)
 			{
-				int ts = stoi(getplayerkeyvalue(j, "frags"));
-				if(otherleader == -1 || ts > stoi(getplayerkeyvalue(otherleader, "frags")))
+				int ts = entcs_GetClientFrags(j);
+				if(otherleader == -1 || ts > entcs_GetClientFrags(otherleader))
 					otherleader = j;
 				if(score < ts || (score == ts && j < me))
 					place++;
 			}
 		}
-		int distribution = otherleader >= 0 ? score - stoi(getplayerkeyvalue(otherleader, "frags")) : 0;
+		int distribution = otherleader >= 0 ? score - entcs_GetClientFrags(otherleader) : 0;
 		if(place == 1)
 			Sbar_DrawXNum(vec2(-3*12, -12), place, 3, 12, '1 1 1');
 		else if(place == 2)
@@ -1007,17 +1010,18 @@ void Sbar_DrawFrags()
 		// draw background
 		vector thecolor;
 		vector pos;
+		int fcolor = entcs_GetClientColors(k);
 
-		thecolor = stov(getplayerkeyvalue(k, "bottomcolor"));
+		thecolor = colormapPaletteColor(fcolor % 16, 1);
 		pos = sbar + vec2(dx + 10, -23);
 		drawfill(pos, '28 4 0', thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		thecolor = stov(getplayerkeyvalue(k, "topcolor"));
+		thecolor = colormapPaletteColor(floor(fcolor / 16), 0);
 		pos = sbar + vec2(dx + 10, 4 - 23);
 		drawfill(pos, '28 3 0', thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw number
-		int f = stoi(getplayerkeyvalue(k, "frags"));
+		int f = entcs_GetClientFrags(k);
 		string num = sprintf("%3d", f);
 
 		if(k == player_localnum)

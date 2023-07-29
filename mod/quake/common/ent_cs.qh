@@ -1,0 +1,136 @@
+#pragma once
+
+#ifdef CSQC
+#include "../client/csqcmodel_hooks.qh"
+#endif
+
+REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
+REGISTER_NET_TEMP(CLIENT_ENTCS)
+
+#ifdef CSQC
+/** True when private information such as origin is available */
+.bool m_entcs_private;
+
+/** True when origin is available */
+.bool has_origin;
+
+/** True when a recent server sent origin has been received */
+.bool has_sv_origin;
+#endif
+.int sv_solid;
+
+#ifdef SVQC
+/*
+ * The point of these entities is to avoid the problems
+ * with clientprediction.
+ * If you add SendEntity to players, the engine will not
+ * do any prediction anymore, and you'd have to write the whole
+ * prediction code in CSQC, you want that? :P
+ * Data can depend on gamemode. For now, it serves as GPS entities
+ * in onslaught... YAY ;)
+ */
+
+	.entity entcs;
+
+	bool entcs_send(entity this, entity to, int sf);
+
+	void entcs_think(entity this);
+
+	void entcs_attach(entity player);
+
+	void entcs_detach(entity player);
+
+	.int m_forceupdate;
+
+	void entcs_force_origin(entity player);
+
+	void entcs_update_players(entity player);
+
+#endif
+
+#ifdef CSQC
+
+	ArrayList _entcs;
+	STATIC_INIT(_entcs)
+	{
+		AL_NEW(_entcs, 255, NULL, e);  // 255 is the engine limit on maxclients
+	}
+	SHUTDOWN(_entcs)
+	{
+		AL_DELETE(_entcs);
+	}
+	#define entcs_receiver(...) EVAL_entcs_receiver(OVERLOAD(entcs_receiver, __VA_ARGS__))
+	#define EVAL_entcs_receiver(...) __VA_ARGS__
+	#define entcs_receiver_1(i) AL_gete(_entcs, i)
+	#define entcs_receiver_2(i, v) AL_sete(_entcs, i, v)
+	#define entcs_is_self(e) ((e).sv_entnum == player_localentnum - 1)
+
+	/**
+     * @param i zero indexed player
+     */
+    .int frags;
+
+	int entcs_GetClientFrags(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e ? e.frags : 0;
+	}
+
+	/**
+     * @param i zero indexed player
+     */
+	int entcs_GetClientColors(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e ? e.colormap : 0;
+	}
+
+	/**
+	* @param i zero indexed player
+	*/
+	string entcs_GetName(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e ? ColorTranslateRGB(e.netname) : "";
+	}
+
+    /**
+     * @param i zero indexed player
+     */
+	entity CSQCModel_server2csqc(int i);
+
+    .float alpha;
+
+    /**
+     * @param i zero indexed player
+     */
+	float entcs_GetAlpha(int i)
+	{
+		entity e = CSQCModel_server2csqc(i);
+		return e ? e.alpha : 1;
+	}
+
+    /**
+     * @param i zero indexed player
+     */
+	vector entcs_GetColor(int i)
+	{
+		entity e = CSQCModel_server2csqc(i);
+		return (!e || e.colormap <= 0)
+		       ? '1 1 1'
+			   : colormapPaletteColor(((e.colormap >= 1024)
+			? e.colormap
+			: entcs_GetClientColors(e.colormap - 1)) & 15, true)
+		;
+	}
+
+    /**
+     * @param i zero indexed player
+     */
+	bool entcs_IsDead(int i)
+	{
+		entity e = CSQCModel_server2csqc(i);
+		return e ? e.csqcmodel_isdead : false;
+	}
+
+#endif
