@@ -69,18 +69,10 @@ spawnfunc(info_teleport_destination)
 		objerror(this, "no targetname");
 }
 
-void teleport_retouch(entity this)
-{
-	_Movetype_LinkEdict_TouchAreaGrid(this);
-}
-
 void teleport_use(entity this, entity actor, entity trigger)
 {
 	this.attack_finished = time + 0.2;
-	//force_retouch = 2;		// make sure even still objects get hit
-	// delay it so we're not triggering other triggers from a trigger
-	setthink(this, teleport_retouch);
-	this.nextthink = time;
+	force_retouch = 2;		// make sure even still objects get hit
 }
 
 void trigger_start_go(entity this)
