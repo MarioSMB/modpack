@@ -26,7 +26,7 @@ THINK FUNCTIONS
 
 void door_blocked(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
+	T_Damage(blocker, this, this, ((IS_MONSTER(blocker)) ? 1000 : this.dmg), DEATH_CRUSH.m_id);
 
 	if((!this.model || this.model == ""))
 		return;

@@ -156,12 +156,15 @@ void PortalFire(entity this, int fire)
 	{
 		PortalErase(portal);
 		_sound(this, CH_WEAPON_SINGLE, "portal/close.wav", 1, ATTN_NORM);
+		// enable to allow attacks to cancel portals instead of casting new ones
+	#if 0
 		// reset attack delay so we can fire another portal quickly
 		if(fire & 1)
 			this.attack_finished = time + 0.2;
 		else
 			this.attack2_finished = time + 0.2;
 		return;
+	#endif
 	}
 
 	_sound(this, CH_WEAPON_SINGLE, "portal/fire.wav", 1, ATTN_NORM);
