@@ -3,13 +3,13 @@
 CLASS(MultiGrenadeLauncher, Weapon)
 /* ammotype  */ ATTRIB(MultiGrenadeLauncher, ammo_type, int, IT_MULTI_ROCKETS);
 /* impulse   */ ATTRIB(MultiGrenadeLauncher, impulse, int, 6);
-/* spawnflags*/ ATTRIB(MultiGrenadeLauncher, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_ROGUE);
+/* spawnflags*/ ATTRIB(MultiGrenadeLauncher, spawnflags, int, WEP_FLAG_ROGUE);
 /* ammo */      ATTRIB(MultiGrenadeLauncher, aflag, int, 5);
 /* modelname */ ATTRIB(MultiGrenadeLauncher, mdl, string, "multi");
 /* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair, string, "gfx/crosshairseeker");
 /* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair_size, float, 0.8);
 /* crosshair */ ATTRIB(MultiGrenadeLauncher, w_crosshair_color, vector, '0.5 1 0');
-/* wepimg    */ ATTRIB(MultiGrenadeLauncher, model2, string, "r_gren");
+/* wepimg    */ ATTRIB(MultiGrenadeLauncher, model2, string, "multi");
 /* refname   */ ATTRIB(MultiGrenadeLauncher, netname, string, "multigrenade");
 /* replace   */ ATTRIB(MultiGrenadeLauncher, weaponreplace, string, "grenadelauncher");
 /* wepname   */ ATTRIB(MultiGrenadeLauncher, m_name, string, _("Multi Grenade Launcher"));

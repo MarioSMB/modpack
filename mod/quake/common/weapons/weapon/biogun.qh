@@ -9,7 +9,7 @@ CLASS(Biogun, Weapon)
 /* crosshair */ ATTRIB(Biogun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(Biogun, w_crosshair_size, float, 0.6);
 /* crosshair */ ATTRIB(Biogun, w_crosshair_color, vector, '1 0.75 0');
-/* wepimg    */ ATTRIB(Biogun, model2, string, "nailgun");
+/* wepimg    */ ATTRIB(Biogun, model2, string, "biogun");
 /* refname   */ ATTRIB(Biogun, netname, string, "biogun");
 /* wepname   */ ATTRIB(Biogun, m_name, string, _("Biogun"));
 

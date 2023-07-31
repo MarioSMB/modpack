@@ -3,13 +3,13 @@
 CLASS(NapalmGun, Weapon)
 /* ammotype  */ ATTRIB(NapalmGun, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(NapalmGun, impulse, int, 6);
-/* spawnflags*/ ATTRIB(NapalmGun, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_IMPEL);
+/* spawnflags*/ ATTRIB(NapalmGun, spawnflags, int, WEP_FLAG_IMPEL);
 /* ammo */      ATTRIB(NapalmGun, aflag, int, 9);
 /* modelname */ ATTRIB(NapalmGun, mdl, string, "srock");
 /* crosshair */ ATTRIB(NapalmGun, w_crosshair, string, "gfx/crosshair66");
 /* crosshair */ ATTRIB(NapalmGun, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(NapalmGun, w_crosshair_color, vector, '1 0.5 0.75');
-/* wepimg    */ ATTRIB(NapalmGun, model2, string, "prox");
+/* wepimg    */ ATTRIB(NapalmGun, model2, string, "srock");
 /* refname   */ ATTRIB(NapalmGun, netname, string, "napalm");
 /* wepname   */ ATTRIB(NapalmGun, m_name, string, _("Napalm Gun"));
 

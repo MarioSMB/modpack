@@ -3,13 +3,13 @@
 CLASS(GrenadeLauncher, Weapon)
 /* ammotype  */ ATTRIB(GrenadeLauncher, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(GrenadeLauncher, impulse, int, 6);
-/* spawnflags*/ ATTRIB(GrenadeLauncher, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(GrenadeLauncher, spawnflags, int, WEP_FLAG_HUDFALLBACK);
 /* ammo */      ATTRIB(GrenadeLauncher, aflag, int, 5);
 /* modelname */ ATTRIB(GrenadeLauncher, mdl, string, "rock");
 /* crosshair */ ATTRIB(GrenadeLauncher, w_crosshair, string, "gfx/crosshairgrenadelauncher");
 /* crosshair */ ATTRIB(GrenadeLauncher, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(GrenadeLauncher, w_crosshair_color, vector, '1 0 0');
-/* wepimg    */ ATTRIB(GrenadeLauncher, model2, string, "rlaunch");
+/* wepimg    */ ATTRIB(GrenadeLauncher, model2, string, "rock");
 /* refname   */ ATTRIB(GrenadeLauncher, netname, string, "grenadelauncher");
 /* wepname   */ ATTRIB(GrenadeLauncher, m_name, string, _("Grenade Launcher"));
 

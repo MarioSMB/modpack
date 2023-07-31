@@ -3,13 +3,13 @@
 CLASS(LaserCannon, Weapon)
 /* ammotype  */ ATTRIB(LaserCannon, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(LaserCannon, impulse, int, 9);
-/* spawnflags*/ ATTRIB(LaserCannon, spawnflags, int, WEP_FLAG_HIPNOTIC);
+/* spawnflags*/ ATTRIB(LaserCannon, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_HIPNOTIC);
 /* ammo */      ATTRIB(LaserCannon, aflag, int, 30);
 /* modelname */ ATTRIB(LaserCannon, mdl, string, "laserg");
 /* crosshair */ ATTRIB(LaserCannon, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(LaserCannon, w_crosshair_size, float, 0.6);
 /* crosshair */ ATTRIB(LaserCannon, w_crosshair_color, vector, '0 1 0');
-/* wepimg    */ ATTRIB(LaserCannon, model2, string, "laser");
+/* wepimg    */ ATTRIB(LaserCannon, model2, string, "lasergun");
 /* refname   */ ATTRIB(LaserCannon, netname, string, "laser_gun");
 /* wepname   */ ATTRIB(LaserCannon, m_name, string, _("Laser Cannon"));
 

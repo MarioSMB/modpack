@@ -9,7 +9,7 @@ CLASS(PortalGun, Weapon)
 /* crosshair */ ATTRIB(PortalGun, w_crosshair, string, "gfx/crosshairporto");
 /* crosshair */ ATTRIB(PortalGun, w_crosshair_size, float, 0.45);
 /* crosshair */ ATTRIB(PortalGun, w_crosshair_color, vector, '1 1 1');
-/* wepimg    */ ATTRIB(PortalGun, model2, string, "mjolnir");
+/* wepimg    */ ATTRIB(PortalGun, model2, string, "portal");
 /* refname   */ ATTRIB(PortalGun, netname, string, "portalgun");
 /* wepname   */ ATTRIB(PortalGun, m_name, string, _("Portal Gun"));
 

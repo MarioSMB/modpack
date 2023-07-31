@@ -3,13 +3,13 @@
 CLASS(SuperLightning, Weapon)
 /* ammotype  */ ATTRIB(SuperLightning, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(SuperLightning, impulse, int, 8);
-/* spawnflags*/ ATTRIB(SuperLightning, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_IMPEL);
+/* spawnflags*/ ATTRIB(SuperLightning, spawnflags, int, WEP_FLAG_IMPEL);
 /* ammo */      ATTRIB(SuperLightning, aflag, int, 12);
 /* modelname */ ATTRIB(SuperLightning, mdl, string, "light2");
 /* crosshair */ ATTRIB(SuperLightning, w_crosshair, string, "gfx/crosshairminstanex");
 /* crosshair */ ATTRIB(SuperLightning, w_crosshair_size, float, 0.6);
 /* crosshair */ ATTRIB(SuperLightning, w_crosshair_color, vector, '0.5 1 1');
-/* wepimg    */ ATTRIB(SuperLightning, model2, string, "lightng");
+/* wepimg    */ ATTRIB(SuperLightning, model2, string, "light2");
 /* refname   */ ATTRIB(SuperLightning, netname, string, "lightme");
 /* wepname   */ ATTRIB(SuperLightning, m_name, string, _("LG-2 Prototype"));
 

@@ -3,13 +3,13 @@
 CLASS(Mjolnir, Weapon)
 /* ammotype  */ ATTRIB(Mjolnir, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(Mjolnir, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD);
 /* ammo */      ATTRIB(Mjolnir, aflag, int, 30);
 /* modelname */ ATTRIB(Mjolnir, mdl, string, "hammer");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair, string, "gfx/crosshaircrylink");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair_color, vector, '1 0.75 1');
-/* wepimg    */ ATTRIB(Mjolnir, model2, string, "mjolnir");
+/* wepimg    */ ATTRIB(Mjolnir, model2, string, "hammer");
 /* refname   */ ATTRIB(Mjolnir, netname, string, "hammer");
 /* wepname   */ ATTRIB(Mjolnir, m_name, string, _("Mjolnir"));
 

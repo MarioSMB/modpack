@@ -9,7 +9,7 @@ CLASS(Ripper, Weapon)
 /* crosshair */ ATTRIB(Ripper, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(Ripper, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Ripper, w_crosshair_color, vector, '1 1 0');
-/* wepimg    */ ATTRIB(Ripper, model2, string, "sshotgun");
+/* wepimg    */ ATTRIB(Ripper, model2, string, "buzzsaw");
 /* refname   */ ATTRIB(Ripper, netname, string, "lightning");
 /* wepname   */ ATTRIB(Ripper, m_name, string, _("Ripper"));
 

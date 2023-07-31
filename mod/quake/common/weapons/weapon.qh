@@ -62,6 +62,7 @@ const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (muta
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
 #endif
+const int WEP_FLAG_HUDFALLBACK   =  BIT(4); // weapon is displayed in the HUD as a default if no other weapon in the slot is selected
 const int WEP_FLAG_SECONDARY     =  BIT(5); // weapon has a secondary attack
 const int WEP_FLAG_NOAGGRO       =  BIT(6); // weapon does not aggro nearby monsters when used
 const int WEP_FLAG_HITUNDEAD     =  BIT(7); // weapon can bypass the undead's ability to shrug off attacks

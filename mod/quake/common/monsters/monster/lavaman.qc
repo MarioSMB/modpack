@@ -48,19 +48,40 @@ bool LavaManCheckAttack(entity this)
 void lavaman_hunt(entity this)
 {
 // go for another player if multi player
-	if(this.enemy.health <= 0)
-	{
-		vector viewPoint = this.origin + '0 0 96';
-		entity possibleEnemy;
-		if(this.charmed)
-			possibleEnemy = findflags(this.enemy, flags, FL_MONSTER);
-		else
-			possibleEnemy = find(this.enemy, classname, "player");
+	if(this.enemy.health <= 0 || (coop && random() < 0.02))
+		this.enemy = NULL;
 
-		traceline(viewPoint, possibleEnemy.origin, true, this);
-		if(trace_fraction == 1)
-			this.enemy = possibleEnemy;
+	if(!this.enemy)
+	{
+		RandomSelection_Init();
+		if(this.charmed)
+		{
+			FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+			{
+				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
+				{
+					traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
+					if(trace_fraction != 1)
+						continue;
+					RandomSelection_AddEnt(it, 1, 1);
+				}
+			});
+		}
+		else
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET),
+			{
+				// enable for line of sight
+				traceline(this.origin + '0 0 16', it.origin, true, this);
+				if(trace_fraction != 1)
+					continue;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+		}
+			
+		this.enemy = RandomSelection_chosen_ent;
 	}
+
 	if(this.enemy)
 	{
 		ai_face(this);
@@ -70,7 +91,12 @@ void lavaman_hunt(entity this)
 }
 
 void lavaman_fire1(entity this);
-void lavaman_rise17(entity this) { set_animofs(this, anim_lavaman_rise1, 17, lavaman_fire1); }
+void lavaman_rise17(entity this)
+{
+	set_animofs(this, anim_lavaman_rise1, 17, lavaman_fire1);
+	if(!this.enemy)
+		setthink(this, this.th_stand);
+}
 void lavaman_rise16(entity this) { set_animofs(this, anim_lavaman_rise1, 16, lavaman_rise17); }
 void lavaman_rise15(entity this) { set_animofs(this, anim_lavaman_rise1, 15, lavaman_rise16); }
 void lavaman_rise14(entity this) { set_animofs(this, anim_lavaman_rise1, 14, lavaman_rise15); }
@@ -359,25 +385,15 @@ void lavaman_missile(entity this, int AttackNumber)
 		lavaman_idle1(this);
 }
 
-void lavaman_awake(entity this, entity actor, entity trigger)
+void lavaman_awake(entity this)
 {
-	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
 	this.takedamage = DAMAGE_AIM;
-	this.flags |= FL_MONSTER;
-	this.ideal_yaw = this.angles * '0 1 0';
-	if(!this.yaw_speed)
-		this.yaw_speed = 20;
-	
-	_setmodel(this, "progs/lavaman.mdl");
-//	setsize(this, '-64 -64 -12', '64 64 128');
-//	setsize(this, '-32 -32 0', '32 32 120');
-	setsize(this, '-32 -32 -24', '32 32 64');
+
 	this.view_ofs = '0 0 48';
 
 //    this.health = 1500;
 
-	this.health = 1250 +(250 * autocvar_skill);
+	this.health = 1250 + (250 * autocvar_skill);
 
 	this.th_stand = lavaman_idle1;
 	this.th_walk = lavaman_walk1;
@@ -389,14 +405,6 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 
 	te_lavasplash(this.origin);
 
-	if(!(actor.powerups & POWERUP_INVISIBILITY))
-	{
-		if(!(actor.flags & FL_NOTARGET))
-		{
-			if(IS_PLAYER(actor))
-				this.enemy = actor;
-		}
-	}
 	droptofloor(this);
 
 	lavaman_rise1(this);
@@ -406,12 +414,14 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 //								  (-64 -64 -12) (64 64 128)
 /*QUAKED monster_lava_man (1 0 0) (-32 -32 -24) (32 32 64) Ambush Sleeping
 */
-spawnfunc(monster_lava_man)
+spawnfunc(monster_lava_man) { monster_start(this, (this.spawnflags & 2), MON_LAVAMAN); }
+#endif // SVQC
+
+#ifdef SVQC
+METHOD(LavaMan, mr_setup, bool(LavaMan this, entity actor))
 {
-	if(!MP_ROGUE) { delete(this); return; }
-	if(deathmatch) { delete(this); return; }
-	
-	precache_model("progs/lavaman.mdl");
+	TC(LavaMan, this);
+
 	precache_model("progs/lavaball.mdl");
 
 	precache_sound("weapons/rocket1i.wav");
@@ -421,19 +431,8 @@ spawnfunc(monster_lava_man)
 	precache_sound("boss1/pain.wav");
 	precache_sound("boss1/death.wav");
 
-	// NOTE: this isn't actually handled as a monster
-	// however, it does count towards the total monster count!
-	monsters_total += 1;
+	lavaman_awake(actor);
 
-	// cause the lavaman to rise from the lava when triggered.
-	if((this.spawnflags & 2) && this.targetname && this.targetname != "")
-	{
-		this.use = lavaman_awake;
-		return;
-	}
-
-	this.monsterdef = MON_LAVAMAN;
-
-	lavaman_awake(this, NULL, NULL);
+	return true;
 }
 #endif

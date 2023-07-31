@@ -3,13 +3,13 @@
 CLASS(ProximityGun, Weapon)
 /* ammotype  */ ATTRIB(ProximityGun, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(ProximityGun, impulse, int, 6);
-/* spawnflags*/ ATTRIB(ProximityGun, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_HIPNOTIC);
+/* spawnflags*/ ATTRIB(ProximityGun, spawnflags, int, WEP_FLAG_HIPNOTIC);
 /* ammo */      ATTRIB(ProximityGun, aflag, int, 6);
 /* modelname */ ATTRIB(ProximityGun, mdl, string, "prox");
 /* crosshair */ ATTRIB(ProximityGun, w_crosshair, string, "gfx/crosshairminelayer");
 /* crosshair */ ATTRIB(ProximityGun, w_crosshair_size, float, 0.9);
 /* crosshair */ ATTRIB(ProximityGun, w_crosshair_color, vector, '0.75 1 0');
-/* wepimg    */ ATTRIB(ProximityGun, model2, string, "gren_prox");
+/* wepimg    */ ATTRIB(ProximityGun, model2, string, "prox");
 /* refname   */ ATTRIB(ProximityGun, netname, string, "proximitygun");
 /* wepname   */ ATTRIB(ProximityGun, m_name, string, _("Proximity Gun"));
 

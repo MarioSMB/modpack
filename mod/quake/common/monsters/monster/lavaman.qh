@@ -7,13 +7,13 @@ MSG_MULTI_NOTIF(DEATH_SELF_MON_LAVAMAN,             1,  NULL,           INFO_DEA
 REGISTER_DEATHTYPE(MONSTER_LAVAMAN,         DEATH_SELF_MON_LAVAMAN,         DEATH_MURDER_MONSTER,           "monster")
 
 #ifdef GAMEQC
-MODEL(MON_LAVAMAN, "progs/boss.mdl");
+MODEL(MON_LAVAMAN, "progs/lavaman.mdl");
 
 SOUND(MON_LAVAMAN_SIGHT, "boss1/sight1");
 #endif
 
 CLASS(LavaMan, Monster)
-    ATTRIB(LavaMan, spawnflags, int, MON_FLAG_HIDDEN | MON_FLAG_STATIONARY | MON_FLAG_ROGUE);
+    ATTRIB(LavaMan, spawnflags, int, MON_FLAG_HIDDEN | MON_FLAG_ROGUE);
     ATTRIB(LavaMan, m_mins, vector, '-32 -32 -24');
     ATTRIB(LavaMan, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC

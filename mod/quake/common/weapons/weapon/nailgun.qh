@@ -3,13 +3,13 @@
 CLASS(Nailgun, Weapon)
 /* ammotype  */ ATTRIB(Nailgun, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Nailgun, impulse, int, 4);
-/* spawnflags*/ ATTRIB(Nailgun, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Nailgun, spawnflags, int, WEP_FLAG_HUDFALLBACK);
 /* ammo */      ATTRIB(Nailgun, aflag, int, 30);
 /* modelname */ ATTRIB(Nailgun, mdl, string, "nail");
 /* crosshair */ ATTRIB(Nailgun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(Nailgun, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(Nailgun, w_crosshair_color, vector, '1 1 0');
-/* wepimg    */ ATTRIB(Nailgun, model2, string, "nailgun");
+/* wepimg    */ ATTRIB(Nailgun, model2, string, "nail");
 /* refname   */ ATTRIB(Nailgun, netname, string, "nailgun");
 /* wepname   */ ATTRIB(Nailgun, m_name, string, _("Nailgun"));
 

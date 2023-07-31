@@ -2,6 +2,37 @@
 
 #include "../common/ent_cs.qh"
 
+float stringwidth(string text, float handleColors, vector sz); // defined in centerprint.qc
+
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN \
+	float textaspect, oldsz; \
+	vector dfs = drawfontscale; \
+	drawfontscale = '1 1 0'; \
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y; \
+	drawfontscale = dfs; \
+	if(sz.x/sz.y > textaspect) { \
+		oldsz = sz.x; \
+		sz.x = sz.y * textaspect; \
+		pos.x += (oldsz - sz.x) * 0.5; \
+	} else { \
+		oldsz = sz.y; \
+		sz.y = sz.x / textaspect; \
+		pos.y += (oldsz - sz.y) * 0.5; \
+	} \
+MACRO_END
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
+	SET_POS_AND_SZ_Y_ASPECT(false);
+	drawstring(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag);
+}
+
+// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
+	SET_POS_AND_SZ_Y_ASPECT(true);
+	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
+}
+
 string Sbar_PickWeapon_wepname(Weapon wpn)
 {
 	string img = wpn.model2;
@@ -23,23 +54,16 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/complete");
 	precache_pic("gfx/quake/finale");
 	precache_pic("gfx/quake/inter");
+	precache_pic("gfx/quake/inter_horde");
 
 	precache_pic("gfx/quake/r_invbar1");
-	precache_pic("gfx/quake/r_invbar2");
 
-	FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_IMPEL),
+	precache_pic("gfx/quake/inv_wep");
+
+	FOREACH(Weapons, it != WEP_Null,
 	{
 		precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(it)));
-		precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(it)));
 	});
-
-	for(int j = 0; j < 5; j++)
-	{
-		FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_IMPEL),
-		{
-			precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(it)));
-		});
-	}
 
 	for(int j = 0; j < 10; j++)
 	{
@@ -125,26 +149,10 @@ PRECACHE(Sbar)
 	precache_pic("gfx/hud/old/voteprogress_prog");
 }
 
-string Sbar_PickWeapon_inva(int cnum)
+string Sbar_PickWeapon(Weapon wpn)
 {
-	switch(cnum)
-	{
-		default:
-		case 2: return "inva1";
-		case 3: return "inva2";
-		case 4: return "inva3";
-		case 5: return "inva4";
-		case 6: return "inva5";
-	}
-}
-
-string Sbar_PickWeapon(int cnum, Weapon wpn, Weapon wep_id, bool with_prefix)
-{
-	string wep = ((wep_id) ? Sbar_PickWeapon_wepname(wep_id) : Sbar_PickWeapon_wepname(wpn));
-	string prefix = "";
-	if(with_prefix)
-		prefix = strcat(((cnum == 0) ? "inv" : ((cnum == 1) ? "inv2" : Sbar_PickWeapon_inva(cnum))), "_");
-	return strcat("gfx/quake/", prefix, wep);
+	string wep = Sbar_PickWeapon_wepname(wpn);
+	return strcat("gfx/quake/inv_", wep);
 }
 
 string Sbar_FacePrefix(string input)
@@ -389,28 +397,14 @@ void Sbar_SoloScoreboard()
 		sbar.x = (vid_conwidth - 320) >> 1;
 		sbar.y = (vid_conheight - 200) >> 1;
 
-		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter", drawgetimagesize("gfx/quake/inter"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter_horde", drawgetimagesize("gfx/quake/inter_horde"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		Sbar_DrawNum('180 64 0', timestr, strlen(timestr), 0);
 
 	// LA: Display as "a" instead of "a/b" if b is 0
-		if(STAT(SECRETS_TOTAL))
-		{
-			Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
-			Sbar_DrawPic('232 104 0', "gfx/quake/num_slash");
-			Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, 0);
-		}
-		else
-			Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+		Sbar_DrawNum('240 104 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
 
-		if(totalmonsters)
-		{
-			Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
-			Sbar_DrawPic('232 144 0', "gfx/quake/num_slash");
-			Sbar_DrawNum('240 144 0', itos(totalmonsters), 3, 0);
-		}
-		else
-			Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(STAT(TOP_SCORE)), 3, 0);
 
 		sbar = oldsbar;
 	}
@@ -523,7 +517,7 @@ void Sbar_Score(int margin)
 		Sbar_DrawXNum(vec2(-3*12, -12), score, 3, 12, '1 1 1');
 		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, (((STAT(HORDE_WAVE) % 3) == 0) ? '1 0 0 ' : '1 1 1'));
 	}
-	else if(autocvar_sbar_scorerank && me >= 0 && me < maxclients)
+	else if(autocvar_sbar_scorerank && deathmatch && me >= 0 && me < maxclients)
 	{
 		// Layout:
 		//
@@ -572,7 +566,7 @@ void Sbar_Score(int margin)
 		}
 	}
 
-	if(autocvar_sbar_gametime)
+	if(autocvar_sbar_gametime && (deathmatch || STAT(SKATING)))
 	{
 		if(deathmatch && STAT(TIMELIMIT))
 		{
@@ -915,42 +909,73 @@ void Sbar_DrawInventory()
 	}
 	oldweapons = myweapons;
 
-	if(WeaponIsFromRogue(viewmodels.activeweapon))
-		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
-	else
-		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
+	Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
 
 	// weapons
 	int wep_pos = 0;
-	FOREACH(Weapons, it != WEP_Null && (myweapons & it.m_wepset),
+	// axe is never displayed on the hud so start at 2
+	for(int j = 2; j <= 10; ++j)
 	{
-		if(it.spawnflags & WEP_FLAG_NOHUD)
-			continue;
-		float thetime = weapon_gettime[it.m_id];
-		int flashon = rint(max(0, time - thetime) * 10);
-		Weapon drawwep = GetDrawWeapon(it, viewmodels.activeweapon);
-		if(flashon >= 10)
-			flashon = (viewmodels.activeweapon == drawwep);
-		else
-			flashon = (flashon % 5) + 2;
-
-		Sbar_DrawPic(vec2(wep_pos * 24, -16), Sbar_PickWeapon(flashon, it, drawwep, WeaponHasPrefix(drawwep)));
-		++wep_pos;
-	});
+		int imp = j;
+		if(j == 10)
+			imp = 0; // we want special 0 weapons to show on slot 10!
+		Weapon wep = WEP_Null;
+		FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
+		{
+			if(viewmodels.activeweapon == it)
+			{
+				wep = it;
+				break; // always prefer the active weapon
+			}
+			if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
+				wep = it;
+		});
+		if(wep != WEP_Null)
+		{
+			float thetime = weapon_gettime[wep.m_id];
+			int flashon = rint(max(0, time - thetime) * 10);
+			if(flashon >= 10)
+				flashon = (viewmodels.activeweapon == wep);
+			else
+				flashon = (flashon % 5) + 2;
+			drawpic(sbar + vec2(wep_pos * 24, -16), "gfx/quake/inv_wep", '24 16 0', '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+			if(flashon)
+				drawfill(sbar + vec2(wep_pos * 24, -16), '24 16 0', '1 1 0', 0.33 * autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+			drawpic(sbar + vec2(wep_pos * 24, -16), Sbar_PickWeapon(wep), '24 16 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			vector col;
+			if(WeaponIsFromRogue(wep))
+				col = '1 0 0';
+			else if(flashon)//(viewmodels.activeweapon == wep)
+				col = '1 1 0';
+			else
+				col = '0.6 0.2 0';
+			float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
+			drawfont = 8; // FONT_USER
+			drawstring_aspect(sbar + vec2(wep_pos * 24, -8), ftos(imp), '8 8 0', col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
+			wep_pos += 1;
+		}
+	}
 
 	// ammo counts
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < 7; j++)
 	{
 		int itemstat;
 		switch(j)
 		{
 			default:
 			case 0: itemstat = getstati(STAT_SHELLS); break;
-			case 1: itemstat = ((viewmodels.activeweapon.ammo_type == IT_LAVA_NAILS) ? STAT(LAVA_NAILS) : getstati(STAT_NAILS)); break;
-			case 2: itemstat = ((viewmodels.activeweapon.ammo_type == IT_MULTI_ROCKETS) ? STAT(MULTI_ROCKETS) : getstati(STAT_ROCKETS)); break;
-			case 3: itemstat = ((viewmodels.activeweapon.ammo_type == IT_PLASMA_AMMO) ? STAT(PLASMA_AMMO) : getstati(STAT_CELLS)); break;
+			case 1: itemstat = getstati(STAT_NAILS); break;
+			case 2: itemstat = getstati(STAT_ROCKETS); break;
+			case 3: itemstat = getstati(STAT_CELLS); break;
+			case 4: itemstat = STAT(LAVA_NAILS); break;
+			case 5: itemstat = STAT(MULTI_ROCKETS); break;
+			case 6: itemstat = STAT(PLASMA_AMMO); break;
 		}
-		Sbar_DrawString(vec2((6 * j + ((j < 2) ? j : 0.5)) * 8, -24), ftos(itemstat));
+		// hack: only render mission pack ammo if we have ammo
+		if(j > 3 && itemstat <= 0)
+			continue;
+		Sbar_DrawString(vec2((6 * j + ((j < 2) ? j : ((j < 4) ? 0.5 : ((j < 5) ? 0.25 : 0.1)))) * 8, -24), ftos(itemstat));
 	}
 
 	// items
@@ -961,7 +986,7 @@ void Sbar_DrawInventory()
 	if(myitems & IT_KEY2)
 		Sbar_DrawPic(vec2(192 + 2 * 16, -16), "gfx/quake/sb_key2");
 	// base powerups
-	for(int j = 2; j < 6; j++)
+	for(int j = 2; j < 6; ++j)
 	{
 		if(mypowerups & BIT(j - 2))
 		{
@@ -982,7 +1007,7 @@ void Sbar_DrawInventory()
 		Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
 
 	// sigils
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < 4; ++j)
 	{
 		if(STAT(SERVERFLAGS) & BIT(j))
 			Sbar_DrawPic(vec2(320 - 32 + j * 8, -16), Sbar_PickSigil(j));
@@ -1041,36 +1066,6 @@ void Sbar_DrawFrags()
 Sbar_DrawVotes
 ===============
 */
-float stringwidth(string text, float handleColors, vector sz); // defined in centerprint.qc
-
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) MACRO_BEGIN \
-	float textaspect, oldsz; \
-	vector dfs = drawfontscale; \
-	drawfontscale = '1 1 0'; \
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y; \
-	drawfontscale = dfs; \
-	if(sz.x/sz.y > textaspect) { \
-		oldsz = sz.x; \
-		sz.x = sz.y * textaspect; \
-		pos.x += (oldsz - sz.x) * 0.5; \
-	} else { \
-		oldsz = sz.y; \
-		sz.y = sz.x / textaspect; \
-		pos.y += (oldsz - sz.y) * 0.5; \
-	} \
-MACRO_END
-
-// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
-void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(false);
-	drawstring(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag);
-}
-
-// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
-void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(true);
-	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
-}
 
 void Sbar_DrawVotes()
 {
@@ -1249,8 +1244,8 @@ void Sbar_Draw()
 			if(sb_lines > 24)
 			{
 				Sbar_DrawInventory();
-				if(maxclients > 1)
-					Sbar_DrawFrags();
+				//if(maxclients > 1)
+					//Sbar_DrawFrags();
 			}
 
 			if(sb_showscores || (STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard))

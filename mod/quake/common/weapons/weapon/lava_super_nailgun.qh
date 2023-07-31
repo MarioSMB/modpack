@@ -3,13 +3,13 @@
 CLASS(LavaSuperNailgun, Weapon)
 /* ammotype  */ ATTRIB(LavaSuperNailgun, ammo_type, int, IT_LAVA_NAILS);
 /* impulse   */ ATTRIB(LavaSuperNailgun, impulse, int, 5);
-/* spawnflags*/ ATTRIB(LavaSuperNailgun, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_ROGUE);
+/* spawnflags*/ ATTRIB(LavaSuperNailgun, spawnflags, int, WEP_FLAG_ROGUE);
 /* ammo */      ATTRIB(LavaSuperNailgun, aflag, int, 30);
 /* modelname */ ATTRIB(LavaSuperNailgun, mdl, string, "lava2");
 /* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(LavaSuperNailgun, w_crosshair_color, vector, '1 0.75 0.25');
-/* wepimg    */ ATTRIB(LavaSuperNailgun, model2, string, "r_superlava");
+/* wepimg    */ ATTRIB(LavaSuperNailgun, model2, string, "lava2");
 /* refname   */ ATTRIB(LavaSuperNailgun, netname, string, "lavasupernailgun");
 /* replace   */ ATTRIB(LavaSuperNailgun, weaponreplace, string, "supernailgun");
 /* wepname   */ ATTRIB(LavaSuperNailgun, m_name, string, _("Lava Super Nailgun"));

@@ -46,7 +46,7 @@ void boss_face(entity this)
 		{
 			FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET),
 			{
-				// enable for line of sight chthon
+				// enable for line of sight
 				//traceline(this.origin + '0 0 16', it.origin, true, this);
 				//if(trace_fraction != 1)
 					//continue;
@@ -63,7 +63,12 @@ void boss_face(entity this)
 		ai_face(this);
 }
 
-void boss_rise17(entity this) { set_animofs(this, anim_boss_rise, 17, boss_missile1); }
+void boss_rise17(entity this)
+{
+	set_animofs(this, anim_boss_rise, 17, boss_missile1);
+	if(!this.enemy)
+		setthink(this, this.th_stand);
+}
 void boss_rise16(entity this) { set_animofs(this, anim_boss_rise, 16, boss_rise17); }
 void boss_rise15(entity this) { set_animofs(this, anim_boss_rise, 15, boss_rise16); }
 void boss_rise14(entity this) { set_animofs(this, anim_boss_rise, 14, boss_rise15); }

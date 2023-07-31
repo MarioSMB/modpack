@@ -3,13 +3,13 @@
 CLASS(MultiRocketLauncher, Weapon)
 /* ammotype  */ ATTRIB(MultiRocketLauncher, ammo_type, int, IT_MULTI_ROCKETS);
 /* impulse   */ ATTRIB(MultiRocketLauncher, impulse, int, 7);
-/* spawnflags*/ ATTRIB(MultiRocketLauncher, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_ROGUE);
+/* spawnflags*/ ATTRIB(MultiRocketLauncher, spawnflags, int, WEP_FLAG_ROGUE);
 /* ammo */      ATTRIB(MultiRocketLauncher, aflag, int, 5);
 /* modelname */ ATTRIB(MultiRocketLauncher, mdl, string, "multi2");
 /* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair, string, "gfx/crosshairfireball");
 /* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair_size, float, 0.65);
 /* crosshair */ ATTRIB(MultiRocketLauncher, w_crosshair_color, vector, '1 0.75 0');
-/* wepimg    */ ATTRIB(MultiRocketLauncher, model2, string, "r_multirock");
+/* wepimg    */ ATTRIB(MultiRocketLauncher, model2, string, "multi2");
 /* refname   */ ATTRIB(MultiRocketLauncher, netname, string, "multirocketlauncher");
 /* replace   */ ATTRIB(MultiRocketLauncher, weaponreplace, string, "rocketlauncher");
 /* wepname   */ ATTRIB(MultiRocketLauncher, m_name, string, _("Multi Rocket Launcher"));

@@ -108,7 +108,8 @@ void PortalTouch(entity this, entity toucher)
 void T_PortalSpawn(entity this, int fire, entity hit, vector org)
 {
 	// changed to make portals only placed on world geometry
-	if(hit)//if(hit.classname == "portalproof" || hit.classname == "door" || hit.move_movetype == MOVETYPE_PUSH || hit.classname == "hardlight2" || hit.classname == "pellet")
+	bool hit_allowed = (hit.solid == SOLID_BSP && hit.move_movetype == MOVETYPE_NONE); // allow stationary bspmodels
+	if(hit && !hit_allowed)//if(hit.classname == "portalproof" || hit.classname == "door" || hit.move_movetype == MOVETYPE_PUSH || hit.classname == "hardlight2" || hit.classname == "pellet")
 	{
 		soundat(NULL, org, CH_TRIGGER, "portal/close.wav", 1, ATTEN_NORM);
 		te_teleport(org);
@@ -173,7 +174,7 @@ void PortalFire(entity this, int fire)
 	vector dir = this.origin + v_forward * 100000;
 
 	traceline(src, src + dir, false, this);
-	if(trace_fraction != 1)
+	if(trace_fraction != 1 && !(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && pointcontents(trace_endpos) != CONTENT_SKY)
 	{
 		if(trace_ent.classname == "hardlight")
 		{
