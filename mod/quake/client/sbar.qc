@@ -56,7 +56,7 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/inter");
 	precache_pic("gfx/quake/inter_horde");
 
-	precache_pic("gfx/quake/r_invbar1");
+	precache_pic("gfx/quake/ibar");
 
 	precache_pic("gfx/quake/inv_wep");
 
@@ -68,11 +68,9 @@ PRECACHE(Sbar)
 	for(int j = 0; j < 10; j++)
 	{
 		precache_pic(strcat("gfx/quake/num_", itos(j)));
-		precache_pic(strcat("gfx/quake/anum_", itos(j)));
 	}
 
 	precache_pic("gfx/quake/num_minus");
-	precache_pic("gfx/quake/anum_minus");
 	precache_pic("gfx/quake/num_slash");
 	precache_pic("gfx/quake/num_colon");
 
@@ -202,10 +200,9 @@ string Sbar_PickItem(int frm)
 	}
 }
 
-string Sbar_PickNum(bool col, string frm)
+string Sbar_PickNum(string frm)
 {
-	string with_color = ((col) ? "a" : "");
-	return strcat("gfx/quake/", with_color, "num_", frm);
+	return strcat("gfx/quake/num_", frm);
 }
 
 vector sbar;
@@ -245,7 +242,7 @@ void Sbar_DrawPic_Color(vector thepos, string pic, vector thecolor)
 }
 
 const int STAT_MINUS = 10; // num frame for '-' stats digit
-void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, int thecolor, int lettersize, vector letterscale)
+void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, vector thecolor, int lettersize, vector letterscale)
 {
 	int numlen = strlen(num);
 	if(numlen < digits)
@@ -260,18 +257,17 @@ void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, int thecolor
 			theframe = "colon";
 		else
 			theframe = chr2str(it);
-		string thepic = Sbar_PickNum(thecolor == 1, theframe);
-		vector piccolor = (thecolor == 2) ? '0 1 1' : '1 1 1';
+		string thepic = Sbar_PickNum(theframe);
 		if(!letterscale)
-			Sbar_DrawPic_Color(thepos, thepic, piccolor);
+			Sbar_DrawPic_Color(thepos, thepic, thecolor);
 		else
-			drawpic(sbar + thepos, thepic, letterscale, piccolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(sbar + thepos, thepic, letterscale, thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		thepos.x += lettersize;
 	});
 }
 
-void Sbar_DrawNum(vector thepos, string num, int digits, int thecolor)
+void Sbar_DrawNum(vector thepos, string num, int digits, vector thecolor)
 {
 	Sbar_DrawNum_lettersize(thepos, num, digits, thecolor, 24, '0 0 0');
 }
@@ -300,7 +296,7 @@ void Sbar_DrawXNum(vector thepos, int num, int digits, int lettersize, vector co
 			theframe = "colon";
 		else
 			theframe = chr2str(it);
-		drawpic(sbar + thepos, Sbar_PickNum(false, theframe), vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(sbar + thepos, Sbar_PickNum(theframe), vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		thepos.x += lettersize;
 	});
@@ -399,12 +395,12 @@ void Sbar_SoloScoreboard()
 
 		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter_horde", drawgetimagesize("gfx/quake/inter_horde"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		Sbar_DrawNum('180 64 0', timestr, strlen(timestr), 0);
+		Sbar_DrawNum('180 64 0', timestr, strlen(timestr), '1 1 1');
 
 	// LA: Display as "a" instead of "a/b" if b is 0
-		Sbar_DrawNum('240 104 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawNum('240 104 0', itos(STAT(MONSTERS_KILLED)), 3, '1 1 1');
 
-		Sbar_DrawNum('240 144 0', itos(STAT(TOP_SCORE)), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(STAT(TOP_SCORE)), 3, '1 1 1');
 
 		sbar = oldsbar;
 	}
@@ -571,12 +567,12 @@ void Sbar_Score(int margin)
 		if(deathmatch && STAT(TIMELIMIT))
 		{
 			string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
-			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
+			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), '1 1 1', 12, '12 12 0');
 		}
 		else
 		{
 			string timestr = seconds_tostring(time);
-			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
+			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), '1 1 1', 12, '12 12 0');
 		}
 	}
 
@@ -824,17 +820,17 @@ void Sbar_IntermissionOverlay()
 	Sbar_DrawNum(246, 64, num / 10, 2, false);
 	Sbar_DrawNum(266, 64, num % 10, 2, false);*/
 	string timestr = seconds_tostring(completed_time);
-	Sbar_DrawNum('180 64 0', timestr, strlen(timestr), 0);
+	Sbar_DrawNum('180 64 0', timestr, strlen(timestr), '1 1 1');
 
 // LA: Display as "a" instead of "a/b" if b is 0
 	if(STAT(SECRETS_TOTAL))
 	{
-		Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+		Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, '1 1 1');
 		Sbar_DrawPic('232 104 0', "gfx/quake/num_slash");
-		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, 0);
+		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, '1 1 1');
 	}
 	else
-		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, '1 1 1');
 
 	int totalmonsters = STAT(MONSTERS_TOTAL);
 	if(STAT(HORDE) && STAT(TOP_SCORE))
@@ -842,12 +838,12 @@ void Sbar_IntermissionOverlay()
 
 	if(totalmonsters)
 	{
-		Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, '1 1 1');
 		Sbar_DrawPic('232 144 0', "gfx/quake/num_slash");
-		Sbar_DrawNum('240 144 0', itos(totalmonsters), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(totalmonsters), 3, '1 1 1');
 	}
 	else
-		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, '1 1 1');
 }
 
 /*
@@ -909,7 +905,7 @@ void Sbar_DrawInventory()
 	}
 	oldweapons = myweapons;
 
-	Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
+	Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
 	int wep_pos = 0;
@@ -961,6 +957,7 @@ void Sbar_DrawInventory()
 	for(int j = 0; j < 7; j++)
 	{
 		int itemstat;
+		int offset;
 		switch(j)
 		{
 			default:
@@ -975,7 +972,11 @@ void Sbar_DrawInventory()
 		// hack: only render mission pack ammo if we have ammo
 		if(j > 3 && itemstat <= 0)
 			continue;
-		Sbar_DrawString(vec2((6 * j + ((j < 2) ? j : ((j < 4) ? 0.5 : ((j < 5) ? 0.25 : 0.1)))) * 8, -24), ftos(itemstat));
+		//int oldf = drawfont;
+		//drawfont = 11;
+		//drawstring(sbar + vec2(48 * j, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//drawfont = oldf;
+		Sbar_DrawString(vec2(48 * j, -24), ftos(itemstat));
 	}
 
 	// items
@@ -1262,7 +1263,7 @@ void Sbar_Draw()
 				// armor
 				if(STAT(POWERUPS) & POWERUP_INVULNERABILITY)
 				{
-					Sbar_DrawNum('24 0 0', itos(666), 3, 1);
+					Sbar_DrawNum('24 0 0', itos(666), 3, '0 1 1');
 					Sbar_DrawPic('0 0 0', "gfx/quake/disc");
 				}
 				else
@@ -1278,7 +1279,7 @@ void Sbar_Draw()
 					if(apic)
 					{
 						Sbar_DrawPic('0 0 0', apic);
-						Sbar_DrawNum('24 0 0', itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
+						Sbar_DrawNum('24 0 0', itos(getstati(STAT_ARMOR)), 3, ((getstati(STAT_ARMOR) <= 25) ? '1 0 0' : '1 1 1'));
 					}
 				}
 
@@ -1287,19 +1288,19 @@ void Sbar_Draw()
 
 				// health
 				int myhealth = rint(STAT(HEALTH));
-				int hpcolor = (STAT(HEALTH) <= 25);
+				vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
 				bool have_fieldgen = ((STAT(POWERUPS) & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0);
 				if(have_fieldgen)
 				{
 					myhealth += rint(STAT(FIELDGEN_HEALTH));
-					hpcolor = 2;
+					hpcolor = '0 1 1';
 				}
 				Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
 
 				if(STAT(SKATING))
 					{ /* nothing */}
 				else if(viewmodels.activeweapon == WEP_SPELLBOOK)
-					Sbar_DrawNum('248 0 0', itos(rint(STAT(MANA))), 3, STAT(MANA) <= 10);
+					Sbar_DrawNum('248 0 0', itos(rint(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
 				else
 				{
 					// ammo icon
@@ -1309,7 +1310,7 @@ void Sbar_Draw()
 					if(pic)
 					{
 						Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
-						Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, Sbar_ItemStat(ammotype) <= 10);
+						Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, ((Sbar_ItemStat(ammotype) <= 10) ? '1 0 0' : '1 1 1'));
 					}
 				}
 
