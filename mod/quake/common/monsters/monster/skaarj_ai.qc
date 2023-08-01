@@ -41,7 +41,7 @@ bool sk_checkprojectiles(entity this)
 
 bool sk_checkenemy(entity this)
 {
-	if(this.enemy.health <= 0)
+	if(this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET))
 	{
 		this.enemy = NULL;
 	// FIXME: look all around for other targets
