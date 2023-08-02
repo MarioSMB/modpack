@@ -194,7 +194,7 @@ void cl_shop_draw()
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
 	sui_drawtext('0 140 0', '16 16 0', "SHOP", '0.3 1 0.3', 1, 0);
-	sui_drawtext('0 160 0', '16 16 0', sprintf("Score: %s", entcs_GetClientFrags(player_localnum)), '1 1 1', 1, 0);
+	sui_drawtext('0 160 0', '16 16 0', sprintf("Score: %d", entcs_GetClientFrags(player_localnum)), '1 1 1', 1, 0);
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
