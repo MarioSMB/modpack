@@ -2019,10 +2019,17 @@ void Physics_Frame()
 			continue;
 
 		// TODO: better location for this hack
-		if(IS_MONSTER(it) && it.charmed && it.health > 0 && time > it.charmed_healthcheck)
+		if(IS_MONSTER(it) && (it.charmed || it.category == CATEGORY_MONSTER) && it.health > 0 && time > it.charmed_healthcheck)
 		{
-			it.charmed_healthcheck = time + 0.25;
-			it.health -= 1;
+			float hitamount = 1;
+			float hitdelay = 0.25;
+			if(it.category == CATEGORY_MONSTER)
+			{
+				hitamount = (it.max_health >= 1000) ? 10 : 2;
+				hitdelay = 1;
+			}
+			it.charmed_healthcheck = time + hitdelay;
+			it.health -= hitamount;
 			if(it.health <= 0)
 				T_Damage(it, NULL, NULL, 1, DEATH_GENERIC.m_id);
 		}

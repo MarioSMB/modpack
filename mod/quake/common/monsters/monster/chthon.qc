@@ -44,7 +44,7 @@ void boss_face(entity this)
 		}
 		else
 		{
-			FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET),
+			FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && !(it.flags & FL_NOTARGET),
 			{
 				// enable for line of sight
 				//traceline(this.origin + '0 0 16', it.origin, true, this);
@@ -302,9 +302,10 @@ void boss_awake(entity this)
 	// Checking a spawnflag to see if chthon is killable
 	this.takedamage = DAMAGE_AIM;
 	this.th_die = boss_die;
+	this.th_stand = boss_idle1;
 	this.health = 3000;
 	this.max_health = this.health;
-	this.use = monster_use; // prevent from being re-triggered into boss_awake state
+	this.use = func_null; // prevent from being re-triggered into boss_awake state
 	if(world.model == "maps/mgend.bsp" && !this.charmed) // special damage states
 		this.th_pain = boss_pain; // Yoder add, September 9 2020
 
