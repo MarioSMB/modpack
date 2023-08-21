@@ -1,6 +1,18 @@
 #ifdef SVQC
 
+// list of maps that require clips to be functional, as the engine currently has collision issues
+// some default fallbacks that are known to be broken without it
+string autocvar_sv_quake_clippedmaps = "cchorde1 eod4 eod7 targstart targ1m1 targ1m2 targ1m3";
+
 int autocvar_noexit;
+
+bool changelevel_checkinlist(string map_name, string list)
+{
+	if (map_name == "" || list == "")
+		return false;
+
+	return (strstrofs(list, map_name, 0) >= 0);
+}
 
 .entity chlevel_targ;
 void changelevel_touch(entity this, entity toucher)
@@ -48,7 +60,7 @@ void changelevel_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);
 
 	// massive hack to work around collision issues!
-	if(this.map == "cchorde1" || substring(this.map, 0, 4) == "targ")
+	if(changelevel_checkinlist(this.map, autocvar_sv_quake_clippedmaps))
 		cvar_set("mod_q1bsp_polygoncollisions", "0");
 	else
 		cvar_set("mod_q1bsp_polygoncollisions", "1");
