@@ -984,8 +984,7 @@ void cvar_changes_init()
 		BADPREFIX("g_forced_team_");
 		BADCVAR("sv_muteban_list");
 		BADCVAR("sv_voteban_list");
-		BADCVAR("sv_allow_customplayermodels_idlist");
-		BADCVAR("sv_allow_customplayermodels_speciallist");
+		BADPREFIX("sv_allow_customplayermodels_");
 
 		// mapinfo
 		BADCVAR("fraglimit");
