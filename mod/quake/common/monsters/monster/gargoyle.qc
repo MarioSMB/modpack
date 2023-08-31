@@ -443,6 +443,9 @@ bool GargoyleCheckAttack(entity this)
 	if(!this.enemy_visible)
 		return false;
 
+	if(!this.th_missile)
+		return false;
+
 	entity targ = this.enemy;
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;

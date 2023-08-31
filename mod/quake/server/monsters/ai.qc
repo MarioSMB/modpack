@@ -1408,7 +1408,7 @@ void ai_run_melee(entity this)
 	this.ideal_yaw = this.enemy_yaw;
 	changeyaw(this);
 
-	if(FacingIdeal(this))
+	if(this.th_melee && FacingIdeal(this))
 	{
 		this.th_melee(this);
 		this.attack_state = AS_STRAIGHT;
@@ -1427,7 +1427,7 @@ void ai_run_missile(entity this)
 {
 	this.ideal_yaw = this.enemy_yaw;
 	changeyaw(this);
-	if(FacingIdeal(this))
+	if(this.th_missile && FacingIdeal(this))
 	{
 		this.th_missile(this);
 		this.attack_state = AS_STRAIGHT;
