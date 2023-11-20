@@ -174,7 +174,7 @@ void pinhead_use(entity this, entity actor, entity trigger)
 		entity head = findradius(this.origin, dist);
 		while(head)
 		{
-			if((IS_CLIENT(head) || IS_MONSTER(head)) && head.takedamage && vdist((head.origin + '0 0 16') - this.origin, <, dist))
+			if((IS_PLAYER(head) || IS_MONSTER(head)) && head.takedamage && vdist((head.origin + '0 0 16') - this.origin, <, dist))
 			{
 				traceline(this.origin, (head.origin + '0 0 16'), true, this);
 				if(trace_fraction >= 1)

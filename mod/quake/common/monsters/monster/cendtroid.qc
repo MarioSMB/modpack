@@ -383,7 +383,7 @@ void ScourgeTriggerThink(entity this)
 //
 void ScourgeTriggerTouch(entity this, entity toucher)
 {
-	if(IS_MONSTER(toucher) || IS_CLIENT(toucher))
+	if(IS_MONSTER(toucher) || IS_PLAYER(toucher))
 		return;
 	if(toucher.move_movetype != MOVETYPE_FLYMISSILE)
 		return;

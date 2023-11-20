@@ -28,12 +28,14 @@ void Physics_UpdateStats(entity this)
 .vector movement_old;
 .vector v_angle_old;
 .int buttons_old;
+.bool button_chat_old;
 void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	if (autocvar_sv_maxidle > 0) {
 		if (buttons != this.buttons_old
 		    || this.movement != this.movement_old
+		    || PHYS_INPUT_BUTTON_BUTTON_CHAT(this) != this.button_chat_old
 		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
 	}
 }
@@ -433,6 +435,7 @@ void PM_Main(entity this, float dt)
 	this.movement_old = this.movement;
 	this.v_angle_old = this.v_angle;
 	this.buttons_old = PHYS_INPUT_BUTTON_MASK(this);
+	this.button_chat_old = PHYS_INPUT_BUTTON_BUTTON_CHAT(this);
 #endif
 
 	if(this.move_movetype == MOVETYPE_NONE)

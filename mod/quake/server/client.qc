@@ -1355,6 +1355,39 @@ called each time a player is spawned
 void DecodeLevelParms(entity this);
 void player_touch(entity this, entity toucher);
 
+.float rejoin_delay;
+float autocvar_sv_quake_rejoin_delay = 3;
+void ObserverThink(entity this)
+{
+	if (this.flags & FL_JUMPRELEASED) {
+		if (PHYS_INPUT_BUTTON_JUMP(this)) {
+			this.flags &= ~FL_JUMPRELEASED;
+			if(time >= this.rejoin_delay)
+				this.flags |= FL_SPAWNING;
+		}
+	} else { // jump pressed
+		if (!PHYS_INPUT_BUTTON_JUMP(this)) {
+			this.flags |= FL_JUMPRELEASED;
+			// primary attack pressed
+			if(this.flags & FL_SPAWNING)
+			{
+				this.flags &= ~FL_SPAWNING;
+				this.classname = STR_PLAYER;
+				this.rejoin_delay = time + autocvar_sv_quake_rejoin_delay; // prevent fast spec-rejoin
+				PutClientInServer(this);
+				return;
+			}
+		}
+	}
+
+	if(MP_MG && horde_ent)
+	{
+		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
+			horde_respawn_all();
+		return;
+	}
+}
+
 void RunPostPutClientInServer(entity this) 
 {
 	entity player = this.owner;
@@ -1394,6 +1427,73 @@ void RunPostPutClientInServer(entity this)
 
 void PutClientInServer(entity this)
 {
+	if(IS_OBSERVER(this))
+		PutObserverInServer(this);
+	else
+		PutPlayerInServer(this);
+}
+
+void PutObserverInServer(entity this)
+{
+	if(IS_PLAYER(this))
+	{
+		// was a player, recount votes and ready status
+		if(IS_REAL_CLIENT(this))
+		{
+			if (vote_called) { VoteCount(false); }
+		}
+		entcs_update_players(this);
+	}
+
+	entity spot = SelectSpawnPoint(this, false);
+
+	setorigin(this, spot.origin + '0 0 32');
+	this.angles = vec2(spot.angles);
+	this.fixangle = true;
+
+	if(this.damagedbycontents)
+		IL_REMOVE(g_damagedbycontents, this);
+	this.damagedbycontents = false;
+	this.takedamage = DAMAGE_NO;
+	this.solid = SOLID_NOT;
+	set_movetype(this, MOVETYPE_NONE);
+	this.flags = FL_CLIENT | FL_NOTARGET;
+	this.effects = 0;
+	this.alpha = 0;
+	this.scale = 0;
+	this.pain_finished = 0;
+	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+	setthink(this, func_null);
+	this.nextthink = 0;
+	this.deadflag = DEAD_NO;
+	this.exptime = 0;
+
+	this.classname = STR_OBSERVER;
+	this.health = -666;
+	setmodel(this, MDL_Null);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	this.view_ofs = '0 0 0';
+
+	this.items = 0;
+	STAT(WEAPONS, this) = '0 0 0';
+	this.drawonlytoclient = this;
+
+	this.weaponmodel = "";
+	this.weaponentity = NULL;
+	this.velocity = '0 0 0';
+	this.avelocity = '0 0 0';
+	this.punchangle = '0 0 0';
+	this.punchvector = '0 0 0';
+	this.oldvelocity = this.velocity;
+
+	//if(this.just_joined)
+	this.just_joined = true; // HACK: for horde to properly "detect" when a player is attempting to join again
+}
+
+void PutPlayerInServer(entity this)
+{
 	entity spot = SelectSpawnPoint(this, false);
 
 	this.classname = STR_PLAYER;
@@ -1409,6 +1509,7 @@ void PutClientInServer(entity this)
 	clear_powerups(this);
 	this.healthrot_nextcheck = 0;
 	this.effects = EF_TELEPORT_BIT;
+	this.drawonlytoclient = NULL;
 
 	this.viewloc = NULL;
 
@@ -1933,6 +2034,12 @@ void PlayerPreThink(entity this)
 	{
 		IntermissionThink(this);	// otherwise a button could be missed between
 		return;					// the think tics
+	}
+
+	if(IS_OBSERVER(this))
+	{
+		ObserverThink(this);
+		return;
 	}
 
 	if(this.view_ofs == '0 0 0')
@@ -2714,8 +2821,7 @@ void ClientDisconnect(entity this)
 	// since they aren't *really* leaving
 
 	// yoder oct13, horde fix for dc-ing players
-	if(MP_MG && autocvar_horde)
-		this.health = 0;
+	this.health = 0;
 
 	// let everyone else know
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname, this.frags);
@@ -2992,6 +3098,24 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	}
 }
 
+void ClientCommand_spectate(entity this)
+{
+	if(!autocvar_sv_spectate)
+	{
+		sprint(this, "Spectating is disabled\n");
+		return;
+	}
+
+	if(IS_OBSERVER(this))
+	{
+		sprint(this, "You are already spectating\n");
+		return;
+	}
+
+	if(IS_PLAYER(this))
+		PutObserverInServer(this);
+}
+
 void exploder_think(entity this)
 {
 	te_explosion2(this.origin, this.count, this.cnt);
@@ -3063,6 +3187,12 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "vote")
 	{
 		VoteCommand(CMD_REQUEST_COMMAND, this, argc, command);
+		return;
+	}
+
+	if(cmd_name == "spectate")
+	{
+		ClientCommand_spectate(this);
 		return;
 	}
 

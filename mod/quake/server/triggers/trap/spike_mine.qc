@@ -16,7 +16,7 @@ void spikemine_Home(entity this)
 		entity head = findradius(this.origin, 2000);
 		while(head)
 		{
-			if(!(head.flags & FL_NOTARGET) && IS_CLIENT(head))
+			if(!(head.flags & FL_NOTARGET) && IS_PLAYER(head))
 			{
 				if(visible(this, head) && (head.health > 0))
 				{

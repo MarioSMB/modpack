@@ -7,11 +7,11 @@ int maxclients;
 
 const string STR_PLAYER = "player";
 //const string STR_SPECTATOR = "spectator";
-//const string STR_OBSERVER = "observer";
+const string STR_OBSERVER = "observer";
 
 #define IS_PLAYER(v) ((v).classname == STR_PLAYER)
 //#define IS_SPEC(v) ((v).classname == STR_SPECTATOR)
-//#define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
+#define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
 
 #define IS_CLIENT(v) (v.flags & FL_CLIENT)
 /** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */

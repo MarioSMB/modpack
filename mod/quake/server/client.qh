@@ -14,6 +14,8 @@ bool autocvar_sv_quake_globalkeys = true;
 float autocvar_sv_maxidle;
 int autocvar_sv_maxidle_minplayers;
 
+bool autocvar_sv_spectate;
+
 .float idlekick_lasttimeleft;
 .float parm_idlesince;
 
@@ -110,6 +112,10 @@ void server_reset();
 string getcdtrack(int numb);
 
 void SendCDTrack(entity to, int numb);
+
+void PutPlayerInServer(entity this);
+
+void PutObserverInServer(entity this);
 
 float intermission_exittime;
 

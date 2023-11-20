@@ -22,7 +22,7 @@ void T_SpearTouch(entity this, entity toucher)
 	if(toucher && toucher.takedamage && (IS_PLAYER(toucher) || IS_MONSTER(toucher)))
 	{
 		_setmodel(this, "progs/impstuck.mdl");
-		if(IS_CLIENT(toucher))
+		if(IS_PLAYER(toucher))
 			knockback = 400 - (toucher.armorvalue * 3);
 		else if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
 			knockback = max(50, 300 - vlen(this.maxs - this.mins)); 
@@ -140,7 +140,7 @@ void T_SpearTouch(entity this, entity toucher)
 		this.nextthink = time + 0.5;
 		this.count = time + 3;
 	}
-	else if(toucher && (toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_CLIENT(toucher) || IS_MONSTER(toucher)))
+	else if(toucher && (toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH || IS_PLAYER(toucher) || IS_MONSTER(toucher)))
 	{
 		_setmodel(this, "progs/impwall.mdl");
 		BecomePurpleExplosion(this, toucher, 50);

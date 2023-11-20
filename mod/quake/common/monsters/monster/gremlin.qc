@@ -855,7 +855,7 @@ void Gremlin_MeleeAttack(entity this)
 	{
 		if(this.stoleweapon == 1)
 			objerror(this, "gremlin meleeing with stolen weapon");
-		else if(IS_CLIENT(this.enemy) && random() < 0.4)
+		else if(IS_PLAYER(this.enemy) && random() < 0.4)
 		{
 			if(GremlinAttemptWeaponSteal(this))
 				return;
@@ -907,14 +907,14 @@ entity GremlinFindVictim(entity this)
 	entity head = findradius(this.origin, 1000);
 	while(head)
 	{
-		if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_CLIENT(head)))
+		if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_PLAYER(head)))
 		{
 			if(visible(this, head) && (head.health > 0) && (head !=this))
 			{
 				float head_dist = vlen(head.origin - this.origin);
 				if(head == this.lastvictim)
 					head_dist = head_dist * 2;
-				if(head.flags & FL_CLIENT)
+				if(IS_PLAYER(head))
 					head_dist = head_dist / 1.5;
 				if(head.classname == this.classname)
 					head_dist = head_dist * 1.5;
@@ -1349,7 +1349,7 @@ void Gremlin_Split(entity this)
 		proceed = true;
 		while (head)
 		{
-			if(head.health > 0 && (IS_MONSTER(head) || IS_CLIENT(head)))
+			if(head.health > 0 && (IS_MONSTER(head) || IS_PLAYER(head)))
 				proceed = false;
 			head = head.chain;
 		}

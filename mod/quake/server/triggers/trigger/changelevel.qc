@@ -35,7 +35,7 @@ void changelevel_touch(entity this, entity toucher)
 	int plnum = 0;
 	int realplnum = 0;
 	// let's not count bots
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
 	{
 		++realplnum;
 		if(it.chlevel_targ == this)
