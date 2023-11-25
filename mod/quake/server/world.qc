@@ -225,6 +225,13 @@ void set_animofs(entity this, int frm, int offs, void(entity) tnk)
 	set_anim(this, frm + realoffset, tnk);
 }
 
+void wep_set_anim(entity this, int frm, void(entity) tnk)
+{
+	this.m_frame = frm;
+	setthink(this, tnk);
+	this.nextthink = time + FRAME_TIME;
+}
+
 void light_use(entity this, entity actor, entity trigger)
 {
 	if(this.spawnflags & START_OFF)

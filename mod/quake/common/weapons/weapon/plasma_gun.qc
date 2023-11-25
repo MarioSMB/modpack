@@ -1,12 +1,12 @@
 #include "plasma_gun.qh"
 
 #ifdef SVQC
-void player_plasma6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponentity.m_frame = 5; } //ooppee uses the rocket fire animation for thirdperson, it's 6 frames though, not 5 so had to dupe it.
-void player_plasma5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_plasma6); this.weaponentity.m_frame = 5; }
-void player_plasma4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_plasma5); this.weaponentity.m_frame = 4; }
-void player_plasma3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_plasma4); this.weaponentity.m_frame = 3; }
-void player_plasma2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_plasma3); this.weaponentity.m_frame = 2; }
-void player_plasma1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_plasma2); this.weaponentity.m_frame = 1; this.effects |= EF_MUZZLEFLASH; }
+void wep_plasmagun_plasma6(entity this) { wep_set_anim(this, 5, w_ready); } //ooppee uses the rocket fire animation for thirdperson, it's 6 frames though, not 5 so had to dupe it.
+void wep_plasmagun_plasma5(entity this) { wep_set_anim(this, 5, wep_plasmagun_plasma6); }
+void wep_plasmagun_plasma4(entity this) { wep_set_anim(this, 4, wep_plasmagun_plasma5); }
+void wep_plasmagun_plasma3(entity this) { wep_set_anim(this, 3, wep_plasmagun_plasma4); }
+void wep_plasmagun_plasma2(entity this) { wep_set_anim(this, 2, wep_plasmagun_plasma3); }
+void wep_plasmagun_plasma1(entity this) { wep_set_anim(this, 1, wep_plasmagun_plasma2); player_rocket1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
 
 void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 {
@@ -225,7 +225,7 @@ METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor, int fire))
 		//      or W_FirePlasma, but same lighting and frames...
 		//actor.attack_finished = time + 1.0;//ooppee edited line out
 		//player_light1(actor);//ooppee edited line out
-		player_plasma1(actor); //ooppee added
+		wep_plasmagun_plasma1(actor.weaponentity); //ooppee added
 		W_FirePlasma(actor); //ooppee added
 		actor.attack_finished = time + 1.0; //ooppee added (same as above code but needs to be executed AFTER)
 	}

@@ -20,9 +20,6 @@ REGISTER_WEAPON(LAVA_NAILGUN, NEW(LavaNailgun));
 //SPAWNFUNC_WEAPON(weapon_shotgun, WEP_LAVA_NAILGUN)
 
 #ifdef SVQC
-void player_lava_nail1(entity this);
-void player_lava_nail2(entity this);
-
 void W_FireLavaSpikes(entity this, float ox);
 
 .bool lava_nailgun_fired;

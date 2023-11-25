@@ -124,7 +124,7 @@ METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_shot1(actor);
+		wep_generic_shot1(actor.weaponentity);
 		W_FireShock(actor);
 		actor.attack_finished = time + 0.15;
 	}

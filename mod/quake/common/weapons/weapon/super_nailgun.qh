@@ -19,8 +19,5 @@ REGISTER_WEAPON(SUPER_NAILGUN, NEW(SuperNailgun));
 SPAWNFUNC_WEAPON(weapon_supernailgun, WEP_SUPER_NAILGUN)
 
 #ifdef SVQC
-void player_supernail2(entity this);
-void player_supernail1(entity this);
-
 void W_FireSuperSpikes(entity this);
 #endif

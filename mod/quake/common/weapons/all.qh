@@ -22,7 +22,11 @@ noref bool autocvar_cl_quake_weapon_switch_fallback_to_impulse = true;
 
 #ifdef SVQC
 void player_shot1(entity this);
+void wep_generic_shot1(entity this);
 void player_rocket1(entity this);
+void wep_generic_rocket1(entity this);
+void player_nail1(entity this);
+void player_light1(entity this);
 #endif
 
 #ifdef SVQC

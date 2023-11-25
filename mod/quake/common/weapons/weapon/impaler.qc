@@ -2,15 +2,26 @@
 
 #ifdef SVQC
 void player_shotimp10(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
-void player_shotimp9(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shotimp10); this.weaponentity.m_frame = 8; }
-void player_shotimp8(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shotimp9); this.weaponentity.m_frame = 7; }
-void player_shotimp7(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shotimp8); this.weaponentity.m_frame = 6; _sound(this, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
-void player_shotimp6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp7); this.weaponentity.m_frame = 6; }
-void player_shotimp5(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp6); this.weaponentity.m_frame = 5; }
-void player_shotimp4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp5); this.weaponentity.m_frame = 4; W_FireSpear(this); }
-void player_shotimp3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp4); this.weaponentity.m_frame = 3; this.effects |= EF_MUZZLEFLASH; }
-void player_shotimp2(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp3); this.weaponentity.m_frame = 2; _sound(this, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
-void player_shotimp1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp2); this.weaponentity.m_frame = 1; }
+void player_shotimp9(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shotimp10); }
+void player_shotimp8(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shotimp9); }
+void player_shotimp7(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shotimp8); }
+void player_shotimp6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp7); }
+void player_shotimp5(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp6); }
+void player_shotimp4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp5); }
+void player_shotimp3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp4); }
+void player_shotimp2(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp3); }
+void player_shotimp1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp2); }
+
+void wep_impaler_shotimp10(entity this) { wep_set_anim(this, 8, w_ready); }
+void wep_impaler_shotimp9(entity this) { wep_set_anim(this, 8, wep_impaler_shotimp10); }
+void wep_impaler_shotimp8(entity this) { wep_set_anim(this, 7, wep_impaler_shotimp9); }
+void wep_impaler_shotimp7(entity this) { wep_set_anim(this, 6, wep_impaler_shotimp8); _sound(this.owner, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
+void wep_impaler_shotimp6(entity this) { wep_set_anim(this, 6, wep_impaler_shotimp7); }
+void wep_impaler_shotimp5(entity this) { wep_set_anim(this, 5, wep_impaler_shotimp6); }
+void wep_impaler_shotimp4(entity this) { wep_set_anim(this, 4, wep_impaler_shotimp5); W_FireSpear(this.owner); }
+void wep_impaler_shotimp3(entity this) { wep_set_anim(this, 3, wep_impaler_shotimp4); this.owner.effects |= EF_MUZZLEFLASH; }
+void wep_impaler_shotimp2(entity this) { wep_set_anim(this, 2, wep_impaler_shotimp3); _sound(this.owner, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
+void wep_impaler_shotimp1(entity this) { wep_set_anim(this, 1, wep_impaler_shotimp2); player_shotimp1(this.owner); }
 
 void T_SpearTouch(entity this, entity toucher)
 {
@@ -444,7 +455,7 @@ METHOD(Impaler, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_shotimp1(actor);
+		wep_impaler_shotimp1(actor.weaponentity);
 		actor.attack_finished = time + 1;
 	}
 }

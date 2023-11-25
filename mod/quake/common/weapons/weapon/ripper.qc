@@ -121,6 +121,7 @@ METHOD(Ripper, wr_think, void(entity thiswep, entity actor, int fire))
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
 		W_FireRipper(actor);
+		wep_generic_shot1(actor.weaponentity);
 		actor.attack_finished = time + 0.66;
 	}
 }

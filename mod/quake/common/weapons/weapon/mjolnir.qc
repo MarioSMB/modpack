@@ -1,19 +1,33 @@
 #include "mjolnir.qh"
 
 #ifdef SVQC
-void player_hammer6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); this.weaponentity.m_frame = 4; }
-void player_hammer5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer6); this.weaponentity.m_frame = 4; }
-void player_hammer4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
-void player_hammer3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer4); this.weaponentity.m_frame = 3; }
-void player_hammer2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_hammer3); this.weaponentity.m_frame = 2; }
-void player_hammer1(entity this) { set_anim(this, anim_player_axatt1 + 3, player_hammer2); this.weaponentity.m_frame = 1; }
+void player_hammer6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); }
+void player_hammer5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer6); }
+void player_hammer4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer5); }
+void player_hammer3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_hammer4); }
+void player_hammer2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_hammer3); }
+void player_hammer1(entity this) { set_anim(this, anim_player_axatt1 + 3, player_hammer2); }
 
-void player_mjolnir6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); this.weaponentity.m_frame = 4; }
-void player_mjolnir5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir6); this.weaponentity.m_frame = 4; }
-void player_mjolnir4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir5); this.weaponentity.m_frame = 4; HIP_FireMjolnir(this); }
-void player_mjolnir3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir4); this.weaponentity.m_frame = 3; }
-void player_mjolnir2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_mjolnir3); this.weaponentity.m_frame = 2; }
-void player_mjolnir1(entity this) { set_anim(this, anim_player_axatt1, player_mjolnir2); this.weaponentity.m_frame = 1; }
+void player_mjolnir6(entity this) { set_anim(this, anim_player_axatt1 + 2, player_run); }
+void player_mjolnir5(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir6); }
+void player_mjolnir4(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir5); }
+void player_mjolnir3(entity this) { set_anim(this, anim_player_axatt1 + 2, player_mjolnir4); }
+void player_mjolnir2(entity this) { set_anim(this, anim_player_axatt1 + 1, player_mjolnir3); }
+void player_mjolnir1(entity this) { set_anim(this, anim_player_axatt1, player_mjolnir2); }
+
+void wep_mjolnir_hammer6(entity this) { wep_set_anim(this, 4, w_ready); }
+void wep_mjolnir_hammer5(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer6); }
+void wep_mjolnir_hammer4(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer5); HIP_FireMjolnir(this.owner); }
+void wep_mjolnir_hammer3(entity this) { wep_set_anim(this, 3, wep_mjolnir_hammer4); }
+void wep_mjolnir_hammer2(entity this) { wep_set_anim(this, 2, wep_mjolnir_hammer3); }
+void wep_mjolnir_hammer1(entity this)
+{
+	wep_set_anim(this, 1, wep_mjolnir_hammer2);
+	if(this.owner.ammo_cells < 30)
+		player_hammer1(this.owner);
+	else
+		player_mjolnir1(this.owner);
+}
 
 void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 {
@@ -268,10 +282,7 @@ METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		if(actor.ammo_cells < 30)
-			player_hammer1(actor);
-		else
-			player_mjolnir1(actor);
+		wep_mjolnir_hammer1(actor.weaponentity);
 		actor.attack_finished = time + 0.8;
 	}
 }

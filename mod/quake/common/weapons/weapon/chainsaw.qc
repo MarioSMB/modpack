@@ -4,25 +4,35 @@
 
 #ifdef SVQC
 
-void player_chainsaw6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_run); this.weaponentity.m_frame = 10; }
-void player_chainsaw5(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw6); this.weaponentity.m_frame = 9; W_FireSaw(this); }
-void player_chainsaw4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_chainsaw5); this.weaponentity.m_frame = 8;
-	if(!this.button0) {
-		player_run(this);
-		return;
-	}
-}
-void player_chainsaw3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw4); this.weaponentity.m_frame = 7; W_FireSaw(this); }
-void player_chainsaw2(entity this)
+void player_chainsaw6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_run); }
+void player_chainsaw5(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw6); }
+void player_chainsaw4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_chainsaw5); }
+void player_chainsaw3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw4); }
+void player_chainsaw2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_chainsaw3); }
+void player_chainsaw1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw2); }
+
+void wep_chainsaw_chainsaw6(entity this) { wep_set_anim(this, 10, w_ready); }
+void wep_chainsaw_chainsaw5(entity this) { wep_set_anim(this, 9, wep_chainsaw_chainsaw6); W_FireSaw(this.owner); }
+void wep_chainsaw_chainsaw4(entity this)
 {
-	set_animofs(this, anim_player_shotatt1, 2, player_chainsaw3); this.weaponentity.m_frame = 6;
-	if(!this.button0)
+	wep_set_anim(this, 8, wep_chainsaw_chainsaw5);
+	if(!this.owner.button0)
 	{
-		player_run(this);
+		w_ready(this);
 		return;
 	}
 }
-void player_chainsaw1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw2); this.weaponentity.m_frame = 5; W_FireSaw(this); }
+void wep_chainsaw_chainsaw3(entity this) { wep_set_anim(this, 7, wep_chainsaw_chainsaw4); W_FireSaw(this.owner); }
+void wep_chainsaw_chainsaw2(entity this)
+{
+	wep_set_anim(this, 6, wep_chainsaw_chainsaw3);
+	if(!this.owner.button0)
+	{
+		w_ready(this);
+		return;
+	}
+}
+void wep_chainsaw_chainsaw1(entity this) { wep_set_anim(this, 5, wep_chainsaw_chainsaw2); player_chainsaw1(this.owner); W_FireSaw(this.owner); }
 
 void W_FireSaw(entity this)
 {
@@ -73,7 +83,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	//if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_chainsaw1(actor);
+		wep_chainsaw_chainsaw1(actor.weaponentity);
 		actor.attack_finished = time + 0.55;
 		_sound(actor, CH_SHOTS, "weapons/sawatck.wav", 1, ATTN_NORM);
 	}

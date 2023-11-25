@@ -106,18 +106,18 @@ METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		if(actor.cnt < 3)
+		if(actor.weaponentity.misc_bulletcounter < 3)
 		{
-			player_rocket1(actor);
+			wep_generic_rocket1(actor.weaponentity);
 			W_FireNapalm(actor);
 			actor.attack_finished = time + 0.6;
-			actor.cnt += 1;
+			actor.weaponentity.misc_bulletcounter += 1;
 		}
 		else
 		{
 			_sound(actor, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 			actor.attack_finished = time + 0.9;
-			actor.cnt = 0;
+			actor.weaponentity.misc_bulletcounter = 0;
 		}
 	}
 }

@@ -1,47 +1,27 @@
 #include "thunderbolt.qh"
 
 #ifdef SVQC
-void player_light1(entity this)
+void W_Thunderbolt_Attack(entity this)
 {
-	set_animofs(this, anim_player_light1, 1, player_light2);
+	entity actor = this.owner;
+	if(!actor.button0)
+	{
+		w_ready(this);
+		return;
+	}
 
-	this.effects |= EF_MUZZLEFLASH;
+	player_light1(actor);
+	setthink(this, W_Thunderbolt_Attack);
+	this.nextthink = time + 0.1;
 
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	//if(this.weapon == WEP_PLASMA_GUN.m_id)
-	//{
-		//W_FirePlasma(this);
-		//player_run(this);
-		//return;
-	//}
-	//else
-	//{
-		W_FireLightning(this);
-		this.attack_finished = time + 0.2;
-	//}
-}
-void player_light2(entity this)
-{
-	set_animofs(this, anim_player_light1, 1, player_light1);
+	actor.effects |= EF_MUZZLEFLASH;
 
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	//if(this.weapon != WEP_PLASMA_GUN.m_id)
-	//{
-		W_FireLightning(this);
-		this.attack_finished = time + 0.2;
-	//}
+	this.m_frame += 1;
+	if(this.m_frame >= 5)
+		this.m_frame = 1;
+	SuperDamageSound(actor);
+	W_FireLightning(actor);
+	actor.attack_finished = time + 0.2;
 }
 
 void W_FireLightning(entity this)
@@ -92,7 +72,7 @@ METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_light1(actor);
+		W_Thunderbolt_Attack(actor.weaponentity);
 		actor.attack_finished = time + 0.1;
 		_sound(actor, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}

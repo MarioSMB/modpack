@@ -1,49 +1,42 @@
 #include "super_lightning.qh"
 
 #ifdef SVQC
-void player_superlight1(entity this)
+void W_SuperLightning_Attack(entity this)
 {
-	set_animofs(this, anim_player_light1, 1, player_superlight2);
-
-	if(this.ammo_cells < 1)
+	entity actor = this.owner;
+	if(actor.ammo_cells < 1)
 	{
-		this.attack_finished = time + 0.5;
-		_sound(this, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
-		this.ammo_cells = 0;
-		W_SetCurrentAmmo(this);
+		actor.attack_finished = time + 0.5;
+		_sound(actor, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
+		actor.ammo_cells = 0;
+		W_SetCurrentAmmo(actor);
 		return;
 	}
-	this.attack_finished = time + 0.1;
-	_sound(this, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
-	this.effects |= EF_MUZZLEFLASH;
-	if(!this.button0)
+	actor.attack_finished = time + 0.1;
+
+	if(!actor.button0)
 	{
-		player_run(this);
+		w_ready(this);
 		return;
 	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLightning(this);
-}
 
-void player_superlight2(entity this)
-{
-	set_animofs(this, anim_player_light1, 2, player_superlight1);
+	this.misc_bulletcounter += 1;
 
-	this.effects |= EF_MUZZLEFLASH;
-	if(!this.button0)
-	{
-		player_run(this);
-		return;
-	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 5)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLightning(this);
-	this.attack_finished = time + 0.1;
+	if((this.misc_bulletcounter % 2) == 0)
+		_sound(actor, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
+
+	player_light1(actor);
+	setthink(this, W_SuperLightning_Attack);
+	this.nextthink = time + 0.1;
+
+	actor.effects |= EF_MUZZLEFLASH;
+
+	this.m_frame += 1;
+	if(this.m_frame >= 5)
+		this.m_frame = 1;
+	SuperDamageSound(actor);
+	W_FireSuperLightning(actor);
+	actor.attack_finished = time + 0.1;
 }
 
 void superlightning_rebound(entity this)
@@ -244,7 +237,8 @@ METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, int fire))
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_superlight1(actor);
+		actor.weaponentity.misc_bulletcounter = 0;
+		W_SuperLightning_Attack(actor.weaponentity);
 		if(actor.ammo_cells < 1)
 		{
 			actor.ammo_cells = 0;

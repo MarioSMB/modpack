@@ -19,8 +19,5 @@ REGISTER_WEAPON(NAILGUN, NEW(Nailgun));
 SPAWNFUNC_WEAPON(weapon_nailgun, WEP_NAILGUN)
 
 #ifdef SVQC
-void player_nail1(entity this);
-void player_nail2(entity this);
-
 void W_FireSpikes(entity this, float ox);
 #endif

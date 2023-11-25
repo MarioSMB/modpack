@@ -24,101 +24,119 @@ PRECACHE(Piano)
 	precache_model("progs/piano_musicnote_brown.mdl");
 }
 
-void player_woodpiano_E20(entity this) { set_anim(this, 16, player_run); this.weaponentity.m_frame = 0; }
-void player_woodpiano_E19(entity this) { set_anim(this, 15, player_woodpiano_E20); this.weaponentity.m_frame = 68; }
-void player_woodpiano_E18(entity this) { set_anim(this, 14, player_woodpiano_E19); this.weaponentity.m_frame = 67; }
-void player_woodpiano_E17(entity this) { set_anim(this, 13, player_woodpiano_E18); this.weaponentity.m_frame = 66; }
-void player_woodpiano_E16(entity this) { set_anim(this, 12, player_woodpiano_E17); this.weaponentity.m_frame = 65; }
-void player_woodpiano_E15(entity this) { set_anim(this, 16, player_woodpiano_E16); this.weaponentity.m_frame = 64; _sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E14(entity this) { set_anim(this, 15, player_woodpiano_E15); this.weaponentity.m_frame = 63; _sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E13(entity this) { set_anim(this, 14, player_woodpiano_E14); this.weaponentity.m_frame = 62; _sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E12(entity this) { set_anim(this, 13, player_woodpiano_E13); this.weaponentity.m_frame = 61; _sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E11(entity this) { set_anim(this, 12, player_woodpiano_E12); this.weaponentity.m_frame = 60; _sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E10(entity this) { set_anim(this, 16, player_woodpiano_E11); this.weaponentity.m_frame = 59; _sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E9(entity this) { set_anim(this, 15, player_woodpiano_E10); this.weaponentity.m_frame = 58; _sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E8(entity this) { set_anim(this, 14, player_woodpiano_E9); this.weaponentity.m_frame = 57; _sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E7(entity this) { set_anim(this, 13, player_woodpiano_E8); this.weaponentity.m_frame = 56; _sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E6(entity this) { set_anim(this, 12, player_woodpiano_E7); this.weaponentity.m_frame = 55; _sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E5(entity this) { set_anim(this, 16, player_woodpiano_E6); this.weaponentity.m_frame = 54; _sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 0.3, ATTN_NORM); }
-void player_woodpiano_E4(entity this) { set_anim(this, 15, player_woodpiano_E5); this.weaponentity.m_frame = 53; }
-void player_woodpiano_E3(entity this) { set_anim(this, 14, player_woodpiano_E4); this.weaponentity.m_frame = 52; }
-void player_woodpiano_E2(entity this) { set_anim(this, 13, player_woodpiano_E3); this.weaponentity.m_frame = 51; }
-void player_woodpiano_E1(entity this) { set_anim(this, 12, player_woodpiano_E2); this.weaponentity.m_frame = 0; }
+void wep_piano_woodpiano_E20(entity this) { wep_set_anim(this, 0, w_ready); }
+void wep_piano_woodpiano_E19(entity this) { wep_set_anim(this, 68, wep_piano_woodpiano_E20); }
+void wep_piano_woodpiano_E18(entity this) { wep_set_anim(this, 67, wep_piano_woodpiano_E19); }
+void wep_piano_woodpiano_E17(entity this) { wep_set_anim(this, 66, wep_piano_woodpiano_E18); }
+void wep_piano_woodpiano_E16(entity this) { wep_set_anim(this, 65, wep_piano_woodpiano_E17); }
+void wep_piano_woodpiano_E15(entity this) { wep_set_anim(this, 64, wep_piano_woodpiano_E16); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord11.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E14(entity this) { wep_set_anim(this, 63, wep_piano_woodpiano_E15); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord10.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E13(entity this) { wep_set_anim(this, 62, wep_piano_woodpiano_E14); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord9.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E12(entity this) { wep_set_anim(this, 61, wep_piano_woodpiano_E13); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord8.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E11(entity this) { wep_set_anim(this, 60, wep_piano_woodpiano_E12); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord7.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E10(entity this) { wep_set_anim(this, 59, wep_piano_woodpiano_E11); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord6.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E9(entity this) { wep_set_anim(this, 58, wep_piano_woodpiano_E10); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord5.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E8(entity this) { wep_set_anim(this, 57, wep_piano_woodpiano_E9); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord4.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E7(entity this) { wep_set_anim(this, 56, wep_piano_woodpiano_E8); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord3.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E6(entity this) { wep_set_anim(this, 55, wep_piano_woodpiano_E7); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord2.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E5(entity this) { wep_set_anim(this, 54, wep_piano_woodpiano_E6); _sound(this.owner, CH_WEAPON_A, "weapons/piano_chord1.wav", 0.3, ATTN_NORM); }
+void wep_piano_woodpiano_E4(entity this) { wep_set_anim(this, 53, wep_piano_woodpiano_E5); }
+void wep_piano_woodpiano_E3(entity this) { wep_set_anim(this, 52, wep_piano_woodpiano_E4); }
+void wep_piano_woodpiano_E2(entity this) { wep_set_anim(this, 51, wep_piano_woodpiano_E3); }
+void wep_piano_woodpiano_E1(entity this) { wep_set_anim(this, 0, wep_piano_woodpiano_E2); }
 
 // Assume player is NOT holding down Button0 for player_chains *except for endings which play automatically
 
+bool piano_checkplayer(entity this)
+{
+	entity actor = this.owner;
+	if(!actor.button0 || actor.impulse || actor.health < 1 || gameover || intermission_running)
+	{
+		if(actor.impulse) // TODO: probably don't need this check!
+			actor.attack_finished = time;
+		w_ready(this);
+		return true;
+	}
+	return false;
+}
+
+void player_piano4(entity this) { set_anim(this, 105, player_run); this.nextthink = time + 0.1; }
+void player_piano3(entity this) { set_anim(this, 106, player_piano4); this.nextthink = time + 0.06; }
+void player_piano2(entity this) { set_anim(this, 113, player_piano3); this.nextthink = time + 0.04; }
+void player_piano1(entity this) { set_anim(this, 103, player_piano2); this.nextthink = time + 0.02; }
+
 /* KEY CHORD 12 ----------------------[] */
-void player_woodpiano_key12_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 48; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} // Let Go Reset // Hotswap // Holding = Play Next Random
+void player_woodpiano_key12_4(entity this) { this.m_frame = 48; if(piano_checkplayer(this)) return; // Let Go Reset // Hotswap // Holding = Play Next Random
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	// If LEFT, play RIGHT side 	// If RIGHT, play LEFT side
-void player_woodpiano_key12_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 47; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key12_4); }
-void player_woodpiano_key12_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 46; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key12_3); }
-void player_woodpiano_key12_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 45; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key12_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key12_3(entity this) { this.m_frame = 47; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key12_4); }
+void player_woodpiano_key12_2(entity this) { this.m_frame = 46; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key12_3); }
+void player_woodpiano_key12_1(entity this) { player_piano1(this.owner); this.m_frame = 45; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key12_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 11 --------------------[]-- */     
-void player_woodpiano_key11_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 44; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;}
+void player_woodpiano_key11_4(entity this) { this.m_frame = 44; if(piano_checkplayer(this)) return;
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
-void player_woodpiano_key11_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 43; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key11_4); }
-void player_woodpiano_key11_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 42; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key11_3); }
-void player_woodpiano_key11_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 41; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key11_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key11_3(entity this) { this.m_frame = 43; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key11_4); }
+void player_woodpiano_key11_2(entity this) { this.m_frame = 42; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key11_3); }
+void player_woodpiano_key11_1(entity this) { player_piano1(this.owner); this.m_frame = 41; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key11_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 10 ------------------[]---- */     
-void player_woodpiano_key10_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 40; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;}
+void player_woodpiano_key10_4(entity this) { this.m_frame = 40; if(piano_checkplayer(this)) return;
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
-void player_woodpiano_key10_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 39; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key10_4); }
-void player_woodpiano_key10_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 38; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key10_3); }
-void player_woodpiano_key10_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 37; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key10_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key10_3(entity this) { this.m_frame = 39; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key10_4); }
+void player_woodpiano_key10_2(entity this) { this.m_frame = 38; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key10_3); }
+void player_woodpiano_key10_1(entity this) { player_piano1(this.owner); this.m_frame = 37; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key10_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 9  ----------------[]------ */     
-void player_woodpiano_key9_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 36; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key9_4(entity this) { this.m_frame = 36; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
-void player_woodpiano_key9_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 35; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key9_4); }
-void player_woodpiano_key9_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 34; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key9_3); }
-void player_woodpiano_key9_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 33; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key9_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key9_3(entity this) { this.m_frame = 35; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key9_4); }
+void player_woodpiano_key9_2(entity this) { this.m_frame = 34; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key9_3); }
+void player_woodpiano_key9_1(entity this) { player_piano1(this.owner); this.m_frame = 33; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key9_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 8  --------------[]-------- */
-void player_woodpiano_key8_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 32; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key8_4(entity this) { this.m_frame = 32; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
-void player_woodpiano_key8_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 31; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key8_4); }
-void player_woodpiano_key8_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 30; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key8_3); }
-void player_woodpiano_key8_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 29; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key8_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key8_3(entity this) { this.m_frame = 31; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key8_4); }
+void player_woodpiano_key8_2(entity this) { this.m_frame = 30; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key8_3); }
+void player_woodpiano_key8_1(entity this) { player_piano1(this.owner); this.m_frame = 29; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key8_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 7  ------------[]---------- */     
-void player_woodpiano_key7_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 28; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key7_4(entity this) { this.m_frame = 28; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
-void player_woodpiano_key7_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 27; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key7_4); }
-void player_woodpiano_key7_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 26; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key7_3); }
-void player_woodpiano_key7_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 25; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key7_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key7_3(entity this) { this.m_frame = 27; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key7_4); }
+void player_woodpiano_key7_2(entity this) { this.m_frame = 26; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key7_3); }
+void player_woodpiano_key7_1(entity this) { player_piano1(this.owner); this.m_frame = 25; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key7_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 6  ----------[]------------ */     
-void player_woodpiano_key6_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 24; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} // Let Go Reset // Hotswap // Holding = Play Next Random
+void player_woodpiano_key6_4(entity this) { this.m_frame = 24; if(piano_checkplayer(this)) return; // Let Go Reset // Hotswap // Holding = Play Next Random
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	// If LEFT, play RIGHT side 	// If RIGHT, play LEFT side
-void player_woodpiano_key6_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 23; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key6_4); }
-void player_woodpiano_key6_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 22; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key6_3); }
-void player_woodpiano_key6_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 21; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key6_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key6_3(entity this) { this.m_frame = 23; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key6_4); }
+void player_woodpiano_key6_2(entity this) { this.m_frame = 22; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key6_3); }
+void player_woodpiano_key6_1(entity this) { player_piano1(this.owner); this.m_frame = 21; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key6_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 5  --------[]-------------- */     
-void player_woodpiano_key5_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 20; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key5_4(entity this) { this.m_frame = 20; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
-void player_woodpiano_key5_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 19; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key5_4); }
-void player_woodpiano_key5_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 18; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key5_3); }
-void player_woodpiano_key5_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 17; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key5_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key5_3(entity this) { this.m_frame = 19; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key5_4); }
+void player_woodpiano_key5_2(entity this) { this.m_frame = 18; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key5_3); }
+void player_woodpiano_key5_1(entity this) { player_piano1(this.owner); this.m_frame = 17; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key5_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 4  ------[]---------------- */
-void player_woodpiano_key4_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 16; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key4_4(entity this) { this.m_frame = 16; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
-void player_woodpiano_key4_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 15; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key4_4); }
-void player_woodpiano_key4_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 14; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key4_3); }
-void player_woodpiano_key4_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 13; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key4_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key4_3(entity this) { this.m_frame = 15; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key4_4); }
+void player_woodpiano_key4_2(entity this) { this.m_frame = 14; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key4_3); }
+void player_woodpiano_key4_1(entity this) { player_piano1(this.owner); this.m_frame = 13; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key4_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 3  ----[]------------------ */
-void player_woodpiano_key3_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 12; if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key3_4(entity this) { this.m_frame = 12; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
-void player_woodpiano_key3_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 11; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key3_4); }
-void player_woodpiano_key3_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 10; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key3_3); }
-void player_woodpiano_key3_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 9;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key3_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key3_3(entity this) { this.m_frame = 11; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key3_4); }
+void player_woodpiano_key3_2(entity this) { this.m_frame = 10; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key3_3); }
+void player_woodpiano_key3_1(entity this) { player_piano1(this.owner); this.m_frame = 9;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key3_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 2  --[]-------------------- */
-void player_woodpiano_key2_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 8;  if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key2_4(entity this) { this.m_frame = 8;  if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
-void player_woodpiano_key2_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 7;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key2_4); }
-void player_woodpiano_key2_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 6;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key2_3); }
-void player_woodpiano_key2_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 5;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key2_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key2_3(entity this) { this.m_frame = 7;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key2_4); }
+void player_woodpiano_key2_2(entity this) { this.m_frame = 6;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key2_3); }
+void player_woodpiano_key2_1(entity this) { player_piano1(this.owner); this.m_frame = 5;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key2_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 /* KEY CHORD 1  []---------------------- */
-void player_woodpiano_key1_4(entity this) { this.frame = 105; this.weaponentity.m_frame = 4;  if(!this.button0) {this.weaponentity.m_frame= 0; player_run(this); return; } if(this.impulse) {this.attack_finished= time + 0; player_run(this); return;} 
+void player_woodpiano_key1_4(entity this) { this.m_frame = 4;  if(piano_checkplayer(this)) return; 
                                                                          this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
-void player_woodpiano_key1_3(entity this) { this.frame = 106; this.weaponentity.m_frame = 3;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key1_4); }
-void player_woodpiano_key1_2(entity this) { this.frame = 113; this.weaponentity.m_frame = 2;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key1_3); }
-void player_woodpiano_key1_1(entity this) { this.frame = 103; this.weaponentity.m_frame = 1;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key1_2); this.attack_finished= time + 0.3; SuperDamageSound(this); W_FireWoodPiano(this); }
+void player_woodpiano_key1_3(entity this) { this.m_frame = 3;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key1_4); }
+void player_woodpiano_key1_2(entity this) { this.m_frame = 2;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key1_3); }
+void player_woodpiano_key1_1(entity this) { player_piano1(this.owner); this.m_frame = 1;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key1_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
 
 // If LEFT, play Random RIGHT side 	// If RIGHT, play Random LEFT side
 
@@ -327,7 +345,7 @@ METHOD(Piano, wr_think, void(entity thiswep, entity actor, int fire))
 
 	if(oldwep != WEP_PIANO) // only plays once!!
 	{
-		player_woodpiano_E1(actor);
+		wep_piano_woodpiano_E1(actor.weaponentity);
 		return;
 	}
 
@@ -335,9 +353,9 @@ METHOD(Piano, wr_think, void(entity thiswep, entity actor, int fire))
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
 		if(random() < 0.5)
-			player_woodpiano_randomplayleft(actor);
+			player_woodpiano_randomplayleft(actor.weaponentity);
 		else	
-			player_woodpiano_randomplayright(actor);
+			player_woodpiano_randomplayright(actor.weaponentity);
 	}
 }
 METHOD(Piano, wr_checkammo1, bool(entity thiswep, entity actor))

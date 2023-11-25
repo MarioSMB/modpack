@@ -19,8 +19,5 @@ REGISTER_WEAPON(LIGHTME, NEW(SuperLightning));
 SPAWNFUNC_WEAPON(weapon_lightme, WEP_LIGHTME)
 
 #ifdef SVQC
-void player_superlight1(entity this);
-void player_superlight2(entity this);
-
 void W_FireSuperLightning(entity this);
 #endif

@@ -1,35 +1,27 @@
 #include "super_nailgun.qh"
 
 #ifdef SVQC
-void player_supernail1(entity this)
+void W_SuperNailgun_Attack(entity this)
 {
-	set_animofs(this, anim_player_nailatt1, 1, player_supernail2);
+	entity actor = this.owner;
+	if(!actor.button0)
+	{
+		w_ready(this);
+		return;
+	}
 
-	this.effects |= EF_MUZZLEFLASH;
+	player_nail1(actor);
+	setthink(this, W_SuperNailgun_Attack);
+	this.nextthink = time + 0.1;
 
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperSpikes(this);
-	this.attack_finished = time + 0.2;
-}
-void player_supernail2(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 2, player_supernail1);
+	actor.effects |= EF_MUZZLEFLASH;
 
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperSpikes(this);
-	this.attack_finished = time + 0.2;
+	this.m_frame += 1;
+	if(this.m_frame >= 9)
+		this.m_frame = 1;
+	SuperDamageSound(actor);
+	W_FireSuperSpikes(actor);
+	actor.attack_finished = time + 0.2;
 }
 
 void superspike_touch(entity this, entity toucher)
@@ -86,7 +78,7 @@ METHOD(SuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
 {
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
-		player_supernail1(actor);
+		W_SuperNailgun_Attack(actor.weaponentity);
 }
 METHOD(SuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

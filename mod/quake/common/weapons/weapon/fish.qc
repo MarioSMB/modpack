@@ -22,26 +22,38 @@ const float SUPERFISHTIME = 7.1; // time to fire super rocket megafish
 
 void fishmissile(entity this);
 void fishcharge(entity this);
-void player_fish12(entity this) { set_anim(this, 12, player_run); this.weaponentity.m_frame = 12; }
-void player_fish11(entity this) { set_anim(this, 11, player_fish12); this.weaponentity.m_frame = 11; }
-void player_fish10(entity this) { set_anim(this, 10, player_fish11); this.weaponentity.m_frame = 10; }
-void player_fish9(entity this) { set_anim(this, 9, player_fish10); this.weaponentity.m_frame = 9; fishmissile(this); }
-void player_fish8(entity this) { set_anim(this, 8, player_fish9); this.weaponentity.m_frame = 8; }
-void player_fish7(entity this) { set_anim(this, 7, player_fish8); this.weaponentity.m_frame = 7; }
-void player_fish6(entity this) { set_anim(this, 6, player_fish7); this.weaponentity.m_frame = 6; }
-void player_fish5(entity this)
+void player_fish12(entity this) { set_anim(this, 12, player_run); }
+void player_fish11(entity this) { set_anim(this, 11, player_fish12); }
+void player_fish10(entity this) { set_anim(this, 10, player_fish11); }
+void player_fish9(entity this) { set_anim(this, 9, player_fish10); }
+void player_fish8(entity this) { set_anim(this, 8, player_fish9); }
+void player_fish7(entity this) { set_anim(this, 7, player_fish8); }
+void player_fish6(entity this) { set_anim(this, 6, player_fish7); }
+void player_fish5(entity this) { set_anim(this, 5, player_fish6); }
+void player_fish4(entity this) { set_anim(this, 4, player_fish5);}
+void player_fish3(entity this) { set_anim(this, 3, player_fish4); }
+void player_fish2(entity this) { set_anim(this, 2, player_fish3); }
+void player_fish1(entity this) { set_anim(this, 1, player_fish2); }
+
+void wep_fish_fish12(entity this) { wep_set_anim(this, 12, w_ready); }
+void wep_fish_fish11(entity this) { wep_set_anim(this, 11, wep_fish_fish12); }
+void wep_fish_fish10(entity this) { wep_set_anim(this, 10, wep_fish_fish11); }
+void wep_fish_fish9(entity this) { wep_set_anim(this, 9, wep_fish_fish10); fishmissile(this.owner); }
+void wep_fish_fish8(entity this) { wep_set_anim(this, 8, wep_fish_fish9); }
+void wep_fish_fish7(entity this) { wep_set_anim(this, 7, wep_fish_fish8); }
+void wep_fish_fish6(entity this) { wep_set_anim(this, 6, wep_fish_fish7); }
+void wep_fish_fish5(entity this)
 {
-	set_anim(this, 5, player_fish6);
-	this.weaponentity.m_frame = 5;
-	if(this.weaponentity.fish_time < SUPERFISHTIME)
-		_sound(this, CH_WEAPON_SINGLE, "weapons/whush.wav", 1, ATTN_NORM);
+	wep_set_anim(this, 5, wep_fish_fish6);
+	if(this.fish_time < SUPERFISHTIME)
+		_sound(this.owner, CH_WEAPON_SINGLE, "weapons/whush.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CH_WEAPON_SINGLE, "weapons/mega.wav", 1, ATTN_NORM);
+		_sound(this.owner, CH_WEAPON_SINGLE, "weapons/mega.wav", 1, ATTN_NORM);
 }
-void player_fish4(entity this) { set_anim(this, 4, fishcharge); fishcharge(this); }
-void player_fish3(entity this) { set_anim(this, 3, player_fish4); this.weaponentity.m_frame = 3; }
-void player_fish2(entity this) { set_anim(this, 2, player_fish3); this.weaponentity.m_frame = 2; }
-void player_fish1(entity this) { set_anim(this, 1, player_fish2); this.weaponentity.m_frame = 1; }
+void wep_fish_fish4(entity this) { wep_set_anim(this, 4, fishcharge); }
+void wep_fish_fish3(entity this) { wep_set_anim(this, 3, wep_fish_fish4); }
+void wep_fish_fish2(entity this) { wep_set_anim(this, 2, wep_fish_fish3); }
+void wep_fish_fish1(entity this) { wep_set_anim(this, 1, wep_fish_fish2); player_fish1(this.owner); }
 
 void fishbounce(entity this, entity toucher)
 {
@@ -163,28 +175,29 @@ void fishmissile(entity this)
 
 	entity fish = spawn();
 	fish.owner = this;
+	fish.fish_time = this.weaponentity.fish_time;
 	fish.projectiledeathtype = WEP_FISH.m_id;
 	fish.model = "feesh.mdl";
-	if(this.fish_time > 4 && this.fish_time < SUPERFISHTIME)
-		this.fish_time = 4;
-	if(this.fish_time >= SUPERFISHTIME)
-		this.fish_time = SUPERFISHTIME;
+	if(fish.fish_time > 4 && fish.fish_time < SUPERFISHTIME)
+		fish.fish_time = 4;
+	if(fish.fish_time >= SUPERFISHTIME)
+		fish.fish_time = SUPERFISHTIME;
 	set_movetype(fish, MOVETYPE_FLYMISSILE);
 	fish.solid = SOLID_BBOX;
-	if(this.fish_time == SUPERFISHTIME)
+	if(fish.fish_time == SUPERFISHTIME)
 	{
 		fish.skin = 1;
 		fish.effects |= EF_DIMLIGHT;
 	}
 	makevectors(this.v_angle);
-	fish.velocity = qc_aim(this, 450 + (250 * this.fish_time));
-	fish.velocity = fish.velocity * (450 + (250 * this.fish_time));
-	if(this.fish_time == 20)
+	fish.velocity = qc_aim(this, 450 + (250 * fish.fish_time));
+	fish.velocity = fish.velocity * (450 + (250 * fish.fish_time));
+	if(fish.fish_time == 20)
 		fish.velocity *= 0.5;
 	fish.angles = vectoangles(fish.velocity);
 	fish.angles_x = crandom()*360;
-	fish.avelocity_x = -400 - (200 * this.fish_time);
-	if(this.fish_time == 20)
+	fish.avelocity_x = -400 - (200 * fish.fish_time);
+	if(fish.fish_time == 20)
 		fish.avelocity_x *= 0.5;
 	fish.movedir = fish.velocity;
 	_setmodel(fish, "progs/feesh.mdl");
@@ -192,8 +205,7 @@ void fishmissile(entity this)
 	settouch(fish, fishtouch);
 	vector org = this.origin + '0 0 20'; // v_forward * 40, not used because it goes through mobs!
 	setorigin(fish, org);
-	fish.fish_time = this.fish_time;
-	this.fish_time = 0;
+	this.weaponentity.fish_time = 0;
 	fish.cnt = time + 10;
 	setthink(fish, fishthink);
 	fish.nextthink = time + 0.01;
@@ -201,25 +213,20 @@ void fishmissile(entity this)
 
 void fishcharge(entity this)
 {
-	if(this.health < 1 || intermission_running)
+	entity actor = this.owner;
+	if(actor.health < 1 || intermission_running)
 		return;
 
 	if(this.fish_time > (SUPERFISHTIME + 3))
 		this.fish_time = SUPERFISHTIME + 3;
 	this.fish_time += 0.1;
-	this.weaponentity.m_frame = 4;
+	this.m_frame = 4;
 	this.nextthink = time + 0.1;
-	this.attack_finished = time + 0.5;
-	if(this.button0)
+	actor.attack_finished = time + 0.5;
+	if(actor.button0)
 		setthink(this, fishcharge);
 	else
-		setthink(this, player_fish5);
-}
-
-void fishthrow(entity this)
-{
-	if(this.weaponentity.m_frame != 4)
-		player_fish1(this);
+		setthink(this, wep_fish_fish5);
 }
 
 METHOD(Fish, wr_think, void(entity thiswep, entity actor, int fire))
@@ -231,7 +238,8 @@ METHOD(Fish, wr_think, void(entity thiswep, entity actor, int fire))
 	{
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 		actor.weaponentity.m_frame = 1;
-		player_fish1(actor);
+		actor.weaponentity.fish_time = 0;
+		wep_fish_fish1(actor.weaponentity);
 		actor.attack_finished = time + 1;
 	}
 }

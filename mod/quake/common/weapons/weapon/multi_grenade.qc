@@ -124,7 +124,7 @@ METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, int fi
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
-		player_rocket1(actor);
+		wep_generic_rocket1(actor.weaponentity);
 		W_FireMultiGrenade(actor);
 		actor.attack_finished = time + 0.6;
 	}

@@ -473,19 +473,39 @@ void player_run(entity this)
 }
 
 // player animations shared among multiple weapons
-void player_shot6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); this.weaponentity.m_frame = 6; }
-void player_shot5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shot6); this.weaponentity.m_frame = 5; }
-void player_shot4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shot5); this.weaponentity.m_frame = 4; }
-void player_shot3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shot4); this.weaponentity.m_frame = 3; }
-void player_shot2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shot3); this.weaponentity.m_frame = 2; }
-void player_shot1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shot2); this.weaponentity.m_frame = 1; this.effects |= EF_MUZZLEFLASH; }
+void player_shot6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
+void player_shot5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shot6); }
+void player_shot4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shot5); }
+void player_shot3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shot4); }
+void player_shot2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shot3); }
+void player_shot1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shot2); }
 
-void player_rocket6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponentity.m_frame = 6; }
-void player_rocket5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_rocket6); this.weaponentity.m_frame = 5; }
-void player_rocket4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_rocket5); this.weaponentity.m_frame = 4; }
-void player_rocket3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_rocket4); this.weaponentity.m_frame = 3; }
-void player_rocket2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_rocket3); this.weaponentity.m_frame = 2; }
-void player_rocket1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_rocket2); this.weaponentity.m_frame = 1; this.effects |= EF_MUZZLEFLASH; }
+void wep_generic_shot6(entity this) { wep_set_anim(this, 6, w_ready); }
+void wep_generic_shot5(entity this) { wep_set_anim(this, 5, wep_generic_shot6); }
+void wep_generic_shot4(entity this) { wep_set_anim(this, 4, wep_generic_shot5); }
+void wep_generic_shot3(entity this) { wep_set_anim(this, 3, wep_generic_shot4); }
+void wep_generic_shot2(entity this) { wep_set_anim(this, 2, wep_generic_shot3); }
+void wep_generic_shot1(entity this) { wep_set_anim(this, 1, wep_generic_shot2); player_shot1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
+
+void player_rocket6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); }
+void player_rocket5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_rocket6); }
+void player_rocket4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_rocket5); }
+void player_rocket3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_rocket4); }
+void player_rocket2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_rocket3); }
+void player_rocket1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_rocket2); }
+
+void wep_generic_rocket6(entity this) { wep_set_anim(this, 6, w_ready); }
+void wep_generic_rocket5(entity this) { wep_set_anim(this, 5, wep_generic_rocket6); }
+void wep_generic_rocket4(entity this) { wep_set_anim(this, 4, wep_generic_rocket5); }
+void wep_generic_rocket3(entity this) { wep_set_anim(this, 3, wep_generic_rocket4); }
+void wep_generic_rocket2(entity this) { wep_set_anim(this, 2, wep_generic_rocket3); }
+void wep_generic_rocket1(entity this) { wep_set_anim(this, 1, wep_generic_rocket2); player_rocket1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
+
+void player_nail2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_run); }
+void player_nail1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_nail2); }
+
+void player_light2(entity this) { set_animofs(this, anim_player_light1, 2, player_run); }
+void player_light1(entity this) { set_animofs(this, anim_player_light1, 1, player_light2); }
 
 string get_painsound(entity this, int chance);
 void PainSound(entity this, entity attacker)
@@ -947,6 +967,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.gravity = 1.0;
 	this.shield_finished = 0;
 	this.antigrav_finished = 0;
+
+	w_ready(this.weaponentity);
 
 	W_Spellbook_ClearSpells(this);
 

@@ -53,6 +53,8 @@ void dedicated_print(string input);
 
 void set_anim(entity this, int frm, void(entity) tnk);
 void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
+// special hax version for weapons since they don't use .frame
+void wep_set_anim(entity this, int frm, void(entity) tnk);
 
 // intrusive lists
 

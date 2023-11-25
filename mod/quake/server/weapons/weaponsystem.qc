@@ -39,6 +39,14 @@ void CL_Weaponentity_Think(entity this)
 	this.alpha = -1;  // TODO: don't render this entity at all
 }
 
+// Weapon subs
+void w_ready(entity w_ent)
+{
+	setthink(w_ent, func_null);
+	w_ent.nextthink = 0;
+	w_ent.misc_bulletcounter = 0;
+}
+
 // spawning weaponentity for client
 void CL_SpawnWeaponentity(entity actor)
 {

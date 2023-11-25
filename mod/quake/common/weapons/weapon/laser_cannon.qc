@@ -8,16 +8,19 @@
 //void() player_laser4   =[$nailatt2, player_laser5  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=4;this.nextthink = time + 0.09;HIP_FireLaser(1);}
 //void() player_laser5   =[$nailatt1, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=5;this.nextthink = time + 0.09;}
 //void() player_laser6   =[$nailatt2, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponentity.m_frame=6;this.nextthink = time + 0.09;}
-void player_laser4(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser1); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 5; this.nextthink = time + 0.1; }
-void player_laser3(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser1); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 4; this.nextthink = time + 0.1; HIP_FireLaser(this, 1); }
-void player_laser2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser3); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 2; this.nextthink = time + 0.1; }
-void player_laser1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser3); this.attack_finished = time + 0.1; this.weaponentity.m_frame = 1; this.nextthink = time + 0.1; HIP_FireLaser(this, 0); }
+void player_laser2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_run); }
+void player_laser1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser2); }
+
+// TODO: wtf
+void wep_lasercannon_laser1(entity this);
+void wep_lasercannon_laser2(entity this) { wep_set_anim(this, 4, wep_lasercannon_laser1); HIP_FireLaser(this.owner, 1); }
+void wep_lasercannon_laser1(entity this) { wep_set_anim(this, 1, wep_lasercannon_laser2); HIP_FireLaser(this.owner, 0); }
 
 void HIP_FireLaser(entity this, float stat)
 {
 	if(!this.button0)
 	{
-		player_run(this);
+		w_ready(this.weaponentity);
 		return;
 	}
 	if(this.ammo_cells < 1)
@@ -25,8 +28,10 @@ void HIP_FireLaser(entity this, float stat)
 		W_SwitchWeapon(this, w_getbestweapon(this));
 		return;
 	}
+	player_laser1(this);
 	SuperDamageSound(this);
 	this.effects |= EF_MUZZLEFLASH;
+	this.attack_finished = time + 0.1;
 	makevectors(this.v_angle);
 
 	float ofs = 6;
@@ -64,7 +69,7 @@ METHOD(LaserCannon, wr_think, void(entity thiswep, entity actor, int fire))
 {
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor))
-		player_laser1(actor);
+		wep_lasercannon_laser1(actor.weaponentity);
 }
 METHOD(LaserCannon, wr_checkammo1, bool(entity thiswep, entity actor))
 {

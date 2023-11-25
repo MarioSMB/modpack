@@ -111,6 +111,7 @@ void W_SwitchWeapon_Force(entity this, Weapon wep)
 	w_ent.cnt = w_ent.m_weapon.m_id;
 	w_ent.m_weapon = wep;
 	W_SetCurrentAmmo(this);
+	w_ready(w_ent);
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)

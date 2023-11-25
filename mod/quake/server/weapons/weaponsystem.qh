@@ -3,3 +3,5 @@
 #include "../../common/weapons/all.qh"
 
 void CL_SpawnWeaponentity(entity e);
+
+void w_ready(entity w_ent);

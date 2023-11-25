@@ -3,25 +3,46 @@
 #include "../../monsters/_mod.qh"
 
 #ifdef SVQC
-void player_axe4(entity this) { set_animofs(this, anim_player_axatt1, 4, player_run); this.weaponentity.m_frame = 4; }
-void player_axe3(entity this) { set_animofs(this, anim_player_axatt1, 3, player_axe4); this.weaponentity.m_frame = 3; W_FireAxe(this); }
-void player_axe2(entity this) { set_animofs(this, anim_player_axatt1, 2, player_axe3); this.weaponentity.m_frame = 2; }
-void player_axe1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_axe2); this.weaponentity.m_frame = 1; }
+void player_axe4(entity this) { set_animofs(this, anim_player_axatt1, 4, player_run); }
+void player_axe3(entity this) { set_animofs(this, anim_player_axatt1, 3, player_axe4); }
+void player_axe2(entity this) { set_animofs(this, anim_player_axatt1, 2, player_axe3); }
+void player_axe1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_axe2); }
 
-void player_axeb4(entity this) { set_animofs(this, anim_player_axattb1, 4, player_run); this.weaponentity.m_frame = 8; }
-void player_axeb3(entity this) { set_animofs(this, anim_player_axattb1, 3, player_axeb4); this.weaponentity.m_frame = 7; W_FireAxe(this); }
-void player_axeb2(entity this) { set_animofs(this, anim_player_axattb1, 2, player_axeb3); this.weaponentity.m_frame = 6; }
-void player_axeb1(entity this) { set_animofs(this, anim_player_axattb1, 1, player_axeb2); this.weaponentity.m_frame = 5; }
+void player_axeb4(entity this) { set_animofs(this, anim_player_axattb1, 4, player_run); }
+void player_axeb3(entity this) { set_animofs(this, anim_player_axattb1, 3, player_axeb4); }
+void player_axeb2(entity this) { set_animofs(this, anim_player_axattb1, 2, player_axeb3); }
+void player_axeb1(entity this) { set_animofs(this, anim_player_axattb1, 1, player_axeb2); }
 
-void player_axec4(entity this) { set_animofs(this, anim_player_axattc1, 4, player_run); this.weaponentity.m_frame = 4; }
-void player_axec3(entity this) { set_animofs(this, anim_player_axattc1, 3, player_axec4); this.weaponentity.m_frame = 3; W_FireAxe(this); }
-void player_axec2(entity this) { set_animofs(this, anim_player_axattc1, 2, player_axec3); this.weaponentity.m_frame = 2; }
-void player_axec1(entity this) { set_animofs(this, anim_player_axattc1, 1, player_axec2); this.weaponentity.m_frame = 1; }
+void player_axec4(entity this) { set_animofs(this, anim_player_axattc1, 4, player_run); }
+void player_axec3(entity this) { set_animofs(this, anim_player_axattc1, 3, player_axec4); }
+void player_axec2(entity this) { set_animofs(this, anim_player_axattc1, 2, player_axec3); }
+void player_axec1(entity this) { set_animofs(this, anim_player_axattc1, 1, player_axec2); }
 
-void player_axed4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); this.weaponentity.m_frame = 8; }
-void player_axed3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_axed4); this.weaponentity.m_frame = 7; W_FireAxe(this); }
-void player_axed2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_axed3); this.weaponentity.m_frame = 6; }
-void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_axed2); this.weaponentity.m_frame = 5; }
+void player_axed4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); }
+void player_axed3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_axed4); }
+void player_axed2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_axed3); }
+void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_axed2); }
+
+
+void wep_axe_axe4(entity this) { wep_set_anim(this, 4, w_ready); }
+void wep_axe_axe3(entity this) { wep_set_anim(this, 3, wep_axe_axe4); W_FireAxe(this.owner); }
+void wep_axe_axe2(entity this) { wep_set_anim(this, 2, wep_axe_axe3); }
+void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); player_axe1(this.owner); }
+
+void wep_axe_axeb4(entity this) { wep_set_anim(this, 8, w_ready); }
+void wep_axe_axeb3(entity this) { wep_set_anim(this, 7, wep_axe_axeb4); W_FireAxe(this.owner); }
+void wep_axe_axeb2(entity this) { wep_set_anim(this, 6, wep_axe_axeb3); }
+void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); player_axeb1(this.owner); }
+
+void wep_axe_axec4(entity this) { wep_set_anim(this, 4, w_ready); }
+void wep_axe_axec3(entity this) { wep_set_anim(this, 3, wep_axe_axec4); W_FireAxe(this.owner); }
+void wep_axe_axec2(entity this) { wep_set_anim(this, 2, wep_axe_axec3); }
+void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); player_axec1(this.owner); }
+
+void wep_axe_axed4(entity this) { wep_set_anim(this, 8, w_ready); }
+void wep_axe_axed3(entity this) { wep_set_anim(this, 7, wep_axe_axed4); W_FireAxe(this.owner); }
+void wep_axe_axed2(entity this) { wep_set_anim(this, 6, wep_axe_axed3); }
+void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); player_axed1(this.owner); }
 
 void W_FireAxe(entity this)
 {
@@ -100,18 +121,18 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, int fire))
 			{
 				// vertical CHOP
 				if(r < 0.5)
-					player_axe1(actor);
+					wep_axe_axe1(actor.weaponentity);
 				else
-					player_axec1(actor);
+					wep_axe_axec1(actor.weaponentity);
 				actor.attack_finished = time + 0.8; // long recover
 			}
 			else
 			{
 				// diagonal SWEEP
 				if(r < 0.5)
-					player_axeb1(actor);
+					wep_axe_axeb1(actor.weaponentity);
 				else
-					player_axed1(actor);
+					wep_axe_axed1(actor.weaponentity);
 						
 				if(actor.axe_hit_chain > 1)
 					actor.attack_finished = time + 0.6;
@@ -123,13 +144,13 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, int fire))
 		else
 		{
 			if(r < 0.25)
-				player_axe1(actor);
+				wep_axe_axe1(actor.weaponentity);
 			else if(r<0.5)
-				player_axeb1(actor);
+				wep_axe_axeb1(actor.weaponentity);
 			else if(r<0.75)
-				player_axec1(actor);
+				wep_axe_axec1(actor.weaponentity);
 			else
-				player_axed1(actor);
+				wep_axe_axed1(actor.weaponentity);
 			float fire_delay = 0.5;
 			if(random() < 0.5)
 				fire_delay = 0.4;

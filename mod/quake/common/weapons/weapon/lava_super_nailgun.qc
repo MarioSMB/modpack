@@ -1,38 +1,29 @@
 #include "lava_super_nailgun.qh"
 
 #ifdef SVQC
-void player_lava_super_nail1(entity this)
+void W_LavaSuperNailgun_Attack(entity this)
 {
-	set_animofs(this, anim_player_nailatt1, 1, player_lava_super_nail2);
-
-	this.effects |= EF_MUZZLEFLASH;
-
-	if(!this.button0)
+	entity actor = this.owner;
+	if(!actor.button0)
 	{
-		player_run(this);
+		w_ready(this);
 		return;
 	}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLavaSpikes(this);
-	this.attack_finished = time + 0.2;
-}
-void player_lava_super_nail2(entity this)
-{
-	set_animofs(this, anim_player_nailatt1, 2, player_lava_super_nail1);
 
-	this.effects |= EF_MUZZLEFLASH;
+	this.misc_bulletcounter += 1;
 
-	if(!this.button0)
-		{player_run(this);return;}
-	this.weaponentity.m_frame += 1;
-	if(this.weaponentity.m_frame >= 9)
-		this.weaponentity.m_frame = 1;
-	SuperDamageSound(this);
-	W_FireSuperLavaSpikes(this);
-	this.attack_finished = time + 0.2;
+	player_nail1(actor);
+	setthink(this, W_LavaSuperNailgun_Attack);
+	this.nextthink = time + 0.1;
+
+	actor.effects |= EF_MUZZLEFLASH;
+
+	this.m_frame += 1;
+	if(this.m_frame >= 9)
+		this.m_frame = 1;
+	SuperDamageSound(actor);
+	W_FireSuperLavaSpikes(actor);
+	actor.attack_finished = time + 0.2;
 }
 
 void W_FireSuperLavaSpikes(entity this)
@@ -68,7 +59,7 @@ METHOD(LavaSuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
 	if(thiswep.wr_checkammo1(thiswep, actor))
 	{
 		actor.lava_super_nailgun_fired = true;
-		player_lava_super_nail1(actor);
+		W_LavaSuperNailgun_Attack(actor.weaponentity);
 	}
 
 	if(!(fire & 1) && actor.lava_super_nailgun_fired && time >= actor.attack_finished)
