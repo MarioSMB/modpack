@@ -24,13 +24,14 @@ vector crosshair_getcolor(entity this, float health_stat)
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
 	vector wcross_color = '0 0 0';
+	entity thiswep = viewmodels[0]; // TODO: unhardcode
 	switch(autocvar_crosshair_color_special)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(viewmodels.activeweapon != WEP_Null)
+			if(thiswep.activeweapon != WEP_Null)
 			{
-				Weapon wep = viewmodels.activeweapon;
+				Weapon wep = thiswep.activeweapon;
 				wcross_color = wep.w_crosshair_color;
 				break;
 			}
@@ -161,7 +162,8 @@ void HUD_Crosshair(entity this)
 
 		if(autocvar_crosshair_per_weapon)
 		{
-			Weapon wep = viewmodels.activeweapon;
+			entity thiswep = viewmodels[0]; // TODO: unhardcode
+			Weapon wep = thiswep.activeweapon;
 
 			wcross_resolution *= wep.w_crosshair_size;
 			wcross_name = wep.w_crosshair;

@@ -4,6 +4,44 @@
 #include "../../client/view.qh"
 #endif
 
+#ifdef SVQC
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		if(this.m_gunalign)
+			return this.m_gunalign; // no adjustment needed
+
+		entity own = this.owner;
+
+		if(preferred_align < 1 || preferred_align > 4)
+			preferred_align = 1; // default
+
+		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
+		{
+			int taken = 0;
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(own.(weaponentity).m_gunalign == j) // we know it can't be ours thanks to the above check
+					taken |= BIT(j);
+				if(own.(weaponentity).m_gunalign == preferred_align)
+					taken |= BIT(preferred_align);
+			}
+
+			if(!(taken & BIT(preferred_align)))
+				return preferred_align; // prefer the recommended
+			if(!(taken & BIT(j)))
+				return j; // or fall back if it's not available
+		}
+
+		return preferred_align; // return it anyway
+	}
+#else
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		return this.m_gunalign > 0 ? this.m_gunalign : preferred_align;
+	}
+#endif
+
 // WEAPON PLUGIN SYSTEM
 
 WepSet _WepSet_FromWeapon(int a)
@@ -123,19 +161,35 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	
 
 #ifdef GAMEQC
-vector shotorg_adjustfromclient(vector vecs)
+vector shotorg_adjustfromclient(vector vecs, float algn)
 {
-	// center aligned
-	vecs.y = 0;
-	vecs.z -= 2;
+	switch (algn)
+	{
+		default:
+		case 3:
+			// right alignment
+			vecs.y = -8;
+			vecs.z -= 2;
+			break;
+		case 4:
+			// left
+			vecs.y = 8;
+			vecs.z -= 2;
+			break;
+		case 1:
+		case 2:
+			// center
+			vecs.y = 0;
+			vecs.z -= 2;
+			break;
+	}
 	return vecs;
 }
 
-vector shotorg_adjust_values(vector vecs)
+vector shotorg_adjust_values(vector vecs, float algn)
 {
 	// center aligned
-	vecs.y = 0;
-	vecs.z -= 2;
+	vecs = shotorg_adjustfromclient(vecs, algn);
 	return vecs;
 }
 
@@ -179,9 +233,13 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	if (this.movedir.x >= 0)
 	{
+		int algn = W_GunAlign(this, 1);
+	#ifdef SVQC
+		this.m_gunalign = algn;
+	#endif
 		vector v = this.movedir;
-		this.movedir = shotorg_adjust(v);
-		this.movedir_aligned = shotorg_adjust(v);
+		this.movedir = shotorg_adjust(v, algn);
+		this.movedir_aligned = shotorg_adjust(v, algn);
 		this.view_ofs = this.movedir_aligned - v;
 	}
 	int compressed_shotorg = compressShotOrigin(this.movedir);
@@ -191,22 +249,6 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
 }
-#endif
-
-#ifdef GAMEQC
-
-REGISTER_NET_TEMP(wframe)
-#ifdef CSQC
-NET_HANDLE(wframe, bool isNew)
-{
-	int fr = ReadByte();
-	entity wepent = viewmodels;
-
-	wepent.frame = fr;
-	return true;
-}
-#endif
-
 #endif
 
 #ifdef SVQC

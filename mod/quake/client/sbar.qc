@@ -894,6 +894,7 @@ void Sbar_DrawInventory()
 	int myitems = STAT(ITEMS);
 	int mypowerups = STAT(POWERUPS);
 	WepSet myweapons = STAT(WEAPONS);
+	entity thiswep = viewmodels[0]; // TODO: unhardcode
 
 	if(oldweapons != myweapons && time > 5) // time check to prevent initial load showing new weapons
 	{
@@ -918,7 +919,7 @@ void Sbar_DrawInventory()
 		Weapon wep = WEP_Null;
 		FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
 		{
-			if(viewmodels.activeweapon == it)
+			if(thiswep.activeweapon == it)
 			{
 				wep = it;
 				break; // always prefer the active weapon
@@ -931,7 +932,7 @@ void Sbar_DrawInventory()
 			float thetime = weapon_gettime[wep.m_id];
 			int flashon = rint(max(0, time - thetime) * 10);
 			if(flashon >= 10)
-				flashon = (viewmodels.activeweapon == wep);
+				flashon = (thiswep.activeweapon == wep);
 			else
 				flashon = (flashon % 5) + 2;
 			drawpic(sbar + vec2(wep_pos * 24, -16), "gfx/quake/inv_wep", '24 16 0', '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
@@ -941,7 +942,7 @@ void Sbar_DrawInventory()
 			vector col;
 			if(WeaponIsFromRogue(wep))
 				col = '1 0 0';
-			else if(flashon)//(viewmodels.activeweapon == wep)
+			else if(flashon)//(thiswep.activeweapon == wep)
 				col = '1 1 0';
 			else
 				col = '0.6 0.2 0';
@@ -1290,6 +1291,7 @@ void Sbar_Draw()
 				int myhealth = rint(STAT(HEALTH));
 				vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
 				bool have_fieldgen = ((STAT(POWERUPS) & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0);
+				entity thiswep = viewmodels[0]; // TODO: unhardcode
 				if(have_fieldgen)
 				{
 					myhealth += rint(STAT(FIELDGEN_HEALTH));
@@ -1299,12 +1301,12 @@ void Sbar_Draw()
 
 				if(STAT(SKATING))
 					{ /* nothing */}
-				else if(viewmodels.activeweapon == WEP_SPELLBOOK)
+				else if(thiswep.activeweapon == WEP_SPELLBOOK)
 					Sbar_DrawNum('248 0 0', itos(rint(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
 				else
 				{
 					// ammo icon
-					int ammotype = viewmodels.activeweapon.ammo_type;
+					int ammotype = thiswep.activeweapon.ammo_type;
 					string pic = Sbar_ItemIcon(ammotype);
 
 					if(pic)

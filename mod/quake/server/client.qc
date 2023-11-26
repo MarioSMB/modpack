@@ -100,15 +100,16 @@ void SetChangeParms(entity this)
 	parm6 = this.ammo_nails;
 	parm7 = this.ammo_rockets;
 	parm8 = this.ammo_cells;
-	if(this.weaponentity)
-		parm9 = this.weaponentity.m_weapon.m_id;
+	.entity weaponentity = weaponentities[0]; // only save first slot
+	if(this.(weaponentity))
+		parm9 = this.(weaponentity).m_weapon.m_id;
 	parm10 = this.model_randomizer;
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
 	parm14 = this.currentspell;
-	if(this.weaponentity)
-		parm15 = this.weaponentity.cnt;
+	if(this.(weaponentity))
+		parm15 = this.(weaponentity).cnt;
 	parm16 = this.items;
 }
 
@@ -158,18 +159,19 @@ void DecodeLevelParms(entity this)
 	this.ammo_nails = parm6;
 	this.ammo_rockets = parm7;
 	this.ammo_cells = parm8;
-	if(this.weaponentity)
-		this.weaponentity.m_weapon = REGISTRY_GET(Weapons, parm9);
+	.entity weaponentity = weaponentities[0]; // only enough space to save the first slot!
+	if(this.(weaponentity))
+		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
 	this.model_randomizer = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
 
 	this.currentspell = parm14;
-	if(this.weaponentity)
-		this.weaponentity.skin = parm14;
-	if(this.weaponentity)
-		this.weaponentity.cnt = parm15;
+	if(this.(weaponentity))
+		this.(weaponentity).skin = parm14;
+	if(this.(weaponentity))
+		this.(weaponentity).cnt = parm15;
 	this.items = parm16;
 	this.powerups = 0;
 	if(this.items & IT_ARMOR3)
@@ -1481,7 +1483,10 @@ void PutObserverInServer(entity this)
 	this.drawonlytoclient = this;
 
 	this.weaponmodel = "";
-	this.weaponentity = NULL;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		this.weaponentities[slot] = NULL;
+	}
 	this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
 	this.punchangle = '0 0 0';
@@ -1516,6 +1521,8 @@ void PutPlayerInServer(entity this)
 	this.weaponframe = 0;
 	this.weaponmodel = "";
 
+	this.dual_weapons = '0 0 0';
+
 	// hipnotic fields
 	this.gravity = 1.0;
 	this.gorging = false;
@@ -1531,10 +1538,16 @@ void PutPlayerInServer(entity this)
 	if (autocvar_g_playerclip_collisions)
 		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
-	CL_SpawnWeaponentity(this);
-	this.weaponentity.weaponname = "";
-	this.weaponentity.m_weapon = WEP_Null;
-	this.weaponentity.skin = this.currentspell;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		CL_SpawnWeaponentity(this, weaponentity);
+		entity w_ent = this.(weaponentity);
+		w_ent.m_weapon = WEP_Null;
+		w_ent.weaponname = "";
+		//w_ent.cnt = -1;
+		w_ent.skin = this.currentspell; // TODO: after DecodeLevelParms?
+	}
 
 	DecodeLevelParms(this);
 
@@ -1579,7 +1592,11 @@ void PutPlayerInServer(entity this)
 		this.angles_z = 0; // never spawn tilted even if the spot says to
 		this.fixangle = true;
 		setorigin(this, spot.origin);
-		this.weaponentity.m_weapon = WEP_Null;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			this.(weaponentity).m_weapon = WEP_Null;
+		}
 
 		return;
 	}
@@ -1647,6 +1664,15 @@ void PutPlayerInServer(entity this)
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	player_stand1(this);
+
+	if (this.impulse) ImpulseCommands(this);
+
+	W_ResetGunAlign(this, 1);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_WeaponFrame(this, weaponentity);
+	}
 
 	if(deathmatch || coop)
 	{
@@ -2090,9 +2116,15 @@ void PlayerPreThink(entity this)
 			this.AGping = this.antigrav_finished + 3;
 	}
 
-	Weapon wep = this.weaponentity.m_weapon;
-	if(time > this.attack_finished && !wep.wr_checkammo1(wep, this))
-		W_SwitchWeapon(this, w_getbestweapon(this));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		Weapon wep = this.(weaponentity).m_weapon;
+		if(time > ATTACK_FINISHED(this, weaponentity) && !wep.wr_checkammo1(wep, this, weaponentity))
+			W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 	
 /*
@@ -2577,6 +2609,7 @@ Called every frame after physics are run
 */
 void xpackEnding(entity this);
 void Regenerate_Mana(entity this);
+.bool dualwielding_prev;
 void PlayerPostThink(entity this)
 {
 	Player_Physics(this);
@@ -2642,8 +2675,28 @@ void PlayerPostThink(entity this)
 		if(cutscene_running)
 			xpackEnding(this);
 
+		// reset gun alignment when dual wielding status changes
+		// to ensure guns are always aligned right and left
+		bool dualwielding = W_DualWielding(this);
+		if(this.dualwielding_prev != dualwielding)
+		{
+			W_ResetGunAlign(this, 1);
+			this.dualwielding_prev = dualwielding;
+		}
+
+		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
+			ImpulseCommands(this);
+
 		// do weapon stuff
-		W_WeaponFrame(this);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			W_WeaponFrame(this, weaponentity);
+		}
+
+		// TODO: split into a separate entity attached to the player?
+		if(this.items & IT_PULSERIFLE)
+			W_PulseRifle(this);
 
 		if(this.cnt > 0 && !this.button0)
 		{
@@ -2861,10 +2914,15 @@ called when a player dies
 */
 string AppendItemcodes(string s, entity player)
 {
-	int w = player.weaponentity.m_weapon.m_id;
-	if(w == 0)
-		w = player.weaponentity.cnt;
-	s = strcat(s, ftos(w));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		int w = player.(weaponentity).m_weapon.m_id;
+		if(w == 0)
+			w = player.(weaponentity).cnt; // previous weapon
+		if(w != 0 || slot == 0)
+			s = strcat(s, ftos(w));
+	}
 	if(PHYS_INPUT_BUTTON_BUTTON_CHAT(player))
 		s = strcat(s, "T");
 	return s;

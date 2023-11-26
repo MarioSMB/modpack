@@ -3,7 +3,7 @@
 CLASS(Mjolnir, Weapon)
 /* ammotype  */ ATTRIB(Mjolnir, ammo_type, int, IT_CELLS);
 /* impulse   */ ATTRIB(Mjolnir, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Mjolnir, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Mjolnir, aflag, int, 30);
 /* modelname */ ATTRIB(Mjolnir, mdl, string, "hammer");
 /* crosshair */ ATTRIB(Mjolnir, w_crosshair, string, "gfx/crosshaircrylink");
@@ -21,5 +21,5 @@ SPAWNFUNC_WEAPON(weapon_mjolnir, WEP_MJOLNIR)
 #ifdef SVQC
 .bool struck_by_mjolnir;
 
-void HIP_FireMjolnir(entity this);
+void HIP_FireMjolnir(entity this, .entity weaponentity);
 #endif

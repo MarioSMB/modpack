@@ -3,7 +3,7 @@
 CLASS(Fish, Weapon)
 /* ammotype  */ ATTRIB(Fish, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(Fish, impulse, int, 6);
-/* spawnflags*/ ATTRIB(Fish, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Fish, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Fish, aflag, int, 5);
 /* modelname */ ATTRIB(Fish, mdl, string, "feesh");
 /* crosshair */ ATTRIB(Fish, w_crosshair, string, "gfx/crosshair50");

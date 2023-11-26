@@ -3,7 +3,7 @@
 CLASS(PortalGun, Weapon)
 /* ammotype  */ ATTRIB(PortalGun, ammo_type, int, 0);
 /* impulse   */ ATTRIB(PortalGun, impulse, int, 0);
-/* spawnflags*/ ATTRIB(PortalGun, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY);
+/* spawnflags*/ ATTRIB(PortalGun, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(PortalGun, aflag, int, 0);
 /* modelname */ ATTRIB(PortalGun, mdl, string, "portal");
 /* crosshair */ ATTRIB(PortalGun, w_crosshair, string, "gfx/crosshairporto");

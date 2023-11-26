@@ -52,20 +52,20 @@ void tuba_note_touch(entity this, entity toucher)
 	Become_Burst_6Sided_BrightYellow_Explosion(this);
 }
 
-void W_FireTuba(entity this)
+void W_FireTuba(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
 	this.ammo_rockets -= 1;
 
 	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 
-	vector org = gettaginfo(this.weaponentity, 0);
+	vector org = gettaginfo(this.(weaponentity), 0);
 	vector offset = org + v_up * 10 + v_right * 5 + v_forward * 14;
-	if(time > this.weaponentity.tuba_smoketime)
+	if(time > this.(weaponentity).tuba_smoketime)
 	{
 		// FIXME gettaginfo(this.(weaponentity), 0) doesn't return the real origin of the weapon
 		Send_Effect(EFFECT_SMOKE_RING, offset, v_up * 100, 1);
-		this.weaponentity.tuba_smoketime = time + 0.25;
+		this.(weaponentity).tuba_smoketime = time + 0.25;
 	}
 
 	// copied from piano
@@ -105,17 +105,17 @@ void W_FireTuba(entity this)
 	sound(tubasnd, CH_TUBA_SINGLE, SND_TUBA_RANDOM(), 1, ATTN_NORM);
 }
 
-METHOD(Tuba, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_shot1(actor.weaponentity);
-		W_FireTuba(actor);
-		actor.attack_finished = time + 0.5;
+		wep_generic_shot1(actor.(weaponentity));
+		W_FireTuba(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);
 	}
 }
-METHOD(Tuba, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Tuba, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

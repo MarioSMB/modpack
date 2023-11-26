@@ -29,6 +29,8 @@ void player_nail1(entity this);
 void player_light1(entity this);
 #endif
 
+int W_GunAlign(entity this, int preferred_align);
+
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -106,7 +108,9 @@ REPLICATE_INIT(string, cvar_cl_weaponpriorities[10]);
 
 .vector movedir_aligned; // shot origin based on weapon alignment (unaffected by shootfromeye)
 
-vector shotorg_adjust_values(vector vecs);
+.int m_gunalign;
+
+vector shotorg_adjust_values(vector vecs, float algn);
 void CL_WeaponEntity_SetModel(entity this, string name);
 #endif
 

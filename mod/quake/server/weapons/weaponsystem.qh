@@ -2,6 +2,26 @@
 
 #include "../../common/weapons/all.qh"
 
-void CL_SpawnWeaponentity(entity e);
+#define INDEPENDENT_ATTACK_FINISHED 1
+
+..entity weaponentity_fld;
+
+.float attack_finished_for[REGISTRY_MAX(Weapons) * MAX_WEAPONSLOTS];
+.float attack_finished_single[MAX_WEAPONSLOTS];
+#if INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
+#else
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
+#endif
+#define ATTACK_FINISHED(ent, w) ATTACK_FINISHED_FOR(ent, ent.(w).m_weapon.m_id, weaponslot(w))
+
+.void(entity) weapon_think;
+.float weapon_nextthink;
+
+void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
 void w_ready(entity w_ent);
+
+void W_ResetGunAlign(entity player, int preferred_alignment);
+
+vector W_Shotorg(entity ent, .entity weaponentity);

@@ -12,7 +12,7 @@ void player_chainsaw2(entity this) { set_animofs(this, anim_player_shotatt1, 2, 
 void player_chainsaw1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_chainsaw2); }
 
 void wep_chainsaw_chainsaw6(entity this) { wep_set_anim(this, 10, w_ready); }
-void wep_chainsaw_chainsaw5(entity this) { wep_set_anim(this, 9, wep_chainsaw_chainsaw6); W_FireSaw(this.owner); }
+void wep_chainsaw_chainsaw5(entity this) { wep_set_anim(this, 9, wep_chainsaw_chainsaw6); W_FireSaw(this.owner, this.weaponentity_fld); }
 void wep_chainsaw_chainsaw4(entity this)
 {
 	wep_set_anim(this, 8, wep_chainsaw_chainsaw5);
@@ -22,7 +22,7 @@ void wep_chainsaw_chainsaw4(entity this)
 		return;
 	}
 }
-void wep_chainsaw_chainsaw3(entity this) { wep_set_anim(this, 7, wep_chainsaw_chainsaw4); W_FireSaw(this.owner); }
+void wep_chainsaw_chainsaw3(entity this) { wep_set_anim(this, 7, wep_chainsaw_chainsaw4); W_FireSaw(this.owner, this.weaponentity_fld); }
 void wep_chainsaw_chainsaw2(entity this)
 {
 	wep_set_anim(this, 6, wep_chainsaw_chainsaw3);
@@ -32,12 +32,12 @@ void wep_chainsaw_chainsaw2(entity this)
 		return;
 	}
 }
-void wep_chainsaw_chainsaw1(entity this) { wep_set_anim(this, 5, wep_chainsaw_chainsaw2); player_chainsaw1(this.owner); W_FireSaw(this.owner); }
+void wep_chainsaw_chainsaw1(entity this) { wep_set_anim(this, 5, wep_chainsaw_chainsaw2); player_chainsaw1(this.owner); W_FireSaw(this.owner, this.weaponentity_fld); }
 
-void W_FireSaw(entity this)
+void W_FireSaw(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
-	vector source = this.origin + this.view_ofs - v_up*6;
+	vector source = W_Shotorg(this, weaponentity) - v_up * 6;
 	int oldsolid = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	traceline(source, source + v_forward*64, MOVE_NORMAL, this);
@@ -78,13 +78,13 @@ void W_FireSaw(entity this)
 	}
 }
 
-METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	//if(thiswep.wr_checkammo1(thiswep, actor))
+	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_chainsaw_chainsaw1(actor.weaponentity);
-		actor.attack_finished = time + 0.55;
+		wep_chainsaw_chainsaw1(actor.(weaponentity));
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.55;
 		_sound(actor, CH_SHOTS, "weapons/sawatck.wav", 1, ATTN_NORM);
 	}
 
@@ -94,7 +94,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, int fire))
 		actor.chainsaw_sound_time = time + 0.1;
 	}
 }
-METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	// does not use ammo
 	return true;

@@ -18,7 +18,7 @@ void wep_impaler_shotimp8(entity this) { wep_set_anim(this, 7, wep_impaler_shoti
 void wep_impaler_shotimp7(entity this) { wep_set_anim(this, 6, wep_impaler_shotimp8); _sound(this.owner, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
 void wep_impaler_shotimp6(entity this) { wep_set_anim(this, 6, wep_impaler_shotimp7); }
 void wep_impaler_shotimp5(entity this) { wep_set_anim(this, 5, wep_impaler_shotimp6); }
-void wep_impaler_shotimp4(entity this) { wep_set_anim(this, 4, wep_impaler_shotimp5); W_FireSpear(this.owner); }
+void wep_impaler_shotimp4(entity this) { wep_set_anim(this, 4, wep_impaler_shotimp5); W_FireSpear(this.owner, this.weaponentity_fld); }
 void wep_impaler_shotimp3(entity this) { wep_set_anim(this, 3, wep_impaler_shotimp4); this.owner.effects |= EF_MUZZLEFLASH; }
 void wep_impaler_shotimp2(entity this) { wep_set_anim(this, 2, wep_impaler_shotimp3); _sound(this.owner, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
 void wep_impaler_shotimp1(entity this) { wep_set_anim(this, 1, wep_impaler_shotimp2); player_shotimp1(this.owner); }
@@ -407,7 +407,8 @@ void impale(entity this)
 	_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
 	BecomeBloodSpurt(this, 0);
 	this.angles_x = this.angles_z = 0;
-	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	.entity priwep = weaponentities[0];
+	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(random() < 0.3)
 			this.frame = 31;
@@ -424,7 +425,7 @@ void impale(entity this)
 		this.frame = 87;
 }
 
-void W_FireSpear(entity this)
+void W_FireSpear(entity this, .entity weaponentity)
 {
 	this.ammo_rockets = this.ammo_rockets - 1;
 	entity missile = spawn();
@@ -445,21 +446,21 @@ void W_FireSpear(entity this)
 	setthink(missile, SUB_Remove);
 	_setmodel(missile, "progs/impaler.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + (v_forward * 8) + '0 0 16');
+	setorigin(missile, W_Shotorg(this, weaponentity) + (v_forward * 8));
 	this.velocity = this.velocity - (v_forward * (600 - this.armorvalue)) + '0 0 50';
 	this.punchangle_x = -10;
 }
 
-METHOD(Impaler, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Impaler, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_impaler_shotimp1(actor.weaponentity);
-		actor.attack_finished = time + 1;
+		wep_impaler_shotimp1(actor.(weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}
 }
-METHOD(Impaler, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Impaler, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

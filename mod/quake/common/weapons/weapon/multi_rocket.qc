@@ -100,7 +100,7 @@ void MultiRocketTouch(entity this, entity toucher)
 	MultiRocketExplode(this, toucher);
 }
 
-void MultiRocketLaunch(entity this, float offset, float frameNum)
+void MultiRocketLaunch(entity this, float offset, float frameNum, .entity weaponentity)
 {
 	entity missile = new(MultiRocket);
 	missile.owner = this;
@@ -118,7 +118,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum)
 		_setmodel(missile, "progs/rockup.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin + v_forward*8 + '0 0 16');
+	setorigin(missile, W_Shotorg(this, weaponentity) + v_forward * 8);
 	
 	vector aimangle;
 	if(coop || deathmatch)
@@ -157,7 +157,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum)
 	}
 }
 
-void W_FireMultiRocket(entity this)
+void W_FireMultiRocket(entity this, .entity weaponentity)
 {
 	this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
 	
@@ -165,23 +165,23 @@ void W_FireMultiRocket(entity this)
 
 	this.punchangle_x = -2;
 	
-	MultiRocketLaunch(this, -10, 2);
-	MultiRocketLaunch(this, -5, 3);
-	MultiRocketLaunch(this, 5, 0);
-	MultiRocketLaunch(this, 10, 1);
+	MultiRocketLaunch(this, -10, 2, weaponentity);
+	MultiRocketLaunch(this, -5, 3, weaponentity);
+	MultiRocketLaunch(this, 5, 0, weaponentity);
+	MultiRocketLaunch(this, 10, 1, weaponentity);
 }
 
-METHOD(MultiRocketLauncher, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(MultiRocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_rocket1(actor.weaponentity);
-		W_FireMultiRocket(actor);
-		actor.attack_finished = time + 0.8;
+		wep_generic_rocket1(actor.(weaponentity));
+		W_FireMultiRocket(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}
 }
-METHOD(MultiRocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(MultiRocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_multi_rockets >= 1;
 	return ammo_amount;

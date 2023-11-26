@@ -84,7 +84,7 @@ void disc_think(entity this)
 	this.angles = vectoangles(this.velocity);
 }
 
-void W_FireRipper(entity this)
+void W_FireRipper(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
 
@@ -111,21 +111,21 @@ void W_FireRipper(entity this)
 
 	_setmodel(disc, "progs/blade.mdl");
 	setsize(disc, '0 0 0', '0 0 0');
-	vector org = this.origin + '0 0 16'; // v_forward * 8, not used because it goes through mobs!
+	vector org = W_Shotorg(this, weaponentity); // v_forward * 8, not used because it goes through mobs!
 	setorigin(disc, org);
 }
 
-METHOD(Ripper, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Ripper, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		W_FireRipper(actor);
-		wep_generic_shot1(actor.weaponentity);
-		actor.attack_finished = time + 0.66;
+		W_FireRipper(actor, weaponentity);
+		wep_generic_shot1(actor.(weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.66);
 	}
 }
-METHOD(Ripper, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Ripper, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_shells >= 2;
 	return ammo_amount;

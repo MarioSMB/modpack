@@ -117,7 +117,7 @@ void shop_buyitem(entity this, string item)
 		return;
 	}
 
-	if(STAT(WEAPONS, this) & wep.m_wepset)
+	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (this.dual_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
 	{
 		sprint(this, "You already have that weapon\n");
 		return;
@@ -153,10 +153,19 @@ void shop_buyitem(entity this, string item)
 	bound_other_ammo(this);
 
 	this.frags -= cost;
-	STAT(WEAPONS, this) |= wep.m_wepset;
+	if(STAT(WEAPONS, this) & wep.m_wepset)
+		this.dual_weapons |= wep.m_wepset;
+	else
+		STAT(WEAPONS, this) |= wep.m_wepset;
 
-	if(wep == w_getbestweapon(this))
-		W_SwitchWeapon(this, wep);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(wep == w_getbestweapon(this, weaponentity))
+			W_SwitchWeapon(this, wep, weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 }
 
 bool shopkeep_send(entity this, entity to, int sf)

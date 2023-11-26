@@ -17,7 +17,7 @@ void player_mjolnir1(entity this) { set_anim(this, anim_player_axatt1, player_mj
 
 void wep_mjolnir_hammer6(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_mjolnir_hammer5(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer6); }
-void wep_mjolnir_hammer4(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer5); HIP_FireMjolnir(this.owner); }
+void wep_mjolnir_hammer4(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer5); HIP_FireMjolnir(this.owner, this.weaponentity_fld); }
 void wep_mjolnir_hammer3(entity this) { wep_set_anim(this, 3, wep_mjolnir_hammer4); }
 void wep_mjolnir_hammer2(entity this) { wep_set_anim(this, 2, wep_mjolnir_hammer3); }
 void wep_mjolnir_hammer1(entity this)
@@ -226,10 +226,10 @@ void HIP_FireMjolnirLightning(entity this)
 	HIP_SpawnMjolnirBase(this);
 }
 
-void HIP_FireMjolnir(entity this)
+void HIP_FireMjolnir(entity this, .entity weaponentity)
 {
-	this.attack_finished = time + 0.4;
-	vector source = this.origin + '0 0 16';
+	ATTACK_FINISHED(this, weaponentity) = time + 0.4;
+	vector source = W_Shotorg(this, weaponentity);
 
 	makevectors(this.v_angle);
 	int oldsolid = this.dphitcontentsmask;
@@ -274,19 +274,19 @@ void HIP_FireMjolnir(entity this)
 			_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM);
 		}
 	}
-	this.attack_finished = time + 0.4;
+	ATTACK_FINISHED(this, weaponentity) = time + 0.4;
 }
 
-METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_mjolnir_hammer1(actor.weaponentity);
-		actor.attack_finished = time + 0.8;
+		wep_mjolnir_hammer1(actor.(weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}
 }
-METHOD(Mjolnir, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Mjolnir, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	// while weapon does use ammo, also works fine without!
 	return true;

@@ -213,69 +213,74 @@ PLAYER
 
 void player_run(entity this);
 
-void spellbook_frame(entity this)
+void spellbook_frame(entity this, .entity weaponentity)
 {
-	//Weapon wep = this.weaponentity.m_weapon;
+	//Weapon wep = this.(weaponentity).m_weapon;
 	//if(wep == WEP_SPELLBOOK)
 	//{
-		if(this.weaponentity.swappingspell == 1)
+		if(this.(weaponentity).swappingspell == 1)
 		{
-			this.weaponentity.m_frame += 3;
-			if(this.weaponentity.m_frame > 12)
+			this.(weaponentity).m_frame += 3;
+			if(this.(weaponentity).m_frame > 12)
 			{
-				this.weaponentity.m_frame = 23;
+				this.(weaponentity).m_frame = 23;
 				this.currentspell += 1;
 				if(this.currentspell > SPELL_LAST)
 					this.currentspell = SPELL_FIRST;
-				this.weaponentity.skin = this.currentspell; // TODO: merge them? might want a spell registry!
-				this.weaponentity.swappingspell = 0;
+				this.(weaponentity).skin = this.currentspell; // TODO: merge them? might want a spell registry!
+				this.(weaponentity).swappingspell = 0;
 			}
 		}
-		else if(this.weaponentity.swappingspell == -1)
+		else if(this.(weaponentity).swappingspell == -1)
 		{
-			this.weaponentity.m_frame -= 3;
-			if(this.weaponentity.m_frame < 0)
+			this.(weaponentity).m_frame -= 3;
+			if(this.(weaponentity).m_frame < 0)
 			{
-				this.weaponentity.m_frame = 23;
+				this.(weaponentity).m_frame = 23;
 				this.currentspell -= 1;
 				if(this.currentspell < SPELL_FIRST)
 					this.currentspell = SPELL_LAST;
-				this.weaponentity.swappingspell = 0;
+				this.(weaponentity).swappingspell = 0;
 			}
 		}
 		else
 		{
-			this.weaponentity.m_frame += 1;
-			if(this.weaponentity.m_frame >= 48)
-				this.weaponentity.m_frame = 28;
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame >= 48)
+				this.(weaponentity).m_frame = 28;
 		}
 	//}
 }
 
 .bool reversed;
-void portalgun_frame(entity this)
+void portalgun_frame(entity this, .entity weaponentity)
 {
-	if(this.weaponentity.reversed)
+	if(this.(weaponentity).reversed)
 	{
-		this.weaponentity.m_frame -= 1;
-		if(this.weaponentity.m_frame <= 0)
-			this.weaponentity.reversed = false;
+		this.(weaponentity).m_frame -= 1;
+		if(this.(weaponentity).m_frame <= 0)
+			this.(weaponentity).reversed = false;
 	}
 	else
 	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.m_frame >= 8)
-			this.weaponentity.reversed = true;
+		this.(weaponentity).m_frame += 1;
+		if(this.(weaponentity).m_frame >= 8)
+			this.(weaponentity).reversed = true;
 	}
 }
 
 void player_stand1(entity this)
 {
-	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_axstnd1, player_stand1);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK && wep != WEP_PORTAL_GUN)
-		this.weaponentity.m_frame = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity wepent = weaponentities[slot];
+		Weapon w = this.(wepent).m_weapon;
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink)
+			this.(wepent).m_frame = 0;
+	}
+
 	if(this.velocity_x || this.velocity_y)
 	{
 		this.walkframe=0;
@@ -293,27 +298,34 @@ void player_stand1(entity this)
 		return; // no weapon logic
 	}
 
-	// TODO wr for this too?
-	if(wep == WEP_RIPPER)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.m_frame > 7)
-			this.weaponentity.m_frame = 0;
-	}
-	if(wep == WEP_CHAINSAW)
-	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.m_frame >= 5)
-			this.weaponentity.m_frame = 0;
-		if(this.view_ofs != '0 0 0')
-			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
-	}
-	if(wep == WEP_SPELLBOOK)
-		spellbook_frame(this);
-	if(wep == WEP_PORTAL_GUN)
-		portalgun_frame(this);
+		.entity weaponentity = weaponentities[slot];
+		Weapon wep = this.(weaponentity).m_weapon;
 
-	if(wep.spawnflags & WEP_FLAG_MELEE)
+		// TODO wr for this too?
+		if(wep == WEP_RIPPER)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame > 7)
+				this.(weaponentity).m_frame = 0;
+		}
+		if(wep == WEP_CHAINSAW)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame >= 5)
+				this.(weaponentity).m_frame = 0;
+			if(this.view_ofs != '0 0 0')
+				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
+		}
+		if(wep == WEP_SPELLBOOK)
+			spellbook_frame(this, weaponentity);
+		if(wep == WEP_PORTAL_GUN)
+			portalgun_frame(this, weaponentity);
+	}
+
+	.entity priwep = weaponentities[0];
+	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
@@ -331,11 +343,15 @@ void player_stand1(entity this)
 .float footstep;
 void player_run(entity this)
 {
-	Weapon wep = this.weaponentity.m_weapon;
 	set_anim(this, anim_player_rockrun1, player_run);
 
-	if(wep != WEP_RIPPER && wep != WEP_CHAINSAW && wep != WEP_SPELLBOOK && wep != WEP_PORTAL_GUN)
-		this.weaponentity.m_frame = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity wepent = weaponentities[slot];
+		Weapon w = this.(wepent).m_weapon;
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink)
+			this.(wepent).m_frame = 0;
+	}
 	if(!this.velocity_x && !this.velocity_y)
 	{
 		if(!STAT(SKATING, this))
@@ -354,26 +370,34 @@ void player_run(entity this)
 		return;
 	}
 
-	if(wep == WEP_RIPPER)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.m_frame > 7)
-			this.weaponentity.m_frame = 0;
-	}
-	if(wep == WEP_CHAINSAW)
-	{
-		this.weaponentity.m_frame += 1;
-		if(this.weaponentity.m_frame >= 5)
-			this.weaponentity.m_frame = 0;
-		if(this.view_ofs != '0 0 0')
-			_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
-	}
-	if(wep == WEP_SPELLBOOK)
-		spellbook_frame(this);
-	if(wep == WEP_PORTAL_GUN)
-		portalgun_frame(this);
+		.entity weaponentity = weaponentities[slot];
+		Weapon wep = this.(weaponentity).m_weapon;
 
-	if(wep.spawnflags & WEP_FLAG_MELEE)
+		// TODO wr for this too?
+		if(wep == WEP_RIPPER)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame > 7)
+				this.(weaponentity).m_frame = 0;
+		}
+		if(wep == WEP_CHAINSAW)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame >= 5)
+				this.(weaponentity).m_frame = 0;
+			if(this.view_ofs != '0 0 0')
+				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
+		}
+		if(wep == WEP_SPELLBOOK)
+			spellbook_frame(this, weaponentity);
+		if(wep == WEP_PORTAL_GUN)
+			portalgun_frame(this, weaponentity);
+	}
+
+	.entity priwep = weaponentities[0];
+	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 6)
 			this.walkframe = 0;
@@ -582,18 +606,19 @@ void player_pain5(entity this) { set_animofs(this, anim_player_pain1, 5, player_
 void player_pain4(entity this) { set_animofs(this, anim_player_pain1, 4, player_pain5); }
 void player_pain3(entity this) { set_animofs(this, anim_player_pain1, 3, player_pain4); }
 void player_pain2(entity this) { set_animofs(this, anim_player_pain1, 2, player_pain3); }
-void player_pain1(entity this, entity attacker) { set_animofs(this, anim_player_pain1, 1, player_pain2); PainSound(this, attacker); this.weaponentity.m_frame = 0; }
+void player_pain1(entity this, entity attacker) { set_animofs(this, anim_player_pain1, 1, player_pain2); PainSound(this, attacker); }
 
 void player_axpain6(entity this) { set_animofs(this, anim_player_axpain1, 6, player_run); }
 void player_axpain5(entity this) { set_animofs(this, anim_player_axpain1, 5, player_axpain6); }
 void player_axpain4(entity this) { set_animofs(this, anim_player_axpain1, 4, player_axpain5); }
 void player_axpain3(entity this) { set_animofs(this, anim_player_axpain1, 3, player_axpain4); }
 void player_axpain2(entity this) { set_animofs(this, anim_player_axpain1, 2, player_axpain3); }
-void player_axpain1(entity this, entity attacker) { set_animofs(this, anim_player_axpain1, 1, player_axpain2); PainSound(this, attacker); this.weaponentity.m_frame = 0; }
+void player_axpain1(entity this, entity attacker) { set_animofs(this, anim_player_axpain1, 1, player_axpain2); PainSound(this, attacker); }
 
 void player_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	if(this.weaponentity.m_frame)
+	.entity weaponentity = weaponentities[0]; // TODO: what even is the purpose of this?
+	if(this.(weaponentity).m_frame)
 		return;
 
 	if(this.pain_finished > time)
@@ -604,7 +629,7 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 
 	if(STAT(SKATING, this))
 		PainSound(this, NULL);
-	else if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	else if(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MELEE)
 		player_axpain1(this, attacker);
 	else
 		player_pain1(this, attacker);
@@ -968,7 +993,22 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.shield_finished = 0;
 	this.antigrav_finished = 0;
 
-	w_ready(this.weaponentity);
+	if(this.classname != "body")
+	{
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
+			}
+		});
+	}
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		w_ready(this.(weaponentity));
+	}
 
 	W_Spellbook_ClearSpells(this);
 
@@ -995,7 +1035,11 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 			this.fixangle = true;
 			setorigin(this, spot.origin);
 			set_movetype(this, MOVETYPE_NONE);
-			this.weaponentity.m_weapon = WEP_Null;
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				this.(weaponentity).m_weapon = WEP_Null;
+			}
 			setmodel(this, MDL_Null);
 		}
 		return;
@@ -1006,7 +1050,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
-	if(this.weaponentity.m_weapon.spawnflags & WEP_FLAG_MELEE)
+	.entity priwep = weaponentities[0];
+	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		player_die_ax1(this);
 		return;

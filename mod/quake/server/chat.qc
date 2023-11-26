@@ -12,7 +12,8 @@ string formatmessage(entity this, string msg)
 	else if(this.items & IT_NAILS) ammoitems = "nails";
 	else if(this.items & IT_SHELLS) ammoitems = "shells";
 
-	Weapon wep = this.weaponentity.m_weapon;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	Weapon wep = this.(weaponentity).m_weapon;
 	string wepname = wep.m_name;
 
 	traceline(this.cursor_trace_start, this.cursor_trace_start + normalize(this.cursor_trace_endpos - this.cursor_trace_start) * 16384, MOVE_NORMAL, this);

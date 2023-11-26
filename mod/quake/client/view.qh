@@ -1,6 +1,6 @@
 #pragma once
 
-entity viewmodels;
+entity viewmodels[MAX_WEAPONSLOTS];
 
 void HUD_CenterPrint ();
 

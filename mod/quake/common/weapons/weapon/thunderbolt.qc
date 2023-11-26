@@ -4,6 +4,7 @@
 void W_Thunderbolt_Attack(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(!actor.button0)
 	{
 		w_ready(this);
@@ -20,15 +21,15 @@ void W_Thunderbolt_Attack(entity this)
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
 	SuperDamageSound(actor);
-	W_FireLightning(actor);
-	actor.attack_finished = time + 0.2;
+	W_FireLightning(actor, weaponentity);
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 }
 
-void W_FireLightning(entity this)
+void W_FireLightning(entity this, .entity weaponentity)
 {
 	if(this.ammo_cells < 1)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 
@@ -55,7 +56,7 @@ void W_FireLightning(entity this)
 
 	this.ammo_cells = this.ammo_cells - 1;
 
-	vector org = this.origin + '0 0 16';
+	vector org = W_Shotorg(this, weaponentity);
 
 	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
 
@@ -67,17 +68,17 @@ void W_FireLightning(entity this)
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30, WEP_LIGHTNING.m_id);
 }
 
-METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		W_Thunderbolt_Attack(actor.weaponentity);
-		actor.attack_finished = time + 0.1;
+		W_Thunderbolt_Attack(actor.(weaponentity));
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.1;
 		_sound(actor, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
 }
-METHOD(Thunderbolt, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Thunderbolt, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_cells >= 1;
 	return ammo_amount;

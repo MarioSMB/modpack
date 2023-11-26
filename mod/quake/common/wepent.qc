@@ -18,15 +18,19 @@ MACRO_END
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
     PROP(false, m_weapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_weapon.m_id); }, \
-	{ viewmodels.activeweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
+	{ (viewmodels[this.m_wepent_slot]).activeweapon = REGISTRY_GET(Weapons, ReadByte()); }) \
     \
     PROP(false, m_frame, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_frame); }, \
-	{ CSQCModel_InterpolateAnimation_1To2_PreNote(viewmodels, BIT(23)); viewmodels.frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note(viewmodels, BIT(23), true); CSQCModel_InterpolateAnimation_Do(viewmodels); }) \
+	{ CSQCModel_InterpolateAnimation_1To2_PreNote((viewmodels[this.m_wepent_slot]), BIT(23)); (viewmodels[this.m_wepent_slot]).frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note((viewmodels[this.m_wepent_slot]), BIT(23), true); CSQCModel_InterpolateAnimation_Do((viewmodels[this.m_wepent_slot])); }) \
     \
     PROP(false, skin, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.skin); }, \
-	{ viewmodels.m_skin = ReadShort(); }) \
+	{ (viewmodels[this.m_wepent_slot]).m_skin = ReadShort(); }) \
+    \
+    PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.m_gunalign); }, \
+	{ (viewmodels[this.m_wepent_slot]).m_gunalign = ReadByte(); }) \
     \
 	/**/
 
@@ -55,6 +59,8 @@ MACRO_END
 			WriteHeader(chan, ENT_CLIENT_WEPENT);
 		else
 			WriteHeader(chan, CLIENT_WEPENT);
+		.entity weaponentity = this.owner.weaponentity_fld;
+		WriteByte(chan, weaponslot(weaponentity));
 		WriteInt24_t(chan, sf);
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
@@ -100,7 +106,8 @@ MACRO_END
 	bool wepent_customize(entity this, entity client)
 	{
 		entity e = client;
-		return e.weaponentity == this.owner;
+		.entity weaponentity = this.owner.weaponentity_fld;
+		return e.(weaponentity) == this.owner;
 	}
 
 	void wepent_link(entity wep)
@@ -120,6 +127,9 @@ MACRO_END
 
 	bool ReadWepent(entity this)
 	{
+		int slot = ReadByte();
+		this.m_wepent_slot = slot;
+		viewmodels[slot].m_wepent_slot = slot;
 		int sf = ReadInt24_t();
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \

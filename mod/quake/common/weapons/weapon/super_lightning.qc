@@ -4,15 +4,16 @@
 void W_SuperLightning_Attack(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(actor.ammo_cells < 1)
 	{
-		actor.attack_finished = time + 0.5;
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
 		_sound(actor, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
 		actor.ammo_cells = 0;
 		W_SetCurrentAmmo(actor);
 		return;
 	}
-	actor.attack_finished = time + 0.1;
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.1;
 
 	if(!actor.button0)
 	{
@@ -35,8 +36,8 @@ void W_SuperLightning_Attack(entity this)
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
 	SuperDamageSound(actor);
-	W_FireSuperLightning(actor);
-	actor.attack_finished = time + 0.1;
+	W_FireSuperLightning(actor, weaponentity);
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.1;
 }
 
 void superlightning_rebound(entity this)
@@ -187,7 +188,7 @@ void LightningTouch(entity this, entity toucher)
 	}
 }
 
-void W_FireSuperLightning(entity this)
+void W_FireSuperLightning(entity this, .entity weaponentity)
 {
 	float r = random();
 	if(this.waterlevel > 1)
@@ -229,16 +230,16 @@ void W_FireSuperLightning(entity this)
 		this.lightningmodel = 1;
 	}
 	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + '0 0 0' - v_forward * 0); // lol what
+	setorigin(missile, W_Shotorg(this, weaponentity)); // lol what
 }
 
-METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		actor.weaponentity.misc_bulletcounter = 0;
-		W_SuperLightning_Attack(actor.weaponentity);
+		actor.(weaponentity).misc_bulletcounter = 0;
+		W_SuperLightning_Attack(actor.(weaponentity));
 		if(actor.ammo_cells < 1)
 		{
 			actor.ammo_cells = 0;
@@ -246,7 +247,7 @@ METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, int fire))
 		}
 	}
 }
-METHOD(SuperLightning, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(SuperLightning, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_cells >= 1;
 	return ammo_amount;

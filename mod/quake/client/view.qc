@@ -291,7 +291,8 @@ void viewmodel_draw(entity this)
 }
 
 STATIC_INIT(viewmodel) {
-    viewmodels = new(viewmodel);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    	viewmodels[slot] = new(viewmodel);
 
     // forces lerping to work at 10 fps, needed for smooth weapon animations
     cvar_settemp("cl_lerpanim_maxdelta_framegroups", "0.1");
@@ -519,7 +520,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
 	if(autocvar_r_drawviewmodel)
-		viewmodel_draw(viewmodels);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			if(viewmodels[slot].activeweapon)
+				viewmodel_draw(viewmodels[slot]);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);

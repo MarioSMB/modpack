@@ -2,6 +2,21 @@
 
 USING(WepSet, vector);
 
+const int MAX_WEAPONSLOTS = 2;
+.entity weaponentities[MAX_WEAPONSLOTS];
+
+int weaponslot(.entity weaponentity)
+{
+    for (int i = 0; i < MAX_WEAPONSLOTS; ++i)
+    {
+        if (weaponentities[i] == weaponentity)
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0);
@@ -35,9 +50,9 @@ CLASS(Weapon, Object)
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
     /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, void(Weapon this, entity actor, int fire)) {}
+    METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
@@ -62,6 +77,8 @@ const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (muta
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
 #endif
+const int WEP_FLAG_DUALWIELD     =  BIT(2); // weapon can be dual wielded
+const int WEP_FLAG_NODUAL        =  BIT(3); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 const int WEP_FLAG_HUDFALLBACK   =  BIT(4); // weapon is displayed in the HUD as a default if no other weapon in the slot is selected
 const int WEP_FLAG_SECONDARY     =  BIT(5); // weapon has a secondary attack
 const int WEP_FLAG_NOAGGRO       =  BIT(6); // weapon does not aggro nearby monsters when used

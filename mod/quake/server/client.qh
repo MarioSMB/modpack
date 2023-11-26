@@ -97,7 +97,7 @@ string get_playerhead(entity this);
 void playersound(entity this, int chan, string sample, float vol, float atten);
 
 // prototypes
-void W_WeaponFrame(entity this);
+void W_WeaponFrame(entity this, .entity weaponentity);
 void W_SetCurrentAmmo(entity this);
 void player_pain(entity this, entity attacker, float damage, int deathtype);
 void player_stand1(entity this);

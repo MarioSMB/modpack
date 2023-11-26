@@ -175,7 +175,7 @@ void army_fire(entity this)
 	vector dir = en.origin - en.velocity*0.2;
 	dir = normalize(dir - this.origin);
 	
-	FireBullets(this, 4, dir, '0.1 0.1 0', DEATH_MONSTER_GRUNT.m_id);
+	FireBullets(this, 4, this.origin, dir, '0.1 0.1 0', DEATH_MONSTER_GRUNT.m_id);
 }
 
 

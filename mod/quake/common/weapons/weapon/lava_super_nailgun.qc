@@ -4,6 +4,7 @@
 void W_LavaSuperNailgun_Attack(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(!actor.button0)
 	{
 		w_ready(this);
@@ -22,11 +23,11 @@ void W_LavaSuperNailgun_Attack(entity this)
 	if(this.m_frame >= 9)
 		this.m_frame = 1;
 	SuperDamageSound(actor);
-	W_FireSuperLavaSpikes(actor);
-	actor.attack_finished = time + 0.2;
+	W_FireSuperLavaSpikes(actor, weaponentity);
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 }
 
-void W_FireSuperLavaSpikes(entity this)
+void W_FireSuperLavaSpikes(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
 
@@ -34,7 +35,7 @@ void W_FireSuperLavaSpikes(entity this)
 	{
 		// disabled notification to reduce spam
 		//centerprint(this, "Out of Lava Nails");
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 
@@ -43,7 +44,7 @@ void W_FireSuperLavaSpikes(entity this)
 	this.ammo_lava_nails = this.ammo_lava_nails - 2;
 	
 	vector dir = qc_aim(this, 1000);
-	entity newmis = launch_lava_spike(this, this.origin + '0 0 16', dir);
+	entity newmis = launch_lava_spike(this, W_Shotorg(this, weaponentity), dir);
 	newmis.projectiledeathtype = WEP_LAVA_SUPER_NAILGUN.m_id;
 	settouch(newmis, superlavaspike_touch);
 
@@ -53,23 +54,23 @@ void W_FireSuperLavaSpikes(entity this)
 	this.punchangle_x = -2;
 }
 
-METHOD(LavaSuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(LavaSuperNailgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		actor.lava_super_nailgun_fired = true;
-		W_LavaSuperNailgun_Attack(actor.weaponentity);
+		W_LavaSuperNailgun_Attack(actor.(weaponentity));
 	}
 
-	if(!(fire & 1) && actor.lava_super_nailgun_fired && time >= actor.attack_finished)
+	if(!(fire & 1) && actor.lava_super_nailgun_fired && time >= ATTACK_FINISHED(actor, weaponentity))
 	{
 		_sound(actor, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
 		actor.lava_super_nailgun_fired = false;
 	}
 
 }
-METHOD(LavaSuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(LavaSuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_lava_nails >= 2;
 	return ammo_amount;

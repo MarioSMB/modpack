@@ -20,7 +20,7 @@ PRECACHE(Fish)
 const float SUPERFISHTIME = 7.1; // time to fire super rocket megafish
 .float fish_time;
 
-void fishmissile(entity this);
+void fishmissile(entity this, .entity weaponentity);
 void fishcharge(entity this);
 void player_fish12(entity this) { set_anim(this, 12, player_run); }
 void player_fish11(entity this) { set_anim(this, 11, player_fish12); }
@@ -38,7 +38,7 @@ void player_fish1(entity this) { set_anim(this, 1, player_fish2); }
 void wep_fish_fish12(entity this) { wep_set_anim(this, 12, w_ready); }
 void wep_fish_fish11(entity this) { wep_set_anim(this, 11, wep_fish_fish12); }
 void wep_fish_fish10(entity this) { wep_set_anim(this, 10, wep_fish_fish11); }
-void wep_fish_fish9(entity this) { wep_set_anim(this, 9, wep_fish_fish10); fishmissile(this.owner); }
+void wep_fish_fish9(entity this) { wep_set_anim(this, 9, wep_fish_fish10); fishmissile(this.owner, this.weaponentity_fld); }
 void wep_fish_fish8(entity this) { wep_set_anim(this, 8, wep_fish_fish9); }
 void wep_fish_fish7(entity this) { wep_set_anim(this, 7, wep_fish_fish8); }
 void wep_fish_fish6(entity this) { wep_set_anim(this, 6, wep_fish_fish7); }
@@ -169,13 +169,13 @@ void fishthink(entity this)
 		set_movetype(this, MOVETYPE_FLYMISSILE);
 }
 
-void fishmissile(entity this)
+void fishmissile(entity this, .entity weaponentity)
 {
 	this.ammo_rockets -= 1;
 
 	entity fish = spawn();
 	fish.owner = this;
-	fish.fish_time = this.weaponentity.fish_time;
+	fish.fish_time = this.(weaponentity).fish_time;
 	fish.projectiledeathtype = WEP_FISH.m_id;
 	fish.model = "feesh.mdl";
 	if(fish.fish_time > 4 && fish.fish_time < SUPERFISHTIME)
@@ -203,9 +203,9 @@ void fishmissile(entity this)
 	_setmodel(fish, "progs/feesh.mdl");
 	setsize(fish, '0 0 0','0 0 0');
 	settouch(fish, fishtouch);
-	vector org = this.origin + '0 0 20'; // v_forward * 40, not used because it goes through mobs!
+	vector org = W_Shotorg(this, weaponentity); // v_forward * 40, not used because it goes through mobs!
 	setorigin(fish, org);
-	this.weaponentity.fish_time = 0;
+	this.(weaponentity).fish_time = 0;
 	fish.cnt = time + 10;
 	setthink(fish, fishthink);
 	fish.nextthink = time + 0.01;
@@ -214,6 +214,7 @@ void fishmissile(entity this)
 void fishcharge(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(actor.health < 1 || intermission_running)
 		return;
 
@@ -221,29 +222,28 @@ void fishcharge(entity this)
 		this.fish_time = SUPERFISHTIME + 3;
 	this.fish_time += 0.1;
 	this.m_frame = 4;
-	this.nextthink = time + 0.1;
-	actor.attack_finished = time + 0.5;
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
 	if(actor.button0)
-		setthink(this, fishcharge);
+		wep_set_anim(this, 4, fishcharge);
 	else
-		setthink(this, wep_fish_fish5);
+		wep_set_anim(this, 4, wep_fish_fish5);
 }
 
-METHOD(Fish, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Fish, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	// TODO: blake sound when switching to the fish?
 
 	if(fire & 1)
-	//if(thiswep.wr_checkammo1(thiswep, actor))
+	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
-		actor.weaponentity.m_frame = 1;
-		actor.weaponentity.fish_time = 0;
-		wep_fish_fish1(actor.weaponentity);
-		actor.attack_finished = time + 1;
+		actor.(weaponentity).m_frame = 1;
+		actor.(weaponentity).fish_time = 0;
+		wep_fish_fish1(actor.(weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}
 }
-METHOD(Fish, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Fish, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

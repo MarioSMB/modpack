@@ -6,6 +6,7 @@
 #include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
 #include "monsters/ai_ammoresist.qh"
+#include "weapons/weaponsystem.qh"
 #include "world.qh"
 
 /*
@@ -152,7 +153,7 @@ vector wall_velocity(entity this)
 	return vel;
 }
 
-void FireBullets(entity this, int shotcount, vector dir, vector spread, int deathtype)
+void FireBullets(entity this, int shotcount, vector org, vector dir, vector spread, int deathtype)
 {
 	float bullet_speed;
 	if(IS_PLAYER(this))
@@ -165,8 +166,9 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread, int deat
 		makevectors(this.angles);
 		bullet_speed = 800 + (autocvar_skill * 150);
 	}
-	vector src_origin = this.origin;
-	src_origin.z = this.absmin_z + this.size_z * 0.7;
+	vector src_origin = org;
+	if(!IS_PLAYER(this))
+		src_origin.z = this.absmin_z + this.size_z * 0.7;
 
 	traceline(src_origin, src_origin + v_forward, MOVE_NORMAL, this);
 	src_origin = trace_endpos;
@@ -519,7 +521,8 @@ void gibhim(entity this)
 			r = random();
 			this.modelindex = this.modelindex_player;
 			//_setmodel(this, "progs/player.mdl");
-			if(this.weaponentity.m_weapon == WEP_AXE)
+			.entity priwep = weaponentities[0];
+			if(this.(priwep).m_weapon == WEP_AXE)
 			{
 				if(r < 0.3)
 					this.frame = 31;
@@ -1203,14 +1206,17 @@ void W_SetCurrentAmmo(entity this)
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
-	this.weaponentity.m_frame = 0;
 
-	Weapon wep = this.weaponentity.m_weapon;
-	if(wep != WEP_Null)
-		this.items |= wep.ammo_type;
-
-	if(wep != WEP_PIANO)
-		this.weaponentity.piano_prevwep = this.weaponentity.m_weapon; // for piano
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		Weapon wep = this.(weaponentity).m_weapon;
+		this.(weaponentity).m_frame = 0;
+		if(wep != WEP_Null)
+			this.items |= wep.ammo_type;
+		if(wep != WEP_PIANO)
+			this.(weaponentity).piano_prevwep = wep; // for piano hax
+	}
 }
 
 /*
@@ -1298,32 +1304,44 @@ W_WeaponFrame
 Called every frame so impulse events can be handled as well as possible
 ============
 */
-void W_WeaponFrame(entity this)
+.float weapon_frametime;
+void W_WeaponFrame(entity this, .entity weaponentity)
 {
 	if(this.exptime != 0)
 		return;
+	if (frametime) this.(weaponentity).weapon_frametime = frametime;
 
 	if(STAT(SKATING, this))
-		skate_fire(this);
+		skate_fire(this, weaponentity);
 
-	Weapon wep = this.weaponentity.m_weapon;
-	if(!STAT(SKATING, this) && !(time < this.attack_finished))
+	if(autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
 	{
-		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
-			ImpulseCommands(this);
+		.entity wepe1 = weaponentities[0];
+		entity wep1 = this.(wepe1);
+		this.(weaponentity).m_weapon = wep1.m_weapon;
+		if((this.m_weapon.spawnflags & WEP_FLAG_NODUAL) || (!(this.m_weapon.spawnflags & WEP_FLAG_DUALWIELD) && !(this.dual_weapons & wep1.m_weapon.m_wepset)))
+		{
+			this.(weaponentity).m_weapon = WEP_Null;
+			this.(weaponentity).weaponname = "";
+			return;
+		}
+	}
 
+	Weapon wep = this.(weaponentity).m_weapon;
+	if(!STAT(SKATING, this) && !(time < ATTACK_FINISHED(this, weaponentity)))
+	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		
 	// check for attack
 		if(wep != WEP_Null)
 		{
-			if(this.button0 && !(wep.spawnflags & WEP_FLAG_NOAGGRO) && wep.wr_checkammo1(wep, this))
+			if(this.button0 && !(wep.spawnflags & WEP_FLAG_NOAGGRO) && wep.wr_checkammo1(wep, this, weaponentity))
 			{
 				SuperDamageSound(this);
 				if(wep != WEP_AXE) // allow stealthy slices!
 					W_Attack(this, false);
 			}
-			wep.wr_think(wep, this, this.button0);
+			wep.wr_think(wep, this, weaponentity, this.button0);
 		}
 	}
 
@@ -1331,8 +1349,16 @@ void W_WeaponFrame(entity this)
 	if(wep == WEP_PORTAL_GUN && !(time < this.attack2_finished) && this.button3)
 	{
 		makevectors(this.v_angle);
-		wep.wr_think(wep, this, 0);
+		wep.wr_think(wep, this, weaponentity, 0);
 	}
+
+		if (time + this.(weaponentity).weapon_frametime * 0.5 >= this.(weaponentity).weapon_nextthink)
+		{
+			if (this.(weaponentity).weapon_think)
+			{
+				this.(weaponentity).weapon_think(this.(weaponentity));
+			}
+		}
 
 	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3 && !(wep.spawnflags & WEP_FLAG_SECONDARY))
 	{
@@ -1344,12 +1370,8 @@ void W_WeaponFrame(entity this)
 		}
 	}
 
-	// TODO: split into a separate entity attached to the player?
-	if(this.items & IT_PULSERIFLE)
-		W_PulseRifle(this);
-
 	// minor stub for Xonotic's weapon entity model detection
-	entity wepent = this.weaponentity;
+	entity wepent = this.(weaponentity);
 	if(!wepent) return;
 	wepent.weaponname = wepent.m_weapon.mdl;
 }

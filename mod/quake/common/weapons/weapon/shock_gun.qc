@@ -78,11 +78,11 @@ void T_ShockTouch(entity this, entity toucher)
 	ShockExplosion(this);
 }
 
-void W_FireShock(entity this)
+void W_FireShock(entity this, .entity weaponentity)
 {
 	if(this.ammo_cells < 1)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 	this.ammo_cells -= 1;
@@ -116,20 +116,20 @@ void W_FireShock(entity this)
 
 	_setmodel(missile, "progs/pbullet.mdl");   // Plasma bullet model
 	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin + v_forward*8 + '0 0 10');
+	setorigin(missile, W_Shotorg(this, weaponentity) + v_forward * 8);
 }
 
-METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_shot1(actor.weaponentity);
-		W_FireShock(actor);
-		actor.attack_finished = time + 0.15;
+		wep_generic_shot1(actor.(weaponentity));
+		W_FireShock(actor, weaponentity);
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.15;
 	}
 }
-METHOD(ShockGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(ShockGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_cells >= 1;
 	return ammo_amount;

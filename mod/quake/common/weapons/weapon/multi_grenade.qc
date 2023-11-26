@@ -81,7 +81,7 @@ void MultiGrenadeTouch(entity this, entity toucher)
 		this.avelocity = '0 0 0';
 }
 
-void W_FireMultiGrenade(entity this)
+void W_FireMultiGrenade(entity this, .entity weaponentity)
 {
 	this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
 	
@@ -116,20 +116,20 @@ void W_FireMultiGrenade(entity this)
 
 	_setmodel(missile, "progs/mervup.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin);
+	setorigin(missile, W_Shotorg(this, weaponentity));
 }
 
-METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_rocket1(actor.weaponentity);
-		W_FireMultiGrenade(actor);
-		actor.attack_finished = time + 0.6;
+		wep_generic_rocket1(actor.(weaponentity));
+		W_FireMultiGrenade(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
 	}
 }
-METHOD(MultiGrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(MultiGrenadeLauncher, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_multi_rockets >= 1;
 	return ammo_amount;

@@ -387,20 +387,23 @@ Deathmatch weapon change rules for picking up a weapon
 .int		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 =============
 */
-void Deathmatch_Weapon(entity this, int old, Weapon newwep)
+void Deathmatch_Weapon(entity this, Weapon newwep, .entity weaponentity)
 {
-	Weapon best = w_getbestweapon(this);
+	Weapon best = w_getbestweapon(this, weaponentity);
 	if(best == newwep)
-		W_SwitchWeapon(this, newwep);
+		W_SwitchWeapon(this, newwep, weaponentity);
 }
 
 bool weapon_customize(entity this, entity client)
 {
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
-	//if(STAT(WEAPONS, client) & wep.m_wepset)
-		//wep = W_Apply_Weaponreplace(client, wep);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
-		return false;
+	{
+		if((client.dual_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
+			return false;
+		if(client.collected_weapons & wep.m_wepset)
+			return false;
+	}
 	return true;
 }
 
@@ -533,21 +536,6 @@ void EnableComboWeapons(entity this)
 	}
 }
 
-Weapon W_Apply_Weaponreplace(entity this, Weapon wep)
-{
-	FOREACH(Weapons, it != WEP_Null && it != wep && it.weaponreplace == wep.netname,
-	{
-		// if the player already has the weapon, skip it
-		// if the player doesn't have ammo for it, also skip TODO: maybe allow swapping to the special weapons if you don't have ammo?
-		if((STAT(WEAPONS, this) & it.m_wepset) || !it.wr_checkammo1(it, this))
-			continue;
-		wep = it;
-		break; // one replacement at a time please!
-	});
-
-	return wep;
-}
-
 /*
 =============
 weapon_touch
@@ -561,7 +549,8 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	Weapon wep = toucher.weaponentity.m_weapon;
+	.entity weaponentity = weaponentities[0]; // TODO?
+	Weapon wep = toucher.(weaponentity).m_weapon;
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
@@ -569,9 +558,7 @@ void weapon_touch(entity this, entity toucher)
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	//if(STAT(WEAPONS,toucher) & newwep.m_wepset)
-		//newwep = W_Apply_Weaponreplace(toucher, newwep);
-	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset))
+	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((toucher.dual_weapons & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
 		return;
 
 	wep = newwep;
@@ -600,13 +587,20 @@ void weapon_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 // change to the weapon
-	int old = toucher.weaponentity.m_weapon.m_id;
-	STAT(WEAPONS, toucher) |= wep.m_wepset;
-
-	if(!deathmatch)
-		W_SwitchWeapon(toucher, wep);
+	if(STAT(WEAPONS, toucher) & wep.m_wepset)
+		toucher.dual_weapons |= wep.m_wepset;
 	else
-		Deathmatch_Weapon(toucher, old, wep);
+		STAT(WEAPONS, toucher) |= wep.m_wepset;
+
+	//if(!(toucher.dual_weapons & wep.m_wepset))
+	//{
+		if(!deathmatch)
+			W_SwitchWeapon(toucher, wep, weaponentity);
+		else
+			Deathmatch_Weapon(toucher, wep, weaponentity);
+	//}
+
+	toucher.collected_weapons |= wep.m_wepset;
 
 	// Moved up so the targets are fired even in coop, but only once.
 	SUB_UseTargets(this, toucher, NULL);
@@ -718,8 +712,9 @@ void ammo_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
-// if the player was using his best weapon, change up to the new one if better		
-	Weapon best = w_getbestweapon(toucher);
+// if the player was using his best weapon, change up to the new one if better
+	.entity weaponentity = weaponentities[0]; // TODO
+	Weapon best = w_getbestweapon(toucher, weaponentity);
 	bool pickedup = false;
 
 	if(this.ammo_shells && toucher.ammo_shells < 100)
@@ -776,8 +771,8 @@ void ammo_touch(entity this, entity toucher)
 
 // change to a better weapon if appropriate
 
-	if(toucher.weaponentity.m_weapon == best)
-		W_SwitchWeapon(toucher, w_getbestweapon(toucher));
+	if(toucher.(weaponentity).m_weapon == best)
+		W_SwitchWeapon(toucher, w_getbestweapon(toucher, weaponentity), weaponentity);
 
 // if changed current ammo, update it
 	W_SetCurrentAmmo(toucher);
@@ -1948,7 +1943,7 @@ void BackpackTouch(entity this, entity toucher)
 
 	//if(!newitem)
 		//newitem = toucher.weapon;
-	int old = toucher.weaponentity.m_weapon.m_id;
+	.entity weaponentity = weaponentities[0];
 
 	if(this.ammo_shells)
 		SendItemPickup(toucher, IT_SHELLS, this.ammo_shells);
@@ -1988,9 +1983,9 @@ void BackpackTouch(entity this, entity toucher)
 			return; // lol
 
 		if(!deathmatch)
-			W_SwitchWeapon(toucher, wep);
+			W_SwitchWeapon(toucher, wep, weaponentity);
 		else
-			Deathmatch_Weapon(toucher, old, wep);
+			Deathmatch_Weapon(toucher, wep, weaponentity);
 	}
 }
 
@@ -2007,7 +2002,7 @@ DropBackpack
 void DropBackpack(entity this)
 {
 	if(STAT(WEAPONS, this) == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
-			return;	// nothing in it
+		return;	// nothing in it
 
 	if(STAT(SKATING, this))
 		return; // skaters don't drop loot!
@@ -2020,7 +2015,8 @@ void DropBackpack(entity this)
 	entity item = spawn();
 	setorigin(item, this.origin - '0 0 24');
 
-	Weapon wep = this.weaponentity.m_weapon;
+	.entity weaponentity = weaponentities[0];
+	Weapon wep = this.(weaponentity).m_weapon;
 	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
 	STAT(WEAPONS, item) = STAT(WEAPONS, this);

@@ -25,29 +25,29 @@ void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, playe
 
 
 void wep_axe_axe4(entity this) { wep_set_anim(this, 4, w_ready); }
-void wep_axe_axe3(entity this) { wep_set_anim(this, 3, wep_axe_axe4); W_FireAxe(this.owner); }
+void wep_axe_axe3(entity this) { wep_set_anim(this, 3, wep_axe_axe4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axe2(entity this) { wep_set_anim(this, 2, wep_axe_axe3); }
 void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); player_axe1(this.owner); }
 
 void wep_axe_axeb4(entity this) { wep_set_anim(this, 8, w_ready); }
-void wep_axe_axeb3(entity this) { wep_set_anim(this, 7, wep_axe_axeb4); W_FireAxe(this.owner); }
+void wep_axe_axeb3(entity this) { wep_set_anim(this, 7, wep_axe_axeb4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axeb2(entity this) { wep_set_anim(this, 6, wep_axe_axeb3); }
 void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); player_axeb1(this.owner); }
 
 void wep_axe_axec4(entity this) { wep_set_anim(this, 4, w_ready); }
-void wep_axe_axec3(entity this) { wep_set_anim(this, 3, wep_axe_axec4); W_FireAxe(this.owner); }
+void wep_axe_axec3(entity this) { wep_set_anim(this, 3, wep_axe_axec4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axec2(entity this) { wep_set_anim(this, 2, wep_axe_axec3); }
 void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); player_axec1(this.owner); }
 
 void wep_axe_axed4(entity this) { wep_set_anim(this, 8, w_ready); }
-void wep_axe_axed3(entity this) { wep_set_anim(this, 7, wep_axe_axed4); W_FireAxe(this.owner); }
+void wep_axe_axed3(entity this) { wep_set_anim(this, 7, wep_axe_axed4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axed2(entity this) { wep_set_anim(this, 6, wep_axe_axed3); }
 void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); player_axed1(this.owner); }
 
-void W_FireAxe(entity this)
+void W_FireAxe(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
-	vector source = this.origin + '0 0 16';
+	vector source = W_Shotorg(this, weaponentity);
 	int oldsolid = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	traceline(source, source + v_forward*64, false, this);
@@ -66,31 +66,31 @@ void W_FireAxe(entity this)
 			else if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MON_FLAG_METAL))
 			{
 				if(r < 0.3)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
 				else if(r < 0.6)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
 				else
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
 			}
 			else if(IS_PLAYER(trace_ent) && trace_ent.armorvalue > 0)
 			{
 				if(r < 0.3)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
 				else if(r < 0.6)
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
 				else
-					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
+					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
 			}
 			else if(r < 0.5)
 			{
-				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut1.wav", 1, ATTN_NORM);
+				_sound(trace_ent, CH_SHOTS, "enviro/physics/axecut1.wav", 1, ATTN_NORM);
 				SpawnBlood(org, '0 0 0', 20, trace_ent);
 				SpawnBlood(org, '0 0 0', 20, trace_ent);
 				SpawnBlood(org, '0 0 0', 20, trace_ent);
 			}
 			else
 			{
-				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut2.wav", 1, ATTN_NORM);
+				_sound(trace_ent, CH_SHOTS, "enviro/physics/axecut2.wav", 1, ATTN_NORM);
 				SpawnBlood(org, '0 0 0', 20, trace_ent);
 			}
 		}
@@ -99,17 +99,16 @@ void W_FireAxe(entity this)
 	}
 	else
 	{	// hit wall
-		_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
+		_sound(this, CH_SHOTS, "player/axhit2.wav", 1, ATTN_NORM);
 		te_gunshot(org);
 	}
 }
 
-METHOD(Axe, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	//if(thiswep.wr_checkammo1(thiswep, actor))
+	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		// TODO: decouple axe attacks from the player animations
 		float r = random();
 		if(random() < 0.7)
 			_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
@@ -121,44 +120,44 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, int fire))
 			{
 				// vertical CHOP
 				if(r < 0.5)
-					wep_axe_axe1(actor.weaponentity);
+					wep_axe_axe1(actor.(weaponentity));
 				else
-					wep_axe_axec1(actor.weaponentity);
-				actor.attack_finished = time + 0.8; // long recover
+					wep_axe_axec1(actor.(weaponentity));
+				weapon_prepareattack(thiswep, actor, weaponentity, 0.8); // long recover
 			}
 			else
 			{
 				// diagonal SWEEP
 				if(r < 0.5)
-					wep_axe_axeb1(actor.weaponentity);
+					wep_axe_axeb1(actor.(weaponentity));
 				else
-					wep_axe_axed1(actor.weaponentity);
+					wep_axe_axed1(actor.(weaponentity));
 						
 				if(actor.axe_hit_chain > 1)
-					actor.attack_finished = time + 0.6;
+					weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
 				else
-					actor.attack_finished = time + 0.4;
+					weapon_prepareattack(thiswep, actor, weaponentity, 0.4);
 							
 			}
 		}
 		else
 		{
 			if(r < 0.25)
-				wep_axe_axe1(actor.weaponentity);
+				wep_axe_axe1(actor.(weaponentity));
 			else if(r<0.5)
-				wep_axe_axeb1(actor.weaponentity);
+				wep_axe_axeb1(actor.(weaponentity));
 			else if(r<0.75)
-				wep_axe_axec1(actor.weaponentity);
+				wep_axe_axec1(actor.(weaponentity));
 			else
-				wep_axe_axed1(actor.weaponentity);
+				wep_axe_axed1(actor.(weaponentity));
 			float fire_delay = 0.5;
 			if(random() < 0.5)
 				fire_delay = 0.4;
-			actor.attack_finished = time + fire_delay;
+			weapon_prepareattack(thiswep, actor, weaponentity, fire_delay);
 		}
 	}
 }
-METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	// does not use ammo
 	return true;

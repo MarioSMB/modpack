@@ -14,6 +14,7 @@ bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 void CL_Weaponentity_Think(entity this)
 {
 	this.nextthink = time;
+	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
 		// owner has new gun; remove old one
@@ -42,23 +43,101 @@ void CL_Weaponentity_Think(entity this)
 // Weapon subs
 void w_ready(entity w_ent)
 {
-	setthink(w_ent, func_null);
-	w_ent.nextthink = 0;
+	w_ent.weapon_think = func_null;
+	w_ent.weapon_nextthink = 0;
 	w_ent.misc_bulletcounter = 0;
 }
 
 // spawning weaponentity for client
-void CL_SpawnWeaponentity(entity actor)
+void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 {
 	entity w_ent = actor.(weaponentity) = new(weaponentity);
 	w_ent.solid = SOLID_NOT;
 	w_ent.owner = actor;
 	setmodel(w_ent, MDL_Null);  // precision set when changed
 	setorigin(w_ent, '0 0 0');
+	w_ent.weaponentity_fld = weaponentity;
 	setthink(w_ent, CL_Weaponentity_Think);
 	w_ent.nextthink = time;
 	w_ent.viewmodelforclient = actor;
 	setcefc(w_ent, CL_Weaponentity_CustomizeEntityForClient);
 
 	wepent_link(w_ent);
+}
+
+void W_ResetGunAlign(entity player, int preferred_alignment)
+{
+	if(W_DualWielding(player))
+		preferred_alignment = 3; // right align, the second gun will default to left
+
+	// clear current weapon slots' alignments so we can redo the calculations!
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = 0;
+	}
+
+	// now set the new values
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (player.(weaponentity))
+			player.(weaponentity).m_gunalign = W_GunAlign(player.(weaponentity), preferred_alignment);
+	}
+}
+
+void weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, float attacktime)
+{
+	entity this = actor.(weaponentity);
+	if (this == NULL) return;
+
+	// if the weapon hasn't been firing continuously, reset the timer
+	if (attacktime >= 0)
+	{
+		if (ATTACK_FINISHED(actor, weaponentity) < time - this.weapon_frametime * 1.5)
+		{
+			ATTACK_FINISHED(actor, weaponentity) = time;
+			// dprint("resetting attack finished to ", ftos(time), "\n");
+		}
+		float arate = 1;
+		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
+
+		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
+		{
+			int slot = weaponslot(weaponentity);
+			for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot)
+			{
+				if(slot == wepslot)
+					continue;
+				.entity wepent = weaponentities[wepslot];
+				if(actor.(wepent) && actor.(wepent).m_weapon != WEP_Null)
+				{
+					if(ATTACK_FINISHED(actor, wepent) > time + actor.(wepent).weapon_frametime * 0.5)
+						continue; // still cooling down!
+					if (ATTACK_FINISHED(actor, wepent) < time - actor.(wepent).weapon_frametime * 1.5)
+						ATTACK_FINISHED(actor, wepent) = time;
+					ATTACK_FINISHED(actor, wepent) = ATTACK_FINISHED(actor, wepent) + (attacktime * arate) / MAX_WEAPONSLOTS;
+				}
+			}
+		}
+	}
+}
+
+vector W_Shotorg(entity ent, .entity weaponentity)
+{
+	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
+	vector md = ent.(weaponentity).movedir;
+	vector vecs = ((md != '0 0 0') ? md : '0 0 0');
+	vector mi = '0 0 0', ma = '0 0 0'; // quake assume zero hitbox size
+
+	vector dv = v_right * -vecs.y + v_up * vecs.z;
+	vector w_shotorg = ent.origin + '0 0 16';
+	tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos;
+
+	// now move the shotorg forward as much as requested if possible
+	tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos - v_forward * nudge;
+	return w_shotorg;
 }

@@ -150,7 +150,7 @@ void T_PortalSpawn(entity this, int fire, entity hit, vector org)
 	force_retouch = 2;
 }
 
-void PortalFire(entity this, int fire)
+void PortalFire(entity this, int fire, .entity weaponentity)
 {
 	entity portal = (fire & 1) ? this.portal1 : this.portal2;
 	if(portal)
@@ -170,8 +170,9 @@ void PortalFire(entity this, int fire)
 
 	_sound(this, CH_WEAPON_SINGLE, "portal/fire.wav", 1, ATTN_NORM);
 
-	vector src = this.origin + v_forward * 10; // TODO: stuck in wall?
-	vector dir = this.origin + v_forward * 100000;
+	vector myorg = W_Shotorg(this, weaponentity);
+	vector src = myorg + v_forward * 10; // TODO: stuck in wall?
+	vector dir = myorg + v_forward * 100000;
 
 	traceline(src, src + dir, false, this);
 	if(trace_fraction != 1 && !(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && pointcontents(trace_endpos) != CONTENT_SKY)
@@ -187,23 +188,23 @@ void PortalFire(entity this, int fire)
 	}
 }
 
-METHOD(PortalGun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(PortalGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		actor.attack_finished = time + 0.8; // before PortalFire so it can be overridden!
-		PortalFire(actor, 1);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.8); // before PortalFire so it can be overridden!
+		PortalFire(actor, 1, weaponentity);
 	}
 
 	if(actor.button3)
 	if(time > actor.attack2_finished)
 	{
 		actor.attack2_finished = time + 0.8;
-		PortalFire(actor, 2);
+		PortalFire(actor, 2, weaponentity);
 	}
 }
-METHOD(PortalGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(PortalGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	// does not use ammo
 	return true;

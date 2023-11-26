@@ -79,7 +79,7 @@ void ProximityBomb(entity this)
 	this.nextthink = time + 0.25;
 }
 
-void W_FireProximityGrenade(entity this)
+void W_FireProximityGrenade(entity this, .entity weaponentity)
 {
 	this.NumProximityGrenades += 1;
 	this.ammo_rockets = this.ammo_rockets - 1;
@@ -125,21 +125,21 @@ void W_FireProximityGrenade(entity this)
 	missile.th_die = ProximityGrenadeExplode;
 
 	_setmodel(missile, "progs/proxbomb.mdl");
-	setorigin(missile, this.origin);
+	setorigin(missile, W_Shotorg(this, weaponentity));
 	setsize(missile, '-1 -1 -1', '1 1 1');
 }
 
-METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_rocket1(actor.weaponentity);
-		W_FireProximityGrenade(actor);
-		actor.attack_finished = time + 0.6;
+		wep_generic_rocket1(actor.(weaponentity));
+		W_FireProximityGrenade(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
 	}
 }
-METHOD(ProximityGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(ProximityGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

@@ -3,7 +3,7 @@
 CLASS(Piano, Weapon)
 /* ammotype  */ ATTRIB(Piano, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Piano, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Piano, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Piano, aflag, int, 30);
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");
@@ -24,5 +24,5 @@ REGISTER_WEAPON(PIANO, NEW(Piano));
 void player_woodpiano_randomplayleft(entity this);
 void player_woodpiano_randomplayright(entity this);
 
-void W_FireWoodPiano(entity this);
+void W_FireWoodPiano(entity this, .entity weaponentity);
 #endif

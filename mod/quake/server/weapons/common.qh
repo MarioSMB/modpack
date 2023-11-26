@@ -3,3 +3,5 @@
 .int projectiledeathtype;
 
 .float misc_bulletcounter;
+
+bool W_DualWielding(entity player);

@@ -4,6 +4,7 @@
 void W_SuperNailgun_Attack(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(!actor.button0)
 	{
 		w_ready(this);
@@ -20,8 +21,8 @@ void W_SuperNailgun_Attack(entity this)
 	if(this.m_frame >= 9)
 		this.m_frame = 1;
 	SuperDamageSound(actor);
-	W_FireSuperSpikes(actor);
-	actor.attack_finished = time + 0.2;
+	W_FireSuperSpikes(actor, weaponentity);
+	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 }
 
 void superspike_touch(entity this, entity toucher)
@@ -51,21 +52,21 @@ void superspike_touch(entity this, entity toucher)
 
 }
 
-void W_FireSuperSpikes(entity this)
+void W_FireSuperSpikes(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
 
 	if(this.ammo_nails < 2)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
-	this.attack_finished = time + 0.2;
+	ATTACK_FINISHED(this, weaponentity) = time + 0.2;
 	this.ammo_nails = this.ammo_nails - 2;
 	vector dir = qc_aim(this, 1000);
-	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
+	entity newmis = launch_spike(this, W_Shotorg(this, weaponentity), dir);
 	newmis.projectiledeathtype = WEP_SUPER_NAILGUN.m_id;
 	newmis.classname = "super_spike";
 	settouch(newmis, superspike_touch);
@@ -74,13 +75,13 @@ void W_FireSuperSpikes(entity this)
 	this.punchangle_x = -2;
 }
 
-METHOD(SuperNailgun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(SuperNailgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
-		W_SuperNailgun_Attack(actor.weaponentity);
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+		W_SuperNailgun_Attack(actor.(weaponentity));
 }
-METHOD(SuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(SuperNailgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_nails >= 2;
 	return ammo_amount;

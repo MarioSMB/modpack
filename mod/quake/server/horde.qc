@@ -440,16 +440,19 @@ void horde_ammo_touch(entity this, entity toucher)
 	if(!pickedup)
 		return;
 
-	// if the player was using their best weapon, change up to the new one if better		
-	Weapon best_weapon = w_getbestweapon(toucher);
-
 	// ammo touch sound
 	if(this.noise && this.noise != "")
 		_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
-	// change to a better weapon if appropriate
-	if(toucher.weaponentity.m_weapon == best_weapon)
-		W_SwitchWeapon(toucher, w_getbestweapon(toucher));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		Weapon best_weapon = w_getbestweapon(toucher, weaponentity);
+		if(toucher.(weaponentity).m_weapon == best_weapon)
+			W_SwitchWeapon(toucher, w_getbestweapon(toucher, weaponentity), weaponentity);
+		if(autocvar_g_weaponswitch_debug != 1)
+			break;
+	}
 
 	// loop through all players and give ammo
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,

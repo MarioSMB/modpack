@@ -69,7 +69,7 @@ void NapalmTouch(entity this, entity toucher)
 	this.nextthink = time;
 }
 
-void W_FireNapalm(entity this)
+void W_FireNapalm(entity this, .entity weaponentity)
 {
 	this.ammo_rockets = this.ammo_rockets - 1;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
@@ -98,30 +98,30 @@ void W_FireNapalm(entity this)
 	setthink(missile, SUB_Remove);
 	_setmodel(missile, "progs/nbomb.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, this.origin);
+	setorigin(missile, W_Shotorg(this, weaponentity));
 }
 
-METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		if(actor.weaponentity.misc_bulletcounter < 3)
+		if(actor.(weaponentity).misc_bulletcounter < 3)
 		{
-			wep_generic_rocket1(actor.weaponentity);
-			W_FireNapalm(actor);
-			actor.attack_finished = time + 0.6;
-			actor.weaponentity.misc_bulletcounter += 1;
+			wep_generic_rocket1(actor.(weaponentity));
+			W_FireNapalm(actor, weaponentity);
+			weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
+			actor.(weaponentity).misc_bulletcounter += 1;
 		}
 		else
 		{
 			_sound(actor, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
-			actor.attack_finished = time + 0.9;
-			actor.weaponentity.misc_bulletcounter = 0;
+			weapon_prepareattack(thiswep, actor, weaponentity, 0.9);
+			actor.(weaponentity).misc_bulletcounter = 0;
 		}
 	}
 }
-METHOD(NapalmGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(NapalmGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

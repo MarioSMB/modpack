@@ -37,17 +37,18 @@ entity W_FireRocket(entity this)
 	return missile;
 }
 
-METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_rocket1(actor.weaponentity);
-		W_FireRocket(actor);
-		actor.attack_finished = time + 0.8;
+		wep_generic_rocket1(actor.(weaponentity));
+		entity rocket = W_FireRocket(actor);
+		setorigin(rocket, W_Shotorg(actor, weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}
 }
-METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_rockets >= 1;
 	return ammo_amount;

@@ -34,17 +34,17 @@ void W_Biogun_Attack(entity this)
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
 	SuperDamageSound(actor);
-	W_FireBio(actor, ((this.misc_bulletcounter % 2) ? 3 : -3));
-	actor.attack_finished = time + 0.5;
+	W_FireBio(actor, ((this.misc_bulletcounter % 2) ? 3 : -3), this.weaponentity_fld);
+	ATTACK_FINISHED(actor, this.weaponentity_fld) = time + 0.5;
 }
 
-void W_FireBio(entity this, float ox)
+void W_FireBio(entity this, float ox, .entity weaponentity)
 {
 	makevectors(this.v_angle);
 
 	if(this.ammo_nails < 2)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 
@@ -54,7 +54,7 @@ void W_FireBio(entity this, float ox)
 	this.ammo_nails -= 2;
 	vector dir = qc_aim(this, 1000);
 	// NOTE: position fix by Seven and Sajt applied here
-	entity missile = launch_spike(this, this.origin + this.view_ofs + v_up * -12 + v_right * ox, dir);
+	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_up * -12 + v_right * ox, dir);
 	missile.dmg = 40;
 	missile.classname = "bio"; // identifier for spike touch TODO: clean this mess up
 	missile.projectiledeathtype = WEP_BIOGUN.m_id;
@@ -64,16 +64,16 @@ void W_FireBio(entity this, float ox)
 	this.punchangle_x = -2;
 }
 
-METHOD(Biogun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Biogun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		actor.weaponentity.misc_bulletcounter = 0;
-		W_Biogun_Attack(actor.weaponentity);
+		actor.(weaponentity).misc_bulletcounter = 0;
+		W_Biogun_Attack(actor.(weaponentity));
 	}
 }
-METHOD(Biogun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Biogun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_nails >= 2;
 	return ammo_amount;

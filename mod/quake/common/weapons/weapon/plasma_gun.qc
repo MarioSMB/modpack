@@ -189,11 +189,11 @@ entity launch_plasma(entity this, vector org, vector dir)
 	return missile;
 }
 
-void W_FirePlasma(entity this)
+void W_FirePlasma(entity this, .entity weaponentity)
 {
 	if(this.ammo_plasma < 1)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 
@@ -213,24 +213,25 @@ void W_FirePlasma(entity this)
 	makevectors(this.v_angle);
 	vector dir = qc_aim(this, 1000);
 	//launch_plasma(this, this.origin + v_forward*24 + '0 0 16', dir);//seven's postion fix -ooppee edit out
-	launch_plasma(this, this.origin + v_forward * 24 + this.view_ofs + v_up * -10 , dir); //seven's fix applied
+	entity plasma = launch_plasma(this, this.origin + v_forward * 24 + this.view_ofs + v_up * -10, dir); //seven's fix applied
+	setorigin(plasma, W_Shotorg(this, weaponentity) + v_forward * 24 + v_up * -10);
 }
 
-METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		// player_light1 determines choice of W_FireLightning 
 		//      or W_FirePlasma, but same lighting and frames...
-		//actor.attack_finished = time + 1.0;//ooppee edited line out
+		//ATTACK_FINISHED(actor, weaponentity) = time + 1.0;//ooppee edited line out
 		//player_light1(actor);//ooppee edited line out
-		wep_plasmagun_plasma1(actor.weaponentity); //ooppee added
-		W_FirePlasma(actor); //ooppee added
-		actor.attack_finished = time + 1.0; //ooppee added (same as above code but needs to be executed AFTER)
+		wep_plasmagun_plasma1(actor.(weaponentity)); //ooppee added
+		W_FirePlasma(actor, weaponentity); //ooppee added
+		weapon_prepareattack(thiswep, actor, weaponentity, 1); //ooppee added (same as above code but needs to be executed AFTER)
 	}
 }
-METHOD(PlasmaGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(PlasmaGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_plasma >= 1;
 	return ammo_amount;

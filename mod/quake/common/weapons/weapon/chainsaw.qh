@@ -3,7 +3,7 @@
 CLASS(Chainsaw, Weapon)
 /* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Chainsaw, aflag, int, 0);
 /* modelname */ ATTRIB(Chainsaw, mdl, string, "saw");
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshair55");
@@ -18,7 +18,7 @@ REGISTER_WEAPON(CHAINSAW, NEW(Chainsaw));
 //SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
 
 #ifdef SVQC
-void W_FireSaw(entity this);
+void W_FireSaw(entity this, .entity weaponentity);
 
 .float chainsaw_sound_time;
 #endif

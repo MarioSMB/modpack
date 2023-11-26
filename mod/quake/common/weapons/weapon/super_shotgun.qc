@@ -1,11 +1,11 @@
 #include "super_shotgun.qh"
 
 #ifdef SVQC
-void W_FireSuperShotgun(entity this)
+void W_FireSuperShotgun(entity this, .entity weaponentity)
 {
 	if(this.ammo_shells == 1)
 	{
-		W_FireShotgun(this);
+		W_FireShotgun(this, weaponentity);
 		return;
 	}
 		
@@ -15,20 +15,20 @@ void W_FireSuperShotgun(entity this)
 
 	this.ammo_shells = this.ammo_shells - 2;
 	vector dir = qc_aim(this, 100000);
-	FireBullets(this, 14, dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
+	FireBullets(this, 14, W_Shotorg(this, weaponentity), dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
 }
 
-METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		wep_generic_shot1(actor.weaponentity);
-		W_FireSuperShotgun(actor);
-		actor.attack_finished = time + 0.7;
+		wep_generic_shot1(actor.(weaponentity));
+		W_FireSuperShotgun(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);
 	}
 }
-METHOD(SuperShotgun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(SuperShotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_shells >= 2;
 	return ammo_amount;

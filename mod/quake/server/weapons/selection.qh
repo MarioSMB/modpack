@@ -1,29 +1,35 @@
 #pragma once
 
+int autocvar_g_weaponswitch_debug = 2;
+bool autocvar_g_weaponswitch_debug_alternate = true;
+
 .float hasweapon_complain_spam;
 
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
+.WepSet dual_weapons;
+.WepSet collected_weapons;
 
-float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing);
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
 
-#define w_getbestweapon(ent) REGISTRY_GET(Weapons, W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity);
 
-void W_SwitchWeapon_Force(entity this, Weapon w);
+#define w_getbestweapon(ent,wepent) REGISTRY_GET(Weapons, W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true, wepent))
+
+void W_SwitchWeapon_Force(entity this, Weapon w, .entity weaponentity);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-void W_SwitchToOtherWeapon(entity this);
-bool W_SwitchWeapon(entity this, Weapon imp); // returns false if the player does not have the weapon
-void W_SwitchWeapon_TryOthers(entity this, Weapon imp);
+void W_SwitchToOtherWeapon(entity this, .entity weaponentity);
+bool W_SwitchWeapon(entity this, Weapon imp, .entity weaponentity); // returns false if the player does not have the weapon
+void W_SwitchWeapon_TryOthers(entity this, Weapon imp, .entity weaponentity);
 
-void W_CycleWeapon(entity this, string weaponorder, float dir);
+void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity);
 
-void W_NextWeaponOnImpulse(entity this, float imp);
+void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity);
 
 // next weapon
-void W_NextWeapon(entity this, float list);
+void W_NextWeapon(entity this, float list, .entity weaponentity);
 
 // prev weapon
-void W_PreviousWeapon(entity this, float list);
+void W_PreviousWeapon(entity this, float list, .entity weaponentity);
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(entity this);
+void W_LastWeapon(entity this, .entity weaponentity);

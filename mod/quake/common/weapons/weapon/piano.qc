@@ -50,10 +50,11 @@ void wep_piano_woodpiano_E1(entity this) { wep_set_anim(this, 0, wep_piano_woodp
 bool piano_checkplayer(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
 	if(!actor.button0 || actor.impulse || actor.health < 1 || gameover || intermission_running)
 	{
 		if(actor.impulse) // TODO: probably don't need this check!
-			actor.attack_finished = time;
+			ATTACK_FINISHED(actor, weaponentity) = time;
 		w_ready(this);
 		return true;
 	}
@@ -70,73 +71,73 @@ void player_woodpiano_key12_4(entity this) { this.m_frame = 48; if(piano_checkpl
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	// If LEFT, play RIGHT side 	// If RIGHT, play LEFT side
 void player_woodpiano_key12_3(entity this) { this.m_frame = 47; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key12_4); }
 void player_woodpiano_key12_2(entity this) { this.m_frame = 46; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key12_3); }
-void player_woodpiano_key12_1(entity this) { player_piano1(this.owner); this.m_frame = 45; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key12_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key12_1(entity this) { player_piano1(this.owner); this.m_frame = 45; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key12_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 11 --------------------[]-- */     
 void player_woodpiano_key11_4(entity this) { this.m_frame = 44; if(piano_checkplayer(this)) return;
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
 void player_woodpiano_key11_3(entity this) { this.m_frame = 43; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key11_4); }
 void player_woodpiano_key11_2(entity this) { this.m_frame = 42; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key11_3); }
-void player_woodpiano_key11_1(entity this) { player_piano1(this.owner); this.m_frame = 41; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key11_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key11_1(entity this) { player_piano1(this.owner); this.m_frame = 41; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key11_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 10 ------------------[]---- */     
 void player_woodpiano_key10_4(entity this) { this.m_frame = 40; if(piano_checkplayer(this)) return;
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
 void player_woodpiano_key10_3(entity this) { this.m_frame = 39; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key10_4); }
 void player_woodpiano_key10_2(entity this) { this.m_frame = 38; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key10_3); }
-void player_woodpiano_key10_1(entity this) { player_piano1(this.owner); this.m_frame = 37; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key10_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key10_1(entity this) { player_piano1(this.owner); this.m_frame = 37; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key10_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 9  ----------------[]------ */     
 void player_woodpiano_key9_4(entity this) { this.m_frame = 36; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
 void player_woodpiano_key9_3(entity this) { this.m_frame = 35; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key9_4); }
 void player_woodpiano_key9_2(entity this) { this.m_frame = 34; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key9_3); }
-void player_woodpiano_key9_1(entity this) { player_piano1(this.owner); this.m_frame = 33; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key9_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key9_1(entity this) { player_piano1(this.owner); this.m_frame = 33; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key9_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 8  --------------[]-------- */
 void player_woodpiano_key8_4(entity this) { this.m_frame = 32; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
 void player_woodpiano_key8_3(entity this) { this.m_frame = 31; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key8_4); }
 void player_woodpiano_key8_2(entity this) { this.m_frame = 30; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key8_3); }
-void player_woodpiano_key8_1(entity this) { player_piano1(this.owner); this.m_frame = 29; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key8_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key8_1(entity this) { player_piano1(this.owner); this.m_frame = 29; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key8_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 7  ------------[]---------- */     
 void player_woodpiano_key7_4(entity this) { this.m_frame = 28; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayleft); } 	
 void player_woodpiano_key7_3(entity this) { this.m_frame = 27; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key7_4); }
 void player_woodpiano_key7_2(entity this) { this.m_frame = 26; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key7_3); }
-void player_woodpiano_key7_1(entity this) { player_piano1(this.owner); this.m_frame = 25; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key7_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key7_1(entity this) { player_piano1(this.owner); this.m_frame = 25; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key7_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 6  ----------[]------------ */     
 void player_woodpiano_key6_4(entity this) { this.m_frame = 24; if(piano_checkplayer(this)) return; // Let Go Reset // Hotswap // Holding = Play Next Random
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	// If LEFT, play RIGHT side 	// If RIGHT, play LEFT side
 void player_woodpiano_key6_3(entity this) { this.m_frame = 23; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key6_4); }
 void player_woodpiano_key6_2(entity this) { this.m_frame = 22; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key6_3); }
-void player_woodpiano_key6_1(entity this) { player_piano1(this.owner); this.m_frame = 21; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key6_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key6_1(entity this) { player_piano1(this.owner); this.m_frame = 21; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key6_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 5  --------[]-------------- */     
 void player_woodpiano_key5_4(entity this) { this.m_frame = 20; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
 void player_woodpiano_key5_3(entity this) { this.m_frame = 19; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key5_4); }
 void player_woodpiano_key5_2(entity this) { this.m_frame = 18; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key5_3); }
-void player_woodpiano_key5_1(entity this) { player_piano1(this.owner); this.m_frame = 17; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key5_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key5_1(entity this) { player_piano1(this.owner); this.m_frame = 17; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key5_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 4  ------[]---------------- */
 void player_woodpiano_key4_4(entity this) { this.m_frame = 16; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
 void player_woodpiano_key4_3(entity this) { this.m_frame = 15; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key4_4); }
 void player_woodpiano_key4_2(entity this) { this.m_frame = 14; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key4_3); }
-void player_woodpiano_key4_1(entity this) { player_piano1(this.owner); this.m_frame = 13; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key4_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key4_1(entity this) { player_piano1(this.owner); this.m_frame = 13; this.nextthink = time + 0.02; setthink(this, player_woodpiano_key4_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 3  ----[]------------------ */
 void player_woodpiano_key3_4(entity this) { this.m_frame = 12; if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
 void player_woodpiano_key3_3(entity this) { this.m_frame = 11; this.nextthink = time + 0.06; setthink(this, player_woodpiano_key3_4); }
 void player_woodpiano_key3_2(entity this) { this.m_frame = 10; this.nextthink = time + 0.04; setthink(this, player_woodpiano_key3_3); }
-void player_woodpiano_key3_1(entity this) { player_piano1(this.owner); this.m_frame = 9;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key3_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key3_1(entity this) { player_piano1(this.owner); this.m_frame = 9;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key3_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 2  --[]-------------------- */
 void player_woodpiano_key2_4(entity this) { this.m_frame = 8;  if(piano_checkplayer(this)) return; 
                                                                            this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
 void player_woodpiano_key2_3(entity this) { this.m_frame = 7;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key2_4); }
 void player_woodpiano_key2_2(entity this) { this.m_frame = 6;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key2_3); }
-void player_woodpiano_key2_1(entity this) { player_piano1(this.owner); this.m_frame = 5;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key2_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key2_1(entity this) { player_piano1(this.owner); this.m_frame = 5;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key2_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 /* KEY CHORD 1  []---------------------- */
 void player_woodpiano_key1_4(entity this) { this.m_frame = 4;  if(piano_checkplayer(this)) return; 
                                                                          this.nextthink = time + 0.03; setthink(this, player_woodpiano_randomplayright); } 	
 void player_woodpiano_key1_3(entity this) { this.m_frame = 3;  this.nextthink = time + 0.06; setthink(this, player_woodpiano_key1_4); }
 void player_woodpiano_key1_2(entity this) { this.m_frame = 2;  this.nextthink = time + 0.04; setthink(this, player_woodpiano_key1_3); }
-void player_woodpiano_key1_1(entity this) { player_piano1(this.owner); this.m_frame = 1;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key1_2); this.owner.attack_finished= time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner); }
+void player_woodpiano_key1_1(entity this) { player_piano1(this.owner); this.m_frame = 1;  this.nextthink = time + 0.02; setthink(this, player_woodpiano_key1_2); ATTACK_FINISHED(this.owner, this.weaponentity_fld) = time + 0.3; SuperDamageSound(this.owner); W_FireWoodPiano(this.owner, this.weaponentity_fld); }
 
 // If LEFT, play Random RIGHT side 	// If RIGHT, play Random LEFT side
 
@@ -262,12 +263,12 @@ void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WOR
 	}
 }
 
-void W_FireWoodPiano(entity this) // Fire Music Note + Play Audio Chord---------------------------------------------------
+void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Play Audio Chord---------------------------------------------------
 {
 	// WHEN ONLY HAVE 1 NAIL AMMO LEFT...
 	if(this.ammo_nails <= 1)
 	{
-		W_SwitchWeapon(this, w_getbestweapon(this));
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
 	this.ammo_nails -= 2;
@@ -303,62 +304,62 @@ void W_FireWoodPiano(entity this) // Fire Music Note + Play Audio Chord---------
 	//musicnote.think = SUB_Remove; 
 	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);		
 
-	if(this.weaponentity.m_frame == 1 || this.weaponentity.m_frame == 5 || this.weaponentity.m_frame == 9 || this.weaponentity.m_frame == 13 || this.weaponentity.m_frame == 17 || this.weaponentity.m_frame == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
+	if(this.(weaponentity).m_frame == 1 || this.(weaponentity).m_frame == 5 || this.(weaponentity).m_frame == 9 || this.(weaponentity).m_frame == 13 || this.(weaponentity).m_frame == 17 || this.(weaponentity).m_frame == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
 	{
-		if(this.weaponentity.m_frame == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
-		if(this.weaponentity.m_frame == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
+		if(this.(weaponentity).m_frame == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
 		
 		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
 		musicnote.avelocity = '0  90 0'; // Roll
 		musicnote.velocity = musicnote.velocity*1 + (v_right* 20) + (v_up* 1); // Don't add .Velocity* (it's already defined above!)
 		
 		setsize(musicnote, '0 0 0', '0 0 0');
-		setorigin(musicnote, this.origin + v_forward*12 + '0 0 -8' + v_right* -8); 
+		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right* -8); 
 	}
 			
-	if(this.weaponentity.m_frame == 25 || this.weaponentity.m_frame == 29 || this.weaponentity.m_frame == 33 || this.weaponentity.m_frame == 37 || this.weaponentity.m_frame == 41 || this.weaponentity.m_frame == 45 )
+	if(this.(weaponentity).m_frame == 25 || this.(weaponentity).m_frame == 29 || this.(weaponentity).m_frame == 33 || this.(weaponentity).m_frame == 37 || this.(weaponentity).m_frame == 41 || this.(weaponentity).m_frame == 45 )
 	{
-		if(this.weaponentity.m_frame == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
-		if(this.weaponentity.m_frame == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
-		if(this.weaponentity.m_frame == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
+		if(this.(weaponentity).m_frame == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
+		if(this.(weaponentity).m_frame == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
+		if(this.(weaponentity).m_frame == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
 		
 		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
 		musicnote.avelocity = '0 -90 0';
 		musicnote.velocity = musicnote.velocity*1 + (v_right*  -20) + (v_up* 1);
 					
 		setsize(musicnote, '0 0 0', '0 0 0'); 	
-		setorigin(musicnote, this.origin + v_forward*12 + '0 0 -8' + v_right* 8); 
+		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right* 8); 
 	}
 }
 
-METHOD(Piano, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	Weapon oldwep = actor.weaponentity.piano_prevwep;
-	actor.weaponentity.piano_prevwep = actor.weaponentity.m_weapon;
+	Weapon oldwep = actor.(weaponentity).piano_prevwep;
+	actor.(weaponentity).piano_prevwep = actor.(weaponentity).m_weapon;
 
 	if(oldwep != WEP_PIANO) // only plays once!!
 	{
-		wep_piano_woodpiano_E1(actor.weaponentity);
+		wep_piano_woodpiano_E1(actor.(weaponentity));
 		return;
 	}
 
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		if(random() < 0.5)
-			player_woodpiano_randomplayleft(actor.weaponentity);
+			player_woodpiano_randomplayleft(actor.(weaponentity));
 		else	
-			player_woodpiano_randomplayright(actor.weaponentity);
+			player_woodpiano_randomplayright(actor.(weaponentity));
 	}
 }
-METHOD(Piano, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Piano, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.ammo_nails >= 2;
 	return ammo_amount;

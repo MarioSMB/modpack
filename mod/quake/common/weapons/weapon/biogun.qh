@@ -22,5 +22,5 @@ REGISTER_WEAPON(BIOGUN, NEW(Biogun));
 void player_bio1(entity this);
 void player_bio2(entity this);
 
-void W_FireBio(entity this, float ox);
+void W_FireBio(entity this, float ox, .entity weaponentity);
 #endif

@@ -121,7 +121,7 @@ void skate_walkframes(entity this)
 	}
 }
 
-void skate_fire(entity this)
+void skate_fire(entity this, .entity weaponentity)
 {
 	if(this.spawn_time + 1 > time)		//player just respawned, exit
 		return;
@@ -133,7 +133,7 @@ void skate_fire(entity this)
 			_sound(this, CHAN_BODY, "player/skaterol.wav", 1, ATTN_NORM);
 			this.push_fast_time = time + 2;
 			this.walkframe = 20;
-			this.attack_finished = time + 0.2;			//don't mess up, hehe (?)
+			ATTACK_FINISHED(this, weaponentity) = time + 0.2;			//don't mess up, hehe (?)
 		}
 	}
 

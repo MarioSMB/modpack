@@ -1,12 +1,12 @@
 #include "spellbook.qh"
 
-#ifdef GAMEQC
+#ifdef SVQC
 entity tracetossent;
 
-vector rune_getspot(entity this)
+vector rune_getspot(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
-	vector src = this.origin + this.view_ofs;
+	vector src = W_Shotorg(this, weaponentity);
 	vector rmin = '-48 -48 0', rmax = '48 48 4';
 
 	if (!tracetossent)
@@ -236,7 +236,7 @@ void sword_melee_think(entity this)
 	{
 		swing_factor = ((1 - (i / 10)) * 2 - 1);
 
-		targpos = (this.realowner.origin + this.realowner.view_ofs
+		targpos = (W_Shotorg(this.realowner, this.weaponentity_fld)
 			+ (v_forward * 160)
 			+ (v_up * swing_factor * 50)
 			+ (v_right * swing_factor * 160));
@@ -284,11 +284,12 @@ void sword_melee_think(entity this)
 	}
 }
 
-void sword_melee_start(entity actor, entity sword)
+void sword_melee_start(entity actor, entity sword, .entity weaponentity)
 {
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.owner = sword;
 	meleetemp.realowner = actor;
+	meleetemp.weaponentity_fld = weaponentity;
 	setthink(meleetemp, sword_melee_think);
 	meleetemp.nextthink = time + 0.5;
 }
@@ -300,7 +301,7 @@ void shield_remove(entity this)
 	delete(this);
 }
 
-void summon_sword(entity this, vector spot)
+void summon_sword(entity this, vector spot, .entity weaponentity)
 {
 	entity sword = spawn();
 	sword.classname = "sword";
@@ -322,7 +323,7 @@ void summon_sword(entity this, vector spot)
 	//sword.view_ofs = '0 0 16';
 	sword.alpha = 0.5;
 
-	sword_melee_start(this, sword);
+	sword_melee_start(this, sword, weaponentity);
 }
 
 void summon_shield(entity this, vector spot)
@@ -349,17 +350,17 @@ void summon_shield(entity this, vector spot)
 	this.spell_shield = shield;
 }
 
-void W_Spell_Sword(entity this)
+void W_Spell_Sword(entity this, .entity weaponentity)
 {
 	if(STAT(MANA, this) < SPELL_COST_SWORD)
 		return;
 	STAT(MANA, this) -= SPELL_COST_SWORD;
 	vector forward, right, up;
 	MAKE_VECTORS(this.angles, forward, right, up);
-	vector targ = this.origin + forward * 24;
+	vector targ = W_Shotorg(this, weaponentity) + forward * 24;
 	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
-	this.attack_finished = time + 0.66;
-	summon_sword(this, targ);
+	ATTACK_FINISHED(this, weaponentity) = time + 0.66;
+	summon_sword(this, targ, weaponentity);
 	//if(this.spell_shield)
 		//this.spell_shield.nextthink = time + 20; // refresh shield every sword attack!
 
@@ -787,7 +788,7 @@ void summon_skeleton_arms(entity this, vector spot)
 	this.arms_spawned = rune;
 }
 
-void W_Spell_BoneShard(entity this)
+void W_Spell_BoneShard(entity this, .entity weaponentity)
 {
 	if(!this.arms_spawned)
 	{
@@ -795,16 +796,16 @@ void W_Spell_BoneShard(entity this)
 			return;
 		if(STAT(MANA, this) < SPELL_COST_BONESHARD)
 			return;
-		vector spot = rune_getspot(this);
+		vector spot = rune_getspot(this, weaponentity);
 		if(spot == '0 0 0')
 		{
 			// TODO: alert the caster?
-			this.attack_finished = time + 0.2; // slight delay to avoid server spam
+			ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 			return;
 		}
 		STAT(MANA, this) -= SPELL_COST_BONESHARD;
 		summon_skeleton_arms(this, spot);
-		this.attack_finished = time + 1.2; // rune spawning delay
+		ATTACK_FINISHED(this, weaponentity) = time + 1.2; // rune spawning delay
 	}
 	else
 	{
@@ -812,7 +813,7 @@ void W_Spell_BoneShard(entity this)
 		if(vdist(rune.origin - this.origin, >, 1000))
 			return; // need to be close to cast it!
 		rune.cnt = time + 20; // reset timer on it with each attack!
-		this.attack_finished = time + 0.05;
+		ATTACK_FINISHED(this, weaponentity) = time + 0.05;
 		this.attack_held = true;
 		fire_bone_shard(this);
 	}
@@ -1244,7 +1245,7 @@ void W_Spellbook_ClearSpells(entity this)
 	this.arms_spawned = NULL;
 }
 
-void W_FireSpellbook(entity this)
+void W_FireSpellbook(entity this, .entity weaponentity)
 {
 	if(STAT(MANA, this) <= 0)
 		return; // early out
@@ -1254,7 +1255,7 @@ void W_FireSpellbook(entity this)
 	{
 		case SPELL_SWORD:
 		{
-			W_Spell_Sword(this);
+			W_Spell_Sword(this, weaponentity);
 			break;
 		}
 		case SPELL_FROST:
@@ -1263,15 +1264,15 @@ void W_FireSpellbook(entity this)
 				return;
 			if(!rune_checklimit(this, SPELL_FROST))
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_FROST;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Frost(this, spot);
 			break;
 		}	
@@ -1281,15 +1282,15 @@ void W_FireSpellbook(entity this)
 				return;
 			if(!rune_checklimit(this, SPELL_ICECANNON))
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_ICECANNON;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_IceCannon(this, spot);
 			break;
 		}	
@@ -1297,22 +1298,22 @@ void W_FireSpellbook(entity this)
 		{
 			if(STAT(MANA, this) < SPELL_COST_VORELING)
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_VORELING;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Voreling(this, spot);
 			break;
 		}
 		case SPELL_BONESHARD:
 		{
 			// attack delays handled by the spell itthis
-			W_Spell_BoneShard(this);
+			W_Spell_BoneShard(this, weaponentity);
 			break;
 		}
 		case SPELL_CURSE:
@@ -1321,15 +1322,15 @@ void W_FireSpellbook(entity this)
 				return;
 			if(!rune_checklimit(this, SPELL_CURSE))
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_CURSE;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Curse(this, spot);
 			break;
 		}
@@ -1339,15 +1340,15 @@ void W_FireSpellbook(entity this)
 				return;
 			if(!rune_checklimit(this, SPELL_EXPLOSION))
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_EXPLOSION;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Explosion(this, spot);
 			break;
 		}
@@ -1357,22 +1358,22 @@ void W_FireSpellbook(entity this)
 				return;
 			if(!rune_checklimit(this, SPELL_SERPENT))
 				return;
-			spot = rune_getspot(this);
+			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')
 			{
 				// TODO: alert the caster?
-				this.attack_finished = time + 0.2; // slight delay to avoid server spam
+				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
 			STAT(MANA, this) -= SPELL_COST_SERPENT;
-			this.attack_finished = time + 0.66;
+			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Serpent(this, spot);
 			break;
 		}
 	}
 }
 
-METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(!(fire & 1))
 		actor.attack_held = false;
@@ -1382,10 +1383,10 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 		actor.spell_shield.nextthink = time + 20;
 
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		//player_magic1(actor);
-		W_FireSpellbook(actor);
+		W_FireSpellbook(actor, weaponentity);
 	}
 
 	if(actor.button3)
@@ -1394,23 +1395,23 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, int fire))
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/page_flip.wav", 1, ATTN_NORM);
 		if(PHYS_INPUT_BUTTON_CROUCH(actor))
 		{
-			actor.weaponentity.m_frame = 12;
-			actor.weaponentity.swappingspell = -1;
+			actor.(weaponentity).m_frame = 12;
+			actor.(weaponentity).swappingspell = -1;
 			int nextspell = actor.currentspell - 1;
 			if(nextspell < SPELL_FIRST)
 				nextspell = SPELL_LAST;
-			actor.weaponentity.skin = nextspell; // update skin first so the animation will show the correct spell!
+			actor.(weaponentity).skin = nextspell; // update skin first so the animation will show the correct spell!
 		}
 		else
 		{
-			actor.weaponentity.m_frame = 0;
-			actor.weaponentity.swappingspell = 1;
+			actor.(weaponentity).m_frame = 0;
+			actor.(weaponentity).swappingspell = 1;
 		}
-		actor.attack_finished = time + 0.5; // also prevent primary fire during this time
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.5; // also prevent primary fire during this time
 		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
 }
-METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	return true; // doesn't use ammo in the traditional sense
 }
