@@ -1491,6 +1491,8 @@ void Wavecheck(entity this)
 	
 	this.wait = 1;
 	setthink(this, Countdown);
+
+	Horde_GiveScore(10);
 	
 	if((this.wave % 3) == 0) // it was a boss wave
 	{

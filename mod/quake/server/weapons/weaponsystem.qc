@@ -128,7 +128,7 @@ vector W_Shotorg(entity ent, .entity weaponentity)
 {
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector md = ent.(weaponentity).movedir;
-	vector vecs = ((md != '0 0 0') ? md : '0 0 0');
+	vector vecs = md;
 	vector mi = '0 0 0', ma = '0 0 0'; // quake assume zero hitbox size
 
 	vector dv = v_right * -vecs.y + v_up * vecs.z;
