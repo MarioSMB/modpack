@@ -399,7 +399,7 @@ bool weapon_customize(entity this, entity client)
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 	{
-		if((client.dual_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
+		if((STAT(DUAL_WEAPONS, client) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
 			return false;
 		if(client.collected_weapons & wep.m_wepset)
 			return false;
@@ -558,7 +558,7 @@ void weapon_touch(entity this, entity toucher)
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((toucher.dual_weapons & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
+	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
 		return;
 
 	wep = newwep;
@@ -588,7 +588,7 @@ void weapon_touch(entity this, entity toucher)
 
 // change to the weapon
 	if(STAT(WEAPONS, toucher) & wep.m_wepset)
-		toucher.dual_weapons |= wep.m_wepset;
+		STAT(DUAL_WEAPONS, toucher) |= wep.m_wepset;
 	else
 		STAT(WEAPONS, toucher) |= wep.m_wepset;
 

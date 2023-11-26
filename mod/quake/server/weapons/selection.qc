@@ -9,7 +9,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	if (time < this.hasweapon_complain_spam)
 		complain = 0;
 
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(this.dual_weapons & wpn.m_wepset))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(STAT(DUAL_WEAPONS, this) & wpn.m_wepset))
 		return false; // no complaints needed
 
 	if (complain)

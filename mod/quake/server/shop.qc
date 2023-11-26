@@ -117,7 +117,7 @@ void shop_buyitem(entity this, string item)
 		return;
 	}
 
-	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (this.dual_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
+	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (STAT(DUAL_WEAPONS, this) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
 	{
 		sprint(this, "You already have that weapon\n");
 		return;
@@ -154,7 +154,7 @@ void shop_buyitem(entity this, string item)
 
 	this.frags -= cost;
 	if(STAT(WEAPONS, this) & wep.m_wepset)
-		this.dual_weapons |= wep.m_wepset;
+		STAT(DUAL_WEAPONS, this) |= wep.m_wepset;
 	else
 		STAT(WEAPONS, this) |= wep.m_wepset;
 

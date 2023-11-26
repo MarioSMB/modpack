@@ -1521,7 +1521,7 @@ void PutPlayerInServer(entity this)
 	this.weaponframe = 0;
 	this.weaponmodel = "";
 
-	this.dual_weapons = '0 0 0';
+	STAT(DUAL_WEAPONS, this) = '0 0 0';
 
 	// hipnotic fields
 	this.gravity = 1.0;

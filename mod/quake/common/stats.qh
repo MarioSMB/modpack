@@ -239,3 +239,5 @@ REGISTER_STAT(MANA, float)
 int top_score;
 #endif
 REGISTER_STAT(TOP_SCORE, int, top_score)
+
+REGISTER_STAT(DUAL_WEAPONS, vectori)

@@ -87,7 +87,7 @@ bool ShopItem_Owned(int index)
 		}
 	}
 	Weapon wep = wepdata[index];
-	if(STAT(WEAPONS) & wep.m_wepset)
+	if((STAT(WEAPONS) & wep.m_wepset) && ((STAT(DUAL_WEAPONS) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
 		return true;
 	else
 		return false;
