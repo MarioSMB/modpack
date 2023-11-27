@@ -256,26 +256,26 @@ void boss_die(entity this, entity inflictor, entity attacker, int deathtype)
 	boss_death1(this);
 }
 
-void boss_missile(entity this, vector p)
+void boss_launch_missile(entity this, entity targ, vector offset)
 {
 	vector vec, d;
 
-	vector offang = vectoangles(this.enemy.origin - this.origin);	
+	vector offang = vectoangles(targ.origin - this.origin);	
 	makevectors(offang);
 
-	vector org = this.origin + p_x*v_forward + p_y*v_right + p_z*'0 0 1';
+	vector org = this.origin + offset.x * v_forward + offset.y * v_right + offset.z * '0 0 1';
 	
 // lead the player on hard mode
 	if(autocvar_skill > 1)
 	{
-		float t = vlen(this.enemy.origin - org) / 300;
-		vec = this.enemy.velocity;
-		vec_z = 0;
-		d = this.enemy.origin + t * vec;		
+		float t = vlen(targ.origin - org) / 300;
+		vec = targ.velocity;
+		vec.z = 0;
+		d = targ.origin + t * vec;		
 	}
 	else
 	{
-		d = this.enemy.origin;
+		d = targ.origin;
 	}
 	
 	vec = normalize(d - org);
@@ -289,6 +289,22 @@ void boss_missile(entity this, vector p)
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
 	settouch(newmis, T_MissileTouch); // rocket explosion
+}
+
+void boss_missile(entity this, vector p)
+{
+	// on high difficulties launch a fireball at every player
+	if(coop && autocvar_skill >= 1 && !this.charmed)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && !(it.flags & FL_NOTARGET),
+		{
+			if(infront(this, it))
+				boss_launch_missile(this, it, p);
+		});
+	}
+	else
+		boss_launch_missile(this, this.enemy, p);
+
 	_sound(this, CH_SHOTS, "boss1/throw.wav", 1, ATTN_NORM);
 
 // check for dead enemy
