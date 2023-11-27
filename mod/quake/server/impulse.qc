@@ -366,7 +366,7 @@ void GiveDualWeapons(entity this)
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
 
-	FOREACH(Weapons, it != WEP_Null,
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_NODUAL),
 	{
 		STAT(DUAL_WEAPONS, this) |= it.m_wepset;
 	});
