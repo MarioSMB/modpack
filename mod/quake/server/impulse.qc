@@ -316,7 +316,7 @@ IMPULSE(weapon_reload)
 	}
 }
 
-void CheatCommand(entity this)
+void GiveAllWeapons(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
@@ -361,6 +361,18 @@ void CheatCommand(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 }
 
+void GiveDualWeapons(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return; // no more singleplayer functionality, unless they're smart enough to enable this!
+
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		STAT(DUAL_WEAPONS, this) |= it.m_wepset;
+	});
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+}
+
 void ImpulseCommands(entity this)
 {
 	if (gameover || intermission_running) return;
@@ -371,7 +383,13 @@ void ImpulseCommands(entity this)
 
 	if(imp == CHIMPULSE_GIVE_ALL.impulse)
 	{
-		CheatCommand(this);
+		GiveAllWeapons(this);
+		return;
+	}
+
+	if(imp == CHIMPULSE_GIVE_DUALWEPS.impulse)
+	{
+		GiveDualWeapons(this);
 		return;
 	}
 
