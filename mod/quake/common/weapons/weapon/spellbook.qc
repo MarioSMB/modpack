@@ -357,7 +357,7 @@ void W_Spell_Sword(entity this, .entity weaponentity)
 	STAT(MANA, this) -= SPELL_COST_SWORD;
 	vector forward, right, up;
 	MAKE_VECTORS(this.angles, forward, right, up);
-	vector targ = W_Shotorg(this, weaponentity) + forward * 24;
+	vector targ = this.origin + forward * 24;
 	__pointparticles(_particleeffectnum("spawn_point_yellow"), targ, '0 0 0', 1);
 	ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 	summon_sword(this, targ, weaponentity);
