@@ -457,7 +457,7 @@ METHOD(Impaler, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		wep_impaler_shotimp1(actor.(weaponentity));
-		weapon_prepareattack(thiswep, actor, weaponentity, 1);
+		weapon_prepareattack(thiswep, actor, weaponentity, 1.5);
 	}
 }
 METHOD(Impaler, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

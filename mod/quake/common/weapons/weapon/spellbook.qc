@@ -236,7 +236,7 @@ void sword_melee_think(entity this)
 	{
 		swing_factor = ((1 - (i / 10)) * 2 - 1);
 
-		targpos = (W_Shotorg(this.realowner, this.weaponentity_fld)
+		targpos = (this.realowner.origin + this.realowner.view_ofs
 			+ (v_forward * 160)
 			+ (v_up * swing_factor * 50)
 			+ (v_right * swing_factor * 160));
