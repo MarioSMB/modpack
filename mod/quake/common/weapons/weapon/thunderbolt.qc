@@ -73,7 +73,7 @@ METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, .entity weapone
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		W_Thunderbolt_Attack(actor.(weaponentity));
-		ATTACK_FINISHED(actor, weaponentity) = time + 0.1;
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 		_sound(actor, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
 }
