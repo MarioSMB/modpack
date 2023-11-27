@@ -2071,6 +2071,12 @@ void PlayerPreThink(entity this)
 	if(this.view_ofs == '0 0 0')
 		return;		// intermission or finale
 
+	if(this.deadflag >= DEAD_DEAD)
+	{
+		PlayerDeathThink(this);
+		return;
+	}
+
 	//JIM
 	// Kill player on Edge of Oblivion
 	if((this.origin_z < -1300) && (world.model == "maps/hipdm1.bsp") && (this.health > 0))
@@ -2094,12 +2100,6 @@ void PlayerPreThink(entity this)
 	}
 
 	//makevectors(this.v_angle);		// is this still used
-
-	if(this.deadflag >= DEAD_DEAD)
-	{
-		PlayerDeathThink(this);
-		return;
-	}
 	
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing

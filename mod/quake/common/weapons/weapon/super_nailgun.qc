@@ -12,14 +12,13 @@ void W_SuperNailgun_Attack(entity this)
 	}
 
 	player_nail1(actor);
-	setthink(this, W_SuperNailgun_Attack);
-	this.nextthink = time + 0.1;
 
 	actor.effects |= EF_MUZZLEFLASH;
 
 	this.m_frame += 1;
 	if(this.m_frame >= 9)
 		this.m_frame = 1;
+	wep_set_anim(this, this.m_frame, W_SuperNailgun_Attack);
 	SuperDamageSound(actor);
 	W_FireSuperSpikes(actor, weaponentity);
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;

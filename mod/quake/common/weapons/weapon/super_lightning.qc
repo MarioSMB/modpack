@@ -27,14 +27,13 @@ void W_SuperLightning_Attack(entity this)
 		_sound(actor, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
 
 	player_light1(actor);
-	setthink(this, W_SuperLightning_Attack);
-	this.nextthink = time + 0.1;
 
 	actor.effects |= EF_MUZZLEFLASH;
 
 	this.m_frame += 1;
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
+	wep_set_anim(this, this.m_frame, W_SuperLightning_Attack);
 	SuperDamageSound(actor);
 	W_FireSuperLightning(actor, weaponentity);
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.1;

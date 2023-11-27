@@ -12,14 +12,13 @@ void W_Thunderbolt_Attack(entity this)
 	}
 
 	player_light1(actor);
-	setthink(this, W_Thunderbolt_Attack);
-	this.nextthink = time + 0.1;
 
 	actor.effects |= EF_MUZZLEFLASH;
 
 	this.m_frame += 1;
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
+	wep_set_anim(this, this.m_frame, W_Thunderbolt_Attack);
 	SuperDamageSound(actor);
 	W_FireLightning(actor, weaponentity);
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;

@@ -35,6 +35,8 @@ float autocvar__menu_alpha; // updated by the menu VM, useful to tell when the m
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+.Weapon last_switchweapon;
+
 // TODO: item pickup flashing? maybe not (seizure fest)
 // requires some kind of stat
 bool autocvar_hud_contents;

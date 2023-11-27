@@ -14,14 +14,13 @@ void W_LavaNailgun_Attack(entity this)
 	this.misc_bulletcounter += 1;
 
 	player_nail1(actor);
-	setthink(this, W_LavaNailgun_Attack);
-	this.nextthink = time + 0.1;
 
 	actor.effects |= EF_MUZZLEFLASH;
 
 	this.m_frame += 1;
 	if(this.m_frame >= 9)
 		this.m_frame = 1;
+	wep_set_anim(this, this.m_frame, W_LavaNailgun_Attack);
 	SuperDamageSound(actor);
 	W_FireLavaSpikes(actor, ((this.misc_bulletcounter % 2) ? 3 : -3), weaponentity);
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;

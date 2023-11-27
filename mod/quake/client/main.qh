@@ -15,6 +15,8 @@ bool vote_waiting_for_me;
 bool autocvar_hud_showbinds;
 bool autocvar_hud_showbinds_limit;
 
+bool autocvar_cl_unpress_attack_on_weapon_switch = false;
+
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server
 

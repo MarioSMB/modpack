@@ -483,6 +483,24 @@ void HUD_Mouse(entity player)
 	}
 }
 
+void View_CheckButtonStatus()
+{
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wepent = viewmodels[slot];
+
+		if(wepent.last_switchweapon != wepent.activeweapon)
+		{
+			wepent.last_switchweapon = wepent.activeweapon;
+			if(slot == 0 && autocvar_cl_unpress_attack_on_weapon_switch)
+			{
+				localcmd("-fire\n");
+				localcmd("-fire2\n");
+			}
+		}
+	}
+}
+
 bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);

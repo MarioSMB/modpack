@@ -27,12 +27,11 @@ void W_Biogun_Attack(entity this)
 	this.misc_bulletcounter += 1;
 
 	player_bio1(actor);
-	setthink(this, W_Biogun_Attack);
-	this.nextthink = time + 0.5;
 
 	this.m_frame += 1;
 	if(this.m_frame >= 5)
 		this.m_frame = 1;
+	wep_set_anim(this, this.m_frame, W_Biogun_Attack);
 	SuperDamageSound(actor);
 	W_FireBio(actor, ((this.misc_bulletcounter % 2) ? 3 : -3), this.weaponentity_fld);
 	ATTACK_FINISHED(actor, this.weaponentity_fld) = time + 0.5;

@@ -812,7 +812,8 @@ void DeathSound(entity this)
 
 void PlayerDead(entity this)
 {
-	this.nextthink = -1;
+	this.nextthink = 0;
+	setthink(this, func_null);
 // allow respawn after a certain time
 	this.deadflag = DEAD_DEAD;
 }
@@ -1077,7 +1078,8 @@ void set_suicide_frame(entity this)
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_TOSS);
 	this.deadflag = DEAD_DEAD;
-	this.nextthink = -1;
+	setthink(this, func_null);
+	this.nextthink = 0;
 }
 
 void player_diea11(entity this) { set_animofs(this, anim_player_deatha1, 11, player_diea11); PlayerDead(this); }
