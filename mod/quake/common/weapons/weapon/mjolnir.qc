@@ -221,7 +221,8 @@ void HIP_FireMjolnirLightning(entity this)
 //   }
 //   this.punchangle_x = 12;
 
-	this.ammo_cells = this.ammo_cells - 15;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_cells -= 15;
 
 	HIP_SpawnMjolnirBase(this);
 }

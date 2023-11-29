@@ -51,7 +51,8 @@ void W_FireBio(entity this, float ox, .entity weaponentity)
 	float vol = (this.silencer) ? 0.2 : 1;
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/bio_fire.wav", vol, ATTN_NORM);
-	this.ammo_nails -= 2;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_nails -= 2;
 	vector dir = qc_aim(this, 1000);
 	// NOTE: position fix by Seven and Sajt applied here
 	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_up * -12 + v_right * ox, dir);

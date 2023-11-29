@@ -22,6 +22,9 @@ bool autocvar_sv_quake_instance_backpacks = true;
 .float jboots_time;
 .float jboots_finished;
 
+.float sharp_time;
+.float sharp_finished;
+
 .int worldtype;
 const int WORLDTYPE_MEDIEVAL = 0;
 const int WORLDTYPE_METAL = 1;

@@ -82,7 +82,8 @@ void ProximityBomb(entity this)
 void W_FireProximityGrenade(entity this, .entity weaponentity)
 {
 	this.NumProximityGrenades += 1;
-	this.ammo_rockets = this.ammo_rockets - 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_rockets -= 1;
 
 	_sound(this, CH_WEAPON_SINGLE, "hipweap/proxbomb.wav", 1, ATTN_NORM);
 

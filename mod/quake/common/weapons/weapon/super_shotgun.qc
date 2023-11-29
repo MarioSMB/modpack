@@ -13,7 +13,8 @@ void W_FireSuperShotgun(entity this, .entity weaponentity)
 
 	this.punchangle_x = -4;
 
-	this.ammo_shells = this.ammo_shells - 2;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_shells -= 2;
 	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 14, W_Shotorg(this, weaponentity), dir, '0.14 0.08 0', WEP_SUPER_SHOTGUN.m_id);
 }

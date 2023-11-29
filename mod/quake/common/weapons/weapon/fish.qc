@@ -171,7 +171,8 @@ void fishthink(entity this)
 
 void fishmissile(entity this, .entity weaponentity)
 {
-	this.ammo_rockets -= 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_rockets -= 1;
 
 	entity fish = spawn();
 	fish.owner = this;

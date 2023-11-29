@@ -3,7 +3,8 @@
 #ifdef SVQC
 entity W_FireRocket(entity this)
 {
-	this.ammo_rockets = this.ammo_rockets - 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_rockets -= 1;
 	
 	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 

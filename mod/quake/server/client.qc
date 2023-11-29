@@ -69,6 +69,8 @@ void clear_powerups(entity this)
 	this.field_generator_health = 0;
 	this.empathy_finished = 0;
 	this.empathy_time = 0;
+	this.sharp_finished = 0;
+	this.sharp_time = 0;
 }
 
 bool reset_flag;
@@ -2519,6 +2521,36 @@ void CheckPowerups(entity this)
 			this.jboots_finished = 0;
 		}
 	}
+
+	if(this.sharp_finished)
+	{
+// sound and screen flash when items starts to run out
+
+		if(this.sharp_finished < time + 3)
+		{
+			if(this.sharp_time == 1)
+			{
+				if(!(MP_MG && autocvar_horde))
+					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHARPSHOOTER);
+				stuffcmd(this, "bf\n");
+				_sound(this, CH_TRIGGER_SINGLE, "items/sharp2.wav", 1, ATTN_NORM);
+				this.sharp_time = time + 1;
+			}
+			
+			if(this.sharp_time < time)
+			{
+				this.sharp_time = time + 1;
+				stuffcmd(this, "bf\n");
+			}
+		}
+
+		if(this.sharp_finished < time)
+		{	// just stopped
+			this.powerups &= ~POWERUP_SHARPSHOOTER;
+			this.sharp_finished = 0;
+			this.sharp_time = 0;
+		}
+	}	
 }
 
 void DrownPlayer(entity this)

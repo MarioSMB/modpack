@@ -427,7 +427,8 @@ void impale(entity this)
 
 void W_FireSpear(entity this, .entity weaponentity)
 {
-	this.ammo_rockets = this.ammo_rockets - 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_rockets -= 1;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);

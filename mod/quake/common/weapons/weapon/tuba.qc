@@ -55,7 +55,8 @@ void tuba_note_touch(entity this, entity toucher)
 void W_FireTuba(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
-	this.ammo_rockets -= 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_rockets -= 1;
 
 	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 

@@ -1643,6 +1643,12 @@ void powerup_touch(entity this, entity toucher)
 		toucher.jboots_time = 1;
 		toucher.jboots_finished = time + 30;
 	}
+
+	if(this.powerups & POWERUP_SHARPSHOOTER)
+	{
+		toucher.sharp_time = 1;
+		toucher.sharp_finished = time + ((horde_ent) ? 15 : 30);
+	}
 }
 
 
@@ -1894,6 +1900,25 @@ spawnfunc(item_jboots_timed)
 {
 	// we don't have super jump boots, just allow spawns to work
 	spawnfunc_item_jboots(this);
+}
+
+/*QUAKED item_artifact_sharp_shooter(0 .5 .8)(-16 -16 -24)(16 16 32)
+From Arcane Dimensions, reused as an infinite ammo powerup
+*/
+spawnfunc(item_artifact_sharp_shooter)
+{
+	settouch(this, powerup_touch);
+
+	precache_model("progs/artifact_sharp.mdl");
+	precache_sound("items/sharp.wav");
+	precache_sound("items/sharp2.wav");
+	precache_sound("items/sharp3.wav");
+	this.noise = "items/sharp.wav";
+	_setmodel(this, "progs/artifact_sharp.mdl");
+	this.netname = "Sharp Shooter";
+	this.powerups = POWERUP_SHARPSHOOTER;
+	setsize(this, '-16 -16 -24', '16 16 32');
+	StartItem(this);
 }
 
 /*

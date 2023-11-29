@@ -36,7 +36,8 @@ void HIP_FireLaser(entity this, float stat, .entity weaponentity)
 	float aofs = ofs * 0.707;
 	if(stat == 0)
 	{
-		this.ammo_cells = this.ammo_cells - 1;
+		if(!(this.powerups & POWERUP_SHARPSHOOTER))
+			this.ammo_cells -= 1;
 		org = org +(aofs*v_right);
 		org = org -(aofs*v_up);
 		HIP_LaunchLaser(this, org, dir, 0);
@@ -45,7 +46,8 @@ void HIP_FireLaser(entity this, float stat, .entity weaponentity)
 	}
 	else if(stat == 1)
 	{
-		this.ammo_cells = this.ammo_cells - 1;
+		if(!(this.powerups & POWERUP_SHARPSHOOTER))
+			this.ammo_cells -= 1;
 		org = org +(ofs*v_up);
 		if(random() < 0.1)
 		{

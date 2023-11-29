@@ -1835,6 +1835,15 @@ void horde_setup_powerup(entity this, int powerup)
 			this.classname = "item_jboots";
 			break;
 		}
+		case POWERUP_SHARPSHOOTER:
+		{
+			this.noise = "items/sharp.wav";
+			_setmodel(this, "progs/artifact_sharp.mdl");
+			this.netname = "Sharp Shooter";
+			this.powerups = POWERUP_SHARPSHOOTER;
+			this.classname = "item_artifact_sharp_shooter";
+			break;
+		}
 	}
 }
 
@@ -1874,6 +1883,7 @@ void horde_spawn_powerup(entity this)
 		RandomSelection_AddFloat(POWERUP_SHIELD, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_EMPATHY_SHIELDS, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_JUMPBOOTS, 0.5, 1);
+		RandomSelection_AddFloat(POWERUP_SHARPSHOOTER, 0.5, 1);
 		horde_setup_powerup(powerup, RandomSelection_chosen_float);
 		//powerup.effects = EF_DIMLIGHT;
 		

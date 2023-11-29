@@ -142,6 +142,8 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/r_ammomulti");
 	precache_pic("gfx/quake/r_ammoplasma");
 
+	precache_pic("gfx/quake/sb_sharp");
+
 	precache_pic("gfx/hud/old/voteprogress_back");
 	precache_pic("gfx/hud/old/voteprogress_voted");
 	precache_pic("gfx/hud/old/voteprogress_prog");
@@ -1007,6 +1009,9 @@ void Sbar_DrawInventory()
 		Sbar_DrawPic('288 -16 0', "gfx/quake/r_shield1");
 	if(mypowerups & POWERUP_ANTIGRAV)
 		Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
+
+	if(mypowerups & POWERUP_SHARPSHOOTER)
+		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_sharp");
 
 	// sigils
 	for(int j = 0; j < 4; ++j)

@@ -7,7 +7,8 @@ void W_FireShotgun(entity this, .entity weaponentity)
 
 	this.punchangle_x = -2;
 
-	this.ammo_shells = this.ammo_shells - 1;
+	if(!(this.powerups & POWERUP_SHARPSHOOTER))
+		this.ammo_shells -= 1;
 	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 6, W_Shotorg(this, weaponentity), dir, '0.04 0.04 0', WEP_SHOTGUN.m_id);
 }

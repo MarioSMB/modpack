@@ -40,5 +40,6 @@ const int POWERUP_FIELDGEN             = BIT(10);
 const int POWERUP_FIREFLOWER           = BIT(11);
 
 const int POWERUP_JUMPBOOTS            = BIT(12);
+const int POWERUP_SHARPSHOOTER         = BIT(13);
 
-const int POWERUP_COUNT                = 13;
+const int POWERUP_COUNT                = 14;
