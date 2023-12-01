@@ -1,0 +1,70 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Keen, "progs/player_keen.mdl");
+MODEL(Keen_Head, "progs/h_player_keen.mdl");
+
+SOUND(Keen_Pain1, "player_keen/pain0");
+SOUND(Keen_Pain2, "player_keen/pain1");
+SOUND(Keen_Pain3, "player_keen/pain2");
+Sound SND_Keen_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Keen_Pain1.m_id + rint(random() * 2));
+}
+
+SOUND(Keen_Death1, "player_keen/death1");
+SOUND(Keen_Death2, "player_keen/death2");
+Sound SND_Keen_Death_Random() {
+    return REGISTRY_GET(Sounds, (random() < 0.5) ? SND_Keen_Death1.m_id : SND_Keen_Death2.m_id);
+}
+SOUND(Keen_Crush, "player_keen/jumpatk");
+SOUND(Keen_Pogo, "player_keen/pogo");
+SOUND(Keen_Appear, "player_keen/start");
+PRECACHE(Keen)
+{
+#ifdef SVQC
+    precache_sound("player_keen/plyrjmp8.wav");       // player jump
+    precache_sound("player_keen/land.wav");           // player landing
+    precache_sound("player_keen/land2.wav");      // player hurt landing
+    precache_sound("player_keen/drown1.wav");     // drowning pain
+    precache_sound("player_keen/drown2.wav");     // drowning pain
+    precache_sound("player_keen/gasp1.wav");      // gasping for air
+    precache_sound("player_keen/gasp2.wav");      // taking breath
+    precache_sound("player_keen/h2odeath.wav");       // drowning death
+
+    precache_sound("player_keen/pain0.wav");
+    precache_sound("player_keen/pain1.wav");
+    precache_sound("player_keen/pain2.wav");
+
+    precache_sound("player_keen/death1.wav");
+    precache_sound("player_keen/death2.wav");
+
+    precache_sound("player_keen/axhit1.wav");
+
+    precache_sound("player_keen/lburn1.wav");     // lava burn
+    precache_sound("player_keen/lburn2.wav");     // lava burn
+
+    precache_model("progs/v_pogo.mdl");
+#endif
+}
+#endif
+CLASS(Keen, Champions)
+    ATTRIB(Keen, netname, string, "keen");
+    ATTRIB(Keen, m_name, string, "Keen");
+    ATTRIB(Keen, qcc_falldamage, float, 0);
+    ATTRIB(Keen, qcc_jumpheight, float, 0.75);
+    ATTRIB(Keen, qcc_meleename, string, "pogo");
+    ATTRIB(Keen, m_viewofs, vector, '0 0 16');
+#ifdef GAMEQC
+    ATTRIB(Keen, m_model, Model, MDL_Keen);
+    ATTRIB(Keen, m_model_head, Model, MDL_Keen_Head);
+    ATTRIB(Keen, m_soundpath, string, "player_keen/");
+    METHOD(Keen, m_sound_pain, string()) { return SND(Keen_Pain_Random()); }
+    METHOD(Keen, m_sound_death, string()) { return SND(Keen_Death_Random()); }
+#endif
+#ifdef SVQC
+    METHOD(Keen, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) { /* no attack, just override */ }
+#endif
+ENDCLASS(Keen)
+REGISTER_CHAMPION(Keen, NEW(Keen));

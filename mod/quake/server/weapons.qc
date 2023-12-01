@@ -1309,6 +1309,11 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 {
 	if(this.exptime != 0)
 		return;
+	if(!STAT(SKATING, this) && this.m_champion && this.m_champion.m_weaponframe)
+	{
+		if(this.m_champion.m_weaponframe(this.m_champion, this, weaponentity))
+			return;
+	}
 	if (frametime) this.(weaponentity).weapon_frametime = frametime;
 
 	if(STAT(SKATING, this))
@@ -1335,13 +1340,17 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 	// check for attack
 		if(wep != WEP_Null)
 		{
-			if(this.button0 && !(wep.spawnflags & WEP_FLAG_NOAGGRO) && wep.wr_checkammo1(wep, this, weaponentity))
+			if(this.button0 && wep.wr_checkammo1(wep, this, weaponentity))
 			{
 				SuperDamageSound(this);
-				if(wep != WEP_AXE) // allow stealthy slices!
+				if(!(wep.spawnflags & WEP_FLAG_NOAGGRO)) // allow stealthy slices!
 					W_Attack(this, false);
 			}
-			wep.wr_think(wep, this, weaponentity, this.button0);
+			// TODO: this is even more hacky than what i had but it'll do for now
+			if(this.m_champion && this.m_champion.wr_think && wep == WEP_AXE)
+				this.m_champion.wr_think(wep, this, weaponentity, this.button0);
+			else
+				wep.wr_think(wep, this, weaponentity, this.button0);
 		}
 	}
 

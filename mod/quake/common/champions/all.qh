@@ -1,0 +1,112 @@
+#pragma once
+
+#ifdef GAMEQC
+    #include "../models/all.qh"
+    #include "../sounds/all.qh"
+#endif
+
+#ifdef GAMEQC
+noref string autocvar_cl_quake_model = "";
+#endif
+
+#ifdef CSQC
+PRECACHE(Champions)
+{
+    precache_pic("gfx/quake/face_invis");
+    precache_pic("gfx/quake/face_invul2");
+    precache_pic("gfx/quake/face_inv2");
+    precache_pic("gfx/quake/face_quad");
+
+    precache_pic("gfx/quake/face1");
+    precache_pic("gfx/quake/face_p1");
+    precache_pic("gfx/quake/face2");
+    precache_pic("gfx/quake/face_p2");
+    precache_pic("gfx/quake/face3");
+    precache_pic("gfx/quake/face_p3");
+    precache_pic("gfx/quake/face4");
+    precache_pic("gfx/quake/face_p4");
+    precache_pic("gfx/quake/face5");
+    precache_pic("gfx/quake/face_p5");
+}
+#endif
+
+REPLICATE_INIT(string, cvar_cl_quake_model);
+
+REGISTRY(Champion, 32)
+REGISTER_REGISTRY(Champion)
+#define REGISTER_CHAMPION(id, inst) REGISTER(Champion, CHAMPION, id, m_id, inst)
+
+REGISTRY_SORT(Champion)
+REGISTRY_CHECK(Champion)
+
+STATIC_INIT(Champion) { FOREACH(Champion, true, it.m_id = i); }
+
+CLASS(Champions, Object)
+    ATTRIB(Champions, m_id, int, 0);
+    ATTRIB(Champions, netname, string);
+    ATTRIB(Champions, m_name, string);
+    ATTRIB(Champions, qcc_movespeed, float, 1);
+    ATTRIB(Champions, qcc_swimspeed, float, 1);
+    ATTRIB(Champions, qcc_pogo, bool, false);
+    ATTRIB(Champions, qcc_damagetaken, float, 1);
+    ATTRIB(Champions, qcc_jumpheight, float, 1);
+    ATTRIB(Champions, qcc_falldamage, float, 1);
+    ATTRIB(Champions, qcc_slimedamage, float, 1);
+    ATTRIB(Champions, qcc_health_regen_rate, float, 1);
+    ATTRIB(Champions, qcc_health_regen_stable, float, 1);
+    ATTRIB(Champions, qcc_health_regen_max, float, 1);
+    ATTRIB(Champions, qcc_health_rot_max, float, 1);
+    ATTRIB(Champions, qcc_health_heal_max, float, 1);
+    ATTRIB(Champions, qcc_health_heal_cap, float, 1);
+    ATTRIB(Champions, qcc_meleename, string, string_null);
+    ATTRIB(Champions, qcc_thirdperson, bool, false);
+    /** NOTE: size adjustments do not work properly yet! */
+    /** switching models while near a wall will cause the player to get stuck */
+    ATTRIB(Champions, m_mins, vector, VEC_HULL_MIN);
+    ATTRIB(Champions, m_maxs, vector, VEC_HULL_MAX);
+    ATTRIB(Champions, m_viewofs, vector, '0 0 22');
+    ATTRIB(Champions, m_scale, float, 0);
+    /** For special models like skater */
+    ATTRIB(Champions, m_hidden, bool, false);
+#ifdef GAMEQC
+    ATTRIB(Champions, m_model, Model, MDL_Null);
+    ATTRIB(Champions, m_model_head, Model, MDL_Null);
+    ATTRIB(Champions, m_soundpath, string, string_null);
+    METHOD(Champions, m_sound_pain, string()) { return "player/pain6.wav"; };
+    METHOD(Champions, m_sound_death, string()) { return "player/death1.wav"; };
+    METHOD(Champions, m_touch, void(Champions this, entity actor, entity toucher)) { };
+    METHOD(Champions, m_hideweapon, bool(Champions this, entity actor)) { return false; };
+    METHOD(Champions, m_playerjump, float(Champions this, entity actor)) { return 1; };
+    METHOD(Champions, m_doublejump, bool(Champions this, entity actor)) { return false; };
+#endif
+    METHOD(Champions, m_physics, bool(Champions this, entity actor, float dt)) { return false; };
+#ifdef CSQC
+    ATTRIB(Champions, m_faceprefix, string, "gfx/quake/");
+#endif
+#ifdef SVQC
+    /** Special condition for allowing selection of this model */
+    METHOD(Champions, m_condition, bool(Champions this, entity actor)) { return false; };
+    METHOD(Champions, m_activate, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_clear, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_updatestats, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_playerthink, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_playerspawn, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity)) { return false; };
+    METHOD(Champions, m_takeammo, bool(Champions this, entity actor)) { return false; };
+    METHOD(Champions, m_pickup_weapon, void(Champions this, entity actor, entity item)) { };
+    METHOD(Champions, m_pickup_powerup, void(Champions this, entity actor, entity item)) { };
+    METHOD(Champions, m_pickup_key, void(Champions this, entity actor, entity item)) { };
+    METHOD(Champions, m_pickup_sigil, void(Champions this, entity actor, entity item)) { };
+    METHOD(Champions, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype)) { };
+    METHOD(Champions, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype)) { return 1; };
+#endif
+ENDCLASS(Champions)
+
+// default champion
+// NOTE: needs to be done after registry has been initialized
+#include "champion/ranger.qh"
+REGISTRY_DEFINE_GET(Champion, CHAMPION_Ranger)
+
+#ifdef SVQC
+Champions Champion_FromString(string champ);
+#endif

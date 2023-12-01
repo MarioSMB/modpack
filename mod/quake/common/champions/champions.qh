@@ -1,0 +1,31 @@
+#pragma once
+
+.Champions m_champion;
+
+void QCC_FixClient(entity this);
+
+#ifdef GAMEQC
+void champions_PlayerTouch(entity this, entity toucher);
+#endif
+
+bool champions_PlayerPhysics(entity this, float dt);
+
+#ifdef SVQC
+void QCC_UpdateStats(entity this);
+
+void champions_PutPlayerInServer(entity this);
+
+void champions_PlayerPreThink(entity this);
+
+void champions_PlayerDies(entity this);
+
+void champions_Killed(entity targ, entity inflictor, entity attacker, int deathtype);
+#endif
+
+#ifdef CSQC
+bool cl_champion_command(string cmd);
+
+bool cl_champion_input_event(float evtype, float scanx, float chary, float devid);
+
+void cl_champion_draw();
+#endif

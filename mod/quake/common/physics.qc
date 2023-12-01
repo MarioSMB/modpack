@@ -8,21 +8,13 @@ void Physics_UpdateStats(entity this)
 {
 	if(intermission_running)
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 0';
-	else if(this.custom_viewofs != '0 0 0')
-		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = this.custom_viewofs;
 	else
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
 
-	if(this.custom_mins != '0 0 0' && this.custom_maxs != '0 0 0')
-	{
-		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.custom_mins;
-		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = this.custom_maxs;
-	}
-	else
-	{
-		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
-		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
-	}
+	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
+	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
+
+	QCC_UpdateStats(this);
 }
 
 .vector movement_old;
@@ -48,6 +40,8 @@ void PM_FixClient(entity this)
 #elif defined(SVQC)
 	Physics_UpdateStats(this);
 #endif
+
+	QCC_FixClient(this);
 }
 
 void SV_check_punch(entity this, float dt)
@@ -105,12 +99,20 @@ void PlayerJump(entity this)
 	
 	if(this.waterlevel >= 2)
 	{
+		float maxspeed_mod = 1;
+		if(this.m_champion)
+		{
+			maxspeed_mod *= this.m_champion.qcc_movespeed;
+			maxspeed_mod *= this.m_champion.qcc_swimspeed;
+		}
+
+		float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
 		if(this.watertype == CONTENT_WATER)
-			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+			this.velocity_z = maxspeed * 0.7;
 		else if(this.watertype == CONTENT_SLIME)
-			this.velocity_z = 80;
+			this.velocity_z = 80 * maxspeed_mod;
 		else
-			this.velocity_z = 50;
+			this.velocity_z = 50 * maxspeed_mod;
 
 	// play swimming sound
 #ifdef SVQC
@@ -127,14 +129,21 @@ void PlayerJump(entity this)
 		return;
 	}
 
+	bool pogo = false;
 	bool doublejump = false;
 	if(this.viewloc && this.waterlevel >= 2)
 		doublejump = true;
+	if(this.m_champion)
+	{
+		pogo = this.m_champion.qcc_pogo;
+		if(this.m_champion.m_doublejump && this.m_champion.m_doublejump(this.m_champion, this))
+			doublejump = true;
+	}
 
 	if(!IS_ONGROUND(this) && !doublejump)
 		return;
 
-	if(IS_JUMP_HELD(this) && !(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS))
+	if(IS_JUMP_HELD(this) && !(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS) && !pogo)
 		return;		// don't pogo stick
 
 	SET_JUMP_HELD(this);
@@ -142,6 +151,12 @@ void PlayerJump(entity this)
 	UNSET_ONGROUND(this);
 
 	float mjumpheight = 270;
+	if(this.m_champion)
+	{
+		mjumpheight *= this.m_champion.qcc_jumpheight;
+		if(this.m_champion.m_playerjump)
+			mjumpheight *= this.m_champion.m_playerjump(this.m_champion, this);
+	}
 	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
 		mjumpheight *= 1.5;
 	if(this.viewloc)
@@ -262,8 +277,17 @@ void PM_WaterMove(entity this, float dt)
 	else if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
+	float maxspeed_mod = 1;
+	if(this.m_champion)
+	{
+		maxspeed_mod *= this.m_champion.qcc_movespeed;
+		maxspeed_mod *= this.m_champion.qcc_swimspeed;
+	}
+
+	float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
+
 	vector wishdir = normalize(wishvel);
-	float wishspeed = min(PHYS_MAXSPEED(this), vlen(wishvel));
+	float wishspeed = min(maxspeed, vlen(wishvel));
 	if(STAT(WETSUIT_FINISHED, this) > time)
 	{
 		if(this.waterlevel == 2)
@@ -386,12 +410,17 @@ void PM_AirMove(entity this, float dt)
 	if(this.move_movetype != MOVETYPE_WALK)
 		wishvel.z += this.movement_z;
 
+	float maxspeed_mod = 1;
+	if(this.m_champion)
+		maxspeed_mod *= this.m_champion.qcc_movespeed;
+
+	float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
-	if (wishspeed > PHYS_MAXSPEED(this))
+	if (wishspeed > maxspeed)
 	{
-		wishvel *= PHYS_MAXSPEED(this) / wishspeed;
-		wishspeed = PHYS_MAXSPEED(this);
+		wishvel *= maxspeed / wishspeed;
+		wishspeed = maxspeed;
 	}
 
 	if(time < this.teleport_time)
@@ -451,10 +480,19 @@ void PM_Main(entity this, float dt)
 		return;
 	}
 
+	if(STAT(QCC_STUNNED, this) > time)
+	{
+		this.velocity = '0 0 0';
+		return;
+	}
+
 	if(PHYS_HEALTH(this) <= 0)
 		return;
 
 	PM_RollView(this);
+
+	if(champions_PlayerPhysics(this, dt))
+		return;
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
 		PlayerJump(this);
@@ -554,6 +592,8 @@ void player_touch(entity this, entity toucher)
 		}
 	}
 #endif
+
+	champions_PlayerTouch(this, toucher);
 }
 
 #if defined(SVQC)

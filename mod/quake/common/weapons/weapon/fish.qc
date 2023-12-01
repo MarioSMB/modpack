@@ -171,8 +171,7 @@ void fishthink(entity this)
 
 void fishmissile(entity this, .entity weaponentity)
 {
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_rockets -= 1;
+	W_TakeAmmo(this, ammo_rockets, 1);
 
 	entity fish = spawn();
 	fish.owner = this;
@@ -223,7 +222,7 @@ void fishcharge(entity this)
 		this.fish_time = SUPERFISHTIME + 3;
 	this.fish_time += 0.1;
 	this.m_frame = 4;
-	ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
+	ATTACK_FINISHED(actor, weaponentity) = time + 1;
 	if(actor.button0)
 		wep_set_anim(this, 4, fishcharge);
 	else

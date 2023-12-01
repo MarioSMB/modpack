@@ -3,7 +3,7 @@
 CLASS(Tuba, Weapon)
 /* ammotype  */ ATTRIB(Tuba, ammo_type, int, IT_ROCKETS);
 /* impulse   */ ATTRIB(Tuba, impulse, int, 7);
-/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Tuba, aflag, int, 7);
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairshotgun");

@@ -3,6 +3,7 @@
 #include "../common/constants.qh"
 #include <common/physics/movetypes/movetypes.qh>
 #include "../common/sui_sys.qh"
+#include "../common/champions/_mod.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/viewloc.qh"
@@ -253,7 +254,15 @@ void viewmodel_draw(entity this)
 {
 	CSQCModel_InterpolateAnimation_Do(this);
 
-	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active || STAT(SKATING)) ? 0 : MASK_NORMAL;
+	bool show_viewmodel = true;
+	if(STAT(SKATING))
+		show_viewmodel = false;
+	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_hideweapon)
+	{
+		if(csqcplayer.m_champion.m_hideweapon(csqcplayer.m_champion, csqcplayer))
+			show_viewmodel = false;
+	}
+	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active || !show_viewmodel) ? 0 : MASK_NORMAL;
 	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
 	Weapon wep = this.activeweapon;
@@ -270,6 +279,9 @@ void viewmodel_draw(entity this)
 	if(a >= 0)
 	{
 		string name = wep.mdl;
+		// TODO? very niche case, weapon overrides would be nice though!
+		if(csqcplayer && csqcplayer.m_champion && wep == WEP_AXE && csqcplayer.m_champion.qcc_meleename)
+			name = csqcplayer.m_champion.qcc_meleename;
 		bool swap = name != this.name_last;
 		if (swap || swapskin)
 		{
@@ -388,6 +400,8 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	if(STAT(SKATING))
 		return 1;
 	if(this.viewloc)
+		return 1;
+	if(this.m_champion && this.m_champion.qcc_thirdperson)
 		return 1;
 	return 0;
 }
@@ -608,6 +622,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	sui_begin(vid_conwidth, vid_conheight);
 
 	cl_shop_draw();
+
+	cl_champion_draw();
 
 	sui_end();
 

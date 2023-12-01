@@ -36,6 +36,10 @@ const float VOL_BASE = 0.7;
 const float VOL_BASEVOICE = 1.0;
 const float VOL_MUFFLED = 0.35;
 
+#ifdef SVQC
+string Sound_randomize();
+#endif
+
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC
@@ -44,7 +48,10 @@ const float VOL_MUFFLED = 0.35;
 		{ \
 			entity __e = e; \
 			/*if (sound_allowed(MSG_BROADCAST, __e))*/ \
-				sound7(__e, c, s, v, a, 0, 0); \
+			float sndpitch = 0; \
+			if(autocvar_sv_quake_fixstuff) \
+				sndpitch = 100 / (random() * (random() * 3)); \
+			sound7(__e, c, ((autocvar_sv_quake_fixstuff == 2) ? Sound_randomize() : s), v, a, sndpitch, 0); \
 		} MACRO_END
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)

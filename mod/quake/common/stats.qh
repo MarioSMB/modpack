@@ -183,8 +183,6 @@ REGISTER_STAT(SERVERFLAGS, int, serverflags)
 
 REGISTER_STAT(WETSUIT_FINISHED, float)
 
-//REGISTER_STAT(KATRIA, bool, (this.model_randomizer < autocvar_sv_quake_katria && have_katria))
-
 #ifdef SVQC
 .int powerups;
 #endif
@@ -241,3 +239,8 @@ int top_score;
 REGISTER_STAT(TOP_SCORE, int, top_score)
 
 REGISTER_STAT(DUAL_WEAPONS, vectori)
+
+REGISTER_STAT(QCC_CHAMPION, int)
+REGISTER_STAT(QCC_STUNNED, float)
+REGISTER_STAT(QCC_ABILITYTIME, float)
+REGISTER_STAT(QCC_LASTWJ, float)

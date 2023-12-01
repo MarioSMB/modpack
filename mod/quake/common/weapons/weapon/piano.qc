@@ -271,8 +271,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_nails -= 2;
+	W_TakeAmmo(this, ammo_nails, 2);
 	
 	//this.punchangle_x = 1;
 

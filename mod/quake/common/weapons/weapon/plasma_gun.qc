@@ -206,8 +206,7 @@ void W_FirePlasma(entity this, .entity weaponentity)
 		T_RadiusDamage(this, this, 35*cells, DEATH_DISCHARGE.m_id, NULL);
 		return;
 	}
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_plasma -= 1;
+	W_TakeAmmo(this, ammo_plasma, 1);
 	_sound(this, CH_WEAPON_SINGLE, "plasma/fire.wav", 0.5, ATTN_NORM);
 	this.punchangle_x = -2;
 

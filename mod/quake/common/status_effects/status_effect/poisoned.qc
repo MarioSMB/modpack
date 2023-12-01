@@ -14,7 +14,10 @@ METHOD(Poisoned, m_tick, void(StatusEffects this, entity actor))
     }
     if(time > actor.poisoned_time)
     {
-        T_Damage(actor, NULL, NULL, 1, DEATH_POISONED.m_id);
+        float poison_dmg = 1;
+        if(IS_MONSTER(actor))
+            poison_dmg = 5;
+        T_Damage(actor, NULL, NULL, poison_dmg, DEATH_POISONED.m_id);
         actor.poisoned_time = time + 1;
     }
     SUPER(Poisoned).m_tick(this, actor);

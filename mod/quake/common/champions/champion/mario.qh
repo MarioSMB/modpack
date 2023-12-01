@@ -1,0 +1,79 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Mario, "progs/player_mario.mdl");
+
+SOUND(Mario_Pain1, "player_mario/pain1");
+SOUND(Mario_Pain2, "player_mario/pain2");
+SOUND(Mario_Pain3, "player_mario/pain3");
+SOUND(Mario_Pain4, "player_mario/pain4");
+SOUND(Mario_Pain5, "player_mario/pain5");
+SOUND(Mario_Pain6, "player_mario/pain6");
+Sound SND_Mario_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Mario_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Mario_Death1, "player_mario/death1");
+SOUND(Mario_Death2, "player_mario/death2");
+SOUND(Mario_Death3, "player_mario/death3");
+SOUND(Mario_Death4, "player_mario/death4");
+SOUND(Mario_Death5, "player_mario/death5");
+Sound SND_Mario_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Mario_Death1.m_id + rint(random() * 4));
+}
+SOUND(Mario_Crush, "items/goomba");
+PRECACHE(Mario)
+{
+#ifdef SVQC
+    precache_sound("player_mario/plyrjmp8.wav");       // player jump
+    precache_sound("player_mario/land.wav");           // player landing
+    precache_sound("player_mario/land2.wav");      // player hurt landing
+    precache_sound("player_mario/drown1.wav");     // drowning pain
+    precache_sound("player_mario/drown2.wav");     // drowning pain
+    precache_sound("player_mario/gasp1.wav");      // gasping for air
+    precache_sound("player_mario/gasp2.wav");      // taking breath
+    precache_sound("player_mario/h2odeath.wav");       // drowning death
+
+    precache_sound("player_mario/pain1.wav");
+    precache_sound("player_mario/pain2.wav");
+    precache_sound("player_mario/pain3.wav");
+    precache_sound("player_mario/pain4.wav");
+    precache_sound("player_mario/pain5.wav");
+    precache_sound("player_mario/pain6.wav");
+
+    precache_sound("player_mario/death1.wav");
+    precache_sound("player_mario/death2.wav");
+    precache_sound("player_mario/death3.wav");
+    precache_sound("player_mario/death4.wav");
+    precache_sound("player_mario/death5.wav");
+
+    precache_sound("player_mario/axhit1.wav");
+
+    precache_sound("player_mario/lburn1.wav");     // lava burn
+    precache_sound("player_mario/lburn2.wav");     // lava burn
+
+    precache_sound("player_mario/start.wav");
+#endif
+}
+#endif
+CLASS(Mario, Champions)
+    ATTRIB(Mario, netname, string, "mario");
+    ATTRIB(Mario, m_name, string, "Mario");
+    ATTRIB(Mario, qcc_jumpheight, float, 1.3);
+    ATTRIB(Mario, m_viewofs, vector, '0 0 20');
+    ATTRIB(Mario, m_hidden, bool, true);
+#ifdef GAMEQC
+    ATTRIB(Mario, m_model, Model, MDL_Mario);
+    ATTRIB(Mario, m_model_head, Model, MDL_Null);
+    ATTRIB(Mario, m_soundpath, string, "player_mario/");
+    METHOD(Mario, m_sound_pain, string()) { return SND(Mario_Pain_Random()); }
+    METHOD(Mario, m_sound_death, string()) { return SND(Mario_Death_Random()); }
+#endif
+ENDCLASS(Mario)
+REGISTER_CHAMPION(Mario, NEW(Mario));
+
+#ifdef SVQC
+string autocvar_sv_allow_customplayermodels_speciallist = "";
+#endif

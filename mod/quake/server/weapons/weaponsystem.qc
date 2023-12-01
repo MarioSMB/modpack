@@ -21,7 +21,13 @@ void CL_Weaponentity_Think(entity this)
 		delete(this);
 		return;
 	}
-	if (this.owner.health <= 0 || STAT(SKATING, this.owner))
+	bool hideweapon = false;
+	if (this.owner.m_champion && this.owner.m_champion.m_hideweapon)
+	{
+		if (this.owner.m_champion.m_hideweapon(this.owner.m_champion, this.owner))
+			hideweapon = true;
+	}
+	if (this.owner.health <= 0 || STAT(SKATING, this.owner) || hideweapon)
 	{
 		// owner died; disappear
 		this.model = "";
@@ -140,4 +146,17 @@ vector W_Shotorg(entity ent, .entity weaponentity)
 	tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	return w_shotorg;
+}
+
+void W_TakeAmmo(entity ent, .float ammotype, float ammoamount)
+{
+	if(ent.powerups & POWERUP_SHARPSHOOTER)
+		return;
+
+	if(ent.m_champion && ent.m_champion.m_takeammo)
+	{
+		if(ent.m_champion.m_takeammo(ent.m_champion, ent))
+			return;
+	}
+	ent.(ammotype) -= ammoamount;
 }

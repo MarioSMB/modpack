@@ -850,7 +850,7 @@ METHOD(SkullWizard, mr_setup, bool(SkullWizard this, entity actor))
 
     precache_sound("skullwiz/idle1.wav");
     precache_sound("skullwiz/idle2.wav");
-    precache_sound("skullwiz/pain2.wav");
+    precache_sound("skullwiz/pain1.wav");
     precache_sound("skullwiz/pain2.wav");
     precache_sound("skullwiz/death.wav");
 

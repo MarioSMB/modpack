@@ -879,7 +879,7 @@ int t_checknewclient(entity this, int check)
 		// look up client
 		entity ent = edict_num(j);
 		// check if it is to be ignored, but never ignore the one we started on (prevent infinite loop)
-		if(j != check && (wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET)))
+		if(j != check && (wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET) || (ent.powerups & POWERUP_INVISIBILITY)))
 			continue;
 		// found a valid client (possibly the same one again)
 		break;
@@ -902,7 +902,7 @@ entity t_checkclient(entity this)
 
 	// return check if it might be visible
 	entity ent = edict_num(this.lastcheck);
-	if(wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET))
+	if(wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET) || (ent.powerups & POWERUP_INVISIBILITY))
 		return NULL;
 
 	// if current entity can't possibly see the check entity, return 0
@@ -1003,7 +1003,7 @@ void HuntTarget(entity this)
 void FoundTarget(entity this)
 {
 	// prevent getting stuck without an enemy (some triggers set the think frame to this)
-	if(!this.enemy || this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET))
+	if(!this.enemy || this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET) || (this.enemy.powerups & POWERUP_INVISIBILITY))
 	{
 		this.enemy = NULL;
 		if(this.th_stand)
@@ -1141,7 +1141,7 @@ bool FindTarget(entity this)
 	{
 		entity selected = NULL;
 		float dist = CHARMED_RADIUS;
-		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD),
+		FOREACH_ENTITY_RADIUS(this.origin, CHARMED_RADIUS, IS_MONSTER(it) && !(it.flags & FL_NOTARGET) && !(it.powerups & POWERUP_INVISIBILITY) && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD),
 		{
 			if(visible(this, it) && this.visible_distance < dist)
 			{
@@ -1209,7 +1209,7 @@ bool FindTarget(entity this)
 	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
 	{
 		this.enemy = this.enemy.enemy;
-		if(!IS_PLAYER(this.enemy) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
+		if(!IS_PLAYER(this.enemy) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET) || (this.enemy.powerups & POWERUP_INVISIBILITY))
 		{
 			this.enemy = NULL;
 			return false;
@@ -1275,6 +1275,8 @@ The monster is walking its beat
 */
 void ai_walk(entity this, float dist)
 {
+	if(!IS_MONSTER(this))
+		return;
 	// check for noticing a player
 	if(FindTarget(this))
 		return;
@@ -1519,8 +1521,10 @@ The monster has an enemy it is trying to kill
 .float endtime; // reused
 void ai_run(entity this, float dist)
 {
+	if(!IS_MONSTER(this))
+		return;
 // see if the enemy is dead
-	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
+	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET) || (this.enemy.powerups & POWERUP_INVISIBILITY))
 	{
 		this.enemy = NULL;
 		if(this.charmed)
@@ -1529,7 +1533,7 @@ void ai_run(entity this, float dist)
 			return;
 		}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET))
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !(this.oldenemy.powerups & POWERUP_INVISIBILITY))
 		{
 			this.enemy = this.oldenemy;
 			HuntTarget(this);

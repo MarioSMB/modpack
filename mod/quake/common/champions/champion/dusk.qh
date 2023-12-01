@@ -1,0 +1,96 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Dusk, "progs/player_dusk.mdl");
+MODEL(Dusk_Head, "progs/h_player_dusk.mdl");
+
+SOUND(Dusk_Pain1, "player_dusk/pain1");
+SOUND(Dusk_Pain2, "player_dusk/pain2");
+SOUND(Dusk_Pain3, "player_dusk/pain3");
+Sound SND_Dusk_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Dusk_Pain1.m_id + rint(random() * 2));
+}
+
+SOUND(Dusk_Death1, "player_dusk/death1");
+SOUND(Dusk_Death2, "player_dusk/death2");
+SOUND(Dusk_Death3, "player_dusk/death3");
+Sound SND_Dusk_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Dusk_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Dusk)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/dusk_face_invis");
+    precache_pic("gfx/quake/dusk_face_invul2");
+    precache_pic("gfx/quake/dusk_face_inv2");
+    precache_pic("gfx/quake/dusk_face_quad");
+
+    precache_pic("gfx/quake/dusk_face1");
+    precache_pic("gfx/quake/dusk_face_p1");
+    precache_pic("gfx/quake/dusk_face2");
+    precache_pic("gfx/quake/dusk_face_p2");
+    precache_pic("gfx/quake/dusk_face3");
+    precache_pic("gfx/quake/dusk_face_p3");
+    precache_pic("gfx/quake/dusk_face4");
+    precache_pic("gfx/quake/dusk_face_p4");
+    precache_pic("gfx/quake/dusk_face5");
+    precache_pic("gfx/quake/dusk_face_p5");
+#endif
+#ifdef SVQC
+    precache_sound("player_dusk/plyrjmp8.wav");       // player jump
+    precache_sound("player_dusk/land.wav");           // player landing
+    precache_sound("player_dusk/land2.wav");      // player hurt landing
+    precache_sound("player_dusk/drown1.wav");     // drowning pain
+    precache_sound("player_dusk/drown2.wav");     // drowning pain
+    precache_sound("player_dusk/gasp1.wav");      // gasping for air
+    precache_sound("player_dusk/gasp2.wav");      // taking breath
+    precache_sound("player_dusk/h2odeath.wav");       // drowning death
+
+    precache_sound("player_dusk/pain1.wav");
+    precache_sound("player_dusk/pain2.wav");
+    precache_sound("player_dusk/pain3.wav");
+
+    precache_sound("player_dusk/death1.wav");
+    precache_sound("player_dusk/death2.wav");
+    precache_sound("player_dusk/death3.wav");
+
+    precache_sound("player_dusk/axhit1.wav");
+
+    precache_sound("player_dusk/lburn1.wav");     // lava burn
+    precache_sound("player_dusk/lburn2.wav");     // lava burn
+
+    precache_sound("player_dusk/fastfirestart.wav");
+    precache_sound("player_dusk/fastfire.wav");
+    precache_sound("player_dusk/sicklestart.wav");
+
+    precache_model("progs/v_sickles.mdl");
+#endif
+}
+#endif
+CLASS(Dusk, Champions)
+    ATTRIB(Dusk, netname, string, "dusk");
+    ATTRIB(Dusk, m_name, string, "Dusk");
+    ATTRIB(Dusk, qcc_meleename, string, "sickles");
+    ATTRIB(Dusk, qcc_health_rot_max, float, 0.5);
+    ATTRIB(Dusk, qcc_health_regen_stable, float, 0.5);
+#ifdef GAMEQC
+    ATTRIB(Dusk, m_model, Model, MDL_Dusk);
+    ATTRIB(Dusk, m_model_head, Model, MDL_Dusk_Head);
+    ATTRIB(Dusk, m_soundpath, string, "player_dusk/");
+    METHOD(Dusk, m_sound_pain, string()) { return SND(Dusk_Pain_Random()); }
+    METHOD(Dusk, m_sound_death, string()) { return SND(Dusk_Death_Random()); }
+#endif
+ENDCLASS(Dusk)
+REGISTER_CHAMPION(Dusk, NEW(Dusk));
+
+#ifdef SVQC
+.bool dusk_revived;
+.vector dusk_spawnpoint;
+.vector dusk_spawnangle;
+
+void Dusk_PlayerSpawn(entity actor);
+
+void Dusk_Killed(entity targ, entity inflictor, entity attacker, int deathtype);
+#endif

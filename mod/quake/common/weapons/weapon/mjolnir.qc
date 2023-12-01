@@ -221,8 +221,7 @@ void HIP_FireMjolnirLightning(entity this)
 //   }
 //   this.punchangle_x = 12;
 
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_cells -= 15;
+	W_TakeAmmo(this, ammo_cells, 15);
 
 	HIP_SpawnMjolnirBase(this);
 }
@@ -247,7 +246,7 @@ void HIP_FireMjolnir(entity this, .entity weaponentity)
 		if(trace_fraction > 0.3 && trace_fraction< 1.0)
 		{
 			HIP_FireMjolnirLightning(this);
-			this.attack_finished = time + 1.5;
+			ATTACK_FINISHED(this, weaponentity) = time + 1.5;
 			return;
 		}
 	}

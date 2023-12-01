@@ -53,8 +53,7 @@ void W_FireLightning(entity this, .entity weaponentity)
 	}
 	this.punchangle_x = -2;
 
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_cells -= 1;
+	W_TakeAmmo(this, ammo_cells, 1);
 
 	vector org = W_Shotorg(this, weaponentity);
 

@@ -1,0 +1,39 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Ranger, "progs/player.mdl");
+MODEL(Ranger_Head, "progs/h_player.mdl");
+
+SOUND(Ranger_Pain1, "player/pain1");
+SOUND(Ranger_Pain2, "player/pain2");
+SOUND(Ranger_Pain3, "player/pain3");
+SOUND(Ranger_Pain4, "player/pain4");
+SOUND(Ranger_Pain5, "player/pain5");
+SOUND(Ranger_Pain6, "player/pain6");
+Sound SND_Ranger_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Ranger_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Ranger_Death1, "player/death1");
+SOUND(Ranger_Death2, "player/death2");
+SOUND(Ranger_Death3, "player/death3");
+SOUND(Ranger_Death4, "player/death4");
+SOUND(Ranger_Death5, "player/death5");
+Sound SND_Ranger_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Ranger_Death1.m_id + rint(random() * 4));
+}
+#endif
+CLASS(Ranger, Champions)
+    ATTRIB(Ranger, netname, string, "ranger");
+    ATTRIB(Ranger, m_name, string, "Ranger");
+#ifdef GAMEQC
+    ATTRIB(Ranger, m_model, Model, MDL_Ranger);
+    ATTRIB(Ranger, m_model_head, Model, MDL_Ranger_Head);
+    ATTRIB(Ranger, m_soundpath, string, "player/");
+    METHOD(Ranger, m_sound_pain, string()) { return SND(Ranger_Pain_Random()); }
+    METHOD(Ranger, m_sound_death, string()) { return SND(Ranger_Death_Random()); }
+#endif
+ENDCLASS(Ranger)
+REGISTER_CHAMPION(Ranger, NEW(Ranger));

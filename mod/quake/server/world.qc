@@ -688,33 +688,6 @@ PRECACHE(Junk)
 	precache_sound("player/gasp2.wav");		// taking breath
 	precache_sound("player/h2odeath.wav");		// drowning death
 
-	precache_sound("player_katria/plyrjmp8.wav");		// player jump
-	precache_sound("player_katria/land.wav");			// player landing
-	precache_sound("player_katria/land2.wav");		// player hurt landing
-	precache_sound("player_katria/drown1.wav");		// drowning pain
-	precache_sound("player_katria/drown2.wav");		// drowning pain
-	precache_sound("player_katria/gasp1.wav");		// gasping for air
-	precache_sound("player_katria/gasp2.wav");		// taking breath
-	precache_sound("player_katria/h2odeath.wav");		// drowning death
-
-	precache_sound("player_mario/plyrjmp8.wav");		// player jump
-	precache_sound("player_mario/land.wav");			// player landing
-	precache_sound("player_mario/land2.wav");		// player hurt landing
-	precache_sound("player_mario/drown1.wav");		// drowning pain
-	precache_sound("player_mario/drown2.wav");		// drowning pain
-	precache_sound("player_mario/gasp1.wav");		// gasping for air
-	precache_sound("player_mario/gasp2.wav");		// taking breath
-	precache_sound("player_mario/h2odeath.wav");		// drowning death
-
-	precache_sound("player_goat/plyrjmp8.wav");		// player jump
-	precache_sound("player_goat/land.wav");			// player landing
-	precache_sound("player_goat/land2.wav");		// player hurt landing
-	precache_sound("player_goat/drown1.wav");		// drowning pain
-	precache_sound("player_goat/drown2.wav");		// drowning pain
-	precache_sound("player_goat/gasp1.wav");		// gasping for air
-	precache_sound("player_goat/gasp2.wav");		// taking breath
-	precache_sound("player_goat/h2odeath.wav");		// drowning death
-
 	precache_sound(QUAKE_TALKSOUND);			// talk
 	precache_sound("player/teledth1.wav");		// telefrag
 	precache_sound("weapons/lock4.wav");		// ammo pick up
@@ -740,27 +713,6 @@ PRECACHE(Junk)
 	precache_sound("player/pain5.wav");
 	precache_sound("player/pain6.wav");
 
-	precache_sound("player_katria/pain1.wav");
-	precache_sound("player_katria/pain2.wav");
-	precache_sound("player_katria/pain3.wav");
-	precache_sound("player_katria/pain4.wav");
-	precache_sound("player_katria/pain5.wav");
-	precache_sound("player_katria/pain6.wav");
-
-	precache_sound("player_mario/pain1.wav");
-	precache_sound("player_mario/pain2.wav");
-	precache_sound("player_mario/pain3.wav");
-	precache_sound("player_mario/pain4.wav");
-	precache_sound("player_mario/pain5.wav");
-	precache_sound("player_mario/pain6.wav");
-
-	precache_sound("player_goat/pain1.wav");
-	precache_sound("player_goat/pain2.wav");
-	precache_sound("player_goat/pain3.wav");
-	precache_sound("player_goat/pain4.wav");
-	precache_sound("player_goat/pain5.wav");
-	precache_sound("player_goat/pain6.wav");
-
 // player death sounds
 	precache_sound("player/death1.wav");
 	precache_sound("player/death2.wav");
@@ -768,34 +720,10 @@ PRECACHE(Junk)
 	precache_sound("player/death4.wav");
 	precache_sound("player/death5.wav");
 
-	precache_sound("player_katria/death1.wav");
-	precache_sound("player_katria/death2.wav");
-	precache_sound("player_katria/death3.wav");
-	precache_sound("player_katria/death4.wav");
-	precache_sound("player_katria/death5.wav");
-
-	precache_sound("player_mario/death1.wav");
-	precache_sound("player_mario/death2.wav");
-	precache_sound("player_mario/death3.wav");
-	precache_sound("player_mario/death4.wav");
-	precache_sound("player_mario/death5.wav");
-
-	precache_sound("player_goat/death1.wav");
-	precache_sound("player_goat/death2.wav");
-	precache_sound("player_goat/death3.wav");
-	precache_sound("player_goat/death4.wav");
-	precache_sound("player_goat/death5.wav");
-
 // ax sounds	
 	precache_sound("weapons/ax1.wav");			// ax swoosh
 	precache_sound("player/axhit1.wav");		// ax hit meat
 	precache_sound("player/axhit2.wav");		// ax hit world
-
-	precache_sound("player_katria/axhit1.wav");
-
-	precache_sound("player_mario/axhit1.wav");
-
-	precache_sound("player_goat/axhit1.wav");
 
 	precache_sound("player/h2ojump.wav");		// player jumping into water
 	precache_sound("player/slimbrn2.wav");		// player enter slime
@@ -806,25 +734,12 @@ PRECACHE(Junk)
 	precache_sound("player/lburn1.wav");		// lava burn
 	precache_sound("player/lburn2.wav");		// lava burn
 
-	precache_sound("player_katria/lburn1.wav");		// lava burn
-	precache_sound("player_katria/lburn2.wav");		// lava burn
-
-	precache_sound("player_mario/lburn1.wav");		// lava burn
-	precache_sound("player_mario/lburn2.wav");		// lava burn
-
-	precache_sound("player_goat/lburn1.wav");		// lava burn
-	precache_sound("player_goat/lburn2.wav");		// lava burn
-
 	precache_sound("misc/water1.wav");			// swimming
 	precache_sound("misc/water2.wav");			// swimming
 
 	precache_model("progs/player.mdl");
-	precache_model("progs/player_katria.mdl");
-	precache_model("progs/player_mario.mdl");
-	precache_model("progs/player_goat.mdl");
 	precache_model("progs/eyes.mdl");
 	precache_model("progs/h_player.mdl");
-	precache_model("progs/h_player_katria.mdl");
 	// NOTE: mario has no head model, uses progs/null.mdl
 	precache_model("progs/gib1.mdl");
 	precache_model("progs/gib2.mdl");
@@ -1699,10 +1614,13 @@ void CreatureFrame_hotliquids(entity this)
 	}
 	else if (this.watertype == CONTENT_SLIME)
 	{
-		if(this.dmgtime < time && this.radsuit_finished < time)
+		float slimedamage = 4;
+		if(this.m_champion)
+			slimedamage *= this.m_champion.qcc_slimedamage;
+		if(this.dmgtime < time && this.radsuit_finished < time && slimedamage > 0)
 		{
 			this.dmgtime = time + 1;
-			T_Damage(this, NULL, NULL, 4 * this.waterlevel, DEATH_SLIME.m_id);
+			T_Damage(this, NULL, NULL, slimedamage * this.waterlevel, DEATH_SLIME.m_id);
 		}
 	}
 }
@@ -1747,28 +1665,37 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	// check to see if player landed and play landing sound	
-	// check to see if player landed and play landing sound
+	float jumpheight_mod = 1;
+	if(this.m_champion)
+		jumpheight_mod *= this.m_champion.qcc_jumpheight;
+	if(this.viewloc)
+		jumpheight_mod *= 1.5;
 	if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
 		skate_land(this);
 	else if(this.jump_flag) // moving or has moved
 	{
-		if(this.jump_flag < -300 && IS_ONGROUND(this) && this.health > 0)
+		if(this.jump_flag < -300 * jumpheight_mod && IS_ONGROUND(this) && this.health > 0)
 		{
+			float falldamage = 5;
+			if(this.m_champion)
+				falldamage *= this.m_champion.qcc_falldamage;
+			if(this.viewloc)
+				falldamage = 0;
 			if(this.watertype == CONTENT_WATER)
 			{
 				if(IS_PLAYER(this))
 					_sound(this, CH_PLAYER, "player/h2ojump.wav", 1, ATTN_NORM);
 			}
-			else if(this.jump_flag < -650)
+			else if(this.jump_flag < -650 * jumpheight_mod && falldamage > 0)
 			{
-				if(this.exptime != 0 || this.viewloc)
+				if(this.exptime != 0)
 				{
 					if(IS_PLAYER(this))
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
 				}
 				else
 				{
-					T_Damage(this, NULL, NULL, 5, DEATH_FALL.m_id);
+					T_Damage(this, NULL, NULL, falldamage, DEATH_FALL.m_id);
 					if(IS_PLAYER(this) && this.health > 0)
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
 				}
@@ -2014,6 +1941,35 @@ void RunThink(entity this, float dt)
 	time = oldtime;
 }
 
+.float scale_fixtime;
+.float color_fixtime;
+.float grav_fixtime;
+.float temp_frametime;
+.float frame_fixtime;
+void Quake_FixStuff(entity this)
+{
+	if(time > this.scale_fixtime)
+	{
+		this.scale = random() * (random() * 3) * (random() * 2);
+		this.scale_fixtime = time + 0.5;
+	}
+
+	if(time > this.color_fixtime)
+	{
+		this.colormod = randomvec() * 4;
+		this.color_fixtime = time + 0.25;
+	}
+
+	if(time > this.grav_fixtime)
+	{
+		if(random() < 0.15)
+			this.gravity = crandom();
+		else
+			this.gravity = random();
+		this.grav_fixtime = time + 1;
+	}
+}
+
 .float charmed_healthcheck;
 void Physics_Frame()
 {
@@ -2022,6 +1978,18 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, true,
 	{
+		float myframetime = PHYS_INPUT_TIMELENGTH;
+		if(autocvar_sv_quake_fixstuff && it.move_movetype != MOVETYPE_PUSH && it.move_movetype != MOVETYPE_FAKEPUSH && it.move_movetype != MOVETYPE_PHYSICS)
+		{
+			Quake_FixStuff(it);
+			if(time > it.frame_fixtime)
+			{
+				it.temp_frametime = myframetime * (random() * 3);
+				it.frame_fixtime = time + 1;
+			}
+			myframetime = it.temp_frametime;
+		}
+
 		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
@@ -2033,7 +2001,8 @@ void Physics_Frame()
 			if(it.category == CATEGORY_MONSTER)
 			{
 				hitamount = (it.max_health >= 1000) ? 10 : 2;
-				hitdelay = 1;
+				if(!it.dusk_revived) // NOTE: specific dusk limit
+					hitdelay = 1;
 			}
 			it.charmed_healthcheck = time + hitdelay;
 			it.health -= hitamount;
@@ -2046,15 +2015,15 @@ void Physics_Frame()
 		it.movetype = (it.move_qcphysics) ? MOVETYPE_QCENTITY : it.move_movetype;
 
 		if(it.move_qcphysics && it.move_movetype != MOVETYPE_NONE)
-			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+			Movetype_Physics_NoMatchTicrate(it, myframetime, false);
 
 		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
 		{
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
-				RunThink(it, PHYS_INPUT_TIMELENGTH);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + myframetime)
+				RunThink(it, myframetime);
 		}
 	});
 

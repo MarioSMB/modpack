@@ -3,6 +3,7 @@
 #include <lib/csqcmodel/sv_model.qh>
 #include <common/csqcmodel_settings.qh>
 #include "../common/physics.qh"
+#include "../common/champions/_mod.qh"
 #include "combat.qh"
 #include "getreplies.qh"
 #include "player.qh"
@@ -224,36 +225,14 @@ bool PlayerInList(entity player, string list)
 	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
-string autocvar_sv_allow_customplayermodels_speciallist = "";
-string autocvar_sv_allow_customplayermodels_idlist = "";
 string autocvar_sv_allow_customplayermodels_silent = "";
-
-bool have_katria;
-bool have_mario;
-bool have_goat;
-STATIC_INIT(check_models)
-{
-	have_katria = fexists("progs/player_katria.mdl");
-	have_mario = fexists("progs/player_mario.mdl");
-	have_goat = fexists("progs/player_goat.mdl");
-}
 
 string get_playermodel(entity this)
 {
 	if(STAT(SKATING, this))
 		return "progs/skater.mdl";
-	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
-	{
-		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
-			return "progs/player_mario.mdl";
-	}
-	if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "")
-	{
-		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
-			return "progs/player_goat.mdl";
-	}
-	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-		return "progs/player_katria.mdl";
+	if(this.m_champion)
+		return this.m_champion.m_model.model_str();
 	return "progs/player.mdl";
 }
 
@@ -261,13 +240,8 @@ string get_playerhead(entity this)
 {
 	if(STAT(SKATING, this))
 		return "progs/h_player.mdl";
-	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
-	{
-		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
-			return "progs/null.mdl";
-	}
-	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-		return "progs/h_player_katria.mdl";
+	if(this.m_champion)
+		return this.m_champion.m_model_head.model_str();
 	return "progs/h_player.mdl";
 }
 
@@ -275,53 +249,16 @@ string get_deathsound(entity this, int chance)
 {
 	if(STAT(SKATING, this))
 		return "player/death1.wav"; // not actually used
-	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+	if(this.m_champion)
+		return this.m_champion.m_sound_death();
+	switch(chance)
 	{
-		switch(chance)
-		{
-			default:
-			case 1: return "player_mario/death1.wav";
-			case 2: return "player_mario/death2.wav";
-			case 3: return "player_mario/death3.wav";
-			case 4: return "player_mario/death4.wav";
-			case 5: return "player_mario/death5.wav";
-		}
-	}
-	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
-	{
-		switch(chance)
-		{
-			default:
-			case 1: return "player_goat/death1.wav";
-			case 2: return "player_goat/death2.wav";
-			case 3: return "player_goat/death3.wav";
-			case 4: return "player_goat/death4.wav";
-			case 5: return "player_goat/death5.wav";
-		}
-	}
-	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-	{
-		switch(chance)
-		{
-			default:
-			case 1: return "player_katria/death1.wav";
-			case 2: return "player_katria/death2.wav";
-			case 3: return "player_katria/death3.wav";
-			case 4: return "player_katria/death4.wav";
-			case 5: return "player_katria/death5.wav";
-		}
-	}
-	else
-	{
-		switch(chance)
-		{
-			default:
-			case 1: return "player/death1.wav";
-			case 2: return "player/death2.wav";
-			case 3: return "player/death3.wav";
-			case 4: return "player/death4.wav";
-			case 5: return "player/death5.wav";
-		}
+		default:
+		case 1: return "player/death1.wav";
+		case 2: return "player/death2.wav";
+		case 3: return "player/death3.wav";
+		case 4: return "player/death4.wav";
+		case 5: return "player/death5.wav";
 	}
 
 	// never actually reached, thanks gmqcc
@@ -332,53 +269,16 @@ string get_painsound(entity this, int chance)
 {
 	if(STAT(SKATING, this))
 		return "player/pain6.wav";
-	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+	if(this.m_champion)
+		return this.m_champion.m_sound_pain();
+	switch(chance)
 	{
-		switch(chance)
-		{
-			case 1: return "player_mario/pain1.wav";
-			case 2: return "player_mario/pain2.wav";
-			case 3: return "player_mario/pain3.wav";
-			case 4: return "player_mario/pain4.wav";
-			case 5: return "player_mario/pain5.wav";
-			default: return "player_mario/pain6.wav";
-		}
-	}
-	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
-	{
-		switch(chance)
-		{
-			case 1: return "player_goat/pain1.wav";
-			case 2: return "player_goat/pain2.wav";
-			case 3: return "player_goat/pain3.wav";
-			case 4: return "player_goat/pain4.wav";
-			case 5: return "player_goat/pain5.wav";
-			default: return "player_goat/pain6.wav";
-		}
-	}
-	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-	{
-		switch(chance)
-		{
-			case 1: return "player_katria/pain1.wav";
-			case 2: return "player_katria/pain2.wav";
-			case 3: return "player_katria/pain3.wav";
-			case 4: return "player_katria/pain4.wav";
-			case 5: return "player_katria/pain5.wav";
-			default: return "player_katria/pain6.wav";
-		}
-	}
-	else
-	{
-		switch(chance)
-		{
-			case 1: return "player/pain1.wav";
-			case 2: return "player/pain2.wav";
-			case 3: return "player/pain3.wav";
-			case 4: return "player/pain4.wav";
-			case 5: return "player/pain5.wav";
-			default: return "player/pain6.wav";
-		}
+		case 1: return "player/pain1.wav";
+		case 2: return "player/pain2.wav";
+		case 3: return "player/pain3.wav";
+		case 4: return "player/pain4.wav";
+		case 5: return "player/pain5.wav";
+		default: return "player/pain6.wav";
 	}
 
 	// never actually reached, thanks gmqcc
@@ -401,12 +301,8 @@ void player_sound(entity this, int chan, string sample, float atten)
 	string soundpath;
 	if(STAT(SKATING, this))
 		soundpath = "player/";
-	else if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
-		soundpath = "player_mario/";
-	else if(have_goat && autocvar_sv_allow_customplayermodels_idlist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
-		soundpath = "player_goat/";
-	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-		soundpath =  "player_katria/";
+	else if(this.m_champion)
+		soundpath = this.m_champion.m_soundpath;
 	else
 		soundpath = "player/";
 	playersound(this, chan, strcat(soundpath, sample), 1, atten);
@@ -1461,6 +1357,7 @@ void PutObserverInServer(entity this)
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NONE);
+	clear_powerups(this);
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.effects = 0;
 	this.alpha = 0;
@@ -1625,6 +1522,9 @@ void PutPlayerInServer(entity this)
 
 	status_effects_PutClientInServer(this);
 
+	if(!STAT(SKATING, this))
+		champions_PutPlayerInServer(this);
+
 	//JIM
 	// Clear out velocity so you're not launched into the air
 	// when you respawn.
@@ -1649,20 +1549,11 @@ void PutPlayerInServer(entity this)
 	else
 		this.spawnsilent = false;
 
-	if(this.custom_scale)
-		this.scale = this.custom_scale;
-	else
-		this.scale = 0;
+	this.scale = 0;
 
-	if(this.custom_mins != '0 0 0' && this.custom_maxs != '0 0 0')
-		setsize(this, this.custom_mins, this.custom_maxs);
-	else
-		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 
-	if(this.custom_viewofs != '0 0 0')
-		this.view_ofs = this.custom_viewofs;
-	else
-		this.view_ofs = '0 0 22';
+	this.view_ofs = '0 0 22';
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	player_stand1(this);
@@ -2024,7 +1915,6 @@ void PlayerDeathThink(entity this)
 	respawn(this);
 }
 
-
 /*
 ================
 PlayerPreThink
@@ -2105,6 +1995,9 @@ void PlayerPreThink(entity this)
 	
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
+
+	if(!STAT(SKATING, this))
+		champions_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
@@ -2620,7 +2513,11 @@ void CheckHealthRot(entity this)
 	if(this.healthrot_nextcheck > time)
 		return;
 
-	if(this.health > this.max_health)
+	float hp_rot_max = this.max_health;
+	if(this.m_champion)
+		hp_rot_max *= this.m_champion.qcc_health_rot_max;
+
+	if(this.health > hp_rot_max)
 	{
 		this.health -= 1;
 		this.healthrot_nextcheck = time + 1;

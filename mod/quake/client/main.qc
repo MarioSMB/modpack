@@ -3,6 +3,7 @@
 #include "centerprint.qh"
 #include "sbar.qh"
 #include "shop.qh"
+#include "../common/champions/_mod.qh"
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
@@ -123,6 +124,9 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 	if(cl_shop_input_event(evtype, nPrimary, nSecondary, 0))
 		return true;
 
+	if(cl_champion_input_event(evtype, nPrimary, nSecondary, 0))
+		return true;
+
 	if(inputType == 3)
 	{
 		mousepos.x = nPrimary;
@@ -234,6 +238,9 @@ void GameCommand(string command)
 			localcmd(strcat("cmd vote ", vote_string, "\n"));
 		return;
 	}
+
+	if(cl_champion_command(s))
+		return;
 
 	// nothing above caught the command, must be invalid
 	LOG_INFO(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.");

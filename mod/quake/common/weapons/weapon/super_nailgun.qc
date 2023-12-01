@@ -63,8 +63,7 @@ void W_FireSuperSpikes(entity this, .entity weaponentity)
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 	ATTACK_FINISHED(this, weaponentity) = time + 0.2;
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_nails = this.ammo_nails - 2;
+	W_TakeAmmo(this, ammo_nails, 2);
 	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_spike(this, W_Shotorg(this, weaponentity), dir);
 	newmis.projectiledeathtype = WEP_SUPER_NAILGUN.m_id;

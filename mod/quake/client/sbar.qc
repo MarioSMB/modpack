@@ -1,6 +1,7 @@
 #include "sbar.qh"
 
 #include "../common/ent_cs.qh"
+#include "../common/champions/_mod.qh"
 
 float stringwidth(string text, float handleColors, vector sz); // defined in centerprint.qc
 
@@ -43,11 +44,8 @@ string Sbar_PickWeapon_wepname(Weapon wpn)
 	return "shotgun";
 }
 
-bool katria_face_exists;
 PRECACHE(Sbar)
 {
-	katria_face_exists = fexists("gfx/quake/katria_face1.jpg");
-
 	precache_pic("gfx/quake/ranking");
 	precache_pic("gfx/quake/sbar");
 	precache_pic("gfx/quake/scorebar");
@@ -73,41 +71,6 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/num_minus");
 	precache_pic("gfx/quake/num_slash");
 	precache_pic("gfx/quake/num_colon");
-
-	precache_pic("gfx/quake/face_invis");
-	precache_pic("gfx/quake/face_invul2");
-	precache_pic("gfx/quake/face_inv2");
-	precache_pic("gfx/quake/face_quad");
-
-	precache_pic("gfx/quake/face1");
-	precache_pic("gfx/quake/face_p1");
-	precache_pic("gfx/quake/face2");
-	precache_pic("gfx/quake/face_p2");
-	precache_pic("gfx/quake/face3");
-	precache_pic("gfx/quake/face_p3");
-	precache_pic("gfx/quake/face4");
-	precache_pic("gfx/quake/face_p4");
-	precache_pic("gfx/quake/face5");
-	precache_pic("gfx/quake/face_p5");
-
-	if(katria_face_exists)
-	{
-		precache_pic("gfx/quake/katria_face_invis");
-		precache_pic("gfx/quake/katria_face_invul2");
-		precache_pic("gfx/quake/katria_face_inv2");
-		precache_pic("gfx/quake/katria_face_quad");
-
-		precache_pic("gfx/quake/katria_face1");
-		precache_pic("gfx/quake/katria_face_p1");
-		precache_pic("gfx/quake/katria_face2");
-		precache_pic("gfx/quake/katria_face_p2");
-		precache_pic("gfx/quake/katria_face3");
-		precache_pic("gfx/quake/katria_face_p3");
-		precache_pic("gfx/quake/katria_face4");
-		precache_pic("gfx/quake/katria_face_p4");
-		precache_pic("gfx/quake/katria_face5");
-		precache_pic("gfx/quake/katria_face_p5");
-	}
 
 	precache_pic("gfx/quake/sb_sigil1");
 	precache_pic("gfx/quake/sb_sigil2");
@@ -158,8 +121,8 @@ string Sbar_PickWeapon(Weapon wpn)
 string Sbar_FacePrefix(string input)
 {
 	string prefix = "gfx/quake/";
-	if(katria_face_exists && csqcplayer && csqcplayer.model == "progs/player_katria.mdl")
-		prefix = "gfx/quake/katria_";
+	if(csqcplayer && csqcplayer.m_champion)
+		prefix = csqcplayer.m_champion.m_faceprefix;
 	return strcat(prefix, input);
 }
 

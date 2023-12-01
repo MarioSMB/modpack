@@ -200,7 +200,7 @@ void VolMisTouch(entity this, entity toucher)
 	if(toucher.health)
 	{
 		SpawnBlood(this.origin, this.velocity*0.2, 50, toucher);
-		T_Damage(toucher, this, this, 80, DEATH_MONSTER_VOLKERH.m_id);
+		T_Damage(toucher, this, this.owner, 80, DEATH_MONSTER_VOLKERH.m_id);
 	}
 	T_RadiusDamage(this, this.owner, 80, DEATH_MONSTER_VOLKERH.m_id, toucher);
 	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);

@@ -277,6 +277,12 @@ void PrecacheMonsters()
 	precache_sound("items/jboots_timed.wav");
 	precache_sound("items/goomba.wav");
 
+	// sharp shooter
+	precache_model("progs/artifact_sharp.mdl");
+	precache_sound("items/sharp.wav");
+	precache_sound("items/sharp2.wav");
+	precache_sound("items/sharp3.wav");
+
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
 	{

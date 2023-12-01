@@ -22,6 +22,7 @@
 #include "impulses/_mod.inc"
 #include "monsters/_mod.inc"
 #include "kickflip/_mod.inc"
+#include "champions/_mod.inc"
 
 // TODO
 #ifdef CSQC

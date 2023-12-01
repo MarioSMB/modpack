@@ -5,6 +5,10 @@
 // hack needed for xonotic references (helps reduce code duplication!)
 #define PHYS_INVEHICLE(s) 					false
 
+#ifdef SVQC
+bool autocvar_sv_quake_fixstuff;
+#endif
+
 // temporary hack for mission pack logic
 #ifdef SVQC
 	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic

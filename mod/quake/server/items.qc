@@ -117,9 +117,12 @@ HEALTH BOX
 //
 bool T_Heal(entity e, float healamount, bool ignore)
 {
+	float hp_heal_max = e.max_health;
+	if(e.m_champion)
+		hp_heal_max *= e.m_champion.qcc_health_heal_max;
 	if(e.health <= 0)
 		return false;
-	if((!ignore) &&(e.health >= e.max_health))
+	if((!ignore) &&(e.health >= hp_heal_max))
 		return false;
 	healamount = ceil(healamount);
 
@@ -128,11 +131,14 @@ bool T_Heal(entity e, float healamount, bool ignore)
 		e.hunger_time = time + HUNGER_MAX;
 
 	e.health = e.health + healamount;
-	if((!ignore) &&(e.health >= e.max_health))
-		e.health = e.max_health;
-		
-	if(e.health > 250)
-		e.health = 250;
+	if((!ignore) &&(e.health >= hp_heal_max))
+		e.health = hp_heal_max;
+
+	float hp_heal_cap = 250;
+	if(e.m_champion)
+		hp_heal_cap *= e.m_champion.qcc_health_heal_cap;
+	if(e.health > hp_heal_cap)
+		e.health = hp_heal_cap;
 	return true;
 }
 
@@ -585,6 +591,9 @@ void weapon_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 
 	bound_other_ammo(toucher);
+
+	if(toucher.m_champion && toucher.m_champion.m_pickup_weapon)
+		toucher.m_champion.m_pickup_weapon(toucher.m_champion, toucher, this);
 
 // change to the weapon
 	if(STAT(WEAPONS, toucher) & wep.m_wepset)
@@ -1133,6 +1142,9 @@ void key_touch(entity this, entity toucher)
 	}
 	else
 		toucher.items |= this.items;
+
+	if(toucher.m_champion && toucher.m_champion.m_pickup_key)
+		toucher.m_champion.m_pickup_key(toucher.m_champion, toucher, this);
 }
 
 bool key_customize(entity this, entity client)
@@ -1272,6 +1284,9 @@ void sigil_touch(entity this, entity toucher)
 			it.hunger_time = time + HUNGER_MAX;
 		});
 	}
+
+	if(toucher.m_champion && toucher.m_champion.m_pickup_sigil)
+		toucher.m_champion.m_pickup_sigil(toucher.m_champion, toucher, this);
 
 	SUB_UseTargets(this, toucher, NULL); // fire all targets / killtargets
 }
@@ -1446,7 +1461,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	else
 		set_movetype(monster, MOVETYPE_STEP);
 
-	if(!(monster.flags & FL_SWIM))
+	if(!(monster.flags & FL_SWIM) && !(mon.spawnflags & MONSTER_TYPE_BOSS))
 	{
 		IL_PUSH(g_damagedbycontents, monster);
 		monster.damagedbycontents	= true;
@@ -1647,8 +1662,11 @@ void powerup_touch(entity this, entity toucher)
 	if(this.powerups & POWERUP_SHARPSHOOTER)
 	{
 		toucher.sharp_time = 1;
-		toucher.sharp_finished = time + ((horde_ent) ? 15 : 30);
+		toucher.sharp_finished = time + ((horde_ent) ? 10 : 30);
 	}
+
+	if(toucher.m_champion && toucher.m_champion.m_pickup_powerup)
+		toucher.m_champion.m_pickup_powerup(toucher.m_champion, toucher, this);
 }
 
 

@@ -1,0 +1,12 @@
+// generated file; do not modify
+#include "bigjohn.qc"
+#include "doom.qc"
+#include "duke.qc"
+#include "dusk.qc"
+#include "goat.qc"
+#include "katria.qc"
+#include "keen.qc"
+#include "mario.qc"
+#include "nyx.qc"
+#include "ranger.qc"
+#include "sorlag.qc"

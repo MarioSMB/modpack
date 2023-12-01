@@ -1,0 +1,71 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Doom, "progs/player_doom.mdl");
+MODEL(Doom_Head, "progs/h_player_doom.mdl");
+
+SOUND(Doom_Pain1, "player_doom/pain1");
+SOUND(Doom_Pain2, "player_doom/pain2");
+SOUND(Doom_Pain3, "player_doom/pain3");
+SOUND(Doom_Pain4, "player_doom/pain4");
+SOUND(Doom_Pain5, "player_doom/pain5");
+SOUND(Doom_Pain6, "player_doom/pain6");
+Sound SND_Doom_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Doom_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Doom_Death1, "player_doom/death1");
+SOUND(Doom_Death2, "player_doom/death2");
+SOUND(Doom_Death3, "player_doom/death3");
+SOUND(Doom_Death4, "player_doom/death4");
+Sound SND_Doom_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Doom_Death1.m_id + rint(random() * 3));
+}
+PRECACHE(Doom)
+{
+#ifdef SVQC
+    precache_sound("player_doom/plyrjmp8.wav");       // player jump
+    precache_sound("player_doom/land.wav");           // player landing
+    precache_sound("player_doom/land2.wav");      // player hurt landing
+    precache_sound("player_doom/drown1.wav");     // drowning pain
+    precache_sound("player_doom/drown2.wav");     // drowning pain
+    precache_sound("player_doom/gasp1.wav");      // gasping for air
+    precache_sound("player_doom/gasp2.wav");      // taking breath
+    precache_sound("player_doom/h2odeath.wav");       // drowning death
+
+    precache_sound("player_doom/pain1.wav");
+    precache_sound("player_doom/pain2.wav");
+    precache_sound("player_doom/pain3.wav");
+    precache_sound("player_doom/pain4.wav");
+    precache_sound("player_doom/pain5.wav");
+    precache_sound("player_doom/pain6.wav");
+
+    precache_sound("player_doom/death1.wav");
+    precache_sound("player_doom/death2.wav");
+    precache_sound("player_doom/death3.wav");
+    precache_sound("player_doom/death4.wav");
+
+    precache_sound("player_doom/axhit1.wav");
+
+    precache_sound("player_doom/lburn1.wav");     // lava burn
+    precache_sound("player_doom/lburn2.wav");     // lava burn
+
+    precache_model("progs/v_punch.mdl");
+#endif
+}
+#endif
+CLASS(Doom, Champions)
+    ATTRIB(Doom, netname, string, "doom");
+    ATTRIB(Doom, m_name, string, "Doom");
+    ATTRIB(Doom, qcc_meleename, string, "punch");
+#ifdef GAMEQC
+    ATTRIB(Doom, m_model, Model, MDL_Doom);
+    ATTRIB(Doom, m_model_head, Model, MDL_Doom_Head);
+    ATTRIB(Doom, m_soundpath, string, "player_doom/");
+    METHOD(Doom, m_sound_pain, string()) { return SND(Doom_Pain_Random()); }
+    METHOD(Doom, m_sound_death, string()) { return SND(Doom_Death_Random()); }
+#endif
+ENDCLASS(Doom)
+REGISTER_CHAMPION(Doom, NEW(Doom));

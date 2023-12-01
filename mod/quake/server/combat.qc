@@ -168,6 +168,8 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 
 	targ.enemy = attacker;
 
+	champions_Killed(targ, inflictor, attacker, deathtype);
+
 	// Yoder March04 2022, punish team killspree
 	if(horde_ent && IS_PLAYER(attacker) && IS_PLAYER(targ))
 	{
@@ -326,6 +328,12 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			return;
 	}
 
+	if(targ.m_champion)
+		damage *= targ.m_champion.qcc_damagetaken;
+
+	if(attacker.m_champion && attacker.m_champion.m_damage)
+		damage *= attacker.m_champion.m_damage(attacker.m_champion, targ, inflictor, attacker, damage, deathtype);
+
 // check for quad damage powerup on the attacker
 	if(attacker.super_damage_finished > time)
 		damage = damage * 4;
@@ -358,7 +366,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 // save damage based on the target's armor level
 
 	float save = ceil(targ.armortype * damage);
-	if(DEATH_IS(deathtype, DEATH_DROWN) || DEATH_IS(deathtype, DEATH_POISONED) || DEATH_IS(deathtype, DEATH_BURNING))
+	if(DEATH_IS(deathtype, DEATH_DROWN) || DEATH_IS(deathtype, DEATH_POISONED) || DEATH_IS(deathtype, DEATH_BURNING) || DEATH_IS(deathtype, DEATH_GENERIC))
 		save = 0;
 
 	float take = ceil(damage-save);

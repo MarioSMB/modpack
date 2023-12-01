@@ -1,0 +1,74 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Sorlag, "progs/player_sorlag.mdl");
+MODEL(Sorlag_Head, "progs/h_player_sorlag.mdl");
+
+SOUND(Sorlag_Pain1, "player_sorlag/pain1");
+SOUND(Sorlag_Pain2, "player_sorlag/pain2");
+SOUND(Sorlag_Pain3, "player_sorlag/pain3");
+SOUND(Sorlag_Pain4, "player_sorlag/pain4");
+Sound SND_Sorlag_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Sorlag_Pain1.m_id + rint(random() * 3));
+}
+
+SOUND(Sorlag_Death1, "player_sorlag/death1");
+SOUND(Sorlag_Death2, "player_sorlag/death2");
+SOUND(Sorlag_Death3, "player_sorlag/death3");
+Sound SND_Sorlag_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Sorlag_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Sorlag)
+{
+#ifdef SVQC
+    precache_sound("player_sorlag/plyrjmp8.wav");       // player jump
+    precache_sound("player_sorlag/land.wav");           // player landing
+    precache_sound("player_sorlag/land2.wav");      // player hurt landing
+    precache_sound("player_sorlag/drown1.wav");     // drowning pain
+    precache_sound("player_sorlag/drown2.wav");     // drowning pain
+    precache_sound("player_sorlag/gasp1.wav");      // gasping for air
+    precache_sound("player_sorlag/gasp2.wav");      // taking breath
+    precache_sound("player_sorlag/h2odeath.wav");       // drowning death
+
+    precache_sound("player_sorlag/pain1.wav");
+    precache_sound("player_sorlag/pain2.wav");
+    precache_sound("player_sorlag/pain3.wav");
+    precache_sound("player_sorlag/pain4.wav");
+
+    precache_sound("player_sorlag/death1.wav");
+    precache_sound("player_sorlag/death2.wav");
+    precache_sound("player_sorlag/death3.wav");
+
+    precache_sound("player_sorlag/axhit1.wav");
+
+    precache_sound("player_sorlag/lburn1.wav");     // lava burn
+    precache_sound("player_sorlag/lburn2.wav");     // lava burn
+
+    precache_sound("player_sorlag/acidspit.wav");
+
+    precache_sound("player/reptilian/player/pain75.wav"); // placeholder
+
+    precache_model("progs/v_sorclaw.mdl");
+    precache_model("progs/s_sorspit.mdl");
+    precache_model("progs/s_sorpool.mdl");
+    precache_sound("blob/land1.wav"); // reused from spawn sound
+#endif
+}
+#endif
+CLASS(Sorlag, Champions)
+    ATTRIB(Sorlag, netname, string, "sorlag");
+    ATTRIB(Sorlag, m_name, string, "Sorlag");
+    ATTRIB(Sorlag, qcc_swimspeed, float, 2);
+    ATTRIB(Sorlag, qcc_slimedamage, float, 0.33);
+    ATTRIB(Sorlag, qcc_meleename, string, "sorclaw");
+#ifdef GAMEQC
+    ATTRIB(Sorlag, m_model, Model, MDL_Sorlag);
+    ATTRIB(Sorlag, m_model_head, Model, MDL_Sorlag_Head);
+    ATTRIB(Sorlag, m_soundpath, string, "player_sorlag/");
+    METHOD(Sorlag, m_sound_pain, string()) { return SND(Sorlag_Pain_Random()); }
+    METHOD(Sorlag, m_sound_death, string()) { return SND(Sorlag_Death_Random()); }
+#endif
+ENDCLASS(Sorlag)
+REGISTER_CHAMPION(Sorlag, NEW(Sorlag));

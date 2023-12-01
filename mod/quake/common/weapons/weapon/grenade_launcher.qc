@@ -28,8 +28,7 @@ void GrenadeTouch(entity this, entity toucher)
 
 void W_FireGrenade(entity this, .entity weaponentity)
 {
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_rockets -= 1;
+	W_TakeAmmo(this, ammo_rockets, 1);
 	
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 

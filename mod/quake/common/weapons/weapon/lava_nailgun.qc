@@ -40,8 +40,7 @@ void W_FireLavaSpikes(entity this, float ox, .entity weaponentity)
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_lava_nails -= 1;
+	W_TakeAmmo(this, ammo_lava_nails, 1);
 	
 	vector dir = qc_aim(this, 1000);
 	entity missile = launch_lava_spike(this, W_Shotorg(this, weaponentity) + v_up * -8 + v_right * ox, dir);

@@ -159,8 +159,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum, .entity weapon
 
 void W_FireMultiRocket(entity this, .entity weaponentity)
 {
-	if(!(this.powerups & POWERUP_SHARPSHOOTER))
-		this.ammo_multi_rockets -= 1;
+	W_TakeAmmo(this, ammo_multi_rockets, 1);
 	
 	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 

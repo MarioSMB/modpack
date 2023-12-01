@@ -1,0 +1,93 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Katria, "progs/player_katria.mdl");
+MODEL(Katria_Head, "progs/h_player_katria.mdl");
+
+SOUND(Katria_Pain1, "player_katria/pain1");
+SOUND(Katria_Pain2, "player_katria/pain2");
+SOUND(Katria_Pain3, "player_katria/pain3");
+SOUND(Katria_Pain4, "player_katria/pain4");
+SOUND(Katria_Pain5, "player_katria/pain5");
+SOUND(Katria_Pain6, "player_katria/pain6");
+Sound SND_Katria_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Katria_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Katria_Death1, "player_katria/death1");
+SOUND(Katria_Death2, "player_katria/death2");
+SOUND(Katria_Death3, "player_katria/death3");
+SOUND(Katria_Death4, "player_katria/death4");
+SOUND(Katria_Death5, "player_katria/death5");
+Sound SND_Katria_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Katria_Death1.m_id + rint(random() * 4));
+}
+PRECACHE(Katria)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/katria_face_invis");
+    precache_pic("gfx/quake/katria_face_invul2");
+    precache_pic("gfx/quake/katria_face_inv2");
+    precache_pic("gfx/quake/katria_face_quad");
+
+    precache_pic("gfx/quake/katria_face1");
+    precache_pic("gfx/quake/katria_face_p1");
+    precache_pic("gfx/quake/katria_face2");
+    precache_pic("gfx/quake/katria_face_p2");
+    precache_pic("gfx/quake/katria_face3");
+    precache_pic("gfx/quake/katria_face_p3");
+    precache_pic("gfx/quake/katria_face4");
+    precache_pic("gfx/quake/katria_face_p4");
+    precache_pic("gfx/quake/katria_face5");
+    precache_pic("gfx/quake/katria_face_p5");
+#endif
+#ifdef SVQC
+    precache_sound("player_katria/plyrjmp8.wav");       // player jump
+    precache_sound("player_katria/land.wav");           // player landing
+    precache_sound("player_katria/land2.wav");      // player hurt landing
+    precache_sound("player_katria/drown1.wav");     // drowning pain
+    precache_sound("player_katria/drown2.wav");     // drowning pain
+    precache_sound("player_katria/gasp1.wav");      // gasping for air
+    precache_sound("player_katria/gasp2.wav");      // taking breath
+    precache_sound("player_katria/h2odeath.wav");       // drowning death
+
+    precache_sound("player_katria/pain1.wav");
+    precache_sound("player_katria/pain2.wav");
+    precache_sound("player_katria/pain3.wav");
+    precache_sound("player_katria/pain4.wav");
+    precache_sound("player_katria/pain5.wav");
+    precache_sound("player_katria/pain6.wav");
+
+    precache_sound("player_katria/death1.wav");
+    precache_sound("player_katria/death2.wav");
+    precache_sound("player_katria/death3.wav");
+    precache_sound("player_katria/death4.wav");
+    precache_sound("player_katria/death5.wav");
+
+    precache_sound("player_katria/axhit1.wav");
+
+    precache_sound("player_katria/lburn1.wav");     // lava burn
+    precache_sound("player_katria/lburn2.wav");     // lava burn
+#endif
+}
+#endif
+CLASS(Katria, Champions)
+    ATTRIB(Katria, netname, string, "katria");
+    ATTRIB(Katria, m_name, string, "Katria");
+    ATTRIB(Katria, qcc_movespeed, float, 1.33);
+    ATTRIB(Katria, qcc_damagetaken, float, 1.2);
+    ATTRIB(Katria, qcc_health_regen_rate, float, 0.25);
+#ifdef GAMEQC
+    ATTRIB(Katria, m_model, Model, MDL_Katria);
+    ATTRIB(Katria, m_model_head, Model, MDL_Katria_Head);
+    ATTRIB(Katria, m_soundpath, string, "player_katria/");
+    METHOD(Katria, m_sound_pain, string()) { return SND(Katria_Pain_Random()); }
+    METHOD(Katria, m_sound_death, string()) { return SND(Katria_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Katria, m_faceprefix, string, "gfx/quake/katria_");
+#endif
+ENDCLASS(Katria)
+REGISTER_CHAMPION(Katria, NEW(Katria));

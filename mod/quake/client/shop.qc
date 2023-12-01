@@ -166,7 +166,7 @@ void entity_list(string id, vector pos, vector size)
 
 void cl_shop_draw()
 {
-	if(!cursor_active)
+	if(!(cursor_active & GUI_OPEN_SHOP))
 		return;
 
 	if(STAT(SHOP_OPEN) < time)
@@ -215,14 +215,14 @@ void cl_shop_draw()
 void shop_open()
 {
 	selected_entity_index = 0;
-	cursor_active = true;
+	cursor_active |= GUI_OPEN_SHOP;
 	setcursormode(cursor_active);
 }
 
 void shop_close()
 {
 	selected_entity_index = 0;
-	cursor_active = false;
+	cursor_active &= ~GUI_OPEN_SHOP;
 	setcursormode(cursor_active);
 
 	IL_EACH(g_drawables, it.classname == "ENT_CLIENT_SHOPKEEP",
@@ -253,7 +253,7 @@ bool cl_shop_command(string cmd)
 
 bool cl_shop_input_event(float evtype, float scanx, float chary, float devid)
 {
-	if(!cursor_active)
+	if(!(cursor_active & GUI_OPEN_SHOP))
 		return false;
 	
 	switch(evtype)

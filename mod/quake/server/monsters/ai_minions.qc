@@ -228,7 +228,10 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	setcefc(monster, monster_customize);
 
 	if(monster.charmed)
+	{
 		monster.health = max(monster.health, 1000);
+		monster.health = min(monster.health, own.health);
+	}
 
 	//if(!(mon.spawnflags & MONSTER_TYPE_FLY))
 		//droptofloor(monster);

@@ -1,0 +1,71 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Nyx, "progs/player_nyx.mdl");
+MODEL(Nyx_Head, "progs/h_player_nyx.mdl");
+
+SOUND(Nyx_Pain1, "player_nyx/pain1");
+SOUND(Nyx_Pain2, "player_nyx/pain2");
+SOUND(Nyx_Pain3, "player_nyx/pain3");
+SOUND(Nyx_Pain4, "player_nyx/pain4");
+Sound SND_Nyx_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Nyx_Pain1.m_id + rint(random() * 3));
+}
+
+SOUND(Nyx_Death1, "player_nyx/death1");
+SOUND(Nyx_Death2, "player_nyx/death2");
+SOUND(Nyx_Death3, "player_nyx/death3");
+Sound SND_Nyx_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Nyx_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Nyx)
+{
+#ifdef SVQC
+    precache_sound("player_nyx/plyrjmp8.wav");       // player jump
+    precache_sound("player_nyx/land.wav");           // player landing
+    precache_sound("player_nyx/land2.wav");      // player hurt landing
+    precache_sound("player_nyx/drown1.wav");     // drowning pain
+    precache_sound("player_nyx/drown2.wav");     // drowning pain
+    precache_sound("player_nyx/gasp1.wav");      // gasping for air
+    precache_sound("player_nyx/gasp2.wav");      // taking breath
+    precache_sound("player_nyx/h2odeath.wav");       // drowning death
+
+    precache_sound("player_nyx/pain1.wav");
+    precache_sound("player_nyx/pain2.wav");
+    precache_sound("player_nyx/pain3.wav");
+    precache_sound("player_nyx/pain4.wav");
+
+    precache_sound("player_nyx/death1.wav");
+    precache_sound("player_nyx/death2.wav");
+    precache_sound("player_nyx/death3.wav");
+
+    precache_sound("player_nyx/axhit1.wav");
+
+    precache_sound("player_nyx/lburn1.wav");     // lava burn
+    precache_sound("player_nyx/lburn2.wav");     // lava burn
+
+    precache_sound("player_nyx/invisenter.wav");
+    precache_sound("player_nyx/invis1.wav");
+    precache_sound("player_nyx/invis2.wav");
+    precache_sound("player_nyx/invis3.wav");
+    precache_sound("player_nyx/invis4.wav");
+
+    precache_model("progs/v_nxsword.mdl");
+#endif
+}
+#endif
+CLASS(Nyx, Champions)
+    ATTRIB(Nyx, netname, string, "nyx");
+    ATTRIB(Nyx, m_name, string, "Nyx");
+    ATTRIB(Nyx, qcc_meleename, string, "nxsword");
+#ifdef GAMEQC
+    ATTRIB(Nyx, m_model, Model, MDL_Nyx);
+    ATTRIB(Nyx, m_model_head, Model, MDL_Nyx_Head);
+    ATTRIB(Nyx, m_soundpath, string, "player_nyx/");
+    METHOD(Nyx, m_sound_pain, string()) { return SND(Nyx_Pain_Random()); }
+    METHOD(Nyx, m_sound_death, string()) { return SND(Nyx_Death_Random()); }
+#endif
+ENDCLASS(Nyx)
+REGISTER_CHAMPION(Nyx, NEW(Nyx));

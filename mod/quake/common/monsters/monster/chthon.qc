@@ -213,7 +213,7 @@ void boss_shockb1(entity this) { set_animofs(this, anim_boss_shockb, 1, boss_sho
 
 void boss_death1(entity this);
 
-void boss_shockc10(entity this) { set_animofs(this, anim_boss_shockc, 10, boss_death1); }
+void boss_shockc10(entity this) { set_animofs(this, anim_boss_shockc, 10, boss_death1); Killed(this, this.enemy, this.enemy, DEATH_CRUSH.m_id); }
 void boss_shockc9(entity this) { set_animofs(this, anim_boss_shockc, 9, boss_shockc10); }
 void boss_shockc8(entity this) { set_animofs(this, anim_boss_shockc, 8, boss_shockc9); }
 void boss_shockc7(entity this) { set_animofs(this, anim_boss_shockc, 7, boss_shockc8); }
@@ -368,7 +368,8 @@ void lightning_fire(entity this)
 		door_go_down(le2);
 		return;
 	}
-	
+
+#if 0
 	vector p1 =(le1.mins + le1.maxs) * 0.5;
 	p1.z = le1.absmin_z - 16;
 	
@@ -377,6 +378,12 @@ void lightning_fire(entity this)
 	
 	// compensate for length of bolt
 	p2 = p2 - normalize(p2-p1)*100;
+#else
+	vector p1 = (le1.absmin + le1.absmax) * 0.5;
+	p1.z = le1.absmin_z + 16;
+	vector p2 = (le2.absmin + le2.absmax) * 0.5;
+	p2.z = le2.absmin_z + 16;
+#endif
 
 	this.nextthink = time + 0.1;
 	setthink(this, lightning_fire);
@@ -420,7 +427,15 @@ void lightning_use(entity this, entity actor, entity trigger)
 	lightning_fire(this);		
 
 // advance the boss pain if down
-	entity e = findentity(NULL, monsterdef, MON_CHTHON);
+	entity e = NULL;
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+	{
+		if(it.monsterdef == MON_CHTHON && it.health > 0 && !it.charmed)
+		{
+			e = it;
+			break;
+		}
+	});
 	if(!e)
 		return;
 	e.enemy = actor;
