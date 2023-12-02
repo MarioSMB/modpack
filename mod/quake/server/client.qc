@@ -991,6 +991,7 @@ void ClientKill(entity this)
 		this.health = 0;
 		return;
 	}
+	champions_PlayerDies(this);
 	set_suicide_frame(this);
 	this.modelindex = this.modelindex_player;
 	this.frags = this.frags - 2;	// extra penalty
@@ -1394,6 +1395,8 @@ void PutObserverInServer(entity this)
 
 	//if(this.just_joined)
 	this.just_joined = true; // HACK: for horde to properly "detect" when a player is attempting to join again
+
+	champions_RemovePlayer(this);
 }
 
 void PutPlayerInServer(entity this)
@@ -2818,6 +2821,8 @@ void ClientDisconnect(entity this)
 
 	status_effects_ClientDisconnect(this);
 
+	champions_RemovePlayer(this);
+
 	sphere_remove(this);
 
 	W_Spellbook_ClearSpells(this);
@@ -3187,6 +3192,8 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "tracer")
 	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 300, MOVE_NORMAL, this);
 		sprint(this, strcat("Texture: ", trace_dphittexturename, "\n"));
@@ -3197,6 +3204,8 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "explosion2")
 	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 100, MOVE_NORMAL, this);
 		entity exploder = new(exploder);
@@ -3210,6 +3219,8 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "addmob")
 	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
 		string arg = argv(1);

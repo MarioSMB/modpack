@@ -10,3 +10,4 @@
 #include "nyx.qh"
 #include "ranger.qh"
 #include "sorlag.qh"
+#include "steve.qh"

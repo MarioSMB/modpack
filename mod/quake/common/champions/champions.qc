@@ -95,6 +95,12 @@ void champions_PlayerDies(entity this)
 		this.m_champion.m_clear(this.m_champion, this);
 }
 
+void champions_RemovePlayer(entity this)
+{
+	if(this.m_champion && this.m_champion.m_clear)
+		this.m_champion.m_clear(this.m_champion, this);
+}
+
 void champions_Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 {
 	if(attacker.m_champion && attacker.m_champion.m_killed)
@@ -180,13 +186,13 @@ void cl_champion_draw()
 		return;
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
-	sui_drawtext('0 160 0', '16 16 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
+	sui_drawtext('0 170 0', '16 16 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '280 160 0';
+	vector ent_menu_size = '280 170 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 	

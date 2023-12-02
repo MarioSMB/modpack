@@ -294,6 +294,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 {
 	float r = random();
 	bool showpain = true;
+	float force = damage;
 	if(!targ.takedamage)
 		return;
 
@@ -333,6 +334,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 	if(attacker.m_champion && attacker.m_champion.m_damage)
 		damage *= attacker.m_champion.m_damage(attacker.m_champion, targ, inflictor, attacker, damage, deathtype);
+	if(targ.m_champion && targ.m_champion.m_damage)
+		damage *= targ.m_champion.m_damage(targ.m_champion, targ, inflictor, attacker, damage, deathtype);
 
 // check for quad damage powerup on the attacker
 	if(attacker.super_damage_finished > time)
@@ -386,7 +389,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	{
 		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
-		targ.velocity += dir * damage * 8;
+		targ.velocity += dir * max(damage, force) * 8;
 		targ.velocity_z += 1;
 		UNSET_ONGROUND(targ);
 	}

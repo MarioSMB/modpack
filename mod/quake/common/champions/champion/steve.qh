@@ -1,0 +1,77 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Steve, "progs/player_steve.mdl");
+
+MODEL(Steve_Block, "progs/block.mdl");
+SOUND(Steve_BlockBreak, "player_steve/blockbreak");
+SOUND(Steve_BlockPlace, "player_steve/blockplace");
+
+SOUND(Steve_Pain1, "player_steve/pain1");
+SOUND(Steve_Pain2, "player_steve/pain2");
+SOUND(Steve_Pain3, "player_steve/pain3");
+Sound SND_Steve_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Steve_Pain1.m_id + rint(random() * 2));
+}
+
+SOUND(Steve_Death1, "player_steve/death1");
+SOUND(Steve_Death2, "player_steve/death2");
+SOUND(Steve_Death3, "player_steve/death3");
+Sound SND_Steve_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Steve_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Steve)
+{
+#ifdef SVQC
+    precache_sound("player_steve/plyrjmp8.wav");       // player jump
+    precache_sound("player_steve/land.wav");           // player landing
+    precache_sound("player_steve/land2.wav");      // player hurt landing
+    precache_sound("player_steve/drown1.wav");     // drowning pain
+    precache_sound("player_steve/drown2.wav");     // drowning pain
+    precache_sound("player_steve/gasp1.wav");      // gasping for air
+    precache_sound("player_steve/gasp2.wav");      // taking breath
+    precache_sound("player_steve/h2odeath.wav");       // drowning death
+
+    precache_sound("player_steve/pain1.wav");
+    precache_sound("player_steve/pain2.wav");
+    precache_sound("player_steve/pain3.wav");
+
+    precache_sound("player_steve/death1.wav");
+    precache_sound("player_steve/death2.wav");
+    precache_sound("player_steve/death3.wav");
+
+    precache_sound("player_steve/axhit1.wav");
+
+    precache_sound("player_steve/lburn1.wav");     // lava burn
+    precache_sound("player_steve/lburn2.wav");     // lava burn
+
+    precache_sound("player_steve/start.wav");
+#endif
+}
+#endif
+CLASS(Steve, Champions)
+    ATTRIB(Steve, netname, string, "steve");
+    ATTRIB(Steve, m_name, string, "Steve");
+    ATTRIB(Steve, qcc_pogo, bool, true);
+    ATTRIB(Steve, m_scale, float, 0.75);
+    ATTRIB(Steve, qcc_movespeed, float, 0.8);
+    ATTRIB(Steve, qcc_falldamage, float, 5);
+#ifdef GAMEQC
+    ATTRIB(Steve, m_model, Model, MDL_Steve);
+    ATTRIB(Steve, m_model_head, Model, MDL_Null);
+    ATTRIB(Steve, m_soundpath, string, "player_steve/");
+    METHOD(Steve, m_sound_pain, string()) { return SND(Steve_Pain_Random()); }
+    METHOD(Steve, m_sound_death, string()) { return SND(Steve_Death_Random()); }
+#endif
+ENDCLASS(Steve)
+REGISTER_CHAMPION(Steve, NEW(Steve));
+
+#ifdef SVQC
+IntrusiveList g_blocks;
+STATIC_INIT(Steve_Defs)
+{
+    g_blocks = IL_NEW();
+}
+#endif

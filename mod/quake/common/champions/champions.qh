@@ -19,6 +19,8 @@ void champions_PlayerPreThink(entity this);
 
 void champions_PlayerDies(entity this);
 
+void champions_RemovePlayer(entity this);
+
 void champions_Killed(entity targ, entity inflictor, entity attacker, int deathtype);
 #endif
 

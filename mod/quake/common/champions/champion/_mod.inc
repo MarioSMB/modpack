@@ -10,3 +10,4 @@
 #include "nyx.qc"
 #include "ranger.qc"
 #include "sorlag.qc"
+#include "steve.qc"

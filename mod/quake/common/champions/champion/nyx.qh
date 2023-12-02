@@ -22,6 +22,23 @@ Sound SND_Nyx_Death_Random() {
 }
 PRECACHE(Nyx)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/katria_face_invis");
+    precache_pic("gfx/quake/katria_face_invul2");
+    precache_pic("gfx/quake/katria_face_inv2");
+    precache_pic("gfx/quake/katria_face_quad");
+
+    precache_pic("gfx/quake/katria_face1");
+    precache_pic("gfx/quake/katria_face_p1");
+    precache_pic("gfx/quake/katria_face2");
+    precache_pic("gfx/quake/katria_face_p2");
+    precache_pic("gfx/quake/katria_face3");
+    precache_pic("gfx/quake/katria_face_p3");
+    precache_pic("gfx/quake/katria_face4");
+    precache_pic("gfx/quake/katria_face_p4");
+    precache_pic("gfx/quake/katria_face5");
+    precache_pic("gfx/quake/katria_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_nyx/plyrjmp8.wav");       // player jump
     precache_sound("player_nyx/land.wav");           // player landing
@@ -66,6 +83,9 @@ CLASS(Nyx, Champions)
     ATTRIB(Nyx, m_soundpath, string, "player_nyx/");
     METHOD(Nyx, m_sound_pain, string()) { return SND(Nyx_Pain_Random()); }
     METHOD(Nyx, m_sound_death, string()) { return SND(Nyx_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Nyx, m_faceprefix, string, "gfx/quake/katria_");
 #endif
 ENDCLASS(Nyx)
 REGISTER_CHAMPION(Nyx, NEW(Nyx));
