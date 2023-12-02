@@ -1501,7 +1501,6 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 // hacked copy of what monsters do during ai_run
 void invis_enemy_dropaggro(entity this)
 {
-	entity oldtarg = this.oldenemy;
 	this.enemy = NULL;
 	if(this.charmed)
 	{
