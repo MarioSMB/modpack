@@ -346,7 +346,7 @@ void Duke_PreJump(entity actor)
 {
 	actor.jetpack_status = false;
 
-	if(!PHYS_INPUT_BUTTON_JUMP(actor))
+	if(!PHYS_INPUT_BUTTON_CROUCH(actor))
 		actor.jetpack_stopped = false;
 }
 
@@ -362,7 +362,7 @@ METHOD(Duke, m_physics, bool(Duke this, entity actor, float dt))
 
 METHOD(Duke, m_doublejump, bool(Duke this, entity actor))
 {
-	if(PHYS_INPUT_BUTTON_JUMP(actor))
+	if(PHYS_INPUT_BUTTON_CROUCH(actor))
 	{
 		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
 
@@ -372,7 +372,7 @@ METHOD(Duke, m_doublejump, bool(Duke this, entity actor))
 			actor.jetpack_stopped = true;
 			actor.jetpack_status = false;	
 		}
-		else if(!IS_JUMP_HELD(actor))
+		else
 		{
 			actor.jetpack_status = true;
 		}
