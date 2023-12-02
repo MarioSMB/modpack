@@ -48,7 +48,7 @@ PRECACHE(Sorlag)
 
     precache_sound("player_sorlag/acidspit.wav");
 
-    precache_sound("player/reptilian/player/pain75.wav"); // placeholder
+    precache_sound("player_sorlag/start.wav");
 
     precache_model("progs/v_sorclaw.mdl");
     precache_model("progs/s_sorspit.mdl");

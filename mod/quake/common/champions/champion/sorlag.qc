@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Sorlag, m_activate, void(Sorlag this, entity actor))
 {
-	_sound(actor, CH_VOICE, "player/reptilian/player/pain75.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 }
 
 void Sorlag_AcidPoolTouch(entity this, entity toucher)

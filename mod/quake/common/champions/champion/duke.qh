@@ -144,3 +144,7 @@ REGISTER_CHAMPION(Duke, NEW(Duke));
 #ifdef SVQC
 .float duke_taunt_timer;
 #endif
+.bool jetpack_stopped;
+.bool jetpack_status;
+
+void Duke_PreJump(entity actor);

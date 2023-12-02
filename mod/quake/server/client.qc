@@ -1945,6 +1945,8 @@ void PlayerPreThink(entity this)
 
 	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
 
+	this.modelflags &= ~MF_ROCKET; // always do this regardless
+
 	if(this.exptime != 0)
 		return;
 

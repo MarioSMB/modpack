@@ -52,6 +52,8 @@ PRECACHE(Doom)
     precache_sound("player_doom/lburn1.wav");     // lava burn
     precache_sound("player_doom/lburn2.wav");     // lava burn
 
+    precache_sound("player_doom/start.wav");
+
     precache_model("progs/v_punch.mdl");
 #endif
 }

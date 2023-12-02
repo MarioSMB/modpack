@@ -3,6 +3,9 @@ void QCC_FixClient(entity this)
 #ifdef CSQC
 	this.m_champion = REGISTRY_GET(Champion, STAT(QCC_CHAMPION, this));
 #endif
+
+	if(this.m_champion && this.m_champion.m_fixclient)
+		this.m_champion.m_fixclient(this.m_champion, this);
 }
 
 #ifdef GAMEQC

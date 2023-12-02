@@ -57,12 +57,12 @@ METHOD(Keen, m_playerjump, float(Keen this, entity actor))
 {
 #ifdef CSQC
 	if(viewmodels[0].activeweapon == WEP_AXE)
-		return 1;
+		return 0;
 #endif
 #ifdef SVQC
 	.entity weaponentity = weaponentities[0];
 	if(actor.(weaponentity).m_weapon == WEP_AXE)
-		return 1;
+		return 0;
 #endif
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6))
 		return 2.5;

@@ -1333,6 +1333,16 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 	}
 
 	Weapon wep = this.(weaponentity).m_weapon;
+	if(autocvar_sv_quake_fixstuff & 2)
+	{
+		RandomSelection_Init();
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		wep = RandomSelection_chosen_ent;
+	}
+
 	if(!STAT(SKATING, this) && !(time < ATTACK_FINISHED(this, weaponentity)))
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity

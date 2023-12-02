@@ -80,6 +80,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_doublejump, bool(Champions this, entity actor)) { return false; };
 #endif
     METHOD(Champions, m_physics, bool(Champions this, entity actor, float dt)) { return false; };
+    METHOD(Champions, m_fixclient, void(Champions this, entity actor)) { };
 #ifdef CSQC
     ATTRIB(Champions, m_faceprefix, string, "gfx/quake/");
 #endif

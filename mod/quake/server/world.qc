@@ -1954,7 +1954,7 @@ void Quake_FixStuff(entity this)
 		this.scale_fixtime = time + 0.5;
 	}
 
-	if(time > this.color_fixtime)
+	if(time > this.color_fixtime && (autocvar_sv_quake_fixstuff & 4))
 	{
 		this.colormod = randomvec() * 4;
 		this.color_fixtime = time + 0.25;
@@ -1982,12 +1982,15 @@ void Physics_Frame()
 		if(autocvar_sv_quake_fixstuff && it.move_movetype != MOVETYPE_PUSH && it.move_movetype != MOVETYPE_FAKEPUSH && it.move_movetype != MOVETYPE_PHYSICS)
 		{
 			Quake_FixStuff(it);
-			if(time > it.frame_fixtime)
+			if(autocvar_sv_quake_fixstuff & 8)
 			{
-				it.temp_frametime = myframetime * (random() * 3);
-				it.frame_fixtime = time + 1;
+				if(time > it.frame_fixtime)
+				{
+					it.temp_frametime = myframetime * (random() * 3);
+					it.frame_fixtime = time + 1;
+				}
+				myframetime = it.temp_frametime;
 			}
-			myframetime = it.temp_frametime;
 		}
 
 		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)

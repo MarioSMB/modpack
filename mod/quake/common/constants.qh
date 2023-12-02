@@ -6,7 +6,7 @@
 #define PHYS_INVEHICLE(s) 					false
 
 #ifdef SVQC
-bool autocvar_sv_quake_fixstuff;
+int autocvar_sv_quake_fixstuff;
 #endif
 
 // temporary hack for mission pack logic

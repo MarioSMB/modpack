@@ -167,6 +167,9 @@ void PlayerJump(entity this)
 			mjumpheight *= 1.5;
 	}
 
+	if(mjumpheight <= 0)
+		return;
+
 	if(PHYS_SKATING(this))
 	{
 		if(!PHYS_BOARD_FALLING(this))
@@ -491,8 +494,9 @@ void PM_Main(entity this, float dt)
 
 	PM_RollView(this);
 
-	if(champions_PlayerPhysics(this, dt))
-		return;
+	// TODO clean up this mess of a setup
+	if(this.m_champion && this.m_champion == CHAMPION_Duke)
+		Duke_PreJump(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
 		PlayerJump(this);
@@ -501,6 +505,8 @@ void PM_Main(entity this, float dt)
 
 	if(PHYS_SKATING(this))
 		skate_drive(this);
+	else if(champions_PlayerPhysics(this, dt))
+		return;
 
 	WaterMove(this, dt);
 
@@ -611,5 +617,10 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 
 #ifdef SVQC
 	this.pm_frametime = frametime;
+#elif defined(CSQC)
+	if(this.jetpack_status && !this.csqcmodel_isdead && !intermission)
+		this.csqcmodel_modelflags |= MF_ROCKET;
+	else
+		this.csqcmodel_modelflags &= ~MF_ROCKET;
 #endif
 }

@@ -56,7 +56,7 @@ METHOD(Goat, m_physics, bool(Goat this, entity actor, float dt))
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor))
 	{
 	#ifdef SVQC
-		if(random() < 0.1)
+		if(autocvar_sv_quake_fixstuff || random() < 0.1)
 			player_sound(actor, CH_WEAPON_SINGLE, "death2.wav", ATTN_NORM);
 		else
 			_sound(actor, CH_WEAPON_SINGLE, SND(Goat_Pain_Random()), 1, ATTN_NORM);

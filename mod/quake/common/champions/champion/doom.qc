@@ -1,6 +1,11 @@
 #include "doom.qh"
 
 #ifdef SVQC
+METHOD(Doom, m_activate, void(Doom this, entity actor))
+{
+	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+}
+
 METHOD(Doom, m_takeammo, bool(Doom this, entity actor))
 {
 	return (random() < 0.2);

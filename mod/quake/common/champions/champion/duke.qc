@@ -36,6 +36,17 @@ METHOD(Duke, m_activate, void(Duke this, entity actor))
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
 }
 
+METHOD(Duke, m_playerthink, void(Duke this, entity actor))
+{
+	if(actor.jetpack_status && actor.health > 0 && !intermission_running)
+		actor.modelflags |= MF_ROCKET;
+	else
+		actor.modelflags &= ~MF_ROCKET;
+
+	if(!actor.jetpack_status && IS_ONGROUND(actor))
+		STAT(QCC_JETPACKFUEL, actor) = 100;
+}
+
 METHOD(Duke, m_playerspawn, void(Duke this, entity actor))
 {
 	string s = "";
@@ -57,6 +68,9 @@ METHOD(Duke, m_playerspawn, void(Duke this, entity actor))
 	else
 		s = "mthrfkr.wav";
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+
+	actor.jetpack_status = false;
+	STAT(QCC_JETPACKFUEL, actor) = 100;
 }
 
 METHOD(Duke, m_killed, void(Duke this, entity targ, entity inflictor, entity attacker, int deathtype))
@@ -219,48 +233,154 @@ METHOD(Duke, m_pickup_sigil, void(Duke this, entity actor, entity item))
 }
 #endif
 
-#if 0
+void PM_jetpack(entity this, float maxspd_mod, float dt)
+{
+	//makevectors(this.v_angle.y * '0 1 0');
+	makevectors(this.v_angle);
+	vector wishvel = v_forward * this.movement_x
+					+ v_right * this.movement_y;
+	// add remaining speed as Z component
+	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
+	// fix speedhacks :P
+	wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
+	// add the unused velocity as up component
+	wishvel_z = 0;
+
+	// if (PHYS_INPUT_BUTTON_JUMP(this))
+		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
+
+	// it is now normalized, so...
+	float a_side = 300;
+	float a_up = 500;
+	float a_add = 0.8 * PHYS_GRAVITY(this);
+
+	wishvel_x *= a_side;
+	wishvel_y *= a_side;
+	wishvel_z *= a_up;
+	wishvel_z += a_add;
+
+	float best = 0;
+	//////////////////////////////////////////////////////////////////////////////////////
+	// finding the maximum over all vectors of above form
+	// with wishvel having an absolute value of 1
+	//////////////////////////////////////////////////////////////////////////////////////
+	// we're finding the maximum over
+	//   f(a_side, a_up, a_add, z) := a_side * (1 - z^2) + (a_add + a_up * z)^2;
+	// for z in the range from -1 to 1
+	//////////////////////////////////////////////////////////////////////////////////////
+	// maximum is EITHER attained at the single extreme point:
+	float a_diff = a_side * a_side - a_up * a_up;
+	float f;
+	if (a_diff != 0)
+	{
+		f = a_add * a_up / a_diff; // this is the zero of diff(f(a_side, a_up, a_add, z), z)
+		if (f > -1 && f < 1) // can it be attained?
+		{
+			best = (a_diff + a_add * a_add) * (a_diff + a_up * a_up) / a_diff;
+			//print("middle\n");
+		}
+	}
+	// OR attained at z = 1:
+	f = (a_up + a_add) * (a_up + a_add);
+	if (f > best)
+	{
+		best = f;
+		//print("top\n");
+	}
+	// OR attained at z = -1:
+	f = (a_up - a_add) * (a_up - a_add);
+	if (f > best)
+	{
+		best = f;
+		//print("bottom\n");
+	}
+	best = sqrt(best);
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//print("best possible acceleration: ", ftos(best), "\n");
+
+	float fxy, fz;
+	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / 300, 1);
+	if (wishvel_z - PHYS_GRAVITY(this) > 0)
+		fz = bound(0, 1 - this.velocity_z / 500, 1);
+	else
+		fz = bound(0, 1 + this.velocity_z / 500, 1);
+
+	float fvel;
+	fvel = vlen(wishvel);
+	wishvel_x *= fxy;
+	wishvel_y *= fxy;
+	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
+
+	fvel = min(1, vlen(wishvel) / best);
+	//if (PHYS_JETPACK_FUEL(this))
+		f = min(1, 100 / (100 * dt * fvel));
+	//else
+		//f = 1;
+
+	//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
+
+	if (f > 0 && wishvel != '0 0 0')
+	{
+		this.velocity = this.velocity + wishvel * f * dt;
+		UNSET_ONGROUND(this);
+
+#ifdef SVQC
+		STAT(QCC_JETPACKFUEL, this) -= 100 * dt * fvel * f;
+		if(STAT(QCC_JETPACKFUEL, this) <= 0)
+			STAT(QCC_JETPACKFUEL, this) = 0;
+
+		this.jetpack_status = true;
+#endif
+	}
+}
+
+#ifdef SVQC
+METHOD(Duke, m_fixclient, void(Duke this, entity actor))
+{
+	actor.jetpack_status = STAT(QCC_JETPACK, actor);
+}
+#endif
+
+void Duke_PreJump(entity actor)
+{
+	actor.jetpack_status = false;
+
+	if(!PHYS_INPUT_BUTTON_JUMP(actor))
+		actor.jetpack_stopped = false;
+}
+
 METHOD(Duke, m_physics, bool(Duke this, entity actor, float dt))
 {
-#ifdef CSQC
-	if(viewmodels[0].activeweapon != WEP_AXE)
-		return false;
-#endif
-#ifdef SVQC
-	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon != WEP_AXE)
-		return false;
-#endif
-	if(actor.waterlevel > 0)
-		return false;
-	if(IS_ONGROUND(actor))
+	if(actor.jetpack_status)
 	{
-		if(PHYS_INPUT_BUTTON_JUMP(actor))
-			actor.velocity_z += 540;
-		else
-			actor.velocity_z += 270;
-	#ifdef SVQC
-		player_sound(actor, CH_VOICE, "pogo.wav", ATTN_NORM);
-	#endif
-		UNSET_ONGROUND(actor);
+		PM_jetpack(actor, 1, dt);
+		return true;
+	}
+	return false;
+}
+
+METHOD(Duke, m_doublejump, bool(Duke this, entity actor))
+{
+	if(PHYS_INPUT_BUTTON_JUMP(actor))
+	{
+		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
+
+		if(actor.jetpack_stopped) { }
+		else if(!has_fuel)
+		{
+			actor.jetpack_stopped = true;
+			actor.jetpack_status = false;	
+		}
+		else if(!IS_JUMP_HELD(actor))
+		{
+			actor.jetpack_status = true;
+		}
 	}
 	else
 	{
-		makevectors(PHYS_WORLD_ANGLES(actor));
-		vector vel = vec2(actor.velocity);
-		float spd = vlen(vel);
-		if(spd < 320)
-			spd += 5;
-		vel = v_forward * spd;
-		actor.velocity_x = vel.x;
-		actor.velocity_y = vel.y;
+		actor.jetpack_stopped = false;
+		actor.jetpack_status = false;
 	}
-	// fix for waterjump
-	if(time > actor.teleport_time || actor.waterlevel == 0)
-	{
-		actor.flags &= ~FL_WATERJUMP;
-		actor.teleport_time = 0;
-	}
-	return true;
+	return false;
 }
-#endif
