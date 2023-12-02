@@ -3222,7 +3222,7 @@ void SV_ParseClientCommand(entity this, string command)
 				break;
 			});
 		}
-		horn_spawnmonster(trace_endpos, this, mon);
+		horn_spawnmonster(trace_endpos, ((argv(2) == "hostile") ? NULL : this), mon);
 		return;
 	}
 
