@@ -50,3 +50,5 @@ void DropBackpack(entity this);
 void BackpackTouch(entity this, entity toucher);
 
 bool T_Heal(entity e, float healamount, bool ignore);
+
+void invis_loseaggro(entity this);

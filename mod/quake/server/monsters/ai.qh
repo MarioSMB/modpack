@@ -101,6 +101,8 @@ void ai_pain(entity this, float dist);
 
 void ai_forward(entity this, float dist);
 
+void HuntCharmer(entity this);
+
 void HuntTarget(entity this);
 
 void ai_back(entity this, float dist);

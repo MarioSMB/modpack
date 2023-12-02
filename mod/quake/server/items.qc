@@ -1498,6 +1498,42 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	return monster;
 }
 
+// hacked copy of what monsters do during ai_run
+void invis_enemy_dropaggro(entity this)
+{
+	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
+	{
+		this.enemy = NULL;
+		if(this.charmed)
+		{
+			HuntCharmer(this);
+			return;
+		}
+	// FIXME: look all around for other targets
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET))
+		{
+			this.enemy = this.oldenemy;
+			HuntTarget(this);
+		}
+		else
+		{
+			if(this.movetarget && this.th_walk)
+				this.th_walk(this);
+			else if(this.th_stand)
+				this.th_stand(this);
+		}
+	}
+}
+
+void invis_loseaggro(entity this)
+{
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+	{
+		if(it.enemy == this)
+			invis_enemy_dropaggro(it);
+	});
+}
+
 /*
 ===============================================================================
 
@@ -1577,6 +1613,7 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.invisible_time = 1;
 		toucher.invisible_finished = time + ((horde_ent) ? 5 : 30);
+		invis_loseaggro(toucher);
 	}
 
 	if(this.powerups & POWERUP_QUAD)

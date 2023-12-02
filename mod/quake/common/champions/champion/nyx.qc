@@ -22,6 +22,8 @@ void Nyx_Invis(entity this)
 	else
 		s = "invis4.wav";
 	player_sound(this, CH_VOICE, s, ATTN_NORM);
+
+	invis_loseaggro(this);
 }
 
 METHOD(Nyx, m_playerthink, void(Nyx this, entity actor))
