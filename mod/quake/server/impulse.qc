@@ -378,6 +378,7 @@ void GiveQuad(entity this)
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
 
+	this.powerups |= POWERUP_QUAD;
 	this.super_time = 1;
 	this.super_damage_finished = time + 999;
 	_sound(this, CH_WEAPON_SINGLE, "items/damage.wav", 1, ATTN_NORM);
