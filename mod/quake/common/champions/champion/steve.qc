@@ -55,7 +55,7 @@ void Steve_PlaceBlock(entity this)
 		if(random() <= 0.5)
 			block.skin = 2;
 		else
-			block.skin = 3;
+			block.skin = 4;
 	}
 
 	player_shot1(this);
