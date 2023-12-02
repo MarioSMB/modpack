@@ -1449,7 +1449,6 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	monster.monsterdef = mon;
 	monster.flags |= FL_MONSTER;
 	//monster.owner = actor;
-	monster.colormod = '0 1 0';
 	monster.spawnfunc_checked = true;
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
@@ -1477,8 +1476,11 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	setthink(monster, monster_start_go);
 	monster.nextthink = time + 0.1;
 	mon.mr_setup(mon, monster);
-	monster.health = max(monster.health, 1000);
-	monster.max_health = monster.health;
+	if(monster.charmed)
+	{
+		monster.health = max(monster.health, 1000);
+		monster.max_health = monster.health;
+	}
 	monster.angles = '0 0 0';
 	if(actor)
 		monster.angles_y = actor.angles_y;
