@@ -75,7 +75,7 @@ METHOD(Steve, m_clear, void(Steve this, entity actor))
 
 METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 {
-	if(!(time < STAT(QCC_ABILITYTIME, actor)) && PHYS_INPUT_BUTTON_CROUCH(actor))
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		int blocklimit = 5;
 		int blockcount = 0;

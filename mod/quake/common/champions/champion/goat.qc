@@ -53,7 +53,7 @@ METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
 
 METHOD(Goat, m_physics, bool(Goat this, entity actor, float dt))
 {
-	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor))
+	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor) && !QCC_HasSpellbook(actor))
 	{
 	#ifdef SVQC
 		if(autocvar_sv_quake_fixstuff || random() < 0.1)

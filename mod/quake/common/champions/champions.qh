@@ -10,6 +10,10 @@ void champions_PlayerTouch(entity this, entity toucher);
 
 bool champions_PlayerPhysics(entity this, float dt);
 
+bool QCC_HasSpellbook(entity this);
+
+bool QCC_CanCastAbility(entity this);
+
 #ifdef SVQC
 void QCC_UpdateStats(entity this);
 

@@ -23,6 +23,36 @@ bool champions_PlayerPhysics(entity this, float dt)
 	return false;
 }
 
+// hack needed
+bool QCC_HasSpellbook(entity this)
+{
+#ifdef SVQC
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_SPELLBOOK)
+			return true;
+	}
+#elif defined(CSQC)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity weaponentity = viewmodels[slot];
+		if(weaponentity.activeweapon == WEP_SPELLBOOK)
+			return true;
+	}
+#endif
+	return false;
+}
+
+bool QCC_CanCastAbility(entity this)
+{
+	if(time < STAT(QCC_ABILITYTIME, this))
+		return false;
+	if(QCC_HasSpellbook(this))
+		return false;
+	return true;
+}
+
 #ifdef SVQC
 void QCC_UpdateStats(entity this)
 {

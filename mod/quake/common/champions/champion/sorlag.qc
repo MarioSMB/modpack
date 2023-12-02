@@ -143,7 +143,7 @@ void Sorlag_Attack(entity this)
 
 METHOD(Sorlag, m_playerthink, void(Sorlag this, entity actor))
 {
-	if(!(time < STAT(QCC_ABILITYTIME, actor)) && PHYS_INPUT_BUTTON_CROUCH(actor))
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Sorlag_Attack(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 1.3;

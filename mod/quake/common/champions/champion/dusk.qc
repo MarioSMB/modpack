@@ -96,7 +96,7 @@ METHOD(Dusk, m_activate, void(Dusk this, entity actor))
 
 METHOD(Dusk, m_playerthink, void(Dusk this, entity actor))
 {
-	if(!(time < STAT(QCC_ABILITYTIME, actor)) && PHYS_INPUT_BUTTON_CROUCH(actor) && actor.health > 25)
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor) && actor.health > 25)
 		Dusk_Reap(actor);
 }
 

@@ -30,7 +30,7 @@ METHOD(Nyx, m_playerthink, void(Nyx this, entity actor))
 {
 	if(actor.powerups & POWERUP_INVISIBILITY)
 		return;
-	if(!(time < STAT(QCC_ABILITYTIME, actor)) && PHYS_INPUT_BUTTON_CROUCH(actor))
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Nyx_Invis(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 10;
