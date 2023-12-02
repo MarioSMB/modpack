@@ -2626,7 +2626,7 @@ void PlayerPostThink(entity this)
 		}
 
 		// TODO: split into a separate entity attached to the player?
-		if(this.items & IT_PULSERIFLE)
+		if((this.items & IT_PULSERIFLE) && !(this.powerups & POWERUP_INVISIBILITY))
 			W_PulseRifle(this);
 
 		if(this.cnt > 0 && !this.button0)
