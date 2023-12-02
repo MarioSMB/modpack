@@ -72,6 +72,8 @@ void QCC_UpdatePlayer(entity this)
 
 void champions_PutPlayerInServer(entity this)
 {
+	this.playermodel = "";
+
 	QCC_UpdatePlayer(this);
 
 	if(this.m_champion && this.m_champion.m_playerspawn)
