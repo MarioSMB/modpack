@@ -1525,9 +1525,6 @@ void PutPlayerInServer(entity this)
 
 	status_effects_PutClientInServer(this);
 
-	if(!STAT(SKATING, this))
-		champions_PutPlayerInServer(this);
-
 	//JIM
 	// Clear out velocity so you're not launched into the air
 	// when you respawn.
@@ -1558,6 +1555,9 @@ void PutPlayerInServer(entity this)
 
 	this.view_ofs = '0 0 22';
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
+
+	if(!STAT(SKATING, this))
+		champions_PutPlayerInServer(this);
 
 	player_stand1(this);
 
