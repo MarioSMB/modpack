@@ -1533,7 +1533,7 @@ void ai_run(entity this, float dist)
 			return;
 		}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET))
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !(this.oldenemy.powerups & POWERUP_INVISIBILITY))
 		{
 			this.enemy = this.oldenemy;
 			HuntTarget(this);
