@@ -373,6 +373,17 @@ void GiveDualWeapons(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 }
 
+void GiveQuad(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return; // no more singleplayer functionality, unless they're smart enough to enable this!
+
+	this.super_time = 1;
+	this.super_damage_finished = time + 999;
+	_sound(this, CH_WEAPON_SINGLE, "items/damage.wav", 1, ATTN_NORM);
+}
+
+// also CheatImpulse
 void ImpulseCommands(entity this)
 {
 	if (gameover || intermission_running) return;
@@ -390,6 +401,12 @@ void ImpulseCommands(entity this)
 	if(imp == CHIMPULSE_GIVE_DUALWEPS.impulse)
 	{
 		GiveDualWeapons(this);
+		return;
+	}
+
+	if(imp == CHIMPULSE_GIVE_QUAD.impulse)
+	{
+		GiveQuad(this);
 		return;
 	}
 
