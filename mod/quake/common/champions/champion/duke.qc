@@ -352,16 +352,6 @@ void Duke_PreJump(entity actor)
 
 METHOD(Duke, m_physics, bool(Duke this, entity actor, float dt))
 {
-	if(actor.jetpack_status)
-	{
-		PM_jetpack(actor, 1, dt);
-		return true;
-	}
-	return false;
-}
-
-METHOD(Duke, m_doublejump, bool(Duke this, entity actor))
-{
 	if(PHYS_INPUT_BUTTON_CROUCH(actor))
 	{
 		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
@@ -381,6 +371,12 @@ METHOD(Duke, m_doublejump, bool(Duke this, entity actor))
 	{
 		actor.jetpack_stopped = false;
 		actor.jetpack_status = false;
+	}
+
+	if(actor.jetpack_status)
+	{
+		PM_jetpack(actor, 1, dt);
+		return true;
 	}
 	return false;
 }
