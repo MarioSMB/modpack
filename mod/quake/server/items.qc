@@ -1501,27 +1501,25 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 // hacked copy of what monsters do during ai_run
 void invis_enemy_dropaggro(entity this)
 {
-	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
+	entity oldtarg = this.oldenemy;
+	this.enemy = NULL;
+	if(this.charmed)
 	{
-		this.enemy = NULL;
-		if(this.charmed)
-		{
-			HuntCharmer(this);
-			return;
-		}
+		HuntCharmer(this);
+		return;
+	}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET))
-		{
-			this.enemy = this.oldenemy;
-			HuntTarget(this);
-		}
-		else
-		{
-			if(this.movetarget && this.th_walk)
-				this.th_walk(this);
-			else if(this.th_stand)
-				this.th_stand(this);
-		}
+	if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !(this.oldenemy.powerups & POWERUP_INVISIBILITY))
+	{
+		this.enemy = this.oldenemy;
+		HuntTarget(this);
+	}
+	else
+	{
+		if(this.movetarget && this.th_walk)
+			this.th_walk(this);
+		else if(this.th_stand)
+			this.th_stand(this);
 	}
 }
 
