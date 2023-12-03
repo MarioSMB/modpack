@@ -72,6 +72,11 @@ void QCC_UpdateStats(entity this)
 				tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
 				if (!trace_startsolid)
 					setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+				else
+				{
+					STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.mins;
+					STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = this.maxs;
+				}
 			}
 		}
 
