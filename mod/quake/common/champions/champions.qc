@@ -95,7 +95,7 @@ void QCC_UpdatePlayer(entity this)
 		if(champ != oldchamp && oldchamp.m_clear)
 			oldchamp.m_clear(oldchamp, this);
 
-		if(champ.m_activate)
+		if(champ.m_activate && champ != oldchamp)
 			champ.m_activate(champ, this);
 	}
 }

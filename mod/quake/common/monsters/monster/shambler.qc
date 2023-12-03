@@ -191,6 +191,12 @@ void sham_melee(entity this)
 
 void CastLightning(entity this)
 {
+	if(this.waterlevel > 1)
+	{
+		T_RadiusDamage(this, this, 35 * 5, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+
 	this.effects |= EF_MUZZLEFLASH;
 
 	ai_face(this);
