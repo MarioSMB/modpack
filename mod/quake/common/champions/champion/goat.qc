@@ -26,7 +26,7 @@ METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
 	if(time > STAT(QCC_ABILITYTIME, actor))
 		return;
 
-	if(IS_PLAYER(toucher) || (IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
+	if(IS_PLAYER(toucher) || (IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
 	{
 		makevectors(actor.angles);
 		vector vec = normalize(toucher.origin - actor.origin);
