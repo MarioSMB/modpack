@@ -43,7 +43,7 @@ void W_FireSpikes(entity this, float ox, .entity weaponentity)
 	W_TakeAmmo(this, ammo_nails, 1);
 	vector dir = qc_aim(this, 1000);
 	// NOTE: position fix by Seven and Sajt applied here
-	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_up * -8 + v_right * ox, dir);
+	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_right * ox, dir);
 	missile.projectiledeathtype = WEP_NAILGUN.m_id;
 
 	this.punchangle_x = -2;

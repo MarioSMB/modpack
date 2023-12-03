@@ -172,7 +172,9 @@ void army_fire(entity this)
 // fire somewhat behind the player, so a dodging player is harder to hit
 	entity en = this.enemy;
 	
-	vector dir = en.origin - en.velocity*0.2;
+	vector dir = (en.absmin + en.absmax) * 0.5;
+	if(en.velocity != '0 0 0')
+		dir -= en.velocity * 0.2;
 	dir = normalize(dir - this.origin);
 	
 	FireBullets(this, 4, this.origin, dir, '0.1 0.1 0', DEATH_MONSTER_GRUNT.m_id);

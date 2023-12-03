@@ -6,6 +6,7 @@
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
 #include "triggers/triggers.qh"
+#include "weapons/weaponsystem.qh"
 
 bool IsExplosionDamage;
 
@@ -27,9 +28,21 @@ vector qc_aim(entity this, float missilespeed)
 {
 	// assume failure if it returns early
 	return = v_forward;
+	if(!IS_PLAYER(this) || W_DualWielding(this))
+		return;
+
 	// if sv_aim is so high it can't possibly accept anything, skip out early
 	if (autocvar_sv_aim >= 1)
+	{
+#if 1
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * missilespeed, MOVE_NOMONSTERS, this);
+		vector w_shotend = trace_endpos;
+		vector w_shotorg = W_Shotorg(this, weaponentities[0]);
+		return normalize(w_shotend - w_shotorg);
+#else
 		return;
+#endif
+	}
 
 	if(!this || wasfreed(this))
 		return; // can not use free/world entity
@@ -583,6 +596,12 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 				points *= 0.5;
 			if(head.monsterdef && (head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && points > (head.health * 0.25))
 				points = 120; // always gib zombies
+			if(deathtype == DEATH_DISCHARGE.m_id)
+			{
+				int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(head.origin));
+				if(!(cont & DPCONTENTS_LIQUIDSMASK))
+					points = 0;
+			}
 			if(points > 0)
 			{
 				if(CanDamage(head, inflictor))

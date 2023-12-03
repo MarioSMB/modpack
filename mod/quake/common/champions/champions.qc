@@ -61,9 +61,19 @@ void QCC_UpdateStats(entity this)
 
 	if(this.m_champion)
 	{
-		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = this.m_champion.m_viewofs;
-		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.m_champion.m_mins;
-		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = this.m_champion.m_maxs;
+		if(autocvar_sv_quake_champions_custombbox)
+		{
+			STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = this.m_champion.m_viewofs;
+			STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.m_champion.m_mins;
+			STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = this.m_champion.m_maxs;
+
+			if(this.mins != STAT(PL_MIN, this) || this.maxs != STAT(PL_MAX, this))
+			{
+				tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
+				if (!trace_startsolid)
+					setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+			}
+		}
 
 		if(this.m_champion.m_updatestats)
 			this.m_champion.m_updatestats(this.m_champion, this);
@@ -83,11 +93,17 @@ void QCC_UpdatePlayer(entity this)
 	string newmdl = champ.m_model.model_str();
 	if(newmdl != this.playermodel)
 	{
+		vector oldmin = this.mins, oldmax = this.maxs;
 		this.playermodel = newmdl;
 		_setmodel(this, newmdl);
+		setsize(this, oldmin, oldmax);
 		this.modelindex_player = this.modelindex;
-
-		setsize(this, champ.m_mins, champ.m_maxs);
+		if(autocvar_sv_quake_champions_custombbox)
+		{
+			tracebox(this.origin, champ.m_mins, champ.m_maxs, this.origin, MOVE_NORMAL, this);
+			if (!trace_startsolid)
+				setsize(this, champ.m_mins, champ.m_maxs);
+		}
 
 		this.view_ofs = champ.m_viewofs;
 		this.scale = champ.m_scale;

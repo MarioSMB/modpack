@@ -43,7 +43,7 @@ void W_FireLavaSpikes(entity this, float ox, .entity weaponentity)
 	W_TakeAmmo(this, ammo_lava_nails, 1);
 	
 	vector dir = qc_aim(this, 1000);
-	entity missile = launch_lava_spike(this, W_Shotorg(this, weaponentity) + v_up * -8 + v_right * ox, dir);
+	entity missile = launch_lava_spike(this, W_Shotorg(this, weaponentity) + v_right * ox, dir);
 	missile.projectiledeathtype = WEP_LAVA_NAILGUN.m_id;
 
 	this.punchangle_x = -2;

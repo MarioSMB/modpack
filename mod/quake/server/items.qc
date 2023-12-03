@@ -2098,7 +2098,8 @@ void DropBackpack(entity this)
 		return; 
 
 	entity item = spawn();
-	setorigin(item, this.origin - '0 0 24');
+	traceline(this.origin, this.origin - '0 0 24', MOVE_NORMAL, this);
+	setorigin(item, trace_endpos);
 
 	.entity weaponentity = weaponentities[0];
 	Weapon wep = this.(weaponentity).m_weapon;
@@ -2140,7 +2141,19 @@ void DropBackpack(entity this)
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");
-	setsize(item, '-16 -16 0', '16 16 56');
+	vector mi = '-16 -16 0', ma = '16 16 56';
+	// some enemies can be smaller than items so we must account for that and not put the item in the wall!
+	tracebox(item.origin, mi, ma, item.origin, MOVE_NOMONSTERS, item);
+	if(trace_startsolid)
+	{
+		mi.x = max(mi.x, this.mins_x);
+		mi.y = max(mi.y, this.mins_y);
+		mi.z = max(mi.z, this.mins_z);
+		ma.x = min(ma.x, this.maxs_x);
+		ma.y = min(ma.y, this.maxs_y);
+		ma.z = min(ma.z, this.maxs_z);
+	}
+	setsize(item, mi, ma);
 	settouch(item, BackpackTouch);
 	if(autocvar_sv_quake_instance_backpacks && IS_PLAYER(this) && IS_REAL_CLIENT(this))
 	{

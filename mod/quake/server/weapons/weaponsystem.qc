@@ -137,8 +137,12 @@ vector W_Shotorg(entity ent, .entity weaponentity)
 	vector vecs = md;
 	vector mi = '0 0 0', ma = '0 0 0'; // quake assume zero hitbox size
 
+	// NOTE: quake specific hack, gun shots are offsetted to their "center"
+	vector viewofs = (IS_PLAYER(ent) ? (ent.view_ofs - '0 0 8') : '0 0 16');
 	vector dv = v_right * -vecs.y + v_up * vecs.z;
-	vector w_shotorg = ent.origin + '0 0 16';
+	if(IS_PLAYER(ent))
+		dv += v_forward * -12;
+	vector w_shotorg = ent.origin + viewofs;
 	tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos;
 

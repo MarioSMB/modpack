@@ -12,30 +12,12 @@ PRECACHE(Biogun)
 	precache_sound("weapons/resist_rocket.wav");
 }
 
-void player_bio1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_bio2); this.nextthink = time + 0.5; }
-void player_bio2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_run); this.nextthink = time + 0.5; }
-
-void W_Biogun_Attack(entity this)
+void biogun_shot1(entity this)
 {
-	entity actor = this.owner;
-	if(!actor.button0)
-	{
-		w_ready(this);
-		return;
-	}
-
-	this.misc_bulletcounter += 1;
-
-	player_bio1(actor);
-
-	this.m_frame += 1;
-	if(this.m_frame >= 5)
-		this.m_frame = 1;
-	wep_set_anim(this, this.m_frame, W_Biogun_Attack);
+	wep_set_anim(this, 1, w_ready);
+	.entity weaponentity = this.weaponentity_fld;
 	this.weapon_nextthink = time + 0.5;
-	SuperDamageSound(actor);
-	W_FireBio(actor, ((this.misc_bulletcounter % 2) ? 3 : -3), this.weaponentity_fld);
-	ATTACK_FINISHED(actor, this.weaponentity_fld) = time + 0.5;
+	this.m_frame = (this.owner.(weaponentity).misc_bulletcounter % 2) ? 1 : 2;
 }
 
 void W_FireBio(entity this, float ox, .entity weaponentity)
@@ -54,7 +36,7 @@ void W_FireBio(entity this, float ox, .entity weaponentity)
 	W_TakeAmmo(this, ammo_nails, 2);
 	vector dir = qc_aim(this, 1000);
 	// NOTE: position fix by Seven and Sajt applied here
-	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_up * -12 + v_right * ox, dir);
+	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_up * -4 + v_right * ox, dir);
 	missile.dmg = 40;
 	missile.classname = "bio"; // identifier for spike touch TODO: clean this mess up
 	missile.projectiledeathtype = WEP_BIOGUN.m_id;
@@ -69,8 +51,13 @@ METHOD(Biogun, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		actor.(weaponentity).misc_bulletcounter = 0;
-		W_Biogun_Attack(actor.(weaponentity));
+		player_shot1(actor);
+		actor.effects |= EF_MUZZLEFLASH;
+		//actor.(weaponentity).misc_bulletcounter = 0;
+		actor.(weaponentity).misc_bulletcounter += 1;
+		biogun_shot1(actor.(weaponentity));
+		W_FireBio(actor, ((actor.(weaponentity).misc_bulletcounter % 2) ? 3 : -3), weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);
 	}
 }
 METHOD(Biogun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

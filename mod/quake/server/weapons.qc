@@ -1293,7 +1293,7 @@ entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 void W_FireFlower_Attack(entity this)
 {
 	_sound(this, CH_WEAPON_B, "items/mario_attack.wav", 1, ATTN_NORM);
-	traceline(this.origin + '0 0 16', this.origin + '0 0 16' + v_right * 15, MOVE_NOMONSTERS, this);
+	traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_right * 15, MOVE_NOMONSTERS, this);
 	Launch_Fireball(this, trace_endpos, v_forward, 500);
 }
 

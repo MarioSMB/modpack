@@ -55,7 +55,9 @@ CLASS(Keen, Champions)
     ATTRIB(Keen, qcc_falldamage, float, 0);
     ATTRIB(Keen, qcc_jumpheight, float, 0.75);
     ATTRIB(Keen, qcc_meleename, string, "pogo");
-    ATTRIB(Keen, m_viewofs, vector, '0 0 16');
+    ATTRIB(Keen, m_viewofs, vector, '0 0 8');
+    ATTRIB(Keen, m_mins, vector, '-8 -8 -24');
+    ATTRIB(Keen, m_maxs, vector, '8 8 14');
 #ifdef GAMEQC
     ATTRIB(Keen, m_model, Model, MDL_Keen);
     ATTRIB(Keen, m_model_head, Model, MDL_Keen_Head);

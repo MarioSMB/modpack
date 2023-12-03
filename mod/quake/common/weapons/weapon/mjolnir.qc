@@ -243,7 +243,7 @@ void HIP_FireMjolnir(entity this, .entity weaponentity)
 //      dprint("fraction = ");
 //      dprint(ftos(trace_fraction));
 //      dprint("\n");
-		if(trace_fraction > 0.3 && trace_fraction< 1.0)
+		if(trace_fraction > 0.3 && trace_fraction < 1.0)
 		{
 			HIP_FireMjolnirLightning(this);
 			ATTACK_FINISHED(this, weaponentity) = time + 1.5;
