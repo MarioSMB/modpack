@@ -8,7 +8,6 @@ METHOD(Steve, m_activate, void(Steve this, entity actor))
 
 void steve_block_break(entity this)
 {
-	vector oldorg = this.origin;
 	sound(this, CH_TRIGGER_SINGLE, SND_Steve_BlockBreak, 1, ATTN_NORM);
 	particle(this.origin + '0 0 16', '0 0 0', 75, 255);
 	setmodel(this, MDL_Null);
@@ -19,8 +18,15 @@ void steve_block_break(entity this)
 	this.takedamage = DAMAGE_NO;
 
 	CSQCMODEL_AUTOUPDATE(this);
+}
 
-	if(this.skin == 4)
+void steve_block_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	vector oldorg = this.origin;
+
+	steve_block_break(this);
+
+	if(this.skin == 4 && this.realowner)
 	{
 		entity mon = horn_spawnmonster(oldorg, this.realowner, MON_GOATLING);
 		if(!mon)
@@ -30,11 +36,6 @@ void steve_block_break(entity this)
 		mon.max_health = mon.health;
 		SpawnChunk(mon.origin, oldorg * 400, 0, 10);
 	}
-}
-
-void steve_block_die(entity this, entity inflictor, entity attacker, int deathtype)
-{
-	steve_block_break(this);
 }
 
 void Steve_PlaceBlock(entity this)

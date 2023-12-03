@@ -34,15 +34,22 @@ METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
 		if(dot < 0.3)
 			return;
 
-		float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
+		if(!(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY))
+		{
+			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
 
-		makevectors(actor.angles);
-		toucher.velocity = v_forward * (300 * pushforce);
-		toucher.velocity_z = (125 * pushforce);
+			makevectors(actor.angles);
+			toucher.velocity = v_forward * (300 * pushforce);
+			toucher.velocity_z = (125 * pushforce);
+		}
 
 		te_explosion2(toucher.origin, 230, 5);
 
-		T_Damage(toucher, actor, actor, 30, DEATH_SHIELD.m_id);
+		float thedamage = 30;
+		if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+			thedamage = 120;
+
+		T_Damage(toucher, actor, actor, thedamage, DEATH_SHIELD.m_id);
 
 		player_sound(actor, CH_VOICE, "bonk.wav", ATTN_NORM);
 
