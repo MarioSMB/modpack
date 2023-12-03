@@ -44,6 +44,8 @@ METHOD(Mario, m_touch, void(Mario this, entity actor, entity toucher))
 			//animdecide_setaction(actor, ANIMACTION_JUMP, true);
 
 			float thedamage = 50;
+			if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+				thedamage = 120;
 			T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
 			sound(actor, CH_TRIGGER_SINGLE, SND_Mario_Crush, 1, ATTN_NORM);
 	#endif

@@ -26,7 +26,7 @@ void steve_block_die(entity this, entity inflictor, entity attacker, int deathty
 
 	steve_block_break(this);
 
-	if(this.skin == 4 && this.realowner)
+	if(this.skin == 3 && this.realowner)
 	{
 		entity mon = horn_spawnmonster(oldorg, this.realowner, MON_GOATLING);
 		if(!mon)
@@ -68,7 +68,7 @@ void Steve_PlaceBlock(entity this)
 		if(random() <= 0.5)
 			block.skin = 2;
 		else
-			block.skin = 4;
+			block.skin = 3;
 	}
 
 	player_shot1(this);

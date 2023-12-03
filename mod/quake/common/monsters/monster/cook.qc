@@ -484,8 +484,8 @@ void cook_die(entity this, entity inflictor, entity attacker, int deathtype)
 	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
 	set_anim(this, 71, cook_die2);
 	this.solid = SOLID_NOT;
-	//STAT(WEAPONS, this) = WEP_PAN.m_wepset;
-	//DropBackpack(this);
+	STAT(WEAPONS, this) = WEP_PAN.m_wepset;
+	DropBackpack(this);
 }
 
 void cook_pong(entity this)

@@ -15,6 +15,7 @@
 #include "lava_super_nailgun.qc"
 #include "multi_grenade.qc"
 #include "multi_rocket.qc"
+#include "pan.qc"
 #include "plasma_gun.qc"
 #include "portal_gun.qc"
 #include "super_lightning.qc"

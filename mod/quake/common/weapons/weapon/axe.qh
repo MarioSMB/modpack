@@ -3,12 +3,13 @@
 CLASS(Axe, Weapon)
 /* ammotype  */ ATTRIB(Axe, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Axe, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOHUD | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Axe, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Axe, aflag, int, 0);
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");
 /* crosshair */ ATTRIB(Axe, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Axe, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Axe, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Axe, model2, string, "axe");
 /* refname   */ ATTRIB(Axe, netname, string, "axe");
 /* wepname   */ ATTRIB(Axe, m_name, string, _("Axe"));
 

@@ -334,6 +334,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	IsExplosionDamage = false;
 
+	if(Pan_CheckDamage(targ, inflictor, attacker))
+		return;
+
 	if(targ.powerups & POWERUP_SHIELD)
 	{
 		// allow some damage to pass through

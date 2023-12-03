@@ -26,6 +26,7 @@
 #include "weapon/fish.qh"
 #include "weapon/tuba.qh"
 #include "weapon/portal_gun.qh"
+#include "weapon/pan.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

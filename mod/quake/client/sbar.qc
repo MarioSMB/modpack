@@ -840,7 +840,7 @@ Weapon GetDrawWeapon(Weapon wep, Weapon awep)
 	if(awep == WEP_Null)
 		return wep;
 
-	if(wep != awep && wep.impulse == awep.impulse && (awep.spawnflags & WEP_FLAG_NOHUD))
+	if(wep != awep && wep.impulse == awep.impulse)
 		return awep;
 
 	return wep;
@@ -875,23 +875,23 @@ void Sbar_DrawInventory()
 
 	// weapons
 	int wep_pos = 0;
-	// axe is never displayed on the hud so start at 2
-	for(int j = 2; j <= 10; ++j)
+	for(int j = 1; j <= 10; ++j)
 	{
 		int imp = j;
 		if(j == 10)
 			imp = 0; // we want special 0 weapons to show on slot 10!
 		Weapon wep = WEP_Null;
-		FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
+		if(thiswep.activeweapon.impulse == imp)
+			wep = thiswep.activeweapon;
+		else
 		{
-			if(thiswep.activeweapon == it)
+			FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
 			{
 				wep = it;
-				break; // always prefer the active weapon
-			}
-			if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
-				wep = it;
-		});
+				if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
+					break;
+			});
+		}
 		if(wep != WEP_Null)
 		{
 			float thetime = weapon_gettime[wep.m_id];
