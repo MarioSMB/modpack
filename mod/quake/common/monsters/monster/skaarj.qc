@@ -627,12 +627,11 @@ void skaarj_fire(entity this, vector org1, vector org2)
 	entity en = this.enemy;
 	
 	vector dir = en.origin + (en.velocity * vlen(this.origin - this.enemy.origin)/500);
-	dir = normalize (dir - this.origin);
+	dir = normalize(dir - this.origin);
 	
-	makevectors(this.angles);
-	SkaarjMissile(this, this.origin + v_forward*org1_x + v_right*(-org1_y) + v_up*org1_z, dir);
-	SkaarjMissile(this, this.origin + v_forward*org2_x + v_right*(-org2_y) + v_up*org2_z, dir);
-	
+	fixedmakevectors(this.angles);
+	SkaarjMissile(this, this.origin + v_right * (-org1.y) + v_up * org1.z, dir); // also had + v_forward * org1.x
+	SkaarjMissile(this, this.origin + v_right * (-org2.y) + v_up * org2.z, dir); // also had + v_forward * org2.x
 }
 
 void skaarj_die_a(entity this)
