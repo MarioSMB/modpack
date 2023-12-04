@@ -2161,6 +2161,6 @@ void DropBackpack(entity this)
 		setcefc(item, BackpackCustomize);
 	}
 	
-	item.nextthink = time + 180;	// remove after 3 minutes
+	item.nextthink = time + 240;
 	setthink(item, SUB_Remove);
 }
