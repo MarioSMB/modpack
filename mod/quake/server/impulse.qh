@@ -3,3 +3,6 @@
 .bool maycheat;
 
 void ImpulseCommands(entity this);
+
+IntrusiveList g_ctrace_changed;
+STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }

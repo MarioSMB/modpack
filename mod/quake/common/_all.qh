@@ -46,6 +46,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "impulses/all.qh"
 #include "kickflip/_mod.qh"
 #include "champions/_mod.qh"
+#include "waypoints/_mod.qh"
 
 #ifdef CSQC
 #include "../server/triggers/trigger/viewloc.qh"

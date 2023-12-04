@@ -153,6 +153,42 @@ LEGACY_IMPULSE(weapbest, 13, "weapon_best")
 REGISTER_IMPULSE(weapon_reload, 20)
 LEGACY_IMPULSE(reload, 20, "weapon_reload")
 
+REGISTER_IMPULSE(waypoint_personal_here, 30)
+LEGACY_IMPULSE(g_waypointsprite_personal, 30, "waypoint_personal_here")
+
+REGISTER_IMPULSE(waypoint_personal_crosshair, 31)
+LEGACY_IMPULSE(g_waypointsprite_personal_p, 31, "waypoint_personal_crosshair")
+
+REGISTER_IMPULSE(waypoint_personal_death, 32)
+LEGACY_IMPULSE(g_waypointsprite_personal_d, 32, "waypoint_personal_death")
+
+REGISTER_IMPULSE(waypoint_here_follow, 33)
+LEGACY_IMPULSE(g_waypointsprite_team_helpme, 33, "waypoint_here_follow")
+
+REGISTER_IMPULSE(waypoint_here_here, 34)
+LEGACY_IMPULSE(g_waypointsprite_team_here, 34, "waypoint_here_here")
+
+REGISTER_IMPULSE(waypoint_here_crosshair, 35)
+LEGACY_IMPULSE(g_waypointsprite_team_here_p, 35, "waypoint_here_crosshair")
+
+REGISTER_IMPULSE(waypoint_here_death, 36)
+LEGACY_IMPULSE(g_waypointsprite_team_here_d, 36, "waypoint_here_death")
+
+REGISTER_IMPULSE(waypoint_danger_here, 37)
+LEGACY_IMPULSE(g_waypointsprite_team_danger, 37, "waypoint_danger_here")
+
+REGISTER_IMPULSE(waypoint_danger_crosshair, 38)
+LEGACY_IMPULSE(g_waypointsprite_team_danger_p, 38, "waypoint_danger_crosshair")
+
+REGISTER_IMPULSE(waypoint_danger_death, 39)
+LEGACY_IMPULSE(g_waypointsprite_team_danger_d, 39, "waypoint_danger_death")
+
+REGISTER_IMPULSE(waypoint_clear_personal, 47)
+LEGACY_IMPULSE(g_waypointsprite_clear_personal, 47, "waypoint_clear_personal")
+
+REGISTER_IMPULSE(waypoint_clear, 48)
+LEGACY_IMPULSE(g_waypointsprite_clear, 48, "waypoint_clear")
+
 
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
 #define _CHIMPULSE(id, n) \

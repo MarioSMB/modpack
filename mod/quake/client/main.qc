@@ -31,11 +31,13 @@ void CSQC_Init()
 	static_init_late();
 	static_init_precache();
 
+	tempdb = db_create();
 	binddb = db_create();
 }
 
 void Shutdown()
 {
+	db_close(tempdb);
 	db_close(binddb);
 }
 

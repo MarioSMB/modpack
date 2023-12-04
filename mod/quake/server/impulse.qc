@@ -418,3 +418,119 @@ void ImpulseCommands(entity this)
 		return;
 	});
 }
+
+void crosshair_trace(entity pl)
+{
+	traceline(pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * 65535, MOVE_NORMAL, pl);
+}
+
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
+	{
+		if(it.model != "")
+		{
+			it.solid = SOLID_BSP;
+			IL_PUSH(g_ctrace_changed, it);
+		}
+	});
+
+	crosshair_trace(pl);
+
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
+
+	IL_CLEAR(g_ctrace_changed);
+}
+
+IMPULSE(waypoint_personal_here)
+{
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at location\n");
+}
+
+IMPULSE(waypoint_personal_crosshair)
+{
+	crosshair_trace(this);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, trace_endpos, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_personal_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.death_origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at death location\n");
+}
+
+IMPULSE(waypoint_here_follow)
+{
+	if (!coop) return;
+	if (this.health <= 0) return;
+	{
+		entity wp = WaypointSprite_Attach(WP_Helpme, this, true, NULL);
+		if (!wp) WaypointSprite_HelpMePing(this.waypointsprite_attachedforcarrier);
+		else WaypointSprite_Ping(wp);
+	}
+	sprint(this, "HELP ME attached\n");
+}
+
+IMPULSE(waypoint_here_here)
+{
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at location\n");
+}
+
+IMPULSE(waypoint_here_crosshair)
+{
+	crosshair_trace_plusvisibletriggers(this);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_here_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.death_origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at death location\n");
+}
+
+IMPULSE(waypoint_danger_here)
+{
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at location\n");
+}
+
+IMPULSE(waypoint_danger_crosshair)
+{
+	crosshair_trace(this);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, trace_endpos, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_danger_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.death_origin, NULL);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at death location\n");
+}
+
+IMPULSE(waypoint_clear_personal)
+{
+	WaypointSprite_ClearPersonal(this);
+	sprint(this, "personal waypoint cleared\n");
+}
+
+IMPULSE(waypoint_clear)
+{
+	WaypointSprite_ClearOwned(this);
+	sprint(this, "all waypoints cleared\n");
+}

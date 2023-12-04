@@ -20,6 +20,8 @@ bool autocvar_cl_unpress_attack_on_weapon_switch = false;
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server
 
+int tempdb;
+
 string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
@@ -27,7 +29,9 @@ string _getcommandkey(string text, string command, bool forcename);
 bool postinit;
 
 IntrusiveList g_drawables;
+IntrusiveList g_drawables_2d;
 STATIC_INIT(main)
 {
 	g_drawables = IL_NEW();
+	g_drawables_2d = IL_NEW();
 }

@@ -1346,6 +1346,8 @@ void PutObserverInServer(entity this)
 		entcs_update_players(this);
 	}
 
+	WaypointSprite_PlayerDead(this);
+
 	entity spot = SelectSpawnPoint(this, false);
 
 	setorigin(this, spot.origin + '0 0 32');
@@ -2675,6 +2677,11 @@ void PlayerPostThink(entity this)
 		}
 	}
 
+	if (this.waypointsprite_attachedforcarrier) {
+		float hp = this.health;
+		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
+	}
+
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
@@ -2833,6 +2840,8 @@ void ClientDisconnect(entity this)
 	GetCvars(this, this, -1);
 	entcs_detach(this);
 
+	WaypointSprite_PlayerGone(this);
+
 	//this.flags &= ~FL_CLIENT;
 	if (this.chatbubbleentity) delete(this.chatbubbleentity);
 
@@ -2984,6 +2993,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
+	targ.death_origin = targ.origin;
 	string attacker_name = attacker.netname;
 
 	#ifdef NOTIFICATIONS_DEBUG

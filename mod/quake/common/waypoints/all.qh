@@ -1,0 +1,34 @@
+#pragma once
+
+#include "waypointsprites.qh"
+
+REGISTRY(Waypoints, BITS(7))
+REGISTER_REGISTRY(Waypoints)
+REGISTRY_CHECK(Waypoints)
+
+/** If you register a new waypoint, make sure to add it to all.inc */
+#define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
+
+CLASS(Waypoint, Object)
+    ATTRIB(Waypoint, m_id, int, 0);
+    ATTRIB(Waypoint, netname, string);
+    ATTRIB(Waypoint, m_name, string);
+    ATTRIB(Waypoint, m_icon, string);
+    ATTRIB(Waypoint, m_color, vector, '1 1 1');
+    ATTRIB(Waypoint, m_blink, int, 1);
+    CONSTRUCTOR(Waypoint, string _netname, string _name, string _icon, vector _color, int _blink) {
+        CONSTRUCT(Waypoint);
+        this.netname = _netname;
+        this.m_name = _name;
+        this.m_icon = _icon;
+        this.m_color = _color;
+        this.m_blink = _blink;
+    }
+ENDCLASS(Waypoint)
+
+#define REGISTER_WAYPOINT(id, text, icon, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, icon, color, blink))
+
+REGISTER_WAYPOINT(Null, "", "", '0 0 0', 1);
+REGISTRY_DEFINE_GET(Waypoints, WP_Null)
+
+#include "all.inc"

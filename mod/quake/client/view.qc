@@ -612,6 +612,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	HUD_Contents();
 
+	// draw 2D entities
+	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Sbar_Draw();
 	HUD_CenterPrint();
 	HUD_Crosshair(this);

@@ -23,6 +23,7 @@
 #include "monsters/_mod.inc"
 #include "kickflip/_mod.inc"
 #include "champions/_mod.inc"
+#include "waypoints/_mod.inc"
 
 // TODO
 #ifdef CSQC

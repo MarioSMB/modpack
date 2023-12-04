@@ -4,4 +4,7 @@
 
 .float misc_bulletcounter;
 
+.float fade_time;
+.float fade_rate;
+
 bool W_DualWielding(entity player);

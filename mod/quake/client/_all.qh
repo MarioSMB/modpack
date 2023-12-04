@@ -20,6 +20,7 @@ vector OFFSET_CURSOR = '0 0 0';
 .int		renderflags;
 
 .void(entity) draw;
+.void(entity) draw2d;
 .void(entity) entremove;
 
 int autocvar_chase_active;
