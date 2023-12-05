@@ -986,8 +986,6 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	champions_PlayerDies(this);
 
-	WaypointSprite_PlayerDead(this);
-
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;

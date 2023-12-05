@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ARACHNOFLOYD,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was disintegrated by an Arachnofloyd"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ARACHNOFLOYD,               1,  NULL,           INFO_DEATH_SELF_MON_ARACHNOFLOYD,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ARACHNOFLOYD,           DEATH_SELF_MON_ARACHNOFLOYD,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ARACHNOFLOYD, "progs/arachnofloyd.mdl");
+MODEL(MON_ARACHNOFLOYD_HEAD, "progs/h_arach.mdl");
+
+SOUND(MON_ARACHNOFLOYD_SIGHT, "arachnofloyd/sight");
+#endif
+
+CLASS(Arachnofloyd, Monster)
+    ATTRIB(Arachnofloyd, spawnflags, int, MON_FLAG_METAL | MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Arachnofloyd, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Arachnofloyd, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Arachnofloyd, m_model, Model, MDL_MON_ARACHNOFLOYD);
+    ATTRIB(Arachnofloyd, m_model_head, Model, MDL_MON_ARACHNOFLOYD_HEAD);
+    ATTRIB(Arachnofloyd, m_sound, Sound, SND_MON_ARACHNOFLOYD_SIGHT);
+#endif
+    ATTRIB(Arachnofloyd, netname, string, "arachnofloyd");
+    ATTRIB(Arachnofloyd, monster_name, string, _("Arachnofloyd"));
+ENDCLASS(Arachnofloyd)
+
+REGISTER_MONSTER(ARACHNOFLOYD, NEW(Arachnofloyd));

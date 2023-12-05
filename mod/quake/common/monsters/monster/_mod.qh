@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include "arachnofloyd.qh"
 #include "armagon.qh"
 #include "axegrunt.qh"
 #include "bambler.qh"

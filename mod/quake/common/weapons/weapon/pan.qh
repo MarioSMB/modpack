@@ -3,7 +3,7 @@
 CLASS(Pan, Weapon)
 /* ammotype  */ ATTRIB(Pan, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Pan, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Pan, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Pan, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Pan, aflag, int, 0);
 /* modelname */ ATTRIB(Pan, mdl, string, "fryingpan");
 /* crosshair */ ATTRIB(Pan, w_crosshair, string, "gfx/crosshair8");

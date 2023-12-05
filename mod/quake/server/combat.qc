@@ -162,6 +162,9 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
 
+	if(IS_PLAYER(targ))
+		WaypointSprite_PlayerDead(targ);
+
 	if(targ.charmed)
 		targ.effects &= ~EF_DIMLIGHT;
 	targ.effects &= ~EF_BRIGHTFIELD;

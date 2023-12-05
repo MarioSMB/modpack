@@ -1576,6 +1576,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 bender");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 skaarj");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 dalek");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 arachnofloyd");
 	}
 
 	// no bosses spawn during army waves
@@ -1630,16 +1631,19 @@ void Horde_SetupSquads()
 	if(!found)
 	{
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 demon");
+		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_EASY, HORDE_SQUAD_TYPE_NORMAL, "1 arachnofloyd");
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 shambler");
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 minotaur");
 		Horde_SpawnSquadEntity(HORDE_BOSS | HORDE_HARD, HORDE_SQUAD_TYPE_BOSS, "1 juggernaut");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 shambler");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 minotaur");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "2 demon");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "1 arachnofloyd");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 shalrath");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 wrath");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "1 demon 1 mutant");
+		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_NORMAL, "2 grunt 1 arachnofloyd");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "2 bambler");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 mutant 1 drole");
 		Horde_SpawnSquadEntity(HORDE_BOSS, HORDE_SQUAD_TYPE_BOSS, "1 justice 1 hknight");
