@@ -625,6 +625,9 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	actor.th_die = zombie_die;
 	actor.th_missile = zombie_missile;
 
+	if(actor.charmed)
+		actor.spawnflags &= ~SPAWN_CRUCIFIED;
+
 	if(actor.spawnflags & SPAWN_CRUCIFIED)
 	{
 		actor.solid = SOLID_NOT;

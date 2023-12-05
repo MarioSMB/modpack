@@ -1,0 +1,32 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SNOWMAN,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 did not want to build a Snowman"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SNOWMAN,               1,  NULL,           INFO_DEATH_SELF_MON_SNOWMAN,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SNOWMAN,           DEATH_SELF_MON_SNOWMAN,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SNOWMAN, "progs/xmas/mon_snowman.mdl");
+MODEL(MON_SNOWMAN_HEAD, "progs/xmas/h_snowman.mdl");
+
+SOUND(MON_SNOWMAN_SIGHT1, "xmas/snowman/sight1");
+SOUND(MON_SNOWMAN_SIGHT2, "xmas/snowman/sight2");
+Sound SND_MON_SNOWMAN_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SNOWMAN_SIGHT1.m_id + floor(prandom() * 2));
+}
+#endif
+
+CLASS(Snowman, Monster)
+    ATTRIB(Snowman, spawnflags, int, MON_FLAG_STATIONARY);
+    ATTRIB(Snowman, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Snowman, m_maxs, vector, '16 16 32');
+#ifdef GAMEQC
+    ATTRIB(Snowman, m_model, Model, MDL_MON_SNOWMAN);
+    ATTRIB(Snowman, m_model_head, Model, MDL_MON_SNOWMAN_HEAD);
+#endif
+    ATTRIB(Snowman, netname, string, "snowman");
+    ATTRIB(Snowman, monster_name, string, _("Snowman"));
+ENDCLASS(Snowman)
+
+REGISTER_MONSTER(SNOWMAN, NEW(Snowman));

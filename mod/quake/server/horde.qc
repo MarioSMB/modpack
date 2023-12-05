@@ -213,6 +213,12 @@ void PrecacheMonsters()
 	precache_model("maps/b_rock0.bsp");
 	precache_model("maps/b_batt1.bsp");
 	precache_model("maps/b_batt0.bsp");
+	precache_model("maps/b_plas1.bsp");
+	precache_model("maps/b_plas0.bsp");
+	precache_model("maps/b_lnail1.bsp");
+	precache_model("maps/b_lnail0.bsp");
+	precache_model("maps/b_mrock1.bsp");
+	precache_model("maps/b_mrock0.bsp");
 	
 	// items
 	precache_model("maps/b_bh10.bsp"); // rotten health
@@ -677,82 +683,159 @@ void SpawnAmmo(entity this)
 		rockets		20%			8.33 %
 		cells		10%			8.33 %
 	*/
-	float r = random() * 20;
-	if(r <= 7) // shells
+	RandomSelection_Init();
+	RandomSelection_AddFloat(IT_SHELLS, 0.4, 1);
+	RandomSelection_AddFloat(IT_NAILS, 0.3, 1);
+	RandomSelection_AddFloat(IT_ROCKETS, 0.2, 1);
+	RandomSelection_AddFloat(IT_CELLS, 0.1, 1);
+	RandomSelection_AddFloat(IT_LAVA_NAILS, 0.3, 1);
+	RandomSelection_AddFloat(IT_PLASMA_AMMO, 0.1, 1);
+	RandomSelection_AddFloat(IT_MULTI_ROCKETS, 0.2, 1);
+
+	switch(RandomSelection_chosen_float)
 	{
-		item.classname = "item_shells";
-		item.noise = "weapons/lock4.wav";
-		if(is_big)
+		case IT_SHELLS:
 		{
-			_setmodel(item, "maps/b_shell1.bsp");
-			item.aflag = 40;
+			item.classname = "item_shells";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_shell1.bsp");
+				item.aflag = 40;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_shell0.bsp");
+				item.aflag = 20;
+			}
+			item.ammo_shells = item.aflag;
+			item.weapon = 1;
+			item.items = IT_SHELLS;
+			item.netname = "shells";
+			break;
 		}
-		else
+		case IT_NAILS:
 		{
-			_setmodel(item, "maps/b_shell0.bsp");
-			item.aflag = 20;
+			item.classname = "item_spikes";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_nail1.bsp");
+				item.aflag = 50;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_nail0.bsp");
+				item.aflag = 25;
+			}
+			item.ammo_nails = item.aflag;
+			item.weapon = 2;
+			item.items = IT_NAILS;
+			item.netname = "nails";
+			break;
 		}
-		item.ammo_shells = item.aflag;
-		item.weapon = 1;
-		item.items = IT_SHELLS;
-		item.netname = "shells";
-	}
-	else if(r <= 14) // spikes
-	{
-		item.classname = "item_spikes";
-		item.noise = "weapons/lock4.wav";
-		if(is_big)
+		case IT_ROCKETS:
 		{
-			_setmodel(item, "maps/b_nail1.bsp");
-			item.aflag = 50;
+			item.classname = "item_rockets";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_rock1.bsp");
+				item.aflag = 10;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_rock0.bsp");
+				item.aflag = 5;
+			}
+			item.ammo_rockets = item.aflag;
+			item.weapon = 3;
+			item.items = IT_ROCKETS;
+			item.netname = "rockets";
+			break;
 		}
-		else
+		// old code defaulted to cells, so we will too!
+		default:
+		case IT_CELLS:
 		{
-			_setmodel(item, "maps/b_nail0.bsp");
-			item.aflag = 25;
+			item.classname = "item_cells";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_batt1.bsp");
+				item.aflag = 12;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_batt0.bsp");
+				item.aflag = 6;
+			}
+			item.ammo_cells = item.aflag;
+			item.weapon = 4;
+			item.items = IT_CELLS;
+			item.netname = "cells";
+			break;
 		}
-		item.ammo_nails = item.aflag;
-		item.weapon = 2;
-		item.items = IT_NAILS;
-		item.netname = "nails";
-	}
-	else if(r <= 17) // rockets
-	{
-		item.classname = "item_rockets";
-		item.noise = "weapons/lock4.wav";
-		if(is_big)
+		case IT_PLASMA_AMMO:
 		{
-			_setmodel(item, "maps/b_rock1.bsp");
-			item.aflag = 10;
+			item.classname = "item_plasma";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_plas1.bsp");
+				item.aflag = 12;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_plas0.bsp");
+				item.aflag = 6;
+			}
+			item.ammo_plasma = item.aflag;
+			item.weapon = 7;
+			item.items = IT_PLASMA_AMMO;
+			item.netname = "plasma";
+			break;
 		}
-		else
+		case IT_LAVA_NAILS:
 		{
-			_setmodel(item, "maps/b_rock0.bsp");
-			item.aflag = 5;
+			item.classname = "item_lava_spikes";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_lnail1.bsp");
+				item.aflag = 50;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_lnail0.bsp");
+				item.aflag = 25;
+			}
+			item.ammo_lava_nails = item.aflag;
+			item.weapon = 5;
+			item.items = IT_LAVA_NAILS;
+			item.netname = "lava nails";
+			break;
 		}
-		item.ammo_rockets = item.aflag;
-		item.weapon = 3;
-		item.items = IT_ROCKETS;
-		item.netname = "rockets";
-	}
-	else // cells
-	{
-		item.classname = "item_cells";
-		item.noise = "weapons/lock4.wav";
-		if(is_big)
+		case IT_MULTI_ROCKETS:
 		{
-			_setmodel(item, "maps/b_batt1.bsp");
-			item.aflag = 12;
+			item.classname = "item_multi_rockets";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				_setmodel(item, "maps/b_mrock1.bsp");
+				item.aflag = 10;
+			}
+			else
+			{
+				_setmodel(item, "maps/b_mrock0.bsp");
+				item.aflag = 5;
+			}
+			item.ammo_multi_rockets = item.aflag;
+			item.weapon = 6;
+			item.items = IT_MULTI_ROCKETS;
+			item.netname = "multi rockets";
+			break;
 		}
-		else
-		{
-			_setmodel(item, "maps/b_batt0.bsp");
-			item.aflag = 6;
-		}
-		item.ammo_cells = item.aflag;
-		item.weapon = 4;
-		item.items = IT_CELLS;
-		item.netname = "cells";
 	}
 	setorigin (item, pos + '0 0 1');
 	setsize(item, '0 0 0', '32 32 56');
@@ -1577,6 +1660,9 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 skaarj");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 dalek");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 arachnofloyd");
+		// event: christmas
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 elf 1 santa");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 raindeer 1 santa");
 	}
 
 	// no bosses spawn during army waves

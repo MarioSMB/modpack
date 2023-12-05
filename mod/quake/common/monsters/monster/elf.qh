@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ELF,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was magically broken by an Elf"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ELF,               1,  NULL,           INFO_DEATH_SELF_MON_ELF,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ELF,           DEATH_SELF_MON_ELF,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ELF, "progs/xmas/mon_elf.mdl");
+MODEL(MON_ELF_HEAD, "progs/xmas/h_elf.mdl");
+
+SOUND(MON_ELF_SIGHT1, "xmas/elf/sight1");
+SOUND(MON_ELF_SIGHT2, "xmas/elf/sight2");
+SOUND(MON_ELF_SIGHT3, "xmas/elf/sight3");
+SOUND(MON_ELF_SIGHT4, "xmas/elf/sight4");
+Sound SND_MON_ELF_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ELF_SIGHT1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Elf, Monster)
+    ATTRIB(Elf, spawnflags, int, 0);
+    ATTRIB(Elf, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Elf, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(Elf, m_model, Model, MDL_MON_ELF);
+    ATTRIB(Elf, m_model_head, Model, MDL_MON_ELF_HEAD);
+#endif
+    ATTRIB(Elf, netname, string, "elf");
+    ATTRIB(Elf, monster_name, string, _("Elf"));
+ENDCLASS(Elf)
+
+REGISTER_MONSTER(ELF, NEW(Elf));

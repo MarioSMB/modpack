@@ -1,0 +1,28 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_RAINDEER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was trampled by a Raindeer"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_RAINDEER,               1,  NULL,           INFO_DEATH_SELF_MON_RAINDEER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_RAINDEER,           DEATH_SELF_MON_RAINDEER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_RAINDEER, "progs/xmas/mon_raindeer.mdl");
+MODEL(MON_RAINDEER_HEAD, "progs/xmas/h_raindeer.mdl");
+
+SOUND(MON_RAINDEER_SIGHT, "xmas/raindeer/sight");
+#endif
+
+CLASS(Raindeer, Monster)
+    ATTRIB(Raindeer, spawnflags, int, MON_FLAG_STATIONARY);
+    ATTRIB(Raindeer, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Raindeer, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Raindeer, m_model, Model, MDL_MON_RAINDEER);
+    ATTRIB(Raindeer, m_model_head, Model, MDL_MON_RAINDEER_HEAD);
+#endif
+    ATTRIB(Raindeer, netname, string, "raindeer");
+    ATTRIB(Raindeer, monster_name, string, _("Raindeer"));
+ENDCLASS(Raindeer)
+
+REGISTER_MONSTER(RAINDEER, NEW(Raindeer));

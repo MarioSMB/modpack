@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SANTA,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was on Santa's naughty list"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SANTA,               1,  NULL,           INFO_DEATH_SELF_MON_SANTA,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SANTA,           DEATH_SELF_MON_SANTA,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SANTA, "progs/xmas/mon_santa.mdl");
+MODEL(MON_SANTA_HEAD, "progs/xmas/h_santa.mdl");
+
+SOUND(MON_SANTA_SIGHT, "xmas/santa/sight");
+#endif
+
+CLASS(Santa, Monster)
+    ATTRIB(Santa, spawnflags, int, 0);
+    ATTRIB(Santa, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Santa, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Santa, m_model, Model, MDL_MON_SANTA);
+    ATTRIB(Santa, m_model_head, Model, MDL_MON_SANTA_HEAD);
+    ATTRIB(Santa, m_sound, Sound, SND_MON_SANTA_SIGHT);
+#endif
+    ATTRIB(Santa, netname, string, "santa");
+    ATTRIB(Santa, monster_name, string, _("Santa"));
+ENDCLASS(Santa)
+
+REGISTER_MONSTER(SANTA, NEW(Santa));
