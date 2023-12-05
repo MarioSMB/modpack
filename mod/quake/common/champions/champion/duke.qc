@@ -352,7 +352,7 @@ void Duke_PreJump(entity actor)
 
 METHOD(Duke, m_physics, bool(Duke this, entity actor, float dt))
 {
-	if(PHYS_INPUT_BUTTON_CROUCH(actor))
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
 
