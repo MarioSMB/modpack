@@ -6,7 +6,7 @@ const int anim_old_shake = 46; //'46 65 0'
 
 void shub_lightstyle(entity this, int lightnum, string lightid)
 {
-	if(this.charmed || world.model != "maps/end.bsp")
+	if(this.charmed || (this.target == "" || !this.target) || world.model != "maps/end.bsp")
 		return;
 	lightstyle(lightnum, lightid);
 }
@@ -128,14 +128,14 @@ void finale_intermission(entity this)
 
 void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	if(!this.charmed)
+	if(!this.charmed && this.target && this.target != "")
 		finale_intermission(this);
 
 	// make fake versions of all players as standins, and move the real
 	// players to the intermission spot
 
 	// used later to tell if a telefragging player should appear
-	this.count = (!this.charmed && deathtype == DEATH_TELEFRAG.m_id);
+	this.count = (!this.charmed && this.target && this.target != "" && deathtype == DEATH_TELEFRAG.m_id);
 	
 	// wait for 1 second
 	entity timer = spawn();
@@ -209,7 +209,7 @@ void finale_4(entity this)
 		}
 		zz = zz + 96;
 	}
-	if(!this.charmed)
+	if(!this.charmed && this.target && this.target != "")
 	{
 		// start the end text
 		WriteByte(MSG_ALL, SVC_FINALE);
