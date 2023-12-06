@@ -605,7 +605,7 @@ void weapon_touch(entity this, entity toucher)
 
 	//if(!(toucher.dual_weapons & wep.m_wepset))
 	//{
-	if(!toucher.cvar_cl_autoswitch)
+	if(toucher.cvar_cl_autoswitch)
 	{
 		if(!deathmatch)
 			W_SwitchWeapon(toucher, wep, weaponentity);
