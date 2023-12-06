@@ -185,7 +185,9 @@ void snowm_die(entity this, entity inflictor, entity attacker, int deathtype)
 		_sound(this, CHAN_BODY, "xmas/snowman/death1.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CHAN_BODY, "xmas/snowman/death2.wav", 1, ATTN_NORM);
-	snowm_explode(this);
+	// delayed to avoid recursive explosions
+	setthink(this, snowm_explode);
+	this.nextthink = time;
 }
 
 /*

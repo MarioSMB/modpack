@@ -225,7 +225,9 @@ void raind_explode(entity this)
 void raind_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CHAN_BODY, "xmas/raindeer/death.wav", 1, ATTN_NORM);
-	raind_explode(this);
+	// slight delay to avoid recursive explosions
+	setthink(this, raind_explode);
+	this.nextthink = time;
 }
 
 /*
