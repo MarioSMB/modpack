@@ -433,6 +433,8 @@ void PM_AirMove(entity this, float dt)
 	if(this.move_movetype == MOVETYPE_NOCLIP)
 	{
 		// noclip
+		makevectors(this.v_angle);
+		wishvel = v_forward * this.movement_x + v_right * this.movement_y + '0 0 1' * this.movement_z;
 		this.velocity = wishvel;
 	}
 	else if(IS_ONGROUND(this))
