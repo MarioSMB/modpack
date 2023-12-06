@@ -22,6 +22,11 @@ int autocvar_sv_quake_fixstuff;
 	#define MP_MG (STAT(MISSIONPACKS) & MISSIONPACK_MG)
 #endif
 
+#ifdef GAMEQC
+REPLICATE_INIT(bool, cvar_cl_autoswitch);
+REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
+#endif
+
 // generic entity flags
 // engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
 #ifdef CSQC

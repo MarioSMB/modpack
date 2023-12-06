@@ -395,6 +395,8 @@ Deathmatch weapon change rules for picking up a weapon
 */
 void Deathmatch_Weapon(entity this, Weapon newwep, .entity weaponentity)
 {
+	if(!this.cvar_cl_autoswitch)
+		return;
 	Weapon best = w_getbestweapon(this, weaponentity);
 	if(best == newwep)
 		W_SwitchWeapon(this, newwep, weaponentity);
@@ -780,7 +782,7 @@ void ammo_touch(entity this, entity toucher)
 
 // change to a better weapon if appropriate
 
-	if(toucher.(weaponentity).m_weapon == best)
+	if(!toucher.cvar_cl_autoswitch && toucher.(weaponentity).m_weapon == best)
 		W_SwitchWeapon(toucher, w_getbestweapon(toucher, weaponentity), weaponentity);
 
 // if changed current ammo, update it

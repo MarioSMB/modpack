@@ -3208,6 +3208,18 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "autoswitch")
+	{
+		if (argv(1) != "")
+		{
+			this.cvar_cl_autoswitch = InterpretBoolean(argv(1));
+			sprint(this, strcat("^1autoswitch is currently turned ", (this.cvar_cl_autoswitch ? "on" : "off"), ".\n"));
+			return;
+		}
+		LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		return;
+	}
+
 	if(cmd_name == "spectate")
 	{
 		ClientCommand_spectate(this);

@@ -158,13 +158,16 @@ void shop_buyitem(entity this, string item)
 	else
 		STAT(WEAPONS, this) |= wep.m_wepset;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if(!this.cvar_cl_autoswitch)
 	{
-		.entity weaponentity = weaponentities[slot];
-		if(wep == w_getbestweapon(this, weaponentity))
-			W_SwitchWeapon(this, wep, weaponentity);
-		if(autocvar_g_weaponswitch_debug != 1)
-			break;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(wep == w_getbestweapon(this, weaponentity))
+				W_SwitchWeapon(this, wep, weaponentity);
+			if(autocvar_g_weaponswitch_debug != 1)
+				break;
+		}
 	}
 }
 
