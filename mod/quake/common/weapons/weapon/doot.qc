@@ -25,7 +25,7 @@ void doot_note_touch(entity this, entity toucher)
 		return;
 	}
 
-	float mydmg = 20;
+	float mydmg = 15;
 	float damg = mydmg + random() * (mydmg * 0.2);
 	
 	if(toucher.health)
@@ -55,8 +55,6 @@ void W_FireDoot(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
 	W_TakeAmmo(this, ammo_rockets, 1);
-
-	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 
 	vector org = gettaginfo(this.(weaponentity), 0);
 	vector offset = org + v_up * -8 + v_forward * 14;
