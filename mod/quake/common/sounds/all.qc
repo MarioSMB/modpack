@@ -6,8 +6,6 @@ string Sound_randomize()
 	RandomSelection_Init();
 	FOREACH(Sounds, it != SND_Null,
 	{
-		if(it == SND_TUBA1 || it == SND_TUBA2 || it == SND_TUBA3 || it == SND_TUBA4 || it == SND_TUBA5 || it == SND_TUBA6 || it == SND_TUBA7 || it == SND_TUBA8)
-			continue;
 		RandomSelection_AddEnt(it, 1, 1);
 	});
 	return Sound_fixpath(RandomSelection_chosen_ent);

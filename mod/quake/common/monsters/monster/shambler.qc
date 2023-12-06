@@ -11,6 +11,8 @@ const int anim_sham_magic = 65; //'65 76 0'
 const int anim_sham_pain = 77; //'77 82 0'
 const int anim_sham_death = 83; //'83 93 0'
 
+const int MON_SHAMBLER_COOKIE = BIT(1);
+
 void sham_stand1(entity this);
 void sham_stand17(entity this) { set_animofs(this, anim_sham_stand, 17, sham_stand1); ai_stand(this); }
 void sham_stand16(entity this) { set_animofs(this, anim_sham_stand, 16, sham_stand17); ai_stand(this); }
@@ -80,7 +82,10 @@ void sham_smash10(entity this)
 		
 	float ldmg =(random() + random() + random()) * 40;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_SHAMBLER.m_id);
-	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_SHAMBLER_COOKIE)
+		_sound(this, CH_VOICE, "shambler/nomnom.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
@@ -113,7 +118,10 @@ void ShamClaw(entity this, float side)
 		
 	float ldmg =(random() + random() + random()) * 20;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_SHAMBLER.m_id);
-	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_SHAMBLER_COOKIE)
+		_sound(this, CH_VOICE, "shambler/nomnom.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	if(side)
 	{
@@ -189,8 +197,36 @@ void sham_melee(entity this)
 
 //============================================================================
 
+void CastCookie(entity this)
+{
+	vector offang = vectoangles(this.enemy.origin - this.origin);
+	
+	makevectors(offang);
+
+	vector org = this.origin + v_up * 30 + v_forward * 30 + v_right * 8.5 + '0 0 1';
+
+// set missile speed
+	vector vec = normalize (v_forward);
+	vec.z = 0 - vec.z + (random() - 0.5)*0.1;
+	
+	entity newmis = launch_spike(this, org, vec);
+	settouch(newmis, T_MissileTouch);
+	newmis.dmg = 20;
+	newmis.projectiledeathtype = DEATH_MONSTER_SHAMBLER.m_id;
+	_setmodel(newmis, "progs/cookie.mdl");
+	setsize(newmis, '0 0 0', '0 0 0');		
+	newmis.velocity = vec*300;
+	_sound(this, CH_WEAPON_SINGLE, "hknight/attack1.wav", 1, ATTN_NORM);
+}
+
 void CastLightning(entity this)
 {
+	if(this.spawnflags & MON_SHAMBLER_COOKIE)
+	{
+		CastCookie(this);
+		return;
+	}
+
 	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
 	if(cont & DPCONTENTS_LIQUIDSMASK)
 	{
@@ -270,7 +306,10 @@ void sham_pain1(entity this) { set_animofs(this, anim_sham_pain, 1, sham_pain2);
 
 void sham_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	_sound(this, CH_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_SHAMBLER_COOKIE)
+		_sound(this, CH_VOICE, "shambler/cookie_hurt.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
 
 	if(this.health <= 0)
 		return;		// allready dying, don't go into pain frame
@@ -319,7 +358,10 @@ void sham_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 
 // regular death
-	_sound(this, CH_VOICE, "shambler/sdeath.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_SHAMBLER_COOKIE)
+		_sound(this, CH_VOICE, "shambler/cookie_die.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "shambler/sdeath.wav", 1, ATTN_NORM);
 	sham_death1(this);
 }
 
@@ -419,6 +461,22 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	precache_sound("shambler/melee2.wav");
 	precache_sound("shambler/smack.wav");
 
+	if(random() <= 0.2)
+		actor.spawnflags |= MON_SHAMBLER_COOKIE;
+
+	if(actor.spawnflags & MON_SHAMBLER_COOKIE)
+	{
+		precache_sound("hknight/attack1.wav");
+		precache_sound("shambler/cookie_die.wav");
+		precache_sound("shambler/cookie_hurt.wav");
+		precache_sound("shambler/nomnom.wav");
+		precache_sound("shambler/cookie.wav");
+		precache_model("progs/cookie.mdl");
+		precache_model("progs/shambler_cookie_creature.mdl");
+		_setmodel(actor, "progs/shambler_cookie_creature.mdl");
+		setsize(actor, this.m_mins, this.m_maxs);
+	}
+
     actor.health = 600;
     actor.th_stand = sham_stand1;
 	actor.th_walk = sham_walk1;
@@ -429,6 +487,17 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	actor.th_pain = sham_pain;
 
 	actor.checkattack = ShamCheckAttack;
+
+    return true;
+}
+METHOD(Shambler, mr_sight, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+
+    if(actor.spawnflags & MON_SHAMBLER_COOKIE)
+		_sound(actor, CH_VOICE, "shambler/cookie.wav", 1, ATTN_NORM);
+	else
+		sound(actor, CH_VOICE, SND_MON_SHAMBLER_SIGHT, 1, ATTN_NORM);
 
     return true;
 }

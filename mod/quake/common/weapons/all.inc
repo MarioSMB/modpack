@@ -27,6 +27,8 @@
 #include "weapon/tuba.qh"
 #include "weapon/portal_gun.qh"
 #include "weapon/pan.qh"
+#include "weapon/doot.qh"
+#include "weapon/mayo.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

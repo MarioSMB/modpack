@@ -95,14 +95,8 @@ void W_FireTuba(entity this, .entity weaponentity)
 
 	musicnote.velocity = v_forward * 200 + v_up * 600;
 
-	// create a special entity for the sound so we can remove it
-	// otherwise the sound will loop forever!
-	entity tubasnd = new(tuba_note);
-	setorigin(tubasnd, this.origin);
-	setthink(tubasnd, tubasound_remove);
-	tubasnd.nextthink = time + 0.5;
-
-	sound(tubasnd, CH_TUBA_SINGLE, SND_TUBA_RANDOM(), 1, ATTN_NORM);
+	float r = max(0.5, random() * 3);
+	sound7(this, CH_WEAPON_SINGLE, SND(TUBA_FIRE), 1, ATTN_NORM, 100 / r, 0);
 }
 
 METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

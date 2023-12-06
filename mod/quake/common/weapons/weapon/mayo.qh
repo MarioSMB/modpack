@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Mayo, Weapon)
+/* ammotype  */ ATTRIB(Mayo, ammo_type, int, IT_ROCKETS);
+/* impulse   */ ATTRIB(Mayo, impulse, int, 6);
+/* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Mayo, aflag, int, 5);
+/* modelname */ ATTRIB(Mayo, mdl, string, "mayo");
+/* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshair7");
+/* crosshair */ ATTRIB(Mayo, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(Mayo, w_crosshair_color, vector, '1 0 0');
+/* wepimg    */ ATTRIB(Mayo, model2, string, "mayo");
+/* refname   */ ATTRIB(Mayo, netname, string, "mayo");
+/* wepname   */ ATTRIB(Mayo, m_name, string, _("Jar O' Mayo"));
+
+ENDCLASS(Mayo)
+REGISTER_WEAPON(MAYO, NEW(Mayo));
+
+//SPAWNFUNC_WEAPON(weapon_mayo, WEP_MAYO)
