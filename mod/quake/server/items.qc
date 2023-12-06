@@ -605,10 +605,13 @@ void weapon_touch(entity this, entity toucher)
 
 	//if(!(toucher.dual_weapons & wep.m_wepset))
 	//{
+	if(!toucher.cvar_cl_autoswitch)
+	{
 		if(!deathmatch)
 			W_SwitchWeapon(toucher, wep, weaponentity);
 		else
 			Deathmatch_Weapon(toucher, wep, weaponentity);
+	}
 	//}
 
 	toucher.collected_weapons |= wep.m_wepset;
@@ -2064,7 +2067,7 @@ void BackpackTouch(entity this, entity toucher)
 	EnableComboWeapons(toucher);
 
 // change to the weapon
-	if(wep != WEP_Null)
+	if(wep != WEP_Null && toucher.cvar_cl_autoswitch)
 	{
 		if((toucher.flags & FL_INWATER) && wep == WEP_LIGHTNING)
 			return; // lol
