@@ -73,6 +73,11 @@ PRECACHE(Nyx)
 #endif
 }
 #endif
+#ifdef CSQC
+#define NYX_STATS \
+"Press %ABILITY% to turn invisible\n" \
+"Able to wall jump"
+#endif
 CLASS(Nyx, Champions)
     ATTRIB(Nyx, netname, string, "nyx");
     ATTRIB(Nyx, m_name, string, "Nyx");
@@ -86,6 +91,9 @@ CLASS(Nyx, Champions)
 #endif
 #ifdef CSQC
     ATTRIB(Nyx, m_faceprefix, string, "gfx/quake/katria_");
+#endif
+#ifdef CSQC
+    ATTRIB(Nyx, message, string, NYX_STATS);
 #endif
 ENDCLASS(Nyx)
 REGISTER_CHAMPION(Nyx, NEW(Nyx));

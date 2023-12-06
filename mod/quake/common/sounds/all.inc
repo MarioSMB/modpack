@@ -1,6 +1,8 @@
 // Global list of sounds
 // TODO: remove uses of _sound
 
+SOUND(JETPACK_FLY, "misc/jetpack_fly");
+
 SOUND(TELE1, "misc/r_tele1");
 SOUND(TELE2, "misc/r_tele2");
 SOUND(TELE3, "misc/r_tele3");

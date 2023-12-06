@@ -1,5 +1,7 @@
 #pragma once
 
+float autocvar_cl_jetpack_attenuation = 2;
+
 // FEATURE: EF_NODRAW workalike
 const int EF_BRIGHTFIELD       = BIT(0);
 const int EF_BRIGHTLIGHT       = BIT(2);

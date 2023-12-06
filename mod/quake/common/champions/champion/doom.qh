@@ -58,6 +58,11 @@ PRECACHE(Doom)
 #endif
 }
 #endif
+#ifdef CSQC
+#define DOOM_STATS \
+"300% increased melee damage\n" \
+"20% chance to not consume ammo"
+#endif
 CLASS(Doom, Champions)
     ATTRIB(Doom, netname, string, "doom");
     ATTRIB(Doom, m_name, string, "Doom");
@@ -68,6 +73,9 @@ CLASS(Doom, Champions)
     ATTRIB(Doom, m_soundpath, string, "player_doom/");
     METHOD(Doom, m_sound_pain, string()) { return SND(Doom_Pain_Random()); }
     METHOD(Doom, m_sound_death, string()) { return SND(Doom_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Doom, message, string, DOOM_STATS);
 #endif
 ENDCLASS(Doom)
 REGISTER_CHAMPION(Doom, NEW(Doom));

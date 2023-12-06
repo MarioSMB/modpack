@@ -35,5 +35,8 @@ CLASS(Ranger, Champions)
     METHOD(Ranger, m_sound_pain, string()) { return SND(Ranger_Pain_Random()); }
     METHOD(Ranger, m_sound_death, string()) { return SND(Ranger_Death_Random()); }
 #endif
+#ifdef CSQC
+    ATTRIB(Ranger, message, string, "No additional bonus stats");
+#endif
 ENDCLASS(Ranger)
 REGISTER_CHAMPION(Ranger, NEW(Ranger));

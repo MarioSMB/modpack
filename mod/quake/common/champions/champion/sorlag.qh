@@ -57,11 +57,19 @@ PRECACHE(Sorlag)
 #endif
 }
 #endif
+#ifdef CSQC
+#define SORLAG_STATS \
+"200% increased swimming speed\n" \
+"Takes 66% less damage in slime\n" \
+"Holds breath 33% longer\n" \
+"Press %ABILITY% to spit acid"
+#endif
 CLASS(Sorlag, Champions)
     ATTRIB(Sorlag, netname, string, "sorlag");
     ATTRIB(Sorlag, m_name, string, "Sorlag");
     ATTRIB(Sorlag, qcc_swimspeed, float, 2);
     ATTRIB(Sorlag, qcc_slimedamage, float, 0.33);
+    ATTRIB(Sorlag, qcc_breathtime, float, 1.33);
     ATTRIB(Sorlag, qcc_meleename, string, "sorclaw");
 #ifdef GAMEQC
     ATTRIB(Sorlag, m_model, Model, MDL_Sorlag);
@@ -69,6 +77,9 @@ CLASS(Sorlag, Champions)
     ATTRIB(Sorlag, m_soundpath, string, "player_sorlag/");
     METHOD(Sorlag, m_sound_pain, string()) { return SND(Sorlag_Pain_Random()); }
     METHOD(Sorlag, m_sound_death, string()) { return SND(Sorlag_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Sorlag, message, string, SORLAG_STATS);
 #endif
 ENDCLASS(Sorlag)
 REGISTER_CHAMPION(Sorlag, NEW(Sorlag));

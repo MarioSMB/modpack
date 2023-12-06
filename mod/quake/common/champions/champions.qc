@@ -167,6 +167,7 @@ void champions_Killed(entity targ, entity inflictor, entity attacker, int deatht
 void champion_menu_close();
 
 float selected_champion_index;
+int champion_hovered_index = -1;
 
 Champions champdata[REGISTRY_MAX(Champion)];
 
@@ -191,6 +192,56 @@ void champion_menu_select()
 	champion_menu_close();
 }
 
+vector champion_info_scroll;
+void champion_info_list(string id, vector pos, vector size)
+{
+	// by this point we know all the data is accurate
+	Champions champ = champdata[champion_hovered_index];
+
+	int linecount = tokenizebyseparator(champ.message, "\n");
+
+	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
+	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), linecount, '0 6 0');
+	sui_pos = '0 0 0';
+	//champion_hovered_index = -1;
+	for(float index = sui_list_item(); index > -1; index = sui_list_item())
+	{
+		sui_push_frame(sui_pos, vec2(size.x - 6, 16));
+		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
+		//if(selected_champion_index == index)
+			//sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.2, 0);
+		string text = argv(index);
+		text = strreplace("%ABILITY%", getcommandkey("(Crouch)", "+crouch"), text);
+		sui_drawtext('0 0 0', '8 8 0', text, '1 1 1', 1, 0);
+		sui_pop_frame();
+	}
+	sui_list_view_end();	
+}
+
+void champion_menu_info(int index)
+{
+	Champions champ = champdata[index];
+	if(!champ.message || champ.message == "")
+		return;
+
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_drawtext('300 -80 0', '10 10 0', "Champion Stats", '1 1 1', 1, 0);
+	
+	sui_fill('300 0 0', '4 4 0', '0 0 0', 0.5, 0);
+	sui_fill('300 0 0', '2 2 0', '1 1 1', 0.75, 0);
+	
+	vector ent_menu_size = '300 150 0';
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_push_frame('300 10 0', ent_menu_size);
+	
+	sui_fill('0 0 0', ent_menu_size, '0 0 0', 0.5, 0);
+	sui_offset = champion_info_scroll;
+	champion_info_list("champion_info_list", '0 0 0', ent_menu_size - '2 2 0');
+	champion_info_scroll = sui_offset;
+	
+	sui_pop_frame();
+}
+
 void champion_menu_list(string id, vector pos, vector size)
 {
 	for(int j = 0; j < REGISTRY_MAX(Champion); ++j)
@@ -207,6 +258,7 @@ void champion_menu_list(string id, vector pos, vector size)
 	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
 	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), champcount, '0 6 0');
 	sui_pos = '0 0 0';
+	//champion_hovered_index = -1;
 	for(float index = sui_list_item(); index > -1; index = sui_list_item())
 	{
 		sui_push_frame(sui_pos, vec2(size.x - 6, 16));
@@ -214,6 +266,7 @@ void champion_menu_list(string id, vector pos, vector size)
 		sui_action_element('0 0 0', vec2(size.x -6, 16), iid);
 		if(sui_is_hovered(iid))
 		{
+			champion_hovered_index = index;
 			sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.1, 0);
 			if(sui_is_clicked(iid))
 			{
@@ -255,11 +308,15 @@ void cl_champion_draw()
 	champion_menu_scroll = sui_offset;
 	
 	sui_pop_frame();
+
+	if(champion_hovered_index != -1)
+		champion_menu_info(champion_hovered_index);
 }
 
 void champion_menu_open()
 {
 	selected_champion_index = 0;
+	champion_hovered_index = -1;
 	cursor_active |= GUI_OPEN_CHAMPIONS;
 	setcursormode(cursor_active);
 }
@@ -267,6 +324,7 @@ void champion_menu_open()
 void champion_menu_close()
 {
 	selected_champion_index = 0;
+	champion_hovered_index = -1;
 	cursor_active &= ~GUI_OPEN_CHAMPIONS;
 	setcursormode(cursor_active);
 }

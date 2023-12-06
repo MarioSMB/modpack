@@ -49,6 +49,13 @@ PRECACHE(Keen)
 #endif
 }
 #endif
+#ifdef CSQC
+#define KEEN_STATS \
+"Small, fits through tight spaces\n" \
+"Short hops, big jump when stationary\n" \
+"Takes no fall damage\n" \
+"Has a pogo stick instead of an Axe"
+#endif
 CLASS(Keen, Champions)
     ATTRIB(Keen, netname, string, "keen");
     ATTRIB(Keen, m_name, string, "Keen");
@@ -67,6 +74,9 @@ CLASS(Keen, Champions)
 #endif
 #ifdef SVQC
     METHOD(Keen, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) { /* no attack, just override */ }
+#endif
+#ifdef CSQC
+    ATTRIB(Keen, message, string, KEEN_STATS);
 #endif
 ENDCLASS(Keen)
 REGISTER_CHAMPION(Keen, NEW(Keen));

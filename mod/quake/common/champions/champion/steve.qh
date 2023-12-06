@@ -51,6 +51,13 @@ PRECACHE(Steve)
 #endif
 }
 #endif
+#ifdef CSQC
+#define STEVE_STATS \
+"Press %ABILITY% to place blocks\n" \
+"Hold Jump to bunnyhop\n" \
+"Takes 500% more fall damage\n" \
+"20% reduced movement speed"
+#endif
 CLASS(Steve, Champions)
     ATTRIB(Steve, netname, string, "steve");
     ATTRIB(Steve, m_name, string, "Steve");
@@ -64,6 +71,9 @@ CLASS(Steve, Champions)
     ATTRIB(Steve, m_soundpath, string, "player_steve/");
     METHOD(Steve, m_sound_pain, string()) { return SND(Steve_Pain_Random()); }
     METHOD(Steve, m_sound_death, string()) { return SND(Steve_Death_Random()); }
+#endif
+ #ifdef CSQC
+    ATTRIB(Steve, message, string, STEVE_STATS);
 #endif
 ENDCLASS(Steve)
 REGISTER_CHAMPION(Steve, NEW(Steve));

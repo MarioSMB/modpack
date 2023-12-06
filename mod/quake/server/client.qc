@@ -1420,6 +1420,9 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT;
 	this.drawonlytoclient = NULL;
 
+	this.alpha = 1;
+	this.colormod = '1 1 1';
+
 	this.viewloc = NULL;
 
 	this.weaponframe = 0;
@@ -2464,7 +2467,10 @@ void DrownPlayer(entity this)
 			player_sound(this, CH_VOICE, "gasp2.wav", ATTN_NORM);
 		else if(this.air_finished < time + 9)
 			player_sound(this, CH_VOICE, "gasp1.wav", ATTN_NORM);
-		this.air_finished = time + 12;
+		float airtime = 12;
+		if(this.m_champion && this.m_champion.qcc_breathtime)
+			airtime *= this.m_champion.qcc_breathtime;
+		this.air_finished = time + airtime;
 		this.dmg = 2;
 	}
 	else if (this.air_finished < time)
@@ -3102,6 +3108,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	}
 }
 
+.float spectate_antispam;
 void ClientCommand_spectate(entity this)
 {
 	if(!autocvar_sv_spectate)
@@ -3117,7 +3124,14 @@ void ClientCommand_spectate(entity this)
 	}
 
 	if(IS_PLAYER(this))
+	{
+		if(time > this.spectate_antispam)
+		{
+			this.spectate_antispam = time + 3;
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
+		}
 		PutObserverInServer(this);
+	}
 }
 
 void exploder_think(entity this)

@@ -59,6 +59,12 @@ PRECACHE(BigJohn)
 #endif
 }
 #endif
+#ifdef CSQC
+#define BIGJOHN_STATS \
+"Damage taken reduced by 66%\n" \
+"Movement speed 33% slower\n" \
+"20% reduced health regeneration"
+#endif
 CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, netname, string, "bigjohn");
     ATTRIB(BigJohn, m_name, string, "Big John");
@@ -73,6 +79,9 @@ CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, m_soundpath, string, "player_bigjohn/");
     METHOD(BigJohn, m_sound_pain, string()) { return SND(BigJohn_Pain_Random()); }
     METHOD(BigJohn, m_sound_death, string()) { return SND(BigJohn_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(BigJohn, message, string, BIGJOHN_STATS);
 #endif
 ENDCLASS(BigJohn)
 REGISTER_CHAMPION(BigJohn, NEW(BigJohn));

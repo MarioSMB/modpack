@@ -52,6 +52,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_jumpheight, float, 1);
     ATTRIB(Champions, qcc_falldamage, float, 1);
     ATTRIB(Champions, qcc_slimedamage, float, 1);
+    ATTRIB(Champions, qcc_breathtime, float, 1);
     ATTRIB(Champions, qcc_health_regen_rate, float, 1);
     ATTRIB(Champions, qcc_health_regen_stable, float, 1);
     ATTRIB(Champions, qcc_health_regen_max, float, 1);
@@ -83,6 +84,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_fixclient, void(Champions this, entity actor)) { };
 #ifdef CSQC
     ATTRIB(Champions, m_faceprefix, string, "gfx/quake/");
+    ATTRIB(Champions, message, string, string_null);
 #endif
 #ifdef SVQC
     /** Special condition for allowing selection of this model */

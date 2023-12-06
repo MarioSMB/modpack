@@ -73,6 +73,12 @@ PRECACHE(Katria)
 #endif
 }
 #endif
+#ifdef CSQC
+#define KATRIA_STATS \
+"33% increased movement speed\n" \
+"Takes 20% more damage\n" \
+"75% faster health regeneration"
+#endif
 CLASS(Katria, Champions)
     ATTRIB(Katria, netname, string, "katria");
     ATTRIB(Katria, m_name, string, "Katria");
@@ -88,6 +94,9 @@ CLASS(Katria, Champions)
 #endif
 #ifdef CSQC
     ATTRIB(Katria, m_faceprefix, string, "gfx/quake/katria_");
+#endif
+#ifdef CSQC
+    ATTRIB(Katria, message, string, KATRIA_STATS);
 #endif
 ENDCLASS(Katria)
 REGISTER_CHAMPION(Katria, NEW(Katria));

@@ -22,6 +22,8 @@ bool autocvar_cl_unpress_attack_on_weapon_switch = false;
 
 int tempdb;
 
+.int snd_looping;
+
 string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)

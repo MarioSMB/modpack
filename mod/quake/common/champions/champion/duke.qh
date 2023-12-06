@@ -127,6 +127,11 @@ PRECACHE(Duke)
 #endif
 }
 #endif
+#ifdef CSQC
+#define DUKE_STATS \
+"Kicks ass, chews bubble gum\n" \
+"Hold %ABILITY% to use jet pack"
+#endif
 CLASS(Duke, Champions)
     ATTRIB(Duke, netname, string, "duke");
     ATTRIB(Duke, m_name, string, "Duke");
@@ -137,6 +142,9 @@ CLASS(Duke, Champions)
     ATTRIB(Duke, m_soundpath, string, "player_duke/");
     METHOD(Duke, m_sound_pain, string()) { return SND(Duke_Pain_Random()); }
     METHOD(Duke, m_sound_death, string()) { return SND(Duke_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Duke, message, string, DUKE_STATS);
 #endif
 ENDCLASS(Duke)
 REGISTER_CHAMPION(Duke, NEW(Duke));

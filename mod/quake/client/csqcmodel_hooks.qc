@@ -1,6 +1,8 @@
 #include "csqcmodel_hooks.qh"
 
+#include "../client/main.qh"
 #include "../common/effects/all.qh"
+#include "../common/sounds/all.qh"
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -31,7 +33,8 @@ void Projectile_DrawTrail(entity this, vector to)
 	if (this.traileffect)
 	{
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
-		boxparticles(particleeffectnum(REGISTRY_GET(Effects, this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		entity eff = REGISTRY_GET(Effects, this.traileffect);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
@@ -134,6 +137,23 @@ void CSQCModel_Effects_Apply(entity this)
 	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		this.renderflags |= RF_ADDITIVE;
 		// also special in CSQCPlayer_GlowMod_Apply
+
+	if(this.csqcmodel_modelflags & MF_ROCKET)
+	{
+		if(!this.snd_looping)
+		{
+			sound(this, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_cl_jetpack_attenuation);
+			this.snd_looping = CH_TRIGGER_SINGLE;
+		}
+	}
+	else
+	{
+		if(this.snd_looping)
+		{
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
+			this.snd_looping = 0;
+		}
+	}
 }
 
 // general functions

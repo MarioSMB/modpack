@@ -311,13 +311,11 @@ void Ent_Remove(entity this)
 {
 	if(this.entremove) this.entremove(this);
 
-#if 0
 	if(this.snd_looping > 0)
 	{
-		sound(this, this.snd_looping, SND_Null, VOL_BASE, 2);
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
 		this.snd_looping = 0;
 	}
-#endif
 
 	this.enttype = 0;
 	this.classname = "";
@@ -393,6 +391,13 @@ STATIC_INIT(PlayerSlots_Spawn)
 }
 
 // optional stuff
+
+void loopsound(entity e, int ch, Sound samp, float vol, float attn)
+{
+	TC(int, ch);
+	sound(e, ch, samp, vol, attn);
+	e.snd_looping = ch;
+}
 
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {

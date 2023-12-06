@@ -71,6 +71,9 @@ CLASS(Mario, Champions)
     METHOD(Mario, m_sound_pain, string()) { return SND(Mario_Pain_Random()); }
     METHOD(Mario, m_sound_death, string()) { return SND(Mario_Death_Random()); }
 #endif
+#ifdef CSQC
+    ATTRIB(Mario, message, string, "It's-a Me, Mario!");
+#endif
 ENDCLASS(Mario)
 REGISTER_CHAMPION(Mario, NEW(Mario));
 

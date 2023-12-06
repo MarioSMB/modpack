@@ -71,6 +71,9 @@ CLASS(Goat, Champions)
     METHOD(Goat, m_sound_pain, string()) { return SND(Goat_Pain_Random()); }
     METHOD(Goat, m_sound_death, string()) { return SND(Goat_Death_Random()); }
 #endif
+#ifdef CSQC
+    ATTRIB(Goat, message, string, "BAAAAAAAHHHHH");
+#endif
 ENDCLASS(Goat)
 REGISTER_CHAMPION(Goat, NEW(Goat));
 

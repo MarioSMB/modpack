@@ -69,6 +69,16 @@ PRECACHE(Dusk)
 #endif
 }
 #endif
+#ifdef CSQC
+#define DUSK_STATS \
+"Health rots to 50%\n" \
+"Special ability: Reap\n" \
+"Press %ABILITY%, costs 25 health\n" \
+"Revives nearby fallen enemies\n" \
+"Sets spawn point of dead players\n" \
+"Respawns nearby non-health items"
+
+#endif
 CLASS(Dusk, Champions)
     ATTRIB(Dusk, netname, string, "dusk");
     ATTRIB(Dusk, m_name, string, "Dusk");
@@ -81,6 +91,9 @@ CLASS(Dusk, Champions)
     ATTRIB(Dusk, m_soundpath, string, "player_dusk/");
     METHOD(Dusk, m_sound_pain, string()) { return SND(Dusk_Pain_Random()); }
     METHOD(Dusk, m_sound_death, string()) { return SND(Dusk_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Dusk, message, string, DUSK_STATS);
 #endif
 ENDCLASS(Dusk)
 REGISTER_CHAMPION(Dusk, NEW(Dusk));
