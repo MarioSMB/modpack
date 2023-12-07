@@ -3060,7 +3060,7 @@ void SV_ParseClientCommand(entity this, string command)
 		}
 	#endif
 		if(e)
-			sprint(this, strcat("Created entity ", etos(e)));
+			sprint(this, strcat("Created entity ", etos(e), "\n"));
 		return;
 	}
 
