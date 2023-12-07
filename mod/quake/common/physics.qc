@@ -162,7 +162,7 @@ void PlayerJump(entity this)
 		if(this.m_champion.m_playerjump)
 			mjumpheight *= this.m_champion.m_playerjump(this.m_champion, this);
 	}
-	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
+	if(StatusEffects_active(STATUSEFFECT_JumpBoots, actor))
 		mjumpheight *= 1.5;
 	if(this.viewloc)
 	{
@@ -541,7 +541,11 @@ void PM_Main(entity this, float dt)
 
 void player_touch(entity this, entity toucher) 
 {
-	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
+	entity actor = this;
+#ifdef CSQC
+	actor = g_statuseffects;
+#endif
+	if(StatusEffects_active(STATUSEFFECT_JumpBoots, actor))
 	{
 	#ifdef SVQC
 		if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
