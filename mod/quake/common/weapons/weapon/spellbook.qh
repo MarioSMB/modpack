@@ -3,7 +3,7 @@
 CLASS(Spellbook, Weapon)
 /* ammotype  */ ATTRIB(Spellbook, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Spellbook, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Spellbook, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Spellbook, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NOSTEAL);
 /* ammo */      ATTRIB(Spellbook, aflag, int, 0);
 /* modelname */ ATTRIB(Spellbook, mdl, string, "book");
 /* crosshair */ ATTRIB(Spellbook, w_crosshair, string, "gfx/crosshaircrylink");
