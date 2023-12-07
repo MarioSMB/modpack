@@ -3059,6 +3059,8 @@ void SV_ParseClientCommand(entity this, string command)
 				delete(e);
 		}
 	#endif
+		if(e)
+			sprint(this, strcat("Created entity ", etos(e)));
 		return;
 	}
 
