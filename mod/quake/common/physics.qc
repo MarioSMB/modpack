@@ -506,7 +506,7 @@ void PM_Main(entity this, float dt)
 	PM_RollView(this);
 
 	// TODO clean up this mess of a setup
-	if(this.m_champion && this.m_champion == CHAMPION_Duke)
+	//if(this.m_champion && this.m_champion == CHAMPION_Duke)
 		Duke_PreJump(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
