@@ -461,7 +461,7 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	precache_sound("shambler/melee2.wav");
 	precache_sound("shambler/smack.wav");
 
-	if(random() <= 0.2)
+	if(autocvar_skill == 3 && random() <= 0.25)
 		actor.spawnflags |= MON_SHAMBLER_COOKIE;
 
 	if(actor.spawnflags & MON_SHAMBLER_COOKIE)
