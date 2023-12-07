@@ -73,6 +73,11 @@ METHOD(Duke, m_playerspawn, void(Duke this, entity actor))
 	STAT(QCC_JETPACKFUEL, actor) = 100;
 }
 
+METHOD(Duke, m_clear, void(Duke this, entity actor))
+{
+	actor.jetpack_status = false;
+}
+
 METHOD(Duke, m_killed, void(Duke this, entity targ, entity inflictor, entity attacker, int deathtype))
 {
 	string s = "";
