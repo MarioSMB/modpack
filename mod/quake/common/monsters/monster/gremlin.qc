@@ -1374,7 +1374,7 @@ void Gremlin_Damage(entity targ, entity inflictor, entity attacker, float damage
 // check for godmode or invincibility
 	if(targ.flags & FL_GODMODE)
 		return;
-	if(targ.invincible_finished >= time)
+	if(StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
 	{
 		if(targ.invincible_sound < time)
 		{

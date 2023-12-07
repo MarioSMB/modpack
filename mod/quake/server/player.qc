@@ -624,7 +624,7 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 	if(this.pain_finished > time)
 		return;
 
-	if(this.invisible_finished > time)
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this))
 		return;		// eyes don't have pain frames
 
 	if(STAT(SKATING, this))
@@ -973,12 +973,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	Obituary(attacker, inflictor, this, deathtype);
 
-	this.powerups &= ~(POWERUP_INVISIBILITY | POWERUP_INVULNERABILITY | POWERUP_SUIT | POWERUP_QUAD);
-	this.invisible_finished = 0;	// don't die as eyes
-	this.invincible_finished = 0;
-	this.super_damage_finished = 0;
+	this.powerups = 0;
 	this.field_generator_finished = 0;
-	this.radsuit_finished = 0;
 	this.effects = 0;
 	this.modelindex = this.modelindex_player;	// don't use eyes
 
@@ -986,15 +982,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	champions_PlayerDies(this);
 
-	// hipnotic fields
-	this.wetsuit_finished = 0;
-	this.empathy_finished = 0;
-	this.powerups &= ~POWERUP_EMPATHY_SHIELDS;
-
 	// rogue fields
 	this.gravity = 1.0;
-	this.shield_finished = 0;
-	this.antigrav_finished = 0;
 
 	if(this.classname != "body")
 	{

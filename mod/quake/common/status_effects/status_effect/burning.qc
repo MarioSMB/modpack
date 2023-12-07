@@ -9,7 +9,7 @@ METHOD(Burning, m_remove, void(StatusEffects this, entity actor, int removal_typ
 }
 METHOD(Burning, m_tick, void(StatusEffects this, entity actor))
 {
-    if((actor.powerups & POWERUP_INVULNERABILITY) || (actor.powerups & POWERUP_SUIT) || (actor.waterlevel && actor.watertype != CONTENT_LAVA))
+    if(StatusEffects_active(STATUSEFFECT_Invulnerability, actor) || StatusEffects_active(STATUSEFFECT_Biosuit, actor) || (actor.waterlevel && actor.watertype != CONTENT_LAVA))
     {
         this.m_remove(this, actor, STATUSEFFECT_REMOVE_NORMAL);
         return;

@@ -6,7 +6,6 @@ float earthquake_intensity;
 float cutscene_running;
 
 .float shield_finished, antigrav_finished;
-.float shield_time, antigrav_time;
 .entity shield_entity;
 
 //

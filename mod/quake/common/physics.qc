@@ -143,7 +143,12 @@ void PlayerJump(entity this)
 	if(!IS_ONGROUND(this) && !doublejump)
 		return;
 
-	if(IS_JUMP_HELD(this) && !(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS) && !pogo)
+	entity actor = this;
+#ifdef CSQC
+	actor = g_statuseffects;
+#endif
+
+	if(IS_JUMP_HELD(this) && !StatusEffects_active(STATUSEFFECT_JumpBoots, actor) && !pogo)
 		return;		// don't pogo stick
 
 	SET_JUMP_HELD(this);
@@ -217,7 +222,7 @@ void WaterMove(entity this, float dt)
 		this.velocity = this.velocity - 0.8 * this.waterlevel * dt * this.velocity;
 
 #ifdef SVQC
-	if(STAT(WETSUIT_FINISHED, this) > time)
+	if(StatusEffects_active(STATUSEFFECT_Wetsuit, this))
 	{
 		if(this.waterlevel >= 2)
 		{
@@ -291,7 +296,11 @@ void PM_WaterMove(entity this, float dt)
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(maxspeed, vlen(wishvel));
-	if(STAT(WETSUIT_FINISHED, this) > time)
+	entity actor = this;
+#ifdef CSQC
+	actor = g_statuseffects;
+#endif
+	if(StatusEffects_active(STATUSEFFECT_Wetsuit, actor))
 	{
 		if(this.waterlevel == 2)
 			wishspeed *= 1.25;
@@ -316,7 +325,7 @@ void PM_WaterMove(entity this, float dt)
 		return;
 
 	float accel = ((PHYS_WATERACCELERATE(this)) < 0 ? PHYS_ACCELERATE(this) : PHYS_WATERACCELERATE(this));
-	if(STAT(WETSUIT_FINISHED, this) > time)
+	if(StatusEffects_active(STATUSEFFECT_Wetsuit, actor))
 	{
 		if(this.waterlevel == 2)
 			accel *= 0.8;
@@ -567,7 +576,7 @@ void player_touch(entity this, entity toucher)
 		}
 	}
 #ifdef SVQC
-	if(this.powerups & POWERUP_SHIELD)
+	if(StatusEffects_active(STATUSEFFECT_Shield, this))
 	{
 		if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
 		{

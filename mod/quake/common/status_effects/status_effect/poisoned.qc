@@ -7,7 +7,7 @@ METHOD(Poisoned, m_remove, void(StatusEffects this, entity actor, int removal_ty
 }
 METHOD(Poisoned, m_tick, void(StatusEffects this, entity actor))
 {
-    if((actor.powerups & POWERUP_INVULNERABILITY) || (actor.powerups & POWERUP_SUIT))
+    if(StatusEffects_active(STATUSEFFECT_Invulnerability, actor) || StatusEffects_active(STATUSEFFECT_Biosuit, actor))
     {
         this.m_remove(this, actor, STATUSEFFECT_REMOVE_NORMAL);
         return;

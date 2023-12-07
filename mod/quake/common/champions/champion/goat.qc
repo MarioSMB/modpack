@@ -17,7 +17,7 @@ METHOD(Goat, m_condition, bool(Goat this, entity actor))
 #ifdef SVQC
 METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
 {
-	if(actor.powerups & POWERUP_SHIELD)
+	if(StatusEffects_active(STATUSEFFECT_Shield, actor))
 		return; // better version
 	if(time < actor.goat_bash_time)
 		return;

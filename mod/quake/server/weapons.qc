@@ -436,7 +436,7 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		v.y = 50 * crandom();
 		v.z = 50 + 50 * random();
 	}
-	else if(this.owner.super_damage_finished > time && IS_PLAYER(this.owner))
+	else if(StatusEffects_active(STATUSEFFECT_Quad, this.owner) && IS_PLAYER(this.owner))
 	{
 		v.x = 1000 * crandom();
 		v.y = 1000 * crandom();
@@ -606,7 +606,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	float ldmg = damage;
 
 	traceline(p1, p2, false, from);
-	if(trace_ent.takedamage && !trace_ent.wetsuit_finished)
+	if(trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
 		if(trace_ent.resist_cells != 0)
 		{
@@ -629,7 +629,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	ldmg = damage;
 
 	traceline(p1 + f, p2 + f, false, from);
-	if(trace_ent != e1 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
+	if(trace_ent != e1 && trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
 		if(trace_ent.resist_cells != 0)
 		{
@@ -648,7 +648,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	ldmg = damage;
 
 	traceline(p1 - f, p2 - f, false, from);
-	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
+	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
 		if(trace_ent.resist_cells != 0)
 		{
@@ -910,7 +910,7 @@ void InternalFireThink(entity this)
 			return;
 		}
 	}
-	if(this.enemy.health <= 48 && this.owner.super_damage_finished > time && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
+	if(this.enemy.health <= 48 && StatusEffects_active(STATUSEFFECT_Quad, this.owner) && !(this.enemy.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 	{
 		if(this.enemy.health > 0)
 		{
@@ -1385,7 +1385,7 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3 && !(wep.spawnflags & WEP_FLAG_SECONDARY))
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
-		if((this.powerups & POWERUP_FIREFLOWER))
+		if(StatusEffects_active(STATUSEFFECT_FireFlower, this))
 		{
 			W_FireFlower_Attack(this);
 			this.attack2_finished = time + 0.75;
@@ -1407,7 +1407,7 @@ Plays sound if needed
 */
 void SuperDamageSound(entity this)
 {
-	if(this.super_damage_finished > time)
+	if(StatusEffects_active(STATUSEFFECT_Quad, this))
 	{
 		if(this.super_sound < time)
 		{

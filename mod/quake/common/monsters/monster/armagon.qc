@@ -20,6 +20,8 @@ const float SERVO_VOLUME = 0.5;
 
 .entity attachment;
 
+.float armagon_super_time;
+
 void armagon_launch_missile(entity this, float ofs, float turn)
 {
 	float dist;
@@ -134,9 +136,9 @@ void armagon_think(entity this)
 //   this.nextthink = time + 0.1;
 	if(this.health < 0)
 		return;
-	if(time > this.super_time)
+	if(time > this.armagon_super_time)
 	{
-		this.super_time = time + 3;
+		this.armagon_super_time = time + 3;
 		if(random() < 0.5)
 		{
 			float r = random();
@@ -173,9 +175,9 @@ void armagon_walkthink(entity this)
 	armagon_turn(this, angdelta, delta);
 	if(this.health < 0)
 		return;
-	if(time > this.super_time)
+	if(time > this.armagon_super_time)
 	{
-		this.super_time = time + 3;
+		this.armagon_super_time = time + 3;
 		if(random() < 0.5)
 		{
 			float r = random();
@@ -762,7 +764,7 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 		actor.worldtype = 0.75;
 	}
 	actor.state = 0;
-	actor.super_time = 0;
+	actor.armagon_super_time = 0;
 	actor.endtime = 0;
 
 	actor.th_stand = armagon_stand;

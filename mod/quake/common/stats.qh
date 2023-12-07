@@ -181,8 +181,6 @@ REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
 
 REGISTER_STAT(SERVERFLAGS, int, serverflags)
 
-REGISTER_STAT(WETSUIT_FINISHED, float)
-
 #ifdef SVQC
 .int powerups;
 #endif

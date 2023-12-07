@@ -8,9 +8,7 @@ METHOD(Nyx, m_activate, void(Nyx this, entity actor))
 
 void Nyx_Invis(entity this)
 {
-	this.powerups |= POWERUP_INVISIBILITY;
-	this.invisible_time = 1;
-	this.invisible_finished = time + 5;
+	StatusEffects_apply(STATUSEFFECT_Invisibility, this, time + 5, 0);
 
 	_sound(this, CH_WEAPON_SINGLE, "player_nyx/invisenter.wav", 1, ATTN_NORM);
 	string s;
@@ -22,13 +20,11 @@ void Nyx_Invis(entity this)
 	else
 		s = "invis4.wav";
 	player_sound(this, CH_VOICE, s, ATTN_NORM);
-
-	invis_loseaggro(this);
 }
 
 METHOD(Nyx, m_playerthink, void(Nyx this, entity actor))
 {
-	if(actor.powerups & POWERUP_INVISIBILITY)
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, actor))
 		return;
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{

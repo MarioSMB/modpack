@@ -1,0 +1,13 @@
+#pragma once
+
+CLASS(Biosuit, Powerups)
+    ATTRIB(Biosuit, netname, string, "biosuit");
+    ATTRIB(Biosuit, m_name, string, _("Biosuit"));
+    ATTRIB(Biosuit, m_color, vector, '0.5 0.5 1');
+    ATTRIB(Biosuit, m_icon, string, "sb_suit");
+ENDCLASS(Biosuit)
+REGISTER_STATUSEFFECT(Biosuit, NEW(Biosuit));
+
+#ifdef SVQC
+.bool biosuit_warning;
+#endif

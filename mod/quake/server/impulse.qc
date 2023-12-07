@@ -379,8 +379,7 @@ void GiveQuad(entity this)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
 
 	this.powerups |= POWERUP_QUAD;
-	this.super_time = 1;
-	this.super_damage_finished = time + 999;
+	StatusEffects_apply(STATUSEFFECT_Quad, this, time + 666, 0);
 	_sound(this, CH_WEAPON_SINGLE, "items/damage.wav", 1, ATTN_NORM);
 }
 

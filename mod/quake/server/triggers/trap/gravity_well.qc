@@ -25,7 +25,7 @@ void trap_gravity_think(entity this)
 		{
 			vector dir = normalize(this.origin - it.origin);
 			vector vel = dir * this.speed;
-			if(it.wetsuit_finished > time && (this.spawnflags & UNDERWATER))
+			if(StatusEffects_active(STATUSEFFECT_Wetsuit, it) && (this.spawnflags & UNDERWATER))
 				vel = vel * 0.6;
 
 			it.velocity = it.velocity + vel;

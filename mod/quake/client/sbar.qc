@@ -2,6 +2,7 @@
 
 #include "../common/ent_cs.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/status_effects/_mod.qh"
 
 float stringwidth(string text, float handleColors, vector sz); // defined in centerprint.qc
 
@@ -857,7 +858,7 @@ void Sbar_DrawInventory()
 {
 	// set flash times
 	int myitems = STAT(ITEMS);
-	int mypowerups = STAT(POWERUPS);
+	//int mypowerups = STAT(POWERUPS);
 	WepSet myweapons = STAT(WEAPONS);
 	entity thiswep = viewmodels[0]; // TODO: unhardcode
 
@@ -952,6 +953,7 @@ void Sbar_DrawInventory()
 		Sbar_DrawPic(vec2(192 + 1 * 16, -16), "gfx/quake/sb_key1");
 	if(myitems & IT_KEY2)
 		Sbar_DrawPic(vec2(192 + 2 * 16, -16), "gfx/quake/sb_key2");
+#if 0
 	// base powerups
 	for(int j = 2; j < 6; ++j)
 	{
@@ -961,21 +963,21 @@ void Sbar_DrawInventory()
 				Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
 		}
 	}
+#endif
 
-#if 0
 	int pcount = 0;
 	FOREACH(StatusEffect, it.instanceOfPowerups,
 	{
-		if(StatusEffects_active(it, g_statuseffects))
+		if(StatusEffects_active(it, g_statuseffects) && it.m_icon && it.m_icon != "")
 		{
 			Sbar_DrawPic(vec2(192 + (3 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
 			pcount += 1;
 		}
-		if(pcount > 4)
+		if(pcount >= 3)
 			break; // we have limited HUD space unfortunately!
 	});
-#endif
 
+#if 0
 	// TODO: unique positions for multiple powerups?
 	if(mypowerups & POWERUP_WETSUIT)
 		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");
@@ -989,6 +991,7 @@ void Sbar_DrawInventory()
 
 	if(mypowerups & POWERUP_SHARPSHOOTER)
 		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_sharp");
+#endif
 
 	// sigils
 	for(int j = 0; j < 4; ++j)
@@ -1152,7 +1155,7 @@ float health_gettime;
 void Sbar_DrawFace()
 {
 	//int myitems = STAT(ITEMS); // changed field due to reaching bit limit
-	int mypowerups = STAT(POWERUPS);
+	//int mypowerups = STAT(POWERUPS);
 	string pic;
 
 	int myhealth = STAT(HEALTH);
@@ -1160,13 +1163,13 @@ void Sbar_DrawFace()
 		health_gettime = time + 0.2;
 	oldhealth = myhealth;
 
-	if((mypowerups & POWERUP_INVISIBILITY) && (mypowerups & POWERUP_INVULNERABILITY))
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, g_statuseffects) && StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects))
 		pic = Sbar_FacePrefix("face_inv2");
-	else if(mypowerups & POWERUP_QUAD)
+	else if(StatusEffects_active(STATUSEFFECT_Quad, g_statuseffects))
 		pic = Sbar_FacePrefix("face_quad");
-	else if((mypowerups & POWERUP_INVISIBILITY) || ((mypowerups & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0))
+	else if(StatusEffects_active(STATUSEFFECT_Invisibility, g_statuseffects) || (StatusEffects_active(STATUSEFFECT_FieldGen, g_statuseffects) && STAT(FIELDGEN_HEALTH) > 0))
 		pic = Sbar_FacePrefix("face_invis");
-	else if(mypowerups & POWERUP_INVULNERABILITY)
+	else if(StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects))
 		pic = Sbar_FacePrefix("face_invul2");
 	else
 	{
@@ -1181,7 +1184,7 @@ void Sbar_DrawFace()
 
 void Sbar_DrawShieldOverlay()
 {
-	if(time > STAT(SHIELD_TIME) || !(STAT(POWERUPS) & POWERUP_SHIELD))
+	if(time > STAT(SHIELD_TIME) || !StatusEffects_active(STATUSEFFECT_Shield, g_statuseffects))
 		return;
 
 	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '1 0 0', bound(0, 0.5 * (STAT(SHIELD_TIME) - time), 0.025), DRAWFLAG_NORMAL);
@@ -1244,7 +1247,7 @@ void Sbar_Draw()
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				// armor
-				if(STAT(POWERUPS) & POWERUP_INVULNERABILITY)
+				if(StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects))
 				{
 					Sbar_DrawNum('24 0 0', itos(666), 3, '0 1 1');
 					Sbar_DrawPic('0 0 0', "gfx/quake/disc");
@@ -1272,7 +1275,7 @@ void Sbar_Draw()
 				// health
 				int myhealth = rint(STAT(HEALTH));
 				vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
-				bool have_fieldgen = ((STAT(POWERUPS) & POWERUP_FIELDGEN) && STAT(FIELDGEN_HEALTH) > 0);
+				bool have_fieldgen = (StatusEffects_active(STATUSEFFECT_FieldGen, g_statuseffects) && STAT(FIELDGEN_HEALTH) > 0);
 				entity thiswep = viewmodels[0]; // TODO: unhardcode
 				if(have_fieldgen)
 				{

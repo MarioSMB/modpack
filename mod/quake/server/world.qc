@@ -1600,7 +1600,7 @@ void CreatureFrame_hotliquids(entity this)
 
 	if (this.watertype == CONTENT_LAVA)
 	{
-		if(this.radsuit_finished > time)
+		if(StatusEffects_active(STATUSEFFECT_Biosuit, this))
 			this.dmgtime = time + 1;
 		else
 			this.dmgtime = time + 0.2;
@@ -1617,7 +1617,7 @@ void CreatureFrame_hotliquids(entity this)
 		float slimedamage = 4;
 		if(this.m_champion)
 			slimedamage *= this.m_champion.qcc_slimedamage;
-		if(this.dmgtime < time && this.radsuit_finished < time && slimedamage > 0)
+		if(this.dmgtime < time && !StatusEffects_active(STATUSEFFECT_Biosuit, this) && slimedamage > 0)
 		{
 			this.dmgtime = time + 1;
 			T_Damage(this, NULL, NULL, slimedamage * this.waterlevel, DEATH_SLIME.m_id);

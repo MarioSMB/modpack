@@ -10,19 +10,13 @@ bool autocvar_sv_quake_instance_backpacks = true;
 
 .bool noalign;
 
-.float wetsuit_finished = _STAT(WETSUIT_FINISHED);
-.float wetsuit_time;
+.float wetsuit_finished;
 .float empathy_finished;
-.float empathy_time;
-.float empathy_sound;
 
-.float fireflower_time;
 .float fireflower_finished;
 
-.float jboots_time;
 .float jboots_finished;
 
-.float sharp_time;
 .float sharp_finished;
 
 .int worldtype;
@@ -50,5 +44,3 @@ void DropBackpack(entity this);
 void BackpackTouch(entity this, entity toucher);
 
 bool T_Heal(entity e, float healamount, bool ignore);
-
-void invis_loseaggro(entity this);

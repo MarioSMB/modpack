@@ -1521,7 +1521,7 @@ void invis_enemy_dropaggro(entity this)
 		return;
 	}
 	// FIXME: look all around for other targets
-	if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !(this.oldenemy.powerups & POWERUP_INVISIBILITY))
+	if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !StatusEffects_active(STATUSEFFECT_Invisibility, this.oldenemy))
 	{
 		this.enemy = this.oldenemy;
 		HuntTarget(this);
@@ -1533,15 +1533,6 @@ void invis_enemy_dropaggro(entity this)
 		else if(this.th_stand)
 			this.th_stand(this);
 	}
-}
-
-void invis_loseaggro(entity this)
-{
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
-	{
-		if(it.enemy == this && it.health > 0 && !it.elec)
-			invis_enemy_dropaggro(it);
-	});
 }
 
 /*
@@ -1561,7 +1552,7 @@ void powerup_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	// TODO: apply this logic to all powerups?
-	if((this.powerups & POWERUP_FIREFLOWER) && (toucher.powerups & POWERUP_FIREFLOWER))
+	if(this.fireflower_finished && StatusEffects_active(STATUSEFFECT_FireFlower, toucher))
 		return;
 
 	string pname = (this.netname != "") ? this.netname : "Powerup";
@@ -1578,7 +1569,7 @@ void powerup_touch(entity this, entity toucher)
 		}
 		else
 		{
-			if((this.powerups & POWERUP_INVISIBILITY) || (this.powerups & POWERUP_INVISIBILITY))
+			if(this.invincible_finished || this.invisible_finished)
 				this.nextthink = time + 60 * 5;
 			else
 				this.nextthink = time + 60;
@@ -1601,11 +1592,10 @@ void powerup_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);
 
 // do the apropriate action
-	if(this.powerups & POWERUP_SUIT)
+	if(this.radsuit_finished)
 	{
-		toucher.rad_time = 1;
-		toucher.radsuit_finished = time + 30; // full duration
-		if(coop) // Respawn biosuit in coop, since it might be required for progression
+		StatusEffects_apply(STATUSEFFECT_Biosuit, toucher, time + 30, 0);
+		if(coop && !horde_ent) // Respawn this powerup in coop, since it might be required for progression
 		{
 			this.target = string_null; // but don't fire off targets again
 			setthink(this, SUB_regen);
@@ -1613,37 +1603,36 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.powerups & POWERUP_INVULNERABILITY)
+	if(this.invincible_finished)
 	{
-		toucher.invincible_time = 1;
-		toucher.invincible_finished = time + ((horde_ent) ? 5 : 30);
+		float invulntime = (horde_ent) ? 5 : 30;
+		StatusEffects_apply(STATUSEFFECT_Invulnerability, toucher, time + invulntime, 0);
 	}
 
-	if(this.powerups & POWERUP_INVISIBILITY)
+	if(this.invisible_finished)
 	{
-		toucher.invisible_time = 1;
-		toucher.invisible_finished = time + ((horde_ent) ? 5 : 30);
-		invis_loseaggro(toucher);
+		float invistime = (horde_ent) ? 5 : 30;
+		StatusEffects_apply(STATUSEFFECT_Invisibility, toucher, time + invistime, 0);
 	}
 
-	if(this.powerups & POWERUP_QUAD)
+	if(this.super_damage_finished)
 	{
-		toucher.super_time = 1;
-		toucher.super_damage_finished = time + ((horde_ent) ? 5 : 30);
+		float quadtime = (horde_ent) ? 5 : 30;
+		StatusEffects_apply(STATUSEFFECT_Quad, toucher, time + quadtime, 0);
 	}
 
-	if(this.powerups & POWERUP_FIELDGEN)
+	if(this.field_generator_finished)
 	{
 		toucher.field_generator_health = this.health;
 		toucher.field_generator_time = -150;
-		toucher.field_generator_finished = time + ((horde_ent) ? 15 : 30);
+		float fieldtime = (horde_ent) ? 15 : 30;
+		StatusEffects_apply(STATUSEFFECT_FieldGen, toucher, time + fieldtime, 0);
 	}
 
-	if(this.powerups & POWERUP_WETSUIT)
+	if(this.wetsuit_finished)
 	{
-		toucher.wetsuit_time = 1;
-		toucher.wetsuit_finished = time + 30;
-		if(coop) // Respawn biosuit in coop, since it might be required for progression
+		StatusEffects_apply(STATUSEFFECT_Wetsuit, toucher, time + 30, 0);
+		if(coop && !horde_ent) // Respawn this powerup in coop, since it might be required for progression
 		{
 			this.target = string_null; // but don't fire off targets again
 			setthink(this, SUB_regen);
@@ -1651,10 +1640,10 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.powerups & POWERUP_EMPATHY_SHIELDS)
+	if(this.empathy_finished)
 	{
-		toucher.empathy_time = 1;
-		toucher.empathy_finished = time + ((horde_ent) ? 15 : 30);
+		float etime = (horde_ent) ? 15 : 30;
+		StatusEffects_apply(STATUSEFFECT_EmpathyShields, toucher, time + etime, 0);
 	}
 
 	if(this.powerups & POWERUP_HORN_OF_CONJURING)
@@ -1667,12 +1656,10 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.powerups & POWERUP_ANTIGRAV)
+	if(this.antigrav_finished)
 	{
-		toucher.antigrav_time = 1;
-		toucher.antigrav_finished = time + 45;
-		toucher.gravity = 0.25;
-		if(coop) // Respawn antigrav in coop, since it might be required for progression
+		StatusEffects_apply(STATUSEFFECT_Antigrav, toucher, time + 45, 0);
+		if(coop && !horde_ent) // Respawn this powerup in coop, since it might be required for progression
 		{
 			this.target = string_null; // but don't fire off targets again
 			setthink(this, SUB_regen);
@@ -1680,10 +1667,10 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.powerups & POWERUP_SHIELD)
+	if(this.shield_finished)
 	{
-		toucher.shield_time = 1;
-		toucher.shield_finished = time + ((horde_ent) ? 15 : 30);
+		float shieldtime = (horde_ent) ? 15 : 30;
+		StatusEffects_apply(STATUSEFFECT_Shield, toucher, time + shieldtime, 0);
 	}
 
 	if(this.powerups & POWERUP_V_SPHERE)
@@ -1693,23 +1680,27 @@ void powerup_touch(entity this, entity toucher)
 		toucher.vsphere_last = time + 0.5; // give player a chance to see they have them!
 	}
 
-	if(this.powerups & POWERUP_FIREFLOWER)
+	if(this.fireflower_finished)
 	{
 		sprint(toucher, "Secondary attacks enabled!\n");
-		toucher.fireflower_time = 1;
-		toucher.fireflower_finished = time + 30; // always give full duration
+		StatusEffects_apply(STATUSEFFECT_FireFlower, toucher, time + 30, 0);
 	}
 
-	if(this.powerups & POWERUP_JUMPBOOTS)
+	if(this.jboots_finished)
 	{
-		toucher.jboots_time = 1;
-		toucher.jboots_finished = time + 30;
+		StatusEffects_apply(STATUSEFFECT_JumpBoots, toucher, time + 30, 0);
+		if(coop && !horde_ent) // Respawn this powerup in coop, since it might be required for progression
+		{
+			this.target = string_null; // but don't fire off targets again
+			setthink(this, SUB_regen);
+			this.nextthink = time + 2.5;
+		}
 	}
 
-	if(this.powerups & POWERUP_SHARPSHOOTER)
+	if(this.sharp_finished)
 	{
-		toucher.sharp_time = 1;
-		toucher.sharp_finished = time + ((horde_ent) ? 10 : 30);
+		float sharptime = (horde_ent) ? 10 : 30;
+		StatusEffects_apply(STATUSEFFECT_SharpShooter, toucher, time + sharptime, 0);
 	}
 
 	if(toucher.m_champion && toucher.m_champion.m_pickup_powerup)
@@ -1732,6 +1723,8 @@ spawnfunc(item_artifact_invulnerability)
 	_setmodel(this, "progs/invulner.mdl");
 	this.netname = "Pentagram of Protection";
 	this.powerups = POWERUP_INVULNERABILITY;
+	if(!this.invincible_finished)
+		this.invincible_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1749,6 +1742,8 @@ spawnfunc(item_artifact_envirosuit)
 	this.noise = "items/suit.wav";
 	_setmodel(this, "progs/suit.mdl");
 	this.netname = "Biosuit";
+	if(!this.radsuit_finished)
+		this.radsuit_finished = 30;
 	this.powerups = POWERUP_SUIT;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
@@ -1769,6 +1764,8 @@ spawnfunc(item_artifact_invisibility)
 	this.noise = "items/inv1.wav";
 	_setmodel(this, "progs/invisibl.mdl");
 	this.netname = "Ring of Shadows";
+	if(!this.invisible_finished)
+		this.invisible_finished = 30;
 	this.powerups = POWERUP_INVISIBILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
@@ -1790,6 +1787,8 @@ spawnfunc(item_artifact_super_damage)
 	_setmodel(this, "progs/quaddama.mdl");
 	this.netname = "Quad Damage";
 	this.powerups = POWERUP_QUAD;
+	if(!this.super_damage_finished)
+		this.super_damage_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1813,6 +1812,8 @@ spawnfunc(item_artifact_field_generator)
 	_setmodel(this, "progs/fieldgen.mdl");
 	this.netname = "Force Field Generator";
 	this.powerups = POWERUP_FIELDGEN;
+	if(!this.field_generator_finished)
+		this.field_generator_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	this.health = 200;
 	StartItem(this);
@@ -1836,6 +1837,8 @@ spawnfunc(item_powerup_shield)
 	_setmodel(this, "progs/shield.mdl");
 	this.netname = "Power Shield";
 	this.powerups = POWERUP_SHIELD;
+	if(!this.shield_finished)
+		this.shield_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1857,6 +1860,8 @@ spawnfunc(item_powerup_belt)
 	_setmodel(this, "progs/beltup.mdl");
 	this.netname = "Anti-Grav Belt";
 	this.powerups = POWERUP_ANTIGRAV;
+	if(!this.antigrav_finished)
+		this.antigrav_finished = 45;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1878,6 +1883,8 @@ spawnfunc(item_artifact_wetsuit)
 	_setmodel(this, "progs/wetsuit.mdl");
 	this.netname = "Wetsuit";
 	this.powerups = POWERUP_WETSUIT;
+	if(!this.wetsuit_finished)
+		this.wetsuit_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 
 	StartItem(this);
@@ -1921,6 +1928,8 @@ spawnfunc(item_artifact_empathy_shields)
 	_setmodel(this, "progs/empathy.mdl");
 	this.netname = "Empathy Shields";
 	this.powerups = POWERUP_EMPATHY_SHIELDS;
+	if(!this.empathy_finished)
+		this.empathy_finished = 30;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
@@ -1941,6 +1950,8 @@ spawnfunc(item_powerup_fireflower)
 	_setmodel(this, "progs/g_fflower.mdl");
 	this.netname = "Fire Flower";
 	this.powerups = POWERUP_FIREFLOWER;
+	if(!this.fireflower_finished)
+		this.fireflower_finished = 30;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
@@ -1957,6 +1968,8 @@ spawnfunc(item_jboots)
 	_setmodel(this, "progs/jumpblue.mdl");
 	this.netname = "Jump Boots";
 	this.powerups = POWERUP_JUMPBOOTS;
+	if(!this.jboots_finished)
+		this.jboots_finished = 30;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
@@ -1982,6 +1995,8 @@ spawnfunc(item_artifact_sharp_shooter)
 	_setmodel(this, "progs/artifact_sharp.mdl");
 	this.netname = "Sharp Shooter";
 	this.powerups = POWERUP_SHARPSHOOTER;
+	if(!this.sharp_finished)
+		this.sharp_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -2147,6 +2162,8 @@ void DropBackpack(entity this)
 	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");
 	vector mi = '-16 -16 0', ma = '16 16 56';
+	// TODO: this hack causes a crash, find a better way to move items out of solid!
+#if 0
 	// some enemies can be smaller than items so we must account for that and not put the item in the wall!
 	tracebox(item.origin, mi, ma, item.origin, MOVE_NOMONSTERS, item);
 	if(trace_startsolid)
@@ -2158,6 +2175,7 @@ void DropBackpack(entity this)
 		ma.y = min(ma.y, this.maxs_y);
 		ma.z = min(ma.z, this.maxs_z);
 	}
+#endif
 	setsize(item, mi, ma);
 	settouch(item, BackpackTouch);
 	if(autocvar_sv_quake_instance_backpacks && IS_PLAYER(this) && IS_REAL_CLIENT(this))

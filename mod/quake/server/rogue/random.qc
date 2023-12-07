@@ -33,6 +33,7 @@ void random_pick_type(entity this)
 		_setmodel(this, "progs/beltup.mdl");
 		this.netname = "Anti-Grav Belt";
 		this.powerups = POWERUP_ANTIGRAV;
+		this.antigrav_finished = 45;
 //		if(norandom == 1)
 //			this.classname = "item_powerup_belt";
 	}
@@ -42,6 +43,7 @@ void random_pick_type(entity this)
 		_setmodel(this, "progs/invulner.mdl");
 		this.netname = "Pentagram of Protection";
 		this.powerups = POWERUP_INVULNERABILITY;
+		this.invincible_finished = 30;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_invulnerability";
 	}
@@ -51,6 +53,7 @@ void random_pick_type(entity this)
 		_setmodel(this, "progs/invisibl.mdl");
 		this.netname = "Ring of Shadows";
 		this.powerups = POWERUP_INVISIBILITY;
+		this.invisible_finished = 30;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_invisibility";
 	}
@@ -60,6 +63,7 @@ void random_pick_type(entity this)
 		_setmodel(this, "progs/quaddama.mdl");
 		this.netname = "Quad Damage";
 		this.powerups = POWERUP_QUAD;
+		this.super_damage_finished = 30;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_super_damage";
 	}

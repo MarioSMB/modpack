@@ -35,7 +35,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 
 	traceline(p1, p2, false, from);
 //JIM
-	if(trace_ent.takedamage && !trace_ent.wetsuit_finished )
+	if(trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent) )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);
@@ -50,7 +50,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 	traceline(p1 + f, p2 + f, false, from);
 //JIM
 	if(trace_ent != e1 && trace_ent.takedamage &&
-		!trace_ent.wetsuit_finished )
+		!StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent) )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);
@@ -60,7 +60,7 @@ void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 	traceline(p1 - f, p2 - f, false, from);
 //JIM
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage &&
-		!trace_ent.wetsuit_finished )
+		!StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent) )
 	{
 		particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage, WEP_MJOLNIR.m_id);

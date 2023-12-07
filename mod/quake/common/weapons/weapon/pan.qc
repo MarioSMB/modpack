@@ -33,7 +33,7 @@ bool Pan_CheckDamage(entity targ, entity inflictor, entity attacker)
 {
 	if(IS_PLAYER(attacker) && !autocvar_g_friendlyfire_virtual)
 		return false;
-	if((!IS_PLAYER(targ) && targ.monsterdef != MON_GREMLIN) || targ.health <= 0 || (targ.powerups & POWERUP_INVULNERABILITY))
+	if((!IS_PLAYER(targ) && targ.monsterdef != MON_GREMLIN) || targ.health <= 0 || StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
 		return false;
 	if(random() > 0.35)
 		return false; // low chance to trigger!

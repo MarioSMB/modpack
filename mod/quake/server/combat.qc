@@ -329,7 +329,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(!MP_MG && targ.monsterdef == MON_SHUB && damage < 9999)
 		return;
 
-	if(discharged && targ.wetsuit_finished)
+	if(discharged && StatusEffects_active(STATUSEFFECT_Wetsuit, targ))
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
@@ -340,7 +340,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(Pan_CheckDamage(targ, inflictor, attacker))
 		return;
 
-	if(targ.powerups & POWERUP_SHIELD)
+	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
 	{
 		// allow some damage to pass through
 		damage = shield_hit(targ, inflictor, attacker, damage);
@@ -357,10 +357,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		damage *= targ.m_champion.m_damage(targ.m_champion, targ, inflictor, attacker, damage, deathtype);
 
 // check for quad damage powerup on the attacker
-	if(attacker.super_damage_finished > time)
+	if(StatusEffects_active(STATUSEFFECT_Quad, attacker))
 		damage = damage * 4;
 
-	if((targ.powerups & POWERUP_EMPATHY_SHIELDS) && !(inflictor.powerups & POWERUP_EMPATHY_SHIELDS) && (targ != attacker))
+	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ) && !StatusEffects_active(STATUSEFFECT_EmpathyShields, inflictor) && (targ != attacker))
 	{
 		empathyused = true;
 		damage = damage/2;
@@ -369,7 +369,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	// jump boots: half damage from attackers below the target
-	if((targ.powerups & POWERUP_JUMPBOOTS) && (targ.origin_z > attacker.origin_z || targ.origin_z > inflictor.origin_z) && targ != attacker)
+	if(StatusEffects_active(STATUSEFFECT_JumpBoots, targ) && (targ.origin_z > attacker.origin_z || targ.origin_z > inflictor.origin_z) && targ != attacker)
 		damage *= 0.5;
 
 	// vengeance sphere handling
@@ -416,7 +416,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 // check for godmode or invincibility
 	if(targ.flags & FL_GODMODE)
 		return;
-	if(targ.invincible_finished >= time)
+	if(StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
 	{
 		if(targ.invincible_sound < time)
 		{
@@ -437,7 +437,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
-	if(targ.powerups & POWERUP_EMPATHY_SHIELDS)
+	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ))
 	{
 		if(targ.empathy_sound < time)
 		{
@@ -466,8 +466,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 		
 // do the damage
-	if(targ.field_generator_finished > time
-		&& inflictor.classname != "grenade" && inflictor.classname != "ogre_grenade" && inflictor.classname != "missile" && inflictor.classname != "vore_ball" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
+	if(StatusEffects_active(STATUSEFFECT_FieldGen, targ)
+		//&& inflictor.classname != "grenade" && inflictor.classname != "ogre_grenade" && inflictor.classname != "missile" && inflictor.classname != "vore_ball" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
 		&& !(!inflictor && targ.watertype == CONTENT_WATER) && !(!inflictor && targ.jump_flag < -650))
 	{
 		if(r < 0.3)

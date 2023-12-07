@@ -27,7 +27,7 @@ void tdeath_touch(entity this, entity toucher)
 // frag anyone who teleports in on top of an invincible player
 	if(IS_PLAYER(toucher))
 	{
-		if(toucher.invincible_finished > time)
+		if(StatusEffects_active(STATUSEFFECT_Invulnerability, toucher))
 			this.classname = "teledeath2";
 		if(!IS_PLAYER(this.owner))
 		{	// other monsters explode themselves

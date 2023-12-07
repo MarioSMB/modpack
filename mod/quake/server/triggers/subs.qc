@@ -111,13 +111,9 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.invisible_finished = srcent.invisible_finished;
 	destent.super_damage_finished = srcent.super_damage_finished;
 	destent.radsuit_finished = srcent.radsuit_finished;
-	destent.invincible_time = srcent.invincible_time;
 	destent.invincible_sound = srcent.invincible_sound;
-	destent.invisible_time = srcent.invisible_time;
 	destent.invisible_sound = srcent.invisible_sound;
-	destent.super_time = srcent.super_time;
 	destent.super_sound = srcent.super_sound;
-	destent.rad_time = srcent.rad_time;
 	destent.fly_sound = srcent.fly_sound;
 	destent.axhitme = srcent.axhitme;
 	destent.show_hostile = srcent.show_hostile;

@@ -1,0 +1,16 @@
+#pragma once
+
+CLASS(Invisibility, Powerups)
+    ATTRIB(Invisibility, netname, string, "invisibility");
+    ATTRIB(Invisibility, m_name, string, _("Ring of Shadows"));
+    ATTRIB(Invisibility, m_color, vector, '0.5 0.5 1');
+    ATTRIB(Invisibility, m_icon, string, "sb_invis");
+ENDCLASS(Invisibility)
+REGISTER_STATUSEFFECT(Invisibility, NEW(Invisibility));
+
+#ifdef SVQC
+.float invisible_sound;
+.bool invisible_warning;
+
+void invis_loseaggro(entity this);
+#endif

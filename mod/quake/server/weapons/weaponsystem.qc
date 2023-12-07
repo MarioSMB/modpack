@@ -154,7 +154,7 @@ vector W_Shotorg(entity ent, .entity weaponentity)
 
 void W_TakeAmmo(entity ent, .float ammotype, float ammoamount)
 {
-	if(ent.powerups & POWERUP_SHARPSHOOTER)
+	if(StatusEffects_active(STATUSEFFECT_SharpShooter, ent))
 		return;
 
 	if(ent.m_champion && ent.m_champion.m_takeammo)

@@ -1,0 +1,14 @@
+#pragma once
+
+CLASS(FieldGen, Powerups)
+    ATTRIB(FieldGen, netname, string, "fieldgen");
+    ATTRIB(FieldGen, m_name, string, _("Force Field Generator"));
+    ATTRIB(FieldGen, m_color, vector, '0.5 0.5 1');
+    //ATTRIB(FieldGen, m_icon, string, "sb_invuln");
+ENDCLASS(FieldGen)
+REGISTER_STATUSEFFECT(FieldGen, NEW(FieldGen));
+
+#ifdef SVQC
+.float field_generator_time;
+.float field_generator_sound;
+#endif

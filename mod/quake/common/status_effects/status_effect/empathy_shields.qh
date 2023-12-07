@@ -1,0 +1,14 @@
+#pragma once
+
+CLASS(EmpathyShields, Powerups)
+    ATTRIB(EmpathyShields, netname, string, "empathyshields");
+    ATTRIB(EmpathyShields, m_name, string, _("Empathy Shields"));
+    ATTRIB(EmpathyShields, m_color, vector, '0.5 0.5 1');
+    ATTRIB(EmpathyShields, m_icon, string, "sb_eshld");
+ENDCLASS(EmpathyShields)
+REGISTER_STATUSEFFECT(EmpathyShields, NEW(EmpathyShields));
+
+#ifdef SVQC
+.bool empathyshields_warning;
+.float empathy_sound;
+#endif

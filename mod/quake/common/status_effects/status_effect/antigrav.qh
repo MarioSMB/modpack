@@ -1,0 +1,13 @@
+#pragma once
+
+CLASS(Antigrav, Powerups)
+    ATTRIB(Antigrav, netname, string, "antigrav");
+    ATTRIB(Antigrav, m_name, string, _("Anti-Grav Belt"));
+    ATTRIB(Antigrav, m_color, vector, '0.5 0.5 1');
+    ATTRIB(Antigrav, m_icon, string, "r_agrav1");
+ENDCLASS(Antigrav)
+REGISTER_STATUSEFFECT(Antigrav, NEW(Antigrav));
+
+#ifdef SVQC
+.bool antigrav_warning;
+#endif

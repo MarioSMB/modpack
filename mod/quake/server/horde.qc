@@ -1858,6 +1858,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/invulner.mdl");
 			this.netname = "Pentagram of Protection";
 			this.powerups = POWERUP_INVULNERABILITY;
+			this.invincible_finished = 5;
 			this.classname = "item_artifact_invulnerability";
 			break;
 		}
@@ -1867,6 +1868,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/quaddama.mdl");
 			this.netname = "Quad Damage";
 			this.powerups = POWERUP_QUAD;
+			this.super_damage_finished = 5;
 			this.classname = "item_artifact_super_damage";
 			break;
 		}
@@ -1876,6 +1878,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/g_fflower.mdl");
 			this.netname = "Fire Flower";
 			this.powerups = POWERUP_FIREFLOWER;
+			this.fireflower_finished = 30;
 			this.classname = "item_powerup_fireflower";
 			break;
 		}
@@ -1903,6 +1906,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/fieldgen.mdl");
 			this.netname = "Force Field Generator";
 			this.powerups = POWERUP_FIELDGEN;
+			this.field_generator_finished = 15;
 			this.classname = "item_artifact_field_generator";
 			this.health = 100;
 			break;
@@ -1913,6 +1917,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/shield.mdl");
 			this.netname = "Power Shield";
 			this.powerups = POWERUP_SHIELD;
+			this.shield_finished = 15;
 			this.classname = "item_powerup_shield";
 			break;
 		}
@@ -1922,6 +1927,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/empathy.mdl");
 			this.netname = "Empathy Shields";
 			this.powerups = POWERUP_EMPATHY_SHIELDS;
+			this.empathy_finished = 15;
 			this.classname = "item_artifact_empathy_shields";
 			break;
 		}
@@ -1931,6 +1937,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/jumpblue.mdl");
 			this.netname = "Jump Boots";
 			this.powerups = POWERUP_JUMPBOOTS;
+			this.jboots_finished = 30;
 			this.classname = "item_jboots";
 			break;
 		}
@@ -1940,6 +1947,7 @@ void horde_setup_powerup(entity this, int powerup)
 			_setmodel(this, "progs/artifact_sharp.mdl");
 			this.netname = "Sharp Shooter";
 			this.powerups = POWERUP_SHARPSHOOTER;
+			this.sharp_finished = 10;
 			this.classname = "item_artifact_sharp_shooter";
 			break;
 		}

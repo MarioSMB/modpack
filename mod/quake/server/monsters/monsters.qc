@@ -30,7 +30,7 @@ Using a monster makes it angry at the current activator
 */
 void monster_use(entity this, entity actor, entity trigger)
 {
-	if(this.enemy || this.health <= 0 || (actor.powerups & POWERUP_INVISIBILITY) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
+	if(this.enemy || this.health <= 0 || StatusEffects_active(STATUSEFFECT_Invisibility, actor) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
 		return;
 	
 	// delay reaction so if the monster is teleported, its sound is still heard

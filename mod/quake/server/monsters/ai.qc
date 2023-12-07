@@ -593,6 +593,7 @@ Something has bumped into a followtarget.  If it is a monster
 moving towards it, change the next destination and continue.
 ==============
 */
+.float followtarget_time;
 void t_followtarget(entity this, entity toucher)
 {
 	if(!IS_MONSTER(toucher))
@@ -601,7 +602,7 @@ void t_followtarget(entity this, entity toucher)
 		return;
 //  if (toucher.enemy == NULL)
 //  	return;
-	if (toucher.wetsuit_time > time)
+	if (toucher.followtarget_time > time)
 		return;
 	entity targ = toucher.enemy;
 
@@ -628,7 +629,7 @@ void t_followtarget(entity this, entity toucher)
 	toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
 
 	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
-	toucher.wetsuit_time = time + 2;
+	toucher.followtarget_time = time + 2;
 	if(!toucher.movetarget)
 	{
 		if (toucher.oldenemy)
@@ -1169,7 +1170,7 @@ bool FindTarget(entity this)
 
 	if(!this.charmed && (client.flags & FL_NOTARGET))
 		return false;
-	if(client.powerups & POWERUP_INVISIBILITY)
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, client))
 		return false;
 
 	if(this.monsterdef.spawnflags & MON_FLAG_NOTARGET)
@@ -1533,7 +1534,7 @@ void ai_run(entity this, float dist)
 			return;
 		}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !(this.oldenemy.powerups & POWERUP_INVISIBILITY))
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !StatusEffects_active(STATUSEFFECT_Invisibility, this.oldenemy))
 		{
 			this.enemy = this.oldenemy;
 			HuntTarget(this);

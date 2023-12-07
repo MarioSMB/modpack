@@ -47,31 +47,12 @@ spawnfunc(info_intermission)
 void clear_powerups(entity this)
 {
 	this.powerups = 0;
-	this.super_damage_finished = 0;
-	this.super_time = 0;
-	this.invisible_finished = 0;
-	this.invisible_time = 0;
-	this.invincible_finished = 0;
-	this.invincible_time = 0;
-	this.radsuit_finished = 0;
-	this.rad_time = 0;
-	this.antigrav_finished = 0;
-	this.antigrav_time = 0;
-	this.jboots_finished = 0;
-	this.jboots_time = 0;
-	this.fireflower_finished = 0;
-	this.fireflower_time = 0;
-	this.shield_finished = 0;
-	this.shield_time = 0;
-	this.wetsuit_finished = 0;
-	this.wetsuit_time = 0;
-	this.field_generator_finished = 0;
-	this.field_generator_time = 0;
-	this.field_generator_health = 0;
-	this.empathy_finished = 0;
-	this.empathy_time = 0;
-	this.sharp_finished = 0;
-	this.sharp_time = 0;
+
+	FOREACH(StatusEffect, it.instanceOfPowerups,
+	{
+		if(StatusEffects_active(it, this))
+			StatusEffects_remove(it, this, STATUSEFFECT_REMOVE_CLEAR);
+	});
 }
 
 bool reset_flag;
@@ -1983,14 +1964,8 @@ void PlayerPreThink(entity this)
 	// Kill player on Edge of Oblivion
 	if((this.origin_z < -1300) && (world.model == "maps/hipdm1.bsp") && (this.health > 0))
 	{
-		if (this.invincible_finished >= time)
-		{
-			this.invincible_finished = 0;
-			this.powerups &= ~POWERUP_INVULNERABILITY;
-			this.invincible_time = 0;
-			this.invincible_finished = 0;
-			this.effects &= ~EF_DIMLIGHT;
-		}
+		if(StatusEffects_active(STATUSEFFECT_Invulnerability, this))
+			StatusEffects_remove(STATUSEFFECT_Invulnerability, this, STATUSEFFECT_REMOVE_CLEAR);
 		T_Damage(this, this, NULL, this.health + 1000, DEATH_FALL.m_id);
 	}
 
@@ -2013,12 +1988,13 @@ void PlayerPreThink(entity this)
 	if(this.pausetime != -1 && time < this.pausetime)
 		this.velocity = '0 0 0';
 
-	if((this.powerups & POWERUP_ANTIGRAV) && time > this.AGping)
+	if(StatusEffects_active(STATUSEFFECT_Antigrav, this) && time > this.AGping)
 	{
+		float atime = StatusEffects_gettime(STATUSEFFECT_Antigrav, this);
 		_sound(this, CH_TRIGGER_SINGLE, "belt/use.wav", 0.4, ATTN_NORM);
 		this.AGping = time + 3;
-		if(this.AGping >= (this.antigrav_finished - 3))
-			this.AGping = this.antigrav_finished + 3;
+		if(this.AGping >= (atime - 3))
+			this.AGping = atime + 3;
 	}
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -2041,419 +2017,7 @@ Check for turning off powerups
 */
 void CheckPowerups(entity this)
 {
-	if(this.health <= 0)
-		return;
 
-// invisibility
-	if(this.invisible_finished)
-	{
-// sound and screen flash when items starts to run out
-		if(this.invisible_sound < time)
-		{
-			_sound(this, CH_TRIGGER_SINGLE, "items/inv3.wav", 0.5, ATTN_IDLE);
-			this.invisible_sound = time +((random() * 3) + 1);
-		}
-
-
-		if(this.invisible_finished < time + 3)
-		{
-			if(this.invisible_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_INVISIBLE);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/inv2.wav", 1, ATTN_NORM);
-				this.invisible_time = time + 1;
-			}
-			
-			if(this.invisible_time < time)
-			{
-				this.invisible_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.invisible_finished < time)
-		{	// just stopped
-			this.powerups &= ~POWERUP_INVISIBILITY;
-			this.invisible_finished = 0;
-			this.invisible_time = 0;
-		}
-		
-	// use the eyes
-		this.frame = 0;
-		this.modelindex = modelindex_eyes;
-	}
-	else
-		this.modelindex = this.modelindex_player; // don't use eyes
-
-// invincibility
-	if(this.invincible_finished)
-	{
-// sound and screen flash when items starts to run out
-		if(this.invincible_finished < time + 3)
-		{
-			if(this.invincible_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_PROTECTION);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/protect2.wav", 1, ATTN_NORM);
-				this.invincible_time = time + 1;
-			}
-			
-			if(this.invincible_time < time)
-			{
-				this.invincible_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-		
-		if(this.invincible_finished < time)
-		{	// just stopped
-			this.powerups &= ~POWERUP_INVULNERABILITY;
-			this.invincible_time = 0;
-			this.invincible_finished = 0;
-		}
-		if(this.invincible_finished > time)
-			this.effects |= EF_DIMLIGHT;
-		else
-			this.effects &= ~EF_DIMLIGHT;
-	}
-
-// super damage
-	if(this.super_damage_finished)
-	{
-// sound and screen flash when items starts to run out
-
-		if(this.super_damage_finished < time + 3)
-		{
-			if(this.super_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_QUAD_DAMAGE);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/damage2.wav", 1, ATTN_NORM);
-				this.super_time = time + 1;
-			}
-			
-			if(this.super_time < time)
-			{
-				this.super_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.super_damage_finished < time)
-		{	// just stopped
-			this.powerups &= ~POWERUP_QUAD;
-			this.super_damage_finished = 0;
-			this.super_time = 0;
-		}
-		if(this.super_damage_finished > time)
-			this.effects |= EF_DIMLIGHT;
-		else
-			this.effects &= ~EF_DIMLIGHT;
-	}	
-
-// suit
-	{
-		if(this.field_generator_finished)
-		{
-			if(this.field_generator_sound < time)
-			{
-				_sound(this, CHAN_AUTO, "weapons/field/genpulse.wav", 1, ATTN_NORM);
-				stuffcmd(this, "bf\n");
-				this.field_generator_sound = time + 1.8;
-			}
-			if(this.field_generator_finished < time || this.field_generator_health <= 0)
-			{
-				this.powerups &= ~POWERUP_FIELDGEN;
-				this.field_generator_finished = 0;
-				this.field_generator_time = 0;
-				this.field_generator_health = 0;
-				_sound(this, CHAN_AUTO, "weapons/field/genstop.wav", 1, ATTN_NORM);
-			}
-			else if(this.field_generator_finished < time + 10)
-			{
-				if(this.field_generator_time <= 1)
-				{
-					stuffcmd(this, "bf\n");
-					_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
-					this.field_generator_time = time + 1;
-				}
-				if(this.field_generator_time < time)
-					this.field_generator_time = time + 1;
-			}
-			else if(this.field_generator_health <= 10 && this.field_generator_time <= -10)
-			{
-				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
-				this.field_generator_time = 1;
-				stuffcmd(this, "bf\n");
-				stuffcmd(this, "bf\n");
-			}
-			else if(this.field_generator_health <= 50 && this.field_generator_time <= -50)
-			{
-				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
-				this.field_generator_time = -10;
-				stuffcmd(this, "bf\n");
-				stuffcmd(this, "bf\n");
-			}
-			else if(this.field_generator_health <= 150 && this.field_generator_time == -150)
-			{
-				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
-				this.field_generator_time = -50;
-				stuffcmd(this, "bf\n");
-				stuffcmd(this, "bf\n");
-			}
-			else
-			{
-				if(this.field_generator_health <= 100 && random() > (this.field_generator_health / 50))
-					this.effects |= EF_BRIGHTFIELD;
-				else if(this.field_generator_finished < (time + 10) && random() > ((this.field_generator_finished - time) / 5))
-					this.effects |= EF_BRIGHTFIELD;
-				else
-					this.effects &= ~EF_BRIGHTFIELD;
-			}
-		}
-		else
-			this.effects &= ~EF_BRIGHTFIELD;
-	}
-
-	if(this.radsuit_finished)
-	{
-		this.air_finished = time + 12;		// don't drown
-
-// sound and screen flash when items starts to run out
-		if(this.radsuit_finished < time + 3)
-		{
-			if(this.rad_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_BIOSUIT);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
-				this.rad_time = time + 1;
-			}
-			
-			if(this.rad_time < time)
-			{
-				this.rad_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.radsuit_finished < time)
-		{	// just stopped
-			this.powerups &= ~POWERUP_SUIT;
-			this.rad_time = 0;
-			this.radsuit_finished = 0;
-		}
-	}
-
-	//JIM
-	// wetsuit
-	if(this.wetsuit_finished)
-	{
-		this.air_finished = time + 12;		// don't drown
-
-	// sound and screen flash when items starts to run out
-		if(this.wetsuit_finished < time + 3)
-		{
-			if(this.wetsuit_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_WETSUIT);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
-				this.wetsuit_time = time + 1;
-			}
-
-			if(this.wetsuit_time < time)
-			{
-				this.wetsuit_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.wetsuit_finished < time)
-		{	// just stopped
-//MED
-			this.powerups &= ~POWERUP_WETSUIT;
-			this.wetsuit_time = 0;
-			this.wetsuit_finished = 0;
-		}
-	}
-
-//MED
-// empathy shields
-	if(this.empathy_finished)
-	{
-		// sound and screen flash when items starts to run out
-		if(this.empathy_finished < time + 3)
-		{
-			if(this.empathy_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_EMPATHY);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
-				this.empathy_time = time + 1;
-			}
-
-			if(this.empathy_time < time)
-			{
-				this.empathy_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.empathy_finished < time)
-		{	// just stopped
-//MED
-			this.powerups &= ~POWERUP_EMPATHY_SHIELDS;
-			this.empathy_time = 0;
-			this.empathy_finished = 0;
-		}
-//MED
-		if(this.empathy_finished > time)
-			this.effects |= EF_DIMLIGHT;
-		else
-			this.effects &= ~EF_DIMLIGHT;
-	}
-
-	if(this.shield_finished)
-	{
-		if(this.shield_finished < time + 3)
-		{
-			if(this.shield_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHIELD);
-				_sound(this, CH_TRIGGER_SINGLE, "shield/fadeout.wav", 1, ATTN_NORM);
-				this.shield_time = 0;
-			}
-			if(this.shield_time < time)
-			{
-				this.shield_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.shield_finished < time)
-		{
-			if(!(MP_MG && autocvar_horde))
-				sprint(this, "Shield lost.\n");
-			this.shield_finished = 0;
-			this.powerups &= ~POWERUP_SHIELD;
-		}
-	}
-
-	if(this.antigrav_finished)
-	{
-		if(this.antigrav_finished < time + 3)
-		{
-			if(this.antigrav_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_ANTIGRAV);
-				this.antigrav_time = 0;
-				_sound(this, CH_TRIGGER_SINGLE, "belt/fadeout.wav", 1, ATTN_NORM);
-			}
-			if(this.antigrav_time < time)
-			{
-				this.antigrav_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-		
-		if(this.antigrav_finished < time)
-		{
-			if(!(MP_MG && autocvar_horde))
-				sprint(this, "Antigrav Lost.\n");
-			this.antigrav_finished = 0;
-			this.powerups &= ~POWERUP_ANTIGRAV;
-			this.gravity = 1.0;
-		}
-	}
-
-	if(this.fireflower_finished)
-	{
-		if(this.fireflower_finished < time + 3)
-		{
-			if(this.fireflower_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_FIREFLOWER);
-				_sound(this, CH_TRIGGER_SINGLE, "items/powerdown_mario.wav", 1, ATTN_NORM);
-				this.fireflower_time = time + 1;
-			}
-
-			if(this.fireflower_time < time)
-				this.fireflower_time = time + 1;
-		}
-
-		if(this.fireflower_finished < time)
-		{
-			this.powerups &= ~POWERUP_FIREFLOWER;
-			this.fireflower_time = 0;
-			this.fireflower_finished = 0;
-		}
-	}
-
-	if(this.jboots_finished)
-	{
-		if(this.jboots_finished < time + 3)
-		{
-			if(this.jboots_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_JUMPBOOTS);
-				_sound(this, CH_TRIGGER_SINGLE, "items/jboots_timed.wav", 1, ATTN_NORM);
-				this.jboots_time = time + 1;
-			}
-
-			if(this.jboots_time < time)
-				this.jboots_time = time + 1;
-		}
-
-		if(this.jboots_finished < time)
-		{
-			this.powerups &= ~POWERUP_JUMPBOOTS;
-			this.jboots_time = 0;
-			this.jboots_finished = 0;
-		}
-	}
-
-	if(this.sharp_finished)
-	{
-// sound and screen flash when items starts to run out
-
-		if(this.sharp_finished < time + 3)
-		{
-			if(this.sharp_time == 1)
-			{
-				if(!(MP_MG && autocvar_horde))
-					Send_Notification(NOTIF_ONE, this, MSG_MULTI, POWERDOWN_SHARPSHOOTER);
-				stuffcmd(this, "bf\n");
-				_sound(this, CH_TRIGGER_SINGLE, "items/sharp2.wav", 1, ATTN_NORM);
-				this.sharp_time = time + 1;
-			}
-			
-			if(this.sharp_time < time)
-			{
-				this.sharp_time = time + 1;
-				stuffcmd(this, "bf\n");
-			}
-		}
-
-		if(this.sharp_finished < time)
-		{	// just stopped
-			this.powerups &= ~POWERUP_SHARPSHOOTER;
-			this.sharp_finished = 0;
-			this.sharp_time = 0;
-		}
-	}	
 }
 
 void DrownPlayer(entity this)
@@ -2637,7 +2201,7 @@ void PlayerPostThink(entity this)
 		}
 
 		// TODO: split into a separate entity attached to the player?
-		if((this.items & IT_PULSERIFLE) && !(this.powerups & POWERUP_INVISIBILITY))
+		if((this.items & IT_PULSERIFLE) && !StatusEffects_active(STATUSEFFECT_Invisibility, this))
 			W_PulseRifle(this);
 
 		if(this.cnt > 0 && !this.button0)
@@ -3141,6 +2705,216 @@ void exploder_think(entity this)
 	delete(this);
 }
 
+#if 0
+void target_spawn_helper_setmodel(entity this)
+{
+	_setmodel(this, this.model);
+}
+
+void target_spawn_helper_setsize(entity this)
+{
+	setsize(this, this.mins, this.maxs);
+}
+
+.void(entity this) target_spawn_spawnfunc;
+void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act, entity trigger)
+{
+	float i, n, valuefieldpos;
+	string key, value, valuefield, valueoffset, valueoffsetrandom;
+	entity valueent;
+	vector data, data2;
+
+	n = tokenize_console(msg);
+
+	for(i = 0; i < n-1; i += 2)
+	{
+		key = argv(i);
+		value = argv(i+1);
+		if(key == "$")
+		{
+			data.x = -1;
+			data.y = FIELD_STRING;
+		}
+		else
+		{
+			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
+			if(data.y == 0) // undefined field, i.e., invalid type
+			{
+				LOG_INFO("target_spawn: invalid/unknown entity key ", key, " specified, ignored!");
+				continue;
+			}
+		}
+		if(substring(value, 0, 1) == "$")
+		{
+			value = substring(value, 1, strlen(value) - 1);
+			if(substring(value, 0, 1) == "$")
+			{
+				// deferred replacement
+				// do nothing
+				// useful for creating target_spawns with this!
+			}
+			else
+			{
+				// replace me!
+				valuefieldpos = strstrofs(value, "+", 0);
+				valueoffset = "";
+				if(valuefieldpos != -1)
+				{
+					valueoffset = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
+					value = substring(value, 0, valuefieldpos);
+				}
+
+				valuefieldpos = strstrofs(valueoffset, "+", 0);
+				valueoffsetrandom = "";
+				if(valuefieldpos != -1)
+				{
+					valueoffsetrandom = substring(valueoffset, valuefieldpos + 1, strlen(valueoffset) - valuefieldpos - 1);
+					valueoffset = substring(valueoffset, 0, valuefieldpos);
+				}
+
+				valuefieldpos = strstrofs(value, ".", 0);
+				valuefield = "";
+				if(valuefieldpos != -1)
+				{
+					valuefield = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
+					value = substring(value, 0, valuefieldpos);
+				}
+
+				if(value == "self")
+				{
+					valueent = this;
+					value = "";
+				}
+				else if(value == "activator")
+				{
+					valueent = act;
+					value = "";
+				}
+				else if(value == "other")
+				{
+					valueent = trigger;
+					value = "";
+				}
+				else if(value == "pusher")
+				{
+					valueent = NULL;
+					value = "";
+				}
+				else if(value == "target")
+				{
+					valueent = e;
+					value = "";
+				}
+				else if(value == "killtarget")
+				{
+					valueent = kt;
+					value = "";
+				}
+				else if(value == "target2")
+				{
+					valueent = t2;
+					value = "";
+				}
+				else if(value == "target3")
+				{
+					valueent = t3;
+					value = "";
+				}
+				else if(value == "target4")
+				{
+					valueent = t4;
+					value = "";
+				}
+				else if(value == "time")
+				{
+					valueent = NULL;
+					value = ftos(time);
+				}
+				else
+				{
+					LOG_INFO("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!");
+					continue;
+				}
+
+				if(valuefield == "")
+				{
+					if(value == "")
+						value = ftos(etof(valueent));
+				}
+				else
+				{
+					if(value != "")
+					{
+						LOG_INFO("target_spawn: try to get a field of a non-entity, ignored!");
+						continue;
+					}
+					data2 = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", valuefield)));
+					if(data2_y == 0) // undefined field, i.e., invalid type
+					{
+						LOG_INFO("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!");
+						continue;
+					}
+					value = getentityfieldstring(data2_x, valueent);
+				}
+
+				if(valueoffset != "")
+				{
+					switch(data.y)
+					{
+						case FIELD_STRING:
+							value = strcat(value, valueoffset);
+							break;
+						case FIELD_FLOAT:
+							value = ftos(stof(value) + stof(valueoffset));
+							break;
+						case FIELD_VECTOR:
+							value = vtos(stov(value) + stov(valueoffset));
+							break;
+						default:
+							LOG_INFO("target_spawn: only string, float and vector fields can do calculations, calculation ignored!");
+							break;
+					}
+				}
+
+				if(valueoffsetrandom != "")
+				{
+					switch(data.y)
+					{
+						case FIELD_FLOAT:
+							value = ftos(stof(value) + random() * stof(valueoffsetrandom));
+							break;
+						case FIELD_VECTOR:
+							data2 = stov(valueoffsetrandom);
+							value = vtos(stov(value) + random() * data2_x * '1 0 0' + random() * data2_y * '0 1 0' + random() * data2_z * '0 0 1');
+							break;
+						default:
+							LOG_INFO("target_spawn: only float and vector fields can do random calculations, calculation ignored!");
+							break;
+					}
+				}
+			}
+		}
+		if(key == "$")
+		{
+			if(substring(value, 0, 1) == "_")
+				value = strcat("target_spawn_helper", value);
+			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
+
+			e.target_spawn_spawnfunc(e);
+
+			// We called an external function, so we have to re-tokenize msg.
+			n = tokenize_console(msg);
+		}
+		else
+		{
+			if(data.y == FIELD_VECTOR)
+				value = strreplace("'", "", value); // why?!?
+			putentityfieldstring(data.x, e, value);
+		}
+	}
+}
+#endif
+
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void NoclipCheat(entity this);
 void SV_ParseClientCommand(entity this, string command)
@@ -3251,6 +3025,40 @@ void SV_ParseClientCommand(entity this, string command)
 		exploder.cnt = stof(argv(2));
 		exploder.nextthink = time + 0.5; // give them enough time to close the console!
 		setorigin(exploder, trace_endpos);
+		return;
+	}
+
+	if(cmd_name == "addent")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		initialize_field_db();
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
+		entity e = spawn();
+		e.spawnfunc_checked = true;
+		setorigin(e, trace_endpos);
+	#if 0
+		string themsg = strcat1(substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		target_spawn_edit_entity(this, e, themsg, NULL, NULL, NULL, NULL, this, this);
+	#else
+		string themsg = strcat1(argv(1));
+		if(themsg != "")
+		{
+			string value = strcat("spawnfunc_", themsg);
+			if(substring(value, 0, 1) == "_")
+				value = strcat("target_spawn_helper", value);
+			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
+
+			if(e.target_spawn_spawnfunc)
+			{
+				setthink(e, e.target_spawn_spawnfunc);
+				e.nextthink = time;
+			}
+			else
+				delete(e);
+		}
+	#endif
 		return;
 	}
 

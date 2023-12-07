@@ -53,3 +53,9 @@ CLASS(StatusEffects, Object)
         returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
 ENDCLASS(StatusEffects)
+
+CLASS(Powerups, StatusEffects)
+#ifdef GAMEQC
+    ATTRIB(Powerups, m_sound_rm, Sound, SND_Null);
+#endif
+ENDCLASS(Powerups)

@@ -114,7 +114,7 @@ void LightningTouch(entity this, entity toucher)
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
 		float damg = 16;
-		if(this.owner.super_damage_finished > time && toucher.health <= (damg * 4))
+		if(StatusEffects_active(STATUSEFFECT_Quad, this.owner) && toucher.health <= (damg * 4))
 		{
 			if(toucher.move_movetype == MOVETYPE_PUSH)
 			{

@@ -60,7 +60,7 @@ void Cook_FindTarget(entity this)
 	if(!client || client == this.cook_target)
 		return;
 
-	if((client.flags & FL_NOTARGET) || (client.powerups & POWERUP_INVISIBILITY))
+	if((client.flags & FL_NOTARGET) || StatusEffects_active(STATUSEFFECT_Invisibility, client))
 		return;
 	int r = range(this, client);
 	if(r == RANGE_FAR || !visible(this, client))

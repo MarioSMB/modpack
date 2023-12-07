@@ -387,11 +387,8 @@ void impale(entity this)
 		return;
 
 	this.impaled = true;
-	this.powerups &= ~POWERUP_INVISIBILITY;
-	this.invisible_finished = 0;
-	this.invincible_finished = 0;
-	this.super_damage_finished = 0;
-	this.radsuit_finished = 0;
+	this.powerups = 0;
+	StatusEffects_removeall(this, STATUSEFFECT_REMOVE_CLEAR);
 	this.modelindex = this.modelindex_player;
 	if(deathmatch || coop)
 		DropBackpack(this);

@@ -1,0 +1,14 @@
+#pragma once
+
+CLASS(Quad, Powerups)
+    ATTRIB(Quad, netname, string, "quad");
+    ATTRIB(Quad, m_name, string, _("Quad Damage"));
+    ATTRIB(Quad, m_color, vector, '0.5 0.5 1');
+    ATTRIB(Quad, m_icon, string, "sb_quad");
+ENDCLASS(Quad)
+REGISTER_STATUSEFFECT(Quad, NEW(Quad));
+
+#ifdef SVQC
+.bool quad_warning;
+.float super_sound;
+#endif
