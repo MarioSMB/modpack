@@ -11,7 +11,8 @@ void W_Thunderbolt_Attack(entity this)
 		return;
 	}
 
-	player_light1(actor);
+	if(IS_PLAYER(actor))
+		player_light1(actor);
 
 	actor.effects |= EF_MUZZLEFLASH;
 

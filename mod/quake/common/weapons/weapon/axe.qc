@@ -27,22 +27,22 @@ void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, playe
 void wep_axe_axe4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_axe_axe3(entity this) { wep_set_anim(this, 3, wep_axe_axe4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axe2(entity this) { wep_set_anim(this, 2, wep_axe_axe3); }
-void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); player_axe1(this.owner); }
+void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); }
 
 void wep_axe_axeb4(entity this) { wep_set_anim(this, 8, w_ready); }
 void wep_axe_axeb3(entity this) { wep_set_anim(this, 7, wep_axe_axeb4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axeb2(entity this) { wep_set_anim(this, 6, wep_axe_axeb3); }
-void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); player_axeb1(this.owner); }
+void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); }
 
 void wep_axe_axec4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_axe_axec3(entity this) { wep_set_anim(this, 3, wep_axe_axec4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axec2(entity this) { wep_set_anim(this, 2, wep_axe_axec3); }
-void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); player_axec1(this.owner); }
+void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); }
 
 void wep_axe_axed4(entity this) { wep_set_anim(this, 8, w_ready); }
 void wep_axe_axed3(entity this) { wep_set_anim(this, 7, wep_axe_axed4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axed2(entity this) { wep_set_anim(this, 6, wep_axe_axed3); }
-void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); player_axed1(this.owner); }
+void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); }
 
 void W_FireAxe(entity this, .entity weaponentity)
 {
@@ -120,18 +120,34 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 			{
 				// vertical CHOP
 				if(r < 0.5)
+				{
+					if(IS_PLAYER(actor))
+						player_axe1(actor);
 					wep_axe_axe1(actor.(weaponentity));
+				}
 				else
+				{
+					if(IS_PLAYER(actor))
+						player_axec1(actor);
 					wep_axe_axec1(actor.(weaponentity));
+				}
 				weapon_prepareattack(thiswep, actor, weaponentity, 0.8); // long recover
 			}
 			else
 			{
 				// diagonal SWEEP
 				if(r < 0.5)
+				{
+					if(IS_PLAYER(actor))
+						player_axeb1(actor);
 					wep_axe_axeb1(actor.(weaponentity));
+				}
 				else
+				{
+					if(IS_PLAYER(actor))
+						player_axed1(actor);
 					wep_axe_axed1(actor.(weaponentity));
+				}
 						
 				if(actor.axe_hit_chain > 1)
 					weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
@@ -143,13 +159,29 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 		else
 		{
 			if(r < 0.25)
+			{
+				if(IS_PLAYER(actor))
+					player_axe1(actor);
 				wep_axe_axe1(actor.(weaponentity));
+			}
 			else if(r<0.5)
+			{
+				if(IS_PLAYER(actor))
+					player_axeb1(actor);
 				wep_axe_axeb1(actor.(weaponentity));
+			}
 			else if(r<0.75)
+			{
+				if(IS_PLAYER(actor))
+					player_axec1(actor);
 				wep_axe_axec1(actor.(weaponentity));
+			}
 			else
+			{
+				if(IS_PLAYER(actor))
+					player_axed1(actor);
 				wep_axe_axed1(actor.(weaponentity));
+			}
 			float fire_delay = 0.5;
 			if(random() < 0.5)
 				fire_delay = 0.4;

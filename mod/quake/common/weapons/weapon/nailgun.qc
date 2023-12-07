@@ -18,7 +18,8 @@ void W_Nailgun_Attack(entity this)
 
 	this.misc_bulletcounter += 1;
 
-	player_nail1(actor);
+	if(IS_PLAYER(actor))
+		player_nail1(actor);
 
 	actor.effects |= EF_MUZZLEFLASH;
 

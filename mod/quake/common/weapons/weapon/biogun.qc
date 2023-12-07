@@ -51,7 +51,8 @@ METHOD(Biogun, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		player_shot1(actor);
+		if(IS_PLAYER(actor))
+			player_shot1(actor);
 		actor.effects |= EF_MUZZLEFLASH;
 		//actor.(weaponentity).misc_bulletcounter = 0;
 		actor.(weaponentity).misc_bulletcounter += 1;

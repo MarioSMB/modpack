@@ -20,14 +20,7 @@ void wep_mjolnir_hammer5(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer
 void wep_mjolnir_hammer4(entity this) { wep_set_anim(this, 4, wep_mjolnir_hammer5); HIP_FireMjolnir(this.owner, this.weaponentity_fld); }
 void wep_mjolnir_hammer3(entity this) { wep_set_anim(this, 3, wep_mjolnir_hammer4); }
 void wep_mjolnir_hammer2(entity this) { wep_set_anim(this, 2, wep_mjolnir_hammer3); }
-void wep_mjolnir_hammer1(entity this)
-{
-	wep_set_anim(this, 1, wep_mjolnir_hammer2);
-	if(this.owner.ammo_cells < 30)
-		player_hammer1(this.owner);
-	else
-		player_mjolnir1(this.owner);
-}
+void wep_mjolnir_hammer1(entity this) { wep_set_anim(this, 1, wep_mjolnir_hammer2); }
 
 void HIP_HammerDamage(vector p1, vector p2, entity from, float damage)
 {
@@ -282,6 +275,13 @@ METHOD(Mjolnir, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+		{
+			if(actor.ammo_cells < 30)
+				player_hammer1(actor);
+			else
+				player_mjolnir1(actor);
+		}
 		wep_mjolnir_hammer1(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}

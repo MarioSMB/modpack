@@ -108,6 +108,8 @@ METHOD(NapalmGun, wr_think, void(entity thiswep, entity actor, .entity weaponent
 	{
 		if(actor.(weaponentity).misc_bulletcounter < 3)
 		{
+			if(IS_PLAYER(actor))
+				player_rocket1(actor);
 			wep_generic_rocket1(actor.(weaponentity));
 			W_FireNapalm(actor, weaponentity);
 			weapon_prepareattack(thiswep, actor, weaponentity, 0.6);

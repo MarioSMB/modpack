@@ -53,7 +53,7 @@ void wep_fish_fish5(entity this)
 void wep_fish_fish4(entity this) { wep_set_anim(this, 4, fishcharge); }
 void wep_fish_fish3(entity this) { wep_set_anim(this, 3, wep_fish_fish4); }
 void wep_fish_fish2(entity this) { wep_set_anim(this, 2, wep_fish_fish3); }
-void wep_fish_fish1(entity this) { wep_set_anim(this, 1, wep_fish_fish2); player_fish1(this.owner); }
+void wep_fish_fish1(entity this) { wep_set_anim(this, 1, wep_fish_fish2); }
 
 void fishbounce(entity this, entity toucher)
 {
@@ -239,6 +239,8 @@ METHOD(Fish, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 		actor.(weaponentity).m_frame = 1;
 		actor.(weaponentity).fish_time = 0;
+		if(IS_PLAYER(actor))
+			player_fish1(actor);
 		wep_fish_fish1(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}

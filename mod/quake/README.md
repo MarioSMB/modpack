@@ -8,8 +8,8 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.fps.gratis/zzz-quake1-assets_01.pk3
- - http://dl.xonotic.fps.gratis/zzz-quake1-extras_08.pk3
+ - http://dl.xonotic.fps.gratis/zzz-quake1-assets_02.pk3
+ - http://dl.xonotic.fps.gratis/zzz-quake1-newextras_06.pk3
  - http://dl.xonotic.fps.gratis/q1-campaign_01.pk3
 
 Optional mission packs:
@@ -26,6 +26,9 @@ Optional mission packs:
  - http://dl.xonotic.fps.gratis/q1-sot_01.pk3
  - http://dl.xonotic.fps.gratis/q1-targetquake_01.pk3
  - http://dl.xonotic.fps.gratis/q1-terra_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-tiddles_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-insomnia_01.pk3
+ - http://dl.xonotic.fps.gratis/q1-dmd_01.pk3
 
 
 Usage

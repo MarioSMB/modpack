@@ -121,6 +121,8 @@ METHOD(Ripper, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		W_FireRipper(actor, weaponentity);
+		if(IS_PLAYER(actor))
+			player_shot1(actor);
 		wep_generic_shot1(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.66);
 	}

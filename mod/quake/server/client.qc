@@ -3098,7 +3098,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
+				if(!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, ""))
+					Obituary_SpecialDeath(targ, false, deathtype, targ.netname, "");
 				break;
 			}
 		}

@@ -6,7 +6,7 @@ void wep_plasmagun_plasma5(entity this) { wep_set_anim(this, 5, wep_plasmagun_pl
 void wep_plasmagun_plasma4(entity this) { wep_set_anim(this, 4, wep_plasmagun_plasma5); }
 void wep_plasmagun_plasma3(entity this) { wep_set_anim(this, 3, wep_plasmagun_plasma4); }
 void wep_plasmagun_plasma2(entity this) { wep_set_anim(this, 2, wep_plasmagun_plasma3); }
-void wep_plasmagun_plasma1(entity this) { wep_set_anim(this, 1, wep_plasmagun_plasma2); player_rocket1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
+void wep_plasmagun_plasma1(entity this) { wep_set_anim(this, 1, wep_plasmagun_plasma2); this.owner.effects |= EF_MUZZLEFLASH; }
 
 void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 {
@@ -226,6 +226,8 @@ METHOD(PlasmaGun, wr_think, void(entity thiswep, entity actor, .entity weaponent
 		//      or W_FirePlasma, but same lighting and frames...
 		//ATTACK_FINISHED(actor, weaponentity) = time + 1.0;//ooppee edited line out
 		//player_light1(actor);//ooppee edited line out
+		if(IS_PLAYER(actor))
+			player_rocket1(actor);
 		wep_plasmagun_plasma1(actor.(weaponentity)); //ooppee added
 		W_FirePlasma(actor, weaponentity); //ooppee added
 		weapon_prepareattack(thiswep, actor, weaponentity, 1); //ooppee added (same as above code but needs to be executed AFTER)

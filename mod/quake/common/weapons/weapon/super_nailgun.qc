@@ -11,7 +11,8 @@ void W_SuperNailgun_Attack(entity this)
 		return;
 	}
 
-	player_nail1(actor);
+	if(IS_PLAYER(actor))
+		player_nail1(actor);
 
 	actor.effects |= EF_MUZZLEFLASH;
 

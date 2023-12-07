@@ -62,7 +62,7 @@ void Mayo_PoolTouch(entity this, entity toucher)
 		return;
 	if(toucher.m_champion == CHAMPION_Sorlag)
 		return;
-	if(IS_PLAYER(toucher) && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	if(IS_PLAYER(this.owner) && IS_PLAYER(toucher) && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
 		return;
 
 	float poisontime = 7;
@@ -139,6 +139,8 @@ METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_FireMayo(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);

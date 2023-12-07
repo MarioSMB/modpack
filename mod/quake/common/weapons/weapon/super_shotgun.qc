@@ -23,6 +23,8 @@ METHOD(SuperShotgun, wr_think, void(entity thiswep, entity actor, .entity weapon
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_shot1(actor);
 		wep_generic_shot1(actor.(weaponentity));
 		W_FireSuperShotgun(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);

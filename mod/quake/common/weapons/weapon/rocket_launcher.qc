@@ -42,6 +42,8 @@ METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weap
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		entity rocket = W_FireRocket(actor);
 		setorigin(rocket, W_Shotorg(actor, weaponentity));

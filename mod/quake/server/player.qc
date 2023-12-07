@@ -411,7 +411,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this))
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && this.move_movetype == MOVETYPE_WALK)
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -444,7 +444,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this))
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && this.move_movetype == MOVETYPE_WALK)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -509,7 +509,7 @@ void wep_generic_shot5(entity this) { wep_set_anim(this, 5, wep_generic_shot6); 
 void wep_generic_shot4(entity this) { wep_set_anim(this, 4, wep_generic_shot5); }
 void wep_generic_shot3(entity this) { wep_set_anim(this, 3, wep_generic_shot4); }
 void wep_generic_shot2(entity this) { wep_set_anim(this, 2, wep_generic_shot3); }
-void wep_generic_shot1(entity this) { wep_set_anim(this, 1, wep_generic_shot2); player_shot1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
+void wep_generic_shot1(entity this) { wep_set_anim(this, 1, wep_generic_shot2); this.owner.effects |= EF_MUZZLEFLASH; }
 
 void player_rocket6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); }
 void player_rocket5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_rocket6); }
@@ -523,7 +523,7 @@ void wep_generic_rocket5(entity this) { wep_set_anim(this, 5, wep_generic_rocket
 void wep_generic_rocket4(entity this) { wep_set_anim(this, 4, wep_generic_rocket5); }
 void wep_generic_rocket3(entity this) { wep_set_anim(this, 3, wep_generic_rocket4); }
 void wep_generic_rocket2(entity this) { wep_set_anim(this, 2, wep_generic_rocket3); }
-void wep_generic_rocket1(entity this) { wep_set_anim(this, 1, wep_generic_rocket2); player_rocket1(this.owner); this.owner.effects |= EF_MUZZLEFLASH; }
+void wep_generic_rocket1(entity this) { wep_set_anim(this, 1, wep_generic_rocket2); this.owner.effects |= EF_MUZZLEFLASH; }
 
 void player_nail2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_run); }
 void player_nail1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_nail2); }

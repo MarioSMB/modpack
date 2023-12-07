@@ -17,6 +17,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_shot1(actor);
 		wep_generic_shot1(actor.(weaponentity));
 		W_FireShotgun(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);

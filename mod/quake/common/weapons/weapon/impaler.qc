@@ -21,7 +21,7 @@ void wep_impaler_shotimp5(entity this) { wep_set_anim(this, 5, wep_impaler_shoti
 void wep_impaler_shotimp4(entity this) { wep_set_anim(this, 4, wep_impaler_shotimp5); W_FireSpear(this.owner, this.weaponentity_fld); }
 void wep_impaler_shotimp3(entity this) { wep_set_anim(this, 3, wep_impaler_shotimp4); this.owner.effects |= EF_MUZZLEFLASH; }
 void wep_impaler_shotimp2(entity this) { wep_set_anim(this, 2, wep_impaler_shotimp3); _sound(this.owner, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
-void wep_impaler_shotimp1(entity this) { wep_set_anim(this, 1, wep_impaler_shotimp2); player_shotimp1(this.owner); }
+void wep_impaler_shotimp1(entity this) { wep_set_anim(this, 1, wep_impaler_shotimp2); }
 
 void T_SpearTouch(entity this, entity toucher)
 {
@@ -456,6 +456,8 @@ METHOD(Impaler, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_shotimp1(actor);
 		wep_impaler_shotimp1(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 1.5);
 	}

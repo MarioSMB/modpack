@@ -32,7 +32,7 @@ void wep_chainsaw_chainsaw2(entity this)
 		return;
 	}
 }
-void wep_chainsaw_chainsaw1(entity this) { wep_set_anim(this, 5, wep_chainsaw_chainsaw2); player_chainsaw1(this.owner); W_FireSaw(this.owner, this.weaponentity_fld); }
+void wep_chainsaw_chainsaw1(entity this) { wep_set_anim(this, 5, wep_chainsaw_chainsaw2); W_FireSaw(this.owner, this.weaponentity_fld); }
 
 void W_FireSaw(entity this, .entity weaponentity)
 {
@@ -83,6 +83,8 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 	if(fire & 1)
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_chainsaw1(actor);
 		wep_chainsaw_chainsaw1(actor.(weaponentity));
 		ATTACK_FINISHED(actor, weaponentity) = time + 0.55;
 		_sound(actor, CH_SHOTS, "weapons/sawatck.wav", 1, ATTN_NORM);

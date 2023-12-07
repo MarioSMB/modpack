@@ -124,6 +124,8 @@ METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, .entit
 	if(fire & 1)
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		if(IS_PLAYER(actor))
+			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_FireMultiGrenade(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);

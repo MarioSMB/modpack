@@ -29,6 +29,8 @@ ENDCLASS(Gremlin)
 REGISTER_MONSTER(GREMLIN, NEW(Gremlin));
 
 #ifdef SVQC
+bool autocvar_sv_quake_gremlin_new;
+
 .float gorging;
 .float stoleweapon;
 .entity lastvictim;

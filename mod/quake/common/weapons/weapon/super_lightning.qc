@@ -27,7 +27,8 @@ void W_SuperLightning_Attack(entity this)
 	if((this.misc_bulletcounter % 2) == 0)
 		_sound(actor, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
 
-	player_light1(actor);
+	if(IS_PLAYER(actor))
+		player_light1(actor);
 
 	actor.effects |= EF_MUZZLEFLASH;
 
@@ -100,7 +101,7 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	if(IS_PLAYER(this.realowner) && IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
 	{
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);

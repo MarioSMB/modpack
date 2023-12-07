@@ -26,7 +26,7 @@ void player_pan1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_
 void wep_pan_pan4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_pan_pan3(entity this) { wep_set_anim(this, 3, wep_pan_pan4); W_FirePan(this.owner, this.weaponentity_fld); }
 void wep_pan_pan2(entity this) { wep_set_anim(this, 2, wep_pan_pan3); }
-void wep_pan_pan1(entity this) { wep_set_anim(this, 1, wep_pan_pan2); player_pan1(this.owner); }
+void wep_pan_pan1(entity this) { wep_set_anim(this, 1, wep_pan_pan2); }
 
 void edie_SpikeTouch(entity this, entity toucher); // TODO
 bool Pan_CheckDamage(entity targ, entity inflictor, entity attacker)
@@ -144,6 +144,8 @@ METHOD(Pan, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
+		if(IS_PLAYER(actor))
+			player_pan1(actor);
 		wep_pan_pan1(actor.(weaponentity));
 		float fire_delay = 0.6;
 		weapon_prepareattack(thiswep, actor, weaponentity, fire_delay);

@@ -21,7 +21,8 @@ void HIP_FireLaser(entity this, float stat, .entity weaponentity)
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}
-	player_laser1(this);
+	if(IS_PLAYER(this))
+		player_laser1(this);
 	SuperDamageSound(this);
 	this.effects |= EF_MUZZLEFLASH;
 	ATTACK_FINISHED(this, weaponentity) = time + 0.2;

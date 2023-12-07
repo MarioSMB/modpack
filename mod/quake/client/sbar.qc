@@ -962,6 +962,20 @@ void Sbar_DrawInventory()
 		}
 	}
 
+#if 0
+	int pcount = 0;
+	FOREACH(StatusEffect, it.instanceOfPowerups,
+	{
+		if(StatusEffects_active(it, g_statuseffects))
+		{
+			Sbar_DrawPic(vec2(192 + (3 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
+			pcount += 1;
+		}
+		if(pcount > 4)
+			break; // we have limited HUD space unfortunately!
+	});
+#endif
+
 	// TODO: unique positions for multiple powerups?
 	if(mypowerups & POWERUP_WETSUIT)
 		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");

@@ -60,7 +60,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 	entity victim = this.enemy;
 	.entity weaponentity = weaponentities[0];
 	Weapon best = victim.(weaponentity).m_weapon;
-	if(best.spawnflags & WEP_FLAG_NOSTEAL)
+	if((best.spawnflags & WEP_FLAG_NOSTEAL) || (best.spawnflags & WEP_FLAG_MELEE))
 		return false;
 	Weapon wep = best;
 	// take that weapon from the entity
@@ -68,7 +68,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 	// give it to our gremlin
 	this.(weaponentity).m_weapon = best;
 	// take some ammo while we are at it
-	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
+	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS);
 	if(best != WEP_Null)
 		Send_Notification(NOTIF_ONE, victim, MSG_MULTI, ITEM_WEAPON_STOLE, best.m_name);
 
@@ -140,7 +140,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 //   this.attack_state = AS_STRAIGHT;
 	// find a recipient
 	victim = GremlinFindVictim(this);
-	if(victim != NULL)
+	if(victim)
 	{
 		this.enemy = victim;
 		FoundTarget(this);
@@ -295,6 +295,7 @@ gremlin_run
 The monster has an enemy it is trying to kill
 =============
 */
+void gremlin_shot1(entity this);
 void gremlin_run(entity this, float dist)
 {
 	if(this.watertype == CONTENT_LAVA) // do damage
@@ -302,6 +303,44 @@ void gremlin_run(entity this, float dist)
 
 	if(this.stoleweapon)
 		this.frame = this.frame + anim_gremlin_grun - anim_gremlin_run;
+
+	if(autocvar_sv_quake_gremlin_new)
+	{
+		if(time > this.attack_finished)
+			this.button0 = false;
+
+		// copy of W_WeaponFrame logic
+		.entity weaponentity = weaponentities[0];
+		Weapon wep = this.(weaponentity).m_weapon;
+		this.(weaponentity).weapon_frametime = frametime;
+
+		vector dir = normalize(this.enemy.origin - this.origin);
+		this.v_angle = vectoangles(dir);
+		if(this.stoleweapon && this.enemy && !(time < ATTACK_FINISHED(this, weaponentity)))
+		{
+			makevectors(this.v_angle); // calculate forward angle for velocity
+				
+			// check for attack
+			if(wep != WEP_Null)
+			{
+				if(this.button0 && wep.wr_checkammo1(wep, this, weaponentity))
+				{
+					SuperDamageSound(this);
+					gremlin_shot1(this);
+				}
+				wep.wr_think(wep, this, weaponentity, this.button0);
+			}
+		}
+
+		if (time + this.(weaponentity).weapon_frametime * 0.5 >= this.(weaponentity).weapon_nextthink)
+		{
+			if (this.(weaponentity).weapon_think)
+			{
+				this.(weaponentity).weapon_think(this.(weaponentity));
+			}
+		}
+	}
+		
 
 	if(this.gorging)
 	{
@@ -349,12 +388,13 @@ void gremlin_run(entity this, float dist)
 		// get away from player if we stole a weapon
 		if(this.stoleweapon)
 		{
+			.entity weaponentity = weaponentities[0];
 			if(this.enemy.health < 0 && IS_PLAYER(this.enemy))
 			{
+				w_ready(this.(weaponentity));
 				gremlin_glook1(this);
 				return;
 			}
-			.entity weaponentity = weaponentities[0];
 			if(!GremlinCheckNoAmmo(this, weaponentity))
 			{
 				if(this.t_length == 1)
@@ -788,7 +828,7 @@ void GremlinDropBackpack(entity this)
 	entity item = spawn();
 	item.origin = this.origin - '0 0 24';
 
-	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
+	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS);
 	item.items = this.items;
 	item.powerups = this.powerups;
 
@@ -796,12 +836,16 @@ void GremlinDropBackpack(entity this)
 	Weapon wep = this.(weaponentity).m_weapon;
 	item.netname = wep.m_name;
 	item.weapon = wep.m_id;
+	w_ready(this.(weaponentity));
 	this.(weaponentity).m_weapon = WEP_Null;
 
 	item.ammo_shells = max(0, this.ammo_shells);
 	item.ammo_nails = max(0, this.ammo_nails);
 	item.ammo_rockets = max(0, this.ammo_rockets);
 	item.ammo_cells = max(0, this.ammo_cells);
+	item.ammo_plasma = max(0, this.ammo_plasma);
+	item.ammo_lava_nails = max(0, this.ammo_lava_nails);
+	item.ammo_multi_rockets = max(0, this.ammo_multi_rockets);
 
 	item.velocity_z = 300;
 	item.velocity_x = -100 + (random() * 200);
@@ -1178,7 +1222,12 @@ bool GremlinWeaponAttack(entity this, .entity weaponentity)
 		return false;
 
 	this.show_hostile = time + 1; // wake monsters up
-
+	if(autocvar_sv_quake_gremlin_new)
+	{
+		this.button0 = true; // shooting handled by run animation
+		this.attack_finished = time + 1;
+		return true;
+	}
 	if(this.(weaponentity).m_weapon == WEP_SHOTGUN)
 	{
 		gremlin_shot1(this);
@@ -1231,6 +1280,7 @@ bool GremlinWeaponAttack(entity this, .entity weaponentity)
 		GremlinFireProximityGrenade(this);
 		this.attack_finished = time + 1;
 	}
+
 	return true;
 }
 
@@ -1510,7 +1560,10 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 	{
 		.entity weaponentity = weaponentities[slot];
 		actor.(weaponentity) = actor; // hack to allow weapon system to work(ish)
+		actor.(weaponentity).owner = actor; // TODO: make sure this doesn't break much
 		actor.(weaponentity).m_weapon = WEP_Null;
+		if(slot == 0)
+			actor.weaponentity_fld = weaponentity;
 	}
 
     actor.health = 100;

@@ -38,6 +38,8 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 
 float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity)
 {
+	if(!IS_PLAYER(this))
+		return 0;
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
 	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
@@ -139,6 +141,8 @@ void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 
 bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
+	if(!IS_PLAYER(this))
+		return false;
 	if(this.(weaponentity).m_weapon != w)
 	{
 		if(client_hasweapon(this, w, weaponentity, true, true))
