@@ -16,7 +16,7 @@ void Mayo_PoolAnim(entity this);
 void Mayo_PoolTouch(entity this, entity toucher);
 void MayoExplode(entity this, bool dopool)
 {
-	T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, NULL);
+	T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, this.owner);
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/jarsmash.wav", 1, ATTN_NORM);
 
@@ -87,7 +87,9 @@ void MayoTouch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;		// don't explode on owne
 	bool dopool = false;
-	if(!toucher.takedamage)
+	if(toucher.takedamage)
+		T_Damage(toucher, this, this.owner, 50, this.projectiledeathtype);
+	else
 		dopool = true;
 	MayoExplode(this, dopool);
 }
