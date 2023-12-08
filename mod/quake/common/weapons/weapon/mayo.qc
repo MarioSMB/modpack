@@ -10,6 +10,9 @@ PRECACHE(Mayo)
 	precache_model("progs/v_mayo.mdl");
 	precache_model("progs/g_mayo.mdl");
 	precache_model("progs/s_mayo.mdl");
+
+	precache_model("progs/piano_musicnote_brown.mdl");
+	precache_model("progs/piano_musicnote_yellow.mdl");
 }
 
 void Mayo_PoolAnim(entity this);
@@ -42,6 +45,21 @@ void MayoExplode(entity this, bool dopool)
 			this.frame = 0;
 			this.nextthink = time + 4.1;
 			setthink(this, Mayo_PoolAnim);
+
+			if(random() < 0.4)
+			{
+				entity note = new(musicnote);
+				setorigin(note, trace_endpos);
+				if(random() > 0.5)
+					_setmodel(note, "progs/piano_musicnote_brown.mdl");
+				else
+					_setmodel(note, "progs/piano_musicnote_yellow.mdl");
+				setsize(note, '0 0 0', '0 0 0');
+				note.angles = '0 1 0' * (random() * 180);
+				set_movetype(note, MOVETYPE_FLY);
+				SUB_SetFade(note, time + 0.1, 0.5);
+				note.velocity = vec * 200;
+			}
 		}
 	}
 	else
@@ -121,7 +139,7 @@ void W_FireMayo(entity this, .entity weaponentity)
 		missile.velocity_z = 200;
 	}
 
-	missile.avelocity = '0 90 0';
+	missile.avelocity = randomvec() * 320;
 
 	missile.angles = vectoangles(missile.velocity);
 

@@ -297,6 +297,9 @@ void armor_touch(entity this, entity toucher)
 		setthink(this, SUB_regen);
 	}
 
+	if(toucher.m_champion && toucher.m_champion.m_pickup_armor)
+		toucher.m_champion.m_pickup_armor(toucher.m_champion, toucher, this);
+
 	// NOTE: disabling spammy message as you already know from the HUD that you got it!
 	//sprint(toucher, "You got armor\n");
 // armor touch sound

@@ -3064,7 +3064,7 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
-	if(cmd_name == "addmob")
+	if(cmd_name == "addmob" || cmd_name == "addmob2")
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)
 			return;
@@ -3080,7 +3080,7 @@ void SV_ParseClientCommand(entity this, string command)
 				break;
 			});
 		}
-		horn_spawnmonster(trace_endpos, ((argv(2) == "hostile") ? NULL : this), mon);
+		horn_spawnmonster(trace_endpos, ((cmd_name == "addmob2") ? NULL : this), mon);
 		return;
 	}
 

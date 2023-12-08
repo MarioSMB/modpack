@@ -314,6 +314,61 @@ void SUB_CalcAngleMoveDone(entity this)
 }
 #endif
 
+/*
+==================
+SUB_VanishOrRemove
+
+Makes client invisible or removes non-client
+==================
+*/
+void SUB_VanishOrRemove (entity ent)
+{
+	if (IS_CLIENT(ent))
+	{
+		// vanish
+		ent.alpha = -1;
+		ent.effects = 0;
+#ifdef SVQC
+		ent.glow_size = 0;
+		ent.pflags = 0;
+#endif
+	}
+	else
+	{
+		// remove
+		delete(ent);
+	}
+}
+
+void SUB_SetFade_Think (entity this)
+{
+	if(this.alpha == 0)
+		this.alpha = 1;
+	setthink(this, SUB_SetFade_Think);
+	this.nextthink = time;
+	this.alpha -= frametime * this.fade_rate;
+	if (this.alpha < 0.01)
+		SUB_VanishOrRemove(this);
+	else
+		this.nextthink = time;
+}
+
+/*
+==================
+SUB_SetFade
+
+Fade ent out when time >= vanish_time
+==================
+*/
+void SUB_SetFade(entity ent, float vanish_time, float fading_time)
+{
+	if (fading_time <= 0)
+		fading_time = 0.01;
+	ent.fade_rate = 1/fading_time;
+	setthink(ent, SUB_SetFade_Think);
+	ent.nextthink = vanish_time;
+}
+
 #ifdef SVQC
 void ApplyMinMaxScaleAngles(entity e)
 {

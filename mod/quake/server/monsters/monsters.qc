@@ -193,6 +193,10 @@ bool monster_checkspawnedflag(entity this)
 // .movetype is reset by physics
 bool monster_customize(entity this, entity client)
 {
+	if(time < this.enemy_reveal_time)
+		this.effects |= (EF_ADDITIVE | EF_NODEPTHTEST);
+	else
+		this.effects &= ~(EF_ADDITIVE | EF_NODEPTHTEST);
 	this.movetype = MOVETYPE_STEP; // RENDER_STEP
 	return true;
 }

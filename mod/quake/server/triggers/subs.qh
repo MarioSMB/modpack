@@ -1,5 +1,26 @@
 #pragma once
 
+/*
+==================
+SUB_VanishOrRemove
+
+Makes client invisible or removes non-client
+==================
+*/
+void SUB_VanishOrRemove(entity ent);
+
+void SUB_SetFade_Think(entity this);
+
+/*
+==================
+SUB_SetFade
+
+Fade 'ent' out when time >= 'when'
+==================
+*/
+.float fade_rate;
+void SUB_SetFade(entity ent, float when, float fading_time);
+
 #ifdef SVQC
 
 void SUB_CopyEntity(entity srcent, entity destent);

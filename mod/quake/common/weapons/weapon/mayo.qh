@@ -6,7 +6,7 @@ CLASS(Mayo, Weapon)
 /* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Mayo, aflag, int, 5);
 /* modelname */ ATTRIB(Mayo, mdl, string, "mayo");
-/* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshair7");
+/* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Mayo, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(Mayo, w_crosshair_color, vector, '1 0 0');
 /* wepimg    */ ATTRIB(Mayo, model2, string, "mayo");

@@ -107,6 +107,8 @@ void weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, fl
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
 		float arate = 1;
+		if(actor.m_champion && actor.m_champion.qcc_attackrate)
+			arate *= actor.m_champion.qcc_attackrate;
 		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
 
 		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
