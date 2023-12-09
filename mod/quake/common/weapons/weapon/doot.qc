@@ -53,6 +53,9 @@ void doot_note_touch(entity this, entity toucher)
 
 void W_FireDoot(entity this, .entity weaponentity)
 {
+	bool docolors = (random() < 0.07);
+	bool dobrown = (!docolors && random() < 0.1);
+
 	this.punchangle_x = -2;
 	W_TakeAmmo(this, ammo_rockets, 1);
 
@@ -61,14 +64,15 @@ void W_FireDoot(entity this, .entity weaponentity)
 	if(time > this.(weaponentity).doot_smoketime)
 	{
 		// FIXME gettaginfo(this.(weaponentity), 0) doesn't return the real origin of the weapon
-		Send_Effect(EFFECT_SMOKE_RING, offset, v_forward * 50, 1);
+		if(dobrown)
+			Send_Effect(EFFECT_BROWN_NOTE, offset, v_forward * 50, 1);
+		else
+			Send_Effect(EFFECT_SMOKE_RING, offset, v_forward * 50, 1);
 		this.(weaponentity).doot_smoketime = time + 0.25;
 	}
 
 	tracebox(this.origin, '0 0 0', '0 0 0', offset, MOVE_NORMAL, this);
 	vector neworg = trace_endpos;
-	bool docolors = (random() < 0.07);
-	bool dobrown = (!docolors && random() < 0.1);
 
 	vector dir = qc_aim(this, 500);
 	float doot_count = max(1, rint(random() * 8));

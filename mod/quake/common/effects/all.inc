@@ -33,4 +33,5 @@ EFFECT(0, RUNE_CYCLONE,             "respawn_ghost")
 EFFECT(0, RUNE_FROST_REGEN,         "ammoregen_fx")
 EFFECT(0, RUNE_METEOR_IMPACT,       "laser_impact")
 
-EFFECT(0, EF_ICEFIELD,              "icefield")
+EFFECT(0, MAYO_SMASH,               "iceorglass")
+EFFECT(0, BROWN_NOTE,               "smoke_large")

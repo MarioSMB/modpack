@@ -29,7 +29,8 @@ void MayoExplode(entity this, bool dopool)
 		traceline(vec, vec + vel_norm * 16, false, this);
 		if(trace_fraction < 1)
 		{
-			te_explosion2(this.origin, 10, 10);
+			Send_Effect(EFFECT_MAYO_SMASH, this.origin, '0 0 10', 1);
+			//te_explosion2(this.origin, 10, 10);
 			set_movetype(this, MOVETYPE_NONE);
 			this.solid = SOLID_TRIGGER;
 			_setmodel(this, "progs/s_mayo.mdl");
@@ -63,7 +64,8 @@ void MayoExplode(entity this, bool dopool)
 	}
 	else
 	{
-		te_explosion2(this.origin, 10, 10);
+		Send_Effect(EFFECT_MAYO_SMASH, this.origin, '0 0 10', 1);
+		//te_explosion2(this.origin, 10, 10);
 		delete(this);
 	}
 }
