@@ -3084,6 +3084,15 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "effects")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		int eff = _particleeffectnum(argv(1));
+		this.effects |= eff;
+		return;
+	}
+
 	if(cmd_name == "say" || cmd_name == "say_team")
 	{
 		if(argc >= 2) Say(this, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);

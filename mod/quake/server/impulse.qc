@@ -383,6 +383,16 @@ void GiveQuad(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "items/damage.wav", 1, ATTN_NORM);
 }
 
+void GiveSharpShooter(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return; // no more singleplayer functionality, unless they're smart enough to enable this!
+
+	this.powerups |= POWERUP_SHARPSHOOTER;
+	StatusEffects_apply(STATUSEFFECT_SharpShooter, this, time + 666, 0);
+	_sound(this, CH_WEAPON_SINGLE, "items/sharp.wav", 1, ATTN_NORM);
+}
+
 // also CheatImpulse
 void ImpulseCommands(entity this)
 {
@@ -407,6 +417,12 @@ void ImpulseCommands(entity this)
 	if(imp == CHIMPULSE_GIVE_QUAD.impulse)
 	{
 		GiveQuad(this);
+		return;
+	}
+
+	if(imp == CHIMPULSE_GIVE_SHARPSHOOTER.impulse)
+	{
+		GiveSharpShooter(this);
 		return;
 	}
 
