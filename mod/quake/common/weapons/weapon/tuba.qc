@@ -156,7 +156,7 @@ vector tuba_calc_velocity(entity actor, entity note)
 void W_FireTuba(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
-	W_TakeAmmo(this, ammo_rockets, 1);
+	W_TakeMana(this, 10);
 
 	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 
@@ -203,7 +203,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 10)
 	{
 		if(IS_PLAYER(actor))
 			player_shot1(actor);
@@ -214,8 +214,7 @@ METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Tuba, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = actor.ammo_rockets >= 1;
-	return ammo_amount;
+	return true; // doesn't use ammo in the traditional sense
 }
 METHOD(Tuba, wr_suicidemessage, Notification(entity thiswep))
 {

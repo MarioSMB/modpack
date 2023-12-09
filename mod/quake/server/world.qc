@@ -194,6 +194,7 @@ PRECACHE(Impel)
 	precache_sound2("misc/h2ohit1.wav");
 	precache_sound2("misc/trigger1.wav");
 	precache_sound2("monsters/spider/sactiv.wav");
+	precache_sound("items/sharp.wav");
 }
 
 entity lastspawn;

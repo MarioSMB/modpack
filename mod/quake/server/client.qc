@@ -1517,6 +1517,7 @@ void PutPlayerInServer(entity this)
 	this.velocity = '0 0 0';
 
 	STAT(MANA, this) = 100;
+	this.mana_regen_pause = 0;
 
 	skate_spawn(this);
 

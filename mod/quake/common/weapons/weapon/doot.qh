@@ -1,10 +1,10 @@
 #pragma once
 
 CLASS(Doot, Weapon)
-/* ammotype  */ ATTRIB(Doot, ammo_type, int, IT_ROCKETS);
-/* impulse   */ ATTRIB(Doot, impulse, int, 6);
-/* spawnflags*/ ATTRIB(Doot, spawnflags, int, 0);
-/* ammo */      ATTRIB(Doot, aflag, int, 7);
+/* ammotype  */ ATTRIB(Doot, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Doot, impulse, int, 3);
+/* spawnflags*/ ATTRIB(Doot, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
+/* ammo */      ATTRIB(Doot, aflag, int, 10);
 /* modelname */ ATTRIB(Doot, mdl, string, "doot");
 /* crosshair */ ATTRIB(Doot, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Doot, w_crosshair_size, float, 0.65);

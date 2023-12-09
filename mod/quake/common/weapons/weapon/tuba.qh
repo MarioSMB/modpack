@@ -1,9 +1,9 @@
 #pragma once
 
 CLASS(Tuba, Weapon)
-/* ammotype  */ ATTRIB(Tuba, ammo_type, int, IT_ROCKETS);
+/* ammotype  */ ATTRIB(Tuba, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Tuba, impulse, int, 7);
-/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MANA);
 /* ammo */      ATTRIB(Tuba, aflag, int, 7);
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
@@ -16,4 +16,4 @@ CLASS(Tuba, Weapon)
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));
 
-//SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
+SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)

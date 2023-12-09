@@ -78,7 +78,7 @@ PRECACHE(Spellbook)
 
 void Regenerate_Mana(entity this)
 {
-	if(this.mana_regen_time < time && STAT(MANA, this) < 100)
+	if(this.mana_regen_time < time && STAT(MANA, this) < 100 && time > this.mana_regen_pause)
 	{
 		STAT(MANA, this) += 1;
 		
@@ -354,7 +354,7 @@ void W_Spell_Sword(entity this, .entity weaponentity)
 {
 	if(STAT(MANA, this) < SPELL_COST_SWORD)
 		return;
-	STAT(MANA, this) -= SPELL_COST_SWORD;
+	W_TakeMana(this, SPELL_COST_SWORD);
 	vector forward, right, up;
 	MAKE_VECTORS(this.angles, forward, right, up);
 	vector targ = this.origin + forward * 24;
@@ -366,7 +366,7 @@ void W_Spell_Sword(entity this, .entity weaponentity)
 
 	if(this.spell_shield || STAT(MANA, this) < SPELL_COST_SHIELD)
 		return;
-	STAT(MANA, this) -= SPELL_COST_SHIELD;
+	W_TakeMana(this, SPELL_COST_SHIELD);
 	targ = this.origin + forward * 16 + right * -48;
 	summon_shield(this, targ);
 }
@@ -803,7 +803,7 @@ void W_Spell_BoneShard(entity this, .entity weaponentity)
 			ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 			return;
 		}
-		STAT(MANA, this) -= SPELL_COST_BONESHARD;
+		W_TakeMana(this, SPELL_COST_BONESHARD);
 		summon_skeleton_arms(this, spot);
 		ATTACK_FINISHED(this, weaponentity) = time + 1.2; // rune spawning delay
 	}
@@ -1271,7 +1271,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_FROST;
+			W_TakeMana(this, SPELL_COST_FROST);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Frost(this, spot);
 			break;
@@ -1289,7 +1289,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_ICECANNON;
+			W_TakeMana(this, SPELL_COST_ICECANNON);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_IceCannon(this, spot);
 			break;
@@ -1305,7 +1305,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_VORELING;
+			W_TakeMana(this, SPELL_COST_VORELING);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Voreling(this, spot);
 			break;
@@ -1329,7 +1329,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_CURSE;
+			W_TakeMana(this, SPELL_COST_CURSE);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Curse(this, spot);
 			break;
@@ -1347,7 +1347,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_EXPLOSION;
+			W_TakeMana(this, SPELL_COST_EXPLOSION);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Explosion(this, spot);
 			break;
@@ -1365,7 +1365,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
 				return;
 			}
-			STAT(MANA, this) -= SPELL_COST_SERPENT;
+			W_TakeMana(this, SPELL_COST_SERPENT);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
 			W_Spell_Serpent(this, spot);
 			break;

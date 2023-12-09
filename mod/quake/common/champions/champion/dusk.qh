@@ -66,6 +66,8 @@ PRECACHE(Dusk)
     precache_sound("player_dusk/sicklestart.wav");
 
     precache_model("progs/v_sickles.mdl");
+
+    precache_model("progs/wisp.mdl");
 #endif
 }
 #endif

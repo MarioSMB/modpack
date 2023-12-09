@@ -115,7 +115,7 @@ void MayoTouch(entity this, entity toucher)
 
 void W_FireMayo(entity this, .entity weaponentity)
 {
-	W_TakeAmmo(this, ammo_rockets, 1);
+	W_TakeMana(this, 10);
 	
 	_sound(this, CH_WEAPON_SINGLE, "hknight/slash1.wav", 1, ATTN_NORM);
 
@@ -158,7 +158,7 @@ void W_FireMayo(entity this, .entity weaponentity)
 METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 10)
 	{
 		if(IS_PLAYER(actor))
 			player_rocket1(actor);
@@ -169,8 +169,7 @@ METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Mayo, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = actor.ammo_rockets >= 1;
-	return ammo_amount;
+	return true; // doesn't use ammo in the traditional sense
 }
 METHOD(Mayo, wr_suicidemessage, Notification(entity thiswep))
 {

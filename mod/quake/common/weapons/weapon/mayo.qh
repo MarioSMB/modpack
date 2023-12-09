@@ -1,9 +1,9 @@
 #pragma once
 
 CLASS(Mayo, Weapon)
-/* ammotype  */ ATTRIB(Mayo, ammo_type, int, IT_ROCKETS);
+/* ammotype  */ ATTRIB(Mayo, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Mayo, impulse, int, 6);
-/* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
 /* ammo */      ATTRIB(Mayo, aflag, int, 5);
 /* modelname */ ATTRIB(Mayo, mdl, string, "mayo");
 /* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshairtuba");

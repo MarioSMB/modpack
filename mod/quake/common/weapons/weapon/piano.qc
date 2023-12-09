@@ -21,6 +21,7 @@ PRECACHE(Piano)
 	precache_model("progs/g_woodpiano.mdl");
 	precache_model("progs/v_woodpiano.mdl");
 	precache_model("progs/piano_musicnote_yellow.mdl");
+	precache_model("progs/piano_musicnote_white.mdl");
 	precache_model("progs/piano_musicnote_brown.mdl");
 }
 
@@ -271,14 +272,12 @@ void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WOR
 
 void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Play Audio Chord---------------------------------------------------
 {
-	// WHEN ONLY HAVE 1 NAIL AMMO LEFT...
-	if(this.ammo_nails <= 1)
+	if(STAT(MANA, this) < 5)
 	{
-		ATTACK_FINISHED(this, weaponentity) = time + 0.5;
-		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+		w_ready(this.(weaponentity));
 		return;
 	}
-	W_TakeAmmo(this, ammo_nails, 2);
+	W_TakeMana(this, 5);
 	
 	//this.punchangle_x = 1;
 
@@ -309,7 +308,15 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	
 	musicnote.nextthink = time + 2.5; // Remove/Explode Time
 	//musicnote.think = SUB_Remove; 
-	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);	
+	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);
+
+	vector mycolor = '1 1 0';
+	if(random() < 0.5)
+	{
+		mycolor.x = max(0.25, random() * 5);
+		mycolor.y = max(0.25, random() * 5);
+		mycolor.z = max(0.25, random() * 5);
+	}
 
 	int wfrm = this.(weaponentity).m_frame;
 	if(wfrm == 1 || wfrm == 5 || wfrm == 9 || wfrm == 13 || wfrm == 17 || wfrm == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
@@ -321,7 +328,8 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 		if(wfrm == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
 		if(wfrm == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
 
-		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
+		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		musicnote.colormod = mycolor;
 		musicnote.avelocity = '0 90 0'; // Roll
 		musicnote.velocity = musicnote.velocity*1 + (v_right* 20) + (v_up* 1); // Don't add .Velocity* (it's already defined above!)
 
@@ -338,7 +346,8 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 		if(wfrm == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
 		if(wfrm == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
 
-		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
+		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		musicnote.colormod = mycolor;
 		musicnote.avelocity = '0 -90 0';
 		musicnote.velocity = musicnote.velocity*1 + (v_right*  -20) + (v_up* 1);
 
@@ -359,7 +368,7 @@ METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 	}
 
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 5)
 	{
 		if(random() < 0.5)
 			player_woodpiano_randomplayleft(actor.(weaponentity));
@@ -369,8 +378,7 @@ METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Piano, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = actor.ammo_nails >= 2;
-	return ammo_amount;
+	return true; // doesn't use ammo in the traditional sense
 }
 METHOD(Piano, wr_suicidemessage, Notification(entity thiswep))
 {

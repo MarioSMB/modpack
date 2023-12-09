@@ -3,7 +3,7 @@
 CLASS(Spellbook, Weapon)
 /* ammotype  */ ATTRIB(Spellbook, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Spellbook, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Spellbook, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NOSTEAL);
+/* spawnflags*/ ATTRIB(Spellbook, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOAGGRO | WEP_FLAG_SECONDARY | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NOSTEAL | WEP_FLAG_MANA);
 /* ammo */      ATTRIB(Spellbook, aflag, int, 0);
 /* modelname */ ATTRIB(Spellbook, mdl, string, "book");
 /* crosshair */ ATTRIB(Spellbook, w_crosshair, string, "gfx/crosshaircrylink");
@@ -21,10 +21,11 @@ REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
 #ifdef SVQC
 .float mana_regen_time;
 .float mana_regen_boost;
+.float mana_regen_pause;
 
 .int swappingspell;
 
-const float MANA_REGEN_RATE = 0.25;
+const float MANA_REGEN_RATE = 0.015;
 
 const int SPELL_RUNE_LIMIT = 2;
 
@@ -40,8 +41,8 @@ void W_Spellbook_ClearSpells(entity this);
 #endif
 const int SPELL_FIRST = 0;
 const int SPELL_SWORD = 0;
-const float SPELL_COST_SWORD = 6;
-const float SPELL_COST_SHIELD = 14;
+const float SPELL_COST_SWORD = 5;
+const float SPELL_COST_SHIELD = 10;
 const int SPELL_FROST = 1;
 const float SPELL_COST_FROST = 30;
 const int SPELL_ICECANNON = 2;

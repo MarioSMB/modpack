@@ -57,7 +57,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 	bool dobrown = (!docolors && random() < 0.1);
 
 	this.punchangle_x = -2;
-	W_TakeAmmo(this, ammo_rockets, 1);
+	W_TakeMana(this, 8);
 
 	vector org = gettaginfo(this.(weaponentity), 0);
 	vector offset = org + v_up * -8 + v_forward * 14;
@@ -98,7 +98,13 @@ void W_FireDoot(entity this, .entity weaponentity)
 		setthink(musicnote, Become_Burst_6Sided_BrightYellow_Explosion);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		if(docolors)
-			musicnote.colormod = randomvec() * 3;
+		{
+			vector mycolor;
+			mycolor.x = max(0.25, random() * 5);
+			mycolor.y = max(0.25, random() * 5);
+			mycolor.z = max(0.25, random() * 5);
+			musicnote.colormod = mycolor;
+		}
 		else if(dobrown)
 		{
 			musicnote.scale = 4;
@@ -126,7 +132,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 METHOD(Doot, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 8)
 	{
 		if(IS_PLAYER(actor))
 			player_shot1(actor);
@@ -137,8 +143,7 @@ METHOD(Doot, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Doot, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = actor.ammo_rockets >= 1;
-	return ammo_amount;
+	return true; // doesn't use ammo in the traditional sense
 }
 METHOD(Doot, wr_suicidemessage, Notification(entity thiswep))
 {

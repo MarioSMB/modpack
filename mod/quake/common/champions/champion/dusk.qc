@@ -79,14 +79,44 @@ void Dusk_Reap(entity this)
 	}
 }
 
+bool wisp_customize(entity this, entity client)
+{
+	return (client.m_champion == CHAMPION_Dusk);
+}
+
+void wisp_think(entity this)
+{
+	if(time > this.wait)
+	{
+		SUB_SetFade(this, time + 0.1, 1);
+		return;
+	}
+
+	this.nextthink = time;
+	// taken from item code
+	float bobheight = 3 + 2 * sin((time - this.spawn_time) * 2);
+	vector oldorg = this.pos1;
+	if(bobheight != this.origin_z - oldorg.z)
+		this.origin_z = oldorg.z + bobheight;
+}
+
 void Dusk_MakeWisp(entity targ)
 {
 	entity wisp = new(dusk_wisp);
+	_setmodel(wisp, "progs/wisp.mdl");
+	setsize(wisp, '0 0 0', '0 0 0');
 	set_movetype(wisp, MOVETYPE_NONE);
 	setorigin(wisp, targ.origin);
-	setthink(wisp, SUB_Remove);
-	wisp.nextthink = time + 10;
+	wisp.spawn_time = time;
+	wisp.pos1 = targ.origin;
+	wisp.wait = time + 10;
+	wisp.alpha = 0.65;
+	wisp.nextthink = time;
+	wisp.avelocity = '0 45 0';
+	wisp.effects = (EF_FULLBRIGHT | EF_ADDITIVE);
+	setthink(wisp, wisp_think);
 	wisp.monsterdef = targ.monsterdef;
+	setcefc(wisp, wisp_customize);
 }
 
 METHOD(Dusk, m_activate, void(Dusk this, entity actor))

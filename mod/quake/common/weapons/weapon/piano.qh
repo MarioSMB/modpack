@@ -1,9 +1,9 @@
 #pragma once
 
 CLASS(Piano, Weapon)
-/* ammotype  */ ATTRIB(Piano, ammo_type, int, IT_NAILS);
+/* ammotype  */ ATTRIB(Piano, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Piano, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
 /* ammo */      ATTRIB(Piano, aflag, int, 30);
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");

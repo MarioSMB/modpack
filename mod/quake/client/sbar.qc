@@ -1286,8 +1286,8 @@ void Sbar_Draw()
 
 				if(STAT(SKATING))
 					{ /* nothing */}
-				else if(thiswep.activeweapon == WEP_SPELLBOOK)
-					Sbar_DrawNum('248 0 0', itos(rint(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
+				else if(thiswep.activeweapon.spawnflags & WEP_FLAG_MANA)
+					Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
 				else
 				{
 					// ammo icon

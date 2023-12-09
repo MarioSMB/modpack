@@ -1565,6 +1565,7 @@ METHOD(Gremlin, mr_setup, bool(Gremlin this, entity actor))
 		if(slot == 0)
 			actor.weaponentity_fld = weaponentity;
 	}
+	STAT(MANA, actor) = 100; // magical weapons?!!
 
     actor.health = 100;
     actor.yaw_speed = 40;
