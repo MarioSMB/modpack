@@ -7,6 +7,7 @@ void W_Nailgun_Attack(entity this)
 	.entity weaponentity = this.weaponentity_fld;
 	if(actor.ammo_nails < 1)
 	{
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
 		W_SwitchWeapon(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		return;
 	}

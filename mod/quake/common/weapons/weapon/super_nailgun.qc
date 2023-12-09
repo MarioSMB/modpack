@@ -58,6 +58,7 @@ void W_FireSuperSpikes(entity this, .entity weaponentity)
 
 	if(this.ammo_nails < 2)
 	{
+		ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}

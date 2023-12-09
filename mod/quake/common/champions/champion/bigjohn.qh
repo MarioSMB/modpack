@@ -55,6 +55,8 @@ PRECACHE(BigJohn)
     precache_sound("player_bigjohn/lburn1.wav");     // lava burn
     precache_sound("player_bigjohn/lburn2.wav");     // lava burn
 
+    precache_sound("player_bigjohn/ability.wav");
+
     precache_model("progs/v_gaunt.mdl");
 #endif
 }
@@ -63,13 +65,14 @@ PRECACHE(BigJohn)
 #define BIGJOHN_STATS \
 "Damage taken reduced by 66%\n" \
 "Movement speed 33% slower\n" \
-"20% reduced health regeneration"
+"Deals 20% less damage\n" \
+"20% reduced health regeneration\n" \
+"Press %ABILITY% to Lighten\n" \
+"Lighten reverses stat changes"
 #endif
 CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, netname, string, "bigjohn");
     ATTRIB(BigJohn, m_name, string, "Big John");
-    ATTRIB(BigJohn, qcc_movespeed, float, 0.66);
-    ATTRIB(BigJohn, qcc_damagetaken, float, 0.33);
     ATTRIB(BigJohn, qcc_health_regen_rate, float, 1.2);
     ATTRIB(BigJohn, qcc_meleename, string, "gaunt");
     ATTRIB(BigJohn, m_viewofs, vector, '0 0 26');

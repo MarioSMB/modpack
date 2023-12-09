@@ -82,6 +82,7 @@ void W_FireShock(entity this, .entity weaponentity)
 {
 	if(this.ammo_cells < 1)
 	{
+		ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}

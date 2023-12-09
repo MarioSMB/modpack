@@ -2002,7 +2002,10 @@ void PlayerPreThink(entity this)
 		.entity weaponentity = weaponentities[slot];
 		Weapon wep = this.(weaponentity).m_weapon;
 		if(time > ATTACK_FINISHED(this, weaponentity) && !wep.wr_checkammo1(wep, this, weaponentity))
+		{
+			ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 			W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+		}
 		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}

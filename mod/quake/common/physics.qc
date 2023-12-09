@@ -103,6 +103,8 @@ void PlayerJump(entity this)
 		if(this.m_champion)
 		{
 			maxspeed_mod *= this.m_champion.qcc_movespeed;
+			if(this.m_champion.m_getmovespeed)
+				maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
 			maxspeed_mod *= this.m_champion.qcc_swimspeed;
 		}
 
@@ -289,6 +291,8 @@ void PM_WaterMove(entity this, float dt)
 	if(this.m_champion)
 	{
 		maxspeed_mod *= this.m_champion.qcc_movespeed;
+		if(this.m_champion.m_getmovespeed)
+			maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
 		maxspeed_mod *= this.m_champion.qcc_swimspeed;
 	}
 
@@ -424,7 +428,11 @@ void PM_AirMove(entity this, float dt)
 
 	float maxspeed_mod = 1;
 	if(this.m_champion)
+	{
 		maxspeed_mod *= this.m_champion.qcc_movespeed;
+		if(this.m_champion.m_getmovespeed)
+			maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
+	}
 
 	float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
 	vector wishdir = normalize(wishvel);

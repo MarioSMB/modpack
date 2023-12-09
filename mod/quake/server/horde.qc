@@ -395,6 +395,14 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	return monster;
 }
 
+void horde_ammo_refresh(entity this)
+{
+	this.solid = SOLID_NOT;
+	setthink(this.owner, SpawnAmmo);
+	this.owner.nextthink = time + HORDE_AMMO_RESPAWN_DELAY;
+	delete(this);
+}
+
 void horde_ammo_touch(entity this, entity toucher)
 {
 	// early exit touch if not a player or not alive
@@ -489,13 +497,9 @@ void horde_ammo_touch(entity this, entity toucher)
 	
 	// remove
 	this.model = string_null;
-	this.solid = SOLID_NOT;
 	// AY dec06 2021
 	//this.owner.wait = false; The Old Way
-	setthink(this.owner, SpawnAmmo);
-	this.owner.nextthink = time + HORDE_AMMO_RESPAWN_DELAY;
-	// end AY
-	delete(this);
+	horde_ammo_refresh(this);
 }
 
 void horde_health_touch(entity this, entity toucher)
@@ -848,6 +852,8 @@ void SpawnAmmo(entity this)
 	item.solid = SOLID_TRIGGER;
 	item.flags = FL_ITEM;
 	settouch(item, horde_ammo_touch);
+	setthink(item, horde_ammo_refresh);
+	item.nextthink = time + HORDE_AMMO_RESPAWN_DELAY * 2;
 	
 	spawn_tfog_silent(pos + '0 0 8'); // added aug30
 }

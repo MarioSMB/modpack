@@ -80,6 +80,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_hideweapon, bool(Champions this, entity actor)) { return false; };
     METHOD(Champions, m_playerjump, float(Champions this, entity actor)) { return 1; };
     METHOD(Champions, m_doublejump, bool(Champions this, entity actor)) { return false; };
+    METHOD(Champions, m_getmovespeed, float(Champions this, entity actor)) { return 1; };
 #endif
     METHOD(Champions, m_physics, bool(Champions this, entity actor, float dt)) { return false; };
     METHOD(Champions, m_fixclient, void(Champions this, entity actor)) { };

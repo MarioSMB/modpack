@@ -35,6 +35,7 @@ void W_FireSuperLavaSpikes(entity this, .entity weaponentity)
 	{
 		// disabled notification to reduce spam
 		//centerprint(this, "Out of Lava Nails");
+		ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}

@@ -2,7 +2,7 @@
 
 #include "../../common/weapons/all.qh"
 
-#define INDEPENDENT_ATTACK_FINISHED 1
+#define INDEPENDENT_ATTACK_FINISHED 0
 
 ..entity weaponentity_fld;
 

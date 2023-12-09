@@ -10,6 +10,7 @@ void W_SuperLightning_Attack(entity this)
 		ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
 		_sound(actor, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
 		actor.ammo_cells = 0;
+		ATTACK_FINISHED(actor, weaponentity) = time + 0.5;
 		W_SetCurrentAmmo(actor);
 		W_SwitchWeapon(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		return;

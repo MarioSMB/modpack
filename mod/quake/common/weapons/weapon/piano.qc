@@ -274,6 +274,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	// WHEN ONLY HAVE 1 NAIL AMMO LEFT...
 	if(this.ammo_nails <= 1)
 	{
+		ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 		return;
 	}

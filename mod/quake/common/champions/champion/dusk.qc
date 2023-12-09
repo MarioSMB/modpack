@@ -68,7 +68,7 @@ void Dusk_Reap(entity this)
 
 	if(found)
 	{
-		STAT(QCC_ABILITYTIME, this) = time + 3;
+		STAT(QCC_ABILITYTIME, this) = time + 5;
 		player_sound(this, CH_WEAPON_B, "fastfire.wav", ATTN_NORM);
 		T_Damage(this, this, NULL, 25, DEATH_GENERIC.m_id);
 	}
