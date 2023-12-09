@@ -25,7 +25,7 @@ void doot_note_touch(entity this, entity toucher)
 		return;
 	}
 
-	float mydmg = 15;
+	float mydmg = ((this.scale > 1) ? 30 : 15);
 	float damg = mydmg + random() * (mydmg * 0.2);
 	
 	if(toucher.health)
@@ -97,7 +97,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 			musicnote.colormod = randomvec() * 3;
 		else if(dobrown)
 		{
-			musicnote.scale = 2;
+			musicnote.scale = 4;
 			musicnote.colormod = '0.5 0.25 0';
 		}
 		else
