@@ -633,7 +633,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #ifdef SVQC
 	this.pm_frametime = frametime;
 #elif defined(CSQC)
-	if(this.jetpack_status && !this.csqcmodel_isdead && !intermission)
+	if(this.jetpack_status && !this.csqcmodel_isdead && !intermission && this.m_champion == CHAMPION_Duke)
 		this.csqcmodel_modelflags |= MF_ROCKET;
 	else
 		this.csqcmodel_modelflags &= ~MF_ROCKET;
