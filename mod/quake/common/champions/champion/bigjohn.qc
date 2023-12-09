@@ -36,7 +36,7 @@ METHOD(BigJohn, m_playerthink, void(BigJohn this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_VOICE, ((random() < 0.5) ? "bigjabl1.wav" : "bigjabl2.wav"), ATTN_NORM);
+		player_sound(actor, CH_VOICE, "ability.wav", ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 3.25;
 	}
 	actor.armorvalue = min(actor.armorvalue, 50); 
