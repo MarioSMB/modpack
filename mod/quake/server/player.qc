@@ -900,7 +900,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	this.view_ofs = '0 0 8';
 	setsize(this, '-16 -16 0', '16 16 56');
 	this.velocity = VelocityForDamage(this, dm);
-	this.origin_z = this.origin_z - 24;
+	setorigin(this, findbetterlocation(this.origin, 16) - '0 0 24');
 	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
 

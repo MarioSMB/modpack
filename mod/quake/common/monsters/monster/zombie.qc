@@ -444,6 +444,9 @@ void zombie_pain(entity this, entity attacker, float take, int deathtype)
 	if(!(death_weapon.spawnflags & WEP_FLAG_HITUNDEAD))
 		this.health = 60; // always reset health
 
+	if(this.spawnflags & SPAWN_CRUCIFIED)
+		return; // no pain animations for a crucified zombie!
+
 	if(take < 9)
 		return;				// totally ignore
 
@@ -630,12 +633,13 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
 	if(actor.spawnflags & SPAWN_CRUCIFIED)
 	{
+		actor.takedamage = DAMAGE_AIM;
 		actor.solid = SOLID_CORPSE;
 		set_movetype(actor, MOVETYPE_NONE);
 		actor.th_stand = zombie_cruc1;
 		actor.th_walk = zombie_cruc1;
 		actor.th_run = zombie_cruc1;
-		actor.th_pain = func_null;
+		actor.th_pain = zombie_pain;
 		actor.th_missile = func_null;
 		zombie_cruc1(actor);
 	}
