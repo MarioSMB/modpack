@@ -401,7 +401,7 @@ void horde_ammo_refresh(entity this)
 	if(this.owner)
 	{
 		setthink(this.owner, SpawnAmmo);
-		this.owner.nextthink = time + HORDE_AMMO_RESPAWN_DELAY;
+		this.owner.nextthink = time;
 	}
 	delete(this);
 }
