@@ -3084,12 +3084,13 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
-	if(cmd_name == "effects")
+	if(cmd_name == "effect")
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)
 			return;
-		int eff = _particleeffectnum(argv(1));
-		this.effects |= eff;
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
+		__pointparticles(_particleeffectnum(argv(1)), trace_endpos, '0 0 0', 1);
 		return;
 	}
 
