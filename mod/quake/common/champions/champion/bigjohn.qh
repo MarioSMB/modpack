@@ -65,7 +65,6 @@ PRECACHE(BigJohn)
 #define BIGJOHN_STATS \
 "Damage taken reduced by 66%\n" \
 "Movement speed 33% slower\n" \
-"Deals 20% less damage\n" \
 "20% reduced health regeneration\n" \
 "Press %ABILITY% to Lighten\n" \
 "Lighten reverses stat changes"
