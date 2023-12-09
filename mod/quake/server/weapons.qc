@@ -1374,6 +1374,27 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 		wep.wr_think(wep, this, weaponentity, 0);
 	}
 
+	if(wep == WEP_SPELLBOOK && !(time < this.attack2_finished) && this.button3)
+	{
+		_sound(this, CH_WEAPON_B, "weapons/page_flip.wav", 1, ATTN_NORM);
+		if(PHYS_INPUT_BUTTON_CROUCH(this))
+		{
+			this.(weaponentity).m_frame = 12;
+			this.(weaponentity).swappingspell = -1;
+			int nextspell = this.currentspell - 1;
+			if(nextspell < SPELL_FIRST)
+				nextspell = SPELL_LAST;
+			this.(weaponentity).skin = nextspell; // update skin first so the animation will show the correct spell!
+		}
+		else
+		{
+			this.(weaponentity).m_frame = 0;
+			this.(weaponentity).swappingspell = 1;
+		}
+		ATTACK_FINISHED(this, weaponentity) = max(ATTACK_FINISHED(this, weaponentity), time + 0.5); // also prevent primary fire during this time
+		this.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
+	}
+
 		if (time + this.(weaponentity).weapon_frametime * 0.5 >= this.(weaponentity).weapon_nextthink)
 		{
 			if (this.(weaponentity).weapon_think)

@@ -308,40 +308,41 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	
 	musicnote.nextthink = time + 2.5; // Remove/Explode Time
 	//musicnote.think = SUB_Remove; 
-	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);		
+	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);	
 
-	if(this.(weaponentity).m_frame == 1 || this.(weaponentity).m_frame == 5 || this.(weaponentity).m_frame == 9 || this.(weaponentity).m_frame == 13 || this.(weaponentity).m_frame == 17 || this.(weaponentity).m_frame == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
+	int wfrm = this.(weaponentity).m_frame;
+	if(wfrm == 1 || wfrm == 5 || wfrm == 9 || wfrm == 13 || wfrm == 17 || wfrm == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
 	{
-		if(this.(weaponentity).m_frame == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
-		if(this.(weaponentity).m_frame == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
-		
+		if(wfrm == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
+		if(wfrm == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
+		if(wfrm == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
+		if(wfrm == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
+		if(wfrm == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
+		if(wfrm == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
+
 		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
-		musicnote.avelocity = '0  90 0'; // Roll
+		musicnote.avelocity = '0 90 0'; // Roll
 		musicnote.velocity = musicnote.velocity*1 + (v_right* 20) + (v_up* 1); // Don't add .Velocity* (it's already defined above!)
-		
+
 		setsize(musicnote, '0 0 0', '0 0 0');
-		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right* -8); 
+		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right * -8); 
 	}
-			
-	if(this.(weaponentity).m_frame == 25 || this.(weaponentity).m_frame == 29 || this.(weaponentity).m_frame == 33 || this.(weaponentity).m_frame == 37 || this.(weaponentity).m_frame == 41 || this.(weaponentity).m_frame == 45 )
+
+	if(wfrm == 25 || wfrm == 29 || wfrm == 33 || wfrm == 37 || wfrm == 41 || wfrm == 45 )
 	{
-		if(this.(weaponentity).m_frame == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
-		if(this.(weaponentity).m_frame == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
-		if(this.(weaponentity).m_frame == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
-		
+		if(wfrm == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
+		if(wfrm == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);} 
+		if(wfrm == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);} 
+		if(wfrm == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);} 
+		if(wfrm == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
+		if(wfrm == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
+
 		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl"); 	
 		musicnote.avelocity = '0 -90 0';
 		musicnote.velocity = musicnote.velocity*1 + (v_right*  -20) + (v_up* 1);
-					
+
 		setsize(musicnote, '0 0 0', '0 0 0'); 	
-		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right* 8); 
+		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right * 8); 
 	}
 }
 

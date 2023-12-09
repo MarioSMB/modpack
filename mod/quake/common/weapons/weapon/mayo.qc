@@ -11,8 +11,7 @@ PRECACHE(Mayo)
 	precache_model("progs/g_mayo.mdl");
 	precache_model("progs/s_mayo.mdl");
 
-	precache_model("progs/piano_musicnote_brown.mdl");
-	precache_model("progs/piano_musicnote_yellow.mdl");
+	precache_model("progs/piano_musicnote_white.mdl");
 }
 
 void Mayo_PoolAnim(entity this);
@@ -50,12 +49,12 @@ void MayoExplode(entity this, bool dopool)
 			{
 				entity note = new(musicnote);
 				setorigin(note, trace_endpos);
-				if(random() > 0.5)
-					_setmodel(note, "progs/piano_musicnote_brown.mdl");
-				else
-					_setmodel(note, "progs/piano_musicnote_yellow.mdl");
+				_setmodel(note, "progs/piano_musicnote_white.mdl");
 				setsize(note, '0 0 0', '0 0 0');
-				note.angles = '0 1 0' * (random() * 180);
+				if(this.owner)
+					note.angles = '0 1 0' * this.owner.angles_y;
+				else
+					note.angles = '0 1 0' * (random() * 180);
 				set_movetype(note, MOVETYPE_FLY);
 				SUB_SetFade(note, time + 0.1, 0.5);
 				note.velocity = vec * 200;

@@ -758,7 +758,7 @@ void arms_think(entity this)
 		remove_arms(this);
 		return;
 	}
-	this.nextthink = time + 0.25;
+	this.nextthink = time + 0.15;
 	setthink(this, arms_think);
 	int armcount = 0;
 	IL_EACH(g_arms, it.realowner == this.realowner && it.classname == "arms",
@@ -1387,28 +1387,6 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, .entity weaponent
 	{
 		//player_magic1(actor);
 		W_FireSpellbook(actor, weaponentity);
-	}
-
-	if(actor.button3)
-	if(time > actor.attack2_finished)
-	{
-		_sound(actor, CH_WEAPON_SINGLE, "weapons/page_flip.wav", 1, ATTN_NORM);
-		if(PHYS_INPUT_BUTTON_CROUCH(actor))
-		{
-			actor.(weaponentity).m_frame = 12;
-			actor.(weaponentity).swappingspell = -1;
-			int nextspell = actor.currentspell - 1;
-			if(nextspell < SPELL_FIRST)
-				nextspell = SPELL_LAST;
-			actor.(weaponentity).skin = nextspell; // update skin first so the animation will show the correct spell!
-		}
-		else
-		{
-			actor.(weaponentity).m_frame = 0;
-			actor.(weaponentity).swappingspell = 1;
-		}
-		ATTACK_FINISHED(actor, weaponentity) = time + 0.5; // also prevent primary fire during this time
-		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
 }
 METHOD(Spellbook, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

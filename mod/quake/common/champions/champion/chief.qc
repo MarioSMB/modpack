@@ -30,7 +30,7 @@ METHOD(Chief, m_playerthink, void(Chief this, entity actor))
 	{
 		player_sound(actor, CH_VOICE, "radar.wav", ATTN_NORM);
 		int targlimit = 0;
-		FOREACH_ENTITY_RADIUS(actor.origin, 750, IS_MONSTER(it) && it.health > 0,
+		FOREACH_ENTITY_RADIUS(actor.origin, 750, IS_MONSTER(it) && it.health > 0 && !it.charmed,
 		{
 			targlimit += 1;
 			if(targlimit > 20)

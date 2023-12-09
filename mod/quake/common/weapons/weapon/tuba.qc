@@ -47,9 +47,110 @@ void tuba_note_touch(entity this, entity toucher)
 
 	//sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	//this.origin = this.origin - 8 * normalize(this.velocity);
-	this.origin = findbetterlocation(this.origin, 32);
+	setorigin(this, findbetterlocation(this.origin, 8));
 
 	Become_Burst_6Sided_BrightYellow_Explosion(this);
+}
+
+vector tuba_calc_arc(vector org, vector tgt, float ht)
+{
+    float grav, sdist, zdist, vs, vz, jumpheight;
+    vector sdir;
+
+    grav  = autocvar_sv_gravity;
+    zdist = tgt_z - org_z;
+    sdist = vlen(tgt - org - zdist * '0 0 1');
+    sdir  = normalize(tgt - org - zdist * '0 0 1');
+
+    // how high do we need to go?
+    jumpheight = fabs(ht);
+    if(zdist > 0)
+        jumpheight = jumpheight + zdist;
+
+    // push so high...
+    vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
+
+    // we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
+    if(ht < 0)
+        if(zdist < 0)
+            vz = -vz;
+
+    vector solution;
+    solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
+    // ALWAYS solvable because jumpheight >= zdist
+    if(!solution_z)
+        solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+    if(zdist == 0)
+        solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+
+    float tuba_calcarc_flighttime = 1;
+    if(zdist < 0)
+    {
+        // down-jump
+        if(ht < 0)
+        {
+            // almost straight line type
+            // jump apex is before the jump
+            // we must take the larger one
+            tuba_calcarc_flighttime = solution_y;
+        }
+        else
+        {
+            // regular jump
+            // jump apex is during the jump
+            // we must take the larger one too
+            tuba_calcarc_flighttime = solution_y;
+        }
+    }
+    else
+    {
+        // up-jump
+        if(ht < 0)
+        {
+            // almost straight line type
+            // jump apex is after the jump
+            // we must take the smaller one
+            tuba_calcarc_flighttime = solution_x;
+        }
+        else
+        {
+            // regular jump
+            // jump apex is during the jump
+            // we must take the larger one
+            tuba_calcarc_flighttime = solution_y;
+        }
+    }
+    vs = sdist / tuba_calcarc_flighttime;
+
+    // finally calculate the velocity
+    return sdir * vs + '0 0 1' * vz;
+}
+
+vector tuba_calc_velocity(entity actor, entity note)
+{
+	vector oldvel = v_forward * 200 + v_up * 600;
+	RandomSelection_Init();
+	FOREACH_ENTITY_RADIUS(actor.origin, 1000, IS_MONSTER(it) && it.health > 0 && !it.charmed && (normalize(it.origin - actor.origin) * v_forward) > 0.1,
+	{
+		if(!checkpvs(actor.origin + actor.view_ofs, it))
+			continue;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+
+	entity targ = RandomSelection_chosen_ent;
+	if(!targ)
+		return oldvel;
+
+	vector tpos1 = targ.origin;
+	vector v = note.origin;
+
+	traceline(v, v + '0 0 1' * 65535, MOVE_WORLDONLY, actor);
+	float h1 = 0.75 * vlen(v - trace_endpos);
+
+	traceline(v, tpos1 + '0 0 1' * 65535, MOVE_WORLDONLY, actor);
+	float h2 = 0.75 * vlen(tpos1 - v);
+
+	return tuba_calc_arc(v, tpos1, ((h1 < h2) ? h1 : h2));
 }
 
 void W_FireTuba(entity this, .entity weaponentity)
@@ -93,7 +194,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 	setorigin(musicnote, trace_endpos);
 	settouch(musicnote, tuba_note_touch);
 
-	musicnote.velocity = v_forward * 200 + v_up * 600;
+	musicnote.velocity = tuba_calc_velocity(this, musicnote);
 
 	float r = max(0.5, random() * 3);
 	sound7(this, CH_WEAPON_SINGLE, SND(TUBA_FIRE), 1, ATTN_NORM, 100 / r, 0);

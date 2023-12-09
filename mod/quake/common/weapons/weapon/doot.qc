@@ -6,7 +6,7 @@ PRECACHE(Doot)
 	precache_model("progs/v_doot.mdl");
 	precache_model("progs/g_doot.mdl");
 
-	precache_model("progs/piano_musicnote_yellow.mdl");
+	precache_model("progs/piano_musicnote_white.mdl");
 	precache_model("progs/x9_burst_6sided_brightyellow.mdl");
 }
 
@@ -67,6 +67,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 
 	tracebox(this.origin, '0 0 0', '0 0 0', offset, MOVE_NORMAL, this);
 	vector neworg = trace_endpos;
+	bool docolors = (random() < 0.07);
 
 	vector dir = qc_aim(this, 500);
 	float doot_count = max(1, rint(random() * 8));
@@ -82,22 +83,26 @@ void W_FireDoot(entity this, .entity weaponentity)
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_DOOT.m_id;
 
-		musicnote.angles = '0 0 0';
+		musicnote.angles = '0 1 0' * this.angles_y;
 		settouch(musicnote, MusicNoteTouch);
 
 		musicnote.nextthink = time + 2.5; // Remove/Explode Time
 		//musicnote.think = SUB_Remove; 
 		setthink(musicnote, Become_Burst_6Sided_BrightYellow_Explosion);
-		_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl");
+		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		if(docolors)
+			musicnote.colormod = randomvec() * 3;
+		else
+			musicnote.colormod = '1 0.85 0';
 		setsize(musicnote, '0 0 0', '0 0 0');
-		musicnote.avelocity = '0 90 180'; // Roll
+		musicnote.avelocity = '0 90 90'; // Roll
 
 		setorigin(musicnote, neworg + randomvec() * 10);
 		settouch(musicnote, doot_note_touch);
 
 		vector spread = '0.15 0.15 0';
 		vector spread_dir = dir + (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
-		musicnote.velocity = spread_dir * 500;
+		musicnote.velocity = spread_dir * 450 + v_up * 100;
 	}
 
 	float r = bound(0.8, random() * 2, 1.3);
