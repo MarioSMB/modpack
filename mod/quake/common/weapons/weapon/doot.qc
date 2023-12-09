@@ -68,9 +68,12 @@ void W_FireDoot(entity this, .entity weaponentity)
 	tracebox(this.origin, '0 0 0', '0 0 0', offset, MOVE_NORMAL, this);
 	vector neworg = trace_endpos;
 	bool docolors = (random() < 0.07);
+	bool dobrown = (!docolors && random() < 0.1);
 
 	vector dir = qc_aim(this, 500);
 	float doot_count = max(1, rint(random() * 8));
+	if(dobrown)
+		doot_count = 1;
 	for(int j = 0; j < doot_count; ++j)
 	{
 		// copied from piano
@@ -92,6 +95,11 @@ void W_FireDoot(entity this, .entity weaponentity)
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		if(docolors)
 			musicnote.colormod = randomvec() * 3;
+		else if(dobrown)
+		{
+			musicnote.scale = 2;
+			musicnote.colormod = '0.5 0.25 0';
+		}
 		else
 			musicnote.colormod = '1 0.85 0';
 		setsize(musicnote, '0 0 0', '0 0 0');
@@ -106,6 +114,8 @@ void W_FireDoot(entity this, .entity weaponentity)
 	}
 
 	float r = bound(0.8, random() * 2, 1.3);
+	if(dobrown)
+		r = 2;
 	sound7(this, CH_WEAPON_SINGLE, SND(DOOT_FIRE), 1, ATTN_NORM, 100 / r, 0);
 }
 
