@@ -630,7 +630,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
 	if(actor.spawnflags & SPAWN_CRUCIFIED)
 	{
-		actor.solid = SOLID_NOT;
+		actor.solid = SOLID_CORPSE;
 		set_movetype(actor, MOVETYPE_NONE);
 		actor.th_stand = zombie_cruc1;
 		actor.th_walk = zombie_cruc1;
