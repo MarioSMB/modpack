@@ -13,13 +13,13 @@ METHOD(BigJohn, m_damage, float(BigJohn this, entity targ, entity inflictor, ent
 	if(targ.m_champion == this)
 	{
 		if(time < STAT(QCC_ABILITYTIME, targ))
-			return 0.33;
-		else
 			return 1.66;
+		else
+			return 0.33;
 	}
 	if(attacker.m_champion == this)
 	{
-		if(time < STAT(QCC_ABILITYTIME, targ))
+		if(time < STAT(QCC_ABILITYTIME, attacker))
 			return 1.2;
 		else
 			return 0.8;
