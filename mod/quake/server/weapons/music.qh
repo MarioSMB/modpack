@@ -1,0 +1,3 @@
+#pragma once
+
+float W_Music_PitchFromAngles(float pitchang, float rndoffset);

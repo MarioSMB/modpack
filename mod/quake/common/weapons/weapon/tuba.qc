@@ -196,8 +196,8 @@ void W_FireTuba(entity this, .entity weaponentity)
 
 	musicnote.velocity = tuba_calc_velocity(this, musicnote);
 
-	float r = max(0.5, random() * 3);
-	sound7(this, CH_WEAPON_SINGLE, SND(TUBA_FIRE), 1, ATTN_NORM, 100 / r, 0);
+	float r = W_Music_PitchFromAngles(this.v_angle_x, max(0.5, random() * 3));
+	sound7(this, CH_WEAPON_SINGLE, SND(TUBA_FIRE), 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

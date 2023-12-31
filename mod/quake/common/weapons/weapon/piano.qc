@@ -318,15 +318,25 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 		mycolor.z = max(0.25, random() * 5);
 	}
 
+	bool dopitched = !autocvar_sv_quake_music_random;
+
 	int wfrm = this.(weaponentity).m_frame;
 	if(wfrm == 1 || wfrm == 5 || wfrm == 9 || wfrm == 13 || wfrm == 17 || wfrm == 21 ) // Left Side (Keys 1-6) 	(1,5,9,13,17,21) < 23
 	{
-		if(wfrm == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
-		if(wfrm == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
-		if(wfrm == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
-		if(wfrm == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
-		if(wfrm == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
-		if(wfrm == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
+		if(dopitched)
+		{
+			float r = W_Music_PitchFromAngles(this.v_angle_x, 2) * 0.75;
+			sound7(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM, r, 0);
+		}
+		else
+		{
+			if(wfrm == 1  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord1.wav", 1, ATTN_NORM);} // Frame 1, plays Animation Key 1, plays Aduio Chord 1 ...
+			if(wfrm == 5  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord2.wav", 1, ATTN_NORM);} 
+			if(wfrm == 9  ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord3.wav", 1, ATTN_NORM);} 
+			if(wfrm == 13 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord4.wav", 1, ATTN_NORM);} 
+			if(wfrm == 17 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord5.wav", 1, ATTN_NORM);} 
+			if(wfrm == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
+		}
 
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = mycolor;
@@ -339,12 +349,20 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 
 	if(wfrm == 25 || wfrm == 29 || wfrm == 33 || wfrm == 37 || wfrm == 41 || wfrm == 45 )
 	{
-		if(wfrm == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
-		if(wfrm == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);} 
-		if(wfrm == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);} 
-		if(wfrm == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);} 
-		if(wfrm == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);} 
-		if(wfrm == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);} 			
+		if(dopitched)
+		{
+			float r = W_Music_PitchFromAngles(this.v_angle_x, 2) * 0.75;
+			sound7(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM, r, 0);
+		}
+		else
+		{
+			if(wfrm == 25 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord7.wav", 1, ATTN_NORM);}
+			if(wfrm == 29 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord8.wav", 1, ATTN_NORM);}
+			if(wfrm == 33 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord9.wav", 1, ATTN_NORM);}
+			if(wfrm == 37 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord10.wav", 1, ATTN_NORM);}
+			if(wfrm == 41 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord11.wav", 1, ATTN_NORM);}
+			if(wfrm == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);}
+		}
 
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = mycolor;

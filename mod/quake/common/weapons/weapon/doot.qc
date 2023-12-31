@@ -123,10 +123,12 @@ void W_FireDoot(entity this, .entity weaponentity)
 		musicnote.velocity = spread_dir * 450 + v_up * 100;
 	}
 
-	float r = bound(0.8, random() * 2, 1.3);
+	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	if(dobrown)
-		r = 2;
-	sound7(this, CH_WEAPON_SINGLE, SND(DOOT_FIRE), 1, ATTN_NORM, 100 / r, 0);
+		r = 50;
+	else
+		r *= 0.75; // TODO: per-instrument offsets
+	sound7(this, CH_WEAPON_SINGLE, SND(DOOT_FIRE), 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Doot, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
