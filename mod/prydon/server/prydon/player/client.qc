@@ -15,15 +15,12 @@ void prydon_ClientConnect(entity this)
 	this.pin = 0;
 	if(mplayer)
 		Secure_GetPin(this);
-	for (e = find(NULL, classname, "npc"); e; e = find(e, classname, "npc"))
+	FOREACH_ENTITY_CLASS("npc", it.ai & AI_FOLLOW,
 	{
-		if(e.ai & AI_FOLLOW)
-		{
-			if(e.sbarsub)
-				e.sbarsub.follow_npcs = 0;
-			e.sbarsub = NULL;
-		}
-	}
+		if(it.sbarsub)
+			it.sbarsub.follow_npcs = 0;
+		it.sbarsub = NULL;
+	});
 	saveversion = SAVE_VERSION;
 	numplayers += 1;
 	bprintf("%s joined to fight the tides of evil\n", this.netname);

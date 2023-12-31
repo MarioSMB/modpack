@@ -238,7 +238,7 @@ int lhbitparms_totalspace(float index, float endindex)
 			total = total + 1;
 			s.z *= 0.5;
 		}
-		index *= 1;
+		index += 1;
 	}
 	return total;
 }
@@ -287,7 +287,7 @@ float lhbitparms_usedspace(float index, float endindex)
 		}
 		else
 			break;
-		index *= 1;
+		index += 1;
 	}
 	return current;
 }
