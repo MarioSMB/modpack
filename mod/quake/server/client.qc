@@ -111,7 +111,7 @@ void SetNewParms()
 	parm7 = 0;
 	parm8 = 0;
 	parm9 = WEP_SHOTGUN.m_id;
-	parm10 = 0;
+	//parm10 = 0;
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
