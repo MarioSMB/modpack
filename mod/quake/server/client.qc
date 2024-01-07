@@ -87,7 +87,7 @@ void SetChangeParms(entity this)
 	.entity weaponentity = weaponentities[0]; // only save first slot
 	if(this.(weaponentity))
 		parm9 = this.(weaponentity).m_weapon.m_id;
-	parm10 = this.model_randomizer;
+	parm10 = this.spectating; // NOTE: update check in PutClientInServer if this is changed!
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
@@ -146,7 +146,7 @@ void DecodeLevelParms(entity this)
 	.entity weaponentity = weaponentities[0]; // only enough space to save the first slot!
 	if(this.(weaponentity))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
-	this.model_randomizer = parm10;
+	this.spectating = parm10; // NOTE: update check in PutClientInServer if this is changed!
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
@@ -1309,6 +1309,9 @@ void RunPostPutClientInServer(entity this)
 
 void PutClientInServer(entity this)
 {
+	if(this.classname == "player_joining" && parm10)
+		this.classname = STR_OBSERVER;
+
 	if(IS_OBSERVER(this))
 		PutObserverInServer(this);
 	else
@@ -1337,6 +1340,7 @@ void PutObserverInServer(entity this)
 
 	if(this.damagedbycontents)
 		IL_REMOVE(g_damagedbycontents, this);
+	this.spectating = true;
 	this.damagedbycontents = false;
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
@@ -1386,6 +1390,7 @@ void PutPlayerInServer(entity this)
 {
 	entity spot = SelectSpawnPoint(this, false);
 
+	this.spectating = false;
 	this.classname = STR_PLAYER;
 	this.health = 100;
 	this.takedamage = DAMAGE_AIM;
