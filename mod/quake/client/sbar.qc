@@ -1194,6 +1194,12 @@ void Sbar_Draw()
 {
 	if(!getproperty(VF_DRAWENGINESBAR)) // drawing in engine turned off, fall back to qc implementation
 	{
+		if(sbar == '0 0 0')
+		{
+			sbar.x = (vid_conwidth - 320)/2;
+			sbar.y = vid_conheight - SBAR_HEIGHT;
+			sbar.z = 0;
+		}
 		// intermission is always full screen
 		if(intermission)
 			sb_lines = 0;
