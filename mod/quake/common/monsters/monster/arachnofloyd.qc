@@ -259,6 +259,13 @@ void arf_leap1(entity this) { set_animofs(this, anim_arachnofloyd_leap, 1, arf_l
 
 void arf_fire_lightning(entity this, float offs)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this, 35 * 8, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+
 	this.effects |= EF_MUZZLEFLASH;
 	makevectors(this.angles);
 	vector org = this.origin + v_right * offs * 32 + v_forward * 24 + '0 0 24';

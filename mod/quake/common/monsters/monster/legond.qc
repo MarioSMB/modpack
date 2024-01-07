@@ -207,6 +207,13 @@ void legond_shootb1(entity this) { set_anim(this, 74, legond_shootb2); ai_face(t
 
 void Legond_FireLightning(entity this)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this, 35 * 10, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+	
 	this.effects |= EF_MUZZLEFLASH;
 	ai_face(this);
 	fixedmakevectors(this.angles);

@@ -21,6 +21,14 @@
 //		<code>
 // }
 
+bool Monsters_SeasonLocked()
+{
+	float month = stof(strftime(true, "%m"));
+	if(month == 12)
+		return false;
+	return true;
+}
+
 /*
 ================
 monster_use
@@ -244,6 +252,8 @@ Monster monster_randomize(entity this, Monster mon)
 	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
+	bool seasonlocked = Monsters_SeasonLocked();
+
 	RandomSelection_Init();
 	FOREACH(Monsters, it != MON_Null,
 	{
@@ -260,6 +270,8 @@ Monster monster_randomize(entity this, Monster mon)
 		if((it.spawnflags & MONSTER_TYPE_FLY) && !(mon.spawnflags & MONSTER_TYPE_FLY))
 			continue;
 		if((mon.spawnflags & MONSTER_TYPE_FLY) && !(it.spawnflags & MONSTER_TYPE_FLY))
+			continue;
+		if((mon.spawnflags & MON_FLAG_XMAS) && seasonlocked)
 			continue;
 		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, this);
 		if(trace_startsolid)

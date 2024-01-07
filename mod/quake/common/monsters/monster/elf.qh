@@ -20,7 +20,7 @@ Sound SND_MON_ELF_SIGHT_RANDOM() {
 #endif
 
 CLASS(Elf, Monster)
-    ATTRIB(Elf, spawnflags, int, 0);
+    ATTRIB(Elf, spawnflags, int, MON_FLAG_XMAS);
     ATTRIB(Elf, m_mins, vector, '-16 -16 -24');
     ATTRIB(Elf, m_maxs, vector, '16 16 16');
 #ifdef GAMEQC

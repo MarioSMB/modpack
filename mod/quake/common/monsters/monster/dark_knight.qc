@@ -88,6 +88,13 @@ void dknight_bow1(entity this)
 
 void dknight_startfire(entity this)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this, 35 * 4, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+
 	float rand = random();
 	float r = random();
 	vector org = this.origin;

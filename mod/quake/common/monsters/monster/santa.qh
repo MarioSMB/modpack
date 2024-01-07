@@ -14,7 +14,7 @@ SOUND(MON_SANTA_SIGHT, "xmas/santa/sight");
 #endif
 
 CLASS(Santa, Monster)
-    ATTRIB(Santa, spawnflags, int, 0);
+    ATTRIB(Santa, spawnflags, int, MON_FLAG_XMAS);
     ATTRIB(Santa, m_mins, vector, '-16 -16 -24');
     ATTRIB(Santa, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

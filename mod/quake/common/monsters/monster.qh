@@ -18,6 +18,7 @@ const int MON_FLAG_NOTARGET = BIT(13); // monster should not be targeted at all 
 const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
 const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
 const int MON_FLAG_HIDDEN = BIT(16);
+const int MON_FLAG_XMAS = BIT(17); // seasonal monster
 
 // entity properties of monsterinfo:
 .entity monsterdef;

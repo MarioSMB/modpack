@@ -14,7 +14,7 @@ SOUND(MON_RAINDEER_SIGHT, "xmas/raindeer/sight");
 #endif
 
 CLASS(Raindeer, Monster)
-    ATTRIB(Raindeer, spawnflags, int, 0);
+    ATTRIB(Raindeer, spawnflags, int, MON_FLAG_XMAS);
     ATTRIB(Raindeer, m_mins, vector, '-16 -16 -24');
     ATTRIB(Raindeer, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

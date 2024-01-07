@@ -18,7 +18,7 @@ Sound SND_MON_SNOWMAN_SIGHT_RANDOM() {
 #endif
 
 CLASS(Snowman, Monster)
-    ATTRIB(Snowman, spawnflags, int, MON_FLAG_STATIONARY);
+    ATTRIB(Snowman, spawnflags, int, MON_FLAG_STATIONARY | MON_FLAG_XMAS);
     ATTRIB(Snowman, m_mins, vector, '-16 -16 -24');
     ATTRIB(Snowman, m_maxs, vector, '16 16 32');
 #ifdef GAMEQC

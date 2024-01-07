@@ -53,6 +53,13 @@ void superchicken_run1(entity this) { set_anim(this, 11, superchicken_run2); ai_
 
 void LaunchLaserbeam(entity this)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this, 35 * 10, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+	
 	this.effects |= EF_MUZZLEFLASH;
 
 	fixedmakevectors(this.angles);

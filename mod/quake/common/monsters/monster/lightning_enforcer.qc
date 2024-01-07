@@ -3,6 +3,13 @@
 #ifdef SVQC
 void lenforcer_fire(entity this)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this, 35 * 4, DEATH_DISCHARGE.m_id, NULL);
+		return;
+	}
+
 	this.effects |= EF_MUZZLEFLASH;
 	ai_face(this);
 	_sound(this, CHAN_WEAPON, "weapons/light2/lghit2.wav", 1, ATTN_NORM);
