@@ -82,7 +82,7 @@ MACRO_END
 #endif
 ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
 
-ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
+ENTCS_PROP(ORIGIN, true, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
