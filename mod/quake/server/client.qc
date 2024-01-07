@@ -1253,6 +1253,7 @@ void ObserverThink(entity this)
 			// primary attack pressed
 			if(this.flags & FL_SPAWNING)
 			{
+				stuffcmd(this, "set cl_quake_spectate 0\n");
 				this.flags &= ~FL_SPAWNING;
 				this.classname = STR_PLAYER;
 				this.rejoin_delay = time + autocvar_sv_quake_rejoin_delay; // prevent fast spec-rejoin
@@ -3009,8 +3010,7 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "spectate")
 	{
 		//ClientCommand_spectate(this);
-		bool spectating = this.cvar_cl_quake_spectate;
-		localcmd(sprintf("set cl_quake_spectate %d\n", !spectating));
+		stuffcmd(this, "set cl_quake_spectate 1\n");
 		return;
 	}
 

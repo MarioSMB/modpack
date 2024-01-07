@@ -33,6 +33,8 @@ void CSQC_Init()
 
 	tempdb = db_create();
 	binddb = db_create();
+
+	registercvar("cl_quake_spectate", "0");
 }
 
 void Shutdown()
