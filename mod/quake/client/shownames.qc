@@ -62,10 +62,10 @@ void Draw_ShowNames(entity this)
 	if (overlap == -1 && autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
-		entity view = NULL;
+		entity entcs = NULL;
 		LL_EACH(shownames_ent, it != this, {
-			view = CSQCModel_server2csqc(i);
-			if (!view)
+			entcs = entcs_receiver(i);
+			if (!(entcs && entcs.has_origin))
 				continue;
 			vector eo = project_3d_to_2d(it.origin + eZ * realoffset);
 			if (OFF_SCREEN(eo)) continue;
@@ -160,16 +160,18 @@ void Draw_ShowNames_All()
 {
 	if (!autocvar_hud_shownames || intermission) return;
 	LL_EACH(shownames_ent, true, {
-		entity view = CSQCModel_server2csqc(i);
-		if (!view)
+		entity entcs = entcs_receiver(i);
+		if (!entcs)
 		{
 			make_pure(it);
 			continue;
 		}
 		make_impure(it);
-		bool dead = view.csqcmodel_isdead;
-		if ((!it.csqcmodel_isdead || it.alpha > 0) && view.origin != it.origin)
-			setorigin(it, view.origin);
+		getthink(entcs)(entcs);
+		if (!entcs.has_origin) continue;
+		bool dead = entcs_IsDead(i);
+		if ((!it.csqcmodel_isdead || it.alpha > 0) && entcs.origin != it.origin)
+			setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
 	});
