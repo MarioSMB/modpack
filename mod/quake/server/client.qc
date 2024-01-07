@@ -87,7 +87,7 @@ void SetChangeParms(entity this)
 	.entity weaponentity = weaponentities[0]; // only save first slot
 	if(this.(weaponentity))
 		parm9 = this.(weaponentity).m_weapon.m_id;
-	parm10 = this.spectating; // NOTE: update check in PutClientInServer if this is changed!
+	//parm10 unused
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
@@ -146,7 +146,7 @@ void DecodeLevelParms(entity this)
 	.entity weaponentity = weaponentities[0]; // only enough space to save the first slot!
 	if(this.(weaponentity))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
-	this.spectating = parm10; // NOTE: update check in PutClientInServer if this is changed!
+	//parm10 unused
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
@@ -1309,9 +1309,6 @@ void RunPostPutClientInServer(entity this)
 
 void PutClientInServer(entity this)
 {
-	if(this.classname == "player_joining" && parm10)
-		this.classname = STR_OBSERVER;
-
 	if(IS_OBSERVER(this))
 		PutObserverInServer(this);
 	else
@@ -2708,6 +2705,11 @@ void ClientCommand_spectate(entity this)
 	}
 }
 
+REPLICATE_APPLYCHANGE("cl_quake_spectate",
+	if(IS_PLAYER(this) && this.cvar_cl_quake_spectate)
+		ClientCommand_spectate(this);
+);
+
 void exploder_think(entity this)
 {
 	te_explosion2(this.origin, this.count, this.cnt);
@@ -3006,7 +3008,9 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "spectate")
 	{
-		ClientCommand_spectate(this);
+		//ClientCommand_spectate(this);
+		bool spectating = this.cvar_cl_quake_spectate;
+		localcmd(sprintf("set cl_quake_spectate %d\n", !spectating));
 		return;
 	}
 

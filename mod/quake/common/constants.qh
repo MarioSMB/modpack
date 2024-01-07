@@ -25,6 +25,9 @@ int autocvar_sv_quake_fixstuff;
 #ifdef GAMEQC
 REPLICATE_INIT(bool, cvar_cl_autoswitch);
 REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
+
+REPLICATE_INIT(bool, cvar_cl_quake_spectate);
+REPLICATE(cvar_cl_quake_spectate, bool, "cl_quake_spectate");
 #endif
 
 // generic entity flags

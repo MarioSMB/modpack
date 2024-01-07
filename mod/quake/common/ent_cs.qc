@@ -82,7 +82,7 @@ MACRO_END
 #endif
 ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
 
-ENTCS_PROP(ORIGIN, true, origin, origin, ENTCS_SET_NORMAL,
+ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
 	{ WriteVector(chan, ent.origin); },
 	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
 
@@ -160,7 +160,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		do {
 			if (IS_PLAYER(player))
 			{
-				if (!IS_PLAYER(to)) break;
+				if (IS_PLAYER(to)) break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
