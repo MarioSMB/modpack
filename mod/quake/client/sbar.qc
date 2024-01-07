@@ -1216,7 +1216,7 @@ void Sbar_Draw()
 
 		if(cursor_active)
 			{} // no special handling
-		if(sb_showscores)
+		if(sb_showscores || STAT(HEALTH) == -666) // hacky check to see if we're spectating
 			Sbar_DrawScoreboard();
 		else if(intermission == 1)
 			Sbar_IntermissionOverlay();
