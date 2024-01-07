@@ -271,7 +271,7 @@ Monster monster_randomize(entity this, Monster mon)
 			continue;
 		if((mon.spawnflags & MONSTER_TYPE_FLY) && !(it.spawnflags & MONSTER_TYPE_FLY))
 			continue;
-		if((mon.spawnflags & MON_FLAG_XMAS) && seasonlocked)
+		if((it.spawnflags & MON_FLAG_XMAS) && seasonlocked)
 			continue;
 		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, this);
 		if(trace_startsolid)
