@@ -123,7 +123,7 @@ void Caleb_bats_think(entity this)
 		float oldhealth = it.health;
 		T_Damage(it, this, this.owner, 5, DEATH_TRAP.m_id);
 		float hpamount = oldhealth - it.health;
-		if(hpamount <= 5)
+		if(hpamount > 0)
 		{
 			Send_Effect(EFFECT_QCC_BLOODTRAIL, it.origin, player.origin, 1);
 			T_Heal(player, hpamount, false);
@@ -247,6 +247,11 @@ METHOD(Caleb, m_damage, float(Champions this, entity targ, entity inflictor, ent
 	{
 		if(STAT(QCC_BLOODRAGE, targ))
 			return 0;
+		if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
+		{
+			if(autocvar_g_friendlyfire_virtual)
+				return 1;
+		}
 		if((targ.health - damage) < 1)
 		{
 			string quip = "";
