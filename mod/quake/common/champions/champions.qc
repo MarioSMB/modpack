@@ -291,8 +291,8 @@ void cl_champion_draw()
 	if(intermission || STAT(HEALTH) <= 0 || STAT(SKATING))
 		return;
 	
-	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
-	sui_drawtext('0 170 0', '16 16 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_drawtext('0 -170 0', '16 16 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
