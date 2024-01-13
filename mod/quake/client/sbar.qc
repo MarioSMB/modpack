@@ -1190,6 +1190,12 @@ void Sbar_DrawShieldOverlay()
 	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '1 0 0', bound(0, 0.5 * (STAT(SHIELD_TIME) - time), 0.025), DRAWFLAG_NORMAL);
 }
 
+void Sbar_DrawChampionOverlay()
+{
+	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_overlay)
+		csqcplayer.m_champion.m_overlay(csqcplayer.m_champion);
+}
+
 void Sbar_Draw()
 {
 	if(!getproperty(VF_DRAWENGINESBAR)) // drawing in engine turned off, fall back to qc implementation
@@ -1214,6 +1220,8 @@ void Sbar_Draw()
 		}
 
 		Sbar_DrawShieldOverlay();
+
+		Sbar_DrawChampionOverlay();
 
 		// always draw push notifications?
 		Sbar_DrawNotify();

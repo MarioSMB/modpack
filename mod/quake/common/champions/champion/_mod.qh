@@ -1,5 +1,6 @@
 // generated file; do not modify
 #include "bigjohn.qh"
+#include "caleb.qh"
 #include "chief.qh"
 #include "doom.qh"
 #include "duke.qh"

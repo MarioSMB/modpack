@@ -1,5 +1,6 @@
 // generated file; do not modify
 #include "bigjohn.qc"
+#include "caleb.qc"
 #include "chief.qc"
 #include "doom.qc"
 #include "duke.qc"

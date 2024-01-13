@@ -1,0 +1,182 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Caleb, "progs/player_caleb.mdl");
+
+SOUND(Caleb_Pain1, "player_caleb/pain1");
+SOUND(Caleb_Pain2, "player_caleb/pain2");
+SOUND(Caleb_Pain3, "player_caleb/pain3");
+SOUND(Caleb_Pain4, "player_caleb/pain4");
+SOUND(Caleb_Pain5, "player_caleb/pain5");
+SOUND(Caleb_Pain6, "player_caleb/pain6");
+Sound SND_Caleb_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Caleb_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Caleb_Death1, "player_caleb/death1");
+SOUND(Caleb_Death2, "player_caleb/death2");
+SOUND(Caleb_Death3, "player_caleb/death3");
+Sound SND_Caleb_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Caleb_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Caleb)
+{
+#ifdef SVQC
+    precache_sound("player_caleb/plyrjmp8.wav");       // player jump
+    precache_sound("player_caleb/land.wav");           // player landing
+    precache_sound("player_caleb/land2.wav");      // player hurt landing
+    precache_sound("player_caleb/drown1.wav");     // drowning pain
+    precache_sound("player_caleb/drown2.wav");     // drowning pain
+    precache_sound("player_caleb/gasp1.wav");      // gasping for air
+    precache_sound("player_caleb/gasp2.wav");      // taking breath
+    precache_sound("player_caleb/h2odeath.wav");       // drowning death
+
+    precache_sound("player_caleb/pain1.wav");
+    precache_sound("player_caleb/pain2.wav");
+    precache_sound("player_caleb/pain3.wav");
+    precache_sound("player_caleb/pain4.wav");
+
+    precache_sound("player_caleb/death1.wav");
+    precache_sound("player_caleb/death2.wav");
+    precache_sound("player_caleb/death3.wav");
+
+    precache_sound("player_caleb/axhit1.wav");
+
+    precache_sound("player_caleb/lburn1.wav");     // lava burn
+    precache_sound("player_caleb/lburn2.wav");     // lava burn
+
+    precache_model("progs/v_ptchfrk.mdl");
+
+    precache_model("progs/bats.mdl");
+
+    precache_sound("player_caleb/play1109.wav");
+    precache_sound("player_caleb/play1110.wav");
+    precache_sound("player_caleb/play1111.wav");
+    precache_sound("player_caleb/play1112.wav");
+    precache_sound("player_caleb/play1113.wav");
+    precache_sound("player_caleb/play1114.wav");
+    precache_sound("player_caleb/play1115.wav");
+    precache_sound("player_caleb/play1116.wav");
+
+    precache_sound("player_caleb/quips/1001.wav");
+    precache_sound("player_caleb/quips/1008.wav");
+    precache_sound("player_caleb/quips/1012.wav");
+    precache_sound("player_caleb/quips/1014.wav");
+    precache_sound("player_caleb/quips/1017.wav");
+    precache_sound("player_caleb/quips/1018.wav");
+    precache_sound("player_caleb/quips/1019.wav");
+    precache_sound("player_caleb/quips/1021.wav");
+    precache_sound("player_caleb/quips/1022.wav");
+    precache_sound("player_caleb/quips/1023.wav");
+    precache_sound("player_caleb/quips/1024.wav");
+    precache_sound("player_caleb/quips/1025.wav");
+    precache_sound("player_caleb/quips/1027.wav");
+    precache_sound("player_caleb/quips/1028.wav");
+    precache_sound("player_caleb/quips/1029.wav");
+    precache_sound("player_caleb/quips/1030.wav");
+    precache_sound("player_caleb/quips/1031.wav");
+    precache_sound("player_caleb/quips/1032.wav");
+    precache_sound("player_caleb/quips/1033.wav");
+    precache_sound("player_caleb/quips/1034.wav");
+    precache_sound("player_caleb/quips/1035.wav");
+    precache_sound("player_caleb/quips/1036.wav");
+    precache_sound("player_caleb/quips/1037.wav");
+    precache_sound("player_caleb/quips/1038.wav");
+    precache_sound("player_caleb/quips/1039.wav");
+    precache_sound("player_caleb/quips/1040.wav");
+    precache_sound("player_caleb/quips/1041.wav");
+    precache_sound("player_caleb/quips/1042.wav");
+    precache_sound("player_caleb/quips/1043.wav");
+    precache_sound("player_caleb/quips/1044.wav");
+    precache_sound("player_caleb/quips/1045.wav");
+    precache_sound("player_caleb/quips/1046.wav");
+    precache_sound("player_caleb/quips/1048.wav");
+    precache_sound("player_caleb/quips/1049.wav");
+    precache_sound("player_caleb/quips/1050.wav");
+    precache_sound("player_caleb/quips/1051.wav");
+    precache_sound("player_caleb/quips/1052.wav");
+    precache_sound("player_caleb/quips/1053.wav");
+    precache_sound("player_caleb/quips/1054.wav");
+    precache_sound("player_caleb/quips/1055.wav");
+    precache_sound("player_caleb/quips/1056.wav");
+    precache_sound("player_caleb/quips/1057.wav");
+    precache_sound("player_caleb/quips/1059.wav");
+    precache_sound("player_caleb/quips/1060.wav");
+    precache_sound("player_caleb/quips/1061.wav");
+    precache_sound("player_caleb/quips/1062.wav");
+    precache_sound("player_caleb/quips/1063.wav");
+    precache_sound("player_caleb/quips/1064.wav");
+    precache_sound("player_caleb/quips/1065.wav");
+    precache_sound("player_caleb/quips/1066.wav");
+    precache_sound("player_caleb/quips/1068.wav");
+    precache_sound("player_caleb/quips/1069.wav");
+    precache_sound("player_caleb/quips/1070.wav");
+    precache_sound("player_caleb/quips/1071.wav");
+    precache_sound("player_caleb/quips/1072.wav");
+    precache_sound("player_caleb/quips/1073.wav");
+    precache_sound("player_caleb/quips/1074.wav");
+    precache_sound("player_caleb/quips/1075.wav");
+    precache_sound("player_caleb/quips/1076.wav");
+    precache_sound("player_caleb/quips/1077.wav");
+    precache_sound("player_caleb/quips/1078.wav");
+    precache_sound("player_caleb/quips/1079.wav");
+    precache_sound("player_caleb/quips/1080.wav");
+    precache_sound("player_caleb/quips/1081.wav");
+    precache_sound("player_caleb/quips/1082.wav");
+    precache_sound("player_caleb/quips/1083.wav");
+    precache_sound("player_caleb/quips/1084.wav");
+    precache_sound("player_caleb/quips/2112.wav");
+
+    precache_sound("player_caleb/mutter/3001b.wav");
+    precache_sound("player_caleb/mutter/3004b.wav");
+    precache_sound("player_caleb/mutter/3012.wav");
+    precache_sound("player_caleb/mutter/3018b.wav");
+    precache_sound("player_caleb/mutter/3020.wav");
+    precache_sound("player_caleb/mutter/3023a.wav");
+    precache_sound("player_caleb/mutter/3027.wav");
+    precache_sound("player_caleb/mutter/3031.wav");
+    precache_sound("player_caleb/mutter/3038.wav");
+
+    precache_sound("player_caleb/heartbeat.wav");
+    precache_sound("player_caleb/bats.wav");
+#endif
+#ifdef CSQC
+    precache_pic("gfx/quake/bloodstrike");
+#endif
+}
+#endif
+#ifdef CSQC
+#define CALEB_STATS \
+"Crazy\n" \
+"Increased melee range with pitchfork\n" \
+"Dying sends Caleb into a Blood Rage\n" \
+"In Blood Rage kill enemies to live\n" \
+"Press %ABILITY% for vampire bats"
+#endif
+CLASS(Caleb, Champions)
+    ATTRIB(Caleb, netname, string, "caleb");
+    ATTRIB(Caleb, m_name, string, "Caleb");
+    ATTRIB(Caleb, qcc_meleename, string, "ptchfrk");
+    ATTRIB(Caleb, qcc_meleerange, float, 2.5);
+#ifdef GAMEQC
+    ATTRIB(Caleb, m_model, Model, MDL_Caleb);
+    ATTRIB(Caleb, m_soundpath, string, "player_caleb/");
+    METHOD(Caleb, m_sound_pain, string()) { return SND(Caleb_Pain_Random()); }
+    METHOD(Caleb, m_sound_death, string()) { return SND(Caleb_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Caleb, message, string, CALEB_STATS);
+#endif
+ENDCLASS(Caleb)
+REGISTER_CHAMPION(Caleb, NEW(Caleb));
+
+#ifdef SVQC
+.float caleb_crazy_time;
+.float bloodrage_time;
+.float bloodrage_heartbeat;
+.entity caleb_bats;
+#endif
+
+const int BLOODRAGE_MAX = 3; // only require 3 kills?

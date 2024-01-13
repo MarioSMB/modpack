@@ -35,3 +35,5 @@ EFFECT(0, RUNE_METEOR_IMPACT,       "laser_impact")
 
 EFFECT(0, MAYO_SMASH,               "iceorglass")
 EFFECT(0, BROWN_NOTE,               "smoke_large")
+
+EFFECT(1, QCC_BLOODTRAIL,           "red_pass")
