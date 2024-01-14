@@ -131,6 +131,7 @@ PRECACHE(Caleb)
 
     precache_sound("player_caleb/mutter/3001b.wav");
     precache_sound("player_caleb/mutter/3004b.wav");
+    precache_sound("player_caleb/mutter/3010.wav");
     precache_sound("player_caleb/mutter/3012.wav");
     precache_sound("player_caleb/mutter/3018b.wav");
     precache_sound("player_caleb/mutter/3020.wav");
