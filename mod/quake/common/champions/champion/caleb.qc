@@ -172,7 +172,7 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 		Caleb_crazy_reset(actor); // no crazy while this is going on!
 		if(time > actor.bloodrage_time)
 		{
-			STAT(QCC_BLOODRAGE_COUNT, actor) -= 1;
+			STAT(QCC_BLOODRAGE_COUNT, actor) = max(-1, STAT(QCC_BLOODRAGE_COUNT, actor) - 1);
 			if(STAT(QCC_BLOODRAGE_COUNT, actor) < 0)
 			{
 				T_Damage(actor, NULL, NULL, 4000, DEATH_GENERIC.m_id);

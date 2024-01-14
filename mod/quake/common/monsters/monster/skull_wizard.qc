@@ -223,6 +223,7 @@ void skullw_blink(entity this)
 	a.x = -a.x;
 	this.angles_x = a.x;
 	this.angles_y = a.y;
+	this.angles_z = 0;
 	this.fixangle = true;
 
 	this.effects &= ~EF_NODRAW;
