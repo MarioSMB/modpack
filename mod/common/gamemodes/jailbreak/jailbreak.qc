@@ -1444,10 +1444,10 @@ JB_SPAWNFUNC(jailbreak_controlpoint_neutral, JB_SetupControlPoint, 0)
 void jb_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-		field_team(ST_JB_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-		field(SP_JB_JBREAKS, "jbs", 0);
-		field(SP_JB_FREED, "freed", SFL_SORT_PRIO_SECONDARY);
-		field(SP_JB_DEFENSE, "def", 0);
+		field_team(ST_JB_ROUNDS, _("SCO^rounds"), SFL_SORT_PRIO_PRIMARY);
+		field(SP_JB_JBREAKS, _("SCO^jbs"), 0);
+		field(SP_JB_FREED, _("SCO^freed"), SFL_SORT_PRIO_SECONDARY);
+		field(SP_JB_DEFENSE, _("SCO^def"), 0);
 	});
 }
 

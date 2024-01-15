@@ -1,4 +1,4 @@
-REGISTER_MINIGAME(chess, "Chess");
+REGISTER_MINIGAME(chess, _("Chess"));
 
 const float CHESS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float CHESS_TURN_WIN   = 0x0200; // player has won
