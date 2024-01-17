@@ -155,9 +155,7 @@ METHOD(Caleb, m_activate, void(Champions this, entity actor))
 	RandomSelection_Init();
 	RandomSelection_AddString("mutter/3004b.wav", 1, 1);
 	RandomSelection_AddString("mutter/3010.wav", 1, 1);
-	RandomSelection_AddString("mutter/3012.wav", 1, 1);
 	RandomSelection_AddString("mutter/3018b.wav", 1, 1);
-	RandomSelection_AddString("mutter/3020.wav", 1, 1);
 	RandomSelection_AddString("mutter/3023a.wav", 1, 1);
 	RandomSelection_AddString("mutter/3027.wav", 1, 1);
 	RandomSelection_AddString("mutter/3031.wav", 1, 1);
@@ -191,7 +189,15 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Caleb_crazy_reset(actor);
-		player_sound(actor, CH_VOICE, "mutter/3001b.wav", ATTN_NORM);
+		string mutter = "";
+		float mutter_rand = random();
+		if(mutter_rand < 0.333)
+			mutter = "mutter/3001b.wav";
+		else if(mutter_rand < 0.666)
+			mutter = "mutter/3004b.wav";
+		else
+			mutter = "mutter/3012.wav";
+		player_sound(actor, CH_VOICE, mutter, ATTN_NORM);
 		_sound(actor, CH_PLAYER_SINGLE, "player_caleb/bats.wav", 1, ATTN_NORM);
 		Send_Effect(EFFECT_SMOKE_LARGE, actor.origin, '0 0 0', 1);
 		STAT(QCC_ABILITYTIME, actor) = time + 10;

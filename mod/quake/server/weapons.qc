@@ -1185,6 +1185,11 @@ void spike_touch(entity this, entity toucher)
 			T_RadiusDamage(this, this.owner, this.dmg, this.projectiledeathtype, this.owner); // tonedown
 			te_explosion2(this.origin, 100, 5);
 		}
+		else if(this.classname == "grape")
+		{
+			te_wizspike(this.origin);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/grape_impact.wav", 1, ATTN_NORM);
+		}
 		else
 			te_spike(this.origin);
 	}

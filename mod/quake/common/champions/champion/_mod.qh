@@ -3,6 +3,7 @@
 #include "caleb.qh"
 #include "chief.qh"
 #include "doom.qh"
+#include "duck.qh"
 #include "duke.qh"
 #include "dusk.qh"
 #include "goat.qh"
