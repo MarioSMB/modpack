@@ -1756,6 +1756,7 @@ void Horde_SetupSquads()
 	IL_EACH(g_squads, (it.spawnflags & HORDE_FINALBOSS), {found = true; break;});
 	if(!found)
 	{
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 thomas");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 super_chicken");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 guardian");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 legond");

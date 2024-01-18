@@ -61,6 +61,7 @@
 #include "spawn.qh"
 #include "spider_droid.qh"
 #include "super_chicken.qh"
+#include "thomas.qh"
 #include "volkerh.qh"
 #include "vore.qh"
 #include "voreling.qh"

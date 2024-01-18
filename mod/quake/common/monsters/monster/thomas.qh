@@ -1,0 +1,28 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_THOMAS,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 likes trains"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_THOMAS,               1,  NULL,           INFO_DEATH_SELF_MON_THOMAS,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_THOMAS,           DEATH_SELF_MON_THOMAS,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_THOMAS, "progs/thomas.mdl");
+
+SOUND(MON_THOMAS_SIGHT, "thomas/whistle");
+#endif
+
+CLASS(Thomas, Monster)
+    ATTRIB(Thomas, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_PASSTARGET | MON_FLAG_METAL);
+    ATTRIB(Thomas, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Thomas, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(Thomas, m_model, Model, MDL_MON_THOMAS);
+    ATTRIB(Thomas, m_model_head, Model, MDL_Null);
+    ATTRIB(Thomas, m_sound, Sound, SND_MON_THOMAS_SIGHT);
+#endif
+    ATTRIB(Thomas, netname, string, "thomas");
+    ATTRIB(Thomas, monster_name, string, _("Thomas"));
+ENDCLASS(Thomas)
+
+REGISTER_MONSTER(THOMAS, NEW(Thomas));

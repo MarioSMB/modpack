@@ -61,6 +61,7 @@
 #include "spawn.qc"
 #include "spider_droid.qc"
 #include "super_chicken.qc"
+#include "thomas.qc"
 #include "volkerh.qc"
 #include "vore.qc"
 #include "voreling.qc"
