@@ -1263,7 +1263,7 @@ void ObserverThink(entity this)
 		}
 	}
 
-	if(MP_MG && horde_ent && !horde_ent.wait)
+	if(MP_MG && horde_ent && time > shop_opentime)
 	{
 		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
 			horde_respawn_all();
@@ -1899,7 +1899,8 @@ void PlayerDeathThink(entity this)
 	this.button4 = 0;
 	this.button5 = 0;
 	// Yoder Sept24, 2021
-	if(MP_MG && horde_ent && !horde_ent.wait)
+	// HACK: using shop opentime to tell when the mid-round stage is active!
+	if(MP_MG && horde_ent && time > shop_opentime)
 	{
 		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
 			horde_respawn_all();
