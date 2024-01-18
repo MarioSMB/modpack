@@ -172,5 +172,5 @@ void W_TakeMana(entity ent, float amount)
 	if(StatusEffects_active(STATUSEFFECT_SharpShooter, ent))
 		return;
 	STAT(MANA, ent) -= amount;
-	ent.mana_regen_pause = time + 2;
+	ent.mana_regen_pause = time + 1.5;
 }
