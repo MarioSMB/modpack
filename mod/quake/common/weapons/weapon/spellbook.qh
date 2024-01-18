@@ -25,7 +25,7 @@ REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
 
 .int swappingspell;
 
-const float MANA_REGEN_RATE = 0.005;
+const float MANA_REGEN_RATE = 0.03333;
 
 const int SPELL_RUNE_LIMIT = 2;
 

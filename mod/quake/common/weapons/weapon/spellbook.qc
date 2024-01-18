@@ -80,7 +80,7 @@ void Regenerate_Mana(entity this)
 {
 	if(this.mana_regen_time < time && STAT(MANA, this) < 100 && time > this.mana_regen_pause)
 	{
-		STAT(MANA, this) += 1;
+		STAT(MANA, this) += 3;
 		
 		if(STAT(MANA, this) > 100)
 			STAT(MANA, this) = 100;
