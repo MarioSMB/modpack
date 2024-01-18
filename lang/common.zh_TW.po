@@ -1,0 +1,365 @@
+
+msgid ""
+msgstr ""
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Arena"
+msgstr "競技場"
+
+msgid "Emerge victorious in a series of duels to win the match!"
+msgstr "在一場場決鬥中淘汰敵人，勝者為王"
+
+msgid "Conquest"
+msgstr "征服"
+
+msgid "Capture all the spawnpoint control points to win"
+msgstr "佔領所有復活控制點以取得勝利"
+
+msgid "Jailbreak"
+msgstr "越獄"
+
+msgid ""
+"Kill enemies to send them to jail, capture control points to release "
+"teammates"
+msgstr "殺死敵人以將他們關入監獄，佔領控制點以釋放隊友"
+
+msgid "Runematch"
+msgstr "符文大戰"
+
+msgid ""
+"Pick up and hold the runes, special items that give you points, a special "
+"power (rune) and a disadvantage (curse)"
+msgstr "拾起符文，開始殺敵。符文給你特別的能力，但也帶有詛咒"
+
+msgid "SNAFU"
+msgstr "蝌蚪保衛戰"
+
+msgid "Situation normal..."
+msgstr "情況一切正常……"
+
+msgid "VIP"
+msgstr "VIP"
+
+msgid "A VIP is chosen on each team, when a VIP dies, the round is over"
+msgstr "每個團隊選出一位 VIP。當 VIP 死亡時，這一輪結束"
+
+msgid "Space Guns"
+msgstr "太空射擊"
+
+msgid "^BG%s^BG was captured by the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
+
+msgid "^BG%s^BG was liberated from the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
+
+msgid "^BG%s^BG has been destroyed"
+msgstr "^BG%s^BG 被摧毀"
+
+msgid "^BG%s^BG has been upgraded to level ^F4%s^BG!"
+msgstr "^BG%s^BG 被升級至第 ^F4%s^BG 級！"
+
+msgid "^BG%s^BG captured %s"
+msgstr "^BG%s^BG 抓捕了 %s"
+
+msgid "^BG%s^3 has broken free!"
+msgstr "^BG%s^3 已逃脫！"
+
+msgid "^BG%s^K1 lost ^BG%s^K1 and ^BG%s"
+msgstr "^BG%s^K1 失去了 ^BG%s^K1 和 ^BG%s"
+
+msgid "^BG%s^BG picked up ^BG%s^BG and ^BG%s"
+msgstr "^BG%s^BG 拾起了 ^BG%s^BG 和 ^BG%s"
+
+msgid "^BG%s^K1 dropped the soul gem"
+msgstr "^BG%s^K1 丟掉了靈魂石"
+
+msgid "^BG%s^K1 picked up the soul gem"
+msgstr "^BG%s^K1 撿起了靈魂石"
+
+msgid "^BG%s^BG has been captured by the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
+
+msgid "^BGYour team has captured %s"
+msgstr "^BG我方佔領了 %s"
+
+msgid "^BG%s^BG has been liberated from the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
+
+msgid "^BGYour team has liberated %s^BG from the ^TC^TT^BG team"
+msgstr "^BG我方從^TC^TT隊^BG釋放了 %s^BG"
+
+msgid "^BG%s^BG has been lost to the ^TC^TT^BG team"
+msgstr "^TC^TT隊^BG失去了 ^BG%s^BG"
+
+msgid ""
+"^K1Your core is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr "^K1我方核心正遭受攻擊！\n^K1現在^K3去保衛它！"
+
+msgid ""
+"^K1Your factory is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr "^K1我方工廠正遭受攻擊\n^K1現在^K3去保衛它！"
+
+msgid "^F2You gained some bonus score for defending the control point!"
+msgstr "^F2你因保衛控制點而獲得獎勵分數！"
+
+msgid "^K1The ^TC^TT^K1 team is escaping!"
+msgstr "^K1^TC^TT隊^K1在越獄！"
+
+msgid "^F2You're free! Run away!"
+msgstr "^F2你自由了！逃跑吧！"
+
+msgid "^K3You bailed your teammates out of jail!"
+msgstr "^K3你幫隊友脫離了監獄！"
+
+msgid "^K1You're in jail, prisoner!"
+msgstr "^K1你進了監獄，囚犯！"
+
+msgid "^K1No sneaking into jail!"
+msgstr "^K1不能溜進監獄！"
+
+msgid "^BGThis control point is not ready yet"
+msgstr "^BG此控制點尚未就緒"
+
+msgid "^BGYour team is already free"
+msgstr "^BG你的團隊已經自由"
+
+msgid "^BGSomeone is already capturing this control point"
+msgstr "^BG已有人在佔領此控制點"
+
+msgid "^BGYou can't capture your team's control points"
+msgstr "^BG不可以佔領己方控制點"
+
+msgid ""
+"^K1Congratulations!\n"
+"^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n"
+"^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
+msgstr "^K1恭喜！\n^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻喪屍）！\n^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻喪屍）！"
+
+msgid ""
+"^BGYou are the ^TC^TT^BG VIP!\n"
+"^F2Survive or your team will lose!"
+msgstr "^BG你是^TC^TT隊^BG VIP！\n"
+
+msgid ""
+"^BGWaiting for VIPs...\n"
+"Pickup your Soul Gem to become a VIP"
+msgstr "^BG等待選出 VIP……\n撿起靈魂石即可成為 VIP"
+
+msgid "^BGWaiting for an enemy VIP"
+msgstr "^BG等待敵方選出 VIP"
+
+msgid "^BG%s^F2 is no longer a VIP!"
+msgstr "^BG%s^F2不再是 VIP！"
+
+msgid "^BGToo many dropped gems! Dropping disabled for %s."
+msgstr "^BG擲出靈魂石過多！%s內不能再擲出。"
+
+msgid "^F2You are no longer a VIP!"
+msgstr "^F2你不再是 VIP！"
+
+msgid "^BG%s^F2 is now a VIP!"
+msgstr "^BG%s^F2 現在是 VIP！"
+
+msgid "^F2You are now a VIP!"
+msgstr "^F2你現在是 VIP！"
+
+msgid "Chainsaw"
+msgstr "電鋸"
+
+msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用電鋸鋸成兩半%s%s"
+
+msgid "^BG%s^K1 played with their Chainsaw%s%s"
+msgstr "^BG%s^K1 把玩自己的電鋸%s%s"
+
+msgid "Uzi"
+msgstr "烏茲衝鋒槍"
+
+msgid "^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍半自動掃射%s%s"
+
+msgid "^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍釘滿重金屬%s%s"
+
+msgid "Flak Cannon"
+msgstr "破片加農炮"
+
+msgid "^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"
+msgstr "^BG%s%s^K1 遭了 ^BG%s^K1 的集束破片%s%s"
+
+msgid "^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用破片加農炮撕碎%s%s"
+
+msgid "^BG%s^K1 was shredded by their own Flak Cannon%s%s"
+msgstr "^BG%s^K1 被自己的破片加農炮撕碎%s%s"
+
+msgid "Lightsabre"
+msgstr "鐳射刃"
+
+msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
+msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用鐳射刃切離%s%s"
+
+msgid "RPG-7"
+msgstr "RPG-7 火箭筒"
+
+msgid "^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 消滅%s%s"
+
+msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 炸得灰飛煙滅%s%s"
+
+msgid "^BG%s^K1 blew themself up with their RPG-7%s%s"
+msgstr "^BG%s^K1 被自己的 RPG-7 炸得灰飛煙滅%s%s"
+
+msgid "Assault Rifle"
+msgstr "突擊步槍"
+
+msgid ""
+"^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍半自動掃射%s%s"
+
+msgid "^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍戰術性撕碎%s%s"
+
+msgid "Fatty"
+msgstr "胖胖"
+
+msgid "Princess"
+msgstr "公主"
+
+msgid ""
+"\n"
+"^7Running the SMB mod pack\n"
+"^3https://github.com/MarioSMB/modpack\n"
+msgstr "\n^7伺服器在執行 SMB 模組包\n^3https://github.com/MarioSMB/modpack\n"
+
+msgid "You ran out of lives!"
+msgstr "你耗盡了生命！"
+
+msgid "Press an arrow key to begin the game"
+msgstr "按下任意方向鍵以開始遊戲"
+
+msgid "Avoid the snake's body, collect the mice!"
+msgstr "吃掉老鼠，避免咬到蛇身！"
+
+msgid "Avoid the screen edges and the snake's body, collect the mice!"
+msgstr "吃掉老鼠，避免咬到蛇身或碰壁！"
+
+msgid ""
+"Press the space bar or right click to change your currently selected color"
+msgstr "要更換顏色，請按空格或右鍵"
+
+msgid ""
+"You lost the game!\n"
+"Select \"^1Next Match^7\" on the menu for a rematch!"
+msgstr "你輸了！\n選擇選單上的“^1下一輪^7”再次開始遊戲！"
+
+msgid ""
+"You win!\n"
+"Select \"^1Next Match^7\" on the menu to start a new match!"
+msgstr "你贏了！\n選擇選單上的“^1下一輪^7”開始新一輪遊戲！"
+
+msgid "Try to take the last piece on the board"
+msgstr "爭取讓自己拿走最後的棋子"
+
+msgid "Use the arrow keys to move and hold the space bar to shoot"
+msgstr "使用方向鍵移動，按住空格射擊"
+
+msgid "^1Wait for your turn to join"
+msgstr "^1請靜候屬於你的一輪"
+
+msgid "Point %s"
+msgstr "點 %s"
+
+msgid "^8(unknown track)"
+msgstr "^8（未知音軌）"
+
+msgid "^1[RADIO] ^2Now playing ^3%s"
+msgstr "^1【電臺 | RADIO】^2正在播放 ^3%s"
+
+msgid "^8 (%s)"
+msgstr "^8 (%s)"
+
+msgid "^7 - %s in queue"
+msgstr "^7 - 佇列 %s 首"
+
+msgid " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)"
+msgstr " ^2（提示：您可以在^1控制檯^2輸入 ^1radio off^2 關閉電臺）"
+
+msgid " ^8(autoqueue)"
+msgstr " ^8(自動補充)"
+
+msgid "^1The tadpole is under attack!\n^2DEFEND^7 the tadpole!"
+msgstr "^1蝌蚪遭到攻擊！\n^2保護^7蝌蚪！"
+
+msgid "The tadpole is ^1DEAD^7 you ^1LOSERS!"
+msgstr "蝌蚪^1死翹翹了^7，你們這些^1失敗者！"
+
+msgid "SCO^rounds"
+msgstr "輪"
+
+msgid "SCO^jbs"
+msgstr "越獄"
+
+msgid "SCO^freed"
+msgstr "釋放"
+
+msgid "SCO^def"
+msgstr "保衛"
+
+msgid "SCO^scores"
+msgstr "分數"
+
+msgid "SCO^survivals"
+msgstr "生存"
+
+msgid "SCO^vipkills"
+msgstr "擊殺 VIP"
+
+msgid "SCO^liberated"
+msgstr "釋放"
+
+msgid "SCO^captured"
+msgstr "佔領"
+
+msgid "Nim"
+msgstr "尼姆棋"
+
+msgid "Snake"
+msgstr "貪吃蛇"
+
+msgid "Boggle"
+msgstr "單詞連連看"
+
+msgid "Chess"
+msgstr "國際象棋"
+
+msgid "Checkers"
+msgstr "國際跳棋"
+
+msgid "Pixel Art"
+msgstr "畫素畫"
+
+msgid "Game over!"
+msgstr "遊戲結束！"
+
+msgid "BOGGLE^Ready"
+msgstr "準備完畢"
+
+msgid "Press \"Ready\" to begin"
+msgstr "點選“準備完畢”以開始"
+
+msgid "Drag the mouse to select as many words as you can before time runs out!"
+msgstr "在計時結束之前，用滑鼠拖動字母、連成儘可能多的英語單詞"
+
+msgid "^BGThawing slowly now\n^BGJump to re-spawn at base instantly"
+msgstr "^BG正在緩慢解凍\n^BG按跳躍以立刻在基地復活"
+
+msgid "^BGYou are now carrying %s^BG!"
+msgstr "^BG你馱著 %s^BG！"
+
+msgid "^BGYou are now riding %s^BG!"
+msgstr "^BG你騎著 %S^BG！"

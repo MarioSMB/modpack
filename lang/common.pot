@@ -1,0 +1,635 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-18 23:30+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: mod/client/main.qc:58
+msgid ""
+"\n"
+"^7Running the SMB mod pack\n"
+"^3https://github.com/MarioSMB/modpack\n"
+msgstr ""
+
+#: mod/common/gamemodes/arena/arena.qc:20
+msgid "^1Wait for your turn to join"
+msgstr ""
+
+#: mod/common/gamemodes/arena/arena.qh:6
+msgid "Arena"
+msgstr ""
+
+#: mod/common/gamemodes/arena/arena.qh:6
+msgid "Emerge victorious in a series of duels to win the match!"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/conquest.qc:494
+msgid "SCO^liberated"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/conquest.qc:495
+msgid "SCO^captured"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/conquest.qh:6
+msgid "Capture all the spawnpoint control points to win"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/conquest.qh:6
+msgid "Conquest"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/dotc.qh:11
+msgid "Defend your team's core while attacking the enemy core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/dotc.qh:11
+msgid "Defense of the Core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/artillery_gun.qc:9
+#, c-format
+msgid "^BG%s^K1 was exploded by a Cannon Artillery drone%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/artillery_rocket.qc:9
+#, c-format
+msgid "^BG%s^K1 was destroyed by a Rocket Artillery drone%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/drones.qc:3
+msgid "^K1You were gunned down by a drone!"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/drones.qc:4
+#, c-format
+msgid "^BG%s%s^K1 was turned into drone cannon fodder by ^BG%s^K1%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/light_tank.qc:9
+#, c-format
+msgid "^BG%s^K1 was blasted by a Light Tank drone%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/scout.qc:9
+#, c-format
+msgid "^BG%s^K1 was gunned down by a Scout drone%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/drones/tank.qc:9
+#, c-format
+msgid "^BG%s^K1 was obliterated by a Tank drone%s%s"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:1
+msgid "White core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:2
+msgid "Red core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:3
+msgid "Blue core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:4
+msgid "Yellow core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:5
+msgid "Pink core"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:7
+msgid "White factory"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:8
+msgid "Red factory"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:9
+msgid "Blue factory"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:10
+msgid "Yellow factory"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:11
+msgid "Pink factory"
+msgstr ""
+
+#: mod/common/gamemodes/dotc/waypoints.qh:13
+msgid "Squad"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:26
+#, c-format
+msgid "Point %s"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1447
+#: mod/common/gamemodes/snafu/snafu.qc:72
+msgid "SCO^rounds"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1448
+msgid "SCO^jbs"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1449
+msgid "SCO^freed"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1450
+msgid "SCO^def"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qh:6
+msgid "Jailbreak"
+msgstr ""
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qh:6
+msgid ""
+"Kill enemies to send them to jail, capture control points to release "
+"teammates"
+msgstr ""
+
+#: mod/common/gamemodes/runematch/runematch.qh:6
+msgid ""
+"Pick up and hold the runes, special items that give you points, a special "
+"power (rune) and a disadvantage (curse)"
+msgstr ""
+
+#: mod/common/gamemodes/runematch/runematch.qh:6
+msgid "Runematch"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/fatty.qc:17
+msgid "Fatty"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/princess2.qc:14
+msgid "Princess"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/snafu.qc:346
+msgid "The tadpole is ^1DEAD^7 you ^1LOSERS!"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/snafu.qc:400
+msgid ""
+"^1The tadpole is under attack!\n"
+"^2DEFEND^7 the tadpole!"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/snafu.qh:6
+msgid "SNAFU"
+msgstr ""
+
+#: mod/common/gamemodes/snafu/snafu.qh:6
+msgid "Situation normal..."
+msgstr ""
+
+#: mod/common/gamemodes/snafu/vprincess.qc:14
+msgid "Princess (verb based)"
+msgstr ""
+
+#: mod/common/gamemodes/vip/vip.qc:695
+msgid "SCO^scores"
+msgstr ""
+
+#: mod/common/gamemodes/vip/vip.qc:697
+msgid "SCO^vipkills"
+msgstr ""
+
+#: mod/common/gamemodes/vip/vip.qh:10
+msgid "A VIP is chosen on each team, when a VIP dies, the round is over"
+msgstr ""
+
+#: mod/common/gamemodes/vip/vip.qh:10 mod/common/gamemodes/vip/vip.qh:46
+msgid "VIP"
+msgstr ""
+
+#: mod/common/minigames/art.qc:1
+msgid "Pixel Art"
+msgstr ""
+
+#: mod/common/minigames/art.qc:366
+msgid ""
+"Press the space bar or right click to change your currently selected color"
+msgstr ""
+
+#: mod/common/minigames/boggle.qc:7
+msgid "Boggle"
+msgstr ""
+
+#: mod/common/minigames/boggle.qc:539
+msgid "Press \"Ready\" to begin"
+msgstr ""
+
+#: mod/common/minigames/boggle.qc:542
+msgid "Drag the mouse to select as many words as you can before time runs out!"
+msgstr ""
+
+#: mod/common/minigames/boggle.qc:762
+msgid "BOGGLE^Ready"
+msgstr ""
+
+#: mod/common/minigames/checkers.qc:1
+msgid "Checkers"
+msgstr ""
+
+#: mod/common/minigames/chess.qc:1
+msgid "Chess"
+msgstr ""
+
+#: mod/common/minigames/nim.qc:3
+msgid "Nim"
+msgstr ""
+
+#: mod/common/minigames/nim.qc:396
+msgid ""
+"You lost the game!\n"
+"Select \"^1Next Match^7\" on the menu for a rematch!"
+msgstr ""
+
+#: mod/common/minigames/nim.qc:397
+msgid ""
+"You win!\n"
+"Select \"^1Next Match^7\" on the menu to start a new match!"
+msgstr ""
+
+#: mod/common/minigames/nim.qc:411
+msgid "Try to take the last piece on the board"
+msgstr ""
+
+#: mod/common/minigames/sg.qc:2
+msgid "Space Guns"
+msgstr ""
+
+#: mod/common/minigames/sg.qc:634
+msgid "Use the arrow keys to move and hold the space bar to shoot"
+msgstr ""
+
+#: mod/common/minigames/snake.qc:2
+msgid "Snake"
+msgstr ""
+
+#: mod/common/minigames/snake.qc:753 mod/common/minigames/snake.qc:758
+msgid "You ran out of lives!"
+msgstr ""
+
+#: mod/common/minigames/snake.qc:761
+msgid "Press an arrow key to begin the game"
+msgstr ""
+
+#: mod/common/minigames/snake.qc:765
+msgid "Avoid the snake's body, collect the mice!"
+msgstr ""
+
+#: mod/common/minigames/snake.qc:767
+msgid "Avoid the screen edges and the snake's body, collect the mice!"
+msgstr ""
+
+#: mod/common/minigames/vr.qc:383
+msgid "No more valid moves, you win"
+msgstr ""
+
+#: mod/common/minigames/vr.qc:386
+msgid "Click on a piece next to the target"
+msgstr ""
+
+#: mod/common/monsters/creeper.qh:21
+msgid "Creeper"
+msgstr ""
+
+#: mod/common/monsters/troll.qh:21
+msgid "Troll"
+msgstr ""
+
+#: mod/common/notifications.qh:17
+#, c-format
+msgid "^BG%s^BG was captured by the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:18
+#, c-format
+msgid "^BG%s^BG was liberated from the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:20
+#, c-format
+msgid "^BG%s^BG has been destroyed"
+msgstr ""
+
+#: mod/common/notifications.qh:21
+#, c-format
+msgid "^BG%s^BG has been upgraded to level ^F4%s^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:23
+#, c-format
+msgid "^BG%s^BG captured %s"
+msgstr ""
+
+#: mod/common/notifications.qh:24
+#, c-format
+msgid "^BG%s^3 has broken free!"
+msgstr ""
+
+#: mod/common/notifications.qh:26
+#, c-format
+msgid "^BG%s^K1 lost ^BG%s^K1 and ^BG%s"
+msgstr ""
+
+#: mod/common/notifications.qh:27
+#, c-format
+msgid "^BG%s^BG picked up ^BG%s^BG and ^BG%s"
+msgstr ""
+
+#: mod/common/notifications.qh:29
+#, c-format
+msgid "^BG%s^K1 dropped the soul gem"
+msgstr ""
+
+#: mod/common/notifications.qh:30
+#, c-format
+msgid "^BG%s^K1 picked up the soul gem"
+msgstr ""
+
+#: mod/common/notifications.qh:33
+#, c-format
+msgid "^BG%s^BG has been captured by the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:34
+#, c-format
+msgid "^BGYour team has captured %s"
+msgstr ""
+
+#: mod/common/notifications.qh:35
+#, c-format
+msgid "^BG%s^BG has been liberated from the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:36
+#, c-format
+msgid "^BGYour team has liberated %s^BG from the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:37
+#, c-format
+msgid "^BG%s^BG has been lost to the ^TC^TT^BG team"
+msgstr ""
+
+#: mod/common/notifications.qh:39
+msgid ""
+"^K1Your core is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr ""
+
+#: mod/common/notifications.qh:40
+msgid ""
+"^K1Your factory is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr ""
+
+#: mod/common/notifications.qh:42
+msgid "^F2You gained some bonus score for defending the control point!"
+msgstr ""
+
+#: mod/common/notifications.qh:43
+msgid "^K1The ^TC^TT^K1 team is escaping!"
+msgstr ""
+
+#: mod/common/notifications.qh:44
+msgid "^F2You're free! Run away!"
+msgstr ""
+
+#: mod/common/notifications.qh:45
+msgid "^K3You bailed your teammates out of jail!"
+msgstr ""
+
+#: mod/common/notifications.qh:46
+msgid "^K1You're in jail, prisoner!"
+msgstr ""
+
+#: mod/common/notifications.qh:47
+msgid "^K1No sneaking into jail!"
+msgstr ""
+
+#: mod/common/notifications.qh:48
+msgid "^BGThis control point is not ready yet"
+msgstr ""
+
+#: mod/common/notifications.qh:49
+msgid "^BGYour team is already free"
+msgstr ""
+
+#: mod/common/notifications.qh:50
+msgid "^BGSomeone is already capturing this control point"
+msgstr ""
+
+#: mod/common/notifications.qh:51
+msgid "^BGYou can't capture your team's control points"
+msgstr ""
+
+#: mod/common/notifications.qh:53
+msgid ""
+"^BGThawing slowly now\n"
+"^BGJump to re-spawn at base instantly"
+msgstr ""
+
+#: mod/common/notifications.qh:54
+#, c-format
+msgid "^BGYou are now carrying %s^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:55
+#, c-format
+msgid "^BGYou are now riding %s^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:57
+#, c-format
+msgid ""
+"^K1Congratulations!\n"
+"^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n"
+"^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
+msgstr ""
+
+#: mod/common/notifications.qh:59
+msgid ""
+"^BGYou are the ^TC^TT^BG VIP!\n"
+"^F2Survive or your team will lose!"
+msgstr ""
+
+#: mod/common/notifications.qh:60
+msgid ""
+"^BGWaiting for VIPs...\n"
+"Pickup your Soul Gem to become a VIP"
+msgstr ""
+
+#: mod/common/notifications.qh:61
+msgid "^BGWaiting for an enemy VIP"
+msgstr ""
+
+#: mod/common/notifications.qh:62
+#, c-format
+msgid "^BG%s^F2 is no longer a VIP!"
+msgstr ""
+
+#: mod/common/notifications.qh:63
+#, c-format
+msgid "^BGToo many dropped gems! Dropping disabled for %s."
+msgstr ""
+
+#: mod/common/notifications.qh:64
+msgid "^F2You are no longer a VIP!"
+msgstr ""
+
+#: mod/common/notifications.qh:65
+#, c-format
+msgid "^BG%s^F2 is now a VIP!"
+msgstr ""
+
+#: mod/common/notifications.qh:66
+msgid "^F2You are now a VIP!"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:69
+msgid "^8(unknown track)"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:70
+#, c-format
+msgid "^1[RADIO] ^2Now playing ^3%s"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:72
+#, c-format
+msgid "^8 (%s)"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:75
+#, c-format
+msgid "^7 - %s in queue"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:77
+msgid " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)"
+msgstr ""
+
+#: mod/common/radio/sv_radio.qc:398
+msgid " ^8(autoqueue)"
+msgstr ""
+
+#: mod/common/special.qc:39
+msgid "^xFB0MMorning ^7Rescue"
+msgstr ""
+
+#: mod/common/weapons/assaultrifle.qh:62
+msgid "Assault Rifle"
+msgstr ""
+
+#: mod/common/weapons/assaultrifle.qh:107
+#, c-format
+msgid ""
+"^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"
+msgstr ""
+
+#: mod/common/weapons/assaultrifle.qh:108
+#, c-format
+msgid "^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"
+msgstr ""
+
+#: mod/common/weapons/chainsaw.qh:65
+msgid "Chainsaw"
+msgstr ""
+
+#: mod/common/weapons/chainsaw.qh:105
+#, c-format
+msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"
+msgstr ""
+
+#: mod/common/weapons/chainsaw.qh:106
+#, c-format
+msgid "^BG%s^K1 played with their Chainsaw%s%s"
+msgstr ""
+
+#: mod/common/weapons/flak.qh:97
+msgid "Flak Cannon"
+msgstr ""
+
+#: mod/common/weapons/flak.qh:152
+#, c-format
+msgid "^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"
+msgstr ""
+
+#: mod/common/weapons/flak.qh:153
+#, c-format
+msgid "^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"
+msgstr ""
+
+#: mod/common/weapons/flak.qh:154
+#, c-format
+msgid "^BG%s^K1 was shredded by their own Flak Cannon%s%s"
+msgstr ""
+
+#: mod/common/weapons/lightsabre.qh:73
+msgid "Lightsabre"
+msgstr ""
+
+#: mod/common/weapons/lightsabre.qh:107
+#, c-format
+msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
+msgstr ""
+
+#: mod/common/weapons/rpg7.qh:55
+msgid "RPG-7"
+msgstr ""
+
+#: mod/common/weapons/rpg7.qh:90
+#, c-format
+msgid "^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"
+msgstr ""
+
+#: mod/common/weapons/rpg7.qh:91
+#, c-format
+msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"
+msgstr ""
+
+#: mod/common/weapons/rpg7.qh:92
+#, c-format
+msgid "^BG%s^K1 blew themself up with their RPG-7%s%s"
+msgstr ""
+
+#: mod/common/weapons/uzi.qh:62
+msgid "Uzi"
+msgstr ""
+
+#: mod/common/weapons/uzi.qh:107
+#, c-format
+msgid "^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"
+msgstr ""
+
+#: mod/common/weapons/uzi.qh:108
+#, c-format
+msgid "^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"
+msgstr ""
