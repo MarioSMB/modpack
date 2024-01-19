@@ -196,9 +196,11 @@ REGISTER_STAT(SHIELD_TIME, float)
 #ifdef SVQC
 float shop_opentime;
 vector shop_weapons;
+int shop_passive;
 #endif
 REGISTER_STAT(SHOP_OPEN, float, shop_opentime)
 REGISTER_STAT(SHOP_WEAPONS, vectori, shop_weapons)
+REGISTER_STAT(SHOP_PASSIVE, int, shop_passive)
 
 #ifdef SVQC
 .int ammo_lava_nails;

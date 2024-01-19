@@ -24,6 +24,9 @@ int autocvar_sv_cheats;
 .bool reflectlightning;
 .bool reflectplasma;
 
+.float pulserifle_finished;
+.float fireball_finished;
+
 void spawn_touchspark(entity this, float damage);
 
 void SpawnDischarge(entity this, float dm);
@@ -77,3 +80,5 @@ void ProximityBomb(entity this);
 void BecomeExplosion(entity this);
 
 void spawn_touchblood(entity this, float damage, entity targ);
+
+void W_Fireball_Attack(entity this, entity targ);

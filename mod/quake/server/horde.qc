@@ -244,7 +244,7 @@ void PrecacheMonsters()
 	precache_model("progs/fireball.mdl");
 	precache_sound("items/powerup_mario.wav");
 	precache_sound("items/powerdown_mario.wav");
-	precache_sound("items/mario_attack.wav");
+	precache_sound("items/fireball_fire.wav");
 
 	// horn
 	precache_model("progs/horn.mdl");
@@ -1453,6 +1453,7 @@ bool SpawnWavePrep(entity this)
 	});
 
 	shop_setup_weapons();
+	shop_setup_passive();
 
 	this.wait = true;
 	return 1;
@@ -1887,16 +1888,6 @@ void horde_setup_powerup(entity this, int powerup)
 			this.classname = "item_artifact_super_damage";
 			break;
 		}
-		case POWERUP_FIREFLOWER:
-		{
-			this.noise = "items/powerup_mario.wav";
-			_setmodel(this, "progs/g_fflower.mdl");
-			this.netname = "Fire Flower";
-			this.powerups = POWERUP_FIREFLOWER;
-			this.fireflower_finished = 30;
-			this.classname = "item_powerup_fireflower";
-			break;
-		}
 		case POWERUP_HORN_OF_CONJURING:
 		{
 			this.noise = "hipitems/horn.wav";
@@ -1998,7 +1989,6 @@ void horde_spawn_powerup(entity this)
 		RandomSelection_Init();
 		RandomSelection_AddFloat(POWERUP_INVULNERABILITY, 1, 1);
 		RandomSelection_AddFloat(POWERUP_QUAD, 1, 1);
-		RandomSelection_AddFloat(POWERUP_FIREFLOWER, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_V_SPHERE, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_HORN_OF_CONJURING, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_FIELDGEN, 0.5, 1);

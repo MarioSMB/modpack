@@ -91,7 +91,13 @@ void shop_buyitem(entity this, string item)
 
 	if(item == "rifle")
 	{
-		if(this.frags < SHOP_COST_RIFLE)
+		if(shop_passive != IT_PULSERIFLE)
+		{
+			sprint(this, "Invalid item\n");
+			return;
+		}
+
+		if(this.frags < SHOP_COST_PASSIVE)
 		{
 			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
 			return;
@@ -103,9 +109,36 @@ void shop_buyitem(entity this, string item)
 			return;
 		}
 
-		this.frags -= SHOP_COST_RIFLE;
+		this.frags -= SHOP_COST_PASSIVE;
 		this.items |= IT_PULSERIFLE;
 		sprint(this, "Pulse Rifle Sidearm activated\n");
+		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
+		return;
+	}
+
+	if(item == "fireball")
+	{
+		if(shop_passive != IT_FIREBALL)
+		{
+			sprint(this, "Invalid item\n");
+			return;
+		}
+
+		if(this.frags < SHOP_COST_PASSIVE)
+		{
+			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
+			return;
+		}
+
+		if(this.items & IT_FIREBALL)
+		{
+			sprint(this, "You already have the Fireball\n");
+			return;
+		}
+
+		this.frags -= SHOP_COST_PASSIVE;
+		this.items |= IT_FIREBALL;
+		sprint(this, "Fireball Launcher activated\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		return;
 	}
@@ -200,6 +233,8 @@ void shop_setup_weapons()
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null,
 		{
+			if(shop_weapons & it.m_wepset)
+				continue;
 			if(it.spawnflags & WEP_FLAG_NOSTEAL)
 				continue; // exclude some weapons!
 			if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
@@ -212,6 +247,15 @@ void shop_setup_weapons()
 		});
 		shop_weapons |= RandomSelection_chosen_ent.m_wepset;
 	}
+}
+
+void shop_setup_passive()
+{
+	shop_passive = 0; // reset initially
+	if(random() > 0.5)
+		shop_passive = IT_PULSERIFLE;
+	else
+		shop_passive = IT_FIREBALL;
 }
 
 // This must be called in SV_ParseClientCommand

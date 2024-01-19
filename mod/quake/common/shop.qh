@@ -6,7 +6,7 @@ const int SHOP_COST_WEAPON = 50; // default price of weapons if none is set
 const int SHOP_COST_HEAL = 100;
 const int SHOP_COST_ARMOR = 100;
 const int SHOP_COST_AMMO = 100;
-const int SHOP_COST_RIFLE = 100;
+const int SHOP_COST_PASSIVE = 100;
 
-const int EXTRA_ITEMS = 4;
+const int SHOP_ITEM_MAX = 16;
 const int SHOP_WEAPON_COUNT = 3;

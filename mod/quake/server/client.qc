@@ -2207,9 +2207,7 @@ void PlayerPostThink(entity this)
 			W_WeaponFrame(this, weaponentity);
 		}
 
-		// TODO: split into a separate entity attached to the player?
-		if((this.items & IT_PULSERIFLE) && !StatusEffects_active(STATUSEFFECT_Invisibility, this))
-			W_PulseRifle(this);
+		W_PassiveAttacks(this);
 
 		if(this.cnt > 0 && !this.button0)
 		{

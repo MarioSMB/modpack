@@ -245,6 +245,29 @@ JUNK
 ====================================
 */
 
+entity W_PickNearbyTarget(entity this)
+{
+	float cur_dist = 0;
+	RandomSelection_Init();
+
+	FOREACH_ENTITY_RADIUS(this.origin, 500, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it))),
+	{
+		if(it.takedamage && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && !it.charmed && visible(this, it))
+		{
+			float head_dist = vlen2(it.origin - this.origin);
+			vector vec = normalize(it.origin - this.origin);
+			float dot = vec * v_forward;
+			if((!cur_dist || head_dist < cur_dist) && dot > 0.3)
+			{
+				RandomSelection_AddEnt(it, 1, 1);
+				cur_dist = head_dist;
+			}
+		}
+	});
+
+	return RandomSelection_chosen_ent;
+}
+
 vector VelocityForDamage(entity this, float dm);
 
 void PulseHome(entity this)
@@ -362,35 +385,39 @@ void W_FireRifleTarget(entity this, entity targ)
 
 void W_PulseRifle(entity this)
 {
-	entity selected = NULL;
-	if(this.search_time < time)
-	{
-		makevectors(this.v_angle);
-		float cur_dist = 0;
-		entity head = findradius(this.origin, 500);
-		while(head)
-		{
-			if(!(head.flags & FL_NOTARGET) && IS_MONSTER(head))
-			{
-				if(head.takedamage && head.health > 0 && !(head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && !head.charmed && visible(this, head))
-				{
-					float head_dist = vlen2(head.origin - this.origin);
-					vector vec = normalize(head.origin - this.origin);
-					float dot = vec * v_forward;
-					if((!cur_dist || head_dist < cur_dist) && dot > 0.3)
-					{
-						selected = head;
-						cur_dist = head_dist;
-					}
-				}
-			}
-			head = head.chain;
-		}
-		this.search_time = time + 1;
-	}
+	if(time < this.pulserifle_finished)
+		return;
+	this.pulserifle_finished = time + 1;
+	makevectors(this.v_angle);
 
+	entity selected = W_PickNearbyTarget(this);
 	if(selected)
 		W_FireRifleTarget(this, selected);
+}
+
+void W_Fireball(entity this)
+{
+	if(time < this.fireball_finished)
+		return;
+	this.fireball_finished = time + 2;
+	makevectors(this.v_angle);
+
+	entity selected = W_PickNearbyTarget(this);
+	if(selected)
+		W_Fireball_Attack(this, selected);
+}
+
+void W_PassiveAttacks(entity this)
+{
+	// passive attacks while invisible would trigger monsters!
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this))
+		return;
+
+	if(this.items & IT_PULSERIFLE)
+		W_PulseRifle(this);
+
+	if(this.items & IT_FIREBALL)
+		W_Fireball(this);
 }
 
 void ExtraBlood(entity targ, vector org, vector vel, float damage)
@@ -1262,7 +1289,7 @@ void NoclipCheat(entity this)
 	}
 }
 
-void W_FireFlower_Touch(entity this, entity toucher)
+void W_Fireball_Touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;
@@ -1284,7 +1311,7 @@ entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 	setorigin(proj, org);
 	proj.velocity = dir * pspeed;
 	proj.bouncefactor = 1;
-	settouch(proj, W_FireFlower_Touch);
+	settouch(proj, W_Fireball_Touch);
 	setmodel(proj, MDL_LAVABALL);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.solid = SOLID_CORPSE;
@@ -1298,11 +1325,12 @@ entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 	return proj;
 }
 
-void W_FireFlower_Attack(entity this)
+void W_Fireball_Attack(entity this, entity targ)
 {
-	_sound(this, CH_WEAPON_B, "items/mario_attack.wav", 1, ATTN_NORM);
-	traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_right * 15, MOVE_NOMONSTERS, this);
-	Launch_Fireball(this, trace_endpos, v_forward, 500);
+	_sound(this, CH_WEAPON_B, "items/fireball_fire.wav", 1, ATTN_NORM);
+	vector org = ((this.origin + (v_right * 16)) + '0 0 8');
+	vector dir = normalize(targ.origin - org);
+	Launch_Fireball(this, org, dir, 500);
 }
 
 /*
@@ -1407,16 +1435,6 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 				this.(weaponentity).weapon_think(this.(weaponentity));
 			}
 		}
-
-	if(!STAT(SKATING, this) && !(time < this.attack2_finished) && this.button3 && !(wep.spawnflags & WEP_FLAG_SECONDARY))
-	{
-		makevectors(this.v_angle); // calculate forward angle for velocity
-		if(StatusEffects_active(STATUSEFFECT_FireFlower, this))
-		{
-			W_FireFlower_Attack(this);
-			this.attack2_finished = time + 0.75;
-		}
-	}
 
 	// minor stub for Xonotic's weapon entity model detection
 	entity wepent = this.(weaponentity);

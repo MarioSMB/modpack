@@ -5,3 +5,5 @@ bool sv_shop_command(entity this, string cmd, float argc);
 void shopkeep_spawn(entity this);
 
 void shop_setup_weapons();
+
+void shop_setup_passive();

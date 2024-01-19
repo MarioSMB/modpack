@@ -18,8 +18,7 @@ const int IT_PLASMA_AMMO         = BIT(11);
 const int IT_MULTI_ROCKETS       = BIT(12);
 
 const int IT_PULSERIFLE          = BIT(13);
-const int IT_PULSEPOWER1         = BIT(14);
-const int IT_PULSEPOWER2         = BIT(15);
+const int IT_FIREBALL            = BIT(14);
 
 
 const int POWERUP_INVISIBILITY         = BIT(0);
@@ -37,9 +36,7 @@ const int POWERUP_V_SPHERE             = BIT(9);
 
 const int POWERUP_FIELDGEN             = BIT(10);
 
-const int POWERUP_FIREFLOWER           = BIT(11);
-
-const int POWERUP_JUMPBOOTS            = BIT(12);
-const int POWERUP_SHARPSHOOTER         = BIT(13);
+const int POWERUP_JUMPBOOTS            = BIT(11);
+const int POWERUP_SHARPSHOOTER         = BIT(12);
 
 const int POWERUP_COUNT                = 14;

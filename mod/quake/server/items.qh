@@ -13,8 +13,6 @@ bool autocvar_sv_quake_instance_backpacks = true;
 .float wetsuit_finished;
 .float empathy_finished;
 
-.float fireflower_finished;
-
 .float jboots_finished;
 
 .float sharp_finished;

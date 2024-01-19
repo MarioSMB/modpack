@@ -4,7 +4,6 @@
 #include "burning.qh"
 #include "empathy_shields.qh"
 #include "fieldgen.qh"
-#include "fire_flower.qh"
 #include "invisibility.qh"
 #include "invulnerability.qh"
 #include "jump_boots.qh"
