@@ -12,7 +12,6 @@ void shop_close();
 
 .float shopkeep_delay;
 
-float selected_entity_index;
 int shop_hovered_index;
 int shop_item_count;
 
@@ -120,8 +119,14 @@ bool ShopItem_Owned(int index)
 
 void shop_buyselected()
 {
-	LOG_DEBUG("Buying ", ShopItem_Name(selected_entity_index));
-	localcmd(sprintf("cmd shop %s\n", ShopItem_Name(selected_entity_index)));
+	if(shop_hovered_index == -1)
+	{
+		shop_close();
+		return;
+	}
+
+	LOG_DEBUG("Buying ", ShopItem_Name(shop_hovered_index));
+	localcmd(sprintf("cmd shop %s\n", ShopItem_Name(shop_hovered_index)));
 	if(csqcplayer) // just play it from the player so we don't have to look for the gremlin!
 		_sound(csqcplayer, CH_TRIGGER_SINGLE, "grem/sight1.wav", VOL_BASE, ATTEN_NORM);
 	shop_close();
@@ -178,7 +183,6 @@ void entity_list(string id, vector pos, vector size)
 			sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.1, 0);
 			if(sui_is_clicked(iid))
 			{
-				selected_entity_index = index;
 				shop_buyselected();
 				break;
 			}
@@ -247,7 +251,6 @@ void cl_shop_draw()
 
 void shop_open()
 {
-	selected_entity_index = 0;
 	shop_hovered_index = -1;
 	shop_item_count = 0;
 	cursor_active |= GUI_OPEN_SHOP;
@@ -256,7 +259,6 @@ void shop_open()
 
 void shop_close()
 {
-	selected_entity_index = 0;
 	shop_hovered_index = -1;
 	shop_item_count = 0;
 	cursor_active &= ~GUI_OPEN_SHOP;
@@ -360,7 +362,6 @@ bool cl_shop_input_event(float evtype, float scanx, float chary, float devid)
 			{
 				if(shop_hovered_index == -1)
 					return true;
-				selected_entity_index = shop_hovered_index;
 				shop_buyselected();
 				return true;
 			}
