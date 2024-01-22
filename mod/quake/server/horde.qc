@@ -121,7 +121,7 @@ entity HordeFindTarget()
 float horde_failed_time = 0;
 void horde_StartFrame()
 {
-	if(!horde_ent || horde_ent.wait || time < shop_opentime)
+	if(!horde_ent || !horde_ent.active)
 		return;
 
 	int alivecount = 0, playercount = 0;
@@ -1533,6 +1533,7 @@ void Countdown4(entity this)
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		//centerprint_all("Fight!");
+	this.active = true;
 	SpawnWave2(this);
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
 	shop_opentime = 0;
@@ -1639,7 +1640,8 @@ void Wavecheck(entity this)
 
 		horde_failed_time = 0; // reset the failed timer too
 		this.nextthink = time + 20; // in case the players are slow to find the key
-		shop_opentime = this.nextthink; // give players some time to shop around too!
+		this.active = false;
+		shop_opentime = this.nextthink + 4; // give players some time to shop around too! buffer is for the countdown to the new round
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SHOP_OPEN);
 	}
 	else
