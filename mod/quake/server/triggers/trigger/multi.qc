@@ -1,5 +1,7 @@
 #ifdef SVQC
 
+.bool trigger_multiple_copperhack;
+
 // the wait time has passed, so set back up for another activation
 void multi_wait(entity this)
 {
@@ -149,7 +151,10 @@ spawnfunc(trigger_multiple)
 		this.wait = 0.2;
 	this.use = multi_use;
 
-	InitTrigger(this);
+	if(this.trigger_multiple_copperhack)
+		InitTriggerBounds(this);
+	else
+		InitTrigger(this);
 
 	if(this.health)
 	{
@@ -184,6 +189,54 @@ set "message" to text string
 spawnfunc(trigger_once)
 {
 	this.wait = -1;
+	spawnfunc_trigger_multiple(this);
+}
+
+/*QUAKED trigger_multiple_box (.5 .5 0) (-8 -8 -8) (8 8 8) ? ? TRIGGER_FIRST MONSTERS ALL_CLIENTS
+Trigger multiple. Variable sized repeatable trigger. Must be targeted at one or more entities.
+
+Quoth2-style edict-saving bounding box trigger: define size with 'size', and the trigger volume will be that size centered on the trigger's origin.
+
+Flags:
+"all_clients" will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+"trigger_first" won't be touchable until triggered once by something else
+"monsters" monsters will fire this trigger (and count as activator, so be careful)
+
+Keys:
+"angle" the trigger will only fire when someone is facing the direction of the angle, use "360" for angle 0.
+"distance" dot product result to compare "angle" against. 0 is 90 degrees off (default), 0.7 is 45 degrees.
+"delay" delay before firing (after trigger)
+"health" button must be killed to activate
+"message" message to display when triggered
+"sounds"
+    1 = secret
+    2 = beep beep
+	3 = large switch
+	4 = it is a mysteryyy
+	-1 = silent
+"noise"	choose your own .wav
+"target"  entity to trigger (required)
+"targetname"  entity name
+"wait" delay between triggerings (default: 0.2) (NOTE: wait -1 with all_clients will not work like you think.)
+*/
+/*FGD
+@PointClass base(TriggerMulti, Bounds) = trigger_multiple_box : "Trigger multiple. Variable sized repeatable trigger.
+Must be targeted at one or more entities.
+
+Quoth2-style edict-saving bounding box trigger: define size with 'size', and the trigger volume will be that size centered on the trigger's origin.
+
+Spawnflags:
+'No Touch': only triggered by other entities, not by touching (legacy; just use a trigger relay)
+'All Clients': will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+'Trigger First': won't be touchable until triggered once by something else
+'Monsters Will Activate': monsters will fire this trigger (and count as activator, so be careful)"
+[
+	wait(string) : "Retriggering Interval" : "0.2"
+]
+*/
+spawnfunc(trigger_multiple_box)
+{
+	this.trigger_multiple_copperhack = true; // workaround for not needing to overcomplicate trigger_multiple
 	spawnfunc_trigger_multiple(this);
 }
 

@@ -28,7 +28,7 @@ match(string)this.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets(entity this, entity actor, entity trigger)
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptargets, bool nomessage)
 {
 //
 // check for a delay
@@ -40,7 +40,8 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
 		t.enemy = actor;
-		t.message = this.message;
+		if(!nomessage)
+			t.message = this.message;
 		t.killtarget = this.killtarget;
 		t.target = this.target;
 		if(MP_MG)
@@ -55,7 +56,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 //
 // print the message
 //
-	if(IS_PLAYER(actor) && this.message != "")
+	if(!nomessage && IS_PLAYER(actor) && this.message != "")
 	if(IS_REAL_CLIENT(actor))
 	{
 		centerprint(actor, this.message);
@@ -79,15 +80,38 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 // fire targets
 //
 
-	s = this.target;
-	if(s && s != "")
+	for(int i = 0; i < 4; ++i)
 	{
-		for(entity t = NULL; (t = find(t, targetname, s)); )
+		if(skiptargets & BIT(i + 1))
+			continue;
+		switch(i)
 		{
-			if(t.use)
-				t.use(t, actor, this);
+			default:
+			case 0: s = this.target; break;
+			case 1: s = this.target2; break;
+			case 2: s = this.target3; break;
+			case 3: s = this.target4; break;
+		}
+		if (s != "")
+		{
+			for(entity t = NULL; (t = find(t, targetname, s)); )
+			{
+				if(t.use)
+					t.use(t, actor, this);
+			}
 		}
 	}
+}
+
+void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, 0, false); }
+void SUB_UseTargetsSilent(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, 0, true); }
+
+bool SUB_UseTargets_CopperAlt(entity this, entity actor, entity trigger, int skiptargets)
+{
+	if(!(this.spawnflags & SPAWN_ALT_TARG))
+		return false;
+	SUB_UseTargets_Ex(this, actor, trigger, skiptargets, false);
+	return true;
 }
 
 /*

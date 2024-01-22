@@ -4,6 +4,7 @@
 #include "triggers.qc"
 #include "subs.qc"
 #include "models.qc"
+#include "lock.qc"
 //#include "triggers.qc"
 //#include "platforms.qc"
 #include "teleporters.qc"

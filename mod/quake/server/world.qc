@@ -197,6 +197,60 @@ PRECACHE(Impel)
 	precache_sound("items/sharp.wav");
 }
 
+// copper-specific lighting hack
+string light_str(float f)
+{
+	float bright = floor(f * 12 + 0.5);
+	
+	if(bright <= 0 ) return "a";
+	if(bright >= 12) return "m";
+
+	if(bright == 1 ) return "b";
+	if(bright == 2 ) return "c";
+	if(bright == 3 ) return "d";
+	if(bright == 4 ) return "e";
+	if(bright == 5 ) return "f";
+	if(bright == 6 ) return "g";
+	if(bright == 7 ) return "h";
+	if(bright == 8 ) return "i";
+	if(bright == 9 ) return "j";
+	if(bright == 10) return "k";
+	if(bright == 11) return "l";
+	return "a";
+}
+
+.float alpha2;
+.float switchshadstyle;
+void bmodel_lightstyle(entity b, float opacity)
+{
+	float a = (b.alpha) ? b.alpha : 1;
+
+	// 'alpha' could be set by mapper or target_fade, 0 is invisible
+	//		1 blocks all light, 0 admits all
+	// 'opacity' is like positional alpha: is the bmodel visible or hidden? how far open is the door? etc
+	//		1 blocks all light, 0 admits all
+	
+	// stash for future changes in alpha
+	if(opacity == 0)
+		b.alpha2 = -1;
+	else
+		b.alpha2 = opacity;
+	
+	if(b.customflags & CFL_INVLIGHT)
+		opacity = 1 - opacity;
+	
+	// 0 for either will override the other and admit light, so we multiply
+	// finally, invert so 0 (brightest) becomes a high value
+	float f = 1 - opacity * a;
+
+	string l = light_str(f);
+
+	if(b.style)
+		lightstyle(b.style, l);
+	if(b.switchshadstyle)
+		lightstyle(b.switchshadstyle, l);
+}
+
 entity lastspawn;
 
 void main() { /* unused */ }
@@ -1211,9 +1265,46 @@ void remove_except_protected(entity e)
 	builtin_remove(e);
 }
 
+// copper junk
+.float version;
+const int SPAWN_COOPONLY = 4096;
+const int SPAWN_NOTCOOP = 8192;
+
+void Copper_OnEntityPrespawn(entity this)
+{
+	// copper-specific hack
+	if(this.version && this.version <= 1.30)
+	{
+		delete(this);
+		return;
+	}
+	if(((this.spawnflags & SPAWN_NOTCOOP) && coop) || ((this.spawnflags & SPAWN_COOPONLY) && !coop))
+	{
+		delete(this);
+		return;
+	}
+
+	// support impulse triggering on anything
+	// shouldn't really be here but it has to get called on every entity anyway
+	if(this.impulse)
+	{
+		if(this.impulse >= 20 && this.impulse < 40)
+		{
+			entity t = spawn();
+			t.owner = this;
+			t.impulse = this.impulse;
+			t.classname = "tg_imp";
+			this.impulse = 0;
+		}
+	}
+}
+
 void SV_OnEntityPreSpawnFunction(entity this)
 {
 	set_movetype(this, this.movetype);
+
+	// to be called last as it removes entities
+	Copper_OnEntityPrespawn(this);
 }
 
 int nJoinAllowed(entity this, entity ignore);
@@ -1760,6 +1851,8 @@ void StartFrame()
 	RunFrameTickEntities(serverframetime);
 
 	status_effects_SV_StartFrame();
+
+	horde_StartFrame();
 
 	FixPhysics();
 

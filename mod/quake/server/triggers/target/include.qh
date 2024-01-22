@@ -1,2 +1,4 @@
 #pragma once
 
+#include "kill.qh"
+#include "state.qh"

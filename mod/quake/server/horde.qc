@@ -118,6 +118,34 @@ entity HordeFindTarget()
 	return RandomSelection_chosen_ent;
 }
 
+float horde_failed_time = 0;
+void horde_StartFrame()
+{
+	if(!horde_ent || horde_ent.wait || time < shop_opentime)
+		return;
+
+	int alivecount = 0, playercount = 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		playercount += 1;
+		if(it.health > 0)
+			alivecount += 1;
+	});
+
+	if(horde_failed_time && alivecount <= 0)
+	{
+		if(time > horde_failed_time)
+			horde_respawn_all();
+		return;
+	}
+
+	// if all players are dead, activate a timer until the match ends
+	if(alivecount <= 0 && playercount > 0)
+		horde_failed_time = time + 10;
+	else
+		horde_failed_time = 0; // reset it otherwise!
+}
+
 
 /*QUAKED info_monster_start START_OFF
 if targeted, it will toggle between on or off, like lights 
@@ -1528,7 +1556,12 @@ void Countdown2(entity this)
 void Countdown(entity this)
 {
 	if(!SpawnWavePrep(this))
+	{
+		// retry
+		setthink(this, Countdown);
+		this.nextthink = time + 4;
 		return;
+	}
 	
 	//centerprint_all("3");
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, 3, this.wave);
@@ -1604,6 +1637,7 @@ void Wavecheck(entity this)
 		if(!key_spawned) // key was already spawned, don't spawn another yet!
 			GetKey(this);
 
+		horde_failed_time = 0; // reset the failed timer too
 		this.nextthink = time + 20; // in case the players are slow to find the key
 		shop_opentime = this.nextthink; // give players some time to shop around too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SHOP_OPEN);

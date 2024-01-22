@@ -262,6 +262,44 @@ void SUB_CalcMoveDone(entity this)
 		this.think1(this);
 }
 
+.float lifetime_finished;
+void shadowmonitor_think(entity this)
+{
+	entity o = this.owner;
+	
+	float frac = vlen(o.origin - this.pos2) / vlen(this.pos2 - this.pos1);
+	if(this.customflags & CFL_INVLIGHT)
+		frac = 1 - frac;
+	bmodel_lightstyle(o, frac);
+	
+	this.nextthink = time + min(0.05, (o.nextthink - o.ltime));
+
+	// remove last so we don't miss a final eval
+	if(this.nextthink <= time || o.ltime > this.lifetime_finished || this.state != o.state)
+		delete(this);
+}
+
+// to avoid damaging existing movement logic with extra thinks, we wrap
+// it and create a helper entity to do this instead
+void SUB_CalcMoveLight(entity this, vector tstart, vector tdest, float tspeed, void(entity) endfn, bool invert)
+{
+	if(this.style || this.switchshadstyle)
+	{
+		entity mon = spawn();
+		mon.classname = "shadowmonitor";
+		mon.owner = this;
+		mon.state = this.state;	// removes this if these stop matching
+		mon.lifetime_finished = this.ltime + vlen(tdest - this.origin) / tspeed;
+		setthink(mon, shadowmonitor_think);
+		mon.nextthink = time;
+		mon.pos1 = tstart;
+		mon.pos2 = tdest;
+		if(invert)
+			mon.customflags |= CFL_INVLIGHT;
+	}	
+	SUB_CalcMove(this, tdest, TSPEED_LINEAR, tspeed, endfn);
+}
+
 
 /*
 =============
@@ -473,6 +511,62 @@ void InitTrigger(entity this)
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
+}
+
+/*
+================
+InitTriggerBounds
+quoth2-style edict-saving bounding box triggers
+================
+*/
+.void(entity, entity, entity) trigger_init_use;
+void trigger_reactivate(entity this, entity actor, entity trigger)
+{
+	// TheSolipsist fix: when the trigger has health, make it solid so it can be shot
+	if(this.max_health)
+		this.solid = SOLID_BBOX;
+	else
+		this.solid = SOLID_TRIGGER;
+	this.use = this.trigger_init_use;
+	force_retouch = 2;		// make sure even still objects get hit
+}
+
+void InitTriggerBounds(entity this)
+{
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+
+	// do this first so setsize links us correctly
+	if(!this.health)
+		this.solid = SOLID_TRIGGER;
+	setorigin (this, this.origin);
+	
+	if(this.size != '0 0 0')
+		setsize(this, this.size * -0.5, this.size * 0.5);
+	else if(this.mangle != '0 0 0')
+	{
+		setsize(this, this.mangle * -0.5, this.mangle * 0.5);
+		this.mangle = '0 0 0';	// so setMoveDir doesn't think our mangle is our angle
+	}
+	
+	if(this.angles != '0 0 0')
+		SetMovedir(this);
+	
+	if(this.distance > 1)
+		this.distance = cos(this.distance / 2);
+
+	if(this.spawnflags & SPAWNFLAG_TRIGGER_FIRST)
+	{
+		this.solid = SOLID_NOT;
+		this.trigger_init_use = this.use;
+		this.use = trigger_reactivate;
+	}
+		
+	set_movetype(this, MOVETYPE_NONE);
+//	particle(this.origin - this.mangle, '0 0 0', 232, 4);
+//	particle(this.origin + this.mangle, '0 0 0', 232, 4);
+//	this.modelindex = 0;
+//	this.model = string_null;
 }
 
 bool InitMovingBrushTrigger(entity this)

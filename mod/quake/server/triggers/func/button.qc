@@ -13,22 +13,32 @@ void button_wait(entity this)
 	this.state = STATE_TOP;
 	this.nextthink = this.ltime + this.wait;
 	setthink(this, button_return);
-	SUB_UseTargets(this, this.enemy, NULL);
 	this.frame = 1;			// use alternate textures
+	if(this.customflags & CFL_LOCKED)
+		return;
+	if(!SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(3) | BIT(4)))
+		SUB_UseTargets(this, this.enemy, NULL);
 }
 
 void button_done(entity this)
 {
+	this.frame = 0; // use normal textures
 	this.state = STATE_BOTTOM;
+	if(this.customflags & CFL_LOCKED)
+		return;
+	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 }
 
 void button_return(entity this)
 {
+	if(this.customflags & CFL_LOCKED)
+		return;
 	this.state = STATE_DOWN;
 	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
 	this.frame = 0;			// use normal textures
 	if(this.health)
 		this.takedamage = DAMAGE_YES;	// can be shot again
+	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(4));
 }
 
 void button_blocked(entity this, entity blocker)
@@ -38,6 +48,8 @@ void button_blocked(entity this, entity blocker)
 
 void button_fire(entity this)
 {
+	if(this.customflags & CFL_LOCKED)
+		return;
 	if(this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
@@ -50,19 +62,27 @@ void button_fire(entity this)
 
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
+	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(2) | BIT(3) | BIT(4));
+
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, button_wait);
 }
 
 void button_use(entity this, entity actor, entity trigger)
 {
+	if(this.customflags & CFL_LOCKED)
+		return;
+	if(this.state == STATE_UP || this.state == STATE_DOWN)
+		return;
 	this.enemy = actor;
 	button_fire(this);
 }
 
 void button_touch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher))
+	if(this.customflags & CFL_LOCKED)
+		return;
+	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
 	if(MP_MG && this.items)
 	{
@@ -111,10 +131,41 @@ void button_touch(entity this, entity toucher)
 
 void button_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(this.customflags & CFL_LOCKED)
+		return;
 	this.enemy = attacker;
 	this.health = this.max_health;
 	this.takedamage = DAMAGE_NO;	// wil be reset upon return
 	button_fire(this);
+}
+
+void button_done_unlock(entity this)
+{
+	button_done(this);
+	this.customflags &= ~CFL_LOCKED;
+}
+
+void button_lock(entity this, bool unlock)
+{
+	if(unlock)
+	{
+		if(this.max_health)
+		{
+			this.takedamage = DAMAGE_YES;
+			this.health = this.max_health;
+		}
+		this.frame = 0; // use normal textures
+		this.state = STATE_DOWN;
+		SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, button_done_unlock);
+	}
+	else
+	{
+		this.customflags |= CFL_LOCKED;
+		if(this.max_health)
+			this.takedamage = DAMAGE_NO;
+		this.state = STATE_UP;
+		SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, button_wait);
+	}
 }
 
 
@@ -133,6 +184,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 2) metallic click
 3) in-out
 */
+void func_button_init(entity this, entity actor, entity trigger);
 spawnfunc(func_button)
 {
 	vector oldmovedir = this.movedir;
@@ -147,18 +199,6 @@ spawnfunc(func_button)
 		case 2: this.noise = "buttons/switch02.wav"; break;
 		case 3: this.noise = "buttons/switch04.wav"; break;
 	}
-
-	setblocked(this, button_blocked);
-	this.use = button_use;
-
-	if(this.health)
-	{
-		this.max_health = this.health;
-		this.th_die = button_killed;
-		this.takedamage = DAMAGE_YES;
-	}
-	else
-		settouch(this, button_touch);
 
 	if(!this.speed)
 		this.speed = 40;
@@ -219,6 +259,30 @@ spawnfunc(func_button)
 		this.pos1 = this.origin;
 		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 	}
+
+	if(this.spawnflags & 128)
+		this.use = func_button_init;
+	else
+		func_button_init(this, NULL, NULL);
+}
+
+void func_button_init(entity this, entity actor, entity trigger)
+{
+	setblocked(this, button_blocked);
+	this.use = button_use;
+	this.lock = button_lock;
+
+	if(this.health)
+	{
+		this.max_health = this.health;
+		this.th_die = button_killed;
+		this.takedamage = DAMAGE_YES;
+	}
+	else
+		settouch(this, button_touch);
+
+	if(this.customflags & CFL_LOCKED)
+		button_lock(this, false);
 }
 
 #endif

@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef SVQC
+// CFL_LOCKED defined elsewhere
+.void(entity this, bool unlock) lock;
+#endif

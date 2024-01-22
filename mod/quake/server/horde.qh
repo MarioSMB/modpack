@@ -56,6 +56,8 @@ void remote_wavecheck(entity this); // trigger wavecheck from outside the base e
 .string category; // to do find operations by type
 string CATEGORY_MONSTER = "monster";
 
+void horde_StartFrame();
+
 string HordeRandomMap();
 
 void horde_key_give_all(int key_item);

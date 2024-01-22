@@ -232,7 +232,7 @@ void Monster_Appear(entity this, entity actor, entity trigger)
 
 bool Monster_Appear_Check(entity this, Monster monster_id)
 {
-	if(!(monster_id.spawnflags & MON_FLAG_APPEAR))
+	if(!(monster_id.spawnflags & MON_FLAG_APPEAR) && !(this.spawnflags & SPAWN_TRIGGERED))
 		return false;
 	if(this.targetname == "" || !this.targetname)
 		return false;

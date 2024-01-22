@@ -1262,13 +1262,6 @@ void ObserverThink(entity this)
 			}
 		}
 	}
-
-	if(MP_MG && horde_ent && !horde_ent.wait && time > shop_opentime)
-	{
-		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
-			horde_respawn_all();
-		return;
-	}
 }
 
 void RunPostPutClientInServer(entity this) 
@@ -1900,11 +1893,7 @@ void PlayerDeathThink(entity this)
 	this.button5 = 0;
 	// Yoder Sept24, 2021
 	if(MP_MG && horde_ent && !horde_ent.wait && time > shop_opentime)
-	{
-		if((coop && HordeGetPlayersAlive() <= 0) || !coop)
-			horde_respawn_all();
 		return;
-	}
 	respawn(this);
 }
 

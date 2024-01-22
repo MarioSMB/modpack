@@ -3,6 +3,7 @@
 // some required common stuff
 #include "triggers.qh"
 #include "subs.qh"
+#include "lock.qh"
 //#include "platforms.qh"
 //#include "teleporters.qh"
 

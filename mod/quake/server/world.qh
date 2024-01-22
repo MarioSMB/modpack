@@ -28,6 +28,27 @@ bool gameover;
 
 .bool nightmare_checked;
 
+// copper junk
+// mostly unused unless necessary for compat
+.int customflags;
+const int CFL_LEFTY = 1;	// used by slidemovers (scrags) to alternate strafe direction
+const int CFL_RETURNED = 1;	// zombie has already respawned in nightmare
+const int CFL_INVLIGHT = 1;	// for backwards bmover light fade behavior
+const int CFL_ZAPPED = 2;
+const int CFL_AXEHITME = 4;
+const int CFL_LOCKED = 16;	// special state-independent deactivation
+const int CFL_INPAIN = 16;	// zombie should knockdown soon
+const int CFL_KNOCKEDDOWN = 32;	// zombie is down
+const int CFL_PLUNGE = 64;	// has fallen in a death pit
+const int CFL_SPAWNER = 128;	// is a generator of monsters
+const int CFL_UNDYING = 256;	// god mode minus one point (player)
+const int CFL_LIQUID_IMMUNE = 512;	// monster spawned touching slime or lava, so assume designer wants it immune to damage
+const int CFL_MELEEONLY = 1024;	// has no ranged attack (monster)
+const int CFL_LIMBO = 2048;	// waiting in teleport limbo (coop, player)
+const int CFL_OMNIVISION = 4096;	// eyes in back of head
+
+void bmodel_lightstyle(entity b, float opacity);
+
 // impel stuff
 bool angry_monsters;
 bool corpse_removal;

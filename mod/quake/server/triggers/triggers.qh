@@ -3,6 +3,8 @@
 #ifdef SVQC
 const int SPAWNFLAG_SILENT = BIT(4);
 
+const int SPAWN_ALT_TARG = 16384;	// fire the four target keys at different times
+
 const int START_OFF = BIT(0);
 
 .float save_nextthink;
@@ -76,9 +78,13 @@ const int ACTIVE_TOGGLE = 3;
 .float attack_finished;
 .float attack2_finished;
 
+.void(entity this, bool unlock) lock;
+
 bool visible(entity this, entity targ);
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
+
+bool SUB_UseTargets_CopperAlt(entity this, entity actor, entity trigger, int skiptargets);
 
 void SUB_SwitchTargets(.string field, string oldtarget, string newtarget);
 

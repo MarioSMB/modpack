@@ -13,6 +13,8 @@ const int MONSTER_SPAWNED_ANGRY = 8;
 const int MONSTER_SPAWNED_TFOG = 16;
 const int MONSTER_WAITWALK = 4096;
 
+const int SPAWN_TRIGGERED = 16; // copper junk
+
 .float waitmin, waitmax;
 
 .float enemy_reveal_time;
