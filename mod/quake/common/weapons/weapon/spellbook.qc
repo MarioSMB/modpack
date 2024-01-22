@@ -76,23 +76,6 @@ PRECACHE(Spellbook)
 	precache_sound("weapons/page_flip.wav");
 }
 
-void Regenerate_Mana(entity this)
-{
-	if(this.mana_regen_time < time && STAT(MANA, this) < 100 && time > this.mana_regen_pause)
-	{
-		STAT(MANA, this) += 3;
-		
-		if(STAT(MANA, this) > 100)
-			STAT(MANA, this) = 100;
-
-		float regen_rate = MANA_REGEN_RATE;
-		if(time < this.mana_regen_boost)
-			regen_rate *= 0.5;
-	
-		this.mana_regen_time = time + regen_rate;
-	}
-}
-
 entity rune_summon(entity this, vector spot, Model rune_model, entity eff, int spell_type)
 {
 	makevectors(this.v_angle);

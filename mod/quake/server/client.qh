@@ -99,6 +99,10 @@ void player_pain(entity this, entity attacker, float damage, int deathtype);
 void player_stand1(entity this);
 void spawn_tfog(vector org);
 
+void Regenerate_Health(entity this);
+
+void Regenerate_Mana(entity this);
+
 void centerprint_all(string s);
 
 void NextLevel();

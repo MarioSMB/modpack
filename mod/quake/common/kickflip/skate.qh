@@ -36,8 +36,6 @@ void push_off_anim(entity this);
 
 void skate_walkframes(entity this);
 
-void Regenerate_Health(entity this);
-
 void water_die(entity this);
 
 void skate_land(entity this);

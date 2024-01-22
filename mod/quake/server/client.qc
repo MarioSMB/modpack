@@ -2102,6 +2102,55 @@ void CheckHealthRot(entity this)
 	this.healthrot_nextcheck = 0;
 }
 
+void Regenerate_Health(entity this)
+{
+	//if(!STAT(SKATING, this))
+		//return;
+	if(StatusEffects_active(STATUSEFFECT_Poisoned, this))
+		return; // no regen while poisoned!!
+
+	float regen_rate = 1;
+	float regen_stable = 100;
+	float regen_max = 250;
+	if(this.m_champion)
+	{
+		regen_rate *= this.m_champion.qcc_health_regen_rate;
+		regen_stable *= this.m_champion.qcc_health_regen_stable;
+		regen_max *= this.m_champion.qcc_health_regen_max;
+	}
+
+	if(this.health_regen_time < time && this.health < regen_stable)
+	{
+		float old_health = this.health;
+		this.health += 1;
+		
+		if(this.health > regen_max)
+			this.health = regen_max;
+		
+		if(old_health <= regen_stable && this.health > regen_stable)
+			this.health = regen_stable;
+	
+		this.health_regen_time = time + regen_rate;
+	}
+}
+
+void Regenerate_Mana(entity this)
+{
+	if(this.mana_regen_time < time && STAT(MANA, this) < 100 && time > this.mana_regen_pause)
+	{
+		STAT(MANA, this) += 3;
+		
+		if(STAT(MANA, this) > 100)
+			STAT(MANA, this) = 100;
+
+		float regen_rate = MANA_REGEN_RATE;
+		if(time < this.mana_regen_boost)
+			regen_rate *= 0.5;
+	
+		this.mana_regen_time = time + regen_rate;
+	}
+}
+
 /*
 ================
 PlayerPostThink
@@ -2110,7 +2159,6 @@ Called every frame after physics are run
 ================
 */
 void xpackEnding(entity this);
-void Regenerate_Mana(entity this);
 .bool dualwielding_prev;
 void PlayerPostThink(entity this)
 {

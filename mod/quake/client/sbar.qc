@@ -950,9 +950,9 @@ void Sbar_DrawInventory()
 	// TODO: cleanup this mess
 	// keys
 	if(myitems & IT_KEY1)
-		Sbar_DrawPic(vec2(192 + 1 * 16, -16), "gfx/quake/sb_key1");
+		Sbar_DrawPic(vec2(192 + 3 * 16, -16), "gfx/quake/sb_key1");
 	if(myitems & IT_KEY2)
-		Sbar_DrawPic(vec2(192 + 2 * 16, -16), "gfx/quake/sb_key2");
+		Sbar_DrawPic(vec2(192 + 4 * 16, -16), "gfx/quake/sb_key2");
 #if 0
 	// base powerups
 	for(int j = 2; j < 6; ++j)
@@ -970,10 +970,10 @@ void Sbar_DrawInventory()
 	{
 		if(StatusEffects_active(it, g_statuseffects) && it.m_icon && it.m_icon != "")
 		{
-			Sbar_DrawPic(vec2(192 + (3 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
+			Sbar_DrawPic(vec2(192 + (5 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
 			pcount += 1;
 		}
-		if(pcount >= 3)
+		if(pcount >= 1)
 			break; // we have limited HUD space unfortunately!
 	});
 
