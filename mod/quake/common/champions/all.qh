@@ -39,7 +39,7 @@ REGISTER_REGISTRY(Champion)
 REGISTRY_SORT(Champion)
 REGISTRY_CHECK(Champion)
 
-STATIC_INIT(Champion) { FOREACH(Champion, true, it.m_id = i); }
+STATIC_INIT(Champion) { FOREACH(Champion, true, it.m_id = 1 + i); }
 
 CLASS(Champions, Object)
     ATTRIB(Champions, m_id, int, 0);

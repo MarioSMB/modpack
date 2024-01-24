@@ -1,9 +1,15 @@
 void QCC_FixClient(entity this)
 {
 #ifdef CSQC
-	int champ = STAT(QCC_CHAMPION);
+	Champions champ = NULL;
+	int mychamp = STAT(QCC_CHAMPION);
+	FOREACH(Champion, it.m_id == mychamp,
+	{
+		champ = it;
+		break;
+	});
 	if(champ)
-		this.m_champion = REGISTRY_GET(Champion, champ);
+		this.m_champion = champ;
 	else
 		this.m_champion = NULL;
 #endif
