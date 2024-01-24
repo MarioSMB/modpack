@@ -528,7 +528,7 @@ void Sbar_Score(int margin)
 		}
 	}
 
-	if(autocvar_sbar_gametime && (deathmatch || STAT(SKATING)))
+	if(autocvar_sbar_gametime && (deathmatch || STAT(SKATING) || STAT(WORLDTYPE) == WORLDTYPE_SLIDE))
 	{
 		if(deathmatch && STAT(TIMELIMIT))
 		{

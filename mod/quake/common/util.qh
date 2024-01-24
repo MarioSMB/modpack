@@ -64,6 +64,14 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
+#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.5)
+
+const int TIME_DECIMALS = 2;
+const float TIME_FACTOR = 100;
+#define TIME_ENCODED_TOSTRING(n, compact) mmssth(n, compact)
+#define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
+#define TIME_DECODE(n) ((n) / TIME_FACTOR)
+
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);

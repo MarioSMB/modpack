@@ -1,7 +1,11 @@
 void QCC_FixClient(entity this)
 {
 #ifdef CSQC
-	this.m_champion = REGISTRY_GET(Champion, STAT(QCC_CHAMPION, this));
+	int champ = STAT(QCC_CHAMPION);
+	if(champ)
+		this.m_champion = REGISTRY_GET(Champion, champ);
+	else
+		this.m_champion = NULL;
 #endif
 
 	if(this.m_champion && this.m_champion.m_fixclient)

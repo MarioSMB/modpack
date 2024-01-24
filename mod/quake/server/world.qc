@@ -1465,7 +1465,9 @@ spawnfunc(worldspawn)
 	lightstyle(3, "mmmmmaaaaammmmmaaaaaabcdefgabcdefg");
 	
 	// 4 FAST STROBE
-	lightstyle(4, "mamamamamama");
+	//lightstyle(4, "mamamamamama");
+	// replacing with a slow pulse to reduce headaches
+	lightstyle(4,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
 	
 	// 5 GENTLE PULSE 1
 	lightstyle(5,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
@@ -1764,6 +1766,8 @@ void CreatureFrame_FallDamage(entity this)
 		jumpheight_mod *= 1.5;
 	if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
 		skate_land(this);
+	else if(STAT(SLIDE_ON, this))
+		{ /* do nothing */ }
 	else if(this.jump_flag) // moving or has moved
 	{
 		if(this.jump_flag < -300 * jumpheight_mod && IS_ONGROUND(this) && this.health > 0)
@@ -1861,6 +1865,8 @@ void StartFrame()
 		CheckRules_World();
 
 	comp_check_time();
+
+	slide_check_time();
 
 	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));

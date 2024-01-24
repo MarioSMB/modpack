@@ -129,7 +129,7 @@ REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #endif
-REGISTER_STAT(MOVEVARS_WALLFRICTION, int, autocvar_sv_wallfriction)
+REGISTER_STAT(MOVEVARS_WALLFRICTION, int)
 
 // unique to quake
 #ifdef SVQC
@@ -149,9 +149,9 @@ const int MISSIONPACK_IMPEL = BIT(2);
 const int MISSIONPACK_MG = BIT(3);
 
 REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, int, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
-REGISTER_STAT(MOVEVARS_FRICTION_WATER, float, autocvar_sv_waterfriction)
-REGISTER_STAT(MOVEVARS_WATERACCELERATE, float, autocvar_sv_wateraccelerate)
-REGISTER_STAT(MOVEVARS_FRICTION_EDGE, float, autocvar_edgefriction)
+REGISTER_STAT(MOVEVARS_FRICTION_WATER, float)
+REGISTER_STAT(MOVEVARS_WATERACCELERATE, float)
+REGISTER_STAT(MOVEVARS_FRICTION_EDGE, float)
 REGISTER_STAT(MISSIONPACKS, int, BIT(23)
                               | (autocvar_sv_missionpack_hipnotic ? MISSIONPACK_HIPNOTIC : 0)
                               | (autocvar_sv_missionpack_rogue ? MISSIONPACK_ROGUE : 0)
@@ -167,17 +167,17 @@ float autocvar_sv_stopspeed;
 float autocvar_sv_maxairspeed;
 float autocvar_sv_airaccelerate;
 #endif
-REGISTER_STAT(MOVEVARS_FRICTION, float, autocvar_sv_friction)
-REGISTER_STAT(MOVEVARS_ACCELERATE, float, autocvar_sv_accelerate)
-REGISTER_STAT(MOVEVARS_MAXSPEED, float, autocvar_sv_maxspeed)
-REGISTER_STAT(MOVEVARS_STOPSPEED, float, autocvar_sv_stopspeed)
-REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float, autocvar_sv_maxairspeed)
-REGISTER_STAT(MOVEVARS_AIRACCELERATE, float, autocvar_sv_airaccelerate)
+REGISTER_STAT(MOVEVARS_FRICTION, float)
+REGISTER_STAT(MOVEVARS_ACCELERATE, float)
+REGISTER_STAT(MOVEVARS_MAXSPEED, float)
+REGISTER_STAT(MOVEVARS_STOPSPEED, float)
+REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
+REGISTER_STAT(MOVEVARS_AIRACCELERATE, float)
 
 #ifdef SVQC
 int autocvar_sv_wallclip;
 #endif
-REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
+REGISTER_STAT(MOVEVARS_WALLCLIP, int)
 
 REGISTER_STAT(SERVERFLAGS, int, serverflags)
 
@@ -251,3 +251,13 @@ REGISTER_STAT(QCC_JETPACK, bool, this.jetpack_status)
 REGISTER_STAT(QCC_JETPACKFUEL, bool)
 REGISTER_STAT(QCC_BLOODRAGE, bool)
 REGISTER_STAT(QCC_BLOODRAGE_COUNT, int)
+
+#ifdef SVQC
+#include "slide/slide.qh"
+#endif
+REGISTER_STAT(SLIDE_ON, bool)
+
+#ifdef SVQC
+.int worldtype;
+#endif
+REGISTER_STAT(WORLDTYPE, int, world.worldtype)

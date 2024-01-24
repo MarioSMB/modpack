@@ -411,7 +411,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && this.move_movetype == MOVETYPE_WALK)
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK)
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -444,7 +444,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && this.move_movetype == MOVETYPE_WALK)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -981,6 +981,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	status_effects_PlayerDies(this);
 
 	champions_PlayerDies(this);
+
+	slide_PlayerDies(this);
 
 	// rogue fields
 	this.gravity = 1.0;

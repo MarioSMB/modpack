@@ -3,6 +3,7 @@
 #include <lib/csqcmodel/sv_model.qh>
 #include <common/csqcmodel_settings.qh>
 #include "../common/physics.qh"
+#include "../common/slide/slide.qh"
 #include "../common/champions/_mod.qh"
 #include "combat.qh"
 #include "getreplies.qh"
@@ -63,7 +64,7 @@ void SetChangeParms(entity this)
 		setspawnparms(this);
 		return;
 	}
-	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SKATE)
+	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_SLIDE)
 	{
 		SetNewParms();
 		return;
@@ -121,7 +122,7 @@ void SetNewParms()
 
 void DecodeLevelParms(entity this)
 {
-	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB))
+	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SLIDE)
 		SetNewParms();		// take away all stuff on starting new episode
 
 	// Yoder Oct25, reset weapons between map loads
@@ -212,6 +213,8 @@ string get_playermodel(entity this)
 {
 	if(STAT(SKATING, this))
 		return "progs/skater.mdl";
+	else if(STAT(SLIDE_ON, this))
+		return "progs/surfer1.mdl";
 	if(this.m_champion)
 		return this.m_champion.m_model.model_str();
 	return "progs/player.mdl";
@@ -220,6 +223,8 @@ string get_playermodel(entity this)
 string get_playerhead(entity this)
 {
 	if(STAT(SKATING, this))
+		return "progs/h_player.mdl";
+	else if(STAT(SLIDE_ON, this))
 		return "progs/h_player.mdl";
 	if(this.m_champion)
 		return this.m_champion.m_model_head.model_str();
@@ -230,7 +235,7 @@ string get_deathsound(entity this, int chance)
 {
 	if(STAT(SKATING, this))
 		return "player/death1.wav"; // not actually used
-	if(this.m_champion)
+	if(this.m_champion && !STAT(SLIDE_ON, this))
 		return this.m_champion.m_sound_death();
 	switch(chance)
 	{
@@ -250,7 +255,7 @@ string get_painsound(entity this, int chance)
 {
 	if(STAT(SKATING, this))
 		return "player/pain6.wav";
-	if(this.m_champion)
+	if(this.m_champion && !STAT(SLIDE_ON, this))
 		return this.m_champion.m_sound_pain();
 	switch(chance)
 	{
@@ -960,7 +965,10 @@ void ClientKill(entity this)
 		sprint(this, "You must wait before suiciding again... Get help.\n");
 		return;
 	}
-	this.suicide_delay = time + autocvar_sv_quake_kill_delay;
+	if(world.worldtype == WORLDTYPE_SLIDE)
+		this.suicide_delay = time + 1;
+	else
+		this.suicide_delay = time + autocvar_sv_quake_kill_delay;
 
 	sphere_remove(this);
 
@@ -973,8 +981,9 @@ void ClientKill(entity this)
 		return;
 	}
 	champions_PlayerDies(this);
-	set_suicide_frame(this);
+	slide_PlayerDies(this);
 	this.modelindex = this.modelindex_player;
+	set_suicide_frame(this);
 	this.frags = this.frags - 2;	// extra penalty
 	respawn(this);
 }
@@ -1517,6 +1526,8 @@ void PutPlayerInServer(entity this)
 
 	skate_spawn(this);
 
+	slide_PutPlayerInServer(this);
+
 // oh, this is a hack!
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
@@ -1539,7 +1550,7 @@ void PutPlayerInServer(entity this)
 	this.view_ofs = '0 0 22';
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
-	if(!STAT(SKATING, this))
+	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE)
 		champions_PutPlayerInServer(this);
 
 	player_stand1(this);
@@ -1974,7 +1985,7 @@ void PlayerPreThink(entity this)
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
 
-	if(!STAT(SKATING, this))
+	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE)
 		champions_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
@@ -2170,6 +2181,9 @@ void PlayerPostThink(entity this)
 		CSQCMODEL_AUTOUPDATE(this);
 		return;		// intermission or finale
 	}
+
+	if(world.worldtype == WORLDTYPE_SLIDE)
+		Slide_OnThink(this);
 
 	earthquake_postthink(this); // !deathmatch?
 

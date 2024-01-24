@@ -1,4 +1,5 @@
 REGISTER_DEATHTYPE(BURNING,                 DEATH_SELF_BURNING,             NULL,                           "")
+REGISTER_DEATHTYPE(CHECKPOINT,              DEATH_SELF_CHECKPOINT,          NULL,                           "")
 REGISTER_DEATHTYPE(CRUSH,                   DEATH_SELF_CRUSH,               NULL,                           "")
 REGISTER_DEATHTYPE(DISCHARGE,               DEATH_SELF_DISCHARGE,           DEATH_MURDER_DISCHARGE,         "")
 REGISTER_DEATHTYPE(DROWN,                   DEATH_SELF_DROWN,               DEATH_MURDER_DROWN,             "")

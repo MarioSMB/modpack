@@ -114,6 +114,7 @@
 
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 helps the other team"), "")
     MSG_INFO_NOTIF(DEATH_SELF_BURNING,                      N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 burned up"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_CHECKPOINT,                   N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 skipped a checkpoint"), "")
     MSG_INFO_NOTIF(DEATH_SELF_CRUSH,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was squashed"), "")
     MSG_INFO_NOTIF(DEATH_SELF_DISCHARGE,                    N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 discharged into the liquid"), "")
     MSG_INFO_NOTIF(DEATH_SELF_DROWN,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 sleeps with the rotfishes"), "")
@@ -184,6 +185,7 @@
 
     MSG_CENTER_NOTIF(DEATH_SELF_BETRAYAL,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were punished for attacking your team mates!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_BURNING,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You burned to death!")), "")
+    MSG_CENTER_NOTIF(DEATH_SELF_CHECKPOINT,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Hit the checkpoints first")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CRUSH,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were crushed!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CHEAT,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You unfairly eliminated yourself!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_DROWN,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't catch your breath!")), "")
@@ -219,6 +221,14 @@
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
 
     MSG_CENTER_NOTIF(SHOP_OPEN,                         N_ENABLE,     0, 0, "",                         CPID_SHOP, "5.5 0", _("^BGShop is open, speak to the ^F1Gremlin^BG!"), "")
+
+    MSG_CENTER_NOTIF(SLIDE_ACTIVATE,                    N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGSlider activated"), "")
+    MSG_CENTER_NOTIF(SLIDE_BONUS_POINT,                 N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGBonus point!"), "")
+    MSG_CENTER_NOTIF(SLIDE_CHECKPOINT,                  N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGCheckpoint!"), "")
+    MSG_CENTER_NOTIF(SLIDE_DEACTIVATE,                  N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGSlider deactivated"), "")
+    MSG_CENTER_NOTIF(SLIDE_FINISHED,                    N_ENABLE,     1, 2, "f1race_time f2race_time s1",CPID_SLIDE,"5.5 0", strcat(_("^BGFinished!"), "\n\n", _("Your time: ^F2%s^BG"), "\n", _("Best time: ^F1%s^BG (%s^BG)")), "")
+    MSG_CENTER_NOTIF(SLIDE_GO,                          N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", BOLD(_("^BGGO!")), "")
+    MSG_CENTER_NOTIF(SLIDE_RECORD,                      N_ENABLE,     1, 2, "f1race_time f2race_time s1",CPID_SLIDE,"5.5 0", strcat(_("^5New record!^BG"), "\n\n", _("New time is ^F1%s^BG"), "\n", _("Previous time: ^F2%s^BG (%s^BG)")), "")
 
     MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")
     MSG_CENTER_NOTIF(POWERDOWN_BIOSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Biosuit expiring"), "")
@@ -263,6 +273,7 @@
 
     MSG_MULTI_NOTIF(DEATH_SELF_BETRAYAL,                N_ENABLE,  NULL,           INFO_DEATH_SELF_BETRAYAL,               CENTER_DEATH_SELF_BETRAYAL)
     MSG_MULTI_NOTIF(DEATH_SELF_BURNING,                 N_ENABLE,  NULL,           INFO_DEATH_SELF_BURNING,                CENTER_DEATH_SELF_BURNING)
+    MSG_MULTI_NOTIF(DEATH_SELF_CHECKPOINT,              N_ENABLE,  NULL,           INFO_DEATH_SELF_CHECKPOINT,             CENTER_DEATH_SELF_CHECKPOINT)
     MSG_MULTI_NOTIF(DEATH_SELF_CRUSH,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_CRUSH,                  CENTER_DEATH_SELF_CRUSH)
     MSG_MULTI_NOTIF(DEATH_SELF_DROWN,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_DROWN,                  CENTER_DEATH_SELF_DROWN)
     MSG_MULTI_NOTIF(DEATH_SELF_DISCHARGE,               N_ENABLE,  NULL,           INFO_DEATH_SELF_DISCHARGE,              CENTER_DEATH_SELF_DISCHARGE)

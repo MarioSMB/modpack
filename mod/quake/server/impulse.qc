@@ -1,5 +1,7 @@
 #include "impulse.qh"
 
+#include "../common/slide/slide.qh"
+
 #define IMPULSE(id) _IMPULSE(IMP_##id)
 #define _IMPULSE(id) \
 	void id##_handle(entity this); \
@@ -401,6 +403,9 @@ void ImpulseCommands(entity this)
 	int imp = this.impulse;
 	if (!imp) return;
 	this.impulse = 0;
+
+	if(slide_ImpulseCommands(this, imp))
+		return;
 
 	if(imp == CHIMPULSE_GIVE_ALL.impulse)
 	{

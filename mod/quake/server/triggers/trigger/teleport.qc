@@ -12,7 +12,7 @@ void teleport_touch(entity this, entity toucher)
 		return;
 
 // only teleport living creatures
-	if(toucher.health <= 0 || toucher.solid != SOLID_SLIDEBOX)
+	if(toucher.health <= 0 || (toucher.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, toucher)))
 		return;
 
 	SUB_UseTargets(this, NULL, NULL);

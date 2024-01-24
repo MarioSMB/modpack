@@ -2,8 +2,6 @@
 
 #include "triggers/teleporters.qh"
 
-string autocvar_sv_worldbasename;
-
 void HordeRecord()
 {
 	float oldscore = top_score;

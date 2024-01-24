@@ -1,0 +1,65 @@
+#pragma once
+
+const int FL_ONGROUND2 				= BIT(20);
+
+void slide_PlayerTouch(entity this, entity toucher);
+
+void Slide_Jump(entity this);
+
+void slide_physics(entity this);
+
+#ifdef SVQC
+float autocvar_sv_quake_slide_timelimit = 300;
+
+float slide_timelimit;
+
+int besttime_saved;
+
+int slideflags;
+const int SF_ALLOWKILL = 1;
+const int SF_INTERBASHNO = 2;
+const int SF_NOCHECKGIB = 4;
+
+//spawnflags for items 'n stuff. I CAN remove it if I want.
+const int NOGLOW = 1;
+const int DMONLY = 1;
+
+//Delay so you don't turn instantly.
+.float pushtime;
+
+//For "zipper" entites and triggers
+.float ziptime;
+
+//Check to see if the slider is on or off. In the future might also show TYPE.
+.float slide_on;
+
+//Time since you entered the "Start Transformer"
+.float slide_time;
+
+//Points checker for checkpoints and the endpoint
+.float slide_points;
+
+.float board_delay;
+
+//Best time, name of the guy with the best time. Globals
+float timebest = 999999;
+string namebest;
+
+int checkcfg;
+
+void slide_check_time();
+
+void slide_UpdateStats(entity this);
+
+void slide_PutPlayerInServer(entity this);
+
+void Slide_OnThink(entity this);
+
+void slide_PlayerDies(entity this);
+
+void Spawn_Board(entity this);
+
+void Spawn_ABoard(entity this);
+
+bool slide_ImpulseCommands(entity this, int imp);
+#endif

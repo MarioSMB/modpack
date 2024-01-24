@@ -220,7 +220,7 @@ vector bobmodel_ofs(entity view)
 
 void viewmodel_animate(entity this)
 {
-	if (autocvar_chase_active || STAT(HEALTH) <= 0 || STAT(SKATING)) return;
+	if (autocvar_chase_active || STAT(HEALTH) <= 0 || STAT(SKATING) || STAT(SLIDE_ON)) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
@@ -255,7 +255,7 @@ void viewmodel_draw(entity this)
 	CSQCModel_InterpolateAnimation_Do(this);
 
 	bool show_viewmodel = true;
-	if(STAT(SKATING))
+	if(STAT(SKATING) || STAT(SLIDE_ON))
 		show_viewmodel = false;
 	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_hideweapon)
 	{
@@ -397,7 +397,7 @@ float eventchase_current_distance;
 float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
 {
-	if(STAT(SKATING))
+	if(STAT(SKATING) || STAT(SLIDE_ON))
 		return 1;
 	if(this.viewloc)
 		return 1;

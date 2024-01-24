@@ -18,11 +18,6 @@ bool autocvar_sv_quake_instance_backpacks = true;
 .float sharp_finished;
 
 .int worldtype;
-const int WORLDTYPE_MEDIEVAL = 0;
-const int WORLDTYPE_METAL = 1;
-const int WORLDTYPE_BASE = 2;
-const int WORLDTYPE_HUB = 3;
-const int WORLDTYPE_SKATE = 4;
 
 const int SIGIL_E1 = BIT(0);
 const int SIGIL_E2 = BIT(1);

@@ -248,7 +248,7 @@ METHOD(Caleb, m_clear, void(Champions this, entity actor))
 METHOD(Caleb, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	bool dont_ignore = (deathtype != DEATH_VOID.m_id && deathtype != DEATH_HURTTRIGGER.m_id && 
-		deathtype != DEATH_KILL.m_id && deathtype != DEATH_GENERIC.m_id && deathtype != DEATH_LAVA.m_id);
+		deathtype != DEATH_KILL.m_id && deathtype != DEATH_GENERIC.m_id && deathtype != DEATH_LAVA.m_id && deathtype != DEATH_CHECKPOINT.m_id);
 	if(targ.m_champion == this && targ.health > 0 && dont_ignore)
 	{
 		if(STAT(QCC_BLOODRAGE, targ))

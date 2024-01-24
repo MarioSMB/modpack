@@ -14,6 +14,23 @@ void Physics_UpdateStats(entity this)
 	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
 	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
 
+	STAT(MOVEVARS_WALLFRICTION, this) = autocvar_sv_wallfriction;
+
+	STAT(MOVEVARS_FRICTION_WATER, this) = autocvar_sv_waterfriction;
+	STAT(MOVEVARS_WATERACCELERATE, this) = autocvar_sv_wateraccelerate;
+	STAT(MOVEVARS_FRICTION_EDGE, this) = autocvar_edgefriction;
+
+	STAT(MOVEVARS_FRICTION, this) = autocvar_sv_friction;
+	STAT(MOVEVARS_ACCELERATE, this) = autocvar_sv_accelerate;
+	STAT(MOVEVARS_MAXSPEED, this) = autocvar_sv_maxspeed;
+	STAT(MOVEVARS_STOPSPEED, this) = autocvar_sv_stopspeed;
+	STAT(MOVEVARS_MAXAIRSPEED, this) = autocvar_sv_maxairspeed;
+	STAT(MOVEVARS_AIRACCELERATE, this) = autocvar_sv_airaccelerate;
+
+	STAT(MOVEVARS_WALLCLIP, this) = autocvar_sv_wallclip;
+
+	slide_UpdateStats(this);
+
 	QCC_UpdateStats(this);
 }
 
@@ -96,6 +113,9 @@ void PlayerJump(entity this)
 {
 	if(this.flags & FL_WATERJUMP)
 		return;
+
+	if(PHYS_SLIDE(this))
+		Slide_Jump(this);
 	
 	if(this.waterlevel >= 2)
 	{
@@ -524,6 +544,8 @@ void PM_Main(entity this, float dt)
 
 	if(PHYS_SKATING(this))
 		skate_drive(this);
+	else if(PHYS_SLIDE(this))
+		slide_physics(this);
 	else if(champions_PlayerPhysics(this, dt))
 		return;
 
@@ -622,6 +644,7 @@ void player_touch(entity this, entity toucher)
 	}
 #endif
 
+	slide_PlayerTouch(this, toucher);
 	champions_PlayerTouch(this, toucher);
 }
 

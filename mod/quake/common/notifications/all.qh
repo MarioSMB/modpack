@@ -41,6 +41,7 @@ ENUMCLASS(CPID)
 	CASE(CPID, POWER)
 	CASE(CPID, COUNT)
 	CASE(CPID, SHOP)
+	CASE(CPID, SLIDE)
 	/** always last */
 	CASE(CPID, LAST)
 ENUMCLASS_END(CPID)
@@ -258,7 +259,10 @@ const float ARG_DC = 6; // unique result to durcnt/centerprint
 	ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
-	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4))
+	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   TIME_ENCODED_TOSTRING(f1, true)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   TIME_ENCODED_TOSTRING(f2, true)) \
+	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   TIME_ENCODED_TOSTRING(f3, true))
 
 #define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN \
 	if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } \
