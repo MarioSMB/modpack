@@ -98,6 +98,7 @@ void S_Explode(entity this)
 	this.solid = SOLID_NOT;
 	this.frame = 0;
 	_setmodel(this, "progs/sphere.mdl");
+	this.scale = 0.2;
 	setsize(this, '0 0 0', '0 0 0');
 	UNSET_ONGROUND(this);
 	this.avelocity_x = crandom()*360;
