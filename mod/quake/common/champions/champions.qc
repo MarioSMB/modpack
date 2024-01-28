@@ -151,6 +151,7 @@ void champions_PlayerPreThink(entity this)
 		if(this.m_champion && this.m_champion.m_clear)
 			this.m_champion.m_clear(this.m_champion, this);
 		this.m_champion = NULL;
+		STAT(QCC_CHAMPION, this) = 0;
 		return;
 	}
 	QCC_UpdatePlayer(this);
