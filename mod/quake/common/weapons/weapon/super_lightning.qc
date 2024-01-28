@@ -102,7 +102,7 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(IS_PLAYER(this.realowner) && IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	if(IS_PLAYER(this.realowner) && IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0 || toucher.tank))
 	{
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);
@@ -110,7 +110,7 @@ void LightningTouch(entity this, entity toucher)
 		this.nextthink = time + 0.1;
 		return;
 	}
-	if(toucher.takedamage && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL))
+	if(toucher.takedamage && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && !toucher.tank)
 	{
 		if(toucher.takedamage == DAMAGE_AIM)
 			spawn_extrablood(this, toucher, 1000); // TODO: toucher?

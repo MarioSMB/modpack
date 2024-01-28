@@ -183,7 +183,7 @@ void Tank_Touch(entity this, entity toucher)
 	else
 	{
 		if((this.origin_z - toucher.origin_z) > 17 && !IS_ONGROUND(this))
-			T_Damage(toucher, this, this, 3 * damg, DEATH_CRUSH.m_id);
+			T_Damage(toucher, this, this, 1.5 * damg, DEATH_CRUSH.m_id);
 		else
 		{
 			if(vdist(this.velocity, >, 100))
