@@ -511,7 +511,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 // react to the damage
 
-	if(IS_MONSTER(attacker) && attacker.poisonous && IS_PLAYER(targ))
+	if(IS_MONSTER(attacker) && attacker.poisonous && IS_PLAYER(targ) && !targ.tank)
 	{
 		float poisontime = floor(autocvar_skill + 3 + 2*random());
 		// Air tanks help reduce poison debuff duration
