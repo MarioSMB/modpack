@@ -6,14 +6,17 @@
 
 void TankAim(entity this)
 {
-#if 1
-	makevectors(self.tank.angles);
-	v_forward.z = 0 - v_forward.z;
-#else
-	makevectors(this.v_angle);
-	if(v_forward.z < 0)
-		v_forward.z *= 0.1;
-#endif
+	if(PHYS_INPUT_BUTTON_ATCK2(this))
+	{
+		makevectors(this.v_angle);
+		if(v_forward.z < 0)
+			v_forward.z *= 0.1;
+	}
+	else
+	{
+		makevectors(self.tank.angles);
+		v_forward.z = 0 - v_forward.z;
+	}
 }
 
 /*******************************\

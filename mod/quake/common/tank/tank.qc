@@ -154,6 +154,8 @@ void Tank_Touch(entity this, entity toucher)
 
 	this.tank.tank_touch_delay = time + 0.1;
 
+	if(IS_PLAYER(toucher) && !toucher.tank && !autocvar_g_friendlyfire_virtual)
+		return; // no friendly bouncing sorry!
 	if(toucher.takedamage != DAMAGE_AIM)
 		return;
 

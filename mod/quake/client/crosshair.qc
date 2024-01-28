@@ -1,5 +1,6 @@
 #include "crosshair.qh"
 
+#include "../common/physics.qh"
 #include "../common/viewloc.qh"
 
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
@@ -160,8 +161,7 @@ void HUD_Crosshair(entity this)
 		vector wcross_forward = view_forward;
 		if(STAT(ITEMS) & IT_TANK)
 		{
-#if 1
-			if(csqcplayer)
+			if(csqcplayer && !PHYS_INPUT_BUTTON_ATCK2(csqcplayer))
 			{
 				makevectors(csqcplayer.angles);
 				wcross_forward = v_forward;
@@ -169,10 +169,6 @@ void HUD_Crosshair(entity this)
 			}
 			else if(wcross_forward.z < 0)
 				wcross_forward.z *= 0.1;
-#else
-			if(wcross_forward.z < 0)
-				wcross_forward.z *= 0.1;
-#endif
 		}
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
