@@ -407,7 +407,7 @@ void ImpulseCommands(entity this)
 	if (!imp) return;
 	this.impulse = 0;
 
-	if(this.tank)
+	if(this.tank && imp < 30 && imp > 48)
 	{
 		Tank_ImpulseCommands(this, imp);
 		return;
