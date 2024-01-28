@@ -801,6 +801,7 @@ void execute_changelevel(entity this)
 			it.fixangle = true;		// turn this way immediately
 		}
 		W_Spellbook_ClearSpells(it);
+		tank_cleanup(it);
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;

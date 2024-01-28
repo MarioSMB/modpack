@@ -52,6 +52,8 @@ void PushBack(entity this, float amount);
 void Tank_Spawn(entity this);
 
 void Tank_Link(entity this);
+
+void tank_cleanup(entity this);
 #endif
 
 void Tank_PlayerJump(entity this, float dt);
