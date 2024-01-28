@@ -12,6 +12,8 @@
 	.vector v_angle;
 
 	.vector movedir; // TODO?
+
+	.int items;
 #endif
 
 #ifdef SVQC

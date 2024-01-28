@@ -100,7 +100,7 @@ void StartItem(entity this)
 		delete(this);
 		return;
 	}
-	this.nextthink = time + 0.2;	// items start after other solids
+	this.nextthink = time + 0.25;	// items start after other solids
 	setthink(this, PlaceItem);
 }
 
@@ -118,6 +118,8 @@ HEALTH BOX
 bool T_Heal(entity e, float healamount, bool ignore)
 {
 	float hp_heal_max = e.max_health;
+	if(e.tank)
+		return false;
 	if(e.m_champion)
 		hp_heal_max *= e.m_champion.qcc_health_heal_max;
 	if(e.health <= 0)
@@ -197,6 +199,8 @@ void health_touch(entity this, entity toucher)
 		return;
 	if(!IS_PLAYER(toucher))
 		return;
+	if(toucher.tank)
+		return;
 
 	bool pickedup = false;
 	if(this.healamount)
@@ -266,6 +270,8 @@ void armor_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	if(!IS_PLAYER(toucher))
+		return;
+	if(toucher.tank)
 		return;
 
 	bool pickedup = false;
@@ -1557,6 +1563,8 @@ void powerup_touch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
+	if(toucher.tank && this.classname != "item_hornofconjuring")
+		return;
 
 	string pname = (this.netname != "") ? this.netname : "Powerup";
 	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_POWERUP_GOT, pname);
@@ -1584,6 +1592,11 @@ void powerup_touch(entity this, entity toucher)
 	{
 		this.nextthink = time + this.wait;
 		setthink(this, SUB_regen);
+	}
+	else if(horde_ent)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
 	}
 
 	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);

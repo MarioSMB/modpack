@@ -340,10 +340,13 @@ void GiveAllWeapons(entity this)
 	//this.items |= (IT_KEY1 | IT_KEY2); // breaks levels
 
 	// mal: also give full armor...
-	this.armortype = 0.8;
-	this.armorvalue = 200;
-	this.items &= ~(IT_ARMOR1 | IT_ARMOR2);
-	this.items |= IT_ARMOR3;
+	if(!this.tank)
+	{
+		this.armortype = 0.8;
+		this.armorvalue = 200;
+		this.items &= ~(IT_ARMOR1 | IT_ARMOR2);
+		this.items |= IT_ARMOR3;
+	}
 
 	this.ammo_lava_nails = 200;
 	this.ammo_multi_rockets = 100;
@@ -403,6 +406,12 @@ void ImpulseCommands(entity this)
 	int imp = this.impulse;
 	if (!imp) return;
 	this.impulse = 0;
+
+	if(this.tank)
+	{
+		Tank_ImpulseCommands(this, imp);
+		return;
+	}
 
 	if(slide_ImpulseCommands(this, imp))
 		return;

@@ -20,6 +20,8 @@ const int IT_MULTI_ROCKETS       = BIT(12);
 const int IT_PULSERIFLE          = BIT(13);
 const int IT_FIREBALL            = BIT(14);
 
+const int IT_TANK                = BIT(15);
+
 
 const int POWERUP_INVISIBILITY         = BIT(0);
 const int POWERUP_INVULNERABILITY      = BIT(1);

@@ -1380,7 +1380,7 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 		wep = RandomSelection_chosen_ent;
 	}
 
-	if(!STAT(SKATING, this) && !(STAT(SLIDE_ON, this)) && !(time < ATTACK_FINISHED(this, weaponentity)))
+	if(!STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.tank && !(time < ATTACK_FINISHED(this, weaponentity)))
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		

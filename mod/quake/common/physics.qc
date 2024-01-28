@@ -1,5 +1,6 @@
 #ifdef SVQC
 #include "../server/client.qh"
+#include "tank/tank.qh"
 #endif
 
 #ifdef SVQC
@@ -29,6 +30,8 @@ void Physics_UpdateStats(entity this)
 
 	STAT(MOVEVARS_WALLCLIP, this) = autocvar_sv_wallclip;
 
+	Tank_UpdateStats(this);
+
 	slide_UpdateStats(this);
 
 	QCC_UpdateStats(this);
@@ -54,6 +57,7 @@ void PM_FixClient(entity this)
 {
 #ifdef CSQC
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
+	this.items = STAT(ITEMS, this);
 #elif defined(SVQC)
 	Physics_UpdateStats(this);
 #endif
@@ -109,8 +113,14 @@ float SV_CalcRoll(entity this)
 }
 #endif
 
-void PlayerJump(entity this)
+void PlayerJump(entity this, float dt)
 {
+	if(this.items & IT_TANK)
+	{
+		Tank_PlayerJump(this, dt);
+		return;
+	}
+
 	if(this.flags & FL_WATERJUMP)
 		return;
 
@@ -538,7 +548,7 @@ void PM_Main(entity this, float dt)
 		Duke_PreJump(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
-		PlayerJump(this);
+		PlayerJump(this, dt);
 	else if(!PHYS_SKATING(this) || IS_ONGROUND(this))
 		UNSET_JUMP_HELD(this);
 
@@ -617,20 +627,20 @@ void player_touch(entity this, entity toucher)
 			makevectors(this.angles);
 			vector vec = normalize(toucher.origin - this.origin);
 			float dot = vec * v_forward;
-        	if(dot < 0.3)
+			if(dot < 0.3)
 				return;
 
 			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
-				
+
 			makevectors(this.angles);
-		    toucher.velocity = v_forward * (500 * pushforce);
+			toucher.velocity = v_forward * (500 * pushforce);
 			toucher.velocity_z = (250 * pushforce);
 
 			// if shield has timed out, respawn it.
 			// don't do particles more than twice a second. 
 			if(this.shield_death_time < time)
 			{
-    	        _sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
+				_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	
 				te_explosion2(toucher.origin, 230, 5);
 

@@ -1,0 +1,57 @@
+#pragma once
+
+const vector TANK_MIN = '-32 -32 -16';
+const vector TANK_MAX = '32 32 27';
+
+#ifdef SVQC
+.entity tank;
+.int tanktype;
+
+.int tankweapon;
+.int cannontype;
+.int plasmatype;
+.int minetype;
+
+.float tank_store_health;
+.float tank_store_armortype;
+.float tank_store_armorvalue;
+.float tank_store_items;
+
+.float tank_horn_delay;
+.float tank_touch_delay;
+
+enum
+{
+	TW_NONE,
+	TW_BGUN,
+	TW_ACANNON,
+	TW_TROCKS,
+	TW_BROCKS,
+	TW_GROCKS,
+	TW_MINES,
+	TW_PLASMA,
+	TW_LAST
+};
+
+void Tank_UpdateStats(entity this);
+
+void Tank_PlayerDie(entity this);
+
+void Tank_Eject(entity this, bool dying);
+
+float Tank_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype);
+
+void Tank_PlayerPostThink(entity this);
+
+void Tank_Eject(entity this, bool dying);
+
+void Smoke(vector org);
+
+void PushBack(entity this, float amount);
+
+void Tank_Spawn(entity this);
+
+void Tank_Link(entity this);
+#endif
+
+void Tank_PlayerJump(entity this, float dt);

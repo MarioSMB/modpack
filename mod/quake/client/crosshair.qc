@@ -101,8 +101,36 @@ LABEL(normalcolor)
 	return wcross_color;
 }
 
+.entity tag_entity;
+void HUD_Crosshair_ApplyPlayerAlpha(float new_alpha)
+{
+	csqcplayer.alpha = new_alpha;
+	FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
+	{
+		it.alpha = new_alpha;
+	});
+	FOREACH_ENTITY_CLASS("ENT_CLIENT_TANK", it.count,
+	{
+		it.alpha = new_alpha;
+	});
+}
+
 void HUD_Crosshair(entity this)
 {
+	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
+	if(autocvar_chase_active && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
+	{
+		csqcplayer.alpha = csqcplayer.m_alpha;
+		HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.alpha);
+	}
+
+	if (autocvar_chase_active && autocvar_chase_front)
+	{
+		if (csqcplayer.alpha != csqcplayer.m_alpha)
+			HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
+		return;
+	}
+
 	if(!sb_showscores && !cursor_active && !intermission && !(STAT(HEALTH) <= 0) && (!csqcplayer.viewloc || (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM)))
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
@@ -127,17 +155,71 @@ void HUD_Crosshair(entity this)
 		// TrueAim check
 		//int shottype;
 
+		static int crosshair_chase_state = 0;
+
+		vector wcross_forward = view_forward;
+		if(STAT(ITEMS) & IT_TANK)
+		{
+#if 1
+			if(csqcplayer)
+			{
+				makevectors(csqcplayer.angles);
+				wcross_forward = v_forward;
+				wcross_forward.z = 0 - wcross_forward.z;
+			}
+			else if(wcross_forward.z < 0)
+				wcross_forward.z *= 0.1;
+#else
+			if(wcross_forward.z < 0)
+				wcross_forward.z *= 0.1;
+#endif
+		}
+
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
-		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		else if(autocvar_chase_active && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			traceline(player_org, player_org + 32768 * view_forward, MOVE_WORLDONLY, NULL);
+			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
+			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha)
+			{
+				crosshair_chase_state = 2;
+				bool hit = false;
+				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
+					hit = true;
+				else
+				{
+					traceline(view_origin, view_origin + 65535 * wcross_forward, MOVE_NORMAL, NULL);
+					if(trace_ent == csqcplayer)
+						hit = true;
+				}
+				float prev_alpha = csqcplayer.alpha;
+				float new_alpha;
+				if(hit)
+					new_alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
+				else
+					new_alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
+
+				if (new_alpha != prev_alpha)
+					HUD_Crosshair_ApplyPlayerAlpha(new_alpha);
+			}
+			traceline(player_org, player_org + 32768 * wcross_forward, MOVE_WORLDONLY, NULL);
 			wcross_origin = vec2(project_3d_to_2d(trace_endpos));
 		}
 		else
-			wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * view_forward));
+			wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * wcross_forward));
+
+		if (crosshair_chase_state == 2) // enabled (this frame)
+			crosshair_chase_state = 1;
+		else if (crosshair_chase_state == 1) // turned off in the previous frame
+		{
+			// reset player alpha only in this frame
+			if (csqcplayer)
+				HUD_Crosshair_ApplyPlayerAlpha(csqcplayer.m_alpha);
+			crosshair_chase_state = 0; // turned off and alpha reset
+		}
 		/*if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;

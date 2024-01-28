@@ -72,6 +72,7 @@ void SetChangeParms(entity this)
 
 // remove items
 	this.items &= ~(IT_KEY1 | IT_KEY2);
+	this.items &= ~IT_TANK;
 	this.items &= ~IT_SUPERHEALTH; // rogue
 	this.gravity = 1.0;
 
@@ -981,6 +982,7 @@ void ClientKill(entity this)
 		return;
 	}
 	champions_PlayerDies(this);
+	Tank_PlayerDie(this);
 	slide_PlayerDies(this);
 	this.modelindex = this.modelindex_player;
 	set_suicide_frame(this);
@@ -1383,6 +1385,7 @@ void PutObserverInServer(entity this)
 	//if(this.just_joined)
 	this.just_joined = true; // HACK: for horde to properly "detect" when a player is attempting to join again
 
+	Tank_PlayerDie(this);
 	champions_RemovePlayer(this);
 }
 
@@ -1908,6 +1911,13 @@ void PlayerDeathThink(entity this)
 	respawn(this);
 }
 
+.bool usekeypressed;
+void PlayerUseKey(entity this)
+{
+	if(this.tank)
+		Tank_Eject(this, false);
+}
+
 /*
 ================
 PlayerPreThink
@@ -1973,7 +1983,7 @@ void PlayerPreThink(entity this)
 		T_Damage(this, this, NULL, this.health + 1000, DEATH_FALL.m_id);
 	}
 
-	if(earthquake_active && IS_ONGROUND(this))
+	if(earthquake_active && IS_ONGROUND(this) && !this.tank)
 	{
 		this.velocity_x = this.velocity_x + (random() * earthquake_intensity * 2) - earthquake_intensity;
 		this.velocity_y = this.velocity_y + (random() * earthquake_intensity * 2) - earthquake_intensity;
@@ -1985,7 +1995,11 @@ void PlayerPreThink(entity this)
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
 
-	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE)
+	if(PHYS_INPUT_BUTTON_USE(this) && !this.usekeypressed)
+		PlayerUseKey(this);
+	this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
+
+	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE) // champions handles tank status properly
 		champions_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
@@ -2093,6 +2107,8 @@ void CheckHealthRot(entity this)
 {
 	if(!MP_HIPNOTIC && !(this.items & IT_SUPERHEALTH))
 		return;
+	if(this.tank)
+		return;
 
 	if(this.healthrot_nextcheck > time)
 		return;
@@ -2119,6 +2135,8 @@ void Regenerate_Health(entity this)
 		//return;
 	if(StatusEffects_active(STATUSEFFECT_Poisoned, this))
 		return; // no regen while poisoned!!
+	if(this.tank)
+		return;
 
 	float regen_rate = 1;
 	float regen_stable = 100;
@@ -2184,6 +2202,9 @@ void PlayerPostThink(entity this)
 
 	if(world.worldtype == WORLDTYPE_SLIDE)
 		Slide_OnThink(this);
+
+	if(this.tank)
+		Tank_PlayerPostThink(this);
 
 	earthquake_postthink(this); // !deathmatch?
 
@@ -2251,14 +2272,20 @@ void PlayerPostThink(entity this)
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
 
-		// do weapon stuff
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		if(this.tank)
+			Tank_WeaponFrame(this);
+		else
 		{
-			.entity weaponentity = weaponentities[slot];
-			W_WeaponFrame(this, weaponentity);
+			// do weapon stuff
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				W_WeaponFrame(this, weaponentity);
+			}
 		}
 
-		W_PassiveAttacks(this);
+		if(!this.tank)
+			W_PassiveAttacks(this);
 
 		if(this.cnt > 0 && !this.button0)
 		{
@@ -2455,6 +2482,8 @@ void ClientDisconnect(entity this)
 	status_effects_ClientDisconnect(this);
 
 	champions_RemovePlayer(this);
+
+	Tank_PlayerDie(this);
 
 	sphere_remove(this);
 

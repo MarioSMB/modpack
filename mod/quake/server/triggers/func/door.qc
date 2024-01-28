@@ -903,7 +903,7 @@ void func_door_init(entity this, entity actor, entity trigger)
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.
 	setthink(this, LinkDoors);
-	this.nextthink = this.ltime + 0.1;
+	this.nextthink = time + 0.1;
 }
 
 #endif

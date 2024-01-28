@@ -277,7 +277,7 @@ void player_stand1(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 
@@ -289,6 +289,9 @@ void player_stand1(entity this)
 		player_run(this);
 		return;
 	}
+
+	if(this.tank)
+		return;
 
 	if(STAT(SKATING, this))
 	{
@@ -349,7 +352,7 @@ void player_run(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 	if(!this.velocity_x && !this.velocity_y)
@@ -359,6 +362,9 @@ void player_run(entity this)
 		player_stand1(this);
 		return;
 	}
+
+	if(this.tank)
+		return;
 
 	if(STAT(SKATING, this))
 	{
@@ -411,7 +417,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK)
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank)
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -444,7 +450,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -977,6 +983,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	this.field_generator_finished = 0;
 	this.effects = 0;
 	this.modelindex = this.modelindex_player;	// don't use eyes
+
+	Tank_PlayerDie(this);
 
 	status_effects_PlayerDies(this);
 

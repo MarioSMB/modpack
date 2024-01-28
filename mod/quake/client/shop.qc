@@ -193,6 +193,8 @@ void entity_list(string id, vector pos, vector size)
 		bool owned = ShopItem_Owned(index);
 		string coststr = (owned) ? "(Owned) " : strcat("$", ftos(ShopItem_Cost(index)), " ");
 		bool can_afford = (owned || entcs_GetClientFrags(player_localnum) >= ShopItem_Cost(index));
+		if((STAT(ITEMS) & IT_TANK) && (shoplist[index] == SHOP_ITEM_HEAL || shoplist[index] == SHOP_ITEM_ARMOR))
+			can_afford = false;
 		vector textcolor = ((can_afford) ? '1 1 1' : '0.75 0.75 0.75');
 		float textalpha = ((can_afford) ? 1 : 0.25);
 		sui_drawtext('0 0 0', '8 8 0', strcat(coststr, ShopItem_PrettyName(index)), textcolor, textalpha, 0);

@@ -66,7 +66,7 @@ bool QCC_CanCastAbility(entity this)
 #ifdef SVQC
 void QCC_UpdateStats(entity this)
 {
-	if(intermission_running)
+	if(intermission_running || this.tank)
 		return;
 
 	if(this.m_champion)
@@ -146,6 +146,13 @@ void champions_PutPlayerInServer(entity this)
 
 void champions_PlayerPreThink(entity this)
 {
+	if(this.tank)
+	{
+		if(this.m_champion && this.m_champion.m_clear)
+			this.m_champion.m_clear(this.m_champion, this);
+		this.m_champion = NULL;
+		return;
+	}
 	QCC_UpdatePlayer(this);
 
 	if(this.m_champion && this.m_champion.m_playerthink)

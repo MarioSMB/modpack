@@ -875,75 +875,78 @@ void Sbar_DrawInventory()
 	Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
-	int wep_pos = 0;
-	for(int j = 1; j <= 10; ++j)
+	if(!(myitems & IT_TANK))
 	{
-		int imp = j;
-		if(j == 10)
-			imp = 0; // we want special 0 weapons to show on slot 10!
-		Weapon wep = WEP_Null;
-		if(thiswep.activeweapon.impulse == imp)
-			wep = thiswep.activeweapon;
-		else
+		int wep_pos = 0;
+		for(int j = 1; j <= 10; ++j)
 		{
-			FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
+			int imp = j;
+			if(j == 10)
+				imp = 0; // we want special 0 weapons to show on slot 10!
+			Weapon wep = WEP_Null;
+			if(thiswep.activeweapon.impulse == imp)
+				wep = thiswep.activeweapon;
+			else
 			{
-				wep = it;
-				if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
-					break;
-			});
+				FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
+				{
+					wep = it;
+					if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
+						break;
+				});
+			}
+			if(wep != WEP_Null)
+			{
+				float thetime = weapon_gettime[wep.m_id];
+				int flashon = rint(max(0, time - thetime) * 10);
+				if(flashon >= 10)
+					flashon = (thiswep.activeweapon == wep);
+				else
+					flashon = (flashon % 5) + 2;
+				drawpic(sbar + vec2(wep_pos * 24, -16), "gfx/quake/inv_wep", '24 16 0', '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				if(flashon)
+					drawfill(sbar + vec2(wep_pos * 24, -16), '24 16 0', '1 1 0', 0.33 * autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				drawpic(sbar + vec2(wep_pos * 24, -16), Sbar_PickWeapon(wep), '24 16 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				vector col;
+				if(WeaponIsFromRogue(wep))
+					col = '1 0 0';
+				else if(flashon)//(thiswep.activeweapon == wep)
+					col = '1 1 0';
+				else
+					col = '0.6 0.2 0';
+				float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
+				drawfont = 8; // FONT_USER
+				drawstring_aspect(sbar + vec2(wep_pos * 24, -8), ftos(imp), '8 8 0', col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawfont = oldfont;
+				wep_pos += 1;
+			}
 		}
-		if(wep != WEP_Null)
-		{
-			float thetime = weapon_gettime[wep.m_id];
-			int flashon = rint(max(0, time - thetime) * 10);
-			if(flashon >= 10)
-				flashon = (thiswep.activeweapon == wep);
-			else
-				flashon = (flashon % 5) + 2;
-			drawpic(sbar + vec2(wep_pos * 24, -16), "gfx/quake/inv_wep", '24 16 0', '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-			if(flashon)
-				drawfill(sbar + vec2(wep_pos * 24, -16), '24 16 0', '1 1 0', 0.33 * autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-			drawpic(sbar + vec2(wep_pos * 24, -16), Sbar_PickWeapon(wep), '24 16 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
-			vector col;
-			if(WeaponIsFromRogue(wep))
-				col = '1 0 0';
-			else if(flashon)//(thiswep.activeweapon == wep)
-				col = '1 1 0';
-			else
-				col = '0.6 0.2 0';
-			float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
-			drawfont = 8; // FONT_USER
-			drawstring_aspect(sbar + vec2(wep_pos * 24, -8), ftos(imp), '8 8 0', col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
-			drawfont = oldfont;
-			wep_pos += 1;
-		}
-	}
 
-	// ammo counts
-	for(int j = 0; j < 7; j++)
-	{
-		int itemstat;
-		int offset;
-		switch(j)
+		// ammo counts
+		for(int j = 0; j < 7; j++)
 		{
-			default:
-			case 0: itemstat = getstati(STAT_SHELLS); break;
-			case 1: itemstat = getstati(STAT_NAILS); break;
-			case 2: itemstat = getstati(STAT_ROCKETS); break;
-			case 3: itemstat = getstati(STAT_CELLS); break;
-			case 4: itemstat = STAT(LAVA_NAILS); break;
-			case 5: itemstat = STAT(MULTI_ROCKETS); break;
-			case 6: itemstat = STAT(PLASMA_AMMO); break;
+			int itemstat;
+			int offset;
+			switch(j)
+			{
+				default:
+				case 0: itemstat = getstati(STAT_SHELLS); break;
+				case 1: itemstat = getstati(STAT_NAILS); break;
+				case 2: itemstat = getstati(STAT_ROCKETS); break;
+				case 3: itemstat = getstati(STAT_CELLS); break;
+				case 4: itemstat = STAT(LAVA_NAILS); break;
+				case 5: itemstat = STAT(MULTI_ROCKETS); break;
+				case 6: itemstat = STAT(PLASMA_AMMO); break;
+			}
+			// hack: only render mission pack ammo if we have ammo
+			if(j > 3 && itemstat <= 0)
+				continue;
+			//int oldf = drawfont;
+			//drawfont = 11;
+			//drawstring(sbar + vec2(48 * j, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			//drawfont = oldf;
+			Sbar_DrawString(vec2(48 * j, -24), ftos(itemstat));
 		}
-		// hack: only render mission pack ammo if we have ammo
-		if(j > 3 && itemstat <= 0)
-			continue;
-		//int oldf = drawfont;
-		//drawfont = 11;
-		//drawstring(sbar + vec2(48 * j, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
-		//drawfont = oldf;
-		Sbar_DrawString(vec2(48 * j, -24), ftos(itemstat));
 	}
 
 	// items
@@ -965,17 +968,20 @@ void Sbar_DrawInventory()
 	}
 #endif
 
-	int pcount = 0;
-	FOREACH(StatusEffect, it.instanceOfPowerups,
+	if(!(myitems & IT_TANK))
 	{
-		if(StatusEffects_active(it, g_statuseffects) && it.m_icon && it.m_icon != "")
+		int pcount = 0;
+		FOREACH(StatusEffect, it.instanceOfPowerups,
 		{
-			Sbar_DrawPic(vec2(192 + (5 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
-			pcount += 1;
-		}
-		if(pcount >= 1)
-			break; // we have limited HUD space unfortunately!
-	});
+			if(StatusEffects_active(it, g_statuseffects) && it.m_icon && it.m_icon != "")
+			{
+				Sbar_DrawPic(vec2(192 + (5 + pcount) * 16, -16), strcat("gfx/quake/", it.m_icon));
+				pcount += 1;
+			}
+			if(pcount >= 1)
+				break; // we have limited HUD space unfortunately!
+		});
+	}
 
 #if 0
 	// TODO: unique positions for multiple powerups?
@@ -1154,9 +1160,12 @@ int oldhealth;
 float health_gettime;
 void Sbar_DrawFace()
 {
-	//int myitems = STAT(ITEMS); // changed field due to reaching bit limit
+	int myitems = STAT(ITEMS); // changed field due to reaching bit limit
 	//int mypowerups = STAT(POWERUPS);
 	string pic;
+
+	if(myitems & IT_TANK)
+		return;
 
 	int myhealth = STAT(HEALTH);
 	if(oldhealth != myhealth && myhealth < oldhealth && (oldhealth - myhealth) >= 3)
@@ -1298,7 +1307,7 @@ void Sbar_Draw()
 				}
 				Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
 
-				if(STAT(SKATING))
+				if(STAT(SKATING) || (STAT(ITEMS) & IT_TANK))
 					{ /* nothing */}
 				else if(thiswep.activeweapon.spawnflags & WEP_FLAG_MANA)
 					Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));

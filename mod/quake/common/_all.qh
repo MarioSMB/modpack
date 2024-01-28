@@ -15,6 +15,8 @@ REGISTER_NET_LINKED(ENT_CLIENT_TOGGLEWALL)
 
 REGISTER_NET_LINKED(ENT_CLIENT_NAGGER) // flags [votecalledvote]
 
+REGISTER_NET_LINKED(ENT_CLIENT_TANK)
+
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC
 NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { make_pure(this); return true; }
@@ -48,6 +50,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "champions/_mod.qh"
 #include "waypoints/_mod.qh"
 #include "slide/_mod.qh"
+#include "tank/_mod.qh"
 
 #ifdef CSQC
 #include "../server/triggers/trigger/viewloc.qh"

@@ -315,6 +315,9 @@ void PrecacheMonsters()
 	precache_sound("items/sharp2.wav");
 	precache_sound("items/sharp3.wav");
 
+	// tank
+	precache_model("progs/g_tank.mdl");
+
 	// precache keys
 	if(world.worldtype == WORLDTYPE_MEDIEVAL || world.worldtype == WORLDTYPE_HUB)
 	{
@@ -538,6 +541,8 @@ void horde_health_touch(entity this, entity toucher)
 {	
 	if(!IS_PLAYER(toucher))
 		return;
+	if(toucher.tank)
+		return;
 	
 	if(!T_Heal(toucher, this.healamount, 0))
 		return;
@@ -562,6 +567,8 @@ void horde_armor_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	if(!IS_PLAYER(toucher))
+		return;
+	if(toucher.tank)
 		return;
 
 	if(this.classname == "item_armor1")
@@ -1478,9 +1485,6 @@ bool SpawnWavePrep(entity this)
 			it.use(it, NULL, NULL);
 	});
 
-	shop_setup_weapons();
-	shop_setup_passive();
-
 	this.wait = true;
 	return 1;
 }
@@ -1535,6 +1539,8 @@ void Countdown4(entity this)
 	SpawnWave2(this);
 	_sound(this, CH_INFO, "misc/talk.wav", 1, ATTN_NONE);
 	shop_opentime = 0;
+	shop_setup_weapons();
+	shop_setup_passive();
 }
 void Countdown3(entity this)
 {
@@ -1994,6 +2000,7 @@ void horde_setup_powerup(entity this, int powerup)
 	}
 }
 
+void horde_spawn_tank(entity this);
 void horde_spawn_powerup(entity this)
 {
 	if(!powerup_chance)
@@ -2001,6 +2008,12 @@ void horde_spawn_powerup(entity this)
 	
 	if(random() < powerup_chance) // "if(1)" to guarantee powerup drop
 	{
+		// if the odds are in our favour, let there be tanks!
+		if(random() < 0.25)
+		{
+			horde_spawn_tank(this);
+			return;
+		}
 		LOG_DEBUG("powerup chance was: ", ftos(powerup_chance));
 		
 		powerup_chance = DEFAULT_POWERUP_CHANCE;
@@ -2036,7 +2049,33 @@ void horde_spawn_powerup(entity this)
 		setsize(powerup, '-12 -12 -12', '12 12 12');
 	}
 	else
-		powerup_chance = powerup_chance + POWERUP_CHANCE_GAIN;
+		powerup_chance += POWERUP_CHANCE_GAIN;
+}
+
+void tankitem_touch(entity this, entity toucher);
+void horde_spawn_tank(entity this)
+{
+	entity item = spawn();
+	setorigin(item, this.origin + '0 0 0');
+
+	//setsize(item, '-16 -16 -24', '16 16 32');
+	item.flags = FL_ITEM;
+	item.solid = SOLID_TRIGGER;
+	set_movetype(item, MOVETYPE_BOUNCE);
+	item.velocity = '0 0 300';
+	
+	//item.velocity_x = crandom() * 64;
+	//item.velocity_y = crandom() * 64;
+	settouch(item, tankitem_touch);
+	setthink(item, horde_powerup_think);
+	item.nextthink = time + 10;
+	//item.effects = EF_DIMLIGHT;
+
+	_setmodel(item, "progs/g_tank.mdl");
+	item.netname = "Tank";
+	item.classname = "item_tank";
+		
+	setsize(item, '-12 -12 -12', '12 12 16');
 }
 
 // remote wavecheck

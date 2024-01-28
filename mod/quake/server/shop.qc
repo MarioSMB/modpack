@@ -14,6 +14,11 @@ void shop_buyitem(entity this, string item)
 
 	if(item == "heal")
 	{
+		if(this.tank)
+		{
+			sprint(this, "You can't buy health while in a tank!\n");
+			return;
+		}
 		if(this.frags < SHOP_COST_HEAL)
 		{
 			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
@@ -32,6 +37,11 @@ void shop_buyitem(entity this, string item)
 
 	if(item == "armor")
 	{
+		if(this.tank)
+		{
+			sprint(this, "You can't buy armor while in a tank!\n");
+			return;
+		}
 		if(this.frags < SHOP_COST_ARMOR)
 		{
 			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");

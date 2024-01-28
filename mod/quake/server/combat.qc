@@ -348,6 +348,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			return;
 	}
 
+	if(targ.tank)
+		damage = Tank_Damage(targ, inflictor, attacker, damage, deathtype);
+
 	if(targ.m_champion)
 		damage *= targ.m_champion.qcc_damagetaken;
 
@@ -496,6 +499,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		targ.armortype = 0;	// lost all armor
 		targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
 	}
+
+	if(targ.tank && targ.health <= 0)
+		Tank_Eject(targ, true); // resets health
 			
 	if(targ.health <= 0)
 	{

@@ -47,6 +47,8 @@ bool GremlinAttemptWeaponSteal(entity this)
 	}
 	if(!IS_PLAYER(this.enemy))
 		return false;
+	if(this.enemy.tank)
+		return false;
 
 	int amount;
 

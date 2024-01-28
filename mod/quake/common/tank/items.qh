@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+void tankitem_touch(entity this, entity toucher);
+#endif
