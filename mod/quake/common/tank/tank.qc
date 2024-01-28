@@ -612,7 +612,8 @@ void Tank_Link(entity this)
 #ifdef CSQC
 void tank_draw(entity this)
 {
-	Movetype_Physics_MatchTicrate(this, TICRATE, false);
+	InterpolateOrigin_Do(this);
+	//Movetype_Physics_MatchTicrate(this, TICRATE, false);
 	if(this.count && csqcplayer)
 	{
 		setorigin(this, csqcplayer.origin);

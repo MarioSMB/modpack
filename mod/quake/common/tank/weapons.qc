@@ -617,7 +617,8 @@ void BPlasmaTouch(entity this, entity toucher)
 
 		setorigin(this, this.origin - 8 * normalize(this.velocity));
 
-		te_teleport(this.origin);
+		//te_teleport(this.origin);
+		te_explosion2(this.origin, 244, 3);
 
 		Remove_BP(this);
 		return;
@@ -696,6 +697,8 @@ void SpreadPlasma(entity this)
 	int maxshots = 5;
 	float shotoffset = floor(maxshots * 0.5) + 1;
 
+	TankAim(this);
+
 	while(num < maxshots)
 	{
 		num += 1;
@@ -705,8 +708,6 @@ void SpreadPlasma(entity this)
 		plasma.solid = SOLID_BBOX;
 		plasma.classname = "splasma";
 
-		makevectors(this.tank.angles);
-		v_forward.z = 0 - v_forward.z;
 		plasma.scale = 0.5;
 		plasma.velocity = qc_aim(this.tank, 1000);
 		plasma.velocity = plasma.velocity * 1000;
@@ -848,7 +849,8 @@ void CPlasmaTouch(entity this, entity toucher)
 
 	setorigin(this, this.origin - 8 * normalize(this.velocity));
 
-	te_teleport(this.origin);
+	//te_teleport(this.origin);
+	te_explosion2(this.origin, 244, 3);
 
 	delete(this);
 }
