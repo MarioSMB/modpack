@@ -94,6 +94,8 @@ void QCC_UpdateStats(entity this)
 
 void QCC_UpdatePlayer(entity this)
 {
+	if(this.tank || STAT(SKATING, this) || world.worldtype == WORLDTYPE_SLIDE)
+		return;
 	Champions oldchamp = this.m_champion;
 	Champions champ = Champion_FromString(this.cvar_cl_quake_model);
 	if(champ.m_condition && champ.m_condition(champ, this))
