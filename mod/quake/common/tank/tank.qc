@@ -426,7 +426,10 @@ void Tank_Eject(entity this, bool dying)
 	this.th_die = PlayerDie;
 
 	if(dying)
+	{
+		this.pain_finished = time + 1;
 		this.health = min(20, mytank.tank_store_health);
+	}
 	else
 		this.health = mytank.tank_store_health;
 
@@ -473,6 +476,9 @@ void Tank_Spawn(entity this)
 	this.items |= IT_TANK;
 	this.effects |= EF_MUZZLEFLASH;
 	this.effects |= EF_NODRAW; // hide the player!
+
+	if(IS_REAL_CLIENT(this))
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_TANK_ENTER);
 
 	clear_powerups(this); // TODO?
 	W_Spellbook_ClearSpells(this);

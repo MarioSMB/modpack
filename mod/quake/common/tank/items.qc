@@ -18,7 +18,7 @@ void tankitem_touch(entity this, entity toucher)
 
 	Tank_Spawn(toucher);
 
-	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_TANK_GOT);
+	//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_TANK_GOT);
 
 	if(deathmatch != 2 && !horde_ent)
 	{

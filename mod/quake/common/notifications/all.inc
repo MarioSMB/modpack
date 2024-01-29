@@ -232,6 +232,7 @@
     MSG_CENTER_NOTIF(SLIDE_GO,                          N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", BOLD(_("^BGGO!")), "")
     MSG_CENTER_NOTIF(SLIDE_RECORD,                      N_ENABLE,     1, 2, "f1race_time f2race_time s1",CPID_SLIDE,"5.5 0", strcat(_("^5New record!^BG"), "\n\n", _("New time is ^F1%s^BG"), "\n", _("Previous time: ^F2%s^BG (%s^BG)")), "")
 
+    MSG_CENTER_NOTIF(TANK_ENTER,                        N_ENABLE,     0, 0, "pass_key",                 CPID_TANK, "0 0", _("^BGPress ^F2%s^BG to exit the tank"), "")
     MSG_CENTER_NOTIF(TANK_MAX_BOUNCEPLASMA,             N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGToo many bounce plasma shots!"), "")
     MSG_CENTER_NOTIF(TANK_MAX_MINES,                    N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGToo many mines out!"), "")
     MSG_CENTER_NOTIF(TANK_GROCKET_DETONATED,            N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGGuided rocket detonated"), "")
