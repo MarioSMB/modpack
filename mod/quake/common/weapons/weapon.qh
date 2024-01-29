@@ -28,8 +28,6 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, spawnflags, int, 0);
     /** M: ammo      : amount of ammo rewarded for picking up the weapon */
     ATTRIB(Weapon, aflag, int, 0);
-    /** M: cost      : cost of buying the weapon in horde mode */
-    ATTRIB(Weapon, m_cost, int, 0);
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */

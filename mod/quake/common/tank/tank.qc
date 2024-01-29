@@ -162,7 +162,6 @@ void Tank_Touch(entity this, entity toucher)
 	if((toucher.origin_z - this.origin_z) > 32)
 		return;
 
-	float damg = vlen(this.velocity - toucher.velocity);
 	UNSET_ONGROUND(toucher);
 	UNSET_ONGROUND(this);
 
@@ -175,19 +174,24 @@ void Tank_Touch(entity this, entity toucher)
 				vector vtemp = toucher.velocity;
 				toucher.velocity = this.velocity * 2 + '0 0 1';
 				this.velocity = vtemp * 2 + '0 0 1';
-				if(damg > 250)
+				if(vdist(this.velocity - toucher.velocity, >, 250))
 					_sound(this, CH_VOICE, "tank/tontank.wav", 1, ATTN_NORM);
 			}
 		}
 	}
 	else
 	{
+		float damg = 0; // setting it only when we need to avoid unnecessary vlen() calls
 		if((this.origin_z - toucher.origin_z) > 17 && !IS_ONGROUND(this))
+		{
+			damg = vlen(this.velocity - toucher.velocity);
 			T_Damage(toucher, this, this, 1.5 * damg, DEATH_CRUSH.m_id);
+		}
 		else
 		{
 			if(vdist(this.velocity, >, 100))
 			{
+				damg = vlen(this.velocity - toucher.velocity);
 				_sound(this, CH_VOICE, "tank/tindude.wav", 1, ATTN_NORM);
 				T_Damage(toucher, this, this, damg * 0.05, DEATH_CRUSH.m_id);
 			}

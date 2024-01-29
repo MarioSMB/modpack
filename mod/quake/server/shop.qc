@@ -172,8 +172,7 @@ void shop_buyitem(entity this, string item)
 		return;
 	}
 
-	float cost = (wep.m_cost) ? wep.m_cost : SHOP_COST_WEAPON;
-	if(this.frags < cost)
+	if(this.frags < SHOP_COST_WEAPON)
 	{
 		sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
 		return;
@@ -195,7 +194,7 @@ void shop_buyitem(entity this, string item)
 
 	bound_other_ammo(this);
 
-	this.frags -= cost;
+	this.frags -= SHOP_COST_WEAPON;
 	if(STAT(WEAPONS, this) & wep.m_wepset)
 		STAT(DUAL_WEAPONS, this) |= wep.m_wepset;
 	else
