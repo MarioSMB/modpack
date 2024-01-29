@@ -4,7 +4,6 @@ float autocvar_fraglimit;
 int autocvar_skill;
 bool autocvar_sv_curl_serverpackages_auto;
 string autocvar_sessionid;
-string autocvar_sv_worldbasename;
 
 // protocol bytes
 const int SVC_CUTSCENE = 34;

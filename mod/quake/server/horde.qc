@@ -10,7 +10,7 @@ void HordeRecord()
 	if(newscore > oldscore)
 	{
 		top_score = newscore;
-		db_put(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/topscore/", ftos(horde_skill)), ftos(newscore));
+		db_put(ServerProgsDB, strcat(mapname, "/topscore/", ftos(horde_skill)), ftos(newscore));
 	}
 }
 
@@ -42,7 +42,7 @@ string HordeRandomMap()
 	for(int j = 0; j < 7; j++)
 	{
 		string themap = strcat("horde", ftos(j + 1));
-		RandomSelection_AddString(themap, (autocvar_sv_worldbasename != themap), 1);
+		RandomSelection_AddString(themap, (mapname != themap), 1);
 	}
 	return RandomSelection_chosen_string;
 }
@@ -1868,7 +1868,7 @@ spawnfunc(horde_manager)
 	this.use = Wavecheck_use;
 
 	horde_skill = autocvar_skill;
-	top_score = stof(db_get(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/topscore/", ftos(horde_skill))));
+	top_score = stof(db_get(ServerProgsDB, strcat(mapname, "/topscore/", ftos(horde_skill))));
 	
 	this.wait = 1; // waiting before next wave?
 	this.delay = 9; // max number of  squads to spawn in a wave

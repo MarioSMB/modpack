@@ -208,9 +208,9 @@ void Slide_Record()
 	if(newtime > oldtime)
 	{
 		besttime_saved = newtime;
-		db_put(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/besttime"), ftos(newtime));
+		db_put(ServerProgsDB, strcat(mapname, "/besttime"), ftos(newtime));
 		if(namebest && namebest != "")
-			db_put(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/bestname"), namebest);
+			db_put(ServerProgsDB, strcat(mapname, "/bestname"), namebest);
 	}
 }
 
@@ -334,8 +334,8 @@ void Set_Check(entity this)
 		e = find(e, classname, "checkfield");
 	}
 
-	timebest = stof(db_get(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/besttime")));
-	strcpy(namebest, db_get(ServerProgsDB, strcat(autocvar_sv_worldbasename, "/bestname")));
+	timebest = stof(db_get(ServerProgsDB, strcat(mapname, "/besttime")));
+	strcpy(namebest, db_get(ServerProgsDB, strcat(mapname, "/bestname")));
 }
 
 PRECACHE(Slide)
