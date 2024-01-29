@@ -9,7 +9,7 @@ void comp_start(entity this)
 		return;
 	}
 	comp_started = true;
-	comp_timelimit = time + 120;		//2 minutes
+	comp_timelimit = 120;		//2 minutes
 
 //reset frags to 0!!!
 	FOREACH_CLIENT(IS_PLAYER(it),

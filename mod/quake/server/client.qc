@@ -1554,6 +1554,7 @@ void PutPlayerInServer(entity this)
 	this.view_ofs = '0 0 22';
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
+	STAT(QCC_CHAMPION, this) = 0;
 	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE)
 		champions_PutPlayerInServer(this);
 
