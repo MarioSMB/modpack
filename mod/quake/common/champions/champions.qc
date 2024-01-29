@@ -8,10 +8,7 @@ void QCC_FixClient(entity this)
 		champ = it;
 		break;
 	});
-	if(champ)
-		this.m_champion = champ;
-	else
-		this.m_champion = NULL;
+	this.m_champion = champ;
 #endif
 
 	if(this.m_champion && this.m_champion.m_fixclient)

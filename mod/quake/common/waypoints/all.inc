@@ -6,3 +6,5 @@ REGISTER_WAYPOINT(Here, _("Here"), "", '0 1 0', 1);
 REGISTER_WAYPOINT(Danger, _("DANGER"), "", '1 0.5 0', 1);
 
 REGISTER_WAYPOINT(Weapon, _("Weapon"), "", '0 0 0', 1);
+
+REGISTER_WAYPOINT(Exit, _("Exit"), "", '0 1 1', 1);

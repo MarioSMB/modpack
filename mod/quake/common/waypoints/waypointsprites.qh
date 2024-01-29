@@ -4,6 +4,7 @@
 
 /** Additional networked waypoint state, used for items, weapons, buffs */
 .int wp_extra;
+.int wp_extra2;
 
 const int SPRITERULE_DEFAULT = 0;
 

@@ -6,6 +6,16 @@ string autocvar_sv_quake_clippedmaps = "cchorde1 eod4 eod7 targstart targ1m1 tar
 
 int autocvar_noexit;
 
+.entity chlevel_targ;
+.bool chlevel_found; // exit found!
+
+bool changelevel_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
+	if(gameover || intermission_running)
+		return false;
+	return (this.owner.chlevel_found && this.wp_extra > 0);
+}
+
 bool changelevel_checkinlist(string map_name, string list)
 {
 	if (map_name == "" || list == "")
@@ -14,7 +24,32 @@ bool changelevel_checkinlist(string map_name, string list)
 	return (strstrofs(list, map_name, 0) >= 0);
 }
 
-.entity chlevel_targ;
+void changelevel_think(entity this)
+{
+	this.nextthink = time + 0.1;
+	if(this.sprite && time > this.wait)
+	{
+		this.wait = time + 1; // no need to do this often
+		int plnum = 0;
+		int realplnum = 0;
+		// let's not count bots
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
+		{
+			++realplnum;
+			if(it.chlevel_targ == this)
+				++plnum;
+		});
+		float themin = min(1.0, this.count);
+		this.sprite.wp_extra = plnum;
+		this.sprite.wp_extra2 = ceil(realplnum * themin);
+	}
+	//if(this.sprite)
+	//{
+		//WaypointSprite_UpdateMaxHealth(e, carrier.max_health);
+        //WaypointSprite_UpdateHealth(e, carrier.health);
+	//}
+}
+
 void changelevel_touch(entity this, entity toucher)
 {
 	// simply don't react if a non-player triggers it
@@ -31,6 +66,9 @@ void changelevel_touch(entity this, entity toucher)
 		return;
 
 	toucher.chlevel_targ = this;
+	if(!this.chlevel_found)
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_EXIT_FOUND, toucher.netname);
+	this.chlevel_found = true;
 
 	int plnum = 0;
 	int realplnum = 0;
@@ -96,6 +134,12 @@ spawnfunc(trigger_changelevel)
 	InitTrigger(this);
 	settouch(this, changelevel_touch);
 	if(!this.count) { this.count = 0.7; }
+
+	setthink(this, changelevel_think);
+	this.nextthink = time + 0.1;
+
+	WaypointSprite_SpawnFixed(WP_Exit, (this.absmin + this.absmax) * 0.5, this, sprite, NULL);
+	this.sprite.waypointsprite_visible_for_player = changelevel_waypointsprite_visible_for_player;
 }
 
 #endif

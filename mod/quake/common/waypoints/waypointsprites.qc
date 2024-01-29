@@ -19,6 +19,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);
+    WriteByte(MSG_ENTITY, this.wp_extra2);
 
     if (sendflags & 0x80)
     {
@@ -95,6 +96,7 @@ void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
     this.wp_extra = ReadByte();
+    this.wp_extra2 = ReadByte();
 
     if (!this.spawntime)
         this.spawntime = time;
@@ -196,6 +198,7 @@ string spritelookuptext(entity this, string s)
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
+    if (s == WP_Exit.netname) return strcat(WP_Exit.m_name, ((this.wp_extra) ? sprintf(" (%d/%d)", this.wp_extra, this.wp_extra2) : ""));
 
     // need to loop, as our netname could be one of three
     FOREACH(Waypoints, it.netname == s, {

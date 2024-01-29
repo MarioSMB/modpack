@@ -210,6 +210,8 @@
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGDisconnecting in ^COUNT...")), "")
 
+    MSG_CENTER_NOTIF(EXIT_FOUND,                        N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0", _("^BG%s^BG found an exit!"), "")
+
     MSG_CENTER_NOTIF(ITEM_BACKPACK_GOT,                 N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "2 0", _("^BGYou get %s"), "")
     MSG_CENTER_NOTIF(ITEM_BACKPACK_GOT_WEAPON,          N_ENABLE,    2, 0, "s1 s2",                    CPID_ITEM, "2 0", _("^BGYou get the ^F1%s^BG and %s"), "")
     MSG_CENTER_NOTIF(ITEM_KEY_GOT,                      N_DISABL,    2, 0, "s1 s2",                    CPID_KEY,  "1.5 0", _("^BG%s^BG got the %s"), "")
