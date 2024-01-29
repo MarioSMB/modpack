@@ -27,7 +27,7 @@ const float AGGRO_ADD = 2; // random additional wait
 
 .float killtime; // game time at which player got their last killed
 .int killspree; // player's current killing spree
-const float KILLSPREE_GAP = 2; // amount of time that can lapse for a kill to no longer count as part of a spree
+const float KILLSPREE_GAP = 3; // amount of time that can lapse for a kill to no longer count as part of a spree
 
 bool CanDamage(entity targ, entity inflictor);
 

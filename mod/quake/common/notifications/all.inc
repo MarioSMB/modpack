@@ -219,6 +219,8 @@
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_STOLE,                 N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "1.5 0", _("^BGGremlin stole your ^F1%s"), "")
 
+    MSG_CENTER_NOTIF(KILL_STREAK,                       N_ENABLE,     0, 1, "streak_col f1",           CPID_SPREE, "2 0", _("%s%s^BG kill streak!"), "")
+
     MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
 

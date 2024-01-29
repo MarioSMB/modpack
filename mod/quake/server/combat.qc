@@ -241,6 +241,8 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 						sprint(attacker, "^32^7 kill streak!\n");
 				}
 #endif
+				if(time < attacker.killtime && attacker.killspree >= 4)
+					Send_Notification(MSG_CENTER, attacker, MSG_CENTER, CENTER_KILL_STREAK, attacker.killspree);
 			}
 			
 			// check to see about spawning a powerup

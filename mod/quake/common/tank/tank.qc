@@ -46,7 +46,7 @@ PRECACHE(Tank)
 	precache_model("progs/mine.mdl");    //Land mine (skin + camo skins)
 	precache_model("progs/brocket.mdl"); //Big rocket model
 	precache_model("progs/grocket.mdl"); //Guided rocket model
-	precache_model("progs/sphere.mdl");  //Cool explosion for Brockets.
+	precache_model("progs/tsphere.mdl");  //Cool explosion for Brockets.
 	precache_model("progs/tankpack.mdl");//Tank pack holding ammo.
 
 	precache_model("progs/tank.mdl");    //The Default Tank!
