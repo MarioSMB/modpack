@@ -29,6 +29,8 @@ void changelevel_think(entity this)
 	this.nextthink = time + 0.1;
 	if(this.sprite && time > this.wait)
 	{
+		float oldextra = this.sprite.wp_extra;
+		float oldextra2 = this.sprite.wp_extra2;
 		this.wait = time + 1; // no need to do this often
 		int plnum = 0;
 		int realplnum = 0;
@@ -42,6 +44,8 @@ void changelevel_think(entity this)
 		float themin = min(1.0, this.count);
 		this.sprite.wp_extra = plnum;
 		this.sprite.wp_extra2 = ceil(realplnum * themin);
+		if(this.sprite.wp_extra != oldextra || this.sprite.wp_extra2 != oldextra2)
+			this.sprite.SendFlags |= 1; // force an update
 	}
 	//if(this.sprite)
 	//{
