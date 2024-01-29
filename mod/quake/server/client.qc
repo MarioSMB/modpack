@@ -3006,8 +3006,14 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 }
 #endif
 
+bool ping_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
+	return (this.realowner == player);
+}
+
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void NoclipCheat(entity this);
+.entity waypointsprite_attachedforping;
 void SV_ParseClientCommand(entity this, string command)
 {
 	// If invalid UTF-8, don't even parse it
@@ -3183,6 +3189,20 @@ void SV_ParseClientCommand(entity this, string command)
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
 		__pointparticles(_particleeffectnum(argv(1)), trace_endpos, '0 0 0', 1);
+		return;
+	}
+
+	if(cmd_name == "pingents")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		IL_EACH(g_moveables, it.pure_data == 0,
+		{
+			entity e = WaypointSprite_Spawn(WP_Entity, 10, 0, NULL, (it.absmin + it.absmax) * 0.5, NULL, 0, it, waypointsprite_attachedforping, false, NULL);
+			e.realowner = this;
+			e.wp_extra = num_for_edict(it);
+			e.waypointsprite_visible_for_player = ping_waypointsprite_visible_for_player;
+		});
 		return;
 	}
 

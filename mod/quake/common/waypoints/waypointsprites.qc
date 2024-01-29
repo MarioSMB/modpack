@@ -18,7 +18,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     if(this.exteriormodeltoclient == to) hide_flags |= 2; // my own
 
     WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, this.wp_extra);
+    WriteShort(MSG_ENTITY, this.wp_extra);
     WriteByte(MSG_ENTITY, this.wp_extra2);
 
     if (sendflags & 0x80)
@@ -95,7 +95,7 @@ void Ent_RemoveWaypointSprite(entity this)
 void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
-    this.wp_extra = ReadByte();
+    this.wp_extra = ReadShort();
     this.wp_extra2 = ReadByte();
 
     if (!this.spawntime)
@@ -199,6 +199,7 @@ string spritelookuptext(entity this, string s)
 		return "Spam"; // no need to translate this debug string
     if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
     if (s == WP_Exit.netname) return strcat(WP_Exit.m_name, ((this.wp_extra) ? sprintf(" (%d/%d)", this.wp_extra, this.wp_extra2) : ""));
+    if (s == WP_Entity.netname) return strcat("Entity ", ftos(this.wp_extra));
 
     // need to loop, as our netname could be one of three
     FOREACH(Waypoints, it.netname == s, {
