@@ -316,6 +316,8 @@ void MineExplode(entity this)
 
 void MineExplodeTouch(entity this, entity toucher)
 {
+	if(toucher == this.owner || toucher == this.owner.tank || (IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual))
+		return;
 	MineExplode(this);
 }
 
