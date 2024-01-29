@@ -202,16 +202,9 @@ void slide_check_time()
 
 void Slide_Record()
 {
-	float oldtime = besttime_saved;
-	float newtime = timebest;
-
-	if(newtime > oldtime)
-	{
-		besttime_saved = newtime;
-		db_put(ServerProgsDB, strcat(mapname, "/besttime"), ftos(newtime));
-		if(namebest && namebest != "")
-			db_put(ServerProgsDB, strcat(mapname, "/bestname"), namebest);
-	}
+	db_put(ServerProgsDB, strcat(mapname, "/besttime"), ftos(timebest));
+	if(namebest && namebest != "")
+		db_put(ServerProgsDB, strcat(mapname, "/bestname"), namebest);
 }
 
 void Slide_Switch(entity this)

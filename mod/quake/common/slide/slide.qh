@@ -13,8 +13,6 @@ float autocvar_sv_quake_slide_timelimit = 300;
 
 float slide_timelimit;
 
-int besttime_saved;
-
 int slideflags;
 const int SF_ALLOWKILL = 1;
 const int SF_INTERBASHNO = 2;
