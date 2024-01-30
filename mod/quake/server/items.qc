@@ -663,7 +663,15 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 	RandomSelection_Init();
 	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN,
 	{
-		if(it.ammo_type != wpn.ammo_type)
+		// hack to allow instruments to replace regular weapon spawns
+		int mytype = it.ammo_type;
+		if(it == WEP_PIANO)
+			mytype = IT_NAILS;
+		else if(it == WEP_DOOT)
+			mytype = IT_SHELLS;
+		else if(it == WEP_TUBA || it == WEP_MAYO)
+			mytype = IT_ROCKETS;
+		if(mytype != wpn.ammo_type)
 			continue;
 		RandomSelection_AddEnt(it, 1, 1);
 	});
