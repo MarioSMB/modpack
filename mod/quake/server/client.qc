@@ -215,7 +215,12 @@ string get_playermodel(entity this)
 	if(STAT(SKATING, this))
 		return "progs/skater.mdl";
 	else if(STAT(SLIDE_ON, this))
-		return "progs/surfer1.mdl";
+	{
+		if(this.cvar_cl_quake_model == "goat" && !CHAMPION_Goat.m_condition(CHAMPION_Goat, this))
+			return "progs/player_goat.mdl";
+		else
+			return "progs/surfer1.mdl";
+	}
 	if(this.m_champion)
 		return this.m_champion.m_model.model_str();
 	return "progs/player.mdl";
