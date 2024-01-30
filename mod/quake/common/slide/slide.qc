@@ -614,9 +614,9 @@ void EndStuff(entity this, entity trigger)
 	if(newrecord)
 	{
 		if(oldtime > 0)
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_NEW, oldname, TIME_ENCODE(timebest), TIME_ENCODE(oldtime));
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_BEAT, oldname, TIME_ENCODE(timebest), TIME_ENCODE(oldtime));
 		else
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_BEAT, TIME_ENCODE(timebest));
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_NEW, TIME_ENCODE(timebest));
 	}
 	else
 		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_FINISHED, ((namebest && namebest != "") ? namebest : "Player"), TIME_ENCODE(temptime), TIME_ENCODE(timebest));
