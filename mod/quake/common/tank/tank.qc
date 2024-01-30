@@ -186,6 +186,7 @@ void Tank_Touch(entity this, entity toucher)
 		{
 			damg = vlen(this.velocity - toucher.velocity);
 			T_Damage(toucher, this, this, 1.5 * damg, DEATH_CRUSH.m_id);
+			T_Damage(this, toucher, toucher, 1, DEATH_CRUSH.m_id);
 		}
 		else
 		{
@@ -194,6 +195,7 @@ void Tank_Touch(entity this, entity toucher)
 				damg = vlen(this.velocity - toucher.velocity);
 				_sound(this, CH_VOICE, "tank/tindude.wav", 1, ATTN_NORM);
 				T_Damage(toucher, this, this, damg * 0.05, DEATH_CRUSH.m_id);
+				T_Damage(this, toucher, toucher, 2, DEATH_CRUSH.m_id);
 			}
 			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
 

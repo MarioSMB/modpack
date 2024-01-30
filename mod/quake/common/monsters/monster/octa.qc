@@ -16,7 +16,7 @@ const int anim_octa_dieb = 115;
 
 void octaflame_touch(entity this, entity toucher)
 {
-	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO)
+	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO || toucher.tank)
 		return;
 	// special rule: no collisions with owner
 	// TODO: clip group?
