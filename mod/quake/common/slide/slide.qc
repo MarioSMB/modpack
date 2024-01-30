@@ -202,7 +202,9 @@ void slide_check_time()
 
 void Slide_Record()
 {
+	string day = strftime(true, "%d");
 	db_put(ServerProgsDB, strcat(mapname, "/besttime"), ftos(timebest));
+	db_put(ServerProgsDB, strcat(mapname, "/besttimeset"), day);
 	if(namebest && namebest != "")
 		db_put(ServerProgsDB, strcat(mapname, "/bestname"), namebest);
 }
@@ -327,8 +329,13 @@ void Set_Check(entity this)
 		e = find(e, classname, "checkfield");
 	}
 
-	timebest = stof(db_get(ServerProgsDB, strcat(mapname, "/besttime")));
-	strcpy(namebest, db_get(ServerProgsDB, strcat(mapname, "/bestname")));
+	float day = stof(strftime(true, "%d"));
+	float timebestset = stof(db_get(ServerProgsDB, strcat(mapname, "/besttimeset")));
+	if(day == timebestset)
+	{
+		timebest = stof(db_get(ServerProgsDB, strcat(mapname, "/besttime")));
+		strcpy(namebest, db_get(ServerProgsDB, strcat(mapname, "/bestname")));
+	}
 }
 
 PRECACHE(Slide)
@@ -605,7 +612,12 @@ void EndStuff(entity this, entity trigger)
 		_sound(this, CHAN_AUTO, "buzz.wav", 1, ATTN_NORM);
 
 	if(newrecord)
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD, oldname, TIME_ENCODE(timebest), TIME_ENCODE(oldtime));
+	{
+		if(oldtime > 0)
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_NEW, oldname, TIME_ENCODE(timebest), TIME_ENCODE(oldtime));
+		else
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_BEAT, TIME_ENCODE(timebest));
+	}
 	else
 		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_FINISHED, ((namebest && namebest != "") ? namebest : "Player"), TIME_ENCODE(temptime), TIME_ENCODE(timebest));
 }
