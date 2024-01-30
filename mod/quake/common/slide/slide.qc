@@ -613,7 +613,7 @@ void EndStuff(entity this, entity trigger)
 
 	if(newrecord)
 	{
-		if(oldtime > 0)
+		if(oldtime > 0 && oldtime != 999999)
 			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_BEAT, oldname, TIME_ENCODE(timebest), TIME_ENCODE(oldtime));
 		else
 			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SLIDE_RECORD_NEW, TIME_ENCODE(timebest));
