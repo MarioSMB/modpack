@@ -15,7 +15,7 @@ void Slide_Jump(entity this)
 #ifdef SVQC
 //   sound (this, CHAN_BODY, "doors/airdoor2.wav", 1, ATTN_NORM);
 	if(this.cvar_cl_quake_model == "goat" && !CHAMPION_Goat.m_condition(CHAMPION_Goat, this))
-		_sound(this, CHAN_BODY, CHAMPION_Goat.m_sound_death(), 1, ATTN_NORM);
+		_sound(this, CHAN_BODY, CHAMPION_Goat.m_sound_death(), 1, 0.25);
 	else
 		_sound(this, CHAN_BODY, "bjump1.wav", 1, ATTN_NORM);
 #endif
