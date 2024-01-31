@@ -185,6 +185,8 @@ void Tank_Touch(entity this, entity toucher)
 		if((this.origin_z - toucher.origin_z) > 17 && !IS_ONGROUND(this))
 		{
 			damg = vlen(this.velocity - toucher.velocity);
+			if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+				damg = 120;
 			T_Damage(toucher, this, this, 1.5 * damg, DEATH_CRUSH.m_id);
 			T_Damage(this, toucher, toucher, 1, DEATH_CRUSH.m_id);
 		}
@@ -193,6 +195,8 @@ void Tank_Touch(entity this, entity toucher)
 			if(vdist(this.velocity, >, 100))
 			{
 				damg = vlen(this.velocity - toucher.velocity);
+				if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+					damg = 1200;
 				_sound(this, CH_VOICE, "tank/tindude.wav", 1, ATTN_NORM);
 				T_Damage(toucher, this, this, damg * 0.05, DEATH_CRUSH.m_id);
 				T_Damage(this, toucher, toucher, 2, DEATH_CRUSH.m_id);
