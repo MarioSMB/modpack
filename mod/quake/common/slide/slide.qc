@@ -205,9 +205,9 @@ void slide_check_time()
 
 void Slide_Record()
 {
-	string day = strftime(true, "%d");
+	string week = strftime(true, "%U");
 	db_put(ServerProgsDB, strcat(mapname, "/besttime"), ftos(timebest));
-	db_put(ServerProgsDB, strcat(mapname, "/besttimeset"), day);
+	db_put(ServerProgsDB, strcat(mapname, "/besttimeset"), week);
 	if(namebest && namebest != "")
 		db_put(ServerProgsDB, strcat(mapname, "/bestname"), namebest);
 }
@@ -332,9 +332,9 @@ void Set_Check(entity this)
 		e = find(e, classname, "checkfield");
 	}
 
-	float day = stof(strftime(true, "%d"));
+	float week = stof(strftime(true, "%U"));
 	float timebestset = stof(db_get(ServerProgsDB, strcat(mapname, "/besttimeset")));
-	if(day == timebestset)
+	if(week == timebestset)
 	{
 		timebest = stof(db_get(ServerProgsDB, strcat(mapname, "/besttime")));
 		strcpy(namebest, db_get(ServerProgsDB, strcat(mapname, "/bestname")));
