@@ -621,7 +621,10 @@ void summon_vorelings(entity this)
 		SpawnChunk(mon.origin, this.pos2 * 400, 0, 10);
 	}
 
-	delete(this);
+	// hack to keep the rune around for the duration of the vorelings to keep them from being spammed
+	this.effects = EF_NODRAW;
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 20;
 }
 
 entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon);
@@ -1280,6 +1283,8 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 		case SPELL_VORELING:
 		{
 			if(STAT(MANA, this) < SPELL_COST_VORELING)
+				return;
+			if(!rune_checklimit(this, SPELL_VORELING))
 				return;
 			spot = rune_getspot(this, weaponentity);
 			if(spot == '0 0 0')

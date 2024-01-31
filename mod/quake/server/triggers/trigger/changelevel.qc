@@ -70,9 +70,6 @@ void changelevel_touch(entity this, entity toucher)
 		return;
 
 	toucher.chlevel_targ = this;
-	if(!this.chlevel_found)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_EXIT_FOUND, toucher.netname);
-	this.chlevel_found = true;
 
 	int plnum = 0;
 	int realplnum = 0;
@@ -83,6 +80,10 @@ void changelevel_touch(entity this, entity toucher)
 		if(it.chlevel_targ == this)
 			++plnum;
 	});
+	if(!this.chlevel_found && realplnum > 1)
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_EXIT_FOUND, toucher.netname);
+	this.chlevel_found = true;
+
 	float themin = min(1.0, this.count);
 	if(plnum < ceil(realplnum * themin)) // 70% of players
 		return;

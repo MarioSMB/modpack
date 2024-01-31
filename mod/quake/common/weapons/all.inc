@@ -29,6 +29,7 @@
 #include "weapon/pan.qh"
 #include "weapon/doot.qh"
 #include "weapon/mayo.qh"
+#include "weapon/kazoo.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

@@ -746,7 +746,7 @@ void SpreadPlasma(entity this)
 
 entity HomeFindTarget(entity this)
 {
-	entity selected = W_PickNearbyTarget(this);
+	entity selected = W_PickNearbyTarget(this, false);
 
 	if(selected)
 	{

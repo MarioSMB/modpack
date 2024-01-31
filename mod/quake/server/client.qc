@@ -2802,6 +2802,12 @@ void exploder_think(entity this)
 	delete(this);
 }
 
+void part_think(entity this)
+{
+	particle(this.origin, '0 0 0', this.count, this.cnt);
+	delete(this);
+}
+
 #if 0
 void target_spawn_helper_setmodel(entity this)
 {
@@ -3129,6 +3135,21 @@ void SV_ParseClientCommand(entity this, string command)
 		exploder.cnt = stof(argv(2));
 		exploder.nextthink = time + 0.5; // give them enough time to close the console!
 		setorigin(exploder, trace_endpos);
+		return;
+	}
+
+	if(cmd_name == "particle")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		makevectors(this.v_angle);
+		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 100, MOVE_NORMAL, this);
+		entity part = new(particle);
+		setthink(part, part_think);
+		part.count = stof(argv(1));
+		part.cnt = stof(argv(2));
+		part.nextthink = time + 0.5; // give them enough time to close the console!
+		setorigin(part, trace_endpos);
 		return;
 	}
 

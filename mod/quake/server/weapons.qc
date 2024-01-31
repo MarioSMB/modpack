@@ -246,7 +246,7 @@ JUNK
 ====================================
 */
 
-entity W_PickNearbyTarget(entity this)
+entity W_PickNearbyTarget(entity this, bool checkinfront)
 {
 	float cur_dist = 0;
 	RandomSelection_Init();
@@ -258,7 +258,7 @@ entity W_PickNearbyTarget(entity this)
 			float head_dist = vlen2(it.origin - this.origin);
 			vector vec = normalize(it.origin - this.origin);
 			float dot = vec * v_forward;
-			if((!cur_dist || head_dist < cur_dist) && dot > 0.3)
+			if((!cur_dist || head_dist < cur_dist) && (!checkinfront || dot > 0.3))
 			{
 				RandomSelection_AddEnt(it, 1, 1);
 				cur_dist = head_dist;
@@ -391,7 +391,7 @@ void W_PulseRifle(entity this)
 	this.pulserifle_finished = time + 1;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this);
+	entity selected = W_PickNearbyTarget(this, true);
 	if(selected)
 		W_FireRifleTarget(this, selected);
 }
@@ -403,7 +403,7 @@ void W_Fireball(entity this)
 	this.fireball_finished = time + 2;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this);
+	entity selected = W_PickNearbyTarget(this, true);
 	if(selected)
 		W_Fireball_Attack(this, selected);
 }

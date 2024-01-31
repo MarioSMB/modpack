@@ -29,3 +29,4 @@
 #include "ripper.qh"
 #include "spellbook.qh"
 #include "tuba.qh"
+#include "kazoo.qh"

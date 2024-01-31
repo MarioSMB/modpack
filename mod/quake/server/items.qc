@@ -665,7 +665,7 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 	{
 		// hack to allow instruments to replace regular weapon spawns
 		int mytype = it.ammo_type;
-		if(it == WEP_PIANO)
+		if(it == WEP_PIANO || it == WEP_KAZOO)
 			mytype = IT_NAILS;
 		else if(it == WEP_DOOT)
 			mytype = IT_SHELLS;
