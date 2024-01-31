@@ -57,7 +57,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 	bool dobrown = (!docolors && random() < 0.1);
 
 	this.punchangle_x = -2;
-	W_TakeMana(this, 8);
+	W_TakeMana(this, 5);
 
 	vector org = gettaginfo(this.(weaponentity), 0);
 	vector offset = org + v_up * -8 + v_forward * 14;
@@ -134,7 +134,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 METHOD(Doot, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 8)
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 5)
 	{
 		if(IS_PLAYER(actor))
 			player_shot1(actor);
