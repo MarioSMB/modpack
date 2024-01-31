@@ -24,8 +24,8 @@ void kazoo_note_touch(entity this, entity toucher)
 		return;
 	}
 
-	float mydmg = 10;
-	float damg = mydmg + random() * (mydmg * 0.2);
+	float mydmg = 12;
+	float damg = mydmg + random() * mydmg;
 	
 	if(toucher.health)
 	{
@@ -56,7 +56,7 @@ void kazoo_note_spreadout(entity this)
 	if(selected)
 	{
 		vector dir = normalize(selected.origin - this.origin);
-		this.velocity = dir * 600;
+		this.velocity = dir * 800;
 		this.avelocity = '0 0 0';
 		setthink(this, Become_Burst_6Sided_BrightYellow_Explosion);
 		this.nextthink = time + 5;
