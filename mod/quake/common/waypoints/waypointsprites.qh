@@ -157,8 +157,6 @@ void WaypointSprite_HelpMePing(entity e);
 
 void WaypointSprite_FadeOutIn(entity e, float t);
 
-void WaypointSprite_Init();
-
 void WaypointSprite_Kill(entity wp);
 
 void WaypointSprite_Disown(entity wp, float fadetime);

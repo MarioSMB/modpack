@@ -250,10 +250,11 @@ entity W_PickNearbyTarget(entity this, bool checkinfront)
 {
 	float cur_dist = 0;
 	RandomSelection_Init();
+	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
 	FOREACH_ENTITY_RADIUS(this.origin, 500, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it))),
 	{
-		if(it.takedamage && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && !it.charmed && visible(this, it))
+		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed && visible(this, it))
 		{
 			float head_dist = vlen2(it.origin - this.origin);
 			vector vec = normalize(it.origin - this.origin);

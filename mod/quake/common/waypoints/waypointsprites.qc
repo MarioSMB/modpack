@@ -844,7 +844,7 @@ void WaypointSprite_FadeOutIn(entity e, float t)
     e.SendFlags |= 16;
 }
 
-void WaypointSprite_Init()
+STATIC_INIT_LATE(WaypointSprite_Init)
 {
     waypointsprite_limitedrange = autocvar_sv_waypointsprite_limitedrange;
     waypointsprite_deployed_lifetime = autocvar_sv_waypointsprite_deployed_lifetime;
