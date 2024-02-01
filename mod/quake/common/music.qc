@@ -124,7 +124,7 @@ void music_PlayerPreThink(entity this)
 			r *= (2 ** playoctave);
 		Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 		if(msound && msound != SND_Null)
-			sound7(this, CH_WEAPON_B, Sound_fixpath(msound), 1, ATTN_NORM, r, 0);
+			sound7(this, CH_AMBIENT_SINGLE, Sound_fixpath(msound), 1, ATTN_NORM, r, 0);
 	}
 
 	this.(weaponentity).music_nextnote = time + (60 / mspeed);

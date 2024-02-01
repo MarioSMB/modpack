@@ -22,7 +22,7 @@ const int CH_PLAYER_SINGLE = 7;
 // const int CH_BGM_SINGLE = -8;
 const int CH_BGM_SINGLE = 8;
 const int CH_AMBIENT = -9;
-// const int CH_AMBIENT_SINGLE = 9;
+const int CH_AMBIENT_SINGLE = 9;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
