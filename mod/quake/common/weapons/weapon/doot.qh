@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(DOOT_MUSICNOTE, "weapons/doot_music");
+#endif
+
 CLASS(Doot, Weapon)
 /* ammotype  */ ATTRIB(Doot, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Doot, impulse, int, 3);
-/* spawnflags*/ ATTRIB(Doot, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Doot, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(Doot, aflag, int, 10);
 /* modelname */ ATTRIB(Doot, mdl, string, "doot");
 /* crosshair */ ATTRIB(Doot, w_crosshair, string, "gfx/crosshairtuba");
@@ -12,6 +16,9 @@ CLASS(Doot, Weapon)
 /* wepimg    */ ATTRIB(Doot, model2, string, "doot");
 /* refname   */ ATTRIB(Doot, netname, string, "doot");
 /* wepname   */ ATTRIB(Doot, m_name, string, _("Doot"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Doot, m_musicnote, Sound, SND_DOOT_MUSICNOTE);
+#endif
 
 ENDCLASS(Doot)
 REGISTER_WEAPON(DOOT, NEW(Doot));

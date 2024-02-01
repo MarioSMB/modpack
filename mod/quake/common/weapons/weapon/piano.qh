@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(PIANO_MUSICNOTE, "weapons/piano_music");
+#endif
+
 CLASS(Piano, Weapon)
 /* ammotype  */ ATTRIB(Piano, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Piano, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(Piano, aflag, int, 30);
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");
@@ -12,6 +16,9 @@ CLASS(Piano, Weapon)
 /* wepimg    */ ATTRIB(Piano, model2, string, "piano");
 /* refname   */ ATTRIB(Piano, netname, string, "piano");
 /* wepname   */ ATTRIB(Piano, m_name, string, _("Piano"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Piano, m_musicnote, Sound, SND_PIANO_MUSICNOTE);
+#endif
 
 ENDCLASS(Piano)
 REGISTER_WEAPON(PIANO, NEW(Piano));

@@ -5,6 +5,7 @@
 #include "../common/physics.qh"
 #include "../common/slide/slide.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/music.qh"
 #include "combat.qh"
 #include "getreplies.qh"
 #include "player.qh"
@@ -1393,6 +1394,7 @@ void PutObserverInServer(entity this)
 
 	Tank_PlayerDie(this);
 	champions_RemovePlayer(this);
+	music_RemovePlayer(this);
 }
 
 void PutPlayerInServer(entity this)
@@ -1524,6 +1526,8 @@ void PutPlayerInServer(entity this)
 	settouch(this, player_touch);
 
 	status_effects_PutClientInServer(this);
+
+	music_RemovePlayer(this);
 
 	//JIM
 	// Clear out velocity so you're not launched into the air
@@ -2007,7 +2011,11 @@ void PlayerPreThink(entity this)
 	this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 
 	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE) // champions handles tank status properly
+	{
 		champions_PlayerPreThink(this);
+
+		music_PlayerPreThink(this);
+	}
 
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
@@ -2489,6 +2497,8 @@ void ClientDisconnect(entity this)
 	status_effects_ClientDisconnect(this);
 
 	champions_RemovePlayer(this);
+
+	music_RemovePlayer(this);
 
 	Tank_PlayerDie(this);
 
@@ -3249,6 +3259,9 @@ void SV_ParseClientCommand(entity this, string command)
 	}
 
 	if(sv_shop_command(this, cmd_name, argc))
+		return;
+
+	if(sv_music_command(this, cmd_name, argc))
 		return;
 
 	clientcommand(this, command);

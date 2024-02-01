@@ -492,6 +492,7 @@ void Tank_Spawn(entity this)
 
 	clear_powerups(this); // TODO?
 	W_Spellbook_ClearSpells(this);
+	music_RemovePlayer(this);
 
 	entity newtank = new(tank);
 	newtank.owner = this;

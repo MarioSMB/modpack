@@ -1,0 +1,21 @@
+#pragma once
+
+#ifdef SVQC
+.int music_pos;
+.int music_speed;
+.float music_nextnote;
+.float music_starttime;
+.int music_repeatstart;
+.int music_repeatend;
+.string music_song;
+
+void music_RemovePlayer(entity this);
+
+void music_PlayerPreThink(entity this);
+
+bool sv_music_command(entity this, string cmd, float argc);
+#endif
+
+#ifdef CSQC
+bool cl_music_command(string cmd, string command);
+#endif

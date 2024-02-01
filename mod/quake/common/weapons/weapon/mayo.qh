@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(MAYO_MUSICNOTE, "weapons/mayo_music");
+#endif
+
 CLASS(Mayo, Weapon)
 /* ammotype  */ ATTRIB(Mayo, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Mayo, impulse, int, 6);
-/* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(Mayo, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(Mayo, aflag, int, 5);
 /* modelname */ ATTRIB(Mayo, mdl, string, "mayo");
 /* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshairtuba");
@@ -12,6 +16,9 @@ CLASS(Mayo, Weapon)
 /* wepimg    */ ATTRIB(Mayo, model2, string, "mayo");
 /* refname   */ ATTRIB(Mayo, netname, string, "mayo");
 /* wepname   */ ATTRIB(Mayo, m_name, string, _("Jar O' Mayo"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Mayo, m_musicnote, Sound, SND_MAYO_MUSICNOTE);
+#endif
 
 ENDCLASS(Mayo)
 REGISTER_WEAPON(MAYO, NEW(Mayo));

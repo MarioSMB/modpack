@@ -44,6 +44,11 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, weaponreplace, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+#ifdef GAMEQC
+    /** M: sound SND_id_MUSICNOTE */
+    ATTRIB(Weapon, m_musicnote, entity);
+#endif
+
 
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
@@ -87,6 +92,7 @@ const int WEP_FLAG_NOSTEAL       =  BIT(10); // weapon should not be taken by gr
 const int WEP_FLAG_HIPNOTIC      =  BIT(11); // from the hipnotic mission pack
 const int WEP_FLAG_ROGUE         =  BIT(12); // from the rogue mission pack
 const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack
+const int WEP_FLAG_MUSIC         =  BIT(14); // weapon is a musical instrument
 
 // variables:
 string weaponorder_byid;

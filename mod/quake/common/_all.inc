@@ -33,4 +33,5 @@
 #endif
 
 #include "wepent.qc"
+#include "music.qc"
 #endif

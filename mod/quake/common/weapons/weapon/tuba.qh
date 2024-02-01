@@ -1,9 +1,15 @@
 #pragma once
 
+#ifdef GAMEQC
+// tuba is in C so there's no custom sound file here
+// TODO: just adjust the pitch of all the instruments moving forward to be in C? may not work with things like mayo!
+SOUND(TUBA_MUSICNOTE, "weapons/tuba_fire");
+#endif
+
 CLASS(Tuba, Weapon)
 /* ammotype  */ ATTRIB(Tuba, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Tuba, impulse, int, 7);
-/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MANA);
+/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MANA | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(Tuba, aflag, int, 7);
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
@@ -12,6 +18,9 @@ CLASS(Tuba, Weapon)
 /* wepimg    */ ATTRIB(Tuba, model2, string, "tuba");
 /* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Tuba, m_musicnote, Sound, SND_TUBA_MUSICNOTE);
+#endif
 
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));

@@ -4,6 +4,7 @@
 #include "sbar.qh"
 #include "shop.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/music.qh"
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
@@ -153,6 +154,9 @@ bool CSQC_ConsoleCommand(string command)
 	string s = strtolower(argv(0));
 
 	if(cl_shop_command(s))
+		return true;
+
+	if(cl_music_command(s, command))
 		return true;
 
 	if(s == "+showaccuracy" || s == "-showaccuracy")

@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(KAZOO_MUSICNOTE, "weapons/kazoo_music");
+#endif
+
 CLASS(Kazoo, Weapon)
 /* ammotype  */ ATTRIB(Kazoo, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Kazoo, impulse, int, 4);
-/* spawnflags*/ ATTRIB(Kazoo, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Kazoo, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(Kazoo, aflag, int, 10);
 /* modelname */ ATTRIB(Kazoo, mdl, string, "kazoo");
 /* crosshair */ ATTRIB(Kazoo, w_crosshair, string, "gfx/crosshairtuba");
@@ -12,6 +16,9 @@ CLASS(Kazoo, Weapon)
 /* wepimg    */ ATTRIB(Kazoo, model2, string, "kazoo");
 /* refname   */ ATTRIB(Kazoo, netname, string, "kazoo");
 /* wepname   */ ATTRIB(Kazoo, m_name, string, _("Kazoo"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Kazoo, m_musicnote, Sound, SND_KAZOO_MUSICNOTE);
+#endif
 
 ENDCLASS(Kazoo)
 REGISTER_WEAPON(KAZOO, NEW(Kazoo));
