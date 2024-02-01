@@ -2011,11 +2011,9 @@ void PlayerPreThink(entity this)
 	this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 
 	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE) // champions handles tank status properly
-	{
 		champions_PlayerPreThink(this);
 
-		music_PlayerPreThink(this);
-	}
+	music_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
