@@ -1,10 +1,6 @@
 #pragma once
 
 #ifdef SVQC
-.entity mymissile;
-.int minenum;
-.int plasmanum;
-
 void T_GMissileExplode(entity this);
 
 void Tank_WeaponFrame(entity this);

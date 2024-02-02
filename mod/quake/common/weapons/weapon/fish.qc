@@ -200,6 +200,7 @@ void fishmissile(entity this, .entity weaponentity)
 	if(fish.fish_time == 20)
 		fish.avelocity_x *= 0.5;
 	fish.movedir = fish.velocity;
+	fish.weaponentity_fld = weaponentity;
 	_setmodel(fish, "progs/feesh.mdl");
 	setsize(fish, '0 0 0','0 0 0');
 	settouch(fish, fishtouch);

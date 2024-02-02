@@ -52,10 +52,11 @@ void kazoo_note_spreadout(entity this)
 		Become_Burst_6Sided_BrightYellow_Explosion(this);
 		return;
 	}
-	entity selected = W_PickNearbyTarget(this, false);
+	entity selected = W_PickNearbyTarget(this, false, true);
 	if(selected)
 	{
-		vector dir = normalize(selected.origin - this.origin);
+		vector targ_pos = (selected.absmin + selected.absmax) * 0.5;
+		vector dir = normalize(targ_pos - this.origin);
 		this.velocity = dir * 800;
 		this.avelocity = '0 0 0';
 		setthink(this, Become_Burst_6Sided_BrightYellow_Explosion);

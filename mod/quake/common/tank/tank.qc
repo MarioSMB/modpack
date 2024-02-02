@@ -424,10 +424,6 @@ void Tank_Eject(entity this, bool dying)
 
 	entity mytank = this.tank;
 
-	if(mytank.mymissile)
-		T_GMissileExplode(mytank.mymissile);
-	mytank.mymissile = NULL;
-
 	tank_cleanup(this);
 
 	this.air_finished = time + 12;
@@ -530,7 +526,7 @@ void Tank_Spawn(entity this)
 
 	this.health = 250;
 	this.armortype = 0;
-	this.armorvalue = 250;
+	this.armorvalue = this.health;
 
 	newtank.tanktype = ceil(random() * 3);
 

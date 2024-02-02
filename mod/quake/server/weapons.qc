@@ -246,18 +246,24 @@ JUNK
 ====================================
 */
 
-entity W_PickNearbyTarget(entity this, bool checkinfront)
+entity W_PickNearbyTarget(entity this, bool checkinfront, bool hitany)
 {
 	float cur_dist = 0;
 	RandomSelection_Init();
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 500, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it))),
+	FOREACH_ENTITY_RADIUS(this.origin, 500, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it)) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
 	{
-		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed && visible(this, it))
+		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
-			float head_dist = vlen2(it.origin - this.origin);
-			vector vec = normalize(it.origin - this.origin);
+			vector targ_pos = (it.absmin + it.absmax) * 0.5;
+			traceline(this.origin, targ_pos, MOVE_NOMONSTERS, this);
+			if(trace_inopen && trace_inwater)
+				continue;
+			if(trace_fraction != 1.0 && trace_ent != it)
+				continue;
+			float head_dist = vlen2(targ_pos - this.origin);
+			vector vec = normalize(targ_pos - this.origin);
 			float dot = vec * v_forward;
 			if((!cur_dist || head_dist < cur_dist) && (!checkinfront || dot > 0.3))
 			{
@@ -392,7 +398,7 @@ void W_PulseRifle(entity this)
 	this.pulserifle_finished = time + 1;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, true);
+	entity selected = W_PickNearbyTarget(this, true, false);
 	if(selected)
 		W_FireRifleTarget(this, selected);
 }
@@ -404,7 +410,7 @@ void W_Fireball(entity this)
 	this.fireball_finished = time + 2;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, true);
+	entity selected = W_PickNearbyTarget(this, true, false);
 	if(selected)
 		W_Fireball_Attack(this, selected);
 }

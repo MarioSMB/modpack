@@ -178,7 +178,6 @@ void T_GMissileTouch(entity this, entity toucher)
 		return;
 
 	entity player = this.realowner;
-	player.tank.mymissile = NULL;
 
 	player.tank.effects |= EF_DIMLIGHT;
 	player.tank.classname = "tank";
@@ -211,17 +210,18 @@ void T_GMissileExplode(entity this)
 
 void GuideThink(entity this)
 {
-	if(!this.realowner || !this.realowner.tank || this.realowner.health < 1 || this.realowner.tank.mymissile != this)
+	if(!this.realowner || !this.realowner.tank || this.realowner.health < 1 || this.realowner.tank.tankweapon != TW_GROCKS)
 	{
-		if(this.realowner.tank.mymissile == this)
-			this.realowner.tank.mymissile = NULL;
 		delete(this);
 		return;
 	}
 
-	this.angles = this.realowner.v_angle;
+	if(PHYS_INPUT_BUTTON_ATCK2(this.realowner))
+		this.angles = this.realowner.v_angle;
+	else
+		this.angles = this.realowner.tank.angles;
 	makevectors(this.angles);
-	this.velocity = normalize(v_forward) * 400;
+	this.velocity = normalize(v_forward) * 1200;
 	this.angles_x = 0 - this.angles_x;
 	makevectors(this.angles);
 
@@ -267,7 +267,7 @@ void W_FireGRocket(entity this)
 	v_forward.z = 0 - v_forward.z;
 
 	missile.angles = vectoangles(missile.velocity);
-	missile.velocity = v_forward * 900;
+	missile.velocity = v_forward * 1200;
 	settouch(missile, T_GMissileTouch);
 	
 	missile.nextthink = time;
@@ -283,8 +283,6 @@ void W_FireGRocket(entity this)
 	missile.classname = "grocket";
 
 	this.tank.velocity = '0 0 0';
-
-	this.tank.mymissile = missile;
 }
 
 /*******************\
@@ -308,15 +306,12 @@ void MineExplode(entity this)
 
 	particle(this.origin, '0 0 0', 0, 255);
 
-	if(this.owner.tank)
-		this.owner.tank.minenum -= 1;
-
 	BecomeExplosion(this);
 }
 
 void MineExplodeTouch(entity this, entity toucher)
 {
-	if(toucher == this.owner || toucher == this.owner.tank || (IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual))
+	if(toucher == this.owner || toucher.owner == this.owner || toucher == this.owner.tank || (IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual))
 		return;
 	MineExplode(this);
 }
@@ -334,7 +329,7 @@ void MineArmedThink(entity this)
 void MineArm(entity this)
 {
 	settouch(this, MineExplodeTouch);
-	this.wait = time + 20;
+	this.wait = time + 5;
 	this.nextthink = time + 0.1;
 	setthink(this, MineArmedThink);
 	_sound(this, CH_WEAPON_SINGLE, "tank/gg_clik2.wav", 0.5, ATTN_NORM);
@@ -360,8 +355,14 @@ void MineArm(entity this)
 
 void MineLand(entity this, entity toucher)
 {
-	if(toucher == this.owner)
+	if(toucher == this.owner || toucher.owner == this.owner)
 		return;
+
+	if(toucher && toucher.takedamage && toucher.health > 0 && (!IS_PLAYER(toucher) || !autocvar_g_friendlyfire_virtual))
+	{
+		MineExplode(this);
+		return;
+	}
 
 	_sound(this, CH_WEAPON_SINGLE, "tank/_minehit.wav", 1, ATTN_NORM);
 
@@ -388,22 +389,14 @@ void MineLand(entity this, entity toucher)
 
 void W_FireMine(entity this)
 {
-	if(this.tank.minenum > 8)
-	{
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_TANK_MAX_MINES);
-		_sound(this.tank, CHAN_BODY, "tank/gg_bleep.wav", 1, ATTN_NORM);
-		this.tank.attack_finished += 0.5;
-		return;
-	}
-
-	this.tank.minenum += 1;
-
 	_sound(this.tank, CH_WEAPON_SINGLE, "tank/minelay.wav", 1, ATTN_NORM);
 			
 	entity mine = spawn();
 	mine.owner = this;
 	set_movetype(mine, MOVETYPE_BOUNCE);
 	mine.solid = SOLID_TRIGGER;
+	mine.projectiledeathtype = DEATH_CRUSH.m_id;
+	mine.effects = EF_FULLBRIGHT;
 
 	if(this.minetype > 0)
 		mine.classname = "cmine";
@@ -412,7 +405,7 @@ void W_FireMine(entity this)
 
 	makevectors(this.tank.angles);
 
-	mine.velocity = v_up * 100 + crandom() * v_up * 10 + v_forward * 30;
+	mine.velocity = v_up * 100 + crandom() * v_up * 10 + v_forward * 500;
 
 	mine.avelocity = '300 300 300';
 
@@ -588,19 +581,12 @@ void NormalPlasma(entity this)
 
 //********** Bounce Plasma **********
 
-void Remove_BP(entity this)
-{
-	if(this.owner && this.owner.plasmanum > 0)
-		this.owner.plasmanum -= 1;
-	delete(this);
-}
-
 void NotBounce(entity this)
 {
 	set_movetype(this, MOVETYPE_FLYMISSILE);
 	UNSET_ONGROUND(this);
 	this.nextthink = time + 3;
-	setthink(this, Remove_BP);
+	setthink(this, SUB_Remove);
 	this.velocity = normalize(this.velocity);
 	this.velocity *= vlen(this.oldvelocity);
 }
@@ -622,7 +608,7 @@ void BPlasmaTouch(entity this, entity toucher)
 		//te_teleport(this.origin);
 		te_explosion2(this.origin, 244, 3);
 
-		Remove_BP(this);
+		delete(this);
 		return;
 	}
 	_sound(this, CH_WEAPON_SINGLE, "tank/pd_pbnc.wav", 1, ATTN_NORM);
@@ -640,15 +626,6 @@ void BouncePlasma(entity this)
 {
 	this.tank.attack_finished += 0.3;
 
-	if(this.tank.plasmanum > 5)
-	{
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_TANK_MAX_BOUNCEPLASMA);
-		_sound(this.tank, CHAN_BODY, "tank/gg_bleep.wav", 1, ATTN_NORM);
-		return;
-	}
-
-	this.plasmanum += 1;
-
 	this.tank.effects |= EF_MUZZLEFLASH;
 
 //REPLACE with firing bounce plasma sound
@@ -661,7 +638,7 @@ void BouncePlasma(entity this)
 	plasma.classname = "bplasma";
 	plasma.effects |= EF_DIMLIGHT;
 
-	plasma.count = 10;
+	plasma.count = 5;
 
 	TankAim(this);
 	plasma.velocity = qc_aim(this.tank, 10000);
@@ -674,7 +651,7 @@ void BouncePlasma(entity this)
 
 	settouch(plasma, BPlasmaTouch);
 	plasma.nextthink = time + 3;
-	setthink(plasma, Remove_BP);
+	setthink(plasma, SUB_Remove);
 
 	_setmodel(plasma, "progs/plasma.mdl");
 	setsize(plasma, '0 0 0', '0 0 0');
@@ -746,7 +723,7 @@ void SpreadPlasma(entity this)
 
 entity HomeFindTarget(entity this)
 {
-	entity selected = W_PickNearbyTarget(this, false);
+	entity selected = W_PickNearbyTarget(this, false, false);
 
 	if(selected)
 	{
@@ -941,15 +918,6 @@ void Tank_WeaponFrame(entity this)
 	{
 		makevectors(this.v_angle); // calculate forward angle for velocity
 		this.show_hostile = time + 1;
-
-		if(this.tank.mymissile)
-		{
-			this.tank.attack_finished = time + 1;
-			this.tank.mymissile.nextthink = time;
-			setthink(this.tank.mymissile, T_GMissileExplode);
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_TANK_GROCKET_DETONATED);
-			return;
-		}
 
 		switch(this.tank.tankweapon)
 		{

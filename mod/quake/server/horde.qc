@@ -2009,7 +2009,7 @@ void horde_spawn_powerup(entity this)
 	if(random() < powerup_chance) // "if(1)" to guarantee powerup drop
 	{
 		// if the odds are in our favour, let there be tanks!
-		if(random() < 0.25)
+		if(random() < 0.2)
 		{
 			horde_spawn_tank(this);
 			return;

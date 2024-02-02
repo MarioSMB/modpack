@@ -238,9 +238,6 @@
     MSG_CENTER_NOTIF(SLIDE_RECORD_NEW,                  N_ENABLE,     0, 1, "f1race_time",               CPID_SLIDE,"5.5 0", strcat(_("^5New record!^BG"), "\n\n", _("New weekly best is ^F1%s^BG")), "")
 
     MSG_CENTER_NOTIF(TANK_ENTER,                        N_ENABLE,     0, 0, "pass_key",                 CPID_TANK, "0 0", _("^BGPress ^F2%s^BG to exit the tank"), "")
-    MSG_CENTER_NOTIF(TANK_MAX_BOUNCEPLASMA,             N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGToo many bounce plasma shots!"), "")
-    MSG_CENTER_NOTIF(TANK_MAX_MINES,                    N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGToo many mines out!"), "")
-    MSG_CENTER_NOTIF(TANK_GROCKET_DETONATED,            N_ENABLE,     0, 0, "",                         CPID_TANK, "0 0", _("^BGGuided rocket detonated"), "")
     MSG_CENTER_NOTIF(TANK_LOCKON,                       N_ENABLE,     1, 0, "s1",                       CPID_TANK, "0 0", _("^BG%s^BG's plasma has a lock on you!"), "")
 
     MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")

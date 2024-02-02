@@ -665,12 +665,29 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 	{
 		// hack to allow instruments to replace regular weapon spawns
 		int mytype = it.ammo_type;
-		if(it == WEP_PIANO || it == WEP_KAZOO)
-			mytype = IT_NAILS;
-		else if(it == WEP_DOOT)
-			mytype = IT_SHELLS;
-		else if(it == WEP_TUBA || it == WEP_MAYO)
-			mytype = IT_ROCKETS;
+		switch(it)
+		{
+			case WEP_PIANO:
+			case WEP_KAZOO:
+			{
+				if(random() > 0.5)
+					mytype = IT_NAILS;
+				break;
+			}
+			case WEP_DOOT:
+			{
+				if(random() > 0.5)
+					mytype = IT_SHELLS;
+				break;
+			}
+			case WEP_TUBA:
+			case WEP_MAYO:
+			{
+				if(random() > 0.5)
+					mytype = IT_ROCKETS;
+				break;
+			}
+		}
 		if(mytype != wpn.ammo_type)
 			continue;
 		RandomSelection_AddEnt(it, 1, 1);
