@@ -11,7 +11,7 @@ void duke_playersound(entity this, int chan, string sample, float atten)
 	player_sound(this, chan, sample, atten);
 }
 
-METHOD(Duke, m_activate, void(Duke this, entity actor))
+METHOD(Duke, m_activate, void(Champions this, entity actor))
 {
 	string s = "";
 	float r = random() * 9;
@@ -36,7 +36,7 @@ METHOD(Duke, m_activate, void(Duke this, entity actor))
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
 }
 
-METHOD(Duke, m_playerthink, void(Duke this, entity actor))
+METHOD(Duke, m_playerthink, void(Champions this, entity actor))
 {
 	if(actor.jetpack_status && actor.health > 0 && !intermission_running)
 		actor.modelflags |= MF_ROCKET;
@@ -47,7 +47,7 @@ METHOD(Duke, m_playerthink, void(Duke this, entity actor))
 		STAT(QCC_JETPACKFUEL, actor) = 100;
 }
 
-METHOD(Duke, m_playerspawn, void(Duke this, entity actor))
+METHOD(Duke, m_playerspawn, void(Champions this, entity actor))
 {
 	string s = "";
 	float r = random() * 8;
@@ -73,12 +73,27 @@ METHOD(Duke, m_playerspawn, void(Duke this, entity actor))
 	STAT(QCC_JETPACKFUEL, actor) = 100;
 }
 
-METHOD(Duke, m_clear, void(Duke this, entity actor))
+METHOD(Duke, m_clear, void(Champions this, entity actor))
 {
 	actor.jetpack_status = false;
 }
 
-METHOD(Duke, m_killed, void(Duke this, entity targ, entity inflictor, entity attacker, int deathtype))
+METHOD(Duke, m_cannon_launch, void(Champions this, entity actor, entity cannon))
+{
+	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	actor.duke_cannon = true;
+}
+
+METHOD(Duke, m_cannon_land, bool(Champions this, entity actor))
+{
+	if(!actor.duke_cannon)
+		return false;
+	stopsound(actor, CH_TRIGGER_SINGLE);
+	actor.duke_cannon = false;
+	return false;
+}
+
+METHOD(Duke, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
 {
 	string s = "";
 	float r = random();
@@ -174,7 +189,7 @@ METHOD(Duke, m_killed, void(Duke this, entity targ, entity inflictor, entity att
 	}
 }
 
-METHOD(Duke, m_pickup_weapon, void(Duke this, entity actor, entity item))
+METHOD(Duke, m_pickup_weapon, void(Champions this, entity actor, entity item))
 {
 	Weapon wep = REGISTRY_GET(Weapons, item.weapon);
 	string s = "";
@@ -204,7 +219,7 @@ METHOD(Duke, m_pickup_weapon, void(Duke this, entity actor, entity item))
 	}
 }
 
-METHOD(Duke, m_pickup_powerup, void(Duke this, entity actor, entity item))
+METHOD(Duke, m_pickup_powerup, void(Champions this, entity actor, entity item))
 {
 	string s = "";
 	float r = random();
@@ -218,7 +233,7 @@ METHOD(Duke, m_pickup_powerup, void(Duke this, entity actor, entity item))
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
 }
 
-METHOD(Duke, m_pickup_key, void(Duke this, entity actor, entity item))
+METHOD(Duke, m_pickup_key, void(Champions this, entity actor, entity item))
 {
 	string s = "";
 	float r = random();
@@ -232,7 +247,7 @@ METHOD(Duke, m_pickup_key, void(Duke this, entity actor, entity item))
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
 }
 
-METHOD(Duke, m_pickup_sigil, void(Duke this, entity actor, entity item))
+METHOD(Duke, m_pickup_sigil, void(Champions this, entity actor, entity item))
 {
 	duke_playersound(actor, CH_VOICE, "imgood.wav", ATTN_NORM);
 }
@@ -341,7 +356,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 }
 
 #ifdef SVQC
-METHOD(Duke, m_fixclient, void(Duke this, entity actor))
+METHOD(Duke, m_fixclient, void(Champions this, entity actor))
 {
 	actor.jetpack_status = STAT(QCC_JETPACK, actor);
 }
@@ -355,7 +370,7 @@ void Duke_PreJump(entity actor)
 		actor.jetpack_stopped = false;
 }
 
-METHOD(Duke, m_physics, bool(Duke this, entity actor, float dt))
+METHOD(Duke, m_physics, bool(Champions this, entity actor, float dt))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{

@@ -29,15 +29,10 @@ void cannon_PlayerPreThink(entity this)
 
 bool cannon_land(entity this)
 {
-	if(!IS_ONGROUND(this) || !this.goat_cannon)
+	if(!IS_ONGROUND(this))
 		return false;
-	if(this.m_champion == CHAMPION_Goat)
-	{
-		_sound(this, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
-		this.goat_cannon = false;
-		this.jump_flag = 0;
-		return true;
-	}
+	if(this.m_champion && this.m_champion.m_cannon_land)
+		return this.m_champion.m_cannon_land(this.m_champion, this);
 	return false;
 }
 
@@ -56,15 +51,14 @@ void cannon_clear(entity this)
 
 void cannon_launch(entity this, entity cannon)
 {
-	if(this.m_champion == CHAMPION_Goat || this.m_champion == CHAMPION_Mario)
-		player_sound(this, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	if(this.m_champion && this.m_champion.m_cannon_launch)
+		this.m_champion.m_cannon_launch(this.m_champion, this, cannon);
 
 	makevectors(this.v_angle);
 	this.velocity = v_forward * cannon.speed + '0 0 1';
 	UNSET_ONGROUND(this);
 	this.cannonball = true;
 	cannon.attack_finished = time + 1; // brief period where the user can't re-enter
-	this.goat_cannon = true;
 	// maybe not? too fast for monsters to see you coming!
 	//this.show_hostile = time + 1;
 

@@ -81,4 +81,5 @@ REGISTER_CHAMPION(Goat, NEW(Goat));
 string autocvar_sv_allow_customplayermodels_goatlist = "";
 
 .float goat_bash_time;
+.bool goat_cannon;
 #endif

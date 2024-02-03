@@ -83,4 +83,6 @@ REGISTER_CHAMPION(Duck, NEW(Duck));
 
 #ifdef SVQC
 string autocvar_sv_allow_customplayermodels_ducklist = "";
+
+.bool duck_cannon;
 #endif

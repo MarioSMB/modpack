@@ -178,6 +178,8 @@ REGISTER_CHAMPION(Caleb, NEW(Caleb));
 .float bloodrage_time;
 .float bloodrage_heartbeat;
 .entity caleb_bats;
+
+.bool caleb_cannon;
 #endif
 
 const int BLOODRAGE_MAX = 3; // only require 3 kills?

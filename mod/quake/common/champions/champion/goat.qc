@@ -12,6 +12,22 @@ METHOD(Goat, m_condition, bool(Goat this, entity actor))
 		return true;
 	return !PlayerInList(actor, autocvar_sv_allow_customplayermodels_goatlist);
 }
+
+METHOD(Goat, m_cannon_launch, void(Champions this, entity actor, entity cannon))
+{
+	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	actor.goat_cannon = true;
+}
+
+METHOD(Goat, m_cannon_land, bool(Champions this, entity actor))
+{
+	if(!actor.goat_cannon)
+		return false;
+	_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
+	actor.goat_cannon = false;
+	actor.jump_flag = 0;
+	return true;
+}
 #endif
 
 #ifdef SVQC

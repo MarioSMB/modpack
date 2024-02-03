@@ -79,4 +79,6 @@ REGISTER_CHAMPION(Mario, NEW(Mario));
 
 #ifdef SVQC
 string autocvar_sv_allow_customplayermodels_speciallist = "";
+
+.bool mario_cannon;
 #endif

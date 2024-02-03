@@ -87,3 +87,7 @@ CLASS(BigJohn, Champions)
 #endif
 ENDCLASS(BigJohn)
 REGISTER_CHAMPION(BigJohn, NEW(BigJohn));
+
+#ifdef SVQC
+.bool bigjohn_cannon;
+#endif

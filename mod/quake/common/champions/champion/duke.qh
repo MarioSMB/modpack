@@ -151,6 +151,8 @@ REGISTER_CHAMPION(Duke, NEW(Duke));
 
 #ifdef SVQC
 .float duke_taunt_timer;
+
+.bool duke_cannon;
 #endif
 .bool jetpack_stopped;
 .bool jetpack_status;

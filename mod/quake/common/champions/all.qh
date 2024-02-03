@@ -106,6 +106,8 @@ CLASS(Champions, Object)
     METHOD(Champions, m_pickup_sigil, void(Champions this, entity actor, entity item)) { };
     METHOD(Champions, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype)) { };
     METHOD(Champions, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype)) { return 1; };
+    METHOD(Champions, m_cannon_launch, void(Champions this, entity actor, entity cannon)) { };
+    METHOD(Champions, m_cannon_land, bool(Champions this, entity actor)) { return false; };
 #endif
 #ifdef CSQC
     METHOD(Champions, m_overlay, void(Champions this)) { };

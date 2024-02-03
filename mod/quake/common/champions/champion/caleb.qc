@@ -218,6 +218,21 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
+METHOD(Caleb, m_cannon_launch, void(Champions this, entity actor, entity cannon))
+{
+	player_sound(actor, CH_TRIGGER_SINGLE, "play1115.wav", ATTN_NORM);
+	actor.caleb_cannon = true;
+}
+
+METHOD(Caleb, m_cannon_land, bool(Champions this, entity actor))
+{
+	if(!actor.caleb_cannon)
+		return false;
+	stopsound(actor, CH_TRIGGER_SINGLE);
+	actor.caleb_cannon = false;
+	return false;
+}
+
 METHOD(Caleb, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
 {
 	if(attacker.m_champion == this && STAT(QCC_BLOODRAGE, attacker) && IS_MONSTER(targ))

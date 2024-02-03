@@ -55,6 +55,21 @@ METHOD(Duck, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
+METHOD(Duck, m_cannon_launch, void(Champions this, entity actor, entity cannon))
+{
+	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	actor.duck_cannon = true;
+}
+
+METHOD(Duck, m_cannon_land, bool(Champions this, entity actor))
+{
+	if(!actor.duck_cannon)
+		return false;
+	stopsound(actor, CH_TRIGGER_SINGLE);
+	actor.duck_cannon = false;
+	return false;
+}
+
 METHOD(Duck, m_condition, bool(Champions this, entity actor))
 {
 	if(autocvar_sv_allow_customplayermodels_ducklist == "")

@@ -30,7 +30,6 @@ SPAWNFUNC_WEAPON(weapon_cannon, WEP_CANNON)
 .entity cannon_targ;
 .bool cannonball;
 .entity cannon_prev;
-.bool goat_cannon;
 
 void cannon_clear(entity this);
 
