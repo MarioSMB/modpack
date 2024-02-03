@@ -18,7 +18,7 @@ CLASS(Cannon, Weapon)
 /* crosshair */ ATTRIB(Cannon, w_crosshair_size, float, 0.8);
 /* crosshair */ ATTRIB(Cannon, w_crosshair_color, vector, '1 1 0');
 /* wepimg    */ ATTRIB(Cannon, model2, string, "cannon");
-/* refname   */ ATTRIB(Cannon, netname, string, "rocketlauncher");
+/* refname   */ ATTRIB(Cannon, netname, string, "cannon");
 /* wepname   */ ATTRIB(Cannon, m_name, string, _("Cannon"));
 
 ENDCLASS(Cannon)
