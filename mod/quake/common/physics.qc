@@ -507,6 +507,11 @@ void PM_RollView(entity this)
 #endif
 }
 
+void cannon_PlayerPhysics(entity this, float dt)
+{
+	this.velocity = '0 0 0';
+}
+
 void PM_Main(entity this, float dt)
 {
 	PM_FixClient(this);
@@ -526,13 +531,7 @@ void PM_Main(entity this, float dt)
 
 	SV_check_punch(this, dt);
 
-	if(PHYS_EXPTIME(this) != 0)
-	{
-		this.velocity = '0 0 0';
-		return;
-	}
-
-	if(STAT(QCC_STUNNED, this) > time)
+	if(STAT(QCC_STUNNED, this) > time || PHYS_EXPTIME(this) != 0 || STAT(CANNON, this))
 	{
 		this.velocity = '0 0 0';
 		return;
@@ -656,6 +655,9 @@ void player_touch(entity this, entity toucher)
 
 	slide_PlayerTouch(this, toucher);
 	champions_PlayerTouch(this, toucher);
+#ifdef SVQC
+	cannon_PlayerTouch(this, toucher);
+#endif
 }
 
 #if defined(SVQC)

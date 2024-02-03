@@ -992,6 +992,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	slide_PlayerDies(this);
 
+	cannon_clear(this);
+
 	// rogue fields
 	this.gravity = 1.0;
 

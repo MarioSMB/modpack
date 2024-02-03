@@ -1,0 +1,42 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(CANNON_DROP, "weapons/sword_swing");
+SOUND(CANNON_LAND, "misc/clang");
+SOUND(CANNON_ENTER, "plats/quake_medplat2");
+
+MODEL(CANNON, "progs/cannon.mdl");
+#endif
+
+CLASS(Cannon, Weapon)
+/* ammotype  */ ATTRIB(Cannon, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Cannon, impulse, int, 7);
+/* spawnflags*/ ATTRIB(Cannon, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD);
+/* ammo */      ATTRIB(Cannon, aflag, int, 0);
+/* modelname */ ATTRIB(Cannon, mdl, string, "cannon");
+/* crosshair */ ATTRIB(Cannon, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(Cannon, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(Cannon, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(Cannon, model2, string, "cannon");
+/* refname   */ ATTRIB(Cannon, netname, string, "rocketlauncher");
+/* wepname   */ ATTRIB(Cannon, m_name, string, _("Cannon"));
+
+ENDCLASS(Cannon)
+REGISTER_WEAPON(CANNON, NEW(Cannon));
+
+SPAWNFUNC_WEAPON(weapon_cannon, WEP_CANNON)
+
+#ifdef SVQC
+.entity cannon_targ;
+.bool cannonball;
+.entity cannon_prev;
+.bool goat_cannon;
+
+void cannon_clear(entity this);
+
+bool cannon_land(entity this);
+
+void cannon_PlayerTouch(entity this, entity toucher);
+
+void cannon_PlayerPreThink(entity this);
+#endif

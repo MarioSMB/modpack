@@ -3,6 +3,11 @@
 #include "../common/physics.qh"
 #include "../common/viewloc.qh"
 
+PRECACHE(Reticle)
+{
+	precache_pic("gfx/reticle_nex");
+}
+
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
 	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
@@ -383,4 +388,31 @@ void HUD_Crosshair(entity this)
 		wcross_resolution_goal_prev = 0;
 		wcross_resolution_goal_prev_prev = 0;
 	}
+}
+
+void DrawReticle(entity this)
+{
+	if(!STAT(CANNON))
+		return;
+
+	vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
+	if(autocvar_cl_reticle_stretch)
+	{
+		reticle_size.x = vid_conwidth;
+		reticle_size.y = vid_conheight;
+		reticle_pos.x = 0;
+		reticle_pos.y = 0;
+	}
+	else
+	{
+		reticle_size.x = max(vid_conwidth, vid_conheight);
+		reticle_size.y = max(vid_conwidth, vid_conheight);
+		reticle_pos.x = (vid_conwidth - reticle_size.x) / 2;
+		reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
+	}
+
+	float f = 1; // zoom value
+
+	if(f)
+		drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * 1, DRAWFLAG_NORMAL);
 }

@@ -16,7 +16,7 @@ CLASS(Chainsaw, Weapon)
 ENDCLASS(Chainsaw)
 REGISTER_WEAPON(CHAINSAW, NEW(Chainsaw));
 
-//SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
+SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
 
 #ifdef SVQC
 void W_FireSaw(entity this, .entity weaponentity);

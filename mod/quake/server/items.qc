@@ -687,6 +687,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_ROCKETS;
 				break;
 			}
+			case WEP_CANNON:
+			{
+				if(random() < 0.33)
+					mytype = IT_ROCKETS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;

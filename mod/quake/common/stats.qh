@@ -261,3 +261,5 @@ REGISTER_STAT(SLIDE_ON, bool)
 .int worldtype;
 #endif
 REGISTER_STAT(WORLDTYPE, int, world.worldtype)
+
+REGISTER_STAT(CANNON, bool)

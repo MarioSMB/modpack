@@ -16,4 +16,4 @@ CLASS(PortalGun, Weapon)
 ENDCLASS(PortalGun)
 REGISTER_WEAPON(PORTAL_GUN, NEW(PortalGun));
 
-//SPAWNFUNC_WEAPON(weapon_portalgun, WEP_PORTAL_GUN)
+SPAWNFUNC_WEAPON(weapon_portalgun, WEP_PORTAL_GUN)

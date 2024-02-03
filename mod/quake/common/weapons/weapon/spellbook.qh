@@ -16,7 +16,7 @@ CLASS(Spellbook, Weapon)
 ENDCLASS(Spellbook)
 REGISTER_WEAPON(SPELLBOOK, NEW(Spellbook));
 
-//SPAWNFUNC_WEAPON(weapon_spellbook, WEP_SPELLBOOK)
+SPAWNFUNC_WEAPON(weapon_spellbook, WEP_SPELLBOOK)
 
 #ifdef SVQC
 .float mana_regen_time;

@@ -1764,7 +1764,9 @@ void CreatureFrame_FallDamage(entity this)
 		jumpheight_mod *= this.m_champion.qcc_jumpheight;
 	if(this.viewloc)
 		jumpheight_mod *= 1.5;
-	if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
+	if(cannon_land(this))
+		{ /* do nothing */ }
+	else if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
 		skate_land(this);
 	else if(this.tank)
 		{ /* do nothing */ }

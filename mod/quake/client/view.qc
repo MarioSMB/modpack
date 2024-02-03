@@ -10,6 +10,7 @@
 #include "../common/wepent.qh"
 #include "../common/util.qh"
 #include "../server/triggers/trigger/viewloc.qh"
+#include "crosshair.qh"
 #include "shownames.qh"
 
 void CSQCModel_InterpolateAnimation_Do(entity this);
@@ -255,7 +256,7 @@ void viewmodel_draw(entity this)
 	CSQCModel_InterpolateAnimation_Do(this);
 
 	bool show_viewmodel = true;
-	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK))
+	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK) || STAT(CANNON))
 		show_viewmodel = false;
 	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_hideweapon)
 	{
@@ -379,7 +380,9 @@ float autocvar_fov;
 void View_UpdateFov()
 {
 	vector fov;
-	if(csqcplayer && csqcplayer.viewloc)
+	if(STAT(CANNON))
+		fov = GetViewLocationFOV(70);
+	else if(csqcplayer && csqcplayer.viewloc)
 		fov = GetViewLocationFOV(110); // enforce 110 fov, so things don't look odd
 	else
 		fov = GetViewLocationFOV(autocvar_fov);
@@ -397,6 +400,8 @@ float eventchase_current_distance;
 float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
 {
+	if(STAT(CANNON))
+		return 0;
 	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK))
 		return 1;
 	if(this.viewloc)
@@ -492,7 +497,7 @@ void HUD_Mouse(entity player)
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	if(!cursor_active)
+	if(!cursor_active && !STAT(CANNON))
 	{
 		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
@@ -612,6 +617,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// Now the the scene has been rendered, begin with the 2D drawing functions
 
+	DrawReticle(local_player);
 	HUD_Contents();
 
 	// draw 2D entities

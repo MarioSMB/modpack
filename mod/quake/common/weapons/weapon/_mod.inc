@@ -30,3 +30,4 @@
 #include "spellbook.qc"
 #include "tuba.qc"
 #include "kazoo.qc"
+#include "cannon.qc"

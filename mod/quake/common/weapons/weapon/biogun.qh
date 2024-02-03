@@ -16,7 +16,7 @@ CLASS(Biogun, Weapon)
 ENDCLASS(Biogun)
 REGISTER_WEAPON(BIOGUN, NEW(Biogun));
 
-//SPAWNFUNC_WEAPON(weapon_biogun, WEP_BIOGUN)
+SPAWNFUNC_WEAPON(weapon_biogun, WEP_BIOGUN)
 
 #ifdef SVQC
 void W_FireBio(entity this, float ox, .entity weaponentity);

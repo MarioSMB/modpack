@@ -353,6 +353,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.tank)
 		damage = Tank_Damage(targ, inflictor, attacker, damage, deathtype);
 
+	if(STAT(CANNON, targ))
+		damage *= 0.5;
+
 	if(targ.m_champion)
 		damage *= targ.m_champion.qcc_damagetaken;
 

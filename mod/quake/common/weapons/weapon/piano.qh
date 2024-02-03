@@ -23,7 +23,7 @@ CLASS(Piano, Weapon)
 ENDCLASS(Piano)
 REGISTER_WEAPON(PIANO, NEW(Piano));
 
-//SPAWNFUNC_WEAPON(weapon_piano, WEP_PIANO)
+SPAWNFUNC_WEAPON(weapon_piano, WEP_PIANO)
 
 #ifdef SVQC
 .entity piano_prevwep; // for starting jingle

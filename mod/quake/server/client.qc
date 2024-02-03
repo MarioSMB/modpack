@@ -991,6 +991,7 @@ void ClientKill(entity this)
 	champions_PlayerDies(this);
 	Tank_PlayerDie(this);
 	slide_PlayerDies(this);
+	cannon_clear(this);
 	this.modelindex = this.modelindex_player;
 	set_suicide_frame(this);
 	this.frags = this.frags - 2;	// extra penalty
@@ -1355,6 +1356,7 @@ void PutObserverInServer(entity this)
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NONE);
 	clear_powerups(this);
+	cannon_clear(this);
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.effects = 0;
 	this.alpha = 0;
@@ -1413,6 +1415,7 @@ void PutPlayerInServer(entity this)
 	this.air_finished = time + 12;
 	this.dmg = 2;   		// initial water damage
 	clear_powerups(this);
+	cannon_clear(this);
 	this.healthrot_nextcheck = 0;
 	this.effects = EF_TELEPORT_BIT;
 	this.drawonlytoclient = NULL;
@@ -2015,6 +2018,8 @@ void PlayerPreThink(entity this)
 
 	music_PlayerPreThink(this);
 
+	cannon_PlayerPreThink(this);
+
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
 		this.velocity = '0 0 0';
@@ -2285,7 +2290,9 @@ void PlayerPostThink(entity this)
 		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
 			ImpulseCommands(this);
 
-		if(this.tank)
+		if(STAT(CANNON, this))
+			{ /* do nothing */ }
+		else if(this.tank)
 			Tank_WeaponFrame(this);
 		else
 		{
@@ -2501,6 +2508,8 @@ void ClientDisconnect(entity this)
 	Tank_PlayerDie(this);
 
 	sphere_remove(this);
+
+	cannon_clear(this);
 
 	W_Spellbook_ClearSpells(this);
 
@@ -3171,6 +3180,7 @@ void SV_ParseClientCommand(entity this, string command)
 		entity e = spawn();
 		e.spawnfunc_checked = true;
 		setorigin(e, trace_endpos);
+		e.angles = this.angles;
 	#if 0
 		string themsg = strcat1(substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 		target_spawn_edit_entity(this, e, themsg, NULL, NULL, NULL, NULL, this, this);
