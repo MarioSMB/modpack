@@ -56,7 +56,7 @@ void cannon_clear(entity this)
 
 void cannon_launch(entity this, entity cannon)
 {
-	if(this.m_champion == CHAMPION_Goat)
+	if(this.m_champion == CHAMPION_Goat || this.m_champion == CHAMPION_Mario)
 		player_sound(this, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
 
 	makevectors(this.v_angle);
