@@ -21,23 +21,6 @@ Sound SND_Dusk_Death_Random() {
 }
 PRECACHE(Dusk)
 {
-#ifdef CSQC
-    precache_pic("gfx/quake/dusk_face_invis");
-    precache_pic("gfx/quake/dusk_face_invul2");
-    precache_pic("gfx/quake/dusk_face_inv2");
-    precache_pic("gfx/quake/dusk_face_quad");
-
-    precache_pic("gfx/quake/dusk_face1");
-    precache_pic("gfx/quake/dusk_face_p1");
-    precache_pic("gfx/quake/dusk_face2");
-    precache_pic("gfx/quake/dusk_face_p2");
-    precache_pic("gfx/quake/dusk_face3");
-    precache_pic("gfx/quake/dusk_face_p3");
-    precache_pic("gfx/quake/dusk_face4");
-    precache_pic("gfx/quake/dusk_face_p4");
-    precache_pic("gfx/quake/dusk_face5");
-    precache_pic("gfx/quake/dusk_face_p5");
-#endif
 #ifdef SVQC
     precache_sound("player_dusk/plyrjmp8.wav");       // player jump
     precache_sound("player_dusk/land.wav");           // player landing

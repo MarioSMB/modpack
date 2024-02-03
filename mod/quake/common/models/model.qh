@@ -18,7 +18,7 @@ CLASS(Model, Object)
             LOG_WARNF("Missing model: \"%s\"", s);
             return;
         }
-        profile(sprintf("precache_model(\"%s\")", s));
+        //profile(sprintf("precache_model(\"%s\")", s));
         precache_model(s);
     }
 ENDCLASS(Model)
