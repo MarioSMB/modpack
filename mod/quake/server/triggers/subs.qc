@@ -300,6 +300,75 @@ void SUB_CalcMoveLight(entity this, vector tstart, vector tdest, float tspeed, v
 	SUB_CalcMove(this, tdest, TSPEED_LINEAR, tspeed, endfn);
 }
 
+/*
+CURVACEOUS MOVE
+
+pathcorners can have a curve spawnflag that marks them as bezier control points
+bezier path corners affect the curve but will never be visited
+	this means they don't affect speed, don't fire targets, etc
+*/
+
+// bez is short for Bilinear EnterpolationZ
+vector bez(vector start, vector ctrl, vector end, float t)
+{
+	vector b1 = t * ctrl + (1-t) * start;
+	vector b2 = t * end + (1-t) * ctrl;
+	return t * b2 + (1-t) * b1;
+}
+
+float lerp_copper(float a, float b, float mix)
+{
+	if(mix <= 0) return a;
+	if(mix >= 1) return b;
+	return (b * mix + a * ( 1 - mix ) );
+}
+
+void SUB_CalcMoveCurveSeg(entity this)
+{
+	float chron = this.ltime;
+	// self.cnt is number of steps we've passed through
+	// (when self.cnt == nodeCtrl.count we should be at nodeEnd)
+	if(this.cnt == this.count)
+	{
+		this.pos2 = '0 0 0';
+		SUB_CalcMoveDone(this);
+		return;
+	}
+	this.cnt += 1;
+
+	float t = this.cnt / this.count;
+	vector destdelta = bez(this.pos1, this.pos2, this.finaldest, t) - this.origin;
+
+	float wishspeed = lerp_copper(this.speed, this.speed2, t);
+	float traveltime = vlen(destdelta) / wishspeed;
+	if(traveltime < 0.05)
+	{
+		this.velocity = '0 0 0';
+		this.nextthink = chron + 0.05;
+		setthink(this, SUB_CalcMoveDone);
+		return;
+	}	
+	this.velocity = destdelta * (1 / traveltime);
+	setthink(this, SUB_CalcMoveCurveSeg);
+	this.nextthink = chron + traveltime;
+}
+
+// init curved motion
+void SUB_CalcMoveCurve(entity this, vector end, vector ctrl, float segs, float speedStart, float speedEnd, void(entity) fnDone)
+{
+	// this.oldenemy is current pathcorner already
+	this.pos1 = this.origin;
+	this.pos2 = ctrl;
+	this.finaldest = end;
+	this.speed = speedStart;
+	this.speed2 = speedEnd;
+	this.cnt = 0;
+	this.count = segs;
+	this.think1 = fnDone;
+	
+	SUB_CalcMoveCurveSeg(this);
+}
+
 
 /*
 =============

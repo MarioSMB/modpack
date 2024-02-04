@@ -23,6 +23,10 @@ void SUB_SetFade(entity ent, float when, float fading_time);
 
 #ifdef SVQC
 
+void SUB_CalcMoveCurveSeg(entity this);
+
+void SUB_CalcMoveCurve(entity this, vector end, vector ctrl, float segs, float speedStart, float speedEnd, void(entity) fnDone);
+
 void SUB_CopyEntity(entity srcent, entity destent);
 
 vector SUB_NormalizeAngles(vector ang);

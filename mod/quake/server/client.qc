@@ -808,6 +808,7 @@ void execute_changelevel(entity this)
 		}
 		W_Spellbook_ClearSpells(it);
 		tank_cleanup(it);
+		cannon_clear(it);
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;

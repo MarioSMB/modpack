@@ -55,6 +55,8 @@ bool QCC_CanCastAbility(entity this)
 {
 	if(time < STAT(QCC_ABILITYTIME, this))
 		return false;
+	if(STAT(CANNON, this))
+		return false;
 	if(QCC_HasSpellbook(this))
 		return false;
 	return true;

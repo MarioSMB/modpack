@@ -1,142 +1,713 @@
 #ifdef SVQC
 
+const int FUNC_TRAIN_NONSOLID = 1;
+
+const int TRAIN_INHERIT = 1;
+const int TRAIN_TOGGLE = 2;
+const int TRAIN_SMOOTHSPEED = 4;
+
+.entity buddy;
+
+spawnfunc(func_train_point);
+void train_wait(entity this);
+void train_use(entity this, entity actor, entity trigger);
 void train_next(entity this);
-void func_train_find(entity this);
+
+entity findunlocked(entity start, .string fld, string match)
+{
+	entity head = find(start, fld, match);
+	while(head)
+	{
+		if(!(head.customflags & CFL_LOCKED))
+			break;
+		head = find(head, fld, match);
+	}
+	return head;
+}
+
+entity findunlockedtarget(entity e, entity start)
+{
+	entity head = NULL;
+	if(e.target && e.target != "")
+		head = findunlocked(start, targetname, e.target);
+	if(head)
+		return head;
+	
+	if(e.target2 && e.target2 != "")
+		head = findunlocked(start, targetname, e.target2);
+	if(head)
+		return head;
+	
+	if(e.target3 && e.target3 != "")
+		head = findunlocked(start, targetname, e.target3);
+	if(head)
+		return head;
+	
+	if(e.target4 && e.target4 != "")
+		return findunlocked(start, targetname, e.target4);
+	return NULL;
+}
+
+void train_sounds(entity this)
+{
+	if(this.sounds == 0)
+	{
+		if(!this.noise)
+			this.noise = ("misc/null.wav");
+		if(!this.noise1)
+			this.noise1 = ("misc/null.wav");
+		precache_sound(this.noise);
+		precache_sound(this.noise1);
+	}
+
+	if(this.sounds == 1)
+	{
+		this.noise = ("plats/train2.wav");
+		precache_sound("plats/train2.wav");
+		this.noise1 = ("plats/train1.wav");
+		precache_sound("plats/train1.wav");
+	}
+	if(this.sounds == 2)
+	{
+		precache_sound("plats/plat1.wav");
+		precache_sound("plats/plat2.wav");
+		this.noise1 = "plats/plat1.wav";
+		this.noise = "plats/plat2.wav";
+	}
+
+}
+
+/*FGD
+@baseclass = TrainSounds [
+	sounds(choices) : "Sound" : 1 =
+	[
+		0: "Silent/Override"
+		1: "Ratchet Metal"
+		2: "Base Lift"
+	]
+]
+@baseclass base(Appearflags, Targetname, TrainSounds, Func, AltTarget) = Train [
+	speed(integer) : "Speed (units per second)" : 64
+	target(target_source) : "Target to start at"
+	dmg(integer) : "Damage on block" : 2
+	noise(string) : "Override stop sound"
+	noise1(string) : "Override move sound"
+	pausetime(string) : "Default wait time" : "0.1"
+]
+*/
+
+void flytrain_ghost_die(entity this)
+{
+	if(this.owner.th_melee)
+		this.owner.th_melee(this.owner);
+	else
+		delete(this.owner);
+	delete(this);
+}
+
+void flytrain_ghost_resume(entity this)
+{
+	if(this.state == STATE_OFF)	// already deactivated
+		return;	
+	if(this.pos2)
+		// we were stopped along a bezier curve, resume with saved values
+		SUB_CalcMoveCurveSeg(this);
+	else
+		SUB_CalcMove(this, this.enemy.origin - this.movedir, TSPEED_LINEAR, this.speed, this.th_stand);
+}
+
+void flytrain_ghost_blocked(entity this, entity blocker)
+{
+	if(this.state == STATE_OFF)	// already deactivated
+		return;	
+	this.velocity = '0 0 0';
+	setthink(this, flytrain_ghost_resume);
+	this.nextthink = this.ltime + 0.05;
+}
+
+// if the flytrain is blocked, it has to halt its buddy's movement and schedule it to restart immediately
+void flytrain_blocked(entity this, entity blocker)
+{
+	if(this.buddy.state == STATE_ON)
+		flytrain_ghost_blocked(this.buddy, blocker);
+
+	if(time < this.attack_finished)
+		return;
+	this.attack_finished = time + this.dmgtime;
+	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
+}
+
+void flytrain_killed(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.customflags & CFL_LOCKED)
+		return;
+	this.health = this.max_health;
+	train_use(this.buddy, attacker, this);
+}
+
+void flytrain_think(entity this)
+{
+	this.takedamage = this.buddy.takedamage;
+	
+	// if the ghost train hits a speed -1 teleport corner we have to teleport with it, not zoom to it
+	if(this.buddy.teleport_time)
+	{
+		this.buddy.teleport_time = 0;
+		setorigin(this, this.buddy.origin - this.movedir);
+		this.velocity = this.buddy.velocity;
+	}
+	else
+	{
+		// rosette movement looks more orbital than the original bounce of random offsets
+		float t = this.ltime + this.lip;
+		vector ang = '0 0 0';
+		ang_y = (sin(this.dest_x * t) + cos(this.dest_y * t)) * 90 + t;
+		float d = cos(t * this.dest_z);
+		ang_z = d * 180;
+		makevectors(ang);
+		
+		this.pos1 = v_forward * this.width * d;
+		this.pos1_z = v_right_z * this.height;
+		
+		vector delta = (this.buddy.origin + this.pos1) - this.origin - this.movedir;
+		vector wishvel = this.buddy.velocity + delta;
+		this.velocity = (this.velocity * 4 + wishvel) * 0.2;
+	}
+	
+	this.nextthink = this.ltime + 0.05;
+}
+
+void flytrain_init(entity this)
+{
+	setorigin(this, this.buddy.origin - this.movedir);
+	setthink(this, flytrain_think);
+	flytrain_think(this);
+}
+
+void flytrain_setup(entity this)
+{
+	// spawn a nonsolid point ent to follow our path sensibly and 
+	//	handle all train-like logic, bc it's a func_train
+	// we shadow it at all times with floaty drifty movement to keep 
+	//	that logic separate from train behavior and allow us to sludge
+	//	the velocity over a few frames for rubber-bandy motion without
+	//	colliding with state changes
+	this.buddy = spawn();
+	this.buddy.spawnflags = this.spawnflags | TRAIN_INHERIT | TRAIN_SMOOTHSPEED; // flytrains always inherit speed
+	this.buddy.speed = this.speed;
+	if(!this.dmg)
+		this.dmg = 2;
+	if(!this.dmgtime)
+		this.dmgtime = 0.5;
+	this.buddy.pausetime = this.pausetime;
+	this.buddy.health = this.health;
+	this.buddy.sounds = this.sounds;
+	this.buddy.solid = -1;
+	if(!this.target || this.target == "")
+	{
+		this.buddy.enemy = spawn();
+		setorigin(this.buddy.enemy, this.origin + this.movedir);
+		this.buddy.enemy.classname = "path_corner";
+		this.buddy.enemy.wait = -1;		
+	}
+	this.buddy.target = this.target;
+	this.buddy.target2 = this.target2;
+	this.buddy.target3 = this.target3;
+	this.buddy.target4 = this.target4;
+	this.buddy.killtarget = this.killtarget;
+
+	this.buddy.targetname = this.targetname;
+	this.buddy.owner = this;
+
+	spawnfunc_func_train_point(this.buddy);
+	this.buddy.classname = "func_flytrain_ghost";
+	this.buddy.th_stand = train_wait;
+	this.buddy.th_melee = flytrain_ghost_die;
+
+	if(!this.width)
+		this.width = 8;
+	if(!this.height)
+		this.height = 8;
+	this.max_health = 0;
+
+	setblocked(this, flytrain_blocked);
+	if(!this.solid)
+		this.solid = SOLID_BSP;
+	if(!this.solid)
+		set_movetype(this, MOVETYPE_NOCLIP);
+	else
+	{
+		set_movetype(this, MOVETYPE_PUSH);
+		if(this.health)
+		{
+			this.max_health = this.health;
+			this.th_die = flytrain_killed;
+			this.takedamage = DAMAGE_YES;
+		}
+	}
+	
+	this.dest_x = 3 + random();
+	this.dest_y = 1 + random();
+	this.dest_z = 4 + random();
+	if(this.speed2 <= 0)
+		this.speed2 = 10;
+	this.dest *= this.speed2;
+	this.lip = random() * 20;
+	
+	setthink(this, flytrain_init);	// wait for buddy to call train_find
+	this.nextthink = this.ltime + 0.25; // magic amount of time :|
+}
+
+/*QUAKED func_flytrain (0 .5 .8) ? - TOGGLE
+Acts as a func_train with PATH_SPEED and SMOOTH_SPEED set, with additional random motion and and gentle smoothing at stops, starts, and hard corners.
+
+"width"		Horizontal drift range, default 8 (-1 for 0)
+"height"	Vertical drift range, default 8 (-1 for 0)
+"lip"		Length of 'leash', default 64 (increase if train jumps around at high speeds)
+"sounds"
+0) none, or, set your own with 'noise' (stop sound) and 'noise1' (move sound)
+1) ratchet metal
+2) base plat
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination
+*/
+/*FGD
+@baseclass base(Train) = Flytrain [
+	width(string) : "Horizontal drift range" : "8"
+	height(string) : "Vertical drift range" : "8"
+]
+@SolidClass base(Flytrain) = func_flytrain : 
+"Acts as a func_train with PATH_SPEED and SMOOTH_SPEED set, with additional random motion and and gentle smoothing at stops, starts, and hard corners. Will fire all targets of a pathcorner on arrival, but does not normally fire its own targets.
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination"
+[
+	width(string) : "Horizontal drift range" : "8"
+	height(string) : "Vertical drift range" : "8"
+]
+*/
+spawnfunc(func_flytrain)
+{
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
+	this.movedir = (this.mins + this.maxs) * 0.5;
+	
+	flytrain_setup(this);
+}
+
+/*QUAKED func_flytrain_point (0 .5 .8) (-8 -8 -8) (8 8 8) - TOGGLE
+Acts as a func_train with PATH_SPEED and SMOOTH_SPEED set, with additional random motion and and gentle smoothing at stops, starts, and hard corners.
+
+"model"		model to use
+"width"		Horizontal drift range, default 8 (-1 for 0)
+"height"	Vertical drift range, default 8 (-1 for 0)
+"lip"		Length of 'leash', default 64 (increase if train jumps around at high speeds)
+"sounds"
+0) none, or, set your own with 'noise' (stop sound) and 'noise1' (move sound)
+1) ratchet metal
+2) base plat
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination
+*/
+/*FGD
+@PointClass base(Flytrain) size(16 16 16) = func_flytrain_point : 
+"Acts as a func_train with PATH_SPEED and SMOOTH_SPEED set, with additional random motion and and gentle smoothing at stops, starts, and hard corners. Will fire all targets of a pathcorner on arrival, but does not normally fire its own targets.
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination"
+[
+	model(string) : "Model to use"
+]
+*/
+spawnfunc(func_flytrain_point)
+{	
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
+	this.classname = "func_flytrain";
+	this.movedir = '0 0 0';
+	
+	flytrain_setup(this);
+}
+
+//============================================================================
 
 void train_blocked(entity this, entity blocker)
 {
 	if(time < this.attack_finished)
 		return;
-	this.attack_finished = time + 0.5;
+	this.attack_finished = time + this.dmgtime;
 	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
 }
+
+void train_killed(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.customflags & CFL_LOCKED)
+		return;
+	this.health = this.max_health;
+	train_use(this, attacker, NULL);
+}
+
+void train_lock(entity this, bool unlock)
+{
+	if(unlock)
+	{
+		this.customflags &= ~CFL_LOCKED;
+		if(this.max_health)
+		{
+			this.health = this.max_health;
+			this.takedamage = DAMAGE_YES;
+		}
+	}
+	else
+	{
+		this.customflags |= CFL_LOCKED;
+		this.takedamage = DAMAGE_NO;
+	}
+}
+
+void train_off(entity this)
+{
+	this.state = STATE_OFF;
+	if(this.customflags & CFL_LOCKED)
+		return;
+	if(this.max_health)
+	{
+		this.health = this.max_health;
+		this.takedamage = DAMAGE_YES;
+	}
+}
+void train_on(entity this)
+{
+	this.state = STATE_ON;
+	if(this.max_health && !(this.spawnflags & TRAIN_TOGGLE))
+		this.takedamage = DAMAGE_NO;
+}
+
 void train_use(entity this, entity actor, entity trigger)
 {
-	if(getthink(this) != func_train_find)
-		return;		// already activated
-	train_next(this);
-}
-
-void train_wait(entity this)
-{
-	if(this.wait)
+	if((this.spawnflags & TRAIN_TOGGLE) && (this.origin + this.movedir) != this.enemy.origin)
 	{
-		this.nextthink = this.ltime + this.wait;
-		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-	}
-	else
-		this.nextthink = this.ltime + 0.1;
-	
-	setthink(this, train_next);
-}
-
-void train_next_use(entity this, entity actor, entity trigger)
-{
-	train_next(this);
-}
-
-void train_next(entity this)
-{
-	entity	targ;
-
-	targ = find(NULL, targetname, this.target);
-	// hack from target quake
-	if(targ.netname && targ.netname != "")
-	{
-		this.targetname = targ.netname;
-		this.wait = -1;
-		targ.netname = "";
-		this.use = train_next_use;
-		this.target = targ.target;
-		this.speed = 80; // why?
+		if(this.state == STATE_ON)
+		{
+			train_off(this);
+			this.velocity = '0 0 0';
+			this.nextthink = 0;
+			_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+		}
+		else
+		{
+			train_on(this);
+			_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
+			if(this.pos2)
+				// we were stopped along a bezier curve, resume with saved values
+				SUB_CalcMoveCurveSeg(this);
+			else
+				SUB_CalcMove(this, this.enemy.origin - this.movedir, TSPEED_LINEAR, this.speed, this.th_stand);
+		}
 		return;
 	}
-	this.use = train_use;
-	this.target = targ.target;
-	if(!this.target || this.target == "")
-		objerror(this, "train_next: no next target");
-	if(targ.wait)
-		this.wait = targ.wait;
+
+	if(this.state == STATE_ON)	// already activated
+		return;	
+	train_next(this);
+}
+
+void train_wait(entity this)	// arrival at a pathcorner
+{
+	entity corner = this.enemy;
+	if(corner.wait)
+		this.wait = corner.wait;
 	else
-		this.wait = 0;
+		this.wait = this.pausetime;
+
+	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(3) | BIT(4));
+
+	if(this.wait == -1)
+	{
+		train_off(this);
+		this.use = train_use;
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+	}
+	else if(this.wait > 0)
+	{
+		train_off(this);	// allow triggering while waiting
+		setthink(this, train_next);
+		this.nextthink = this.ltime + this.wait;
+		if(this.wait > 0.1)
+			_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+	}
+	else 	// this.wait is 0 or a garbage value
+	{
+		train_next(this);
+	}
+	
+	// trains now fire their pathcorners' targets on arrival
+	// if a player is riding the train, treat them as activator
+	// OR NOT, your silly function was changing activator to the train
+	SUB_UseTargets(corner, this, NULL);
+	// fire them after sorting corner wait stuff, in case the corner triggers
+	// the train itself (useful for wait-locking a pathcorner with a relay)
+}
+
+// quick bezier length approximation (2/3 chord len + 1/3 perimeter)
+float bez_lenApprox(vector start, vector ctrl, vector end)
+{
+	float chord = vlen(start - end);
+	float peri = vlen(start - ctrl) + vlen(ctrl - end) + chord;
+
+	return 2 * chord / 3 + peri / 3;
+}
+
+void train_next(entity this) // departure for next pathcorner
+{
+	entity ctrl = NULL;
+	float segs;
+	entity corner = findunlockedtarget(this.enemy, world);
+	if(!corner)
+	{
+		LOG_DEBUG("train_next: no next target");
+		// .th_melee is a train's "expire at end of path" function, because .th_die
+		// has to be reserved for shootable trains to work with T_Damage()/Killed()
+		if(this.th_melee)
+			this.th_melee(this);
+		else
+			delete(this);
+		SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
+		return;
+	}
+	this.oldenemy = this.enemy;
+	if(corner.spawnflags & 16)
+	{
+		ctrl = corner;
+		corner = findunlockedtarget(ctrl, NULL);
+		if(!corner)
+		{
+			LOG_DEBUG("train_next: no next target after curve point");
+			if(this.th_melee)
+				this.th_melee(this);
+			else
+				delete(this);
+			SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
+			return;
+		}
+	}
+	
+	this.enemy = corner;
+	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(4));
+	train_on(this);
+	
+	if(this.oldenemy.speed == -1)
+	{
+		setorigin(this, corner.origin - this.movedir);
+		this.teleport_time = time;
+		this.th_stand(this);
+		return;
+	}
+	else if(this.oldenemy.speed > 0 && (this.spawnflags & TRAIN_INHERIT))
+		this.speed = this.oldenemy.speed;
+
 	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
-	float newspeed = (targ.speed) ? targ.speed : this.speed;
-	SUB_CalcMove(this, targ.origin - this.mins, TSPEED_LINEAR, newspeed, train_wait);
+	
+	if(ctrl)
+	{
+		float dspeed;
+		if((this.spawnflags & TRAIN_INHERIT) && (this.spawnflags & TRAIN_SMOOTHSPEED) && corner.speed > 0)
+			dspeed = corner.speed;
+		else
+			dspeed = this.speed;
+		
+		if(ctrl.count)
+			segs = ctrl.count;
+		else
+			// chop the curve into roughly 200ms segments
+			segs = ceil(5 * bez_lenApprox(this.origin, ctrl.origin, corner.origin) / ((this.speed + dspeed) / 2));
+
+		SUB_CalcMoveCurve(this, corner.origin - this.movedir, ctrl.origin - this.movedir, segs, this.speed, dspeed, this.th_stand);
+		return;
+	}
+	
+	if((this.spawnflags & TRAIN_INHERIT) && (this.spawnflags & TRAIN_SMOOTHSPEED) && this.enemy.speed > 0)
+	{
+		// 'curved' motion in a straight line, for the speed stepping
+		vector travel = (corner.origin - this.movedir) - this.origin;
+		segs = max( 2, floor( vlen(travel) / 64 ) );	// pick an intelligent segment count
+		SUB_CalcMoveCurve(this, corner.origin - this.movedir, this.origin + travel * 0.5, segs, this.speed, this.enemy.speed, this.th_stand);
+	}
+	else
+		SUB_CalcMove(this, corner.origin - this.movedir, TSPEED_LINEAR, this.speed, this.th_stand);
 }
 
 void func_train_find(entity this)
 {
-	entity	targ;
+	if(!this.enemy)
+		this.enemy = findunlockedtarget(this, NULL);
 
-	targ = find(NULL, targetname, this.target);
-	this.target = targ.target;
-	setorigin(this, targ.origin - this.mins);
+	//this.target = this.enemy.target;
+	setorigin(this, this.enemy.origin - this.movedir);
+	if((this.spawnflags & TRAIN_INHERIT) && this.enemy.speed > 0)
+		this.speed = this.enemy.speed;
 	if(!this.targetname || this.targetname == "")
 	{	// not triggered, so start immediately
-		this.nextthink = this.ltime + 0.1;
-		setthink(this, train_next);
+		train_wait(this);	// still go through wait in case we start at a wait -1 corner
 	}
 }
 
-const int FUNC_TRAIN_NONSOLID = 1;
-
-/*QUAKED func_train(0 .5 .8) ?
-Trains are moving platforms that players can ride.
-The targets origin specifies the min point of the train at each corner.
-The train spawns at the first target it is pointing at.
-If the train is the target of a button or trigger, it will not begin moving until activated.
-speed	default 100
-dmg		default	2
-sounds
-1) ratchet metal
-
-*/
-spawnfunc(func_train)
-{	
+void func_train_setup(entity this)
+{
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target || this.target == "")
+	if((!this.target || this.target == "") && !this.enemy)
 		objerror(this, "func_train without a target");
+
 	if(!this.dmg)
 		this.dmg = 2;
+	if(!this.dmgtime)
+		this.dmgtime = 0.5;
+	if(!this.pausetime)
+		this.pausetime = 0.1;
+	this.wait = 0;	// this is american mcgee's fault
 
-	//if (!InitMovingBrushTrigger(this))
-		//return;
-	this.solid = SOLID_BSP;
-	_setmodel(this, this.model);
-	setsize(this, this.mins, this.maxs);
-	setorigin(this, this.origin);
-	set_movetype(this, MOVETYPE_PUSH);
-	this.effects |= EF_LOWPRECISION;
+	train_sounds(this);
 
-	if(this.sounds == 0)
-	{
-		this.noise =("misc/null.wav");
-		precache_sound("misc/null.wav");
-		this.noise1 =("misc/null.wav");
-		precache_sound("misc/null.wav");
-	}
-
-	if(this.sounds == 1)
-	{
-		this.noise =("plats/train2.wav");
-		precache_sound("plats/train2.wav");
-		this.noise1 =("plats/train1.wav");
-		precache_sound("plats/train1.wav");
-	}
-
-	this.cnt = 1;
-	if(MP_MG && (this.spawnflags & FUNC_TRAIN_NONSOLID) && substring(world.model, 0, 7) == "maps/mg") // hack needed because this flag is set on vanilla maps!
+//	this.cnt = 1;
+	if(!this.solid)
+		this.solid = SOLID_BSP;
+	if(!this.solid)
+		set_movetype(this, MOVETYPE_NOCLIP);
+	else
+		set_movetype(this, MOVETYPE_PUSH);
+	if((this.spawnflags & FUNC_TRAIN_NONSOLID) && substring(world.model, 0, 7) == "maps/mg") // hack needed because this flag is set on vanilla maps!
 		this.solid = SOLID_NOT; // TODO: MOVETYPE_FAKEPUSH?
 	else
 		setblocked(this, train_blocked);
 	this.use = train_use;
+	this.lock = train_lock;
 	this.classname = "train";
+	
+	this.max_health = 0;
+	if(this.health)
+	{
+		this.max_health = this.health;
+		this.th_die = train_killed;
+		this.takedamage = DAMAGE_YES;
+	}
+	train_off(this);
 
-// start trains on the second frame, to make sure their targets have had
-// a chance to spawn
-	this.nextthink = this.ltime + 0.1;
+	// start trains on the second frame, to make sure their targets have had
+	// a chance to spawn
 	setthink(this, func_train_find);
+	this.nextthink = this.ltime + 0.1;
+}
+
+/*QUAKED func_train (0 .5 .8) ? PATH_SPEED TOGGLE SMOOTHSPEED
+Trains are moving platforms that players can ride. Its origin is the min corner of the train. 
+The train spawns at the first target it is pointing at. If the train is the target of a button or trigger, it will not begin moving until activated.
+A train will fire all targets of a pathcorner on arrival.
+
+Keys:
+"speed"	default 100
+"dmg"	default	2
+"sounds"
+	0) none, or, set your own with 'noise' (stop sound) and 'noise1' (move sound)
+	1) ratchet metal
+	2) base plat
+"pausetime"	pausetime at a pathcorner that doesn't specify a wait, default 0.1, -1 for continuous motion
+"health" allow the train to be shot to trigger it whenever it could normally be triggered (toggle spawnflag applies)
+
+Spawnflags:
+PATH_SPEED: train will inherit 'speed' value from path_corners as it reaches them
+If a path_corner's speed is -1, the func_train's move when LEAVING that corner will be to snap instantly to the next corner.
+TOGGLE: allow starting/stopping motion anywhere on its path (default is to ignore triggerings when in motion)
+SMOOTH_SPEED: if PATH_SPEED, train will smoothly blend to its destination's 'speed' as it travels to it
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination
+*/
+/*FGD
+@SolidClass base(Train) = func_train : "Moving platform that players can ride. 
+Its origin is the min corner of the train. 
+The train spawns at the first target it is pointing at. If the train is the target of a button or trigger, it will not begin moving until activated.
+Will fire all targets of a pathcorner on arrival, but does not normally fire its own targets.
+
+
+If 'Speed from path' is set, the train will inherit the 'speed' value from path_corners as it reaches them. If 'blend speed smoothly' is also set, the train will instead smoothly blend to its destination's 'speed' as it travels to it.
+If a path_corner's speed is -1, the func_train's move when LEAVING that corner will be to snap instantly to the next corner.
+The 'Toggle' spawnflag allows starting and stopping the motion anywhere on the train's path (default is to ignore triggerings when in motion).
+Setting 'health' will allow the train to be shot to trigger it whenever it could normally be triggered (toggle spawnflag applies). 
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination"
+[
+	spawnflags(Flags) = [
+		1 : "Speed from path" : 0
+		2 : "Toggle" : 0
+		4 : "Blend speed smoothly" : 0
+	]
+	health(integer) : "Health (shootable if > 0)"
+]
+*/
+spawnfunc(func_train)
+{	
+	func_train_setup(this);
+	
+	this.th_stand = train_wait;
+	
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
+	setorigin(this, this.origin);
+	this.movedir = this.mins;
+}
+
+/*QUAKED func_train_point (0 .5 .8) (-8 -8 -8) (8 8 8) PATH_SPEED
+Trains are moving platforms that players can ride.
+The targets origin specifies the min point of the train at each corner. The train spawns at the first target it is pointing at.
+If the train is the target of a button or trigger, it will not begin moving until activated.
+A train will fire all targets of a pathcorner on arrival.
+Keys:
+"model" model to use
+"speed"	default 100
+"dmg"	default	2
+"sounds"
+	0) none, or, set your own with 'noise' (stop sound) and 'noise1' (move sound)
+	1) ratchet metal
+	2) base plat
+"pausetime"	pausetime at a pathcorner that doesn't specify a wait, default 0.1, -1 for continuous motion
+
+Spawnflags:
+PATH_SPEED: train will inherit 'speed' value from path_corners as it reaches them
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination
+*/
+/*FGD
+@PointClass base(Train) = func_train_point : "Moving platform that players can ride. 
+The point entity is the origin, even if a model is specified.
+The train spawns at the first target it is pointing at. If the train is the target of a button or trigger, it will not begin moving until activated.
+Will fire all targets of a pathcorner on arrival, but does not normally fire its own targets.
+
+If 'Speed from path' is set, the train will inherit the 'speed' value from path_corners as it reaches them. If 'blend speed smoothly' is also set, the train will instead smoothly blend to its destination's 'speed' as it travels to it.
+If a path_corner's speed is -1, the func_train's move when LEAVING that corner will be to snap instantly to the next corner.
+The 'Toggle' spawnflag allows starting and stopping the motion anywhere on the train's path (default is to ignore triggerings when in motion).
+
+Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner arrival, 'target3' on each departure, 'target4' on termination"
+[
+	model(string) : "Model to use"
+	spawnflags(Flags) = [
+		1 : "Speed from path" : 0
+		2 : "Toggle" : 0
+		4 : "Blend speed smoothly" : 0
+	]
+]
+*/
+spawnfunc(func_train_point)
+{	
+	func_train_setup(this);
+	
+	this.th_stand = train_wait;
+	
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, this.mins, this.maxs);
+	setorigin(this, this.origin);
+	this.movedir = '0 0 0';
 }
 
 /*QUAKED misc_teleporttrain(0 .5 .8)(-8 -8 -8)(8 8 8)
@@ -319,7 +890,7 @@ spawnfunc(func_train2)
 	if(!this.dmg)
 		this.dmg = 2;
 
-	if (!InitMovingBrushTrigger(this))
+	if(!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;
 

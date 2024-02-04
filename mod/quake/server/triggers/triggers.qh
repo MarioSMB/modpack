@@ -37,8 +37,9 @@ const int START_OFF = BIT(0);
 
 .float height;
 
-.float t_width;
-.float t_length;
+.float length, width, height;
+.float t_length = length;	// preserve old func_door_secret maphacks
+.float t_width = width;
 
 //----------------
 // STATES & ACTIVE
@@ -47,6 +48,9 @@ const int STATE_TOP = 0;
 const int STATE_BOTTOM = 1;
 const int STATE_UP = 2;
 const int STATE_DOWN = 3;
+
+const int STATE_OFF = 0;
+const int STATE_ON = 1;
 
 float orig_random(entity this);
 void CorpseThink(entity this);
