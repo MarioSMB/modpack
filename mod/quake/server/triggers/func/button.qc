@@ -60,7 +60,8 @@ void button_fire(entity this)
 			this.items = 0;
 	}
 
-	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+	if(this.noise && this.noise != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(2) | BIT(3) | BIT(4));
 
@@ -84,7 +85,7 @@ void button_touch(entity this, entity toucher)
 		return;
 	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
-	if(MP_MG && this.items)
+	if(this.items)
 	{
 		if(time < this.attack_finished)
 			return;
@@ -187,7 +188,8 @@ When a button is touched, it moves some distance in the direction of it's angle,
 void func_button_init(entity this, entity actor, entity trigger);
 spawnfunc(func_button)
 {
-	vector oldmovedir = this.movedir;
+	if(this.movedir != '0 0 0')
+		this.have_mg_movedir = true;
 	SetMovedir(this);
 	if (!InitMovingBrushTrigger(this))
 		return;
@@ -212,53 +214,34 @@ spawnfunc(func_button)
 
 	this.state = STATE_BOTTOM;
 
-	if(MP_MG)
-	{
-		SUB_SetWorldtype(this);
-		if(this.worldtype ==  WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
-		{
-			precache_sound("doors/medtry.wav");
-			precache_sound("doors/meduse.wav");
-			this.noise3 = "doors/medtry.wav";
-			this.noise4 = "doors/meduse.wav";
-		}
-		else if(this.worldtype == WORLDTYPE_METAL)
-		{
-			precache_sound("doors/runetry.wav");
-			precache_sound("doors/runeuse.wav");
-			this.noise3 = "doors/runetry.wav";
-			this.noise4 = "doors/runeuse.wav";
-		}
-		else if(this.worldtype == WORLDTYPE_BASE)
-		{
-			precache_sound("doors/basetry.wav");
-			precache_sound("doors/baseuse.wav");
-			this.noise3 = "doors/basetry.wav";
-			this.noise4 = "doors/baseuse.wav";
-		}
+	SUB_SetWorldtype(this);
 
-		if(this.spawnflags & DOOR_SILVER_KEY)
-			this.items = IT_KEY1;
-		if(this.spawnflags & DOOR_GOLD_KEY)
-			this.items = IT_KEY2;
-
-		if(oldmovedir)
-		{
-			this.pos1 = this.origin;
-			this.pos2 = this.pos1 + oldmovedir;
-			this.angles = '0 0 0';
-		}
-		else
-		{
-			this.pos1 = this.origin;
-			this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-		}
-	}
-	else
+	if(this.worldtype ==  WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 	{
-		this.pos1 = this.origin;
-		this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+		precache_sound("doors/medtry.wav");
+		precache_sound("doors/meduse.wav");
+		this.noise3 = "doors/medtry.wav";
+		this.noise4 = "doors/meduse.wav";
 	}
+	else if(this.worldtype == WORLDTYPE_METAL)
+	{
+		precache_sound("doors/runetry.wav");
+		precache_sound("doors/runeuse.wav");
+		this.noise3 = "doors/runetry.wav";
+		this.noise4 = "doors/runeuse.wav";
+	}
+	else if(this.worldtype == WORLDTYPE_BASE)
+	{
+		precache_sound("doors/basetry.wav");
+		precache_sound("doors/baseuse.wav");
+		this.noise3 = "doors/basetry.wav";
+		this.noise4 = "doors/baseuse.wav";
+	}
+
+	if(this.spawnflags & DOOR_SILVER_KEY)
+		this.items = IT_KEY1;
+	if(this.spawnflags & DOOR_GOLD_KEY)
+		this.items = IT_KEY2;
 
 	if(this.spawnflags & 128)
 		this.use = func_button_init;
@@ -280,6 +263,20 @@ void func_button_init(entity this, entity actor, entity trigger)
 	}
 	else
 		settouch(this, button_touch);
+
+	if(this.have_mg_movedir)
+	{
+		this.pos1 = this.origin;
+		this.pos2 = this.pos1 + this.movedir;
+		this.angles = '0 0 0';
+	}
+	else
+	{
+		if(!this.distance)
+			this.distance = fabs(this.movedir * this.size) - this.lip;
+		this.pos1 = this.origin;
+		this.pos2 = this.pos1 + this.movedir * this.distance;
+	}
 
 	if(this.customflags & CFL_LOCKED)
 		button_lock(this, false);

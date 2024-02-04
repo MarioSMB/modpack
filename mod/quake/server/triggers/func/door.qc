@@ -128,7 +128,7 @@ void door_fire(entity this)
 
 	if(this.spawnflags & DOOR_TOGGLE)
 	{
-		if (this.state == STATE_UP || this.state == STATE_TOP)
+		if(this.state == STATE_UP || this.state == STATE_TOP)
 		{
 			do {
 				door_go_down(e);
@@ -205,7 +205,7 @@ void door_lock_do(entity d)
 	}
 	else
 	{
-		/*if (d.owner.trigger_field == world && !d.owner.items && !(d.spawnflags & DOOR_TOGGLE))
+		/*if(d.owner.trigger_field == world && !d.owner.items && !(d.spawnflags & DOOR_TOGGLE))
 			objerror("door being locked doesn't have a trigger");
 		else*/ if(d.owner.trigger_field)
 			settouch(d.owner.trigger_field, func_null);
@@ -227,7 +227,7 @@ void door_unlock_do(entity d)
 	}
 	else
 	{
-		/*if (d.owner.trigger_field == world && !d.owner.items && !(d.spawnflags & DOOR_TOGGLE))
+		/*if(d.owner.trigger_field == world && !d.owner.items && !(d.spawnflags & DOOR_TOGGLE))
 			objerror("door being unlocked doesn't have a trigger");
 		else*/ if(d.owner.trigger_field)
 			settouch(d.owner.trigger_field, door_trigger_touch);
@@ -379,7 +379,7 @@ void(vector cmins, vector cmaxs) door_finalize =
 	do {
 		// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 		// but spawn in the open position
-		if (t.spawnflags & DOOR_START_OPEN)
+		if(t.spawnflags & DOOR_START_OPEN)
 		{
 			setorigin (t, t.pos2);
 			t.pos2 = t.pos1;
@@ -388,20 +388,20 @@ void(vector cmins, vector cmaxs) door_finalize =
 		t = t.enemy;
 	} while (t != self);
 			
-	if (self.items)
+	if(self.items)
 	{
 		door_key_init();
 		return;
 	}
 
-	if (self.style < 0)
+	if(self.style < 0)
 	{
 		self.style *= -1;
 		self.customflags |= CFL_INVLIGHT;
 	}
-	if (self.spawnflags & DOOR_START_OPEN)
+	if(self.spawnflags & DOOR_START_OPEN)
 	{
-		if (self.customflags & CFL_INVLIGHT)
+		if(self.customflags & CFL_INVLIGHT)
 			self.customflags -= CFL_INVLIGHT;
 		else
 			self.customflags |= CFL_INVLIGHT;
@@ -409,31 +409,31 @@ void(vector cmins, vector cmaxs) door_finalize =
 	
 	bmodel_lightstyle(self, 1);
 
-	if (self.health)
+	if(self.health)
 		return;
-	if (self.targetname != string_null)
-		if (!door_getslocked(self) || self.spawnflags & DOOR_TOGGLE)
+	if(self.targetname != string_null)
+		if(!door_getslocked(self) || self.spawnflags & DOOR_TOGGLE)
 			return;
 	
 	self.trigger_field = door_spawn_field(cmins, cmaxs);
 	
-	if (self.customflags & CFL_LOCKED)
-		door_lock(FALSE);
+	if(self.customflags & CFL_LOCKED)
+		door_lock(false);
 }
 
 float(entity door, entity master) door_can_link =
 {
-	if (door == master) return TRUE;	// first door
-	if (door.enemy) return FALSE;	// already linked
-	if (door.spawnflags & DOOR_DONT_LINK) return FALSE;	// will finalize itself later
+	if(door == master) return true;	// first door
+	if(door.enemy) return false;	// already linked
+	if(door.spawnflags & DOOR_DONT_LINK) return false;	// will finalize itself later
 
-	if (door.targetname != string_null && master.targetname != string_null && master.targetname != door.targetname)
-		return FALSE;	// part of different systems, might only touch coincidentally
+	if(door.targetname != string_null && master.targetname != string_null && master.targetname != door.targetname)
+		return false;	// part of different systems, might only touch coincidentally
 	
-	if (door.items && master.items && !(master.items & door.items))
-		return FALSE;	// different items requirements
+	if(door.items && master.items && !(master.items & door.items))
+		return false;	// different items requirements
 	
-	return TRUE;
+	return true;
 }
 
 /*
@@ -446,9 +446,9 @@ void door_link(entity this)
 	entity	t, masterdoor;
 	vector	cmins, cmaxs;
 
-	if (self.enemy)
+	if(self.enemy)
 		return;		// already linked by another door
-	if (self.spawnflags & DOOR_DONT_LINK)
+	if(self.spawnflags & DOOR_DONT_LINK)
 	{
 		self.owner = self.enemy = self;
 		door_finalize(self.mins, self.maxs);
@@ -465,9 +465,9 @@ void door_link(entity this)
 	{
 		self.owner = masterdoor;
 		
-		if (self != masterdoor)
+		if(self != masterdoor)
 		{
-			if ((self.targetname != string_null && masterdoor.targetname == string_null) ||
+			if((self.targetname != string_null && masterdoor.targetname == string_null) ||
 				self.targetname == masterdoor.targetname)
 			{
 				// all the doors in the chain having the same targetname will cause
@@ -476,7 +476,7 @@ void door_link(entity this)
 				self.targetname = string_null;
 			}
 			masterdoor.items |= self.items;
-			if (self.health != 0 && masterdoor.health == 0)
+			if(self.health != 0 && masterdoor.health == 0)
 				masterdoor.health = self.health;
 
 			SUB_MergeTargets(masterdoor);
@@ -485,7 +485,7 @@ void door_link(entity this)
 			self.target3 = string_null;
 			self.target4 = string_null;
 			self.killtarget = string_null;
-			if (self.message != string_null && masterdoor.message == string_null)
+			if(self.message != string_null && masterdoor.message == string_null)
 				masterdoor.message = self.message;
 		}
 
@@ -494,7 +494,7 @@ void door_link(entity this)
 			t = find (t, classname, self.classname);	
 		} while (t && (!door_can_link(t,masterdoor) || !EntitiesTouching(self,t)));
 		
-		if (!t)
+		if(!t)
 		{
 			self.enemy = masterdoor;		// make the chain a loop
 			self = self.owner;
@@ -522,23 +522,119 @@ void LinkDoors(entity this)
 }
 #else
 #if 1
-entity spawn_field(entity this, vector fmins, vector fmaxs)
+entity door_spawn_field(entity this, vector fmins, vector fmaxs)
 {
+	//dprint("spawning door field\n");
 	entity trigger = spawn();
 	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = this;
-	trigger.worldtype = this.worldtype;
 	settouch(trigger, door_trigger_touch);
 
 	vector t1 = fmins;
 	vector t2 = fmaxs;
 	setsize(trigger, t1 - '60 60 8', t2 + '60 60 8');
-	return(trigger);
+	return trigger;
 }
 
-void door_finalize(entity this)
+void door_key_init(entity this)
 {
+	if(!this.message || this.message == "")
+	{
+		if(this.items & IT_KEY1)
+		{
+			if(world.worldtype == 2)
+				this.message = "You need the Silver Keycard";
+			else if(world.worldtype == 1)
+				this.message = "You need the Silver Runekey";
+			else if(world.worldtype == 0)
+				this.message = "You need the Silver Key";
+		}
+		else if(this.items & IT_KEY2)
+		{
+			if(world.worldtype == 2)
+				this.message = "You need the Gold Keycard";
+			else if(world.worldtype == 1)
+				this.message = "You need the Gold Runekey";			
+			else if(world.worldtype == 0)
+				this.message = "You need the Gold Key";
+		}
+	}
+	if(this.items)
+	{
+		entity t = this;
+		do {
+			t.wait = -1;
+			t = t.enemy;
+		} while(t != this);
+	}
+}
+
+// checks if a door ONLY has locks targeting it
+bool door_getslocked(entity d)
+{
+	if(!d.targetname || d.targetname == "")
+		return false;
+	
+	entity t;
+	bool found = false;
+	t = find(NULL, target, d.targetname);
+	while(t)
+	{
+		found = true;
+		if(t.classname != "target_lock")
+			return false;
+		t = find(t, target, d.targetname);
+	}
+	t = find(NULL, target2, d.targetname);
+	while(t)
+	{
+		found = true;
+		if(t.classname != "target_lock")
+			return false;
+		t = find(t, target2, d.targetname);
+	}
+	t = find(NULL, target3, d.targetname);
+	while(t)
+	{
+		found = true;
+		if(t.classname != "target_lock")
+			return false;
+		t = find(t, target3, d.targetname);
+	}
+	t = find(NULL, target4, d.targetname);
+	while(t)
+	{
+		found = true;
+		if(t.classname != "target_lock")
+			return false;
+		t = find(t, target4, d.targetname);
+	}
+	return found;	// no targeters has to be false
+}
+
+void door_finalize(entity this, vector cmins, vector cmaxs)
+{
+	// switch positions after linking so START_OPEN doors link properly
+	entity t = this;
+	do {
+		// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+		// but spawn in the open position
+		if(t.spawnflags & DOOR_START_OPEN)
+		{
+			setorigin (t, t.pos2);
+			t.pos2 = t.pos1;
+			t.pos1 = t.origin;
+		}
+		t = t.enemy;
+	} while (t != this);
+			
+	if(this.items)
+	{
+		door_key_init(this);
+		return;
+	}
+
 	if(this.style < 0)
 	{
 		this.style *= -1;
@@ -551,11 +647,80 @@ void door_finalize(entity this)
 		else
 			this.customflags |= CFL_INVLIGHT;
 	}
-
+	
 	bmodel_lightstyle(this, 1);
 
+	if(this.health)
+		return;
+	if(this.targetname && this.targetname != "")
+		if(!door_getslocked(this) || (this.spawnflags & DOOR_TOGGLE))
+			return;
+	
+	this.trigger_field = door_spawn_field(this, cmins, cmaxs);
+	
 	if(this.customflags & CFL_LOCKED)
 		door_lock(this, false);
+}
+
+/*
+=============
+SUB_AddTarget
+===============
+*/
+void SUB_AddTarget(entity to, string tname)
+{
+	if(!to)
+		return;
+	if(!to.target || to.target == "")
+		to.target = tname;
+	else if(!to.target2 || to.target2 == "")
+		to.target2 = tname;
+	else if(!to.target3 || to.target3 == "")
+		to.target3 = tname;
+	else if(!to.target4 || to.target4 == "")
+		to.target4 = tname;
+}
+
+/*
+=============
+SUB_MergeTargets
+===============
+*/
+void SUB_MergeTargets(entity this, entity to)
+{
+	// iw -- fixed copying target over all 4 targets and never copying killtarget
+	if(!to)
+		return;
+	if(this.target && this.target != "")
+		SUB_AddTarget(to, this.target);
+	if(this.target2 && this.target2 != "")
+		SUB_AddTarget(to, this.target2);
+	if(this.target3 && this.target3 != "")
+		SUB_AddTarget(to, this.target3);
+	if(this.target4 && this.target4 != "")
+		SUB_AddTarget(to, this.target4);
+	if(this.killtarget && this.killtarget != "")
+	{
+		if(to.killtarget && to.killtarget != "")
+			{ /* nope */ }
+		else
+			to.killtarget = this.killtarget;
+	}		
+}
+
+bool door_can_link(entity door, entity master)
+{
+	if(door == master) return true;	// first door
+	if(door.enemy) return false;	// already linked
+	if(door.spawnflags & DOOR_DONT_LINK) return false;	// will finalize itself later
+
+	if(door.targetname && door.targetname != "" && master.targetname && master.targetname != "" && master.targetname != door.targetname)
+		return false;	// part of different systems, might only touch coincidentally
+	
+	if(door.items && master.items && !(master.items & door.items))
+		return false;	// different items requirements
+	
+	return true;
 }
 
 void LinkDoors(entity this)
@@ -565,72 +730,69 @@ void LinkDoors(entity this)
 	if(this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;
-		door_finalize(this);
+		door_finalize(this, this.mins, this.maxs);
 		return;		// don't want to link this door
 	}
 
 	vector cmins = this.mins;
 	vector cmaxs = this.maxs;
 	
-	entity starte = this;
+	entity masterdoor = this;
 	entity t = this;
-
-	entity e = this;
 	
 	do
 	{
-		e.owner = starte;			// master door
+		this.owner = masterdoor;
+		
+		if(this != masterdoor)
+		{
+			if((this.targetname && this.targetname != "" && (!masterdoor.targetname || masterdoor.targetname == "")) ||
+				this.targetname == masterdoor.targetname)
+			{
+				// all the doors in the chain having the same targetname will cause
+				// the whole chain to be triggered once for every door in the chain
+				masterdoor.targetname = this.targetname;
+				this.targetname = string_null;
+			}
+			masterdoor.items |= this.items;
+			if(this.health != 0 && masterdoor.health == 0)
+				masterdoor.health = this.health;
 
-		if(e.health)
-			starte.health = e.health;
-		if(e.targetname && e.targetname != "")
-			starte.targetname = e.targetname;
-		if(e.message != "")
-			starte.message = e.message;
+			SUB_MergeTargets(this, masterdoor);
+			this.target = string_null;
+			this.target2 = string_null;
+			this.target3 = string_null;
+			this.target4 = string_null;
+			this.killtarget = string_null;
+			if(this.message != string_null && masterdoor.message == string_null)
+				masterdoor.message = this.message;
+		}
 
-		t = find(t, classname, e.classname);	
+		// skip doors with other targetnames to not fold them into the loop
+		do {
+			t = find(t, classname, this.classname);	
+		} while (t && (!door_can_link(t, masterdoor) || !boxesoverlap(this.absmin, this.absmax, t.absmin, t.absmax)));
+		
 		if(!t)
 		{
-			e.enemy = starte;		// make the chain a loop
-			door_finalize(e.owner); // TODO: unsure if this is the correct entity, cursed copper mess!
-		// shootable, fired, or key doors just needed the owner/enemy links,
-		// they don't spawn a field
-	
-			if(e.owner.health)
-				return;
-			if(e.owner.targetname && e.owner.targetname != "")
-				return;
-			if(e.owner.items)
-				return;
+			this.enemy = masterdoor;		// make the chain a loop
+			this = this.owner;
 
-			e.owner.owner.trigger_field = spawn_field(e.owner, cmins, cmaxs);
-
+			door_finalize(this, cmins, cmaxs);
+			
 			return;
 		}
 
-		if(boxesoverlap(e.mins, e.maxs, t.mins, t.maxs))
-		{
-			if(t.enemy)
-				objerror(this, "cross connected doors");
-			
-			e.enemy = t;
-			e = t;
+		this.enemy = t;
+		this = t;
 
-			if(t.mins_x < cmins.x)
-				cmins.x = t.mins_x;
-			if(t.mins_y < cmins.y)
-				cmins.y = t.mins_y;
-			if(t.mins_z < cmins.z)
-				cmins.z = t.mins_z;
-			if(t.maxs_x > cmaxs.x)
-				cmaxs.x = t.maxs_x;
-			if(t.maxs_y > cmaxs.y)
-				cmaxs.y = t.maxs_y;
-			if(t.maxs_z > cmaxs.z)
-				cmaxs.z = t.maxs_z;
-		}
-	} while(1);
-
+		cmins_x = min(t.mins_x, cmins_x);
+		cmins_y = min(t.mins_y, cmins_y);
+		cmins_z = min(t.mins_z, cmins_z);
+		cmaxs_x = max(t.maxs_x, cmaxs_x);
+		cmaxs_y = max(t.maxs_y, cmaxs_y);
+		cmaxs_z = max(t.maxs_z, cmaxs_z);
+	} while (t);
 }
 #else
 void door_spawnfield(entity this, vector fmins, vector fmaxs)
@@ -670,17 +832,17 @@ bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 
 void LinkDoors(entity this)
 {
-	if (this.enemy)
+	if(this.enemy)
 		return;		// already linked by another door
-	if (this.spawnflags & 4)
+	if(this.spawnflags & 4)
 	{
 		this.owner = this.enemy = this;
 
-		if (this.health)
+		if(this.health)
 			return;
-		if (this.targetname != "")
+		if(this.targetname != "")
 			return;
-		if (this.items)
+		if(this.items)
 			return;
 
 		door_spawnfield(this, this.absmin, this.absmax);
@@ -715,17 +877,17 @@ void LinkDoors(entity this)
 			this.targetname = t.targetname;
 		if((t.message != "") && (this.message == ""))
 			this.message = t.message;
-		if (t.absmin_x < cmins_x)
+		if(t.absmin_x < cmins_x)
 			cmins_x = t.absmin_x;
-		if (t.absmin_y < cmins_y)
+		if(t.absmin_y < cmins_y)
 			cmins_y = t.absmin_y;
-		if (t.absmin_z < cmins_z)
+		if(t.absmin_z < cmins_z)
 			cmins_z = t.absmin_z;
-		if (t.absmax_x > cmaxs_x)
+		if(t.absmax_x > cmaxs_x)
 			cmaxs_x = t.absmax_x;
-		if (t.absmax_y > cmaxs_y)
+		if(t.absmax_y > cmaxs_y)
 			cmaxs_y = t.absmax_y;
-		if (t.absmax_z > cmaxs_z)
+		if(t.absmax_z > cmaxs_z)
 			cmaxs_z = t.absmax_z;
 		if(t.enemy == this)
 			break;
@@ -744,17 +906,33 @@ void LinkDoors(entity this)
 	// shootable, or triggered doors just needed the owner/enemy links,
 	// they don't spawn a field
 
-	if (this.health)
+	if(this.health)
 		return;
-	if (this.targetname != "")
+	if(this.targetname != "")
 		return;
-	if (this.items)
+	if(this.items)
 		return;
 
 	door_spawnfield(this, cmins, cmaxs);
 }
 #endif
 #endif
+
+// for measuring how large an entity is along an arbitrary vector
+// FIXME: this is trash and it returns trash
+float BoundsAngleSize(vector v, vector s)
+{
+	v.x = fabs(v.x);
+	v.y = fabs(v.y);
+	v.z = fabs(v.z);
+	
+	// size is always + + + but this is in case I switch the parameters somewhere
+	s.x = fabs(s.x);
+	s.y = fabs(s.y);
+	s.z = fabs(s.z);
+	
+	return v * s;
+}
 
 
 /*QUAKED func_door(0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
@@ -785,12 +963,13 @@ Key doors are allways wait -1.
 void func_door_init(entity this, entity actor, entity trigger);
 spawnfunc(func_door)
 {
-	vector oldmovedir = this.movedir;
+	if(this.movedir != '0 0 0')
+		this.have_mg_movedir = true;
 	SetMovedir(this);
 	SUB_SetWorldtype(this);
 
 	this.max_health = this.health;
-	if (!InitMovingBrushTrigger(this))
+	if(!InitMovingBrushTrigger(this))
 		return;
 
 	switch(this.sounds)
@@ -831,52 +1010,6 @@ spawnfunc(func_door)
 		this.lip = 8;
 	if(!this.dmg)
 		this.dmg = 2;
-
-	this.pos1 = this.origin;
-
-	if(MP_ROGUE)
-	{
-		// fix cameron's door
-		vector tmpvec = this.movedir;
-		if(tmpvec.x < 0)
-			tmpvec.x = 0 - tmpvec.x;
-		if(tmpvec.y < 0)
-			tmpvec.y = 0 - tmpvec.y;
-		if(this.distance)
-		{
-			this.pos1 = this.origin;
-			this.pos2 = this.pos1 + this.movedir * this.distance;
-		}
-		else
-			this.pos2 = this.pos1 + this.movedir * (fabs(tmpvec * this.size) - this.lip);
-	}
-	else
-	{
-		if(this.distance)
-		{
-			this.pos1 = this.origin;
-			this.pos2 = this.pos1 + this.movedir * this.distance;
-		}
-		else
-			this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-	}
-
-	if(MP_MG && oldmovedir != '0 0 0')
-	{
-		this.pos2 = this.pos1 + oldmovedir;
-		this.angles = '0 0 0';
-	}
-
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
-	if(this.spawnflags & DOOR_START_OPEN)
-	{
-		setorigin(this, this.pos2);
-		this.pos2 = this.pos1;
-		this.pos1 = this.origin;
-	}
-
-	this.state = STATE_BOTTOM;
 	
 	if(this.items)
 		this.wait = -1;
@@ -899,6 +1032,25 @@ void func_door_init(entity this, entity actor, entity trigger)
 		this.takedamage = DAMAGE_YES;
 		this.th_die = door_killed;
 	}
+
+	if(!this.distance)
+		this.distance = BoundsAngleSize(this.movedir, this.size) - this.lip;
+	if(this.pos1 && this.pos2)
+		setorigin(this, this.pos1);
+	else
+	{
+		this.pos1 = this.origin;
+		this.pos2 = this.pos1 + this.movedir * this.distance;
+	}
+
+	// mg hack
+	if(this.have_mg_movedir)
+	{
+		this.pos2 = this.pos1 + this.movedir;
+		this.angles = '0 0 0';
+	}
+
+	this.state = STATE_BOTTOM;
 
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.

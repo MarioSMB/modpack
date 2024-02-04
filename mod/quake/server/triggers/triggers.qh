@@ -22,6 +22,8 @@ const int START_OFF = BIT(0);
 
 .float duration;
 
+.bool have_mg_movedir; // mg hack
+
 .int count;
 
 .vector dest;

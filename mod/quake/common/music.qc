@@ -1,6 +1,11 @@
 #include "music.qh"
 
 #ifdef SVQC
+PRECACHE(Music)
+{
+	precache_model("progs/piano_musicnote_white.mdl");
+}
+
 void music_reset(entity this)
 {
 	.entity weaponentity = weaponentities[0];
@@ -130,8 +135,6 @@ void CreatureFrame_Music(entity this)
 			mspeed *= 1.333;
 	}
 
-	LOG_INFO(ftos(mspeed));
-
 	// if there's no note just treat it like a space
 	if(playnote)
 	{
@@ -152,6 +155,25 @@ void CreatureFrame_Music(entity this)
 		Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 		if(msound && msound != SND_Null)
 			sound7(this, CH_AMBIENT_SINGLE, Sound_fixpath(msound), 1, ATTN_NORM, r, 0);
+
+		//if(random() <= 0.7)
+		//{
+			entity musicnote = new(musicnote);
+			makevectors(this.v_angle);
+			setorigin(musicnote, this.origin + v_forward * 45);
+			_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+			vector mycolor;
+			mycolor.x = max(0.25, random() * 5);
+			mycolor.y = max(0.25, random() * 5);
+			mycolor.z = max(0.25, random() * 5);
+			musicnote.colormod = mycolor;
+			musicnote.scale = 0.75;
+			setsize(musicnote, '0 0 0', '0 0 0');
+			musicnote.angles = '0 1 0' * this.angles_y;
+			set_movetype(musicnote, MOVETYPE_FLY);
+			SUB_SetFade(musicnote, time + 0.1, 0.5);
+			musicnote.velocity = '0 0 200';
+		//}
 	}
 
 	this.(weaponentity).music_nextnote = time + (60 / mspeed);
