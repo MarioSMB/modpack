@@ -1,5 +1,7 @@
 #pragma once
 
+bool autocvar_sv_quake_monsterfix;
+
 .bool charmed;
 .entity charmer;
 .bool huntingcharmer;

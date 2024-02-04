@@ -15,7 +15,7 @@ void cannon_PlayerTouch(entity this, entity toucher)
 		return;
 	if(IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual)
 		return;
-	if(vdist(this.velocity, <, 1000))
+	if(vdist(this.velocity, <, this.cannon_prev.speed * 0.5))
 		return;
 
 	T_Damage(toucher, this, this, this.cannon_prev.dmg, DEATH_CRUSH.m_id);

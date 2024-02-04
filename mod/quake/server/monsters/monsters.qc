@@ -199,14 +199,14 @@ bool monster_checkspawnedflag(entity this)
 // interpolation for monsters only applies when .movetype is set to MOVETYPE_STEP
 // this hack ensures that while allowing us to use QC physics for movement
 // .movetype is reset by physics
-// NOTE: hack has been disabled as I have made engine modifications to the Quake server to allow RENDER_STEP to work with all monsters, see https://github.com/DarkPlacesEngine/darkplaces/issues/82
 bool monster_customize(entity this, entity client)
 {
 	if(time < this.enemy_reveal_time)
 		this.effects |= (EF_ADDITIVE | EF_NODEPTHTEST);
 	else
 		this.effects &= ~(EF_ADDITIVE | EF_NODEPTHTEST);
-	//this.movetype = MOVETYPE_STEP; // RENDER_STEP
+	if(!autocvar_sv_quake_monsterfix)
+		this.movetype = MOVETYPE_STEP; // RENDER_STEP
 	return true;
 }
 
