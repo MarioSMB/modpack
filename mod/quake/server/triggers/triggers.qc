@@ -44,11 +44,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 			t.message = this.message;
 		t.killtarget = this.killtarget;
 		t.target = this.target;
-		if(MP_MG)
-		{
-			t.targetname = this.targetname;
-			t.use = func_null;
-		}
+		t.targetname = this.targetname;
+		t.use = func_null;
 		return;
 	}
 	

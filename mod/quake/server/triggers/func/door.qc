@@ -60,6 +60,7 @@ void door_hit_top(entity this)
 void door_hit_bottom(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
+	this.frame = this.skin;
 	this.state = STATE_BOTTOM;
 
 	SUB_UseTargets_CopperAlt(this, NULL, NULL, BIT(1) | BIT(2) | BIT(3));
@@ -99,6 +100,7 @@ void door_go_up(entity this)
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMoveLight(this, this.pos1, this.pos2, this.speed, door_hit_top, false);
+	this.frame = !this.skin;
 
 	if(!SUB_UseTargets_CopperAlt(this, NULL, NULL, BIT(2) | BIT(3) | BIT(4)))
 		SUB_UseTargetsSilent(this, NULL, NULL);
@@ -124,27 +126,29 @@ void door_fire(entity this)
 	if(this.items)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise4, 1, ATTN_NORM);
 
-	this.message = "";		// no more message
-
-	if(this.spawnflags & DOOR_TOGGLE)
+	if(!(this.spawnflags & DOOR_TOGGLE))
+		this.message = ""; // no more message
+	else
 	{
 		if(this.state == STATE_UP || this.state == STATE_TOP)
 		{
 			do {
 				door_go_down(e);
 				e = e.enemy;
-			} while(e != this && e != NULL);
+			} while(e != this && e);
 			return;
 		}
 	}
 	
 // trigger all paired doors
-	do {
-		door_go_up(e);
-		e = e.enemy;
-	} while(e != this && e != NULL);
+	if(!(this.spawnflags & DOOR_TOGGLE) || ((this.spawnflags & DOOR_TOGGLE) && this.state == STATE_BOTTOM))
+	{
+		do {
+			door_go_up(e);
+			e = e.enemy;
+		} while(e != this && e);
+	}
 }
-
 
 void door_use(entity this, entity actor, entity trigger)
 {
@@ -156,6 +160,7 @@ void door_use(entity this, entity actor, entity trigger)
 		this.owner.message = "";	
 		this.enemy.message = "";
 	}
+	this.takedamage = DAMAGE_NO;
 	door_fire(this.owner);
 }
 
@@ -164,8 +169,13 @@ void door_trigger_touch(entity this, entity toucher)
 {
 	if(toucher.health <= 0)
 		return;
+	if(toucher.move_movetype == MOVETYPE_NOCLIP)
+		return;
 
 	if(time < this.attack_finished)
+		return;
+	// silly fix for sleeping monsters standing behind doors inside their touch fields causing them to open
+	if(IS_MONSTER(toucher) && !toucher.enemy && !toucher.goalentity)
 		return;
 	this.attack_finished = time + 1;
 
@@ -175,9 +185,9 @@ void door_trigger_touch(entity this, entity toucher)
 
 void door_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	this.health = this.max_health;
-	this.takedamage = DAMAGE_NO;	// will be reset upon return
-	door_use(this, attacker, NULL);
+	this.owner.health = this.owner.max_health;
+	this.owner.takedamage = DAMAGE_NO;	// will be reset upon return
+	door_use(this.owner, attacker, NULL);
 }
 
 void door_lock_do(entity d)
@@ -331,10 +341,14 @@ void door_touch(entity this, entity toucher)
 		horde_key_spend(this.owner.items);
 	else // standard behaviour
 		toucher.items &= ~this.owner.items;
-	settouch(this, func_null);
-	if(this.enemy)
-		settouch(this.enemy, func_null); // get paired door
-	door_use(this, NULL, toucher);
+	settouch(this.owner, func_null);
+	entity t = this.owner.enemy;
+	while(t != this.owner)// get paired doors
+	{
+		settouch(t, func_null);
+		t = t.enemy;
+	}
+	door_use(this.owner, NULL, toucher);
 }
 
 /*
@@ -353,175 +367,7 @@ LinkDoors
 
 =============
 */
-#if 0
-entity(vector fmins, vector fmaxs) door_spawn_field =
-{
-	local entity	trigger;
-	local	vector	t1, t2;
-	//dprint("spawning door field\n");
-	trigger = spawn();
-	trigger.movetype = MOVETYPE_NONE;
-	trigger.solid = SOLID_TRIGGER;
-	trigger.owner = self;
-	trigger.touch = door_trigger_touch;
 
-	t1 = fmins;
-	t2 = fmaxs;
-	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
-	return (trigger);
-}
-
-void(vector cmins, vector cmaxs) door_finalize =
-{
-	entity t;
-	// switch positions after linking so START_OPEN doors link properly
-	t = self;
-	do {
-		// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-		// but spawn in the open position
-		if(t.spawnflags & DOOR_START_OPEN)
-		{
-			setorigin (t, t.pos2);
-			t.pos2 = t.pos1;
-			t.pos1 = t.origin;
-		}
-		t = t.enemy;
-	} while (t != self);
-			
-	if(self.items)
-	{
-		door_key_init();
-		return;
-	}
-
-	if(self.style < 0)
-	{
-		self.style *= -1;
-		self.customflags |= CFL_INVLIGHT;
-	}
-	if(self.spawnflags & DOOR_START_OPEN)
-	{
-		if(self.customflags & CFL_INVLIGHT)
-			self.customflags -= CFL_INVLIGHT;
-		else
-			self.customflags |= CFL_INVLIGHT;
-	}
-	
-	bmodel_lightstyle(self, 1);
-
-	if(self.health)
-		return;
-	if(self.targetname != string_null)
-		if(!door_getslocked(self) || self.spawnflags & DOOR_TOGGLE)
-			return;
-	
-	self.trigger_field = door_spawn_field(cmins, cmaxs);
-	
-	if(self.customflags & CFL_LOCKED)
-		door_lock(false);
-}
-
-float(entity door, entity master) door_can_link =
-{
-	if(door == master) return true;	// first door
-	if(door.enemy) return false;	// already linked
-	if(door.spawnflags & DOOR_DONT_LINK) return false;	// will finalize itself later
-
-	if(door.targetname != string_null && master.targetname != string_null && master.targetname != door.targetname)
-		return false;	// part of different systems, might only touch coincidentally
-	
-	if(door.items && master.items && !(master.items & door.items))
-		return false;	// different items requirements
-	
-	return true;
-}
-
-/*
-=============
-door_link
-=============
-*/
-void door_link(entity this)
-{
-	entity	t, masterdoor;
-	vector	cmins, cmaxs;
-
-	if(self.enemy)
-		return;		// already linked by another door
-	if(self.spawnflags & DOOR_DONT_LINK)
-	{
-		self.owner = self.enemy = self;
-		door_finalize(self.mins, self.maxs);
-		return;		// don't want to link this door
-	}
-
-	cmins = self.mins;
-	cmaxs = self.maxs;
-	
-	masterdoor = self;
-	t = self;
-	
-	do
-	{
-		self.owner = masterdoor;
-		
-		if(self != masterdoor)
-		{
-			if((self.targetname != string_null && masterdoor.targetname == string_null) ||
-				self.targetname == masterdoor.targetname)
-			{
-				// all the doors in the chain having the same targetname will cause
-				// the whole chain to be triggered once for every door in the chain
-				masterdoor.targetname = self.targetname;
-				self.targetname = string_null;
-			}
-			masterdoor.items |= self.items;
-			if(self.health != 0 && masterdoor.health == 0)
-				masterdoor.health = self.health;
-
-			SUB_MergeTargets(masterdoor);
-			self.target = string_null;
-			self.target2 = string_null;
-			self.target3 = string_null;
-			self.target4 = string_null;
-			self.killtarget = string_null;
-			if(self.message != string_null && masterdoor.message == string_null)
-				masterdoor.message = self.message;
-		}
-
-		// skip doors with other targetnames to not fold them into the loop
-		do {
-			t = find (t, classname, self.classname);	
-		} while (t && (!door_can_link(t,masterdoor) || !EntitiesTouching(self,t)));
-		
-		if(!t)
-		{
-			self.enemy = masterdoor;		// make the chain a loop
-			self = self.owner;
-
-			door_finalize(cmins, cmaxs);
-			
-			return;
-		}
-
-		self.enemy = t;
-		self = t;
-
-		cmins_x = min(t.mins_x, cmins_x);
-		cmins_y = min(t.mins_y, cmins_y);
-		cmins_z = min(t.mins_z, cmins_z);
-		cmaxs_x = max(t.maxs_x, cmaxs_x);
-		cmaxs_y = max(t.maxs_y, cmaxs_y);
-		cmaxs_z = max(t.maxs_z, cmaxs_z);
-	} while (t);
-}
-
-void LinkDoors(entity this)
-{
-	door_link(this);
-}
-#else
-#if 1
 entity door_spawn_field(entity this, vector fmins, vector fmaxs)
 {
 	//dprint("spawning door field\n");
@@ -764,7 +610,7 @@ void LinkDoors(entity this)
 			this.target3 = string_null;
 			this.target4 = string_null;
 			this.killtarget = string_null;
-			if(this.message != string_null && masterdoor.message == string_null)
+			if(this.message && this.message != "" && (!masterdoor.message || masterdoor.message == ""))
 				masterdoor.message = this.message;
 		}
 
@@ -794,129 +640,6 @@ void LinkDoors(entity this)
 		cmaxs_z = max(t.maxs_z, cmaxs_z);
 	} while (t);
 }
-#else
-void door_spawnfield(entity this, vector fmins, vector fmaxs)
-{
-	entity	trigger;
-	vector	t1 = fmins, t2 = fmaxs;
-
-	trigger = new(doortriggerfield);
-	set_movetype(trigger, MOVETYPE_NONE);
-	trigger.solid = SOLID_TRIGGER;
-	trigger.owner = this;
-	settouch(trigger, door_trigger_touch);
-
-	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
-}
-
-entity LinkDoors_nextent(entity cur, entity near, entity pass)
-{
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & 4) || cur.enemy))
-	{
-	}
-	return cur;
-}
-
-bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
-{
-	float DELTA = 4;
-	if((e1.absmin_x > e2.absmax_x + DELTA)
-	|| (e1.absmin_y > e2.absmax_y + DELTA)
-	|| (e1.absmin_z > e2.absmax_z + DELTA)
-	|| (e2.absmin_x > e1.absmax_x + DELTA)
-	|| (e2.absmin_y > e1.absmax_y + DELTA)
-	|| (e2.absmin_z > e1.absmax_z + DELTA)
-	) { return false; }
-	return true;
-}
-
-void LinkDoors(entity this)
-{
-	if(this.enemy)
-		return;		// already linked by another door
-	if(this.spawnflags & 4)
-	{
-		this.owner = this.enemy = this;
-
-		if(this.health)
-			return;
-		if(this.targetname != "")
-			return;
-		if(this.items)
-			return;
-
-		door_spawnfield(this, this.absmin, this.absmax);
-
-		return;		// don't want to link this door
-	}
-
-	FindConnectedComponent(this, enemy, LinkDoors_nextent, LinkDoors_isconnected, this);
-
-	// set owner, and make a loop of the chain
-	LOG_TRACE("LinkDoors: linking doors:");
-	for(entity t = this; ; t = t.enemy)
-	{
-		LOG_TRACE(" ", etos(t));
-		t.owner = this;
-		if(t.enemy == NULL)
-		{
-			t.enemy = this;
-			break;
-		}
-	}
-	LOG_TRACE("");
-
-	// collect health, targetname, message, size
-	vector cmins = this.absmin;
-	vector cmaxs = this.absmax;
-	for(entity t = this; ; t = t.enemy)
-	{
-		if(t.health && !this.health)
-			this.health = t.health;
-		if((t.targetname != "") && (this.targetname == ""))
-			this.targetname = t.targetname;
-		if((t.message != "") && (this.message == ""))
-			this.message = t.message;
-		if(t.absmin_x < cmins_x)
-			cmins_x = t.absmin_x;
-		if(t.absmin_y < cmins_y)
-			cmins_y = t.absmin_y;
-		if(t.absmin_z < cmins_z)
-			cmins_z = t.absmin_z;
-		if(t.absmax_x > cmaxs_x)
-			cmaxs_x = t.absmax_x;
-		if(t.absmax_y > cmaxs_y)
-			cmaxs_y = t.absmax_y;
-		if(t.absmax_z > cmaxs_z)
-			cmaxs_z = t.absmax_z;
-		if(t.enemy == this)
-			break;
-	}
-
-	// distribute health, targetname, message
-	for(entity t = this; t; t = t.enemy)
-	{
-		t.health = this.health;
-		t.targetname = this.targetname;
-		t.message = this.message;
-		if(t.enemy == this)
-			break;
-	}
-
-	// shootable, or triggered doors just needed the owner/enemy links,
-	// they don't spawn a field
-
-	if(this.health)
-		return;
-	if(this.targetname != "")
-		return;
-	if(this.items)
-		return;
-
-	door_spawnfield(this, cmins, cmaxs);
-}
-#endif
-#endif
 
 // for measuring how large an entity is along an arbitrary vector
 // FIXME: this is trash and it returns trash
@@ -1055,7 +778,7 @@ void func_door_init(entity this, entity actor, entity trigger)
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.
 	setthink(this, LinkDoors);
-	this.nextthink = time + 0.1;
+	this.nextthink = this.ltime + 0.1;
 }
 
 #endif
