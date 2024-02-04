@@ -35,10 +35,8 @@ int note_from_char(int input)
 	return 0; // C as a default?
 }
 
-void music_PlayerPreThink(entity this)
+void CreatureFrame_Music(entity this)
 {
-	if(!frametime)
-		return;
 	.entity weaponentity = weaponentities[0]; // TODO?
 	string mymusic = this.(weaponentity).music_song;
 	if(!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MUSIC))
@@ -62,14 +60,33 @@ void music_PlayerPreThink(entity this)
 	int playoctave = 0;
 	int playsharp = 0;
 
+#define SKIP_NOTE \
+	this.(weaponentity).music_pos += 1; \
+	mypos = this.(weaponentity).music_pos; \
+	note = argv(mypos)
+
 	string note = argv(mypos);
+	if(note == "1|" || note == "|1") // so i don't have to remember which side to put it
+	{
+		if(mypos < this.(weaponentity).music_repeatend) // already repeated, skip ahead to the end of the repeat
+		{
+			mypos = this.(weaponentity).music_pos = this.(weaponentity).music_repeatend;
+			note = argv(mypos);
+		}
+		else
+		{
+			SKIP_NOTE;
+		}
+	}
+	if(note == "2|" || note == "|2") // just skip it, the repeat marker is the "end" of the first time section
+	{
+		SKIP_NOTE;
+	}
 	if(note == ":|")
 	{
 		if(mypos == this.(weaponentity).music_repeatend)
 		{
-			this.(weaponentity).music_pos += 1;
-			mypos = this.(weaponentity).music_pos;
-			note = argv(mypos);
+			SKIP_NOTE;
 		}
 		else
 		{
@@ -81,10 +98,10 @@ void music_PlayerPreThink(entity this)
 	if(note == "|:")
 	{
 		this.(weaponentity).music_repeatstart = mypos;
-		this.(weaponentity).music_pos += 1;
-		mypos = this.(weaponentity).music_pos;
-		note = argv(mypos);
+		SKIP_NOTE;
 	}
+
+#undef SKIP_NOTE
 
 	int slen = strlen(note);
 	for(int j = 0; j < slen; ++j)
@@ -93,17 +110,27 @@ void music_PlayerPreThink(entity this)
 		int newchar = str2chr(curpos, 0);
 		if(newchar >= 'a' && newchar <= 'g')
 			playnote = newchar;
-		else if(newchar == '+')
+		else if(newchar == '+') // sharp
 			playsharp += 0.5;
-		else if(newchar == '-')
+		else if(newchar == '-') // flat
 			playsharp -= 0.5;
-		else if(IS_DIGIT(curpos))
+		else if(IS_DIGIT(curpos)) // octave
+		{
 			playoctave = stof(curpos);
-		else if(newchar == '<')
-			mspeed *= 0.5;
-		else if(newchar == '>')
-			mspeed *= 1.5;
+			if(!playoctave)
+				playoctave = -1; // TODO: actually handle lower octaves
+		}
+		else if(newchar == '<') // slower
+			mspeed /= 2;
+		else if(newchar == '>') // faster
+			mspeed *= 2;
+		else if(newchar == '.') // dotted
+			mspeed -= (mspeed * 0.5);
+		else if(newchar == '*') // triola
+			mspeed *= 1.333;
 	}
+
+	LOG_INFO(ftos(mspeed));
 
 	// if there's no note just treat it like a space
 	if(playnote)

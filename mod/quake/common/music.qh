@@ -11,7 +11,7 @@
 
 void music_RemovePlayer(entity this);
 
-void music_PlayerPreThink(entity this);
+void CreatureFrame_Music(entity this);
 
 bool sv_music_command(entity this, string cmd, float argc);
 #endif

@@ -179,9 +179,6 @@ void T_GMissileTouch(entity this, entity toucher)
 
 	entity player = this.realowner;
 
-	player.tank.effects |= EF_DIMLIGHT;
-	player.tank.classname = "tank";
-
 	if(pointcontents(this.origin) == CONTENT_SKY)
 	{
 		delete(this);

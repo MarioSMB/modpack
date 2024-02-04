@@ -2016,8 +2016,6 @@ void PlayerPreThink(entity this)
 	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE) // champions handles tank status properly
 		champions_PlayerPreThink(this);
 
-	music_PlayerPreThink(this);
-
 	cannon_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
