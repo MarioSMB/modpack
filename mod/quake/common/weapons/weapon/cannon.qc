@@ -207,7 +207,7 @@ void W_DropCannon(entity this, .entity weaponentity)
 	set_movetype(cannon, MOVETYPE_TOSS);
 	cannon.solid = SOLID_TRIGGER;
 	setmodel(cannon, MDL_CANNON);
-	setsize(cannon, '-32 -32 -16', '32 32 32');
+	setsize(cannon, '-8 -8 -16', '8 8 8');
 	settouch(cannon, cannon_projectile_touch);
 	setthink(cannon, SUB_Remove);
 	cannon.nextthink = time + 3;

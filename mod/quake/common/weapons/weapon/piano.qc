@@ -272,12 +272,12 @@ void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WOR
 
 void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Play Audio Chord---------------------------------------------------
 {
-	if(STAT(MANA, this) < 5)
+	if(STAT(MANA, this) < 2)
 	{
 		w_ready(this.(weaponentity));
 		return;
 	}
-	W_TakeMana(this, 5);
+	W_TakeMana(this, 2);
 	
 	//this.punchangle_x = 1;
 
@@ -386,7 +386,7 @@ METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 	}
 
 	if(fire & 1)
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 5)
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 2)
 	{
 		if(random() < 0.5)
 			player_woodpiano_randomplayleft(actor.(weaponentity));
