@@ -131,7 +131,6 @@ void cannon_think(entity this)
 		.entity weaponentity = weaponentities[0];
 		if(PHYS_INPUT_BUTTON_ATCK(player) && time > ATTACK_FINISHED(player, weaponentity))
 			cannon_launch(player, this);
-		CSQCMODEL_AUTOUPDATE(this);
 		return;
 	}
 	else
@@ -143,18 +142,16 @@ void cannon_think(entity this)
 		delete(this);
 		return;
 	}
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void cannon_setup(entity this)
 {
-	CSQCMODEL_AUTOINIT(this);
 	//set_movetype(this, MOVETYPE_NONE);
 	this.cannon_targ = this.owner; // backup so we can safely clear realowner
 	this.owner = NULL; // to allow collisions
 	setthink(this, cannon_think);
 	this.nextthink = time + 0.1;
+	this.solid = SOLID_TRIGGER;
 	settouch(this, cannon_touch);
 	setsize(this, '-32 -32 -16', '32 32 32');
 }
@@ -185,6 +182,21 @@ void cannon_projectile_touch(entity this, entity toucher)
 		return;
 	}
 
+	// TODO: bumping sound?
+}
+
+void cannon_projectile_think(entity this)
+{
+	this.nextthink = time;
+	if(time >= this.wait)
+	{
+		delete(this);
+		return;
+	}
+
+	if(!IS_ONGROUND(this))
+		return;
+
 	sound(this, CH_WEAPON_B, SND_CANNON_LAND, 1, ATTN_NORM);
 	cannon_setup(this);
 	this.attack_finished = time + 0.5;
@@ -206,12 +218,13 @@ void W_DropCannon(entity this, .entity weaponentity)
 	entity cannon = new(cannon_projectile);
 	cannon.owner = this;
 	set_movetype(cannon, MOVETYPE_TOSS);
-	cannon.solid = SOLID_TRIGGER;
+	cannon.solid = SOLID_BBOX;
 	setmodel(cannon, MDL_CANNON);
 	setsize(cannon, '-8 -8 -16', '8 8 8');
 	settouch(cannon, cannon_projectile_touch);
-	setthink(cannon, SUB_Remove);
-	cannon.nextthink = time + 3;
+	setthink(cannon, cannon_projectile_think);
+	cannon.wait = time + 3;
+	cannon.nextthink = time;
 
 	vector org = this.origin + (this.view_ofs * 0.75);
 	setorigin(cannon, org);
