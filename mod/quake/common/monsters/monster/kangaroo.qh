@@ -13,8 +13,8 @@ MODEL(MON_KANGAROO_HEAD, "progs/gib1.mdl");
 
 CLASS(Kangaroo, Monster)
     ATTRIB(Kangaroo, spawnflags, int, MON_FLAG_INFIGHT | MON_FLAG_PASSTARGET);
-    ATTRIB(Kangaroo, m_mins, vector, '-16 -16 -24');
-    ATTRIB(Kangaroo, m_maxs, vector, '16 16 32');
+    ATTRIB(Kangaroo, m_mins, vector, '-16 -16 -48');
+    ATTRIB(Kangaroo, m_maxs, vector, '16 16 8');
 #ifdef GAMEQC
     ATTRIB(Kangaroo, m_model, Model, MDL_MON_KANGAROO);
     ATTRIB(Kangaroo, m_model_head, Model, MDL_MON_KANGAROO_HEAD);
