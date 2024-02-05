@@ -153,7 +153,6 @@ void cannon_setup(entity this)
 	this.nextthink = time + 0.1;
 	this.solid = SOLID_TRIGGER;
 	settouch(this, cannon_touch);
-	setsize(this, '-32 -32 -16', '32 32 32');
 }
 
 spawnfunc(cannon)
@@ -165,7 +164,7 @@ spawnfunc(cannon)
 	this.solid = SOLID_TRIGGER;
 	set_movetype(this, MOVETYPE_TOSS);
 	setmodel(this, MDL_CANNON);
-	setsize(this, '-32 -32 -16', '32 32 32');
+	setsize(this, '-16 -16 -16', '16 16 32');
 	this.pos2 = this.angles;
 	if(!this.noalign)
 		droptofloor(this);
@@ -220,7 +219,8 @@ void W_DropCannon(entity this, .entity weaponentity)
 	set_movetype(cannon, MOVETYPE_TOSS);
 	cannon.solid = SOLID_BBOX;
 	setmodel(cannon, MDL_CANNON);
-	setsize(cannon, '-8 -8 -16', '8 8 8');
+	//setsize(cannon, '-8 -8 -16', '8 8 8');
+	setsize(cannon, '-16 -16 -16', '16 16 32');
 	settouch(cannon, cannon_projectile_touch);
 	setthink(cannon, cannon_projectile_think);
 	cannon.wait = time + 3;
