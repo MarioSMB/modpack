@@ -21,7 +21,7 @@ void tdeath_touch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;
 
-	if(MP_MG && autocvar_horde && IS_PLAYER(toucher))
+	if((autocvar_horde || autocvar_g_friendlyfire_virtual) && IS_PLAYER(toucher))
 		return;
 
 // frag anyone who teleports in on top of an invincible player
