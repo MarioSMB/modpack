@@ -2041,7 +2041,13 @@ void BackpackTouch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
-	if(this.realowner && toucher != this.realowner && IS_PLAYER(this.realowner))
+
+	bool valid_owner = false;
+	if(this.crypto_idfp && this.crypto_idfp != "" && this.crypto_idfp == toucher.crypto_idfp)
+		valid_owner = true;
+	if(this.realowner == toucher)
+		valid_owner = true;
+	if(!valid_owner && (this.realowner || this.crypto_idfp))
 		return; // don't let other players grab a backpack they can't see
 
 	//if(toucher == this.owner && ((this.nextthink - time) > 119))
@@ -2096,6 +2102,7 @@ void BackpackTouch(entity this, entity toucher)
 
 	// continue as normal?
 // remove the backpack
+	strfree(this.crypto_idfp);
 	delete(this);
 
 	EnableComboWeapons(toucher);
@@ -2115,7 +2122,12 @@ void BackpackTouch(entity this, entity toucher)
 
 bool BackpackCustomize(entity this, entity client)
 {
-	return (!this.realowner || this.realowner == client || !IS_PLAYER(this.realowner));
+	bool valid_owner = false;
+	if(this.crypto_idfp && this.crypto_idfp != "" && this.crypto_idfp == client.crypto_idfp)
+		valid_owner = true;
+	if(this.realowner == client)
+		valid_owner = true;
+	return ((!this.realowner && (!this.crypto_idfp || this.crypto_idfp == "")) || valid_owner);
 }
 
 /*
@@ -2200,6 +2212,8 @@ void DropBackpack(entity this)
 	if(autocvar_sv_quake_instance_backpacks && IS_PLAYER(this) && IS_REAL_CLIENT(this))
 	{
 		item.realowner = this;
+		if(this.crypto_idfp)
+			strcpy(item.crypto_idfp, this.crypto_idfp);
 		setcefc(item, BackpackCustomize);
 	}
 	
