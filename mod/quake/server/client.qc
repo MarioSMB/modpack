@@ -3069,7 +3069,10 @@ void SV_ParseClientCommand(entity this, string command)
 		case "download": break;                            // handled by engine in cl_parse.c
 		case "mv_getpicture": break;                       // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
-		case "prespawn": break;                            // handled by engine in host_cmd.c
+		case "prespawn":
+			// but we can abuse this for the collision setting!
+			stuffcmd(this, "\nsettemp mod_q1bsp_polygoncollisions 0\n");
+			break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
