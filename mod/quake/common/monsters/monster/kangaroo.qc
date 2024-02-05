@@ -142,7 +142,7 @@ METHOD(Kangaroo, mr_setup, bool(Kangaroo this, entity actor))
 	actor.th_pain = roo_pain;
 
 	actor.scale = 2;
-	setsize(actor, this.m_mins * actor.scale, this.m_maxs * actor.scale);
+	//setsize(actor, this.m_mins * actor.scale, this.m_maxs * actor.scale);
 	settouch(actor, roo_touch);
 
     return true;
