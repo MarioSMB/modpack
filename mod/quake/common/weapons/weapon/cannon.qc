@@ -220,7 +220,11 @@ void W_DropCannon(entity this, .entity weaponentity)
 	cannon.solid = SOLID_BBOX;
 	setmodel(cannon, MDL_CANNON);
 	//setsize(cannon, '-8 -8 -16', '8 8 8');
-	setsize(cannon, '-16 -16 -16', '16 16 32');
+	vector cmin = this.mins, cmax = this.maxs;
+	// some basic sanity, but otherwise use player's hitbox to avoid exploits
+	cmin.z = -16;
+	cmax.z = 32;
+	setsize(cannon, cmin, cmax);
 	settouch(cannon, cannon_projectile_touch);
 	setthink(cannon, cannon_projectile_think);
 	cannon.wait = time + 3;
