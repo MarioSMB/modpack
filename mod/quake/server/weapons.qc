@@ -1297,6 +1297,40 @@ void NoclipCheat(entity this)
 	}
 }
 
+void GodCheat(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+
+	if(this.flags & FL_GODMODE)
+	{
+		this.flags &= ~FL_GODMODE;
+		sprint(this, "godmode OFF\n");
+	}
+	else
+	{
+		this.flags |= FL_GODMODE;
+		sprint(this, "godmode ON\n");
+	}
+}
+
+void NotargetCheat(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+
+	if(this.flags & FL_NOTARGET)
+	{
+		this.flags &= ~FL_NOTARGET;
+		sprint(this, "notarget OFF\n");
+	}
+	else
+	{
+		this.flags |= FL_NOTARGET;
+		sprint(this, "notarget ON\n");
+	}
+}
+
 void W_Fireball_Touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)

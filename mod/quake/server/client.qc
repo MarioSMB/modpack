@@ -3041,6 +3041,8 @@ bool ping_waypointsprite_visible_for_player(entity this, entity player, entity v
 
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void NoclipCheat(entity this);
+void GodCheat(entity this);
+void NotargetCheat(entity this);
 .entity waypointsprite_attachedforping;
 void SV_ParseClientCommand(entity this, string command)
 {
@@ -3099,6 +3101,18 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "noclip")
 	{
 		NoclipCheat(this);
+		return;
+	}
+
+	if(cmd_name == "god")
+	{
+		GodCheat(this);
+		return;
+	}
+
+	if(cmd_name == "notarget")
+	{
+		NotargetCheat(this);
 		return;
 	}
 
