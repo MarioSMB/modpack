@@ -156,6 +156,7 @@ void cannon_setup(entity this)
 	setthink(this, cannon_think);
 	this.nextthink = time + 0.1;
 	settouch(this, cannon_touch);
+	setsize(this, '-32 -32 -16', '32 32 32');
 }
 
 spawnfunc(cannon)
