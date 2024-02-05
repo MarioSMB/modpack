@@ -1727,6 +1727,12 @@ RULES
 ===============================================================================
 */
 
+bool is_start_map()
+{
+	// TODO: allow mappers to define their own start maps
+	return (mapname == "start" || mapname == "mgstart" || mapname == "aopstart" || mapname == "hipstart" || mapname == "rstart");
+}
+
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1736,69 +1742,19 @@ void NextLevel()
 	if(nextmap && nextmap != "")
 		return; // already done
 
-	entity o = NULL;
-
 	VoteReset(true);
 
-	if(MP_MG)
+	entity o = find(NULL, classname, "trigger_changelevel");
+
+	// go back to same map if no trigger_changelevel
+	if(!o || is_start_map())
 	{
-	// find a trigger changelevel
-		o = find(NULL, classname, "trigger_changelevel");
-
-		// go back to same map if no trigger_changelevel
-		if(!o || mapname == "mgstart")
-		{
-			o = spawn();
-			o.map = mapname;
-		}
+		if(!o)
+			o = new(trigger_changelevel);
+		o.map = mapname;
 	}
-	else if(MP_IMPEL)
-	{
-	// find a trigger changelevel
-		o = find(NULL, classname, "trigger_changelevel");
-
-		// go back to same map if no trigger_changelevel
-		if(!o || mapname == "aopstart")
-		{
-			o = spawn();
-			o.map = mapname;
-		}
-	}
-	else if(MP_HIPNOTIC)
-	{
-		// find a trigger changelevel
-		o = find(NULL, classname, "trigger_changelevel");
-
-		// go back to same map if no trigger_changelevel
-		if(!o || mapname == "hipstart")
-		{
-			o = spawn();
-			o.map = mapname;
-		}
-	}
-	else if(MP_ROGUE)
-	{
-		if(mapname == "start" || mapname == "rstart" || mapname == "hipstart" || mapname == "aopstart" || mapname == "mgstart")
-		{
-			mapname = "r1m1";
-
-			o = spawn();
-			o.map = mapname;
-		}
-		else
-		{
-			// find a trigger changelevel
-			o = find(NULL, classname, "trigger_changelevel");
-
-			// go back to same map if no trigger_changelevel
-			if(!o || mapname == "rstart")
-			{
-				o = spawn();
-				o.map = mapname;
-			}
-		}
-	}
-	else if(mapname == "start")
+#if 0
+	if(mapname == "start")
 	{
 		if(!autocvar_registered)
 		{
@@ -1828,37 +1784,30 @@ void NextLevel()
 		o = spawn();
 		o.map = mapname;
 	}
+#endif
 	if(world.model == "maps/mgdm1.bsp")
 	{
-		o = spawn();
+		if(!o)
+			o = new(trigger_changelevel);
 		o.map = "mgdm2";
 	}
 	else if(world.model == "maps/mgdm2.bsp")
 	{
-		o = spawn();
+		if(!o)
+			o = new(trigger_changelevel);
 		o.map = "mgdm3";
 	}
 	else if(world.model == "maps/mgdm3.bsp")
 	{
-		o = spawn();
+		if(!o)
+			o = new(trigger_changelevel);
 		o.map = "mgdm4";
 	}
 	else if(world.model == "maps/mgdm4.bsp")
 	{
-		o = spawn();
-		o.map = "mgdm1";
-	}
-	else
-	{
-		// find a trigger changelevel
-		o = find(NULL, classname, "trigger_changelevel");
-
-		// go back to same map if no trigger_changelevel
 		if(!o)
-		{
-			o = spawn();
-			o.map = mapname;
-		}
+			o = new(trigger_changelevel);
+		o.map = "mgdm1";
 	}
 
 	nextmap = o.map;
@@ -1869,8 +1818,9 @@ void NextLevel()
 
 	GameLogClose();
 	
-	if(o.nextthink < time)
+	if(o && !o.lip)
 	{
+		o.lip = 1;
 		setthink(o, execute_changelevel);
 		o.nextthink = time + 0.1;
 	}

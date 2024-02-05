@@ -459,7 +459,14 @@ void Legond_Pain(entity this, entity attacker, float damage, int deathtype)
 }
 
 void legond_die24(entity this) { set_anim(this, 109, legond_die24); CorpseThink(this); }
-void legond_die23(entity this) { set_anim(this, 109, legond_die24); if(!horde_ent && !this.charmed && (coop != 2 || world.model == "maps/aopend.bsp") && this.target && this.target != "") NextLevel(); }
+void legond_die23(entity this)
+{
+	set_anim(this, 109, legond_die24);
+	if(horde_ent || this.charmed)
+		return;
+	if((coop != 2 || world.model == "maps/aopend.bsp") && this.target && this.target != "")
+		NextLevel();
+}
 void legond_die22(entity this) { set_anim(this, 109, legond_die23); }
 void legond_die21(entity this) { set_anim(this, 109, legond_die22); }
 void legond_die20(entity this) { set_anim(this, 109, legond_die21); }
