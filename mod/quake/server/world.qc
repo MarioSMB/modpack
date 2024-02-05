@@ -843,6 +843,8 @@ PRECACHE(Junk)
 	precache_model("progs/skater.mdl");		// skater model
 	precache_sound("player/yeah1.wav");          		// yeah sound after trick
 	precache_sound("player/yeah2.wav");          		// ...
+
+	precache_sound("items/sharp2.wav");
 }
 
 string cvar_changes, cvar_purechanges;
