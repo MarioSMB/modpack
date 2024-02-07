@@ -16,45 +16,6 @@ bool target_state_compare(entity this, entity inc)
 	return out;
 }
 
-//count -4 = numclients in coop
-void playercount_convert(entity this, .float fld)
-{
-	if(this.(fld) != -4)
-		return;
-	if(!coop)
-		this.(fld) = 1;
-	else
-	{
-		int clients = 0;
-		// let's not count bots
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
-		{
-			++clients;
-		});
-		// limit this because we can't assume a max of 8 coop players (... thanks decino)
-		if(clients <= 4)
-			this.(fld) = clients;
-		else if(clients >= 20)
-			this.(fld) = 10;	// hard cap of 10 @ 20 players
-		else if(clients >= 16)
-			this.(fld) = 9;
-		else if(clients >= 12)
-			this.(fld) = 8;
-		else if(clients >= 10)
-			this.(fld) = 7;
-		else if(clients >= 8)
-			this.(fld) = 6;
-		else if(clients >= 6)
-			this.(fld) = 5;		
-		/*
-			this.(fld) =	// magic formula ...
-				min(4, clients)	+							// first four clients count full
-				floor(max(0, min(12, clients) - 4) / 2) +	// clients above 4th count half
-				floor(max(0, clients - 12) / 4);			// clients above 12th count quarter
-		*/
-	}
-}
-
 void target_state_use(entity this, entity actor, entity trigger)
 {
 	if(this.customflags & CFL_LOCKED)

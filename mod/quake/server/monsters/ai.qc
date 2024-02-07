@@ -438,10 +438,15 @@ Monsters will continue walking towards the next target corner.
 spawnfunc(path_corner)
 {
 	if(!this.targetname || this.targetname == "")
+	{
 		objerror(this, "path_corner with no targetname");
+		return;
+	}
 
 	if(MP_MG && this.wait < 0)
 		this.wait = 999999;
+	if(!this.wait && this.pausetime)
+		this.wait = this.pausetime;
 		
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_movetarget);

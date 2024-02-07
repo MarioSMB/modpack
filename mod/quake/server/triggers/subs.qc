@@ -553,6 +553,50 @@ void SetMovedir(entity this)
 	this.angles = '0 0 0';
 }
 
+void SUB_CountTargets(entity this)
+{
+	int i = 0;
+	entity t = NULL;
+	while(this.target != string_null) 
+	{
+		t = find(t, targetname, this.target);
+		if(!t) break;
+		i += 1;
+	}
+	t = NULL;
+	while(this.target2 != string_null) 
+	{
+		t = find(t, targetname, this.target2);
+		if(!t) break;
+		i += 1;
+	}
+	t = NULL;
+	while(this.target3 != string_null) 
+	{
+		t = find(t, targetname, this.target3);
+		if(!t) break;
+		i += 1;
+	}
+	t = NULL;
+	while(this.target4 != string_null) 
+	{
+		t = find(t, targetname, this.target4);
+		if(!t) break;
+		i += 1;
+	}
+
+	this.cnt = i;
+
+	this.frags = 0;	
+	t = NULL;
+	while(this.killtarget != string_null) 
+	{
+		t = find(t, targetname, this.killtarget);
+		if(!t) break;
+		this.frags += 1;
+	}
+}
+
 /*
 ================
 RemovedOutsideCoop
@@ -563,6 +607,19 @@ bool RemovedOutsideCoop(entity this)
 {
 	return (!coop && (this.spawnflags & COOP_ONLY));
 }
+
+.void(entity, entity, entity) trigger_init_use;
+void trigger_reactivate(entity this, entity actor, entity trigger)
+{
+	// TheSolipsist fix: when the trigger has health, make it solid so it can be shot
+	if(this.max_health)
+		this.solid = SOLID_BBOX;
+	else
+		this.solid = SOLID_TRIGGER;
+	this.use = this.trigger_init_use;
+	force_retouch = 2;		// make sure even still objects get hit
+}
+
 
 void InitTrigger(entity this)
 {
@@ -580,6 +637,13 @@ void InitTrigger(entity this)
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
+
+	if(this.spawnflags & SPAWNFLAG_TRIGGER_FIRST)
+	{
+		this.solid = SOLID_NOT;
+		this.trigger_init_use = this.use;
+		this.use = trigger_reactivate;
+	}
 }
 
 /*
@@ -588,18 +652,6 @@ InitTriggerBounds
 quoth2-style edict-saving bounding box triggers
 ================
 */
-.void(entity, entity, entity) trigger_init_use;
-void trigger_reactivate(entity this, entity actor, entity trigger)
-{
-	// TheSolipsist fix: when the trigger has health, make it solid so it can be shot
-	if(this.max_health)
-		this.solid = SOLID_BBOX;
-	else
-		this.solid = SOLID_TRIGGER;
-	this.use = this.trigger_init_use;
-	force_retouch = 2;		// make sure even still objects get hit
-}
-
 void InitTriggerBounds(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
@@ -760,5 +812,37 @@ float SUB_Elevation(entity this, float theta, vector sorg, vector mdest, float z
 	while(theta > 90)
 		theta -= 180;
 	return theta;
+}
+
+/*
+=============
+SUB_PrintMessage
+===============
+*/
+void SUB_PrintMessage(entity this, entity actor)
+{
+	if(!this.message || this.message == "")
+		return;
+
+	// print the message
+	if(IS_PLAYER(actor) && IS_REAL_CLIENT(actor))
+	{
+		centerprint_proximity(actor, process_string(this.message));
+		
+		// non-triggers might play the noise themselves (buttons, etc)
+		if((!this.noise || this.noise == "") && (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT) && this.sounds != -1)
+			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
+	}
+	else
+	{
+		// sometimes activator can be an infighting monster that killed a monster 
+		// with a targetname, so just print to all clients
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it),
+		{
+			centerprint(it, this.message);
+			if((!this.noise || this.noise == "") && (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT))
+				_sound(it, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
+		});
+	}
 }
 #endif

@@ -3,6 +3,7 @@
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
+#include "triggers/func/button.qh"
 #include "triggers/func/earthquake.qh"
 #include "vote.qh"
 #include "weapons/weaponsystem.qh"
@@ -195,6 +196,11 @@ PRECACHE(Impel)
 	precache_sound2("misc/trigger1.wav");
 	precache_sound2("monsters/spider/sactiv.wav");
 	precache_sound("items/sharp.wav");
+}
+
+bool IsRogueMap()
+{
+	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2");
 }
 
 // copper-specific lighting hack
@@ -1859,6 +1865,8 @@ void StartFrame()
 	delete_fn = remove_except_protected; // we don't use remove_unsafely as quake does infact use spikes
 
 	earthquake_frame();
+
+	skillbutton_frame();
 
 	RunFrameTickEntities(serverframetime);
 

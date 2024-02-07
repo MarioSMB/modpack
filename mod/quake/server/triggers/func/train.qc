@@ -193,7 +193,9 @@ void flytrain_setup(entity this)
 	//	the velocity over a few frames for rubber-bandy motion without
 	//	colliding with state changes
 	this.buddy = spawn();
-	this.buddy.spawnflags = this.spawnflags | TRAIN_INHERIT | TRAIN_SMOOTHSPEED; // flytrains always inherit speed
+	this.buddy.spawnflags = this.spawnflags;
+	this.buddy.spawnflags |= TRAIN_INHERIT; // flytrains always inherit speed
+	this.buddy.spawnflags |= TRAIN_SMOOTHSPEED; // make it smoothed as well for less jank
 	this.buddy.speed = this.speed;
 	if(!this.dmg)
 		this.dmg = 2;
@@ -205,9 +207,8 @@ void flytrain_setup(entity this)
 	this.buddy.solid = -1;
 	if(!this.target || this.target == "")
 	{
-		this.buddy.enemy = spawn();
+		this.buddy.enemy = new(path_corner);
 		setorigin(this.buddy.enemy, this.origin + this.movedir);
-		this.buddy.enemy.classname = "path_corner";
 		this.buddy.enemy.wait = -1;		
 	}
 	this.buddy.target = this.target;
@@ -219,6 +220,7 @@ void flytrain_setup(entity this)
 	this.buddy.targetname = this.targetname;
 	this.buddy.owner = this;
 
+	this.buddy.spawnfunc_checked = true;
 	spawnfunc_func_train_point(this.buddy);
 	this.buddy.classname = "func_flytrain_ghost";
 	this.buddy.th_stand = train_wait;
@@ -231,8 +233,7 @@ void flytrain_setup(entity this)
 	this.max_health = 0;
 
 	setblocked(this, flytrain_blocked);
-	if(!this.solid)
-		this.solid = SOLID_BSP;
+	this.solid = zeroconvertdefault(this.solid, SOLID_BSP);
 	if(!this.solid)
 		set_movetype(this, MOVETYPE_NOCLIP);
 	else
@@ -319,7 +320,7 @@ Alt Target Pattern: 'target' selects path start, 'target2' on each pathcorner ar
 ]
 */
 spawnfunc(func_flytrain_point)
-{	
+{
 	precache_model(this.model);
 	_setmodel(this, this.model);
 	setsize(this, this.mins, this.maxs);
@@ -462,17 +463,17 @@ void train_next(entity this) // departure for next pathcorner
 {
 	entity ctrl = NULL;
 	float segs;
-	entity corner = findunlockedtarget(this.enemy, world);
+	entity corner = findunlockedtarget(this.enemy, NULL);
 	if(!corner)
 	{
 		LOG_DEBUG("train_next: no next target");
 		// .th_melee is a train's "expire at end of path" function, because .th_die
 		// has to be reserved for shootable trains to work with T_Damage()/Killed()
+		SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 		if(this.th_melee)
 			this.th_melee(this);
 		else
 			delete(this);
-		SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 		return;
 	}
 	this.oldenemy = this.enemy;
@@ -483,11 +484,11 @@ void train_next(entity this) // departure for next pathcorner
 		if(!corner)
 		{
 			LOG_DEBUG("train_next: no next target after curve point");
+			SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 			if(this.th_melee)
 				this.th_melee(this);
 			else
 				delete(this);
-			SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 			return;
 		}
 	}
@@ -500,7 +501,10 @@ void train_next(entity this) // departure for next pathcorner
 	{
 		setorigin(this, corner.origin - this.movedir);
 		this.teleport_time = time;
-		this.th_stand(this);
+		if(this.th_stand)
+			this.th_stand(this);
+		else
+			train_wait(this);
 		return;
 	}
 	else if(this.oldenemy.speed > 0 && (this.spawnflags & TRAIN_INHERIT))
@@ -557,21 +561,22 @@ void func_train_setup(entity this)
 	if(!this.speed)
 		this.speed = 100;
 	if((!this.target || this.target == "") && !this.enemy)
-		objerror(this, "func_train without a target");
+	{
+		objerror(this, "train entity without a target");
+		return;
+	}
 
 	if(!this.dmg)
 		this.dmg = 2;
 	if(!this.dmgtime)
 		this.dmgtime = 0.5;
-	if(!this.pausetime)
-		this.pausetime = 0.1;
+	this.pausetime = zeroconvertdefault(this.pausetime, 0.1);
 	this.wait = 0;	// this is american mcgee's fault
 
 	train_sounds(this);
 
 //	this.cnt = 1;
-	if(!this.solid)
-		this.solid = SOLID_BSP;
+	this.solid = zeroconvertdefault(this.solid, SOLID_BSP);
 	if(!this.solid)
 		set_movetype(this, MOVETYPE_NOCLIP);
 	else
@@ -702,7 +707,9 @@ spawnfunc(func_train_point)
 	func_train_setup(this);
 	
 	this.th_stand = train_wait;
-	
+
+	if(!this.model || this.model == "")
+		this.model = "null";
 	precache_model(this.model);
 	_setmodel(this, this.model);
 	setsize(this, this.mins, this.maxs);
@@ -718,7 +725,10 @@ spawnfunc(misc_teleporttrain)
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target || this.target == "")
-		objerror(this, "func_train without a target");
+	{
+		objerror(this, "misc_teleporttrain without a target");
+		return;
+	}
 
 	this.cnt = 1;
 	this.solid = SOLID_NOT;
@@ -726,6 +736,8 @@ spawnfunc(misc_teleporttrain)
 	setblocked(this, train_blocked);
 	this.use = train_use;
 	this.avelocity = '100 200 300';
+
+	this.th_stand = train_wait;
 
 	this.noise =("misc/null.wav");
 	precache_sound("misc/null.wav");
@@ -789,8 +801,11 @@ void hip_train_next(entity this)
 	// Save the speed in cnt for later use
 	this.cnt = targ.speed;
 	this.target = targ.target;
-	if(!this.target)
+	if(!this.target || this.target == "")
+	{
 		objerror(this, "hip_train_next: no next target");
+		return;
+	}
 
 	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 
@@ -886,7 +901,10 @@ spawnfunc(func_train2)
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target || this.target == "")
-		objerror(this, "func_train without a target");
+	{
+		objerror(this, "func_train2 without a target");
+		return;
+	}
 	if(!this.dmg)
 		this.dmg = 2;
 

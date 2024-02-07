@@ -1078,18 +1078,13 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 	}
     else if(coop)
 	{
-		if(MP_MG)
+		// choose a point that is active
+		RandomSelection_Init();
+		FOREACH_ENTITY_CLASS("info_player_coop", it.state == COOP_SPAWN_ACTIVE,
 		{
-			// choose a point that is active
-			RandomSelection_Init();
-			FOREACH_ENTITY_CLASS("info_player_coop", it.state == COOP_SPAWN_ACTIVE,
-			{
-				RandomSelection_AddEnt(it, 1, 1);
-			});
-			lastspawn = RandomSelection_chosen_ent;
-		}
-		else
-			lastspawn = find(lastspawn, classname, "info_player_coop");
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		lastspawn = RandomSelection_chosen_ent;
 		if(!lastspawn)
 			lastspawn = find(lastspawn, classname, "info_player_start");
 		if(lastspawn)
@@ -1238,7 +1233,7 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 	spot = find(NULL, classname, "info_player_start");
 	if(!spot)
 	{
-		if(!deathmatch)
+		//if(!deathmatch) // desperate times
 			spot = find(NULL, classname, "info_player_deathmatch");
 		if(!spot)
 			error("PutClientInServer: no info_player_start/deathmatch on level");
@@ -1600,6 +1595,9 @@ void PutPlayerInServer(entity this)
 	}
 
 	stuffcmd(this, "-attack\n"); // prevent shooting after respawning
+
+	// spawns fire targets when spawned at
+	SUB_UseTargets(spot, this, NULL);
 }
 
 
@@ -1649,7 +1647,7 @@ potential spawning position for deathmatch games
 */
 spawnfunc(info_player_deathmatch)
 {
-	if(MP_MG && !deathmatch) { delete(this); return; }
+	//if(MP_MG && !deathmatch) { delete(this); return; }
 	IL_PUSH(g_spawnpoints, this);
 }
 

@@ -250,8 +250,8 @@ void VolkerhMissile(entity this)
 	_setmodel(missile, "progs/volball.mdl");
 	missile.scale = this.scale;
 	missile.solid = SOLID_BBOX;
-	missile.movetype = MOVETYPE_FLYMISSILE;
-	setsize (missile, '0 0 0', '0 0 0');
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	setsize(missile, '0 0 0', '0 0 0');
 	missile.origin = org;
 	missile.velocity = vec * (666 * missile.scale);
 	missile.avelocity = '300 300 300';

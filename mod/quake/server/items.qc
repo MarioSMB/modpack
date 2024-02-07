@@ -1194,6 +1194,8 @@ void key_touch(entity this, entity toucher)
 
 bool key_customize(entity this, entity client)
 {
+	if(autocvar_sv_quake_globalkeys)
+		return true;
 	return !(client.items & this.items);
 }
 

@@ -1,4 +1,6 @@
 #pragma once
 
 #include "kill.qh"
+#include "lock.qh"
+#include "sound.qh"
 #include "state.qh"

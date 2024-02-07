@@ -6,8 +6,16 @@ const int PUSH_ACTIVE = BIT(2); // rogue
 const int ADDITIVE_PUSH = BIT(1); // mg
 const int PUSH_START_OFF = BIT(2); // mg
 
+// copper
+const int PUSH_ADD_VEL = 2; // copy of mg flag, see ADDITIVE_PUSH
+const int PUSH_TUNNEL = 8;
+
 void trigger_push_touch(entity this, entity toucher)
 {
+	if(toucher.move_movetype == MOVETYPE_NOCLIP)
+		return;
+	if(this.customflags & CFL_LOCKED)
+		return;
 	if(this.active != ACTIVE_ACTIVE)
 		return;
 
@@ -33,10 +41,24 @@ void trigger_push_touch(entity this, entity toucher)
 
 	if(toucher.health > 0 || toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
 	{
-		if((toucher.flags & FL_INSHELTER))
+		if(toucher.flags & FL_INSHELTER)
 			return;
-		if((this.spawnflags & ADDITIVE_PUSH)) // yoder add, Jan 28 2021
-			toucher.velocity = toucher.velocity + this.speed * this.movedir * 10 * frametime;
+		if(this.spawnflags & ADDITIVE_PUSH) // yoder add, Jan 28 2021
+		{
+			if(time != this.dmgtime && time < this.attack_finished)
+				return;
+			if(this.speed2 > 0)
+			{
+				float overspeed = (toucher.velocity * this.movedir) - this.speed2;
+				if(overspeed < 0)
+					toucher.velocity += min(overspeed * -1, this.speed) * this.movedir;
+			}
+			else
+				toucher.velocity += this.speed * this.movedir;
+
+			this.dmgtime = time;
+			this.attack_finished = time + 0.05;
+		}
 		else
 			toucher.velocity = this.speed * this.movedir * 10;
 		if(IS_PLAYER(toucher))
@@ -44,7 +66,14 @@ void trigger_push_touch(entity this, entity toucher)
 			if(toucher.fly_sound < time)
 			{
 				toucher.fly_sound = time + 1.5;
-				_sound(toucher, CH_TRIGGER, "ambience/windfly.wav", 1, ATTN_NORM);
+				_sound(toucher, CH_TRIGGER, this.noise, 1, ATTN_NORM);
+			}
+
+			if(this.spawnflags & PUSH_TUNNEL)
+			{
+				vector suck = (this.origin + 0.5 * (this.mins + this.maxs)) - toucher.origin;
+				suck -= this.movedir * (suck * this.movedir);
+				toucher.velocity += suck * this.speed * 0.1;
 			}
 		}
 		UNSET_ONGROUND(toucher);
@@ -61,6 +90,15 @@ void trigger_push_use(entity this, entity actor, entity trigger)
 		this.active = ACTIVE_ACTIVE;
 }
 
+void trigger_push_find(entity this)
+{
+	entity n = find(NULL, targetname, this.target);
+	if(!n)
+		return;
+	
+	this.movedir = normalize(n.origin - (this.origin + 0.5 * (this.mins + this.maxs)));
+}
+
 
 /*QUAKED trigger_push(.5 .5 .5) ? PUSH_ONCE PUSH_TOGL PUSH_ACTIVE ADDITIVE_PUSH START_OFF
 Pushes the player.
@@ -69,10 +107,15 @@ speed: velocity of push. (default 1000)
 */
 spawnfunc(trigger_push)
 {
+	if(this.angles == '0 0 0')
+		this.angles = '0 360 0';
+
 	this.use = trigger_push_use;
 
 	InitTrigger(this);
-	precache_sound("ambience/windfly.wav");
+	if(!this.noise || this.noise == "")
+		this.noise = "ambience/windfly.wav";
+	precache_sound(this.noise);
 	settouch(this, trigger_push_touch);
 	if(!this.speed)
 		this.speed = 1000;
@@ -80,7 +123,7 @@ spawnfunc(trigger_push)
 	this.active = ACTIVE_ACTIVE;
 
 	// we're on a rogue campaign map, disable toggle flag which overlaps with additive, toggling handled automatically
-	if(substring(world.model, 0, 6) == "maps/r")
+	if(IsRogueMap())
 	{
 		// jumppads with the toggle flag aren't active by default unless specified
 		if(!(this.spawnflags & PUSH_ACTIVE) && (this.spawnflags & PUSH_TOGL))
@@ -91,6 +134,12 @@ spawnfunc(trigger_push)
 
 	if((this.spawnflags & PUSH_START_OFF))
 		this.active = ACTIVE_NOT;
+
+	if(this.target && this.target != "")
+	{
+		setthink(this, trigger_push_find);
+		this.nextthink = time + 0.1;
+	}
 }
 
 //============================================================================

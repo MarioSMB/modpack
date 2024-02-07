@@ -282,7 +282,7 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 {
     TC(Knight, this);
 
-    if((actor.spawnflags & 2) && substring(world.model, 0, 6) != "maps/r")
+    if((actor.spawnflags & 2) && !IsRogueMap())
     	actor.spawnflags &= ~2; // TODO: why would mg be setting this?
 
 	if((actor.spawnflags & 2)) // statue

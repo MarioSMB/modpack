@@ -60,6 +60,8 @@ void changelevel_touch(entity this, entity toucher)
 	// simply don't react if a non-player triggers it
 	if(!IS_PLAYER(toucher))
 		return;
+	if(this.customflags & CFL_LOCKED)
+		return;
 
 	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart" && mapname != "quake")))
 	{
@@ -82,7 +84,13 @@ void changelevel_touch(entity this, entity toucher)
 			++plnum;
 	});
 	if(!this.chlevel_found && realplnum > 1)
+	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_EXIT_FOUND, toucher.netname);
+		FOREACH_ENTITY_CLASS("trigger_changelevel", it.map == this.map,
+		{
+			it.chlevel_found = true;
+		});
+	}
 	this.chlevel_found = true;
 
 	float themin = min(1.0, this.count);
@@ -101,7 +109,7 @@ void changelevel_touch(entity this, entity toucher)
 		serverflags = 0;
 	}
 
-	SUB_UseTargets(this, toucher, NULL);
+	SUB_UseTargetsSilent(this, toucher, NULL);
 
 	// massive hack to work around collision issues!
 	if(autocvar_sv_quake_clipfix)
@@ -125,7 +133,7 @@ void changelevel_touch(entity this, entity toucher)
 // we can't move people right now, because touch functions are called
 // in the middle of C movement code, so set a think time to do it
 	setthink(this, execute_changelevel);
-	this.nextthink = time + 0.1;
+	this.nextthink = time;
 }
 
 /*

@@ -17,7 +17,10 @@ void RemoveTarget(entity victim)
 	}
 	// clean up door triggers so they don't get lonely and crash
 	else if(victim.trigger_field)
+	{
 		delete(victim.trigger_field);
+		victim.trigger_field = NULL;
+	}
 
 	// silence movers
 	_sound(victim, CHAN_VOICE, "misc/null.wav", 1, 1);
@@ -49,50 +52,6 @@ void target_kill_remove(entity this, entity t, entity actor)
 	}
 	else
 		RemoveTarget(t);
-}
-
-void SUB_CountTargets(entity this)
-{
-	int i = 0;
-	entity t = NULL;
-	while(this.target != string_null) 
-	{
-		t = find(t, targetname, this.target);
-		if(!t) break;
-		i += 1;
-	}
-	t = NULL;
-	while(this.target2 != string_null) 
-	{
-		t = find(t, targetname, this.target2);
-		if(!t) break;
-		i += 1;
-	}
-	t = NULL;
-	while(this.target3 != string_null) 
-	{
-		t = find(t, targetname, this.target3);
-		if(!t) break;
-		i += 1;
-	}
-	t = NULL;
-	while(this.target4 != string_null) 
-	{
-		t = find(t, targetname, this.target4);
-		if(!t) break;
-		i += 1;
-	}
-
-	this.cnt = i;
-
-	this.frags = 0;	
-	t = NULL;
-	while(this.killtarget != string_null) 
-	{
-		t = find(t, targetname, this.killtarget);
-		if(!t) break;
-		this.frags += 1;
-	}
 }
 
 void target_kill_rando(entity this, entity actor)

@@ -23,6 +23,8 @@ void SUB_SetFade(entity ent, float when, float fading_time);
 
 #ifdef SVQC
 
+void SUB_CountTargets(entity this);
+
 void SUB_CalcMoveCurveSeg(entity this);
 
 void SUB_CalcMoveCurve(entity this, vector end, vector ctrl, float segs, float speedStart, float speedEnd, void(entity) fnDone);
@@ -79,4 +81,6 @@ float SUB_RightShift(float num, float bits);
 vector attack_vector(vector attack_dir);
 
 float SUB_Elevation(entity this, float theta, vector sorg, vector mdest, float zspeed);
+
+void SUB_PrintMessage(entity this, entity actor);
 #endif

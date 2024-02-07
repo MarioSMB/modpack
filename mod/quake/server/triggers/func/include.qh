@@ -6,3 +6,4 @@
 #include "oncount.qh"
 #include "rotate.qh"
 #include "spawn.qh"
+#include "void.qh"

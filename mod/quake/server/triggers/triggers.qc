@@ -1,5 +1,96 @@
 #ifdef SVQC
 
+// shorthand for turning -1 to 0 for keyvalues for which 0 is a valid non-default selection
+float zeroconvert(float in)
+{
+	if(in == -1)
+		return 0;
+	return in;
+}
+float zeroconvertdefault(float in, float def)
+{
+	if(in == -1)
+		return 0;
+	if(in == 0)
+		return def;
+	return in;
+}
+
+//count -4 = numclients in coop
+void playercount_convert(entity this, .float fld)
+{
+	if(this.(fld) != -4)
+		return;
+	if(!coop)
+		this.(fld) = 1;
+	else
+	{
+		int clients = 0;
+		// let's not count bots
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
+		{
+			++clients;
+		});
+		// limit this because we can't assume a max of 8 coop players (... thanks decino)
+		if(clients <= 4)
+			this.(fld) = clients;
+		else if(clients >= 20)
+			this.(fld) = 10;	// hard cap of 10 @ 20 players
+		else if(clients >= 16)
+			this.(fld) = 9;
+		else if(clients >= 12)
+			this.(fld) = 8;
+		else if(clients >= 10)
+			this.(fld) = 7;
+		else if(clients >= 8)
+			this.(fld) = 6;
+		else if(clients >= 6)
+			this.(fld) = 5;
+		/*
+			this.(fld) =	// magic formula ...
+				min(4, clients)	+							// first four clients count full
+				floor(max(0, min(12, clients) - 4) / 2) +	// clients above 4th count half
+				floor(max(0, clients - 12) / 4);			// clients above 12th count quarter
+		*/
+	}
+}
+
+/*! The translation table between the graphical font and plain ASCII  --KB */
+const int qfont_table[256] = {
+	'\0', '#',  '#',  '#',  '#',  '.',  '#',  '#',
+	'#',  9,    10,   '#',  ' ',  13,   '.',  '.',
+	'[',  ']',  '0',  '1',  '2',  '3',  '4',  '5',
+	'6',  '7',  '8',  '9',  '.',  '<',  '=',  '>',
+	' ',  '!',  '"',  '#',  '$',  '%',  '&',  '\'',
+	'(',  ')',  '*',  '+',  ',',  '-',  '.',  '/',
+	'0',  '1',  '2',  '3',  '4',  '5',  '6',  '7',
+	'8',  '9',  ':',  ';',  '<',  '=',  '>',  '?',
+	'@',  'A',  'B',  'C',  'D',  'E',  'F',  'G',
+	'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',
+	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',
+	'X',  'Y',  'Z',  '[',  '\\', ']',  '^',  '_',
+	'`',  'a',  'b',  'c',  'd',  'e',  'f',  'g',
+	'h',  'i',  'j',  'k',  'l',  'm',  'n',  'o',
+	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',
+	'x',  'y',  'z',  '{',  '|',  '}',  '~',  '<',
+
+	'<',  '=',  '>',  '#',  '#',  '.',  '#',  '#',
+	'#',  '#',  ' ',  '#',  ' ',  '>',  '.',  '.',
+	'[',  ']',  '0',  '1',  '2',  '3',  '4',  '5',
+	'6',  '7',  '8',  '9',  '.',  '<',  '=',  '>',
+	' ',  '!',  '"',  '#',  '$',  '%',  '&',  '\'',
+	'(',  ')',  '*',  '+',  ',',  '-',  '.',  '/',
+	'0',  '1',  '2',  '3',  '4',  '5',  '6',  '7',
+	'8',  '9',  ':',  ';',  '<',  '=',  '>',  '?',
+	'@',  'A',  'B',  'C',  'D',  'E',  'F',  'G',
+	'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',
+	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',
+	'X',  'Y',  'Z',  '[',  '\\', ']',  '^',  '_',
+	'`',  'a',  'b',  'c',  'd',  'e',  'f',  'g',
+	'h',  'i',  'j',  'k',  'l',  'm',  'n',  'o',
+	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',
+	'x',  'y',  'z',  '{',  '|',  '}',  '~',  '<'
+};
 
 //=============================================================================
 
@@ -7,6 +98,29 @@ void DelayThink(entity this)
 {
 	SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
+}
+
+string process_string(string input)
+{
+	string utf8_enable_save = cvar_string("utf8_enable");
+	cvar_set("utf8_enable", "0");
+	string output = "";
+	FOREACH_CHAR(input, true,
+	{
+		output = strcat(output, chr2str(qfont_table[it]));
+	});
+	cvar_set("utf8_enable", utf8_enable_save);
+	return output;
+}
+
+float autocvar_sv_quake_message_range = 512;
+void centerprint_proximity(entity player, string input)
+{
+	centerprint(player, input); // always send to the player no matter what
+	FOREACH_ENTITY_RADIUS(player.origin, autocvar_sv_quake_message_range, it != player && IS_PLAYER(it) && IS_REAL_CLIENT(it),
+	{
+		centerprint(it, input);
+	});
 }
 
 /*
@@ -43,8 +157,10 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 		if(!nomessage)
 			t.message = this.message;
 		t.killtarget = this.killtarget;
-		t.target = this.target;
-		t.targetname = this.targetname;
+		if(!(skiptargets & BIT(1))) t.target = this.target;
+		if(!(skiptargets & BIT(2))) t.target2 = this.target2;
+		if(!(skiptargets & BIT(3))) t.target3 = this.target3;
+		if(!(skiptargets & BIT(4))) t.target4 = this.target4;
 		t.use = func_null;
 		return;
 	}
@@ -56,7 +172,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 	if(!nomessage && IS_PLAYER(actor) && this.message != "")
 	if(IS_REAL_CLIENT(actor))
 	{
-		centerprint(actor, this.message);
+		centerprint_proximity(actor, process_string(this.message));
 		if(!this.noise || this.noise == "")
 			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
 	}
@@ -67,7 +183,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 
 	string s;
 	s = this.killtarget;
-	if (s && s != "")
+	if(s && s != "")
 	{
 		for(entity t = NULL; (t = find(t, targetname, s)); )
 			delete(t);
@@ -76,6 +192,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 //
 // fire targets
 //
+
+	if(this.target_random)
+		RandomSelection_Init();
 
 	for(int i = 0; i < 4; ++i)
 	{
@@ -89,15 +208,23 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 			case 2: s = this.target3; break;
 			case 3: s = this.target4; break;
 		}
-		if (s != "")
+		if(s != "")
 		{
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
 				if(t.use)
-					t.use(t, actor, this);
+				{
+					if(this.target_random)
+						RandomSelection_AddEnt(t, 1, 0);
+					else
+						t.use(t, actor, this);
+				}
 			}
 		}
 	}
+
+	if(this.target_random && RandomSelection_chosen_ent)
+		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
 }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, 0, false); }

@@ -9,6 +9,8 @@ const int START_OFF = BIT(0);
 
 .float save_nextthink;
 
+.bool target_random;
+
 .float movespeed; // ad hack
 
 .float gravity;
@@ -84,6 +86,12 @@ const int ACTIVE_TOGGLE = 3;
 .float attack_finished;
 .float attack2_finished;
 
+float zeroconvert(float in);
+
+float zeroconvertdefault(float in, float def);
+
+void playercount_convert(entity this, .float fld);
+
 .void(entity this, bool unlock) lock;
 
 bool visible(entity this, entity targ);
@@ -103,5 +111,5 @@ const int MONSTER_ONLY = 8; // for trigger_hurt
 const int SPAWNFLAG_NOMESSAGE = BIT(0);
 const int SPAWNFLAG_NOTOUCH = BIT(0);
 
-const int SPAWNFLAG_TRIGGER_FIRST = BIT(1);
+const int SPAWNFLAG_TRIGGER_FIRST = BIT(2);
 #endif

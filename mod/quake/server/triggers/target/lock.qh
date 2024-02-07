@@ -1,0 +1,8 @@
+#pragma once
+
+#ifdef SVQC
+const int SPAWN_LOCK_START = 1;
+const int SPAWN_LOCK_LOCK_ONLY = 2;
+const int SPAWN_LOCK_UNLOCK_ONLY = 4;
+const int SPAWN_LOCK_NOTOGGLE = 6;
+#endif

@@ -3,5 +3,5 @@
 #ifdef SVQC
 spawnfunc(trigger_multiple);
 
-void multi_trigger(entity this);
+bool multi_trigger(entity this);
 #endif

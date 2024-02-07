@@ -1,7 +1,30 @@
 #ifdef SVQC
 
-.bool trigger_multiple_copperhack;
+const int MULTI_NOMESSAGE = 1;
+const int MULTI_NOTOUCH = 1;
+const int MULTI_SUPERSECRET = 2;
+const int MULTI_TRIGGER_FIRST = 4;
+const int MULTI_TRIGGER_TOGGLE = 4;
+const int MULTI_TRIGGER_MONSTERS = 8;
+const int MULTI_ALL_CLIENTS = 16;
 
+void InitTriggerSounds(entity this)
+{
+	if(!this.noise || this.noise == "")
+	{
+		if(this.sounds == 1)
+			this.noise = "misc/secret.wav";
+		else if(this.sounds == 2)
+			this.noise = QUAKE_TALKSOUND;
+		else if(this.sounds == 3)
+			this.noise = "misc/trigger1.wav";
+	}
+	
+	if(this.noise && this.noise != "")
+		precache_sound(this.noise);
+}
+
+// the wait time has passed, so set back up for another activation
 // the wait time has passed, so set back up for another activation
 void multi_wait(entity this)
 {
@@ -13,58 +36,99 @@ void multi_wait(entity this)
 	}
 }
 
-
 // the trigger was just touched/killed/used
 // this.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
-void multi_trigger(entity this)
+bool multi_trigger(entity this)
 {
 	if(this.nextthink > time)
-	{
-		return; // already been triggered
-	}
+		return false;		// already been triggered
 
+	if(this.customflags & CFL_LOCKED)
+		return false;
+	
 	if(this.classname == "trigger_secret")
 	{
+		SUB_UseTargetsSilent(this, this.enemy, NULL);
 		if(!IS_PLAYER(this.enemy))
-			return;
+			return false;
+		if(this.noise && this.noise != "")
+			_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 		secrets_found += 1;
+		if(IS_REAL_CLIENT(this.enemy))
+			centerprint(this.enemy, process_string(this.message));
+		settouch(this, func_null);
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		return false;
 	}
 
-	if(this.noise && this.noise != "")
-		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-
-	// don't trigger again until reset
-	this.takedamage = DAMAGE_NO;
-
+	playercount_convert(this, count);
+	if(this.count > 0)
+	{
+		this.count -= 1;
+		if(this.count == 0)
+			delete(this);
+	}
 	SUB_UseTargets(this, this.enemy, NULL);
+	
+	// sub_usetargets plays the sound if there's a message, doesn't if not
+	if(this.noise && this.noise != "")
+		sound_delayed(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM, this.delay);
 
+// don't trigger again until reset
+	this.takedamage = DAMAGE_NO;
+	
 	if(this.wait > 0)	
 	{
 		setthink(this, multi_wait);
 		this.nextthink = time + this.wait;
 	}
 	else
-	{	// we can't just delete(this) here, because this is a touch function
+	{	// we can't just remove (this) here, because this is a touch function
 		// called while C code is looping through area links...
 		settouch(this, func_null);
-		this.nextthink = time + 0.1;
 		setthink(this, SUB_Remove);
-		return;
+		this.nextthink = time;
 	}
-
-	if(this.cnt > 0)
-	{
-		this.cnt = this.cnt - 1;
-		if(this.cnt == 0)
-		{
-			settouch(this, func_null);
-			this.nextthink = time + 0.1;
-			setthink(this, SUB_Remove);
-		}
-	}
+	
+	return true;
 }
 
+// simplified multi_trigger with repeat-per-client guard included
+// and dumb shootable/secret overloads removed
+bool multi_trigger_coop(entity this)
+{
+	if(this.customflags & CFL_LOCKED)
+		return false;
+	
+	// respond to multiple coop clients touching this at once before disabling
+	if(time != this.dmgtime)
+		if(time < this.attack_finished)
+			return false;
+	
+	playercount_convert(this, count);
+	if(this.count > 0)
+	{
+		this.count -= 1;
+		if(this.count == 0)
+			remove(this);
+	}
+	SUB_UseTargets(this, this.enemy, NULL);
+	
+	if(this.noise && this.noise != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+	
+	if(this.spawnflags & MULTI_ALL_CLIENTS)
+		this.dmgtime = time;
+	this.attack_finished = time + this.wait;
+
+	return true;
+}
+
+
+// trigger_multiples are sometimes used as shootable buttons :(
+// most notably the 'well of wishes' secret message in start.bsp
 void multi_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.enemy = attacker;
@@ -79,34 +143,104 @@ void multi_use(entity this, entity actor, entity trigger)
 
 void multi_touch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher))
+	if(this.spawnflags & MULTI_TRIGGER_MONSTERS)
+	{
+		if(!IS_MONSTER(toucher))
+			return;
+		if(!(toucher.enemy || toucher.goalentity))
+			return;
+	}
+	else if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
 	
-// if the trigger has an angles field, check player's facing direction
+	// if the trigger has an angles field, check player's facing direction
 	if(this.movedir != '0 0 0')
 	{
-		makevectors(toucher.angles);
-		if(v_forward * this.movedir < 0)
+		makevectors(toucher.v_angle);
+		if(v_forward * this.movedir < this.distance)
 			return;		// not facing the right way
 	}
 	
 	this.enemy = toucher;
-	multi_trigger(this);
+	
+	// would use think1 but the prototype has to be float(); hooray for saving an efield
+	if(!this.checkattack)
+		this.checkattack = multi_trigger;
+	this.checkattack(this);
 }
 
-/*QUAKED trigger_multiple(.5 .5 .5) ? notouch
-Variable sized repeatable trigger.  Must be targeted at one or more entities.  If "health" is set, the trigger must be killed to activate each time.
-If "delay" is set, the trigger waits some time after activating before firing.
-"wait" : Seconds between triggerings.(.2 default)
-"cnt" how many times it can be triggered (infinite default in hipnotic)
-If notouch is set, the trigger is only fired by other entities, not by touching.
-NOTOUCH has been obsoleted by trigger_relay!
-sounds
-1)	secret
-2)	beep beep
-3)	large switch
-4)
-set "message" to text string
+
+void init_trigger_multiple(entity this)
+{
+	if(!this.wait)
+		this.wait = 0.2;
+	this.use = multi_use;
+
+	if(this.health)
+	{
+		if(this.spawnflags & MULTI_NOTOUCH)
+			objerror(this, "init_trigger: health and notouch don't make sense together\n");
+		if(this.spawnflags & MULTI_ALL_CLIENTS)
+			objerror(this, "init_trigger: allclients and health don't make sense together\n");
+		this.max_health = this.health;
+		this.th_die = multi_killed;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin);	// make sure it links into the world
+	}
+	else
+	{
+		this.solid = SOLID_TRIGGER;
+		if(this.spawnflags & MULTI_ALL_CLIENTS)
+		{
+			if(this.spawnflags & MULTI_NOTOUCH)
+				objerror(this, "init_trigger: allclients and notouch don't make sense together\n");
+			this.checkattack = multi_trigger_coop;
+		}
+		if(!(this.spawnflags & MULTI_NOTOUCH))
+			settouch(this, multi_touch);
+	}
+}
+
+/*QUAKED trigger_multiple (.5 .0 .5) ? NOTOUCH ? TRIGGER_FIRST MONSTERS ALL_CLIENTS
+Variable sized repeatable trigger.
+Must be targeted at one or more entities.
+
+Flags:
+"notouch" only triggered by other entities, not by touching
+"all_clients" will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+"trigger_first" won't be touchable until triggered once by something else
+"monsters" monsters will fire this trigger (and count as activator, so be careful)
+
+Keys:
+"angle" the trigger will only fire when someone is facing the direction of the angle, use 360 for angle 0.
+"distance" degrees of tolerance on facing angle if 'angle' is set
+"delay" delay before firing (after trigger)
+"health" solid, must be killed to activate
+"message" message to display when triggered
+"sounds"
+    1 = secret
+    2 = beep beep
+	3 = large switch
+	4 = it is a mysteryyy
+	-1 = silent
+"noise"	choose your own .wav
+"target"  entity to trigger (required)
+"targetname"  entity name
+"wait" delay between triggerings (default: 0.2) (NOTE: wait -1 with all_clients will not work like you think.)
+*/
+/*FGD
+@SolidClass base(TriggerMulti) = trigger_multiple : "Trigger multiple. Variable sized repeatable trigger.
+Must be targeted at one or more entities.
+
+Spawnflags:
+'No Touch': only triggered by other entities, not by touching (legacy; just use a trigger relay)
+'All Clients': will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+'Trigger First': won't be touchable until triggered once by something else
+'Monsters Will Activate': monsters will fire this trigger (and count as activator, so be careful)" 
+[
+	wait(string) : "Retriggering Interval" : "0.2"
+]
 */
 spawnfunc(trigger_multiple);
 void trigger_multiple_use(entity this, entity actor, entity trigger)
@@ -120,77 +254,20 @@ spawnfunc(trigger_multiple)
 		delete(this);
 		return;
 	}
-	if(this.sounds == 1)
-	{
-		precache_sound("misc/secret.wav");
-		this.noise = "misc/secret.wav";
-	}
-	else if(this.sounds == 2)
-	{
-		precache_sound(QUAKE_TALKSOUND);
-		this.noise = QUAKE_TALKSOUND;
-	}
-	else if(this.sounds == 3)
-	{
-		precache_sound("misc/trigger1.wav");
-		this.noise = "misc/trigger1.wav";
-	}
 
-	if(MP_MG)
+	InitTriggerSounds(this);
+
+	if(this.spawnflags & 2)
 	{
-		this.sounds = 0;
-		if(this.spawnflags & SPAWNFLAG_TRIGGER_FIRST)
-		{
-			this.use = trigger_multiple_use;
-			this.spawnflags &= ~SPAWNFLAG_TRIGGER_FIRST;
-			return;
-		}
+		this.use = trigger_multiple_use;
+		this.spawnflags &= ~2;
+		return;
 	}
 	
-	if(!this.wait)
-		this.wait = 0.2;
-	this.use = multi_use;
-
-	if(this.trigger_multiple_copperhack)
-		InitTriggerBounds(this);
-	else
-		InitTrigger(this);
-
-	if(this.health)
-	{
-		if(this.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror(this, "health and notouch don't make sense\n");
-		this.max_health = this.health;
-		this.th_die = multi_killed;
-		this.takedamage = DAMAGE_YES;
-		this.solid = SOLID_BBOX;
-		setorigin(this, this.origin);	// make sure it links into the world
-	}
-	else if(!(this.spawnflags & SPAWNFLAG_NOTOUCH))
-			settouch(this, multi_touch);
-
-	if(!this.cnt)
-		this.cnt = -1;
+	init_trigger_multiple(this);
+	InitTrigger(this);
 }
 
-/*QUAKED trigger_once(.5 .5 .5) ? notouch
-Variable sized trigger. Triggers once, then removes itself.  You must set the key "target" to the name of another object in the level that has a matching
-"targetname".  If "health" is set, the trigger must be killed to activate.
-If notouch is set, the trigger is only fired by other entities, not by touching.
-if "killtarget" is set, any objects that have a matching "target" will be removed when the trigger is fired.
-if "angle" is set, the trigger will only fire when someone is facing the direction of the angle.  Use "360" for an angle of 0.
-sounds
-1)	secret
-2)	beep beep
-3)	large switch
-4)
-set "message" to text string
-*/
-spawnfunc(trigger_once)
-{
-	this.wait = -1;
-	spawnfunc_trigger_multiple(this);
-}
 
 /*QUAKED trigger_multiple_box (.5 .5 0) (-8 -8 -8) (8 8 8) ? ? TRIGGER_FIRST MONSTERS ALL_CLIENTS
 Trigger multiple. Variable sized repeatable trigger. Must be targeted at one or more entities.
@@ -236,8 +313,104 @@ Spawnflags:
 */
 spawnfunc(trigger_multiple_box)
 {
-	this.trigger_multiple_copperhack = true; // workaround for not needing to overcomplicate trigger_multiple
+	InitTriggerSounds(this);
+	
+	init_trigger_multiple(this);
+	setorigin(this, this.origin);	// make sure it links into the world
+	InitTriggerBounds(this);
+}
+
+
+/*QUAKED trigger_once (.5 .0 .5) ? NOTOUCH ? TRIGGER_FIRST MONSTERS
+Variable sized trigger. Triggers once, then removes itself. You must set the key "target" to the name of another object in the level that has a matching "targetname". If notouch is set, the trigger is only fired by other entities, not by touching.
+
+Wait is always -1.
+
+Flags:
+"notouch" only triggered by other entities, not by touching
+"trigger_first" won't be touchable until triggered once by something else
+"monsters" monsters will fire this trigger (and count as activator, so be careful)
+
+Keys:
+"angle" the trigger will only fire when someone is facing the direction of the angle, use "360" for angle 0.
+"distance" dot product result to compare "angle" against. 0 is 90 degrees off (default), 0.7 is 45 degrees.
+"delay" delay before firing (after trigger)
+"health" button must be killed to activate
+"message" message to display when triggered
+"sounds"
+    1 = secret
+    2 = beep beep
+	3 = large switch
+	4 = it is a mysteryyy
+	-1 = silent
+"noise"	choose your own .wav
+"target"  entity to trigger (required)
+"targetname"  entity name
+*/
+/*FGD
+@SolidClass base(TriggerMulti) = trigger_once : "Trigger multiple. Variable sized trigger.
+Must be targeted at one or more entities. Wait is always -1: removes itself after one use.
+
+Spawnflags:
+'No Touch': only triggered by other entities, not by touching (legacy; just use a trigger relay)
+'All Clients': will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+'Trigger First': won't be touchable until triggered once by something else
+'Monsters Will Activate': monsters will fire this trigger (and count as activator, so be careful)"
+[]
+*/
+spawnfunc(trigger_once)
+{
+	this.wait = -1;
+	this.spawnfunc_checked = true;
 	spawnfunc_trigger_multiple(this);
+}
+
+
+/*QUAKED trigger_once_box (.5 .0 .5) ? ? ? TRIGGER_FIRST MONSTERS
+Quoth2-style cache-saving bounding box triggers: define size with "mangle", as total dimensions in xyz - trigger volume will be that size centered on the trigger_multiple_box's origin.  otherwise acts like a normal trigger.
+
+Wait is always -1.
+
+Quoth2-style edict-saving bounding box trigger: define size with 'size', and the trigger volume will be that size centered on the trigger's origin.
+
+Flags:
+"trigger_first" won't be touchable until triggered once by something else
+"monsters" monsters will fire this trigger (and count as activator, so be careful)
+
+Keys:
+"angle" the trigger will only fire when someone is facing the direction of the angle, use "360" for angle 0.
+"distance" dot product result to compare "angle" against. 0 is 90 degrees off (default), 0.7 is 45 degrees.
+"delay" delay before firing (after trigger)
+"health" button must be killed to activate
+"message" message to display when triggered
+"sounds"
+    1 = secret
+    2 = beep beep
+	3 = large switch
+	4 = it is a mysteryyy
+	-1 = silent
+"noise"	choose your own .wav
+"target"  entity to trigger (required)
+"targetname"  entity name
+*/
+/*FGD
+@PointClass base(TriggerMulti, Bounds) = trigger_once_box : "Trigger multiple. Variable sized trigger.
+Must be targeted at one or more entities. Wait is always -1: removes itself after one use.
+
+Quoth2-style edict-saving bounding box trigger: define size with 'size', and the trigger volume will be that size centered on the trigger's origin.
+
+Spawnflags:
+'No Touch': only triggered by other entities, not by touching (legacy; just use a trigger relay)
+'All Clients': will trigger once per client touching it on the same frame before waiting (default behavior is to trigger only for the first touch event, ie the lowest-numbered client). use if you want to trigger a target_items or target_heal and have every client in the trigger affected by the result.
+'Trigger First': won't be touchable until triggered once by something else
+'Monsters Will Activate': monsters will fire this trigger (and count as activator, so be careful)"
+[]
+*/
+spawnfunc(trigger_once_box)
+{
+	this.wait = -1;
+	this.spawnfunc_checked = true;
+	spawnfunc_trigger_multiple_box(this);
 }
 
 #endif

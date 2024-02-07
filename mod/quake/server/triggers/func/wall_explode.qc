@@ -206,7 +206,7 @@ void wall_dieuse(entity this, entity actor, entity trigger)
 	wall_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 }
 
-void wall_touch(entity this, entity toucher)
+void wall_explode_touch(entity this, entity toucher)
 {
 	if(this.cnt == 1)
 		return;
@@ -244,7 +244,7 @@ spawnfunc(wall_explode)
 		return;
 	}
 	if(!this.health)
-		settouch(this, wall_touch);
+		settouch(this, wall_explode_touch);
 	else
 	{
 		this.takedamage = DAMAGE_YES;
