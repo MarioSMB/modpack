@@ -64,18 +64,17 @@ void Radio_Announce(entity this)
 	if(radio_playing_queue >= 0)
 	if(autocvar_sv_radio_announce)
 	{
-		string desc = cvar_string(strcat("_radio_queue_", ftos(radio_playing_queue), "_desc"));
-		if(desc == "")
-			desc = "^8(unknown track)";
-		desc = strcat("^1[RADIO] ^2Now playing ^3", desc);
+		string track = cvar_string(strcat("_radio_queue_", ftos(radio_playing_queue), "_desc"));
+		if(track == "")
+			track = _("^8(unknown track)");
+		string desc = sprintf(_("^1[RADIO] ^2Now playing ^3%s"), track);
 		if(radio_tracklen)
-			desc = strcat(desc, "^8 (", mmss(radio_tracklen * 10), ")");
+			desc = strcat(desc, sprintf(_("^8 (%s)"), mmss(radio_tracklen * 10)));
 		float left = cvar("_radio_queue_left");
 		if(left)
-			desc = strcat(desc, "^7 - ", ftos(left), " in queue");
-
+			desc = strcat(desc, sprintf(_("^7 - %s in queue"), ftos(left)));
 		if(autocvar_sv_radio_announce_howto)
-			desc = strcat(desc, " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)");
+			desc = strcat(desc, _(" ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)"));
 
 		if(this)
 			sprint(this, strcat("\{3}", desc, "\n"));
@@ -396,7 +395,7 @@ void Radio_URI_Get_Callback(float id, float status, string data)
 	if(n > 3)
 	{
 		d = substring(data, argv_start_index(3), strlen(data));
-		d = strcat(d, " ^8(autoqueue)");
+		d = strcat(d, _(" ^8(autoqueue)"));
 	}
 
 	Radio_Queue(argv(0), argv(1), stof(argv(2)), d);
