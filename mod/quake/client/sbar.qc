@@ -857,6 +857,7 @@ float weapon_gettime[72];
 void Sbar_DrawInventory()
 {
 	// set flash times
+	float oldfont = drawfont;
 	int myitems = STAT(ITEMS);
 	//int mypowerups = STAT(POWERUPS);
 	WepSet myweapons = STAT(WEAPONS);
@@ -914,7 +915,6 @@ void Sbar_DrawInventory()
 					col = '1 1 0';
 				else
 					col = '0.6 0.2 0';
-				float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
 				drawfont = 8; // FONT_USER
 				drawstring_aspect(sbar + vec2(wep_pos * 24, -8), ftos(imp), '8 8 0', col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 				drawfont = oldfont;
@@ -953,9 +953,25 @@ void Sbar_DrawInventory()
 	// TODO: cleanup this mess
 	// keys
 	if(myitems & IT_KEY1)
+	{
 		Sbar_DrawPic(vec2(192 + 3 * 16, -16), "gfx/quake/sb_key1");
+		if(STAT(KEYS_SILVER) > 0)
+		{
+			drawfont = 8; // FONT_USER
+			drawstring_aspect(sbar + vec2(192 + 3 * 16, -8) - '2 0 0', ftos(STAT(KEYS_SILVER)), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
+		}
+	}
 	if(myitems & IT_KEY2)
+	{
 		Sbar_DrawPic(vec2(192 + 4 * 16, -16), "gfx/quake/sb_key2");
+		if(STAT(KEYS_GOLD) > 0)
+		{
+			drawfont = 8; // FONT_USER
+			drawstring_aspect(sbar + vec2(192 + 4 * 16, -8) - '2 0 0', ftos(STAT(KEYS_GOLD)), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
+		}
+	}
 #if 0
 	// base powerups
 	for(int j = 2; j < 6; ++j)

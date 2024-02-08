@@ -647,13 +647,13 @@ void horde_key_give(int key_item)
 {
 	if(key_item & IT_KEY1)
 	{
-		keys_silver++;
+		keys_silver += 1;
 		if(keys_silver == 1)
 			horde_key_give_all(IT_KEY1);
 	}
 	else if(key_item & IT_KEY2)
 	{
-		keys_gold++;
+		keys_gold += 1;
 		if(keys_gold == 1)
 			horde_key_give_all(IT_KEY2);
 	}
@@ -664,13 +664,13 @@ void horde_key_spend(float key_item)
 {
 	if(key_item & IT_KEY1)
 	{
-		keys_silver--;
+		keys_silver -= 1;
 		if(keys_silver == 0)
 			horde_key_remove_all(IT_KEY1);
 	}
 	else if(key_item & IT_KEY2)
 	{
-		keys_gold--;
+		keys_gold -= 1;
 		if(keys_gold == 0)
 			horde_key_remove_all(IT_KEY2);
 	}

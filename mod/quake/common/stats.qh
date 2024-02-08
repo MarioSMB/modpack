@@ -263,3 +263,9 @@ REGISTER_STAT(SLIDE_ON, bool)
 REGISTER_STAT(WORLDTYPE, int, world.worldtype)
 
 REGISTER_STAT(CANNON, bool)
+
+#ifdef SVQC
+#include "../server/horde.qh"
+#endif
+REGISTER_STAT(KEYS_SILVER, int, keys_silver)
+REGISTER_STAT(KEYS_GOLD, int, keys_gold)
