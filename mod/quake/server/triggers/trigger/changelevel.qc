@@ -80,7 +80,7 @@ void changelevel_touch(entity this, entity toucher)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
 	{
 		++realplnum;
-		if(it.chlevel_targ == this)
+		if(it.chlevel_targ == this || (it.chlevel_targ && it.chlevel_targ.map == this.map))
 			++plnum;
 	});
 	if(!this.chlevel_found && realplnum > 1)
