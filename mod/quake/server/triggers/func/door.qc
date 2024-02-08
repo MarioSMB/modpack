@@ -757,8 +757,8 @@ void func_door_init(entity this, entity actor, entity trigger)
 	}
 
 	if(!this.distance)
-		this.distance = BoundsAngleSize(this.movedir, this.size) - this.lip;
-	if(this.pos1 && this.pos2)
+		this.distance = (fabs(this.movedir * this.size) - this.lip);
+	if(this.pos1 != '0 0 0' && this.pos2 != '0 0 0')
 		setorigin(this, this.pos1);
 	else
 	{
@@ -769,6 +769,7 @@ void func_door_init(entity this, entity actor, entity trigger)
 	// mg hack
 	if(this.have_mg_movedir)
 	{
+		this.pos1 = this.origin;
 		this.pos2 = this.pos1 + this.movedir;
 		this.angles = '0 0 0';
 	}

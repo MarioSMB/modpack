@@ -257,10 +257,10 @@ spawnfunc(trigger_multiple)
 
 	InitTriggerSounds(this);
 
-	if(this.spawnflags & 2)
+	if(this.spawnflags & MULTI_TRIGGER_FIRST)
 	{
 		this.use = trigger_multiple_use;
-		this.spawnflags &= ~2;
+		this.spawnflags &= ~MULTI_TRIGGER_FIRST;
 		return;
 	}
 	
@@ -361,7 +361,6 @@ Spawnflags:
 spawnfunc(trigger_once)
 {
 	this.wait = -1;
-	this.spawnfunc_checked = true;
 	spawnfunc_trigger_multiple(this);
 }
 
@@ -409,7 +408,6 @@ Spawnflags:
 spawnfunc(trigger_once_box)
 {
 	this.wait = -1;
-	this.spawnfunc_checked = true;
 	spawnfunc_trigger_multiple_box(this);
 }
 

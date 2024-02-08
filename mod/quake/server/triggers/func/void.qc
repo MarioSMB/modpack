@@ -45,7 +45,6 @@ spawnfunc(func_void)
 {
 	this.dmg = 5000;
 
-	this.spawnfunc_checked = true;
 	spawnfunc_trigger_hurt(this);
 }
 
