@@ -38,11 +38,17 @@ Using a monster makes it angry at the current activator
 */
 void monster_use(entity this, entity actor, entity trigger)
 {
-	if(this.enemy || this.health <= 0 || StatusEffects_active(STATUSEFFECT_Invisibility, actor) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
+	if(this.enemy || this.health <= 0 || StatusEffects_active(STATUSEFFECT_Invisibility, actor) || (actor.flags & FL_NOTARGET) || (!IS_PLAYER(actor) && !IS_MONSTER(actor)))
 		return;
 	
 	// delay reaction so if the monster is teleported, its sound is still heard
-	this.enemy = actor;
+	if(IS_MONSTER(actor))
+	{
+		this.enemy = actor.enemy;
+		this.oldenemy = actor.oldenemy;
+	}
+	else
+		this.enemy = actor;
 	this.nextthink = time + 0.1;
 	setthink(this, FoundTarget);
 }
@@ -67,16 +73,30 @@ void monster_begin_walking(entity this, entity actor, entity trigger)
 //============================================================================
 
 .float oldsolid;
+.vector rmovedir;
 void monster_start_go(entity this)
 {
 	bool is_walker = !((this.flags & FL_SWIM) || (this.flags & FL_FLY)); // special check needed here as there isn't a walk flag
 
+	if(this.rmovedir != '0 0 0')
+	{
+		makevectors(this.angles);
+		this.movedir = v_forward * this.rmovedir_x + v_right * this.rmovedir_y + v_up * this.rmovedir_z;
+		this.rmovedir = '0 0 0';
+	}
+
 	if(!this.yaw_speed)
 		this.yaw_speed = ((is_walker) ? 20 : 10);
-	if(is_walker)
+	if(is_walker && this.movedir == '0 0 0' && !(this.spawnflags & SPAWN_TRIGGERED))
 	{
 		this.origin_z = this.origin_z + 1;	// raise off floor a bit
 		droptofloor(this);
+	}
+
+	if((this.spawnflags & SPAWN_TRIGGERED) && this.movedir != '0 0 0')
+	{
+		this.velocity = this.movedir;
+		this.movedir = '0 0 0';
 	}
 
 	this.view_ofs = ((this.flags & FL_SWIM) ? '0 0 10' : '0 0 25');
@@ -109,7 +129,14 @@ void monster_start_go(entity this)
 			spawn_tfog(this.origin);
 	}
 
-	if(this.target && this.target != "")
+	if(this.enemy)
+	{
+		if(this.th_stand)
+			this.th_stand(this);
+		setthink(this, FoundTarget);
+		this.nextthink = time;
+	}
+	else if(this.target && this.target != "")
 	{
 		if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND))
 		{
@@ -224,11 +251,22 @@ void Monster_Appear_Delayed(entity this)
 	monster_start(this, false, this.monsterdef);
 }
 
+const int SPAWN_INSTAWAKE = 128;
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
 	float timer = (this.delay) ? this.delay : 0;
 	setthink(this, Monster_Appear_Delayed);
 	this.nextthink = time + timer;
+	if((this.spawnflags & SPAWN_INSTAWAKE) && (IS_MONSTER(actor) || IS_PLAYER(actor)))
+	{
+		if(IS_MONSTER(actor))
+		{
+			this.enemy = actor.enemy;
+			this.oldenemy = actor.oldenemy;
+		}
+		else
+			this.enemy = actor;
+	}
 }
 
 bool Monster_Appear_Check(entity this, Monster monster_id)

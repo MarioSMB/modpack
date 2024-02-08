@@ -49,7 +49,7 @@ void tuba_note_touch(entity this, entity toucher)
 	//this.origin = this.origin - 8 * normalize(this.velocity);
 	setorigin(this, findbetterlocation(this.origin, 8));
 
-	Become_Burst_6Sided_BrightYellow_Explosion(this);
+	BecomeCartoonExplosion(this);
 }
 
 vector tuba_calc_arc(vector org, vector tgt, float ht)
@@ -178,13 +178,14 @@ void W_FireTuba(entity this, .entity weaponentity)
 	musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	musicnote.classname = "tubanote";
 	musicnote.projectiledeathtype = WEP_TUBA.m_id;
+	musicnote.effects = EF_FULLBRIGHT;
 
 	musicnote.angles = vectoangles(musicnote.velocity);
 	settouch(musicnote, MusicNoteTouch);
 
 	musicnote.nextthink = time + 2.5; // Remove/Explode Time
 	//musicnote.think = SUB_Remove; 
-	setthink(musicnote, Become_Burst_6Sided_BrightYellow_Explosion);
+	setthink(musicnote, BecomeCartoonExplosion);
 	_setmodel(musicnote, "progs/piano_musicnote_yellow.mdl");
 	setsize(musicnote, '-3 -3 -3', '3 3 3');
 	musicnote.avelocity = '0 90 0'; // Roll

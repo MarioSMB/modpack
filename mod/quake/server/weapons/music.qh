@@ -1,3 +1,9 @@
 #pragma once
 
 float W_Music_PitchFromAngles(float pitchang, float rndoffset);
+
+void BecomeCartoonExplosion(entity this);
+
+void MusicNoteBounceTouch(entity this, entity toucher);
+
+void MusicNoteTouch(entity this, entity toucher);

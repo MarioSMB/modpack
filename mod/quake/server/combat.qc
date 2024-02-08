@@ -261,6 +261,9 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
 		targ.health = -99;
 
+	if(IS_MONSTER(targ) && targ.max_health > 100 && targ.dmg_take > (targ.max_health * 0.6))
+		targ.health = -99;
+
 	targ.gravity = 1.0;
 
 	targ.takedamage = DAMAGE_NO;
@@ -409,6 +412,15 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		targ.dmg_take = targ.dmg_take + take;
 		targ.dmg_save = targ.dmg_save + save;
 		targ.dmg_inflictor = inflictor;
+	}
+	else
+	{
+		if(time - targ.dmg_time > 1)
+		{
+			targ.dmg_take = 0;
+			targ.dmg_time = time;
+		}
+		targ.dmg_take = targ.dmg_take + take;
 	}
 
 // figure momentum add

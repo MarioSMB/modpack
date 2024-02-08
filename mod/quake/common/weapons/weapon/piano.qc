@@ -172,104 +172,6 @@ void player_woodpiano_randomplayright(entity this) // Keys 7 - 12 RIGHT SIDE
 	else 			{player_woodpiano_key12_1(this); }
 }
 
-void x_cartoonburst4(entity this) { this.frame = 6; this.nextthink = time + 0.025; setthink(this, SUB_Remove); }
-void x_cartoonburst3(entity this) { this.frame = 4; this.nextthink = time + 0.025; setthink(this, x_cartoonburst4); }
-void x_cartoonburst2(entity this) { this.frame = 2; this.nextthink = time + 0.025; setthink(this, x_cartoonburst3); }
-void x_cartoonburst1(entity this) { this.frame = 0; this.nextthink = time + 0.025; setthink(this, x_cartoonburst2); }
-
-void Become_Burst_6Sided_BrightPurple_Explosion(entity this) // ( Bright Brown / Purple ) --------------------------------------------
-{
-	set_movetype(this, MOVETYPE_NONE);
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	_setmodel(this, "progs/x9_burst_6sided_brightpurple.mdl");
-	setsize(this, '0 0 0', '0 0 0');
-	this.solid = SOLID_NOT;
-	x_cartoonburst1(this);
-}
-
-void Become_Burst_6Sided_BrightYellow_Explosion(entity this) // ( Bright Yellow ) --------------------------------------------
-{
-	set_movetype(this, MOVETYPE_NONE);
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	_setmodel(this, "progs/x9_burst_6sided_brightyellow.mdl");
-	setsize(this, '0 0 0', '0 0 0');
-	this.solid = SOLID_NOT;
-	x_cartoonburst1(this);
-}
-
-void Become_Burst_6Sided_Brown_Explosion(entity this) // ( Brown ) --------------------------------------------
-{
-	set_movetype(this, MOVETYPE_NONE);
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	_setmodel(this, "progs/x9_burst_6sided_brown.mdl");
-	setsize(this, '0 0 0', '0 0 0');
-	this.solid = SOLID_NOT;
-	x_cartoonburst1(this);
-}
-
-void MusicNoteTouch2(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WORLD ------------------------------------------------------------------------------
-{
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return; // trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}   
-	
-	if(toucher.takedamage) // if it bleeds...
-	{
-		//spawn_touchblood (1);
-		T_Damage(toucher, this, this.owner, 18, WEP_PIANO.m_id); // DIRECT Damage
-
-		Become_Burst_6Sided_BrightPurple_Explosion(this);
-		
-		return;         
-	}
-	
-	if(this.velocity == '0 0 0') {this.avelocity = '0 0 0';} // Bounce?
-}
-
-void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WORLD ------------------------------------------------------------------------------
-{
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return; // trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}   
-	
-	if(toucher.takedamage) // if it bleeds...
-	{
-		//spawn_touchblood (1);
-		T_Damage(toucher, this, this.owner, 27, this.projectiledeathtype); // DIRECT Damage
-
-		Become_Burst_6Sided_BrightYellow_Explosion(this);
-		return;         
-	}
-	
-	if(this.velocity == '0 0 0') {this.avelocity = '0 0 0';} // Bounce?
-
-	else
-	{
-		_setmodel(this, "progs/piano_musicnote_brown.mdl");
-		setsize(this, '0 0 0', '0 0 0'); 
-		settouch(this, MusicNoteTouch2);	
-	}
-}
-
 void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Play Audio Chord---------------------------------------------------
 {
 	if(STAT(MANA, this) < 3)
@@ -284,9 +186,11 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	entity musicnote = spawn();
 	musicnote.projectiledeathtype = WEP_PIANO.m_id;
 	musicnote.owner = this;
+	musicnote.dmg = 27;
 	set_movetype(musicnote, MOVETYPE_BOUNCE);
 	musicnote.solid = SOLID_BBOX;
 	musicnote.classname = "grenade";
+	musicnote.effects = EF_FULLBRIGHT;
 		
 	makevectors(this.v_angle);
 	
@@ -308,7 +212,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	
 	musicnote.nextthink = time + 2.5; // Remove/Explode Time
 	//musicnote.think = SUB_Remove; 
-	setthink(musicnote, Become_Burst_6Sided_Brown_Explosion);
+	setthink(musicnote, BecomeCartoonExplosion);
 
 	vector mycolor = '1 1 0';
 	if(random() < 0.5)

@@ -11,7 +11,6 @@ PRECACHE(Kazoo)
 }
 
 .float kazoo_smoketime;
-void Become_Burst_6Sided_BrightYellow_Explosion(entity this);
 
 void kazoo_note_touch(entity this, entity toucher)
 {
@@ -42,14 +41,14 @@ void kazoo_note_touch(entity this, entity toucher)
 	//this.origin = this.origin - 8 * normalize(this.velocity);
 	this.origin = findbetterlocation(this.origin, 8);
 
-	Become_Burst_6Sided_BrightYellow_Explosion(this);
+	BecomeCartoonExplosion(this);
 }
 
 void kazoo_note_spreadout(entity this)
 {
 	if(time > this.count)
 	{
-		Become_Burst_6Sided_BrightYellow_Explosion(this);
+		BecomeCartoonExplosion(this);
 		return;
 	}
 	entity selected = W_PickNearbyTarget(this, false, true);
@@ -59,7 +58,7 @@ void kazoo_note_spreadout(entity this)
 		vector dir = normalize(targ_pos - this.origin);
 		this.velocity = dir * 800;
 		this.avelocity = '0 0 0';
-		setthink(this, Become_Burst_6Sided_BrightYellow_Explosion);
+		setthink(this, BecomeCartoonExplosion);
 		this.nextthink = time + 5;
 	}
 	else

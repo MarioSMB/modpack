@@ -49,6 +49,7 @@ void MayoExplode(entity this, bool dopool)
 			if(random() < 0.4)
 			{
 				entity note = new(musicnote);
+				note.effects = EF_FULLBRIGHT;
 				setorigin(note, trace_endpos);
 				_setmodel(note, "progs/piano_musicnote_white.mdl");
 				setsize(note, '0 0 0', '0 0 0');

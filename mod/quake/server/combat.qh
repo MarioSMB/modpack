@@ -16,6 +16,8 @@ bool discharged; // hipnotic
 
 .string deathtarget; // hack from ad
 
+.float dmg_time;
+
 .bool poisonous;
 
 .bool is_frozen; // defines whether an entity is frozen

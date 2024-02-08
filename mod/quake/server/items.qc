@@ -1567,10 +1567,9 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	monster.nextthink = time + 0.1;
 	mon.mr_setup(mon, monster);
 	if(monster.charmed)
-	{
 		monster.health = max(monster.health, 1000);
-		monster.max_health = monster.health;
-	}
+
+	monster.max_health = monster.health;
 	monster.angles = '0 0 0';
 	if(actor)
 		monster.angles_y = actor.angles_y;

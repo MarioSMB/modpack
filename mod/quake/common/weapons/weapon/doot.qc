@@ -11,7 +11,6 @@ PRECACHE(Doot)
 }
 
 .float doot_smoketime;
-void Become_Burst_6Sided_BrightYellow_Explosion(entity this);
 void MusicNoteTouch(entity this, entity toucher);
 
 void doot_note_touch(entity this, entity toucher)
@@ -48,7 +47,7 @@ void doot_note_touch(entity this, entity toucher)
 	//this.origin = this.origin - 8 * normalize(this.velocity);
 	this.origin = findbetterlocation(this.origin, 8);
 
-	Become_Burst_6Sided_BrightYellow_Explosion(this);
+	BecomeCartoonExplosion(this);
 }
 
 void W_FireDoot(entity this, .entity weaponentity)
@@ -89,13 +88,14 @@ void W_FireDoot(entity this, .entity weaponentity)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_DOOT.m_id;
+		musicnote.effects = EF_FULLBRIGHT;
 
 		musicnote.angles = '0 1 0' * this.angles_y;
 		settouch(musicnote, MusicNoteTouch);
 
 		musicnote.nextthink = time + 2.5; // Remove/Explode Time
 		//musicnote.think = SUB_Remove; 
-		setthink(musicnote, Become_Burst_6Sided_BrightYellow_Explosion);
+		setthink(musicnote, BecomeCartoonExplosion);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		if(docolors)
 		{
@@ -125,7 +125,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	if(dobrown)
-		r = 50;
+		r = 35;
 	else
 		r *= 0.75; // TODO: per-instrument offsets
 	sound7(this, CH_WEAPON_SINGLE, SND(DOOT_FIRE), 1, ATTN_NORM, r, 0);
