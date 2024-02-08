@@ -22,13 +22,6 @@ msgcat common.pot.new-* >common.pot.new
 msgcomm xonotic/common.pot common.pot.new | msgcomm -u common.pot.new - >lang/common.pot
 rm -f common.pot.new*
 
-# update existing translation files to include new strings
-for i in $(ls lang); do
-    if [[ "${i%.po}" != "$i" ]] && [[ "$i" != "common.pot" ]]; then
-        msgcat lang/common.pot lang/$i >lang/$i.new && mv lang/$i.new lang/$i
-    fi
-done
-
 echo "Complete."
 
 cd $cwd
