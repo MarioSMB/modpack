@@ -66,6 +66,9 @@ spawnfunc(misc_model)
 	if(this.spawnflags == 0)
 		return;
 
+	if((!this.targetname || this.targetname == "") && !this.impulse && this.pos1 == '0 0 0')
+		return;
+
 	if(this.cnt < this.frame)
 		objerror(this, "misc_model with invalid frame range (cnt < frame)");
 	if(this.targetname == "")

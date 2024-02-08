@@ -1,8 +1,22 @@
 #ifdef SVQC
 
+// copper's version of definitions, mostly unused but here for reference
+const int TELEPORT_PLAYER_ONLY = 1;
+const int TELEPORT_SILENT = 2;
+const int TELEPORT_PUSH = 2;
+const int TELEPORT_TRIGGER_FIRST = 4;
+const int TELEPORT_NOTRIGGER = 8;
+const int TELEPORT_NOFLASH = 16;
+const int TELEPORT_MONSTER_ONLY = 32;
+
 void teleport_touch(entity this, entity toucher)
 {
-	if(this.targetname && this.targetname != "" && (!MP_MG || !(this.spawnflags & IGNORE_TARGETNAME)))
+	if(this.customflags & CFL_LOCKED)
+		return;
+	if(this.active != ACTIVE_ACTIVE)
+		return;
+
+	if(this.targetname && this.targetname != "" && (!(this.spawnflags & IGNORE_TARGETNAME) && substring(world.model, 0, 7) == "maps/mg"))
 	{
 		if(this.attack_finished < time)
 			return; // not fired yet
@@ -15,24 +29,40 @@ void teleport_touch(entity this, entity toucher)
 	if(toucher.health <= 0 || (toucher.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, toucher)))
 		return;
 
+	playercount_convert(this, count);
+	if(this.count == 0)
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
+		settouch(this, func_null);
+		return;
+	}
+	else if(this.count > 0)
+		this.count -= 1;
+
 	SUB_UseTargets(this, NULL, NULL);
 
 // put a tfog where the player was
-	spawn_tfog(toucher.origin);
+	if(!(this.spawnflags & TELEPORT_NOFLASH))
+		spawn_tfog(toucher.origin);
 
-	entity targ = find(NULL, targetname, this.target);
+	entity targ = findunlockedtarget(this, NULL);
 	if(!targ)
-		objerror(this, "couldn't find target");
-		
+	{
+		objerror(this, "trigger_teleport: couldn't find target");
+		return;
+	}
+
 // spawn a tfog flash in front of the destination
 	makevectors(targ.mangle);
 	vector org = targ.origin + 32 * v_forward;
 
-	spawn_tfog(org);
+	if(!(this.spawnflags & TELEPORT_NOFLASH))
+		spawn_tfog(org);
 	spawn_tdeath(targ.origin, toucher);
 
 // move the player and lock him down for a little while
-	if(!toucher.health)
+	if(toucher.health <= 0)
 	{
 		setorigin(toucher, targ.origin);
 		toucher.velocity = (v_forward * toucher.velocity_x) + (v_forward * toucher.velocity_y);
@@ -117,6 +147,18 @@ void trigger_start_go(entity this)
 	}
 }
 
+void trigger_start_use(entity this, entity actor, entity trigger)
+{
+	this.active = ACTIVE_ACTIVE;
+	this.use = teleport_use;
+	if(this.max_health)
+		this.solid = SOLID_BBOX;
+	else
+		this.solid = SOLID_TRIGGER;
+	trigger_start_go(this);
+	force_retouch = 2;
+}
+
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT CTF_ONLY
 Any object touching this will be transported to the corresponding info_teleport_destination entity. You must set the "target" field, and create an object with a "targetname" field that matches.
 
@@ -128,8 +170,13 @@ spawnfunc(trigger_teleport)
 	settouch(this, teleport_touch);
 	// find the destination 
 	if(!this.target || this.target == "")
-		objerror(this, "no target");
+	{
+		objerror(this, "trigger_teleport: no target");
+		return;
+	}
 	this.use = teleport_use;
+	this.count = zeroconvertdefault(this.count, -1);
+	this.active = ACTIVE_ACTIVE;
 
 	if(!(this.spawnflags & SILENT))
 	{
@@ -138,8 +185,16 @@ spawnfunc(trigger_teleport)
 		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
 	}
 
-	this.nextthink = this.nextthink + 0.5;
-	setthink(this, trigger_start_go);
+	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && this.targetname && this.targetname != "")
+	{
+		this.active = ACTIVE_NOT;
+		this.use = trigger_start_use;
+	}
+	else
+	{
+		this.nextthink = this.nextthink + 0.5;
+		setthink(this, trigger_start_go);
+	}
 }
 
 void effect_teleport_use(entity this, entity actor, entity trigger)
@@ -166,14 +221,6 @@ spawnfunc(effect_teleport)
 // this entity is handy when activating a big trigger_teleport volume
 // to try and teleport something is inconvenient
 // --------------------------------
-
-const int TELEPORT_PLAYER_ONLY = 1;
-const int TELEPORT_SILENT = 2;
-const int TELEPORT_PUSH = 2;
-const int TELEPORT_TRIGGER_FIRST = 4;
-const int TELEPORT_NOTRIGGER = 8;
-const int TELEPORT_NOFLASH = 16;
-const int TELEPORT_MONSTER_ONLY = 32;
 
 void teleport(entity traveler, entity dst, float tfog, float nofwd)
 {

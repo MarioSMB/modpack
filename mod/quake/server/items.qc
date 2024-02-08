@@ -57,6 +57,28 @@ void FixItem(entity this)
 	}
 }
 
+/*
+================================
+ItemUse
+
+triggering an item
+ - if it regenerates, stop regenerating
+ - if it doesn't, force it to respawn
+items which have yet to be spawned have a different .use
+================================
+*/
+void ItemSpawn(entity this, entity actor, entity trigger);
+void ItemUse(entity this, entity actor, entity trigger)
+{
+	if(this.wait > 0)
+	{
+		this.wait = 0;
+		setthink(this, SUB_Remove);	// if nextthink is in the future, don't respawn again
+		return;
+	}
+	this.alpha = 1;
+	ItemSpawn(this, actor, trigger);
+}
 
 /*
 ============
@@ -65,6 +87,15 @@ PlaceItem
 plants the object on the floor
 ============
 */
+const int ITEM_SUSPENDED = 4;
+
+void ItemSpawn(entity this, entity actor, entity trigger)
+{
+	this.solid = SOLID_TRIGGER;
+	this.model = this.mdl;
+	setthink(this, FixItem);
+	this.nextthink = time + 0.5;
+}
 
 void PlaceItem(entity this)
 {
@@ -72,18 +103,27 @@ void PlaceItem(entity this)
 	if(!(this.items & IT_KEY1) && !(this.items & IT_KEY2))
 		this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	if(this.spawnflags & DROPTOFLOOR_DISABLE)
+	if((this.spawnflags & DROPTOFLOOR_DISABLE) || (this.spawnflags & ITEM_SUSPENDED))
 		set_movetype(this, MOVETYPE_NONE);
 	else
 		set_movetype(this, MOVETYPE_TOSS);	
 	this.velocity = '0 0 0';
 	setorigin(this, this.origin + '0 0 6');
+	//if(this.use != SUB_regen)
+		this.use = ItemUse;
 	this.m_min = this.mins;
 	this.m_max = this.maxs;
 	setthink(this, FixItem);
 	this.nextthink = time + 1; // initial delay
-	if(!this.noalign)
+	if(!this.noalign && !(this.spawnflags & ITEM_SUSPENDED))
 		droptofloor(this);
+
+	if(SUB_VerifyTriggerable(this))
+	{
+		this.solid = SOLID_NOT;
+		this.model = string_null;
+		this.use = ItemSpawn;
+	}
 }
 
 /*

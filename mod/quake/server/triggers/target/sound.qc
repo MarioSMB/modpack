@@ -18,25 +18,34 @@ void sound_setup(entity this, float vol)
 		this.distance = ATTN_NONE;
 	
 	this.width = 0;
-	precache_sound(this.noise);
+	if(this.noise && this.noise != "")
+	{
+		// why the HELL copper allows this is beyond me
+		this.noise = strzone(strreplace("//", "/", this.noise));
+		precache_sound(this.noise);
+	}
 	
-	if(this.noise1 == string_null)
+	if(!this.noise1 || this.noise1 == "")
 		return;
+	this.noise1 = strzone(strreplace("//", "/", this.noise1));
 	precache_sound(this.noise1);
 	this.width++;
 
 	if(!this.noise2 || this.noise2 == "")
 		return;
+	this.noise2 = strzone(strreplace("//", "/", this.noise2));
 	precache_sound(this.noise2);
 	this.width++;
 
 	if(!this.noise3 || this.noise3 == "")
 		return;
+	this.noise3 = strzone(strreplace("//", "/", this.noise3));
 	precache_sound(this.noise3);
 	this.width++;
 
 	if(!this.noise4 || this.noise4 == "")
 		return;
+	this.noise4 = strzone(strreplace("//", "/", this.noise4));
 	precache_sound(this.noise4);
 	this.width++;
 }

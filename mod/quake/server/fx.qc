@@ -540,3 +540,103 @@ spawnfunc(particle_tele_fountain)
 		this.nextthink = time + this.wait + this.delay * random();
 	}
 }
+
+.float rand;
+void target_explosion_go(entity this)
+{
+	if(this.dmg)
+		T_RadiusDamage(this, this.enemy, this.dmg, DEATH_HURTTRIGGER.m_id, this);
+	
+	if(this.spawnflags & 1)
+	{
+		_sound(this, CH_TRIGGER_SINGLE, "blob/death1.wav", 1, ATTN_NORM);
+		BecomeExplosion(this);
+	}
+	else if(this.spawnflags & 2)
+		BecomeExplosion(this);
+	else
+		BecomeExplosion(this);
+}
+
+void target_explosion_use(entity this, entity actor, entity trigger)
+{
+	entity bewm;
+	vector offset = '0 0 0';
+	
+	this.enemy = actor;
+
+	playercount_convert(this, count);
+	if(this.count == 1 && this.delay == 0 && this.rand == 0)
+	{
+		bewm = spawn();
+		if(this.size != '0 0 0')
+			offset = vec3(random() * this.size_x, random() * this.size_y, random() * this.size_z) - this.size * 0.5;
+		setorigin(bewm, this.origin + offset);
+		setthink(bewm, target_explosion_go);
+		bewm.enemy = actor;
+		bewm.spawnflags = this.spawnflags;
+		bewm.nextthink = time;
+		bewm.dmg = this.dmg;
+		bewm.message = this.message;
+		return;
+	}
+	
+	float tnext = this.delay + this.rand * random();
+	for(int i = 0; i < this.count; i++)
+	{
+		bewm = spawn();
+		if(this.size != '0 0 0')
+			offset = vec3(random() * this.size_x, random() * this.size_y, random() * this.size_z) - this.size * 0.5;
+		setorigin(bewm, this.origin + offset);
+		setthink(bewm, target_explosion_go);
+		bewm.enemy = actor;
+		bewm.spawnflags = this.spawnflags;
+		bewm.nextthink = time + tnext;
+		bewm.dmg = this.dmg;
+		bewm.message = this.message;
+		tnext += this.wait + random() * this.rand;
+	}
+}
+
+/*QUAKED target_explosion (0 .5 .8) (-8 -8 -8) (8 8 8) TARBABY PUFF
+Causes explosions, same appearance as a rocket/grenade blast. Set 'TARBABY' for a purple spawn-style explosion or 'PUFF' for the weak anti-shambler-style burst instead.
+
+Keys
+"count" number of times to explode after triggering, default 1
+"delay" Time to wait before first explode
+"wait" Static time to wait between explosions
+"rand" Random time to wait before explosions (will sum both)
+"dmg" Do splash damage, default 0
+"deathtype" death message if the player is killed by your horrible trap
+"size" explode somewhere randomly chosen within a box of this size
+*/
+/*FGD
+@Pointclass base(Targetname, Appearflags, Deathtype) color(0 128 224) size(16 16 16) = target_explosion : 
+"Causes one or more explosions when triggered, same appearance as a rocket/grenade blast." 
+[
+	spawnflags(flags) = [
+		1 : "Tarbaby blast " : 0
+		1 : "Puff blast" : 0
+	]
+	count(integer) : "Repeat count" : 1
+	delay(string) : "Delay before first blast" : "0"
+	wait(string) : "Wait between blasts" : "1"
+	rand(string) : "Random extra wait before blasts" : "0"
+	size(string) : "Explode somewhere randomly chosen within a box of this size (x y z)" : "0 0 0"
+	dmg(integer) : "Splash damage" : 0
+]
+*/
+.string deathtype;
+spawnfunc(target_explosion)
+{
+	this.count = zeroconvertdefault(this.count, 1);
+	this.use = target_explosion_use;
+	if(this.spawnflags & 1)
+		precache_sound("blob/death1.wav");
+	if(!this.wait)
+		this.wait = 1;
+	if(this.deathtype && this.deathtype != "")
+		this.message = this.deathtype;
+	else
+		this.message = "joins the smithereens";
+}

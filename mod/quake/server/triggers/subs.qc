@@ -326,8 +326,8 @@ float lerp_copper(float a, float b, float mix)
 void SUB_CalcMoveCurveSeg(entity this)
 {
 	float chron = this.ltime;
-	// self.cnt is number of steps we've passed through
-	// (when self.cnt == nodeCtrl.count we should be at nodeEnd)
+	// this.cnt is number of steps we've passed through
+	// (when this.cnt == nodeCtrl.count we should be at nodeEnd)
 	if(this.cnt == this.count)
 	{
 		this.pos2 = '0 0 0';
@@ -430,7 +430,7 @@ Makes client invisible or removes non-client
 */
 void SUB_VanishOrRemove (entity ent)
 {
-	if (IS_CLIENT(ent))
+	if(IS_CLIENT(ent))
 	{
 		// vanish
 		ent.alpha = -1;
@@ -454,7 +454,7 @@ void SUB_SetFade_Think (entity this)
 	setthink(this, SUB_SetFade_Think);
 	this.nextthink = time;
 	this.alpha -= frametime * this.fade_rate;
-	if (this.alpha < 0.01)
+	if(this.alpha < 0.01)
 		SUB_VanishOrRemove(this);
 	else
 		this.nextthink = time;
@@ -469,7 +469,7 @@ Fade ent out when time >= vanish_time
 */
 void SUB_SetFade(entity ent, float vanish_time, float fading_time)
 {
-	if (fading_time <= 0)
+	if(fading_time <= 0)
 		fading_time = 0.01;
 	ent.fade_rate = 1/fading_time;
 	setthink(ent, SUB_SetFade_Think);
@@ -844,5 +844,84 @@ void SUB_PrintMessage(entity this, entity actor)
 				_sound(it, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
 		});
 	}
+}
+
+/*
+=============
+SUB_VerifyTrigger
+
+somewhat unreliable attempt to ensure items with targetnames that aren't actually
+triggered by anything don't stay unspawned forever and break a stock map
+examples: weapons in antediluvium targeted by spotlights, the silver key in e4m4
+===============
+*/
+bool SUB_VerifyTrigger(entity this, entity tg)
+{
+	// things that could conceivably be targeted at an item but cannot fire targets
+	if(tg.classname == "light" ||
+		//tg.classname == "path_corner" ||	// trains do fire targets
+		tg.classname == "trap_shooter" ||
+		tg.classname == "target_drop" ||
+		tg.classname == "target_fade" ||
+		tg.classname == "trap_spikeshooter")
+		return false;
+		
+	if(tg.killtarget == this.targetname)	// id1 'killtarget must target' protection
+		return false;
+	return true;
+}
+
+/*
+=============
+SUB_VerifyTriggerable
+===============
+*/
+bool SUB_VerifyTriggerable(entity this)
+{
+	if(!this.targetname || this.targetname == "")
+		return false;
+	// some quake maps use SUB_regen as a hack to make items respawn, but
+	// they expect those items to still spawn at map start, so catch those
+	// cases and return false to force the item to spawn
+	if(/*this.use == SUB_regen ||*/ this.classname == "info_notnull")
+		return false;
+
+	entity tg;
+
+	bool validTriggerers = false;
+	tg = NULL;
+	while(1)
+	{
+		tg = find(tg, target, this.targetname);
+		if(!tg)
+			break;
+		validTriggerers |= SUB_VerifyTrigger(this, tg);
+	}
+	tg = NULL;
+	while(1)
+	{
+		tg = find(tg, target2, this.targetname);
+		if(!tg)
+			break;
+		validTriggerers |= SUB_VerifyTrigger(this, tg);
+	}
+	tg = NULL;
+	while(1)
+	{
+		tg = find(tg, target3, this.targetname);
+		if(!tg)
+			break;
+		validTriggerers |= SUB_VerifyTrigger(this, tg);
+	}
+	tg = NULL;
+	while(1)
+	{
+		tg = find(tg, target4, this.targetname);
+		if(!tg)
+			break;
+		validTriggerers |= SUB_VerifyTrigger(this, tg);
+	}
+	
+	return validTriggerers;
 }
 #endif

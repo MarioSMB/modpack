@@ -83,4 +83,8 @@ vector attack_vector(vector attack_dir);
 float SUB_Elevation(entity this, float theta, vector sorg, vector mdest, float zspeed);
 
 void SUB_PrintMessage(entity this, entity actor);
+
+bool SUB_VerifyTrigger(entity this, entity tg);
+
+bool SUB_VerifyTriggerable(entity this);
 #endif
