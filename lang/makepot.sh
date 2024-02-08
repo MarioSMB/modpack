@@ -9,9 +9,26 @@ if [ ! -d "$base" ]; then
     exit 1
 fi
 
-git ls-files mod | sort -u | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
+current_branch=$(git branch | awk '/^\*/ { print $2 }')
+# gather new strings from all branches
+branches=$(git branch --list -a | awk '/^\*/ { next } /remotes\/origin\/HEAD/ { next } /^  remotes\/origin\// { print substr($1, length("remotes/origin/") + 1, length($1)) }')
+for i in $branches; do
+    git checkout $i || { echo "Can't checkout to $i"; rm -f common.pot.new*; exit 1; }
+    git ls-files mod | sort -u | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new-`basename $i` >&2
+done
+git checkout "$current_branch"
+msgcat common.pot.new-* >common.pot.new
 # exclude vanilla strings
 msgcomm xonotic/common.pot common.pot.new | msgcomm -u common.pot.new - >lang/common.pot
-rm -f common.pot.new
+rm -f common.pot.new*
+
+# update existing translation files to include new strings
+for i in $(ls lang); do
+    if [[ "${i%.po}" != "$i" ]] && [[ "$i" != "common.pot" ]]; then
+        msgcat lang/common.pot lang/$i >lang/$i.new && mv lang/$i.new lang/$i
+    fi
+done
+
+echo "Complete."
 
 cd $cwd
