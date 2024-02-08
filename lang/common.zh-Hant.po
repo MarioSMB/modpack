@@ -14,11 +14,11 @@ msgstr ""
 "POT-Creation-Date: 2024-01-18 23:30+0800\n"
 "PO-Revision-Date: 2024-01-18 16:06+0000\n"
 "Last-Translator: NaitLee, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/naitlee-soft/teams/182965/zh_TW/)\n"
+"Language-Team: Chinese Traditional (https://app.transifex.com/naitlee-soft/teams/182965/zh-Hant/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
+"Language: zh-Hant\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: mod/client/main.qc:58
@@ -28,7 +28,7 @@ msgid ""
 "^3https://github.com/MarioSMB/modpack\n"
 msgstr ""
 "\n"
-"^7伺服器在執行 SMB 模組包\n"
+"^7服務器在運行 SMB 模組包\n"
 "^3https://github.com/MarioSMB/modpack\n"
 
 #: mod/common/gamemodes/arena/arena.qc:20
@@ -41,7 +41,7 @@ msgstr "競技場"
 
 #: mod/common/gamemodes/arena/arena.qh:6
 msgid "Emerge victorious in a series of duels to win the match!"
-msgstr "在一場場決鬥中淘汰敵人，勝者為王"
+msgstr "在一場場決鬥中淘汰敵人，勝者爲王"
 
 #: mod/common/gamemodes/conquest/conquest.qc:494
 msgid "SCO^liberated"
@@ -53,7 +53,7 @@ msgstr "佔領"
 
 #: mod/common/gamemodes/conquest/conquest.qh:6
 msgid "Capture all the spawnpoint control points to win"
-msgstr "佔領所有復活控制點以取得勝利"
+msgstr "佔領所有重生控制點以取得勝利"
 
 #: mod/common/gamemodes/conquest/conquest.qh:6
 msgid "Conquest"
@@ -237,7 +237,7 @@ msgstr "VIP"
 
 #: mod/common/minigames/art.qc:1
 msgid "Pixel Art"
-msgstr "畫素畫"
+msgstr "像素畫"
 
 #: mod/common/minigames/art.qc:366
 msgid ""
@@ -250,12 +250,12 @@ msgstr "單詞連連看"
 
 #: mod/common/minigames/boggle.qc:539
 msgid "Press \"Ready\" to begin"
-msgstr "點選“準備完畢”以開始"
+msgstr "點擊“準備完畢”以開始"
 
 #: mod/common/minigames/boggle.qc:542
 msgid ""
 "Drag the mouse to select as many words as you can before time runs out!"
-msgstr "在計時結束之前，用滑鼠拖動字母、連成儘可能多的英語單詞"
+msgstr "在計時結束之前，用鼠標拖動字母、連成儘可能多的英語單詞"
 
 #: mod/common/minigames/boggle.qc:762
 msgid "BOGGLE^Ready"
@@ -279,7 +279,7 @@ msgid ""
 "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
 "你輸了！\n"
-"選擇選單上的“^1下一輪^7”再次開始遊戲！"
+"選擇菜單上的“^1下一輪^7”再次開始遊戲！"
 
 #: mod/common/minigames/nim.qc:397
 msgid ""
@@ -287,7 +287,7 @@ msgid ""
 "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
 "你贏了！\n"
-"選擇選單上的“^1下一輪^7”開始新一輪遊戲！"
+"選擇菜單上的“^1下一輪^7”開始新一輪遊戲！"
 
 #: mod/common/minigames/nim.qc:411
 msgid "Try to take the last piece on the board"
@@ -303,7 +303,7 @@ msgstr "使用方向鍵移動，按住空格射擊"
 
 #: mod/common/minigames/snake.qc:2
 msgid "Snake"
-msgstr "貪吃蛇"
+msgstr "貪喫蛇"
 
 #: mod/common/minigames/snake.qc:753 mod/common/minigames/snake.qc:758
 msgid "You ran out of lives!"
@@ -315,11 +315,11 @@ msgstr "按下任意方向鍵以開始遊戲"
 
 #: mod/common/minigames/snake.qc:765
 msgid "Avoid the snake's body, collect the mice!"
-msgstr "吃掉老鼠，避免咬到蛇身！"
+msgstr "喫掉老鼠，避免咬到蛇身！"
 
 #: mod/common/minigames/snake.qc:767
 msgid "Avoid the screen edges and the snake's body, collect the mice!"
-msgstr "吃掉老鼠，避免咬到蛇身或碰壁！"
+msgstr "喫掉老鼠，避免咬到蛇身或碰壁！"
 
 #: mod/common/minigames/vr.qc:383
 msgid "No more valid moves, you win"
@@ -479,12 +479,12 @@ msgstr ""
 #: mod/common/notifications.qh:54
 #, c-format
 msgid "^BGYou are now carrying %s^BG!"
-msgstr "^BG你馱著 %s^BG！"
+msgstr "^BG你馱着 %s^BG！"
 
 #: mod/common/notifications.qh:55
 #, c-format
 msgid "^BGYou are now riding %s^BG!"
-msgstr "^BG你騎著 %S^BG！"
+msgstr "^BG你騎着 %S^BG！"
 
 #: mod/common/notifications.qh:57
 #, c-format
@@ -494,8 +494,8 @@ msgid ""
 "^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
 msgstr ""
 "^K1恭喜！\n"
-"^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻喪屍）！\n"
-"^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻喪屍）！"
+"^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻殭屍）！\n"
+"^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻殭屍）！"
 
 #: mod/common/notifications.qh:59
 msgid ""
@@ -509,7 +509,7 @@ msgid ""
 "Pickup your Soul Gem to become a VIP"
 msgstr ""
 "^BG等待選出 VIP……\n"
-"撿起靈魂石即可成為 VIP"
+"撿起靈魂石即可成爲 VIP"
 
 #: mod/common/notifications.qh:61
 msgid "^BGWaiting for an enemy VIP"
@@ -555,7 +555,7 @@ msgstr "^8 (%s)"
 #: mod/common/radio/sv_radio.qc:75
 #, c-format
 msgid "^7 - %s in queue"
-msgstr "^7 - 佇列 %s 首"
+msgstr "^7 - 隊列 %s 首"
 
 #: mod/common/radio/sv_radio.qc:77
 msgid " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)"
@@ -619,12 +619,12 @@ msgstr "^BG%s^K1 被自己的破片加農炮撕碎%s%s"
 
 #: mod/common/weapons/lightsabre.qh:73
 msgid "Lightsabre"
-msgstr "鐳射刃"
+msgstr "激光刃"
 
 #: mod/common/weapons/lightsabre.qh:107
 #, c-format
 msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
-msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用鐳射刃切離%s%s"
+msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用激光刃切離%s%s"
 
 #: mod/common/weapons/rpg7.qh:55
 msgid "RPG-7"
