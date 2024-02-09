@@ -98,7 +98,7 @@ void knight_atk9(entity this) { set_animofs(this, anim_knight_attackb, 9, knight
 void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
-void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); W_TriggerParry(this); }
+void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); W_Parry_Trigger(this); }
 void knight_atk4(entity this) { set_animofs(this, anim_knight_attackb, 4, knight_atk5); ai_charge(this, 0); }
 void knight_atk3(entity this) { set_animofs(this, anim_knight_attackb, 3, knight_atk4); ai_charge(this, 4); }
 void knight_atk2(entity this) { set_animofs(this, anim_knight_attackb, 2, knight_atk3); ai_charge(this, 7); }
