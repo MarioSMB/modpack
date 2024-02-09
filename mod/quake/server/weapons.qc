@@ -58,6 +58,10 @@ entity W_ParryProjectile(entity this)
 	makevectors(this.v_angle);
 	FOREACH_ENTITY_RADIUS(this.origin, 200, (it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE) && time > it.sword_swing && it.owner != this,
 	{
+		//if(!IS_MONSTER(it.owner))
+			//continue;
+		if(IS_MONSTER(it))
+			continue; // no corpse bouncers thank you very much
 		float dot = normalize(it.origin - this.origin) * v_forward;
 		//LOG_INFO("dot = ", ftos(dot));
 		if(dot <= 0.3) { continue; }
@@ -88,6 +92,8 @@ bool W_Parry(entity this, entity targ)
 
 	if(!targ && IS_PLAYER(this))
 		targ = W_ParryProjectile(this);
+	else if(targ.health <= 0 || !targ.takedamage || targ.elec)
+		return false;
 
 	if(!targ || targ.sword_swing < time)
 		return false;

@@ -71,6 +71,9 @@ bool Pan_CheckDamage(entity targ, entity inflictor, entity attacker)
 
 void W_FirePan(entity this, .entity weaponentity)
 {
+	if(W_Parry(this, NULL))
+		return;
+	
 	makevectors(this.v_angle);
 	vector source = W_Shotorg(this, weaponentity);
 	int oldsolid = this.dphitcontentsmask;
@@ -80,10 +83,10 @@ void W_FirePan(entity this, .entity weaponentity)
 	//if(trace_fraction == 1.0)
 		//return;
 
-	if(W_Parry(this, trace_ent))
+	if(trace_fraction == 1.0)
 		return;
 
-	if(trace_fraction == 1.0)
+	if(W_Parry(this, trace_ent))
 		return;
 	
 	vector org = trace_endpos - v_forward * 4;
