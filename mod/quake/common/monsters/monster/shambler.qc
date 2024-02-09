@@ -347,7 +347,7 @@ void sham_death1(entity this) { set_animofs(this, anim_sham_death, 1, sham_death
 void sham_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 // check for gib
-	if(this.health < -60)
+	if(this.health < -60 || this.dmg_take > (this.max_health * 0.6))
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_shams.mdl", this.health);

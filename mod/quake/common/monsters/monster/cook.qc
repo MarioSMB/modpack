@@ -34,6 +34,9 @@ void cook_ai_melee(entity this, int deathtype)
 	if(vdist(this.enemy.origin - this.origin, >, 120))
 		return;
 
+	if(W_Parry(this, this.enemy))
+		return;
+
 	float ldmg = (random() + random() + random()) * 3;
 	float num = random();
 	ldmg += 3;
@@ -501,7 +504,10 @@ void cook_pong(entity this)
 	this.walkframe += 1;
 	ai_charge(this, 10);
 	if(this.walkframe == 1 || this.walkframe == 4)
+	{
+		W_Parry_Trigger(this);
 		_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_IDLE);
+	}
 	if(this.walkframe == 3 || this.walkframe == 6)
 		cook_ai_melee(this, DEATH_MONSTER_COOK.m_id);
 }
@@ -520,6 +526,7 @@ void cook_ping4(entity this)
 
 void cook_ping3(entity this)
 {
+	W_Parry_Trigger(this);
 	set_anim(this, 52, cook_ping4);
 	ai_charge(this, 8);
 }

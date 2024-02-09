@@ -458,14 +458,19 @@ void Legond_Pain(entity this, entity attacker, float damage, int deathtype)
 	legond_pain1(this);
 }
 
-void legond_die24(entity this) { set_anim(this, 109, legond_die24); CorpseThink(this); }
-void legond_die23(entity this)
+void Legond_NextLevel(entity this)
 {
-	set_anim(this, 109, legond_die24);
 	if(horde_ent || this.charmed)
 		return;
 	if((coop != 2 || world.model == "maps/aopend.bsp") && this.target && this.target != "")
 		NextLevel();
+}
+
+void legond_die24(entity this) { set_anim(this, 109, legond_die24); CorpseThink(this); }
+void legond_die23(entity this)
+{
+	set_anim(this, 109, legond_die24);
+	Legond_NextLevel(this);
 }
 void legond_die22(entity this) { set_anim(this, 109, legond_die23); }
 void legond_die21(entity this) { set_anim(this, 109, legond_die22); }
@@ -492,11 +497,28 @@ void legond_die5(entity this)
 void legond_die4(entity this) { set_anim(this, 97, legond_die5); }
 void legond_die3(entity this) { set_anim(this, 96, legond_die4); }
 void legond_die2(entity this) { set_anim(this, 95, legond_die3); }
-void legond_die1(entity this, entity inflictor, entity attacker, int deathtype)
+void legond_die1(entity this)
 {
 	set_anim(this, 94, legond_die2);
 	_sound(this, CHAN_AUTO, "monsters/legond/lpain2.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
+}
+
+void legond_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.health < -150)
+	{
+		Legond_NextLevel(this);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		ThrowHead(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		return;
+	}
+	legond_die1(this);
 }
 
 spawnfunc(monster_legond)
@@ -527,7 +549,7 @@ METHOD(Legond, mr_setup, bool(Legond this, entity actor))
 	actor.th_run = legond_run1;
 	actor.th_melee = Legond_Melee;
 	actor.th_pain = Legond_Pain;
-	actor.th_die = legond_die1;
+	actor.th_die = legond_die;
 	actor.th_missile = legond_shoot1;
 
 	actor.checkattack = LegondCheckAttack;

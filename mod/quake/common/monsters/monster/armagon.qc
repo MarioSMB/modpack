@@ -509,7 +509,17 @@ void armagon_die4(entity this)
 }
 void armagon_die3(entity this) { set_animofs(this, anim_armagon_ldie, 1, armagon_die4); armagon_think(this); this.nextthink = time + 0.2; }
 void armagon_die2(entity this) { set_animofs(this, anim_armagon_tranl, 2, armagon_die3); armagon_think(this); this.nextthink = time + 0.2; }
-void armagon_die1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
+void armagon_die1(entity this) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
+
+void armagon_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.health < -150)
+	{
+		armagon_die14(this);
+		return;
+	}
+	armagon_die1(this);
+}
 
 void armagon_body_explode2(entity this)
 {
@@ -770,7 +780,7 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 	actor.th_stand = armagon_stand;
 	actor.th_walk = armagon_walk;
 	actor.th_run = armagon_run;
-	actor.th_die = armagon_die1;
+	actor.th_die = armagon_die;
 	actor.th_missile = armagon_missile_attack;
 	actor.th_melee = armagon_stop1;
 	actor.th_pain = armagon_pain;

@@ -29,6 +29,101 @@ PRECACHE(Weapons)
 	precache_sound("weapons/grenade.wav");	// grenade launcher
 	precache_sound("weapons/bounce.wav");		// grenade bounce
 	precache_sound("weapons/shotgn2.wav");	// super shotgun
+
+	precache_sound("enviro/physics/axemet1.wav");
+	precache_sound("enviro/physics/axemet2.wav");
+	precache_sound("enviro/physics/axemet3.wav");
+}
+
+void W_Parry_ResetWeapon(entity this)
+{
+	if(!IS_PLAYER(this))
+		return; // just incase gremmy tries something funny
+
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity))
+		{
+			wep_set_anim(this.(weaponentity), 1, w_ready);
+			ATTACK_FINISHED(this, weaponentity) = time + 0.5;
+		}
+	}
+}
+
+bool autocvar_sv_quake_reflectshots = true;
+entity W_ParryProjectile(entity this)
+{
+	entity targ = NULL;
+	makevectors(this.v_angle);
+	FOREACH_ENTITY_RADIUS(this.origin, 200, (it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE) && time > it.sword_swing && it.owner != this,
+	{
+		float dot = normalize(it.origin - this.origin) * v_forward;
+		//LOG_INFO("dot = ", ftos(dot));
+		if(dot <= 0.3) { continue; }
+
+		targ = it;
+		break;
+	});
+	if(targ)
+	{
+		targ.owner = this;
+		targ.realowner = this;
+		targ.sword_swing = time; // hack to make parry code trigger on target
+		if(autocvar_sv_quake_reflectshots)
+			targ.velocity *= -1;
+		else
+			targ.velocity = v_forward * vlen(targ.velocity);
+		targ.angles = vectoangles(targ.velocity);
+		targ.dmg *= 2;
+	}
+	return targ;
+}
+
+bool W_Parry(entity this, entity targ)
+{
+	// only targets who are both swinging can parry
+	if(this.sword_swing < time)
+		return false;
+
+	if(!targ && IS_PLAYER(this))
+		targ = W_ParryProjectile(this);
+
+	if(!targ || targ.sword_swing < time)
+		return false;
+
+	float r = random();
+	if(r < 0.3)
+		_sound(this, CH_SHOTS, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(this, CH_SHOTS, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_SHOTS, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
+
+	// force weapons into a slight cooldown and play a short parry animation
+	W_Parry_ResetWeapon(this);
+	W_Parry_ResetWeapon(targ);
+
+	// reset parry status for everyone so there can't be a multihit
+	this.sword_swing = 0;
+	targ.sword_swing = 0;
+
+	// reset delay make sure the animation almost always plays
+	this.pain_finished = time;
+	targ.pain_finished = time;
+
+	// play regular pain animations as a "parry" effect
+	if(this.th_pain)
+		this.th_pain(this, targ, 0, DEATH_GENERIC.m_id);
+	if(targ.th_pain)
+		targ.th_pain(targ, this, 0, DEATH_GENERIC.m_id);
+
+	return true;
+}
+
+void W_Parry_Trigger(entity this)
+{
+	this.sword_swing = time + 0.333;
 }
 
 /*

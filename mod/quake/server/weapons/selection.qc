@@ -115,6 +115,7 @@ void W_SwitchWeapon_Force(entity this, Weapon wep, .entity weaponentity)
 	entity w_ent = this.(weaponentity);
 	w_ent.cnt = w_ent.m_weapon.m_id;
 	w_ent.m_weapon = wep;
+	this.sword_swing = 0; // TODO: allow weapons to tell when they've been swapped away from
 	W_SetCurrentAmmo(this);
 	w_ready(w_ent);
 }

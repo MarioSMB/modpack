@@ -364,6 +364,11 @@ void blud_die1(entity this)
 }
 void blud_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(this.health < -150)
+	{
+		gib_blud(this);
+		return;
+	}
 	blud_die1(this);
 }
 

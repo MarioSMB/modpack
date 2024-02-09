@@ -854,6 +854,12 @@ void eidolon_die(entity this, entity inflictor, entity attacker, int deathtype)
 	eidolon_finish_attachment(this);	// Remove any attachments
 	eidolon_remove_attachment(this);
 
+	if(this.health < -150)
+	{
+		eidolon_explode(this);
+		return;
+	}
+
 	_sound(this, CH_VOICE, "eidolon/death.wav", 1, ATTN_NORM);
 	eidolon_die1(this);
 }

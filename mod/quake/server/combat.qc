@@ -159,7 +159,7 @@ Killed
 */
 void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 {
-	if(targ.health < -99)
+	if(IS_PLAYER(targ) && targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
 
 	if(IS_PLAYER(targ))
@@ -259,9 +259,6 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	}
 
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
-		targ.health = -99;
-
-	if(IS_MONSTER(targ) && targ.max_health > 100 && targ.dmg_take > (targ.max_health * 0.6))
 		targ.health = -99;
 
 	targ.gravity = 1.0;

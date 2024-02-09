@@ -497,7 +497,18 @@ void gor_death5(entity this) { set_animofs(this, anim_goroth_death, 5, gor_death
 void gor_death4(entity this) { set_animofs(this, anim_goroth_death, 4, gor_death5); }
 void gor_death3(entity this) { set_animofs(this, anim_goroth_death, 3, gor_death4); }
 void gor_death2(entity this) { set_animofs(this, anim_goroth_death, 2, gor_death3); }
-void gor_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_goroth_death, 1, gor_death2); _sound(this, CH_VOICE, "goroth/gordie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+void gor_death1(entity this) { set_animofs(this, anim_goroth_death, 1, gor_death2); _sound(this, CH_VOICE, "goroth/gordie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+
+void gor_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.health < -150)
+	{
+		gor_gib(this);
+		return;
+	}
+
+	gor_death1(this);
+}
 
 void gor_wake(entity this, entity actor, entity trigger)
 {
@@ -539,7 +550,7 @@ METHOD(Goroth, mr_setup, bool(Goroth this, entity actor))
 	actor.th_stand = gor_stand1;
 	actor.th_walk = gor_walk1;
 	actor.th_run = gor_run1;
-	actor.th_die = gor_death1;
+	actor.th_die = gor_die;
 	actor.th_melee = GorothAttack;
 	actor.th_missile = GorothAttack;
 	actor.th_pain = gor_pain;

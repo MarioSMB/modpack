@@ -147,6 +147,11 @@ void thomas1_die1(entity this)
 
 void thomas_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(this.health < -150)
+	{
+		thomas_explode(this);
+		return;
+	}
 // regular death
 	thomas1_die1(this);
 }

@@ -623,9 +623,9 @@ void player_axpain1(entity this, entity attacker) { set_animofs(this, anim_playe
 
 void player_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	.entity weaponentity = weaponentities[0]; // TODO: what even is the purpose of this?
+	.entity weaponentity = weaponentities[0]; // small hack to prevent players from getting knocked out of axe swinging animation
 	if(this.(weaponentity).m_frame)
-		return;
+		return; // TODO: probably not needed anymore
 
 	if(this.pain_finished > time)
 		return;

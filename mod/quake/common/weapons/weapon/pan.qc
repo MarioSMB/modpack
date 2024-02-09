@@ -25,7 +25,7 @@ void player_pan1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_
 
 void wep_pan_pan4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_pan_pan3(entity this) { wep_set_anim(this, 3, wep_pan_pan4); W_FirePan(this.owner, this.weaponentity_fld); }
-void wep_pan_pan2(entity this) { wep_set_anim(this, 2, wep_pan_pan3); }
+void wep_pan_pan2(entity this) { wep_set_anim(this, 2, wep_pan_pan3); W_Parry_Trigger(this.owner); }
 void wep_pan_pan1(entity this) { wep_set_anim(this, 1, wep_pan_pan2); }
 
 void edie_SpikeTouch(entity this, entity toucher); // TODO
@@ -77,6 +77,12 @@ void W_FirePan(entity this, .entity weaponentity)
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	traceline(source, source + v_forward*120, false, this);
 	this.dphitcontentsmask = oldsolid;
+	//if(trace_fraction == 1.0)
+		//return;
+
+	if(W_Parry(this, trace_ent))
+		return;
+
 	if(trace_fraction == 1.0)
 		return;
 	

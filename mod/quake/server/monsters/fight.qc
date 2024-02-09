@@ -169,7 +169,7 @@ ai_melee
 
 =============
 */
-void ai_melee(entity this, int deathtype, int melee_range)
+void ai_melee_sword(entity this, int deathtype, int melee_range, bool check_parry)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -177,11 +177,19 @@ void ai_melee(entity this, int deathtype, int melee_range)
 	if(!ai_checkmelee(this, melee_range, false))
 		return; // Too far away
 
+	if(check_parry && W_Parry(this, this.enemy))
+		return;
+
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }
 
-void ai_melee_side(entity this, int deathtype, int melee_range)
+void ai_melee(entity this, int deathtype, int melee_range)
+{
+	ai_melee_sword(this, deathtype, melee_range, false);
+}
+
+void ai_melee_sidesword(entity this, int deathtype, int melee_range, bool check_parry)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -194,4 +202,9 @@ void ai_melee_side(entity this, int deathtype, int melee_range)
 		return;
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
+}
+
+void ai_melee_side(entity this, int deathtype, int melee_range)
+{
+	ai_melee_sidesword(this, deathtype, melee_range, false);
 }

@@ -782,7 +782,17 @@ void vol_death5(entity this) { set_animofs(this, anim_volkerh_death, 5, vol_deat
 void vol_death4(entity this) { set_animofs(this, anim_volkerh_death, 4, vol_death5); }
 void vol_death3(entity this) { set_animofs(this, anim_volkerh_death, 3, vol_death4); }
 void vol_death2(entity this) { set_animofs(this, anim_volkerh_death, 2, vol_death3); }
-void vol_death1(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_volkerh_death, 1, vol_death2); _sound(this, CH_VOICE, "volkerh/voldie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+void vol_death1(entity this) { set_animofs(this, anim_volkerh_death, 1, vol_death2); _sound(this, CH_VOICE, "volkerh/voldie.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+
+void vol_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.health < -150)
+	{
+		vol_gib(this);
+		return;
+	}
+	vol_death1(this);
+}
 
 void vol_wake(entity this, entity actor, entity trigger)
 {
@@ -825,7 +835,7 @@ METHOD(Volkerh, mr_setup, bool(Volkerh this, entity actor))
 	actor.th_stand = vol_stand1;
 	actor.th_walk = vol_walk1;
 	actor.th_run = vol_run1;
-	actor.th_die = vol_death1;
+	actor.th_die = vol_die;
 	//actor.th_melee = VolkerhAttack;
 	actor.th_missile = VolkerhAttack;
 	actor.th_pain = vol_pain;

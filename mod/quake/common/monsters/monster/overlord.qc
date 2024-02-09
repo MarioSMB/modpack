@@ -438,8 +438,18 @@ void overlord_die06(entity this) { set_animofs(this, anim_swrath_s_wtdt, 6, over
 void overlord_die05(entity this) { set_animofs(this, anim_swrath_s_wtdt, 5, overlord_die06); this.nextthink = time + 0.05; }
 void overlord_die04(entity this) { set_animofs(this, anim_swrath_s_wtdt, 4, overlord_die05); this.nextthink = time + 0.05; }
 void overlord_die03(entity this) { set_animofs(this, anim_swrath_s_wtdt, 3, overlord_die04); this.nextthink = time + 0.05; }
-void overlord_die02(entity this, entity inflictor, entity attacker, int deathtype) { set_animofs(this, anim_swrath_s_wtdt, 2, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
+void overlord_die02(entity this) { set_animofs(this, anim_swrath_s_wtdt, 2, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
 //oid overlord_die01(entity this) { set_animofs(this, anim_swrath_s_wtdt, 1, overlord_die02); this.nextthink = time + 0.05; }
+
+void overlord_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(this.health < -150)
+	{
+		overlord_die19(this);
+		return;
+	}
+	overlord_die02(this);
+}
 
 /*QUAKED info_overlord_destination (.5 .5 .5) (-8 -8 -8) (8 8 32) 
 This is the destination marker for the overlord.
@@ -502,7 +512,7 @@ METHOD(Overlord, mr_setup, bool(Overlord this, entity actor))
 	actor.th_missile = overlord_missile;
 	actor.th_melee = overlord_melee;
 	actor.th_pain = overlord_pain;
-	actor.th_die = overlord_die02;
+	actor.th_die = overlord_die;
 
     return true;
 }

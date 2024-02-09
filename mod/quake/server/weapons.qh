@@ -8,6 +8,8 @@ int autocvar_sv_cheats;
 .bool elec;
 .bool lightningmodel;
 
+.float sword_swing;
+
 .bool axhitme;
 
 .float axe_hit_chain; // number of consecutive axe hits
@@ -26,6 +28,8 @@ int autocvar_sv_cheats;
 
 .float pulserifle_finished;
 .float fireball_finished;
+
+bool W_Parry(entity this, entity targ);
 
 void spawn_touchspark(entity this, float damage);
 

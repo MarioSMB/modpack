@@ -224,6 +224,45 @@ void boss_shockc3(entity this) { set_animofs(this, anim_boss_shockc, 3, boss_sho
 void boss_shockc2(entity this) { set_animofs(this, anim_boss_shockc, 2, boss_shockc3); }
 void boss_shockc1(entity this) { set_animofs(this, anim_boss_shockc, 1, boss_shockc2); }
 
+void GibBoss(entity this)
+{
+	_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+
+	vector boss = this.origin;
+
+	float dx = 0, dy = 0, dz = 0;
+	dz = 16;
+	while (dz <= 144)
+	{
+		dx = -64;
+		while (dx <= 64)
+		{
+			dy = -64;
+			while (dy <= 64)
+			{
+				this.origin_x = boss_x + dx;
+				this.origin_y = boss_y + dy;
+				this.origin_z = boss_z + dz;
+
+				float r = random();
+				if(r < 0.3)
+					ThrowGib(this, "progs/gib1.mdl", -300);
+				else if(r < 0.6)
+					ThrowGib(this, "progs/gib2.mdl", -300);
+				else
+					ThrowGib(this, "progs/gib3.mdl", -300);
+				dy = dy + 32;
+			}
+			dx = dx + 32;
+		}
+		dz = dz + 96;
+	}
+
+	te_lavasplash(boss);
+	SUB_UseTargets(this, this.enemy, NULL);
+	delete(this);
+}
+
 void boss_death10(entity this)
 {
 	// being removed, don't need new frame
@@ -253,6 +292,11 @@ void boss_death1(entity this)
 
 void boss_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(this.health < -150)
+	{
+		GibBoss(this);
+		return;
+	}
 	boss_death1(this);
 }
 

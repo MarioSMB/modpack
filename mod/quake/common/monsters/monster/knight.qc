@@ -75,12 +75,12 @@ void knight_run1(entity this)
 
 void knight_runatk11(entity this) { set_animofs(this, anim_knight_runattack, 11, knight_run1); ai_charge(this, 10); }
 void knight_runatk10(entity this) { set_animofs(this, anim_knight_runattack, 10, knight_runatk11); ai_charge_side(this); }
-void knight_runatk9(entity this) { set_animofs(this, anim_knight_runattack, 9, knight_runatk10); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_runatk8(entity this) { set_animofs(this, anim_knight_runattack, 8, knight_runatk9); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_runatk7(entity this) { set_animofs(this, anim_knight_runattack, 7, knight_runatk8); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_runatk5(entity this) { set_animofs(this, anim_knight_runattack, 5, knight_runatk6); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_runatk4(entity this) { set_animofs(this, anim_knight_runattack, 4, knight_runatk5); ai_charge_side(this); }
+void knight_runatk9(entity this) { set_animofs(this, anim_knight_runattack, 9, knight_runatk10); ai_melee_sidesword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk8(entity this) { set_animofs(this, anim_knight_runattack, 8, knight_runatk9); ai_melee_sidesword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk7(entity this) { set_animofs(this, anim_knight_runattack, 7, knight_runatk8); ai_melee_sidesword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_sidesword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk5(entity this) { set_animofs(this, anim_knight_runattack, 5, knight_runatk6); ai_melee_sidesword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk4(entity this) { set_animofs(this, anim_knight_runattack, 4, knight_runatk5); ai_charge_side(this); W_Parry_Trigger(this); }
 void knight_runatk3(entity this) { set_animofs(this, anim_knight_runattack, 3, knight_runatk4); ai_charge_side(this); }
 void knight_runatk2(entity this) { set_animofs(this, anim_knight_runattack, 2, knight_runatk3); ai_charge_side(this); }
 void knight_runatk1(entity this)
@@ -95,10 +95,10 @@ void knight_runatk1(entity this)
 
 void knight_atk10(entity this) { set_animofs(this, anim_knight_attackb, 10, knight_run1); ai_charge(this, 5); }
 void knight_atk9(entity this) { set_animofs(this, anim_knight_attackb, 9, knight_atk10); ai_charge(this, 1); }
-void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60); }
-void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); }
+void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee_sword(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); W_TriggerParry(this); }
 void knight_atk4(entity this) { set_animofs(this, anim_knight_attackb, 4, knight_atk5); ai_charge(this, 0); }
 void knight_atk3(entity this) { set_animofs(this, anim_knight_attackb, 3, knight_atk4); ai_charge(this, 4); }
 void knight_atk2(entity this) { set_animofs(this, anim_knight_attackb, 2, knight_atk3); ai_charge(this, 7); }
