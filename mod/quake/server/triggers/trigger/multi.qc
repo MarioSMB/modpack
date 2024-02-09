@@ -112,7 +112,7 @@ bool multi_trigger_coop(entity this)
 	{
 		this.count -= 1;
 		if(this.count == 0)
-			remove(this);
+			delete(this);
 	}
 	SUB_UseTargets(this, this.enemy, NULL);
 	

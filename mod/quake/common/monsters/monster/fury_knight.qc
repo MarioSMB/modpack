@@ -956,15 +956,15 @@ void dfury_grunt_sound(entity this, int soundtype)
 		if(soundtype == DFURY_SOUND_OPTIONAL && random() < 0.8)
 			return;
 		float r = random();
-		self.weaponswitch = 0.6 + random()*0.4;
+		this.weaponswitch = 0.6 + random()*0.4;
 		if(r < 0.25)
-			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt1.wav", self.weaponswitch, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt1.wav", this.weaponswitch, ATTN_NORM);
 		else if(r < 0.5)
-			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt2.wav", self.weaponswitch, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt2.wav", this.weaponswitch, ATTN_NORM);
 		else if(r < 0.75)
-			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt3.wav", self.weaponswitch, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt3.wav", this.weaponswitch, ATTN_NORM);
 		else
-			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt4.wav", self.weaponswitch, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "dknight/dfury_grunt4.wav", this.weaponswitch, ATTN_NORM);
 	}
 }
 

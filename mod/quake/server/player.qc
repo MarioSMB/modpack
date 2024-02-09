@@ -915,7 +915,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	{
 		// only monsters gibs should fade away 
 		setthink(this, MonsterFade);
-		self.nextthink = time + 1;
+		this.nextthink = time + 1;
 	}
 	else
 	{
