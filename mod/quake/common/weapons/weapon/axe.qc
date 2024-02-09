@@ -27,22 +27,22 @@ void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, playe
 void wep_axe_axe4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_axe_axe3(entity this) { wep_set_anim(this, 3, wep_axe_axe4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axe2(entity this) { wep_set_anim(this, 2, wep_axe_axe3); }
-void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); W_Parry_Trigger(this.owner); }
+void wep_axe_axe1(entity this) { wep_set_anim(this, 1, wep_axe_axe2); W_Parry_Trigger(this.owner, 0); }
 
 void wep_axe_axeb4(entity this) { wep_set_anim(this, 8, w_ready); }
 void wep_axe_axeb3(entity this) { wep_set_anim(this, 7, wep_axe_axeb4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axeb2(entity this) { wep_set_anim(this, 6, wep_axe_axeb3); }
-void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); W_Parry_Trigger(this.owner); }
+void wep_axe_axeb1(entity this) { wep_set_anim(this, 5, wep_axe_axeb2); W_Parry_Trigger(this.owner, 0); }
 
 void wep_axe_axec4(entity this) { wep_set_anim(this, 4, w_ready); }
 void wep_axe_axec3(entity this) { wep_set_anim(this, 3, wep_axe_axec4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axec2(entity this) { wep_set_anim(this, 2, wep_axe_axec3); }
-void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); W_Parry_Trigger(this.owner); }
+void wep_axe_axec1(entity this) { wep_set_anim(this, 1, wep_axe_axec2); W_Parry_Trigger(this.owner, 0); }
 
 void wep_axe_axed4(entity this) { wep_set_anim(this, 8, w_ready); }
 void wep_axe_axed3(entity this) { wep_set_anim(this, 7, wep_axe_axed4); W_FireAxe(this.owner, this.weaponentity_fld); }
 void wep_axe_axed2(entity this) { wep_set_anim(this, 6, wep_axe_axed3); }
-void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); W_Parry_Trigger(this.owner); }
+void wep_axe_axed1(entity this) { wep_set_anim(this, 5, wep_axe_axed2); W_Parry_Trigger(this.owner, 0); }
 
 void W_FireAxe(entity this, .entity weaponentity)
 {

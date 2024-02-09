@@ -14,7 +14,7 @@ SOUND(MON_FURY_KNIGHT_SIGHT, "dknight/dfury_sight");
 #endif
 
 CLASS(FuryKnight, Monster)
-    ATTRIB(FuryKnight, spawnflags, int, 0);
+    ATTRIB(FuryKnight, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(FuryKnight, m_mins, vector, '-16 -16 -24');
     ATTRIB(FuryKnight, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

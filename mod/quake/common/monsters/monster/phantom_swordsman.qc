@@ -27,10 +27,10 @@ void sword_run1(entity this)
 void sword_atk10(entity this) { set_animofs(this, anim_sword_attackb1, 10, sword_run1); ai_charge(this, 14); }
 void sword_atk9(entity this) { set_animofs(this, anim_sword_attackb1, 9, sword_atk10); ai_charge(this, 14); }
 void sword_atk8(entity this) { set_animofs(this, anim_sword_attackb1, 8, sword_atk9); ai_charge(this, 14); }
-void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
-void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
-void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60); }
-void sword_atk4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_atk5); ai_charge(this, 14); }
+void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60, true); }
+void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60, true); }
+void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this, DEATH_MONSTER_SWORD.m_id, 60, true); }
+void sword_atk4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_atk5); ai_charge(this, 14); W_Parry_Trigger(this, 0); }
 void sword_atk3(entity this) { set_animofs(this, anim_sword_attackb1, 3, sword_atk4); ai_charge(this, 14); }
 void sword_atk2(entity this) { set_animofs(this, anim_sword_attackb1, 2, sword_atk3); ai_charge(this, 14); }
 void sword_atk1(entity this)
@@ -39,6 +39,11 @@ void sword_atk1(entity this)
 	_sound(this, 0, "knight/sword1.wav", 1, 1);
 	ai_charge(this, 14);
 }
+
+void sword_parry4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_run1); }
+void sword_parry3(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_parry4); }
+void sword_parry2(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_parry3); }
+void sword_parry1(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_parry2); }
 
 //===========================================================================
 
@@ -91,13 +96,21 @@ void sword_pause(entity this)
 	this.delay = 0;
 }
 
+void sword_pain_parry(entity this, entity attacker, float damage, int deathtype)
+{
+	if(deathtype != DEATH_GENERIC.m_id)
+		return;
+
+	sword_parry1(this);
+}
+
 void sword_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	this.th_run = sword_run1; 
 	setthink(this, sword_run1);
 	this.nextthink = time + 0.1;
 	this.delay = 0;
-	this.th_pain = func_null;
+	this.th_pain = sword_pain_parry;
 }
 
 /*QUAKED monster_sword (1 0 0) (-16 -16 -24) (16 16 40) Ambush

@@ -14,10 +14,6 @@ void ai_charge_side(entity this);
 
 bool ai_checkmelee(entity this, float attackdist, float attackzaxis);
 
-void ai_melee(entity this, int deathtype, int melee_range);
+void ai_melee(entity this, int deathtype, int melee_range, bool check_parry);
 
-void ai_melee_side(entity this, int deathtype, int melee_range);
-
-void ai_melee_sword(entity this, int deathtype, int melee_range, bool check_parry);
-
-void ai_melee_sidesword(entity this, int deathtype, int melee_range, bool check_parry);
+void ai_melee_side(entity this, int deathtype, int melee_range, bool check_parry);

@@ -505,7 +505,7 @@ void cook_pong(entity this)
 	ai_charge(this, 10);
 	if(this.walkframe == 1 || this.walkframe == 4)
 	{
-		W_Parry_Trigger(this);
+		W_Parry_Trigger(this, 0);
 		_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_IDLE);
 	}
 	if(this.walkframe == 3 || this.walkframe == 6)
@@ -526,7 +526,7 @@ void cook_ping4(entity this)
 
 void cook_ping3(entity this)
 {
-	W_Parry_Trigger(this);
+	W_Parry_Trigger(this, 0);
 	set_anim(this, 52, cook_ping4);
 	ai_charge(this, 8);
 }

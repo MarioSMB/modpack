@@ -52,11 +52,12 @@ void W_Parry_ResetWeapon(entity this)
 }
 
 bool autocvar_sv_quake_reflectshots = true;
+bool autocvar_sv_quake_parry_playershots = false;
 entity W_ParryProjectile(entity this)
 {
 	entity targ = NULL;
 	makevectors(this.v_angle);
-	FOREACH_ENTITY_RADIUS(this.origin, 200, (it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE) && time > it.sword_swing && it.owner != this,
+	FOREACH_ENTITY_RADIUS(this.origin, 120, (it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE || it.move_movetype == MOVETYPE_TOSS) && time > it.parry_time && time > it.parry_cooldown && it.owner != this,
 	{
 		//if(!IS_MONSTER(it.owner))
 			//continue;
@@ -64,8 +65,10 @@ entity W_ParryProjectile(entity this)
 			continue; // probably not a projectile
 		if(it.velocity == '0 0 0')
 			continue;
-		if(IS_MONSTER(it))
+		if(IS_MONSTER(it) || IS_PLAYER(it))
 			continue; // no corpse bouncers thank you very much
+		if(!autocvar_sv_quake_parry_playershots && IS_PLAYER(it.owner))
+			continue;
 		float dot = normalize(it.origin - this.origin) * v_forward;
 		//LOG_INFO("dot = ", ftos(dot));
 		if(dot <= 0.3) { continue; }
@@ -75,31 +78,38 @@ entity W_ParryProjectile(entity this)
 	});
 	if(targ)
 	{
+		entity oldown = targ.owner;
 		targ.owner = this;
 		targ.realowner = this;
-		targ.sword_swing = time; // hack to make parry code trigger on target
+		targ.enemy = oldown;
+		targ.parry_time = time; // hack to make parry code trigger on target
 		if(autocvar_sv_quake_reflectshots)
 			targ.velocity *= -1;
 		else
 			targ.velocity = v_forward * vlen(targ.velocity);
+		if(StatusEffects_active(STATUSEFFECT_Quad, this))
+			targ.velocity *= 2;
 		targ.angles = vectoangles(targ.velocity);
-		targ.dmg *= 2;
+		if(IS_MONSTER(oldown))
+			targ.dmg *= 3;
 	}
 	return targ;
 }
 
 bool W_Parry(entity this, entity targ)
 {
-	// only targets who are both swinging can parry
-	if(this.sword_swing < time)
+	if(this.parry_time < time)
+		return false;
+	if(time < this.parry_cooldown || time < targ.parry_cooldown)
 		return false;
 
+	// if no target is provided, attempt to parry a nearby projectile instead
 	if(!targ && IS_PLAYER(this))
 		targ = W_ParryProjectile(this);
 	else if(targ.health <= 0 || !targ.takedamage || targ.elec)
 		return false;
 
-	if(!targ || targ.sword_swing < time)
+	if(!targ || targ.parry_time < time)
 		return false;
 
 	float r = random();
@@ -115,12 +125,22 @@ bool W_Parry(entity this, entity targ)
 	W_Parry_ResetWeapon(targ);
 
 	// reset parry status for everyone so there can't be a multihit
-	this.sword_swing = 0;
-	targ.sword_swing = 0;
+	this.parry_time = 0;
+	targ.parry_time = 0;
+
+	// add a cooldown so parries don't happen again too frequently
+	float parrycooldown = 0.666;
+	this.parry_cooldown = time + parrycooldown;
+	targ.parry_cooldown = time + parrycooldown;
 
 	// reset delay make sure the animation almost always plays
 	this.pain_finished = time;
 	targ.pain_finished = time;
+
+	// put monsters on a cooldown as well
+	float parry_attackdelay = 1.333;
+	this.attack_finished = max(this.attack_finished, time + parry_attackdelay);
+	targ.attack_finished = max(targ.attack_finished, time + parry_attackdelay);
 
 	// play regular pain animations as a "parry" effect
 	if(this.th_pain)
@@ -131,9 +151,11 @@ bool W_Parry(entity this, entity targ)
 	return true;
 }
 
-void W_Parry_Trigger(entity this)
+void W_Parry_Trigger(entity this, float parrytime)
 {
-	this.sword_swing = time + 0.333;
+	if(!parrytime)
+		parrytime = PARRY_TIME;
+	this.parry_time = time + parrytime;
 }
 
 /*

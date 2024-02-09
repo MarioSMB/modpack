@@ -214,33 +214,33 @@ void dfury_idle_sound(entity this)
 // Melee Attack 1 - Slice (bring swords together and pull apart)
 void dfury_slice11(entity this) { set_animofs(this, anim_dfury_slice, 14, dfury_run1); ai_charge(this, 7); }
 void dfury_slice10(entity this) { set_animofs(this, anim_dfury_slice, 13, dfury_slice11); ai_charge(this, 0); }
-void dfury_slice9(entity this) { set_animofs(this, anim_dfury_slice, 11, dfury_slice10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70); }
+void dfury_slice9(entity this) { set_animofs(this, anim_dfury_slice, 11, dfury_slice10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true); }
 void dfury_slice8(entity this)
 {
 	set_animofs(this, anim_dfury_slice, 9, dfury_slice9);
 	ai_charge(this, 6);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_slice7(entity this)
 {
 	set_animofs(this, anim_dfury_slice, 8, dfury_slice8);
 	ai_charge(this, 12);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_slice6(entity this)
 {
 	set_animofs(this, anim_dfury_slice, 7, dfury_slice7);
 	ai_charge(this, 19);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_slice5(entity this)
 {
 	set_animofs(this, anim_dfury_slice, 6, dfury_slice6);
 	ai_charge(this, 11);
 	dfury_sword_sound(this);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
-void dfury_slice4(entity this) { set_animofs(this, anim_dfury_slice, 5, dfury_slice5); ai_charge(this, 4); }
+void dfury_slice4(entity this) { set_animofs(this, anim_dfury_slice, 5, dfury_slice5); ai_charge(this, 4); W_Parry_Trigger(this, 0); }
 void dfury_slice3(entity this) { set_animofs(this, anim_dfury_slice, 4, dfury_slice4); ai_charge(this, 17); }
 void dfury_slice2(entity this) { set_animofs(this, anim_dfury_slice, 3, dfury_slice3); ai_charge(this, 10); dfury_sword_sound(this); }
 void dfury_slice1(entity this)
@@ -258,12 +258,13 @@ void dfury_smash9(entity this)
 {
 	set_animofs(this, anim_dfury_smash, 10, dfury_smash10);
 	ai_charge(this, 3);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_smash8(entity this)
 {
 	set_animofs(this, anim_dfury_smash, 9, dfury_smash9);
 	ai_charge(this, 2);
+	W_Parry_Trigger(this, 0);
 	if(vdist(this.enemy.origin - this.origin, >, 40))
 		return;
 	if(!CanDamage(this.enemy, this))
@@ -301,20 +302,20 @@ void dfury_rswing6(entity this)
 {
 	set_animofs(this, anim_dfury_rswing, 6, dfury_rswing7);
 	ai_charge(this, 5);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 	dfury_sword_sound(this);
 }
 void dfury_rswing5(entity this)
 {
 	set_animofs(this, anim_dfury_rswing, 5, dfury_rswing6);
 	ai_charge(this, 7);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_rswing4(entity this)
 {
 	set_animofs(this, anim_dfury_rswing, 4, dfury_rswing5);
 	ai_charge(this, 8);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_rswing3(entity this)
 {
@@ -338,20 +339,20 @@ void dfury_lswing6(entity this)
 {
 	set_animofs(this, anim_dfury_lswing, 6, dfury_lswing7);
 	ai_charge(this, 5);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 	dfury_sword_sound(this);
 }
 void dfury_lswing5(entity this)
 {
 	set_animofs(this, anim_dfury_lswing, 5, dfury_lswing6);
 	ai_charge(this, 7);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_lswing4(entity this)
 {
 	set_animofs(this, anim_dfury_lswing, 4, dfury_lswing5);
 	ai_charge(this, 8);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_lswing3(entity this)
 {
@@ -433,29 +434,29 @@ void dfury_lunge13(entity this)
 {
 	set_animofs(this, anim_dfury_lunge, 13, dfury_lunge14);
 	ai_charge(this, 1);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_lunge12(entity this)
 {
 	set_animofs(this, anim_dfury_lunge, 12, dfury_lunge13);
 	ai_charge(this, 1);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_lunge11(entity this)
 {
 	set_animofs(this, anim_dfury_lunge, 11, dfury_lunge12);
 	ai_charge(this, 4);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 	dfury_sword_sound(this);
 }
 void dfury_lunge10(entity this)
 {
 	set_animofs(this, anim_dfury_lunge, 10, dfury_lunge11);
 	ai_charge(this, 5);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
-void dfury_lunge9(entity this) { set_animofs(this, anim_dfury_lunge, 9, dfury_lunge10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70); }
-void dfury_lunge7(entity this) { set_animofs(this, anim_dfury_lunge, 7, dfury_lunge8); }
+void dfury_lunge9(entity this) { set_animofs(this, anim_dfury_lunge, 9, dfury_lunge10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true); }
+void dfury_lunge7(entity this) { set_animofs(this, anim_dfury_lunge, 7, dfury_lunge8); W_Parry_Trigger(this, 0); }
 void dfury_lunge6(entity this) { set_animofs(this, anim_dfury_lunge, 6, dfury_lunge7); }
 void dfury_lunge5(entity this) { set_animofs(this, anim_dfury_lunge, 5, dfury_lunge6); }
 void dfury_lunge4(entity this)
@@ -507,20 +508,20 @@ void dfury_watk18(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 18, dfury_watk19);
 	ai_charge(this, 21);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk17(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 17, dfury_watk18);
 	ai_charge(this, 19);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk16(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 16, dfury_watk17);
 	ai_charge(this, 19);
 	dfury_sword_sound(this);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk15(entity this) { set_animofs(this, anim_dfury_w_attack, 15, dfury_watk16); ai_charge(this, 18); }
 void dfury_watk14(entity this)
@@ -536,20 +537,20 @@ void dfury_watk10(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 10, dfury_watk11);
 	ai_charge(this, 21);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk9(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 9, dfury_watk10);
 	ai_charge(this, 23);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk8(entity this)
 {
 	set_animofs(this, anim_dfury_w_attack, 8, dfury_watk9);
 	ai_charge(this, 22);
 	dfury_sword_sound(this);
-	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70);
+	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
 void dfury_watk7(entity this) { set_animofs(this, anim_dfury_w_attack, 7, dfury_watk8); ai_charge(this, 19); }
 void dfury_watk6(entity this) { set_animofs(this, anim_dfury_w_attack, 6, dfury_watk7); ai_charge(this, 18); }
@@ -838,8 +839,8 @@ void dfury_painD1(entity this) { set_animofs(this, anim_dfury_painD, 1, dfury_pa
 //----------------------------------------------------------------------
 void dfury_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	//if((random() * 30) > damage)
-	//	return;
+	//if(deathtype != DEATH_GENERIC.m_id && (random() * 30) > damage)
+		//return;
 
 	if(this.pain_finished > time)
 		return;

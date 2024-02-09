@@ -150,6 +150,7 @@ void ShalMissile(entity this)
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.nextthink = flytime + time;
+	missile.count = time + 10;
 	setthink(missile, ShalHome);
 	missile.enemy = this.enemy;
 	settouch(missile, ShalMissileTouch);
@@ -158,7 +159,7 @@ void ShalMissile(entity this)
 void ShalHome(entity this)
 {
 	vector vtemp = this.enemy.origin + '0 0 10';
-	if(this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
+	if(this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET) || time > this.count)
 	{
 		delete(this);
 		return;

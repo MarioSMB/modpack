@@ -27,13 +27,11 @@ bool CheckAttack(entity this)
 {
 	if(this.enemy_range == RANGE_FAR)
 		return false;
-	if(this.enemy_range != RANGE_MELEE)
-	{
-		if(!this.th_missile)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
+	if(this.enemy_range != RANGE_MELEE && !this.th_missile)
+		return false;
+
+	if(time < this.attack_finished)
+		return false;
 
 	entity targ = this.enemy;
 	
@@ -62,7 +60,7 @@ bool CheckAttack(entity this)
 	if(this.enemy_range == RANGE_MELEE)
 	{
 		chance = 0.9;
-		this.attack_finished = 0;
+		//this.attack_finished = 0;
 	}
 	else if(this.enemy_range == RANGE_NEAR)
 	{
@@ -169,7 +167,7 @@ ai_melee
 
 =============
 */
-void ai_melee_sword(entity this, int deathtype, int melee_range, bool check_parry)
+void ai_melee(entity this, int deathtype, int melee_range, bool check_parry)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -184,12 +182,7 @@ void ai_melee_sword(entity this, int deathtype, int melee_range, bool check_parr
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }
 
-void ai_melee(entity this, int deathtype, int melee_range)
-{
-	ai_melee_sword(this, deathtype, melee_range, false);
-}
-
-void ai_melee_sidesword(entity this, int deathtype, int melee_range, bool check_parry)
+void ai_melee_side(entity this, int deathtype, int melee_range, bool check_parry)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -202,9 +195,4 @@ void ai_melee_sidesword(entity this, int deathtype, int melee_range, bool check_
 		return;
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
-}
-
-void ai_melee_side(entity this, int deathtype, int melee_range)
-{
-	ai_melee_sidesword(this, deathtype, melee_range, false);
 }

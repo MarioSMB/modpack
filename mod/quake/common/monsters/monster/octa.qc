@@ -236,14 +236,14 @@ void octa_atk7(entity this)
 	set_animofs(this, anim_octa_atk, 7, octa_atk8);
 	ai_face(this);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 void octa_atk5(entity this)
 {
 	set_animofs(this, anim_octa_atk, 5, octa_atk6);
 	ai_face(this);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 	else if(vdist(this.enemy.origin - this.origin, <, 384))
 		octa_fire(this);
 }
@@ -252,7 +252,7 @@ void octa_atk6(entity this)
 	set_animofs(this, anim_octa_atk, 6, octa_atk7);
 	ai_face(this);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 void octa_atk4(entity this) { set_animofs(this, anim_octa_atk, 4, octa_atk5); ai_face(this); }
 void octa_atk3(entity this) { set_animofs(this, anim_octa_atk, 3, octa_atk4); ai_face(this); }
@@ -264,7 +264,7 @@ void octa_atka13(entity this)
 	set_animofs(this, anim_octa_rush, 13, octa_run1);
 	ai_run(this, 22);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 	_sound(this, CH_VOICE, "tronyn/mon_bigfish_swim2.wav", 1, ATTN_NORM);
 }
 void octa_atka12(entity this)
@@ -272,7 +272,7 @@ void octa_atka12(entity this)
 	set_animofs(this, anim_octa_rush, 12, octa_atka13);
 	ai_run(this, 16);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 void octa_atka11(entity this) { set_animofs(this, anim_octa_rush, 11, octa_atka12); ai_run(this, 8); }
 void octa_atka10(entity this) { set_animofs(this, anim_octa_rush, 10, octa_atka11); ai_run(this, 8); }
@@ -292,21 +292,21 @@ void octa_atka3(entity this)
 {
 	set_animofs(this, anim_octa_rush, 3, octa_atka4); ai_run(this, 8);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 void octa_atka2(entity this)
 {
 	set_animofs(this, anim_octa_rush, 2, octa_atka3);
 	ai_run(this, 16);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 void octa_atka1(entity this)
 {
 	set_animofs(this, anim_octa_rush, 1, octa_atka2);
 	ai_run(this, 18);
 	if(vdist(this.enemy.origin - this.origin, <=, 100))
-		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100);
+		ai_melee(this, DEATH_MONSTER_OCTA.m_id, 100, false);
 }
 
 void octa_attack(entity this)

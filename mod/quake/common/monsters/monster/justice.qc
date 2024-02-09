@@ -447,7 +447,10 @@ void justice_chargeframe(entity this)
 		return;
 	if(this.state == JUSTICE_DEAD)
 		return;
-	
+
+	if(this.walkframe == 0 || this.walkframe == 4)
+		W_Parry_Trigger(this, 0);
+
 	// Keep looping
 	this.nextthink = time + 0.1;
 	setthink(this, justice_chargeframe);
@@ -460,9 +463,17 @@ void justice_chargeframe(entity this)
 		justice_sword_sound(this);
 	// Check for charging damage
 	if(this.walkframe == 1 || this.walkframe == 2)
-		ai_melee(this, DEATH_MONSTER_JUSTICE.m_id, 100);
+	{
+		ai_melee(this, DEATH_MONSTER_JUSTICE.m_id, 100, true);
+		if(this.state == JUSTICE_PAIN)
+			return; // rough hack to check if our attack was parried
+	}
 	else if(this.walkframe >= 5 && this.frame <= 9)
-		ai_melee(this, DEATH_MONSTER_JUSTICE.m_id, 100);
+	{
+		ai_melee(this, DEATH_MONSTER_JUSTICE.m_id, 100, true);
+		if(this.state == JUSTICE_PAIN)
+			return; // rough hack to check if our attack was parried
+	}
 
 	// Update frame and move forward
 	this.frame = anim_justice_charge + this.walkframe;
@@ -493,6 +504,8 @@ void justice_ai_melee(entity this)
 		return;
 	if(!CanDamage(this.enemy, this))
 		return;
+	if(W_Parry(this, this.enemy))
+		return;
 			
 	float ldmg = (random() + random() + random()) * 30;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_JUSTICE.m_id);
@@ -510,6 +523,9 @@ void justice_smashframe(entity this)
 		return;
 	if(this.state == JUSTICE_DEAD)
 		return;
+
+	if(this.walkframe == 1)
+		W_Parry_Trigger(this, 0);
 
 	// Keep looping
 	this.nextthink = time + 0.1;
@@ -531,7 +547,11 @@ void justice_smashframe(entity this)
 		justice_sword_sound(this);
 	// sword meets flesh! or ground ...
 	else if(this.walkframe == 5)
+	{
 		justice_ai_melee(this);
+		if(this.state == JUSTICE_PAIN)
+			return; // rough hack to check if our attack was parried
+	}
 	
 	// Update frame and move forward
 	this.frame = anim_justice_smash + this.walkframe;
@@ -1292,7 +1312,7 @@ void justice_pain(entity this, entity attacker, float damage, int deathtype)
 	if(this.pain_finished > time)
 		return;
 
-	if((random() * 200) > damage)
+	if(deathtype != DEATH_GENERIC.m_id && (random() * 200) > damage)
 		return;
 	if(this.state == JUSTICE_DEAD)
 		return;
@@ -1300,6 +1320,7 @@ void justice_pain(entity this, entity attacker, float damage, int deathtype)
 	justice_finish_attachment(this);
 
 	this.pain_finished = time + 2;
+	this.state = JUSTICE_PAIN;
 	justice_painA1(this);
 	_sound(this, CH_VOICE, "justice/pain1.wav", 1, ATTN_NORM);
 }
@@ -1394,6 +1415,9 @@ bool JusticeCheckAttack(entity this)
 		return true;
 	}
 
+	if(time < this.attack_finished)
+		return false;
+
 	if(ai_checkmelee(this, 200, 0))
 	{
 		if(vdist(this.enemy.origin - this.origin, >, 100) && random() < 0.5)
@@ -1421,9 +1445,6 @@ bool JusticeCheckAttack(entity this)
 			}
 		}
 	}
-
-	if(time < this.attack_finished)
-		return false;
 
 	if(vdist(this.enemy.origin - this.origin, <, 250))
 		return false;

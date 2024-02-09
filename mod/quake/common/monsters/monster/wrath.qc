@@ -186,8 +186,11 @@ void WrathMissile(entity this, int AttackNumber)
 	makevectors(this.angles);
 
 	entity missile = spawn();
+	missile.classname = "wrath_missile";
+	missile.solid = SOLID_CORPSE;
+	missile.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	missile.owner = this;
-	missile.solid = SOLID_BBOX;
+	//missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	_setmodel(missile, "progs/w_ball.mdl");
 
@@ -244,6 +247,7 @@ void WrathHome(entity this)
 
 void WrathMissileTouch(entity this, entity toucher)
 {
+#if 0
 	if(toucher == this.owner ||
 		toucher.monsterdef == MON_WRATH || 
 		toucher.monsterdef == MON_OVERLORD)
@@ -251,6 +255,10 @@ void WrathMissileTouch(entity this, entity toucher)
 		delete(this);
 		return;		// don't explode on any wraths
 	}
+#else
+	if(toucher == this.owner)
+		return;
+#endif
 
 	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		T_Damage(toucher, this, this, 110, this.projectiledeathtype);	

@@ -329,6 +329,7 @@ void boss_launch_missile(entity this, entity targ, vector offset)
 	newmis.classname = "chthon_lavaball";
 	_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.owner = this;
+	newmis.dmg = 100;
 	newmis.avelocity = '200 100 300';
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
