@@ -60,6 +60,10 @@ entity W_ParryProjectile(entity this)
 	{
 		//if(!IS_MONSTER(it.owner))
 			//continue;
+		if(!it.owner)
+			continue; // probably not a projectile
+		if(it.velocity == '0 0 0')
+			continue;
 		if(IS_MONSTER(it))
 			continue; // no corpse bouncers thank you very much
 		float dot = normalize(it.origin - this.origin) * v_forward;
