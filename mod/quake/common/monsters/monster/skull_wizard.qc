@@ -220,8 +220,9 @@ void skullw_blink(entity this)
 
 	setorigin(this, newpos);
 	vector a = vectoangles(targ.origin - this.origin);
-	a.x = -a.x;
-	this.angles_x = a.x;
+	//a.x = -a.x;
+	//this.angles_x = a.x;
+	this.angles_x = 0;
 	this.angles_y = a.y;
 	this.angles_z = 0;
 	this.fixangle = true;
