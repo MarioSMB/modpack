@@ -143,7 +143,7 @@ bool W_Parry(entity this, entity targ)
 	targ.pain_finished = time;
 
 	// put monsters on a cooldown as well
-	float parry_attackdelay = 1.333;
+	float parry_attackdelay = 1;
 	this.attack_finished = max(this.attack_finished, time + parry_attackdelay);
 	targ.attack_finished = max(targ.attack_finished, time + parry_attackdelay);
 

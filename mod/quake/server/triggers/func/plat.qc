@@ -18,6 +18,7 @@ void plat_spawn_inside_trigger(entity this)
 	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = this;
+	this.trigger_field = trigger;
 	
 	vector tmin = this.mins + '25 25 0';
 	vector tmax = this.maxs - '25 25 -8';
@@ -124,6 +125,42 @@ void plat_use(entity this, entity actor, entity trigger)
 	plat_go_down(this);
 }
 
+void plat_lock(entity this, bool unlock)
+{
+	if(unlock)
+	{
+		if(this.trigger_field)
+			settouch(this.trigger_field, plat_center_touch);
+		if(this.targetname && this.targetname != "")
+			this.use = plat_use;
+		this.customflags &= ~CFL_LOCKED;
+	}
+	else
+	{
+		if(this.trigger_field)
+			settouch(this.trigger_field, func_null);
+		this.use = func_null;
+		this.customflags |= CFL_LOCKED;
+	}
+}
+
+bool door_getslocked(entity d);
+void plat_finalize(entity this)
+{
+	plat_spawn_inside_trigger(this);	// the "start moving" trigger	
+
+	if(this.targetname && this.targetname != "" && !door_getslocked(this))
+	{
+		this.state = STATE_UP;
+		this.use = plat_use;
+	}
+	else
+	{
+		setorigin(this, this.pos2);
+		this.state = STATE_BOTTOM;
+	}
+}
+
 
 /*QUAKED func_plat(0 .5 .8) ? PLAT_LOW_TRIGGER
 speed	default 150
@@ -179,28 +216,32 @@ spawnfunc(func_plat)
 	if(!this.speed)
 		this.speed = 150;
 
-// pos1 is the top position, pos2 is the bottom
-	this.pos1 = this.origin;
-	this.pos2 = this.origin;
-	if(this.height)
-		this.pos2_z = this.origin_z - this.height;
-	else
-		this.pos2_z = this.origin_z - this.size_z + 8;
+	if(!this.height)
+	{
+		if(this.distance)
+			this.height = this.distance;
+		else
+		{
+			if(!this.lip)
+				this.lip = 8;
+			this.height = this.size_z - this.lip;
+		}
+	}
+
+	if(this.pos1 == '0 0 0' && this.pos2 == '0 0 0')
+	{
+		// pos1 is the top position, pos2 is the bottom
+		this.pos1 = this.origin;
+		this.pos2 = this.origin;
+		if(this.height)
+			this.pos2_z = this.origin_z - this.height;
+	}
 
 	this.use = plat_trigger_use;
+	this.lock = plat_lock;
 
-	plat_spawn_inside_trigger(this);	// the "start moving" trigger	
-
-	if(this.targetname && this.targetname != "")
-	{
-		this.state = STATE_UP;
-		this.use = plat_use;
-	}
-	else
-	{
-		setorigin(this, this.pos2);
-		this.state = STATE_BOTTOM;
-	}
+	setthink(this, plat_finalize);
+	this.nextthink = this.ltime + 0.1;
 }
 
 #endif

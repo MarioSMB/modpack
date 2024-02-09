@@ -1698,6 +1698,22 @@ spawnfunc(trigger_activate_coop_spawns)
 
 const int COOP_SPAWN_START_ACTIVE = BIT(0);
 
+// dumb way to make coop starts visible/invisible to the cyclical spawnpoint search 
+// code without making that code overly complex
+void coop_lock(entity this, bool unlock)
+{
+	if(unlock)
+		this.classname = "info_player_coop";
+	else
+		this.classname = "info_player_coop_notyet";
+}
+
+void coop_enable(entity this, entity actor, entity trigger)
+{
+	this.classname = "info_player_coop";
+	this.use = func_null;
+}
+
 /*QUAKED info_player_coop(1 0 1)(-16 -16 -24)(16 16 24)
 potential spawning position for coop games
 */
@@ -1713,6 +1729,13 @@ spawnfunc(info_player_coop)
 		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
 			this.state = COOP_SPAWN_ACTIVE;
 	}
+	
+	if(this.spawnflags & 1)
+	{
+		this.classname = "info_player_coop_notyet";
+		this.use = coop_enable;
+	}
+	this.lock = coop_lock;
 
 	IL_PUSH(g_spawnpoints, this);
 }
