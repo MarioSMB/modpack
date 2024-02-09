@@ -337,10 +337,10 @@ void santa_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -60)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/xmas/h_santa.mdl", this.health);
-		ThrowGib(this, "progs/xmas/gib_santagun.mdl", this.health);
-		ThrowGib(this, "progs/xmas/gib_santasack.mdl", this.health);
-		ThrowGib(this, "progs/xmas/gib_snowball.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/xmas/h_santa.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/xmas/gib_santagun.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/xmas/gib_santasack.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/xmas/gib_snowball.mdl", this.health);
 		return;
 	}
 

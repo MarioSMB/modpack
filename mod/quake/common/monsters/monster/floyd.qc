@@ -241,7 +241,7 @@ void ThrowFloydHead(entity this, string gibname, float dm)
 	head.solid = SOLID_TRIGGER;
 	setorigin(head, head.origin);
 	setsize(head, '-16 -16 0', '16 16 32');
-	head.velocity = VelocityForDamage(this, dm);
+	head.velocity = VelocityForDamage(this, this, dm);
 	head.origin_z = this.origin_z + 32;
 	head.angles_y = this.angles_y;
 	UNSET_ONGROUND(head);

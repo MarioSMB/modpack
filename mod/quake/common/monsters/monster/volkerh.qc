@@ -716,7 +716,7 @@ void vol_pain(entity this, entity attacker, float damage, int deathtype)
 	// no action?
 }
 
-void vol_gib(entity this)
+void vol_gib(entity this, entity inflictor)
 {
 	// throw tons of meat chunks
 	_sound(this, CHAN_BODY, "boss2/pop2.wav", 1, ATTN_NORM);
@@ -738,11 +738,11 @@ void vol_gib(entity this)
 
 				float r = random();
 				if(r < 0.3)				
-					ThrowGib(this, "progs/gib1.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib1.mdl", -100);
 				else if(r < 0.6)
-					ThrowGib(this, "progs/gib2.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib2.mdl", -100);
 				else
-					ThrowGib(this, "progs/gib3.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib3.mdl", -100);
 				posy += 31;
 			}
 			posx += 31;
@@ -752,7 +752,12 @@ void vol_gib(entity this)
 	delete(this);
 }
 
-void vol_death26(entity this) { set_animofs(this, anim_volkerh_death, 26, vol_gib); }
+void vol_gibthink(entity this)
+{
+	vol_gib(this, this);
+}
+
+void vol_death26(entity this) { set_animofs(this, anim_volkerh_death, 26, vol_gibthink); }
 void vol_death25(entity this) { set_animofs(this, anim_volkerh_death, 25, vol_death26); }
 void vol_death24(entity this) { set_animofs(this, anim_volkerh_death, 24, vol_death25); }
 void vol_death23(entity this) { set_animofs(this, anim_volkerh_death, 23, vol_death24); }
@@ -788,7 +793,7 @@ void vol_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -150)
 	{
-		vol_gib(this);
+		vol_gib(this, inflictor);
 		return;
 	}
 	vol_death1(this);

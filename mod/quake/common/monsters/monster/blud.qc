@@ -258,19 +258,19 @@ void blud_pain(entity this, entity attacker, float damage, int deathtype)
 
 void gib_blud(entity this)
 {
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/bone.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/bone2.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/gib3.mdl", this.health);
-	ThrowHead(this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, this, "progs/bone.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/bone2.mdl", this.health);
+	ThrowGib(this, this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, this, "progs/gib3.mdl", this.health);
+	ThrowHead(this, this, "progs/rawbone.mdl", this.health);
 }
 
 void blud_die46(entity this) { set_anim(this, 65, blud_die46); gib_blud(this); }
@@ -278,25 +278,25 @@ void blud_die45(entity this) { set_anim(this, 64, blud_die46); }
 void blud_die44(entity this)
 {
 	set_anim(this, 63, blud_die45);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
 }
 void blud_die43(entity this) { set_anim(this, 62, blud_die44); }
-void blud_die42(entity this) { set_anim(this, 61, blud_die43); ThrowGib(this, "progs/gib1.mdl", this.health); }
+void blud_die42(entity this) { set_anim(this, 61, blud_die43); ThrowGib(this, this, "progs/gib1.mdl", this.health); }
 void blud_die41(entity this) { set_anim(this, 60, blud_die42); }
 void blud_die40(entity this)
 {
 	set_anim(this, 59, blud_die41);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/bone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/bone.mdl", this.health);
 }
 void blud_die39(entity this) { set_anim(this, 58, blud_die40); }
 void blud_die38(entity this) { set_anim(this, 57, blud_die39); }
 void blud_die37(entity this)
 {
 	set_anim(this, 56, blud_die38);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
 }
 void blud_die36(entity this) { set_anim(this, 55, blud_die37); }
 void blud_die35(entity this) { set_anim(this, 54, blud_die36); }
@@ -304,57 +304,57 @@ void blud_die34(entity this) { set_anim(this, 53, blud_die35); }
 void blud_die33(entity this)
 {
 	set_anim(this, 52, blud_die34);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
 }
 void blud_die32(entity this) { set_anim(this, 51, blud_die33); }
-void blud_die31(entity this) { set_anim(this, 50, blud_die32); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die31(entity this) { set_anim(this, 50, blud_die32); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die30(entity this) { set_anim(this, 51, blud_die31); }
 void blud_die29(entity this) { set_anim(this, 52, blud_die30); }
-void blud_die28(entity this) { set_anim(this, 53, blud_die29); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die28(entity this) { set_anim(this, 53, blud_die29); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die27(entity this) { set_anim(this, 54, blud_die28); }
 void blud_die26(entity this) { set_anim(this, 55, blud_die27); }
-void blud_die25(entity this) { set_anim(this, 56, blud_die26); ThrowGib(this, "progs/bone.mdl", this.health); }
+void blud_die25(entity this) { set_anim(this, 56, blud_die26); ThrowGib(this, this, "progs/bone.mdl", this.health); }
 void blud_die24(entity this) { set_anim(this, 57, blud_die25); }
 void blud_die23(entity this) { set_anim(this, 58, blud_die24); }
 void blud_die22(entity this)
 {
 	set_anim(this, 59, blud_die23);
-	ThrowGib(this, "progs/bone.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/bone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
 }
 void blud_die21(entity this) { set_anim(this, 60, blud_die22); }
 void blud_die20(entity this) { set_anim(this, 61, blud_die21); }
 void blud_die19(entity this) { set_anim(this, 62, blud_die20); }
-void blud_die18(entity this) { set_anim(this, 63, blud_die19); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die18(entity this) { set_anim(this, 63, blud_die19); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die17(entity this) { set_anim(this, 64, blud_die18); }
-void blud_die16(entity this) { set_anim(this, 65, blud_die17); ThrowGib(this, "progs/rawbone.mdl", this.health); }
+void blud_die16(entity this) { set_anim(this, 65, blud_die17); ThrowGib(this, this, "progs/rawbone.mdl", this.health); }
 void blud_die15(entity this) { set_anim(this, 64, blud_die16); }
-void blud_die14(entity this) { set_anim(this, 63, blud_die15); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die14(entity this) { set_anim(this, 63, blud_die15); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die13(entity this) { set_anim(this, 62, blud_die14); }
 void blud_die12(entity this) { set_anim(this, 61, blud_die13); }
 void blud_die11(entity this)
 {
 	set_anim(this, 60, blud_die12);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/bone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/bone.mdl", this.health);
 }
 void blud_die10(entity this) { set_anim(this, 59, blud_die11); }
 void blud_die9(entity this) { set_anim(this, 58, blud_die10); }
 void blud_die8(entity this) { set_anim(this, 57, blud_die9); }
-void blud_die7(entity this) { set_anim(this, 56, blud_die8); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die7(entity this) { set_anim(this, 56, blud_die8); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die6(entity this) { set_anim(this, 55, blud_die7); }
 void blud_die5(entity this) { set_anim(this, 54, blud_die6); }
-void blud_die4(entity this) { set_anim(this, 53, blud_die5); ThrowGib(this, "progs/xtragib.mdl", this.health); }
+void blud_die4(entity this) { set_anim(this, 53, blud_die5); ThrowGib(this, this, "progs/xtragib.mdl", this.health); }
 void blud_die3(entity this) { set_anim(this, 52, blud_die4); }
 void blud_die2(entity this)
 {
 	set_anim(this, 51, blud_die3);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/bone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, this, "progs/bone.mdl", this.health);
 }
 void blud_die1(entity this)
 {

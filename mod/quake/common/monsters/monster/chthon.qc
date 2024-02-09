@@ -246,11 +246,11 @@ void GibBoss(entity this)
 
 				float r = random();
 				if(r < 0.3)
-					ThrowGib(this, "progs/gib1.mdl", -300);
+					ThrowGib(this, this, "progs/gib1.mdl", -300);
 				else if(r < 0.6)
-					ThrowGib(this, "progs/gib2.mdl", -300);
+					ThrowGib(this, this, "progs/gib2.mdl", -300);
 				else
-					ThrowGib(this, "progs/gib3.mdl", -300);
+					ThrowGib(this, this, "progs/gib3.mdl", -300);
 				dy = dy + 32;
 			}
 			dx = dx + 32;

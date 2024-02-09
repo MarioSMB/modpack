@@ -166,12 +166,12 @@ void Explode_Egg(entity this)
 	_setmodel(this, "");
 	if(random() > 0.5) // classname == "monster_wraith"
 	{
-		entity gib = ThrowGib(this, "progs/proj_wraithshell.mdl", rint(2+random()*4));
+		entity gib = ThrowGib(this, this, "progs/proj_wraithshell.mdl", rint(2+random()*4));
 		gib.frame = 9;
 	}
 	else // classname == "monster_shalrath"
 	{
-		entity gib = ThrowGib(this, "progs/proj_shalshell.mdl", rint(2+random()*4));
+		entity gib = ThrowGib(this, this, "progs/proj_shalshell.mdl", rint(2+random()*4));
 		gib.frame = 9;
 	}
 

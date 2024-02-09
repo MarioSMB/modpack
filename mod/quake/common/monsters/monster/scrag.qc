@@ -321,13 +321,13 @@ void wiz_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, MDL_MON_SCRAG_HEAD.model_str(), this.health);
-		ThrowGib(this, "progs/grenbone.mdl", this.health);
-		ThrowGib(this, "progs/grenbone.mdl", this.health);
-		ThrowGib(this, "progs/grenbone.mdl", this.health);
-		ThrowGib(this, "progs/grenbone.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowHead(this, inflictor, MDL_MON_SCRAG_HEAD.model_str(), this.health);
+		ThrowGib(this, inflictor, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/grenbone.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
 		return;
 	}
 

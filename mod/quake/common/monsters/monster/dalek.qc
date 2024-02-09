@@ -148,8 +148,8 @@ void dalek_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 		_sound(this, CH_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
-		ThrowGib(this, "progs/daltop.mdl", -50);
-		ThrowGib(this, "progs/dalmid.mdl", -48);
+		ThrowGib(this, inflictor, "progs/daltop.mdl", -50);
+		ThrowGib(this, inflictor, "progs/dalmid.mdl", -48);
 
 		_setmodel(this, "progs/dalskrt.mdl");
 

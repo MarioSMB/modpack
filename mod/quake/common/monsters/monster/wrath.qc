@@ -143,9 +143,9 @@ void wrath_die15(entity this)
 {
 	set_animofs(this, anim_wrath_wrthdt01, 15, wrath_die15);
 
-	ThrowGib(this, "progs/wrthgib1.mdl", this.health);
-	ThrowGib(this, "progs/wrthgib2.mdl", this.health);
-	ThrowGib(this, "progs/wrthgib3.mdl", this.health);
+	ThrowGib(this, this, "progs/wrthgib1.mdl", this.health);
+	ThrowGib(this, this, "progs/wrthgib2.mdl", this.health);
+	ThrowGib(this, this, "progs/wrthgib3.mdl", this.health);
 	T_RadiusDamage(this, this, 80, DEATH_MONSTER_WRATH.m_id, NULL);
 
 	this.origin = this.origin + '0 0 24';

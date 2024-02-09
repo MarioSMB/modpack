@@ -73,13 +73,13 @@ void juggernaut_die2(entity this)
 {
 	if(this.mdl == "progs/jugg.mdl")
 	{
-		ThrowHead(this, "progs/h_jugg.mdl", this.health);
-		ThrowGib(this, "progs/a_jugg.mdl", this.health);
+		ThrowHead(this, this, "progs/h_jugg.mdl", this.health);
+		ThrowGib(this, this, "progs/a_jugg.mdl", this.health);
 	}
 	else if(this.mdl == "progs/jugg2.mdl")
 	{
-		ThrowHead(this, "progs/h_jugg2.mdl", this.health);
-		ThrowGib(this, "progs/a_jugg2.mdl", this.health);
+		ThrowHead(this, this, "progs/h_jugg2.mdl", this.health);
+		ThrowGib(this, this, "progs/a_jugg2.mdl", this.health);
 	}
 	T_RadiusDamage(this, this, 120, DEATH_MONSTER_JUGGERNAUT.m_id, this);
 	_sound(this, CHAN_ITEM, "monsters/juggers/jgib.wav", 1, ATTN_NORM);

@@ -227,13 +227,13 @@ void SpearDig(entity this)
 
 void ImpaledGibs(entity this)
 {
-	ThrowHead(this, "progs/gib3.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/xtragib.mdl", this.health);
-	ThrowGib(this, "progs/rawbone2.mdl", this.health);
+	ThrowHead(this, this, "progs/gib3.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, this, "progs/rawbone2.mdl", this.health);
 	if(IS_PLAYER(this))
 		this.impaled = false;
 }

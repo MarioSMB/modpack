@@ -213,12 +213,12 @@ void raind_explode(entity this)
 	SpawnProjectileSmoke(this.origin, 200, 250, 100);
 
 	// No blood or guts!
-	ThrowHead(this, "progs/xmas/h_raindeer.mdl", this.health);
-	ThrowGib(this, "progs/xmas/gib_rdleg1.mdl", this.health);
-	ThrowGib(this, "progs/xmas/gib_rdrockpack.mdl", this.health);
+	ThrowHead(this, this, "progs/xmas/h_raindeer.mdl", this.health);
+	ThrowGib(this, this, "progs/xmas/gib_rdleg1.mdl", this.health);
+	ThrowGib(this, this, "progs/xmas/gib_rdrockpack.mdl", this.health);
 	for(int j = 0; j < floor(random() * 8); ++j)
 	{
-		ThrowGib(this, "progs/xmas/gib_snowball.mdl", this.health);
+		ThrowGib(this, this, "progs/xmas/gib_snowball.mdl", this.health);
 	}
 }
 

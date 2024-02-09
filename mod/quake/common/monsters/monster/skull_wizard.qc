@@ -723,8 +723,8 @@ void skullw_explode(entity this)
 {
 	//particle_explode(this.origin, 100, 3, PARTICLE_BURST_WHITE, PARTICLE_BURST_SKULLUP);
 	te_explosion2(this.origin, 100, 3);
-	ThrowGib(this, "progs/h_skullwiz.mdl", -1);
-	entity gib = ThrowGib(this, "progs/w_skullbook.mdl", -1);
+	ThrowGib(this, this, "progs/h_skullwiz.mdl", -1);
+	entity gib = ThrowGib(this, this, "progs/w_skullbook.mdl", -1);
 	gib.skin = this.skin;
 
 	STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
@@ -770,8 +770,8 @@ void skullw_die(entity this, entity inflictor, entity attacker, int deathtype)
 		te_explosion(this.origin);
 		SpawnExplosion(EXPLODE_MED, this.origin, "weapons/r_exp3b.wav");
 
-		ThrowHead(this, "progs/h_skullwiz.mdl", -1);
-		entity gib = ThrowGib(this, "progs/w_skullbook.mdl", -1);
+		ThrowHead(this, inflictor, "progs/h_skullwiz.mdl", -1);
+		entity gib = ThrowGib(this, inflictor, "progs/w_skullbook.mdl", -1);
 		gib.skin = this.skin;
 		STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
 		DropBackpack(this);

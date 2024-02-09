@@ -252,10 +252,10 @@ void bend_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/h_bender.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
-		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/h_bender.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
 		return;
 	}
 

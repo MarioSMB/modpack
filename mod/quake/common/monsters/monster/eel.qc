@@ -170,10 +170,10 @@ void eel_death(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		this.skin = 0;
 		this.effects = 0;
-		ThrowHead(this, "progs/eelgib.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/eelgib.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 		return;
 	}
 	else

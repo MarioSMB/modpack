@@ -1363,10 +1363,10 @@ void justice_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -60)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/h_justice.mdl", this.health);
-		ThrowGib(this, "progs/w_justicesword.mdl", this.health);
-		ThrowGib(this, "progs/gib_justiceboot.mdl", this.health);
-		ThrowGib(this, "progs/gib_justiceshould.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/h_justice.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/w_justicesword.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib_justiceboot.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib_justiceshould.mdl", this.health);
 		return;
 	}
 

@@ -1785,10 +1785,10 @@ void judge_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -60)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/h_judge.mdl", this.health);
-		ThrowGib(this, "progs/w_judgesword.mdl", this.health);
-		ThrowGib(this, "progs/gib_judgeboot.mdl", this.health);
-		ThrowGib(this, "progs/gib_judgeshould.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/h_judge.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/w_judgesword.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib_judgeboot.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib_judgeshould.mdl", this.health);
 		return;
 	}
 

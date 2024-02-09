@@ -51,26 +51,31 @@ void W_Parry_ResetWeapon(entity this)
 	}
 }
 
-bool autocvar_sv_quake_reflectshots = true;
 bool autocvar_sv_quake_parry_playershots = false;
+bool W_Projectile_CanParry(entity this, entity proj)
+{
+	if(!proj.owner || proj.owner == this || proj.velocity == '0 0 0')
+		return false;
+	// hacky way to guess if it's a projectile
+	if(!(proj.move_movetype == MOVETYPE_FLYMISSILE || proj.move_movetype == MOVETYPE_FLY || proj.move_movetype == MOVETYPE_BOUNCE || proj.move_movetype == MOVETYPE_TOSS))
+		return false;
+	bool parryplayer = (autocvar_sv_quake_parry_playershots && IS_PLAYER(proj.owner));
+	if(!IS_MONSTER(proj.owner) && !parryplayer)
+		return false;
+	if(IS_MONSTER(proj) || IS_PLAYER(proj))
+		return false; // no corpse bouncers thank you very much
+
+	return true;
+}
+
+bool autocvar_sv_quake_reflectshots = true;
 entity W_ParryProjectile(entity this)
 {
 	entity targ = NULL;
 	makevectors(this.v_angle);
-	FOREACH_ENTITY_RADIUS(this.origin, 120, (it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE || it.move_movetype == MOVETYPE_TOSS) && time > it.parry_time && time > it.parry_cooldown && it.owner != this,
+	FOREACH_ENTITY_RADIUS(this.origin, 120, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(this, it),
 	{
-		//if(!IS_MONSTER(it.owner))
-			//continue;
-		if(!it.owner)
-			continue; // probably not a projectile
-		if(it.velocity == '0 0 0')
-			continue;
-		if(IS_MONSTER(it) || IS_PLAYER(it))
-			continue; // no corpse bouncers thank you very much
-		if(!autocvar_sv_quake_parry_playershots && IS_PLAYER(it.owner))
-			continue;
 		float dot = normalize(it.origin - this.origin) * v_forward;
-		//LOG_INFO("dot = ", ftos(dot));
 		if(dot <= 0.3) { continue; }
 
 		targ = it;
@@ -403,7 +408,7 @@ entity W_PickNearbyTarget(entity this, bool checkinfront, bool hitany)
 	return RandomSelection_chosen_ent;
 }
 
-vector VelocityForDamage(entity this, float dm);
+vector VelocityForDamage(entity this, entity inflictor, float dm);
 
 void PulseHome(entity this)
 {
@@ -432,7 +437,7 @@ void BecomePurpleExplosion(entity this, entity directhitentity, float dm)
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.velocity = VelocityForDamage(this, dm);
+	missile.velocity = VelocityForDamage(this, directhitentity, dm);
 	missile.avelocity_x = random() * 300;
 	missile.avelocity_y = random() * 300;
 	missile.avelocity_z = random() * 300;
@@ -452,7 +457,7 @@ void BecomeBloodSpurt(entity this, float dm)
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.velocity = VelocityForDamage(this, dm);
+	missile.velocity = VelocityForDamage(this, this, dm);
 	missile.avelocity_x = random() * 300;
 	missile.avelocity_y = random() * 300;
 	missile.avelocity_z = random() * 300;
@@ -955,7 +960,7 @@ void SpawnFireSpark(entity this)
 	missile.realowner = this.owner;
 	missile.classname = "flame";
 	missile.projectiledeathtype = WEP_NAPALM.m_id;
-	missile.velocity = VelocityForDamage(this, 0);
+	missile.velocity = VelocityForDamage(this, this, 0);
 	missile.velocity_z = missile.velocity_z + 100 + 50 * random();
 	settouch(missile, MakeFlame);
 	_setmodel(missile, "progs/firesprk.mdl");
@@ -993,7 +998,7 @@ void SpawnInternalFire2(entity this)
 	this.nextthink = time + 0.1;
 	setthink(this, NapalmCheckEnemyDead);
 }
-entity ThrowGib(entity this, string gibname, float dm);
+entity ThrowGib(entity this, entity inflictor, string gibname, float dm);
 
 void InternalFireThink(entity this)
 {
@@ -1089,18 +1094,18 @@ void InternalFireThink(entity this)
 				_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
 				if(this.enemy.max_health < 80)
 				{
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
 				}
 				else
 				{
-					ThrowGib(this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/bone2.mdl", ((this.enemy.health - 40) - (random() * 60)));
-					ThrowGib(this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/bone2.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this.enemy, this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
 				}
 			}
 			else
@@ -1134,18 +1139,18 @@ void InternalFireThink(entity this)
 					_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
 					if(this.enemy.max_health <= 80)
 					{
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
-						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this.enemy, this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
 					}
 					else
 					{
-						ThrowGib(this, "progs/bone.mdl", this.enemy.health - 80);
-						ThrowGib(this, "progs/xtragib.mdl", this.enemy.health - 80);
-						ThrowGib(this, "progs/bone2.mdl", this.enemy.health - 80);
+						ThrowGib(this.enemy, this, "progs/bone.mdl", this.enemy.health - 80);
+						ThrowGib(this.enemy, this, "progs/xtragib.mdl", this.enemy.health - 80);
+						ThrowGib(this.enemy, this, "progs/bone2.mdl", this.enemy.health - 80);
 					}
 				}
 				else if(this.enemy.classname == "wall_explode")

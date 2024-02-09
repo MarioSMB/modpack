@@ -73,9 +73,9 @@ void spider_run1(entity this)
 void spider_die2(entity this)
 {
 	T_RadiusDamage(this, this, 80, DEATH_MONSTER_SPIDER_DROID.m_id, this.other2);
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
-	ThrowHead(this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
+	ThrowGib(this, this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
+	ThrowGib(this, this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
+	ThrowHead(this, this, "progs/spidgib.mdl", ((this.health - 40) - (random () * 40)));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }

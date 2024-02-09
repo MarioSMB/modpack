@@ -767,10 +767,10 @@ void eidolon_explode(entity this)
 	SpawnExplosion(EXPLODE_PLASMA_BIG, this.origin, "eidolon/explode_death.wav");
 
 	// Gib explosive fountain!?!
-	ThrowGib(this, "progs/proj_golemrock1.mdl", -500);	// Small Golem rock
-	ThrowGib(this, "progs/proj_golemrock2.mdl", -500);	// Large Golem rock
-	ThrowGib(this, "progs/gib1.mdl", -500);		// Some flesh bits
-	ThrowGib(this, "progs/gib2.mdl", -500);
+	ThrowGib(this, this, "progs/proj_golemrock1.mdl", -500);	// Small Golem rock
+	ThrowGib(this, this, "progs/proj_golemrock2.mdl", -500);	// Large Golem rock
+	ThrowGib(this, this, "progs/gib1.mdl", -500);		// Some flesh bits
+	ThrowGib(this, this, "progs/gib2.mdl", -500);
 
 	if(this.movelast)
 		delete(this.movelast);

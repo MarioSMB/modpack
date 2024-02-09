@@ -881,10 +881,10 @@ void gremlin_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -35)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/h_grem.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/h_grem.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 		return;
 	}
 	else if(dot > 0.7 && (random() < 0.5) && IS_ONGROUND(this))
@@ -1361,7 +1361,7 @@ void Gremlin_ThrowHead(entity this, float dm)
 	Monster mon = this.monsterdef;
 	if(mon.m_model_head)
 		gibname = mon.m_model_head.model_str();
-	ThrowHead(this, gibname, dm);
+	ThrowHead(this, this, gibname, dm);
 }
 
 /*

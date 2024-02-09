@@ -8,8 +8,6 @@ float autocvar_g_friendlyfire;
 
 .bool damagedbycontents;
 
-entity damage_inflictor; // hipnotic
-
 bool empathyused; // hipnotic
 
 bool discharged; // hipnotic

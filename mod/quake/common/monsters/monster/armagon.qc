@@ -525,15 +525,15 @@ void armagon_body_explode2(entity this)
 {
 	_sound(this, CH_TRIGGER, "misc/longexpl.wav", 1, ATTN_ARMAGON);
 	setthink(this, armagon_body_explode2);
-	ThrowGib(this, "progs/gib1.mdl", -200);
-	ThrowGib(this, "progs/gib2.mdl", -200);
-	ThrowGib(this, "progs/gib3.mdl", -200);
-	ThrowGib(this, "progs/gib1.mdl", -200);
-	ThrowGib(this, "progs/gib2.mdl", -200);
-	ThrowGib(this, "progs/gib3.mdl", -200);
-	ThrowGib(this, "progs/gib1.mdl", -200);
-	ThrowGib(this, "progs/gib2.mdl", -200);
-	ThrowGib(this, "progs/gib3.mdl", -200);
+	ThrowGib(this, this, "progs/gib1.mdl", -200);
+	ThrowGib(this, this, "progs/gib2.mdl", -200);
+	ThrowGib(this, this, "progs/gib3.mdl", -200);
+	ThrowGib(this, this, "progs/gib1.mdl", -200);
+	ThrowGib(this, this, "progs/gib2.mdl", -200);
+	ThrowGib(this, this, "progs/gib3.mdl", -200);
+	ThrowGib(this, this, "progs/gib1.mdl", -200);
+	ThrowGib(this, this, "progs/gib2.mdl", -200);
+	ThrowGib(this, this, "progs/gib3.mdl", -200);
 	set_movetype(this, MOVETYPE_NONE);
 	setmodel(this, MDL_EXPLOSION);
 	setsize(this, '0 0 0', '0 0 0');
@@ -553,9 +553,9 @@ void armagon_body_explode1(entity this)
 	{
 		if(this.cnt > this.count)
 		{
-			ThrowGib(this, "progs/gib1.mdl", -100);
-			ThrowGib(this, "progs/gib2.mdl", -100);
-			ThrowGib(this, "progs/gib3.mdl", -100);
+			ThrowGib(this, this, "progs/gib1.mdl", -100);
+			ThrowGib(this, this, "progs/gib2.mdl", -100);
+			ThrowGib(this, this, "progs/gib3.mdl", -100);
 			this.count = this.cnt + 1;
 		}
 		this.cnt = this.cnt + 1;

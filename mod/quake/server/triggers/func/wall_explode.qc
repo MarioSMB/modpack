@@ -44,7 +44,7 @@ void throw_debris(entity this)
 	missile.solid = SOLID_BBOX;
 	settouch(missile, DebrisBounceSound);
 	makevectors(this.angles);
-	missile.velocity = VelocityForDamage(this, 0);
+	missile.velocity = VelocityForDamage(this, this, 0);
 	missile.avelocity = '300 100 200';
 	if(targ.classname == "light")
 		missile.nextthink = ((time + 4) + (random () * 4));

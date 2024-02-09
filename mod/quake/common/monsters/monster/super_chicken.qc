@@ -27,20 +27,20 @@ void superchicken_die(entity this, entity inflictor, entity attacker, int deatht
 {
 	_sound(this, CH_VOICE, "chicken/chickdie.wav", 1, ATTEN_LARGE);
 	float dm = -50;
-	ThrowHead(this, "progs/gib1.mdl", dm);
-	ThrowGib(this, "progs/mangib1.mdl", dm);
-	ThrowGib(this, "progs/mangib2.mdl", dm);
-	ThrowGib(this, "progs/mangib3.mdl", dm);
-	ThrowGib(this, "progs/gib1.mdl", dm);
-	ThrowGib(this, "progs/gib2.mdl", dm);
-	ThrowGib(this, "progs/gib3.mdl", dm);
-	ThrowGib(this, "progs/gib2.mdl", dm);
-	ThrowGib(this, "progs/gib1.mdl", dm);
-	ThrowGib(this, "progs/gib2.mdl", dm);
-	ThrowGib(this, "progs/gib3.mdl", dm);
-	ThrowGib(this, "progs/gib1.mdl", dm);
-	ThrowGib(this, "progs/gib2.mdl", dm);
-	ThrowGib(this, "progs/gib3.mdl", dm);
+	ThrowHead(this, inflictor, "progs/gib1.mdl", dm);
+	ThrowGib(this, inflictor, "progs/mangib1.mdl", dm);
+	ThrowGib(this, inflictor, "progs/mangib2.mdl", dm);
+	ThrowGib(this, inflictor, "progs/mangib3.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", dm);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", dm);
 }
 
 void superchicken_run7(entity this) { set_anim(this, 17, superchicken_run1); ai_run(this, 32); }

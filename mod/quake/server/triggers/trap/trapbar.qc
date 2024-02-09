@@ -60,15 +60,15 @@ void dropblood(entity this)
 void trapbar_explode(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CHAN_AUTO, "enviro/physics/trstop.wav", 1, ATTN_NORM);
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
-	ThrowGib(this, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
+	ThrowGib(this, inflictor, "progs/spidgib.mdl", ((this.health - 40) - (random() * 40)));
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 	BecomeExplosion(this);
 }

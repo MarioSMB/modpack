@@ -537,9 +537,9 @@ void dragon_boom1(entity this)
 		return;
 		
 	this.dragonDeathState = DDIE_EXPLODED;
-	ThrowGib(this, "progs/drggib01.mdl", -100);
-	ThrowGib(this, "progs/drggib02.mdl", -100);
-	ThrowGib(this, "progs/drggib03.mdl", -100);
+	ThrowGib(this, this, "progs/drggib01.mdl", -100);
+	ThrowGib(this, this, "progs/drggib02.mdl", -100);
+	ThrowGib(this, this, "progs/drggib03.mdl", -100);
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	setthink(this, dragon_boom2);
 	this.nextthink = time + 0.1;

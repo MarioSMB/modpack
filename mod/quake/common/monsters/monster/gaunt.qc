@@ -452,10 +452,10 @@ void gaunt_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 	if(this.health < -70 || dogib)
 	{
-		ThrowHead(this, "progs/h_gaunt.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
-		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/h_gaunt.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
 		return;
 	}
 	

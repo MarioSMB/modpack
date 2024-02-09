@@ -165,12 +165,12 @@ void arf_pain(entity this, entity attacker, float damage, int deathtype)
 void arf_explode(entity this)
 {
 	_sound(this, CH_VOICE, "arachnofloyd/death1.wav", 1, ATTN_NORM);
-	ThrowHead(this, "progs/h_arach.mdl", this.health);
-	ThrowGib(this, "progs/fgib1.mdl", this.health);
-	ThrowGib(this, "progs/fgib1.mdl", this.health);
-	ThrowGib(this, "progs/fgib1.mdl", this.health);
-	ThrowGib(this, "progs/fgib1.mdl", this.health);
-	ThrowGib(this, "progs/fgib1.mdl", this.health);
+	ThrowHead(this, this, "progs/h_arach.mdl", this.health);
+	ThrowGib(this, this, "progs/fgib1.mdl", this.health);
+	ThrowGib(this, this, "progs/fgib1.mdl", this.health);
+	ThrowGib(this, this, "progs/fgib1.mdl", this.health);
+	ThrowGib(this, this, "progs/fgib1.mdl", this.health);
+	ThrowGib(this, this, "progs/fgib1.mdl", this.health);
 
 	BecomeExplosion(this);
 }

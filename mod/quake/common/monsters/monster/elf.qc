@@ -313,11 +313,11 @@ void elf_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -20)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/xmas/h_elf.mdl", this.health);
-		ThrowGib(this, "progs/xmas/gib_elfcane.mdl", this.health);
+		ThrowHead(this, inflictor, "progs/xmas/h_elf.mdl", this.health);
+		ThrowGib(this, inflictor, "progs/xmas/gib_elfcane.mdl", this.health);
 		for(int j = 0; j < floor(random() * 6); ++j)
 		{
-			ThrowGib(this, "progs/xmas/gib_snowball.mdl", this.health);
+			ThrowGib(this, inflictor, "progs/xmas/gib_snowball.mdl", this.health);
 		}
 		return;
 	}

@@ -103,12 +103,12 @@ void roo_run(entity this, float dist)
 void roo_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-	ThrowHead(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/gib3.mdl", this.health);
-	ThrowGib(this, "progs/gib3.mdl", this.health);
+	ThrowHead(this, inflictor, "progs/gib1.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
 }
 
 void roo_touch(entity this, entity toucher)

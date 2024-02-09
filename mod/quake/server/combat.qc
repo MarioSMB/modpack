@@ -391,8 +391,6 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		});
 	}
 
-	damage_inflictor = inflictor; // hipnotic
-
 // save damage based on the target's armor level
 
 	float save = ceil(targ.armortype * damage);

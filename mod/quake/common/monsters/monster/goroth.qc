@@ -441,7 +441,7 @@ void gor_pain(entity this, entity attacker, float damage, int deathtype)
 	//GorothTaunt(this);
 }
 
-void gor_gib(entity this)
+void gor_gib(entity this, entity inflictor)
 {
 	// throw tons of meat chunks
 	_sound(this, CHAN_BODY, "boss2/pop2.wav", 1, ATTN_NORM);
@@ -462,11 +462,11 @@ void gor_gib(entity this)
 
 				float r = random();
 				if(r < 0.3)				
-					ThrowGib(this, "progs/gib1.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib1.mdl", -100);
 				else if(r < 0.6)
-					ThrowGib(this, "progs/gib2.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib2.mdl", -100);
 				else
-					ThrowGib(this, "progs/gib3.mdl", -100);
+					ThrowGib(this, inflictor, "progs/gib3.mdl", -100);
 				posy += 48;
 			}
 			posx += 128;
@@ -477,7 +477,12 @@ void gor_gib(entity this)
 	delete(this);
 }
 
-void gor_death21(entity this) { set_animofs(this, anim_goroth_death, 21, gor_gib); }
+void gor_gibthink(entity this)
+{
+	gor_gib(this, this);
+}
+
+void gor_death21(entity this) { set_animofs(this, anim_goroth_death, 21, gor_gibthink); }
 void gor_death20(entity this) { set_animofs(this, anim_goroth_death, 20, gor_death21); }
 void gor_death19(entity this) { set_animofs(this, anim_goroth_death, 19, gor_death20); }
 void gor_death18(entity this) { set_animofs(this, anim_goroth_death, 18, gor_death19); }
@@ -503,7 +508,7 @@ void gor_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	if(this.health < -150)
 	{
-		gor_gib(this);
+		gor_gib(this, inflictor);
 		return;
 	}
 

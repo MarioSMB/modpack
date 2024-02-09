@@ -15,6 +15,6 @@ void DeathBubbles(entity this, int num_bubbles);
 
 void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype);
 
-void ThrowHead(entity this, string gibname, float dm);
+void ThrowHead(entity this, entity inflictor, string gibname, float dm);
 
-entity ThrowGib(entity this, string gibname, float dm);
+entity ThrowGib(entity this, entity inflictor, string gibname, float dm);

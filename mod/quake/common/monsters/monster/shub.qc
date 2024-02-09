@@ -198,11 +198,11 @@ void finale_4(entity this)
 
 				float r = random();
 				if(r < 0.3)				
-					ThrowGib(this, "progs/gib1.mdl", -999);
+					ThrowGib(this, this, "progs/gib1.mdl", -999);
 				else if(r < 0.6)
-					ThrowGib(this, "progs/gib2.mdl", -999);
+					ThrowGib(this, this, "progs/gib2.mdl", -999);
 				else
-					ThrowGib(this, "progs/gib3.mdl", -999);
+					ThrowGib(this, this, "progs/gib3.mdl", -999);
 				yy = yy + 32;
 			}
 			xx = xx + 32;

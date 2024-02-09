@@ -449,17 +449,17 @@ void drole_pain(entity this, entity attacker, float damage, int deathtype)
 	drole_pain1(this);
 }
 
-void drole_explode(entity this, bool isgib)
+void drole_explode(entity this, entity inflictor, bool isgib)
 {
 	float myhealth = (isgib) ? this.health : -100;
 	_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-	ThrowHead(this, "progs/h_drole.mdl", myhealth);
-	ThrowGib(this, "progs/gib_drolearm1.mdl", myhealth);
-	ThrowGib(this, "progs/gib_drolearm2.mdl", myhealth);
-	ThrowGib(this, "progs/gib_droleleg1.mdl", myhealth);
+	ThrowHead(this, inflictor, "progs/h_drole.mdl", myhealth);
+	ThrowGib(this, inflictor, "progs/gib_drolearm1.mdl", myhealth);
+	ThrowGib(this, inflictor, "progs/gib_drolearm2.mdl", myhealth);
+	ThrowGib(this, inflictor, "progs/gib_droleleg1.mdl", myhealth);
 }
 
-void drole_death26(entity this) { set_animofs(this, anim_drole_death, 26, drole_death26); drole_explode(this, false); }
+void drole_death26(entity this) { set_animofs(this, anim_drole_death, 26, drole_death26); drole_explode(this, this, false); }
 void drole_death25(entity this) { set_animofs(this, anim_drole_death, 25, drole_death26); }
 void drole_death24(entity this) { set_animofs(this, anim_drole_death, 24, drole_death25); }
 void drole_death23(entity this) { set_animofs(this, anim_drole_death, 23, drole_death24); }
@@ -492,7 +492,7 @@ void drole_die(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.health < -50)
 	{
 		// custom gib function reused for death
-		drole_explode(this, true);
+		drole_explode(this, inflictor, true);
 		return;
 	}
 

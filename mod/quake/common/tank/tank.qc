@@ -343,7 +343,7 @@ void ThrowTGib(string gibname, float dm, entity master)
 	setorigin(gib, master.origin);
 	_setmodel(gib, gibname);
 	setsize(gib, '-10 -10 -10', '10 10 10');
-	gib.velocity = VelocityForDamage(master, dm);
+	gib.velocity = VelocityForDamage(master, master, dm);
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.solid = SOLID_NOT;
 	gib.avelocity_x = random()*600;

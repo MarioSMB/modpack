@@ -824,16 +824,16 @@ void PlayerDead(entity this)
 	this.deadflag = DEAD_DEAD;
 }
 
-vector VelocityForDamage(entity this, float dm)
+vector VelocityForDamage(entity this, entity inflictor, float dm)
 {
 	vector v;
 
 	// check if the inflictor had velocity, e.g. like a rocket or explode box
-	if(damage_inflictor.velocity != '0 0 0')
+	if(inflictor.velocity != '0 0 0')
 	{
 		// impact some of inflictor's velocity on the gibs
-		v = 0.2 * damage_inflictor.velocity;
-		v = v + (25 * normalize(this.origin - damage_inflictor.origin));
+		v = 0.2 * inflictor.velocity;
+		v = v + (25 * normalize(this.origin - inflictor.origin));
 		v.z = 100 + 100 * random();
 		v.x = v.x + (50 * crandom());
 		v.y = v.y + (50 * crandom());
@@ -864,13 +864,13 @@ vector VelocityForDamage(entity this, float dm)
 	return v;
 }
 
-entity ThrowGib(entity this, string gibname, float dm)
+entity ThrowGib(entity this, entity inflictor, string gibname, float dm)
 {
 	entity gib = spawn();
 	setorigin(gib, this.origin);
 	_setmodel(gib, gibname);
 	setsize(gib, '0 0 0', '0 0 0');
-	gib.velocity = VelocityForDamage(this, dm);
+	gib.velocity = VelocityForDamage(this, inflictor, dm);
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.solid = SOLID_NOT;
 	gib.avelocity_x = random()*600;
@@ -894,7 +894,7 @@ void HeadThink(entity this)
 	}
 }
 
-void ThrowHead(entity this, string gibname, float dm)
+void ThrowHead(entity this, entity inflictor, string gibname, float dm)
 {
 	_setmodel(this, gibname);
 	this.frame = 0;
@@ -905,7 +905,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	this.solid = SOLID_NOT;
 	this.view_ofs = '0 0 8';
 	setsize(this, '-16 -16 0', '16 16 56');
-	this.velocity = VelocityForDamage(this, dm);
+	this.velocity = VelocityForDamage(this, inflictor, dm);
 	setorigin(this, findbetterlocation(this.origin, 16) - '0 0 24');
 	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
@@ -942,15 +942,15 @@ void CorpseThink(entity this)
 	}
 }
 
-void GibPlayer(entity this, entity attacker)
+void GibPlayer(entity this, entity inflictor, entity attacker)
 {
-	ThrowHead(this, get_playerhead(this), this.health);
-	ThrowGib(this, "progs/gib1.mdl", this.health);
-	ThrowGib(this, "progs/gib2.mdl", this.health);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/rawbone.mdl", this.health);
-	ThrowGib(this, "progs/rawbone2.mdl", this.health);
-	ThrowGib(this, "progs/gib3.mdl", this.health);
+	ThrowHead(this, inflictor, get_playerhead(this), this.health);
+	ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/rawbone2.mdl", this.health);
+	ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
 
 	this.deadflag = DEAD_DEAD;
 
@@ -1030,7 +1030,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	if(this.health < -40 || STAT(SKATING, this) || horde_ent)
 	{
-		GibPlayer(this, attacker);
+		GibPlayer(this, inflictor, attacker);
 		if(horde_ent)
 		{
 			entity spot = FindIntermission(this);
