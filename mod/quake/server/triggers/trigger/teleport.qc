@@ -107,6 +107,12 @@ void teleport_use(entity this, entity actor, entity trigger)
 
 void trigger_start_go(entity this)
 {
+	if(!(this.spawnflags & TELEPORT_SILENT))
+	{
+		vector o = (this.mins + this.maxs) * 0.5;
+		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
+	}
+
 	// purely a dev print for wonky triggers
 	#if 0
 	entity temp = find(NULL, targetname, this.target);
@@ -174,16 +180,10 @@ spawnfunc(trigger_teleport)
 		objerror(this, "trigger_teleport: no target");
 		return;
 	}
+	precache_sound("ambience/hum1.wav");
 	this.use = teleport_use;
 	this.count = zeroconvertdefault(this.count, -1);
 	this.active = ACTIVE_ACTIVE;
-
-	if(!(this.spawnflags & SILENT))
-	{
-		precache_sound("ambience/hum1.wav");
-		vector o = (this.mins + this.maxs) * 0.5;
-		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
-	}
 
 	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && this.targetname && this.targetname != "")
 	{
@@ -455,6 +455,58 @@ spawnfunc(info_teleport_target)
 		this.count = -1;
 	this.use = teleport_target_use;
 	//fog_fixKeys(this); // TODO? not sure if we want all the weird fog changing stuff!
+}
+
+/*QUAKED trigger_teleport_box (.5 .0 .5) (-8 -8 -8) (8 8 8) PLAYER_ONLY SILENT TRIGGER_FIRST NOTRIGGER
+Any object touching this will be transported to the corresponding info_teleport_destination entity.
+You must set the "target" field, and create an object with a "targetname" field that matches.
+Quoth2-style edict-saving bounding box trigger: define bounds size with 'size' - trigger volume will be centered on the trigger's origin.
+
+Flags:
+"player_only" only players will teleport
+"silent" no whispering from the slipgate
+"trigger_first" won't be touchable until triggered once by something else
+"notrigger" default behavior for a teleporter with a targetname is to only teleport what's touching it
+	when triggered.  this will preserve ordinary no-targetname behavior (if you're using the teleporter's
+	targetname for a killtarget for example)
+"noflash" don't spawn tfog or make noise
+
+Keys:
+"target" targetname of info_teleport_destination (required)
+"targetname" entity name (required)
+*/
+/*FGD
+@PointClass base(Trigger, Teleport, Bounds) = trigger_teleport_box : "Trigger: Teleporter.
+Any object touching this will be transported to the corresponding info_teleport_destination entity.
+
+Quoth2-style edict-saving bounding box trigger: define bounds size with 'size' - trigger volume will be centered on the trigger's origin.
+
+The 'Not Triggerable' spawnflag: default behavior for a teleporter with a targetname is to only teleport what's touching it when triggered. this will preserve ordinary no-targetname behavior (if you're using the teleporter's targetname for a killtarget for example)." []
+*/
+spawnfunc(trigger_teleport_box)
+{
+	InitTriggerBounds(this);
+	settouch(this, teleport_touch);
+	// find the destination 
+	if(!this.target || this.target == "")
+	{
+		objerror(this, "trigger_teleport_box: no target");
+		return;
+	}
+	precache_sound("ambience/hum1.wav");
+	this.use = teleport_use;
+	this.count = zeroconvertdefault(this.count, -1);
+	this.active = ACTIVE_ACTIVE;
+	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && this.targetname && this.targetname != "")
+	{
+		this.active = ACTIVE_NOT;
+		this.use = trigger_start_use;
+	}
+	else
+	{
+		this.nextthink = this.nextthink + 0.5;
+		setthink(this, trigger_start_go);
+	}
 }
 
 #endif
