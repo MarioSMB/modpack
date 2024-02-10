@@ -208,6 +208,13 @@ void W_DropCannon(entity this, .entity weaponentity)
 {
 	if(!StatusEffects_active(STATUSEFFECT_SharpShooter, this))
 	{
+		// add a delay to every weapon slot when dropping a cannon to prevent instant fires
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity w_ent = weaponentities[slot];
+			if(this.(w_ent) && slot != weaponslot(weaponentity))
+				ATTACK_FINISHED(this, w_ent) = time + 0.5;
+		}
 		STAT(WEAPONS, this) &= ~WEP_CANNON.m_wepset;
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 	}
