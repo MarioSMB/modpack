@@ -102,6 +102,8 @@ bool SUB_UseTargets_CopperAlt(entity this, entity actor, entity trigger, int ski
 
 void SUB_SwitchTargets(.string field, string oldtarget, string newtarget);
 
+void SUB_UseTargetsSilent(entity this, entity actor, entity trigger);
+
 void SUB_SetWorldtype(entity this);
 
 // Yoder Sept 24 2021 Horde merge

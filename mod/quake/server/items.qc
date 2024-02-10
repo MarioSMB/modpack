@@ -539,9 +539,9 @@ void EnableComboWeapons(entity this)
 	if(!IS_PLAYER(this))
 		return;
 	
-	if (!(STAT(WEAPONS, this) & WEPSET(LAVA_NAILGUN)))
+	if(!(STAT(WEAPONS, this) & WEPSET(LAVA_NAILGUN)))
 	{
-		if (this.ammo_lava_nails > 0 && (STAT(WEAPONS, this) & WEPSET(NAILGUN)))
+		if(this.ammo_lava_nails > 0 && (STAT(WEAPONS, this) & WEPSET(NAILGUN)))
 		{
 			// NOTE: disabling spammy message as you already know from the HUD that you got it!
 			//sprint (this, "Lava Enabled\n");
@@ -549,9 +549,9 @@ void EnableComboWeapons(entity this)
 		}
 	}
 
-	if (!(STAT(WEAPONS, this) & WEPSET(LAVA_SUPER_NAILGUN)))
+	if(!(STAT(WEAPONS, this) & WEPSET(LAVA_SUPER_NAILGUN)))
 	{
-		if (this.ammo_lava_nails > 0 && 
+		if(this.ammo_lava_nails > 0 && 
 							(STAT(WEAPONS, this) & WEPSET(SUPER_NAILGUN)))
 		{
 			// NOTE: disabling spammy message as you already know from the HUD that you got it!
@@ -560,9 +560,9 @@ void EnableComboWeapons(entity this)
 		}
 	}
 
-	if (!(STAT(WEAPONS, this) & WEPSET(MULTI_GRENADE)))
+	if(!(STAT(WEAPONS, this) & WEPSET(MULTI_GRENADE)))
 	{
-		if (this.ammo_multi_rockets > 0 && 
+		if(this.ammo_multi_rockets > 0 && 
 							(STAT(WEAPONS, this) & WEPSET(GRENADE_LAUNCHER)))
 		{
 			// NOTE: disabling spammy message as you already know from the HUD that you got it!
@@ -571,9 +571,9 @@ void EnableComboWeapons(entity this)
 		}
 	}
 
-	if (!(STAT(WEAPONS, this) & WEPSET(MULTI_ROCKET)))
+	if(!(STAT(WEAPONS, this) & WEPSET(MULTI_ROCKET)))
 	{
-		if (this.ammo_multi_rockets > 0 && 
+		if(this.ammo_multi_rockets > 0 && 
 							(STAT(WEAPONS, this) & WEPSET(ROCKET_LAUNCHER)))
 		{
 			// NOTE: disabling spammy message as you already know from the HUD that you got it!
@@ -582,9 +582,9 @@ void EnableComboWeapons(entity this)
 		}
 	}
 
-	if (!(STAT(WEAPONS, this) & WEPSET(PLASMA_GUN)))
+	if(!(STAT(WEAPONS, this) & WEPSET(PLASMA_GUN)))
 	{
-		if (this.ammo_plasma > 0 && (STAT(WEAPONS, this) & WEPSET(LIGHTNING)))
+		if(this.ammo_plasma > 0 && (STAT(WEAPONS, this) & WEPSET(LIGHTNING)))
 		{
 			// NOTE: disabling spammy message as you already know from the HUD that you got it!
 			//sprint (this, "Plasma Gun Enabled\n");
@@ -2069,13 +2069,6 @@ PLAYER BACKPACKS
 ===============================================================================
 */
 
-string cons_sep(string a, string sep, string b)
-{
-	if (a == "") return b;
-	if (b == "") return a;
-	return strcat(a, sep, b);
-}
-
 void BackpackTouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -2260,4 +2253,826 @@ void DropBackpack(entity this)
 	
 	item.nextthink = time + 240;
 	setthink(item, SUB_Remove);
+}
+
+/*
+===============================================================================
+
+DROPPING
+
+===============================================================================
+*/
+
+void ItemFall(entity this)
+{
+	if(!(this.spawnflags & ITEM_SUSPENDED))
+		return;
+	this.solid = SOLID_TRIGGER;
+	set_movetype(this, MOVETYPE_TOSS);	
+	this.velocity = '0 0 1';
+	this.spawnflags &= ~ITEM_SUSPENDED;
+}
+
+void target_drop_do(string tname)
+{
+	if(!tname || tname == "")
+		return;
+		
+	entity t = NULL;
+	
+	do
+	{
+		t = find(t, targetname, tname);
+		if(!t)
+			break;
+		
+		ItemFall(t);
+	} while(t);
+}
+
+void target_drop_use(entity this, entity actor, entity trigger)
+{
+	target_drop_do(this.target);
+	target_drop_do(this.target2);
+	target_drop_do(this.target3);
+	target_drop_do(this.target4);
+}
+
+/*QUAKED target_drop (0.75 0.25 0) (-16 -16 -16) (16 16 16) ?
+Causes all targeted items which are SUSPENDED to drop when triggered.
+*/
+/*FGD
+@PointClass base(Appearflags, Targetname) size(32 32 32) color(192 64 0) = target_drop : 
+"Target Drop. Causes all targeted items which are suspended to drop when triggered."
+[
+	target(target_destination) : "Target: acts on all items with a matching targetname" 
+	target2(target_destination) : "Target 2: acts on all items with a matching targetname" 
+	target3(target_destination) : "Target 3: acts on all items with a matching targetname" 
+	target4(target_destination) : "Target 4: acts on all items with a matching targetname" 
+]
+*/
+spawnfunc(target_drop)
+{
+	this.use = target_drop_use;
+}
+
+
+
+/*
+===============================================================================
+
+GIVING/TAKING/CHECKING
+
+===============================================================================
+*/
+
+// nasty series of hacks copied from copper to make maps mostly functional
+
+const int SPAWN_TGTITEMS_TAKE = 1;
+const int SPAWN_TGTITEMS_OVERRIDE = 2;
+const int SPAWN_TGTITEMS_FLASH = 4;
+const int SPAWN_TGTITEMS_TEST = 8;
+const int SPAWN_TGTITEMS_MIN = 16;
+
+const float ARMORTYPE_GREEN = 0.3;
+const float ARMORTYPE_YELLOW = 0.5;
+const float ARMORTYPE_RED = 0.7;
+
+const int IT_INVISIBILITY			= 524288;
+const int IT_INVULNERABILITY		= 1048576;
+const int IT_SUIT					= 2097152;
+const int IT_QUAD					= 4194304;
+
+.int svflags;
+.string deathtype;
+
+/*FGD
+@baseclass = TrigItems [
+	svflags(flags) =
+	[
+		1 : "E1 complete" : 0
+		2 : "E2 complete" : 0
+		4 : "E3 complete" : 0
+		8 : "E4 complete" : 0
+		16 : "Unused" : 0
+		32 : "Unused" : 0
+		64 : "Unused" : 0
+		128 : "Unused" : 0
+	]
+	items(flags) =
+	[
+		1 : "Shotgun" : 0
+		2 : "Super Shotgun" : 0
+		4 : "Nailgun" : 0
+		8 : "Perforator" : 0
+		16 : "Grenade Laucher" : 0
+		32 : "Rocket Launcher" : 0
+		64 : "Lightning Gun" : 0
+		4096 : "Axe" : 0
+		131072 : "Silver Key" : 0
+		262144 : "Gold Key" : 0
+		524288 : "Ring" : 0
+		1048576 : "Pent" : 0
+		2097152 : "Biosuit" : 0
+		4194304 : "Quad" : 0
+	]
+	ammo_shells(integer) : "Shells" : 0
+	ammo_nails(integer) : "Nails" : 0
+	ammo_rockets(integer) : "Rockets" : 0
+	ammo_cells(integer) : "Cells" : 0
+	health(integer) : "Health" : 0
+	armorvalue(integer) : "Armor" : 0
+	armortype(choices) : "Armor Strength" = [
+		0.0 : "Ignore"
+		0.3 : "Green (30%)"
+		0.5 : "Yellow (50%)"
+		0.7 : "Red (70%)"
+	]
+]
+*/
+void armor_set_type(entity e)
+{
+	if(!IS_PLAYER(e))
+		return;
+	
+	e.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+	if(!e.armorvalue)
+	{
+		e.armortype = 0;
+		return;
+	}
+	
+	if(e.armortype < ARMORTYPE_YELLOW)
+		e.items |= IT_ARMOR1;
+	else if(e.armortype < ARMORTYPE_RED)
+		e.items |= IT_ARMOR2;
+	else
+		e.items |= IT_ARMOR3;
+	
+	e.armorvalue = min(e.armorvalue, 500);
+}
+
+void target_items_takeweapon(entity player, Weapon wep)
+{
+	if(STAT(DUAL_WEAPONS, player) & wep.m_wepset)
+		STAT(DUAL_WEAPONS, player) &= ~wep.m_wepset;
+	else
+	{
+		STAT(WEAPONS, player) &= ~wep.m_wepset;
+		.entity weaponentity = weaponentities[0];
+		if(player.(weaponentity).m_weapon == wep)
+			W_SwitchWeapon(player, w_getbestweapon(player, weaponentity), weaponentity);
+	}
+
+	// since this is a nasty ass trigger, let's be nice and let them gather a new dual weapon!
+	player.collected_weapons &= ~wep.m_wepset;
+}
+
+void target_items_giveweapon(entity player, Weapon wep)
+{
+	if(STAT(WEAPONS, player) & wep.m_wepset)
+		STAT(DUAL_WEAPONS, player) |= wep.m_wepset;
+	else
+		STAT(WEAPONS, player) |= wep.m_wepset;
+
+	if(player.cvar_cl_autoswitch)
+	{
+		.entity weaponentity = weaponentities[0]; // TODO?
+		if(!deathmatch)
+			W_SwitchWeapon(player, wep, weaponentity);
+		else
+			Deathmatch_Weapon(player, wep, weaponentity);
+	}
+
+	player.collected_weapons |= wep.m_wepset;
+}
+
+void target_items_setweapon(entity this, entity e, int dotake)
+{
+	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+	if(dotake == 2)
+	{
+		if(STAT(WEAPONS, e) & wep.m_wepset)
+			target_items_takeweapon(e, wep);
+		else
+			target_items_giveweapon(e, wep);
+	}
+	else if(dotake == 1)
+		target_items_takeweapon(e, wep);
+	else
+		target_items_giveweapon(e, wep);
+}
+
+void target_items_giveinv_min(entity this, entity e)
+{
+	if(this.health && this.health > e.health)
+		T_Heal(e, (this.health - e.health), true);
+	
+	float arm = zeroconvert(this.armorvalue);
+	if(arm > e.armorvalue)
+	{
+		int bit = IT_ARMOR1;
+		if(this.armortype >= ARMORTYPE_RED)
+			bit = IT_ARMOR3;
+		else if(this.armortype >= ARMORTYPE_YELLOW)
+			bit = IT_ARMOR2;
+		else
+			bit = IT_ARMOR1;
+		e.armortype = this.armortype;
+		e.armorvalue = arm;
+		e.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		e.items |= bit;
+	}
+
+	if(this.ammo_shells) e.ammo_shells =	max(e.ammo_shells,	zeroconvert(this.ammo_shells));
+	if(this.ammo_nails) e.ammo_nails =		max(e.ammo_nails,	zeroconvert(this.ammo_nails));
+	if(this.ammo_rockets) e.ammo_rockets =	max(e.ammo_rockets,	zeroconvert(this.ammo_rockets));
+	if(this.ammo_cells) e.ammo_cells =		max(e.ammo_cells,	zeroconvert(this.ammo_cells));
+}
+
+void target_items_giveinv(entity this, entity e)
+{
+	if(this.spawnflags & SPAWN_TGTITEMS_MIN)
+	{
+		target_items_giveinv_min(this, e);
+	}
+	else
+	{
+		if(this.health)
+			T_Heal(e, this.health, true);
+			
+		if(this.armorvalue)
+		{
+			float avalue = zeroconvert(this.armorvalue);
+			if(avalue > e.armorvalue)
+			{
+				int bit = IT_ARMOR1;
+				if(this.armortype >= ARMORTYPE_RED)
+					bit = IT_ARMOR3;
+				else if(this.armortype >= ARMORTYPE_YELLOW)
+					bit = IT_ARMOR2;
+				else
+					bit = IT_ARMOR1;
+				e.armortype = this.armortype;
+				e.armorvalue = avalue;
+				e.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+				e.items |= bit;
+			}
+		}
+
+		if(this.ammo_shells) e.ammo_shells += zeroconvert(this.ammo_shells);
+		if(this.ammo_nails) e.ammo_nails += zeroconvert(this.ammo_nails);
+		if(this.ammo_rockets) e.ammo_rockets += zeroconvert(this.ammo_rockets);
+		if(this.ammo_cells) e.ammo_cells += zeroconvert(this.ammo_cells);
+	}
+	bound_other_ammo(e);
+	
+	if(this.svflags)
+		serverflags |= zeroconvert(this.svflags);
+
+	if(this.items)
+	{
+		float it = zeroconvert(this.items);
+		
+		// set artifact timers properly
+		if(it & IT_INVISIBILITY)
+			StatusEffects_apply(STATUSEFFECT_Invisibility, e, time + this.length, 0);
+		if(it & IT_INVULNERABILITY)
+			StatusEffects_apply(STATUSEFFECT_Invulnerability, e, time + this.length, 0);
+		if(it & IT_SUIT)
+			StatusEffects_apply(STATUSEFFECT_Biosuit, e, time + this.length, 0);
+		if(it & IT_QUAD)
+			StatusEffects_apply(STATUSEFFECT_Quad, e, time + this.length, 0);
+		
+		if(it & IT_KEY1)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_give(IT_KEY1);
+				//delete(this);
+			}
+			else
+				e.items |= IT_KEY1;
+		}
+		if(it & IT_KEY2)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_give(IT_KEY2);
+				//delete(this);
+			}
+			else
+				e.items |= IT_KEY2;
+		}
+	}
+
+	if(this.weapon)
+		target_items_setweapon(this, e, 0);
+}
+
+bool target_items_testinv(entity this, entity e)
+{
+	if(this.health > 0 && this.health > e.health) return false;
+	if(this.armorvalue && this.armorvalue > e.armorvalue) return false;
+	if(this.armortype && this.armortype > e.armortype) return false;
+
+	if(this.svflags)
+	{
+		float sf = zeroconvert(this.svflags);
+		if(sf & serverflags != sf)
+			return false;
+	}
+
+	if(this.ammo_shells && this.ammo_shells > e.ammo_shells) return false;
+	if(this.ammo_nails && this.ammo_nails > e.ammo_nails) return false;
+	if(this.ammo_rockets && this.ammo_rockets > e.ammo_rockets) return false;
+	if(this.ammo_cells && this.ammo_cells > e.ammo_cells) return false;
+
+	if(this.items)
+	{
+		float it = zeroconvert(this.items);
+		if(it & e.items != it)
+			return false;
+	}
+
+	if(this.weapon)
+	{
+		Weapon wep = REGISTRY_GET(Weapons, this.weapon);
+		if(!(STAT(WEAPONS, e) & wep.m_wepset))
+			return false;
+	}
+
+	return true;
+}
+
+bool target_items_takeinv(entity this, entity e, entity actor)
+{
+	if(!(this.spawnflags & SPAWN_TGTITEMS_MIN))
+	{
+		if(!target_items_testinv(this, e))
+			return false;
+	}
+	
+	if(this.armorvalue)
+	{
+		e.armorvalue = max(0, e.armorvalue - this.armorvalue);
+		armor_set_type(e);
+	}
+
+	if(this.health > 0)
+	{
+		string oldmessage = this.message;
+		this.message = this.deathtype;
+		T_Damage(e, this, actor, min(e.health, this.health), DEATH_HURTTRIGGER.m_id);
+		this.message = oldmessage;
+		if(e.health <= 0)
+			return false;
+	}
+		
+	if(this.svflags)
+	{
+		float sf = zeroconvert(this.svflags);
+		serverflags &= ~sf;
+	}
+
+	if(this.ammo_shells)
+	{
+		e.ammo_shells = max(0, e.ammo_shells - zeroconvert(this.ammo_shells));
+	}
+	if(this.ammo_nails)
+	{
+		e.ammo_nails = max(0, e.ammo_nails - zeroconvert(this.ammo_nails));
+	}
+	if(this.ammo_rockets)
+	{
+		e.ammo_rockets = max(0, e.ammo_rockets - zeroconvert(this.ammo_rockets));
+	}
+	if(this.ammo_cells)
+	{
+		e.ammo_cells = max(0, e.ammo_cells - zeroconvert(this.ammo_cells));
+	}
+
+	if(this.items)
+	{
+		float it = zeroconvert(this.items);
+		
+		// set artifact timers properly
+		if(it & IT_INVISIBILITY)
+			StatusEffects_remove(STATUSEFFECT_Invisibility, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_INVULNERABILITY)
+			StatusEffects_remove(STATUSEFFECT_Invulnerability, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_SUIT)
+			StatusEffects_remove(STATUSEFFECT_Biosuit, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_QUAD)
+			StatusEffects_remove(STATUSEFFECT_Quad, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_KEY1)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_spend(IT_KEY1);
+				//delete(this);
+			}
+			else
+				e.items &= ~IT_KEY1;
+		}
+		if(it & IT_KEY2)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_spend(IT_KEY2);
+				//delete(this);
+			}
+			else
+				e.items &= ~IT_KEY2;
+		}
+	}
+
+	if(this.weapon)
+		target_items_setweapon(this, e, 1);
+	
+	return true;
+}
+
+
+void target_items_setinv(entity this, entity e, entity actor)
+{
+	if(this.health > 0)
+		e.health = this.health;
+		
+	if(this.armorvalue)
+	{
+		e.armorvalue = zeroconvert(this.armorvalue);
+		if(this.armortype)
+		{
+			e.armortype = this.armortype;
+		}
+		else	// value but no type: assume a color from amount given
+		{
+			if(this.armorvalue > 150)
+				e.armortype = ARMORTYPE_RED;
+			else if(this.armorvalue > 100)
+				e.armortype = ARMORTYPE_YELLOW;
+			else
+				e.armortype = ARMORTYPE_GREEN;
+		}
+		armor_set_type(e);
+	}
+	else if(this.armortype && e.armorvalue)	// type but not value: override color on player
+	{
+		e.armortype = this.armortype;
+		armor_set_type(e);
+	}
+
+	if(this.svflags)
+		serverflags = zeroconvert(this.svflags);		
+
+	if(this.ammo_shells) e.ammo_shells = zeroconvert(this.ammo_shells);
+	if(this.ammo_nails) e.ammo_nails = zeroconvert(this.ammo_nails);
+	if(this.ammo_rockets) e.ammo_rockets = zeroconvert(this.ammo_rockets);
+	if(this.ammo_cells) e.ammo_cells = zeroconvert(this.ammo_cells);
+	bound_other_ammo(e);
+	
+	if(this.items)
+	{
+		float it = zeroconvert(this.items);
+			
+		// set artifact timers properly
+		if(it & IT_INVISIBILITY)
+			StatusEffects_apply(STATUSEFFECT_Invisibility, e, time + this.length, 0);
+		else
+			StatusEffects_remove(STATUSEFFECT_Invisibility, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_INVULNERABILITY)
+			StatusEffects_apply(STATUSEFFECT_Invulnerability, e, time + this.length, 0);
+		else
+			StatusEffects_remove(STATUSEFFECT_Invulnerability, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_SUIT)
+			StatusEffects_apply(STATUSEFFECT_Biosuit, e, time + this.length, 0);
+		else
+			StatusEffects_remove(STATUSEFFECT_Biosuit, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(it & IT_QUAD)
+			StatusEffects_apply(STATUSEFFECT_Quad, e, time + this.length, 0);
+		else
+			StatusEffects_remove(STATUSEFFECT_Quad, e, STATUSEFFECT_REMOVE_CLEAR);
+
+		if(autocvar_sv_quake_globalkeys)
+		{
+			horde_key_spend(IT_KEY1);
+			//delete(this);
+		}
+		else
+			e.items &= ~IT_KEY1;
+
+		if(autocvar_sv_quake_globalkeys)
+		{
+			horde_key_spend(IT_KEY2);
+			//delete(this);
+		}
+		else
+			e.items &= ~IT_KEY2;
+
+		e.worldtype = 0;
+		if(it & IT_KEY1)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_give(IT_KEY1);
+				//delete(this);
+			}
+			else
+				e.items |= IT_KEY1;
+		}
+		if(it & IT_KEY2)
+		{
+			if(autocvar_sv_quake_globalkeys)
+			{
+				horde_key_give(IT_KEY2);
+				//delete(this);
+			}
+			else
+				e.items |= IT_KEY2;
+		}
+	}
+
+	if(this.weapon)
+		target_items_setweapon(this, e, 2);
+	
+	// after resetweaponstate or else deadthink will be overwritten
+	if(this.health < 0)
+	{
+		string oldmessage = this.message;
+		this.message = this.deathtype;
+		T_Damage(e, this, actor, e.health, DEATH_HURTTRIGGER.m_id);
+		this.message = oldmessage;
+	}
+}
+
+void target_items_use(entity this, entity actor, entity trigger)
+{
+	entity act = actor;
+	if(!IS_PLAYER(act))
+		return;
+	if(act.health <= 0)
+		return;
+	
+	if(this.spawnflags & SPAWN_TGTITEMS_OVERRIDE)
+	{
+		target_items_setinv(this, act, actor);
+	}
+	else if(this.spawnflags & SPAWN_TGTITEMS_TEST)
+	{
+		// TAKE reverses the polarity of TEST, so that it only tests if you don't
+		// have all the specified inventory
+		if(target_items_testinv(this, act) != !!(this.spawnflags & SPAWN_TGTITEMS_TAKE))
+		{
+			actor = act;
+			SUB_UseTargetsSilent(this, actor, trigger);
+		}
+		else
+		{
+			SUB_PrintMessage(this, actor);
+			return;
+		}
+	}
+	else if(this.spawnflags & SPAWN_TGTITEMS_TAKE)
+	{
+		if(target_items_takeinv(this, act, actor))
+		{
+			actor = act;
+			SUB_UseTargetsSilent(this, actor, trigger);
+		}
+		else
+		{
+			SUB_PrintMessage(this, actor);
+			return;
+		}
+	}
+	else
+	{
+		target_items_giveinv(this, act);
+	}
+	//if(this.spawnflags & SPAWN_TGTITEMS_FLASH)
+		//stuffcmd(act, "bf\n");
+	if(this.noise && this.noise != "")
+		_sound(act, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
+		
+	actor = act;
+}
+
+/*QUAKED target_items (0.75 0.25 0) (-8 -8 -8) (8 8 8) TAKE OVERRIDE FLASH TEST MINIMUM
+Gives weapons, ammo, items, health, armor, and/or runes to the activating player when triggered. 
+
+Keyvalues:
+"ammo_shells" number of shells player should receive - same for _cells, _rockets, and _nails
+"health" health (will overheal beyond 100)
+"armorvalue" armor (protection color scales automatically)
+"armortype" armor strength (0.3+ green, 0.5+ yellow, 0.7+ red)
+"weapon" item bitflag (not impulse number!) of the weapon the player should swap to (if he has it)
+"items" bitmask of what items the player should get (see below for reference)
+"svflags" bitmask of serverflags to alter (1/2/4/8 are the episode runes, 16+ are invisible)
+"length" length of powerup time in seconds if any are given (default 30)
+"noise" wav file to play on activator
+
+Spawnflags:
+FLASH: flash the recipient's screen when triggered, defaults to being stealthy
+MINIMUM: for numeric amounts, give the player enough to have a minimum of the amount specified
+TAKE: subtract specified inventory amounts instead of adding
+  - subtracting enough health WILL kill the player
+  - will fire its targets if all items can be successfully taken
+  - will print "message" and take nothing instead
+  - TAKE with MINIMUM will skip the test and take whatever it can, firing no targets either way
+OVERRIDE: force the player's inventory to all specified amounts (mainly useful triggered from spawnpoints), specify -1 for any keyvalue to force a 0 (-1 does not work for health)
+TEST: behaves like TAKE, but doesn't take anything 
+  - fires targets if activator has the matching inventory
+  - prints "message" if not
+  - TEST with TAKE will reverse the test (fire if player doesn't have)
+  - beware of how this interacts with triggers: it will only test the first client to touch a trigger in coop unless it has ALL_CLIENTS set
+
+Item Bitmask Reference:
+	SG	= 1		SSG	= 2
+	NG	= 4		SNG	= 8
+	GL	= 16	RL	= 32
+	LG	= 64	Axe	= 4096
+	
+	Silver	= 131072
+	Gold	= 262144
+	Ring	= 524288
+	Pent	= 1048576
+	Biosuit	= 2097152
+	Quad	= 4194304
+*/
+/*FGD
+@PointClass base(Appearflags, Target, Targetname, TrigItems, Deathtype) size(32 32 32) color(192 64 0) = target_items : 
+"Target: Give. Adds weapons, ammo, items, health, armor, and/or runes to the activating player when triggered.
+
+Spawnflag Usage:
+'Take': subtract specified inventory amounts instead of adding
+  - subtracting enough health WILL kill the player
+  - will fire its targets if all items are successfully taken
+  - will print 'message' if fewer than all items are successfully taken
+'Override': force the player's inventory to all specified amounts (mainly useful triggered from spawnpoints), specify -1 for any keyvalue to force a 0 (-1 does not work for items or health)
+'Test Only': behaves like TAKE, but without taking anything 
+  - fires targets if activator has the matching inventory
+  - prints 'message' if not
+  - TEST with TAKE will reverse the test (fire if player doesn't have)
+  - beware of how this interacts with triggers: it will only test the first client to touch a trigger in coop!
+'Minimum': for numeric amounts, give the player enough to have a minimum of the amount specified
+'Flash screen': flash the recipient's screen when triggered, defaults to being stealthy"
+[
+	length(integer) : "Override powerup duration" : 0
+	message(string) : "Message to print if Take was unsuccessful"
+	spawnflags(flags) =
+	[
+		1 : "Take instead" : 0
+		2 : "Override instead" : 0
+		4 : "Flash screen" : 0
+		8 : "Test only" : 0
+		16 : "Minimum" : 0
+	]
+	weapon(choices) : "Force Select Weapon" = 
+	[
+		0 : "Don't"
+		1 : "Shotgun"
+		2 : "Super Shotgun"
+		4 : "Nailgun"
+		8 : "Perforator"
+		16 : "Grenade Laucher"
+		32 : "Rocket Launcher"
+		64 : "Lightning Gun"
+		4096 : "Axe"
+	]
+	noise(string) : "wav file to play on activator"
+]
+*/
+spawnfunc(target_items)
+{
+	this.use = target_items_use;
+	
+	if(this.length <= 0)
+		this.length = 30;
+	if(!this.deathtype || this.deathtype == "")
+		this.deathtype = "had their life removed";
+
+	// force selection not fully supported, as players can disable autoswitch
+	switch(this.weapon)
+	{
+		case 1: this.weapon = WEP_SHOTGUN.m_id; break;
+		case 2: this.weapon = WEP_SUPER_SHOTGUN.m_id; break;
+		case 4: this.weapon = WEP_NAILGUN.m_id; break;
+		case 8: this.weapon = WEP_SUPER_NAILGUN.m_id; break;
+		case 16: this.weapon = WEP_GRENADE_LAUNCHER.m_id; break;
+		case 32: this.weapon = WEP_ROCKET_LAUNCHER.m_id; break;
+		case 64: this.weapon = WEP_LIGHTNING.m_id; break;
+		case 4096: this.weapon = WEP_AXE.m_id; break;
+	}
+
+	// now we must hack away their dumb version of weapons
+	if(this.items & 1)
+	{
+		this.weapon = WEP_SHOTGUN.m_id;
+		this.items &= ~1;
+	}
+	if(this.items & 2)
+	{
+		this.weapon = WEP_SUPER_SHOTGUN.m_id;
+		this.items &= ~2;
+	}
+	if(this.items & 4)
+	{
+		this.weapon = WEP_NAILGUN.m_id;
+		this.items &= ~4;
+	}
+	if(this.items & 8)
+	{
+		this.weapon = WEP_SUPER_NAILGUN.m_id;
+		this.items &= ~8;
+	}
+	if(this.items & 16)
+	{
+		this.weapon = WEP_GRENADE_LAUNCHER.m_id;
+		this.items &= ~16;
+	}
+	if(this.items & 32)
+	{
+		this.weapon = WEP_ROCKET_LAUNCHER.m_id;
+		this.items &= ~32;
+	}
+	if(this.items & 64)
+	{
+		this.weapon = WEP_LIGHTNING.m_id;
+		this.items &= ~64;
+	}
+	if(this.items & 4096)
+	{
+		this.weapon = WEP_AXE.m_id;
+		this.items &= ~4096;
+	}
+	
+	if(this.items > 0)
+	{
+		// clear the item flags that are only for HUD switches so we can be sloppy with .items later
+		this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | 
+									 IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+	}
+	
+	// snap armor color to only allowed values
+	if(this.armortype >= ARMORTYPE_RED)
+		this.armortype = ARMORTYPE_RED;
+	else if(this.armortype >= ARMORTYPE_YELLOW)
+		this.armortype = ARMORTYPE_YELLOW;
+	else if(this.armortype >= ARMORTYPE_GREEN)
+		this.armortype = ARMORTYPE_GREEN;
+	else
+		this.armortype = 0;
+	
+	if(this.noise && this.noise != "")
+		precache_sound(this.noise);
+}
+spawnfunc(target_give)
+{
+	spawnfunc_target_items(this);
+}
+
+
+// ==========================================================
+
+// mode flags
+const int SPAWN_NOTEASY = 256;
+const int SPAWN_NOTNORMAL = 512;
+const int SPAWN_NOTHARD = 1024;
+const int SPAWN_NOTDM = 2048;
+//const int SPAWN_COOPONLY = 4096;
+//const int SPAWN_NOTCOOP = 8192;
+
+const int SPAWNFLAG_ALL_CLIENTS = 16;
+
+spawnfunc(trigger_multiple);
+spawnfunc(trigger_inventory)
+{
+	LOG_DEBUG("trigger_inventory is deprecated; use an ALL_CLIENTS trigger with a target_items");
+	
+	// dumb rearguard action to support this entity I shouldn't have made: copy ourself
+	// to an ALL_CLIENTS trigger, then turn ourself into a target_items that it triggers
+	entity trig = spawn();
+	trig.model = this.model;
+	trig.wait = this.wait;
+	trig.delay = this.delay;
+	trig.spawnflags = (this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) | SPAWNFLAG_ALL_CLIENTS;
+	spawnfunc_trigger_multiple(trig);
+	trig.targetname = this.targetname;
+	
+	vector bb = trig.origin + 0.5 * (trig.mins + trig.maxs);
+	trig.target = ftos(fabs(bb_x+bb_y+bb_z));	// we need a unique-ish targetname ...
+	this.targetname = trig.target;
+	setorigin(this,bb);
+	float inv = !(this.spawnflags & 1);
+	this.spawnflags &= ~(SPAWN_NOTEASY - 1);
+	this.spawnflags |= SPAWN_TGTITEMS_TEST + (SPAWN_TGTITEMS_TAKE * inv);
+	spawnfunc_target_items(this);
 }

@@ -235,7 +235,7 @@ void flytrain_setup(entity this)
 	setblocked(this, flytrain_blocked);
 	this.solid = zeroconvertdefault(this.solid, SOLID_BSP);
 	if(!this.solid)
-		set_movetype(this, MOVETYPE_NOCLIP);
+		set_movetype(this, MOVETYPE_FAKEPUSH);
 	else
 	{
 		set_movetype(this, MOVETYPE_PUSH);
@@ -399,7 +399,7 @@ void train_use(entity this, entity actor, entity trigger)
 		{
 			train_on(this);
 			_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
-			if(this.pos2)
+			if(this.pos2 != '0 0 0')
 				// we were stopped along a bezier curve, resume with saved values
 				SUB_CalcMoveCurveSeg(this);
 			else
@@ -411,6 +411,23 @@ void train_use(entity this, entity actor, entity trigger)
 	if(this.state == STATE_ON)	// already activated
 		return;	
 	train_next(this);
+}
+
+entity get_closest_client(entity this)
+{
+	float chosen_dist = 0;
+	entity chosen = NULL;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		float mydist = vlen2(it.origin - this.origin);
+		if(!chosen || mydist < chosen_dist)
+		{
+			chosen = it;
+			chosen_dist = mydist;
+		}
+	});
+
+	return chosen;
 }
 
 void train_wait(entity this)	// arrival at a pathcorner
@@ -445,7 +462,8 @@ void train_wait(entity this)	// arrival at a pathcorner
 	// trains now fire their pathcorners' targets on arrival
 	// if a player is riding the train, treat them as activator
 	// OR NOT, your silly function was changing activator to the train
-	SUB_UseTargets(corner, this, NULL);
+	entity player = get_closest_client(this);
+	SUB_UseTargets(corner, player, NULL);
 	// fire them after sorting corner wait stuff, in case the corner triggers
 	// the train itself (useful for wait-locking a pathcorner with a relay)
 }
@@ -469,9 +487,11 @@ void train_next(entity this) // departure for next pathcorner
 		LOG_DEBUG("train_next: no next target");
 		// .th_melee is a train's "expire at end of path" function, because .th_die
 		// has to be reserved for shootable trains to work with T_Damage()/Killed()
-		SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 		if(this.th_melee)
+		{
 			this.th_melee(this);
+			SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
+		}
 		else
 			delete(this);
 		return;
@@ -484,9 +504,11 @@ void train_next(entity this) // departure for next pathcorner
 		if(!corner)
 		{
 			LOG_DEBUG("train_next: no next target after curve point");
-			SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
 			if(this.th_melee)
+			{
 				this.th_melee(this);
+				SUB_UseTargets_CopperAlt(this, this.enemy, NULL, BIT(1) | BIT(2) | BIT(3));
+			}
 			else
 				delete(this);
 			return;
@@ -503,8 +525,6 @@ void train_next(entity this) // departure for next pathcorner
 		this.teleport_time = time;
 		if(this.th_stand)
 			this.th_stand(this);
-		else
-			train_wait(this);
 		return;
 	}
 	else if(this.oldenemy.speed > 0 && (this.spawnflags & TRAIN_INHERIT))
@@ -578,7 +598,7 @@ void func_train_setup(entity this)
 //	this.cnt = 1;
 	this.solid = zeroconvertdefault(this.solid, SOLID_BSP);
 	if(!this.solid)
-		set_movetype(this, MOVETYPE_NOCLIP);
+		set_movetype(this, MOVETYPE_FAKEPUSH);
 	else
 		set_movetype(this, MOVETYPE_PUSH);
 	if((this.spawnflags & FUNC_TRAIN_NONSOLID) && substring(world.model, 0, 7) == "maps/mg") // hack needed because this flag is set on vanilla maps!
@@ -717,42 +737,55 @@ spawnfunc(func_train_point)
 	this.movedir = '0 0 0';
 }
 
+void teleball_init(entity this, entity actor, entity trigger)
+{
+	if(this.spawnflags & 1)
+	{
+		this.spawnflags &= ~1;
+		_setmodel(this, "progs/teleport.mdl");
+		setsize(this, '0 0 0', '0 0 0');	
+	}
+	
+	this.avelocity = 50 * vec3(crandom(), crandom(), crandom());
+	this.use = func_null;
+}
+
 /*QUAKED misc_teleporttrain(0 .5 .8)(-8 -8 -8)(8 8 8)
 This is used for the final bos
 */
 spawnfunc(misc_teleporttrain)
-{	
+{
+	precache_model2("progs/teleport.mdl");
+	
+	// emulate old "spawn where you were placed and then move to the first pathcorner"
+	// behavior so udob_end isn't broken by the first path_corner's targets not firing
+	setorigin(this, this.origin);
+	entity path = spawn();
+	setorigin(path, this.origin);
+	path.classname = "path_corner";
+	path.targetname = strzone(vtos(this.origin));	// dumb, but unique!
+	path.target = this.target;
+	this.target = path.targetname;
+	// do this first so train_find finds it
+	
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target || this.target == "")
+	if(this.speed2)
+		this.speed2 /= 6;	// old teletrains have old dumb speed2 values from old dumb fly code
+	this.pausetime = -1;
+	this.solid = -1;
+	
+	flytrain_setup(this);
+	set_movetype(this, MOVETYPE_FAKEPUSH);	// for avelocity
+	
+	if(!(this.spawnflags & 1))
 	{
-		objerror(this, "misc_teleporttrain without a target");
-		return;
+		teleball_init(this, NULL, NULL);
+		_setmodel(this, "progs/teleport.mdl");
+		setsize(this, '0 0 0', '0 0 0');	
 	}
-
-	this.cnt = 1;
-	this.solid = SOLID_NOT;
-	set_movetype(this, MOVETYPE_PUSH);
-	setblocked(this, train_blocked);
-	this.use = train_use;
-	this.avelocity = '100 200 300';
-
-	this.th_stand = train_wait;
-
-	this.noise =("misc/null.wav");
-	precache_sound("misc/null.wav");
-	this.noise1 =("misc/null.wav");
-	precache_sound("misc/null.wav");
-
-	precache_model2("progs/teleport.mdl");
-	_setmodel(this, "progs/teleport.mdl");
-	setsize(this, this.mins , this.maxs);
-	setorigin(this, this.origin);
-
-// start trains on the second frame, to make sure their targets have had
-// a chance to spawn
-	this.nextthink = this.ltime + 0.1;
-	setthink(this, func_train_find);
+	else
+		self.use = teleball_init;
 }
 
 // --------------------------------------------------------------------------------

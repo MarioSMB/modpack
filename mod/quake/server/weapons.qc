@@ -615,8 +615,8 @@ vector VelocityForJump(entity this, entity targ, float dm)
 		v.y = 200 * crandom();
 		v.z = 300 + 100 * random();
 	}
-	if(IS_PLAYER(targ))
-		set_movetype(targ, MOVETYPE_WALK);
+	//if(IS_PLAYER(targ))
+		//set_movetype(targ, MOVETYPE_WALK);
 	v = v * 0.7;
 	return v;
 }

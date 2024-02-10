@@ -4,9 +4,13 @@
 const int anim_old_old = 0; //'0 45 0'
 const int anim_old_shake = 46; //'46 65 0'
 
+const float ATTN_SHUB = 0.05; // almost infinite but not quite
+
+.float strength;
+
 void shub_lightstyle(entity this, int lightnum, string lightid)
 {
-	if(this.charmed || (this.target == "" || !this.target) || world.model != "maps/end.bsp")
+	if(this.charmed || (this.target == "" || !this.target) || (world.model != "maps/end.bsp" && world.model != "maps/udobend.bsp"))
 		return;
 	lightstyle(lightnum, lightid);
 }
@@ -62,7 +66,29 @@ void old_idle2(entity this) { set_animofs(this, anim_old_old, 2, old_idle3); }
 void old_idle1(entity this) { set_animofs(this, anim_old_old, 1, old_idle2); }
 
 void old_thrash1(entity this);
-void old_thrash20(entity this) { set_animofs(this, anim_old_shake, 20, old_thrash20); finale_4(this); }
+void old_thrash20(entity this)
+{
+	set_animofs(this, anim_old_shake, 20, old_thrash20);
+#if 0
+	if(!(this.spawnflags & 1) && this.health <= 0)
+	{
+		if(this.strength > 0)
+		{
+			this.strength -= 1;
+			setthink(this, old_thrash1);
+		}
+		return;
+	}
+#endif
+	sound(this, CH_TRIGGER_SINGLE, SND_Null, 1, ATTN_SHUB);
+	if(this.strength > 0 && this.health > 0)
+	{
+		shub_lightstyle(this, 0, "m");
+		setthink(this, old_idle1);
+		return;
+	}
+	finale_4(this);
+}
 void old_thrash19(entity this) { set_animofs(this, anim_old_shake, 19, old_thrash20); shub_lightstyle(this, 0, "a"); }
 void old_thrash18(entity this) { set_animofs(this, anim_old_shake, 18, old_thrash19); shub_lightstyle(this, 0, "b"); }
 void old_thrash17(entity this) { set_animofs(this, anim_old_shake, 17, old_thrash18); shub_lightstyle(this, 0, "c"); }
@@ -71,9 +97,12 @@ void old_thrash15(entity this)
 {
 	set_animofs(this, anim_old_shake, 15, old_thrash16);
 	shub_lightstyle(this, 0, "m");
-	this.cnt += 1;
-	if(this.cnt < 3)
-		setthink(this, old_thrash1);
+	if(!(this.spawnflags & 1) && this.health <= 0)
+	{
+		this.cnt += 1;
+		if(this.cnt < 3)
+			setthink(this, old_thrash1);
+	}
 }
 void old_thrash14(entity this) { set_animofs(this, anim_old_shake, 14, old_thrash15); shub_lightstyle(this, 0, "m"); }
 void old_thrash13(entity this) { set_animofs(this, anim_old_shake, 13, old_thrash14); shub_lightstyle(this, 0, "k"); }
@@ -88,9 +117,25 @@ void old_thrash5(entity this) { set_animofs(this, anim_old_shake, 5, old_thrash6
 void old_thrash4(entity this) { set_animofs(this, anim_old_shake, 4, old_thrash5); shub_lightstyle(this, 0, "i"); }
 void old_thrash3(entity this) { set_animofs(this, anim_old_shake, 3, old_thrash4); shub_lightstyle(this, 0, "k"); }
 void old_thrash2(entity this) { set_animofs(this, anim_old_shake, 2, old_thrash3); shub_lightstyle(this, 0, "k"); }
-void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); shub_lightstyle(this, 0, "m"); }
+void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); shub_lightstyle(this, 0, "m"); _sound(this, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_SHUB); }
 
 //============================================================================
+
+void shub_dudecycle(entity this)
+{
+	this.frame += 1;
+	if(autocvar_skill > 2)
+	{
+		if(this.frame > 28)
+			this.frame = 17;
+	}
+	else
+	{
+		if(this.frame > 16)
+			this.frame = 12; 
+	}
+	this.nextthink = time + 0.1;
+}
 
 void finale_intermission(entity this)
 {
@@ -103,18 +148,29 @@ void finale_intermission(entity this)
 	entity pos = FindIntermission(this);
 	entity pl = find(NULL, classname, "misc_teleporttrain");
 	if(pl)
+	{
+		if(pl.buddy)
+		{
+			stopsound(pl.buddy, CH_TRIGGER_SINGLE);
+			delete(pl.buddy);
+		}
+		stopsound(pl, CH_TRIGGER_SINGLE);
 		delete(pl);
+	}
 
 	WriteByte(MSG_ALL, SVC_FINALE);
 	WriteString(MSG_ALL, "");
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
+		W_Spellbook_ClearSpells(it);
+		tank_cleanup(it);
+		cannon_clear(it);
+		clear_powerups(it);
 		it.view_ofs = '0 0 0';
 		if(pos)
 			it.angles = it.v_angle = pos.mangle;
 		it.fixangle = true;		// turn this way immediately
-		it.map = this.map;
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
@@ -169,7 +225,6 @@ void finale_3(entity this)
 	shub.enemy = this.enemy;
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
-	_sound(shub, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_NORM);
 	shub_lightstyle(this, 0, "abcdefghijklmlkjihgfedcb");	
 	delete(this);
 }
@@ -179,7 +234,7 @@ void finale_4(entity this)
 	//entity shub = this.owner;
 
 	// throw tons of meat chunks
-	_sound(this, CH_TRIGGER_SINGLE, "boss2/pop2.wav", 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "boss2/pop2.wav", 1, ATTN_SHUB);
 	
 	vector oldo = this.origin;
 
@@ -211,6 +266,9 @@ void finale_4(entity this)
 	}
 	if(!this.charmed && this.target && this.target != "")
 	{
+		if(this.health > 0 && !intermission_running)
+			finale_intermission(this);
+
 		// start the end text
 		WriteByte(MSG_ALL, SVC_FINALE);
 		WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
@@ -228,9 +286,24 @@ void finale_4(entity this)
 				_setmodel(n, "progs/player.mdl");
 				n.colormap = 1024;
 			}
-			oldo = oldo - '32 264 0';
-			setorigin(n, oldo);
-			n.angles = '0 290 0';
+			if(autocvar_skill > 2)	// axe on nightmare because you are very badass
+			{
+				n.angles_y -= 35;
+				n.frame = 17 + floor(random() * 9.9);
+			}
+			else
+			{
+				n.angles_y += 25;
+				n.frame = 12 + floor(random() * 2.9);
+			}
+			makevectors(this.angles);
+			n.angles = this.angles;
+			setorigin(n, oldo + v_forward * 128);
+			setthink(n, shub_dudecycle);
+			n.nextthink = time + 0.1;
+			//oldo = oldo - '32 264 0';
+			//setorigin(n, oldo);
+			//n.angles = '0 290 0';
 			n.frame = 1;
 		}
 
@@ -254,6 +327,28 @@ void finale_4(entity this)
 	//setthink(timer, finale_5);
 }
 
+void shub_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	if(intermission_running)
+		return; // don't trigger twice
+
+	if((this.spawnflags & 1) && !this.charmed)
+		finale_4(this);
+	else
+		finale_1(this, inflictor, attacker, deathtype);
+}
+
+void shub_use(entity this, entity actor, entity trigger)
+{
+	if(this.health <= 0 || this.strength <= 0)
+		return;
+	this.strength -= 1;
+	this.enemy = actor;
+	if(this.strength <= 0 && IS_PLAYER(actor))
+		this.count = 1;
+	old_thrash1(this);
+}
+
 //============================================================================
 
 
@@ -271,6 +366,9 @@ METHOD(Shub, mr_setup, bool(Shub this, entity actor))
 	precache_sound2("boss2/idle.wav");
 	precache_sound2("boss2/pop2.wav");
 
+	if(!actor.strength)
+		actor.strength = 3;
+
 	actor.health = 4000;
 	actor.th_stand = old_idle1;
 	actor.th_walk = old_idle1;
@@ -278,7 +376,9 @@ METHOD(Shub, mr_setup, bool(Shub this, entity actor))
 	actor.nextthink = time + 0.1;	
 	actor.takedamage = DAMAGE_YES;
 	actor.th_pain = func_null;
-	actor.th_die = finale_1;
+	actor.th_die = shub_die;
+
+	actor.use = shub_use;
 
 	return true;
 }

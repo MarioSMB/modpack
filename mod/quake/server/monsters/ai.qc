@@ -462,6 +462,7 @@ Something has bumped into a movetarget.  If it is a monster
 moving towards it, change the next destination and continue.
 ==============
 */
+entity findunlocked(entity start, .string fld, string match);
 void t_movetarget(entity this, entity toucher)
 {
 	if(toucher.movetarget != this)
@@ -469,7 +470,7 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.enemy)
 		return; // fighting, not following a path
 
-	if(MP_MG)
+	if(MP_MG && substring(world.model, 0, 7) == "maps/mg")
 	{
 		this.owner = toucher; // we have a valid visitor!
 		if(toucher.dmg_inflictor && toucher.dmg_inflictor.classname == "path_corner")
@@ -485,7 +486,7 @@ void t_movetarget(entity this, entity toucher)
 
 	if(this.target && this.target != "")
 	{
-		toucher.goalentity = toucher.movetarget = find(NULL, targetname, this.target);
+		toucher.goalentity = toucher.movetarget = findunlocked(NULL, targetname, this.target);
 		if (!toucher.movetarget)
 		{
 			toucher.pausetime = -1;
@@ -507,6 +508,7 @@ void t_movetarget(entity this, entity toucher)
 	}
 	else
 	{
+		toucher.goalentity = toucher.movetarget = NULL;
 		toucher.pausetime = -1;
 		toucher.th_stand(toucher);
 	}

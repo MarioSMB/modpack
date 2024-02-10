@@ -612,6 +612,7 @@ bool RemovedOutsideCoop(entity this)
 void trigger_reactivate(entity this, entity actor, entity trigger)
 {
 	// TheSolipsist fix: when the trigger has health, make it solid so it can be shot
+	this.active = ACTIVE_ACTIVE;
 	if(this.max_health)
 		this.solid = SOLID_BBOX;
 	else

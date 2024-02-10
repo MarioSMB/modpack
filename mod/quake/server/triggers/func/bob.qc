@@ -405,7 +405,7 @@ void func_bobbing_init(entity this, entity actor, entity trigger)
 	
 	this.solid = zeroconvertdefault(this.solid, SOLID_BSP);
 	if(!this.solid)
-		set_movetype(this, MOVETYPE_NOCLIP);
+		set_movetype(this, MOVETYPE_FAKEPUSH);
 	else
 		set_movetype(this, MOVETYPE_PUSH);
 

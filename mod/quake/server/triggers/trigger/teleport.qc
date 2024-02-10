@@ -1,6 +1,5 @@
 #ifdef SVQC
 
-// copper's version of definitions, mostly unused but here for reference
 const int TELEPORT_PLAYER_ONLY = 1;
 const int TELEPORT_SILENT = 2;
 const int TELEPORT_PUSH = 2;
@@ -9,25 +8,34 @@ const int TELEPORT_NOTRIGGER = 8;
 const int TELEPORT_NOFLASH = 16;
 const int TELEPORT_MONSTER_ONLY = 32;
 
+void teleport(entity traveler, entity dst, bool tfog, bool nofwd);
 void teleport_touch(entity this, entity toucher)
 {
 	if(this.customflags & CFL_LOCKED)
 		return;
-	if(this.active != ACTIVE_ACTIVE)
-		return;
 
-	if(this.targetname && this.targetname != "" && (!(this.spawnflags & IGNORE_TARGETNAME) && substring(world.model, 0, 7) == "maps/mg"))
+	bool ignore_targetname = ((this.spawnflags & IGNORE_TARGETNAME) && substring(world.model, 0, 7) == "maps/mg");
+	if(this.targetname && this.targetname != "" && !ignore_targetname && !(this.spawnflags & TELEPORT_TRIGGER_FIRST) && !(this.spawnflags & TELEPORT_NOTRIGGER))
 	{
 		if(this.attack_finished < time)
 			return; // not fired yet
 	}
 
-	if((this.spawnflags & PLAYER_ONLY) && !IS_PLAYER(toucher))
+	if((this.spawnflags & TELEPORT_PLAYER_ONLY) && !IS_PLAYER(toucher))
+		return;
+	if((this.spawnflags & TELEPORT_MONSTER_ONLY) && !IS_MONSTER(toucher))
 		return;
 
 // only teleport living creatures
 	if(toucher.health <= 0 || (toucher.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, toucher)))
 		return;
+
+	entity targ = findunlockedtarget(this, NULL);
+	if(!targ)
+	{
+		objerror(this, "trigger_teleport: couldn't find target");
+		return;
+	}
 
 	playercount_convert(this, count);
 	if(this.count == 0)
@@ -40,49 +48,12 @@ void teleport_touch(entity this, entity toucher)
 	else if(this.count > 0)
 		this.count -= 1;
 
-	SUB_UseTargets(this, NULL, NULL);
+	teleport(toucher, targ, (this.spawnflags & TELEPORT_NOFLASH), false);
 
-// put a tfog where the player was
-	if(!(this.spawnflags & TELEPORT_NOFLASH))
-		spawn_tfog(toucher.origin);
-
-	entity targ = findunlockedtarget(this, NULL);
-	if(!targ)
-	{
-		objerror(this, "trigger_teleport: couldn't find target");
+	if(targ.classname == "misc_teleporttrain")
 		return;
-	}
 
-// spawn a tfog flash in front of the destination
-	makevectors(targ.mangle);
-	vector org = targ.origin + 32 * v_forward;
-
-	if(!(this.spawnflags & TELEPORT_NOFLASH))
-		spawn_tfog(org);
-	spawn_tdeath(targ.origin, toucher);
-
-// move the player and lock him down for a little while
-	if(toucher.health <= 0)
-	{
-		setorigin(toucher, targ.origin);
-		toucher.velocity = (v_forward * toucher.velocity_x) + (v_forward * toucher.velocity_y);
-		return;
-	}
-
-	setorigin(toucher, targ.origin);
-	toucher.angles = targ.mangle;
-	if(IS_PLAYER(toucher))
-	{
-		toucher.fixangle = 1;		// turn this way immediately
-		toucher.teleport_time = time + 0.7;
-		toucher.velocity = v_forward * 300;
-		if(MP_MG && !coop && !deathmatch)
-			FogPushSettingsFrom(toucher, targ, 0);
-	}
-
-	UNSET_ONGROUND(toucher);
-
-	BITXOR_ASSIGN(toucher.effects, EF_TELEPORT_BIT);
+	SUB_UseTargets(this, toucher, NULL);
 }
 
 /*QUAKED info_teleport_destination(.5 .5 .5)(-8 -8 -8)(8 8 32)
@@ -105,64 +76,43 @@ void teleport_use(entity this, entity actor, entity trigger)
 	force_retouch = 2;		// make sure even still objects get hit
 }
 
-void trigger_start_go(entity this)
+void teleport_hum(entity this)
 {
-	if(!(this.spawnflags & TELEPORT_SILENT))
-	{
-		vector o = (this.mins + this.maxs) * 0.5;
-		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
-	}
-
-	// purely a dev print for wonky triggers
-	#if 0
-	entity temp = find(NULL, targetname, this.target);
-	if(!temp || (temp.classname != "info_teleport_destination" && temp.classname != "misc_teleporttrain"))
-	{
-		dprint("trigger_teleport");
-		if(this.targetname && this.targetname != "")
-		{
-			dprint(", targetname '");
-			dprint(this.targetname);
-			dprint("'");
-		}
-		dprint(", target '");
-		dprint(this.target);
-		if(!temp)
-		{
-			dprint("' has no target\n");
-		}
-		else
-		{
-			if(temp == this)
-			{
-				dprint("' targets itthis\n");
-			}
-			else
-			{
-				dprint("' has unusual target ");
-				dprint(temp.classname);
-				dprint("'\n");
-			}
-		}
-	}
-	#endif
-	if(angry_monsters && this.targetname && this.targetname != "")
-	{
-		if(world.model != "maps/end.bsp" || this.targetname != "t68")
-			this.use(this, NULL, NULL);
-	}
+	vector o;
+	if(this.origin != '0 0 0')
+		o = this.origin;
+	else
+		o = (this.absmin + this.absmax) * 0.5;
+	ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
 }
 
-void trigger_start_use(entity this, entity actor, entity trigger)
+void teleport_reactivate(entity this, entity actor, entity trigger)
 {
-	this.active = ACTIVE_ACTIVE;
+	trigger_reactivate(this, actor, trigger);
+	// triggerfirst + nonsilent = delayed ambientsound, so shortcut teleporters don't sound like secrets
+	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && !(this.spawnflags & TELEPORT_SILENT))
+		teleport_hum(this);
+	
 	this.use = teleport_use;
-	if(this.max_health)
-		this.solid = SOLID_BBOX;
-	else
-		this.solid = SOLID_TRIGGER;
-	trigger_start_go(this);
-	force_retouch = 2;
+}
+
+void trigger_teleport_setup(entity this)
+{
+	settouch(this, teleport_touch);
+	// find the destination 
+	if(!this.target || this.target == "")
+	{
+		objerror(this, "trigger_teleport: no target");
+		return;
+	}
+	this.use = teleport_use;
+	this.count = zeroconvertdefault(this.count, -1);
+	if(!(this.spawnflags & TELEPORT_SILENT))
+	{
+		precache_sound("ambience/hum1.wav");
+		if (!(this.spawnflags & TELEPORT_TRIGGER_FIRST))
+			teleport_hum(this);
+	}
 }
 
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT CTF_ONLY
@@ -173,28 +123,9 @@ If the trigger_teleport has a targetname, it will only teleport entities when it
 spawnfunc(trigger_teleport)
 {
 	InitTrigger(this);
-	settouch(this, teleport_touch);
-	// find the destination 
-	if(!this.target || this.target == "")
-	{
-		objerror(this, "trigger_teleport: no target");
-		return;
-	}
-	precache_sound("ambience/hum1.wav");
-	this.use = teleport_use;
-	this.count = zeroconvertdefault(this.count, -1);
-	this.active = ACTIVE_ACTIVE;
-
-	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && this.targetname && this.targetname != "")
-	{
-		this.active = ACTIVE_NOT;
-		this.use = trigger_start_use;
-	}
-	else
-	{
-		this.nextthink = this.nextthink + 0.5;
-		setthink(this, trigger_start_go);
-	}
+	trigger_teleport_setup(this);	// after inittrigger, so that size/model is set, so the telehum hums in the right place
+	if(this.spawnflags & TELEPORT_TRIGGER_FIRST)
+		this.use = teleport_reactivate;
 }
 
 void effect_teleport_use(entity this, entity actor, entity trigger)
@@ -222,7 +153,7 @@ spawnfunc(effect_teleport)
 // to try and teleport something is inconvenient
 // --------------------------------
 
-void teleport(entity traveler, entity dst, float tfog, float nofwd)
+void teleport(entity traveler, entity dst, bool tfog, bool nofwd)
 {
 	vector vdir = '0 0 0';
 	float flash = 3;	// 1 = @org, 2 = @dest, 3 = both
@@ -235,7 +166,7 @@ void teleport(entity traveler, entity dst, float tfog, float nofwd)
 			vdir = vectoangles(traveler.enemy.origin - dst.origin);
 		}
 		// if the teleball isn't moving, emerge facing the direction you traveled to help orientation
-		else if(dst.buddy && dst.buddy.velocity == VEC_ORIGIN)
+		else if(dst.buddy && dst.buddy.velocity == '0 0 0')
 		{
 			vdir = vectoangles(dst.origin - traveler.origin);
 			nofwd = true;
@@ -298,6 +229,7 @@ void teleport(entity traveler, entity dst, float tfog, float nofwd)
 		{
 			traveler.teleport_time = time + 0.7;
 			traveler.velocity = v_forward * 300;
+			traveler.oldvelocity = traveler.velocity;
 		}
 	}
 	else
@@ -307,6 +239,8 @@ void teleport(entity traveler, entity dst, float tfog, float nofwd)
 	}
 
 	UNSET_ONGROUND(traveler);
+
+	BITXOR_ASSIGN(traveler.effects, EF_TELEPORT_BIT);
 }
 
 bool teleport_target_check(entity this, entity e);
@@ -341,7 +275,7 @@ bool teleport_target_check(entity this, entity e)
 	if(e.movetype == MOVETYPE_NOCLIP)
 		return false;
 	// only teleport living creatures
-	if(e.health <= 0 || e.solid != SOLID_SLIDEBOX) // TODO: not a great way to check for "living"
+	if(e.health <= 0 || (e.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, e))) // TODO: not a great way to check for "living"
 		return false;
 	return true;
 }
@@ -486,27 +420,9 @@ The 'Not Triggerable' spawnflag: default behavior for a teleporter with a target
 spawnfunc(trigger_teleport_box)
 {
 	InitTriggerBounds(this);
-	settouch(this, teleport_touch);
-	// find the destination 
-	if(!this.target || this.target == "")
-	{
-		objerror(this, "trigger_teleport_box: no target");
-		return;
-	}
-	precache_sound("ambience/hum1.wav");
-	this.use = teleport_use;
-	this.count = zeroconvertdefault(this.count, -1);
-	this.active = ACTIVE_ACTIVE;
-	if((this.spawnflags & TELEPORT_TRIGGER_FIRST) && this.targetname && this.targetname != "")
-	{
-		this.active = ACTIVE_NOT;
-		this.use = trigger_start_use;
-	}
-	else
-	{
-		this.nextthink = this.nextthink + 0.5;
-		setthink(this, trigger_start_go);
-	}
+	trigger_teleport_setup(this);
+	if(this.spawnflags & TELEPORT_TRIGGER_FIRST)
+		this.use = teleport_reactivate;
 }
 
 #endif
