@@ -144,15 +144,6 @@ match(string)this.target and call their .use function
 */
 void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptargets, bool nomessage)
 {
-	if((!this.target || this.target == "") &&
-	   (!this.target2 || this.target2 == "") &&
-	   (!this.target3 || this.target3 == "") &&
-	   (!this.target4 || this.target4 == "") &&
-	   (!this.targetname || this.targetname == ""))
-	{
-		return;
-	}
-
 //
 // check for a delay
 //
