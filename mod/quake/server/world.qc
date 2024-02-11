@@ -1287,19 +1287,23 @@ void Copper_OnEntityPrespawn(entity this)
 		return;
 	}
 	// since coop only stuff relies entirely on there being multiple players, we must sadly turn it off
-#if 0
-	if(((this.spawnflags & SPAWN_NOTCOOP) && coop) || ((this.spawnflags & SPAWN_COOPONLY) && !coop))
+	bool forcecoop = false;
+	// some maps require co-op to function correctly (ironically), so force enable it here
+	if(world.model == "maps/rmx_rj.bsp")
+		forcecoop = true;
+	if(forcecoop)
+	{
+		if(((this.spawnflags & SPAWN_NOTCOOP) && coop) || ((this.spawnflags & SPAWN_COOPONLY) && !coop))
+		{
+			delete(this);
+			return;
+		}
+	}
+	else if(this.spawnflags & SPAWN_COOPONLY)
 	{
 		delete(this);
 		return;
 	}
-#else
-	if(this.spawnflags & SPAWN_COOPONLY)
-	{
-		delete(this);
-		return;
-	}
-#endif
 
 	// support impulse triggering on anything
 	// shouldn't really be here but it has to get called on every entity anyway
