@@ -83,6 +83,7 @@ bool CheckAttack(entity this)
 	{
 		this.th_missile(this);
 		this.attack_finished = time + (2 * random());
+		W_Parry_Trigger(this, 0.5);
 		return true;
 	}
 
