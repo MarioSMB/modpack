@@ -10,6 +10,15 @@ PRECACHE(Otamatone)
 	precache_model("progs/x9_burst_6sided_brightyellow.mdl");
 }
 
+const float OTAMATONE_WEPANIMTIME = 0.015;
+
+void wep_otamatone_shot6(entity this) { wep_set_anim(this, 6, w_ready); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; }
+void wep_otamatone_shot5(entity this) { wep_set_anim(this, 5, wep_otamatone_shot6); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; }
+void wep_otamatone_shot4(entity this) { wep_set_anim(this, 4, wep_otamatone_shot5); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; }
+void wep_otamatone_shot3(entity this) { wep_set_anim(this, 3, wep_otamatone_shot4); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; }
+void wep_otamatone_shot2(entity this) { wep_set_anim(this, 2, wep_otamatone_shot3); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; }
+void wep_otamatone_shot1(entity this) { wep_set_anim(this, 1, wep_otamatone_shot2); this.weapon_nextthink = time + OTAMATONE_WEPANIMTIME; this.owner.effects |= EF_MUZZLEFLASH; }
+
 .float otamatone_smoketime;
 
 void otamatone_note_touch(entity this, entity toucher)
@@ -54,7 +63,7 @@ void otamatone_zapnearby(entity this)
 		SendCSQCLightningBeam(this.origin, it.origin);
 		// may cause heavy lag when fired near water!
 		//LightningDamage(this.origin, it.origin, this, 15, WEP_OTAMATONE.m_id);
-		T_Damage(it, this, this.owner, 20, this.projectiledeathtype);
+		T_Damage(it, this, this.owner, 15, this.projectiledeathtype);
 		hitenemy = true;
 	});
 
@@ -152,7 +161,7 @@ METHOD(Otamatone, wr_think, void(entity thiswep, entity actor, .entity weaponent
 	{
 		if(IS_PLAYER(actor))
 			player_shot1(actor);
-		wep_generic_shot1(actor.(weaponentity));
+		wep_otamatone_shot1(actor.(weaponentity));
 		W_FireOtamatone(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}
