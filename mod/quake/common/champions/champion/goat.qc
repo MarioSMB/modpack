@@ -39,19 +39,22 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 		makevectors(actor.v_angle);
 		setorigin(musicnote, actor.origin + v_forward * -45);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-		if(time > actor.goat_brown_time && random() < 0.025)
-		{
-			musicnote.colormod = '0.5 0.25 0';
-			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
-			actor.goat_brown_time = time + 3;
-		}
-		else
-			musicnote.colormod = '0 1 0';
 		musicnote.scale = 0.75;
 		musicnote.effects = EF_FULLBRIGHT;
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.angles = '0 1 0' * actor.angles_y;
-		set_movetype(musicnote, MOVETYPE_FLY);
+		if(time > actor.goat_brown_time && random() < 0.125)
+		{
+			musicnote.colormod = '0.5 0.25 0';
+			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
+			actor.goat_brown_time = time + 3;
+			set_movetype(musicnote, MOVETYPE_BOUNCE);
+		}
+		else
+		{
+			musicnote.colormod = '0 1 0';
+			set_movetype(musicnote, MOVETYPE_FLY);
+		}
 		SUB_SetFade(musicnote, time + 0.1, 0.5);
 		musicnote.velocity = '0 0 150' + v_forward * -100;
 	}
