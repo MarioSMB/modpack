@@ -1293,19 +1293,7 @@ void ObserverThink(entity this)
 	}
 	else if(PHYS_INPUT_BUTTON_ATCK2(this))
 	{
-		entity ent = findchain(classname, STR_PLAYER);
-		if(!ent)
-			return;
-		entity first = ent;
-		if(this.clientcamera && this.clientcamera != this)
-		while(ent && ent != this.clientcamera)
-			ent = ent.chain;
-
-		if(ent.chain)
-			ent = ent.chain;
-		else
-			ent = first;
-		this.clientcamera = ent;
+		this.clientcamera = this;
 		this.spectate_delay = time + 1;
 	}
 }
@@ -1965,7 +1953,7 @@ void PlayerPreThink(entity this)
 		this.netname_previous = strzone(this.netname);
 	}
 
-	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
+	this.disableclientprediction = ((intermission_running) ? 1 : -1);
 
 	this.modelflags &= ~MF_ROCKET; // always do this regardless
 
