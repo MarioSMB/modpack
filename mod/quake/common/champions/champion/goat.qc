@@ -39,7 +39,7 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 		makevectors(actor.v_angle);
 		setorigin(musicnote, actor.origin + v_forward * -45);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-		musicnote.colormod = colormapPaletteColor(actor.colormap & 0x0F, true);
+		musicnote.colormod = (actor.colormap) ? colormapPaletteColor(actor.colormap, true) : '1 0.5 1';
 		musicnote.scale = 0.75;
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.angles = '0 1 0' * actor.angles_y;
