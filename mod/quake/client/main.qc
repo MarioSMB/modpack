@@ -36,6 +36,7 @@ void CSQC_Init()
 	binddb = db_create();
 
 	registercvar("cl_quake_spectate", "0");
+	registercvar("cl_quake_goatstuff", "0.3");
 }
 
 void Shutdown()

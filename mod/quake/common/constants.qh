@@ -28,6 +28,9 @@ REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 
 REPLICATE_INIT(bool, cvar_cl_quake_spectate);
 REPLICATE(cvar_cl_quake_spectate, bool, "cl_quake_spectate");
+
+REPLICATE_INIT(float, cvar_cl_quake_goatstuff);
+REPLICATE(cvar_cl_quake_goatstuff, float, "cl_quake_goatstuff");
 #endif
 
 // generic entity flags

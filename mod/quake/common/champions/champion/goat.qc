@@ -33,13 +33,13 @@ METHOD(Goat, m_cannon_land, bool(Champions this, entity actor))
 #ifdef SVQC
 METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 {
-	if(random() < 0.6 && actor.velocity != '0 0 0')
+	if(random() < actor.cvar_cl_quake_goatstuff && vdist(actor.velocity, >, 250))
 	{
 		entity musicnote = new(musicnote);
 		makevectors(actor.v_angle);
 		setorigin(musicnote, actor.origin + v_forward * -45);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-		musicnote.colormod = colormapPaletteColor(actor.colormap & 0x0F, false);
+		musicnote.colormod = colormapPaletteColor(actor.colormap & 0x0F, true);
 		musicnote.scale = 0.75;
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.angles = '0 1 0' * actor.angles_y;
