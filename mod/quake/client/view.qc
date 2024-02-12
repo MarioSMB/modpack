@@ -404,8 +404,8 @@ int WantEventchase(entity this, bool want_vehiclechase)
 		return 0;
 	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK))
 		return 1;
-	if((player_localnum + 1) != player_localentnum) // spectating)
-		return 1;
+	//if((player_localnum + 1) != player_localentnum) // spectating)
+		//return 1;
 	if(this.viewloc)
 		return 1;
 	if(this.m_champion && this.m_champion.qcc_thirdperson)
