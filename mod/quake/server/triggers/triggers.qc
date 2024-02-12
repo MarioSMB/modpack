@@ -216,7 +216,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 		{
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
-				if(t.use)
+				if(t != this && t.use)
 				{
 					if(this.target_random)
 						RandomSelection_AddEnt(t, 1, 0);

@@ -418,7 +418,18 @@ void View_EventChase(entity this)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(autocvar_chase_active == -2)
+		if((player_localnum + 1) != player_localentnum)
+		{
+			if(!autocvar_chase_active)
+			{
+				cvar_set("chase_active", "-2");
+				return;
+			}
+
+			if(autocvar_chase_active == -2)
+				return;
+		}
+		else if(autocvar_chase_active == -2)
 			cvar_set("chase_active", "0");
 
 		int eventchase = WantEventchase(this, false);
