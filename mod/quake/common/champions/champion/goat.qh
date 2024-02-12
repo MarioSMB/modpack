@@ -82,4 +82,5 @@ string autocvar_sv_allow_customplayermodels_goatlist = "";
 
 .float goat_bash_time;
 .bool goat_cannon;
+.float goat_brown_time;
 #endif

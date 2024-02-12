@@ -39,10 +39,11 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 		makevectors(actor.v_angle);
 		setorigin(musicnote, actor.origin + v_forward * -45);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-		if(random() < 0.025)
+		if(time > actor.goat_brown_time && random() < 0.025)
 		{
 			musicnote.colormod = '0.5 0.25 0';
 			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
+			actor.goat_brown_time = time + 3;
 		}
 		else
 			musicnote.colormod = '0 1 0';
