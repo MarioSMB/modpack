@@ -1253,6 +1253,7 @@ void DecodeLevelParms(entity this);
 void player_touch(entity this, entity toucher);
 
 .float rejoin_delay;
+.float spectate_delay;
 float autocvar_sv_quake_rejoin_delay = 3;
 void ObserverThink(entity this)
 {
@@ -1276,6 +1277,36 @@ void ObserverThink(entity this)
 				return;
 			}
 		}
+	}
+
+	if(time < this.spectate_delay)
+		return;
+	if(this.button0)
+	{
+		entity player = (this.clientcamera == this) ? NULL : this.clientcamera;
+		entity ent = find(player, classname, STR_PLAYER);
+		if(!ent)
+			ent = find(ent, classname, STR_PLAYER);
+		if(ent)
+			this.clientcamera = ent;
+		this.spectate_delay = time + 1;
+	}
+	else if(PHYS_INPUT_BUTTON_ATCK2(this))
+	{
+		entity ent = findchain(classname, STR_PLAYER);
+		if(!ent)
+			return;
+		entity first = ent;
+		if(this.clientcamera && this.clientcamera != this)
+		while(ent && ent != this.clientcamera)
+			ent = ent.chain;
+
+		if(ent.chain)
+			ent = ent.chain;
+		else
+			ent = first;
+		this.clientcamera = ent;
+		this.spectate_delay = time + 1;
 	}
 }
 
@@ -1365,6 +1396,7 @@ void PutObserverInServer(entity this)
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
 	this.exptime = 0;
+	this.clientcamera = this;
 
 	this.classname = STR_OBSERVER;
 	this.health = -666;
@@ -1415,6 +1447,7 @@ void PutPlayerInServer(entity this)
 	this.healthrot_nextcheck = 0;
 	this.effects = EF_TELEPORT_BIT;
 	this.drawonlytoclient = NULL;
+	this.clientcamera = this;
 
 	this.alpha = 1;
 	this.colormod = '1 1 1';
