@@ -25,7 +25,8 @@ const int OGRE_NORMAL = BIT(2);
 
 void OgreGrenadeExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 40, this.projectiledeathtype, NULL);
+	float damg = (this.dmg) ? this.dmg : 40;
+	T_RadiusDamage(this, this.owner, damg, this.projectiledeathtype, NULL);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
@@ -66,6 +67,7 @@ void OgreFireGrenade(entity this)
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_OGRE.m_id;
 	missile.classname = "ogre_grenade";
+	missile.dmg = 40;
 		
 // set missile speed	
 
