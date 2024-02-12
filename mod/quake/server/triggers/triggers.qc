@@ -187,8 +187,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 	{
 		for(entity t = NULL; (t = find(t, targetname, s)); )
 		{
-			if(t.trigger_field)
-				delete(t.trigger_field);
+			//if(t.trigger_field)
+				//delete(t.trigger_field);
 			delete(t);
 		}
 	}

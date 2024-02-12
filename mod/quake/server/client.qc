@@ -1253,7 +1253,7 @@ void DecodeLevelParms(entity this);
 void player_touch(entity this, entity toucher);
 
 .float rejoin_delay;
-.float spectate_delay;
+//.float spectate_delay;
 float autocvar_sv_quake_rejoin_delay = 3;
 void ObserverThink(entity this)
 {
@@ -1278,7 +1278,7 @@ void ObserverThink(entity this)
 			}
 		}
 	}
-
+#if 0
 	if(time < this.spectate_delay)
 		return;
 	if(this.button0)
@@ -1296,6 +1296,7 @@ void ObserverThink(entity this)
 		this.clientcamera = this;
 		this.spectate_delay = time + 1;
 	}
+#endif
 }
 
 void RunPostPutClientInServer(entity this) 
@@ -1953,7 +1954,7 @@ void PlayerPreThink(entity this)
 		this.netname_previous = strzone(this.netname);
 	}
 
-	this.disableclientprediction = ((intermission_running) ? 1 : -1);
+	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
 
 	this.modelflags &= ~MF_ROCKET; // always do this regardless
 
