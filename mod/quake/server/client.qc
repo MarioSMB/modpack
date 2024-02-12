@@ -1279,9 +1279,7 @@ void ObserverThink(entity this)
 		}
 	}
 
-	if(time < this.spectate_delay)
-		return;
-	if(this.button0)
+	if(this.button0 && time > this.spectate_delay)
 	{
 		entity player = (this.clientcamera == this) ? NULL : this.clientcamera;
 		entity ent = find(player, classname, STR_PLAYER);
@@ -1289,12 +1287,14 @@ void ObserverThink(entity this)
 			ent = find(ent, classname, STR_PLAYER);
 		if(ent)
 			this.clientcamera = ent;
+		if(this.clientcamera && this.clientcamera != this)
+			centerprint(this, strcat("Spectating ", this.clientcamera.netname));
 		this.spectate_delay = time + 1;
 	}
 	else if(PHYS_INPUT_BUTTON_ATCK2(this))
 	{
 		this.clientcamera = this;
-		this.spectate_delay = time + 1;
+		this.spectate_delay = time + 0.5;
 	}
 }
 
