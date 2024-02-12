@@ -43,19 +43,20 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 		musicnote.effects = EF_FULLBRIGHT;
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.angles = '0 1 0' * actor.angles_y;
-		if(time > actor.goat_brown_time && random() < 0.125)
+		if(time > actor.goat_brown_time && random() < 0.025)
 		{
 			musicnote.colormod = '0.5 0.25 0';
 			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
 			actor.goat_brown_time = time + 3;
 			set_movetype(musicnote, MOVETYPE_BOUNCE);
+			SUB_SetFade(musicnote, time + 0.1, 3);
 		}
 		else
 		{
 			musicnote.colormod = '0 1 0';
 			set_movetype(musicnote, MOVETYPE_FLY);
+			SUB_SetFade(musicnote, time + 0.1, 0.5);
 		}
-		SUB_SetFade(musicnote, time + 0.1, 0.5);
 		musicnote.velocity = '0 0 150' + v_forward * -100;
 	}
 }
