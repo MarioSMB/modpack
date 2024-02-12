@@ -378,13 +378,13 @@ JUNK
 ====================================
 */
 
-entity W_PickNearbyTarget(entity this, bool checkinfront, bool hitany)
+entity W_PickNearbyTarget(entity this, float hitrange, bool checkinfront, bool hitany)
 {
 	float cur_dist = 0;
 	RandomSelection_Init();
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 500, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it)) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
+	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it)) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
 	{
 		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
@@ -530,7 +530,7 @@ void W_PulseRifle(entity this)
 	this.pulserifle_finished = time + 1;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, true, false);
+	entity selected = W_PickNearbyTarget(this, 500, true, false);
 	if(selected)
 		W_FireRifleTarget(this, selected);
 }
@@ -542,7 +542,7 @@ void W_Fireball(entity this)
 	this.fireball_finished = time + 2;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, true, false);
+	entity selected = W_PickNearbyTarget(this, 500, true, false);
 	if(selected)
 		W_Fireball_Attack(this, selected);
 }
@@ -772,6 +772,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	f = vec3(0 - f.y, f.x, 0) * 16;
 	float ldmg = damage;
 
+	entity attacker = (IS_MONSTER(from.owner) || IS_PLAYER(from.owner) ? from.owner : from);
+
 	traceline(p1, p2, false, from);
 	if(trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
@@ -806,7 +808,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(ldmg > 0)
-			T_Damage(trace_ent, from, from, ldmg, deathtype);
+			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
 		if(trace_ent.reflectlightning)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
@@ -825,7 +827,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(ldmg > 0)
-			T_Damage(trace_ent, from, from, ldmg, deathtype);
+			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
 		if(trace_ent.reflectlightning)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);

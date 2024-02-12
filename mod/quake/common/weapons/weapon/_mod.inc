@@ -31,3 +31,4 @@
 #include "tuba.qc"
 #include "kazoo.qc"
 #include "cannon.qc"
+#include "otamatone.qc"

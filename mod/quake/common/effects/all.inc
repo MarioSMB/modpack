@@ -37,3 +37,5 @@ EFFECT(0, MAYO_SMASH,               "iceorglass")
 EFFECT(0, BROWN_NOTE,               "smoke_large")
 
 EFFECT(1, QCC_BLOODTRAIL,           "red_pass")
+
+EFFECT(0, OTAMATONE_FIRE,           "arc_smoke")

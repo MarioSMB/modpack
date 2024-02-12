@@ -1,0 +1,30 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(OTAMATONE_MUSICNOTE, "weapons/otamatone_music");
+#endif
+
+CLASS(Otamatone, Weapon)
+/* ammotype  */ ATTRIB(Otamatone, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Otamatone, impulse, int, 8);
+/* spawnflags*/ ATTRIB(Otamatone, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* ammo */      ATTRIB(Otamatone, aflag, int, 5);
+/* modelname */ ATTRIB(Otamatone, mdl, string, "otamatone");
+/* crosshair */ ATTRIB(Otamatone, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Otamatone, w_crosshair_size, float, 0.45);
+/* crosshair */ ATTRIB(Otamatone, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Otamatone, model2, string, "otamatone");
+/* refname   */ ATTRIB(Otamatone, netname, string, "otamatone");
+/* wepname   */ ATTRIB(Otamatone, m_name, string, _("Otamatone"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Otamatone, m_musicnote, Sound, SND_OTAMATONE_MUSICNOTE);
+#endif
+
+ENDCLASS(Otamatone)
+REGISTER_WEAPON(OTAMATONE, NEW(Otamatone));
+
+SPAWNFUNC_WEAPON(weapon_otamatone, WEP_OTAMATONE)
+
+#ifdef GAMEQC
+SOUND(OTAMATONE_FIRE, "weapons/otamatone_fire");
+#endif
