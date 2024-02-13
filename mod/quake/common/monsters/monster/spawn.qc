@@ -77,11 +77,12 @@ void Tar_JumpTouch(entity this, entity toucher)
 		return;
 	if(toucher.takedamage && toucher.classname != this.classname)
 	{
-		if( vdist(this.velocity, >, 400) )
+		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 10 + 10*random();
-			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_SPAWN.m_id);	
+			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_SPAWN.m_id);
 			_sound(this, CH_WEAPON_SINGLE, "blob/hit1.wav", 1, ATTN_NORM);
+			this.attack_finished = time + 0.5;
 		}
 	}
 	else
@@ -101,10 +102,6 @@ void Tar_JumpTouch(entity this, entity toucher)
 		}
 		return;	// not on ground yet
 	}
-
-	settouch(this, func_null);
-	setthink(this, tbaby_jump1);
-	this.nextthink = time + 0.1;
 }
 
 void tbaby_jump5(entity this);
@@ -113,10 +110,13 @@ void tbaby_fly1(entity this);
 void tbaby_fly4(entity this)
 {
 	set_animofs(this, anim_tbaby_fly, 4, tbaby_fly1);
+	if(this.exptime != 0)
+		return;
 	if(IS_ONGROUND(this))
 	{
 		settouch(this, func_null);
 		setthink(this, tbaby_run1);
+		set_movetype(this, MOVETYPE_STEP);
 		return;
 	}
 	this.cnt += 1;

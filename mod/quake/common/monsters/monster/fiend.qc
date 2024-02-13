@@ -297,7 +297,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 			float ldmg = 40 + 10*random();
 			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_FIEND.m_id);
 			if(MP_MG)
-				this.attack_finished = time + 0.5;	
+				this.attack_finished = time + 0.5;
 		}
 	}
 

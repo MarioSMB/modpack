@@ -263,9 +263,9 @@ spawnfunc(trigger_multiple)
 		this.spawnflags &= ~MULTI_TRIGGER_FIRST;
 		return;
 	}
-	
-	init_trigger_multiple(this);
+
 	InitTrigger(this);
+	init_trigger_multiple(this);
 }
 
 
