@@ -646,10 +646,11 @@ void InitTrigger(entity this)
 		SetMovedir(this);
 	if(!this.health)
 		this.solid = SOLID_TRIGGER;
-	SetBrushEntityModelNoLOD(this);
+	//SetBrushEntityModelNoLOD(this);
+	_setmodel(this, this.model);
 	set_movetype(this, MOVETYPE_NONE);
-	this.modelindex = 0;
-	this.model = "";
+	//this.modelindex = 0;
+	this.model = string_null;
 
 	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && substring(world.model, 0, 7) != "maps/mg")
 	{
