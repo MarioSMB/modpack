@@ -1465,6 +1465,53 @@ void NotargetCheat(entity this)
 	}
 }
 
+void GiveCheat(entity this, string input)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+
+	Weapon wep = WEP_Null;
+	FOREACH(Weapons, it != WEP_Null && it.netname == input,
+	{
+		wep = it;
+		break;
+	});
+
+	if(wep == WEP_Null)
+	{
+		sprint(this, "Invalid weapon\n");
+		return;
+	}
+
+	if(STAT(WEAPONS, this) & wep.m_wepset)
+	{
+		if(STAT(DUAL_WEAPONS, this) & wep.m_wepset)
+		{
+			sprint(this, "You already have that weapon\n");
+			return;
+		}
+		else
+			STAT(DUAL_WEAPONS, this) |= wep.m_wepset;
+	}
+	else
+		STAT(WEAPONS, this) |= wep.m_wepset;
+
+	if(wep.aflag && wep.items)
+	{
+		switch(wep.ammo_type)
+		{
+			case IT_SHELLS: this.ammo_shells += wep.aflag; break;
+			case IT_NAILS: this.ammo_nails += wep.aflag; break;
+			case IT_ROCKETS: this.ammo_rockets += wep.aflag; break;
+			case IT_CELLS: this.ammo_cells += wep.aflag; break;
+			case IT_LAVA_NAILS: this.ammo_lava_nails += wep.aflag; break;
+			case IT_MULTI_ROCKETS: this.ammo_multi_rockets += wep.aflag; break;
+			case IT_PLASMA_AMMO: this.ammo_plasma += wep.aflag; break;
+		}
+	}
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+}
+
 void W_Fireball_Touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)

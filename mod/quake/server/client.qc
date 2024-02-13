@@ -3035,6 +3035,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 void NoclipCheat(entity this);
 void GodCheat(entity this);
 void NotargetCheat(entity this);
+void GiveCheat(entity this, string input);
 .entity waypointsprite_attachedforping;
 void SV_ParseClientCommand(entity this, string command)
 {
@@ -3093,6 +3094,12 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "noclip")
 	{
 		NoclipCheat(this);
+		return;
+	}
+
+	if(cmd_name == "give")
+	{
+		GiveCheat(this, argv(1));
 		return;
 	}
 

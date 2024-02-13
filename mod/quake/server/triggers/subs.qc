@@ -535,11 +535,22 @@ just constant angles.
 */
 void SetMovedir(entity this)
 {
-	if(MP_MG && this.movedir)
+	if(this.movedir != '0 0 0')
 	{
 		this.angles = '0 0 0';
 		return;
 	}
+	vector myangle = '0 0 0';
+	if(this.mangle != '0 0 0')
+	{
+		myangle = this.angles;
+		if(myangle == '0 -1 0')
+			myangle = '0 -90 0';
+		else if(myangle == '0 -2 0')
+			myangle = '0 90 0';
+		this.angles = vec3(this.mangle_y, this.mangle_x, this.mangle_z);
+	}
+
 	if(this.angles == '0 -1 0')
 		this.movedir = '0 0 1';
 	else if(this.angles == '0 -2 0')
@@ -550,7 +561,7 @@ void SetMovedir(entity this)
 		this.movedir = v_forward;
 	}
 	
-	this.angles = '0 0 0';
+	this.angles = myangle;
 }
 
 void SUB_CountTargets(entity this)
