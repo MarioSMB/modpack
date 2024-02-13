@@ -633,7 +633,8 @@ void InitTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	if(this.angles != '0 0 0')
 		SetMovedir(this);
-	this.solid = SOLID_TRIGGER;
+	if(!this.health)
+		this.solid = SOLID_TRIGGER;
 	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
