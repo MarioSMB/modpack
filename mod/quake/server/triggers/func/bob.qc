@@ -374,7 +374,7 @@ spawnfunc(func_bobbing)
 	
 	this.dmg = zeroconvertdefault(this.dmg, 2);
 	
-	if(!this.pos1 && !this.pos2)
+	if(this.pos1 == '0 0 0' && this.pos2 == '0 0 0')
 	{
 		this.pos1 = this.origin + this.distance * 0.5 * this.movedir;
 		this.pos2 = this.origin - this.distance * 0.5 * this.movedir;

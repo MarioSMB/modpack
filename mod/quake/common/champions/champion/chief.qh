@@ -11,6 +11,8 @@ SOUND(Chief_Death1, "player_chief/death1");
 PRECACHE(Chief)
 {
 #ifdef SVQC
+    precache_model("progs/v_mcsword.mdl");
+
     precache_sound("player_chief/plyrjmp8.wav");       // player jump
     precache_sound("player_chief/land.wav");           // player landing
     precache_sound("player_chief/land2.wav");      // player hurt landing
@@ -44,7 +46,7 @@ PRECACHE(Chief)
 CLASS(Chief, Champions)
     ATTRIB(Chief, netname, string, "chief");
     ATTRIB(Chief, m_name, string, "Chief");
-    //ATTRIB(Chief, qcc_meleename, string, "chiefwep");
+    ATTRIB(Chief, qcc_meleename, string, "mcsword");
     ATTRIB(Chief, qcc_attackrate, float, 0.75);
 #ifdef GAMEQC
     ATTRIB(Chief, m_model, Model, MDL_Chief);
