@@ -38,7 +38,7 @@ METHOD(Duke, m_activate, void(Champions this, entity actor))
 
 METHOD(Duke, m_playerthink, void(Champions this, entity actor))
 {
-	if(actor.jetpack_status && actor.health > 0 && !intermission_running)
+	if(actor.jetpack_status && actor.health > 0 && !intermission_running && !STAT(CANNON, this))
 		actor.modelflags |= MF_ROCKET;
 	else
 		actor.modelflags &= ~MF_ROCKET;

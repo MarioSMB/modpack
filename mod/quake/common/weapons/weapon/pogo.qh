@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Pogo, Weapon)
+/* ammotype  */ ATTRIB(Pogo, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Pogo, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Pogo, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Pogo, aflag, int, 0);
+/* modelname */ ATTRIB(Pogo, mdl, string, "pogo");
+/* crosshair */ ATTRIB(Pogo, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Pogo, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Pogo, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Pogo, model2, string, "pogo");
+/* refname   */ ATTRIB(Pogo, netname, string, "pogo");
+/* wepname   */ ATTRIB(Pogo, m_name, string, _("Pogo"));
+
+ENDCLASS(Pogo)
+REGISTER_WEAPON(POGO, NEW(Pogo));
+
+//SPAWNFUNC_WEAPON(weapon_pogo, WEP_POGO)

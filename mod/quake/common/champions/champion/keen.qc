@@ -4,6 +4,11 @@
 METHOD(Keen, m_activate, void(Keen this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	STAT(WEAPONS, actor) |= WEP_POGO.m_wepset;
+}
+METHOD(Keen, m_clear, void(Keen this, entity actor))
+{
+	STAT(WEAPONS, actor) &= ~WEP_POGO.m_wepset;
 }
 #endif
 
@@ -14,12 +19,12 @@ METHOD(Keen, m_touch, void(Keen this, entity actor, entity toucher))
 		return; // better version
 #ifdef SVQC
 	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon != WEP_AXE)
+	if(actor.(weaponentity).m_weapon != WEP_POGO)
 		return;
 
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 #elif defined(CSQC)
-	if(viewmodels[0].activeweapon != WEP_AXE)
+	if(viewmodels[0].activeweapon != WEP_POGO)
 		return;
 
 	if(IS_PLAYER(toucher))
@@ -56,12 +61,12 @@ METHOD(Keen, m_touch, void(Keen this, entity actor, entity toucher))
 METHOD(Keen, m_playerjump, float(Keen this, entity actor))
 {
 #ifdef CSQC
-	if(viewmodels[0].activeweapon == WEP_AXE)
+	if(viewmodels[0].activeweapon == WEP_POGO)
 		return 0;
 #endif
 #ifdef SVQC
 	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon == WEP_AXE)
+	if(actor.(weaponentity).m_weapon == WEP_POGO)
 		return 0;
 #endif
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6))
@@ -72,12 +77,12 @@ METHOD(Keen, m_playerjump, float(Keen this, entity actor))
 METHOD(Keen, m_physics, bool(Keen this, entity actor, float dt))
 {
 #ifdef CSQC
-	if(viewmodels[0].activeweapon != WEP_AXE)
+	if(viewmodels[0].activeweapon != WEP_POGO)
 		return false;
 #endif
 #ifdef SVQC
 	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon != WEP_AXE)
+	if(actor.(weaponentity).m_weapon != WEP_POGO)
 		return false;
 #endif
 	if(actor.waterlevel > 0)

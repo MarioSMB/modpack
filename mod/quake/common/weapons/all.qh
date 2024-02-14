@@ -4,7 +4,7 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "rocketlauncher multirocketlauncher impaler cannon lightning plasma shock lightme otamatone laser_gun grenadelauncher multigrenade proximitygun tuba napalm fish mayo spellbook hammer portalgun supernailgun lavasupernailgun piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun chainsaw pan axe";
+noref string autocvar_cl_quake_weaponpriority = "pogo rocketlauncher multirocketlauncher impaler cannon lightning plasma shock lightme otamatone laser_gun grenadelauncher multigrenade proximitygun tuba napalm fish mayo spellbook hammer portalgun supernailgun lavasupernailgun piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun chainsaw pan axe";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher cannon multirocketlauncher impaler grenadelauncher multigrenade biogun proximitygun tuba napalm fish mayo"; // explosives
 noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme"; // energy
@@ -66,6 +66,7 @@ Weapon Weapon_from_name(string s)
 const int WEP_FIRST = 1;
 #define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)
 WepSet WEPSET_ALL;
+WepSet WEPSET_CHAMPIONS;
 
 #include "all.inc"
 
@@ -82,6 +83,8 @@ STATIC_INIT(register_weapons_done)
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
+        if (it.spawnflags & WEP_FLAG_CHAMPION)
+            WEPSET_CHAMPIONS |= set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)

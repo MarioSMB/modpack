@@ -1624,13 +1624,13 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 	}
 
 	// TODO: handle secondary attacks properly!
-	if(wep == WEP_PORTAL_GUN && !(time < this.attack2_finished) && this.button3)
+	if(wep == WEP_PORTAL_GUN && !(time < this.attack2_finished) && this.button3 && !STAT(SLIDE_ON, this))
 	{
 		makevectors(this.v_angle);
 		wep.wr_think(wep, this, weaponentity, 0);
 	}
 
-	if(wep == WEP_SPELLBOOK && !(time < this.attack2_finished) && this.button3)
+	if(wep == WEP_SPELLBOOK && !(time < this.attack2_finished) && this.button3 && !STAT(SLIDE_ON, this))
 	{
 		_sound(this, CH_WEAPON_B, "weapons/page_flip.wav", 1, ATTN_NORM);
 		if(PHYS_INPUT_BUTTON_CROUCH(this))

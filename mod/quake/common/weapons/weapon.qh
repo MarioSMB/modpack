@@ -93,6 +93,7 @@ const int WEP_FLAG_HIPNOTIC      =  BIT(11); // from the hipnotic mission pack
 const int WEP_FLAG_ROGUE         =  BIT(12); // from the rogue mission pack
 const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack
 const int WEP_FLAG_MUSIC         =  BIT(14); // weapon is a musical instrument
+const int WEP_FLAG_CHAMPION      =  BIT(15); // weapon is a champion's signature weapon
 
 // variables:
 string weaponorder_byid;

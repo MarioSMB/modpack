@@ -203,28 +203,34 @@ spawnfunc(item_health)
 
 	if(this.spawnflags & H_ROTTEN)
 	{
-		precache_model("maps/b_bh10.bsp");
+		//precache_model("maps/b_bh10.bsp");
 
 		precache_sound("items/r_item1.wav");
-		_setmodel(this, "maps/b_bh10.bsp");
+		//_setmodel(this, "maps/b_bh10.bsp");
+		precache_model("progs/heart1.mdl");
+		_setmodel(this, "progs/heart1.mdl");
 		this.noise = "items/r_item1.wav";
 		this.healamount = 15;
 		this.healtype = 0;
 	}
 	else if(this.spawnflags & H_MEGA)
 	{
-		precache_model("maps/b_bh100.bsp");
+		//precache_model("maps/b_bh100.bsp");
 		precache_sound("items/r_item2.wav");
-		_setmodel(this, "maps/b_bh100.bsp");
+		//_setmodel(this, "maps/b_bh100.bsp");
+		precache_model("progs/heart3.mdl");
+		_setmodel(this, "progs/heart3.mdl");
 		this.noise = "items/r_item2.wav";
 		this.healamount = 100;
 		this.healtype = 2;
 	}
 	else
 	{
-		precache_model("maps/b_bh25.bsp");
+		//precache_model("maps/b_bh25.bsp");
 		precache_sound("items/health1.wav");
-		_setmodel(this, "maps/b_bh25.bsp");
+		//_setmodel(this, "maps/b_bh25.bsp");
+		precache_model("progs/heart2.mdl");
+		_setmodel(this, "progs/heart2.mdl");
 		this.noise = "items/health1.wav";
 		this.healamount = 25;
 		this.healtype = 1;

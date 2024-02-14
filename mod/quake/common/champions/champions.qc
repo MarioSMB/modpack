@@ -62,10 +62,41 @@ bool QCC_CanCastAbility(entity this)
 	return true;
 }
 
+bool QCC_Allowed(entity this)
+{
+	if(STAT(ITEMS) & IT_TANK)
+		return false;
+	if(STAT(SLIDE_ON, this) || STAT(WORLDTYPE) == WORLDTYPE_SLIDE)
+		return false;
+	if(STAT(SKATING, this))
+		return false;
+	return true;
+}
+
 #ifdef SVQC
+void QCC_ClearWeapons(entity this)
+{
+	STAT(WEAPONS, this) &= ~(WEPSET_CHAMPIONS);
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_CHAMPION)
+			W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+	}
+}
+
+void QCC_ClearPlayer(entity this)
+{
+	if(this.m_champion && this.m_champion.m_clear)
+		this.m_champion.m_clear(this.m_champion, this);
+	this.m_champion = NULL;
+	STAT(QCC_CHAMPION, this) = 0;
+	QCC_ClearWeapons(this);
+}
+
 void QCC_UpdateStats(entity this)
 {
-	if(intermission_running || this.tank)
+	if(intermission_running || !QCC_Allowed(this))
 		return;
 
 	if(this.m_champion)
@@ -96,7 +127,7 @@ void QCC_UpdateStats(entity this)
 
 void QCC_UpdatePlayer(entity this)
 {
-	if(this.tank || STAT(SKATING, this) || world.worldtype == WORLDTYPE_SLIDE)
+	if(!QCC_Allowed(this))
 		return;
 	Champions oldchamp = this.m_champion;
 	Champions champ = Champion_FromString(this.cvar_cl_quake_model);
@@ -124,11 +155,14 @@ void QCC_UpdatePlayer(entity this)
 		this.view_ofs = champ.m_viewofs;
 		this.scale = champ.m_scale;
 
-		if(champ != oldchamp && oldchamp.m_clear)
-			oldchamp.m_clear(oldchamp, this);
-
-		if(champ.m_activate && champ != oldchamp)
-			champ.m_activate(champ, this);
+		if(champ != oldchamp)
+		{
+			QCC_ClearWeapons(this);
+			if(oldchamp.m_clear)
+				oldchamp.m_clear(oldchamp, this);
+			if(champ.m_activate)
+				champ.m_activate(champ, this);
+		}
 	}
 }
 
@@ -147,12 +181,9 @@ void champions_PutPlayerInServer(entity this)
 
 void champions_PlayerPreThink(entity this)
 {
-	if(this.tank)
+	if(!QCC_Allowed(this))
 	{
-		if(this.m_champion && this.m_champion.m_clear)
-			this.m_champion.m_clear(this.m_champion, this);
-		this.m_champion = NULL;
-		STAT(QCC_CHAMPION, this) = 0;
+		QCC_ClearPlayer(this);
 		return;
 	}
 	QCC_UpdatePlayer(this);
@@ -307,7 +338,7 @@ void cl_champion_draw()
 {
 	if(!(cursor_active & GUI_OPEN_CHAMPIONS))
 		return;
-	if(intermission || STAT(HEALTH) <= 0 || STAT(SKATING))
+	if(intermission || STAT(HEALTH) <= 0 || !QCC_Allowed(csqcplayer))
 		return;
 	
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));

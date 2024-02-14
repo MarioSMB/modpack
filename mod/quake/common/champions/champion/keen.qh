@@ -61,7 +61,7 @@ CLASS(Keen, Champions)
     ATTRIB(Keen, m_name, string, "Keen");
     ATTRIB(Keen, qcc_falldamage, float, 0);
     ATTRIB(Keen, qcc_jumpheight, float, 0.75);
-    ATTRIB(Keen, qcc_meleename, string, "pogo");
+    //ATTRIB(Keen, qcc_meleename, string, "pogo");
     ATTRIB(Keen, m_viewofs, vector, '0 0 8');
     ATTRIB(Keen, m_mins, vector, '-8 -8 -24');
     ATTRIB(Keen, m_maxs, vector, '8 8 14');
@@ -71,9 +71,6 @@ CLASS(Keen, Champions)
     ATTRIB(Keen, m_soundpath, string, "player_keen/");
     METHOD(Keen, m_sound_pain, string()) { return SND(Keen_Pain_Random()); }
     METHOD(Keen, m_sound_death, string()) { return SND(Keen_Death_Random()); }
-#endif
-#ifdef SVQC
-    METHOD(Keen, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) { /* no attack, just override */ }
 #endif
 #ifdef CSQC
     ATTRIB(Keen, message, string, KEEN_STATS);

@@ -141,13 +141,15 @@ void DecodeLevelParms(entity this)
 		SetNewParms(); // reset all stuff on level 8 and new episode
 
 	STAT(WEAPONS, this) = vec3(parm1, parm2, parm3);
+	QCC_ClearWeapons(this);
 	this.armorvalue = parm4;
 	this.ammo_shells = parm5;
 	this.ammo_nails = parm6;
 	this.ammo_rockets = parm7;
 	this.ammo_cells = parm8;
 	.entity weaponentity = weaponentities[0]; // only enough space to save the first slot!
-	if(this.(weaponentity))
+	Weapon wep = REGISTRY_GET(Weapons, parm9);
+	if(this.(weaponentity) && wep != WEP_Null && (STAT(WEAPONS, this) & wep.m_wepset))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
 	//parm10 unused
 	this.ammo_lava_nails = parm11;

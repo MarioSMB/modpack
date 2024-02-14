@@ -32,3 +32,4 @@
 #include "kazoo.qc"
 #include "cannon.qc"
 #include "otamatone.qc"
+#include "pogo.qc"
