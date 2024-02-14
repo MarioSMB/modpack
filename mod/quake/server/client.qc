@@ -1693,6 +1693,7 @@ void trigger_activate_coop_spawns_use(entity this, entity actor, entity trigger)
 	{
 		newitems |= STAT(WEAPONS, it);
 	});
+	newitems &= ~WEPSET_CHAMPIONS;
 
 	FOREACH_ENTITY_CLASS("info_player_coop", true,
 	{
