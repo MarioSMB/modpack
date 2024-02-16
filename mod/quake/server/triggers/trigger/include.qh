@@ -1,5 +1,6 @@
 #pragma once
 
+#include "changelevel.qh"
 #include "fog.qh"
 #include "multi.qh"
 #include "viewloc.qh"

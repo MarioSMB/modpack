@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef SVQC
+string autocvar__spawntarget = "";
+
+.string maptarget;
+
+string chlevel_spawntarget;
+#endif

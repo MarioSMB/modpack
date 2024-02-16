@@ -114,7 +114,7 @@ void SetNewParms()
 	parm7 = 0;
 	parm8 = 0;
 	parm9 = WEP_SHOTGUN.m_id;
-	//parm10 = 0; // never reset it
+	parm10 = 0;
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
@@ -1082,6 +1082,23 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 
 		if(coop) // fix for singleplayer
 			return NULL; // didn't find anything....
+	}
+	else if(chlevel_spawntarget && chlevel_spawntarget != "")
+	{
+		RandomSelection_Init();
+		FOREACH_ENTITY_STRING(targetname, chlevel_spawntarget,
+		{
+			if(!coop && it.classname == "info_player_coop")
+				continue;
+			if(it.classname != "info_player_start" && it.classname != "info_player_coop")
+				continue;
+			RandomSelection_AddEnt(it, ((it.classname == "info_player_coop") ? 2 : 1), 1);
+		});
+		lastspawn = RandomSelection_chosen_ent;
+		if(!lastspawn)
+			lastspawn = find(lastspawn, classname, "info_player_start");
+		if(lastspawn)
+			return lastspawn;
 	}
     else if(coop)
 	{
@@ -2508,7 +2525,7 @@ void ClientDisconnect(entity this)
 
 	status_effects_ClientDisconnect(this);
 
-	champions_ClientDisconnect(this);
+	champions_RemovePlayer(this);
 
 	music_RemovePlayer(this);
 

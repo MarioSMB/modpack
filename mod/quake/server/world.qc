@@ -5,6 +5,7 @@
 #include "horde.qh"
 #include "triggers/func/button.qh"
 #include "triggers/func/earthquake.qh"
+#include "triggers/trigger/changelevel.qh"
 #include "vote.qh"
 #include "weapons/weaponsystem.qh"
 
@@ -1378,6 +1379,10 @@ spawnfunc(worldspawn)
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
+
+	if(autocvar__spawntarget && autocvar__spawntarget != "")
+		strcpy(chlevel_spawntarget, autocvar__spawntarget);
+	cvar_set("_spawntarget", "");
 
 	startingserverflags = serverflags;
 

@@ -39,7 +39,7 @@ void Clockwork_Clear(entity this)
 void Clockwork_Remove(entity this)
 {
 	cannon_clear(this);
-	this.solid = SOLID_BBOX;
+	this.solid = SOLID_SLIDEBOX;
 	this.takedamage = DAMAGE_AIM;
 	set_movetype(this, MOVETYPE_WALK);
 	_setmodel(this, get_playermodel(this));
@@ -298,8 +298,8 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 	switch(eggtype)
 	{
 		default:
-		case 0: snd = "weapons/egg0_fire.wav"; newmis.dmg = 20; break;
-		case 1: snd = "weapons/egg1_fire.wav"; newmis.modelflags = MF_ROCKET; break;
+		case 0: snd = "weapons/egg0_fire.wav"; break;
+		case 1: snd = "weapons/egg1_fire.wav"; newmis.dmg = 20; newmis.modelflags = MF_ROCKET; break;
 		case 2:
 		{
 			snd = "weapons/egg2_fire.wav";

@@ -205,7 +205,7 @@ spawnfunc(item_health)
 
 	if(this.spawnflags & H_ROTTEN)
 	{
-		//precache_model("maps/b_bh10.bsp");
+		precache_model("maps/b_bh10.bsp");
 
 		precache_sound("items/r_item1.wav");
 		_setmodel(this, "maps/b_bh10.bsp");

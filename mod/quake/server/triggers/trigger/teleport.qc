@@ -48,7 +48,7 @@ void teleport_touch(entity this, entity toucher)
 	else if(this.count > 0)
 		this.count -= 1;
 
-	teleport(toucher, targ, (this.spawnflags & TELEPORT_NOFLASH), false);
+	teleport(toucher, targ, !(this.spawnflags & TELEPORT_NOFLASH), false);
 
 	if(targ.classname == "misc_teleporttrain")
 		return;

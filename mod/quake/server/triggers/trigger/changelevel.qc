@@ -1,3 +1,5 @@
+#include "changelevel.qh"
+
 #ifdef SVQC
 
 // list of maps that require clips to be functional, as the engine currently has collision issues
@@ -9,6 +11,8 @@ int autocvar_noexit;
 
 .entity chlevel_targ;
 .bool chlevel_found; // exit found!
+
+.string maptarget;
 
 bool changelevel_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
@@ -119,6 +123,9 @@ void changelevel_touch(entity this, entity toucher)
 		else
 			cvar_set("mod_q1bsp_polygoncollisions", "1");
 	}
+
+	if(this.maptarget && this.maptarget != "")
+		cvar_set("_spawntarget", MakeConsoleSafe(this.maptarget));
 
 	// coded fix for aop's lack of a spawnflag
 	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!MP_MG || (!this.endtext || this.endtext == "")))

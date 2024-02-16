@@ -205,11 +205,6 @@ void champions_PlayerDies(entity this)
 
 void champions_RemovePlayer(entity this)
 {
-	QCC_ClearPlayer(this, true);	
-}
-
-void champions_ClientDisconnect(entity this)
-{
 	QCC_ClearPlayer(this, false);	
 }
 
