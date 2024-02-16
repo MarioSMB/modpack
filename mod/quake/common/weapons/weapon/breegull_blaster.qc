@@ -231,12 +231,7 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 	}
 
 	int eggtype = this.skin;
-
-	if(toucher.takedamage)
-	{
-		float damg = ((this.dmg) ? this.dmg : 20);
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-	}
+	float damg = ((this.dmg) ? this.dmg : 20);
 
 	switch(eggtype)
 	{
@@ -259,7 +254,10 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 			if(toucher.takedamage && !IS_PLAYER(toucher))
 				StatusEffects_apply(STATUSEFFECT_Slowness, toucher, time + 5, 0);
 			if(StatusEffects_active(STATUSEFFECT_Burning, toucher))
+			{
+				damg *= 3;
 				StatusEffects_remove(STATUSEFFECT_Burning, toucher, STATUSEFFECT_REMOVE_NORMAL);
+			}
 			__pointparticles(_particleeffectnum("electro_ballexplode"), this.origin, '0 0 0', 1);
 			break;
 		}
@@ -270,6 +268,9 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 			break;
 		}
 	}
+
+	if(toucher.takedamage)
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 
 	delete(this);
 }
@@ -286,7 +287,7 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 	_setmodel(newmis, "progs/egg.iqm");
 	setsize(newmis, '0 0 0', '0 0 0');
 	newmis.skin = eggtype;
-	newmis.dmg = 25;
+	newmis.dmg = 30;
 	newmis.nextthink = time + 5;
 	setthink(newmis, SUB_Remove);
 	newmis.velocity = dir * 600;
@@ -322,7 +323,7 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 			settouch(newmis, W_BreegullBlaster_ClockworkTouch);
 			break;
 		}
-		case 5: snd = "weapons/egg5_fire.wav"; newmis.dmg = 8; break;
+		case 5: snd = "weapons/egg5_fire.wav"; newmis.dmg = 10; break;
 	}
 
 	_sound(this, CH_WEAPON_SINGLE, snd, 1, ATTN_NORM);
