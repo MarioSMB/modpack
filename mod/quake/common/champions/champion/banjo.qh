@@ -81,3 +81,5 @@ REGISTER_CHAMPION(Banjo, NEW(Banjo));
 #endif
 .bool jetpack_stopped;
 .bool jetpack_status; // reusing stat
+
+void Banjo_PreJump(entity actor);
