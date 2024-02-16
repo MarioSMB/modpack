@@ -57,6 +57,8 @@ bool QCC_CanCastAbility(entity this)
 		return false;
 	if(STAT(CANNON, this))
 		return false;
+	if(STAT(CLOCKWORK, this))
+		return false;
 	if(QCC_HasSpellbook(this))
 		return false;
 	return true;
@@ -85,18 +87,19 @@ void QCC_ClearWeapons(entity this)
 	}
 }
 
-void QCC_ClearPlayer(entity this)
+void QCC_ClearPlayer(entity this, bool clearweapons)
 {
 	if(this.m_champion && this.m_champion.m_clear)
 		this.m_champion.m_clear(this.m_champion, this);
 	this.m_champion = NULL;
 	STAT(QCC_CHAMPION, this) = 0;
-	QCC_ClearWeapons(this);
+	if(clearweapons)
+		QCC_ClearWeapons(this);
 }
 
 void QCC_UpdateStats(entity this)
 {
-	if(intermission_running || !QCC_Allowed(this))
+	if(intermission_running || !QCC_Allowed(this) || this.clockwork)
 		return;
 
 	if(this.m_champion)
@@ -127,7 +130,7 @@ void QCC_UpdateStats(entity this)
 
 void QCC_UpdatePlayer(entity this)
 {
-	if(!QCC_Allowed(this))
+	if(!QCC_Allowed(this) || this.clockwork)
 		return;
 	Champions oldchamp = this.m_champion;
 	Champions champ = Champion_FromString(this.cvar_cl_quake_model);
@@ -181,9 +184,11 @@ void champions_PutPlayerInServer(entity this)
 
 void champions_PlayerPreThink(entity this)
 {
+	if(this.clockwork)
+		return;
 	if(!QCC_Allowed(this))
 	{
-		QCC_ClearPlayer(this);
+		QCC_ClearPlayer(this, true);
 		return;
 	}
 	QCC_UpdatePlayer(this);
@@ -200,8 +205,12 @@ void champions_PlayerDies(entity this)
 
 void champions_RemovePlayer(entity this)
 {
-	if(this.m_champion && this.m_champion.m_clear)
-		this.m_champion.m_clear(this.m_champion, this);
+	QCC_ClearPlayer(this, true);	
+}
+
+void champions_ClientDisconnect(entity this)
+{
+	QCC_ClearPlayer(this, false);	
 }
 
 void champions_Killed(entity targ, entity inflictor, entity attacker, int deathtype)
@@ -348,7 +357,7 @@ void cl_champion_draw()
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '230 200 0';
+	vector ent_menu_size = '230 220 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 	

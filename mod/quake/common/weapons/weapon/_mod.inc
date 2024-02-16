@@ -33,3 +33,4 @@
 #include "cannon.qc"
 #include "otamatone.qc"
 #include "pogo.qc"
+#include "breegull_blaster.qc"

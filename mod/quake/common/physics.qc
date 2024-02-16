@@ -35,6 +35,12 @@ void Physics_UpdateStats(entity this)
 	slide_UpdateStats(this);
 
 	QCC_UpdateStats(this);
+
+	if(this.clockwork && !intermission_running)
+	{
+		STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = '-8 -8 -1';
+		STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = '8 8 8';
+	}
 }
 
 .vector movement_old;
@@ -188,6 +194,8 @@ void PlayerJump(entity this, float dt)
 	UNSET_ONGROUND(this);
 
 	float mjumpheight = 270;
+	if(STAT(CLOCKWORK, this))
+		mjumpheight *= 0.75;
 	if(this.m_champion)
 	{
 		mjumpheight *= this.m_champion.qcc_jumpheight;

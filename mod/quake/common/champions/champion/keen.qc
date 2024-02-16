@@ -1,19 +1,25 @@
 #include "keen.qh"
 
 #ifdef SVQC
-METHOD(Keen, m_activate, void(Keen this, entity actor))
+METHOD(Keen, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 	STAT(WEAPONS, actor) |= WEP_POGO.m_wepset;
 }
-METHOD(Keen, m_clear, void(Keen this, entity actor))
+METHOD(Keen, m_clear, void(Champions this, entity actor))
 {
 	STAT(WEAPONS, actor) &= ~WEP_POGO.m_wepset;
+}
+METHOD(Keen, m_playerspawn, void(Champions this, entity actor))
+{
+	actor.jetpack_status = false;
+	STAT(QCC_JETPACKFUEL, actor) = 100;
+	STAT(WEAPONS, actor) |= WEP_POGO.m_wepset;
 }
 #endif
 
 #ifdef GAMEQC
-METHOD(Keen, m_touch, void(Keen this, entity actor, entity toucher))
+METHOD(Keen, m_touch, void(Champions this, entity actor, entity toucher))
 {
 	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
 		return; // better version
@@ -58,7 +64,7 @@ METHOD(Keen, m_touch, void(Keen this, entity actor, entity toucher))
 }
 #endif
 
-METHOD(Keen, m_playerjump, float(Keen this, entity actor))
+METHOD(Keen, m_playerjump, float(Champions this, entity actor))
 {
 #ifdef CSQC
 	if(viewmodels[0].activeweapon == WEP_POGO)
@@ -74,7 +80,7 @@ METHOD(Keen, m_playerjump, float(Keen this, entity actor))
 	return 1;
 }
 
-METHOD(Keen, m_physics, bool(Keen this, entity actor, float dt))
+METHOD(Keen, m_physics, bool(Champions this, entity actor, float dt))
 {
 #ifdef CSQC
 	if(viewmodels[0].activeweapon != WEP_POGO)

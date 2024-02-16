@@ -1789,9 +1789,7 @@ void CreatureFrame_FallDamage(entity this)
 		{ /* do nothing */ }
 	else if(STAT(SKATING, this) && this.jump_flag < -50 && IS_ONGROUND(this) && this.health > 0)
 		skate_land(this);
-	else if(this.tank)
-		{ /* do nothing */ }
-	else if(STAT(SLIDE_ON, this))
+	else if(this.tank || this.clockwork || STAT(SLIDE_ON, this))
 		{ /* do nothing */ }
 	else if(this.jump_flag) // moving or has moved
 	{

@@ -13,7 +13,7 @@ spawnfunc(item_tank)
 
 void tankitem_touch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher) || (toucher.items & IT_TANK) || toucher.health < 1 || STAT(SKATING, toucher) || STAT(SLIDE_ON, toucher) || STAT(CANNON, toucher))
+	if(!IS_PLAYER(toucher) || (toucher.items & IT_TANK) || toucher.health < 1 || toucher.clockwork || STAT(SKATING, toucher) || STAT(SLIDE_ON, toucher) || STAT(CANNON, toucher))
 		return;
 
 	Tank_Spawn(toucher);

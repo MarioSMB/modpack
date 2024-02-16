@@ -165,6 +165,8 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(IS_PLAYER(targ))
 		WaypointSprite_PlayerDead(targ);
 
+	StatusEffects_removeall(targ, STATUSEFFECT_REMOVE_CLEAR);
+
 	if(targ.charmed)
 		targ.effects &= ~EF_DIMLIGHT;
 	targ.effects &= ~EF_BRIGHTFIELD;
@@ -514,6 +516,12 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 	if(targ.tank && targ.health <= 0)
 		Tank_Eject(targ, true); // resets health
+
+	if(targ.clockwork && targ.health <= 0)
+	{
+		showpain = false;
+		Clockwork_Explode(targ);
+	}
 			
 	if(targ.health <= 0)
 	{

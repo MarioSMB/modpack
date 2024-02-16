@@ -90,7 +90,7 @@ void SetChangeParms(entity this)
 	.entity weaponentity = weaponentities[0]; // only save first slot
 	if(this.(weaponentity))
 		parm9 = this.(weaponentity).m_weapon.m_id;
-	//parm10 unused
+	parm10 = STAT(BREEGULL_EGGTYPE, this);
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
@@ -114,7 +114,7 @@ void SetNewParms()
 	parm7 = 0;
 	parm8 = 0;
 	parm9 = WEP_SHOTGUN.m_id;
-	//parm10 = 0;
+	//parm10 = 0; // never reset it
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
@@ -151,7 +151,8 @@ void DecodeLevelParms(entity this)
 	Weapon wep = REGISTRY_GET(Weapons, parm9);
 	if(this.(weaponentity) && wep != WEP_Null && (STAT(WEAPONS, this) & wep.m_wepset))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
-	//parm10 unused
+	if(STAT(BREEGULL_EGGTYPE, this) <= 0) // allow preserving current selection over the map given one
+		STAT(BREEGULL_EGGTYPE, this) = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
@@ -293,6 +294,8 @@ void playersound(entity this, int chan, string sample, float vol, float atten)
 
 void player_sound(entity this, int chan, string sample, float atten)
 {
+	if(this.clockwork)
+		return; // no player sounds thank you very much
 	string soundpath;
 	if(STAT(SKATING, this))
 		soundpath = "player/";
@@ -811,8 +814,10 @@ void execute_changelevel(entity this)
 		W_Spellbook_ClearSpells(it);
 		tank_cleanup(it);
 		cannon_clear(it);
+		Clockwork_Clear(it);
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
+		it.clientcamera = it;
 		it.solid = SOLID_NOT;
 		it.flags |= FL_NOTARGET; // fix a silly monster bug
 		//it.health = -2342; // can't do this because of parms
@@ -1388,6 +1393,8 @@ void PutObserverInServer(entity this)
 	this.exptime = 0;
 	this.clientcamera = this;
 
+	Clockwork_Clear(this);
+
 	this.classname = STR_OBSERVER;
 	this.health = -666;
 	setmodel(this, MDL_Null);
@@ -1452,6 +1459,8 @@ void PutPlayerInServer(entity this)
 	// hipnotic fields
 	this.gravity = 1.0;
 	this.gorging = false;
+
+	Clockwork_Clear(this);
 
 	// Cut off any still running player sounds.
 	stopsound(this, CH_PLAYER_SINGLE);
@@ -2121,6 +2130,8 @@ void CheckHealthRot(entity this)
 		return;
 	if(this.tank)
 		return;
+	if(this.clockwork)
+		return;
 
 	if(this.healthrot_nextcheck > time)
 		return;
@@ -2148,6 +2159,8 @@ void Regenerate_Health(entity this)
 	if(StatusEffects_active(STATUSEFFECT_Poisoned, this))
 		return; // no regen while poisoned!!
 	if(this.tank)
+		return;
+	if(this.clockwork)
 		return;
 
 	float regen_rate = 1;
@@ -2495,7 +2508,7 @@ void ClientDisconnect(entity this)
 
 	status_effects_ClientDisconnect(this);
 
-	champions_RemovePlayer(this);
+	champions_ClientDisconnect(this);
 
 	music_RemovePlayer(this);
 

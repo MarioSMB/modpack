@@ -402,7 +402,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(STAT(CANNON))
 		return 0;
-	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK))
+	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK) || STAT(CLOCKWORK))
 		return 1;
 	//if((player_localnum + 1) != player_localentnum) // spectating)
 		//return 1;

@@ -19,7 +19,7 @@ bool autocvar_sv_quake_champions_custombbox = true;
 
 void QCC_ClearWeapons(entity this);
 
-void QCC_ClearPlayer(entity this);
+void QCC_ClearPlayer(entity this, bool clearweapons);
 
 void QCC_UpdateStats(entity this);
 
@@ -30,6 +30,8 @@ void champions_PlayerPreThink(entity this);
 void champions_PlayerDies(entity this);
 
 void champions_RemovePlayer(entity this);
+
+void champions_ClientDisconnect(entity this);
 
 void champions_Killed(entity targ, entity inflictor, entity attacker, int deathtype);
 #endif

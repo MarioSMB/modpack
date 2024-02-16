@@ -431,26 +431,36 @@ void player_run(entity this)
 					this.footstep = 0.5 * (this.footstep - 95);
 
 				float r = random();
-				if(r < 0.14)
-				_sound(this, CH_VOICE, "misc/foot1.wav", 0.5, ATTN_NORM);
-				else if(r < 0.29)
-				   _sound(this, CH_VOICE, "misc/foot2.wav", 0.5, ATTN_NORM);
-				else if(r < 0.43)
-				   _sound(this, CH_VOICE, "misc/foot3.wav", 0.5, ATTN_NORM);
-				else if(r < 0.58)
-				   _sound(this, CH_VOICE, "misc/foot4.wav", 0.5, ATTN_NORM);
-				else if(r < 0.72)
-				   _sound(this, CH_VOICE, "misc/foot5.wav", 0.5, ATTN_NORM);
-				else if(r < 0.86)
-				   _sound(this, CH_VOICE, "misc/foot6.wav", 0.5, ATTN_NORM);
+				if(this.clockwork)
+				{
+					if(r > 0.5)
+						_sound(this, CH_VOICE, "misc/clockwork_footstep1.wav", 0.5, ATTN_NORM);
+					else
+						_sound(this, CH_VOICE, "misc/clockwork_footstep2.wav", 0.5, ATTN_NORM);
+				}
 				else
-				   _sound(this, CH_VOICE, "misc/foot7.wav", 0.5, ATTN_NORM);
+				{
+					if(r < 0.14)
+						_sound(this, CH_VOICE, "misc/foot1.wav", 0.5, ATTN_NORM);
+					else if(r < 0.29)
+					   _sound(this, CH_VOICE, "misc/foot2.wav", 0.5, ATTN_NORM);
+					else if(r < 0.43)
+					   _sound(this, CH_VOICE, "misc/foot3.wav", 0.5, ATTN_NORM);
+					else if(r < 0.58)
+					   _sound(this, CH_VOICE, "misc/foot4.wav", 0.5, ATTN_NORM);
+					else if(r < 0.72)
+					   _sound(this, CH_VOICE, "misc/foot5.wav", 0.5, ATTN_NORM);
+					else if(r < 0.86)
+					   _sound(this, CH_VOICE, "misc/foot6.wav", 0.5, ATTN_NORM);
+					else
+					   _sound(this, CH_VOICE, "misc/foot7.wav", 0.5, ATTN_NORM);
+				}
 			}
 		}
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.clockwork && this.move_movetype == MOVETYPE_WALK && !this.tank)
 	{
 		if(this.waterlevel == 0)
 		{

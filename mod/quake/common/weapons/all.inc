@@ -33,6 +33,7 @@
 #include "weapon/cannon.qh"
 #include "weapon/otamatone.qh"
 #include "weapon/pogo.qh"
+#include "weapon/breegull_blaster.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

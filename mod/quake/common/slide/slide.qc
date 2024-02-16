@@ -221,7 +221,7 @@ void Slide_Switch(entity this)
 
 void Slide_On(entity this)
 {
-	if(this.tank || STAT(SKATING, this) || STAT(CANNON, this))
+	if(this.tank || STAT(SKATING, this) || STAT(CANNON, this) || this.clockwork)
 		return;
 	STAT(SLIDE_ON, this) = true;
 	if(!deathmatch)
@@ -294,7 +294,7 @@ void Slide_OnThink(entity this)
 		}
 	}
 
-	if(PHYS_INPUT_BUTTON_CROUCH(this) && time > this.board_delay && this.health > 0 && !this.elec && !this.tank && !STAT(SKATING, this) && !STAT(CANNON, this))
+	if(PHYS_INPUT_BUTTON_CROUCH(this) && time > this.board_delay && this.health > 0 && !this.elec && !this.tank && !this.clockwork && !STAT(SKATING, this) && !STAT(CANNON, this))
 	{
 		Slide_Toggle(this);
 		this.board_delay = time + 1;
@@ -510,6 +510,7 @@ void StartTouch(entity this, entity toucher)
 	if(toucher.tank) return;
 	if(STAT(CANNON, toucher)) return;
 	if(STAT(SKATING, toucher)) return;
+	if(toucher.clockwork) return;
 
 	if(!STAT(SLIDE_ON, toucher))
 		Slide_On(toucher);
@@ -742,6 +743,7 @@ void ReslideTouch(entity this, entity toucher)
 	if(toucher.tank) return;
 	if(STAT(CANNON, toucher)) return;
 	if(STAT(SKATING, toucher)) return;
+	if(toucher.clockwork) return;
 
 	Slide_On(toucher);
 

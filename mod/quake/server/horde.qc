@@ -252,8 +252,6 @@ void PrecacheMonsters()
 	precache_model("maps/b_bh25.bsp"); // regular health
 	precache_sound("items/health1.wav");
 	precache_model("progs/armor.mdl"); // regular armor
-	precache_model("progs/heart1.mdl");
-	precache_model("progs/heart2.mdl");
 	
 	// quad damage
 	precache_model("progs/quaddama.mdl");
@@ -910,8 +908,7 @@ void SpawnItem(entity this)
 	{
 		item.classname = "item_health";
 		settouch(item, horde_health_touch);
-		//_setmodel(item, "maps/b_bh10.bsp");
-		_setmodel(item, "progs/heart1.mdl");
+		_setmodel(item, "maps/b_bh10.bsp");
 		item.noise = "items/r_item1.wav";
 		item.healamount = 15;
 		item.healtype = 0;
@@ -922,8 +919,7 @@ void SpawnItem(entity this)
 	{
 		item.classname = "item_health";
 		settouch(item, horde_health_touch);
-		//_setmodel(item, "maps/b_bh25.bsp");
-		_setmodel(item, "progs/heart2.mdl");
+		_setmodel(item, "maps/b_bh25.bsp");
 		item.noise = "items/health1.wav";
 		item.healamount = 25;
 		item.healtype = 1;

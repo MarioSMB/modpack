@@ -1,0 +1,27 @@
+#pragma once
+
+CLASS(BreegullBlaster, Weapon)
+/* ammotype  */ ATTRIB(BreegullBlaster, ammo_type, int, 0);
+/* impulse   */ ATTRIB(BreegullBlaster, impulse, int, 2);
+/* spawnflags*/ ATTRIB(BreegullBlaster, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(BreegullBlaster, aflag, int, 0);
+/* modelname */ ATTRIB(BreegullBlaster, mdl, string, "breegull");
+/* crosshair */ ATTRIB(BreegullBlaster, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(BreegullBlaster, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(BreegullBlaster, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(BreegullBlaster, model2, string, "breegull");
+/* refname   */ ATTRIB(BreegullBlaster, netname, string, "breegull");
+/* wepname   */ ATTRIB(BreegullBlaster, m_name, string, _("Breegull Blaster"));
+
+ENDCLASS(BreegullBlaster)
+REGISTER_WEAPON(BREEGULLBLASTER, NEW(BreegullBlaster));
+
+//SPAWNFUNC_WEAPON(weapon_breegull, WEP_BREEGULLBLASTER)
+
+#ifdef SVQC
+.entity clockwork;
+
+void Clockwork_Explode(entity this);
+
+void Clockwork_Clear(entity this);
+#endif

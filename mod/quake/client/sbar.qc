@@ -111,6 +111,13 @@ PRECACHE(Sbar)
 	precache_pic("gfx/hud/old/voteprogress_back");
 	precache_pic("gfx/hud/old/voteprogress_voted");
 	precache_pic("gfx/hud/old/voteprogress_prog");
+
+	precache_pic("gfx/quake/egg0");
+	precache_pic("gfx/quake/egg1");
+	precache_pic("gfx/quake/egg2");
+	precache_pic("gfx/quake/egg3");
+	precache_pic("gfx/quake/egg4");
+	precache_pic("gfx/quake/egg5");
 }
 
 string Sbar_PickWeapon(Weapon wpn)
@@ -1327,6 +1334,22 @@ void Sbar_Draw()
 					{ /* nothing */}
 				else if(thiswep.activeweapon.spawnflags & WEP_FLAG_MANA)
 					Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
+				else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)
+				{
+					string pic = "";
+					switch(STAT(BREEGULL_EGGTYPE))
+					{
+						default:
+						case 0: pic = "egg0"; break;
+						case 1: pic = "egg1"; break;
+						case 2: pic = "egg2"; break;
+						case 3: pic = "egg3"; break;
+						case 4: pic = "egg4"; break;
+						case 5: pic = "egg5"; break;
+					}
+					// need to call drawpic directly here as the original ammo size is 24 pixels...
+					drawpic(sbar + '224 0 0', strcat("gfx/quake/", pic), '24 24 0', '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				}
 				else
 				{
 					// ammo icon

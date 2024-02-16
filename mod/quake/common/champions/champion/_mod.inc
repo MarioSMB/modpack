@@ -1,4 +1,5 @@
 // generated file; do not modify
+#include "banjo.qc"
 #include "bigjohn.qc"
 #include "caleb.qc"
 #include "chief.qc"

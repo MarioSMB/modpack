@@ -167,6 +167,7 @@ void finale_intermission(entity this)
 		tank_cleanup(it);
 		cannon_clear(it);
 		clear_powerups(it);
+		Clockwork_Clear(it);
 		it.view_ofs = '0 0 0';
 		if(pos)
 			it.angles = it.v_angle = pos.mangle;
@@ -174,6 +175,7 @@ void finale_intermission(entity this)
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
+		it.clientcamera = it;
 		set_movetype(it, MOVETYPE_NONE);
 		//it.modelindex = 0;
 		setmodel(it, MDL_Null);

@@ -1,0 +1,83 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Banjo, "progs/player_banjo.mdl");
+
+SOUND(Banjo_Pain1, "player_banjo/pain1");
+SOUND(Banjo_Pain2, "player_banjo/pain2");
+SOUND(Banjo_Pain3, "player_banjo/pain3");
+SOUND(Banjo_Pain4, "player_banjo/pain4");
+SOUND(Banjo_Pain5, "player_banjo/pain5");
+SOUND(Banjo_Pain6, "player_banjo/pain6");
+Sound SND_Banjo_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Banjo_Pain1.m_id + rint(random() * 5));
+}
+
+SOUND(Banjo_Death1, "player_banjo/death1");
+SOUND(Banjo_Death2, "player_banjo/death2");
+SOUND(Banjo_Death3, "player_banjo/death3");
+Sound SND_Banjo_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Banjo_Death1.m_id + rint(random() * 2));
+}
+PRECACHE(Banjo)
+{
+#ifdef SVQC
+    precache_sound("player_banjo/plyrjmp8.wav");       // player jump
+    precache_sound("player_banjo/land.wav");           // player landing
+    precache_sound("player_banjo/land2.wav");      // player hurt landing
+    precache_sound("player_banjo/drown1.wav");     // drowning pain
+    precache_sound("player_banjo/drown2.wav");     // drowning pain
+    precache_sound("player_banjo/gasp1.wav");      // gasping for air
+    precache_sound("player_banjo/gasp2.wav");      // taking breath
+    precache_sound("player_banjo/h2odeath.wav");       // drowning death
+
+    precache_sound("player_banjo/pain1.wav");
+    precache_sound("player_banjo/pain2.wav");
+    precache_sound("player_banjo/pain3.wav");
+    precache_sound("player_banjo/pain4.wav");
+
+    precache_sound("player_banjo/death1.wav");
+    precache_sound("player_banjo/death2.wav");
+    precache_sound("player_banjo/death3.wav");
+
+    precache_sound("player_banjo/axhit1.wav");
+
+    precache_sound("player_banjo/lburn1.wav");     // lava burn
+    precache_sound("player_banjo/lburn2.wav");     // lava burn
+
+    precache_sound("player_banjo/start.wav");
+    precache_sound("player_banjo/flight.wav");
+    precache_sound("player_banjo/falling.wav");
+#endif
+}
+#endif
+#ifdef CSQC
+#define BANJO_STATS \
+"Hold %ABILITY% to glide\n" \
+"Jumps 20% higher\n" \
+"Has Kazooie as a weapon"
+#endif
+CLASS(Banjo, Champions)
+    ATTRIB(Banjo, netname, string, "banjo");
+    ATTRIB(Banjo, m_name, string, "Banjo");
+    ATTRIB(Banjo, qcc_jumpheight, float, 1.2);
+#ifdef GAMEQC
+    ATTRIB(Banjo, m_model, Model, MDL_Banjo);
+    ATTRIB(Banjo, m_soundpath, string, "player_banjo/");
+    METHOD(Banjo, m_sound_pain, string()) { return SND(Banjo_Pain_Random()); }
+    METHOD(Banjo, m_sound_death, string()) { return SND(Banjo_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Banjo, message, string, BANJO_STATS);
+#endif
+ENDCLASS(Banjo)
+REGISTER_CHAMPION(Banjo, NEW(Banjo));
+
+#ifdef SVQC
+.bool banjo_cannon;
+.bool banjo_landed;
+#endif
+.bool jetpack_stopped;
+.bool jetpack_status; // reusing stat
