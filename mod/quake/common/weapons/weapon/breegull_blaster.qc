@@ -40,6 +40,7 @@ void Clockwork_Remove(entity this)
 {
 	cannon_clear(this);
 	this.solid = SOLID_SLIDEBOX;
+	this.flags &= ~FL_NOTARGET;
 	this.takedamage = DAMAGE_AIM;
 	set_movetype(this, MOVETYPE_WALK);
 	_setmodel(this, get_playermodel(this));
@@ -185,6 +186,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	setsize(player, '-8 -8 -1', '8 8 8');
 	setorigin(player, org);
 	player.health = 15;
+	player.flags |= FL_NOTARGET;
 
 	delete(this);
 }
@@ -244,7 +246,7 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 		case 1:
 		{
 			if(toucher.takedamage && !IS_PLAYER(toucher))
-				StatusEffects_apply(STATUSEFFECT_Burning, toucher, time + 5, 0);
+				StatusEffects_apply(STATUSEFFECT_Burning, toucher, time + 7, 0);
 			te_knightspike(this.origin);
 			break;
 		}
@@ -252,10 +254,10 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 		case 3:
 		{
 			if(toucher.takedamage && !IS_PLAYER(toucher))
-				StatusEffects_apply(STATUSEFFECT_Slowness, toucher, time + 5, 0);
+				StatusEffects_apply(STATUSEFFECT_Slowness, toucher, time + 7, 0);
 			if(StatusEffects_active(STATUSEFFECT_Burning, toucher))
 			{
-				damg *= 3;
+				damg = 100; // extinguish them!
 				StatusEffects_remove(STATUSEFFECT_Burning, toucher, STATUSEFFECT_REMOVE_NORMAL);
 			}
 			__pointparticles(_particleeffectnum("electro_ballexplode"), this.origin, '0 0 0', 1);
