@@ -1380,9 +1380,9 @@ spawnfunc(worldspawn)
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
 
-	if(autocvar__spawntarget && autocvar__spawntarget != "")
-		strcpy(chlevel_spawntarget, autocvar__spawntarget);
-	cvar_set("_spawntarget", "");
+	// NOTE: let's set this when a trigger_changelevel changes it again, not here
+	// setting it here causes map restarts to lose position!
+	//cvar_set("_spawntarget", "");
 
 	startingserverflags = serverflags;
 

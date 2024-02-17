@@ -12,7 +12,7 @@ int autocvar_noexit;
 .entity chlevel_targ;
 .bool chlevel_found; // exit found!
 
-.string maptarget;
+.string spawntarget;
 
 bool changelevel_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
@@ -124,8 +124,10 @@ void changelevel_touch(entity this, entity toucher)
 			cvar_set("mod_q1bsp_polygoncollisions", "1");
 	}
 
-	if(this.maptarget && this.maptarget != "")
-		cvar_set("_spawntarget", MakeConsoleSafe(this.maptarget));
+	if(this.spawntarget && this.spawntarget != "")
+		cvar_set("_spawntarget", MakeConsoleSafe(this.spawntarget));
+	else
+		cvar_set("_spawntarget", "");
 
 	// coded fix for aop's lack of a spawnflag
 	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!MP_MG || (!this.endtext || this.endtext == "")))

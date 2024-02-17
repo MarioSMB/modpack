@@ -1053,6 +1053,10 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 	entity spot = find(NULL, classname, "testplayerstart");
 	if(spot)
 		return spot;
+
+	bool have_spawntarget = false;
+	if(autocvar__spawntarget && autocvar__spawntarget != "" && find(NULL, targetname, autocvar__spawntarget))
+		have_spawntarget = true;
 		
 // choose a info_player_deathmatch point
 	if(MP_MG && autocvar_horde)
@@ -1083,10 +1087,10 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 		if(coop) // fix for singleplayer
 			return NULL; // didn't find anything....
 	}
-	else if(chlevel_spawntarget && chlevel_spawntarget != "")
+	else if(have_spawntarget)
 	{
 		RandomSelection_Init();
-		FOREACH_ENTITY_STRING(targetname, chlevel_spawntarget,
+		FOREACH_ENTITY_STRING(targetname, autocvar__spawntarget,
 		{
 			if(!coop && it.classname == "info_player_coop")
 				continue;
@@ -2424,8 +2428,11 @@ string rogue_getcdtrack(int numb)
 	return "rtrack02"; // because gmqcc
 }
 
+.string music;
 string getcdtrack(int numb)
 {
+	if(world.music)
+		return world.music;
 	if(MP_HIPNOTIC)
 		return hip_getcdtrack(numb);
 	if(MP_ROGUE)

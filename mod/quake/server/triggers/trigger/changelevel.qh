@@ -3,7 +3,5 @@
 #ifdef SVQC
 string autocvar__spawntarget = "";
 
-.string maptarget;
-
-string chlevel_spawntarget;
+.string spawntarget;
 #endif

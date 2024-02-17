@@ -1367,7 +1367,9 @@ void sigil_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	this.classname = ""; // so rune doors won't find it
-	if(substring(world.model, 0, 6) != "maps/e")
+	if(substring(world.model, 0, 10) == "maps/banjo")
+		serverflags |= (this.spawnflags);
+	else if(substring(world.model, 0, 6) != "maps/e")
 	{
 		int lastPickup = SUB_LeftShift(this.spawnflags & SIGIL_ALL, SIGIL_NUMBITS);
     	serverflags |= (this.spawnflags & SIGIL_ALL) | lastPickup;
@@ -1408,34 +1410,39 @@ spawnfunc(item_sigil)
 	if(!this.spawnflags)
 		this.spawnflags |= SIGIL_E1;
 
-	precache_sound("misc/runekey.wav");
-	this.noise = "misc/runekey.wav";
+	if(!this.noise || this.noise == "")
+		this.noise = "misc/runekey.wav";
+
+	precache_sound(this.noise);
 
 	if(this.spawnflags & SIGIL_E1)
 	{
 		this.spawnflags = SIGIL_E1;
-		precache_model("progs/end1.mdl");
-		_setmodel(this, "progs/end1.mdl");
+		if(!this.model || this.model == "")
+			this.model = "progs/end1.mdl";
 	}
 	if(this.spawnflags & SIGIL_E2)
 	{
 		this.spawnflags = SIGIL_E2;
-		precache_model2("progs/end2.mdl");
-		_setmodel(this, "progs/end2.mdl");
+		if(!this.model || this.model == "")
+			this.model = "progs/end2.mdl";
 	}
 	if(this.spawnflags & SIGIL_E3)
 	{
 		this.spawnflags = SIGIL_E3;
-		precache_model2("progs/end3.mdl");
-		_setmodel(this, "progs/end3.mdl");
+		if(!this.model || this.model == "")
+			this.model = "progs/end3.mdl";
 	}
 	if(this.spawnflags & SIGIL_E4)
 	{
 		this.spawnflags = SIGIL_E4;
-		precache_model2("progs/end4.mdl");
-		_setmodel(this, "progs/end4.mdl");
+		if(!this.model || this.model == "")
+			this.model = "progs/end4.mdl";
 	}
-	
+
+	precache_model(this.model);
+	_setmodel(this, this.model);
+
 	settouch(this, sigil_touch);
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);

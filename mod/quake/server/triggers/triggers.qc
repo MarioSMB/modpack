@@ -175,6 +175,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 		centerprint_proximity(actor, process_string(this.message));
 		if(!this.noise || this.noise == "")
 			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
+		else
+			_sound(actor, CH_INFO, this.noise, 1, ATTN_NORM);
 	}
 
 //
