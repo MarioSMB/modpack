@@ -1819,9 +1819,12 @@ void CreatureFrame_FallDamage(entity this)
 				}
 				else
 				{
-					T_Damage(this, NULL, NULL, falldamage, DEATH_FALL.m_id);
 					if(IS_PLAYER(this) && this.health > 0)
+					{
 						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
+						this.pain_finished = time + 0.5; // so the regular pain sound doesn't play
+					}
+					T_Damage(this, NULL, NULL, falldamage, DEATH_FALL.m_id);
 				}
 			}
 			else if(IS_PLAYER(this))
