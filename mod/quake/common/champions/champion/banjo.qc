@@ -6,6 +6,10 @@ METHOD(Banjo, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 	STAT(WEAPONS, actor) |= WEP_BREEGULLBLASTER.m_wepset;
+
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(actor.(weaponentity).m_weapon == WEP_SHOTGUN)
+		W_SwitchWeapon(actor, WEP_BREEGULLBLASTER, weaponentity);
 }
 
 METHOD(Banjo, m_cannon_launch, void(Champions this, entity actor, entity cannon))

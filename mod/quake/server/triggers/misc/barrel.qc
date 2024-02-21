@@ -8,8 +8,7 @@ void barrel_explode(entity this)
 	particle(this.origin, '0 0 0', 75, 255);
 
 	// yoder add, 27/09/2020 to make barrels fire targets on explode
-	if(MP_MG)
-		SUB_UseTargets(this, this.enemy, NULL);
+	SUB_UseTargets(this, this.enemy, NULL);
 
 	setmodel(this, MDL_Null);
 	setsize(this, '0 0 0', '0 0 0');
@@ -22,6 +21,7 @@ void barrel_explode(entity this)
 
 void barrel_detonate(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	this.enemy = attacker;
 	this.classname = "explo_box";
 	this.takedamage = DAMAGE_NO;
 	setthink(this, barrel_explode);
@@ -85,16 +85,18 @@ spawnfunc(misc_explobox2)
 
 void func_explode_detonate(entity this)
 {
-	vector pos = this.mins + (this.size * 0.5);
-	pos.z -= 32;
-	setmodel(this, MDL_Null);
-	setorigin(this, pos);
+	//vector pos = this.mins + (this.size * 0.5);
+	//pos.z -= 32;
+	//setmodel(this, MDL_Null);
+	//setsize(this, '0 0 0', '0 0 0');
+	//setorigin(this, pos);
 
 	barrel_explode(this);
 }
 
 void func_explode_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	this.enemy = attacker;
 	this.takedamage = DAMAGE_NO;
 	setthink(this, func_explode_detonate);
 	this.nextthink = time + 0.15;
@@ -111,6 +113,7 @@ spawnfunc(func_explode)
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_BSP;
+	precache_model(this.model);
 	_setmodel(this, this.model);
 
 	this.health = 20;

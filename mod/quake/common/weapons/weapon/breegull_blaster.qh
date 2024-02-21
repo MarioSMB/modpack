@@ -16,7 +16,7 @@ CLASS(BreegullBlaster, Weapon)
 ENDCLASS(BreegullBlaster)
 REGISTER_WEAPON(BREEGULLBLASTER, NEW(BreegullBlaster));
 
-//SPAWNFUNC_WEAPON(weapon_breegull, WEP_BREEGULLBLASTER)
+SPAWNFUNC_WEAPON(weapon_breegull, WEP_BREEGULLBLASTER)
 
 #ifdef SVQC
 .entity clockwork;

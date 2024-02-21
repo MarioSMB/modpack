@@ -1407,6 +1407,9 @@ End of level sigil, pick up to end episode and return to jrstart.
 
 spawnfunc(item_sigil)
 {
+	if(this.svflags > 0)
+		this.spawnflags = this.svflags;
+
 	if(!this.spawnflags)
 		this.spawnflags |= SIGIL_E1;
 
@@ -2360,7 +2363,6 @@ const int IT_INVULNERABILITY		= 1048576;
 const int IT_SUIT					= 2097152;
 const int IT_QUAD					= 4194304;
 
-.int svflags;
 .string deathtype;
 
 /*FGD

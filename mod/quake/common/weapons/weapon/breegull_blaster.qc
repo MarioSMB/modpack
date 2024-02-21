@@ -5,6 +5,7 @@
 #ifdef SVQC
 PRECACHE(BreegullBlaster)
 {
+	precache_model("progs/g_breegull.mdl");
 	precache_model("progs/v_breegull.mdl");
     precache_model("progs/egg.iqm");
 
