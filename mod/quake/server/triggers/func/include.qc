@@ -18,6 +18,7 @@
 #include "pendulum.qc"
 #include "plat.qc"
 #include "pushable.qc"
+#include "rainsnow.qc"
 #include "rotate.qc"
 #include "rubble.qc"
 #include "skill.qc"

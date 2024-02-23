@@ -1,0 +1,14 @@
+#pragma once
+
+.float fade_end;
+.float gravity;
+.float delay;
+
+.int state;
+const int RAINSNOW_SNOW = 0;
+const int RAINSNOW_RAIN = 1;
+const int RAINSNOW_CUBE = 2;
+
+#ifdef CSQC
+.int glow_color;
+#endif

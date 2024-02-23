@@ -177,7 +177,7 @@ METHOD(Rotfish, mr_setup, bool(Rotfish this, entity actor))
 	precache_sound2("fish/bite.wav");
 	precache_sound2("fish/idle.wav");
 
-	if(random() <= 0.1 && fexists("progs/dopefish.mdl"))
+	if((random() <= 0.1 || (actor.spawnflags & 2)) && fexists("progs/dopefish.mdl"))
 	{
 		precache_sound2("dopefish/death.wav");
 		precache_sound2("dopefish/bite.wav");

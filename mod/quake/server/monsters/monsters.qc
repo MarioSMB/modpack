@@ -76,7 +76,7 @@ void monster_begin_walking(entity this, entity actor, entity trigger)
 .vector rmovedir;
 void monster_start_go(entity this)
 {
-	bool is_walker = !((this.flags & FL_SWIM) || (this.flags & FL_FLY)); // special check needed here as there isn't a walk flag
+	bool is_walker = (!(this.flags & FL_SWIM) && !(this.flags & FL_FLY)); // special check needed here as there isn't a walk flag
 
 	if(this.rmovedir != '0 0 0')
 	{

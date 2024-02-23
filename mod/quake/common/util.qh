@@ -38,6 +38,9 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
 string translate_key(string key);
 
+vector decompressShortVector(float data);
+float compressShortVector(vector vec);
+
 // Some common varargs functions. Lowercase as they match C.
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))

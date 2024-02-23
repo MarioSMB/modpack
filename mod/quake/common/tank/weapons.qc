@@ -14,7 +14,7 @@ void TankAim(entity this)
 	}
 	else
 	{
-		makevectors(self.tank.angles);
+		makevectors(this.tank.angles);
 		v_forward.z = 0 - v_forward.z;
 	}
 }

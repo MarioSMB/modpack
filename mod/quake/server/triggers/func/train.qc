@@ -8,6 +8,8 @@ const int TRAIN_SMOOTHSPEED = 4;
 
 .entity buddy;
 
+.bool starton;
+
 spawnfunc(func_train_point);
 void train_wait(entity this);
 void train_use(entity this, entity actor, entity trigger);
@@ -197,6 +199,7 @@ void flytrain_setup(entity this)
 	this.buddy.spawnflags |= TRAIN_INHERIT; // flytrains always inherit speed
 	this.buddy.spawnflags |= TRAIN_SMOOTHSPEED; // make it smoothed as well for less jank
 	this.buddy.speed = this.speed;
+	this.buddy.starton = this.starton;
 	if(!this.dmg)
 		this.dmg = 2;
 	if(!this.dmgtime)
@@ -570,7 +573,7 @@ void func_train_find(entity this)
 	setorigin(this, this.enemy.origin - this.movedir);
 	if((this.spawnflags & TRAIN_INHERIT) && this.enemy.speed > 0)
 		this.speed = this.enemy.speed;
-	if(!this.targetname || this.targetname == "")
+	if(!this.targetname || this.targetname == "" || this.starton)
 	{	// not triggered, so start immediately
 		train_wait(this);	// still go through wait in case we start at a wait -1 corner
 	}
@@ -785,7 +788,7 @@ spawnfunc(misc_teleporttrain)
 		setsize(this, '0 0 0', '0 0 0');	
 	}
 	else
-		self.use = teleball_init;
+		this.use = teleball_init;
 }
 
 // --------------------------------------------------------------------------------

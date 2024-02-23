@@ -894,6 +894,141 @@ int cvar_settemp_restore()
 	return j;
 }
 
+// compressed vector format:
+// like MD3, just even shorter
+//   4 bit pitch (16 angles), 0 is -90, 8 is 0, 16 would be 90
+//   5 bit yaw (32 angles), 0=0, 8=90, 16=180, 24=270
+//   7 bit length (logarithmic encoding), 1/8 .. about 7844
+//     length = 2^(length_encoded/8) / 8
+// if pitch is 90, yaw does nothing and therefore indicates the sign (yaw is then either 11111 or 11110); 11111 is pointing DOWN
+// thus, valid values are from 0000.11110.0000000 to 1111.11111.1111111
+// the special value 0 indicates the zero vector
+
+float lengthLogTable[128];
+
+float invertLengthLog(float dist)
+{
+	int l, r, m;
+
+	if(dist >= lengthLogTable[127])
+		return 127;
+	if(dist <= lengthLogTable[0])
+		return 0;
+
+	l = 0;
+	r = 127;
+
+	while(r - l > 1)
+	{
+		m = floor((l + r) / 2);
+		if(lengthLogTable[m] < dist)
+			l = m;
+		else
+			r = m;
+	}
+
+	// now: r is >=, l is <
+	float lerr = (dist - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - dist);
+	if(lerr < rerr)
+		return l;
+	return r;
+}
+
+vector decompressShortVector(int data)
+{
+	vector out;
+	if(data == 0)
+		return '0 0 0';
+	float p	= (data & 0xF000) / 0x1000;
+	float q	= (data & 0x0F80) / 0x80;
+	int len = (data & 0x007F);
+
+	//print("\ndecompress: p:", ftos(p)); print(" q:", ftos(q)); print(" len:", ftos(len), "\n");
+
+	if(p == 0)
+	{
+		out.x = 0;
+		out.y = 0;
+		if(q == 31)
+			out.z = -1;
+		else
+			out.z = +1;
+	}
+	else
+	{
+		q = .19634954084936207740 * q;
+		p = .19634954084936207740 * p - 1.57079632679489661922;
+		out.x = cos(q) *  cos(p);
+		out.y = sin(q) *  cos(p);
+		out.z =          -sin(p);
+	}
+
+	//print("decompressed: ", vtos(out), "\n");
+
+	return out * lengthLogTable[len];
+}
+
+float compressShortVector(vector vec)
+{
+	vector ang;
+	float p, y, len;
+	if(vec == '0 0 0')
+		return 0;
+	//print("compress: ", vtos(vec), "\n");
+	ang = vectoangles(vec);
+	ang.x = -ang.x;
+	if(ang.x < -90)
+		ang.x += 360;
+	if(ang.x < -90 && ang.x > +90)
+		error("BOGUS vectoangles");
+	//print("angles: ", vtos(ang), "\n");
+
+	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	if(p == 0)
+	{
+		if(vec.z < 0)
+			y = 31;
+		else
+			y = 30;
+	}
+	else
+		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
+	len = invertLengthLog(vlen(vec));
+
+	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");
+
+	return (p * 0x1000) + (y * 0x80) + len;
+}
+
+STATIC_INIT(compressShortVector)
+{
+	float l = 1;
+	float f = (2 ** (1/8));
+	int i;
+	for(i = 0; i < 128; ++i)
+	{
+		lengthLogTable[i] = l;
+		l *= f;
+	}
+
+	if(cvar("developer") > 0)
+	{
+		LOG_TRACE("Verifying vector compression table...");
+		for(i = 0x0F00; i < 0xFFFF; ++i)
+			if(i != compressShortVector(decompressShortVector(i)))
+			{
+				LOG_FATALF(
+				    "BROKEN vector compression: %s -> %s -> %s",
+				    ftos(i),
+				    vtos(decompressShortVector(i)),
+				    ftos(compressShortVector(decompressShortVector(i)))
+                );
+			}
+		LOG_TRACE("Done.");
+	}
+}
+
 float shutdown_running;
 #ifdef SVQC
 void SV_Shutdown()

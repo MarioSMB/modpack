@@ -107,6 +107,7 @@ spawnfunc(trigger_usekey)
 	settouch(this, keytrigger_touch);
 
 	InitTrigger(this);
+	this.solid = SOLID_TRIGGER; // workaround for a copper hack that sets triggers with health as nonsolid
 }
 
 #endif
