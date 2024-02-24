@@ -1365,7 +1365,7 @@ void RunPostPutClientInServer(entity this)
 
 void PutClientInServer(entity this)
 {
-	if(IS_OBSERVER(this))
+	if(IS_OBSERVER(this) || gameover || intermission_running)
 		PutObserverInServer(this);
 	else
 		PutPlayerInServer(this);
@@ -1719,7 +1719,7 @@ spawnfunc(info_player_team2)
 void trigger_activate_coop_spawns_use(entity this, entity actor, entity trigger)
 {
 	WepSet newitems = '0 0 0';
-	FOREACH_CLIENT(IS_PLAYER(it),
+	FOREACH_CLIENT(IS_PLAYER(it) && !it.maycheat,
 	{
 		newitems |= STAT(WEAPONS, it);
 	});
