@@ -1,9 +1,7 @@
 //FEATURE: Client-side vaporizer and vortex beams, greatly easing the pain of high ping
 
-//bool autocvar_cl_particles_newvortexbeam;
 AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      "Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled");
 AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    "Minimum ping for the client side beams to automatically enable");
-AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  "Draw a fancy new vortex beam");
 
 .float last_beam;
 
@@ -109,12 +107,6 @@ void ClientBeam_Draw(entity this)
 	Draw_ClientBeam_trace_callback_a = bound(0, fail, 1);
 	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_ClientBeam_trace_callback);
 	Draw_ClientBeam_trace_callback_tex = string_null;
-
-	/*if(!MUTATOR_CALLHOOK(Particles_ClientBeam, this.vorg1, this.vorg2))
-	if(autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
-	else
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
 }
 
 void FireClientBeam(vector start, vector end, bool hit)
@@ -272,8 +264,6 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	{
 		if(autocvar_cl_particles_oldvortexbeam)
 		{ /* keep insta beam */ }
-		else if(autocvar_cl_particles_newvortexbeam && particleeffectnum(EFFECT_VORTEX_BEAM_NEW) >= 0)
-			eff = particleeffectnum(EFFECT_VORTEX_BEAM_NEW);
 		else
 			eff = particleeffectnum(EFFECT_VORTEX_BEAM);
 	}
@@ -291,10 +281,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		traceline(shot_endpos - normalize(force) * 16, shot_endpos + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		w_backoff = -1 * normalize(force);
 		vector org2 = shot_endpos + w_backoff * 6;
-		if(autocvar_cl_particles_newvortexbeam && is_vortex)
-			pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);
-		else
-			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+		pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	}
 
 	if(wep.activeweapon == WEP_VAPORIZER)
@@ -338,31 +325,6 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 		if(time < wep.last_beam)
 			continue;
 		DrawClientBeam(wep, ((wep.activeweapon == WEP_OVERKILL_NEX) ? oknex_delay : vortex_pdelay), vaporizer_delay, attack1_held, localme);
-	}
-
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_mod, Weapon_ImpactEffect)
-{
-	if(autocvar_cl_particles_newvortexbeam && (M_ARGV(0, entity) == WEP_VORTEX || M_ARGV(0, entity) == WEP_OVERKILL_NEX))
-	{
-		vector org2 = w_org + w_backoff * 6;
-		pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);
-		if(!w_issilent)
-			sound(M_ARGV(1, entity), CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
-		return true;
-	}
-
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_mod, Particles_VortexBeam)
-{
-	if(autocvar_cl_particles_newvortexbeam && particleeffectnum(EFFECT_VORTEX_BEAM_NEW) >= 0)
-	{
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_NEW), M_ARGV(0, vector), M_ARGV(1, vector), 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
-		return true;
 	}
 
 	return false;
