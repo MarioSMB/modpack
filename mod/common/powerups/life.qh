@@ -1,0 +1,54 @@
+#pragma once
+
+MSG_INFO_NOTIF(POWERUP_LIFE,                        1,      1, 0, "s1", "s1",       "life",                         "^BG%s^K1 picked up Life Mushroom", "")
+MSG_CENTER_NOTIF(POWERUP_LIFE,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Life Mushroom gives you double health capacity!", "")
+MSG_CENTER_NOTIF(POWERDOWN_LIFE,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Life Mushroom has withered", "")
+
+#ifdef GAMEQC
+const int IT_LIFE = BIT(21);
+
+MODEL(Life_ITEM, Item_Model("life.md3"));
+SOUND(Life, "items/powerup_life");
+#endif
+
+#ifdef SVQC
+.float life_finished;
+AUTOCVAR(g_powerups_life, bool, true, "");
+AUTOCVAR(g_powerup_life_time, float, 60, "");
+void powerup_life_init(Pickup def, entity item)
+{
+    if(!autocvar_g_powerups || !autocvar_g_powerups_life)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+
+    if(!item.life_finished)
+        item.life_finished = (item.count) ? item.count : autocvar_g_powerup_life_time;
+}
+#endif
+REGISTER_ITEM(Life, Powerup) {
+    this.m_canonical_spawnfunc = "item_lifeshroom";
+#ifdef SVQC
+    this.m_iteminit         =   powerup_life_init;
+#endif
+#ifdef GAMEQC
+    this.spawnflags         =   ITEM_FLAG_NORMAL;
+    this.m_itemid           =   IT_LIFE;
+    this.m_model            =   MDL_Life_ITEM;
+    this.m_sound            =   SND_Life;
+    this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
+#endif
+    this.netname            =   "lifeshroom";
+    this.m_name             =   _("Life Mushroom");
+    this.m_icon             =   "lifeshroom";
+    this.m_color            =   '1 0.25 0.25';
+    this.m_waypoint         =   _("Life Mushroom");
+    this.m_waypointblink    =   2;
+}
+
+SPAWNFUNC_ITEM(item_lifeshroom, ITEM_Life)
+
+CLASS(Life, Powerups)
+    ATTRIB(Life, netname, string, "lifeshroom");
+    ATTRIB(Life, m_name, string, _("Life Mushroom"));
+    ATTRIB(Life, m_icon, string, "lifeshroom");
+ENDCLASS(Life)
+REGISTER_STATUSEFFECT(Life, NEW(Life));

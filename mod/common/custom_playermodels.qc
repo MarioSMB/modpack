@@ -227,6 +227,8 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 
 	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
+	else
+		player.effects &= ~EF_STARDUST;
 
 	if(CS_CVAR(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
