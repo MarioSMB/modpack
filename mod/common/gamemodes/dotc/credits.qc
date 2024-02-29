@@ -162,7 +162,7 @@ void dotc_CreditDraw(entity this)
 		this.alpha = 1;
 	}
 
-	if(autocvar_cl_animate_items)
+	if(autocvar_cl_items_animate)
 	if(!this.dotc_credit_simple)
 	{
 		this.avelocity = DOTC_CREDIT_AVELOCITY;
@@ -180,7 +180,7 @@ void dotc_Credit_UpdateModel(entity this)
 	this.model = mymodel;
 
 	if(this.dotc_credit_simple)
-	if(fexists(mysimplemodel) && autocvar_cl_simple_items)
+	if(autocvar_cl_simple_items && fexists(mysimplemodel))
 		this.model = mysimplemodel;
 	else
 		this.dotc_credit_simple = false;

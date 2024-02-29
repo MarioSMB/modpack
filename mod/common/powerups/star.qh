@@ -8,7 +8,7 @@ MSG_CENTER_NOTIF(POWERDOWN_STAR,                    1,      0, 0, "",           
 const int IT_STAR = BIT(23);
 
 MODEL(Star_ITEM, Item_Model("star.md3"));
-SOUND(Star, Item_Sound("powerup"));
+SOUND(Star, "items/powerup_star");
 #endif
 
 #ifdef SVQC

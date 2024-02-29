@@ -42,7 +42,6 @@ REGISTER_ITEM(Mini, Powerup) {
     this.m_itemid           =   IT_MINI;
     this.m_model            =   MDL_Mini_ITEM;
     this.m_sound            =   SND_Mini;
-    this.m_glow             =   true;
     this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
     this.netname            =   "minishroom";
