@@ -8,6 +8,7 @@ PRECACHE(BreegullBlaster)
 	precache_model("progs/g_breegull.mdl");
 	precache_model("progs/v_breegull.mdl");
     precache_model("progs/egg.iqm");
+	precache_model("progs/clockwork.mdl");
 
     precache_sound("weapons/egg0_fire.wav");
     precache_sound("weapons/egg1_fire.wav");
@@ -183,7 +184,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	vector org = this.origin + '0 0 8';
 	settouch(player, Clockwork_Touch);
 	player.oldorigin = org;
-	_setmodel(player, "progs/spid.mdl");
+	_setmodel(player, "progs/clockwork.mdl");
 	setsize(player, '-8 -8 -1', '8 8 8');
 	setorigin(player, org);
 	player.health = 15;

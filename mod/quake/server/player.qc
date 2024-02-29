@@ -293,6 +293,12 @@ void player_stand1(entity this)
 	if(this.tank)
 		return;
 
+	if(this.model == "progs/clockwork.mdl")
+	{
+		this.walkframe = this.frame = 0;
+		return;
+	}
+
 	if(STAT(SKATING, this))
 	{
 		skate_walkframes(this);
@@ -403,7 +409,14 @@ void player_run(entity this)
 	}
 
 	.entity priwep = weaponentities[0];
-	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
+	if(this.model == "progs/clockwork.mdl")
+	{
+		//this.walkframe += 1;
+		if(this.walkframe > 4)
+			this.walkframe = 0;
+		this.frame = this.walkframe;
+	}
+	else if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
 		if(this.walkframe >= 6)
 			this.walkframe = 0;
