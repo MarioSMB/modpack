@@ -170,7 +170,7 @@ void CreatureFrame_Music(entity this)
 			musicnote.scale = 0.75;
 			setsize(musicnote, '0 0 0', '0 0 0');
 			musicnote.angles = '0 1 0' * this.angles_y;
-			set_movetype(musicnote, MOVETYPE_FLY);
+			set_movetype(musicnote, MOVETYPE_NOCLIP);
 			SUB_SetFade(musicnote, time + 0.1, 0.5);
 			musicnote.velocity = '0 0 200';
 		//}
