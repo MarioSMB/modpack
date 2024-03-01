@@ -647,7 +647,10 @@ void InitTrigger(entity this)
 	if(!this.health)
 		this.solid = SOLID_TRIGGER;
 	//SetBrushEntityModelNoLOD(this);
+	vector oldmin = this.mins, oldmax = this.maxs;
 	_setmodel(this, this.model);
+	if(oldmin != '0 0 0' && oldmax != '0 0 0')
+		setsize(this, oldmin, oldmax);
 	set_movetype(this, MOVETYPE_NONE);
 	//this.modelindex = 0;
 	this.model = string_null;
