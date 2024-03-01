@@ -3,6 +3,8 @@
 #include "../../monsters/_mod.qh"
 
 #ifdef SVQC
+float autocvar_sv_quake_clockwork_time = 7;
+
 PRECACHE(BreegullBlaster)
 {
 	precache_model("progs/g_breegull.mdl");
@@ -174,7 +176,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	dummy.cnt = player.scale;
 	dummy.active = true;
 	dummy.weaponentity_fld = this.weaponentity_fld;
-	dummy.count = time + 5; // short duration!
+	dummy.count = time + autocvar_sv_quake_clockwork_time; // short duration!
 	setthink(dummy, Dummy_Think);
 	dummy.nextthink = time + 0.1;
 	set_movetype(dummy, MOVETYPE_TOSS);
