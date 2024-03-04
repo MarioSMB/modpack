@@ -76,7 +76,8 @@ void monster_begin_walking(entity this, entity actor, entity trigger)
 .vector rmovedir;
 void monster_start_go(entity this)
 {
-	bool is_walker = (!(this.flags & FL_SWIM) && !(this.flags & FL_FLY)); // special check needed here as there isn't a walk flag
+	Monster mon = this.monsterdef;
+	bool is_walker = (!(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_FLY)); // special check needed here as there isn't a walk flag
 
 	if(this.rmovedir != '0 0 0')
 	{
@@ -99,20 +100,20 @@ void monster_start_go(entity this)
 		this.movedir = '0 0 0';
 	}
 
-	this.view_ofs = ((this.flags & FL_SWIM) ? '0 0 10' : '0 0 25');
+	this.view_ofs = ((mon.spawnflags & MONSTER_TYPE_SWIM) ? '0 0 10' : '0 0 25');
 	this.takedamage = DAMAGE_AIM;
 	this.ideal_yaw = this.angles * '0 1 0';
 	if(!this.use)
 		this.use = monster_use;
 
-	if(!(this.flags & FL_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE) && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
+	if(!(mon.spawnflags & MONSTER_TYPE_SWIM) && !(this.flags & FL_DECOY) && !(this.spawnflags & SPAWNFLAG_NO_CONTENTS_DAMAGE) && !(mon.spawnflags & MONSTER_TYPE_BOSS))
 	{
 		if(!this.damagedbycontents)
 			IL_PUSH(g_damagedbycontents, this);
 		this.damagedbycontents	= true;
 	}
 
-	if(!(this.flags & FL_SWIM))
+	if(!(mon.spawnflags & MONSTER_TYPE_SWIM))
 	{
 		tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(trace_startsolid)
@@ -257,6 +258,7 @@ void Monster_Appear(entity this, entity actor, entity trigger)
 	float timer = (this.delay) ? this.delay : 0;
 	setthink(this, Monster_Appear_Delayed);
 	this.nextthink = time + timer;
+	this.use = func_null; // will be set to a normal value upon spawning
 	if((this.spawnflags & SPAWN_INSTAWAKE) && (IS_MONSTER(actor) || IS_PLAYER(actor)))
 	{
 		if(IS_MONSTER(actor))
@@ -362,7 +364,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
 
 	this.solid = SOLID_SLIDEBOX;
-	if(this.flags & FL_FLY)
+	if(mon.spawnflags & MONSTER_TYPE_FLY)
 		set_movetype(this, MOVETYPE_QCENTITY);
 	else
 		set_movetype(this, MOVETYPE_STEP);

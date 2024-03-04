@@ -288,9 +288,11 @@ void func_bobbing_think(entity this)
 	
 	// whither are we going
 	vector dst = func_bobbing_pos(this, curphase);
+
+	float thelength = this.wait * PHYS_INPUT_FRAMETIME;
 	
-	this.velocity = (dst - this.origin) / this.length;
-	this.nextthink = this.ltime + this.length;
+	this.velocity = (dst - this.origin) / thelength;
+	this.nextthink = this.ltime + thelength;
 }
 
 /*QUAKED func_bobbing (0 .5 .8) ? START_OFF CRUSHER STOP_LOW STOP_MID STOP_HIGH - - START_INVIS

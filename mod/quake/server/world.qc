@@ -2024,19 +2024,19 @@ void DropToFloor_Handler(entity this)
 	}
 	else
 	{
-		if(!trace_allsolid && trace_fraction < 1)
+		if(trace_allsolid)
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+		else if(trace_fraction < 1)
 		{
 			setorigin(this, trace_endpos);
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
 			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
 			this.move_suspendedinair = true;
-		}
-		else
-		{
-			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
-			// hacky workaround for #2774
-			SET_ONGROUND(this);
 		}
 	}
 }
