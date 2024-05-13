@@ -117,9 +117,23 @@ float SV_CalcRoll(entity this)
 
 	return side * sign;
 }
+
+.float speed;
+void sys_phys_fixspeed(entity this, float maxspd_mod)
+{
+	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspd_mod;
+	if (this.speed != spd) {
+		this.speed = spd; // TODO: send this as a stat and set the below cvars on the client?
+		string temps = ftos(spd);
+		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
+	}
+}
 #endif
 
-void PlayerJump(entity this, float dt)
+void PlayerJump(entity this, float maxspd_mod, float dt)
 {
 	if(this.items & IT_TANK)
 	{
@@ -135,22 +149,13 @@ void PlayerJump(entity this, float dt)
 	
 	if(this.waterlevel >= 2)
 	{
-		float maxspeed_mod = 1;
-		if(this.m_champion)
-		{
-			maxspeed_mod *= this.m_champion.qcc_movespeed;
-			if(this.m_champion.m_getmovespeed)
-				maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
-			maxspeed_mod *= this.m_champion.qcc_swimspeed;
-		}
-
-		float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
+		float maxspeed = PHYS_MAXSPEED(this) * maxspd_mod;
 		if(this.watertype == CONTENT_WATER)
 			this.velocity_z = maxspeed * 0.7;
 		else if(this.watertype == CONTENT_SLIME)
-			this.velocity_z = 80 * maxspeed_mod;
+			this.velocity_z = 80 * maxspd_mod;
 		else
-			this.velocity_z = 50 * maxspeed_mod;
+			this.velocity_z = 50 * maxspd_mod;
 
 	// play swimming sound
 #ifdef SVQC
@@ -317,7 +322,7 @@ void CheckWaterJump(entity this)
 	}
 }
 
-void PM_WaterMove(entity this, float dt)
+void PM_WaterMove(entity this, float maxspd_mod, float dt)
 {
 	makevectors(this.v_angle);
 
@@ -328,16 +333,7 @@ void PM_WaterMove(entity this, float dt)
 	else if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
-	float maxspeed_mod = 1;
-	if(this.m_champion)
-	{
-		maxspeed_mod *= this.m_champion.qcc_movespeed;
-		if(this.m_champion.m_getmovespeed)
-			maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
-		maxspeed_mod *= this.m_champion.qcc_swimspeed;
-	}
-
-	float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
+	float maxspeed = PHYS_MAXSPEED(this) * maxspd_mod;
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(maxspeed, vlen(wishvel));
@@ -459,7 +455,7 @@ void PM_AirAccelerate(entity this, float dt, vector wishvel, float wishspeed)
 	this.velocity += accelspeed * wishdir;
 }
 
-void PM_AirMove(entity this, float dt)
+void PM_AirMove(entity this, float maxspd_mod, float dt)
 {
 	makevectors(this.angles_y * '0 1 0');
 	vector wishvel = v_forward * this.movement_x + v_right * this.movement_y;
@@ -467,15 +463,7 @@ void PM_AirMove(entity this, float dt)
 	if(this.move_movetype != MOVETYPE_WALK)
 		wishvel.z += this.movement_z;
 
-	float maxspeed_mod = 1;
-	if(this.m_champion)
-	{
-		maxspeed_mod *= this.m_champion.qcc_movespeed;
-		if(this.m_champion.m_getmovespeed)
-			maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
-	}
-
-	float maxspeed = PHYS_MAXSPEED(this) * maxspeed_mod;
+	float maxspeed = PHYS_MAXSPEED(this) * maxspd_mod;
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
 	if (wishspeed > maxspeed)
@@ -553,6 +541,21 @@ void PM_Main(entity this, float dt)
 
 	PM_RollView(this);
 
+	float maxspeed_mod = 1;
+	if(this.m_champion)
+	{
+		maxspeed_mod *= this.m_champion.qcc_movespeed;
+		if(this.m_champion.m_getmovespeed)
+			maxspeed_mod *= this.m_champion.m_getmovespeed(this.m_champion, this);
+
+		if(this.waterlevel >= 2 && !(this.flags & FL_WATERJUMP) && !(this.items & IT_TANK) && this.move_movetype != MOVETYPE_NOCLIP)
+			maxspeed_mod *= this.m_champion.qcc_swimspeed;
+	}
+
+#ifdef SVQC
+	sys_phys_fixspeed(this, maxspeed_mod);
+#endif
+
 	// TODO clean up this mess of a setup
 	if(this.m_champion == CHAMPION_Duke)
 		Duke_PreJump(this);
@@ -560,7 +563,7 @@ void PM_Main(entity this, float dt)
 		Banjo_PreJump(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
-		PlayerJump(this, dt);
+		PlayerJump(this, maxspeed_mod, dt);
 	else if(!PHYS_SKATING(this) || IS_ONGROUND(this))
 		UNSET_JUMP_HELD(this);
 
@@ -584,11 +587,11 @@ void PM_Main(entity this, float dt)
 
 	if(this.waterlevel >= 2 && this.move_movetype != MOVETYPE_NOCLIP)
 	{
-		PM_WaterMove(this, dt);
+		PM_WaterMove(this, maxspeed_mod, dt);
 		return;
 	}
 
-	PM_AirMove(this, dt);
+	PM_AirMove(this, maxspeed_mod, dt);
 }
 
 void player_touch(entity this, entity toucher) 

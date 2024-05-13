@@ -103,7 +103,7 @@ void PlaceItem(entity this)
 	if(!(this.items & IT_KEY1) && !(this.items & IT_KEY2))
 		this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	if((this.spawnflags & DROPTOFLOOR_DISABLE) || (this.spawnflags & ITEM_SUSPENDED))
+	if(this.classname != "item_sigil" && ((this.spawnflags & DROPTOFLOOR_DISABLE) || (this.spawnflags & ITEM_SUSPENDED)))
 		set_movetype(this, MOVETYPE_NONE);
 	else
 		set_movetype(this, MOVETYPE_TOSS);	
@@ -135,7 +135,7 @@ Sets the clipping size and plants the object on the floor
 */
 void StartItem(entity this)
 {
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(MP_MG && this.classname != "item_sigil" && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
 	{
 		delete(this);
 		return;
@@ -2598,7 +2598,7 @@ bool target_items_testinv(entity this, entity e)
 	if(this.svflags)
 	{
 		float sf = zeroconvert(this.svflags);
-		if(sf & serverflags != sf)
+		if((sf & serverflags) != sf)
 			return false;
 	}
 

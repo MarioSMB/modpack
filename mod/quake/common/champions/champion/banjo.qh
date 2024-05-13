@@ -78,6 +78,7 @@ REGISTER_CHAMPION(Banjo, NEW(Banjo));
 #ifdef SVQC
 .bool banjo_cannon;
 .bool banjo_landed;
+.float banjo_sigilsound;
 #endif
 .bool jetpack_stopped;
 .bool jetpack_status; // reusing stat

@@ -364,7 +364,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	if(mon.spawnflags & MONSTER_TYPE_DECOY) { this.flags |= FL_DECOY; }
 
 	this.solid = SOLID_SLIDEBOX;
-	if(mon.spawnflags & MONSTER_TYPE_FLY)
+	if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM))
 		set_movetype(this, MOVETYPE_QCENTITY);
 	else
 		set_movetype(this, MOVETYPE_STEP);

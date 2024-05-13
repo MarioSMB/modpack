@@ -28,12 +28,24 @@ METHOD(Banjo, m_cannon_land, bool(Champions this, entity actor))
 	return false;
 }
 
+METHOD(Banjo, m_pickup_sigil, void(Champions this, entity actor, entity item))
+{
+	// play a sigil collection sound, but give it a delay to play any jingles
+	actor.banjo_sigilsound = time + 2.5;
+}
+
 METHOD(Banjo, m_playerthink, void(Champions this, entity actor))
 {
 	if(!actor.jetpack_status && IS_ONGROUND(actor))
 	{
 		actor.banjo_landed = true;
 		STAT(QCC_JETPACKFUEL, actor) = 100;
+	}
+
+	if(actor.banjo_sigilsound && time > actor.banjo_sigilsound)
+	{
+		player_sound(actor, CH_TRIGGER_SINGLE, "start.wav", ATTN_NORM);
+		actor.banjo_sigilsound = 0;
 	}
 }
 
@@ -46,6 +58,7 @@ METHOD(Banjo, m_playerspawn, void(Champions this, entity actor))
 
 METHOD(Banjo, m_clear, void(Champions this, entity actor))
 {
+	actor.banjo_sigilsound = 0;
 	actor.jetpack_status = false;
 	STAT(WEAPONS, actor) &= ~WEP_BREEGULLBLASTER.m_wepset;
 }
