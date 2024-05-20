@@ -14,7 +14,7 @@ current_branch=$(git branch | awk '/^\*/ { print $2 }')
 branches=$(git branch --list -a | awk '/^\*/ { next } /remotes\/origin\/HEAD/ { next } /^  remotes\/origin\// { print substr($1, length("remotes/origin/") + 1, length($1)) }')
 for i in $branches; do
     git checkout $i || { echo "Can't checkout to $i"; rm -f common.pot.new*; exit 1; }
-    git ls-files mod | sort -u | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new-`basename $i` >&2
+    git ls-files mod | sort -u | grep -E '.qc$|.qh$' | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new-`basename $i` >&2
 done
 git checkout "$current_branch"
 msgcat common.pot.new-* >common.pot.new
