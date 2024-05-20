@@ -17,7 +17,7 @@ rm -v compiled/zzz-smb-l10n.pk3dir/*
 echo "Merging localization files to $dst"
 for i in $(ls lang); do
     if [ -f lang/$i ] && [ -f $base/$i ] && [[ "$i" != "common.pot" ]]; then
-        msgcat $base/$i lang/$i > $dst/$i
+        msgcat --to-code UTF-8 $base/$i lang/$i > $dst/$i
     fi
 done
 

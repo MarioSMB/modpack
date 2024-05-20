@@ -7,7 +7,7 @@ cd "`dirname $0`/.."
 
 for i in $(ls lang); do
     if [[ "${i%.po}" != "$i" ]] && [[ "$i" != "common.pot" ]]; then
-        msgcat lang/common.pot lang/$i >lang/$i.new && mv lang/$i.new lang/$i
+        msgmerge -N -F -U lang/$i lang/common.pot
     fi
 done
 
