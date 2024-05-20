@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # update existing translation files to include new strings
 # for those who need to translate offline by editing plain .po files
 

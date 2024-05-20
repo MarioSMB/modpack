@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 cwd="`pwd`"
 cd "`dirname $0`/.."
 
-declare base=xonotic
+base=xonotic
 if [ ! -d "$base" ]; then
     echo "RTFM (README.md)"
     cd $cwd
