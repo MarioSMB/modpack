@@ -20,7 +20,9 @@ git checkout "$current_branch"
 msgcat common.pot.new-* >common.pot.new
 # exclude vanilla strings
 msgcomm xonotic/common.pot common.pot.new | msgcomm -u common.pot.new - >lang/common.pot
-rm -f common.pot.new*
+if [ ! $SMB_KEEP_POT ]; then
+    rm -f common.pot.new*
+fi
 
 echo "Complete."
 
