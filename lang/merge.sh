@@ -22,6 +22,7 @@ for i in $(ls lang); do
 done
 
 if [ ! -n "${ZIP:-}" ]; then
+    rm -v compiled compiled/zzz-smb-l10n.*.pk3
     # unique id for different versions of localization
     sha256=$(cat compiled/zzz-smb-l10n.pk3dir/* | sha256sum)
     pk3path=compiled/$pk3name.${sha256:0:8}.pk3
