@@ -201,7 +201,7 @@ PRECACHE(Impel)
 
 bool IsRogueMap()
 {
-	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2");
+	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2" || substring(world.model, 0, 10) == "maps/banjo");
 }
 
 // copper-specific lighting hack

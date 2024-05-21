@@ -169,14 +169,14 @@ void Wiz_FastFire(entity this)
 {
 	if(this.owner.health > 0)
 	{
-		this.owner.effects = this.owner.effects | EF_MUZZLEFLASH;
+		this.owner.effects |= EF_MUZZLEFLASH;
 
 		fixedmakevectors(this.enemy.angles);	
 		vector dst = this.enemy.origin - 13*this.movedir;
 	
 		vector vec = normalize(dst - this.origin);
-		_sound(this, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, vec);
+		_sound(newmis, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 		newmis.projectiledeathtype = DEATH_MONSTER_SCRAG.m_id;
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
