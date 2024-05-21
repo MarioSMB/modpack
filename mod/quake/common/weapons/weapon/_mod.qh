@@ -34,3 +34,4 @@
 #include "otamatone.qh"
 #include "pogo.qh"
 #include "breegull_blaster.qh"
+#include "mic.qh"

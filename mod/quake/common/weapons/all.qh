@@ -4,7 +4,7 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "breegull pogo rocketlauncher multirocketlauncher impaler cannon lightning plasma shock lightme otamatone laser_gun grenadelauncher multigrenade proximitygun tuba napalm fish mayo spellbook hammer portalgun supernailgun lavasupernailgun piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun chainsaw pan axe";
+noref string autocvar_cl_quake_weaponpriority = "breegull pogo rocketlauncher multirocketlauncher impaler cannon lightning plasma shock lightme mic otamatone laser_gun grenadelauncher multigrenade proximitygun tuba napalm fish mayo spellbook hammer portalgun supernailgun lavasupernailgun piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun chainsaw pan axe";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher cannon multirocketlauncher impaler grenadelauncher multigrenade biogun proximitygun tuba napalm fish mayo"; // explosives
 noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme"; // energy
@@ -12,7 +12,7 @@ noref string autocvar_cl_quake_weaponpriority2 = "lightning portalgun"; // hitsc
 noref string autocvar_cl_quake_weaponpriority3 = "lightning sshotgun shotgun"; // hitscan all
 noref string autocvar_cl_quake_weaponpriority4 = "laser_gun shock grenadelauncher multigrenade napalm fish mayo supernailgun biogun tuba lavasupernailgun piano doot nailgun lavanailgun kazoo chainsaw"; // spam weapons
 noref string autocvar_cl_quake_weaponpriority5 = "cannon impaler portalgun"; // movement weapons
-noref string autocvar_cl_quake_weaponpriority6 = "tuba otamatone mayo piano kazoo doot"; // musical instruments
+noref string autocvar_cl_quake_weaponpriority6 = "tuba mic otamatone mayo piano kazoo doot"; // musical instruments
 noref string autocvar_cl_quake_weaponpriority7 = "";
 noref string autocvar_cl_quake_weaponpriority8 = "";
 noref string autocvar_cl_quake_weaponpriority9 = "";

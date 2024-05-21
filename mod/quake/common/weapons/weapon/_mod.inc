@@ -34,3 +34,4 @@
 #include "otamatone.qc"
 #include "pogo.qc"
 #include "breegull_blaster.qc"
+#include "mic.qc"

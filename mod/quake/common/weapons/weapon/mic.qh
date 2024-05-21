@@ -1,0 +1,28 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(MIC_MUSICNOTE, "weapons/mic_music");
+
+//SOUND(MIC_FIRE, "weapons/mic_attack");
+#endif
+
+CLASS(Mic, Weapon)
+/* ammotype  */ ATTRIB(Mic, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Mic, impulse, int, 9);
+/* spawnflags*/ ATTRIB(Mic, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* ammo */      ATTRIB(Mic, aflag, int, 10);
+/* modelname */ ATTRIB(Mic, mdl, string, "mic");
+/* crosshair */ ATTRIB(Mic, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Mic, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(Mic, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Mic, model2, string, "mic");
+/* refname   */ ATTRIB(Mic, netname, string, "mic");
+/* wepname   */ ATTRIB(Mic, m_name, string, _("Mic"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Mic, m_musicnote, Sound, SND_MIC_MUSICNOTE);
+#endif
+
+ENDCLASS(Mic)
+REGISTER_WEAPON(MIC, NEW(Mic));
+
+SPAWNFUNC_WEAPON(weapon_mic, WEP_MIC)
