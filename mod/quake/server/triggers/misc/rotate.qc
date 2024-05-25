@@ -137,6 +137,13 @@ spawnfunc(rotate_object_continuously)
 		this.speed = 1;
 		RegisterFrameTickEntity(this);
 	}
+
+	// TODO: hopefully this doesn't break any mg maps!
+	if(this.spawnflags & SOLID_BSP)
+	{
+		this.nextthink = this.ltime + 999999999;
+		setthink(this, SUB_NullThink); // for PushMove
+	}
 }
 
 

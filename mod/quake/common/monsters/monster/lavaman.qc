@@ -24,6 +24,13 @@ bool LavaManCheckAttack(entity this)
 
 	entity targ = this.enemy;
 
+	// TODO: better place for this
+	if(vdist(this.origin - targ.origin, >, 1600))
+	{
+		this.enemy = NULL;
+		return false;
+	}
+
 // see if any entities are in the way of the shot
 	vector spot1 = this.origin + '0 0 64';
 
@@ -54,30 +61,19 @@ void lavaman_hunt(entity this)
 	if(!this.enemy)
 	{
 		RandomSelection_Init();
-		if(this.charmed)
+		FOREACH_ENTITY_RADIUS(this.origin, 1024, true,
 		{
-			FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
-			{
-				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
-				{
-					traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
-					if(trace_fraction != 1)
-						continue;
-					RandomSelection_AddEnt(it, 1, 1);
-				}
-			});
-		}
-		else
-		{
-			FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET),
-			{
-				// enable for line of sight
-				traceline(this.origin + '0 0 16', it.origin, true, this);
-				if(trace_fraction != 1)
-					continue;
-				RandomSelection_AddEnt(it, 1, 1);
-			});
-		}
+			if(this.charmed && !IS_MONSTER(it))
+				continue;
+			if(!this.charmed && !IS_PLAYER(it))
+				continue;
+			if(it == this || this.enemy == it || it.health <= 0 || (it.flags & FL_NOTARGET))
+				continue;
+			traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
+			if(trace_fraction != 1)
+				continue;
+			RandomSelection_AddEnt(it, 1, 1);
+		});
 			
 		this.enemy = RandomSelection_chosen_ent;
 	}
@@ -148,7 +144,7 @@ void lavaman_idle1(entity this)
 // ============
 void lavaman_walk(entity this)
 {
-	if(this.enemy)
+	if(this.enemy && this.enemy.health > 0)
 		LavaManCheckAttack(this);
 	else
 		lavaman_hunt(this);
@@ -190,7 +186,7 @@ void lavaman_walk1(entity this) { set_animofs(this, anim_lavaman_walk1, 1, lavam
 
 void lavaman_run(entity this)
 {
-	if(this.enemy)
+	if(this.enemy && this.enemy.health > 0)
 		LavaManCheckAttack(this);
 	else
 		lavaman_hunt(this);
@@ -231,27 +227,27 @@ void lavaman_run2(entity this) { set_animofs(this, anim_lavaman_walk1, 2, lavama
 void lavaman_run1(entity this) { set_animofs(this, anim_lavaman_walk1, 1, lavaman_run2); lavaman_run(this);}
 
 void lavaman_fire23(entity this) { set_animofs(this, anim_lavaman_attack1, 23, lavaman_run1); }
-void lavaman_fire22(entity this) { set_animofs(this, anim_lavaman_attack1, 22, lavaman_fire23); ai_charge(this, 1);}
+void lavaman_fire22(entity this) { set_animofs(this, anim_lavaman_attack1, 22, lavaman_fire23); /*ai_charge(this, 1);*/}
 void lavaman_fire21(entity this) { set_animofs(this, anim_lavaman_attack1, 21, lavaman_fire22); ai_face(this);}
 void lavaman_fire20(entity this) { set_animofs(this, anim_lavaman_attack1, 20, lavaman_fire21); ai_face(this);}
 void lavaman_fire19(entity this) { set_animofs(this, anim_lavaman_attack1, 19, lavaman_fire20); ai_face(this);}
 void lavaman_fire18(entity this) { set_animofs(this, anim_lavaman_attack1, 18, lavaman_fire19); lavaman_missile(this, 2);}
 void lavaman_fire17(entity this) { set_animofs(this, anim_lavaman_attack1, 17, lavaman_fire18); ai_face(this);}
-void lavaman_fire16(entity this) { set_animofs(this, anim_lavaman_attack1, 16, lavaman_fire17); ai_charge(this, 1);}
-void lavaman_fire15(entity this) { set_animofs(this, anim_lavaman_attack1, 15, lavaman_fire16); ai_charge(this, 1);}
+void lavaman_fire16(entity this) { set_animofs(this, anim_lavaman_attack1, 16, lavaman_fire17); /*ai_charge(this, 1);*/}
+void lavaman_fire15(entity this) { set_animofs(this, anim_lavaman_attack1, 15, lavaman_fire16); /*ai_charge(this, 1);*/}
 void lavaman_fire14(entity this) { set_animofs(this, anim_lavaman_attack1, 14, lavaman_fire15); ai_face(this);}
 void lavaman_fire13(entity this) { set_animofs(this, anim_lavaman_attack1, 13, lavaman_fire14); ai_face(this);}
-void lavaman_fire12(entity this) { set_animofs(this, anim_lavaman_attack1, 12, lavaman_fire13); ai_charge(this, 1);}
+void lavaman_fire12(entity this) { set_animofs(this, anim_lavaman_attack1, 12, lavaman_fire13); /*ai_charge(this, 1);*/}
 void lavaman_fire11(entity this) { set_animofs(this, anim_lavaman_attack1, 11, lavaman_fire12); ai_face(this);}
-void lavaman_fire10(entity this) { set_animofs(this, anim_lavaman_attack1, 10, lavaman_fire11); ai_charge(this, 1);}
+void lavaman_fire10(entity this) { set_animofs(this, anim_lavaman_attack1, 10, lavaman_fire11); /*ai_charge(this, 1);*/}
 void lavaman_fire9(entity this) { set_animofs(this, anim_lavaman_attack1, 9, lavaman_fire10); ai_face(this);}
 void lavaman_fire8(entity this) { set_animofs(this, anim_lavaman_attack1, 8, lavaman_fire9); ai_face(this);}
 void lavaman_fire7(entity this) { set_animofs(this, anim_lavaman_attack1, 7, lavaman_fire8); lavaman_missile(this, 1);}
 void lavaman_fire6(entity this) { set_animofs(this, anim_lavaman_attack1, 6, lavaman_fire7); ai_face(this);}
-void lavaman_fire5(entity this) { set_animofs(this, anim_lavaman_attack1, 5, lavaman_fire6); ai_charge(this, 1);}
+void lavaman_fire5(entity this) { set_animofs(this, anim_lavaman_attack1, 5, lavaman_fire6); /*ai_charge(this, 1);*/}
 void lavaman_fire4(entity this) { set_animofs(this, anim_lavaman_attack1, 4, lavaman_fire5); ai_face(this);}
 void lavaman_fire3(entity this) { set_animofs(this, anim_lavaman_attack1, 3, lavaman_fire4);  ai_face(this);}
-void lavaman_fire2(entity this) { set_animofs(this, anim_lavaman_attack1, 2, lavaman_fire3); ai_charge(this, 1);}
+void lavaman_fire2(entity this) { set_animofs(this, anim_lavaman_attack1, 2, lavaman_fire3); /*ai_charge(this, 1);*/}
 void lavaman_fire1(entity this) { set_animofs(this, anim_lavaman_attack1, 1, lavaman_fire2);  ai_face(this);}
 
 void lavaman_shocka10(entity this) { set_animofs(this, anim_lavaman_shocka1, 10, lavaman_run1); }
@@ -390,6 +386,9 @@ void lavaman_awake(entity this)
 	this.takedamage = DAMAGE_AIM;
 
 	this.view_ofs = '0 0 48';
+
+	if(!this.yaw_speed)
+		this.yaw_speed = 10;
 
 //    this.health = 1500;
 
