@@ -421,7 +421,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 // figure momentum add
-	if((inflictor != NULL) &&(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
+	if((inflictor != NULL) && deathtype != DEATH_HURTTRIGGER.m_id &&(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
 	{
 		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);

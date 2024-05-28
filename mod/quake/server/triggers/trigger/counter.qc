@@ -119,7 +119,7 @@ void counter_timed_use(entity this, entity actor, entity trigger)
 
 	this.enemy = actor;
 	this.delay = 0;
-	this.nextthink = -1;
+	this.nextthink = 0;
 	setthink(this, func_null);
 	multi_trigger(this);
 	delete(this);
@@ -130,7 +130,7 @@ Acts as an intermediary for an action that takes multiple inputs.
 
 If nomessage is not set, t will print "1 more.. " etc when triggered and "sequence complete" when finished.
 
-After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itthis.
+After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itself.
 */
 spawnfunc(trigger_counter_timed)
 {
