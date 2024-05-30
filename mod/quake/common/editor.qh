@@ -1,10 +1,24 @@
 #pragma once
 
-#ifdef SVQC
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_EDITOR)
 
-bool sv_editor_command(entity this, string cmd, float argc);
+EFFECT(1, EDITOR_TARGET,            "TE_TEI_G3")
+EFFECT(1, EDITOR_TARGET2,           "TE_TEI_G3YELLOW")
+EFFECT(1, EDITOR_TARGET3,           "TE_TEI_G3PINK")
+EFFECT(1, EDITOR_TARGET4,           "TE_TEI_G3BLUE")
+EFFECT(1, EDITOR_KILLTARGET,        "TE_TEI_G3RED_HIT")
 #endif
 
-#ifdef CSQC
-void editor_draw();
+#ifdef SVQC
+.entity waypointsprite_editor;
+
+float editor_lastcheck;
+
+void editor_StartFrame();
+
+bool sv_editor_command(entity this, string cmd, float argc);
+
+IntrusiveList g_editor;
+STATIC_INIT(g_editor) { g_editor = IL_NEW(); }
 #endif

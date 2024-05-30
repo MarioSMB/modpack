@@ -1366,7 +1366,8 @@ void sigil_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
-	centerprint(toucher, "You got the rune!");
+	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_MULTI, ITEM_RUNE_GOT, toucher.netname);
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_RUNE_GOT_SELF);
 
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");

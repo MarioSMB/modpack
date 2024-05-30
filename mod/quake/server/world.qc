@@ -1,5 +1,6 @@
 #include "world.qh"
 
+#include "../common/editor.qh"
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
@@ -1892,6 +1893,8 @@ void StartFrame()
 	status_effects_SV_StartFrame();
 
 	horde_StartFrame();
+
+	editor_StartFrame();
 
 	FixPhysics();
 
