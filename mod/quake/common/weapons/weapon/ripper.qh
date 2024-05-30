@@ -16,8 +16,7 @@ CLASS(Ripper, Weapon)
 ENDCLASS(Ripper)
 REGISTER_WEAPON(RIPPER, NEW(Ripper));
 
-// defined elsewhere
-//SPAWNFUNC_WEAPON(weapon_ripper, WEP_RIPPER)
+SPAWNFUNC_WEAPON(weapon_ripper, WEP_RIPPER)
 
 #ifdef SVQC
 .int num_bounces;

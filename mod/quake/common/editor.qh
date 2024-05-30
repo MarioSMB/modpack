@@ -1,0 +1,10 @@
+#pragma once
+
+#ifdef SVQC
+
+bool sv_editor_command(entity this, string cmd, float argc);
+#endif
+
+#ifdef CSQC
+void editor_draw();
+#endif

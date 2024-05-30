@@ -4,6 +4,7 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include "../common/sui_sys.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/editor.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/viewloc.qh"
@@ -616,6 +617,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_pixelheight = autocvar_vid_pixelheight;
 
 	View_UpdateFov();
+
+	editor_draw();
 
 	// Draw the Crosshair
 	setproperty(VF_DRAWCROSSHAIR, 0);

@@ -5,6 +5,7 @@
 #include "../common/physics.qh"
 #include "../common/slide/slide.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/editor.qh"
 #include "../common/music.qh"
 #include "combat.qh"
 #include "getreplies.qh"
@@ -3316,6 +3317,14 @@ void SV_ParseClientCommand(entity this, string command)
 		if (thecmd) wordwrap_sprint(this, thecmd, 1000);
 		else sprint(this, "ERROR: unsupported info command");
 		return;
+	}
+
+	if(cmd_name == "editor")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		if(sv_editor_command(this, cmd_name, argc))
+			return;
 	}
 
 	if(sv_shop_command(this, cmd_name, argc))

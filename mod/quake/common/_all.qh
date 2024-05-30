@@ -58,6 +58,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
 #include "wepent.qh"
 #include "music.qh"
+#include "editor.qh"
 
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))

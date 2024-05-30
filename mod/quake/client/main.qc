@@ -4,6 +4,7 @@
 #include "sbar.qh"
 #include "shop.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/editor.qh"
 #include "../common/music.qh"
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"

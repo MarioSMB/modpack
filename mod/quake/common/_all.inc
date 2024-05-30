@@ -34,4 +34,5 @@
 
 #include "wepent.qc"
 #include "music.qc"
+#include "editor.qc"
 #endif
