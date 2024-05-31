@@ -166,6 +166,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	dummy.angles = player.angles;
 	dummy.v_angle = player.v_angle;
 	dummy.colormap = player.colormap;
+	dummy.dphitcontentsmask = player.dphitcontentsmask;
 	dummy.solid = SOLID_BBOX;
 	dummy.scale = player.scale;
 	dummy.health = player.health;
