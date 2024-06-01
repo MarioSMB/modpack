@@ -4,9 +4,9 @@
 #include "../combat.qh"
 #include "../horde.qh"
 #include "../player.qh"
-#include "../triggers/subs.qh"
-#include "../triggers/teleporters.qh"
-#include "../triggers/triggers.qh"
+#include "../../common/triggers/subs.qh"
+#include "../../common/triggers/teleporters.qh"
+#include "../../common/triggers/triggers.qh"
 #include "../weapons.qh"
 
 /* ALL MONSTERS SHOULD BE 1 0 0 IN COLOR */

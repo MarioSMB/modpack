@@ -1,0 +1,28 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(BANJO_FIRE, "weapons/banjo_fire");
+
+SOUND(BANJO_MUSICNOTE, "weapons/banjo_music");
+#endif
+
+CLASS(Banjo, Weapon)
+/* ammotype  */ ATTRIB(Banjo, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Banjo, impulse, int, 2);
+/* spawnflags*/ ATTRIB(Banjo, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* ammo */      ATTRIB(Banjo, aflag, int, 7);
+/* modelname */ ATTRIB(Banjo, mdl, string, "banjo");
+/* crosshair */ ATTRIB(Banjo, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Banjo, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Banjo, w_crosshair_color, vector, '0.5 0.35 0');
+/* wepimg    */ ATTRIB(Banjo, model2, string, "banjo");
+/* refname   */ ATTRIB(Banjo, netname, string, "banjo");
+/* wepname   */ ATTRIB(Banjo, m_name, string, _("Banjo"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Banjo, m_musicnote, Sound, SND_BANJO_MUSICNOTE);
+#endif
+
+ENDCLASS(Banjo)
+REGISTER_WEAPON(BANJO, NEW(Banjo));
+
+SPAWNFUNC_WEAPON(weapon_banjo, WEP_BANJO)

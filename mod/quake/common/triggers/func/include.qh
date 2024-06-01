@@ -4,6 +4,7 @@
 #include "earthquake.qh"
 #include "exploder.qh"
 #include "oncount.qh"
+#include "plat.qh"
 #include "rainsnow.qh"
 #include "rotate.qh"
 #include "spawn.qh"

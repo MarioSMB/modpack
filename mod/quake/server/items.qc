@@ -3,8 +3,8 @@
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
 #include "rogue/rogue.qh"
-#include "triggers/subs.qh"
-#include "triggers/triggers.qh"
+#include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
 #include "weapons.qh"
 #include "weapons/selection.qh"
 
@@ -747,6 +747,18 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 			{
 				if(random() > 0.5)
 					mytype = IT_CELLS;
+				break;
+			}
+			case WEP_OCARINA:
+			{
+				if(random() > 0.5)
+					mytype = IT_CELLS;
+				break;
+			}
+			case WEP_BANJO:
+			{
+				if(random() > 0.33)
+					mytype = IT_SHELLS;
 				break;
 			}
 		}

@@ -559,7 +559,7 @@ void PM_Main(entity this, float dt)
 	// TODO clean up this mess of a setup
 	if(this.m_champion == CHAMPION_Duke)
 		Duke_PreJump(this);
-	if(this.m_champion == CHAMPION_Banjo)
+	if(this.m_champion == CHAMPION_BanjoKazooie)
 		Banjo_PreJump(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))

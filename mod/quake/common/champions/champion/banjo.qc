@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 
-METHOD(Banjo, m_activate, void(Champions this, entity actor))
+METHOD(BanjoKazooie, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 	STAT(WEAPONS, actor) |= WEP_BREEGULLBLASTER.m_wepset;
@@ -12,13 +12,13 @@ METHOD(Banjo, m_activate, void(Champions this, entity actor))
 		W_SwitchWeapon(actor, WEP_BREEGULLBLASTER, weaponentity);
 }
 
-METHOD(Banjo, m_cannon_launch, void(Champions this, entity actor, entity cannon))
+METHOD(BanjoKazooie, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
 	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
 	actor.banjo_cannon = true;
 }
 
-METHOD(Banjo, m_cannon_land, bool(Champions this, entity actor))
+METHOD(BanjoKazooie, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.banjo_cannon)
 		return false;
@@ -28,13 +28,13 @@ METHOD(Banjo, m_cannon_land, bool(Champions this, entity actor))
 	return false;
 }
 
-METHOD(Banjo, m_pickup_sigil, void(Champions this, entity actor, entity item))
+METHOD(BanjoKazooie, m_pickup_sigil, void(Champions this, entity actor, entity item))
 {
 	// play a sigil collection sound, but give it a delay to play any jingles
 	actor.banjo_sigilsound = time + 2.5;
 }
 
-METHOD(Banjo, m_playerthink, void(Champions this, entity actor))
+METHOD(BanjoKazooie, m_playerthink, void(Champions this, entity actor))
 {
 	if(!actor.jetpack_status && IS_ONGROUND(actor))
 	{
@@ -49,14 +49,14 @@ METHOD(Banjo, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
-METHOD(Banjo, m_playerspawn, void(Champions this, entity actor))
+METHOD(BanjoKazooie, m_playerspawn, void(Champions this, entity actor))
 {
 	actor.jetpack_status = false;
 	STAT(QCC_JETPACKFUEL, actor) = 100;
 	STAT(WEAPONS, actor) |= WEP_BREEGULLBLASTER.m_wepset;
 }
 
-METHOD(Banjo, m_clear, void(Champions this, entity actor))
+METHOD(BanjoKazooie, m_clear, void(Champions this, entity actor))
 {
 	actor.banjo_sigilsound = 0;
 	actor.jetpack_status = false;
@@ -169,7 +169,7 @@ void PM_flight(entity this, float maxspd_mod, float dt)
 }
 
 #ifdef SVQC
-METHOD(Banjo, m_fixclient, void(Champions this, entity actor))
+METHOD(BanjoKazooie, m_fixclient, void(Champions this, entity actor))
 {
 	actor.jetpack_status = STAT(QCC_JETPACK, actor);
 }
@@ -183,7 +183,7 @@ void Banjo_PreJump(entity actor)
 		actor.jetpack_stopped = false;
 }
 
-METHOD(Banjo, m_physics, bool(Champions this, entity actor, float dt))
+METHOD(BanjoKazooie, m_physics, bool(Champions this, entity actor, float dt))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{

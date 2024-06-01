@@ -126,7 +126,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 #include "../../server/items.qh"
 #include "../../server/player.qh"
 #include "../../server/rogue/lava_wpn.qh"
-#include "../../server/triggers/triggers.qh"
+#include "../../common/triggers/triggers.qh"
 #include "../../server/weapons.qh"
 #include "../../server/weapons/common.qh"
 #endif

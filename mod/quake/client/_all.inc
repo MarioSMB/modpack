@@ -14,9 +14,6 @@
 
 #include "../common/_all.inc"
 
-// TODO
-#include "../server/triggers/func/rainsnow.qc"
-
 #include <lib/csqcmodel/cl_model.qc>
 #include "../common/physics.qh"
 #include <lib/csqcmodel/cl_player.qc>

@@ -35,3 +35,5 @@
 #include "pogo.qh"
 #include "breegull_blaster.qh"
 #include "mic.qh"
+#include "ocarina.qh"
+#include "banjo.qh"

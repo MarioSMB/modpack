@@ -16,6 +16,7 @@
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
 #include "notifications/all.qc"
+#include "triggers/include.qc"
 
 #include "status_effects/_mod.inc"
 #include "weapons/_mod.inc"
@@ -26,11 +27,6 @@
 #include "waypoints/_mod.inc"
 #include "slide/_mod.inc"
 #include "tank/_mod.inc"
-
-// TODO
-#ifdef CSQC
-#include "../server/triggers/trigger/viewloc.qc"
-#endif
 
 #include "wepent.qc"
 #include "music.qc"

@@ -1,7 +1,7 @@
 #include "proximity_gun.qh"
 
 #ifdef SVQC
-#include "../../../server/triggers/func/spawn.qh"
+#include "../../../common/triggers/func/spawn.qh"
 #endif
 
 #ifdef SVQC

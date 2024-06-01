@@ -12,8 +12,8 @@
 #include "player.qh"
 #include "rogue/sphere.qh"
 #include "shop.qh"
-#include "triggers/teleporters.qh"
-#include "triggers/trigger/fog.qh"
+#include "../common/triggers/teleporters.qh"
+#include "../common/triggers/trigger/fog.qh"
 #include "vote.qh"
 #include "weapons/weaponsystem.qh"
 
@@ -1302,6 +1302,8 @@ void ObserverThink(entity this)
 				this.flags &= ~FL_SPAWNING;
 				this.classname = STR_PLAYER;
 				this.rejoin_delay = time + autocvar_sv_quake_rejoin_delay; // prevent fast spec-rejoin
+				// get the spawn parms as they were at level start
+				setspawnparms(this);
 				PutClientInServer(this);
 				return;
 			}
@@ -1888,6 +1890,8 @@ void NextLevel()
 
 	nextmap = o.map;
 	gameover = true;
+
+	target_music_kill();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");

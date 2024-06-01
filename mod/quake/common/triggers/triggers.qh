@@ -1,6 +1,32 @@
 #pragma once
 
+.int active;
+const int ACTIVE_NOT = 0;
+const int ACTIVE_ACTIVE = 1;
+const int ACTIVE_IDLE = 2;
+const int ACTIVE_BUSY = 2;
+const int ACTIVE_TOGGLE = 3;
+
+//----------
+// SENDFLAGS
+//----------
+const int SF_TRIGGER_INIT = BIT(0);
+const int SF_TRIGGER_UPDATE = BIT(1);
+const int SF_TRIGGER_RESET = BIT(2);
+
 #ifdef SVQC
+//-----------
+// SPAWNFLAGS
+//-----------
+const int START_ENABLED = BIT(0);
+const int START_DISABLED = BIT(0);
+const int ALL_ENTITIES = BIT(1);
+const int ON_MAPLOAD = BIT(1);
+const int INVERT_TEAMS = BIT(2);
+const int CRUSH = BIT(2);
+const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
+const int ONLY_PLAYERS = BIT(14);
+
 const int SPAWNFLAG_SILENT = BIT(4);
 
 const int SPAWN_ALT_TARG = 16384;	// fire the four target keys at different times
@@ -73,13 +99,6 @@ void CorpseThink(entity this);
 .float lip;
 .float speed;
 .float sounds;
-
-.int active;
-const int ACTIVE_NOT = 0;
-const int ACTIVE_ACTIVE = 1;
-const int ACTIVE_IDLE = 2;
-const int ACTIVE_BUSY = 2;
-const int ACTIVE_TOGGLE = 3;
 
 .string killtarget;
 

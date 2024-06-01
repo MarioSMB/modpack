@@ -1,8 +1,8 @@
 #include "armagon.qh"
 
 #ifdef SVQC
-#include "../../../server/triggers/func/exploder.qh"
-#include "../../../server/triggers/func/rotate.qh"
+#include "../../../common/triggers/func/exploder.qh"
+#include "../../../common/triggers/func/rotate.qh"
 #endif
 
 #ifdef SVQC

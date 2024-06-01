@@ -1,6 +1,6 @@
 #include "horde.qh"
 
-#include "triggers/teleporters.qh"
+#include "../common/triggers/teleporters.qh"
 
 void HordeRecord()
 {

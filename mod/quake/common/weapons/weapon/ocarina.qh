@@ -1,0 +1,28 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(OCARINA_SUMMON, "weapons/ocarina_summon");
+
+SOUND(OCARINA_MUSICNOTE, "weapons/ocarina_music");
+#endif
+
+CLASS(Ocarina, Weapon)
+/* ammotype  */ ATTRIB(Ocarina, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Ocarina, impulse, int, 0);
+/* spawnflags*/ ATTRIB(Ocarina, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* ammo */      ATTRIB(Ocarina, aflag, int, 7);
+/* modelname */ ATTRIB(Ocarina, mdl, string, "ocarina");
+/* crosshair */ ATTRIB(Ocarina, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Ocarina, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Ocarina, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Ocarina, model2, string, "ocarina");
+/* refname   */ ATTRIB(Ocarina, netname, string, "ocarina");
+/* wepname   */ ATTRIB(Ocarina, m_name, string, _("Ocarina"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Ocarina, m_musicnote, Sound, SND_OCARINA_MUSICNOTE);
+#endif
+
+ENDCLASS(Ocarina)
+REGISTER_WEAPON(OCARINA, NEW(Ocarina));
+
+SPAWNFUNC_WEAPON(weapon_ocarina, WEP_OCARINA)

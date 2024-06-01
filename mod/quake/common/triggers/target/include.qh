@@ -2,5 +2,6 @@
 
 #include "kill.qh"
 #include "lock.qh"
+#include "music.qh"
 #include "sound.qh"
 #include "state.qh"

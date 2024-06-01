@@ -1,3 +1,6 @@
+//#include "models.qh"
+
+#ifdef SVQC
 const int SPAWN_WALL_NONSOLID = 1;
 const int SPAWN_WALL_TOGGLEVIS = 2;
 const int SPAWN_WALL_STARTINVIS = 4;
@@ -234,3 +237,4 @@ spawnfunc(func_bossgate)
 		this.nextthink = time + 0.2;
 	}
 }
+#endif

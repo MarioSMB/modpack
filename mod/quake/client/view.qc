@@ -9,7 +9,8 @@
 #include "../common/viewloc.qh"
 #include "../common/wepent.qh"
 #include "../common/util.qh"
-#include "../server/triggers/trigger/viewloc.qh"
+#include "../common/triggers/target/music.qh"
+#include "../common/triggers/trigger/viewloc.qh"
 #include "crosshair.qh"
 #include "shownames.qh"
 
@@ -580,6 +581,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
 	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
+
+	TargetMusic_Advance();
 
 	if(drawtime == 0)
 		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps

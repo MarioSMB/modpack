@@ -1,0 +1,37 @@
+#pragma once
+
+.float lifetime;
+
+.string noise;
+.float fade_time;
+.float volume;
+.float active;
+
+const int SF_MUSIC_ORIGIN = BIT(2);
+
+#ifdef CSQC
+float autocvar_bgmvolume;
+
+float music_disabled;
+entity music_default;
+entity music_target;
+entity music_trigger;
+// FIXME also control bgmvolume here, to not require a target_music for the default track.
+
+entityclass(TargetMusic);
+classfield(TargetMusic) .int state;
+classfield(TargetMusic) .float lastvol;
+
+void TargetMusic_Advance();
+
+void Net_TargetMusic();
+
+void Ent_TriggerMusic_Think(entity this);
+
+void Ent_TriggerMusic_Remove(entity this);
+
+#elif defined(SVQC)
+void target_music_kill();
+
+void TargetMusic_RestoreGame();
+#endif

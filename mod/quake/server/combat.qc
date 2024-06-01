@@ -5,7 +5,7 @@
 #include "monsters/ai_minions.qh"
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
-#include "triggers/triggers.qh"
+#include "../common/triggers/triggers.qh"
 #include "weapons/weaponsystem.qh"
 
 bool IsExplosionDamage;
@@ -319,8 +319,13 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 
 	// Yoder add, September 9 2020
+	// bosses are immune to damage while frozen (mechanic)
 	if(targ.is_frozen)
-		return;
+	{
+		if(targ.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
+			return;
+		showpain = false;
+	}
 
 	if(targ.charmed && (IS_PLAYER(attacker) || attacker == targ.charmer || attacker.charmer == targ.charmer))
 		return; // no hurting our pets!

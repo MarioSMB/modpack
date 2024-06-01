@@ -1,7 +1,7 @@
 #include "lavaman.qh"
 
-#include "../../../server/triggers/triggers.qh"
-#include "../../../server/triggers/func/door.qh"
+#include "../../../common/triggers/triggers.qh"
+#include "../../../common/triggers/func/door.qh"
 
 #ifdef SVQC
 const int anim_lavaman_rise1 = 0;

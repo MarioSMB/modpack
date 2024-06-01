@@ -1,13 +1,5 @@
 #ifdef SVQC
 
-void plat_center_touch(entity this, entity toucher);
-void plat_outside_touch(entity this, entity toucher);
-void plat_trigger_use(entity this, entity actor, entity trigger);
-void plat_go_up(entity this);
-void plat_go_down(entity this);
-void plat_crush(entity this, entity blocker);
-const int PLAT_LOW_TRIGGER = BIT(0);
-
 void plat_spawn_inside_trigger(entity this)
 {
 //

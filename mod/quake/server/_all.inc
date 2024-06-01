@@ -26,7 +26,6 @@
 
 #include "weapons/_mod.inc"
 #include "monsters/_all.inc"
-#include "triggers/include.qc"
 
 // mission packs
 #include "rogue/_all.inc"

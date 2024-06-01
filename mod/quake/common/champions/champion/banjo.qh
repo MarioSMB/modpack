@@ -21,7 +21,7 @@ SOUND(Banjo_Death3, "player_banjo/death3");
 Sound SND_Banjo_Death_Random() {
     return REGISTRY_GET(Sounds, SND_Banjo_Death1.m_id + rint(random() * 2));
 }
-PRECACHE(Banjo)
+PRECACHE(BanjoKazooie)
 {
 #ifdef SVQC
     precache_sound("player_banjo/plyrjmp8.wav");       // player jump
@@ -59,21 +59,21 @@ PRECACHE(Banjo)
 "Jumps 20% higher\n" \
 "Has Kazooie as a weapon"
 #endif
-CLASS(Banjo, Champions)
-    ATTRIB(Banjo, netname, string, "banjo");
-    ATTRIB(Banjo, m_name, string, "Banjo");
-    ATTRIB(Banjo, qcc_jumpheight, float, 1.2);
+CLASS(BanjoKazooie, Champions)
+    ATTRIB(BanjoKazooie, netname, string, "banjo");
+    ATTRIB(BanjoKazooie, m_name, string, "Banjo");
+    ATTRIB(BanjoKazooie, qcc_jumpheight, float, 1.2);
 #ifdef GAMEQC
-    ATTRIB(Banjo, m_model, Model, MDL_Banjo);
-    ATTRIB(Banjo, m_soundpath, string, "player_banjo/");
-    METHOD(Banjo, m_sound_pain, string()) { return SND(Banjo_Pain_Random()); }
-    METHOD(Banjo, m_sound_death, string()) { return SND(Banjo_Death_Random()); }
+    ATTRIB(BanjoKazooie, m_model, Model, MDL_Banjo);
+    ATTRIB(BanjoKazooie, m_soundpath, string, "player_banjo/");
+    METHOD(BanjoKazooie, m_sound_pain, string()) { return SND(Banjo_Pain_Random()); }
+    METHOD(BanjoKazooie, m_sound_death, string()) { return SND(Banjo_Death_Random()); }
 #endif
 #ifdef CSQC
-    ATTRIB(Banjo, message, string, BANJO_STATS);
+    ATTRIB(BanjoKazooie, message, string, BANJO_STATS);
 #endif
-ENDCLASS(Banjo)
-REGISTER_CHAMPION(Banjo, NEW(Banjo));
+ENDCLASS(BanjoKazooie)
+REGISTER_CHAMPION(BanjoKazooie, NEW(BanjoKazooie));
 
 #ifdef SVQC
 .bool banjo_cannon;

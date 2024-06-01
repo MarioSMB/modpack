@@ -1,6 +1,6 @@
 #ifdef SVQC
 
-#include "../../rogue/newplats.qh"
+#include "../../../server/rogue/newplats.qh"
 
 const int ELVTR_DOWN = BIT(0);
 

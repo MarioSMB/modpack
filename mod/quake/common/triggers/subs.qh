@@ -23,6 +23,10 @@ void SUB_SetFade(entity ent, float when, float fading_time);
 
 #ifdef SVQC
 
+bool InitMovingBrushTrigger(entity this);
+
+void SUB_CalcMove(entity this, vector tdest, float tspeedtype, float tspeed, void(entity) func);
+
 void SUB_CountTargets(entity this);
 
 void SUB_CalcMoveCurveSeg(entity this);

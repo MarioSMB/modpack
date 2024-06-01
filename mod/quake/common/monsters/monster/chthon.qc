@@ -1,7 +1,7 @@
 #include "chthon.qh"
 
-#include "../../../server/triggers/triggers.qh"
-#include "../../../server/triggers/func/door.qh"
+#include "../../../common/triggers/triggers.qh"
+#include "../../../common/triggers/func/door.qh"
 
 #ifdef SVQC
 const int anim_boss_rise = 0; //'0 16 0'

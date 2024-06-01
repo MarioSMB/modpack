@@ -35,3 +35,5 @@
 #include "pogo.qc"
 #include "breegull_blaster.qc"
 #include "mic.qc"
+#include "ocarina.qc"
+#include "banjo.qc"

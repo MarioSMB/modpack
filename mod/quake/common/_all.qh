@@ -40,6 +40,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "models/all.qh"
 #include "sounds/all.qh"
 #include "deathtypes/all.qh"
+#include "triggers/include.qh"
 
 #include "status_effects/_mod.qh"
 #include "items/item.qh"
@@ -53,7 +54,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "tank/_mod.qh"
 
 #ifdef CSQC
-#include "../server/triggers/trigger/viewloc.qh"
+#include "../common/triggers/trigger/viewloc.qh"
 #endif
 
 #include "wepent.qh"

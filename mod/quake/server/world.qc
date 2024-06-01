@@ -4,9 +4,9 @@
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
-#include "triggers/func/button.qh"
-#include "triggers/func/earthquake.qh"
-#include "triggers/trigger/changelevel.qh"
+#include "../common/triggers/func/button.qh"
+#include "../common/triggers/func/earthquake.qh"
+#include "../common/triggers/trigger/changelevel.qh"
 #include "vote.qh"
 #include "weapons/weaponsystem.qh"
 
@@ -2196,6 +2196,8 @@ void RestoreGame()
 
 	// Progs DB (capture records)
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
+
+	TargetMusic_RestoreGame();
 }
 
 void Shutdown()

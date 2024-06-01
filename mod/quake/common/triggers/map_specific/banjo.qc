@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 /*QUAKED func_levelgate(0 .5 .8)
 Inversed version of func_episodegate, prevents access until the required runes have been gathered.
 "svflags" is the flag number for serverflags when checked.
@@ -22,3 +24,5 @@ spawnfunc(func_levelgate)
 	this.use = func_wall_use;
 	_setmodel(this, this.model);
 }
+
+#endif

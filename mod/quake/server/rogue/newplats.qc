@@ -1,5 +1,7 @@
 #include "newplats.qh"
 
+#include "../../common/triggers/func/plat.qh"
+
 // ==================================
 // down N and wait code
 // ==================================
