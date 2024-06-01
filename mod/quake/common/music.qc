@@ -236,7 +236,7 @@ void Music_Copy(entity this)
 	}
 
 	// copy the music of a nearby player
-	FOREACH_ENTITY_RADIUS(this.origin, 1024, IS_PLAYER(it) && it != this,
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
 		if(!it.(weaponentity).music_pos)
 			continue; // cheap escape
