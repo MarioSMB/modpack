@@ -144,6 +144,8 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
 	if(!IS_PLAYER(this))
 		return false;
+	if(this.clockwork)
+		return false;
 	if(this.(weaponentity).m_weapon != w)
 	{
 		if(client_hasweapon(this, w, weaponentity, true, true))
