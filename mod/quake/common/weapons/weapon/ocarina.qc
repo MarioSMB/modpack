@@ -49,7 +49,11 @@ void ocarina_note_touch(entity this, entity toucher)
 		{
 			SUB_Freeze(toucher);
 			setthink(toucher, ocarina_unfreeze);
-			toucher.nextthink = time + 3;
+			float freeze_time = 3;
+			if(StatusEffects_active(STATUSEFFECT_Slowness, toucher))
+				freeze_time = 10;
+
+			toucher.nextthink = time + freeze_time;
 		}
 	}
 

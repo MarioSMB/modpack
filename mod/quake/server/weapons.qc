@@ -1379,7 +1379,8 @@ void W_SetCurrentAmmo(entity this)
 {
 	if(this.exptime != 0)
 		return;
-	player_run(this);		// get out of any weapon firing states
+	if(!this.clockwork)
+		player_run(this);		// get out of any weapon firing states
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
