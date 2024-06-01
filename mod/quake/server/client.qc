@@ -1002,6 +1002,7 @@ void ClientKill(entity this)
 	slide_PlayerDies(this);
 	cannon_clear(this);
 	this.modelindex = this.modelindex_player;
+	WaypointSprite_PlayerDead(this);
 	set_suicide_frame(this);
 	this.frags = this.frags - 2;	// extra penalty
 	respawn(this);

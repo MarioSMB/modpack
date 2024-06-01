@@ -75,7 +75,8 @@ void PM_flight(entity this, float maxspd_mod, float dt)
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
 	// fix speedhacks :P
-	wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
+	if(wishvel != '0 0 0')
+		wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
 	// add the unused velocity as up component
 	wishvel_z = 0;
 
