@@ -479,7 +479,8 @@ void Lightning_Draw(entity this)
 	//tex = "particles/lgbeam";
 	tex = "particles/gauntletbeam";
 
-	Draw_CylindricLine(this.vorg1, this.vorg2, 6, tex, 0.25, -time * 3, '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
+	// NOTE: '1.1 1.1 1.1' rgb is used as a temporary workaround for #419
+	Draw_CylindricLine(this.vorg1, this.vorg2, 6, tex, 0.25, -time * 3, '1.1 1.1 1.1', 1, DRAWFLAG_NORMAL, view_origin);
 }
 
 NET_HANDLE(TE_CSQC_LIGHTNING, bool isNew)

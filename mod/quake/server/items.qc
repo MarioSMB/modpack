@@ -1638,6 +1638,8 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 void invis_enemy_dropaggro(entity this)
 {
 	this.enemy = NULL;
+	if(this.is_frozen)
+		return;
 	if(this.charmed)
 	{
 		HuntCharmer(this);
@@ -1652,9 +1654,15 @@ void invis_enemy_dropaggro(entity this)
 	else
 	{
 		if(this.movetarget && this.th_walk)
-			this.th_walk(this);
+		{
+			setthink(this, this.th_walk);
+			this.nextthink = time;
+		}
 		else if(this.th_stand)
-			this.th_stand(this);
+		{
+			setthink(this, this.th_stand);
+			this.nextthink = time;
+		}
 	}
 }
 
