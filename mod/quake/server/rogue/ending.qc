@@ -96,8 +96,11 @@ void track_camera(entity this)
 void move_camera(entity this)
 {
 	entity cameraPoint = find(NULL, targetname, "cameraview");
-	if(cameraPoint == NULL)
+	if(!cameraPoint)
+	{
 		objerror(this, "Could not find camerapoint!");
+		return;
+	}
 	
 	this.model = "";
 	this.yaw_speed = 20;
@@ -244,8 +247,11 @@ void actor_control(entity this)
 		this.target = "point1";
 		this.movetarget = find(NULL, targetname, this.target);
 		this.goalentity = this.movetarget;
-		if(this.goalentity == NULL)
+		if(!this.goalentity)
+		{
 			objerror(this, "End Sequence point1 placing screwed up!");
+			return;
+		}
 		this.frame = 6;
 		setthink(this, actor_run);
 		this.nextthink = time + 0.1;
@@ -256,8 +262,11 @@ void actor_control(entity this)
 		this.target = "machine";
 		this.movetarget = find(NULL, targetname, this.target);
 		this.goalentity = this.movetarget;
-		if(this.goalentity == NULL)
+		if(!this.goalentity)
+		{
 			objerror(this, "End Sequence machine placing screwed up!");
+			return;
+		}
 		actorStage = STAGE_FIRING;
 		setthink(this, actor_fire1);
 		this.nextthink = time + 0.1;
@@ -276,8 +285,11 @@ void actor_control(entity this)
 		this.target = "point2";
 		this.movetarget = find(NULL, targetname, this.target);
 		this.goalentity = this.movetarget;
-		if(this.goalentity == NULL)
+		if(!this.goalentity)
+		{
 			objerror(this, "End Sequence point2 placing screwed up!");
+			return;
+		}
 		this.frame = 6;
 		setthink(this, actor_run);
 		this.nextthink = time + 0.1;

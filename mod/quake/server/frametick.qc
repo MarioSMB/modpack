@@ -25,7 +25,10 @@ STATIC_INIT(g_frametick) { g_frametick = IL_NEW(); }
 void RegisterFrameTickEntity(entity this)
 {
 	if(!this.tick)
+	{
 		objerror(this, "Registered frame tick entity doesn't have tick function.\n");
+		return;
+	}
 	IL_PUSH(g_frametick, this);
 }
 

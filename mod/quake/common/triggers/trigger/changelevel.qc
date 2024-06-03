@@ -153,7 +153,10 @@ Unless the NO_INTERMISSION flag is set, the view will go to the info_intermissio
 spawnfunc(trigger_changelevel)
 {
 	if(!this.map || this.map == "")
+	{
 		objerror(this, "changelevel trigger doesn't have map");
+		return;
+	}
 
 	this.killstring = " tried to leave";
 

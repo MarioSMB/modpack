@@ -266,7 +266,10 @@ spawnfunc(trigger_fog_transition)
 	}
 
 	if(this.style < 0 || this.style > 2)
+	{
 		objerror(this, "Invalid style for trigger_fog_transition. Needs to be 0, 1 or 2.");
+		return;
+	}
 	settouch(this, trigger_fog_transition_touch);
     InitTrigger(this);
 }
