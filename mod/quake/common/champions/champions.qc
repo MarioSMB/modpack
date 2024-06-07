@@ -57,6 +57,8 @@ bool QCC_CanCastAbility(entity this)
 		return false;
 	if(STAT(CANNON, this))
 		return false;
+	if(STAT(ITEMS) & IT_TANK)
+		return false;
 	if(STAT(CLOCKWORK, this))
 		return false;
 	if(this.m_transform)
