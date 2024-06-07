@@ -103,7 +103,7 @@ METHOD(Demon, m_touch, void(Champions this, entity actor, entity toucher))
 	if(time > actor.demon_bash_time)
 		return;
 
-	if(IS_PLAYER(toucher) || (IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
+	if((IS_PLAYER(toucher) && !autocvar_g_friendlyfire_virtual) || (IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
 	{
 		makevectors(actor.angles);
 		vector vec = normalize(toucher.origin - actor.origin);
@@ -157,7 +157,8 @@ METHOD(Demon, m_playerjump, float(Champions this, entity actor))
 		actor.demon_bash_time = time + 1;
 		demon_jump4(actor);
 	#endif
-		fixedmakevectors(actor.angles);
+		vector vang = PHYS_INPUT_ANGLES(actor);
+		makevectors('0 1 0' * vang.y);
 		actor.velocity += v_forward * 600;
 		actor.velocity_z += 300;
 		UNSET_ONGROUND(actor);
