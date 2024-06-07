@@ -19,20 +19,33 @@ METHOD(Keen, m_playerspawn, void(Champions this, entity actor))
 #endif
 
 #ifdef GAMEQC
-METHOD(Keen, m_touch, void(Champions this, entity actor, entity toucher))
+bool Keen_PogoActive(entity actor)
 {
-	if(STAT(POWERUPS, this) & POWERUP_JUMPBOOTS)
-		return; // better version
+	if(STAT(ITEMS, actor) & IT_TANK)
+		return false;
+	if(STAT(CLOCKWORK, actor))
+		return false;
 #ifdef SVQC
 	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon != WEP_POGO)
-		return;
+	if(actor.(weaponentity).m_weapon == WEP_POGO)
+		return true;
+#endif
+#ifdef CSCQC
+	if(viewmodels[0].activeweapon == WEP_POGO)
+		return true;
+#endif
+	return false;
+}
 
+METHOD(Keen, m_touch, void(Champions this, entity actor, entity toucher))
+{
+	if(STAT(POWERUPS, actor) & POWERUP_JUMPBOOTS)
+		return; // better version
+	if(!Keen_PogoActive(actor))
+		return;
+#ifdef SVQC
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 #elif defined(CSQC)
-	if(viewmodels[0].activeweapon != WEP_POGO)
-		return;
-
 	if(IS_PLAYER(toucher))
 #endif
 	{
@@ -66,15 +79,8 @@ METHOD(Keen, m_touch, void(Champions this, entity actor, entity toucher))
 
 METHOD(Keen, m_playerjump, float(Champions this, entity actor))
 {
-#ifdef CSQC
-	if(viewmodels[0].activeweapon == WEP_POGO)
+	if(Keen_PogoActive(actor))
 		return 0;
-#endif
-#ifdef SVQC
-	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon == WEP_POGO)
-		return 0;
-#endif
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6))
 		return 2.5;
 	return 1;
@@ -82,15 +88,8 @@ METHOD(Keen, m_playerjump, float(Champions this, entity actor))
 
 METHOD(Keen, m_physics, bool(Champions this, entity actor, float dt))
 {
-#ifdef CSQC
-	if(viewmodels[0].activeweapon != WEP_POGO)
+	if(!Keen_PogoActive(actor))
 		return false;
-#endif
-#ifdef SVQC
-	.entity weaponentity = weaponentities[0];
-	if(actor.(weaponentity).m_weapon != WEP_POGO)
-		return false;
-#endif
 	if(actor.waterlevel > 0)
 		return false;
 	if(IS_ONGROUND(actor))

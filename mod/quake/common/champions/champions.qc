@@ -153,7 +153,19 @@ void QCC_UpdatePlayer(entity this)
 	Champions oldchamp = this.m_champion;
 	Champions champ = Champion_FromString(this.cvar_cl_quake_model);
 	if(this.m_transform && this.transform_limited && time > this.transform_limited)
+	{
 		QCC_ClearTransform(this);
+		// hard delay of weapons so you don't get stuck spamming!
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity))
+			{
+				wep_set_anim(this.(weaponentity), 1, w_ready);
+				ATTACK_FINISHED(this, weaponentity) = time + 1;
+			}
+		}
+	}
 
 	if(this.m_transform)
 	{
