@@ -115,7 +115,8 @@ METHOD(Goat, m_physics, bool(Champions this, entity actor, float dt))
 			_sound(actor, CH_WEAPON_SINGLE, SND(Goat_Pain_Random()), 1, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	#endif
-		fixedmakevectors(actor.angles);
+		vector vang = PHYS_INPUT_ANGLES(actor);
+		makevectors('0 1 0' * vang.y);
 		actor.velocity += v_forward * 700;
 		actor.velocity_z += 100;
 		UNSET_ONGROUND(actor);
