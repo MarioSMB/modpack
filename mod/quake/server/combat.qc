@@ -559,12 +559,13 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 				{
 					// yoder Sept24, 2021
 					// if in horde mode, have enemies obey a reaggro time
-					if(IS_PLAYER(targ.enemy) && IS_PLAYER(attacker)) // current and new enemy are both players, check reaggro times
+					if((IS_PLAYER(targ.enemy) || targ.enemy.monster_attack) && IS_PLAYER(attacker)) // current and new enemy are both players, check reaggro times
 					{
 						// check reaggro times
 						if(!targ.aggro_time || (targ.aggro_time + AGGRO_MIN + (random() * AGGRO_ADD) < time))
 						{
-							targ.oldenemy = targ.enemy;
+							if(IS_PLAYER(targ.enemy))
+								targ.oldenemy = targ.enemy;
 							targ.enemy = attacker;
 							targ.aggro_time = time;
 							FoundTarget(targ);

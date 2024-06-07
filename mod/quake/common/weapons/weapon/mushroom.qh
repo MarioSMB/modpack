@@ -1,0 +1,25 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(MUSHROOM_THROW, "weapons/sword_swing");
+
+MODEL(MUSHROOM, "progs/mushroom.mdl");
+#endif
+
+CLASS(Mushroom, Weapon)
+/* ammotype  */ ATTRIB(Mushroom, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Mushroom, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Mushroom, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
+/* ammo */      ATTRIB(Mushroom, aflag, int, 0);
+/* modelname */ ATTRIB(Mushroom, mdl, string, "mushroom");
+/* crosshair */ ATTRIB(Mushroom, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Mushroom, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Mushroom, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Mushroom, model2, string, "mushroom");
+/* refname   */ ATTRIB(Mushroom, netname, string, "mushroom");
+/* wepname   */ ATTRIB(Mushroom, m_name, string, _("Mushroom"));
+
+ENDCLASS(Mushroom)
+REGISTER_WEAPON(MUSHROOM, NEW(Mushroom));
+
+SPAWNFUNC_WEAPON(weapon_mushroom, WEP_MUSHROOM)

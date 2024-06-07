@@ -816,6 +816,7 @@ void execute_changelevel(entity this)
 		tank_cleanup(it);
 		cannon_clear(it);
 		Clockwork_Clear(it);
+		QCC_ClearTransform(it);
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.clientcamera = it;
@@ -894,11 +895,11 @@ void CopyToBodyQueue(entity ent)
 
 	IL_PUSH(g_clones, body);
 
-	if(coop || deathmatch)
-	{
-		setthink(body, SUB_Remove);
-		body.nextthink = time + 10;
-	}
+	//if(coop || deathmatch)
+	//{
+	//	setthink(body, SUB_Remove);
+	//	body.nextthink = time + 10;
+	//}
 }
 
 void LoadGame()

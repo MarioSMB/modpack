@@ -336,15 +336,25 @@ void player_stand1(entity this)
 	.entity priwep = weaponentities[0];
 	if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
-		if(this.walkframe >= 12)
-			this.walkframe = 0;
-		this.frame = anim_player_axstnd1 + this.walkframe;
+		vector anim = vec3(anim_player_axstnd1, 0, 12);
+
+		if(this.m_champion && this.m_champion.qcc_anim_axstnd != '0 0 0')
+			anim = this.m_champion.qcc_anim_axstnd;
+
+		if(this.walkframe >= anim.z)
+			this.walkframe = anim.y;
+		this.frame = anim.x + this.walkframe;
 	}
 	else
 	{
-		if(this.walkframe >= 5)
-			this.walkframe = 0;
-		this.frame = anim_player_stand1 + this.walkframe;
+		vector anim = vec3(anim_player_stand1, 0, 5);
+
+		if(this.m_champion && this.m_champion.qcc_anim_stand != '0 0 0')
+			anim = this.m_champion.qcc_anim_stand;
+
+		if(this.walkframe >= anim.z)
+			this.walkframe = anim.y;
+		this.frame = anim.x + this.walkframe;
 	}
 	this.walkframe = this.walkframe + 1;	
 }
@@ -418,19 +428,28 @@ void player_run(entity this)
 	}
 	else if(this.(priwep).m_weapon.spawnflags & WEP_FLAG_MELEE)
 	{
-		if(this.walkframe >= 6)
-			this.walkframe = 0;
-		this.frame = anim_player_axrun1 + this.walkframe;
+		vector anim = vec3(anim_player_axrun1, 0, 6);
+
+		if(this.m_champion && this.m_champion.qcc_anim_axrun != '0 0 0')
+			anim = this.m_champion.qcc_anim_axrun;
+
+		if(this.walkframe >= anim.z)
+			this.walkframe = anim.y;
+		this.frame = anim.x + this.walkframe;
 	}
 	else
 	{
-		bool check_walkframe = (this.walkframe >= 6);
-		if(check_walkframe)
-			this.walkframe = 0;
-		this.frame = this.frame + this.walkframe;
+		vector anim = vec3(anim_player_rockrun1, 0, 6);
+
+		if(this.m_champion && this.m_champion.qcc_anim_rockrun != '0 0 0')
+			anim = this.m_champion.qcc_anim_rockrun;
+
+		if(this.walkframe >= anim.z)
+			this.walkframe = anim.y;
+		this.frame = anim.x + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank)
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform)
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -473,7 +492,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.clockwork && this.move_movetype == MOVETYPE_WALK && !this.tank)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.clockwork && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform)
 	{
 		if(this.waterlevel == 0)
 		{
@@ -656,7 +675,9 @@ void player_pain(entity this, entity attacker, float damage, int deathtype)
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, this))
 		return;		// eyes don't have pain frames
 
-	if(STAT(SKATING, this))
+	if(this.m_transform)
+		{ }
+	else if(STAT(SKATING, this))
 		PainSound(this, NULL);
 	else if(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MELEE)
 		player_axpain1(this, attacker);
@@ -1097,7 +1118,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 }
 
 void set_suicide_frame(entity this)
-{	// used by kill command and disconnect command
+{
+	// used by kill command and disconnect command
 	if(substring(this.model, 0, 12) != "progs/player" && this.model != "progs/skater.mdl")
 		return;	// already gibbed
 	this.frame = anim_player_deatha1 + (11 - 1); // animation frames start at 1

@@ -1,12 +1,12 @@
 #include "goat.qh"
 
 #ifdef SVQC
-METHOD(Goat, m_activate, void(Goat this, entity actor))
+METHOD(Goat, m_activate, void(Champions this, entity actor))
 {
 	_sound(actor, CH_WEAPON_SINGLE, "goatling/death1.wav", 1, ATTN_NORM);
 }
 
-METHOD(Goat, m_condition, bool(Goat this, entity actor))
+METHOD(Goat, m_condition, bool(Champions this, entity actor))
 {
 	if(autocvar_sv_allow_customplayermodels_goatlist == "")
 		return true;
@@ -61,7 +61,7 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
-METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
+METHOD(Goat, m_touch, void(Champions this, entity actor, entity toucher))
 {
 	if(StatusEffects_active(STATUSEFFECT_Shield, actor))
 		return; // better version
@@ -104,7 +104,7 @@ METHOD(Goat, m_touch, void(Goat this, entity actor, entity toucher))
 }
 #endif
 
-METHOD(Goat, m_physics, bool(Goat this, entity actor, float dt))
+METHOD(Goat, m_physics, bool(Champions this, entity actor, float dt))
 {
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor) && !QCC_HasSpellbook(actor))
 	{

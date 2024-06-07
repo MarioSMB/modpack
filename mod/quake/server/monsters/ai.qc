@@ -1214,10 +1214,10 @@ bool FindTarget(entity this)
 // got one
 //
 	this.enemy = client;
-	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
+	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy) && !this.enemy.monster_attack)
 	{
 		this.enemy = this.enemy.enemy;
-		if(!IS_PLAYER(this.enemy) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
+		if((!IS_PLAYER(this.enemy) && !this.enemy.monster_attack) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
 		{
 			this.enemy = NULL;
 			return false;
@@ -1532,7 +1532,7 @@ void ai_run(entity this, float dist)
 	if(!IS_MONSTER(this))
 		return;
 // see if the enemy is dead
-	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
+	if(wasfreed(this.enemy) || this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
 	{
 		this.enemy = NULL;
 		if(this.charmed)

@@ -30,6 +30,7 @@ EFFECT(1, TR_VORESPIKE,             "TR_VORESPIKE")
 EFFECT(0, RUNE_PUFF_RED,            "spawn_point_red")
 EFFECT(0, RUNE_PUFF_BLUE,           "spawn_point_blue")
 EFFECT(0, RUNE_CYCLONE,             "respawn_ghost")
+EFFECT(0, RUNE_HEAL,                "healing_fx")
 EFFECT(0, RUNE_FROST_REGEN,         "ammoregen_fx")
 EFFECT(0, RUNE_METEOR_IMPACT,       "laser_impact")
 
@@ -37,5 +38,8 @@ EFFECT(0, MAYO_SMASH,               "iceorglass")
 EFFECT(0, BROWN_NOTE,               "smoke_large")
 
 EFFECT(1, QCC_BLOODTRAIL,           "red_pass")
+EFFECT(0, QCC_HEALING,              "cherryblossom")
+EFFECT(0, QCC_GIB,                  "particlegibs_damage_dissolve")
+EFFECT(0, QCC_MUSHROOM,             "spawn_point_yellow")
 
 EFFECT(0, OTAMATONE_FIRE,           "arc_smoke")

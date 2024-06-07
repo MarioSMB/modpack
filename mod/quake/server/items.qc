@@ -245,6 +245,8 @@ void health_touch(entity this, entity toucher)
 		return;
 	if(toucher.clockwork)
 		return;
+	if(toucher.m_transform)
+		return;
 
 	bool pickedup = false;
 	if(this.healamount)
@@ -316,6 +318,8 @@ void armor_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 	if(toucher.tank)
+		return;
+	if(toucher.m_transform)
 		return;
 
 	bool pickedup = false;

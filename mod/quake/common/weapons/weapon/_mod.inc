@@ -37,3 +37,4 @@
 #include "mic.qc"
 #include "ocarina.qc"
 #include "banjo.qc"
+#include "mushroom.qc"

@@ -1,0 +1,67 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Demon, "progs/demon.mdl");
+MODEL(Demon_Head, "progs/h_demon.mdl");
+
+PRECACHE(Demon)
+{
+#ifdef SVQC
+    precache_sound("player_keyleth/plyrjmp8.wav");       // player jump
+    precache_sound("player_keyleth/land.wav");           // player landing
+    precache_sound("player_keyleth/land2.wav");      // player hurt landing
+    precache_sound("player_keyleth/drown1.wav");     // drowning pain
+    precache_sound("player_keyleth/drown2.wav");     // drowning pain
+    precache_sound("player_keyleth/gasp1.wav");      // gasping for air
+    precache_sound("player_keyleth/gasp2.wav");      // taking breath
+    precache_sound("player_keyleth/h2odeath.wav");       // drowning death
+
+    precache_sound("player_keyleth/axhit1.wav");
+
+    precache_sound("player_keyleth/lburn1.wav");     // lava burn
+    precache_sound("player_keyleth/lburn2.wav");     // lava burn
+
+    precache_sound("demon/sight2.wav");
+    precache_sound("demon/djump.wav");
+    precache_sound("demon/dpain1.wav");
+    precache_sound("demon/ddeath.wav");
+    precache_sound("shambler/smack.wav");
+
+    precache_model("progs/v_sorclaw.mdl");
+#endif
+}
+#endif
+CLASS(Demon, Champions)
+    ATTRIB(Demon, netname, string, "demon");
+    ATTRIB(Demon, m_name, string, "Demon");
+    ATTRIB(Demon, m_hidden, bool, true);
+    ATTRIB(Demon, qcc_movespeed, float, 0.5);
+    ATTRIB(Demon, qcc_health_regen_rate, float, 2);
+    ATTRIB(Demon, qcc_health_rot_max, float, 3);
+    ATTRIB(Demon, qcc_meleename, string, "sorclaw");
+    ATTRIB(Demon, qcc_thirdperson, bool, true);
+    ATTRIB(Demon, qcc_anim_axrun, vector, '21 0 5');
+    ATTRIB(Demon, qcc_anim_rockrun, vector, '21 0 5');
+    ATTRIB(Demon, qcc_anim_axstnd, vector, '0 0 12');
+    ATTRIB(Demon, qcc_anim_stand, vector, '0 0 12');
+#ifdef GAMEQC
+    ATTRIB(Demon, m_model, Model, MDL_Demon);
+    ATTRIB(Demon, m_model_head, Model, MDL_Demon_Head);
+    ATTRIB(Demon, m_soundpath, string, "player_keyleth/");
+    METHOD(Demon, m_sound_pain, string()) { return "demon/dpain1.wav"; }
+    METHOD(Demon, m_sound_death, string()) { return "demon/ddeath.wav"; }
+#endif
+#ifdef CSQC
+    ATTRIB(Demon, message, string, "You are transformed!");
+#endif
+ENDCLASS(Demon)
+REGISTER_CHAMPION(Demon, NEW(Demon));
+
+#ifdef SVQC
+.float demon_bash_time; // air time TODO: actually use air time?
+.float demon_bash_delay; // delay before hitting another target
+.float demon_melee_time;
+.bool demon_cannon;
+#endif

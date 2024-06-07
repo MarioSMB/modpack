@@ -59,6 +59,8 @@ bool QCC_CanCastAbility(entity this)
 		return false;
 	if(STAT(CLOCKWORK, this))
 		return false;
+	if(this.m_transform)
+		return false;
 	if(QCC_HasSpellbook(this))
 		return false;
 	return true;
@@ -76,6 +78,20 @@ bool QCC_Allowed(entity this)
 }
 
 #ifdef SVQC
+void QCC_ClearTransform(entity this)
+{
+	if(this.transform_prevhealth)
+		this.health = this.transform_prevhealth;
+	this.armortype = this.transform_armortype;
+	this.armorvalue = this.transform_armorvalue;
+	armor_set_type(this);
+	this.transform_prevhealth = 0;
+	this.transform_limited = 0;
+	this.transform_armortype = 0;
+	this.transform_armorvalue = 0;
+	this.m_transform = NULL;
+}
+
 void QCC_ClearWeapons(entity this)
 {
 	STAT(WEAPONS, this) &= ~(WEPSET_CHAMPIONS);
@@ -134,7 +150,27 @@ void QCC_UpdatePlayer(entity this)
 		return;
 	Champions oldchamp = this.m_champion;
 	Champions champ = Champion_FromString(this.cvar_cl_quake_model);
-	if(champ.m_condition && champ.m_condition(champ, this))
+	if(this.m_transform && this.transform_limited && time > this.transform_limited)
+		QCC_ClearTransform(this);
+
+	if(this.m_transform)
+	{
+		if(this.m_champion != this.m_transform)
+		{
+			if(this.transform_health)
+			{
+				this.transform_prevhealth = this.health;
+				this.health = this.transform_health;
+			}
+			this.transform_armortype = this.armortype;
+			this.transform_armorvalue = this.armorvalue;
+			this.armortype = 0;
+			this.armorvalue = 0;
+			this.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		}
+		champ = this.m_transform;
+	}
+	else if(champ.m_condition && champ.m_condition(champ, this))
 		champ = CHAMPION_Ranger;
 
 	STAT(QCC_CHAMPION, this) = champ.m_id;
@@ -173,6 +209,8 @@ void champions_PutPlayerInServer(entity this)
 {
 	this.playermodel = "";
 
+	STAT(QCC_ABILITYTIME, this) = time + 0.5;
+
 	QCC_UpdatePlayer(this);
 
 	if(this.m_champion && this.m_champion.m_playerspawn)
@@ -199,6 +237,13 @@ void champions_PlayerPreThink(entity this)
 
 void champions_PlayerDies(entity this)
 {
+	// reset transformation state
+	this.m_transform = NULL;
+	this.transform_prevhealth = 0;
+	this.transform_health = 0;
+	this.transform_armortype = 0;
+	this.transform_armorvalue = 0;
+
 	if(this.m_champion && this.m_champion.m_clear)
 		this.m_champion.m_clear(this.m_champion, this);
 }
@@ -352,7 +397,7 @@ void cl_champion_draw()
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '230 220 0';
+	vector ent_menu_size = '230 240 0'; // NOTE: update y value by at least 10 when adding new champions!
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 	

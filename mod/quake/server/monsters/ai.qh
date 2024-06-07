@@ -32,6 +32,8 @@ const float MIN_ANGLE_DELTA = 10;
 
 .bool(entity this) checkattack;
 
+.bool monster_attack;
+
 .float lefty;
 
 .float pausetime;

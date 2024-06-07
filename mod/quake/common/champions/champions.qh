@@ -2,6 +2,13 @@
 
 .Champions m_champion;
 
+.Champions m_transform;
+.float transform_limited;
+.float transform_health;
+.float transform_prevhealth;
+.float transform_armortype;
+.float transform_armorvalue;
+
 void QCC_FixClient(entity this);
 
 #ifdef GAMEQC
@@ -16,6 +23,8 @@ bool QCC_CanCastAbility(entity this);
 
 #ifdef SVQC
 bool autocvar_sv_quake_champions_custombbox = true;
+
+void QCC_ClearTransform(entity this);
 
 void QCC_ClearWeapons(entity this);
 

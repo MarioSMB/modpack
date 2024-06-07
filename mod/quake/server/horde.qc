@@ -543,6 +543,8 @@ void horde_health_touch(entity this, entity toucher)
 		return;
 	if(toucher.tank)
 		return;
+	if(toucher.m_transform)
+		return;
 	
 	if(!T_Heal(toucher, this.healamount, 0))
 		return;
@@ -555,7 +557,8 @@ void horde_health_touch(entity this, entity toucher)
 	
 	this.model = string_null;
 	this.solid = SOLID_NOT;
-	this.owner.wait = false;
+	if(this.owner)
+		this.owner.wait = false;
 	delete(this);
 }
 
@@ -569,6 +572,8 @@ void horde_armor_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 	if(toucher.tank)
+		return;
+	if(toucher.m_transform)
 		return;
 
 	if(this.classname == "item_armor1")

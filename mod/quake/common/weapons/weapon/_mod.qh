@@ -37,3 +37,4 @@
 #include "mic.qh"
 #include "ocarina.qh"
 #include "banjo.qh"
+#include "mushroom.qh"
