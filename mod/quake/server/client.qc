@@ -895,11 +895,11 @@ void CopyToBodyQueue(entity ent)
 
 	IL_PUSH(g_clones, body);
 
-	//if(coop || deathmatch)
-	//{
-	//	setthink(body, SUB_Remove);
-	//	body.nextthink = time + 10;
-	//}
+	if(coop || deathmatch)
+	{
+		setthink(body, SUB_Remove);
+		body.nextthink = time + 10;
+	}
 }
 
 void LoadGame()
