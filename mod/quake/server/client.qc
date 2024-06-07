@@ -1402,6 +1402,7 @@ void PutObserverInServer(entity this)
 	this.damagedbycontents = false;
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
+	QCC_ClearTransform(it);
 	set_movetype(this, MOVETYPE_NONE);
 	clear_powerups(this);
 	cannon_clear(this);
