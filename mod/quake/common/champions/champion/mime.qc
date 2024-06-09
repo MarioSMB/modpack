@@ -15,8 +15,6 @@ void BallTouch(entity this, entity toucher)
 		this.avelocity = '0 0 0';
 }
 
-float autocvar_test1 = 0.5;
-float autocvar_test2 = 0.075;
 void Mime_ThrowBall(entity this)
 {
 	.entity weaponentity = weaponentities[0]; // TODO?
@@ -25,8 +23,8 @@ void Mime_ThrowBall(entity this)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_TRAP.m_id;
-	missile.bouncefactor = autocvar_test1;
-	missile.bouncestop = autocvar_test2;
+	missile.bouncefactor = 1;
+	missile.bouncestop = 0.1;
 // set missile speed	
 
 	makevectors(this.v_angle);
