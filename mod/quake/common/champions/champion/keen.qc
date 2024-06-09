@@ -105,7 +105,8 @@ METHOD(Keen, m_physics, bool(Champions this, entity actor, float dt))
 	}
 	else
 	{
-		makevectors(PHYS_WORLD_ANGLES(actor));
+		vector vang = PHYS_INPUT_ANGLES(actor);
+		makevectors('0 1 0' * vang.y);
 		vector vel = vec2(actor.velocity);
 		float spd = vlen(vel);
 		if(spd < 320)

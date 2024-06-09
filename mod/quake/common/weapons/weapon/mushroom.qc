@@ -34,7 +34,7 @@ void mushroom_think(entity this)
 
 	Send_Effect(EFFECT_QCC_MUSHROOM, this.origin, '0 0 0', 1);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 512, IS_MONSTER(it) && it.health > 0 && !it.charmed && !it.is_frozen && !it.elec && it.enemy.classname != this.classname && !wasfreed(it.enemy),
+	FOREACH_ENTITY_RADIUS(this.origin, 512, IS_MONSTER(it) && it.health > 0 && it.enemy && !it.charmed && !it.is_frozen && !it.elec && it.enemy.classname != this.classname && !wasfreed(it.enemy),
 	{
 		if(it.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
 			continue;

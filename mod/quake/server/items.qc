@@ -2222,7 +2222,10 @@ DropBackpack
 */
 void DropBackpack(entity this)
 {
-	if(STAT(WEAPONS, this) == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
+	WepSet weps = STAT(WEAPONS, this);
+	weps &= ~WEPSET_CHAMPIONS;
+
+	if(weps == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
 		return;	// nothing in it
 
 	if(STAT(SKATING, this))
@@ -2241,7 +2244,7 @@ void DropBackpack(entity this)
 	Weapon wep = this.(weaponentity).m_weapon;
 	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
-	STAT(WEAPONS, item) = STAT(WEAPONS, this);
+	STAT(WEAPONS, item) = weps;
 
 	item.ammo_shells = this.ammo_shells;
 	item.ammo_nails = this.ammo_nails;
