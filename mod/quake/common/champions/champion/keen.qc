@@ -21,6 +21,8 @@ METHOD(Keen, m_playerspawn, void(Champions this, entity actor))
 #ifdef GAMEQC
 bool Keen_PogoActive(entity actor)
 {
+	if(actor.waterlevel > 0)
+		return false;
 	if(STAT(ITEMS, actor) & IT_TANK)
 		return false;
 	if(STAT(CLOCKWORK, actor))
@@ -30,7 +32,7 @@ bool Keen_PogoActive(entity actor)
 	if(actor.(weaponentity).m_weapon == WEP_POGO)
 		return true;
 #endif
-#ifdef CSCQC
+#ifdef CSQC
 	if(viewmodels[0].activeweapon == WEP_POGO)
 		return true;
 #endif
@@ -89,8 +91,6 @@ METHOD(Keen, m_playerjump, float(Champions this, entity actor))
 METHOD(Keen, m_physics, bool(Champions this, entity actor, float dt))
 {
 	if(!Keen_PogoActive(actor))
-		return false;
-	if(actor.waterlevel > 0)
 		return false;
 	if(IS_ONGROUND(actor))
 	{

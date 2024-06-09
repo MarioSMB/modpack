@@ -77,3 +77,7 @@ CLASS(Keen, Champions)
 #endif
 ENDCLASS(Keen)
 REGISTER_CHAMPION(Keen, NEW(Keen));
+
+#ifdef GAMEQC
+bool Keen_PogoActive(entity actor);
+#endif

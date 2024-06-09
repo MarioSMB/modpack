@@ -449,7 +449,7 @@ void player_run(entity this)
 		this.frame = anim.x + this.walkframe;
 	}
 
-	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform)
+	if(autocvar_g_footsteps == 1 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform && !Keen_PogoActive(this))
 	{
 		this.footstep = this.footstep + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;
@@ -492,7 +492,7 @@ void player_run(entity this)
 	}
 	this.walkframe = this.walkframe + 1;
 
-	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.clockwork && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform)
+	if(autocvar_g_footsteps == 2 && !gameover && !STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.clockwork && this.move_movetype == MOVETYPE_WALK && !this.tank && !this.m_transform && !Keen_PogoActive(this))
 	{
 		if(this.waterlevel == 0)
 		{
