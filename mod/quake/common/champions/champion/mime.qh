@@ -1,0 +1,73 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Mime, "progs/player_mime.mdl");
+
+SOUND(Mime_Pain1, "player_mime/pain1");
+SOUND(Mime_Pain2, "player_mime/pain2");
+Sound SND_Mime_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Mime_Pain1.m_id + rint(random() * 1));
+}
+
+SOUND(Mime_Death1, "player_mime/death1");
+SOUND(Mime_Death2, "player_mime/death2");
+Sound SND_Mime_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Mime_Death1.m_id + rint(random() * 1));
+}
+
+MODEL(Ball, "progs/ball.mdl");
+PRECACHE(Mime)
+{
+#ifdef SVQC
+    precache_sound("player_mime/plyrjmp8.wav");       // player jump
+    precache_sound("player_mime/land.wav");           // player landing
+    precache_sound("player_mime/land2.wav");      // player hurt landing
+    precache_sound("player_mime/drown1.wav");     // drowning pain
+    precache_sound("player_mime/drown2.wav");     // drowning pain
+    precache_sound("player_mime/gasp1.wav");      // gasping for air
+    precache_sound("player_mime/gasp2.wav");      // taking breath
+    precache_sound("player_mime/h2odeath.wav");       // drowning death
+
+    precache_sound("player_mime/pain1.wav");
+    precache_sound("player_mime/pain2.wav");
+
+    precache_sound("player_mime/death1.wav");
+    precache_sound("player_mime/death2.wav");
+
+    precache_sound("player_mime/axhit1.wav");
+
+    precache_sound("player_mime/lburn1.wav");     // lava burn
+    precache_sound("player_mime/lburn2.wav");     // lava burn
+
+    precache_sound("player_mime/start.wav");
+
+    precache_sound("weapons/sword_swing.wav");
+    precache_sound("player_mime/bounce.wav");
+#endif
+}
+#endif
+CLASS(Mime, Champions)
+    ATTRIB(Mime, netname, string, "mime");
+    ATTRIB(Mime, m_name, string, "Mime");
+    ATTRIB(Mime, m_viewofs, vector, '0 0 20');
+    ATTRIB(Mime, m_hidden, bool, true);
+#ifdef GAMEQC
+    ATTRIB(Mime, m_model, Model, MDL_Mime);
+    ATTRIB(Mime, m_model_head, Model, MDL_Null);
+    ATTRIB(Mime, m_soundpath, string, "player_mime/");
+    METHOD(Mime, m_sound_pain, string()) { return SND(Mime_Pain_Random()); }
+    METHOD(Mime, m_sound_death, string()) { return SND(Mime_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Mime, message, string, "Mr. Mime!");
+#endif
+ENDCLASS(Mime)
+REGISTER_CHAMPION(Mime, NEW(Mime));
+
+#ifdef SVQC
+string autocvar_sv_allow_customplayermodels_silent = "";
+
+.bool mime_cannon;
+#endif

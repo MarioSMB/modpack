@@ -13,6 +13,7 @@
 #include "keen.qc"
 #include "keyleth.qc"
 #include "mario.qc"
+#include "mime.qc"
 #include "nyx.qc"
 #include "ranger.qc"
 #include "sorlag.qc"

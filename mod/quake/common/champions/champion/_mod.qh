@@ -13,6 +13,7 @@
 #include "keen.qh"
 #include "keyleth.qh"
 #include "mario.qh"
+#include "mime.qh"
 #include "nyx.qh"
 #include "ranger.qh"
 #include "sorlag.qh"
