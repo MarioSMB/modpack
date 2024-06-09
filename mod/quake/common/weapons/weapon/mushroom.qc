@@ -38,6 +38,8 @@ void mushroom_think(entity this)
 	{
 		if(it.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
 			continue;
+		if(!checkpvs(this.origin, it))
+			continue;
 		it.aggro_time = time;
 		if(IS_PLAYER(it.enemy))
 			it.oldenemy = it.enemy;
