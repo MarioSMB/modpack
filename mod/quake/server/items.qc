@@ -2242,6 +2242,8 @@ void DropBackpack(entity this)
 
 	.entity weaponentity = weaponentities[0];
 	Weapon wep = this.(weaponentity).m_weapon;
+	if(wep.spawnflags & WEP_FLAG_CHAMPION)
+		wep = REGISTRY_GET(Weapons, this.(weaponentity).cnt);
 	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
 	STAT(WEAPONS, item) = weps;
