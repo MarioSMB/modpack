@@ -1,0 +1,72 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Dingus, "progs/player_dingus.mdl");
+
+SOUND(Dingus_Pain1, "player_dingus/pain1");
+SOUND(Dingus_Pain2, "player_dingus/pain2");
+Sound SND_Dingus_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Dingus_Pain1.m_id + rint(random() * 1));
+}
+
+SOUND(Dingus_Death1, "player_dingus/death1");
+SOUND(Dingus_Death2, "player_dingus/death2");
+Sound SND_Dingus_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Dingus_Death1.m_id + rint(random() * 1));
+}
+
+PRECACHE(Dingus)
+{
+#ifdef SVQC
+    precache_sound("player_dingus/plyrjmp8.wav");       // player jump
+    precache_sound("player_dingus/land.wav");           // player landing
+    precache_sound("player_dingus/land2.wav");      // player hurt landing
+    precache_sound("player_dingus/drown1.wav");     // drowning pain
+    precache_sound("player_dingus/drown2.wav");     // drowning pain
+    precache_sound("player_dingus/gasp1.wav");      // gasping for air
+    precache_sound("player_dingus/gasp2.wav");      // taking breath
+    precache_sound("player_dingus/h2odeath.wav");       // drowning death
+
+    precache_sound("player_dingus/pain1.wav");
+    precache_sound("player_dingus/pain2.wav");
+
+    precache_sound("player_dingus/death1.wav");
+    precache_sound("player_dingus/death2.wav");
+
+    precache_sound("player_dingus/axhit1.wav");
+    precache_sound("player_dingus/axhit2.wav");
+
+    precache_sound("player_dingus/lburn1.wav");     // lava burn
+    precache_sound("player_dingus/lburn2.wav");     // lava burn
+
+    precache_sound("player_dingus/start.wav");
+    precache_sound("player_dingus/oops.wav");
+#endif
+}
+#endif
+CLASS(Dingus, Champions)
+    ATTRIB(Dingus, netname, string, "dingus");
+    ATTRIB(Dingus, m_name, string, "Dingus");
+    ATTRIB(Dingus, m_viewofs, vector, '0 0 20');
+    ATTRIB(Dingus, m_hidden, bool, true);
+#ifdef GAMEQC
+    ATTRIB(Dingus, m_model, Model, MDL_Dingus);
+    ATTRIB(Dingus, m_model_head, Model, MDL_Null);
+    ATTRIB(Dingus, m_soundpath, string, "player_dingus/");
+    METHOD(Dingus, m_sound_pain, string()) { return SND(Dingus_Pain_Random()); }
+    METHOD(Dingus, m_sound_death, string()) { return SND(Dingus_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Dingus, message, string, "Timey Wimey");
+#endif
+ENDCLASS(Dingus)
+REGISTER_CHAMPION(Dingus, NEW(Dingus));
+
+#ifdef SVQC
+string autocvar_sv_allow_customplayermodels_dingus = "";
+
+.bool dingus_cannon;
+.float dingus_bash_delay;
+#endif

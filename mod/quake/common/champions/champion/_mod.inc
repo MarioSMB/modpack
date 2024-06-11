@@ -4,6 +4,7 @@
 #include "caleb.qc"
 #include "chief.qc"
 #include "demon.qc"
+#include "dingus.qc"
 #include "doom.qc"
 #include "duck.qc"
 #include "duke.qc"
