@@ -37,6 +37,7 @@ CLASS(Demon, Champions)
     ATTRIB(Demon, netname, string, "demon");
     ATTRIB(Demon, m_name, string, "Demon");
     ATTRIB(Demon, m_hidden, bool, true);
+    ATTRIB(Demon, qcc_noselect, bool, true);
     ATTRIB(Demon, qcc_movespeed, float, 0.5);
     ATTRIB(Demon, qcc_health_regen_rate, float, 2);
     ATTRIB(Demon, qcc_health_rot_max, float, 3);

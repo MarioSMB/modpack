@@ -184,7 +184,7 @@ void QCC_UpdatePlayer(entity this)
 		}
 		champ = this.m_transform;
 	}
-	else if(champ.m_condition && champ.m_condition(champ, this))
+	else if(champ.qcc_noselect || (champ.m_condition && champ.m_condition(champ, this)))
 		champ = CHAMPION_Ranger;
 
 	STAT(QCC_CHAMPION, this) = champ.m_id;

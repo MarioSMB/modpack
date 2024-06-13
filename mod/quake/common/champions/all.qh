@@ -48,6 +48,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_movespeed, float, 1);
     ATTRIB(Champions, qcc_swimspeed, float, 1);
     ATTRIB(Champions, qcc_pogo, bool, false);
+    ATTRIB(Champions, qcc_noselect, bool, false);
     ATTRIB(Champions, qcc_attackrate, float, 1);
     ATTRIB(Champions, qcc_damagetaken, float, 1);
     ATTRIB(Champions, qcc_jumpheight, float, 1);
