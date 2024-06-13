@@ -289,14 +289,13 @@ void Mutant_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || (!this.takedamage))
 		return;
 
-	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
+	if(toucher.takedamage && this.attack_finished < time)
 	{
 		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 25 + 10 * random();
 			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_MUTANT.m_id);
-			if(MP_MG)
-				this.attack_finished = time + 0.5;	
+			this.attack_finished = time + 0.5;	
 		}
 	}
 

@@ -717,7 +717,6 @@ string armagon_sight(entity this) { return "armagon/sight.wav"; }
 */
 spawnfunc(monster_armagon)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
 	monster_start(this, true, MON_ARMAGON);
 }
 #endif // SVQC

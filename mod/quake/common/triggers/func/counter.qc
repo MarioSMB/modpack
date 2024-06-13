@@ -113,8 +113,6 @@ it specifies how high to count before reseting to zero.  Default is 10.
 
 spawnfunc(func_counter)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	if(!this.wait)
 		this.wait = 1;
 

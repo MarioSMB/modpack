@@ -290,14 +290,13 @@ void Demon_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || (!this.takedamage))
 		return;
 
-	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
+	if(toucher.takedamage && this.attack_finished < time)
 	{
 		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 40 + 10*random();
 			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_FIEND.m_id);
-			if(MP_MG)
-				this.attack_finished = time + 0.5;
+			this.attack_finished = time + 0.5;
 		}
 	}
 

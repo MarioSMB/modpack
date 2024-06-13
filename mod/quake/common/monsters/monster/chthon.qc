@@ -176,7 +176,7 @@ void boss_shockz1(entity this) { set_animofs(this, anim_boss_shocka, 1, boss_sho
 void boss_shocka10(entity this)
 {
 	set_animofs(this, anim_boss_shocka, 10, boss_missile1);
-	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
+	if(this.spawnflags & BOSS_KILLABLE)
 	{
 		SUB_Freeze(this);
 		this.use = SUB_Unfreeze_use;
@@ -195,7 +195,7 @@ void boss_shocka1(entity this) { set_animofs(this, anim_boss_shocka, 1, boss_sho
 void boss_shockb10(entity this)
 {
 	set_animofs(this, anim_boss_shockb, 4, boss_missile1);
-	if(MP_MG && (this.spawnflags & BOSS_KILLABLE))
+	if(this.spawnflags & BOSS_KILLABLE)
 	{
 		SUB_Freeze(this);
 		this.use = SUB_Unfreeze_use;
@@ -463,10 +463,7 @@ void lightning_use(entity this, entity actor, entity trigger)
 // don't let the electrodes go back up until the bolt is done
 	le1.nextthink = -1;
 	le2.nextthink = -1;
-	if(MP_MG)
-		lightning_end = time + 2;
-	else
-		lightning_end = time + 1;
+	lightning_end = time + 2;
 
 	_sound(this, CH_VOICE, "misc/power.wav", 1, ATTN_NORM);
 	lightning_fire(this);		

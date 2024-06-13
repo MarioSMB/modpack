@@ -44,8 +44,7 @@ health: amount of damage needed to set off trigger.
 */
 spawnfunc(trigger_explosion)
 {
-	if(!MP_ROGUE && !MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;

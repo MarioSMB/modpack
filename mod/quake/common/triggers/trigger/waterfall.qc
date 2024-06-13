@@ -20,8 +20,6 @@ void trigger_waterfall_touch(entity this, entity toucher)
 
 spawnfunc(trigger_waterfall)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	InitTrigger(this);
 	settouch(this, trigger_waterfall_touch);
 

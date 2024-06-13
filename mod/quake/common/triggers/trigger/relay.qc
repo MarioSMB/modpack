@@ -74,7 +74,7 @@ This fixed size trigger cannot be touched, it can only be fired by other events.
 */
 spawnfunc(trigger_relay)
 {
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;

@@ -18,8 +18,6 @@ players.
 */
 spawnfunc(trigger_remove)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.cnt = FL_CLIENT | FL_MONSTER;
 	if(this.spawnflags & 1)
 		this.cnt &= ~FL_MONSTER;

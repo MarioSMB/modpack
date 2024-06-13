@@ -45,14 +45,13 @@ void Dog_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || !this.takedamage)
 		return;
 		
-	if(toucher.takedamage && (!MP_MG || this.attack_finished < time))
+	if(toucher.takedamage && this.attack_finished < time)
 	{
 		if(vdist(this.velocity, >, 300))
 		{
 			float ldmg = 10 + 10*random();
 			T_Damage(toucher, this, this, ldmg, DEATH_MONSTER_ROTTWEILER.m_id);
-			if(MP_MG)
-				this.attack_finished = time + 0.5;
+			this.attack_finished = time + 0.5;
 		}
 	}
 
@@ -203,7 +202,7 @@ void dog_painb1(entity this) { set_animofs(this, anim_dog_painb, 1, dog_painb2);
 
 void dog_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	if(MP_IMPEL && this.pain_finished > time)
+	if(this.pain_finished > time)
 		return;
 
 	_sound(this, CH_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
@@ -211,14 +210,12 @@ void dog_pain(entity this, entity attacker, float damage, int deathtype)
 	if(attacker || random() > 0.5)
 	{
 		dog_pain1(this);
-		if(MP_IMPEL)
-			this.pain_finished = time + 1;
+		this.pain_finished = time + 1;
 	}
 	else
 	{
 		dog_painb1(this);
-		if(MP_IMPEL)
-			this.pain_finished = time + 1;
+		this.pain_finished = time + 1;
 	}
 }
 

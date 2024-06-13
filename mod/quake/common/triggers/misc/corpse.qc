@@ -52,7 +52,6 @@ bool set_pose_frame(entity this)
 
 spawnfunc(misc_corpse)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!set_pose_frame(this))
 	{
 		objerror(this, "misc_corpse with invalid style.");

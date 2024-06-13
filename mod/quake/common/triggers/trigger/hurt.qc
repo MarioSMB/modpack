@@ -24,21 +24,18 @@ void hurt_use(entity this, entity actor, entity trigger)
 
 void hurt_touch(entity this, entity toucher)
 {
-	if(MP_MG && this.state)
+	if(this.state)
 		return;
 	if(toucher.takedamage)
 	{
 		// Yoder Sept24 2021 Horde merge
 		// allows for monster-only hurt volumes
-		if(MP_MG && (this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
+		if((this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
 			return;
 		this.solid = SOLID_NOT;
 		T_Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id);
 		setthink(this, hurt_on);
-		if(MP_MG)
-			this.nextthink = time + this.wait;
-		else
-			this.nextthink = time + 1;
+		this.nextthink = time + this.wait;
 
 		//MED 12/01/96 added count stuff
 		if(this.cnt > 0)

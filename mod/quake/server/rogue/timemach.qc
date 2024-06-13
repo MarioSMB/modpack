@@ -152,7 +152,6 @@ void time_die(entity this, entity inflictor, entity attacker, int deathtype)
 */
 spawnfunc(item_time_machine)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model("progs/timemach.mdl");
@@ -182,7 +181,6 @@ spawnfunc(item_time_machine)
 */
 spawnfunc(item_time_core)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model ("progs/timecore.mdl");

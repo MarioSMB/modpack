@@ -837,12 +837,6 @@ bool WeaponIsFromRogue(Weapon wep)
 	return (wep.spawnflags & WEP_FLAG_ROGUE);
 }
 
-bool WeaponHasPrefix(Weapon wep)
-{
-	// rogue's weapons lack prefix support, so we need this ugly hack to work around it!
-	return !WeaponIsFromRogue(wep);
-}
-
 Weapon GetDrawWeapon(Weapon wep, Weapon awep)
 {
 	if(awep == WEP_Null)

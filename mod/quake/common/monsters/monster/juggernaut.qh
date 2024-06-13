@@ -16,7 +16,7 @@ SOUND(MON_JUGGERNAUT_SIGHT, "monsters/juggers/jlocked");
 #endif
 
 CLASS(Juggernaut, Monster)
-    ATTRIB(Juggernaut, spawnflags, int, MON_FLAG_IMPEL | MON_FLAG_METAL);
+    ATTRIB(Juggernaut, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(Juggernaut, m_mins, vector, '-32 -32 -24');
     ATTRIB(Juggernaut, m_maxs, vector, '32 32 68');
 #ifdef GAMEQC

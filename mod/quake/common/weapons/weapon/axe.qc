@@ -121,7 +121,7 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 			_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 		else
 			_sound(actor, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
-		if(MP_MG && autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
+		if(autocvar_horde && (serverflags & SIGIL_E3)) // horde rune behavior
 		{
 			if(actor.axe_hit_chain >= 2 && time < actor.axe_hit_chain_time)
 			{

@@ -141,8 +141,6 @@ void effect_teleport_use(entity this, entity actor, entity trigger)
 
 spawnfunc(effect_teleport)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.use = effect_teleport_use;
 }
 

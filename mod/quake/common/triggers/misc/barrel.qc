@@ -25,10 +25,7 @@ void barrel_detonate(entity this, entity inflictor, entity attacker, int deathty
 	this.classname = "explo_box";
 	this.takedamage = DAMAGE_NO;
 	setthink(this, barrel_explode);
-	if(MP_MG)
-		this.nextthink = time + 0.15;
-	else
-		this.nextthink = time + 0.3; // enhanced uses .ltime but that doesn't translate well to time!
+	this.nextthink = time + 0.15;
 }
 
 void barrel_spawn(entity this)
@@ -109,7 +106,6 @@ Custom exploding box
 
 spawnfunc(func_explode)
 {
-	if(!MP_MG) { delete(this); return; }
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_BSP;

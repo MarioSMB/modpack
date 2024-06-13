@@ -137,26 +137,12 @@ bool autocvar_sv_gameplayfix_nostepmoveonsteepslopes;
 float autocvar_sv_waterfriction;
 float autocvar_sv_wateraccelerate;
 float autocvar_edgefriction;
-
-bool autocvar_sv_missionpack_hipnotic;
-bool autocvar_sv_missionpack_rogue;
-bool autocvar_sv_missionpack_impel;
-bool autocvar_sv_missionpack_mg;
 #endif
-const int MISSIONPACK_HIPNOTIC = BIT(0);
-const int MISSIONPACK_ROGUE = BIT(1);
-const int MISSIONPACK_IMPEL = BIT(2);
-const int MISSIONPACK_MG = BIT(3);
 
 REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, int, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
 REGISTER_STAT(MOVEVARS_FRICTION_WATER, float)
 REGISTER_STAT(MOVEVARS_WATERACCELERATE, float)
 REGISTER_STAT(MOVEVARS_FRICTION_EDGE, float)
-REGISTER_STAT(MISSIONPACKS, int, BIT(23)
-                              | (autocvar_sv_missionpack_hipnotic ? MISSIONPACK_HIPNOTIC : 0)
-                              | (autocvar_sv_missionpack_rogue ? MISSIONPACK_ROGUE : 0)
-                              | (autocvar_sv_missionpack_impel ? MISSIONPACK_IMPEL : 0)
-                              | (autocvar_sv_missionpack_mg ? MISSIONPACK_MG : 0))
 
 // handled slightly differently
 #ifdef SVQC

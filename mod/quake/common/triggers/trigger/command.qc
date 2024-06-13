@@ -26,8 +26,6 @@ void trigger_command_disabled_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_command)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.use = trigger_command_disabled_use;
 	setthink(this, func_null);
 }

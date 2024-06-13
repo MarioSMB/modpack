@@ -668,7 +668,6 @@ void dragon_activate(entity this)
 */
 spawnfunc(monster_dragon)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 	monster_start(this, true, MON_DRAGON);
 }
@@ -726,8 +725,6 @@ If not, he is leaving.
 */
 spawnfunc(trigger_dragon)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	delete(this);
 }
 
@@ -759,8 +756,6 @@ between rooms.
 */
 spawnfunc(dragon_corner)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-	
 	if(!this.targetname || this.targetname == "")
 		objerror(this, "dragon_corner: no targetname");
 

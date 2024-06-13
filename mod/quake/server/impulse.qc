@@ -329,12 +329,6 @@ void GiveAllWeapons(entity this)
 	this.ammo_cells = 200;
 	FOREACH(Weapons, it != WEP_Null,
 	{
-		if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
-			continue;
-		if(!MP_ROGUE && (it.spawnflags & WEP_FLAG_ROGUE))
-			continue;
-		if(!MP_IMPEL && (it.spawnflags & WEP_FLAG_IMPEL))
-			continue;
 		if(it.spawnflags & WEP_FLAG_CHAMPION)
 			continue;
 		STAT(WEAPONS, this) |= it.m_wepset;

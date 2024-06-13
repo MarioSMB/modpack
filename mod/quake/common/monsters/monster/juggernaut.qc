@@ -666,14 +666,11 @@ void juggernaut_melee(entity this)
 
 spawnfunc(monster_juggernaut)
 {
-	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, true, MON_JUGGERNAUT);
 }
 // TODO: separate monster!
 spawnfunc(monster_juggernaut2)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	monster_start(this, true, MON_JUGGERNAUT);
 }
 #endif // SVQC

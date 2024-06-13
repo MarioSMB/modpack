@@ -76,7 +76,6 @@ Contains a random powerup.
 */
 spawnfunc(item_random_powerup)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	if(!deathmatch) { delete(this); return; }
 	
 	// Precache the lot of it....

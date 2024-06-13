@@ -25,7 +25,6 @@ Hurts alive things when they touch it
 */
 spawnfunc(func_hurt)
 {
-	if(!MP_MG) { delete(this); return; }
 	_setmodel(this, this.model);
 	setorigin(this, this.origin);
 	this.solid = SOLID_BSP;

@@ -17,9 +17,9 @@ entity W_FireRocket(entity this);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
-	if(MP_ROGUE && ((this.spawnflags & SPAWNFLAG_SUPERSPIKE) || !this.spawnflags))
+	if((this.spawnflags & SPAWNFLAG_SUPERSPIKE) || !this.spawnflags)
 	{
-		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.projectiledeathtype = DEATH_TRAP.m_id;
@@ -29,13 +29,12 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	}
 	else if(this.spawnflags & SPAWNFLAG_LASER)
 	{
-		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 		entity las = LaunchLaser(this, this.origin, this.movedir);
-		if(MP_HIPNOTIC)
-			las.spawnflags = this.spawnflags;
+		las.spawnflags = this.spawnflags;
 	}
-	else if(MP_HIPNOTIC && !MP_ROGUE && (this.spawnflags & SPAWNFLAG_LAVABALL))
+	else if(this.spawnflags & SPAWNFLAG_LAVABALL)
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
 			_sound (this, CH_WEAPON_SINGLE, "misc/spike.wav", 1, ATTN_NORM);
@@ -55,7 +54,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		lavaball.nextthink = time + 5;
 		setthink(lavaball, SUB_Remove);
 	}
-	else if(MP_HIPNOTIC && !MP_ROGUE && (this.spawnflags & SPAWNFLAG_ROCKET))
+	else if(this.spawnflags & SPAWNFLAG_ROCKET)
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
@@ -66,18 +65,15 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	}
 	else
 	{
-		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.projectiledeathtype = DEATH_TRAP.m_id;
 		newmis.velocity = this.movedir * 500;
-		if(MP_ROGUE)
-		{
-			if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
-				settouch(newmis, superlavaspike_touch);
-			else if((this.spawnflags & SPAWNFLAG_LAVASKILL) && autocvar_skill > 1)
-				settouch(newmis, superlavaspike_touch);
-		}
+		if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
+			settouch(newmis, superlavaspike_touch);
+		else if((this.spawnflags & SPAWNFLAG_LAVASKILL) && autocvar_skill > 1)
+			settouch(newmis, superlavaspike_touch);
 		else if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
 			settouch(newmis, superspike_touch);
 	}
@@ -85,7 +81,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 
 void shooter_think(entity this)
 {
-	if(!MP_HIPNOTIC || this.state)
+	if(this.state)
 		spikeshooter_use(this, NULL, NULL);
 	this.nextthink = time + this.wait;
 	FOREACH_ENTITY_ENT(owner, this,
@@ -160,8 +156,7 @@ spawnfunc(trap_shooter)
 	
 	if(this.wait == 0)
 		this.wait = 1;
-	if(MP_HIPNOTIC)
-		this.state = 1;
+	this.state = 1;
 	this.nextthink = this.save_nextthink + this.wait + this.ltime;
 	setthink(this, shooter_think);
 }
@@ -180,8 +175,6 @@ Continuously fires spikes.
 */
 spawnfunc(trap_switched_shooter)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.wait == 0)
 		this.wait = 1;
 //MED 11/01/96 added state capability

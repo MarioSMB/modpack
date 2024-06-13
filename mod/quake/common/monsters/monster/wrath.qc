@@ -280,7 +280,6 @@ void WrathMissileTouch(entity this, entity toucher)
 */
 spawnfunc(monster_wrath)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	monster_start(this, true, MON_WRATH);
 }
 #endif // SVQC

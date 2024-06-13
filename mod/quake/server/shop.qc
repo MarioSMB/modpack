@@ -154,7 +154,7 @@ void shop_buyitem(entity this, string item)
 	}
 
 	Weapon wep = Weapon_from_name(item);
-	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL) || !(shop_weapons & wep.m_wepset))
+	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL) || !(shop_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_CHAMPION))
 	{
 		sprint(this, "Invalid weapon\n");
 		return;
@@ -163,12 +163,6 @@ void shop_buyitem(entity this, string item)
 	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (STAT(DUAL_WEAPONS, this) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
 	{
 		sprint(this, "You already have that weapon\n");
-		return;
-	}
-
-	if((!MP_HIPNOTIC && (wep.spawnflags & WEP_FLAG_HIPNOTIC)) || (!MP_ROGUE && (wep.spawnflags & WEP_FLAG_ROGUE)) || (!MP_IMPEL && (wep.spawnflags & WEP_FLAG_IMPEL)))
-	{
-		sprint(this, "Weapons from that mission pack are unavailable\n");
 		return;
 	}
 
@@ -244,14 +238,8 @@ void shop_setup_weapons()
 		{
 			if(shop_weapons & it.m_wepset)
 				continue;
-			if(it.spawnflags & WEP_FLAG_NOSTEAL)
+			if((it.spawnflags & WEP_FLAG_NOSTEAL) || (it.spawnflags & WEP_FLAG_CHAMPION))
 				continue; // exclude some weapons!
-			if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
-				continue;
-			if(!MP_ROGUE && (it.spawnflags & WEP_FLAG_ROGUE))
-				continue;
-			if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
-				continue;
 			RandomSelection_AddEnt(it, 1, 1);
 		});
 		shop_weapons |= RandomSelection_chosen_ent.m_wepset;

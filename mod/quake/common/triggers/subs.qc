@@ -635,7 +635,7 @@ void trigger_reactivate(entity this, entity actor, entity trigger)
 
 void InitTrigger(entity this)
 {
-	if(MP_MG && RemovedOutsideCoop(this))
+	if(RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;

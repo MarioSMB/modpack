@@ -28,8 +28,7 @@ void repeater_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_repeater)
 {
-	if(!MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;

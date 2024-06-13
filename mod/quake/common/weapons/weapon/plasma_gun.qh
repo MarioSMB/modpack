@@ -3,7 +3,7 @@
 CLASS(PlasmaGun, Weapon)
 /* ammotype  */ ATTRIB(PlasmaGun, ammo_type, int, IT_PLASMA_AMMO);
 /* impulse   */ ATTRIB(PlasmaGun, impulse, int, 8);
-/* spawnflags*/ ATTRIB(PlasmaGun, spawnflags, int, WEP_FLAG_ROGUE);
+/* spawnflags*/ ATTRIB(PlasmaGun, spawnflags, int, 0);
 /* ammo */      ATTRIB(PlasmaGun, aflag, int, 6);
 /* modelname */ ATTRIB(PlasmaGun, mdl, string, "plasma");
 /* crosshair */ ATTRIB(PlasmaGun, w_crosshair, string, "gfx/crosshairelectro");

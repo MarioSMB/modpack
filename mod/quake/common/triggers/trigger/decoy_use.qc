@@ -17,8 +17,6 @@ void trigger_decoy_touch(entity this, entity toucher)
 
 spawnfunc(trigger_decoy_use)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(deathmatch) { delete(this); return; }
 
 	InitTrigger(this);

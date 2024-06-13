@@ -157,8 +157,6 @@ When triggered, fires lightning in the direction set in QuakeEd.
 
 spawnfunc(trap_lightning_triggered)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.classname = "trap_lightning_triggered";
 
 	lightning_init(this);
@@ -175,8 +173,6 @@ Continuously fire lightning.
 */
 spawnfunc(trap_lightning)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.classname = "trap_lightning";
 
 	lightning_init(this);
@@ -203,8 +199,6 @@ Continuously fires lightning.
 */
 spawnfunc(trap_lightning_switched)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.classname = "trap_lightning_switched";
 
 	lightning_init(this);

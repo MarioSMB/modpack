@@ -89,8 +89,6 @@ void func_bob_use(entity this, entity actor, entity trigger)
 
 spawnfunc(func_bob)
 {
-	if(!MP_MG) { delete(this); return; }
-
 	_setmodel(this, this.model);
 	setorigin(this, this.origin);
 

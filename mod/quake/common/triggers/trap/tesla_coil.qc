@@ -139,8 +139,6 @@ targets enemies in vicinity and fires at them
 */
 spawnfunc(trap_tesla_coil)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	precache_sound("misc/tesla.wav");
 	precache_sound("hipweap/mjolhit.wav");   // lightning sound
 	if(this.wait == 0)
@@ -186,8 +184,6 @@ targets enemies in vicinity and fires at them
 */
 spawnfunc(trap_gods_wrath)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.delay == 0)
 		this.delay = 5;
 	spawnfunc_trap_tesla_coil(this);

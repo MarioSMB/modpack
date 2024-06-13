@@ -55,7 +55,7 @@ bool JimCheckAttack(entity this)
 {
 	if(time < this.attack_finished)
 		return false;
-	if(!MP_IMPEL && !this.enemy_visible)
+	if(!this.enemy_visible)
 		return false;
 
 	if(this.enemy_range == RANGE_FAR)

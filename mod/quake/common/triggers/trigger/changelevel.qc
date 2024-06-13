@@ -105,9 +105,8 @@ void changelevel_touch(entity this, entity toucher)
 		bprintf("%s exited the level\n", toucher.netname);
 
 	nextmap = this.map;
-	if(MP_MG)
-		intermissiontext = this.endtext;
-	if(MP_MG && world.model == "maps/mgend.bsp")
+	intermissiontext = this.endtext;
+	if(world.model == "maps/mgend.bsp")
 	{
 		//Finished the whole pack, clear the runes.
 		serverflags = 0;
@@ -130,7 +129,7 @@ void changelevel_touch(entity this, entity toucher)
 		cvar_set("_spawntarget", "");
 
 	// coded fix for aop's lack of a spawnflag
-	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!MP_MG || (!this.endtext || this.endtext == "")))
+	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!this.endtext || this.endtext == ""))
 	{
 		GotoNextMap();
 		settouch(this, func_null);

@@ -37,7 +37,6 @@ void trigger_multitouch_touch(entity this, entity toucher)
 
 spawnfunc(trigger_multitouch)
 {
-	if(!MP_MG) { delete(this); return; }
     InitTrigger(this);
     settouch(this, trigger_multitouch_touch);
     this.wait = 0; // 0 is empty, 1 is touched

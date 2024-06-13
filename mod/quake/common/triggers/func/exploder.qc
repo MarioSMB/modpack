@@ -47,8 +47,6 @@ void exploder_use(entity this, entity actor, entity trigger)
 */
 spawnfunc(func_exploder)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	precache_sound("misc/shortexp.wav");
 	precache_sound("misc/longexpl.wav");
 	this.classname = "exploder";
@@ -135,9 +133,7 @@ void multi_exploder_use(entity this, entity actor, entity trigger)
 	"speed" attenuation for explosions (default normal)
 */
 spawnfunc(func_multi_exploder)
-{
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
+{	
 	precache_sound("misc/shortexp.wav");
 	precache_sound("misc/longexpl.wav");
 	this.classname = "exploder";

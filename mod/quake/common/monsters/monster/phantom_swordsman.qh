@@ -11,7 +11,7 @@ MODEL(MON_PHANTOM_SWORDSMAN, "progs/sword.mdl");
 #endif
 
 CLASS(PhantomSwordsman, Monster)
-    ATTRIB(PhantomSwordsman, spawnflags, int, MON_FLAG_ROGUE | MON_FLAG_METAL);
+    ATTRIB(PhantomSwordsman, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(PhantomSwordsman, m_mins, vector, '-16 -16 -24');
     ATTRIB(PhantomSwordsman, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

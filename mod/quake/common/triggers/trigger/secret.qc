@@ -11,7 +11,7 @@ set "message" to text string
 */
 spawnfunc(trigger_secret)
 {
-	if(MP_MG && Inhibit_Coop(this))
+	if(Inhibit_Coop(this))
 	{
 		delete(this);
 		return;

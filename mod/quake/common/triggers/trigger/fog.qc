@@ -160,7 +160,6 @@ dest: fog color
 
 spawnfunc(info_fog)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.fog_density)
 		this.fog_density = 0.05;
 	else if(this.fog_color_x > 1.0 || this.fog_color_y > 1.0 || this.fog_color_z > 1.0) //Not in 0..1 range?
@@ -191,7 +190,6 @@ delay: time to fade the transition over
 */
 spawnfunc(trigger_fog)
 {
-	if(!MP_MG) { delete(this); return; }
 	// Fog is set on the server, so transitions and triggers work really bad in multiplayer. 
 	// Just remove ourself if we're in multiplayer.
 	if(coop || deathmatch) 
@@ -256,7 +254,6 @@ style: Which axis this trigger fades across. 0 = X, 1 = Y, 2 = Z
 */
 spawnfunc(trigger_fog_transition)
 {
-	if(!MP_MG) { delete(this); return; }
 	// Fog is set on the server, so transitions and triggers work really bad in multiplayer. 
 	// Just remove ourself if we're in multiplayer.
 	if(coop || deathmatch) 

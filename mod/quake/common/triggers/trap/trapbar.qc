@@ -80,8 +80,6 @@ void trapbar_pain(entity this, entity attacker, float damage, int deathtype)
 
 spawnfunc(trapbar)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	this.solid = SOLID_BBOX;
 	set_movetype(this, MOVETYPE_NONE);
 	precache_model("progs/trapbar.mdl");

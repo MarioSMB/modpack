@@ -51,8 +51,6 @@ UNDERWATER cuts the pull in half for players wearing the wetsuit
 */
 spawnfunc(trap_gravity_well)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.solid = SOLID_TRIGGER;
 	set_movetype(this, MOVETYPE_NONE);
 	setsize( this, '-16 -16 -16','16 16 16');

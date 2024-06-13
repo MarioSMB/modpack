@@ -27,8 +27,6 @@ reaches the value set by count, func_oncount triggers its targets.
 
 spawnfunc(func_oncount)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.count = floor(this.count);
 	if(this.count <= 0)
 		this.count = 1;

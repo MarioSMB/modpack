@@ -74,7 +74,6 @@ void become_decoy(string targ, vector orig, entity player)
 */
 spawnfunc(monster_decoy)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
 	monster_start(this, true, MON_DECOY);
 }
 #endif // SVQC

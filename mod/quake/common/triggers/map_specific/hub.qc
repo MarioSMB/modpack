@@ -2,7 +2,6 @@
 
 spawnfunc(hub_trigger_changelevel)
 {
-    if(!MP_MG) { delete(this); return; }
     if((serverflags & SIGIL_ALL) != SIGIL_ALL)
     {
         delete(this);

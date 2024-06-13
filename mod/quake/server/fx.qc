@@ -84,8 +84,7 @@ dmg is the intensity of the shake
 */
 spawnfunc(trigger_screenshake)
 {
-	if(!MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;
@@ -125,7 +124,6 @@ void trigger_sound_play(entity this, entity actor, entity trigger)
 */
 spawnfunc(trigger_sound) 
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.noise || this.noise == "")
 		delete(this);
 	
@@ -236,7 +234,6 @@ void play_lightning(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_lightning)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.noise || this.noise == "")
 		this.noise = "misc/power.wav";
 	precache_sound(this.noise);
@@ -333,8 +330,7 @@ void spawn_fade_manager(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_fade)
 {
-	if(!MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;
@@ -396,8 +392,7 @@ void SUB_FreezeTargets(entity this, entity actor, entity trigger)
 */
 spawnfunc(trigger_freeze)
 {
-	if(!MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;
@@ -425,7 +420,6 @@ void particle_embers_think(entity this)
 
 spawnfunc(particle_embers)
 {
-	if(!MP_MG) { delete(this); return; }
 	// size determines the box the particles can spawn within
 	if(!this.size)
 		this.size = '128 128 0';
@@ -447,7 +441,6 @@ spawnfunc(particle_embers)
 
 spawnfunc(particle_embers_tall)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.size)
 		this.size = '40 40 0';
 	if(!this.delay)
@@ -483,7 +476,6 @@ void particle_tele_think(entity this)
 
 spawnfunc(particle_tele)
 {
-	if(!MP_MG) { delete(this); return; }
 	/*
 	1. get origin
 	2. get a random vector, then normalize it. Save it for later
@@ -522,7 +514,6 @@ void particle_tele_fountain_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(particle_tele_fountain)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.delay)
 		this.delay = 0.1;
 	

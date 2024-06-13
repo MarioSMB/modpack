@@ -411,7 +411,6 @@ Stronger - mummy starts with 1000 hitpoints, rather than 500.
 */
 spawnfunc(monster_mummy)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	monster_start(this, true, MON_MUMMY);
 }
 #endif // SVQC

@@ -24,8 +24,6 @@ set the gravity of a player
 */
 spawnfunc(trigger_setgravity)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	InitTrigger(this);
 	settouch(this, trigger_gravity_touch);
 	if(!this.gravity)

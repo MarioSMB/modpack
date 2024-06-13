@@ -8,8 +8,6 @@
 */
 spawnfunc(info_command)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	// TODO: this is extremely dangerous, see if maps actually use it and disable it otherwise
 	if(this.message && this.message != "")
 		localcmd(strcat("\n", MakeConsoleSafe(this.message), "\n"));

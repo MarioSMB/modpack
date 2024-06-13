@@ -384,21 +384,10 @@ bool ShamCheckAttack(entity this)
 		}
 	}
 
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
-	else
-	{
-		if(time < this.attack_finished)
-			return false;
-		
-		if(!this.enemy_visible)
-			return false;
-	}
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(time < this.attack_finished)
+		return false;
 		
 	entity targ = this.enemy;
 	
@@ -420,8 +409,6 @@ bool ShamCheckAttack(entity this)
 	}
 			
 // missile attack
-	if(!MP_IMPEL && this.enemy_range == RANGE_FAR)
-		return false;
 		
 	this.attack_state = AS_MISSILE;
 	this.attack_finished = time + (2 * 2 * random());

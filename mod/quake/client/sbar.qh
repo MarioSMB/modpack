@@ -37,9 +37,6 @@ float notify_times[NOTIFY_MAX_ENTRIES];
 string notify_items[NOTIFY_MAX_ENTRIES];
 string notify_icons[NOTIFY_MAX_ENTRIES];
 
-const int WEP_INDEXSTART_HIPNOTIC = 7;
-const int WEP_INDEXSTART_ROGUE = 11;
-
 string Sbar_ItemIcon(int item);
 
 string Sbar_ItemName(int item);

@@ -159,7 +159,6 @@ void monster_start_use(entity this, entity actor, entity trigger)
 
 spawnfunc(info_monster_start)
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false; // used for checking if this is a valid spawn
 	this.use = monster_start_use;
 	setorigin(this, this.origin);	
@@ -168,7 +167,6 @@ spawnfunc(info_monster_start)
 
 spawnfunc(info_monster_start_ranged) // used for ogres and enforcers
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false; // used for checking if this is a valid spawn
 	this.use = monster_start_use;
 	setorigin(this, this.origin);	
@@ -177,7 +175,6 @@ spawnfunc(info_monster_start_ranged) // used for ogres and enforcers
 
 spawnfunc(info_monster_start_flying) // used exclusively for scrags (wizards)
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false; // used for checking if this is a valid spawn
 	this.use = monster_start_use;
 	setorigin(this, this.origin);	
@@ -186,7 +183,6 @@ spawnfunc(info_monster_start_flying) // used exclusively for scrags (wizards)
 
 spawnfunc(info_monster_start_boss) // used for shalraths and shamblers
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false; // used for checking if this is a valid spawn
 	this.use = monster_start_use;
 	setorigin(this, this.origin);	
@@ -196,7 +192,6 @@ spawnfunc(info_monster_start_boss) // used for shalraths and shamblers
 // ENTITY
 spawnfunc(info_horde_ammo)
 {
-	if(!MP_MG) { delete(this); return; }
 	//this.wait = false;
 	setthink(this, SpawnAmmo);
 	this.nextthink = time + HORDE_START_DELAY + random() * 3;
@@ -205,14 +200,12 @@ spawnfunc(info_horde_ammo)
 // ENTITY
 spawnfunc(info_horde_item)
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false;
 }
 
 // SHOP
 spawnfunc(info_horde_shop)
 {
-	if(!MP_MG) { delete(this); return; }
 	shopkeep_spawn(this);
 }
 
@@ -224,7 +217,6 @@ const int KEY_FOURTH_PLUS = BIT(3);
 // ENTITY
 spawnfunc(info_horde_key)
 {
-	if(!MP_MG) { delete(this); return; }
 	this.wait = false;
 }
 //============================================================================
@@ -1496,7 +1488,6 @@ bool SpawnWavePrep(entity this)
 
 void horde_squad_setup(entity this)
 {
-	if(!MP_MG) { delete(this); return; }
 
 	if(this.spawnflags & HORDE_FINALBOSS)
 		this.spawnflags |= HORDE_BOSS; // ensure also marked as boss
@@ -1851,7 +1842,6 @@ void SetHorde(entity this)
 // define entity 
 spawnfunc(horde_manager)
 {
-	if(!MP_MG) { delete(this); return; }
 	// AY, Dec06 2021, auto set horde cvar
 	if(!autocvar_horde && !deathmatch)
 		cvar_set("horde", "1");

@@ -13,7 +13,7 @@ SOUND(MON_LEGOND_SIGHT, "monsters/legond/legond");
 #endif
 
 CLASS(Legond, Monster)
-    ATTRIB(Legond, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_IMPEL);
+    ATTRIB(Legond, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT);
     ATTRIB(Legond, m_mins, vector, '-5 -14 -1');
     ATTRIB(Legond, m_maxs, vector, '11 14 53');
 #ifdef GAMEQC

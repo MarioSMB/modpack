@@ -75,7 +75,6 @@ void func_fade_think(entity this)
 
 spawnfunc(func_fade)
 {
-    if(!MP_MG) { delete(this); return; }
 #if 1
     if(true)
     {

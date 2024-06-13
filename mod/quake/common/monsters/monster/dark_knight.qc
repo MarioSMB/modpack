@@ -274,7 +274,6 @@ void dknightattack(entity this)
 
 spawnfunc(monster_dknight)
 {
-	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, true, MON_DARK_KNIGHT);
 }
 #endif // SVQC

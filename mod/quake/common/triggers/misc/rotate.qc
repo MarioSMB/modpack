@@ -105,7 +105,6 @@ Trigger to turn on and off.
 */
 spawnfunc(rotate_object_continuously)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(this.avelocity == '0 0 0')
 		this.avelocity = '0 30 0';
 	if(this.delay > 0)

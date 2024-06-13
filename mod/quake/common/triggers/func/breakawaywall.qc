@@ -38,8 +38,6 @@ Default is 60.
 
 spawnfunc(trigger_damagethreshold)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
@@ -75,8 +73,6 @@ Special walltype that removes itself when triggered.
 
 spawnfunc(func_breakawaywall)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 

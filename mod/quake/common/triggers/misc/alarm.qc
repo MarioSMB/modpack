@@ -27,8 +27,6 @@ void play_alarm(entity this, entity actor, entity trigger)
 
 spawnfunc(sound_alarm)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_sound2("enviro/security/onalarm1.wav");
 	precache_sound2("enviro/security/onalarm2.wav");
 	precache_sound2("enviro/security/onalarm3.wav");

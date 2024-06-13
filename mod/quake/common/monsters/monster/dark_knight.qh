@@ -19,7 +19,7 @@ Sound SND_MON_DARK_KNIGHT_SIGHT_RANDOM() {
 #endif
 
 CLASS(DarkKnight, Monster)
-    ATTRIB(DarkKnight, spawnflags, int, MON_FLAG_METAL | MON_FLAG_IMPEL);
+    ATTRIB(DarkKnight, spawnflags, int, MON_FLAG_METAL);
     ATTRIB(DarkKnight, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(DarkKnight, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

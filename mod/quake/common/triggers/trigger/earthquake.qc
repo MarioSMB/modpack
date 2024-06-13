@@ -54,8 +54,6 @@ can vary between -20 and +20, a range of 40.
 */
 spawnfunc(earthquake)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-	
 	if(!this.delay)
 		this.delay = 20;
 	if(!this.wait)
@@ -127,8 +125,6 @@ can vary between -20 and +20, a range of 40.
 */
 spawnfunc(trigger_earthquake)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-	
 	precache_sound ("equake/rumble.wav");
 	
 	if(!this.weapon)
@@ -165,8 +161,6 @@ Trigger to kill the level-wide earthquake.
 */
 spawnfunc(trigger_earthquake_kill)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-	
 	settouch(this, kill_earthquake);
 
 	InitTrigger(this);

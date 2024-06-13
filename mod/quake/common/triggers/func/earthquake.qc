@@ -55,8 +55,6 @@ Causes an earthquake.  Triggers targets.
 
 spawnfunc(func_earthquake)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	quakeactive = false;
 	precache_sound("misc/quake.wav");
 	precache_sound("misc/quakeend.wav");

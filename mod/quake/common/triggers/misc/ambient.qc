@@ -70,7 +70,6 @@ spawnfunc(ambient_swamp2)
 */
 spawnfunc(ambient_generic)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.noise || this.noise == "")
 	{
 		LOG_DEBUG("ambient_generic with no noise. Removing.");
@@ -123,8 +122,6 @@ play a sound when it is used
 */
 spawnfunc(play_sound_triggered)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	precache_sound(this.noise);
 	if(this.volume == 0)
 		this.volume = 1;
@@ -153,8 +150,6 @@ play a sound on a periodic basis
 */
 spawnfunc(play_sound)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	spawnfunc_play_sound_triggered(this);
 	if(this.wait == 0)
 		this.wait = 20;
@@ -177,8 +172,6 @@ spawnfunc(play_sound)
 */
 spawnfunc(random_thunder)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.noise = "ambience/thunder1.wav";
 	spawnfunc_play_sound(this);
 	this.impulse = 6;
@@ -195,8 +188,6 @@ spawnfunc(random_thunder)
 */
 spawnfunc(random_thunder_triggered)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.noise = "ambience/thunder1.wav";
 	spawnfunc_play_sound_triggered(this);
 	this.impulse = 6;
@@ -207,8 +198,6 @@ spawnfunc(random_thunder_triggered)
 */
 spawnfunc(ambient_humming)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/humming.wav");
@@ -220,8 +209,6 @@ spawnfunc(ambient_humming)
 */
 spawnfunc(ambient_rushing)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/rushing.wav");
@@ -233,8 +220,6 @@ spawnfunc(ambient_rushing)
 */
 spawnfunc(ambient_running_water)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/runwater.wav");
@@ -246,8 +231,6 @@ spawnfunc(ambient_running_water)
 */
 spawnfunc(ambient_fan_blowing)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/fanblow.wav");
@@ -259,8 +242,6 @@ spawnfunc(ambient_fan_blowing)
 */
 spawnfunc(ambient_waterfall)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/waterfal.wav");
@@ -272,8 +253,6 @@ spawnfunc(ambient_waterfall)
 */
 spawnfunc(ambient_riftpower)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/riftpowr.wav");

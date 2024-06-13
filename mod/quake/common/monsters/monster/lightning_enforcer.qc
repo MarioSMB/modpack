@@ -223,7 +223,6 @@ void lenf_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 spawnfunc(monster_lenforcer)
 {
-	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, true, MON_LIGHTNING_ENFORCER);
 }
 

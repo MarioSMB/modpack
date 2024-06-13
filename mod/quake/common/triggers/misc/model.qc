@@ -55,7 +55,6 @@ void misc_model_use_once(entity this, entity actor, entity trigger)
 
 spawnfunc(misc_model)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.model || this.model == "")
 		objerror(this, "misc_model with no model specified");
 	precache_model(this.model);

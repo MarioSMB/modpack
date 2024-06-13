@@ -120,7 +120,6 @@ delay - seconds after first sighting before it attacks (default 10)
 */
 spawnfunc(monster_sword)
 {
-	if(!MP_ROGUE) { delete(this); return; }
 	monster_start(this, true, MON_PHANTOM_SWORDSMAN);
 }
 #endif // SVQC

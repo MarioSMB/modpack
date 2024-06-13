@@ -66,7 +66,7 @@ void SetChangeParms(entity this)
 		setspawnparms(this);
 		return;
 	}
-	if(this.health <= 0 || deathmatch || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_SLIDE)
+	if(this.health <= 0 || deathmatch || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_SLIDE)
 	{
 		SetNewParms();
 		return;
@@ -125,11 +125,11 @@ void SetNewParms()
 
 void DecodeLevelParms(entity this)
 {
-	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || (MP_MG && world.worldtype == WORLDTYPE_HUB) || world.worldtype == WORLDTYPE_SLIDE)
+	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SLIDE)
 		SetNewParms();		// take away all stuff on starting new episode
 
 	// Yoder Oct25, reset weapons between map loads
-	if(MP_MG && autocvar_horde)
+	if(autocvar_horde)
 		SetNewParms();
 
 	if(world.model == "maps/hipstart.bsp"
@@ -396,7 +396,7 @@ void GotoNextMap()
 		changelevel(mapname);
 	else
 	{
-		if(MP_MG && autocvar_horde)
+		if(autocvar_horde)
 			changelevel(HordeRandomMap());
 		else
 			changelevel(nextmap);
@@ -506,31 +506,28 @@ void ExitIntermission()
 			return;
 		}
 		//MP
-		if(MP_MG)
+		if(intermissiontext && intermissiontext != "")
 		{
-			if(intermissiontext && intermissiontext != "")
+			WriteByte(MSG_ALL, SVC_FINALE);
+			WriteString(MSG_ALL, intermissiontext);
+			intermissiontext = string_null;
+			if(world.model == "maps/mgend.bsp")
 			{
-				WriteByte(MSG_ALL, SVC_FINALE);
-				WriteString(MSG_ALL, intermissiontext);
-				intermissiontext = string_null;
-				if(world.model == "maps/mgend.bsp")
-				{
-					intermission_exittime = time + 10000000;  // never allow exit
-					server_reset();
-				}
-				return;
+				intermission_exittime = time + 10000000;  // never allow exit
+				server_reset();
 			}
-			if(MP_MG && world.endtext && world.endtext != "")
+			return;
+		}
+		if(world.endtext && world.endtext != "")
+		{
+			WriteByte(MSG_ALL, SVC_FINALE);
+			WriteString(MSG_ALL, world.endtext);
+			if(world.model == "maps/mgend.bsp")
 			{
-				WriteByte(MSG_ALL, SVC_FINALE);
-				WriteString(MSG_ALL, world.endtext);
-				if(world.model == "maps/mgend.bsp")
-				{
-					intermission_exittime = time + 10000000;  // never allow exit
-					server_reset();
-				}
-				return;
+				intermission_exittime = time + 10000000;  // never allow exit
+				server_reset();
 			}
+			return;
 		}
 		//HIPNOTIC
 		if(world.model == "maps/hip1m4.bsp")
@@ -687,7 +684,7 @@ void ExitIntermission()
 		}
 
 		// NOTE: credits not implemented
-		//if(MP_MG && nextmap == "start" || nextmap == "hipstart" || nextmap == "rstart" || nextmap == "aopstart" || nextmap == "mgstart" && !coop && !autocvar_horde) // Yoder modify Oct25 to check against horde
+		//if(nextmap == "start" || nextmap == "hipstart" || nextmap == "rstart" || nextmap == "aopstart" || nextmap == "mgstart" && !coop && !autocvar_horde) // Yoder modify Oct25 to check against horde
 		GotoNextMap();
 	}
 	
@@ -757,21 +754,8 @@ void server_delayed_reset(entity this)
 		return; // don't wanna do a hard reset in these cases
 
 	// kicks everyone and resets the server!
-#if 0
-	string themap = "start";
-	if(MP_HIPNOTIC)
-		themap = "hipstart";
-	else if(MP_ROGUE)
-		themap = "rstart";
-	else if(MP_IMPEL)
-		themap = "aopstart";
-	else if(MP_MG)
-		themap = "mgstart";
-	localcmd("\nmap ", themap, "\n");
-#else
 	string themap = "quake";
 	changelevel(themap);
-#endif
 }
 
 void server_reset()
@@ -825,11 +809,8 @@ void execute_changelevel(entity this)
 		it.flags |= FL_NOTARGET; // fix a silly monster bug
 		//it.health = -2342; // can't do this because of parms
 		set_movetype(it, MOVETYPE_NONE);
-		if(MP_MG)
-		{
-			clear_powerups(it);
-			FogPushSettingsFrom(it, pos, 0);
-		}
+		clear_powerups(it);
+		FogPushSettingsFrom(it, pos, 0);
 		if(pos)
 		{
 			//it.modelindex = 0;
@@ -841,24 +822,21 @@ void execute_changelevel(entity this)
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
 
-	if(MP_MG)
+	// Yoder merge Horde sept24 2021
+	if(horde_ent)
 	{
-		// Yoder merge Horde sept24 2021
-		if(horde_ent)
+		setthink(horde_ent, func_null);
+		horde_ent.nextthink = -1;
+		FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
 		{
-			setthink(horde_ent, func_null);
-			horde_ent.nextthink = -1;
-			FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
-			{
-				setthink(it, GibMonster);
-				it.nextthink = time + 0.2 + random() * 1.8;
-			});
-		}
-		if(this.spawnflags & NO_INTERMISSION)
-		{
-			//Go directly to intermission text.
-			ExitIntermission();
-		}
+			setthink(it, GibMonster);
+			it.nextthink = time + 0.2 + random() * 1.8;
+		});
+	}
+	if(this.spawnflags & NO_INTERMISSION)
+	{
+		//Go directly to intermission text.
+		ExitIntermission();
 	}
 }
 
@@ -915,8 +893,7 @@ void LoadGame()
 // called by ClientKill and DeadThink
 void respawn(entity this)
 {
-	if(MP_MG)
-		this.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 	if(coop)
 	{
 		// make a copy of the dead body for appearances sake
@@ -993,7 +970,7 @@ void ClientKill(entity this)
 
 	bprintf("%s suicides\n", this.netname);
 
-	if(MP_MG && autocvar_horde) // horde mode behaviour
+	if(autocvar_horde) // horde mode behaviour
 	{
 		PlayerDie(this, NULL, NULL, DEATH_KILL.m_id);
 		this.health = 0;
@@ -1063,7 +1040,7 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 		have_spawntarget = true;
 		
 // choose a info_player_deathmatch point
-	if(MP_MG && autocvar_horde)
+	if(autocvar_horde)
 	{ // run simpler logic for horde - just need a spot with noone on top of it...
     	entity hordeSpawn = find(NULL, classname, "info_player_coop");
 
@@ -1231,28 +1208,25 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 
 	if(serverflags)
 	{	// return with a rune to start
-		if(MP_MG)
+		int lastPickup = sigil_getLastPickup();
+		if(lastPickup)
 		{
-			int lastPickup = sigil_getLastPickup();
-			if(lastPickup)
+			string spname = string_null;
+			if(lastPickup & SIGIL_E1) spname = "start_1";
+			else if(lastPickup & SIGIL_E2) spname = "start_2";
+			else if(lastPickup & SIGIL_E3) spname = "start_3";
+			else if(lastPickup & SIGIL_E4) spname = "start_4";
+			else if(lastPickup & SIGIL_E5) spname = "start_5";
+			else if(lastPickup & SIGIL_E6) spname = "start_6";
+			if(spname)
 			{
-				string spname = string_null;
-				if(lastPickup & SIGIL_E1) spname = "start_1";
-				else if(lastPickup & SIGIL_E2) spname = "start_2";
-				else if(lastPickup & SIGIL_E3) spname = "start_3";
-				else if(lastPickup & SIGIL_E4) spname = "start_4";
-				else if(lastPickup & SIGIL_E5) spname = "start_5";
-				else if(lastPickup & SIGIL_E6) spname = "start_6";
-				if(spname)
+				spot = find(NULL, netname, spname);
+				if(spot)
 				{
-					spot = find(NULL, netname, spname);
-					if(spot)
+					if(spot.classname == "info_player_start_hub")
 					{
-						if(spot.classname == "info_player_start_hub")
-						{
-							sigil_clearLastPickup();
-							return spot;
-						}
+						sigil_clearLastPickup();
+						return spot;
 					}
 				}
 			}
@@ -1571,7 +1545,7 @@ void PutPlayerInServer(entity this)
 	this.angles_z = 0; // never spawn tilted even if the spot says to
 	this.fixangle = true;		// turn this way immediately
 
-	if(MP_MG && coop && STAT(WEAPONS, spot))
+	if(coop && STAT(WEAPONS, spot))
 	{
 		STAT(WEAPONS, this) |= STAT(WEAPONS, spot);
 		if(STAT(WEAPONS, this) & (WEPSET(NAILGUN) | WEPSET(SUPER_NAILGUN)))
@@ -1645,14 +1619,11 @@ void PutPlayerInServer(entity this)
 
 	spawn_tdeath(this.origin, this);
 
-	if(MP_MG)
-	{
-		entity postSpawn = new(postSpawn);
-		postSpawn.owner = this;
-		postSpawn.enemy = spot;
-		setthink(postSpawn, RunPostPutClientInServer);
-		postSpawn.nextthink = time + 0.05;
-	}
+	entity postSpawn = new(postSpawn);
+	postSpawn.owner = this;
+	postSpawn.enemy = spot;
+	setthink(postSpawn, RunPostPutClientInServer);
+	postSpawn.nextthink = time + 0.05;
 
 	stuffcmd(this, "-attack\n"); // prevent shooting after respawning
 
@@ -1707,7 +1678,7 @@ potential spawning position for deathmatch games
 */
 spawnfunc(info_player_deathmatch)
 {
-	//if(MP_MG && !deathmatch) { delete(this); return; }
+	//if(!deathmatch) { delete(this); return; }
 	IL_PUSH(g_spawnpoints, this);
 }
 
@@ -1752,7 +1723,6 @@ Activates a set of coop spawnpoints.
 */
 spawnfunc(trigger_activate_coop_spawns)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!coop) { delete(this); return; }
 	this.use = trigger_activate_coop_spawns_use;
 }
@@ -1780,17 +1750,14 @@ potential spawning position for coop games
 */
 spawnfunc(info_player_coop)
 {
-	if(MP_MG)
+	if(!coop)
 	{
-		if(!coop)
-		{
-			delete(this);
-			return;
-		}
-		if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
-			this.state = COOP_SPAWN_ACTIVE;
+		delete(this);
+		return;
 	}
-	
+	if((this.spawnflags & COOP_SPAWN_START_ACTIVE) || (!this.targetname || this.targetname == ""))
+		this.state = COOP_SPAWN_ACTIVE;
+
 	if(this.spawnflags & 1)
 	{
 		this.classname = "info_player_coop_notyet";
@@ -1955,7 +1922,7 @@ void PlayerDeathThink(entity this)
 	this.button4 = 0;
 	this.button5 = 0;
 	// Yoder Sept24, 2021
-	if(MP_MG && horde_ent && horde_ent.active)
+	if(horde_ent && horde_ent.active)
 		return;
 	respawn(this);
 }
@@ -2156,8 +2123,6 @@ that recently used a Mega-Health.
 */
 void CheckHealthRot(entity this)
 {
-	if(!MP_HIPNOTIC && !(this.items & IT_SUPERHEALTH))
-		return;
 	if(this.tank)
 		return;
 	if(this.clockwork)
@@ -2177,8 +2142,6 @@ void CheckHealthRot(entity this)
 		return;
 	}
 
-	if(!MP_HIPNOTIC)
-		this.items &= ~IT_SUPERHEALTH;
 	this.healthrot_nextcheck = 0;
 }
 
@@ -2351,22 +2314,19 @@ void PlayerPostThink(entity this)
 		}
 
 		// AY 11 Nov 2021, check killspree end
-		if(MP_MG)
+		if(this.killspree > 0 && time > this.killtime)
 		{
-			if (this.killspree > 0 && time > this.killtime)
+			//LOG_DEBUG("killspree ended.");
+
+			//score = (this.killspree + (this.killspree - 1) -1) * 5; // previously was "attacker.killspree - 1"
+			if(this.killspree > 1)
 			{
-				LOG_DEBUG("killspree ended.");
-				
-				//score = (this.killspree + (this.killspree - 1) -1) * 5; // previously was "attacker.killspree - 1"
-				if(this.killspree > 1)
-				{
-					float score = ceil((this.killspree * this.killspree) / 2);
-					//sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, this.killspree));
-					this.frags += score;
-				}
-				
-				this.killspree = 0; // reset killspree
+				float score = ceil((this.killspree * this.killspree) / 2);
+				//sprint(this, sprintf("%s lost their kill streak of %d!\n", this.netname, this.killspree));
+				this.frags += score;
 			}
+
+			this.killspree = 0; // reset killspree
 		}
 
 		Regenerate_Health(this);
@@ -2442,9 +2402,9 @@ string getcdtrack(int numb)
 {
 	if(world.music)
 		return world.music;
-	if(MP_HIPNOTIC)
+	if(IsHipnoticMap())
 		return hip_getcdtrack(numb);
-	if(MP_ROGUE)
+	if(IsRogueMap())
 		return rogue_getcdtrack(numb);
 
 	switch(numb)

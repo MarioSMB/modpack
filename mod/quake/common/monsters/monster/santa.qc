@@ -364,13 +364,10 @@ bool SantaCheckAttack(entity this)
 {
 	entity targ = this.enemy;
 
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(time < this.attack_finished)
+		return false;
 
 	if(ai_checkmelee(this, 100, 0))
 	{
@@ -392,14 +389,6 @@ bool SantaCheckAttack(entity this)
 			
 	
 // missile attack
-	if(!MP_IMPEL)
-	{
-		if(time < this.attack_finished)
-			return false;
-			
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-	}
 
 	if(this.movespeed < 0)
 	{

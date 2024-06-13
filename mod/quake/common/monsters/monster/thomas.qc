@@ -190,13 +190,10 @@ bool ThomasCheckAttack(entity this)
 {
 	entity targ = this.enemy;
 
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(time < this.attack_finished)
+		return false;
 	
 // see if any entities are in the way of the shot
 	vector spot1 = this.origin + this.view_ofs;
@@ -212,14 +209,6 @@ bool ThomasCheckAttack(entity this)
 			
 	
 // missile attack
-	if(!MP_IMPEL)
-	{
-		if(time < this.attack_finished)
-			return false;
-			
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-	}
 
 	float chance = 0;
 	if(this.enemy_range == RANGE_MELEE)

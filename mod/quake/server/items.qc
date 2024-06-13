@@ -135,7 +135,7 @@ Sets the clipping size and plants the object on the floor
 */
 void StartItem(entity this)
 {
-	if(MP_MG && this.classname != "item_sigil" && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(this.classname != "item_sigil" && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
 	{
 		delete(this);
 		return;
@@ -278,9 +278,6 @@ void health_touch(entity this, entity toucher)
 	// Megahealth = rot down the player's super health
 	if(this.healtype == 2)
 	{
-		if(!MP_HIPNOTIC) // TODO: why?
-			toucher.items |= IT_SUPERHEALTH;
-
 		toucher.healthrot_nextcheck = time + 5;
 	}
 
@@ -779,10 +776,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if(autocvar_skill == 3)
 		wpn = W_RandomizeWeapon(wpn);
 
-	if(!MP_HIPNOTIC && (wpn.spawnflags & WEP_FLAG_HIPNOTIC)) { delete(this); return; }
-	if(!MP_ROGUE && (wpn.spawnflags & WEP_FLAG_ROGUE)) { delete(this); return; }
-	if(!MP_IMPEL && (wpn.spawnflags & WEP_FLAG_IMPEL)) { delete(this); return; }
-
 	string mymdl = strcat("progs/g_", wpn.mdl, ".mdl");
 	precache_model(mymdl); // TODO: model registry
 	_setmodel(this, mymdl);
@@ -796,8 +789,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 
 spawnfunc(weapon_rifle)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_model("progs/g_tek.mdl");
 	_setmodel(this, "progs/g_tek.mdl");
 	this.netname = "Armor Laser System";
@@ -810,8 +801,6 @@ spawnfunc(weapon_rifle)
 #if 0
 spawnfunc(weapon_rifleupgrade)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_model("progs/wing.mdl");
 	_setmodel(this, "progs/wing.mdl");
 	this.netname = "Laser System Upgrade";
@@ -1007,8 +996,6 @@ Small box is 25, Big box is 50.
 
 spawnfunc(item_lava_spikes)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1067,8 +1054,6 @@ Small box is 5, Big box is 10.
 
 spawnfunc(item_multi_rockets)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1126,8 +1111,6 @@ Small box is 6, Big box is 12.
 */
 spawnfunc(item_plasma)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1489,7 +1472,6 @@ void misc_rune_indicator_usetargets(entity this)
 
 spawnfunc(misc_rune_indicator)
 {
-	if(!MP_MG) { delete(this); return; }
 	bool isactive = (this.spawnflags & RUNE_INDICATOR_ACTIVE);
 	this.spawnflags &= ~RUNE_INDICATOR_ACTIVE;
 	if(!this.spawnflags)
@@ -1556,12 +1538,6 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 		RandomSelection_Init();
 		FOREACH(Monsters, it != MON_Null,
 		{
-			if(!MP_HIPNOTIC && (it.spawnflags & MON_FLAG_HIPNOTIC))
-				continue;
-			if(!MP_ROGUE && (it.spawnflags & MON_FLAG_ROGUE))
-				continue;
-			if(!MP_IMPEL && (it.spawnflags & MON_FLAG_IMPEL))
-				continue;
 			if((it.spawnflags & MONSTER_TYPE_SWIM) && actor.waterlevel < 1)
 				continue;
 			if(it.spawnflags & MONSTER_TYPE_DECOY)
@@ -1957,8 +1933,6 @@ The shield upgrade
 */
 spawnfunc(item_powerup_shield)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	settouch(this, powerup_touch);
 
 	precache_model("progs/shield.mdl");
@@ -1980,9 +1954,7 @@ spawnfunc(item_powerup_shield)
 The anti-grav belt
 */
 spawnfunc(item_powerup_belt)
-{
-	if(!MP_ROGUE) { delete(this); return; }
-	
+{	
 	settouch(this, powerup_touch);
 
 	precache_model("progs/beltup.mdl");
@@ -2004,8 +1976,6 @@ Player takes no damage from electrical attacks and swims faster for 30 seconds
 */
 spawnfunc(item_artifact_wetsuit)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	settouch(this, powerup_touch);
 
 	precache_model("progs/wetsuit.mdl");
@@ -2030,8 +2000,6 @@ to spawn the charmed creature.
 */
 spawnfunc(item_hornofconjuring)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	settouch(this, powerup_touch);
 
 	precache_model("progs/horn.mdl");
@@ -2049,8 +2017,6 @@ Empathy Shield.
 */
 spawnfunc(item_artifact_empathy_shields)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	settouch(this, powerup_touch);
 
 	precache_model("progs/empathy.mdl");

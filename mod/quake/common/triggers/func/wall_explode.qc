@@ -219,8 +219,6 @@ void wall_explode_touch(entity this, entity toucher)
 
 spawnfunc(wall_explode)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_model2("progs/sglass.mdl");
 	precache_model2("progs/glass.mdl");
 	precache_model2("progs/rubble.mdl");

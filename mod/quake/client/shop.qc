@@ -154,14 +154,8 @@ void entity_list(string id, vector pos, vector size)
 	{
 		if(!(STAT(SHOP_WEAPONS) & it.m_wepset))
 			continue;
-		if(it.spawnflags & WEP_FLAG_NOSTEAL)
+		if((it.spawnflags & WEP_FLAG_NOSTEAL) || (it.spawnflags & WEP_FLAG_CHAMPION))
 			continue; // exclude some weapons!
-		if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
-			continue;
-		if(!MP_ROGUE && (it.spawnflags & WEP_FLAG_ROGUE))
-			continue;
-		if(!MP_HIPNOTIC && (it.spawnflags & WEP_FLAG_HIPNOTIC))
-			continue;
 		shoplist[itemcount] = SHOP_ITEM_WEAPON;
 		shopdata[itemcount] = it.m_id;
 		itemcount += 1;

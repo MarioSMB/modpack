@@ -114,7 +114,6 @@ void spike_mine_first_think(entity this)
 
 spawnfunc(trap_spike_mine)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model ("progs/spikmine.mdl");

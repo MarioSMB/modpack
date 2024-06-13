@@ -105,8 +105,6 @@ It will not damage players until activated.
 */
 spawnfunc(buzzsaw)
 {
-	if(!MP_ROGUE) { delete(this); return; }
-
 	precache_model("progs/buzzsaw.mdl");
 
 	precache_sound("buzz/buzz.wav");

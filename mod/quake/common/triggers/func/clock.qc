@@ -57,8 +57,6 @@ Set the angle to be the direction the clock is facing.
 
 spawnfunc(func_clock)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.classname = "clock";
 	setthink(this, clock_firstthink);
 	this.nextthink = time + 0.1;

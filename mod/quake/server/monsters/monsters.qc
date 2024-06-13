@@ -123,7 +123,7 @@ void monster_start_go(entity this)
 	if(this.health <= 0)
 		return;
 
-	if(MP_MG && monster_checkspawnedflag(this))
+	if(monster_checkspawnedflag(this))
 	{
 		spawn_tdeath(this.origin, this);
 		if(this.spawnflags & MONSTER_SPAWNED_TFOG)
@@ -139,7 +139,7 @@ void monster_start_go(entity this)
 	}
 	else if(this.target && this.target != "")
 	{
-		if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND))
+		if(this.spawnflags & MONSTER_ATTACK_FRIEND)
 		{
 			RandomSelection_Init();
 			for(entity targ = findchain(targetname, this.target); targ; targ = targ.chain)
@@ -173,7 +173,7 @@ void monster_start_go(entity this)
 		}
 		else
 		{
-			if(MP_MG && (this.spawnflags & MONSTER_WAITWALK))
+			if(this.spawnflags & MONSTER_WAITWALK)
 			{
 				this.pausetime = -1;
 				if(this.th_stand)
@@ -204,7 +204,7 @@ void monster_start_go(entity this)
 		}
 	}
 
-	if(MP_MG && monster_checkspawnedflag(this))
+	if(monster_checkspawnedflag(this))
 	{
 		// Yoder, Sept29, horde fix so that preplaced monsters are counted on spawn_tdeath
 		if(horde_ent)
@@ -339,7 +339,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 
 	if(!mon || mon == MON_Null) { return; } // invalid monster
 	if(deathmatch) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;
@@ -390,7 +390,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 
 	// Yoder, Sept29, fix for preplaced monsters in horde_ent
 	// in horde, mosnters shouldn't increase total count until spawned
-	if(MP_MG && autocvar_horde)
+	if(autocvar_horde)
 	{
 		if(!monster_checkspawnedflag(this) && !(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
 			monsters_total += 1;
@@ -400,7 +400,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 
 	this.max_health = this.health;
 
-	if(MP_MG && monster_checkspawnedflag(this))
+	if(monster_checkspawnedflag(this))
 	{
 		this.use = StartMonster;
 		this.oldsolid = this.solid;

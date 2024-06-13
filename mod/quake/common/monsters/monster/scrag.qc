@@ -71,7 +71,7 @@ bool WizardCheckAttack(entity this)
 {
 	if(time < this.attack_finished)
 		return false;
-	if(!MP_IMPEL && !this.enemy_visible)
+	if(!this.enemy_visible)
 		return false;
 
 	if(this.enemy_range == RANGE_FAR)
@@ -336,15 +336,14 @@ void wiz_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 void Wiz_Pain(entity this, entity attacker, float damage, int deathtype)
 {
-	if(MP_IMPEL && this.pain_finished > time)
+	if(this.pain_finished > time)
 		return;
 	if(random()*70 > damage)
 		return;		// didn't flinch
 	_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 
 	wiz_pain1(this);
-	if(MP_IMPEL)
-		this.pain_finished = time + 1;
+	this.pain_finished = time + 1;
 }
 
 void Wiz_Missile(entity this)

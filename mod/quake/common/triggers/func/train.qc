@@ -932,8 +932,6 @@ sounds
 */
 spawnfunc(func_train2)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target || this.target == "")

@@ -38,8 +38,6 @@ Pushable walls.
 
 spawnfunc(func_pushable)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 

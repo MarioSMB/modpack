@@ -20,7 +20,6 @@ Shelters the player from pushes
 */
 spawnfunc(trigger_shelter_portal)
 {
-	if(!MP_MG) { delete(this); return; }
 	InitTrigger(this);
 	settouch(this, trigger_shelter_portal_touch);
 	this.pos1 = this.mins + (this.size * 0.5);

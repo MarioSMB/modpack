@@ -443,7 +443,7 @@ spawnfunc(path_corner)
 		return;
 	}
 
-	if(MP_MG && this.wait < 0)
+	if(this.wait < 0)
 		this.wait = 999999;
 	if(!this.wait && this.pausetime)
 		this.wait = this.pausetime;
@@ -470,7 +470,7 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.enemy)
 		return; // fighting, not following a path
 
-	if(MP_MG && substring(world.model, 0, 7) == "maps/mg")
+	if(substring(world.model, 0, 7) == "maps/mg")
 	{
 		this.owner = toucher; // we have a valid visitor!
 		if(toucher.dmg_inflictor && toucher.dmg_inflictor.classname == "path_corner")
@@ -535,7 +535,6 @@ When activated, will zero out the pausetime for monsters, causing them to contin
 */
 spawnfunc(target_cancelpause)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.target || this.target == "")
 		objerror(this, "target_cancelpause with no target given.\n");
 	if(!this.targetname || this.targetname == "")
@@ -574,7 +573,6 @@ When activated, will switch out the target .
 */
 spawnfunc(target_switchpath)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.target || this.target == "")
 		objerror(this, "target_switchtarget with no target given.\n");
 	if(!this.targetname || this.targetname == "")
@@ -682,9 +680,7 @@ Monsters will stop what they are doing and follow to the path
 
 spawnfunc(path_follow)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-	
-   followtarget_f(this);
+	followtarget_f(this);
 }
 
 /*QUAKED path_follow2 (0.5 0.3 0) (-8 -8 -8) (8 8 8)
@@ -693,8 +689,6 @@ Monsters will stop what they are doing and follow to the path
 
 spawnfunc(path_follow2)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_followtarget);
 	setsize (this, '-8 -8 -8', '8 8 8');
@@ -1071,7 +1065,7 @@ bool FindTarget(entity this)
 	entity client = NULL;
 
 	// First, if we are attacking friends, try to find another friend
-	if(MP_MG && (this.spawnflags & MONSTER_ATTACK_FRIEND) && this.target && this.target != "" && substring(world.model, 0, 7) == "maps/mg")
+	if((this.spawnflags & MONSTER_ATTACK_FRIEND) && this.target && this.target != "" && substring(world.model, 0, 7) == "maps/mg")
 	{
 		RandomSelection_Init();
 		FOREACH_ENTITY_STRING(targetname, this.target,
@@ -1130,7 +1124,7 @@ bool FindTarget(entity this)
 		}
 	}
 
-	if(!MP_MG && MP_IMPEL && (this.spawnflags & 4))
+	if(this.spawnflags & 4)
 		return false;
 
 	// if the first spawnflag bit is set, the monster will only wake up on
@@ -1183,7 +1177,7 @@ bool FindTarget(entity this)
 	if(this.monsterdef.spawnflags & MON_FLAG_NOTARGET)
 		return false;
 
-	if(!MP_IMPEL || !angry_monsters)
+	if(!angry_monsters)
 	{
 		int r = range(this, client);
 		if(r == RANGE_FAR && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS)) // give bosses a further range
@@ -1204,7 +1198,7 @@ bool FindTarget(entity this)
 				return false;
 		}
 	}
-	else if(MP_IMPEL && this.enemy)
+	else if(this.enemy)
 	{
 		if(!visible(this, client))
 			return false;

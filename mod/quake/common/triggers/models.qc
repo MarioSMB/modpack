@@ -199,39 +199,34 @@ This bmodel appears unless players have all of the episode sigils.
 const int BOSSGATE_INVERSE = 64;
 spawnfunc(func_bossgate)
 {
-	if(MP_MG)
+	bool inverse = (this.spawnflags & BOSSGATE_INVERSE);
+	this.spawnflags &= ~BOSSGATE_INVERSE;
+	if(!this.spawnflags)
+		this.spawnflags = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4;
+	this.spawnflags &= SIGIL_ALL;
+	if((serverflags & this.spawnflags) == this.spawnflags) // ALL runes collected
 	{
-		bool inverse = (this.spawnflags & BOSSGATE_INVERSE);
-		this.spawnflags &= ~BOSSGATE_INVERSE;
-		if(!this.spawnflags)
-			this.spawnflags = SIGIL_E1 | SIGIL_E2 | SIGIL_E3 | SIGIL_E4;
-		this.spawnflags &= SIGIL_ALL;
-		if((serverflags & this.spawnflags) == this.spawnflags) // ALL runes collected
+		if(!inverse)
 		{
-			if(!inverse)
-			{
-				delete(this);
-				return;
-			}
-		}
-		else
-		{
-			if(inverse)
-			{
-				delete(this);
-				return;
-			}
+			delete(this);
+			return;
 		}
 	}
-	else if((serverflags & 15) == 15)
-		return;		// all episodes completed
+	else
+	{
+		if(inverse)
+		{
+			delete(this);
+			return;
+		}
+	}
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
 	_setmodel(this, this.model);
 
-	if(MP_MG && (this.target || this.target != "" || this.killtarget || this.killtarget != ""))
+	if(this.target || this.target != "" || this.killtarget || this.killtarget != "")
 	{
 		setthink(this, func_bossgate_usetargets);
 		this.nextthink = time + 0.2;

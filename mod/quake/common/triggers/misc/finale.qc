@@ -123,8 +123,6 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 
 spawnfunc(effect_finale)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(deathmatch) { delete(this); return; }
 
 	initialize_field_db();
@@ -152,8 +150,6 @@ void info_startendtext_use(entity this, entity actor, entity trigger)
 
 spawnfunc(info_startendtext)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	this.use = info_startendtext_use;
 }
 

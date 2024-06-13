@@ -53,7 +53,7 @@ void button_fire(entity this)
 	if(this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
-	if(MP_MG && this.items)
+	if(this.items)
 	{
 		_sound(this, CH_TRIGGER_SINGLE, this.noise4, 1, ATTN_NORM);
 		if(!(this.spawnflags & BUTTON_KEY_ALWAYS_REQUIRED))

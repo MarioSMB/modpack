@@ -47,9 +47,6 @@ bool dropclient_schedule(entity this)
 // TODO: remove when models and sounds are properly registered
 PRECACHE(Hipnotic)
 {
-	if(!MP_HIPNOTIC)
-		return;
-
 	precache_sound ("misc/flys.wav");
 	precache_sound ("misc/shortexp.wav");
 	precache_sound ("misc/longexpl.wav");
@@ -85,9 +82,6 @@ PRECACHE(Hipnotic)
 
 PRECACHE(Impel)
 {
-	if(!MP_IMPEL)
-		return;
-
 	precache_sound2("zombie/z_shot1.wav");
 
 	precache_model2("progs/v_implr.mdl");
@@ -203,6 +197,11 @@ PRECACHE(Impel)
 bool IsRogueMap()
 {
 	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2" || substring(world.model, 0, 10) == "maps/banjo");
+}
+
+bool IsHipnoticMap()
+{
+	return (substring(world.model, 0, 8) == "maps/hip");
 }
 
 // copper-specific lighting hack
@@ -1363,18 +1362,6 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
-// hack to auto enable/disable mission packs if their content is detected
-STATIC_INIT_EARLY(missionpacks)
-{
-	cvar_set("sv_missionpack_impel", ftos(fexists("progs/legond.mdl")));
-
-	cvar_set("sv_missionpack_rogue", ftos(fexists("progs/dragon.mdl")));
-
-	cvar_set("sv_missionpack_hipnotic", ftos(fexists("progs/armabody.mdl")));
-
-	cvar_set("sv_missionpack_mg", ftos(fexists("progs/mg1_rune1.mdl")));
-}
-
 spawnfunc(worldspawn)
 {
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
@@ -1586,20 +1573,7 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
-	#if 0
-		if(MP_MG)
-			mapname = "mgstart";
-		else if(MP_IMPEL)
-			mapname = "aopstart";
-		else if(MP_ROGUE)
-			mapname = "rstart";
-		else if(MP_HIPNOTIC)
-			mapname = "hipstart";
-		else
-			mapname = "start";
-	#else
 		mapname = "quake";
-	#endif
 		GotoNextMap();
 
 		return;
@@ -1680,20 +1654,7 @@ void CheckRules_World()
 			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp"
 			&& world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp" && world.model != "maps/quake.bsp")
 		{
-		#if 0
-			if(MP_MG)
-				localcmd("\nmap mgstart\n");
-			else if(MP_IMPEL)
-				localcmd("\nmap aopstart\n");
-			else if(MP_HIPNOTIC)
-				localcmd("\nmap hipstart\n");
-			else if(MP_ROGUE)
-				localcmd("\nmap rstart\n");
-			else
-				localcmd("\nmap start\n");
-		#else
 			changelevel("quake");
-		#endif
 		}
 		else
 			NextLevel();

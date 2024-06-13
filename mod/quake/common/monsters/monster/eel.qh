@@ -14,7 +14,7 @@ SOUND(MON_EEL_SIGHT, "eel/eelc5");
 #endif
 
 CLASS(Eel, Monster)
-    ATTRIB(Eel, spawnflags, int, MONSTER_TYPE_SWIM | MON_FLAG_ROGUE);
+    ATTRIB(Eel, spawnflags, int, MONSTER_TYPE_SWIM);
     ATTRIB(Eel, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Eel, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC

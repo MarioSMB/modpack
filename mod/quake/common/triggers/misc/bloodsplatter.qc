@@ -32,8 +32,6 @@ void make_blood_fall_use(entity this, entity actor, entity trigger)
 
 spawnfunc(misc_bloodspitter)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_model("progs/bldfall.mdl");
 	if(this.targetname && this.targetname != "")
 		this.use = make_blood_fall_use;

@@ -103,7 +103,6 @@ const int spike_anim_attacka = 54; //'54 68 0';
 
 spawnfunc(monster_spikemine)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model("progs/demon.mdl");

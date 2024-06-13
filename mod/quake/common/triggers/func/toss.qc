@@ -91,7 +91,6 @@ void func_toss_linkcascade(entity this)
 
 spawnfunc(func_toss)
 {
-    if(!MP_MG) { delete(this); return; }
     this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
     SetBrushEntityModelNoLOD(this);
@@ -134,7 +133,6 @@ void func_shatter_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(func_shatter)
 {
-    if(!MP_MG) { delete(this); return; }
 	float dist; // distance between origin and pos2 
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
@@ -210,7 +208,6 @@ void func_debris_wakeup_wait(entity this, entity actor, entity trigger)
 
 spawnfunc(func_debris)
 {
-    if(!MP_MG) { delete(this); return; }
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
 	_setmodel(this, this.model);

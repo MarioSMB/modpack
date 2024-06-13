@@ -2,8 +2,6 @@
 
 spawnfunc(misc_gib2)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	if(!this.mdl || this.mdl == "")
 	{
 		float rnum = random ();
@@ -25,8 +23,6 @@ spawnfunc(misc_gib2)
 
 spawnfunc(misc_gib)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	float r = random();
 	if(r < 0.3)
 	{

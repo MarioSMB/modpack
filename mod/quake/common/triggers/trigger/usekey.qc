@@ -72,8 +72,6 @@ Variable sized single use trigger that requires a key to trigger targets.  Must 
 
 spawnfunc(trigger_usekey)
 {
-	if(!MP_HIPNOTIC) { delete(this); return; }
-
 	if(world.worldtype == WORLDTYPE_MEDIEVAL)
 	{
 		precache_sound("doors/medtry.wav");

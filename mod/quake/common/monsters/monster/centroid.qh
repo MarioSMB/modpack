@@ -14,7 +14,7 @@ SOUND(MON_CENTROID_SIGHT, "scourge/sight");
 #endif
 
 CLASS(Centroid, Monster)
-    ATTRIB(Centroid, spawnflags, int, MON_FLAG_HIPNOTIC);
+    ATTRIB(Centroid, spawnflags, int, 0);
     ATTRIB(Centroid, m_mins, vector, '-32 -32 -24');
     ATTRIB(Centroid, m_maxs, vector, '32 32 64');
 #ifdef GAMEQC

@@ -49,8 +49,6 @@ void pixel_think(entity this)
 
 spawnfunc(misc_pixel)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	precache_model2("progs/null.mdl");
 	precache_sound2("ambience/pixels.wav");
 	setthink(this, pixel_think);

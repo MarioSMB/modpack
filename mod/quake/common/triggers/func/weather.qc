@@ -8,8 +8,6 @@ void snow_bob(entity this);
 
 spawnfunc(snow_fall)
 {
-    if(!MP_IMPEL) { delete(this); return; }
-
     precache_model2("progs/snow.spr");
     this.nextthink = time + 1;
     setthink(this, make_snow);
@@ -68,8 +66,6 @@ void smallsnow_bob(entity this);
 
 spawnfunc(smallsnow_fall)
 {
-    if(!MP_IMPEL) { delete(this); return; }
-
     precache_model2("progs/smlsnow.spr");
     this.nextthink = (time + (random () * 15));
     setthink(this, premake_smallsnow);
@@ -140,8 +136,6 @@ void leaf_bob(entity this);
 
 spawnfunc(leaf_fall)
 {
-    if(!MP_IMPEL) { delete(this); return; }
-
     precache_model("progs/leaf.mdl");
     this.nextthink = time + 1;
     setthink(this, make_leaf);
@@ -201,8 +195,6 @@ void lostbubble_bob(entity this);
 
 spawnfunc(lostbubbles)
 {
-    if(!MP_IMPEL) { delete(this); return; }
-
     precache_model2("progs/s_bubble.spr");
     this.nextthink = time + 1;
     setthink(this, make_lostbubble);
@@ -288,8 +280,6 @@ void make_rain(entity this);
 
 spawnfunc(rain_fall)
 {
-    if(!MP_IMPEL) { delete(this); return; }
-
     precache_model2("progs/drop.spr");
     precache_model2("progs/drop.spr");
     this.nextthink = time + 1;

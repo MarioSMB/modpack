@@ -249,7 +249,7 @@ void trigger_multiple_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(trigger_multiple)
 {
-	if(MP_MG && Inhibit_Coop(this))
+	if(Inhibit_Coop(this))
 	{
 		delete(this);
 		return;

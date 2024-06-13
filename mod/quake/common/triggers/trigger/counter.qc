@@ -66,7 +66,7 @@ After the counter has been triggered "count" times(default 2), it will fire all 
 */
 spawnfunc(trigger_counter)
 {
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;
@@ -134,8 +134,7 @@ After the counter has been triggered "count" times (default 2), it will fire all
 */
 spawnfunc(trigger_counter_timed)
 {
-	if(!MP_MG) { delete(this); return; }
-	if(MP_MG && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
+	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))
 	{
 		delete(this);
 		return;

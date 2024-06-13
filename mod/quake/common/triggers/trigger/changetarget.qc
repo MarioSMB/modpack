@@ -7,7 +7,6 @@ void trigger_changetarget_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_changetarget)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(!this.target || this.target == "")
 		objerror(this, "Missing target.");
 	if(!this.killtarget || this.killtarget == "")

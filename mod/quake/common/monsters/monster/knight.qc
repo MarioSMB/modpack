@@ -342,7 +342,7 @@ METHOD(Knight, mr_sight, bool(Knight this, entity actor))
 		return false;
 	}
 
-	if(!MP_ROGUE || !actor.skin)
+	if(!actor.skin)
 		sound(actor, CH_VOICE, this.m_sound, 1, ATTN_NORM);
 
     return true;

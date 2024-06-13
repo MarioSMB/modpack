@@ -199,8 +199,6 @@ void pinhead_think(entity this)
 
 spawnfunc(misc_pinhead_triggered)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	this.classname = "misc_pinhead";
 	precache_model2("progs/claw.mdl");
 	precache_sound2("enviro/pinhead/pinback.wav");
@@ -219,8 +217,6 @@ spawnfunc(misc_pinhead_triggered)
 
 spawnfunc(misc_pinhead)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	spawnfunc_misc_pinhead_triggered(this);
 	this.nextthink = random();
 	setthink(this, pinhead_think);

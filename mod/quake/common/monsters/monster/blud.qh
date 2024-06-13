@@ -14,7 +14,7 @@ SOUND(MON_BLUD_SIGHT, "monsters/blud/blsight");
 #endif
 
 CLASS(Blud, Monster)
-    ATTRIB(Blud, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_IMPEL);
+    ATTRIB(Blud, spawnflags, int, MONSTER_TYPE_BOSS);
     ATTRIB(Blud, m_mins, vector, '-16 -16 -48');
     ATTRIB(Blud, m_maxs, vector, '16 16 48');
 #ifdef GAMEQC

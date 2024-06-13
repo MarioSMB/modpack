@@ -4,7 +4,6 @@
 
 spawnfunc(mge2m2_electrode_target)
 {
-    if(!MP_MG) { delete(this); return; }
 }
 
 // Electrode buttons
@@ -28,7 +27,6 @@ void mge2m2_electrode_button_touch(entity this, entity toucher)
 
 spawnfunc(mge2m2_electrode_button)
 {
-    if(!MP_MG) { delete(this); return; }
     spawnfunc_func_button(this);
     settouch(this, mge2m2_electrode_button_touch);
 }
@@ -57,7 +55,6 @@ void mge2m2_rune_egg_opener_use(entity this, entity actor, entity trigger)
 
 spawnfunc(mge2m2_rune_egg_opener)
 {
-    if(!MP_MG) { delete(this); return; }
     this.use = mge2m2_rune_egg_opener_use;
 }
 
@@ -85,7 +82,6 @@ void mge2m2_rune_pickup_fixer_use_think(entity this)
 
 spawnfunc(mge2m2_rune_pickup_fixer)
 {
-    if(!MP_MG) { delete(this); return; }
     this.use = mge2m2_rune_pickup_fixer_use;
     setthink(this, mge2m2_rune_pickup_fixer_use_think);
     this.nextthink = time + 0.8;
@@ -94,7 +90,6 @@ spawnfunc(mge2m2_rune_pickup_fixer)
 // Obsolete, replace with trigger_cleanup_corpses
 spawnfunc(mge2m2_cleanup_corpses)
 {
-    if(!MP_MG) { delete(this); return; }
     LOG_DEBUG("WARNING: entity 'mge2m2_cleanup_corpses' spawned. Please replace with 'trigger_cleanup_corpses'.");
     spawnfunc_trigger_cleanup_corpses(this);
 }

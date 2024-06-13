@@ -242,13 +242,10 @@ bool RaindeerCheckAttack(entity this)
 {
 	entity targ = this.enemy;
 
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(time < this.attack_finished)
+		return false;
 
 	if(ai_checkmelee(this, 80, 0))
 	{
@@ -270,14 +267,6 @@ bool RaindeerCheckAttack(entity this)
 			
 	
 // missile attack
-	if(!MP_IMPEL)
-	{
-		if(time < this.attack_finished)
-			return false;
-			
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-	}
 
 	float chance = 0;
 	if(this.enemy_range == RANGE_MELEE)

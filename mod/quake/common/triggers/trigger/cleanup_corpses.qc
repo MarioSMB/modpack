@@ -12,7 +12,6 @@ void trigger_cleanup_corpses_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_cleanup_corpses)
 {
-	if(!MP_MG) { delete(this); return; }
 	if(coop == 0) { delete(this); return; }
 	this.use = trigger_cleanup_corpses_use;
 }

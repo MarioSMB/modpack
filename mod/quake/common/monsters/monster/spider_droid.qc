@@ -103,7 +103,6 @@ void spider_melee(entity this)
 */
 spawnfunc(monster_spider)
 {
-	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, true, MON_SPIDER_DROID);
 }
 #endif // SVQC

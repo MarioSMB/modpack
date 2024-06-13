@@ -390,8 +390,6 @@ void Legond_Des_return(entity this)
 
 spawnfunc(legond_teledes)
 {
-	if(!MP_IMPEL) { delete(this); return; }
-
 	this.solid = SOLID_BBOX;
 	setmodel(this, MDL_Null);
 	set_movetype(this, MOVETYPE_FLY);
@@ -523,7 +521,6 @@ void legond_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 spawnfunc(monster_legond)
 {
-	if(!MP_IMPEL) { delete(this); return; }
 	monster_start(this, true, MON_LEGOND);
 }
 #endif // SVQC

@@ -432,22 +432,12 @@ bool OgreCheckAttack(entity this)
 		}
 	}
 
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		if(time < this.attack_finished)
-			return false;
-	}
-	else
-	{
-		if(time < this.attack_finished)
-			return false;
-		
-		// TODO: ogre still fires when enemy isn't visible only in impel?
-		if(!this.enemy_visible)
-			return false;
-	}
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	if(time < this.attack_finished)
+		return false;
+	if(!this.enemy_visible)
+		return false;
 
 	entity targ = this.enemy;
 	
@@ -466,30 +456,11 @@ bool OgreCheckAttack(entity this)
 	}
 			
 // missile attack
-	float chance;
-	if(MP_IMPEL)
-	{
-		if(this.enemy_range == RANGE_NEAR)
-			chance = 0.10;
-		else if(this.enemy_range == RANGE_MID)
-			chance = 0.05;
-		else
-			chance = 0;
-	}
-	else
-	{
-		if(time < this.attack_finished)
-			return false;
-
-		if(this.enemy_range == RANGE_FAR)
-			return false;
-		else if(this.enemy_range == RANGE_NEAR)
-			chance = 0.10;
-		else if(this.enemy_range == RANGE_MID)
-			chance = 0.05;
-		else
-			chance = 0;
-	}
+	float chance = 0;
+	if(this.enemy_range == RANGE_NEAR)
+		chance = 0.10;
+	else if(this.enemy_range == RANGE_MID)
+		chance = 0.05;
 
 	this.attack_state = AS_MISSILE;
 	float extra_delay = 3;

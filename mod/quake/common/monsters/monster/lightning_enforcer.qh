@@ -20,7 +20,7 @@ Sound SND_MON_LENFORCER_SIGHT_RANDOM() {
 #endif
 
 CLASS(LightningEnforcer, Monster)
-    ATTRIB(LightningEnforcer, spawnflags, int, MON_FLAG_IMPEL);
+    ATTRIB(LightningEnforcer, spawnflags, int, 0);
     ATTRIB(LightningEnforcer, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(LightningEnforcer, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

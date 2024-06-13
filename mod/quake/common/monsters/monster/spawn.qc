@@ -264,43 +264,40 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 	actor.th_melee = tbaby_jump1;
 	actor.th_die = tbaby_die1;
 
-	if(MP_ROGUE)
+	precache_sound2("blob/mytosis.wav");
+	if(actor.spawnflags & 8)
 	{
-		precache_sound2("blob/mytosis.wav");
-		if(actor.spawnflags & 8)
+		actor.th_pain = tbaby_mitosis;
+		actor.skin = 2;
+		actor.health = 100;
+	}
+	else if(actor.spawnflags & 4)
+	{
+		actor.th_pain = tbaby_mitosis;
+		actor.skin = 1;
+		actor.health = 60;
+	}
+	else if(actor.spawnflags & 2)
+		actor.skin = 0;
+	else
+	{
+		float myskill = autocvar_skill;
+		float r = myskill * 0.2;
+		r += random();
+		if(r > 0.8 && myskill > 1)
 		{
 			actor.th_pain = tbaby_mitosis;
 			actor.skin = 2;
 			actor.health = 100;
 		}
-		else if(actor.spawnflags & 4)
+		else if(r > 0.5)
 		{
 			actor.th_pain = tbaby_mitosis;
 			actor.skin = 1;
 			actor.health = 60;
 		}
-		else if(actor.spawnflags & 2)
-			actor.skin = 0;
 		else
-		{
-			float myskill = autocvar_skill;
-			float r = myskill * 0.2;
-			r += random();
-			if(r > 0.8 && myskill > 1)
-			{
-				actor.th_pain = tbaby_mitosis;
-				actor.skin = 2;
-				actor.health = 100;
-			}
-			else if(r > 0.5)
-			{
-				actor.th_pain = tbaby_mitosis;
-				actor.skin = 1;
-				actor.health = 60;
-			}
-			else
-				actor.skin = 0;
-		}
+			actor.skin = 0;
 	}
 
     return true;

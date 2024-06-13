@@ -333,11 +333,6 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(attacker.charmed && (IS_PLAYER(targ) || targ == attacker.charmer || targ.charmer == attacker.charmer))
 		return; // no hurting us either!
 
-	// shub kill crash fix.
-	// TODO
-	if(!MP_MG && targ.monsterdef == MON_SHUB && damage < 9999)
-		return;
-
 	if(discharged && StatusEffects_active(STATUSEFFECT_Wetsuit, targ))
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
