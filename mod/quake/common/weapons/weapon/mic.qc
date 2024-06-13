@@ -209,6 +209,7 @@ void W_FireMic(entity this, .entity weaponentity)
 METHOD(Mic, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 10)
 	{
 		if(IS_PLAYER(actor))

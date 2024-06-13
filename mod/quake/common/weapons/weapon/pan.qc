@@ -150,6 +150,7 @@ void W_FirePan(entity this, .entity weaponentity)
 METHOD(Pan, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);

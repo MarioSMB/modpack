@@ -1370,7 +1370,30 @@ METHOD(Spellbook, wr_think, void(entity thiswep, entity actor, .entity weaponent
 	if(actor.spell_shield)
 		actor.spell_shield.nextthink = time + 20;
 
+	if(fire & 2)
+	if(!(time < actor.attack2_finished))
+	{
+		_sound(actor, CH_WEAPON_B, "weapons/page_flip.wav", 1, ATTN_NORM);
+		if(PHYS_INPUT_BUTTON_CROUCH(actor))
+		{
+			actor.(weaponentity).m_frame = 12;
+			actor.(weaponentity).swappingspell = -1;
+			int nextspell = actor.currentspell - 1;
+			if(nextspell < SPELL_FIRST)
+				nextspell = SPELL_LAST;
+			actor.(weaponentity).skin = nextspell; // update skin first so the animation will show the correct spell!
+		}
+		else
+		{
+			actor.(weaponentity).m_frame = 0;
+			actor.(weaponentity).swappingspell = 1;
+		}
+		ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.5); // also prevent primary fire during this time
+		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
+	}
+
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		//player_magic1(actor);

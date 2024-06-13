@@ -113,6 +113,7 @@ void W_FireAxe(entity this, .entity weaponentity)
 METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		float r = random();

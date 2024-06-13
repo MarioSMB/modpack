@@ -324,7 +324,7 @@ void player_stand1(entity this)
 			this.(weaponentity).m_frame += 1;
 			if(this.(weaponentity).m_frame >= 5)
 				this.(weaponentity).m_frame = 0;
-			if(this.view_ofs != '0 0 0' && !this.m_champion.wr_think)
+			if(this.view_ofs != '0 0 0')
 				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 		}
 		if(wep == WEP_SPELLBOOK)
@@ -409,7 +409,7 @@ void player_run(entity this)
 			this.(weaponentity).m_frame += 1;
 			if(this.(weaponentity).m_frame >= 5)
 				this.(weaponentity).m_frame = 0;
-			if(this.view_ofs != '0 0 0' && !this.m_champion.wr_think)
+			if(this.view_ofs != '0 0 0')
 				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 		}
 		if(wep == WEP_SPELLBOOK)

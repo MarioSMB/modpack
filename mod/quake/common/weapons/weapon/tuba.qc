@@ -204,6 +204,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 8)
 	{
 		if(IS_PLAYER(actor))

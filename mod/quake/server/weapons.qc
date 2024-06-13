@@ -1603,74 +1603,20 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 		wep = RandomSelection_chosen_ent;
 	}
 
-	if(!STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.tank && !this.clockwork && !(time < ATTACK_FINISHED(this, weaponentity)))
+	if(!STAT(SKATING, this) && !STAT(SLIDE_ON, this) && !this.tank && !this.clockwork)
 	{
-		makevectors(this.v_angle); // calculate forward angle for velocity
-		
 	// check for attack
 		if(wep != WEP_Null)
 		{
+			makevectors(this.v_angle); // calculate forward angle for velocity
 			if(this.button0 && wep.wr_checkammo1(wep, this, weaponentity))
 			{
 				SuperDamageSound(this);
 				if(!(wep.spawnflags & WEP_FLAG_NOAGGRO)) // allow stealthy slices!
 					W_Attack(this, false);
 			}
-			// TODO: this is even more hacky than what i had but it'll do for now
-			if(this.m_champion && this.m_champion.wr_think && wep == WEP_AXE)
-				this.m_champion.wr_think(wep, this, weaponentity, this.button0);
-			else
-				wep.wr_think(wep, this, weaponentity, this.button0);
+			wep.wr_think(wep, this, weaponentity, this.button0 | (this.button3 << 1));
 		}
-	}
-
-	// TODO: handle secondary attacks properly!
-	if(wep == WEP_PORTAL_GUN && !(time < this.attack2_finished) && this.button3 && !STAT(SLIDE_ON, this))
-	{
-		makevectors(this.v_angle);
-		wep.wr_think(wep, this, weaponentity, 0);
-	}
-
-	if(wep == WEP_BREEGULLBLASTER && !(time < this.attack2_finished) && this.button3 && !(STAT(SLIDE_ON, this)) && !this.clockwork)
-	{
-		STAT(BREEGULL_EGGTYPE, this) += 1;
-		if(STAT(BREEGULL_EGGTYPE, this) > 5)
-			STAT(BREEGULL_EGGTYPE, this) = 0;
-		string snd = "";
-		switch(STAT(BREEGULL_EGGTYPE, this))
-		{
-			default:
-			case 0: snd = "weapons/egg0.wav"; break;
-			case 1: snd = "weapons/egg1.wav"; break;
-			case 2: snd = "weapons/egg2.wav"; break;
-			case 3: snd = "weapons/egg3.wav"; break;
-			case 4: snd = "weapons/egg4.wav"; break;
-			case 5: snd = "weapons/egg5.wav"; break;
-		}
-		_sound(this, CH_WEAPON_B, snd, 1, ATTN_NORM);
-		ATTACK_FINISHED(this, weaponentity) = max(ATTACK_FINISHED(this, weaponentity), time + 0.5); // also prevent primary fire during this time
-		this.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
-	}
-
-	if(wep == WEP_SPELLBOOK && !(time < this.attack2_finished) && this.button3 && !STAT(SLIDE_ON, this))
-	{
-		_sound(this, CH_WEAPON_B, "weapons/page_flip.wav", 1, ATTN_NORM);
-		if(PHYS_INPUT_BUTTON_CROUCH(this))
-		{
-			this.(weaponentity).m_frame = 12;
-			this.(weaponentity).swappingspell = -1;
-			int nextspell = this.currentspell - 1;
-			if(nextspell < SPELL_FIRST)
-				nextspell = SPELL_LAST;
-			this.(weaponentity).skin = nextspell; // update skin first so the animation will show the correct spell!
-		}
-		else
-		{
-			this.(weaponentity).m_frame = 0;
-			this.(weaponentity).swappingspell = 1;
-		}
-		ATTACK_FINISHED(this, weaponentity) = max(ATTACK_FINISHED(this, weaponentity), time + 0.5); // also prevent primary fire during this time
-		this.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
 
 		if (time + this.(weaponentity).weapon_frametime * 0.5 >= this.(weaponentity).weapon_nextthink)

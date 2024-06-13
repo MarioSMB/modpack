@@ -338,7 +338,34 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 
 METHOD(BreegullBlaster, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
+	if(!(fire & 1))
+		actor.(weaponentity).cnt = 0;
+
+	// checking secondary first as a page swap prevents attacking
+	if(fire & 2)
+	if(!(time < actor.attack2_finished))
+	{
+		STAT(BREEGULL_EGGTYPE, actor) += 1;
+		if(STAT(BREEGULL_EGGTYPE, actor) > 5)
+			STAT(BREEGULL_EGGTYPE, actor) = 0;
+		string snd = "";
+		switch(STAT(BREEGULL_EGGTYPE, actor))
+		{
+			default:
+			case 0: snd = "weapons/egg0.wav"; break;
+			case 1: snd = "weapons/egg1.wav"; break;
+			case 2: snd = "weapons/egg2.wav"; break;
+			case 3: snd = "weapons/egg3.wav"; break;
+			case 4: snd = "weapons/egg4.wav"; break;
+			case 5: snd = "weapons/egg5.wav"; break;
+		}
+		_sound(actor, CH_WEAPON_B, snd, 1, ATTN_NORM);
+		ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.5); // also prevent primary fire during this time
+		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
+	}
+
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		if(IS_PLAYER(actor))
@@ -348,8 +375,6 @@ METHOD(BreegullBlaster, wr_think, void(entity thiswep, entity actor, .entity wea
 		float attack_delay = W_BreegullBlaster_AttackRate(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, attack_delay);
 	}
-	else
-		actor.(weaponentity).cnt = 0;
 }
 METHOD(BreegullBlaster, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {

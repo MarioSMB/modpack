@@ -159,6 +159,7 @@ void W_FireMayo(entity this, .entity weaponentity)
 METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 8)
 	{
 		if(IS_PLAYER(actor))

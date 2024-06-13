@@ -123,6 +123,7 @@ void W_FireShock(entity this, .entity weaponentity)
 METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		if(IS_PLAYER(actor))

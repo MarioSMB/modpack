@@ -191,14 +191,15 @@ void PortalFire(entity this, int fire, .entity weaponentity)
 METHOD(PortalGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.8); // before PortalFire so it can be overridden!
 		PortalFire(actor, 1, weaponentity);
 	}
 
-	if(actor.button3)
-	if(time > actor.attack2_finished)
+	if(fire & 2)
+	if(!(time < actor.attack2_finished))
 	{
 		actor.attack2_finished = time + 0.8;
 		PortalFire(actor, 2, weaponentity);

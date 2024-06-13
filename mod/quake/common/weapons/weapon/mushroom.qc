@@ -163,6 +163,7 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 METHOD(Mushroom, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		if(IS_PLAYER(actor))

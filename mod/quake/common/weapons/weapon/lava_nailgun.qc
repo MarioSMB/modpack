@@ -54,6 +54,7 @@ void W_FireLavaSpikes(entity this, float ox, .entity weaponentity)
 METHOD(LavaNailgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		actor.lava_nailgun_fired = true;

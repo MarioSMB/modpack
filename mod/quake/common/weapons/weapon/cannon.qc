@@ -248,6 +248,7 @@ void W_DropCannon(entity this, .entity weaponentity)
 METHOD(Cannon, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		if(IS_PLAYER(actor))

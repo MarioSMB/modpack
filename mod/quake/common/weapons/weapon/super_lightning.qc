@@ -238,6 +238,7 @@ void W_FireSuperLightning(entity this, .entity weaponentity)
 METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		actor.(weaponentity).misc_bulletcounter = 0;

@@ -118,6 +118,7 @@ void W_FireRipper(entity this, .entity weaponentity)
 METHOD(Ripper, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		W_FireRipper(actor, weaponentity);

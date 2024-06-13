@@ -72,6 +72,7 @@ void W_FireLightning(entity this, .entity weaponentity)
 METHOD(Thunderbolt, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
 		W_Thunderbolt_Attack(actor.(weaponentity));

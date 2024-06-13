@@ -63,6 +63,7 @@ void HIP_FireLaser(entity this, float stat, .entity weaponentity)
 METHOD(LaserCannon, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 		wep_lasercannon_laser1(actor.(weaponentity));
 }
