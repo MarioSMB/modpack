@@ -309,6 +309,9 @@ void player_stand1(entity this)
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
+		// TODO: clean up this mess
+		if(this.m_transform || STAT(CANNON, this) || this.tank)
+			break;
 		.entity weaponentity = weaponentities[slot];
 		Weapon wep = this.(weaponentity).m_weapon;
 
@@ -394,6 +397,9 @@ void player_run(entity this)
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
+		// TODO: clean up this mess
+		if(this.m_transform || STAT(CANNON, this) || this.tank)
+			break;
 		.entity weaponentity = weaponentities[slot];
 		Weapon wep = this.(weaponentity).m_weapon;
 
@@ -469,6 +475,15 @@ void player_run(entity this)
 						_sound(this, CH_VOICE, "misc/clockwork_footstep1.wav", 0.5, ATTN_NORM);
 					else
 						_sound(this, CH_VOICE, "misc/clockwork_footstep2.wav", 0.5, ATTN_NORM);
+				}
+				else if(this.m_champion == CHAMPION_Pepsiman) // TODO: allow champions to customise footsteps
+				{
+					if(r < 0.33)
+					   _sound(this, CH_VOICE, "player_pepsiman/foot1.wav", 0.5, ATTN_NORM);
+					else if(r < 0.66)
+					   _sound(this, CH_VOICE, "player_pepsiman/foot2.wav", 0.5, ATTN_NORM);
+					else
+					   _sound(this, CH_VOICE, "player_pepsiman/foot3.wav", 0.5, ATTN_NORM);
 				}
 				else
 				{

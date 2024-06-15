@@ -58,7 +58,7 @@ void Steve_PlaceBlock(entity this)
 	setsize(block, '-16 -16 0', '16 16 32');
 	set_movetype(block, MOVETYPE_NONE);
 	block.takedamage = DAMAGE_AIM;
-	block.health = 25;
+	block.health = 5;
 	setthink(block, steve_block_break);
 	block.nextthink = time + 30;
 	block.th_die = steve_block_die;

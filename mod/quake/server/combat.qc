@@ -396,7 +396,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 // save damage based on the target's armor level
 
 	float save = ceil(targ.armortype * damage);
+	// TODO: status effect deathtype flag?
 	if(DEATH_IS(deathtype, DEATH_DROWN) || DEATH_IS(deathtype, DEATH_POISONED) || DEATH_IS(deathtype, DEATH_BURNING) || DEATH_IS(deathtype, DEATH_GENERIC))
+		save = 0;
+	if(deathtype & HITTYPE_ARMORPIERCE)
 		save = 0;
 
 	float take = ceil(damage-save);

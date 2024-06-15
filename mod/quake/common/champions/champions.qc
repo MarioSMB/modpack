@@ -161,7 +161,7 @@ void QCC_UpdatePlayer(entity this)
 			.entity weaponentity = weaponentities[slot];
 			if(this.(weaponentity))
 			{
-				wep_set_anim(this.(weaponentity), 1, w_ready);
+				wep_set_anim(this.(weaponentity), 0, w_ready);
 				ATTACK_FINISHED(this, weaponentity) = time + 1;
 			}
 		}

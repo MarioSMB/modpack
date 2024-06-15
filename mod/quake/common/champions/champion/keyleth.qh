@@ -70,7 +70,7 @@ PRECACHE(Keyleth)
 
     precache_sound("demon/dhit2.wav");
 
-    precache_model("progs/v_punch.mdl");
+    precache_model("progs/v_keypunch.mdl");
 #endif
 }
 #endif
@@ -89,9 +89,7 @@ CLASS(Keyleth, Champions)
     ATTRIB(Keyleth, m_viewofs, vector, '0 0 30');
     ATTRIB(Keyleth, qcc_movespeed, float, 1.1);
     ATTRIB(Keyleth, qcc_jumpheight, float, 1.15);
-    ATTRIB(Keyleth, m_mins, vector, '-16 -16 -24');
-    ATTRIB(Keyleth, m_maxs, vector, '16 16 45');
-    ATTRIB(Keyleth, qcc_meleename, string, "punch");
+    ATTRIB(Keyleth, qcc_meleename, string, "keypunch");
 #ifdef GAMEQC
     ATTRIB(Keyleth, m_model, Model, MDL_Keyleth);
     ATTRIB(Keyleth, m_model_head, Model, MDL_Null);

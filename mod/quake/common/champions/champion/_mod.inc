@@ -16,6 +16,7 @@
 #include "mario.qc"
 #include "mime.qc"
 #include "nyx.qc"
+#include "pepsiman.qc"
 #include "ranger.qc"
 #include "sorlag.qc"
 #include "steve.qc"

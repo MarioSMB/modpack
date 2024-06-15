@@ -16,6 +16,7 @@
 #include "mario.qh"
 #include "mime.qh"
 #include "nyx.qh"
+#include "pepsiman.qh"
 #include "ranger.qh"
 #include "sorlag.qh"
 #include "steve.qh"

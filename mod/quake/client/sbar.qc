@@ -1216,10 +1216,62 @@ void Sbar_DrawShieldOverlay()
 	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '1 0 0', bound(0, 0.5 * (STAT(SHIELD_TIME) - time), 0.025), DRAWFLAG_NORMAL);
 }
 
+void Sbar_DrawChampionNotice()
+{
+	float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
+	drawfont = 8; // FONT_USER
+
+	vector panel_pos = vec2(0.45 * vid_conwidth, 0.85 * vid_conheight);
+	vector panel_size = vec2(0.09 * vid_conwidth, 0.09 * vid_conheight);
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	// always force 3:1 aspect
+	vector newSize = '0 0 0';
+	if(mySize.x/mySize.y > 3)
+	{
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
+
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
+	}
+	else
+	{
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
+
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
+	}
+	mySize = newSize;
+
+	string s;
+	s = sprintf(_("Champion: %s"), csqcplayer.m_champion.m_name);
+	drawstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	s = sprintf(_("Press %s to swap"), getcommandkey(_("quickmenu"), "quickmenu"));
+	drawstring_aspect(pos + eY * (4/8) * mySize.y, s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	drawfont = oldfont;
+}
+
+entity oldchampion;
+float champion_messagetime;
 void Sbar_DrawChampionOverlay()
 {
+	if(csqcplayer && csqcplayer.m_champion != oldchampion && !csqcplayer.m_champion.qcc_noselect)
+	{
+		oldchampion = csqcplayer.m_champion;
+		champion_messagetime = time + 3;
+	}
 	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_overlay)
 		csqcplayer.m_champion.m_overlay(csqcplayer.m_champion);
+
+	if(csqcplayer.m_champion && time < champion_messagetime)
+	{
+		Sbar_DrawChampionNotice();
+	}
 }
 
 void Sbar_Draw()

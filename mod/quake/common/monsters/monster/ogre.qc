@@ -355,6 +355,7 @@ void ogre_die3(entity this)
 		this.ammo_multi_rockets = 2;
 	else
 		this.ammo_rockets = 2;
+	STAT(WEAPONS, this) = WEP_CHAINSAW.m_wepset;
 	DropBackpack(this);
 }
 void ogre_die2(entity this) { set_animofs(this, anim_ogre_death, 2, ogre_die3); }
@@ -379,6 +380,8 @@ void ogre_bdie3(entity this)
 		this.ammo_multi_rockets = 2;
 	else
 		this.ammo_rockets = 2;
+	// TODO: make optional?
+	STAT(WEAPONS, this) = WEP_CHAINSAW.m_wepset;
 	DropBackpack(this);
 }
 void ogre_bdie2(entity this) { set_animofs(this, anim_ogre_bdeath, 2, ogre_bdie3); ai_forward(this, 5); }

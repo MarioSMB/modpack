@@ -134,7 +134,7 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 	mushroom.dphitcontentsmask = DPCONTENTS_SOLID;
 	set_movetype(mushroom, MOVETYPE_TOSS);
 	mushroom.solid = SOLID_TRIGGER;
-	mushroom.healamount = 15;
+	mushroom.healamount = 10;
 	mushroom.healtype = 0;
 	mushroom.noise = "items/r_item1.wav";
 	mushroom.cnt = time + 0.33; // prevent picking up health instantly
@@ -170,7 +170,7 @@ METHOD(Mushroom, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_ThrowMushroom(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);
+		weapon_prepareattack(thiswep, actor, weaponentity, 1.5);
 	}
 }
 METHOD(Mushroom, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

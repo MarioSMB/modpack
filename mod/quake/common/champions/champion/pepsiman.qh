@@ -1,0 +1,74 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Pepsiman, "progs/player_pepsiman.mdl");
+
+MODEL(CAN, "progs/can.md3");
+
+SOUND(Pepsiman_Pain1, "player_pepsiman/pain1");
+SOUND(Pepsiman_Pain2, "player_pepsiman/pain2");
+Sound SND_Pepsiman_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Pepsiman_Pain1.m_id + rint(random() * 1));
+}
+
+SOUND(Pepsiman_Death1, "player_pepsiman/death1");
+SOUND(Pepsiman_Death2, "player_pepsiman/death2");
+Sound SND_Pepsiman_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Pepsiman_Death1.m_id + rint(random() * 1));
+}
+
+PRECACHE(Pepsiman)
+{
+#ifdef SVQC
+    precache_sound("player_pepsiman/plyrjmp8.wav");       // player jump
+    precache_sound("player_pepsiman/land.wav");           // player landing
+    precache_sound("player_pepsiman/land2.wav");      // player hurt landing
+    precache_sound("player_pepsiman/drown1.wav");     // drowning pain
+    precache_sound("player_pepsiman/drown2.wav");     // drowning pain
+    precache_sound("player_pepsiman/gasp1.wav");      // gasping for air
+    precache_sound("player_pepsiman/gasp2.wav");      // taking breath
+    precache_sound("player_pepsiman/h2odeath.wav");       // drowning death
+
+    precache_sound("player_pepsiman/pain1.wav");
+    precache_sound("player_pepsiman/pain2.wav");
+
+    precache_sound("player_pepsiman/death1.wav");
+    precache_sound("player_pepsiman/death2.wav");
+
+    precache_sound("player_pepsiman/axhit1.wav");
+
+    precache_sound("player_pepsiman/lburn1.wav");     // lava burn
+    precache_sound("player_pepsiman/lburn2.wav");     // lava burn
+
+    precache_sound("player_pepsiman/start.wav");
+
+    precache_sound("player_pepsiman/can_roll.wav");
+    precache_sound("player_pepsiman/foot1.wav");
+    precache_sound("player_pepsiman/foot2.wav");
+    precache_sound("player_pepsiman/foot3.wav");
+#endif
+}
+#endif
+CLASS(Pepsiman, Champions)
+    ATTRIB(Pepsiman, netname, string, "pepsiman");
+    ATTRIB(Pepsiman, m_name, string, "Pepsiman");
+    ATTRIB(Pepsiman, m_hidden, bool, true);
+    ATTRIB(Pepsiman, qcc_movespeed, float, 1.33);
+#ifdef GAMEQC
+    ATTRIB(Pepsiman, m_model, Model, MDL_Pepsiman);
+    ATTRIB(Pepsiman, m_model_head, Model, MDL_Null);
+    ATTRIB(Pepsiman, m_soundpath, string, "player_pepsiman/");
+    METHOD(Pepsiman, m_sound_pain, string()) { return SND(Pepsiman_Pain_Random()); }
+    METHOD(Pepsiman, m_sound_death, string()) { return SND(Pepsiman_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Pepsiman, message, string, "PEPSIMAAAAAAAN");
+#endif
+ENDCLASS(Pepsiman)
+REGISTER_CHAMPION(Pepsiman, NEW(Pepsiman));
+
+#ifdef SVQC
+.bool pepsiman_cannon;
+#endif
