@@ -16,7 +16,7 @@ SOUND(MON_JIM_SIGHT, "jim/sight1");
 CLASS(Jim, Monster)
     ATTRIB(Jim, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_METAL);
     ATTRIB(Jim, m_mins, vector, '-16 -16 -24');
-    ATTRIB(Jim, m_maxs, vector, '16 16 32');
+    ATTRIB(Jim, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC
     ATTRIB(Jim, m_model, Model, MDL_MON_JIM);
     ATTRIB(Jim, m_sound, Sound, SND_MON_JIM_SIGHT);
