@@ -535,9 +535,9 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				print_to(caller, "^1Vote calling is not allowed.");
 			}
-			else if (!autocvar_sv_vote_gamestart && time < 30)
+			else if (!autocvar_sv_vote_gamestart && time < 10)
 			{
-				print_to(caller, "^1Vote calling is not allowed within 30 seconds of the map loading.");
+				print_to(caller, "^1Vote calling is not allowed within 10 seconds of the map loading.");
 			}
 			else if (vote_called)
 			{

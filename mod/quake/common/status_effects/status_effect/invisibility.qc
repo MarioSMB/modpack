@@ -5,7 +5,7 @@ void invis_loseaggro(entity this)
 {
     FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
     {
-        if(it.enemy == this && it.health > 0 && !it.elec)
+        if(it.enemy == this && it.health > 0 && !it.elec && !(it.effects & EF_NODRAW))
             invis_enemy_dropaggro(it);
     });
 }

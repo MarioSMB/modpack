@@ -64,6 +64,8 @@ void changelevel_touch(entity this, entity toucher)
 	// simply don't react if a non-player triggers it
 	if(!IS_PLAYER(toucher))
 		return;
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 	if(this.customflags & CFL_LOCKED)
 		return;
 
@@ -144,6 +146,12 @@ void changelevel_touch(entity this, entity toucher)
 	this.nextthink = time;
 }
 
+void changelevel_use(entity this, entity actor, entity trigger)
+{
+	this.active = ACTIVE_ACTIVE;
+	force_retouch = 2;
+}
+
 /*
 QUAKED trigger_changelevel (0.5 0.5 0.5) ? NO_INTERMISSION
 When the player touches this, he gets sent to the map listed in the "map" variable.
@@ -158,6 +166,14 @@ spawnfunc(trigger_changelevel)
 	}
 
 	this.killstring = " tried to leave";
+
+	if(this.targetname && this.targetname != "")
+	{
+		this.use = changelevel_use;
+		this.active = ACTIVE_NOT;
+	}
+	else
+		this.active = ACTIVE_ACTIVE;
 
 	InitTrigger(this);
 	settouch(this, changelevel_touch);

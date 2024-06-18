@@ -1372,6 +1372,7 @@ void sigil_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	this.model = string_null;
+	this.noise = string_null; // so triggers don't play it again
 	this.classname = ""; // so rune doors won't find it
 	if(substring(world.model, 0, 10) == "maps/banjo")
 		serverflags |= (this.spawnflags);

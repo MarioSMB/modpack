@@ -571,12 +571,47 @@ void summon_icefield(entity this)
 	_sound(field, CHAN_AUTO, "weapons/ice_shatter.wav", 1, ATTN_STATIC);
 }
 
-void W_Spell_IceCannon(entity this, vector spot)
+void W_Spell_IceCannon(entity this, .entity weaponentity)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_FIRE, EFFECT_RUNE_PUFF_BLUE, SPELL_ICECANNON);
-	setthink(rune, summon_icefield);
-	rune.nextthink = time + 1.5;
-	rune.colormod = '0 0.25 1';
+	if(STAT(MANA, this) < SPELL_COST_ICECANNON)
+		return;
+
+	if(this.fly_sound < time)
+	{
+		this.fly_sound = time + 1.5;
+		_sound(this, CH_WEAPON_SINGLE, "ambience/windfly.wav", 1, ATTN_NORM);
+	}
+
+	W_TakeMana(this, SPELL_COST_ICECANNON);
+	ATTACK_FINISHED(this, weaponentity) = time + 0.1;
+
+	makevectors(this.v_angle);
+
+	float therange = 300;
+	vector org = CENTER_OR_VIEWOFS(this) - '0 0 8';
+	vector end = org + v_forward * therange;
+
+	te_particlecube(org - '8 8 8', org + '8 8 8', v_forward * 128, 20, 7, 0, 0.66);
+
+	tracebox(org, '-8 -8 -8', '8 8 8', end, MOVE_NORMAL, this);
+
+	entity targ = trace_ent;
+
+	if(!targ || !targ.takedamage || targ.health <= 0)
+		return;
+	if(!((IS_PLAYER(targ) && !autocvar_g_friendlyfire_virtual) || IS_MONSTER(targ)))
+		return;
+
+	T_Damage(targ, this, this, 5, WEP_SPELLBOOK.m_id);
+	StatusEffects_apply(STATUSEFFECT_Slowness, targ, time + 3, 0);
+	if(!(targ.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))
+	{
+		float pushforce = 100 / vlen(targ.maxs - targ.mins);
+
+		targ.velocity = v_forward * (256 * pushforce);
+		//targ.velocity_z = (64 * pushforce);
+		UNSET_ONGROUND(targ);
+	}
 }
 
 void summon_vorelings(entity this)
@@ -1264,20 +1299,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 		}	
 		case SPELL_ICECANNON:
 		{
-			if(STAT(MANA, this) < SPELL_COST_ICECANNON)
-				return;
-			if(!rune_checklimit(this, SPELL_ICECANNON))
-				return;
-			spot = rune_getspot(this, weaponentity);
-			if(spot == '0 0 0')
-			{
-				// TODO: alert the caster?
-				ATTACK_FINISHED(this, weaponentity) = time + 0.2; // slight delay to avoid server spam
-				return;
-			}
-			W_TakeMana(this, SPELL_COST_ICECANNON);
-			ATTACK_FINISHED(this, weaponentity) = time + 0.66;
-			W_Spell_IceCannon(this, spot);
+			W_Spell_IceCannon(this, weaponentity);
 			break;
 		}	
 		case SPELL_VORELING:
@@ -1300,7 +1322,7 @@ void W_FireSpellbook(entity this, .entity weaponentity)
 		}
 		case SPELL_BONESHARD:
 		{
-			// attack delays handled by the spell itthis
+			// attack delays handled by the spell itself
 			W_Spell_BoneShard(this, weaponentity);
 			break;
 		}

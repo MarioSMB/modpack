@@ -177,6 +177,9 @@ void skullw_blink(entity this)
 	vector oldpos = this.origin;
 	entity targ = this.enemy;
 
+	if(!targ || wasfreed(targ))
+		targ = this; // just use our own origin so we don't teleport somewhere silly TODO: abort teleport?
+
 	// enable for random location teleportation (may break maps)
 #if 0
 	vector extrasize = '1 1 1' * 1200;
