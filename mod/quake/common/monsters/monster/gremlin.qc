@@ -127,8 +127,10 @@ bool GremlinAttemptWeaponSteal(entity this)
 			break;
 		}
 	}
-	victim.(weaponentity).m_weapon = w_getbestweapon(this, weaponentity);
-	W_SetCurrentAmmo(victim);
+	//victim.(weaponentity).m_weapon = w_getbestweapon(this, weaponentity);
+	//W_SetCurrentAmmo(victim);
+	ATTACK_FINISHED(victim, weaponentity) = time + 0.5;
+	W_SwitchWeapon(victim, w_getbestweapon(victim, weaponentity), weaponentity);
 
 	// tag the gremlin as having stolen a weapon
 	this.stoleweapon = true;
@@ -308,23 +310,22 @@ void gremlin_run(entity this, float dist)
 
 	if(autocvar_sv_quake_gremlin_new)
 	{
-		if(time > this.attack_finished)
-			this.button0 = false;
-
 		// copy of W_WeaponFrame logic
 		.entity weaponentity = weaponentities[0];
 		Weapon wep = this.(weaponentity).m_weapon;
 		this.(weaponentity).weapon_frametime = frametime;
 
+		if(time > ATTACK_FINISHED(this, weaponentity))
+			this.button0 = false;
+
 		vector dir = normalize(this.enemy.origin - this.origin);
 		this.v_angle = vectoangles(dir);
-		if(this.stoleweapon && this.enemy && !(time < ATTACK_FINISHED(this, weaponentity)))
+		if(this.stoleweapon && this.enemy)
 		{
-			makevectors(this.v_angle); // calculate forward angle for velocity
-				
 			// check for attack
 			if(wep != WEP_Null)
 			{
+				makevectors(this.v_angle); // calculate forward angle for velocity
 				if(this.button0 && wep.wr_checkammo1(wep, this, weaponentity))
 				{
 					SuperDamageSound(this);
