@@ -146,8 +146,8 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 		return false;
 	if(this.clockwork)
 		return false;
-	if(this.m_transform)
-		return false;
+	if(this.m_transform && this.m_transform.qcc_noselect)
+		return false; // TODO
 	if(this.(weaponentity).m_weapon != w)
 	{
 		if(client_hasweapon(this, w, weaponentity, true, true))

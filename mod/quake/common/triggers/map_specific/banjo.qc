@@ -42,7 +42,8 @@ void target_transform_use(entity this, entity actor, entity trigger)
 			break;
 		});
 		// TODO: warn if one isn't found?
-		return;
+		if(!targ)
+			return;
 	}
 
 	// abort if player is already transformed by something else
