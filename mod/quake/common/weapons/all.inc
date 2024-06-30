@@ -38,6 +38,8 @@
 #include "weapon/ocarina.qh"
 #include "weapon/banjo.qh"
 #include "weapon/mushroom.qh"
+#include "weapon/crossbow.qh"
+#include "weapon/bongos.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

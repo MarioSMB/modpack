@@ -38,3 +38,5 @@
 #include "ocarina.qc"
 #include "banjo.qc"
 #include "mushroom.qc"
+#include "crossbow.qc"
+#include "bongos.qc"

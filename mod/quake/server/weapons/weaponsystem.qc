@@ -111,7 +111,7 @@ void weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, fl
 			arate *= actor.m_champion.qcc_attackrate;
 		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
 
-		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor))
+		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor) && !(actor.weaponentity.m_weapon.spawnflags & WEP_FLAG_NOALTERNATE))
 		{
 			int slot = weaponslot(weaponentity);
 			for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot)

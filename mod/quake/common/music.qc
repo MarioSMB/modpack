@@ -152,6 +152,8 @@ void CreatureFrame_Music(entity this)
 		float r = 100 + (12.5 * pitchnote);
 		if(playoctave)
 			r *= (2 ** playoctave);
+		if(this.(weaponentity).m_weapon.m_nopitch)
+			r = 100 / bound(0.8, random() * 2, 1.3);
 		Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 		if(msound && msound != SND_Null)
 			sound7(this, CH_AMBIENT_SINGLE, Sound_fixpath(msound), 1, ATTN_NORM, r, 0);

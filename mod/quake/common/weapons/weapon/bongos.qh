@@ -1,0 +1,29 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(BONGOS_FIRE, "weapons/bongos_fire");
+
+SOUND(BONGOS_MUSICNOTE, "weapons/bongos_fire");
+#endif
+
+CLASS(Bongos, Weapon)
+/* ammotype  */ ATTRIB(Bongos, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Bongos, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Bongos, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Bongos, aflag, int, 5);
+/* modelname */ ATTRIB(Bongos, mdl, string, "bongos");
+/* crosshair */ ATTRIB(Bongos, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Bongos, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Bongos, w_crosshair_color, vector, '0.5 0.35 0');
+/* wepimg    */ ATTRIB(Bongos, model2, string, "bongos");
+/* refname   */ ATTRIB(Bongos, netname, string, "bongos");
+/* wepname   */ ATTRIB(Bongos, m_name, string, _("Bongos"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Bongos, m_musicnote, Sound, SND_BONGOS_MUSICNOTE);
+/* pitch     */ ATTRIB(Bongos, m_nopitch, bool, true);
+#endif
+
+ENDCLASS(Bongos)
+REGISTER_WEAPON(BONGOS, NEW(Bongos));
+
+SPAWNFUNC_WEAPON(weapon_bongos, WEP_BONGOS)

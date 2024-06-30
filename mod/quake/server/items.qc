@@ -762,6 +762,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_SHELLS;
 				break;
 			}
+			case WEP_BONGOS:
+			{
+				if(random() > 0.33)
+					mytype = IT_SHELLS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;

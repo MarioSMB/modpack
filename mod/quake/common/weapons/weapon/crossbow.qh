@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(Crossbow, Weapon)
+/* ammotype  */ ATTRIB(Crossbow, ammo_type, int, IT_NAILS);
+/* impulse   */ ATTRIB(Crossbow, impulse, int, 5);
+/* spawnflags*/ ATTRIB(Crossbow, spawnflags, int, WEP_FLAG_DUALWIELD | WEP_FLAG_NOALTERNATE);
+/* ammo */      ATTRIB(Crossbow, aflag, int, 30);
+/* modelname */ ATTRIB(Crossbow, mdl, string, "crossbow");
+/* crosshair */ ATTRIB(Crossbow, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(Crossbow, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Crossbow, w_crosshair_color, vector, '1 0.75 0');
+/* wepimg    */ ATTRIB(Crossbow, model2, string, "crossbow");
+/* refname   */ ATTRIB(Crossbow, netname, string, "crossbow");
+/* wepname   */ ATTRIB(Crossbow, m_name, string, _("Crossbow"));
+
+ENDCLASS(Crossbow)
+REGISTER_WEAPON(CROSSBOW, NEW(Crossbow));
+
+SPAWNFUNC_WEAPON(weapon_crossbow, WEP_CROSSBOW)
+
+#ifdef SVQC
+void W_FireCrossbow(entity this, float ox, .entity weaponentity);
+#endif

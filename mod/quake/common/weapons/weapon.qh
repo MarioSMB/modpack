@@ -47,6 +47,8 @@ CLASS(Weapon, Object)
 #ifdef GAMEQC
     /** M: sound SND_id_MUSICNOTE */
     ATTRIB(Weapon, m_musicnote, entity);
+    /** M: pitch     : whether this weapon should have no pitch adjustments as an instrument */
+    ATTRIB(Weapon, m_nopitch, bool, false);
 #endif
 
 
@@ -80,6 +82,7 @@ const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (muta
 const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
 #endif
+const int WEP_FLAG_NOALTERNATE   =  BIT(0); // weapon is always fired at the same rate even when dual wielded
 const int WEP_FLAG_MANA          =  BIT(1); // weapon uses mana instead of ammo
 const int WEP_FLAG_DUALWIELD     =  BIT(2); // weapon can be dual wielded
 const int WEP_FLAG_NODUAL        =  BIT(3); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything

@@ -17,7 +17,7 @@ CLASS(LavaNailgun, Weapon)
 ENDCLASS(LavaNailgun)
 REGISTER_WEAPON(LAVA_NAILGUN, NEW(LavaNailgun));
 
-//SPAWNFUNC_WEAPON(weapon_shotgun, WEP_LAVA_NAILGUN)
+//SPAWNFUNC_WEAPON(lava_nailgun, WEP_LAVA_NAILGUN)
 
 #ifdef SVQC
 void W_FireLavaSpikes(entity this, float ox, .entity weaponentity);
