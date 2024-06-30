@@ -3,7 +3,7 @@
 CLASS(Crossbow, Weapon)
 /* ammotype  */ ATTRIB(Crossbow, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Crossbow, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Crossbow, spawnflags, int, WEP_FLAG_DUALWIELD | WEP_FLAG_NOALTERNATE);
+/* spawnflags*/ ATTRIB(Crossbow, spawnflags, int, WEP_FLAG_DUALWIELD | WEP_FLAG_NOALTERNATE | WEP_FLAG_HITUNDEAD);
 /* ammo */      ATTRIB(Crossbow, aflag, int, 30);
 /* modelname */ ATTRIB(Crossbow, mdl, string, "crossbow");
 /* crosshair */ ATTRIB(Crossbow, w_crosshair, string, "gfx/crosshairuzi");
