@@ -299,6 +299,8 @@ void MineExplode(entity this)
 
 	te_explosion(this.origin);
 
+	settouch(this, func_null);
+
 	_sound(this, CHAN_BODY, "tank/minedet.wav", 1, ATTN_NORM);
 
 	particle(this.origin, '0 0 0', 0, 255);
@@ -310,7 +312,9 @@ void MineExplodeTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner || toucher.owner == this.owner || toucher == this.owner.tank || (IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual))
 		return;
-	MineExplode(this);
+	setthink(this, MineExplode);
+	this.nextthink = time;
+	settouch(this, func_null);
 }
 
 void MineArmedThink(entity this)
@@ -357,7 +361,9 @@ void MineLand(entity this, entity toucher)
 
 	if(toucher && toucher.takedamage && toucher.health > 0 && (!IS_PLAYER(toucher) || !autocvar_g_friendlyfire_virtual))
 	{
-		MineExplode(this);
+		setthink(this, MineExplode);
+		this.nextthink = time;
+		settouch(this, func_null);
 		return;
 	}
 
