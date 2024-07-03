@@ -105,7 +105,9 @@ void S_Explode(entity this)
 	this.avelocity_y = crandom()*360;
 	this.avelocity_z = crandom()*360;
 
-	SE_Exp1(this);
+	setthink(this, SE_Exp1);
+	this.nextthink = time;
+	settouch(this, func_null);
 }
 
 void T_BRocketTouch(entity this, entity toucher)

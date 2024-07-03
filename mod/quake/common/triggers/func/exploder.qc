@@ -99,8 +99,8 @@ void multi_explosion(vector loc, float rad, float damage, float dur, float pause
 	temp.absmin = temp.origin - (rad * '1 1 1');
 	temp.absmax = temp.origin + (rad * '1 1 1');
 	setthink(temp, multi_exploder_fire);
+	temp.nextthink = time;
 	temp.volume = vol;
-	multi_exploder_fire(temp);
 }
 
 void multi_exploder_use(entity this, entity actor, entity trigger)
