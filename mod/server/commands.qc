@@ -211,13 +211,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 			print_to(player, "Entity doesn't exist");
 			return true;
 		}
-		print_to(player, "Info for entity ", ent.classname, ":");
+		print_to(player, strcat("Info for entity ", ent.classname, ":"));
 		vector lists = ent.il_lists;
 		if (lists) {
 			for (int i = 0; i < IL_MAX; ++i) {
 				IntrusiveList list = il_links[i];
 				if ((lists & list.il_listmask) && IL_CONTAINS(list, ent)) {
-					print_to(player, "Part of ", vtos(list.il_listmask), " ", etos(list));
+					print_to(player, strcat("Part of ", vtos(list.il_listmask), " ", etos(list)));
 				}
 			}
 		}
