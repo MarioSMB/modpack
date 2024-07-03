@@ -223,6 +223,17 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 		}
 		return true;
 	}
+
+	if(cmd_name == "checklinks")
+	{
+		print_to(player, "Listing every il_link entity");
+		for (int i = 0; i < IL_MAX; ++i)
+		{
+			IntrusiveList list = il_links[i];
+			print_to(player, strcat("#", ftos(i), ": ", ((list) ? etos(list) : "empty")));
+		}
+		return true;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
