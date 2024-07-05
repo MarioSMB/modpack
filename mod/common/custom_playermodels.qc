@@ -132,7 +132,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 {
-	if(autocvar_sv_allow_customplayermodels && !g_overkill)
+	if((autocvar_sv_allow_customplayermodels && !g_overkill) || autocvar_sv_allow_customplayermodels == 2)
 	{
 		entity player = M_ARGV(2, entity);
 #define ALLOWED(d) (models_allowed & MODELS_##d)
