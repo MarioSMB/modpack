@@ -91,8 +91,8 @@ METHOD(Mime, m_cannon_land, bool(Champions this, entity actor))
 
 METHOD(Mime, m_condition, bool(Champions this, entity actor))
 {
-	if(autocvar_sv_allow_customplayermodels_silent == "")
+	if(autocvar_sv_allow_customplayermodels_mime == "")
 		return true;
-	return !PlayerInList(actor, autocvar_sv_allow_customplayermodels_silent);
+	return !PlayerInList(actor, autocvar_sv_allow_customplayermodels_mime);
 }
 #endif

@@ -67,7 +67,7 @@ ENDCLASS(Mime)
 REGISTER_CHAMPION(Mime, NEW(Mime));
 
 #ifdef SVQC
-string autocvar_sv_allow_customplayermodels_silent = "";
+string autocvar_sv_allow_customplayermodels_mime = "";
 
 .bool mime_cannon;
 #endif

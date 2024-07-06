@@ -213,8 +213,7 @@ bool PlayerInList(entity player, string list)
 	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
-// defined by mime champion
-//string autocvar_sv_allow_customplayermodels_silent = "";
+string autocvar_sv_allow_customplayermodels_silent = "";
 
 string get_playermodel(entity this)
 {
