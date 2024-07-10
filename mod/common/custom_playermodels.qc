@@ -158,6 +158,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			cpmodels_UpdateWeaponSkin(player, 6);
 		}
 
+		if(CS_CVAR(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
+		{
+			M_ARGV(0, string) = "models/player/rosalina.dpm";
+			cpmodels_UpdateWeaponSkin(player, 2);
+		}
+
 		if(CS_CVAR(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			M_ARGV(0, string) = "models/player/nexus.zym";
 
@@ -167,13 +173,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(CS_CVAR(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
-			{
-				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
-					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here TODO this is a model issue, should be fixed there!
-				M_ARGV(0, string) = "models/player/rosalina.dpm";
-				cpmodels_UpdateWeaponSkin(player, 2);
-			}
 			if(CS_CVAR(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 			{
 				M_ARGV(0, string) = "models/player/renamon.iqm";
@@ -200,7 +199,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 				cpmodels_UpdateWeaponSkin(player, 5);
 			}
 		}
-		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
+		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/iggy.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
@@ -219,7 +218,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(CS_CVAR(player).cvar_cl_model == "goaty" && ALLOWED(GOATY))
 				M_ARGV(0, string) = "models/player/goat.dpm";
 		}
-		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
