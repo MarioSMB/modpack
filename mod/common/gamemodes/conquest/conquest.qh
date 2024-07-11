@@ -21,7 +21,7 @@ CLASS(Conquest, Gametype)
     METHOD(Conquest, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "conquest_controlpoint")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
     METHOD(Conquest, m_isTwoBaseMode, bool())
     {

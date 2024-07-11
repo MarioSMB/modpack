@@ -8,7 +8,7 @@ CLASS(Snafu, Gametype)
     METHOD(Snafu, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "snafu_tadpole")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
 ENDCLASS(Snafu)
 REGISTER_GAMETYPE(SNAFU, NEW(Snafu));

@@ -8,7 +8,7 @@ CLASS(Runematch, Gametype)
     METHOD(Runematch, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "runematch_spawn_point")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
     METHOD(Runematch, m_setTeams, void(string sa))
     {
@@ -21,7 +21,7 @@ CLASS(Runematch, Gametype)
     METHOD(Runematch, m_isForcedSupported, bool(Gametype this))
     {
         // force all DM maps to work in runematch?!
-        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+        if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
             return true;
         return false;
     }
