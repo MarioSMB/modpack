@@ -63,7 +63,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
 		{
 			if(autocvar_g_player_crush_sound)
-				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASEVOICE, ATTN_NORM);
 			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 #endif
@@ -93,7 +93,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 			if(autocvar_g_player_crush_sound)
-				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASEVOICE, ATTN_NORM);
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 	#endif
@@ -122,7 +122,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 			if(autocvar_g_player_crush_sound)
-				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASEVOICE, ATTN_NORM);
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 	#endif
