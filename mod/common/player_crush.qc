@@ -9,6 +9,11 @@ AUTOCVAR(g_player_crush_damage, float, 200, "");
 AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
 AUTOCVAR(g_player_crush_bounce, float, 300, "Bounce height in advanced trace mode");
 AUTOCVAR(g_player_crush_bounce_jump, float, 600, "Bounce height while holding jump in advanced trace mode");
+AUTOCVAR(g_player_crush_sound, bool, false, "Play boowip sound");
+#endif
+
+#ifdef GAMEQC
+SOUND(GOOMBA, "misc/goomba");
 #endif
 
 REGISTER_STAT(PLAYER_CRUSH, bool, autocvar_g_player_crush)
@@ -56,7 +61,11 @@ void pc_PlayerTouch(entity this, entity toucher)
 		vector vdir = normalize(toucher.origin - this.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
+		{
+			if(autocvar_g_player_crush_sound)
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
 			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, this.origin, '0 0 0');
+		}
 #endif
 	}
 	else if(STAT(PLAYER_CRUSH_SIMPLE, this) == 0)
@@ -83,6 +92,9 @@ void pc_PlayerTouch(entity this, entity toucher)
 
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
+			if(autocvar_g_player_crush_sound)
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
+
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 	#endif
 		}
@@ -108,6 +120,9 @@ void pc_PlayerTouch(entity this, entity toucher)
 			this.oldvelocity_z = this.velocity_z;
 
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
+
+			if(autocvar_g_player_crush_sound)
+				sound(toucher, CH_TRIGGER, SND_GOOMBA, VOL_BASE, ATTN_NORM);
 
 			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 	#endif
