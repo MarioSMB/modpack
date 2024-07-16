@@ -146,10 +146,10 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 int cq_found_players[17];
 void cq_ControlPoint_Think(entity this)
 {
+	this.nextthink = time + CQ_CP_THINKRATE;
+
 	if(game_stopped || time < game_starttime)
 		return;
-
-	this.nextthink = time + CQ_CP_THINKRATE;
 
 	float old_health = GetResource(this, RES_HEALTH);
 	int found_teammates = 0, found_enemies = 0;
