@@ -55,6 +55,9 @@ void pc_PlayerTouch(entity this, entity toucher)
 		return;
 #endif
 
+	if(toucher.solid == SOLID_TRIGGER || this.solid == SOLID_TRIGGER) // independent
+		return;
+
 	if(STAT(PLAYER_CRUSH_SIMPLE, this) == 1 && IS_PLAYER(toucher))
 	{
 #ifdef SVQC
