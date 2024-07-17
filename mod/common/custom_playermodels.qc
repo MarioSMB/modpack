@@ -27,8 +27,8 @@ const int MODELS_BEAR = BIT(9);
 const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
 const int MODELS_IGGY = BIT(12);
-const int MODELS_MARIO64 = BIT(13);
-const int MODELS_WONG = BIT(14);
+const int MODELS_TT = BIT(13);
+const int MODELS_MIME = BIT(14);
 const int MODELS_GOATY = BIT(15);
 #endif
 
@@ -85,8 +85,8 @@ PRECACHE(cpmodels_precache)
 		CHECK_MODEL("monk2.dpm", MONK)
 		CHECK_MODEL("nexus.zym", NEXUS)
 		CHECK_MODEL("iggy.dpm", IGGY)
-		CHECK_MODEL("mario64.dpm", MARIO64)
-		CHECK_MODEL("leilei.zym", WONG)
+		CHECK_MODEL("tt.dpm", TT)
+		CHECK_MODEL("mime.dpm", MIME)
 	}
 #undef CHECK_MODEL
 }
@@ -158,6 +158,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			cpmodels_UpdateWeaponSkin(player, 6);
 		}
 
+		if(CS_CVAR(player).cvar_cl_model == "tt" && ALLOWED(TT))
+		{
+			M_ARGV(0, string) = "models/player/tt.dpm";
+			cpmodels_UpdateWeaponSkin(player, 6);
+		}
+
 		if(CS_CVAR(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
 		{
 			M_ARGV(0, string) = "models/player/rosalina.dpm";
@@ -169,6 +175,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
 			M_ARGV(0, string) = "models/player/ubot.iqm";
+
+		if(CS_CVAR(player).cvar_cl_model == "mime" && ALLOWED(MIME))
+		{
+			M_ARGV(0, string) = "models/player/mime.dpm";
+			cpmodels_UpdateWeaponSkin(player, 5);
+		}
 
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
@@ -193,11 +205,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 				M_ARGV(0, string) = "models/player/goat.dpm";
 				cpmodels_UpdateWeaponSkin(player, 7);
 			}
-			if(CS_CVAR(player).cvar_cl_model == "wong" && ALLOWED(WONG))
-			{
-				M_ARGV(0, string) = "models/player/leilei.zym";
-				cpmodels_UpdateWeaponSkin(player, 5);
-			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/iggy.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
@@ -209,8 +216,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 				M_ARGV(0, string) = "models/player/mario.dpm";
 			if(CS_CVAR(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
 				M_ARGV(0, string) = "models/player/luigi.dpm";
-			if(CS_CVAR(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
-				M_ARGV(0, string) = "models/player/mario64.dpm";
 			if(CS_CVAR(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				M_ARGV(0, string) = "models/player/bear.dpm";
 			if(CS_CVAR(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
@@ -218,7 +223,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(CS_CVAR(player).cvar_cl_model == "goaty" && ALLOWED(GOATY))
 				M_ARGV(0, string) = "models/player/goat.dpm";
 		}
-		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm")
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
@@ -298,9 +303,9 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 	entity player = M_ARGV(0, entity);
 
 	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
-		(player.model == "models/player/mario.dpm" || player.model == "models/player/mario64.dpm") &&
+		(player.model == "models/player/mario.dpm") &&
 #ifdef SVQC
-		!g_cts && !g_race && (CS_CVAR(player).cvar_cl_sparkle == 3 || CS_CVAR(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
+		!g_cts && !g_race && (CS_CVAR(player).cvar_cl_sparkle == 3 || CS_CVAR(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO))
 #elif defined(CSQC)
 		!ISGAMETYPE(CTS) && !ISGAMETYPE(RACE) && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
@@ -311,7 +316,8 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
 		player.velocity -= forward * autocvar_sv_jumpvelocity_backflip_backspeed; // NOTE: hardcoded backflip value? needs fixing!
 	#ifdef SVQC
-		PlayerSound(player, playersound_cjump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+		if(!autocvar_g_jump_grunt)
+			PlayerSound(player, playersound_cjump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	#endif
 	}
 }
