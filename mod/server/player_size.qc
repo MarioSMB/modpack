@@ -31,6 +31,8 @@ MUTATOR_HOOKFUNCTION(player_size, PlayerSpawn)
 		return;
 
 	player.player_scale = ((player.player_scale_override) ? player.player_scale_override : autocvar_g_player_size);
+	if(player.player_scale < 0)
+		player.player_scale = (random() * (player.player_scale * -1));
 	player.scale = player.player_scale;
 
 	// TODO: setting size here causes havoc (you get stuck in the floor!), moving them up is an option but may break certain maps
