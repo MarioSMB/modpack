@@ -14,5 +14,7 @@ MUTATOR_HOOKFUNCTION(random_spawns, PlayerSpawn)
 	{
 		player.angles = oldang;
 		player.angles_z = 0;
+		player.spawnorigin = player.origin;
+		player.oldorigin = player.origin;
 	}
 }
