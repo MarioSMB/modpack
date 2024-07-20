@@ -2,6 +2,7 @@
 
 #include "akimbo.qc"
 #include "freeze.qc"
+#include "hook_playeronly.qc"
 #include "itemplacer.qc"
 #include "keeprunning.qc"
 #include "piggyback.qc"
