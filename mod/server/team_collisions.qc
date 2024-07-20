@@ -1,9 +1,9 @@
 //FEATURE: Teammate collisions, pass through teammates instead of bumping into them!
 
 AUTOCVAR(g_team_collisions, bool, false, "Enable to allow passing through teammates, requires sv_qcphysics and a compatible engine");
-AUTOCVAR(g_team_collisions_projectiles, bool, false, "Apply passthrough to projectiles as well");
+AUTOCVAR(g_team_collisions_projectiles, bool, true, "Apply passthrough to projectiles as well");
 AUTOCVAR(g_player_collisions, bool, false, "Enable to allow passing through players, requires sv_qcphysics and a compatible engine");
-AUTOCVAR(g_player_collisions_projectiles, bool, false, "Apply passthrough to projectiles as well");
+AUTOCVAR(g_player_collisions_projectiles, bool, true, "Apply passthrough to projectiles as well");
 
 const int CLIPGROUP_PLAYER = 1;
 
