@@ -29,6 +29,8 @@ MUTATOR_HOOKFUNCTION(player_size, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	if((!autocvar_g_player_size || autocvar_g_player_size == 1) && !player.player_scale_override)
 		return;
+	if(g_prophunt)
+		return; // TODO
 
 	player.player_scale = ((player.player_scale_override) ? player.player_scale_override : autocvar_g_player_size);
 	if(player.player_scale < 0)

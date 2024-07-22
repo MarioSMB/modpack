@@ -238,7 +238,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && !g_prophunt && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
 	else
 		player.effects &= ~EF_STARDUST;

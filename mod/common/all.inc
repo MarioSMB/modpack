@@ -3,9 +3,9 @@
 
 #include "announcer.qc"
 #include "commands/all.inc"
+#include "gamemodes/all.inc"
 #include "custom_playermodels.qc"
 #include "effects.inc"
-#include "gamemodes/all.inc"
 #include "hook.qc"
 #include "location.qc"
 #include "projectiles.qh"

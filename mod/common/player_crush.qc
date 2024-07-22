@@ -27,6 +27,9 @@ void pc_PlayerTouch(entity this, entity toucher)
 		return;
 
 #ifdef SVQC
+	if(g_prophunt) // TODO
+		return;
+
 	bool and_monster = IS_MONSTER(toucher) && (this.monsterdef.spawnflags & MON_FLAG_CRUSH);
 
 	if(!autocvar_g_player_crush && !and_monster)
@@ -47,6 +50,9 @@ void pc_PlayerTouch(entity this, entity toucher)
 	if(weaponLocked(this))
 		return;
 #elif defined(CSQC)
+	if(ISGAMETYPE(PROPHUNT)) // TODO
+		return;
+
 	if(STAT(PLAYER_CRUSH_SIMPLE) != -1)
 		return;
 	if(!IS_PLAYER(toucher))
