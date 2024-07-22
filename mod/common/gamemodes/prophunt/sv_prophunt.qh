@@ -23,7 +23,7 @@ AUTOCVAR(g_prophunt_edit, int, 0, "Allow editing sandbox objects, set to 2 to on
 AUTOCVAR(g_prophunt_mirrordamage, float, 0.5, "Amount of damage the hunter takes for shooting the wrong prop");
 AUTOCVAR(g_prophunt_prop_copysize, bool, true, "Copy the size of the prop when transforming");
 AUTOCVAR(g_prophunt_prop_health, float, 10, "Default health of players on the prop team");
-AUTOCVAR(g_prophunt_prop_healthscale, float, 0.35, "Multiplier of player health based on prop size");
+AUTOCVAR(g_prophunt_prop_healthscale, float, 0.25, "Multiplier of player health based on prop size");
 AUTOCVAR(g_prophunt_prop_taunt_start, float, 0.5, "Value between 0 and 1, percentage multiplier of when random taunts will start");
 AUTOCVAR(g_prophunt_prop_taunt_delay, float, 10, "Delay between prop forced taunts when time is almost up");
 AUTOCVAR(g_prophunt_prop_taunt_delay_random, float, 8, "Additional random delay added onto the random taunts to break consistency");

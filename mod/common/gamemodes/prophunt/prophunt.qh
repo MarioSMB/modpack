@@ -17,8 +17,9 @@ CLASS(PropHunt, Gametype)
             int fh = fopen(file_name, FILE_READ);
             if(fh < 0)
                 return false;
-            string thetext = fgets(fh);
-            if(strstrofs(thetext, "containing 0 objects", 0) >= 0)
+            string thetext = fgets(fh); // get first line in the file, should be the sandbox header
+            //if(strstrofs(thetext, "containing 0 objects", 0) >= 0)
+            if(thetext == "" || substring(thetext, -20, 20) == "containing 0 objects")
             {
                 // no objects in the map!
                 fclose(fh);
