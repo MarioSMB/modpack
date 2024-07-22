@@ -717,6 +717,9 @@ MUTATOR_HOOKFUNCTION(ph, PlayerDamage_SplitHealthArmor)
 
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
+	if(IS_PLAYER(frag_target) && frag_target.team == prophunt_propteam)
+		frag_target.pain_finished = time + 0.5; // no sounds
+
 	if (autocvar_g_prophunt_damage2score <= 0 || frag_damage - excess == 0) return;
 
 	entity scorer = NULL;
