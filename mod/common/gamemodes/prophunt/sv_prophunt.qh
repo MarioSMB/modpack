@@ -1,7 +1,5 @@
 #pragma once
 
-AUTOCVAR_NOREF(g_prophunt, bool, false, "");
-
 AUTOCVAR(g_prophunt_warmup, float, 20, "");
 AUTOCVAR(g_prophunt_round_timelimit, float, 180, "");
 AUTOCVAR(g_prophunt_team_spawns, bool, true, "");

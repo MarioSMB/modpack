@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+AUTOCVAR_NOREF(g_prophunt, bool, false, "");
+#endif
+
 #ifdef CSQC
 void HUD_Mod_PH(vector pos, vector mySize);
 #endif
