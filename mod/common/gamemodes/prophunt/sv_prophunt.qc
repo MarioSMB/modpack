@@ -179,6 +179,8 @@ entity PH_SpectateNext(entity player, entity start)
 
 bool ph_IsProp(entity targ)
 {
+	if(substring(targ.model, -4, 4) == ".obj")
+		return false; // damn you engine bug
 	switch(targ.classname)
 	{
 		case "misc_gamemodel":
