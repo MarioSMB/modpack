@@ -67,6 +67,24 @@ REGISTER_MUTATOR(ph, false)
             field_team(ST_PH_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
         });
 
+        if(autocvar_g_prophunt_prop_model != "")
+        {
+        	FOREACH_WORD(autocvar_g_prophunt_prop_model, fexists(it),
+			{
+				precache_model(it);
+			});
+        }
+
+        if(autocvar_g_prophunt_prop_taunt_sound != "")
+        {
+        	FOREACH_WORD(autocvar_g_prophunt_prop_model, true,
+			{
+				string file = strcat("sound/", it);
+				if(fexists(file))
+					precache_sound(file);
+			});
+        }
+
         prophunt_propteam = NUM_TEAM_1; // always first team starts
 		allowed_to_spawn = true;
 		g_prophunt_spectate_enemies = autocvar_g_prophunt_spectate_enemies;
