@@ -261,6 +261,14 @@ void ph_ClearModel(entity this, bool ismanual)
 	this.skin = 0;
 }
 
+MUTATOR_HOOKFUNCTION(ph, PlayerPowerups)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.team == prophunt_propteam)
+		player.effects &= ~EF_FULLBRIGHT; // ignore fullbrightplayers setting
+}
+
 MUTATOR_HOOKFUNCTION(ph, PlayerPreThink)
 {
 	if (game_stopped)
