@@ -214,11 +214,13 @@ bool ph_Randomize(entity this)
 {
 	if(autocvar_g_prophunt_prop_randomize)
 	{
+		int tries = 0;
 		RandomSelection_Init();
 		IL_EACH(g_moveables, ph_IsProp(it) && it.model != this.model,
 		{
-			if(autocvar_g_prophunt_prop_randomize_checksize)
+			if(autocvar_g_prophunt_prop_randomize_checksize && tries < autocvar_g_prophunt_prop_randomize_checksize_tries)
 			{
+				tries += 1;
 				tracebox(this.origin, it.mins, it.maxs, this.origin, MOVE_NOMONSTERS, this);
 				if(trace_startsolid)
 					continue;

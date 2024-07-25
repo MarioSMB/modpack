@@ -37,6 +37,7 @@ AUTOCVAR(g_prophunt_prop_transform_delay, float, 1, "Time in seconds between tra
 AUTOCVAR(g_prophunt_prop_transform_sandbox_only, bool, false, "Allow only sandbox objects as transformations");
 AUTOCVAR(g_prophunt_prop_randomize, bool, false, "Give players a random prop at the start of the match");
 AUTOCVAR(g_prophunt_prop_randomize_checksize, bool, true, "Perform a scan to make sure the randomized object fits where the player is");
+AUTOCVAR(g_prophunt_prop_randomize_checksize_tries, int, 16, "Only try checking sizes on this many objects before just accepting any");
 
 //bool allowed_to_spawn;
 bool g_prophunt_spectate_enemies; // updated on map reset
