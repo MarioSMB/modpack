@@ -217,6 +217,12 @@ bool ph_Randomize(entity this)
 		RandomSelection_Init();
 		IL_EACH(g_moveables, ph_IsProp(it) && it.model != this.model,
 		{
+			if(autocvar_g_prophunt_prop_randomize_checksize)
+			{
+				tracebox(this.origin, it.mins, it.maxs, this.origin, MOVE_NOMONSTERS, this);
+				if(trace_startsolid)
+					continue;
+			}
 			RandomSelection_AddEnt(it, 1, 1);
 		});
 		if(RandomSelection_chosen_ent)
