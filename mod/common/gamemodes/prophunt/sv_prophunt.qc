@@ -348,6 +348,7 @@ MUTATOR_HOOKFUNCTION(ph, PlayerPreThink)
 	}
 
 	player.last_vehiclecheck = time + 5; // prevent touchies
+	player.nextstep = time + 5; // no footsteps
 
 	bool can_transform = true;
 	if(autocvar_g_prophunt_prop_limit > 0 && player.prophunt_transforms >= autocvar_g_prophunt_prop_limit)
