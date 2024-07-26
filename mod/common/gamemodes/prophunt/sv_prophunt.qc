@@ -711,14 +711,7 @@ MUTATOR_HOOKFUNCTION(ph, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(ph, FilterItem)
 {
-	entity item = M_ARGV(0, entity);
-
-	if (autocvar_g_powerups <= 0)
-	if (item.itemdef.instanceOfPowerup)
-		return true;
-
-	if (autocvar_g_pickup_items <= 0)
-		return true;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ph, PlayerDamage_SplitHealthArmor)
