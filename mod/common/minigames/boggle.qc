@@ -4,7 +4,7 @@
 
 #ifdef MINIGAME_SUPPORT_WORDS
 
-REGISTER_MINIGAME(boggle, "Boggle");
+REGISTER_MINIGAME(boggle, _("Boggle"));
 
 const int BOGGLE_TURN_MOVE  = 0x0100; // player has to create words on the board
 const int BOGGLE_TURN_WAIT  = 0x0200; // player has to click ready
@@ -533,13 +533,13 @@ string boggle_turn_to_string(int turnflags)
 		return _("You are spectating");
 
 	if (turnflags & BOGGLE_TURN_DRAW )
-		return "Game over!";
+		return _("Game over!");
 
 	if(turnflags & BOGGLE_TURN_WAIT)
-		return "Press \"Ready\" to begin";
+		return _("Press \"Ready\" to begin");
 
 	if ( turnflags & BOGGLE_TURN_MOVE )
-		return "Drag the mouse to select as many words as you can before time runs out!";
+		return _("Drag the mouse to select as many words as you can before time runs out!");
 
 	return "";
 }
@@ -759,7 +759,7 @@ int boggle_client_event(entity minigame, string event, ...)
 		}
 		case "menu_show":
 		{
-			HUD_MinigameMenu_CustomEntry(...(0,entity),"Ready","ready");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("BOGGLE^Ready"),"ready");
 			return false;
 		}
 		case "menu_click":

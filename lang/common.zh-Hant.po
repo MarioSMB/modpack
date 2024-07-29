@@ -1,0 +1,660 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# NaitLee, 2024
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-18 23:30+0800\n"
+"PO-Revision-Date: 2024-01-18 16:06+0000\n"
+"Last-Translator: NaitLee, 2024\n"
+"Language-Team: Chinese Traditional (https://app.transifex.com/naitlee-soft/teams/182965/zh-Hant/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-Hant\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: mod/client/main.qc:58
+msgid ""
+"\n"
+"^7Running the SMB mod pack\n"
+"^3https://github.com/MarioSMB/modpack\n"
+msgstr ""
+"\n"
+"^7服務器在運行 SMB 模組包\n"
+"^3https://github.com/MarioSMB/modpack\n"
+
+#: mod/common/gamemodes/arena/arena.qc:20
+msgid "^1Wait for your turn to join"
+msgstr "^1請靜候屬於你的一輪"
+
+#: mod/common/gamemodes/arena/arena.qh:6
+msgid "Arena"
+msgstr "競技場"
+
+#: mod/common/gamemodes/arena/arena.qh:6
+msgid "Emerge victorious in a series of duels to win the match!"
+msgstr "在一場場決鬥中淘汰敵人，勝者爲王"
+
+#: mod/common/gamemodes/conquest/conquest.qc:494
+msgid "SCO^liberated"
+msgstr "釋放"
+
+#: mod/common/gamemodes/conquest/conquest.qc:495
+msgid "SCO^captured"
+msgstr "佔領"
+
+#: mod/common/gamemodes/conquest/conquest.qh:6
+msgid "Capture all the spawnpoint control points to win"
+msgstr "佔領所有重生控制點以取得勝利"
+
+#: mod/common/gamemodes/conquest/conquest.qh:6
+msgid "Conquest"
+msgstr "征服"
+
+#: mod/common/gamemodes/dotc/dotc.qh:11
+msgid "Defend your team's core while attacking the enemy core"
+msgstr "保護己方核心、進攻敵方核心"
+
+#: mod/common/gamemodes/dotc/dotc.qh:11
+msgid "Defense of the Core"
+msgstr "保衛核心"
+
+#: mod/common/gamemodes/dotc/drones/artillery_gun.qc:9
+#, c-format
+msgid "^BG%s^K1 was exploded by a Cannon Artillery drone%s%s"
+msgstr "^BG%s^K1 被火炮型載炮無人機轟炸%s%s"
+
+#: mod/common/gamemodes/dotc/drones/artillery_rocket.qc:9
+#, c-format
+msgid "^BG%s^K1 was destroyed by a Rocket Artillery drone%s%s"
+msgstr "^BG%s^K1 被火箭型載炮無人機摧殘%s%s"
+
+#: mod/common/gamemodes/dotc/drones/drones.qc:3
+msgid "^K1You were gunned down by a drone!"
+msgstr "^K1你被無人機擊斃了！"
+
+#: mod/common/gamemodes/dotc/drones/drones.qc:4
+#, c-format
+msgid "^BG%s%s^K1 was turned into drone cannon fodder by ^BG%s^K1%s%s"
+msgstr "^BG%s^K1 被 ^BG%s^K1 用來填充無人機火炮%s%s"
+
+#: mod/common/gamemodes/dotc/drones/light_tank.qc:9
+#, c-format
+msgid "^BG%s^K1 was blasted by a Light Tank drone%s%s"
+msgstr "^BG%s^K1 被輕坦克無人機爆破%s%s"
+
+#: mod/common/gamemodes/dotc/drones/scout.qc:9
+#, c-format
+msgid "^BG%s^K1 was gunned down by a Scout drone%s%s"
+msgstr "^BG%s^K1 被偵查無人機擊斃%s%s"
+
+#: mod/common/gamemodes/dotc/drones/tank.qc:9
+#, c-format
+msgid "^BG%s^K1 was obliterated by a Tank drone%s%s"
+msgstr "^BG%s^K1 被坦克無人機抹殺%s%s"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:1
+msgid "White core"
+msgstr "中立核心"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:2
+msgid "Red core"
+msgstr "紅隊核心"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:3
+msgid "Blue core"
+msgstr "藍隊核心"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:4
+msgid "Yellow core"
+msgstr "黃隊核心"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:5
+msgid "Pink core"
+msgstr "粉隊核心"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:7
+msgid "White factory"
+msgstr "中立工廠"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:8
+msgid "Red factory"
+msgstr "紅隊工廠"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:9
+msgid "Blue factory"
+msgstr "藍隊工廠"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:10
+msgid "Yellow factory"
+msgstr "黃隊工廠"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:11
+msgid "Pink factory"
+msgstr "粉隊工廠"
+
+#: mod/common/gamemodes/dotc/waypoints.qh:13
+msgid "Squad"
+msgstr "部隊"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:26
+#, c-format
+msgid "Point %s"
+msgstr "點 %s"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1447
+#: mod/common/gamemodes/snafu/snafu.qc:72
+msgid "SCO^rounds"
+msgstr "輪"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1448
+msgid "SCO^jbs"
+msgstr "越獄"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1449
+msgid "SCO^freed"
+msgstr "釋放"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1450
+msgid "SCO^def"
+msgstr "保衛"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qh:6
+msgid "Jailbreak"
+msgstr "越獄"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qh:6
+msgid ""
+"Kill enemies to send them to jail, capture control points to release "
+"teammates"
+msgstr "殺死敵人以將他們關入監獄，佔領控制點以釋放隊友"
+
+#: mod/common/gamemodes/runematch/runematch.qh:6
+msgid ""
+"Pick up and hold the runes, special items that give you points, a special "
+"power (rune) and a disadvantage (curse)"
+msgstr "拾起符文，開始殺敵。符文給你特別的能力，但也帶有詛咒"
+
+#: mod/common/gamemodes/runematch/runematch.qh:6
+msgid "Runematch"
+msgstr "符文大戰"
+
+#: mod/common/gamemodes/snafu/fatty.qc:17
+msgid "Fatty"
+msgstr "胖胖"
+
+#: mod/common/gamemodes/snafu/princess2.qc:14
+msgid "Princess"
+msgstr "公主"
+
+#: mod/common/gamemodes/snafu/snafu.qc:346
+msgid "The tadpole is ^1DEAD^7 you ^1LOSERS!"
+msgstr "蝌蚪^1死翹翹了^7，你們這些^1失敗者！"
+
+#: mod/common/gamemodes/snafu/snafu.qc:400
+msgid ""
+"^1The tadpole is under attack!\n"
+"^2DEFEND^7 the tadpole!"
+msgstr ""
+"^1蝌蚪遭到攻擊！\n"
+"^2保護^7蝌蚪！"
+
+#: mod/common/gamemodes/snafu/snafu.qh:6
+msgid "SNAFU"
+msgstr "蝌蚪保衛戰"
+
+#: mod/common/gamemodes/snafu/snafu.qh:6
+msgid "Situation normal..."
+msgstr "情況一切正常……"
+
+#: mod/common/gamemodes/snafu/vprincess.qc:14
+msgid "Princess (verb based)"
+msgstr "公主"
+
+#: mod/common/gamemodes/vip/vip.qc:695
+msgid "SCO^scores"
+msgstr "分數"
+
+#: mod/common/gamemodes/vip/vip.qc:697
+msgid "SCO^vipkills"
+msgstr "擊殺 VIP"
+
+#: mod/common/gamemodes/vip/vip.qh:10
+msgid "A VIP is chosen on each team, when a VIP dies, the round is over"
+msgstr "每個團隊選出一位 VIP。當 VIP 死亡時，這一輪結束"
+
+#: mod/common/gamemodes/vip/vip.qh:10 mod/common/gamemodes/vip/vip.qh:46
+msgid "VIP"
+msgstr "VIP"
+
+#: mod/common/minigames/art.qc:1
+msgid "Pixel Art"
+msgstr "像素畫"
+
+#: mod/common/minigames/art.qc:366
+msgid ""
+"Press the space bar or right click to change your currently selected color"
+msgstr "要更換顏色，請按空格或右鍵"
+
+#: mod/common/minigames/boggle.qc:7
+msgid "Boggle"
+msgstr "單詞連連看"
+
+#: mod/common/minigames/boggle.qc:539
+msgid "Press \"Ready\" to begin"
+msgstr "點擊“準備完畢”以開始"
+
+#: mod/common/minigames/boggle.qc:542
+msgid ""
+"Drag the mouse to select as many words as you can before time runs out!"
+msgstr "在計時結束之前，用鼠標拖動字母、連成儘可能多的英語單詞"
+
+#: mod/common/minigames/boggle.qc:762
+msgid "BOGGLE^Ready"
+msgstr "準備完畢"
+
+#: mod/common/minigames/checkers.qc:1
+msgid "Checkers"
+msgstr "國際跳棋"
+
+#: mod/common/minigames/chess.qc:1
+msgid "Chess"
+msgstr "國際象棋"
+
+#: mod/common/minigames/nim.qc:3
+msgid "Nim"
+msgstr "尼姆棋"
+
+#: mod/common/minigames/nim.qc:396
+msgid ""
+"You lost the game!\n"
+"Select \"^1Next Match^7\" on the menu for a rematch!"
+msgstr ""
+"你輸了！\n"
+"選擇菜單上的“^1下一輪^7”再次開始遊戲！"
+
+#: mod/common/minigames/nim.qc:397
+msgid ""
+"You win!\n"
+"Select \"^1Next Match^7\" on the menu to start a new match!"
+msgstr ""
+"你贏了！\n"
+"選擇菜單上的“^1下一輪^7”開始新一輪遊戲！"
+
+#: mod/common/minigames/nim.qc:411
+msgid "Try to take the last piece on the board"
+msgstr "爭取讓自己拿走最後的棋子"
+
+#: mod/common/minigames/sg.qc:2
+msgid "Space Guns"
+msgstr "太空射擊"
+
+#: mod/common/minigames/sg.qc:634
+msgid "Use the arrow keys to move and hold the space bar to shoot"
+msgstr "使用方向鍵移動，按住空格射擊"
+
+#: mod/common/minigames/snake.qc:2
+msgid "Snake"
+msgstr "貪喫蛇"
+
+#: mod/common/minigames/snake.qc:753 mod/common/minigames/snake.qc:758
+msgid "You ran out of lives!"
+msgstr "你耗盡了生命！"
+
+#: mod/common/minigames/snake.qc:761
+msgid "Press an arrow key to begin the game"
+msgstr "按下任意方向鍵以開始遊戲"
+
+#: mod/common/minigames/snake.qc:765
+msgid "Avoid the snake's body, collect the mice!"
+msgstr "喫掉老鼠，避免咬到蛇身！"
+
+#: mod/common/minigames/snake.qc:767
+msgid "Avoid the screen edges and the snake's body, collect the mice!"
+msgstr "喫掉老鼠，避免咬到蛇身或碰壁！"
+
+#: mod/common/minigames/vr.qc:383
+msgid "No more valid moves, you win"
+msgstr "没有可行的移动了，你赢了"
+
+#: mod/common/minigames/vr.qc:386
+msgid "Click on a piece next to the target"
+msgstr "点击目标旁的一颗棋子"
+
+#: mod/common/monsters/creeper.qh:21
+msgid "Creeper"
+msgstr "苦力怕"
+
+#: mod/common/monsters/troll.qh:21
+msgid "Troll"
+msgstr "巨魔"
+
+#: mod/common/notifications.qh:17
+#, c-format
+msgid "^BG%s^BG was captured by the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
+
+#: mod/common/notifications.qh:18
+#, c-format
+msgid "^BG%s^BG was liberated from the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
+
+#: mod/common/notifications.qh:20
+#, c-format
+msgid "^BG%s^BG has been destroyed"
+msgstr "^BG%s^BG 被摧毀"
+
+#: mod/common/notifications.qh:21
+#, c-format
+msgid "^BG%s^BG has been upgraded to level ^F4%s^BG!"
+msgstr "^BG%s^BG 被升級至第 ^F4%s^BG 級！"
+
+#: mod/common/notifications.qh:23
+#, c-format
+msgid "^BG%s^BG captured %s"
+msgstr "^BG%s^BG 抓捕了 %s"
+
+#: mod/common/notifications.qh:24
+#, c-format
+msgid "^BG%s^3 has broken free!"
+msgstr "^BG%s^3 已逃脫！"
+
+#: mod/common/notifications.qh:26
+#, c-format
+msgid "^BG%s^K1 lost ^BG%s^K1 and ^BG%s"
+msgstr "^BG%s^K1 失去了 ^BG%s^K1 和 ^BG%s"
+
+#: mod/common/notifications.qh:27
+#, c-format
+msgid "^BG%s^BG picked up ^BG%s^BG and ^BG%s"
+msgstr "^BG%s^BG 拾起了 ^BG%s^BG 和 ^BG%s"
+
+#: mod/common/notifications.qh:29
+#, c-format
+msgid "^BG%s^K1 dropped the soul gem"
+msgstr "^BG%s^K1 丟掉了靈魂石"
+
+#: mod/common/notifications.qh:30
+#, c-format
+msgid "^BG%s^K1 picked up the soul gem"
+msgstr "^BG%s^K1 撿起了靈魂石"
+
+#: mod/common/notifications.qh:33
+#, c-format
+msgid "^BG%s^BG has been captured by the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
+
+#: mod/common/notifications.qh:34
+#, c-format
+msgid "^BGYour team has captured %s"
+msgstr "^BG我方佔領了 %s"
+
+#: mod/common/notifications.qh:35
+#, c-format
+msgid "^BG%s^BG has been liberated from the ^TC^TT^BG team"
+msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
+
+#: mod/common/notifications.qh:36
+#, c-format
+msgid "^BGYour team has liberated %s^BG from the ^TC^TT^BG team"
+msgstr "^BG我方從^TC^TT隊^BG釋放了 %s^BG"
+
+#: mod/common/notifications.qh:37
+#, c-format
+msgid "^BG%s^BG has been lost to the ^TC^TT^BG team"
+msgstr "^TC^TT隊^BG失去了 ^BG%s^BG"
+
+#: mod/common/notifications.qh:39
+msgid ""
+"^K1Your core is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr ""
+"^K1我方核心正遭受攻擊！\n"
+"^K1現在^K3去保衛它！"
+
+#: mod/common/notifications.qh:40
+msgid ""
+"^K1Your factory is under attack!\n"
+"^K3Defend it ^K1NOW!"
+msgstr ""
+"^K1我方工廠正遭受攻擊\n"
+"^K1現在^K3去保衛它！"
+
+#: mod/common/notifications.qh:42
+msgid "^F2You gained some bonus score for defending the control point!"
+msgstr "^F2你因保衛控制點而獲得獎勵分數！"
+
+#: mod/common/notifications.qh:43
+msgid "^K1The ^TC^TT^K1 team is escaping!"
+msgstr "^K1^TC^TT隊^K1在越獄！"
+
+#: mod/common/notifications.qh:44
+msgid "^F2You're free! Run away!"
+msgstr "^F2你自由了！逃跑吧！"
+
+#: mod/common/notifications.qh:45
+msgid "^K3You bailed your teammates out of jail!"
+msgstr "^K3你幫隊友脫離了監獄！"
+
+#: mod/common/notifications.qh:46
+msgid "^K1You're in jail, prisoner!"
+msgstr "^K1你進了監獄，囚犯！"
+
+#: mod/common/notifications.qh:47
+msgid "^K1No sneaking into jail!"
+msgstr "^K1不能溜進監獄！"
+
+#: mod/common/notifications.qh:48
+msgid "^BGThis control point is not ready yet"
+msgstr "^BG此控制點尚未就緒"
+
+#: mod/common/notifications.qh:49
+msgid "^BGYour team is already free"
+msgstr "^BG你的團隊已經自由"
+
+#: mod/common/notifications.qh:50
+msgid "^BGSomeone is already capturing this control point"
+msgstr "^BG已有人在佔領此控制點"
+
+#: mod/common/notifications.qh:51
+msgid "^BGYou can't capture your team's control points"
+msgstr "^BG不可以佔領己方控制點"
+
+#: mod/common/notifications.qh:53
+msgid ""
+"^BGThawing slowly now\n"
+"^BGJump to re-spawn at base instantly"
+msgstr ""
+"^BG正在緩慢解凍\n"
+"^BG按跳躍以立刻在基地復活"
+
+#: mod/common/notifications.qh:54
+#, c-format
+msgid "^BGYou are now carrying %s^BG!"
+msgstr "^BG你馱着 %s^BG！"
+
+#: mod/common/notifications.qh:55
+#, c-format
+msgid "^BGYou are now riding %s^BG!"
+msgstr "^BG你騎着 %S^BG！"
+
+#: mod/common/notifications.qh:57
+#, c-format
+msgid ""
+"^K1Congratulations!\n"
+"^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n"
+"^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
+msgstr ""
+"^K1恭喜！\n"
+"^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻殭屍）！\n"
+"^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻殭屍）！"
+
+#: mod/common/notifications.qh:59
+msgid ""
+"^BGYou are the ^TC^TT^BG VIP!\n"
+"^F2Survive or your team will lose!"
+msgstr "^BG你是^TC^TT隊^BG VIP！\n"
+
+#: mod/common/notifications.qh:60
+msgid ""
+"^BGWaiting for VIPs...\n"
+"Pickup your Soul Gem to become a VIP"
+msgstr ""
+"^BG等待選出 VIP……\n"
+"撿起靈魂石即可成爲 VIP"
+
+#: mod/common/notifications.qh:61
+msgid "^BGWaiting for an enemy VIP"
+msgstr "^BG等待敵方選出 VIP"
+
+#: mod/common/notifications.qh:62
+#, c-format
+msgid "^BG%s^F2 is no longer a VIP!"
+msgstr "^BG%s^F2不再是 VIP！"
+
+#: mod/common/notifications.qh:63
+#, c-format
+msgid "^BGToo many dropped gems! Dropping disabled for %s."
+msgstr "^BG擲出靈魂石過多！%s內不能再擲出。"
+
+#: mod/common/notifications.qh:64
+msgid "^F2You are no longer a VIP!"
+msgstr "^F2你不再是 VIP！"
+
+#: mod/common/notifications.qh:65
+#, c-format
+msgid "^BG%s^F2 is now a VIP!"
+msgstr "^BG%s^F2 現在是 VIP！"
+
+#: mod/common/notifications.qh:66
+msgid "^F2You are now a VIP!"
+msgstr "^F2你現在是 VIP！"
+
+#: mod/common/radio/sv_radio.qc:69
+msgid "^8(unknown track)"
+msgstr "^8（未知音軌）"
+
+#: mod/common/radio/sv_radio.qc:70
+#, c-format
+msgid "^1[RADIO] ^2Now playing ^3%s"
+msgstr "^1【電臺 | RADIO】^2正在播放 ^3%s"
+
+#: mod/common/radio/sv_radio.qc:72
+#, c-format
+msgid "^8 (%s)"
+msgstr "^8 (%s)"
+
+#: mod/common/radio/sv_radio.qc:75
+#, c-format
+msgid "^7 - %s in queue"
+msgstr "^7 - 隊列 %s 首"
+
+#: mod/common/radio/sv_radio.qc:77
+msgid " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)"
+msgstr " ^2（提示：您可以在^1控制檯^2輸入 ^1radio off^2 關閉電臺）"
+
+#: mod/common/radio/sv_radio.qc:398
+msgid " ^8(autoqueue)"
+msgstr " ^8(自動補充)"
+
+#: mod/common/special.qc:39
+msgid "^xFB0MMorning ^7Rescue"
+msgstr "^xFB0MMorning ^7Rescue"
+
+#: mod/common/weapons/assaultrifle.qh:62
+msgid "Assault Rifle"
+msgstr "突擊步槍"
+
+#: mod/common/weapons/assaultrifle.qh:107
+#, c-format
+msgid ""
+"^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍半自動掃射%s%s"
+
+#: mod/common/weapons/assaultrifle.qh:108
+#, c-format
+msgid "^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍戰術性撕碎%s%s"
+
+#: mod/common/weapons/chainsaw.qh:65
+msgid "Chainsaw"
+msgstr "電鋸"
+
+#: mod/common/weapons/chainsaw.qh:105
+#, c-format
+msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用電鋸鋸成兩半%s%s"
+
+#: mod/common/weapons/chainsaw.qh:106
+#, c-format
+msgid "^BG%s^K1 played with their Chainsaw%s%s"
+msgstr "^BG%s^K1 把玩自己的電鋸%s%s"
+
+#: mod/common/weapons/flak.qh:97
+msgid "Flak Cannon"
+msgstr "破片加農炮"
+
+#: mod/common/weapons/flak.qh:152
+#, c-format
+msgid "^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"
+msgstr "^BG%s%s^K1 遭了 ^BG%s^K1 的集束破片%s%s"
+
+#: mod/common/weapons/flak.qh:153
+#, c-format
+msgid "^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用破片加農炮撕碎%s%s"
+
+#: mod/common/weapons/flak.qh:154
+#, c-format
+msgid "^BG%s^K1 was shredded by their own Flak Cannon%s%s"
+msgstr "^BG%s^K1 被自己的破片加農炮撕碎%s%s"
+
+#: mod/common/weapons/lightsabre.qh:73
+msgid "Lightsabre"
+msgstr "激光刃"
+
+#: mod/common/weapons/lightsabre.qh:107
+#, c-format
+msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
+msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用激光刃切離%s%s"
+
+#: mod/common/weapons/rpg7.qh:55
+msgid "RPG-7"
+msgstr "RPG-7 火箭筒"
+
+#: mod/common/weapons/rpg7.qh:90
+#, c-format
+msgid "^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 消滅%s%s"
+
+#: mod/common/weapons/rpg7.qh:91
+#, c-format
+msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 炸得灰飛煙滅%s%s"
+
+#: mod/common/weapons/rpg7.qh:92
+#, c-format
+msgid "^BG%s^K1 blew themself up with their RPG-7%s%s"
+msgstr "^BG%s^K1 被自己的 RPG-7 炸得灰飛煙滅%s%s"
+
+#: mod/common/weapons/uzi.qh:62
+msgid "Uzi"
+msgstr "烏茲衝鋒槍"
+
+#: mod/common/weapons/uzi.qh:107
+#, c-format
+msgid "^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍半自動掃射%s%s"
+
+#: mod/common/weapons/uzi.qh:108
+#, c-format
+msgid "^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍釘滿重金屬%s%s"

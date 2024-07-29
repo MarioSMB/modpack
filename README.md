@@ -49,3 +49,20 @@ For speed up compilation, if you want to execute without compression (without `c
 4. Download the content packs to `PATH/data` and make sure they're available on your map download server
 
 To update your server, repeat the above steps, but skip step 4 unless the packages available are newer than the ones you have
+
+
+Localization
+============
+
+(url to transifex to be done)
+
+Localization files dedicated to SMB are in the folder `lang`.
+
+There are some scripts inside, introduced below. Complete setup with `./update.sh` before use.
+
+1. `makepot.sh` generates `common.pot` from SMB source code and *excludes vanilla Xonotic strings* from the same file in Xonotic data.
+2. `merge.sh` will merge existing SMB translations and corresponding vanilla translations, when both exists, to `compiled/zzz-smb-l10n.pk3dir`
+  - To make translations available for your server players, use the `zzz-smb-l10n.xxxxxx.pk3` for your server (to skip creating pk3, use `ZIP=: ./merge.sh`)
+  - This step is automatically done when executing `./build.sh` (to skip, use `L10N=0 ./build.sh`)
+
+If you want to have translations from your own code and avoid merge conflicts, be sure to develop & translate in a seperate branch.
