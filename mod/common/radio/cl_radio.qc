@@ -4,6 +4,11 @@ REGISTER_MUTATOR(radio, true);
 
 .float radio_starttime;
 
+STATIC_INIT_LATE(radio)
+{
+	localcmd("\nalias radio \"cl_cmd radio ${* ?}\"\n");
+}
+
 void Radio_Stopper_Think(entity this)
 {
 	if(this.cnt < -2 || intermission)
@@ -102,13 +107,6 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 	e.cnt = time;
 	e.flags = loop;
 	e.radio_starttime = start;
-}
-
-MUTATOR_HOOKFUNCTION(radio, Ent_Init)
-{
-	localcmd("\nalias radio \"cl_cmd radio ${* ?}\"\n");
-
-	localcmd("\ncmd radio ", ftos(autocvar_cl_radio), "\n");
 }
 
 .bool paused;
