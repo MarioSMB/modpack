@@ -490,6 +490,16 @@ MUTATOR_HOOKFUNCTION(ph, ForbidSpawn)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ph, Sandbox_DragAllowed)
+{
+	return (autocvar_g_prophunt_edit > 0);
+}
+
+MUTATOR_HOOKFUNCTION(ph, Sandbox_SaveAllowed)
+{
+	return (autocvar_g_prophunt_edit > 0);
+}
+
 MUTATOR_HOOKFUNCTION(ph, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
@@ -506,18 +516,6 @@ MUTATOR_HOOKFUNCTION(ph, PutClientInServer)
 
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-}
-
-ACCUMULATE void sandbox_ObjectFunction_Think(entity this)
-{
-	if(g_prophunt && autocvar_g_prophunt_edit <= 0)
-		this.grab = 0; // oh no
-}
-
-MUTATOR_HOOKFUNCTION(ph, SV_StartFrame)
-{
-	if(autocvar_g_prophunt_edit <= 0)
-		autosave_time = time + 5; // force no autosave (TODO: very hacky!)
 }
 
 MUTATOR_HOOKFUNCTION(ph, reset_map_players)
