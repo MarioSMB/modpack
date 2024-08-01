@@ -54,7 +54,6 @@ PRECACHE(Pepsiman)
 CLASS(Pepsiman, Champions)
     ATTRIB(Pepsiman, netname, string, "pepsiman");
     ATTRIB(Pepsiman, m_name, string, "Pepsiman");
-    ATTRIB(Pepsiman, m_hidden, bool, true);
     ATTRIB(Pepsiman, qcc_movespeed, float, 1.33);
 #ifdef GAMEQC
     ATTRIB(Pepsiman, m_model, Model, MDL_Pepsiman);
