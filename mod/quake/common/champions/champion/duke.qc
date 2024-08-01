@@ -335,7 +335,8 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 	if(fvel)
 	{
-		fvel = min(1, fvel / best);
+		if(best)
+			fvel = min(1, fvel / best);
 		//if (PHYS_JETPACK_FUEL(this))
 			f = min(1, 100 / (100 * dt * fvel));
 		//else
