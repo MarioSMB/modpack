@@ -262,9 +262,10 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
 	// fix speedhacks :P
-	wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
+	if(wishvel != '0 0 0')
+		wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
 	// add the unused velocity as up component
-	wishvel_z = 0;
+	wishvel.z = 0;
 
 	// if (PHYS_INPUT_BUTTON_JUMP(this))
 		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
@@ -332,12 +333,14 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	wishvel_y *= fxy;
 	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
 
-	fvel = min(1, vlen(wishvel) / best);
-	//if (PHYS_JETPACK_FUEL(this))
-		f = min(1, 100 / (100 * dt * fvel));
-	//else
-		//f = 1;
-
+	if(fvel)
+	{
+		fvel = min(1, fvel / best);
+		//if (PHYS_JETPACK_FUEL(this))
+			f = min(1, 100 / (100 * dt * fvel));
+		//else
+			//f = 1;
+	}
 	//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
 
 	if (f > 0 && wishvel != '0 0 0')
