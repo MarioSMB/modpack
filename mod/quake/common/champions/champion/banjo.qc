@@ -150,10 +150,11 @@ void PM_flight(entity this, float maxspd_mod, float dt)
 	{
 		if(best)
 			fvel = min(1, fvel / best);
-		//if (PHYS_JETPACK_FUEL(this))
-			f = min(1, 100 / (100 * dt * fvel));
-		//else
-			//f = 1;
+		float fvelscale = (100 * dt * fvel);
+		if(fvelscale)
+			f = min(1, 100 / fvelscale);
+		else
+			f = 0;
 	}
 
 	//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
