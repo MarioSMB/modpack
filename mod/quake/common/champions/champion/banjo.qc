@@ -191,6 +191,8 @@ void Banjo_PreJump(entity actor)
 
 METHOD(BanjoKazooie, m_physics, bool(Champions this, entity actor, float dt))
 {
+	if(dt == 0)
+		LOG_INFO("Uh oh! Frametime is 0, this no goodie!");
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
