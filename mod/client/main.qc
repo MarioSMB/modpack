@@ -39,6 +39,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias place_item \"cmd placeitem spawn ${* ?}\"\n");
 	localcmd("\nalias itemplacer \"cmd placeitem ${* ?}\"\n");
 	localcmd("\nalias placeitems \"cl_cmd placeitems ${* ?}\"\n");
+	localcmd("\nalias propedit \"cl_cmd propedit ${* ?}\"\n");
 	localcmd("\nalias oregon \"cl_cmd oregon ${* ?}\"\n");
 
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
@@ -89,6 +90,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 	if(cmd_name == "placeitems")
 	{
 		localcmd("\ncl_cmd hud quickmenu file \"\" placeitems.txt\n");
+		return true;
+	}
+
+	if(cmd_name == "propedit")
+	{
+		localcmd("\ncl_cmd hud quickmenu file \"\" props.txt\n");
 		return true;
 	}
 

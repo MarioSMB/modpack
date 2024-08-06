@@ -9,6 +9,7 @@
 	#include "damage.qc"
 	#include "demo.qc"
 	//#include "itemplacer.qc"
+	#include "independent_players.qc"
 	#include "items.qc"
 	#include "monsters.qc"
 	#include "player_size.qc"

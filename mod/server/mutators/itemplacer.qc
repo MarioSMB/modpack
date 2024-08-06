@@ -399,6 +399,7 @@ void itemplacer_Database_Load()
 	{
 		if(autocvar_g_itemplacer_info > 0)
 			LOG_INFO("^3ITEMPLACER - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded");
+		return;
 	}
 	else
 	{
@@ -577,7 +578,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseClientCommand)
 						}
 						default:
 						{
-							string oldlist = strcat1(e.itemplacer_extrafields);
+							string oldlist = strcat(e.itemplacer_extrafields);
 							strfree(e.itemplacer_extrafields);
 							e.itemplacer_extrafields = strzone(cons(oldlist, strcat(argv(2), "=", argv(3))));
 							break;
@@ -606,7 +607,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseClientCommand)
 				if(e)
 				{
 					string newlist = "";
-					string oldlist = strcat1(e.itemplacer_extrafields);
+					string oldlist = strcat(e.itemplacer_extrafields);
 					string arg = argv(2);
 					if(strstrofs(oldlist, arg, 0) >= 0)
 					{
@@ -654,7 +655,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseClientCommand)
 				if(e)
 				{
 					string newlist = "";
-					string oldlist = strcat1(e.itemplacer_extrafields);
+					string oldlist = strcat(e.itemplacer_extrafields);
 					string arg = argv(2);
 					if(strstrofs(oldlist, arg, 0) >= 0)
 					{
@@ -702,7 +703,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseClientCommand)
 				if(e)
 				{
 					string newlist = "";
-					string oldlist = strcat1(e.itemplacer_extrafields);
+					string oldlist = strcat(e.itemplacer_extrafields);
 					string arg = argv(2);
 					FOREACH_WORD(oldlist, !startsWith(it, arg),
 					{

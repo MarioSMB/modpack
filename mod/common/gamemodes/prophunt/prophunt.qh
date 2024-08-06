@@ -1,0 +1,71 @@
+#pragma once
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_prophunt, bool, false, "");
+#endif
+
+#ifdef CSQC
+void HUD_Mod_PH(vector pos, vector mySize);
+#endif
+CLASS(PropHunt, Gametype)
+    INIT(PropHunt)
+    {
+        registercvar("g_ph_on_sandbox_maps", "1");
+        this.gametype_init(this, _("Prop Hunt"),"ph","g_prophunt",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"sandbox","timelimit=25 pointlimit=4 leadlimit=0",_("Identify and defeat enemy teammates disguised as objects"));
+    }
+    METHOD(PropHunt, m_isForcedSupported, bool(Gametype this))
+    {
+        if((cvar_type("g_ph_on_sandbox_maps") & CVAR_TYPEFLAG_EXISTS) && cvar("g_ph_on_sandbox_maps"))
+        {
+            string file_name = strcat("sandbox/storage_default_", MapInfo_Map_bspname, ".txt");
+            int fh = fopen(file_name, FILE_READ);
+            if(fh < 0)
+                return false;
+            string thetext = fgets(fh); // get first line in the file, should be the sandbox header
+            //if(strstrofs(thetext, "containing 0 objects", 0) >= 0)
+            if(thetext == "" || substring(thetext, -20, 20) == "containing 0 objects")
+            {
+                // no objects in the map!
+                fclose(fh);
+                return false;
+            }
+            fclose(fh);
+            return true;
+        }
+        return false;
+    }
+    METHOD(PropHunt, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+    {
+        TC(Gametype, this);
+        returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "",          _("The amount of rounds won needed before the match will end"));
+    }
+#ifdef CSQC
+    ATTRIB(PropHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_PH);
+#endif
+ENDCLASS(PropHunt)
+REGISTER_GAMETYPE(PROPHUNT, NEW(PropHunt));
+#define g_prophunt IS_GAMETYPE(PROPHUNT)
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_ph_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_ph_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_ph_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_ph_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_ph_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_ph_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_ph_weapon_stay, float, 0, "");
+#endif
+
+#ifdef SVQC
+int prophunt_propteam;
+#endif
+#ifdef GAMEQC
+REGISTER_STAT(PROPHUNT_PROPTEAM, int, prophunt_propteam)
+#endif
+
+#ifdef GAMEQC
+    MSG_CENTER_NOTIF(PROPHUNT_HUNTER,                   1,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^K1hunter^BG! Track down disguised props!")), "")
+    MSG_CENTER_NOTIF(PROPHUNT_PROP,                     1,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1prop^BG! Click on objects around the world to disguise yourself!")), "")
+
+    MSG_CENTER_NOTIF(PROPHUNT_TRANSFORMS_REMAINING,     1,    0, 1, "f1",             CPID_SURVIVAL,          "0 0",  BOLD(_("^BGTransforms remaining: ^K1%s")), "")
+#endif

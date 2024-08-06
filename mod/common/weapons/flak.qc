@@ -9,7 +9,7 @@ MUTATOR_HOOKFUNCTION(flak_rockets, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if((STAT(WEAPONS, item) & WepSet_FromWeapon(WEP_FLAK)) && !GetResource(item, RES_ROCKETS) && !Item_IsLoot(item))
+	if((STAT(WEAPONS, item) & WepSet_FromWeapon(WEP_FLAK)) && !GetResource(item, RES_ROCKETS) && !ITEM_IS_LOOT(item))
 		SetResource(item, RES_ROCKETS, cvar("g_pickup_rockets_weapon"));
 }
 

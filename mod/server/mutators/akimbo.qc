@@ -13,7 +13,7 @@ MUTATOR_HOOKFUNCTION(akimbo, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity player = M_ARGV(1, entity);
 
-	if((Item_IsLoot(item) || autocvar_g_akimbo_atspawns) && item.weapon && 
+	if((ITEM_IS_LOOT(item) || autocvar_g_akimbo_atspawns) && item.weapon && 
 							(STAT(WEAPONS, player) & item.itemdef.m_weapon.m_wepset) && item.owner != player && !(item.itemdef.m_weapon.spawnflags & WEP_FLAG_NODUAL))
 		PS(player).dual_weapons |= item.itemdef.m_weapon.m_wepset; // dual it up!
 }
@@ -22,6 +22,6 @@ MUTATOR_HOOKFUNCTION(akimbo, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if((Item_IsLoot(item) || autocvar_g_akimbo_atspawns) && item.weapon && item.owner && IS_PLAYER(item.owner))
+	if((ITEM_IS_LOOT(item) || autocvar_g_akimbo_atspawns) && item.weapon && item.owner && IS_PLAYER(item.owner))
 		PS(item.owner).dual_weapons &= ~item.itemdef.m_weapon.m_wepset; // no longer akimbo'd (we don't check blacklist here, no need)
 }

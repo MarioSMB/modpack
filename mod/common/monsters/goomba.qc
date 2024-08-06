@@ -123,7 +123,6 @@ METHOD(Goomba, mr_setup, bool(Monster thismon, entity actor))
 	if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_goomba_speed_stop); }
 	if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_goomba_damageforcescale); }
 
-	actor.ticrate = sys_frametime; // accuracy required
 	//actor.monster_loot = ITEM_HealthBig;
 	actor.monster_attackfunc = func_null;
 	actor.spawn_time = time + 0.25;

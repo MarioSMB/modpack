@@ -242,7 +242,6 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_koopa_speed_stop); }
 			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_koopa_damageforcescale); }
 
-			actor.ticrate = sys_frametime; // accuracy required
 			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = func_null;
 			actor.spawn_time = time + 0.25;

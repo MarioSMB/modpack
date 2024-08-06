@@ -1,0 +1,99 @@
+#pragma once
+
+AUTOCVAR(g_prophunt_warmup, float, 20, "");
+AUTOCVAR(g_prophunt_round_timelimit, float, 180, "");
+AUTOCVAR(g_prophunt_team_spawns, bool, true, "");
+AUTOCVAR(g_prophunt_weaponarena, string, "most", "");
+AUTOCVAR(g_prophunt_spectate_enemies, int, 0, "");
+AUTOCVAR(g_prophunt_point_limit, int, -1, "PH point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use mapinfo's limit)");
+AUTOCVAR(g_prophunt_point_leadlimit, int, -1, "PH point lead limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use mapinfo's limit)");
+
+AUTOCVAR(g_prophunt_damage2score, float, 100, "");
+
+AUTOCVAR(g_prophunt_start_health, float, 100, "");
+AUTOCVAR(g_prophunt_start_armor, float, 0, "");
+AUTOCVAR(g_prophunt_start_ammo_shells, float, 60, "");
+AUTOCVAR(g_prophunt_start_ammo_nails, float, 320, "");
+AUTOCVAR(g_prophunt_start_ammo_rockets, float, 160, "");
+AUTOCVAR(g_prophunt_start_ammo_cells, float, 180, "");
+AUTOCVAR(g_prophunt_start_ammo_plasma, float, 180, "");
+AUTOCVAR(g_prophunt_start_ammo_fuel, float, 0, "");
+
+AUTOCVAR(g_prophunt_edit, int, 0, "Allow editing sandbox objects, set to 2 to only allow props to edit objects");
+AUTOCVAR(g_prophunt_mirrordamage, float, 0.5, "Amount of damage the hunter takes for shooting the wrong prop");
+AUTOCVAR(g_prophunt_prop_copysize, bool, true, "Copy the size of the prop when transforming");
+AUTOCVAR(g_prophunt_prop_health, float, 10, "Default health of players on the prop team");
+AUTOCVAR(g_prophunt_prop_healthscale, float, 0.25, "Multiplier of player health based on prop size");
+AUTOCVAR(g_prophunt_prop_taunt_start, float, 0.5, "Value between 0 and 1, percentage multiplier of when random taunts will start");
+AUTOCVAR(g_prophunt_prop_taunt_delay, float, 10, "Delay between prop forced taunts when time is almost up");
+AUTOCVAR(g_prophunt_prop_taunt_delay_random, float, 8, "Additional random delay added onto the random taunts to break consistency");
+AUTOCVAR(g_prophunt_prop_taunt_sound, string, "", "Sound to play when auto taunting, leave blank to use normal taunt sounds");
+AUTOCVAR(g_prophunt_prop_taunt_sounddir, string, "", "Look for random taunt sounds in this folder if the regular list is empty, exclude sound/ and final / as they are added automatically");
+AUTOCVAR(g_prophunt_prop_model, string, "", "Default model to use for prop team, leave blank to use regular playermodel");
+AUTOCVAR(g_prophunt_prop_limit, int, 0, "Maximum number of times a player can transform per round");
+AUTOCVAR(g_prophunt_prop_transform, bool, true, "Allow transforming into props in the map");
+AUTOCVAR(g_prophunt_prop_transform_cancel, bool, true, "Allow cancelling transformation");
+AUTOCVAR(g_prophunt_prop_transform_delay, float, 1, "Time in seconds between transformations");
+AUTOCVAR(g_prophunt_prop_transform_sandbox_only, bool, false, "Allow only sandbox objects as transformations");
+AUTOCVAR(g_prophunt_prop_randomize, bool, false, "Give players a random prop at the start of the match");
+AUTOCVAR(g_prophunt_prop_randomize_checksize, bool, true, "Perform a scan to make sure the randomized object fits where the player is");
+AUTOCVAR(g_prophunt_prop_randomize_checksize_tries, int, 16, "Only try checking sizes on this many objects before just accepting any");
+
+//bool allowed_to_spawn;
+bool g_prophunt_spectate_enemies; // updated on map reset
+
+const int ST_PH_ROUNDS = 1;
+
+.float prophunt_lasttaunt;
+.float prophunt_lasttrace;
+
+.int prophunt_transforms;
+
+bool PH_CheckTeams();
+bool PH_CheckWinner();
+void PH_RoundStart();
+bool ph_isEliminated(entity e);
+bool ph_Randomize(entity this);
+
+REGISTER_MUTATOR(ph, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+        GameRules_spawning_teams(autocvar_g_prophunt_team_spawns);
+        GameRules_limit_score(autocvar_g_prophunt_point_limit);
+        GameRules_limit_lead(autocvar_g_prophunt_point_leadlimit);
+
+        GameRules_scoring(BITS(2), SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_PH_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+        });
+
+        if(autocvar_g_prophunt_prop_model != "")
+        {
+        	FOREACH_WORD(autocvar_g_prophunt_prop_model, fexists(it),
+			{
+				precache_model(it);
+			});
+        }
+
+        if(autocvar_g_prophunt_prop_taunt_sound != "")
+        {
+        	FOREACH_WORD(autocvar_g_prophunt_prop_model, true,
+			{
+				string file = strcat("sound/", it);
+				if(fexists(file))
+					precache_sound(file);
+			});
+        }
+
+        prophunt_propteam = NUM_TEAM_1; // always first team starts
+		allowed_to_spawn = true;
+		g_prophunt_spectate_enemies = autocvar_g_prophunt_spectate_enemies;
+		observe_blocked_if_eliminated = (g_prophunt_spectate_enemies == -1);
+		round_handler_Spawn(PH_CheckTeams, PH_CheckWinner, PH_RoundStart);
+		round_handler_Init(5, autocvar_g_prophunt_warmup, autocvar_g_prophunt_round_timelimit);
+		EliminatedPlayers_Init(ph_isEliminated);
+	}
+	return 0;
+}

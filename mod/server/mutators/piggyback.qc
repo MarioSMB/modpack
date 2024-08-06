@@ -133,7 +133,7 @@ void pb_FixPBEnt(entity p)
 
 bool pb_GiveItem(entity to, entity item)
 {
-	if (Item_IsExpiring(item))
+	if (ITEM_IS_EXPIRING(item))
 	{
 		item.strength_finished = max(0, item.strength_finished - time);
 		item.invincible_finished = max(0, item.invincible_finished - time);
@@ -144,7 +144,7 @@ bool pb_GiveItem(entity to, entity item)
 	bool gave = (it && it.instanceOfPickup) ? ITEM_HANDLE(Pickup, it, item, to) : Item_GiveTo(item, to);
 	if (!gave)
 	{
-		if (Item_IsExpiring(item))
+		if (ITEM_IS_EXPIRING(item))
 		{
 			// undo what we did above
 			item.strength_finished += time;
@@ -156,7 +156,7 @@ bool pb_GiveItem(entity to, entity item)
 		return false;
 	}
 
-	if (Item_IsExpiring(item))
+	if (ITEM_IS_EXPIRING(item))
 	{
 		// undo it anyway
 		item.strength_finished += time;

@@ -13,7 +13,7 @@ CLASS(Arena, Gametype)
     {
         // force all DM maps to work in arena?!
         // TODO: use duel instead (duel currently forces support for dm, but exclusive duel maps are possible!)
-        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+        if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
             return true;
         return false;
     }

@@ -21,7 +21,7 @@ CLASS(Jailbreak, Gametype)
     METHOD(Jailbreak, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(substring(v, 0, 10) == "jailbreak_")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
 #ifdef CSQC
     ATTRIB(Jailbreak, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);

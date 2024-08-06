@@ -1,0 +1,4 @@
+#pragma once
+
+void HUD_Mod_PH(vector myPos, vector mySize);
+void HUD_Mod_PH_Draw(vector myPos, vector mySize, int layout);
