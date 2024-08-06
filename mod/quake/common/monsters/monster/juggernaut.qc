@@ -24,12 +24,14 @@ void juggernaut_pain(entity this, entity attacker, float damage, int deathtype)
 		_sound(this, CHAN_BODY, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
 	if(damage < ((this.health + damage) * 0.2))
 		return;
-	this.pain_finished = time + 3;
+	this.pain_finished = time + 1;
 	juggernaut_pain1(this);
 }
 
 void JuggerCheckWater(entity this)
 {
+	if(time < this.pain_finished)
+		return; // only so often so players can actually hurt it!
 	if(this.watertype == CONTENT_WATER)
 	{
 		this.effects = EF_DIMLIGHT;

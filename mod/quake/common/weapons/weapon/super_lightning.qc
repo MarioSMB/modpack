@@ -159,6 +159,13 @@ void LightningTouch(entity this, entity toucher)
 				T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 				return;
 			}
+			// TODO: generic way of telling if a target can actually be hurt
+			if(toucher.charmed && (IS_PLAYER(this.owner) || this.owner == toucher.charmer || this.owner.charmer == toucher.charmer))
+				return; // no hurting our pets!
+
+			if(this.owner.charmed && (IS_PLAYER(toucher) || toucher == this.owner.charmer || toucher.charmer == this.owner.charmer))
+				return; // no hurting us either!
+
 			if(!IS_PLAYER(toucher))
 				toucher.owner = this.owner;
 			else
