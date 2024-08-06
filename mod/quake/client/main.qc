@@ -8,6 +8,7 @@
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
+#include <common/checkextension.qh>
 
 bool autocvar_developer_csqcentities;
 
@@ -17,6 +18,8 @@ bool autocvar_developer_csqcentities;
 
 void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
+	CheckEngineExtensions();
+
 	{
 		int i = 0;
 		for ( ; i < 255; ++i)

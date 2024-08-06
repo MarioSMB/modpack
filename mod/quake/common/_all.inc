@@ -8,6 +8,8 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/movetypes/all.inc>
 
+#include <common/checkextension.qc>
+
 #include "physics.qc"
 #include "sui_sys.qc"
 #include "viewloc.qc"

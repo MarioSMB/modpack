@@ -1364,6 +1364,7 @@ STATIC_INIT_EARLY(maxclients)
 
 spawnfunc(worldspawn)
 {
+	CheckEngineExtensions();
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!

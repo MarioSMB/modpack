@@ -26,6 +26,8 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
 #include <lib/warpzone/anglestransform.qh>
 
+#include <common/checkextension.qh>
+
 #include "stats.qh"
 
 #include "constants.qh"
