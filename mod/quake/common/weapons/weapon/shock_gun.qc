@@ -3,7 +3,7 @@
 #ifdef SVQC
 PRECACHE(Shock_PreCache)
 {
-	precache_sound2("enforcer/enfstop.wav");   // electric zap (for water hit)
+	precache_sound("enforcer/enfstop.wav");   // electric zap (for water hit)
 	precache_sound("weapons/dsfirxpl.wav");   // for plasma hit
 	precache_sound("weapons/dsplasma.wav");    // plasma firing
 	precache_model("progs/pbullet.mdl");      // Plasma bullet model

@@ -325,9 +325,9 @@ void PrecacheMonsters()
 	}
 	if(world.worldtype == WORLDTYPE_BASE)
 	{
-		precache_sound2("misc/basekey.wav");
-		precache_model2("progs/b_g_key.mdl");
-		precache_model2("progs/b_s_key.mdl");
+		precache_sound("misc/basekey.wav");
+		precache_model("progs/b_g_key.mdl");
+		precache_model("progs/b_s_key.mdl");
 	}
 }
 // =================================================================

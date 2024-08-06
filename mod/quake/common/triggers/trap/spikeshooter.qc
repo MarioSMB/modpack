@@ -14,6 +14,7 @@ entity LaunchLaser(entity this, vector org, vector vec);
 void superlavaspike_touch(entity this, entity toucher);
 void superspike_touch(entity this, entity toucher);
 entity W_FireRocket(entity this);
+entity launch_fireball(entity this, vector org, vector dir);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
@@ -119,16 +120,16 @@ spawnfunc(trap_spikeshooter)
 	this.killstring = " was spiked";
 	if(this.spawnflags & SPAWNFLAG_LASER)
 	{
-		precache_model2("progs/laser.mdl");
+		precache_model("progs/laser.mdl");
 		
-		precache_sound2("enforcer/enfire.wav");
-		precache_sound2("enforcer/enfstop.wav");
+		precache_sound("enforcer/enfire.wav");
+		precache_sound("enforcer/enfstop.wav");
 	}
 	if(this.spawnflags & SPAWNFLAG_LAVABALL) // too early to bother checking for mission packs
 	{
 		precache_model("progs/lavarock.mdl");
 //      this.classname = "fireball";
-		precache_sound2("misc/spike.wav");
+		precache_sound("misc/spike.wav");
 	}
 	if(this.spawnflags & SPAWNFLAG_ROCKET)
 	{
@@ -137,22 +138,22 @@ spawnfunc(trap_spikeshooter)
 	}
 	if(this.spawnflags & SPAWNFLAG_LAVASPIKE)
 	{
-		precache_model2("progs/lspike.mdl");
-		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
-		precache_sound2("weapons/rocket1i.wav");
+		precache_model("progs/lspike.mdl");
+		precache_sound("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound("weapons/rocket1i.wav");
 	}
 	if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
 	{
-		precache_model2("progs/lspike.mdl");
-		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
-		precache_sound2("weapons/spike2.wav");
+		precache_model("progs/lspike.mdl");
+		precache_sound("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound("weapons/spike2.wav");
 	}
 	if(this.spawnflags & SPAWNFLAG_LAVASKILL)
 	{
-		precache_model2("progs/lspike.mdl");
-		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
-		precache_sound2("weapons/rocket1i.wav");
-		precache_sound2("weapons/spike2.wav");
+		precache_model("progs/lspike.mdl");
+		precache_sound("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound("weapons/rocket1i.wav");
+		precache_sound("weapons/spike2.wav");
 	}
 	if(this.spawnflags & SPAWNFLAG_FIREBALL)
 		precache_model("progs/fireball.mdl");

@@ -383,23 +383,23 @@ METHOD(Blud, mr_setup, bool(Blud this, entity actor))
 {
     TC(Blud, this);
 
-	precache_model2("progs/xtragib.mdl");
-	precache_model2("progs/bone.mdl");
-	precache_model2("progs/bone2.mdl");
-	precache_model2("progs/rawbone2.mdl");
-	precache_sound2("monsters/blud/blatt1.wav");
-	precache_sound2("monsters/blud/blatt2.wav");
-	precache_sound2("monsters/blud/bldie.wav");
-	precache_sound2("monsters/blud/blhurt1.wav");
-	precache_sound2("monsters/blud/blhurt2.wav");
-	precache_sound2("monsters/blud/blhurt3.wav");
-	precache_sound2("monsters/blud/blidle1.wav");
-	precache_sound2("monsters/blud/blidle2.wav");
-	precache_sound2("monsters/blud/blidle3.wav");
-	precache_sound2("monsters/blud/blidle4.wav");
-	precache_sound2("monsters/blud/blood.wav");
-	precache_sound2("zombie/z_miss.wav");
-	precache_sound2("zombie/z_hit.wav");
+	precache_model("progs/xtragib.mdl");
+	precache_model("progs/bone.mdl");
+	precache_model("progs/bone2.mdl");
+	precache_model("progs/rawbone2.mdl");
+	precache_sound("monsters/blud/blatt1.wav");
+	precache_sound("monsters/blud/blatt2.wav");
+	precache_sound("monsters/blud/bldie.wav");
+	precache_sound("monsters/blud/blhurt1.wav");
+	precache_sound("monsters/blud/blhurt2.wav");
+	precache_sound("monsters/blud/blhurt3.wav");
+	precache_sound("monsters/blud/blidle1.wav");
+	precache_sound("monsters/blud/blidle2.wav");
+	precache_sound("monsters/blud/blidle3.wav");
+	precache_sound("monsters/blud/blidle4.wav");
+	precache_sound("monsters/blud/blood.wav");
+	precache_sound("zombie/z_miss.wav");
+	precache_sound("zombie/z_hit.wav");
 
     actor.health = 3000;
 	actor.th_stand = blud_stand1;

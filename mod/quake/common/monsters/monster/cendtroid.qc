@@ -431,17 +431,17 @@ METHOD(Centroid, mr_setup, bool(Centroid this, entity actor))
 {
     TC(Centroid, this);
 
-	precache_model2("progs/laser.mdl");
-	precache_model2("progs/s_light.mdl");
-	precache_model2("progs/spike.mdl");
+	precache_model("progs/laser.mdl");
+	precache_model("progs/s_light.mdl");
+	precache_model("progs/spike.mdl");
 
 	precache_sound("scourge/idle.wav");
 	precache_sound("scourge/pain.wav");
 	precache_sound("scourge/pain2.wav");
 	precache_sound("scourge/tailswng.wav");
 	precache_sound("scourge/walk.wav");
-	precache_sound2("shambler/smack.wav");
-	precache_sound2("weapons/rocket1i.wav");
+	precache_sound("shambler/smack.wav");
+	precache_sound("weapons/rocket1i.wav");
 
 	actor.yaw_speed = 60;
 	actor.attack_state = AS_DODGING;

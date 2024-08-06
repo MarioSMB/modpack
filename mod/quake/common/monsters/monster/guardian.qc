@@ -570,11 +570,11 @@ METHOD(Guardian, mr_setup, bool(Guardian this, entity actor))
 	//else
 		//objerror(actor, "monster_morph: no skin selection!");
 	
-	precache_model2("progs/laser.mdl");
-	precache_sound2("enforcer/enfire.wav");
-	precache_sound2("guard/death.wav");
-	precache_sound2("guard/pain1.wav");
-	precache_sound2("guard/see1.wav");
+	precache_model("progs/laser.mdl");
+	precache_sound("enforcer/enfire.wav");
+	precache_sound("guard/death.wav");
+	precache_sound("guard/pain1.wav");
+	precache_sound("guard/see1.wav");
 
 	// undo what setup did
 	setmodel(actor, MDL_Null);

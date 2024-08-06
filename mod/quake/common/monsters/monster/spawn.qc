@@ -252,9 +252,9 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 {
     TC(Spawn, this);
 
-	precache_sound2("blob/death1.wav");
-	precache_sound2("blob/hit1.wav");
-	precache_sound2("blob/land1.wav");
+	precache_sound("blob/death1.wav");
+	precache_sound("blob/hit1.wav");
+	precache_sound("blob/land1.wav");
 
     actor.health = 80;
     actor.th_stand = tbaby_stand1;
@@ -264,7 +264,7 @@ METHOD(Spawn, mr_setup, bool(Spawn this, entity actor))
 	actor.th_melee = tbaby_jump1;
 	actor.th_die = tbaby_die1;
 
-	precache_sound2("blob/mytosis.wav");
+	precache_sound("blob/mytosis.wav");
 	if(actor.spawnflags & 8)
 	{
 		actor.th_pain = tbaby_mitosis;

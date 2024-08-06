@@ -283,18 +283,18 @@ METHOD(DarkKnight, mr_setup, bool(DarkKnight this, entity actor))
 {
     TC(DarkKnight, this);
 
-	precache_sound2("monsters/dknight/dklight.wav");
-	precache_sound2("monsters/dknight/dkidle1.wav");
-	precache_sound2("monsters/dknight/dkidle2.wav");
-	precache_sound2("monsters/dknight/dkidle3.wav");
-	precache_sound2("monsters/dknight/dkhurt1.wav");
-	precache_sound2("monsters/dknight/dkhurt2.wav");
-	precache_sound2("monsters/dknight/dkdeath1.wav");
-	precache_sound2("monsters/dknight/dkdeath2.wav");
-	precache_sound2("monsters/dknight/dkzap.wav");
-	precache_sound2("monsters/dknight/dkswzap1.wav");
-	precache_sound2("monsters/dknight/dkswzap2.wav");
-	precache_sound2("shalrath/attack2.wav");
+	precache_sound("monsters/dknight/dklight.wav");
+	precache_sound("monsters/dknight/dkidle1.wav");
+	precache_sound("monsters/dknight/dkidle2.wav");
+	precache_sound("monsters/dknight/dkidle3.wav");
+	precache_sound("monsters/dknight/dkhurt1.wav");
+	precache_sound("monsters/dknight/dkhurt2.wav");
+	precache_sound("monsters/dknight/dkdeath1.wav");
+	precache_sound("monsters/dknight/dkdeath2.wav");
+	precache_sound("monsters/dknight/dkzap.wav");
+	precache_sound("monsters/dknight/dkswzap1.wav");
+	precache_sound("monsters/dknight/dkswzap2.wav");
+	precache_sound("shalrath/attack2.wav");
 
     actor.health = 200;
 	actor.th_stand = dknight_stand1;

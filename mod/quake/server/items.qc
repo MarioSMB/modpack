@@ -1275,7 +1275,7 @@ void key_setsounds(entity this)
 	}
 	if(this.worldtype == WORLDTYPE_BASE)
 	{
-		precache_sound2("misc/basekey.wav");
+		precache_sound("misc/basekey.wav");
 		this.noise = "misc/basekey.wav";
 	}
 }

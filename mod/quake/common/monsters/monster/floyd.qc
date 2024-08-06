@@ -460,17 +460,17 @@ METHOD(Floyd, mr_setup, bool(Floyd this, entity actor))
 {
     TC(Floyd, this);
 
-	precache_model2("progs/floyd.mdl");
-	precache_model2("progs/flaser.mdl");
-	precache_model2("progs/h_floyd.mdl");
-	precache_model2("progs/fgib1.mdl");
+	precache_model("progs/floyd.mdl");
+	precache_model("progs/flaser.mdl");
+	precache_model("progs/h_floyd.mdl");
+	precache_model("progs/fgib1.mdl");
 	
-	precache_sound2("floyd/idle.wav");
-	precache_sound2("floyd/sight.wav");
-	precache_sound2("floyd/pain.wav");
-	precache_sound2("floyd/fire.wav");
-	precache_sound2("floyd/death.wav");
-	precache_sound2("enforcer/enfstop.wav");
+	precache_sound("floyd/idle.wav");
+	precache_sound("floyd/sight.wav");
+	precache_sound("floyd/pain.wav");
+	precache_sound("floyd/fire.wav");
+	precache_sound("floyd/death.wav");
+	precache_sound("enforcer/enfstop.wav");
 
 	// random chance outside of horde to be on side!
 	if(!horde_ent && !actor.spawnflags && random() <= 0.1)

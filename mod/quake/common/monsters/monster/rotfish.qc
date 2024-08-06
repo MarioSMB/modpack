@@ -173,15 +173,15 @@ METHOD(Rotfish, mr_setup, bool(Rotfish this, entity actor))
 {
     TC(Rotfish, this);
 
-	precache_sound2("fish/death.wav");
-	precache_sound2("fish/bite.wav");
-	precache_sound2("fish/idle.wav");
+	precache_sound("fish/death.wav");
+	precache_sound("fish/bite.wav");
+	precache_sound("fish/idle.wav");
 
 	if((random() <= 0.1 || (actor.spawnflags & 2)) && fexists("progs/dopefish.mdl"))
 	{
-		precache_sound2("dopefish/death.wav");
-		precache_sound2("dopefish/bite.wav");
-		precache_sound2("dopefish/idle.wav");
+		precache_sound("dopefish/death.wav");
+		precache_sound("dopefish/bite.wav");
+		precache_sound("dopefish/idle.wav");
 		precache_model("progs/dopefish.mdl");
 		_setmodel(actor, "progs/dopefish.mdl");
 	}

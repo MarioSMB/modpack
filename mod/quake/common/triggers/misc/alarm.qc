@@ -27,10 +27,10 @@ void play_alarm(entity this, entity actor, entity trigger)
 
 spawnfunc(sound_alarm)
 {
-	precache_sound2("enviro/security/onalarm1.wav");
-	precache_sound2("enviro/security/onalarm2.wav");
-	precache_sound2("enviro/security/onalarm3.wav");
-	precache_sound2("enviro/security/onalarm4.wav");
+	precache_sound("enviro/security/onalarm1.wav");
+	precache_sound("enviro/security/onalarm2.wav");
+	precache_sound("enviro/security/onalarm3.wav");
+	precache_sound("enviro/security/onalarm4.wav");
 	this.use = play_alarm;
 }
 

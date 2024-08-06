@@ -183,8 +183,8 @@ METHOD(Dalek, mr_setup, bool(Dalek this, entity actor))
 
 	precache_sound("dalek/daldie.wav");
 
-	precache_model2("progs/laser.mdl");
-	precache_sound2("enforcer/enfire.wav");
+	precache_model("progs/laser.mdl");
+	precache_sound("enforcer/enfire.wav");
 
     actor.health = 200;
     actor.th_stand = dalek_stand1;

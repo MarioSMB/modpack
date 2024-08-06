@@ -208,13 +208,13 @@ METHOD(Vore, mr_setup, bool(Vore this, entity actor))
 {
     TC(Vore, this);
 
-	precache_model2("progs/v_spike.mdl");
+	precache_model("progs/v_spike.mdl");
 	
-	precache_sound2("shalrath/attack.wav");
-	precache_sound2("shalrath/attack2.wav");
-	precache_sound2("shalrath/death.wav");
-	precache_sound2("shalrath/idle.wav");
-	precache_sound2("shalrath/pain.wav");
+	precache_sound("shalrath/attack.wav");
+	precache_sound("shalrath/attack2.wav");
+	precache_sound("shalrath/death.wav");
+	precache_sound("shalrath/idle.wav");
+	precache_sound("shalrath/pain.wav");
 
     actor.health = 400;
     actor.th_stand = shal_stand;

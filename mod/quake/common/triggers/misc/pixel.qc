@@ -49,8 +49,8 @@ void pixel_think(entity this)
 
 spawnfunc(misc_pixel)
 {
-	precache_model2("progs/null.mdl");
-	precache_sound2("ambience/pixels.wav");
+	precache_model("progs/null.mdl");
+	precache_sound("ambience/pixels.wav");
 	setthink(this, pixel_think);
 	this.nextthink = time;
 	this.teleport_time = this.teleport_time / 100;

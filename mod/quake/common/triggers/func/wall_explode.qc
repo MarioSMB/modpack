@@ -219,15 +219,15 @@ void wall_explode_touch(entity this, entity toucher)
 
 spawnfunc(wall_explode)
 {
-	precache_model2("progs/sglass.mdl");
-	precache_model2("progs/glass.mdl");
-	precache_model2("progs/rubble.mdl");
-	precache_sound2("enviro/physics/glass.wav");
-	precache_sound2("enviro/physics/glassbit.wav");
-	precache_sound2("enviro/physics/wallexpl.wav");
-	precache_sound2("enviro/physics/piece1.wav");
-	precache_sound2("enviro/physics/piece2.wav");
-	precache_sound2("enviro/physics/piece3.wav");
+	precache_model("progs/sglass.mdl");
+	precache_model("progs/glass.mdl");
+	precache_model("progs/rubble.mdl");
+	precache_sound("enviro/physics/glass.wav");
+	precache_sound("enviro/physics/glassbit.wav");
+	precache_sound("enviro/physics/wallexpl.wav");
+	precache_sound("enviro/physics/piece1.wav");
+	precache_sound("enviro/physics/piece2.wav");
+	precache_sound("enviro/physics/piece3.wav");
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_PUSH);

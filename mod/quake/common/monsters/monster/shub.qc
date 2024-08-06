@@ -364,9 +364,9 @@ METHOD(Shub, mr_setup, bool(Shub this, entity actor))
 {
 	TC(Shub, this);
 
-	precache_sound2("boss2/death.wav");
-	precache_sound2("boss2/idle.wav");
-	precache_sound2("boss2/pop2.wav");
+	precache_sound("boss2/death.wav");
+	precache_sound("boss2/idle.wav");
+	precache_sound("boss2/pop2.wav");
 
 	if(!actor.strength)
 		actor.strength = 3;

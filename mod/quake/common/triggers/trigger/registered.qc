@@ -7,20 +7,27 @@ void trigger_onlyregistered_touch(entity this, entity toucher)
 	if(this.attack_finished > time)
 		return;
 
-	this.attack_finished = time + 2;
-	if(autocvar_registered)
+	bool isregistered = true;
+#if 0
+	if(!autocvar_g_registered)
+		isregistered = false;
+#endif
+
+	if(isregistered)
 	{
 		this.message = "";
 		SUB_UseTargets(this, NULL, toucher);
 		delete(this);
+		return;
 	}
-	else
+
+	// if we get here, game is unregistered
+
+	this.attack_finished = time + 2;
+	if(this.message != "")
 	{
-		if(this.message != "")
-		{
-			centerprint(toucher, this.message);
-			_sound(toucher, CH_PLAYER, QUAKE_TALKSOUND, 1, ATTN_NORM);
-		}
+		centerprint(toucher, this.message);
+		_sound(toucher, CH_PLAYER, QUAKE_TALKSOUND, 1, ATTN_NORM);
 	}
 }
 

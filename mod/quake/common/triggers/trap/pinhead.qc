@@ -200,14 +200,14 @@ void pinhead_think(entity this)
 spawnfunc(misc_pinhead_triggered)
 {
 	this.classname = "misc_pinhead";
-	precache_model2("progs/claw.mdl");
-	precache_sound2("enviro/pinhead/pinback.wav");
-	precache_sound2("enviro/pinhead/pindef.wav");
-	precache_sound2("enviro/pinhead/pinfire.wav");
-	precache_sound2("enviro/pinhead/pinhit.wav");
-	precache_sound2("enviro/pinhead/pinpull.wav");
-	precache_sound2("enviro/pinhead/pinrip.wav");
-	precache_sound2("enviro/pinhead/pinsuck.wav");
+	precache_model("progs/claw.mdl");
+	precache_sound("enviro/pinhead/pinback.wav");
+	precache_sound("enviro/pinhead/pindef.wav");
+	precache_sound("enviro/pinhead/pinfire.wav");
+	precache_sound("enviro/pinhead/pinhit.wav");
+	precache_sound("enviro/pinhead/pinpull.wav");
+	precache_sound("enviro/pinhead/pinrip.wav");
+	precache_sound("enviro/pinhead/pinsuck.wav");
 	this.use = pinhead_use;
 	if(this.ltime == 0)
 		this.ltime = 2;

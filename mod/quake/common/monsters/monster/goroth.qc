@@ -533,7 +533,7 @@ METHOD(Goroth, mr_setup, bool(Goroth this, entity actor))
 	precache_model("progs/gorball.mdl");
 	precache_model("progs/gorrock.mdl");
 	
-	precache_sound2("boss2/pop2.wav");
+	precache_sound("boss2/pop2.wav");
 	precache_sound("weapons/rocket1i.wav");
 	precache_sound("boss1/throw.wav");
 	

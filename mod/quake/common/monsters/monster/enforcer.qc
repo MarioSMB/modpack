@@ -317,14 +317,14 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 {
 	TC(Enforcer, this);
 
-	precache_model2("progs/laser.mdl");
+	precache_model("progs/laser.mdl");
 
-	precache_sound2("enforcer/death1.wav");
-	precache_sound2("enforcer/enfire.wav");
-	precache_sound2("enforcer/enfstop.wav");
-	precache_sound2("enforcer/idle1.wav");
-	precache_sound2("enforcer/pain1.wav");
-	precache_sound2("enforcer/pain2.wav");
+	precache_sound("enforcer/death1.wav");
+	precache_sound("enforcer/enfire.wav");
+	precache_sound("enforcer/enfstop.wav");
+	precache_sound("enforcer/idle1.wav");
+	precache_sound("enforcer/pain1.wav");
+	precache_sound("enforcer/pain2.wav");
 
 	actor.health = 80;
 	actor.th_stand = enf_stand1;

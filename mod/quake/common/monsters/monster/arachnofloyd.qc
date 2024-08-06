@@ -417,21 +417,21 @@ METHOD(Arachnofloyd, mr_setup, bool(Arachnofloyd this, entity actor))
 {
     TC(Arachnofloyd, this);
 
-	precache_model2("progs/fgib1.mdl");
+	precache_model("progs/fgib1.mdl");
 
-	precache_model2("progs/s_light.mdl");
-	precache_sound2("misc/power.wav");
-	precache_sound2("shambler/sboom.wav");
-	precache_sound2("arachnofloyd/whirr1.wav");
-	precache_sound2("arachnofloyd/step2.wav");
-	precache_sound2("arachnofloyd/step1.wav");
-	precache_sound2("arachnofloyd/leap.wav");
-	precache_sound2("arachnofloyd/death1.wav");
-	precache_sound2("arachnofloyd/death2.wav");	
-	precache_sound2("arachnofloyd/idle1.wav");
-	precache_sound2("arachnofloyd/idle2.wav");	
-	precache_sound2("arachnofloyd/pain1.wav");
-	precache_sound2("arachnofloyd/pain2.wav");	
+	precache_model("progs/s_light.mdl");
+	precache_sound("misc/power.wav");
+	precache_sound("shambler/sboom.wav");
+	precache_sound("arachnofloyd/whirr1.wav");
+	precache_sound("arachnofloyd/step2.wav");
+	precache_sound("arachnofloyd/step1.wav");
+	precache_sound("arachnofloyd/leap.wav");
+	precache_sound("arachnofloyd/death1.wav");
+	precache_sound("arachnofloyd/death2.wav");	
+	precache_sound("arachnofloyd/idle1.wav");
+	precache_sound("arachnofloyd/idle2.wav");	
+	precache_sound("arachnofloyd/pain1.wav");
+	precache_sound("arachnofloyd/pain2.wav");	
 
     actor.health = 600;
     actor.th_stand = arf_stand1;

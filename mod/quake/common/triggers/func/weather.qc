@@ -8,7 +8,7 @@ void snow_bob(entity this);
 
 spawnfunc(snow_fall)
 {
-    precache_model2("progs/snow.spr");
+    precache_model("progs/snow.spr");
     this.nextthink = time + 1;
     setthink(this, make_snow);
 }
@@ -66,7 +66,7 @@ void smallsnow_bob(entity this);
 
 spawnfunc(smallsnow_fall)
 {
-    precache_model2("progs/smlsnow.spr");
+    precache_model("progs/smlsnow.spr");
     this.nextthink = (time + (random () * 15));
     setthink(this, premake_smallsnow);
 }
@@ -195,7 +195,7 @@ void lostbubble_bob(entity this);
 
 spawnfunc(lostbubbles)
 {
-    precache_model2("progs/s_bubble.spr");
+    precache_model("progs/s_bubble.spr");
     this.nextthink = time + 1;
     setthink(this, make_lostbubble);
 }
@@ -280,8 +280,8 @@ void make_rain(entity this);
 
 spawnfunc(rain_fall)
 {
-    precache_model2("progs/drop.spr");
-    precache_model2("progs/drop.spr");
+    precache_model("progs/drop.spr");
+    precache_model("progs/drop.spr");
     this.nextthink = time + 1;
     setthink(this, make_drop);
 }

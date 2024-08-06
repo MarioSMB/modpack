@@ -817,10 +817,10 @@ METHOD(Volkerh, mr_setup, bool(Volkerh this, entity actor))
 	precache_model("progs/volball.mdl");
 	precache_model("progs/volspire.mdl");
 	
-	precache_sound2("blob/death1.wav");
+	precache_sound("blob/death1.wav");
 	precache_sound("shambler/sboom.wav");
 	precache_sound("player/inlava.wav");
-	precache_sound2("boss2/pop2.wav");
+	precache_sound("boss2/pop2.wav");
 	
 	precache_sound("volkerh/volwake.wav");
 	precache_sound("volkerh/voltaunt1.wav");

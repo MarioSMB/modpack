@@ -450,16 +450,16 @@ void ExitIntermission()
 		#else
 			SendCDTrack(NULL, 3);
 		#endif
-			if(!autocvar_registered)
-			{
-				WriteByte(MSG_ALL, SVC_FINALE);
-				WriteString(MSG_ALL, "As the corpse of the monstrous entity\nChthon sinks back into the lava whence\nit rose, you grip the Rune of Earth\nMagic tightly. Now that you have\nconquered the Dimension of the Doomed,\nrealm of Earth Magic, you are ready to\ncomplete your task in the other three\nhaunted lands of Quake. Or are you? If\nyou don't register Quake, you'll never\nknow what awaits you in the Realm of\nBlack Magic, the Netherworld, and the\nElder World!");
-			}
-			else
-			{
+			//if(!autocvar_registered)
+			//{
+				//WriteByte(MSG_ALL, SVC_FINALE);
+				//WriteString(MSG_ALL, "As the corpse of the monstrous entity\nChthon sinks back into the lava whence\nit rose, you grip the Rune of Earth\nMagic tightly. Now that you have\nconquered the Dimension of the Doomed,\nrealm of Earth Magic, you are ready to\ncomplete your task in the other three\nhaunted lands of Quake. Or are you? If\nyou don't register Quake, you'll never\nknow what awaits you in the Realm of\nBlack Magic, the Netherworld, and the\nElder World!");
+			//}
+			//else
+			//{
 				WriteByte(MSG_ALL, SVC_FINALE);
 				WriteString(MSG_ALL, "As the corpse of the monstrous entity\nChthon sinks back into the lava whence\nit rose, you grip the Rune of Earth\nMagic tightly. Now that you have\nconquered the Dimension of the Doomed,\nrealm of Earth Magic, you are ready to\ncomplete your task. A Rune of magic\npower lies at the end of each haunted\nland of Quake. Go forth, seek the\ntotality of the four Runes!");
-			}
+			//}
 			return;
 		}
 		else if(world.model == "maps/e2m6.bsp")
@@ -689,11 +689,11 @@ void ExitIntermission()
 	
 	if(intermission_running == 3)
 	{
-		if(!autocvar_registered)
-		{	// shareware episode has been completed, go to sell screen
-			WriteByte(MSG_ALL, SVC_SELLSCREEN);
-			return;
-		}
+		//if(!autocvar_registered)
+		//{	// shareware episode has been completed, go to sell screen
+			//WriteByte(MSG_ALL, SVC_SELLSCREEN);
+			//return;
+		//}
 		
 		if((serverflags&15) == 15 && substring(world.model, 0, 6) == "maps/e") // try to catch only standard Quake episodes
 		{

@@ -758,7 +758,7 @@ This is used for the final bos
 */
 spawnfunc(misc_teleporttrain)
 {
-	precache_model2("progs/teleport.mdl");
+	precache_model("progs/teleport.mdl");
 	
 	// emulate old "spawn where you were placed and then move to the first pathcorner"
 	// behavior so udob_end isn't broken by the first path_corner's targets not firing
