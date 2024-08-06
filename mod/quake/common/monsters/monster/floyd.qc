@@ -504,7 +504,7 @@ METHOD(Floyd, mr_setup, bool(Floyd this, entity actor))
 		actor.use = floyd_awake;
 
 		setorigin(actor, actor.origin + '0 0 10');
-		droptofloor(actor);
+		DropToFloor_QC_DelayedInit(actor);
 		actor.ideal_yaw = actor.angles * '0 1 0';
 		if(!actor.yaw_speed)
 			actor.yaw_speed = 20;

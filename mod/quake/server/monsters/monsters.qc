@@ -91,7 +91,7 @@ void monster_start_go(entity this)
 	if(is_walker && this.movedir == '0 0 0' && !(this.spawnflags & SPAWN_TRIGGERED))
 	{
 		this.origin_z = this.origin_z + 1;	// raise off floor a bit
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 	}
 
 	if((this.spawnflags & SPAWN_TRIGGERED) && this.movedir != '0 0 0')

@@ -243,7 +243,7 @@ void zombie_attc1(entity this) { set_animofs(this, anim_zombie_attc, 1, zombie_a
 void zombie_missile(entity this)
 {
 	float r = random();
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 	
 	if(r < 0.3)
 		zombie_atta1(this);
@@ -335,7 +335,7 @@ void zombie_paind5(entity this) { set_animofs(this, anim_zombie_paind, 5, zombie
 void zombie_paind4(entity this) { set_animofs(this, anim_zombie_paind, 4, zombie_paind5); }
 void zombie_paind3(entity this) { set_animofs(this, anim_zombie_paind, 3, zombie_paind4); }
 void zombie_paind2(entity this) { set_animofs(this, anim_zombie_paind, 2, zombie_paind3); }
-void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); droptofloor(this); }
+void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); DropToFloor_QC_DelayedInit(this); }
 
 void zombie_paine11(entity this);
 void zombie_paine30(entity this) { set_animofs(this, anim_zombie_paine, 30, zombie_run1); }
@@ -364,7 +364,7 @@ void zombie_paine12(entity this)
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 	if(trace_startsolid)
 	{
@@ -546,7 +546,7 @@ void zombie_escape16(entity this)
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 }
 void zombie_escape15(entity this)
 {

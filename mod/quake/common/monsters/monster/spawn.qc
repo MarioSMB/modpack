@@ -181,7 +181,7 @@ void tbaby_checknew(entity this)
 	this.th_melee = tbaby_jump1;
 	this.th_die = tbaby_die1;       
 	this.origin_z = this.origin_z + 1;      // raise off floor a bit
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	if(!t_walkmove(this, 0,0))
 	{

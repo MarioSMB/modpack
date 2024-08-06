@@ -116,7 +116,7 @@ void PlaceItem(entity this)
 	setthink(this, FixItem);
 	this.nextthink = time + 1; // initial delay
 	if(!this.noalign && !(this.spawnflags & ITEM_SUSPENDED))
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 
 	if(SUB_VerifyTriggerable(this))
 	{
@@ -1606,7 +1606,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	setup_minionsupport(monster);
 
 	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
-		droptofloor(monster);
+		DropToFloor_QC_DelayedInit(monster);
 	
 	tracebox(monster.origin, monster.mins, monster.maxs, monster.origin, MOVE_NOMONSTERS, monster);
 	if(trace_startsolid)

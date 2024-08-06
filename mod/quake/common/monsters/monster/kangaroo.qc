@@ -82,7 +82,7 @@ void roo_pain(entity this, entity attacker, float damage, int deathtype)
 
 void roo_run(entity this, float dist)
 {
-	//droptofloor(this);
+	//DropToFloor_QC_DelayedInit(this);
 	if(this.enemy)
 		ai_run(this, dist);
 	else

@@ -234,7 +234,7 @@ entity minion_spawn(entity own, vector org, Monster mon)
 	}
 
 	//if(!(mon.spawnflags & MONSTER_TYPE_FLY))
-		//droptofloor(monster);
+		//DropToFloor_QC_DelayedInit(monster);
 
 	monster.takedamage = DAMAGE_AIM;
 	if(!monster.yaw_speed)
@@ -269,7 +269,7 @@ void Hatch_Egg(entity this)
 	set_movetype(this, MOVETYPE_TOSS);
 	this.oldorigin = this.origin;
 	this.origin_z = this.origin_z + 8;
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 	
 	// Can the egg hatch yet? Solid content?
 	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);

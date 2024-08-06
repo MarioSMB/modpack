@@ -519,7 +519,7 @@ void morph_teleport(entity this)
 	theChild.mangle = theDest.mangle;
 	morph_setup(theChild);
 	setorigin(theChild, theDest.origin);
-	droptofloor(theChild);
+	DropToFloor_QC_DelayedInit(theChild);
 
 	setthink(theChild, morph_wake1);
 	theChild.nextthink = time + 0.3;

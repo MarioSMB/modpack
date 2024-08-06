@@ -27,6 +27,22 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
 			settouch(newmis, superspike_touch);
 	}
+	else if(((this.spawnflags & SPAWNFLAG_LAVASPIKE) || (this.spawnflags & SPAWNFLAG_SUPERLAVA)) && IsRogueMap())
+	{
+		entity newmis = launch_lava_spike(this, this.origin, this.movedir);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
+		newmis.projectiledeathtype = DEATH_TRAP.m_id;
+		newmis.velocity = this.movedir * 500;
+		if((this.spawnflags & SPAWNFLAG_SUPERLAVA) || (this.spawnflags & SPAWNFLAG_LAVASKILL))
+			settouch(newmis, superlavaspike_touch);
+		else
+			settouch(newmis, lavaspike_touch);
+	}
+	else if((this.spawnflags & SPAWNFLAG_FIREBALL) && IsRogueMap())
+	{
+		entity newmis = launch_fireball(this, this.origin, this.movedir);
+		newmis.projectiledeathtype = DEATH_TRAP.m_id;
+	}
 	else if(this.spawnflags & SPAWNFLAG_LASER)
 	{
 		if(!(this.spawnflags & SPAWNFLAG_SILENT))
@@ -36,7 +52,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	}
 	else if(this.spawnflags & SPAWNFLAG_LAVABALL)
 	{
-		if(!this.spawnflags & SPAWNFLAG_SILENT)
+		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound (this, CH_WEAPON_SINGLE, "misc/spike.wav", 1, ATTN_NORM);
 		entity lavaball = new(lavaball);
 		set_movetype(lavaball, MOVETYPE_FLYMISSILE);
@@ -56,7 +72,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	}
 	else if(this.spawnflags & SPAWNFLAG_ROCKET)
 	{
-		if(!this.spawnflags & SPAWNFLAG_SILENT)
+		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 		entity rocket = W_FireRocket(this);
 		rocket.velocity = this.movedir*1000;
@@ -108,37 +124,37 @@ spawnfunc(trap_spikeshooter)
 		precache_sound2("enforcer/enfire.wav");
 		precache_sound2("enforcer/enfstop.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_LAVABALL) // too early to bother checking for mission packs
+	if(this.spawnflags & SPAWNFLAG_LAVABALL) // too early to bother checking for mission packs
 	{
 		precache_model("progs/lavarock.mdl");
 //      this.classname = "fireball";
 		precache_sound2("misc/spike.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_ROCKET)
+	if(this.spawnflags & SPAWNFLAG_ROCKET)
 	{
 		precache_model("progs/missile.mdl");
 		precache_sound("weapons/sgun1.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_LAVASPIKE)
+	if(this.spawnflags & SPAWNFLAG_LAVASPIKE)
 	{
 		precache_model2("progs/lspike.mdl");
 		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
 		precache_sound2("weapons/rocket1i.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
+	if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
 	{
 		precache_model2("progs/lspike.mdl");
 		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
 		precache_sound2("weapons/spike2.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_LAVASKILL)
+	if(this.spawnflags & SPAWNFLAG_LAVASKILL)
 	{
 		precache_model2("progs/lspike.mdl");
 		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
 		precache_sound2("weapons/rocket1i.wav");
 		precache_sound2("weapons/spike2.wav");
 	}
-	else if(this.spawnflags & SPAWNFLAG_FIREBALL)
+	if(this.spawnflags & SPAWNFLAG_FIREBALL)
 		precache_model("progs/fireball.mdl");
 	else
 		precache_sound("weapons/spike2.wav");

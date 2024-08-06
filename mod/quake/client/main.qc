@@ -15,7 +15,7 @@ bool autocvar_developer_csqcentities;
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void CSQC_Init()
+void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	{
 		int i = 0;

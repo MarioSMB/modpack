@@ -222,7 +222,7 @@ void shopkeep_spawn(entity this)
 	precache_sound("weapons/pkup.wav");
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_NOT;
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 	set_movetype(this, MOVETYPE_NONE);
 	Net_LinkEntity(this, false, 0, shopkeep_send);
 }

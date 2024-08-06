@@ -124,7 +124,7 @@ const int anim_sword_deathb = 29; //'29 40 0'
 
 void killsword(entity this)
 {
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 3;
 }
@@ -295,7 +295,7 @@ void summon_sword(entity this, vector spot, .entity weaponentity)
 	//set_movetype(sword, MOVETYPE_FLY);
 	sword.angles = this.angles;
 	SetMovetypeFollow(sword, this);
-	//droptofloor(sword);
+	//DropToFloor_QC_DelayedInit(sword);
 	setthink(sword, animatesword1);
 	sword.nextthink = time + 0.1;
 	sword.effects = EF_LOWPRECISION | EF_ADDITIVE | EF_NOSHADOW;

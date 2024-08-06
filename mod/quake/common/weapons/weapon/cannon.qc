@@ -167,7 +167,7 @@ spawnfunc(cannon)
 	setsize(this, '-16 -16 -16', '16 16 32');
 	this.pos2 = this.angles;
 	if(!this.noalign)
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 	cannon_setup(this);
 }
 

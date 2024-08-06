@@ -5,6 +5,8 @@
 // hack needed for xonotic references (helps reduce code duplication!)
 #define PHYS_INVEHICLE(s) 					false
 
+const float PL_CORPSE_SCALE = 0.235; // average hitbox height is scaled by this when the player dies
+
 #ifdef SVQC
 int autocvar_sv_quake_fixstuff;
 #endif

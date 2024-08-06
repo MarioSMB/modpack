@@ -47,7 +47,7 @@ spawnfunc(misc_gib)
 	set_movetype(this, MOVETYPE_TOSS);
 	this.origin_z = this.origin_z + 1;
 	setorigin(this, this.origin);
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 }
 
 #endif

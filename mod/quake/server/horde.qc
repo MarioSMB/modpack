@@ -384,7 +384,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	setcefc(monster, monster_customize);
 	
 	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
-		droptofloor(monster);
+		DropToFloor_QC_DelayedInit(monster);
 	
 	tracebox(monster.origin, monster.mins, monster.maxs, monster.origin, MOVE_NOMONSTERS, monster);
 	if(trace_startsolid)

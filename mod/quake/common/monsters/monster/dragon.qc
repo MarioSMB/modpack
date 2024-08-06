@@ -337,7 +337,7 @@ void FireballTouch(entity this, entity toucher)
 //	BecomeExplosion();
 }
 
-void launch_fireball(entity this, vector org, vector dir)
+entity launch_fireball(entity this, vector org, vector dir)
 {
 	this.effects = this.effects | EF_MUZZLEFLASH;
 	entity fireball = new(fireball);
@@ -359,6 +359,8 @@ void launch_fireball(entity this, vector org, vector dir)
 	settouch(fireball, FireballTouch);
 	fireball.nextthink = time + 6;
 	setthink(fireball, SUB_Remove);
+
+	return fireball;
 }
 
 // ===========================================

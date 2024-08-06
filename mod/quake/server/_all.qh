@@ -1,7 +1,7 @@
 #pragma once
 
 //void(entity e) _makestatic_hidden = #69;
-void droptofloor(entity this);
+void DropToFloor_QC_DelayedInit(entity this);
 
 int maxclients;
 

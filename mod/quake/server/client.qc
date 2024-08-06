@@ -3202,10 +3202,10 @@ void SV_ParseClientCommand(entity this, string command)
 		setorigin(e, trace_endpos);
 		e.angles = this.angles;
 	#if 0
-		string themsg = strcat1(substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		string themsg = strcat(substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 		target_spawn_edit_entity(this, e, themsg, NULL, NULL, NULL, NULL, this, this);
 	#else
-		string themsg = strcat1(argv(1));
+		string themsg = strcat(argv(1));
 		if(themsg != "")
 		{
 			string value = strcat("spawnfunc_", themsg);

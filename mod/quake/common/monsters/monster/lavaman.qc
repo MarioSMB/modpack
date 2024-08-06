@@ -404,7 +404,7 @@ void lavaman_awake(entity this)
 
 	te_lavasplash(this.origin);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	lavaman_rise1(this);
 }

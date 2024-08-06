@@ -37,7 +37,7 @@ void eel_pitch_change(entity this)
 {
 	if(pointcontents(this.origin) != CONTENT_WATER)
 	{
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 		T_Damage(this, NULL, NULL, 6, DEATH_DROWN.m_id);
 		return;
 	}
@@ -136,7 +136,7 @@ void eel_attack2(entity this) { set_animofs(this, anim_eel_eelswim1, 2, eel_atta
 void eel_attack1(entity this) { set_animofs(this, anim_eel_eelswim1, 1, eel_attack2); ai_charge(this, 8); eel_pitch_change(this);}
 
 void eel_death16(entity this) { set_animofs(this, anim_eel_eeldth1, 10, eel_death16); CorpseThink(this); }
-void eel_death15(entity this) { set_animofs(this, anim_eel_eeldth1, 9, eel_death16); droptofloor(this); }
+void eel_death15(entity this) { set_animofs(this, anim_eel_eeldth1, 9, eel_death16); DropToFloor_QC_DelayedInit(this); }
 void eel_death14(entity this) { set_animofs(this, anim_eel_eeldth1, 8, eel_death15); }
 void eel_death13(entity this) { set_animofs(this, anim_eel_eeldth1, 7, eel_death14); }
 void eel_death12(entity this) { set_animofs(this, anim_eel_eeldth1, 6, eel_death13); }

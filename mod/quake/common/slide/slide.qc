@@ -468,7 +468,7 @@ spawnfunc(point_zip)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.mangle = this.angles;
 
@@ -541,7 +541,7 @@ spawnfunc(point_start)
 		return;
 	}
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	precache_sound("go.wav");
 
@@ -596,7 +596,7 @@ void EndStuff(entity this, entity trigger)
 	if(deathmatch)
 		bprintf("%s finished in %d seconds\n", this.netname, temptime);
 
-	string oldname = strcat1(namebest);
+	string oldname = strcat(namebest);
 
 	if(temptime > 0 && (temptime < timebest || !timebest))
 	{
@@ -662,7 +662,7 @@ spawnfunc(point_end)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.angles = vectoangles(trace_plane_normal);
 	this.angles_z = crandom()*180;
@@ -712,7 +712,7 @@ spawnfunc(point_check)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.angles = vectoangles(trace_plane_normal);
 	this.angles_z = crandom()*180;
@@ -763,7 +763,7 @@ spawnfunc(item_reslide)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.angles = vectoangles(trace_plane_normal);
 	this.angles_z = crandom()*180;
@@ -1079,7 +1079,7 @@ spawnfunc(dummy_end)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.angles = vectoangles(trace_plane_normal);
 	this.angles_z = crandom()*180;
@@ -1153,7 +1153,7 @@ spawnfunc(dummy_check)
 
 	traceline(this.origin, this.origin - '0 0 256', true, this);
 
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	this.angles = vectoangles(trace_plane_normal);
 	this.angles_z = crandom()*180;
