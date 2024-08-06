@@ -604,7 +604,7 @@ void func_train_setup(entity this)
 		set_movetype(this, MOVETYPE_FAKEPUSH);
 	else
 		set_movetype(this, MOVETYPE_PUSH);
-	if((this.spawnflags & FUNC_TRAIN_NONSOLID) && substring(world.model, 0, 7) == "maps/mg") // hack needed because this flag is set on vanilla maps!
+	if((this.spawnflags & FUNC_TRAIN_NONSOLID) && IsMGMap()) // hack needed because this flag is set on vanilla maps!
 		this.solid = SOLID_NOT; // TODO: MOVETYPE_FAKEPUSH?
 	else
 		setblocked(this, train_blocked);

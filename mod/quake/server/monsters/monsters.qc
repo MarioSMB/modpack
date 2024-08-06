@@ -221,7 +221,7 @@ bool monster_checkspawnedflag(entity this)
 {
 	if(!(this.spawnflags & MONSTER_SPAWNED))
 		return false;
-	return (substring(world.model, 0, 7) == "maps/mg" || substring(world.model, 0, 5) == "horde");
+	return IsMGMap();
 }
 
 // interpolation for monsters only applies when .movetype is set to MOVETYPE_STEP
@@ -274,7 +274,7 @@ void Monster_Appear(entity this, entity actor, entity trigger)
 bool Monster_Appear_Check(entity this, Monster monster_id)
 {
 	bool check_triggered = (this.spawnflags & SPAWN_TRIGGERED);
-	if(substring(world.model, 0, 7) == "maps/mg")
+	if(IsMGMap())
 		check_triggered = false;
 	if(!(monster_id.spawnflags & MON_FLAG_APPEAR) && !check_triggered)
 		return false;

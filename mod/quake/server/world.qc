@@ -204,6 +204,11 @@ bool IsHipnoticMap()
 	return (substring(world.model, 0, 8) == "maps/hip");
 }
 
+bool IsMGMap()
+{
+	return (world.model == "maps/hub.bsp" || substring(world.model, 0, 7) == "maps/mg" || substring(world.model, 0, 10) == "maps/horde");
+}
+
 // copper-specific lighting hack
 string light_str(float f)
 {
@@ -1653,7 +1658,7 @@ void CheckRules_World()
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
 		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch 
 			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp"
-			&& world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp" && world.model != "maps/quake.bsp")
+			&& world.model != "maps/aopstart.bsp" && world.model != "maps/mgstart.bsp" && world.model != "maps/hub.bsp" && world.model != "maps/quake.bsp")
 		{
 			changelevel("quake");
 		}

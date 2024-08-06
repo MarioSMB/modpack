@@ -470,7 +470,7 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.enemy)
 		return; // fighting, not following a path
 
-	if(substring(world.model, 0, 7) == "maps/mg")
+	if(IsMGMap())
 	{
 		this.owner = toucher; // we have a valid visitor!
 		if(toucher.dmg_inflictor && toucher.dmg_inflictor.classname == "path_corner")
@@ -1065,7 +1065,7 @@ bool FindTarget(entity this)
 	entity client = NULL;
 
 	// First, if we are attacking friends, try to find another friend
-	if((this.spawnflags & MONSTER_ATTACK_FRIEND) && this.target && this.target != "" && substring(world.model, 0, 7) == "maps/mg")
+	if((this.spawnflags & MONSTER_ATTACK_FRIEND) && this.target && this.target != "" && IsMGMap())
 	{
 		RandomSelection_Init();
 		FOREACH_ENTITY_STRING(targetname, this.target,

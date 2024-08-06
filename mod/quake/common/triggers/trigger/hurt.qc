@@ -65,7 +65,7 @@ spawnfunc(trigger_hurt)
 		this.dmg = 5;
 	if(!this.wait)
 		this.wait = 1;
-	if((this.spawnflags & START_OFF) && substring(world.model, 0, 7) == "maps/mg")
+	if((this.spawnflags & START_OFF) && IsMGMap())
 		this.state = 1;
 	else if(this.spawnflags & 1)
 		this.dmg = 10000;

@@ -14,7 +14,7 @@ void teleport_touch(entity this, entity toucher)
 	if(this.customflags & CFL_LOCKED)
 		return;
 
-	bool ignore_targetname = ((this.spawnflags & IGNORE_TARGETNAME) && substring(world.model, 0, 7) == "maps/mg");
+	bool ignore_targetname = ((this.spawnflags & IGNORE_TARGETNAME) && IsMGMap());
 	if(this.targetname && this.targetname != "" && !ignore_targetname && !(this.spawnflags & TELEPORT_TRIGGER_FIRST) && !(this.spawnflags & TELEPORT_NOTRIGGER))
 	{
 		if(this.attack_finished < time)

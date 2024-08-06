@@ -655,7 +655,7 @@ void InitTrigger(entity this)
 	//this.modelindex = 0;
 	this.model = string_null;
 
-	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && substring(world.model, 0, 7) != "maps/mg")
+	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && !IsMGMap())
 	{
 		this.solid = SOLID_NOT;
 		this.trigger_init_use = this.use;
@@ -693,7 +693,7 @@ void InitTriggerBounds(entity this)
 	if(this.distance > 1)
 		this.distance = cos(this.distance / 2);
 
-	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && substring(world.model, 0, 7) != "maps/mg")
+	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && !IsMGMap())
 	{
 		this.solid = SOLID_NOT;
 		this.trigger_init_use = this.use;
