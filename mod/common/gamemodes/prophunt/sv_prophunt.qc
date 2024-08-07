@@ -277,6 +277,12 @@ MUTATOR_HOOKFUNCTION(ph, PlayerPowerups)
 		player.effects &= ~EF_FULLBRIGHT; // ignore fullbrightplayers setting
 }
 
+MUTATOR_HOOKFUNCTION(ph, ShowChatBubble)
+{
+	entity player = M_ARGV(0, entity);
+	return (player.team == prophunt_propteam);
+}
+
 MUTATOR_HOOKFUNCTION(ph, PlayerPreThink)
 {
 	if (game_stopped)
@@ -288,9 +294,6 @@ MUTATOR_HOOKFUNCTION(ph, PlayerPreThink)
 	{
 		return;
 	}
-
-	if(player.chatbubbleentity)
-		player.chatbubbleentity.effects = BITSET(player.chatbubbleentity.effects, EF_NODRAW, player.team == prophunt_propteam);
 
 	if(player.team != prophunt_propteam)
 		return;
