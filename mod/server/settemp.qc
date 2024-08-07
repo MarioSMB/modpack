@@ -29,3 +29,17 @@ ACCUMULATE void MapInfo_LoadMapSettings(string s)
 		parse_settemp(thevar);
 	}
 }
+
+STATIC_INIT(Settemp_Init)
+{
+	string gtv = autocvar__sv_vote_gametype_custom;
+	if(gtv == "")
+		return;
+
+	string thevar = strcat("sv_vote_gametype_", gtv, "_settemp");
+	if(cvar_type(thevar) & CVAR_TYPEFLAG_EXISTS)
+	{
+		thevar = cvar_string(thevar);
+		parse_settemp(thevar);
+	}
+}

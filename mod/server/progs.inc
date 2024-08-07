@@ -23,6 +23,7 @@
 	#include "mutators/all.inc"
 #endif
 
+//#define QUAKE_ONE
 #ifdef QUAKE_ONE
 	#include "../quake/server/progs.inc"
 #endif
