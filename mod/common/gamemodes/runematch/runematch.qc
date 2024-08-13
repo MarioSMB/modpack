@@ -85,6 +85,7 @@ AUTOCVAR(g_balance_curse_weak_force, float, 0.6, "");
 // spawnfuncs
 spawnfunc(runematch_spawn_point)
 {
+	if(!g_runematch) { delete(this); return; }
 	if(!autocvar_g_runematch_fixedspawns) { delete(this); return; }
 
 	IL_PUSH(g_runematch_spawnpoints, this);
