@@ -1924,68 +1924,23 @@ bool WarpZoneLib_MoveOutOfSolid(entity e)
 	return true;
 }
 
-//bool autocvar_sv_gameplayfix_droptofloorstartsolid;
-//bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
+bool WarpZoneLib_MoveOutOfSolid(entity e);
+#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
+
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
 bool autocvar_sv_mapformat_is_quake3;
 bool autocvar_sv_mapformat_is_quake2;
 
 // deferred dropping
 // ported from VM_SV_droptofloor TODO: make a common function for the client-side?
-// originally ported from DP's droptofloor() builtin
-// TODO: make a common function for the client-side?
-// bones_was_here: when we have a use case for it, yes
 void DropToFloor_QC(entity this)
 {
-	int nudgeresult;
-
 	if(!this || wasfreed(this))
 	{
-		LOG_WARN("DropToFloor_QC: can not modify free entity");
+		// no modifying free entities
 		return;
-	}
-
-	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid were done for items
-	 * using box '-16 -16 0' '16 16 48' (without the FL_ITEM expansion applied),
-	 * which often resulted in bboxes partially in solids once expansion was applied.
-	 * We don't want bboxes in solids (bad for gameplay and culling),
-	 * but we also don't want items to land on a "skirting board" or the base of a sloping wall.
-	 * For initial nudgeoutofsolid and droptofloor stages we use a small box
-	 * so they fall as far and in the same place as they traditionally would,
-	 * then we nudge the full size box out of solid, in a direction appropriate for the plane(s).
-	 */
-	vector saved_mins = this.mins; // gmqcc's used-uninitialized check doesn't handle
-	vector saved_maxs = this.maxs; // making these assignments FL_ITEM conditional.
-	if (this.flags & FL_ITEM)
-	{
-		// Using the Q3 bbox for best compatibility with all maps, except...
-		this.mins.x = -15;
-		this.mins.y = -15;
-		this.maxs.x = 15;
-		this.maxs.y = 15;
-		this.maxs.z = this.mins.z + 30; // ...Nex, Xon and Quake use a different vertical offset, see also: StartItem()
-	}
-
-	/* NOTE: sv_gameplayfix_droptofloorstartsolid_nudgetocorrect isn't checked, so it won't need to be networked to CSQC.
-	 * It was enabled by default in all Xonotic releases and in Nexuiz, so now certain maps depend on it.
-	 * Example: on erbium 0.8.6 the shards @ crylink are too low (in collision with the floor),
-	 * so without this those fall through the floor.
-	 * Q3, Q2 and Quake don't try to move items out of solid.
-	 */
-	if(autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
-	{
-		nudgeresult = nudgeoutofsolid(this);
-		if (!nudgeresult)
-			LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX badly placed entity \"%s\" before drop", this.origin, this.classname);
-		else if (nudgeresult > 0)
-			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" before drop", this.origin, this.classname);
-	}
-	else if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2) // Quake
-	{
-		if (this.flags & FL_ITEM)
-			this.origin.z += 6;
-		else
-			this.origin.z += 1; // monsters 1, misc_explobox 2 but we don't support those currently
 	}
 
 	vector end = this.origin;
@@ -1995,67 +1950,65 @@ void DropToFloor_QC(entity this)
 		end.z -= 128;
 	else
 		end.z -= 256; // Quake, QuakeWorld
-	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NOMONSTERS, this);
 
-	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 	{
-		// Quake games just delete badly placed items (and misc_explobox)...
-		if (this.flags & FL_ITEM)
+		if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+			set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
+		move_out_of_solid(this);
+	}
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
 		{
-			LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed item \"%s\"", this.origin, this.classname);
-			delete(this);
-			return;
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
 		}
-		// ...not monsters though...
-		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): badly placed entity \"%s\"", this.origin, this.classname);
-	}
-	else if (autocvar_sv_mapformat_is_quake2 && trace_startsolid) // Q3, Q2
-	{
-		// ...but we can't do that on Q3 maps like jamdm1
-		// because our tracebox hits things Q3's trace doesn't (patches?).
-		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake 3 compat): badly placed entity \"%s\"", this.origin, this.classname);
-	}
-
-	/* NOTE: sv_gameplayfix_droptofloorstartsolid (fallback from tracebox to traceline) isn't implemented.
-	 * It was disabled by default in all Xonotic releases and in Nexuiz.
-	 * Q3 doesn't support it (always uses its '-15 -15 -15' '15 15 15' box when dropping items), neither does Quake or Q2.
-	 */
-
-	if (!autocvar_sv_mapformat_is_quake2) // Quake, Q3, Nexuiz, Xonotic
-		// allow to ride movers (or unset if in freefall)
-		this.groundentity = trace_ent;
-
-	if (!autocvar_sv_mapformat_is_quake3)
-		// if support is destroyed, keep suspended (gross hack for floating items in various maps)
-		// bones_was_here: is this for Q1BSP only? Which maps use it? Do we need it at all? Intentions unclear in DP...
-		this.move_suspendedinair = true;
-
-	if (trace_fraction)
-		this.origin = trace_endpos;
-
-	if (this.flags & FL_ITEM)
-	{
-		this.mins = saved_mins;
-		this.maxs = saved_maxs;
-
-		// A side effect of using a small box to drop items (and do the initial nudge) is
-		// the full size box can end up in collision with a sloping floor or terrain model.
-		nudgeresult = nudgeoutofsolid(this);
-		// No warns for successful nudge because it would spam about items on slopes/terrain.
-	}
-	else if (trace_allsolid && trace_fraction) // dropped using "proper" bbox but never left solid
-	{
-		nudgeresult = nudgeoutofsolid(this);
-		if (nudgeresult > 0)
-			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" after drop", this.origin, this.classname);
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
+					set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
+				move_out_of_solid(this);
+			}
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
 	}
 	else
-		nudgeresult = -1;
-
-	if (!nudgeresult)
-		LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX stuck entity \"%s\" after drop", this.origin, this.classname);
-
-	setorigin(this, this.origin);
+	{
+		if(trace_allsolid)
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+		else if(trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
 }
 
 void DropToFloor_QC_DelayedInit(entity this)
