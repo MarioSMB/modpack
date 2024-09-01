@@ -9,8 +9,9 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 
 	entity client = this;
 	string nickname = strdecolorize(GetCallerName(client));
+	string output = strdecolorize(msg);
 
-	string formatted = sprintf("#%d <%s>: %s", client.playerid, nickname, msg);
+	string formatted = sprintf("#%d <%s>: %s", client.playerid, nickname, output);
 	sendto(autocvar_chat_dest_udp, formatted);
 }
 
