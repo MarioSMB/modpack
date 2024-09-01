@@ -10,12 +10,12 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 	entity client = this;
 	string nickname = GetCallerName(client);
 
-	string formatted = sprintf("#%s <%d>: %s", client.playerid, nickname, msg);
+	string formatted = sprintf("#%d <%s>: %s", client.playerid, nickname, msg);
 	sendto(autocvar_chat_dest_udp, formatted);
 }
 
 void sendto(string destination, string msg)
 {
 	//LOG_INFO("sendto: sending a packet");
-	localcmd(sprintf("packet %s %s\n", destination, msg));
+	localcmd(sprintf("packet %s \"%s\"\n", destination, msg));
 }
