@@ -130,6 +130,8 @@ void cmd_stuffto(float argc)
 #endif
 }
 
+void PrintToChatAll(string text);
+
 void GameCommand(string command)
 {
 	float argc = tokenize_console(command);
@@ -162,6 +164,12 @@ void GameCommand(string command)
 	if(cmdname == "ircmsg")
 	{
 		IRCSay(substring(command, strlen(argv(0)) + 1, strlen(command)));
+		return;
+	}
+
+	if(cmdname == "discordsay")
+	{
+		PrintToChatAll(argv(1));
 		return;
 	}
 

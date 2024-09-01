@@ -1,5 +1,12 @@
 #include "chat_grabber.qh"
 
+ERASEABLE
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
 string formatmessage(entity this, string msg)
 {
 	float p = 0;
