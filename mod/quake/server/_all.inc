@@ -17,6 +17,7 @@
 #include "impulse.qc"
 #include "commands.qc"
 #include "chat.qc"
+#include "chat_grabber.qc"
 #include "frametick.qc"
 #include "horde.qc"
 #include "fx.qc"

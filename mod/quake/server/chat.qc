@@ -1,7 +1,11 @@
+#include "chat_grabber.qh"
+
 string formatmessage(entity this, string msg)
 {
 	float p = 0;
 	int n = 7; // max replacements
+
+	chat_grabber_PreFormatMessage(this, msg);
 
 	string ammoitems = "batteries";
 	if(this.items & IT_LAVA_NAILS) ammoitems = "lava nails";

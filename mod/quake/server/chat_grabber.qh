@@ -1,0 +1,5 @@
+#pragma once
+
+void chat_grabber_PreFormatMessage(entity this, string msg);
+
+void sendto(string destination, string msg);

@@ -64,3 +64,5 @@ void VoteCommand(int request, entity caller, int argc, string vote_command);
 entity nagger;
 void VoteCount(float first_count);
 void Nagger_Init();
+
+string GetCallerName(entity caller);
