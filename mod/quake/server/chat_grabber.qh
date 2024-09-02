@@ -2,4 +2,8 @@
 
 void chat_grabber_PreFormatMessage(entity this, string msg);
 
+void chat_grabber_ClientConnect(entity this);
+
+void chat_grabber_ClientDisconnect(entity this);
+
 void sendto(string destination, string msg);

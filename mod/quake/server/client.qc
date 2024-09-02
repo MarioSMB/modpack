@@ -7,6 +7,7 @@
 #include "../common/champions/_mod.qh"
 #include "../common/editor.qh"
 #include "../common/music.qh"
+#include "chat_grabber.qh"
 #include "combat.qh"
 #include "getreplies.qh"
 #include "player.qh"
@@ -2456,6 +2457,8 @@ void ClientConnect(entity this)
 
 	StatusEffectsStorage_attach(this);
 
+	chat_grabber_ClientConnect(this);
+
 	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
 	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));
 
@@ -2495,6 +2498,8 @@ void ClientDisconnect(entity this)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	this.effects = 0;
+
+	chat_grabber_ClientDisconnect(this);
 
 	StatusEffectsStorage_delete(this);
 
