@@ -2,6 +2,15 @@
 
 string autocvar_chat_dest_udp; // UDP protocol socket destination for caught chat messages
 
+STATIC_INIT_LATE(chat_grabber)
+{
+	for(int j = 1; j <= maxclients; ++j)
+	{
+		string slotvar = strcat("_player_", ftos(j));
+		registercvar(slotvar, "");
+	}
+}
+
 void chat_grabber_PreFormatMessage(entity this, string msg)
 {
 	if(autocvar_chat_dest_udp == "")
@@ -21,7 +30,7 @@ void chat_grabber_ClientConnect(entity this)
 		return;
 
 	string slotvar = strcat("_player_", ftos(this.playerid));
-	if((cvar_type(slotvar) & CVAR_TYPEFLAG_EXISTS) && cvar_string(slotvar) == this.netname)
+	if(cvar_string(slotvar) == this.netname)
 		return; // already joined, don't show again
 
 	// store nickname to compare on next connect
