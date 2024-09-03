@@ -11,6 +11,8 @@ const int anim_bam_magic = 65; //'65 76 0'
 const int anim_bam_pain = 77; //'77 82 0'
 const int anim_bam_death = 83; //'83 93 0'
 
+const int MON_BAMBLER_ELMO = BIT(1);
+
 void bam_stand1(entity this);
 void bam_stand17(entity this) { set_animofs(this, anim_bam_stand, 17, bam_stand1); ai_stand(this); }
 void bam_stand16(entity this) { set_animofs(this, anim_bam_stand, 16, bam_stand17); ai_stand(this); }
@@ -36,7 +38,12 @@ void bam_walk12(entity this)
 	set_animofs(this, anim_bam_walk, 12, bam_walk1);
 	ai_walk(this, 7);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, "bambler/sidle.wav", 1, ATTN_IDLE);
+	{
+		if(this.spawnflags & MON_BAMBLER_ELMO)
+			_sound(this, CH_VOICE, "bambler/elmo_idle.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_VOICE, "bambler/sidle.wav", 1, ATTN_IDLE);
+	}
 }
 void bam_walk11(entity this) { set_animofs(this, anim_bam_walk, 11, bam_walk12); ai_walk(this, 7); }
 void bam_walk10(entity this) { set_animofs(this, anim_bam_walk, 10, bam_walk11); ai_walk(this, 9); }
@@ -56,7 +63,12 @@ void bam_run6(entity this)
 	set_animofs(this, anim_bam_run, 6, bam_run1);
 	ai_run(this, 20);
 	if(random() > 0.8)
-		_sound(this, CH_VOICE, "bambler/sidle.wav", 1, ATTN_IDLE);
+	{
+		if(this.spawnflags & MON_BAMBLER_ELMO)
+			_sound(this, CH_VOICE, "bambler/elmo_idle.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_VOICE, "bambler/sidle.wav", 1, ATTN_IDLE);
+	}
 }
 void bam_run5(entity this) { set_animofs(this, anim_bam_run, 5, bam_run6); ai_run(this, 24); }
 void bam_run4(entity this) { set_animofs(this, anim_bam_run, 4, bam_run5); ai_run(this, 20); }
@@ -80,7 +92,10 @@ void bam_smash10(entity this)
 		
 	float ldmg = (random() + random() + random()) * 40;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_BAMBLER.m_id);
-	_sound(this, CH_VOICE, "bambler/smack.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_BAMBLER_ELMO)
+		_sound(this, CH_VOICE, "bambler/elmo_smack.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "bambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
@@ -113,7 +128,10 @@ void bamClaw(entity this, float side)
 		
 	float ldmg =(random() + random() + random()) * 20;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_BAMBLER.m_id);
-	_sound(this, CH_VOICE, "bambler/smack.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_BAMBLER_ELMO)
+		_sound(this, CH_VOICE, "bambler/elmo_smack.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "bambler/smack.wav", 1, ATTN_NORM);
 
 	if(side)
 	{
@@ -198,7 +216,10 @@ void bam_pain1(entity this) { set_animofs(this, anim_bam_pain, 1, bam_pain2); }
 
 void bam_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	_sound(this, CH_VOICE, "bambler/shurt2.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_BAMBLER_ELMO)
+		_sound(this, CH_VOICE, "bambler/elmo_hurt.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "bambler/shurt2.wav", 1, ATTN_NORM);
 
 	if(this.health <= 0)
 		return;		// allready dying, don't go into pain frame
@@ -250,7 +271,10 @@ void bam_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 
 // regular death
-	_sound(this, CH_VOICE, "bambler/sdeath.wav", 1, ATTN_NORM);
+	if(this.spawnflags & MON_BAMBLER_ELMO)
+		_sound(this, CH_VOICE, "bambler/elmo_die.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "bambler/sdeath.wav", 1, ATTN_NORM);
 	bam_death1(this);
 }
 
@@ -272,6 +296,21 @@ METHOD(Bambler, mr_setup, bool(Bambler this, entity actor))
 	precache_sound("bambler/melee2.wav");
 	precache_sound("bambler/smack.wav");
 
+	if(autocvar_skill == 3 && random() <= 0.25)
+		actor.spawnflags |= MON_BAMBLER_ELMO;
+
+	if(actor.spawnflags & MON_BAMBLER_ELMO)
+	{
+		precache_sound("bambler/elmo_idle.wav");
+		precache_sound("bambler/elmo_hurt.wav");
+		precache_sound("bambler/elmo_die.wav");
+		precache_sound("bambler/elmo_sight.wav");
+		precache_sound("bambler/elmo_smack.wav");
+		precache_model("progs/bambler_elmo.mdl");
+		_setmodel(actor, "progs/bambler_elmo.mdl");
+		setsize(actor, this.m_mins, this.m_maxs);
+	}
+
     actor.health = 450;
     actor.th_stand = bam_stand1;
 	actor.th_walk = bam_walk1;
@@ -279,6 +318,17 @@ METHOD(Bambler, mr_setup, bool(Bambler this, entity actor))
 	actor.th_die = bam_die;
 	actor.th_melee = bam_melee;
 	actor.th_pain = bam_pain;
+
+    return true;
+}
+METHOD(Bambler, mr_sight, bool(Bambler this, entity actor))
+{
+    TC(Bambler, this);
+
+    if(actor.spawnflags & MON_BAMBLER_ELMO)
+		_sound(actor, CH_VOICE, "bambler/elmo_sight.wav", 1, ATTN_NORM);
+	else
+		sound(actor, CH_VOICE, SND_MON_BAMBLER_SIGHT, 1, ATTN_NORM);
 
     return true;
 }
