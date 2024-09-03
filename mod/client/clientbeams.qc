@@ -226,7 +226,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	if(wep.activeweapon != WEP_VAPORIZER && wep.activeweapon != WEP_VORTEX && wep.activeweapon != WEP_OVERKILL_NEX)
 		return;
 	if(!held)
-	//if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
+	//if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(WEP_VORTEX, secondary) && attack2_held && !WEP_CVAR(WEP_VORTEX, charge)))
 		return;
 	if(!(autocvar_cl_vaporizerbeam > 0 || (player.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1)))
 		return;
@@ -249,9 +249,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	//v_right = view_right;
 	//v_up = view_up;
 
-	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
-	float hit_damage = ((is_vortex) ? WEP_CVAR_PRI(vortex, damage) : vaporizer_damage);
-	float hit_force = ((is_vortex) ? WEP_CVAR_PRI(vortex, force) : 800);
+	float vaporizer_damage = ((WEP_CVAR_PRI(WEP_VAPORIZER, damage) > 0) ? WEP_CVAR_PRI(WEP_VAPORIZER, damage) : 10000);
+	float hit_damage = ((is_vortex) ? WEP_CVAR_PRI(WEP_VORTEX, damage) : vaporizer_damage);
+	float hit_force = ((is_vortex) ? WEP_CVAR_PRI(WEP_VORTEX, force) : 800);
 
 	int shottype = W_SetupShot_Dir_ProjectileSize_Range(rlplayer, wep, forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
 	FireRailgunBullet(rlplayer, wep, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, hit_damage, hit_force, 0, 0, 0, 0, wep.activeweapon.m_id);
@@ -289,7 +289,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	else if(is_vortex && (input_buttons & 1))
 	{
 		wep.last_beam = time + vordelay;
-		//else if(WEP_CVAR(vortex, secondary) && attack2_held)
+		//else if(WEP_CVAR(WEP_VORTEX, secondary) && attack2_held)
 			//wep.last_beam = time + vortex_sdelay;
 	}
 }
@@ -303,10 +303,10 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 	|| (spectatee_status)
 	) { return false; }
 
-	float vaporizer_delay = WEP_CVAR_PRI(vaporizer, refire);
-	float vortex_pdelay = WEP_CVAR_PRI(vortex, refire);
-	float oknex_delay = WEP_CVAR_PRI(oknex, refire);
-	//float vortex_sdelay = WEP_CVAR_SEC(vortex, refire);
+	float vaporizer_delay = WEP_CVAR_PRI(WEP_VAPORIZER, refire);
+	float vortex_pdelay = WEP_CVAR_PRI(WEP_VORTEX, refire);
+	float oknex_delay = WEP_CVAR_PRI(WEP_OVERKILL_NEX, refire);
+	//float vortex_sdelay = WEP_CVAR_SEC(WEP_VORTEX, refire);
 	//float vortex_charge = STAT(VORTEX_CHARGE);
 
 	bool attack1_held = (input_buttons & BIT(0));

@@ -15,7 +15,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	float damg = WEP_CVAR(rpg7, damage);
+	float damg = WEP_CVAR(WEP_RPG, damage);
 	if(IS_VEHICLE(directhitentity))
 		damg *= 3;
 
@@ -24,11 +24,11 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 		this,
 		this.realowner,
 		damg,
-		WEP_CVAR(rpg7, edgedamage),
-		WEP_CVAR(rpg7, radius),
+		WEP_CVAR(WEP_RPG, edgedamage),
+		WEP_CVAR(WEP_RPG, radius),
 		NULL,
 		NULL,
-		WEP_CVAR(rpg7, force),
+		WEP_CVAR(WEP_RPG, force),
 		this.projectiledeathtype,
 		weaponentity,
 		directhitentity
@@ -37,7 +37,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	Weapon thiswep = WEP_RPG;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg7, ammo))
+		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_RPG, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
 		{
 			this.realowner.cnt = WEP_RPG.m_id;
@@ -66,9 +66,9 @@ void W_RPG7_Think(entity this)
 	// accelerate
 	vector forward, right, up;
 	MAKE_VECTORS(this.angles.x * '-1 0 0 ' + this.angles.y * '0 1 0', forward, right, up);
-	float velspeed = WEP_CVAR(rpg7, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * forward);
+	float velspeed = WEP_CVAR(WEP_RPG, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * forward);
 	if(velspeed > 0)
-		this.velocity = this.velocity + forward * min(WEP_CVAR(rpg7, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
+		this.velocity = this.velocity + forward * min(WEP_CVAR(WEP_RPG, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
 
 	if(this.csqcprojectile_clientanimate == 0)
 		UpdateCSQCProjectile(this);
@@ -98,9 +98,9 @@ void W_RPG7_Damage(entity this, entity inflictor, entity attacker, float damage,
 
 void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpg7, ammo), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_RPG, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_RPG_FIRE, CH_WEAPON_A, WEP_CVAR(rpg7, damage), WEP_RPG.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_RPG_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_RPG, damage), WEP_RPG.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -108,11 +108,11 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.owner = missile.realowner = actor;
 	missile.classname = "rpg";
 	missile.bot_dodge = true;
-	missile.bot_dodgerating = WEP_CVAR(rpg7, damage);
+	missile.bot_dodgerating = WEP_CVAR(WEP_RPG, damage);
 
 	missile.takedamage = DAMAGE_YES;
-	missile.damageforcescale = WEP_CVAR(rpg7, damageforcescale);
-	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(rpg7, health));
+	missile.damageforcescale = WEP_CVAR(WEP_RPG, damageforcescale);
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(WEP_RPG, health));
 	missile.event_damage = W_RPG7_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -123,19 +123,19 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rpg7, speedstart), 0);
+	W_SetupProjVelocity_Basic(missile, WEP_CVAR(WEP_RPG, speedstart), 0);
 	missile.angles = vectoangles(missile.velocity);
 
 	settouch(missile, W_RPG7_Touch);
 	setthink(missile, W_RPG7_Think);
 	missile.nextthink = time;
-	missile.cnt = time + WEP_CVAR(rpg7, lifetime);
+	missile.cnt = time + WEP_CVAR(WEP_RPG, lifetime);
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(missile, WEP_CVAR(rpg7, speedaccel) == 0, PROJECTILE_RPG, false); // because of fly sound
+	CSQCProjectile(missile, WEP_CVAR(WEP_RPG, speedaccel) == 0, PROJECTILE_RPG, false); // because of fly sound
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -144,22 +144,22 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(RPG7, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpg7, speed), 0, WEP_CVAR(rpg7, lifetime), false, true);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(WEP_RPG, speed), 0, WEP_CVAR(WEP_RPG, lifetime), false, true);
 }
 
 METHOD(RPG7, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(rpg7, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpg7, ammo)) { // forced reload
+    if(WEP_CVAR(WEP_RPG, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(WEP_RPG, ammo)) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else {
     	actor.(weaponentity).tuba_instrument = 0; // full
         actor.(weaponentity).weaponname = "rpg7";
         if(fire & 1)
         {
-            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rpg7, refire)))
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_RPG, refire)))
             {
                 W_RPG7_Attack(thiswep, actor, weaponentity);
-                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rpg7, animtime), w_ready);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_RPG, animtime), w_ready);
 
                 actor.(weaponentity).tuba_instrument = 1; // empty
                 actor.(weaponentity).weaponname = "rpg7_empty";
@@ -169,8 +169,8 @@ METHOD(RPG7, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(RPG7, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(rpg7, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPG.m_id]) >= WEP_CVAR(rpg7, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_RPG, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPG.m_id]) >= WEP_CVAR(WEP_RPG, ammo);
     return ammo_amount;
 }
 METHOD(RPG7, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -179,7 +179,7 @@ METHOD(RPG7, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(RPG7, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, WEP_CVAR(rpg7, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR(WEP_RPG, ammo), SND_RELOAD);
 }
 METHOD(RPG7, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -194,7 +194,7 @@ METHOD(RPG7, wr_killmessage, Notification(entity thiswep))
 }
 METHOD(RPG7, wr_pickup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	if(WEP_CVAR(rpg7, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpg7, ammo))
+	if(WEP_CVAR(WEP_RPG, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(WEP_RPG, ammo))
 	{
 		actor.(weaponentity).tuba_instrument = 1; // empty
         actor.(weaponentity).weaponname = "rpg7_empty";

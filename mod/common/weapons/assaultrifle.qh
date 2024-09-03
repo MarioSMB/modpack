@@ -99,7 +99,7 @@ CLASS(AssaultRifle, Weapon)
 #undef X
 
 ENDCLASS(AssaultRifle)
-REGISTER_WEAPON(ASSAULTRIFLE, assaultrifle, NEW(AssaultRifle));
+REGISTER_WEAPON(ASSAULTRIFLE, NEW(AssaultRifle));
 
 SPAWNFUNC_WEAPON(weapon_assaultrifle, WEP_ASSAULTRIFLE)
 

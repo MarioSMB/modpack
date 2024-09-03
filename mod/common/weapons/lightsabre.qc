@@ -101,7 +101,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 				//LOG_INFO("dot = ", ftos(dot));
 				if(dot <= 0.3) { continue; }
 
-				if(!(it.classname == "rocket" || it.classname == "grenade") || WEP_CVAR_BOTH(lightsabre, isprimary, melee_deflectrockets))
+				if(!(it.classname == "rocket" || it.classname == "grenade") || WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_deflectrockets))
 				{
 					it.velocity *= -1; // straight forward...?
 					UpdateCSQCProjectile(it);
@@ -145,12 +145,12 @@ void W_Lightsabre_Melee_Think(entity this)
 	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR_BOTH(lightsabre, isprimary, melee_time) * W_WeaponRateFactor(this.realowner);
+	meleetime = WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces));
+	f = ((1 - swing) * WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if(IS_DEAD(this.realowner) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
+	if(IS_DEAD(this.realowner) && WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_no_doubleslap))
 	{
 		delete(this);
 		return;
@@ -159,17 +159,17 @@ void W_Lightsabre_Melee_Think(entity this)
 	// if okay, perform the traces needed for this frame
 	for(i=this.swing_prev; i < f; ++i)
 	{
-		swing_factor = ((1 - (i / WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces))) * 2 - 1);
+		swing_factor = ((1 - (i / WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_traces))) * 2 - 1);
 
 		targpos = (this.realowner.origin + this.realowner.view_ofs
-			+ (v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, melee_range))
-			+ (v_up * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_up))
-			+ (v_right * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_side)));
+			+ (v_forward * WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_range))
+			+ (v_up * swing_factor * WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_swing_up))
+			+ (v_right * swing_factor * WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_swing_side)));
 
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		if(W_Lightsabre_Melee_Block(this, NULL))
-			accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
+			accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, (WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -180,23 +180,23 @@ void W_Lightsabre_Melee_Think(entity this)
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.takedamage == DAMAGE_AIM)
 			&& (trace_ent != this.swing_alreadyhit)
-			&& (is_player || WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage)))
+			&& (is_player || WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 
 			if(!W_Lightsabre_Melee_Block(this, trace_ent))
 			{
 				if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-					swing_damage = (WEP_CVAR_BOTH(lightsabre, isprimary, damage) * min(1, swing_factor + 1));
+					swing_damage = (WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, damage) * min(1, swing_factor + 1));
 				else
-					swing_damage = (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1));
+					swing_damage = (WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1));
 
 				//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 				Damage(target_victim, this.realowner, this.realowner,
 					swing_damage, deathtype, this.weaponentity_fld,
 					this.realowner.origin + this.realowner.view_ofs,
-					v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, force));
+					v_forward * WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, force));
 
 				spamsound(this.realowner, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 
@@ -206,7 +206,7 @@ void W_Lightsabre_Melee_Think(entity this)
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 
-			if(WEP_CVAR_BOTH(lightsabre, isprimary, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
+			if(WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				this.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
@@ -237,7 +237,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 {
 	bool isprimary = !(fire & 2);
 	sound(actor, CH_WEAPON_A, ((isprimary) ? SND_LIGHTSABRE_MELEE2 : SND_LIGHTSABRE_MELEE1), VOL_BASE, ATTN_NORM);
-	weapon_thinkf(actor, weaponentity, ((isprimary) ? WFRAME_FIRE2 : WFRAME_FIRE1), WEP_CVAR_BOTH(lightsabre, isprimary, animtime), w_ready);
+	weapon_thinkf(actor, weaponentity, ((isprimary) ? WFRAME_FIRE2 : WFRAME_FIRE1), WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, animtime), w_ready);
 	animdecide_setaction(actor, ANIMACTION_MELEE, true);
 
 	entity meleetemp = new(meleetemp);
@@ -247,8 +247,8 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	if(!isprimary)
 		meleetemp.projectiledeathtype |= HITTYPE_SECONDARY;
 	meleetemp.weaponentity_fld = weaponentity;
-	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range), meleetemp.projectiledeathtype);
+	meleetemp.nextthink = time + WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_delay) * W_WeaponRateFactor(actor);
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, damage), WEP_CVAR_BOTH(WEP_LIGHTSABRE, isprimary, melee_range), meleetemp.projectiledeathtype);
 }
 
 // HACK: use tuba_instrument to avoid the need to manually network this from mod
@@ -285,12 +285,12 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if((fire & 1) || (fire & 2))
-			if(weapon_prepareattack(thiswep, actor, weaponentity, (fire & 2), WEP_CVAR_BOTH(lightsabre, !(fire & 2), refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, (fire & 2), WEP_CVAR_BOTH(WEP_LIGHTSABRE, !(fire & 2), refire)))
 			{
 				if(!actor.(weaponentity).tuba_instrument)
 				{
 					W_LightSabre_SetActive(actor, weaponentity, true, true);
-					//weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, !(fire & 2), animtime), w_ready);
+					//weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(WEP_LIGHTSABRE, !(fire & 2), animtime), w_ready);
 				}
 				else
 				{

@@ -140,7 +140,7 @@ CLASS(Flak, Weapon)
 #undef X
 
 ENDCLASS(Flak)
-REGISTER_WEAPON(FLAK, flak, NEW(Flak));
+REGISTER_WEAPON(FLAK, NEW(Flak));
 
 SPAWNFUNC_WEAPON(weapon_flak, WEP_FLAK)
 
