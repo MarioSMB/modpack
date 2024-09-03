@@ -511,6 +511,8 @@ void cannon_PlayerPhysics(entity this, float dt)
 	this.velocity = '0 0 0';
 }
 
+bool CheckLadder(entity this);
+
 void PM_Main(entity this, float dt)
 {
 	PM_FixClient(this);
@@ -585,7 +587,7 @@ void PM_Main(entity this, float dt)
 		return;
 	}
 
-	if(this.waterlevel >= 2 && this.move_movetype != MOVETYPE_NOCLIP)
+	if((this.waterlevel >= 2 || CheckLadder(this)) && this.move_movetype != MOVETYPE_NOCLIP)
 	{
 		PM_WaterMove(this, maxspeed_mod, dt);
 		return;

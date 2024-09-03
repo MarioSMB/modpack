@@ -1,0 +1,8 @@
+#pragma once
+
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_LADDER)
+
+const int SF_LADDER_ORIGIN = BIT(2);
+
+IntrusiveList g_ladders;
+STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }

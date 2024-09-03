@@ -11,6 +11,7 @@
 #include "fog.qc"
 #include "hurt.qc"
 #include "jumppads.qc"
+#include "ladder.qc"
 #include "multi.qc"
 #include "multitouch.qc"
 #include "registered.qc"

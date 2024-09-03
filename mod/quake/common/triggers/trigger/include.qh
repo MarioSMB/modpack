@@ -2,5 +2,6 @@
 
 #include "changelevel.qh"
 #include "fog.qh"
+#include "ladder.qh"
 #include "multi.qh"
 #include "viewloc.qh"
