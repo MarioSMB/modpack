@@ -2,6 +2,11 @@
 
 string autocvar_chat_dest_udp; // UDP protocol socket destination for caught chat messages
 string autocvar__player_list; // internal list of player IPs, not to be shared
+bool autocvar_chat_grabber_show_id = false; // show player IDs in the message
+bool autocvar_chat_grabber_show_circle = false; // show circle emoji behind each player to differentiate them
+
+const int CIRCLES = 8; // discord comes with 8 unique circle types
+string chat_circles[CIRCLES] = {":blue_circle:", ":brown_circle:", ":green_circle:", ":orange_circle:", ":purple_circle:", ":red_circle:", ":white_circle:", ":yellow_circle:"};
 
 void chat_grabber_PreFormatMessage(entity this, string msg)
 {
@@ -13,6 +18,21 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 	string output = strdecolorize(msg);
 
 	string formatted = sprintf("<%s>: %s", nickname, output);
+	if(autocvar_chat_grabber_show_circle)
+	{
+		int chosen = (client.playerid - 1) % CIRCLES;
+		string mycircle = chat_circles[chosen];
+		// TODO: custom handler?
+		if(substring(nickname, 0, 5) == "Mario")
+			mycircle = ":circled_m:";
+		else if(nickname == "daro")
+			mycircle = ":wheel:";
+		else if(strstrofs(nickname, "Musicgoat", 0) >= 0)
+			mycircle = ":goat:";
+		formatted = strcat(mycircle, " ", formatted);
+	}
+	if(autocvar_chat_grabber_show_id)
+		formatted = strcat(ftos(client.playerid), " ", formatted);
 	sendto(autocvar_chat_dest_udp, formatted);
 }
 
