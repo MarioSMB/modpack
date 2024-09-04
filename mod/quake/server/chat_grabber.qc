@@ -1,15 +1,7 @@
 #include "vote.qh"
 
 string autocvar_chat_dest_udp; // UDP protocol socket destination for caught chat messages
-
-STATIC_INIT_LATE(chat_grabber)
-{
-	for(int j = 1; j <= maxclients; ++j)
-	{
-		string slotvar = strcat("_player_", ftos(j));
-		registercvar(slotvar, "");
-	}
-}
+string autocvar__player_list; // internal list of player IPs, not to be shared
 
 void chat_grabber_PreFormatMessage(entity this, string msg)
 {
@@ -20,7 +12,7 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 	string nickname = strdecolorize(GetCallerName(client));
 	string output = strdecolorize(msg);
 
-	string formatted = sprintf("#%d <%s>: %s", client.playerid, nickname, output);
+	string formatted = sprintf("<%s>: %s", nickname, output);
 	sendto(autocvar_chat_dest_udp, formatted);
 }
 
@@ -29,12 +21,12 @@ void chat_grabber_ClientConnect(entity this)
 	if(autocvar_chat_dest_udp == "")
 		return;
 
-	string slotvar = strcat("_player_", ftos(this.playerid));
-	if(cvar_string(slotvar) == this.netname)
-		return; // already joined, don't show again
+	if(PlayerInIPList(this, autocvar__player_list))
+		return;
 
-	// store nickname to compare on next connect
-	cvar_set(slotvar, this.netname);
+	// storing IP only as crypto is unreliable
+	string theid = this.netaddress;
+	cvar_set("_player_list", cons(autocvar__player_list, theid));
 
 	string nickname = strdecolorize(GetCallerName(this));
 	string output = strcat(nickname, " has joined the server");
@@ -46,13 +38,36 @@ void chat_grabber_ClientDisconnect(entity this)
 	if(autocvar_chat_dest_udp == "")
 		return;
 
-	string nickname = strdecolorize(GetCallerName(this));
+	entity client = this;
+	string nickname = strdecolorize(GetCallerName(client));
 	string output = strcat(nickname, " has left the server");
 	sendto(autocvar_chat_dest_udp, output);
 
-	// only called when the match hasn't ended, relatively safe to clear
-	string slotvar = strcat("_player_", ftos(this.playerid));
-	cvar_set(slotvar, "");
+	// rebuild the string minus our details
+	string tmp_string = "";
+	FOREACH_WORD(autocvar__player_list, it != client.netaddress,
+	{
+		tmp_string = cons(tmp_string, it);
+	});
+
+	cvar_set("_player_list", tmp_string);
+}
+
+void chat_grabber_CheckClients()
+{
+	if(autocvar_chat_dest_udp == "")
+		return;
+
+	// basically redo the entire list with the current players
+	// ensures no dangling references to players who leave mid-connect
+	cvar_set("_player_list", "");
+
+	string tmp_string = "";
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		tmp_string = cons(tmp_string, it.netaddress);
+	});
+	cvar_set("_player_list", tmp_string);
 }
 
 void sendto(string destination, string msg)

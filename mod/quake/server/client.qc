@@ -1864,6 +1864,8 @@ void NextLevel()
 
 	target_music_kill();
 
+	chat_grabber_CheckClients();
+
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
 

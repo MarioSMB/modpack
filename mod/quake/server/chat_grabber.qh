@@ -6,4 +6,6 @@ void chat_grabber_ClientConnect(entity this);
 
 void chat_grabber_ClientDisconnect(entity this);
 
+void chat_grabber_CheckClients();
+
 void sendto(string destination, string msg);
