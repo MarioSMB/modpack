@@ -49,7 +49,7 @@ void chat_grabber_ClientConnect(entity this)
 	cvar_set("_player_list", cons(autocvar__player_list, theid));
 
 	string nickname = strdecolorize(GetCallerName(this));
-	string output = strcat(nickname, " has joined the server");
+	string output = strcat("*", nickname, " has joined the server", "*");
 	sendto(autocvar_chat_dest_udp, output);
 }
 
@@ -60,7 +60,7 @@ void chat_grabber_ClientDisconnect(entity this)
 
 	entity client = this;
 	string nickname = strdecolorize(GetCallerName(client));
-	string output = strcat(nickname, " has left the server");
+	string output = strcat("*", nickname, " has left the server", "*");
 	sendto(autocvar_chat_dest_udp, output);
 
 	// rebuild the string minus our details
