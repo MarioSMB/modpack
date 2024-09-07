@@ -600,3 +600,27 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	vote_waiting = (nags & BIT(2));
 	vote_waiting_for_me = (nags & BIT(3));
 }
+
+/** engine callback */
+void URI_Get_Callback(int id, int status, string data)
+{
+	TC(int, id); TC(int, status);
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// TODO: unhandled
+		// sv_cmd curl
+		//Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
+	}
+}

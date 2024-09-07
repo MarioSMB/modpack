@@ -92,8 +92,6 @@ float autocvar_g_chat_flood_spl;
 float autocvar_g_chat_flood_burst;
 float autocvar_g_chat_flood_lmax;
 
-.bool muted;
-
 bool autocvar_g_chat_flood_notify_flooder;
 
 /**

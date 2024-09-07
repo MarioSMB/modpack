@@ -1,3 +1,5 @@
+#include "command/banning.qh"
+
 STATIC_INIT(qmod_cmds)
 {
 	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
@@ -155,10 +157,9 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(cmdname == "banlist")
+	if (BanCommand(argc, command))
 	{
-		LOG_INFO("Banning is currently not implemented, sorry Melanobot\n");
-		return;
+		return;  // handled by server/command/banning.qc
 	}
 
 	if(cmdname == "ircmsg")

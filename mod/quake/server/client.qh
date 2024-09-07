@@ -21,6 +21,8 @@ bool autocvar_g_playerclip_collisions;
 
 bool autocvar_samelevel;
 
+string autocvar_hostname;
+
 string intermissiontext;
 
 .float suicide_delay;
@@ -35,6 +37,8 @@ const int COOP_ONLY = 32768; // yoder add, Jan 16 2021; Only spawn in coop. Used
 const int COOP_SPAWN_ACTIVE = 73;
 
 .bool spectating;
+
+.bool muted;
 
 string current_cdtrack;
 

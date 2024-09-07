@@ -1,0 +1,27 @@
+#pragma once
+
+float autocvar_g_ban_default_bantime;
+float autocvar_g_ban_default_masksize;
+float autocvar_g_ban_sync_interval;
+float autocvar_g_ban_sync_timeout;
+string autocvar_g_ban_sync_trusted_servers;
+bool autocvar_g_ban_sync_trusted_servers_verify;
+string autocvar_g_ban_sync_uri;
+bool autocvar_g_ban_telluser = true;
+string autocvar_g_banned_list;
+bool autocvar_g_banned_list_idmode;
+string autocvar_g_chatban_list;
+string autocvar_g_playban_list;
+//bool autocvar_g_playban_minigames;
+string autocvar_g_voteban_list;
+
+#define GET_BAN_ARG(v, d) if (argc > reason_arg) { if ((v = stof(argv(reason_arg))) != 0) ++reason_arg; else v = d; } else { v = d; }
+#define GET_BAN_REASON(v, d) if (argc > reason_arg) v = substring(command, argv_start_index(reason_arg), strlen(command) - argv_start_index(reason_arg)); else v = d;
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+//void BanCommand_macro_write_aliases(float fh);
+
+void BanCommand_macro_help();
+float BanCommand_macro_usage(int argc);
+
+bool BanCommand(int argc, string command);

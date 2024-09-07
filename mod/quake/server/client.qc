@@ -9,7 +9,9 @@
 #include "../common/music.qh"
 #include "chat_grabber.qh"
 #include "combat.qh"
+#include "command/banning.qh"
 #include "getreplies.qh"
+#include "ipban.qh"
 #include "player.qh"
 #include "rogue/sphere.qh"
 #include "shop.qh"
@@ -1345,7 +1347,7 @@ void RunPostPutClientInServer(entity this)
 
 void PutClientInServer(entity this)
 {
-	if(IS_OBSERVER(this) || gameover || intermission_running)
+	if(IS_OBSERVER(this) || gameover || intermission_running || PlayerInList(this, autocvar_g_playban_list))
 		PutObserverInServer(this);
 	else
 		PutPlayerInServer(this);
@@ -2438,6 +2440,7 @@ called when a player connects to a server
 */
 void ClientConnect(entity this)
 {
+	if (Ban_MaybeEnforceBanOnce(this)) return;
 	make_impure(this);
 	this.classname = "player_joining";
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
@@ -2460,6 +2463,9 @@ void ClientConnect(entity this)
 	StatusEffectsStorage_attach(this);
 
 	chat_grabber_ClientConnect(this);
+
+	if (PlayerInList(this, autocvar_g_chatban_list)) // chatban
+		this.muted = true;
 
 	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
 	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));
@@ -3061,6 +3067,9 @@ void SV_ParseClientCommand(entity this, string command)
 	for (i = 0; i < len; ++i)
 		command2 = strcat(command2, chr2str(str2chr(command, i)));
 	if (command != command2) return;
+
+	// if we're banned, don't even parse the command
+	if (Ban_MaybeEnforceBanOnce(this)) return;
 
 	float argc = tokenize_console(command);
 

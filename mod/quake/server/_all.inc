@@ -15,6 +15,7 @@
 #include "gamelog.qc"
 #include "getreplies.qc"
 #include "impulse.qc"
+#include "ipban.qc"
 #include "commands.qc"
 #include "chat.qc"
 #include "chat_grabber.qc"
@@ -25,6 +26,7 @@
 #include "explosions.qc"
 #include "vote.qc"
 
+#include "command/_all.inc"
 #include "weapons/_mod.inc"
 #include "monsters/_all.inc"
 

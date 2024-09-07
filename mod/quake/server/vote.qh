@@ -20,8 +20,6 @@ float autocvar_sv_vote_stop;
 float autocvar_sv_vote_timeout;
 float autocvar_sv_vote_wait;
 
-string autocvar_g_voteban_list;
-
 // definitions for command selection between progs
 const float VC_ASGNMNT_BOTH = 1;
 const float VC_ASGNMNT_CLIENTONLY = 2;

@@ -4,6 +4,7 @@
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
+#include "ipban.qh"
 #include "../common/triggers/func/button.qh"
 #include "../common/triggers/func/earthquake.qh"
 #include "../common/triggers/trigger/changelevel.qh"
@@ -1518,6 +1519,8 @@ spawnfunc(worldspawn)
 	static_init_late();
 	static_init_precache();
 
+	Ban_LoadBans();
+
 	if(autocvar_sv_eventlog)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
@@ -2174,6 +2177,7 @@ void Shutdown()
 		world_initialized = 0;
 
 		LOG_TRACE("Saving persistent data...");
+		Ban_SaveBans();
 
 		db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		db_close(ServerProgsDB);
@@ -2182,5 +2186,33 @@ void Shutdown()
 	else if(world_initialized == 0)
 	{
 		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data");
+	}
+}
+
+/** engine callback */
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// unhandled currently (TODO?)
+		// sv_cmd curl
+		//Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".");
 	}
 }

@@ -1,5 +1,7 @@
 #include "vote.qh"
 
+#include "command/banning.qh"
+
 // =============================================
 //  Server side voting code, reworked by Samual
 //  Last updated: December 27th, 2011
@@ -432,6 +434,7 @@ float VoteCommand_checkargs(float startpos, int argc)
 int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, int argc)
 {
 	string first_command = argv(startpos);
+	int missing_chars = argv_start_index(startpos);
 
 	if (autocvar_sv_vote_limit > 0 && strlen(vote_command) > autocvar_sv_vote_limit)
 		return 0;
@@ -442,6 +445,34 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
+		case "kick":
+		case "kickban":    // catch all kick/kickban commands
+		{
+			entity victim = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(victim, true, false);
+
+			if (accepted > 0)
+			{
+				string reason = "No reason provided";
+				if(argc > next_token)
+					reason = substring(vote_command, argv_start_index(next_token) - missing_chars, -1);
+
+				string command_arguments = reason;
+				if (first_command == "kickban")
+					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
+
+				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
+				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
+			}
+			else
+			{
+				print_to(caller, strcat("vcall: ", "client not valid: ", argv(startpos + 1), ".\n"));
+				return 0;
+			}
+
+			break;
+		}
+
 		case "restart":
 		{
 			// add a delay so that vote result can be seen and announcer can be heard
