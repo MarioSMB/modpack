@@ -151,7 +151,8 @@ void W_FireMic(entity this, .entity weaponentity)
 	this.punchangle_x = -2;
 	W_TakeMana(this, 10);
 
-	vector org = gettaginfo(this.(weaponentity), 0);
+	//vector org = gettaginfo(this.(weaponentity), 0);
+	vector org = this.origin + this.view_ofs;
 	vector offset = org + v_up * -8 + v_forward * 14;
 	if(time > this.(weaponentity).mic_smoketime)
 	{

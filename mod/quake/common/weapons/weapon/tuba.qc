@@ -160,7 +160,8 @@ void W_FireTuba(entity this, .entity weaponentity)
 
 	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 
-	vector org = gettaginfo(this.(weaponentity), 0);
+	//vector org = gettaginfo(this.(weaponentity), 0);
+	vector org = this.origin + this.view_ofs;
 	vector offset = org + v_up * 10 + v_right * 5 + v_forward * 14;
 	if(time > this.(weaponentity).tuba_smoketime)
 	{
