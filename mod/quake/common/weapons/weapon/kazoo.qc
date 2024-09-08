@@ -92,7 +92,8 @@ void W_FireKazoo(entity this, .entity weaponentity)
 	this.punchangle_x = -1;
 	W_TakeMana(this, 5);
 
-	vector org = gettaginfo(this.(weaponentity), 0);
+	//vector org = gettaginfo(this.(weaponentity), 0);
+	vector org = this.origin + this.view_ofs;
 	vector offset = org + v_up * -8 + v_forward * 14;
 	if(time > this.(weaponentity).kazoo_smoketime)
 	{
