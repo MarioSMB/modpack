@@ -77,8 +77,8 @@ entity editor_create(string thetype, vector position, float theang)
 	setorigin(ent, position);
 	ent.angles_y = theang;
 	_setmodel(ent, "null");
-	setsize(ent, VEC_HULL_MIN, VEC_HULL_MAX);
 	ent.solid = SOLID_CORPSE;
+	setsize(ent, VEC_HULL_MIN, VEC_HULL_MAX);
 	Net_LinkEntity(ent, true, 0, editor_send);
 
 	entity e = WaypointSprite_Spawn(WP_Entity, 0, 1024, ent, '0 0 64', NULL, 0, ent, waypointsprite_editor, false, NULL);
@@ -405,8 +405,8 @@ NET_HANDLE(ENT_CLIENT_EDITOR, bool isnew)
 	this.angles_y = ReadAngle();
 
 	_setmodel(this, "null");
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_CORPSE;
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	set_movetype(this, MOVETYPE_NONE);
 
 	this.draw = editor_draw;

@@ -175,8 +175,8 @@ void GorothSmashBoom(entity this)
 	expl.avelocity_z = random()*600;
 	settouch(expl, func_null);
 	_setmodel(expl, "progs/s_explod.spr");
-	setsize(expl, '0 0 0', '0 0 0');
 	expl.solid = SOLID_NOT;
+	setsize(expl, '0 0 0', '0 0 0');
 	expl.nextthink = time;
 	setthink(expl, s_explode1);
 	te_explosion(this.origin);

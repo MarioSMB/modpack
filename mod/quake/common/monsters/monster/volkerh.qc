@@ -210,8 +210,8 @@ void VolMisTouch(entity this, entity toucher)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
-	setsize(this, '0 0 0', '0 0 0');
 	this.solid = SOLID_NOT;
+	setsize(this, '0 0 0', '0 0 0');
 	s_explode1(this);
 }
 

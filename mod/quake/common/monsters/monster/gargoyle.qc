@@ -150,9 +150,9 @@ void garg_fbupdate(entity this, float fbframe, vector fbofs)
 		this.pain_finished = time + 1.5;		//don't go into pain whilst firing
 		setorigin(this.attachment, this.origin);
 		_setmodel(this.attachment, this.attachment.mdl);
+		this.attachment.solid = SOLID_NOT;
 		setsize(this.attachment, '0 0 0', '0 0 0');
 		set_movetype(this.attachment, MOVETYPE_NONE);
-		this.attachment.solid = SOLID_NOT;
 		_sound(this, CH_WEAPON_SINGLE, "gargoyle/attack1.wav", 1, ATTN_NORM);
 	}
 

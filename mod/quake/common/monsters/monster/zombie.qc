@@ -362,8 +362,8 @@ void zombie_paine12(entity this)
 	// see if ok to stand up
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	DropToFloor_QC_DelayedInit(this);
 	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 	if(trace_startsolid)

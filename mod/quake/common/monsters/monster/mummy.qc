@@ -325,8 +325,8 @@ void mummy_paine12(entity this)
 	set_animofs(this, anim_mummy_paine, 12, mummy_paine13);
 	// see if ok to stand up
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	tracebox(this.origin, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 	if(trace_startsolid)
 	{
@@ -440,8 +440,8 @@ METHOD(Mummy, mr_setup, bool(Mummy this, entity actor))
 
 	if(actor.spawnflags & SPAWN_LYING)
 	{
-		setsize(actor, '-16 -16 -24', '16 16 -16');
 		actor.solid = SOLID_CORPSE;
+		setsize(actor, '-16 -16 -24', '16 16 -16');
 		actor.th_stand = mummy_sleep;
 		actor.th_run = mummy_wake;
 		actor.th_walk = mummy_wake;

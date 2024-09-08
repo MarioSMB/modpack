@@ -566,7 +566,7 @@ void edie_death5(entity this) { set_animofs(this, anim_edie_death, 5, edie_death
 void edie_death4(entity this) { set_animofs(this, anim_edie_death, 4, edie_death5); }
 void edie_death3(entity this) { set_animofs(this, anim_edie_death, 3, edie_death4); }
 void edie_death2(entity this) { set_animofs(this, anim_edie_death, 2, edie_death3); this.nextthink = time + 0.2; }
-void edie_death1(entity this) { set_animofs(this, anim_edie_death, 1, edie_death2); this.nextthink = time + 0.2; this.solid = this.solid = SOLID_TRIGGER; setorigin(this, this.origin); _sound(this, CH_VOICE, "edie/death.wav", 1, 1); }
+void edie_death1(entity this) { set_animofs(this, anim_edie_death, 1, edie_death2); this.nextthink = time + 0.2; this.solid = SOLID_TRIGGER; setorigin(this, this.origin); _sound(this, CH_VOICE, "edie/death.wav", 1, 1); }
 
 void edie_die(entity this, entity inflictor, entity attacker, int deathtype)
 {

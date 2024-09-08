@@ -258,12 +258,12 @@ void ThrowFloydGib(entity this, string gibname, float dm)
 	gib.origin_y = this.origin_y - 16 + random()*32;
 	gib.origin_z = this.origin_z - 32 + random()*64;
 	_setmodel(gib, gibname);
+	gib.solid = SOLID_TRIGGER;
 	setsize(gib, '0 0 0', '0 0 0');
 	gib.velocity_x = crandom() * 400;
 	gib.velocity_y = crandom() * 400;
 	gib.velocity_z = 200 + random() * 400;
 	set_movetype(gib, MOVETYPE_BOUNCE);
-	gib.solid = SOLID_TRIGGER;
 	setorigin(gib, gib.origin);
 	gib.avelocity_x = random()*600;
 	gib.avelocity_y = random()*600;

@@ -424,8 +424,8 @@ NET_HANDLE(ENT_CLIENT_SHOPKEEP, bool isnew)
 	setorigin(this, this.origin);
 
 	_setmodel(this, "progs/grem.mdl");
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_NOT;
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	set_movetype(this, MOVETYPE_NONE);
 	this.shopkeep_frametick = 0;
 	this.frame = 0;

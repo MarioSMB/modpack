@@ -80,9 +80,9 @@ void gaunt_update_attachment(entity this, float elecframe)
 		this.pain_finished = time + 1.2;		//don't go into pain whilst firing
 		setorigin(this.attachment, this.origin);
 		_setmodel(this.attachment, this.attachment.mdl);
+		this.attachment.solid = SOLID_NOT;
 		setsize(this.attachment, '0 0 0', '0 0 0');
 		set_movetype(this.attachment, MOVETYPE_NONE);
-		this.attachment.solid = SOLID_NOT;
 		_sound(this, CH_WEAPON_SINGLE, "gaunt/plasma_start.wav", 1, ATTN_NORM);
 	}
 

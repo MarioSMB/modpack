@@ -536,8 +536,8 @@ void armagon_body_explode2(entity this)
 	ThrowGib(this, this, "progs/gib3.mdl", -200);
 	set_movetype(this, MOVETYPE_NONE);
 	setmodel(this, MDL_EXPLOSION);
-	setsize(this, '0 0 0', '0 0 0');
 	this.solid = SOLID_NOT;
+	setsize(this, '0 0 0', '0 0 0');
 	this.nextthink = time + 0.1;
 	s_explode1(this);
 }

@@ -84,10 +84,10 @@ METHOD(Decoy, mr_setup, bool(Decoy this, entity actor))
     TC(Decoy, this);
 
 	_setmodel(actor, "progs/player.mdl");
+	actor.solid = SOLID_SLIDEBOX;
 	setsize(actor, VEC_HULL_MIN, VEC_HULL_MAX);
 	actor.view_ofs = '0 0 22';
 
-	actor.solid = SOLID_SLIDEBOX;
 	set_movetype(actor, MOVETYPE_STEP);
 
 	actor.health = 3000000;
