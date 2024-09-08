@@ -16,7 +16,7 @@ STATIC_INIT_LATE(chat_grabber)
 
 	if(autocvar_chat_grabber_show_mapchange)
 	{
-		string formatted = sprintf("Now playing level **%s**", mapname);
+		string formatted = sprintf("- Now playing **%s**", mapname);
 		if(world.message != "")
 			formatted = strcat(formatted, " (", MakeConsoleSafe(world.message), ")");
 		sendto(autocvar_chat_dest_udp, formatted);
