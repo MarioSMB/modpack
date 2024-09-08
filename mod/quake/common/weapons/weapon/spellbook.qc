@@ -478,8 +478,8 @@ void summon_cyclone(entity rune)
 	setorigin(ent, rune.origin);
 	ent.realowner = rune.realowner; // not setting owner, we want interaction!
 	ent.classname = "cyclone";
-	setsize(ent, '-40 -40 0', '40 40 48');
 	ent.solid = SOLID_TRIGGER;
+	setsize(ent, '-40 -40 0', '40 40 48');
 	settouch(ent, cyclone_touch);
 	ent.cnt = time + 6;
 	setthink(ent, cyclone_think);
@@ -1004,8 +1004,8 @@ void SkullMissileTouch(entity this, entity toucher)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
-	setsize(this, '0 0 0', '0 0 0');
 	this.solid = SOLID_NOT;
+	setsize(this, '0 0 0', '0 0 0');
 	s_explode1(this);
 }
 
