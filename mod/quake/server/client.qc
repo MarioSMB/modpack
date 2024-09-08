@@ -1790,11 +1790,13 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+	cvar_set("_endmatch", "0");
 	if(nextmap && nextmap != "")
 		return; // already done
 
 	VoteReset(true);
 
+	// TODO: pick the one with the most players
 	entity o = find(NULL, classname, "trigger_changelevel");
 
 	// go back to same map if no trigger_changelevel

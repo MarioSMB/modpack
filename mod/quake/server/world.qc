@@ -1371,6 +1371,7 @@ STATIC_INIT_EARLY(maxclients)
 spawnfunc(worldspawn)
 {
 	CheckEngineExtensions();
+	cvar_set("_endmatch", "0");
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
@@ -1655,6 +1656,31 @@ void CheckRules_World()
 		
 	float timelimit = autocvar_timelimit * 60;
 	float fraglimit = autocvar_fraglimit;
+
+	if(autocvar__endmatch)
+	{
+		bool foundend = false;
+		if(coop)
+		{
+			FOREACH_ENTITY_CLASS("trigger_changelevel", it.chlevel_found,
+			{
+				foundend = true;
+				break;
+			});
+		}
+		else if(deathmatch)
+			foundend = true; // allow ending the match early!
+		if(!foundend)
+		{
+			// nobody has found the end yet, let's cancel that vote
+			cvar_set("_endmatch", "0");
+		}
+		else
+		{
+			NextLevel();
+			return;
+		}
+	}
 	
 	if(timelimit && time >= timelimit)
 	{

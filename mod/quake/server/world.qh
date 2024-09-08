@@ -1,6 +1,7 @@
 #pragma once
 
 float autocvar_fraglimit;
+bool autocvar__endmatch;
 int autocvar_skill;
 bool autocvar_sv_curl_serverpackages_auto;
 string autocvar_sessionid;

@@ -4,9 +4,24 @@ string autocvar_chat_dest_udp; // UDP protocol socket destination for caught cha
 string autocvar__player_list; // internal list of player IPs, not to be shared
 bool autocvar_chat_grabber_show_id = false; // show player IDs in the message
 bool autocvar_chat_grabber_show_circle = false; // NOTE: doesn't work currently! show circle emoji behind each player to differentiate them
+bool autocvar_chat_grabber_show_mapchange = true; // show map changes
 
 const int CIRCLES = 8; // discord comes with 8 unique circle types
 string chat_circles[CIRCLES] = {":blue_circle:", ":brown_circle:", ":green_circle:", ":orange_circle:", ":purple_circle:", ":red_circle:", ":white_circle:", ":yellow_circle:"};
+
+STATIC_INIT_LATE(chat_grabber)
+{
+	if(autocvar_chat_dest_udp == "")
+		return;
+
+	if(autocvar_chat_grabber_show_mapchange)
+	{
+		string formatted = sprintf("Now playing level **%s**", mapname);
+		if(world.message != "")
+			formatted = strcat(formatted, " (", MakeConsoleSafe(world.message), ")");
+		sendto(autocvar_chat_dest_udp, formatted);
+	}
+}
 
 void chat_grabber_PreFormatMessage(entity this, string msg)
 {

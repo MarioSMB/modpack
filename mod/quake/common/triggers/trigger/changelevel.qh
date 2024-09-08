@@ -4,4 +4,7 @@
 string autocvar__spawntarget = "";
 
 .string spawntarget;
+
+.entity chlevel_targ;
+.bool chlevel_found; // exit found!
 #endif

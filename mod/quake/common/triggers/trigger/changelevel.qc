@@ -9,11 +9,6 @@ bool autocvar_sv_quake_clipfix = false;
 
 int autocvar_noexit;
 
-.entity chlevel_targ;
-.bool chlevel_found; // exit found!
-
-.string spawntarget;
-
 bool changelevel_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
 	if(gameover || intermission_running)
