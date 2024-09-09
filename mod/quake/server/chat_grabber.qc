@@ -28,6 +28,8 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 {
 	if(autocvar_chat_dest_udp == "")
 		return;
+	if(this.muted)
+		return;
 
 	entity client = this;
 	string nickname = strdecolorize(GetCallerName(client));
