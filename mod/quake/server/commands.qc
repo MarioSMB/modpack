@@ -209,6 +209,55 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "addtolist")
+	{
+		if(argc >= 2)
+		{
+			string original_cvar = argv(1);
+			string tmp_string = argv(2);
+
+			if(cvar_string(original_cvar) == "") // cvar was empty
+			{
+				cvar_set(original_cvar, tmp_string);
+			}
+			else // add it to the end of the list if the list doesn't already have it
+			{
+				FOREACH_WORD(cvar_string(original_cvar), it == tmp_string,
+				{
+					return; // already in the list
+				});
+
+				cvar_set(original_cvar, cons(cvar_string(original_cvar), tmp_string));
+			}
+			return;
+		}
+
+		LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		return;
+	}
+
+	if(cmdname == "removefromlist")
+	{
+		if(argc == 3)
+		{
+			string original_cvar = argv(1);
+			string removal = argv(2);
+
+			string tmp_string = "";
+			FOREACH_WORD(cvar_string(original_cvar), it != removal,
+			{
+				tmp_string = cons(tmp_string, it);
+			});
+
+			cvar_set(original_cvar, tmp_string);
+
+			return;
+		}
+
+		LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		return;
+	}
+
 	if(cmdname == "find")
 	{
 		FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
