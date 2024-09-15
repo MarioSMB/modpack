@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
+# Generate .pot (translation template) from strings in source code
+
 cwd="`pwd`"
 cd "`dirname $0`/.."
-
 base=xonotic
-if [ ! -d "$base" ]; then
-    echo "RTFM (README.md)"
+
+fail() {
+    echo $2
     cd $cwd
-    exit 1
+    exit $1
+}
+
+if [ ! -d "$base" ]; then
+    fail 1 "Not proceeding because xonotic data is missing. See 'README.md'"
+fi
+if ! msgcat --version >>/dev/null; then
+    fail 0 "Not generating translation files because 'gettext' is not installed"
 fi
 
 current_branch=$(git branch | awk '/^\*/ { print $2 }')
@@ -24,6 +33,5 @@ if [ ! $SMB_KEEP_POT ]; then
     rm -f common.pot.new*
 fi
 
-echo "Complete."
-
+echo "Translation files generated."
 cd $cwd

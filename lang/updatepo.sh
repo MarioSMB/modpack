@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
-# update existing translation files to include new strings
-# for those who need to translate offline by editing plain .po files
+# Execute this to update your translated .po files, to include new strings in common.pot
+# Helpful for those who translate by editing .po files
+# Code maintainers don't have to run this, Transifed handles updates well
 
 cwd="`pwd`"
-cd "`dirname $0`/.."
+cd "`dirname $0`"
 
-for i in $(ls lang); do
+if ! msgcat --version >>/dev/null; then
+    echo "Please install 'gettext' to run this script"
+    cd $cwd
+    exit 1
+fi
+
+for i in $(ls); do
     if [[ "${i%.po}" != "$i" ]] && [[ "$i" != "common.pot" ]]; then
-        msgmerge -N -F -U lang/$i lang/common.pot
+        msgmerge -N -F -U --backup=none $i common.pot
     fi
 done
 
