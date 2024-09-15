@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 23:30+0800\n"
+"POT-Creation-Date: 2024-09-15 14:14+0800\n"
 "PO-Revision-Date: 2024-01-18 16:06+0000\n"
 "Last-Translator: NaitLee, 2024\n"
 "Language-Team: Chinese Traditional (https://app.transifex.com/naitlee-soft/teams/182965/zh-Hant/)\n"
@@ -21,17 +21,8 @@ msgstr ""
 "Language: zh-Hant\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: mod/client/main.qc:58
-msgid ""
-"\n"
-"^7Running the SMB mod pack\n"
-"^3https://github.com/MarioSMB/modpack\n"
-msgstr ""
-"\n"
-"^7服務器在運行 SMB 模組包\n"
-"^3https://github.com/MarioSMB/modpack\n"
-
 #: mod/common/gamemodes/arena/arena.qc:20
+#: mod/common/gamemodes/arena/arena.qc:18
 msgid "^1Wait for your turn to join"
 msgstr "^1請靜候屬於你的一輪"
 
@@ -42,14 +33,6 @@ msgstr "競技場"
 #: mod/common/gamemodes/arena/arena.qh:6
 msgid "Emerge victorious in a series of duels to win the match!"
 msgstr "在一場場決鬥中淘汰敵人，勝者爲王"
-
-#: mod/common/gamemodes/conquest/conquest.qc:494
-msgid "SCO^liberated"
-msgstr "釋放"
-
-#: mod/common/gamemodes/conquest/conquest.qc:495
-msgid "SCO^captured"
-msgstr "佔領"
 
 #: mod/common/gamemodes/conquest/conquest.qh:6
 msgid "Capture all the spawnpoint control points to win"
@@ -146,26 +129,10 @@ msgid "Squad"
 msgstr "部隊"
 
 #: mod/common/gamemodes/jailbreak/jailbreak.qc:26
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:24
 #, c-format
 msgid "Point %s"
 msgstr "點 %s"
-
-#: mod/common/gamemodes/jailbreak/jailbreak.qc:1447
-#: mod/common/gamemodes/snafu/snafu.qc:72
-msgid "SCO^rounds"
-msgstr "輪"
-
-#: mod/common/gamemodes/jailbreak/jailbreak.qc:1448
-msgid "SCO^jbs"
-msgstr "越獄"
-
-#: mod/common/gamemodes/jailbreak/jailbreak.qc:1449
-msgid "SCO^freed"
-msgstr "釋放"
-
-#: mod/common/gamemodes/jailbreak/jailbreak.qc:1450
-msgid "SCO^def"
-msgstr "保衛"
 
 #: mod/common/gamemodes/jailbreak/jailbreak.qh:6
 msgid "Jailbreak"
@@ -177,13 +144,37 @@ msgid ""
 "teammates"
 msgstr "殺死敵人以將他們關入監獄，佔領控制點以釋放隊友"
 
+#: mod/common/gamemodes/mmm/cl_mmm.qc:16
+msgid "Murderer"
+msgstr ""
+
+#: mod/common/gamemodes/mmm/cl_mmm.qc:22
+msgid "Civilian"
+msgstr ""
+
+#: mod/common/gamemodes/mmm/cl_mmm.qc:28
+msgid "Detective"
+msgstr ""
+
+#: mod/common/gamemodes/mmm/mmm.qh:13
+msgid ""
+"A group of space civilians have murderers among them. Murderers must kill "
+"civilians, while the civilians have to try to find and kill the murderers"
+msgstr ""
+
+#: mod/common/gamemodes/mmm/mmm.qh:13
+msgid "Murder in Megaerebus Manor"
+msgstr ""
+
 #: mod/common/gamemodes/runematch/runematch.qh:6
+#: mod/common/gamemodes/runematch.qh:6
 msgid ""
 "Pick up and hold the runes, special items that give you points, a special "
 "power (rune) and a disadvantage (curse)"
 msgstr "拾起符文，開始殺敵。符文給你特別的能力，但也帶有詛咒"
 
 #: mod/common/gamemodes/runematch/runematch.qh:6
+#: mod/common/gamemodes/runematch.qh:6
 msgid "Runematch"
 msgstr "符文大戰"
 
@@ -194,18 +185,6 @@ msgstr "胖胖"
 #: mod/common/gamemodes/snafu/princess2.qc:14
 msgid "Princess"
 msgstr "公主"
-
-#: mod/common/gamemodes/snafu/snafu.qc:346
-msgid "The tadpole is ^1DEAD^7 you ^1LOSERS!"
-msgstr "蝌蚪^1死翹翹了^7，你們這些^1失敗者！"
-
-#: mod/common/gamemodes/snafu/snafu.qc:400
-msgid ""
-"^1The tadpole is under attack!\n"
-"^2DEFEND^7 the tadpole!"
-msgstr ""
-"^1蝌蚪遭到攻擊！\n"
-"^2保護^7蝌蚪！"
 
 #: mod/common/gamemodes/snafu/snafu.qh:6
 msgid "SNAFU"
@@ -219,61 +198,21 @@ msgstr "情況一切正常……"
 msgid "Princess (verb based)"
 msgstr "公主"
 
-#: mod/common/gamemodes/vip/vip.qc:695
-msgid "SCO^scores"
-msgstr "分數"
-
-#: mod/common/gamemodes/vip/vip.qc:697
-msgid "SCO^vipkills"
-msgstr "擊殺 VIP"
-
-#: mod/common/gamemodes/vip/vip.qh:10
+#: mod/common/gamemodes/vip/vip.qh:10 mod/common/gamemodes/vip.qh:10
 msgid "A VIP is chosen on each team, when a VIP dies, the round is over"
 msgstr "每個團隊選出一位 VIP。當 VIP 死亡時，這一輪結束"
 
 #: mod/common/gamemodes/vip/vip.qh:10 mod/common/gamemodes/vip/vip.qh:46
+#: mod/common/gamemodes/vip.qh:10 mod/common/gamemodes/vip.qh:39
 msgid "VIP"
 msgstr "VIP"
 
-#: mod/common/minigames/art.qc:1
-msgid "Pixel Art"
-msgstr "像素畫"
-
-#: mod/common/minigames/art.qc:366
+#: mod/common/minigames/art.qc:366 mod/common/minigames/art.qc:352
 msgid ""
 "Press the space bar or right click to change your currently selected color"
 msgstr "要更換顏色，請按空格或右鍵"
 
-#: mod/common/minigames/boggle.qc:7
-msgid "Boggle"
-msgstr "單詞連連看"
-
-#: mod/common/minigames/boggle.qc:539
-msgid "Press \"Ready\" to begin"
-msgstr "點擊“準備完畢”以開始"
-
-#: mod/common/minigames/boggle.qc:542
-msgid ""
-"Drag the mouse to select as many words as you can before time runs out!"
-msgstr "在計時結束之前，用鼠標拖動字母、連成儘可能多的英語單詞"
-
-#: mod/common/minigames/boggle.qc:762
-msgid "BOGGLE^Ready"
-msgstr "準備完畢"
-
-#: mod/common/minigames/checkers.qc:1
-msgid "Checkers"
-msgstr "國際跳棋"
-
-#: mod/common/minigames/chess.qc:1
-msgid "Chess"
-msgstr "國際象棋"
-
-#: mod/common/minigames/nim.qc:3
-msgid "Nim"
-msgstr "尼姆棋"
-
-#: mod/common/minigames/nim.qc:396
+#: mod/common/minigames/nim.qc:396 mod/common/minigames/nim.qc:358
 msgid ""
 "You lost the game!\n"
 "Select \"^1Next Match^7\" on the menu for a rematch!"
@@ -281,7 +220,7 @@ msgstr ""
 "你輸了！\n"
 "選擇菜單上的“^1下一輪^7”再次開始遊戲！"
 
-#: mod/common/minigames/nim.qc:397
+#: mod/common/minigames/nim.qc:397 mod/common/minigames/nim.qc:359
 msgid ""
 "You win!\n"
 "Select \"^1Next Match^7\" on the menu to start a new match!"
@@ -289,7 +228,7 @@ msgstr ""
 "你贏了！\n"
 "選擇菜單上的“^1下一輪^7”開始新一輪遊戲！"
 
-#: mod/common/minigames/nim.qc:411
+#: mod/common/minigames/nim.qc:411 mod/common/minigames/nim.qc:373
 msgid "Try to take the last piece on the board"
 msgstr "爭取讓自己拿走最後的棋子"
 
@@ -300,10 +239,6 @@ msgstr "太空射擊"
 #: mod/common/minigames/sg.qc:634
 msgid "Use the arrow keys to move and hold the space bar to shoot"
 msgstr "使用方向鍵移動，按住空格射擊"
-
-#: mod/common/minigames/snake.qc:2
-msgid "Snake"
-msgstr "貪喫蛇"
 
 #: mod/common/minigames/snake.qc:753 mod/common/minigames/snake.qc:758
 msgid "You ran out of lives!"
@@ -337,82 +272,132 @@ msgstr "苦力怕"
 msgid "Troll"
 msgstr "巨魔"
 
+#: mod/common/notifications.qh:19 mod/common/notifications.qh:18
 #: mod/common/notifications.qh:17
 #, c-format
 msgid "^BG%s^BG was captured by the ^TC^TT^BG team"
 msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
 
+#: mod/common/notifications.qh:20 mod/common/notifications.qh:19
 #: mod/common/notifications.qh:18
 #, c-format
 msgid "^BG%s^BG was liberated from the ^TC^TT^BG team"
 msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
 
+#: mod/common/notifications.qh:22 mod/common/notifications.qh:21
 #: mod/common/notifications.qh:20
 #, c-format
 msgid "^BG%s^BG has been destroyed"
 msgstr "^BG%s^BG 被摧毀"
 
+#: mod/common/notifications.qh:23 mod/common/notifications.qh:22
 #: mod/common/notifications.qh:21
 #, c-format
 msgid "^BG%s^BG has been upgraded to level ^F4%s^BG!"
 msgstr "^BG%s^BG 被升級至第 ^F4%s^BG 級！"
 
+#: mod/common/notifications.qh:25 mod/common/notifications.qh:24
 #: mod/common/notifications.qh:23
 #, c-format
 msgid "^BG%s^BG captured %s"
 msgstr "^BG%s^BG 抓捕了 %s"
 
+#: mod/common/notifications.qh:26 mod/common/notifications.qh:25
 #: mod/common/notifications.qh:24
 #, c-format
 msgid "^BG%s^3 has broken free!"
 msgstr "^BG%s^3 已逃脫！"
 
+#: mod/common/notifications.qh:28
+msgid "^BGYou are ^K1Murderer^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:29 mod/common/notifications.qh:70
+msgid "^K1Murderers^BG win the round"
+msgstr ""
+
+#: mod/common/notifications.qh:31
+msgid "^BGYou are ^F1Civilian^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:32 mod/common/notifications.qh:72
+msgid "^F1Civilians^BG win the round"
+msgstr ""
+
+#: mod/common/notifications.qh:34
+msgid "^BGYou are ^4Detective^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:35
+#, c-format
+msgid "^BG%s is ^4Detective^BG!"
+msgstr ""
+
+#: mod/common/notifications.qh:36 mod/common/notifications.qh:74
+#, c-format
+msgid "^BG%s"
+msgstr ""
+
+#: mod/common/notifications.qh:37
+msgid "^K1KARMA WARNING! ^3Here, have the Rifle!"
+msgstr ""
+
+#: mod/common/notifications.qh:39 mod/common/notifications.qh:27
 #: mod/common/notifications.qh:26
 #, c-format
 msgid "^BG%s^K1 lost ^BG%s^K1 and ^BG%s"
 msgstr "^BG%s^K1 失去了 ^BG%s^K1 和 ^BG%s"
 
+#: mod/common/notifications.qh:40 mod/common/notifications.qh:28
 #: mod/common/notifications.qh:27
 #, c-format
 msgid "^BG%s^BG picked up ^BG%s^BG and ^BG%s"
 msgstr "^BG%s^BG 拾起了 ^BG%s^BG 和 ^BG%s"
 
-#: mod/common/notifications.qh:29
+#: mod/common/notifications.qh:45 mod/common/notifications.qh:33
+#: mod/common/notifications.qh:29 mod/common/notifications.qh:30
 #, c-format
 msgid "^BG%s^K1 dropped the soul gem"
 msgstr "^BG%s^K1 丟掉了靈魂石"
 
-#: mod/common/notifications.qh:30
+#: mod/common/notifications.qh:46 mod/common/notifications.qh:34
+#: mod/common/notifications.qh:30 mod/common/notifications.qh:31
 #, c-format
 msgid "^BG%s^K1 picked up the soul gem"
 msgstr "^BG%s^K1 撿起了靈魂石"
 
-#: mod/common/notifications.qh:33
+#: mod/common/notifications.qh:49 mod/common/notifications.qh:37
+#: mod/common/notifications.qh:33 mod/common/notifications.qh:34
 #, c-format
 msgid "^BG%s^BG has been captured by the ^TC^TT^BG team"
 msgstr "^BG%s^BG 被^TC^TT隊^BG佔領"
 
-#: mod/common/notifications.qh:34
+#: mod/common/notifications.qh:50 mod/common/notifications.qh:38
+#: mod/common/notifications.qh:34 mod/common/notifications.qh:35
 #, c-format
 msgid "^BGYour team has captured %s"
 msgstr "^BG我方佔領了 %s"
 
-#: mod/common/notifications.qh:35
+#: mod/common/notifications.qh:51 mod/common/notifications.qh:39
+#: mod/common/notifications.qh:35 mod/common/notifications.qh:36
 #, c-format
 msgid "^BG%s^BG has been liberated from the ^TC^TT^BG team"
 msgstr "^BG%s^BG 被從^TC^TT隊^BG釋放"
 
-#: mod/common/notifications.qh:36
+#: mod/common/notifications.qh:52 mod/common/notifications.qh:40
+#: mod/common/notifications.qh:36 mod/common/notifications.qh:37
 #, c-format
 msgid "^BGYour team has liberated %s^BG from the ^TC^TT^BG team"
 msgstr "^BG我方從^TC^TT隊^BG釋放了 %s^BG"
 
-#: mod/common/notifications.qh:37
+#: mod/common/notifications.qh:53 mod/common/notifications.qh:41
+#: mod/common/notifications.qh:37 mod/common/notifications.qh:38
 #, c-format
 msgid "^BG%s^BG has been lost to the ^TC^TT^BG team"
 msgstr "^TC^TT隊^BG失去了 ^BG%s^BG"
 
-#: mod/common/notifications.qh:39
+#: mod/common/notifications.qh:55 mod/common/notifications.qh:43
+#: mod/common/notifications.qh:39 mod/common/notifications.qh:40
 msgid ""
 "^K1Your core is under attack!\n"
 "^K3Defend it ^K1NOW!"
@@ -420,7 +405,8 @@ msgstr ""
 "^K1我方核心正遭受攻擊！\n"
 "^K1現在^K3去保衛它！"
 
-#: mod/common/notifications.qh:40
+#: mod/common/notifications.qh:56 mod/common/notifications.qh:44
+#: mod/common/notifications.qh:40 mod/common/notifications.qh:41
 msgid ""
 "^K1Your factory is under attack!\n"
 "^K3Defend it ^K1NOW!"
@@ -428,45 +414,376 @@ msgstr ""
 "^K1我方工廠正遭受攻擊\n"
 "^K1現在^K3去保衛它！"
 
-#: mod/common/notifications.qh:42
+#: mod/common/notifications.qh:58 mod/common/notifications.qh:46
+#: mod/common/notifications.qh:42 mod/common/notifications.qh:43
 msgid "^F2You gained some bonus score for defending the control point!"
 msgstr "^F2你因保衛控制點而獲得獎勵分數！"
 
-#: mod/common/notifications.qh:43
+#: mod/common/notifications.qh:59 mod/common/notifications.qh:47
+#: mod/common/notifications.qh:43 mod/common/notifications.qh:44
 msgid "^K1The ^TC^TT^K1 team is escaping!"
 msgstr "^K1^TC^TT隊^K1在越獄！"
 
-#: mod/common/notifications.qh:44
+#: mod/common/notifications.qh:60 mod/common/notifications.qh:48
+#: mod/common/notifications.qh:44 mod/common/notifications.qh:45
 msgid "^F2You're free! Run away!"
 msgstr "^F2你自由了！逃跑吧！"
 
-#: mod/common/notifications.qh:45
+#: mod/common/notifications.qh:61 mod/common/notifications.qh:49
+#: mod/common/notifications.qh:45 mod/common/notifications.qh:46
 msgid "^K3You bailed your teammates out of jail!"
 msgstr "^K3你幫隊友脫離了監獄！"
 
-#: mod/common/notifications.qh:46
+#: mod/common/notifications.qh:62 mod/common/notifications.qh:50
+#: mod/common/notifications.qh:46 mod/common/notifications.qh:47
 msgid "^K1You're in jail, prisoner!"
 msgstr "^K1你進了監獄，囚犯！"
 
-#: mod/common/notifications.qh:47
+#: mod/common/notifications.qh:63 mod/common/notifications.qh:51
+#: mod/common/notifications.qh:47 mod/common/notifications.qh:48
 msgid "^K1No sneaking into jail!"
 msgstr "^K1不能溜進監獄！"
 
-#: mod/common/notifications.qh:48
+#: mod/common/notifications.qh:64 mod/common/notifications.qh:52
+#: mod/common/notifications.qh:48 mod/common/notifications.qh:49
 msgid "^BGThis control point is not ready yet"
 msgstr "^BG此控制點尚未就緒"
 
-#: mod/common/notifications.qh:49
+#: mod/common/notifications.qh:65 mod/common/notifications.qh:53
+#: mod/common/notifications.qh:49 mod/common/notifications.qh:50
 msgid "^BGYour team is already free"
 msgstr "^BG你的團隊已經自由"
 
-#: mod/common/notifications.qh:50
+#: mod/common/notifications.qh:66 mod/common/notifications.qh:54
+#: mod/common/notifications.qh:50 mod/common/notifications.qh:51
 msgid "^BGSomeone is already capturing this control point"
 msgstr "^BG已有人在佔領此控制點"
 
-#: mod/common/notifications.qh:51
+#: mod/common/notifications.qh:67 mod/common/notifications.qh:55
+#: mod/common/notifications.qh:51 mod/common/notifications.qh:52
 msgid "^BGYou can't capture your team's control points"
 msgstr "^BG不可以佔領己方控制點"
+
+#: mod/common/notifications.qh:69
+msgid ""
+"^BGYou are ^K1Murderer^BG! Kill all the civilians without raising suspicion!"
+msgstr ""
+
+#: mod/common/notifications.qh:71
+msgid ""
+"^BGYou are ^F1Civilian^BG! Try to find out who are murderers and survive "
+"until time is up!"
+msgstr ""
+
+#: mod/common/notifications.qh:73
+msgid ""
+"^BGYou are ^4Detective^BG! Find out who are murderers and protect the "
+"civilians!"
+msgstr ""
+
+#: mod/common/notifications.qh:80 mod/common/notifications.qh:61
+#: mod/common/notifications.qh:57 mod/common/notifications.qh:59
+#, c-format
+msgid ""
+"^K1Congratulations!\n"
+"^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n"
+"^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
+msgstr ""
+"^K1恭喜！\n"
+"^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻殭屍）！\n"
+"^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻殭屍）！"
+
+#: mod/common/notifications.qh:87 mod/common/notifications.qh:68
+#: mod/common/notifications.qh:59 mod/common/notifications.qh:61
+msgid ""
+"^BGYou are the ^TC^TT^BG VIP!\n"
+"^F2Survive or your team will lose!"
+msgstr "^BG你是^TC^TT隊^BG VIP！\n"
+
+#: mod/common/notifications.qh:88 mod/common/notifications.qh:69
+#: mod/common/notifications.qh:60 mod/common/notifications.qh:62
+msgid ""
+"^BGWaiting for VIPs...\n"
+"Pickup your Soul Gem to become a VIP"
+msgstr ""
+"^BG等待選出 VIP……\n"
+"撿起靈魂石即可成爲 VIP"
+
+#: mod/common/notifications.qh:89 mod/common/notifications.qh:70
+#: mod/common/notifications.qh:61 mod/common/notifications.qh:63
+msgid "^BGWaiting for an enemy VIP"
+msgstr "^BG等待敵方選出 VIP"
+
+#: mod/common/notifications.qh:90 mod/common/notifications.qh:71
+#: mod/common/notifications.qh:62 mod/common/notifications.qh:64
+#, c-format
+msgid "^BG%s^F2 is no longer a VIP!"
+msgstr "^BG%s^F2不再是 VIP！"
+
+#: mod/common/notifications.qh:91 mod/common/notifications.qh:72
+#: mod/common/notifications.qh:63 mod/common/notifications.qh:65
+#, c-format
+msgid "^BGToo many dropped gems! Dropping disabled for %s."
+msgstr "^BG擲出靈魂石過多！%s內不能再擲出。"
+
+#: mod/common/notifications.qh:92 mod/common/notifications.qh:73
+#: mod/common/notifications.qh:64 mod/common/notifications.qh:66
+msgid "^F2You are no longer a VIP!"
+msgstr "^F2你不再是 VIP！"
+
+#: mod/common/notifications.qh:93 mod/common/notifications.qh:74
+#: mod/common/notifications.qh:65 mod/common/notifications.qh:67
+#, c-format
+msgid "^BG%s^F2 is now a VIP!"
+msgstr "^BG%s^F2 現在是 VIP！"
+
+#: mod/common/notifications.qh:94 mod/common/notifications.qh:75
+#: mod/common/notifications.qh:66 mod/common/notifications.qh:68
+msgid "^F2You are now a VIP!"
+msgstr "^F2你現在是 VIP！"
+
+#: mod/common/special.qc:39 mod/common/special.qc:36
+msgid "^xFB0MMorning ^7Rescue"
+msgstr "^xFB0MMorning ^7Rescue"
+
+#: mod/common/vehicles/cyberchop.qh:5
+#, c-format
+msgid ""
+"^BG%s%s^K1 got caught in the blast when ^BG%s^K1's CyberChopper exploded%s%s"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop.qh:6
+#, c-format
+msgid "^BG%s^K1 got caught in the blast of a CyberChopper explosion%s%s"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop.qh:7
+msgid "^K1You got caught in the blast of a CyberChopper explosion!"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop.qh:29
+msgid "CyberChopper"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop_weapons.qh:10
+msgid "Cyberchopper minigun"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop_weapons.qh:18
+msgid "Cyberchopper bomb"
+msgstr ""
+
+#: mod/common/vehicles/cyberchop_weapons.qh:26
+msgid "Cyberchopper flare"
+msgstr ""
+
+#: mod/common/weapons/assaultrifle.qh:62
+msgid "Assault Rifle"
+msgstr "突擊步槍"
+
+#: mod/common/weapons/assaultrifle.qh:107
+#, c-format
+msgid ""
+"^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍半自動掃射%s%s"
+
+#: mod/common/weapons/assaultrifle.qh:108
+#, c-format
+msgid "^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍戰術性撕碎%s%s"
+
+#: mod/common/weapons/chainsaw.qh:65
+#: mod/quake/common/weapons/weapon/chainsaw.qh:14
+#: mod/common/weapons/chainsaw.qc:63
+msgid "Chainsaw"
+msgstr "電鋸"
+
+#: mod/common/weapons/chainsaw.qh:105 mod/common/weapons/chainsaw.qc:101
+#, c-format
+msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用電鋸鋸成兩半%s%s"
+
+#: mod/common/weapons/chainsaw.qh:106 mod/common/weapons/chainsaw.qc:102
+#, c-format
+msgid "^BG%s^K1 played with their Chainsaw%s%s"
+msgstr "^BG%s^K1 把玩自己的電鋸%s%s"
+
+#: mod/common/weapons/flak.qh:97 mod/common/weapons/flak.qc:92
+msgid "Flak Cannon"
+msgstr "破片加農炮"
+
+#: mod/common/weapons/flak.qh:152 mod/common/weapons/flak.qc:144
+#, c-format
+msgid "^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"
+msgstr "^BG%s%s^K1 遭了 ^BG%s^K1 的集束破片%s%s"
+
+#: mod/common/weapons/flak.qh:153 mod/common/weapons/flak.qc:145
+#, c-format
+msgid "^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用破片加農炮撕碎%s%s"
+
+#: mod/common/weapons/flak.qh:154 mod/common/weapons/flak.qc:146
+#, c-format
+msgid "^BG%s^K1 was shredded by their own Flak Cannon%s%s"
+msgstr "^BG%s^K1 被自己的破片加農炮撕碎%s%s"
+
+#: mod/common/weapons/lightsabre.qh:73 mod/common/weapons/lightsabre.qc:66
+msgid "Lightsabre"
+msgstr "激光刃"
+
+#: mod/common/weapons/lightsabre.qh:107 mod/common/weapons/lightsabre.qc:96
+#, c-format
+msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
+msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用激光刃切離%s%s"
+
+#: mod/common/weapons/rpg7.qh:55 mod/common/weapons/rpg.qc:39
+msgid "RPG-7"
+msgstr "RPG-7 火箭筒"
+
+#: mod/common/weapons/rpg7.qh:90 mod/common/weapons/rpg.qc:71
+#, c-format
+msgid "^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 消滅%s%s"
+
+#: mod/common/weapons/rpg7.qh:91 mod/common/weapons/rpg.qc:72
+#, c-format
+msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 炸得灰飛煙滅%s%s"
+
+#: mod/common/weapons/rpg7.qh:92 mod/common/weapons/rpg.qc:73
+#, c-format
+msgid "^BG%s^K1 blew themself up with their RPG-7%s%s"
+msgstr "^BG%s^K1 被自己的 RPG-7 炸得灰飛煙滅%s%s"
+
+#: mod/common/weapons/uzi.qh:62 mod/common/weapons/uzi.qc:50
+msgid "Uzi"
+msgstr "烏茲衝鋒槍"
+
+#: mod/common/weapons/uzi.qh:107 mod/common/weapons/uzi.qc:93
+#, c-format
+msgid "^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍半自動掃射%s%s"
+
+#: mod/common/weapons/uzi.qh:108 mod/common/weapons/uzi.qc:94
+#, c-format
+msgid "^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍釘滿重金屬%s%s"
+
+#: mod/common/weapons/zsaber.qh:80
+msgid "Z-Saber"
+msgstr ""
+
+#: mod/common/weapons/zsaber.qh:126
+#, c-format
+msgid "^BG%s%s^K1's has been cut by ^BG%s^K1's Z-Saber%s%s"
+msgstr ""
+
+#: mod/common/powerups/life.qh:40 mod/common/powerups/life.qh:43
+#: mod/common/powerups/life.qh:51
+msgid "Life Mushroom"
+msgstr ""
+
+#: mod/common/powerups/mini.qh:48 mod/common/powerups/mini.qh:51
+#: mod/common/powerups/mini.qh:59
+msgid "Mini Mushroom"
+msgstr ""
+
+#: mod/common/powerups/star.qh:45 mod/common/powerups/star.qh:48
+#: mod/common/powerups/star.qh:56
+msgid "Starman"
+msgstr ""
+
+#: mod/client/main.qc:58
+msgid ""
+"\n"
+"^7Running the SMB mod pack\n"
+"^3https://github.com/MarioSMB/modpack\n"
+msgstr ""
+"\n"
+"^7服務器在運行 SMB 模組包\n"
+"^3https://github.com/MarioSMB/modpack\n"
+
+#: mod/common/gamemodes/conquest/conquest.qc:494
+msgid "SCO^liberated"
+msgstr "釋放"
+
+#: mod/common/gamemodes/conquest/conquest.qc:495
+msgid "SCO^captured"
+msgstr "佔領"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1447
+#: mod/common/gamemodes/snafu/snafu.qc:72
+msgid "SCO^rounds"
+msgstr "輪"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1448
+msgid "SCO^jbs"
+msgstr "越獄"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1449
+msgid "SCO^freed"
+msgstr "釋放"
+
+#: mod/common/gamemodes/jailbreak/jailbreak.qc:1450
+msgid "SCO^def"
+msgstr "保衛"
+
+#: mod/common/gamemodes/snafu/snafu.qc:346
+msgid "The tadpole is ^1DEAD^7 you ^1LOSERS!"
+msgstr "蝌蚪^1死翹翹了^7，你們這些^1失敗者！"
+
+#: mod/common/gamemodes/snafu/snafu.qc:400
+msgid ""
+"^1The tadpole is under attack!\n"
+"^2DEFEND^7 the tadpole!"
+msgstr ""
+"^1蝌蚪遭到攻擊！\n"
+"^2保護^7蝌蚪！"
+
+#: mod/common/gamemodes/vip/vip.qc:695
+msgid "SCO^scores"
+msgstr "分數"
+
+#: mod/common/gamemodes/vip/vip.qc:697
+msgid "SCO^vipkills"
+msgstr "擊殺 VIP"
+
+#: mod/common/minigames/art.qc:1
+msgid "Pixel Art"
+msgstr "像素畫"
+
+#: mod/common/minigames/boggle.qc:7
+msgid "Boggle"
+msgstr "單詞連連看"
+
+#: mod/common/minigames/boggle.qc:539
+msgid "Press \"Ready\" to begin"
+msgstr "點擊“準備完畢”以開始"
+
+#: mod/common/minigames/boggle.qc:542
+msgid ""
+"Drag the mouse to select as many words as you can before time runs out!"
+msgstr "在計時結束之前，用鼠標拖動字母、連成儘可能多的英語單詞"
+
+#: mod/common/minigames/boggle.qc:762
+msgid "BOGGLE^Ready"
+msgstr "準備完畢"
+
+#: mod/common/minigames/checkers.qc:1
+msgid "Checkers"
+msgstr "國際跳棋"
+
+#: mod/common/minigames/chess.qc:1
+msgid "Chess"
+msgstr "國際象棋"
+
+#: mod/common/minigames/nim.qc:3
+msgid "Nim"
+msgstr "尼姆棋"
+
+#: mod/common/minigames/snake.qc:2
+msgid "Snake"
+msgstr "貪喫蛇"
 
 #: mod/common/notifications.qh:53
 msgid ""
@@ -485,58 +802,6 @@ msgstr "^BG你馱着 %s^BG！"
 #, c-format
 msgid "^BGYou are now riding %s^BG!"
 msgstr "^BG你騎着 %S^BG！"
-
-#: mod/common/notifications.qh:57
-#, c-format
-msgid ""
-"^K1Congratulations!\n"
-"^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n"
-"^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"
-msgstr ""
-"^K1恭喜！\n"
-"^BG在你的保護下，蝌蚪活過第 ^F1%s^BG 波（^F1%s^BG 隻殭屍）！\n"
-"^F2迎接第 ^F1%s^F2 波^BG（^F1%s^BG 隻殭屍）！"
-
-#: mod/common/notifications.qh:59
-msgid ""
-"^BGYou are the ^TC^TT^BG VIP!\n"
-"^F2Survive or your team will lose!"
-msgstr "^BG你是^TC^TT隊^BG VIP！\n"
-
-#: mod/common/notifications.qh:60
-msgid ""
-"^BGWaiting for VIPs...\n"
-"Pickup your Soul Gem to become a VIP"
-msgstr ""
-"^BG等待選出 VIP……\n"
-"撿起靈魂石即可成爲 VIP"
-
-#: mod/common/notifications.qh:61
-msgid "^BGWaiting for an enemy VIP"
-msgstr "^BG等待敵方選出 VIP"
-
-#: mod/common/notifications.qh:62
-#, c-format
-msgid "^BG%s^F2 is no longer a VIP!"
-msgstr "^BG%s^F2不再是 VIP！"
-
-#: mod/common/notifications.qh:63
-#, c-format
-msgid "^BGToo many dropped gems! Dropping disabled for %s."
-msgstr "^BG擲出靈魂石過多！%s內不能再擲出。"
-
-#: mod/common/notifications.qh:64
-msgid "^F2You are no longer a VIP!"
-msgstr "^F2你不再是 VIP！"
-
-#: mod/common/notifications.qh:65
-#, c-format
-msgid "^BG%s^F2 is now a VIP!"
-msgstr "^BG%s^F2 現在是 VIP！"
-
-#: mod/common/notifications.qh:66
-msgid "^F2You are now a VIP!"
-msgstr "^F2你現在是 VIP！"
 
 #: mod/common/radio/sv_radio.qc:69
 msgid "^8(unknown track)"
@@ -565,96 +830,999 @@ msgstr " ^2（提示：您可以在^1控制檯^2輸入 ^1radio off^2 關閉電�
 msgid " ^8(autoqueue)"
 msgstr " ^8(自動補充)"
 
-#: mod/common/special.qc:39
-msgid "^xFB0MMorning ^7Rescue"
-msgstr "^xFB0MMorning ^7Rescue"
-
-#: mod/common/weapons/assaultrifle.qh:62
-msgid "Assault Rifle"
-msgstr "突擊步槍"
-
-#: mod/common/weapons/assaultrifle.qh:107
+#: mod/quake/client/sbar.qc:1250
 #, c-format
+msgid "Champion: %s"
+msgstr ""
+
+#: mod/quake/client/sbar.qc:1253
+#, c-format
+msgid "Press %s to swap"
+msgstr ""
+
+#: mod/quake/client/sbar.qc:1253
+msgid "quickmenu"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/arachnofloyd.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was disintegrated by an Arachnofloyd"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/arachnofloyd.qh:26
+msgid "Arachnofloyd"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/armagon.qh:5
+#, c-format
+msgid "^BG%s%s^K1 outgunned by Armagon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/armagon.qh:21
+msgid "Armagon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/axegrunt.qh:5
+#, c-format
+msgid "^BG%s%s^K1 got the chop from an Axe Grunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/axegrunt.qh:26
+msgid "Axe Grunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/bambler.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was brutally bashed by a Bambler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/bambler.qh:26
+msgid "Bambler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/bender.qh:5
+#, c-format
+msgid "^BG%s%s^K1 bit Bender's shiny metal ass"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/bender.qh:26
+msgid "Bender"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/blud.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was hemorrhaged by Blud"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/blud.qh:26
+msgid "Blud"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/centroid.qh:5
+#, c-format
+msgid "^BG%s%s^K1 stung by a Centroid"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/centroid.qh:26
+msgid "Centroid"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/chthon.qh:5
+#, c-format
+msgid "^BG%s%s^K1 becomes one with Chthon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/chthon.qh:24
+msgid "Chthon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/cook.qh:5
+#, c-format
+msgid "^BG%s%s^K1 becomes the Cook's next dish"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/cook.qh:34
+msgid "Cook"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dalek.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was exterminated by a Dalek"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dalek.qh:24
+msgid "Dalek"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dark_knight.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was surgically sliced by a Dark Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dark_knight.qh:30
+msgid "Dark Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/decoy.qh:17
+msgid "Decoy"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dragon.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was annihilated by the Dragon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dragon.qh:6
+#, c-format
+msgid "^BG%s%s^K1 was squashed by the Dragon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/dragon.qh:27
+msgid "Dragon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/drole.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was decimated by a Drole"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/drole.qh:26
+msgid "Drole"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/edie.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was violently gunned down by an Edie"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/edie.qh:26
+msgid "Edie"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/eel.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was electrified by an Eel"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/eel.qh:26
+msgid "Eel"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/eidolon.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was pulverized by the Sculptor"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/eidolon.qh:24
+msgid "Eidolon"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/elf.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was magically broken by an Elf"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/elf.qh:31
+msgid "Elf"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/enforcer.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was blasted by an Enforcer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/enforcer.qh:31
+msgid "Enforcer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/fiend.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was eviscerated by a Fiend"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/fiend.qh:26
+msgid "Fiend"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/floyd.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was made obsolete by an Automaton"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/floyd.qh:26
+msgid "Floyd"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/fury_knight.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was sliced by a Fury Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/fury_knight.qh:26
+msgid "Fury Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gargoyle.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was burned by a Gargoyle"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gargoyle.qh:26
+msgid "Gargoyle"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gaunt.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was blasted by a Gaunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gaunt.qh:26
+msgid "Gaunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/goatling.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was pounced on by a Goatling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/goatling.qh:22
+msgid "Goatling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/goroth.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was dominated by Goroth"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/goroth.qh:24
+msgid "Goroth"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gremlin.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was outsmarted by a Gremlin"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/gremlin.qh:26
+msgid "Gremlin"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/grenling.qh:5
+#, c-format
+msgid "^BG%s%s^K1 received a nasty bite from a Grenling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/grenling.qh:29
+msgid "Grenling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/grunt.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was shot by a Grunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/grunt.qh:26
+msgid "Grunt"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/guardian.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was sent to the tombs by the Guardian"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/guardian.qh:23
+msgid "Guardian"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/hell_knight.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was slain by a Hell Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/hell_knight.qh:26
+msgid "Hell Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/jim.qh:5
+#, c-format
+msgid "^BG%s%s^K1 is dead Jim"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/jim.qh:25
+msgid "Jim"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/judicator.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was judged unworthy by The Judicator"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/judicator.qh:26
+msgid "Judicator"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/juggernaut.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was destroyed by a Juggernaut"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/juggernaut.qh:28
+msgid "Juggernaut"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/justice.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was cut down by The Sword of Justice"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/justice.qh:26
+msgid "Sword of Justice"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/kangaroo.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was brutally kicked by a Kangaroo"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/kangaroo.qh:23
+msgid "Kangaroo"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/knight.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was slashed by a Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/knight.qh:26
+msgid "Knight"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lavaman.qh:5
+#, c-format
+msgid "^BG%s%s^K1 fries in Hephaestus' fury"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lavaman.qh:24
+msgid "LavaMan"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/legond.qh:5
+#, c-format
+msgid "^BG%s%s^K1 lost their duel against Legond"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/legond.qh:24
+msgid "Legond"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lightning_enforcer.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was zapped by a Lightning Enforcer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lightning_enforcer.qh:31
+msgid "Lightning Enforcer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lost_soul.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was found by a Lost Soul"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/lost_soul.qh:24
+msgid "Lost Soul"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/minotaur.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was gored by a Minotaur"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/minotaur.qh:26
+msgid "Minotaur"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/mummy.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was Mummified"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/mummy.qh:23
+msgid "Mummy"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/mutant.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was mutilated by a Mutant"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/mutant.qh:26
+msgid "Mutant"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/octa.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was inked by an Octa"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/octa.qh:24
+msgid "Octa"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/ogre.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was destroyed by an Ogre"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/ogre.qh:26
+msgid "Ogre"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/overlord.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was obliterated by an Overlord"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/overlord.qh:21
+msgid "Overlord"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/phantom_swordsman.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was slit open by a Phantom Swordsman"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/phantom_swordsman.qh:21
+msgid "Phantom Swordsman"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/raindeer.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was trampled by a Raindeer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/raindeer.qh:25
+msgid "Raindeer"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/rotfish.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was fed to the Rotfish"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/rotfish.qh:23
+msgid "Rotfish"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/rottweiler.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was mauled by a Rottweiler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/rottweiler.qh:26
+msgid "Rottweiler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/santa.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was on Santa's naughty list"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/santa.qh:26
+msgid "Santa"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/scrag.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was scragged by a Scrag"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/scrag.qh:26
+msgid "Scrag"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/shambler.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was smashed by a Shambler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/shambler.qh:26
+msgid "Shambler"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/shub.qh:17
+msgid "Shub-Niggurath"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/skaarj.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was riddled full of holes by a Skaarj"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/skaarj.qh:26
+msgid "Skaarj"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/skull_wizard.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was blown apart by a Skull Wizard"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/skull_wizard.qh:26
+msgid "Skull Wizard"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/snowman.qh:5
+#, c-format
+msgid "^BG%s%s^K1 did not want to build a Snowman"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/snowman.qh:29
+msgid "Snowman"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/spawn.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was slimed by a Spawn"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/spider_droid.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was tripped up by a Spider Droid"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/spider_droid.qh:26
+msgid "Spider Droid"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/super_chicken.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was zapped by the Super Chicken"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/super_chicken.qh:34
+msgid "Super Chicken"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/thomas.qh:5
+#, c-format
+msgid "^BG%s%s^K1 likes trains"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/thomas.qh:25
+msgid "Thomas"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/volkerh.qh:5
+#, c-format
+msgid "^BG%s%s^K1's blood was feasted upon by Volkerh"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/volkerh.qh:24
+msgid "Volkerh"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/vore.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was exploded by a Vore"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/vore.qh:26
+msgid "Vore"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/voreling.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was pounced on by a Voreling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/voreling.qh:22
+msgid "Voreling"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/wrath.qh:5
+#, c-format
+msgid "^BG%s%s^K1 was disintegrated by a Wrath"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/wrath.qh:24
+msgid "Wrath"
+msgstr ""
+
+#: mod/quake/common/monsters/monster/zombie.qh:5
+#, c-format
+msgid "^BG%s%s^K1 joins the Zombies"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/antigrav.qh:5
+msgid "Anti-Grav Belt"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/biosuit.qh:5
+msgid "Biosuit"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/empathy_shields.qh:5
+msgid "Empathy Shields"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/fieldgen.qh:5
+msgid "Force Field Generator"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/invisibility.qh:5
+msgid "Ring of Shadows"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/invulnerability.qh:5
+msgid "Pentagram of Protection"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/jump_boots.qh:5
+msgid "Jump Boots"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/poisoned.qh:10
+msgid "Poisoned"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/quad.qh:5
+msgid "Quad Damage"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/sharp_shooter.qh:5
+msgid "Sharp Shooter"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/shield.qh:5
+msgid "Power Shield"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/slowness.qh:10
+msgid "Slowness"
+msgstr ""
+
+#: mod/quake/common/status_effects/status_effect/wetsuit.qh:5
+msgid "Wetsuit"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/axe.qh:14
+msgid "Axe"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/banjo.qh:20
+msgid "Banjo"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/biogun.qh:14
+msgid "Biogun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/bongos.qh:20
+msgid "Bongos"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/breegull_blaster.qh:14
+msgid "Breegull Blaster"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/cannon.qh:22
+msgid "Cannon"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/crossbow.qh:14
+msgid "Crossbow"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/doot.qh:18
+msgid "Doot"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/fish.qh:14
+msgid "Mighty Norse Throwing Fish"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/grenade_launcher.qh:14
+msgid "Grenade Launcher"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/impaler.qh:14
+msgid "Rocket Powered Impaler"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/kazoo.qh:18
+msgid "Kazoo"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/laser_cannon.qh:14
+msgid "Laser Cannon"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/lava_nailgun.qh:15
+msgid "Lava Nailgun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/lava_super_nailgun.qh:15
+msgid "Lava Super Nailgun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/mayo.qh:18
+msgid "Jar O' Mayo"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/mic.qh:20
+msgid "Mic"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/mjolnir.qh:14
+msgid "Mjolnir"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/multi_grenade.qh:15
+msgid "Multi Grenade Launcher"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/multi_rocket.qh:15
+msgid "Multi Rocket Launcher"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/mushroom.qh:20
+msgid "Mushroom"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/nailgun.qh:14
+msgid "Nailgun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/napalm_gun.qh:14
+msgid "Napalm Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/ocarina.qh:20
+msgid "Ocarina"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/otamatone.qh:18
+msgid "Otamatone"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/pan.qh:14
+msgid "Frying Pan"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/piano.qh:18
+msgid "Piano"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/plasma_gun.qh:15
+msgid "Plasma Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/pogo.qh:14
+msgid "Pogo"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/portal_gun.qh:14
+msgid "Portal Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/proximity_gun.qh:14
+msgid "Proximity Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/ripper.qh:14
+msgid "Ripper"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/rocket_launcher.qh:14
+msgid "Rocket Launcher"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/shock_gun.qh:15
+msgid "Shock Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/spellbook.qh:14
+msgid "Spellbook"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/super_lightning.qh:14
+msgid "LG-2 Prototype"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/super_nailgun.qh:14
+msgid "Super Nailgun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/super_shotgun.qh:14
+msgid "Double-Barrelled Shotgun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/thunderbolt.qh:14
+msgid "Thunderbolt"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/cl_conquest.qc:58
+#, c-format
+msgid "Capturing %s"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/cl_conquest.qc:59
+#, c-format
+msgid "Defending %s"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/cl_conquest.qc:63
+#, c-format
+msgid "Observing %s"
+msgstr ""
+
+#: mod/common/gamemodes/conquest/cl_conquest.qc:65
+#, c-format
+msgid "Liberating %s"
+msgstr ""
+
+#: mod/common/player_crush.qc:4
+msgid "Allow crushing players by jumping on their head"
+msgstr ""
+
+#: mod/common/player_crush.qc:5
+msgid "Use simple height checking"
+msgstr ""
+
+#: mod/common/player_crush.qc:8
+msgid "Bounce height in advanced trace mode"
+msgstr ""
+
+#: mod/common/player_crush.qc:9
+msgid "Bounce height while holding jump in advanced trace mode"
+msgstr ""
+
+#: mod/common/vehicles/lightapc.qc:44
+msgid "LightAPC"
+msgstr ""
+
+#: mod/common/vehicles/lightapc.qc:54 mod/common/vehicles/lightapc.qc:64
+msgid "LightAPC Gunner"
+msgstr ""
+
+#: mod/common/vehicles/lightapc.qc:74
+msgid "LightAPC Passenger"
+msgstr ""
+
+#: mod/common/vehicles/lightapc.qc:1319
+msgid "No front gunner!"
+msgstr ""
+
+#: mod/common/vehicles/lightapc.qc:1325
+msgid "No back gunner!"
+msgstr ""
+
+#: mod/common/weapons.qc:7
 msgid ""
-"^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍半自動掃射%s%s"
+"Custom directory for weapon models, set to something like myserver, end "
+"result will look like 'models/weapons_myserver/weapon.md3'"
+msgstr ""
 
-#: mod/common/weapons/assaultrifle.qh:108
-#, c-format
-msgid "^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用突擊步槍戰術性撕碎%s%s"
+#: mod/common/weapons.qc:8
+msgid ""
+"Custom directory for weapon sounds, set to something like myserver, end "
+"result will look like 'sound/weapons_myserver/weapon.wav'"
+msgstr ""
 
-#: mod/common/weapons/chainsaw.qh:65
-msgid "Chainsaw"
-msgstr "電鋸"
+#: mod/common/weapons.qc:21
+msgid "Don't allow server to override weapon models or sounds"
+msgstr ""
 
-#: mod/common/weapons/chainsaw.qh:105
-#, c-format
-msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用電鋸鋸成兩半%s%s"
+#: mod/server/damage.qc:3
+msgid "Multiplier for the amount of damage a player takes from turrets"
+msgstr ""
 
-#: mod/common/weapons/chainsaw.qh:106
-#, c-format
-msgid "^BG%s^K1 played with their Chainsaw%s%s"
-msgstr "^BG%s^K1 把玩自己的電鋸%s%s"
+#: mod/server/damage.qc:4
+msgid "Multiplier for the amount of damage a turret takes from players"
+msgstr ""
 
-#: mod/common/weapons/flak.qh:97
-msgid "Flak Cannon"
-msgstr "破片加農炮"
+#: mod/server/headshots.qc:3
+msgid "Announce headshots and deal extra damage with the rifle"
+msgstr ""
 
-#: mod/common/weapons/flak.qh:152
-#, c-format
-msgid "^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"
-msgstr "^BG%s%s^K1 遭了 ^BG%s^K1 的集束破片%s%s"
+#: mod/server/headshots.qc:4
+msgid "Damage multiplier if hitting the head with a rifle"
+msgstr ""
 
-#: mod/common/weapons/flak.qh:153
-#, c-format
-msgid "^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用破片加農炮撕碎%s%s"
+#: mod/server/itemplacer.qc:1
+msgid "Item placement tool to spawn in some entities"
+msgstr ""
 
-#: mod/common/weapons/flak.qh:154
-#, c-format
-msgid "^BG%s^K1 was shredded by their own Flak Cannon%s%s"
-msgstr "^BG%s^K1 被自己的破片加農炮撕碎%s%s"
+#: mod/server/itemplacer.qc:2
+msgid "Also attempt to spawn in the items as they're placed"
+msgstr ""
 
-#: mod/common/weapons/lightsabre.qh:73
-msgid "Lightsabre"
-msgstr "激光刃"
+#: mod/server/items.qc:1
+msgid ""
+"Custom directory for item models, set to something like myserver, end result"
+" will look like 'models/items_myserver/item.md3'"
+msgstr ""
 
-#: mod/common/weapons/lightsabre.qh:107
-#, c-format
-msgid "^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"
-msgstr "^BG%s%s^K1 的手被 ^BG%s^K1 用激光刃切離%s%s"
+#: mod/server/items.qc:2
+msgid ""
+"Custom directory for item sounds, set to something like myserver, end result"
+" will look like 'sound/misc_myserver/item.wav'"
+msgstr ""
 
-#: mod/common/weapons/rpg7.qh:55
-msgid "RPG-7"
-msgstr "RPG-7 火箭筒"
+#: mod/server/monsters.qc:1
+msgid ""
+"Custom directory for monster models, set to something like myserver, end "
+"result will look like 'models/monsters_myserver/monster.md3'"
+msgstr ""
 
-#: mod/common/weapons/rpg7.qh:90
-#, c-format
-msgid "^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 消滅%s%s"
+#: mod/server/mutators/freeze.qc:3
+msgid "Enable freeze mutator (similar to freezetag, but for other modes)"
+msgstr ""
 
-#: mod/common/weapons/rpg7.qh:91
-#, c-format
-msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的 RPG 炸得灰飛煙滅%s%s"
+#: mod/server/mutators/freeze.qc:4
+msgid "Don't automatically unfreeze the player"
+msgstr ""
 
-#: mod/common/weapons/rpg7.qh:92
-#, c-format
-msgid "^BG%s^K1 blew themself up with their RPG-7%s%s"
-msgstr "^BG%s^K1 被自己的 RPG-7 炸得灰飛煙滅%s%s"
+#: mod/server/mutators/freeze.qc:5
+msgid "Don't allow re-spawning instantly by jumping"
+msgstr ""
 
-#: mod/common/weapons/uzi.qh:62
-msgid "Uzi"
-msgstr "烏茲衝鋒槍"
+#: mod/server/mutators/piggyback.qc:3
+msgid "Enable piggyback mutator (riding teammates)"
+msgstr ""
 
-#: mod/common/weapons/uzi.qh:107
-#, c-format
-msgid "^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍半自動掃射%s%s"
+#: mod/server/mutators/piggyback.qc:4
+msgid "Allow riding enemies"
+msgstr ""
 
-#: mod/common/weapons/uzi.qh:108
-#, c-format
-msgid "^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用烏茲衝鋒槍釘滿重金屬%s%s"
+#: mod/server/mutators/random_vehicles.qc:3
+msgid "Enable random vehicles mutator"
+msgstr ""
+
+#: mod/server/mutators/riflearena.qc:14
+msgid "Enable rifle arena mutator"
+msgstr ""
+
+#: mod/server/mutators/riflearena.qc:15
+msgid "Enable blaster in the rifle arena mutator"
+msgstr ""
+
+#: mod/server/mutators/rocketcam.qc:1
+msgid ""
+"Enable rocket cam (view follows the fired rocket), doesn't work in jailbreak"
+msgstr ""
+
+#: mod/server/mutators/shotgunarena.qc:10
+msgid "Enable shotgun arena mutator"
+msgstr ""
+
+#: mod/server/mutators/skycycle.qc:14
+msgid "Enable day-night cycles"
+msgstr ""
+
+#: mod/server/mutators/skycycle.qc:32
+msgid "Start at specific time (percentage of time [0 to 1])"
+msgstr ""
+
+#: mod/server/mutators/skycycle.qc:33
+msgid "Don't advance time"
+msgstr ""
+
+#: mod/server/mutators/spawn_unique.qc:3
+msgid "Prevent spawning at the same spawn point twice if possible"
+msgstr ""
+
+#: mod/server/mutators/zombie_apocalypse.qc:11
+msgid "Enable zombie apocalypse mutator"
+msgstr ""
+
+#: mod/server/mutators/zombie_apocalypse.qc:13
+msgid "On death, players become playable monsters"
+msgstr ""
+
+#: mod/server/mutators/zombie_apocalypse.qc:14
+msgid ""
+"Spawn this type of monster, can be random or any of the mobs in 'spawnmob "
+"list'"
+msgstr ""
