@@ -1,6 +1,6 @@
 //FEATURE: Nim minigame, the classic matchstick game with balls
 
-REGISTER_MINIGAME(nim, "Nim");
+REGISTER_MINIGAME(nim, _("Nim"));
 
 const int NIM_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int NIM_TURN_WIN   = 0x0200; // player has won
