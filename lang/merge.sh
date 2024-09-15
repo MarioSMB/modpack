@@ -39,9 +39,9 @@ if [ ! -n "${ZIP:-}" ]; then
     if [ -e "compiled/${pk3name}.*.pk3" ]; then
         rm -v compiled/${pk3name}.*.pk3
     fi
-    # unique id for different versions of localization
-    sha256=$(cat compiled/${pk3name}.pk3dir/* | sha256sum)
-    pk3path=compiled/$pk3name.${sha256:0:8}.pk3
+    hash=$(cat compiled/${pk3name}.pk3dir/* | sha256sum)
+    version=$(date +%y%m%d)+${hash:0:4}
+    pk3path=compiled/${pk3name}_${version}.pk3
     echo "Making localization package $pk3path"
     echo "localization package for smb server" >$dst/${pk3name}.pk3.serverpackage
     zip -9 -j $pk3path $dst/*
