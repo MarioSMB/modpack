@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-20 09:11+0800\n"
+"POT-Creation-Date: 2024-09-15 14:14+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -805,6 +805,20 @@ msgstr ""
 msgid " ^8(autoqueue)"
 msgstr ""
 
+#: mod/quake/client/sbar.qc:1250
+#, c-format
+msgid "Champion: %s"
+msgstr ""
+
+#: mod/quake/client/sbar.qc:1253
+#, c-format
+msgid "Press %s to swap"
+msgstr ""
+
+#: mod/quake/client/sbar.qc:1253
+msgid "quickmenu"
+msgstr ""
+
 #: mod/quake/common/monsters/monster/arachnofloyd.qh:5
 #, c-format
 msgid "^BG%s%s^K1 was disintegrated by an Arachnofloyd"
@@ -1451,8 +1465,16 @@ msgstr ""
 msgid "Axe"
 msgstr ""
 
+#: mod/quake/common/weapons/weapon/banjo.qh:20
+msgid "Banjo"
+msgstr ""
+
 #: mod/quake/common/weapons/weapon/biogun.qh:14
 msgid "Biogun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/bongos.qh:20
+msgid "Bongos"
 msgstr ""
 
 #: mod/quake/common/weapons/weapon/breegull_blaster.qh:14
@@ -1461,6 +1483,10 @@ msgstr ""
 
 #: mod/quake/common/weapons/weapon/cannon.qh:22
 msgid "Cannon"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/crossbow.qh:14
+msgid "Crossbow"
 msgstr ""
 
 #: mod/quake/common/weapons/weapon/doot.qh:18
@@ -1499,6 +1525,10 @@ msgstr ""
 msgid "Jar O' Mayo"
 msgstr ""
 
+#: mod/quake/common/weapons/weapon/mic.qh:20
+msgid "Mic"
+msgstr ""
+
 #: mod/quake/common/weapons/weapon/mjolnir.qh:14
 msgid "Mjolnir"
 msgstr ""
@@ -1511,12 +1541,20 @@ msgstr ""
 msgid "Multi Rocket Launcher"
 msgstr ""
 
+#: mod/quake/common/weapons/weapon/mushroom.qh:20
+msgid "Mushroom"
+msgstr ""
+
 #: mod/quake/common/weapons/weapon/nailgun.qh:14
 msgid "Nailgun"
 msgstr ""
 
 #: mod/quake/common/weapons/weapon/napalm_gun.qh:14
 msgid "Napalm Gun"
+msgstr ""
+
+#: mod/quake/common/weapons/weapon/ocarina.qh:20
+msgid "Ocarina"
 msgstr ""
 
 #: mod/quake/common/weapons/weapon/otamatone.qh:18
