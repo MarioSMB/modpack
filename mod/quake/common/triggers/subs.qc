@@ -628,6 +628,7 @@ void trigger_reactivate(entity this, entity actor, entity trigger)
 		this.solid = SOLID_BBOX;
 	else
 		this.solid = SOLID_TRIGGER;
+	setorigin(this, this.origin); // relink
 	this.use = this.trigger_init_use;
 	force_retouch = 2;		// make sure even still objects get hit
 }
@@ -658,6 +659,7 @@ void InitTrigger(entity this)
 	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && !IsMGMap())
 	{
 		this.solid = SOLID_NOT;
+		setorigin(this, this.origin); // relink
 		this.trigger_init_use = this.use;
 		this.use = trigger_reactivate;
 	}
