@@ -43,14 +43,17 @@ void barrel_spawn(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.killstring = " blew up";
 
-	this.origin_z = this.origin_z + 2;
-	float oldz = this.origin_z;
-	DropToFloor_QC_DelayedInit(this);
-	if(oldz - this.origin_z > 250)
+	if(this.classname != "func_explobox")
 	{
-		LOG_DEBUG("Exploding box fell out of the level at ", vtos(this.origin), "\n");
-		delete(this);
-		return;
+		this.origin_z = this.origin_z + 2;
+		float oldz = this.origin_z;
+		DropToFloor_QC_DelayedInit(this);
+		if(oldz - this.origin_z > 250)
+		{
+			LOG_DEBUG("Exploding box fell out of the level at ", vtos(this.origin), "\n");
+			delete(this);
+			return;
+		}
 	}
 
 	CSQCMODEL_AUTOINIT(this);
@@ -76,6 +79,30 @@ Smaller exploding box, REGISTERED ONLY
 spawnfunc(misc_explobox2)
 {
 	this.mdl = "maps/b_exbox2.bsp";
+	barrel_spawn(this);
+}
+
+/*QUAKED func_explobox (.8 .2 0) ? TARBABY PUFF - - - - - START_INVIS
+Build your own exploding box!
+
+Keyvalues:
+"health"	defaults to 18. -1 will make it immune to damage (trigger only)
+"dmg"		damage to explode with, defaults to 150 if unset. -1 will force 0.
+"target"	fires targets when it explodes
+"targetname"	will explode when triggered
+"wait"		will respawn after 'wait' seconds
+"count"		will only respawn 'count' times
+*/
+/*FGD
+@SolidClass base(Explobox, FuncInvis) = func_explobox : "Customizable exploding container. 
+Explodes when triggered or shot. Fires targets when it explodes." 
+[
+	dmg(integer) : "Explosion damage (-1 will force 0)" : 150
+]
+*/
+spawnfunc(func_explobox)
+{
+	this.mdl = this.model;
 	barrel_spawn(this);
 }
 
