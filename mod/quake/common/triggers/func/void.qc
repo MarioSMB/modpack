@@ -41,8 +41,15 @@ If the func_void's first target is an info_teleport_destination, it will hurt th
 ]
 */
 spawnfunc(trigger_hurt);
+spawnfunc(trigger_teleport);
 spawnfunc(func_void)
 {
+	// a quirk of func_void: convert to a trigger_teleport if there's a target
+	if(this.target && this.target != "")
+	{
+		spawnfunc_trigger_teleport(this);
+		return;
+	}
 	this.dmg = 5000;
 
 	spawnfunc_trigger_hurt(this);
