@@ -87,7 +87,7 @@ Manually counts all living monsters
 int HordeGetMonstersAlive()
 {
 	int monstercount = 0;
-	FOREACH_ENTITY_STRING(category, "monster",
+	FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
 	{
 		if(it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			monstercount += 1;
@@ -1593,18 +1593,6 @@ void Wavecheck(entity this)
 	this.nextthink = time + 10;
 
 	LOG_DEBUGF("\n===============\nchecking kills: %d of %d", monsters_killed, monsters_total);
-
-	// debug checking last monster position
-	if(monsters_killed + 3 >= monsters_total)
-	{
-		FOREACH_ENTITY_STRING(category, CATEGORY_MONSTER,
-		{
-			if(it.health > 0)
-				LOG_DEBUGF("Position of monster: %s : %v", it.classname, it.origin);
-			else
-				it.category = string_null;
-		});
-	}
 	
 	// Early exit for kill count
 	if((this.wave % 3) == 0 || this.wave < 3) // Be exact?
