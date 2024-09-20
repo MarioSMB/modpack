@@ -56,7 +56,7 @@ void Dusk_Reap(entity this)
 
 	float reap_range = 300;
 	bool found = false;
-	FOREACH_ENTITY_RADIUS(this.origin, reap_range, true,
+	FOREACH_ENTITY_RADIUS(org, reap_range, true,
 	{
 		if(it.flags & FL_ITEM)
 			found += Dusk_Reap_Item(this, it);

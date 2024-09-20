@@ -1566,11 +1566,11 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 	monster.flags |= FL_MONSTER;
 	//monster.owner = actor;
 	monster.spawnfunc_checked = true;
+	monster.solid = SOLID_SLIDEBOX;
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }
-	monster.solid = SOLID_SLIDEBOX;
 	if(monster.flags & FL_FLY)
 		set_movetype(monster, MOVETYPE_QCENTITY);
 	else
