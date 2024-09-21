@@ -61,6 +61,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_health_rot_max, float, 1);
     ATTRIB(Champions, qcc_health_heal_max, float, 1);
     ATTRIB(Champions, qcc_health_heal_cap, float, 1);
+    ATTRIB(Champions, qcc_ammo_cap, float, 1);
     ATTRIB(Champions, qcc_meleename, string, string_null);
     ATTRIB(Champions, qcc_thirdperson, bool, false);
     ATTRIB(Champions, qcc_meleerange, float, 1);

@@ -51,6 +51,12 @@ PRECACHE(Pepsiman)
 #endif
 }
 #endif
+#ifdef CSQC
+#define PEPSIMAN_STATS \
+"PEPSIMAAAAAAAN\n" \
+"Press %ABILITY% for a drink\n" \
+"Moves 33% faster"
+#endif
 CLASS(Pepsiman, Champions)
     ATTRIB(Pepsiman, netname, string, "pepsiman");
     ATTRIB(Pepsiman, m_name, string, "Pepsiman");
@@ -63,7 +69,7 @@ CLASS(Pepsiman, Champions)
     METHOD(Pepsiman, m_sound_death, string()) { return SND(Pepsiman_Death_Random()); }
 #endif
 #ifdef CSQC
-    ATTRIB(Pepsiman, message, string, "PEPSIMAAAAAAAN");
+    ATTRIB(Pepsiman, message, string, PEPSIMAN_STATS);
 #endif
 ENDCLASS(Pepsiman)
 REGISTER_CHAMPION(Pepsiman, NEW(Pepsiman));

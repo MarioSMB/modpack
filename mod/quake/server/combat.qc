@@ -384,6 +384,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(StatusEffects_active(STATUSEFFECT_JumpBoots, targ) && (targ.origin_z > attacker.origin_z || targ.origin_z > inflictor.origin_z) && targ != attacker)
 		damage *= 0.5;
 
+#if 0
 	// vengeance sphere handling
 	if(targ != attacker && IS_MONSTER(attacker) && time > targ.vsphere_last)
 	{
@@ -394,6 +395,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			break;
 		});
 	}
+#endif
 
 // save damage based on the target's armor level
 

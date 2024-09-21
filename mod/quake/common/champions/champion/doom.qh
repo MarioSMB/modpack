@@ -61,6 +61,7 @@ PRECACHE(Doom)
 #ifdef CSQC
 #define DOOM_STATS \
 "300% increased melee damage\n" \
+"50% increased shotgun damage\n" \
 "20% chance to not consume ammo"
 #endif
 CLASS(Doom, Champions)

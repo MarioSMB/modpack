@@ -4,19 +4,14 @@ METHOD(BigJohn, m_getmovespeed, float(Champions this, entity actor))
 {
 	if(time < STAT(QCC_ABILITYTIME, actor))
 		return 1.33;
-	return 0.66;
+	return 0.85;
 }
 
 #ifdef SVQC
 METHOD(BigJohn, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	if(targ.m_champion == this)
-	{
-		if(time < STAT(QCC_ABILITYTIME, targ))
-			return 1.66;
-		else
-			return 0.33;
-	}
+		return 0.5;
 	return 1;
 }
 

@@ -86,7 +86,7 @@ void PM_flight(entity this, float maxspd_mod, float dt)
 	// it is now normalized, so...
 	float a_side = 260;
 	float a_up = 15;
-	float a_add = 0.8 * PHYS_GRAVITY(this);
+	float a_add = 0.2 * PHYS_GRAVITY(this);
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
@@ -136,9 +136,9 @@ void PM_flight(entity this, float maxspd_mod, float dt)
 	float fxy, fz;
 	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / 300, 1);
 	if (wishvel_z - PHYS_GRAVITY(this) > 0)
-		fz = bound(0, 1 - this.velocity_z / 500, 1);
+		fz = bound(0, 1 - this.velocity_z / 10, 1);
 	else
-		fz = bound(0, 1 + this.velocity_z / 500, 1);
+		fz = bound(0, 1 + this.velocity_z / 10, 1);
 
 	float fvel;
 	fvel = vlen(wishvel);

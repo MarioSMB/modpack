@@ -271,9 +271,9 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
 
 	// it is now normalized, so...
-	float a_side = 300;
+	float a_side = 200;
 	float a_up = 500;
-	float a_add = 0.8 * PHYS_GRAVITY(this);
+	float a_add = 0.5 * PHYS_GRAVITY(this);
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
@@ -321,11 +321,11 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	//print("best possible acceleration: ", ftos(best), "\n");
 
 	float fxy, fz;
-	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / 300, 1);
+	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / 150, 1);
 	if (wishvel_z - PHYS_GRAVITY(this) > 0)
-		fz = bound(0, 1 - this.velocity_z / 500, 1);
+		fz = bound(0, 1 - this.velocity_z / 200, 1);
 	else
-		fz = bound(0, 1 + this.velocity_z / 500, 1);
+		fz = bound(0, 1 + this.velocity_z / 200, 1);
 
 	float fvel;
 	fvel = vlen(wishvel);
@@ -351,7 +351,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC
-		STAT(QCC_JETPACKFUEL, this) -= 100 * dt * fvel * f;
+		STAT(QCC_JETPACKFUEL, this) -= 75 * dt * fvel * f;
 		if(STAT(QCC_JETPACKFUEL, this) <= 0)
 			STAT(QCC_JETPACKFUEL, this) = 0;
 

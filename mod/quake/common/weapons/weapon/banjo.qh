@@ -9,7 +9,7 @@ SOUND(BANJO_MUSICNOTE, "weapons/banjo_music");
 CLASS(Banjo, Weapon)
 /* ammotype  */ ATTRIB(Banjo, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Banjo, impulse, int, 2);
-/* spawnflags*/ ATTRIB(Banjo, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* spawnflags*/ ATTRIB(Banjo, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Banjo, aflag, int, 7);
 /* modelname */ ATTRIB(Banjo, mdl, string, "banjo");
 /* crosshair */ ATTRIB(Banjo, w_crosshair, string, "gfx/crosshairtuba");

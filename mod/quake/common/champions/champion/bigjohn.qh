@@ -63,8 +63,8 @@ PRECACHE(BigJohn)
 #endif
 #ifdef CSQC
 #define BIGJOHN_STATS \
-"Damage taken reduced by 66%\n" \
-"Movement speed 33% slower\n" \
+"Damage taken reduced by 50%\n" \
+"Movement speed 15% slower\n" \
 "20% reduced health regeneration\n" \
 "Press %ABILITY% to Lighten\n" \
 "Lighten reverses stat changes"

@@ -75,6 +75,21 @@ void sphere_think(entity this)
 		delete(this);
 		return;
 	}
+
+	if(time > this.owner.vsphere_last)
+	{
+		makevectors(this.owner.v_angle);
+
+		entity selected = W_PickNearbyTarget(this, 700, true, false);
+		if(selected)
+		{
+			this.owner.vsphere_last = time + 3;
+			sphere_attack(this, selected);
+			return;
+		}
+		// otherwise only check a single sphere once per second
+		this.owner.vsphere_last = time + 1;
+	}
 	
 	ai_orbit(this, this.owner, 16, '0 0 48');
 	

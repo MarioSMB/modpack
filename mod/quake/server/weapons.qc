@@ -397,7 +397,7 @@ entity W_PickNearbyTarget(entity this, float hitrange, bool checkinfront, bool h
 			float head_dist = vlen2(targ_pos - this.origin);
 			vector vec = normalize(targ_pos - this.origin);
 			float dot = vec * v_forward;
-			if((!cur_dist || head_dist < cur_dist) && (!checkinfront || dot > 0.3))
+			if((!cur_dist || head_dist < cur_dist) && (!checkinfront || dot > 0.66))
 			{
 				RandomSelection_AddEnt(it, 1, 1);
 				cur_dist = head_dist;

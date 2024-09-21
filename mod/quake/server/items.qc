@@ -1799,6 +1799,7 @@ void powerup_touch(entity this, entity toucher)
 	{
 		sphere_spawn(this, toucher);
 		sphere_spawn(this, toucher);
+		sphere_spawn(this, toucher);
 		toucher.vsphere_last = time + 0.5; // give player a chance to see they have them!
 	}
 
