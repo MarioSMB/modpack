@@ -28,7 +28,7 @@ METHOD(Chief, m_playerthink, void(Chief this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_VOICE, "radar.wav", ATTN_NORM);
+		bool found = false;
 		int targlimit = 0;
 		FOREACH_ENTITY_RADIUS(actor.origin, 750, IS_MONSTER(it) && it.health > 0 && !it.charmed,
 		{
@@ -36,9 +36,18 @@ METHOD(Chief, m_playerthink, void(Chief this, entity actor))
 			if(targlimit > 20)
 				break;
 			if(!chief_visible(actor, it))
+			{
+				found = true;
 				it.enemy_reveal_time = time + 2;
+			}
 		});
-		STAT(QCC_ABILITYTIME, actor) = time + 6;
+		if(found)
+		{
+			STAT(QCC_ABILITYTIME, actor) = time + 6;
+			player_sound(actor, CH_VOICE, "radar.wav", ATTN_NORM);
+		}
+		else // otherwise just an internal cooldown to stop spam
+			STAT(QCC_ABILITYTIME, actor) = time + 1;
 	}
 }
 #endif
