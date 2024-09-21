@@ -27,7 +27,6 @@ METHOD(BigJohn, m_playerthink, void(Champions this, entity actor))
 		player_sound(actor, CH_VOICE, "ability.wav", ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 3.25;
 	}
-	actor.armorvalue = min(actor.armorvalue, 50); 
 }
 
 METHOD(BigJohn, m_cannon_launch, void(Champions this, entity actor, entity cannon))
