@@ -1,0 +1,118 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Papyrus, "progs/player_papyrus.mdl");
+MODEL(Papyrus_Head, "progs/h_player_papyrus.mdl");
+
+SOUND(Papyrus_Pain1, "player_papyrus/pain1");
+SOUND(Papyrus_Pain2, "player_papyrus/pain2");
+Sound SND_Papyrus_Pain_Random() {
+    return (random() > 0.5) ? SND_Papyrus_Pain1 : SND_Papyrus_Pain2;
+}
+
+SOUND(Papyrus_Death1, "player_papyrus/death1");
+SOUND(Papyrus_Death2, "player_papyrus/death2");
+SOUND(Papyrus_Death3, "player_papyrus/death3");
+SOUND(Papyrus_Death4, "player_papyrus/death4");
+Sound SND_Papyrus_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Papyrus_Death1.m_id + rint(random() * 3));
+}
+PRECACHE(Papyrus)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/papyrus_face_invis");
+    precache_pic("gfx/quake/papyrus_face_invul2");
+    precache_pic("gfx/quake/papyrus_face_inv2");
+    precache_pic("gfx/quake/papyrus_face_quad");
+
+    precache_pic("gfx/quake/papyrus_face1");
+    precache_pic("gfx/quake/papyrus_face_p1");
+    precache_pic("gfx/quake/papyrus_face2");
+    precache_pic("gfx/quake/papyrus_face_p2");
+    precache_pic("gfx/quake/papyrus_face3");
+    precache_pic("gfx/quake/papyrus_face_p3");
+    precache_pic("gfx/quake/papyrus_face4");
+    precache_pic("gfx/quake/papyrus_face_p4");
+    precache_pic("gfx/quake/papyrus_face5");
+    precache_pic("gfx/quake/papyrus_face_p5");
+
+    precache_pic("gfx/quake/sb_pap_line1");
+    precache_pic("gfx/quake/sb_pap_line2");
+    precache_pic("gfx/quake/sb_pap_line3");
+    precache_pic("gfx/quake/sb_pap_line4");
+    precache_pic("gfx/quake/sb_pap_line5");
+#endif
+#ifdef SVQC
+    precache_sound("player_papyrus/plyrjmp8.wav");       // player jump
+    precache_sound("player_papyrus/land.wav");           // player landing
+    precache_sound("player_papyrus/land2.wav");      // player hurt landing
+    precache_sound("player_papyrus/drown1.wav");     // drowning pain
+    precache_sound("player_papyrus/drown2.wav");     // drowning pain
+    precache_sound("player_papyrus/gasp1.wav");      // gasping for air
+    precache_sound("player_papyrus/gasp2.wav");      // taking breath
+    precache_sound("player_papyrus/h2odeath.wav");       // drowning death
+
+    precache_sound("player_papyrus/axhit1.wav");
+    precache_sound("player_papyrus/axhit2.wav");
+
+    precache_sound("player_papyrus/lburn1.wav");     // lava burn
+    precache_sound("player_papyrus/lburn2.wav");     // lava burn
+
+    precache_sound("player_papyrus/start.wav");
+    precache_sound("player_papyrus/talk.wav");
+    precache_sound("player_papyrus/falling.wav");
+    precache_sound("player_papyrus/throw.wav");
+
+    precache_sound("player_papyrus/laser_charge.wav");
+    precache_sound("player_papyrus/laser_fire.wav");
+
+    precache_model("progs/bone.mdl");
+#endif
+}
+#endif
+#ifdef CSQC
+#define PAPYRUS_STATS \
+"Half a second invincibility frames\n" \
+"15% reduced movement speed\n" \
+"Press %ABILITY% to throw a bone"
+#endif
+CLASS(Papyrus, Champions)
+    ATTRIB(Papyrus, netname, string, "papyrus");
+    ATTRIB(Papyrus, m_name, string, "Papyrus");
+    ATTRIB(Papyrus, m_viewofs, vector, '0 0 30');
+    ATTRIB(Papyrus, qcc_movespeed, float, 0.85);
+#ifdef GAMEQC
+    ATTRIB(Papyrus, m_model, Model, MDL_Papyrus);
+    ATTRIB(Papyrus, m_model_head, Model, MDL_Papyrus_Head);
+    ATTRIB(Papyrus, m_soundpath, string, "player_papyrus/");
+    METHOD(Papyrus, m_sound_pain, string()) { return SND(Papyrus_Pain_Random()); }
+    METHOD(Papyrus, m_sound_death, string()) { return SND(Papyrus_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Papyrus, m_faceprefix, string, "gfx/quake/papyrus_");
+#endif
+#ifdef CSQC
+    ATTRIB(Papyrus, message, string, PAPYRUS_STATS);
+#endif
+ENDCLASS(Papyrus)
+REGISTER_CHAMPION(Papyrus, NEW(Papyrus));
+
+#ifdef SVQC
+.bool papyrus_cannon;
+
+.float papyrus_dmgtime;
+
+void SendPapyrusLine(entity this, int liner);
+#endif
+
+#ifdef CSQC
+const int PAPYRUS_MAX_ENTRIES = 1;
+
+int papyrus_index;
+int papyrus_count;
+float papyrus_times[PAPYRUS_MAX_ENTRIES];
+string papyrus_icons[PAPYRUS_MAX_ENTRIES];
+void Sbar_Papyrus_Push(int liner);
+#endif

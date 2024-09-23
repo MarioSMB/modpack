@@ -17,6 +17,7 @@
 #include "mario.qh"
 #include "mime.qh"
 #include "nyx.qh"
+#include "papyrus.qh"
 #include "pepsiman.qh"
 #include "ranger.qh"
 #include "sorlag.qh"
