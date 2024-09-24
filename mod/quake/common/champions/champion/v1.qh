@@ -3,7 +3,7 @@
 #include "../all.qh"
 
 #ifdef GAMEQC
-EFFECT(0, V1_SLIDE,                 "electro_lightning")
+EFFECT(0, V1_SLIDE,                 "TE_SPARK")
 
 MODEL(V1, "progs/player_v1.mdl");
 

@@ -16,7 +16,7 @@ METHOD(V1, m_getmovespeed, float(Champions this, entity actor))
 
 bool V1_Sliding(entity actor)
 {
-	if(PHYS_INPUT_BUTTON_CROUCH(actor) && actor.waterlevel <= 1)
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && actor.waterlevel <= 1 && time > actor.teleport_time)
 		return true;
 	return false;
 }
@@ -127,8 +127,9 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 #ifdef SVQC
 		if(time > actor.v1_antispam && vdist(actor.velocity, >, PHYS_MAXSPEED(actor) * 0.6))
 		{
-			makevectors(actor.v_angle);
-			Send_Effect(EFFECT_V1_SLIDE, actor.origin + v_forward * 40, v_forward * -400, 1);
+			vector vangle = PHYS_INPUT_ANGLES(actor);
+			makevectors('0 1 0' * vangle.y);
+			Send_Effect(EFFECT_V1_SLIDE, actor.origin + v_up * -10 + v_forward * 40, v_forward * -100 + v_up * 50, 10);
 			_sound(actor, CH_SHOTS, "player/axhit2.wav", 0.1, ATTN_NORM);
 			actor.v1_antispam = time + 0.05;
 		}

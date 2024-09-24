@@ -11,6 +11,17 @@ void teddy_think(entity this)
 		delete(this);
 		return;
 	}
+
+	float invtime = 1;
+	FOREACH_ENTITY_RADIUS(this.origin, 120, IS_PLAYER(it) && it.health > 0,
+	{
+		float curtime = StatusEffects_gettime(STATUSEFFECT_Invulnerability, it);
+		if((time + invtime) > curtime)
+		{
+			it.invincible_warning = true; // no spam thank you!
+			StatusEffects_apply(STATUSEFFECT_Invulnerability, it, time + invtime, 0);
+		}
+	});
 }
 
 void teddy_die(entity this, entity inflictor, entity attacker, int deathtype)
@@ -46,7 +57,7 @@ void teddy_projectile_think(entity this)
 		return;
 
 	teddy_setup(this);
-	this.wait = time + 10;
+	this.wait = time + 7;
 }
 
 void ThrowTeddy(entity this)
