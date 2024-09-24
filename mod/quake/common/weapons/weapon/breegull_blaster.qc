@@ -206,10 +206,10 @@ float W_BreegullBlaster_AttackRate(entity actor, .entity weaponentity)
 		case 0:
 		{
 			attack_delay = 0.5;
-			actor.(weaponentity).cnt += 1;
-			if(actor.(weaponentity).cnt >= 3)
+			actor.(weaponentity).count += 1;
+			if(actor.(weaponentity).count >= 3)
 			{
-				actor.(weaponentity).cnt = 0;
+				actor.(weaponentity).count = 0;
 				attack_delay = 1;
 			}
 			break;
@@ -339,7 +339,7 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 METHOD(BreegullBlaster, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(!(fire & 1))
-		actor.(weaponentity).cnt = 0;
+		actor.(weaponentity).count = 0;
 
 	// checking secondary first as a page swap prevents attacking
 	if(fire & 2)

@@ -12,7 +12,7 @@ void W_FireKatana(entity this, .entity weaponentity);
 void wep_katana(entity this)
 {
 	this.m_frame += 1;
-	float animlimit = (this.cnt) ? 10 : 15;
+	float animlimit = (this.count) ? 10 : 15;
 	if(this.m_frame >= animlimit)
 	{
 		// reset attack delay so player can swing again quickly
@@ -81,7 +81,7 @@ void W_FireKatana(entity this, .entity weaponentity)
 		trace_ent.axhitme = true;
 		float damage = 80;
 		T_Damage(trace_ent, this, this, damage, WEP_KATANA.m_id);
-		this.(weaponentity).cnt = 1;
+		this.(weaponentity).count = 1;
 	}
 	else
 	{	// hit wall
@@ -125,7 +125,7 @@ METHOD(Katana, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 		if(IS_PLAYER(actor))
 			player_katana1(actor);
 		actor.(weaponentity).m_frame = 0;
-		actor.(weaponentity).cnt = 0;
+		actor.(weaponentity).count = 0;
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/katana_swing2.wav", 1, ATTN_NORM);
 		W_Katana_TryLunge(actor);
 		wep_katana(actor.(weaponentity));
