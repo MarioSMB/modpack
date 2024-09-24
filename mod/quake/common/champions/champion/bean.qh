@@ -57,7 +57,7 @@ PRECACHE(Bean)
 #ifdef CSQC
 #define BEAN_STATS \
 "Press %ABILITY% to throw Teddy\n" \
-"No additional bonus stats"
+"Teddy boosts confidence while nearby"
 #endif
 CLASS(Bean, Champions)
     ATTRIB(Bean, netname, string, "bean");

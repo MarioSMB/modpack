@@ -3,7 +3,7 @@
 METHOD(V1, m_friction, float(Champions this, entity actor))
 {
 	if(V1_Sliding(actor))
-		return 0;
+		return 0.1;
 	return 1;
 }
 
@@ -134,7 +134,8 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 			actor.v1_antispam = time + 0.05;
 		}
 #endif
-		actor.movement_y = 0; // no sideways movement!
+		actor.movement_x = 0;
+		actor.movement_y = 0;
 	}
 
 	if(!IS_ONGROUND(actor) && V1_Sliding(actor) && actor.velocity_z > -300 && actor.velocity_z < 200 && !IS_JUMP_HELD(actor))
