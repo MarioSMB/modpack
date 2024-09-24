@@ -12,7 +12,7 @@ void W_FireKatana(entity this, .entity weaponentity);
 void wep_katana(entity this)
 {
 	this.m_frame += 1;
-	float animlimit = (this.count) ? 10 : 15;
+	float animlimit = (this.count) ? 7 : 10;
 	if(this.m_frame >= animlimit)
 	{
 		// reset attack delay so player can swing again quickly
@@ -129,7 +129,7 @@ METHOD(Katana, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 		_sound(actor, CH_WEAPON_SINGLE, "weapons/katana_swing2.wav", 1, ATTN_NORM);
 		W_Katana_TryLunge(actor);
 		wep_katana(actor.(weaponentity));
-		weapon_prepareattack(thiswep, actor, weaponentity, 2);
+		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}
 }
 METHOD(Katana, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

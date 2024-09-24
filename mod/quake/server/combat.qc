@@ -372,6 +372,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(StatusEffects_active(STATUSEFFECT_Quad, attacker))
 		damage = damage * 4;
 
+	if(targ.classname == "block" && !IS_PLAYER(attacker))
+		damage = 1;
+
 	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ) && !StatusEffects_active(STATUSEFFECT_EmpathyShields, inflictor) && (targ != attacker))
 	{
 		empathyused = true;

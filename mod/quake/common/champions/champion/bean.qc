@@ -37,11 +37,11 @@ void teddy_setup(entity this)
 	setthink(this, teddy_think);
 	this.nextthink = time + 0.1;
 	this.solid = SOLID_TRIGGER;
-	this.health = 30;
-	this.takedamage = DAMAGE_AIM;
+	//this.health = 50;
+	//this.takedamage = DAMAGE_AIM;
 	this.angles = this.pos2;
-	this.monster_attack = true;
-	this.th_die = teddy_die;
+	//this.monster_attack = true;
+	//this.th_die = teddy_die;
 }
 
 void teddy_projectile_think(entity this)
@@ -67,8 +67,6 @@ void ThrowTeddy(entity this)
 	teddy.dphitcontentsmask = DPCONTENTS_SOLID;
 	set_movetype(teddy, MOVETYPE_TOSS);
 	teddy.solid = SOLID_TRIGGER;
-	teddy.healamount = 10;
-	teddy.healtype = 0;
 	teddy.cnt = time + 0.33;
 	setmodel(teddy, MDL_TEDDY);
 	//setsize(teddy, '-4 -4 -4', '4 4 4');
