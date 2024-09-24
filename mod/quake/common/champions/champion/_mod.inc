@@ -22,3 +22,4 @@
 #include "ranger.qc"
 #include "sorlag.qc"
 #include "steve.qc"
+#include "v1.qc"

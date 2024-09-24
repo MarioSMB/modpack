@@ -1,0 +1,23 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(KATANA_THROW, "weapons/sword_swing");
+#endif
+
+CLASS(Katana, Weapon)
+/* ammotype  */ ATTRIB(Katana, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Katana, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Katana, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_MELEE);
+/* ammo */      ATTRIB(Katana, aflag, int, 0);
+/* modelname */ ATTRIB(Katana, mdl, string, "katana");
+/* crosshair */ ATTRIB(Katana, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Katana, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Katana, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Katana, model2, string, "katana");
+/* refname   */ ATTRIB(Katana, netname, string, "katana");
+/* wepname   */ ATTRIB(Katana, m_name, string, _("Katana"));
+
+ENDCLASS(Katana)
+REGISTER_WEAPON(KATANA, NEW(Katana));
+
+SPAWNFUNC_WEAPON(weapon_katana, WEP_KATANA)

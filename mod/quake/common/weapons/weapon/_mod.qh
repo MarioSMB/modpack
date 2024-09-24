@@ -40,3 +40,4 @@
 #include "mushroom.qh"
 #include "crossbow.qh"
 #include "bongos.qh"
+#include "katana.qh"

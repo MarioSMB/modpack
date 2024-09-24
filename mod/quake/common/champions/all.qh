@@ -61,6 +61,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_health_rot_max, float, 1);
     ATTRIB(Champions, qcc_health_heal_max, float, 1);
     ATTRIB(Champions, qcc_health_heal_cap, float, 1);
+    ATTRIB(Champions, qcc_health_nopickup, bool, false);
     ATTRIB(Champions, qcc_ammo_cap, float, 1);
     ATTRIB(Champions, qcc_meleename, string, string_null);
     ATTRIB(Champions, qcc_thirdperson, bool, false);
@@ -88,6 +89,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_playerjump, float(Champions this, entity actor)) { return 1; };
     METHOD(Champions, m_doublejump, bool(Champions this, entity actor)) { return false; };
     METHOD(Champions, m_getmovespeed, float(Champions this, entity actor)) { return 1; };
+    METHOD(Champions, m_friction, float(Champions this, entity actor)) { return 1; };
 #endif
     METHOD(Champions, m_physics, bool(Champions this, entity actor, float dt)) { return false; };
     METHOD(Champions, m_fixclient, void(Champions this, entity actor)) { };

@@ -412,6 +412,9 @@ void PM_UserFriction(entity this, float dt)
 	else
 		friction = PHYS_FRICTION(this);
 
+	if(this.m_champion && this.m_champion.m_friction)
+		friction *= this.m_champion.m_friction(this.m_champion, this);
+
 	float control = (speed < PHYS_STOPSPEED(this)) ? PHYS_STOPSPEED(this) : speed;
 	float newspeed = speed - dt * control * friction;
 

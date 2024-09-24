@@ -247,6 +247,8 @@ void health_touch(entity this, entity toucher)
 		return;
 	if(toucher.m_transform)
 		return;
+	if(toucher.m_champion && toucher.m_champion.qcc_health_nopickup)
+		return;
 
 	bool pickedup = false;
 	if(this.healamount)
