@@ -107,6 +107,7 @@ void W_Katana_TryLunge(entity actor)
 	{
 		setorigin(actor, actor.origin + '0 0 1');
 		actor.velocity += normalize(trace_ent.origin - actor.origin) * (vlen(actor.origin - trace_ent.origin) * 2.5);
+		actor.velocity_z += (PHYS_GRAVITY(actor) * 0.5);
 		UNSET_ONGROUND(actor);
 	}
 }
