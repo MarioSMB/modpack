@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_NORB,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was Norbed"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_NORB,            1,  NULL,           INFO_DEATH_SELF_MON_NORB,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_NORB,        DEATH_SELF_MON_NORB,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_NORB, "progs/nail_orb.mdl");
+MODEL(MON_NORB_HEAD, "progs/h_mega.mdl");
+
+SOUND(MON_NORB_SIGHT1, "orb/sight1");
+SOUND(MON_NORB_SIGHT2, "orb/sight2");
+SOUND(MON_NORB_SIGHT3, "orb/sight3");
+SOUND(MON_NORB_SIGHT4, "orb/sight4");
+Sound SND_MON_NORB_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_NORB_SIGHT1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Norb, Monster)
+    ATTRIB(Norb, spawnflags, int, 0);
+    ATTRIB(Norb, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Norb, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Norb, m_model, Model, MDL_MON_NORB);
+    ATTRIB(Norb, m_model_head, Model, MDL_MON_NORB_HEAD);
+#endif
+    ATTRIB(Norb, netname, string, "norb");
+    ATTRIB(Norb, monster_name, string, _("Norb"));
+ENDCLASS(Norb)
+
+REGISTER_MONSTER(NORB, NEW(Norb));

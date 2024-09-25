@@ -46,6 +46,7 @@
 #include "octa.qc"
 #include "ogre.qc"
 #include "overlord.qc"
+#include "norb.qc"
 #include "phantom_swordsman.qc"
 #include "raindeer.qc"
 #include "rotfish.qc"

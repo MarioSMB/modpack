@@ -41,3 +41,4 @@
 #include "crossbow.qc"
 #include "bongos.qc"
 #include "katana.qc"
+#include "organ.qc"

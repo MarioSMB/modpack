@@ -770,6 +770,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_SHELLS;
 				break;
 			}
+			case WEP_ORGAN:
+			{
+				if(random() > 0.33)
+					mytype = IT_NAILS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;

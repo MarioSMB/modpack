@@ -41,6 +41,7 @@
 #include "weapon/crossbow.qh"
 #include "weapon/bongos.qh"
 #include "weapon/katana.qh"
+#include "weapon/organ.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

@@ -46,6 +46,7 @@
 #include "octa.qh"
 #include "ogre.qh"
 #include "overlord.qh"
+#include "norb.qh"
 #include "phantom_swordsman.qh"
 #include "raindeer.qh"
 #include "rotfish.qh"
