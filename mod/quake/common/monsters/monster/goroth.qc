@@ -280,12 +280,12 @@ void GorothRockExplode(entity this)
 	BecomeExplosion(this);
 }
 
-void gorrock10(entity this) { set_anim(this, 5, GorothRockExplode); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
-void gorrock9(entity this) { set_anim(this, 5, gorrock10); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
-void gorrock8(entity this) { set_anim(this, 5, gorrock9); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
-void gorrock7(entity this) { set_anim(this, 5, gorrock8); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
-void gorrock6(entity this) { set_anim(this, 5, gorrock7); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
-void gorrock5(entity this) { set_anim(this, 4, gorrock6); T_RadiusDamage(this, this.owner, 50, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock10(entity this) { set_anim(this, 5, GorothRockExplode); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock9(entity this) { set_anim(this, 5, gorrock10); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock8(entity this) { set_anim(this, 5, gorrock9); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock7(entity this) { set_anim(this, 5, gorrock8); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock6(entity this) { set_anim(this, 5, gorrock7); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
+void gorrock5(entity this) { set_anim(this, 4, gorrock6); T_RadiusDamage(this, this.owner, 20, DEATH_MONSTER_GOROTH.m_id, this.owner); }
 void gorrock4(entity this) { set_anim(this, 3, gorrock5); }
 void gorrock3(entity this) { set_anim(this, 2, gorrock4); }
 void gorrock2(entity this) { set_anim(this, 1, gorrock3); }
@@ -305,7 +305,7 @@ void GorothRock(entity this)
 	org = trace_endpos;
 	setorigin(rock, org);
 	
-	rock.nextthink = time + 1;
+	rock.nextthink = time + 1.5;
 	setthink(rock, gorrock1);
 }
 

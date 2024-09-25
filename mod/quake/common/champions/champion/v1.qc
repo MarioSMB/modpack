@@ -16,7 +16,7 @@ METHOD(V1, m_getmovespeed, float(Champions this, entity actor))
 
 bool V1_Sliding(entity actor)
 {
-	if(PHYS_INPUT_BUTTON_CROUCH(actor) && actor.waterlevel <= 1 && time > actor.teleport_time)
+	if(PHYS_INPUT_BUTTON_CROUCH(actor) && actor.waterlevel <= 1 && !(actor.flags & FL_WATERJUMP) && QCC_CanCastAbility(actor))
 		return true;
 	return false;
 }
@@ -67,7 +67,7 @@ METHOD(V1, m_cannon_land, bool(Champions this, entity actor))
 			Send_Effect(EFFECT_SMOKE_RING, actor.origin, '0 0 10', 1);
 			T_RadiusDamage(actor, actor, 100, DEATH_TRAP.m_id, actor);
 			actor.jump_flag = 0;
-			actor.v1_antispam = time + 0.5;
+			actor.v1_antispam = time + 0.25;
 			return true;
 		}
 		return false;
@@ -145,7 +145,8 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 #endif
 		vector vang = PHYS_INPUT_ANGLES(actor);
 		makevectors('0 1 0' * vang.y);
-		actor.velocity += v_forward * 400;
+		if(vdist(vec2(actor.velocity), <, 600))
+			actor.velocity += v_forward * 400;
 		actor.velocity_z -= 800;
 	}
 	return false;
@@ -158,7 +159,7 @@ METHOD(V1, m_playerjump, float(Champions this, entity actor))
 	#ifdef SVQC
 		player_sound(actor, CH_TRIGGER_SINGLE, "slide_jump.wav", ATTN_NORM);
 	#endif
-		return 2.25;
+		return 2;
 	}
 	return 1;
 }

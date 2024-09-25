@@ -422,7 +422,7 @@ void VolkerhLightning(entity this)
 
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos, this, 30, DEATH_MONSTER_VOLKERH.m_id);
+	LightningDamage(org, trace_endpos, this, 15, DEATH_MONSTER_VOLKERH.m_id);
 }
 
 // Attack End
