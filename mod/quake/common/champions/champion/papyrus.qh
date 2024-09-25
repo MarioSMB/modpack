@@ -75,14 +75,13 @@ PRECACHE(Papyrus)
 #ifdef CSQC
 #define PAPYRUS_STATS \
 "Half a second invincibility frames\n" \
-"15% reduced movement speed\n" \
-"Press %ABILITY% to throw a bone"
+"Press %ABILITY% to throw a bone\n" \
+"Sometimes become 50 damage laser skull"
 #endif
 CLASS(Papyrus, Champions)
     ATTRIB(Papyrus, netname, string, "papyrus");
     ATTRIB(Papyrus, m_name, string, "Papyrus");
     ATTRIB(Papyrus, m_viewofs, vector, '0 0 30');
-    ATTRIB(Papyrus, qcc_movespeed, float, 0.85);
 #ifdef GAMEQC
     ATTRIB(Papyrus, m_model, Model, MDL_Papyrus);
     ATTRIB(Papyrus, m_model_head, Model, MDL_Papyrus_Head);

@@ -56,14 +56,14 @@ PRECACHE(Steve)
 "Press %ABILITY% to place blocks\n" \
 "Hold Jump to bunnyhop\n" \
 "Takes 500% more fall damage\n" \
-"20% reduced movement speed"
+"15% reduced movement speed"
 #endif
 CLASS(Steve, Champions)
     ATTRIB(Steve, netname, string, "steve");
     ATTRIB(Steve, m_name, string, "Steve");
     ATTRIB(Steve, qcc_pogo, bool, true);
     ATTRIB(Steve, m_scale, float, 0.75);
-    ATTRIB(Steve, qcc_movespeed, float, 0.8);
+    ATTRIB(Steve, qcc_movespeed, float, 0.85);
     ATTRIB(Steve, qcc_falldamage, float, 5);
 #ifdef GAMEQC
     ATTRIB(Steve, m_model, Model, MDL_Steve);
