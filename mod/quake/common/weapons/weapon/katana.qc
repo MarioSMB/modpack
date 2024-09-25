@@ -111,7 +111,7 @@ void W_Katana_TryLunge(entity actor)
 		setorigin(actor, actor.origin + '0 0 1');
 		vector ang = vectoangles(trace_ent.origin - actor.origin);
 		makevectors(ang);
-		actor.velocity = v_forward * (vlen(actor.origin - trace_ent.origin) * 1.3);
+		actor.velocity = v_forward * (vlen(actor.origin - trace_ent.origin) * 2.5);
 		UNSET_ONGROUND(actor);
 	}
 }
