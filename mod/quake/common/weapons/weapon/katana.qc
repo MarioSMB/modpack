@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 bool autocvar_sv_quake_katana_midair = true;
+bool autocvar_sv_quake_katana_projectiles = true;
 
 void player_katana4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); }
 void player_katana3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_katana4); }
@@ -27,12 +28,15 @@ void wep_katana(entity this)
 
 	if(this.m_frame == 1)
 		W_Parry_Trigger(this.owner, 0);
-	else if(this.m_frame == 4)
+	else if(this.m_frame >= 4 && this.m_frame < 7 && !this.count)
 		W_FireKatana(this.owner, this.weaponentity_fld);
 }
 
 void W_FireKatana(entity this, .entity weaponentity)
 {
+	if(W_Parry(this, NULL))
+		return;
+
 	makevectors(this.v_angle);
 	vector source = W_Shotorg(this, weaponentity);
 	int oldsolid = this.dphitcontentsmask;
@@ -83,13 +87,15 @@ void W_FireKatana(entity this, .entity weaponentity)
 		trace_ent.axhitme = true;
 		float damage = 80;
 		T_Damage(trace_ent, this, this, damage, WEP_KATANA.m_id);
-		this.(weaponentity).count = 1;
 	}
 	else
 	{	// hit wall
 		_sound(this, CH_SHOTS, "player/axhit2.wav", 1, ATTN_NORM);
 		te_gunshot(org);
 	}
+
+	// hit something, cut anim short
+	this.(weaponentity).count = 1;
 }
 
 void W_Katana_TryLunge(entity actor)
@@ -102,8 +108,8 @@ void W_Katana_TryLunge(entity actor)
 	float pushforward = 400;
 	if(!IS_ONGROUND(actor))
 		pushforward *= 1.5;
-	tracebox(actor.origin, '-8 -8 -8', '8 8 8', actor.origin + v_forward * pushforward, MOVE_NORMAL, actor);
-	if(trace_ent.takedamage && vdist(actor.origin - trace_ent.origin, >, 110))
+	tracebox(actor.origin, '-8 -8 -8', '8 8 8', CENTER_OR_VIEWOFS(actor) + v_forward * pushforward, MOVE_NORMAL, actor);
+	if((trace_ent.takedamage || (trace_ent.projectiledeathtype && trace_ent.owner != actor && autocvar_sv_quake_katana_projectiles)) && vdist(actor.origin - trace_ent.origin, >, 110))
 	{
 		setorigin(actor, actor.origin + '0 0 1');
 		actor.velocity += normalize(trace_ent.origin - actor.origin) * (vlen(actor.origin - trace_ent.origin) * 2.5);
