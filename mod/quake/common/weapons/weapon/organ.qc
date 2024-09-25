@@ -197,6 +197,12 @@ void organ_think(entity this)
 
 void organ_setup(entity this)
 {
+	FOREACH_ENTITY_CLASS("organ", it.realowner == this.realowner && it.takedamage,
+	{
+		organ_die(it, NULL, NULL, DEATH_GENERIC.m_id);
+	});
+
+	this.classname = "organ";
 	//set_movetype(this, MOVETYPE_NONE);
 	this.owner = NULL; // to allow collisions
 	setthink(this, organ_think);
@@ -258,7 +264,8 @@ void W_DropOrgan(entity this, .entity weaponentity)
 
 	sound(this, CH_WEAPON_B, SND_ORGAN_DROP, 1, ATTN_NORM);
 
-	entity organ = new(organ_projectile);
+	entity organ = spawn();
+	organ.classname = "organ_projectile";
 	organ.owner = this;
 	organ.realowner = this;
 	set_movetype(organ, MOVETYPE_TOSS);
