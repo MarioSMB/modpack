@@ -111,7 +111,7 @@ bool W_Parry(entity this, entity targ)
 	// if no target is provided, attempt to parry a nearby projectile instead
 	if(!targ && IS_PLAYER(this))
 		targ = W_ParryProjectile(this);
-	else if(targ.health <= 0 || !targ.takedamage || targ.elec)
+	else if((targ.health <= 0 || !targ.takedamage || targ.elec) && !W_Projectile_CanParry(this, targ))
 		return false;
 
 	if(!targ || targ.parry_time < time)

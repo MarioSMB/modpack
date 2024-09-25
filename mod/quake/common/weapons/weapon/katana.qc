@@ -32,9 +32,49 @@ void wep_katana(entity this)
 		W_FireKatana(this.owner, this.weaponentity_fld);
 }
 
+entity W_Katana_FindProjectile(entity this, float arange)
+{
+	entity targ = NULL;
+	makevectors(this.v_angle);
+	FOREACH_ENTITY_RADIUS(this.origin, arange, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(this, it),
+	{
+		float dot = normalize(it.origin - this.origin) * v_forward;
+		if(dot <= 0.3) { continue; }
+
+		targ = it;
+		break;
+	});
+
+	return targ;
+}
+
+entity W_Katana_Parry(entity this)
+{
+	if(this.parry_time < time)
+		return NULL;
+	if(time < this.parry_cooldown)
+		return NULL;
+	if(!IS_PLAYER(this))
+		return NULL;
+
+	entity targ = W_Katana_FindProjectile(this, 120);
+
+	// delete it next frame so we can target it
+	if(targ)
+	{
+		setthink(targ, SUB_Remove);
+		targ.nextthink = time;
+		settouch(targ, func_null);
+		targ.solid = SOLID_NOT;
+		return targ;
+	}
+	return NULL;
+}
+
 void W_FireKatana(entity this, .entity weaponentity)
 {
-	if(W_Parry(this, NULL))
+	entity targ = W_Katana_Parry(this);
+	if(targ && W_Parry(this, targ))
 		return;
 
 	makevectors(this.v_angle);
@@ -108,11 +148,19 @@ void W_Katana_TryLunge(entity actor)
 	float pushforward = 400;
 	if(!IS_ONGROUND(actor))
 		pushforward *= 1.5;
-	tracebox(actor.origin, '-8 -8 -8', '8 8 8', CENTER_OR_VIEWOFS(actor) + v_forward * pushforward, MOVE_NORMAL, actor);
-	if((trace_ent.takedamage || (trace_ent.projectiledeathtype && trace_ent.owner != actor && autocvar_sv_quake_katana_projectiles)) && vdist(actor.origin - trace_ent.origin, >, 110))
+	entity targ = NULL;
+	if(autocvar_sv_quake_katana_projectiles)
+		targ = W_Katana_FindProjectile(actor, pushforward);
+	if(!targ)
+	{
+		tracebox(actor.origin, '-8 -8 -8', '8 8 8', CENTER_OR_VIEWOFS(actor) + v_forward * pushforward, MOVE_NORMAL, actor);
+		targ = trace_ent;
+	}
+	vector targ_org = (targ.absmin + targ.absmax) * 0.5;
+	if((targ.takedamage || (W_Projectile_CanParry(actor, targ) && targ.owner != actor && autocvar_sv_quake_katana_projectiles)) && vdist(actor.origin - targ_org, >, 110))
 	{
 		setorigin(actor, actor.origin + '0 0 1');
-		actor.velocity += normalize(trace_ent.origin - actor.origin) * (vlen(actor.origin - trace_ent.origin) * 2.5);
+		actor.velocity += normalize(targ_org - actor.origin) * (vlen(actor.origin - targ_org) * 2.5);
 		actor.velocity_z += (PHYS_GRAVITY(actor) * PHYS_INPUT_TIMELENGTH);
 		UNSET_ONGROUND(actor);
 	}
