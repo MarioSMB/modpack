@@ -98,7 +98,7 @@ void W_Katana_TryLunge(entity actor)
 		return;
 	makevectors(actor.angles);
 	float pushforward = 400;
-	tracebox(actor.origin, actor.mins, actor.maxs, actor.origin + v_forward * pushforward, MOVE_NORMAL, actor);
+	tracebox(actor.origin, actor.mins + ('0 0 1' * PHYS_STEPHEIGHT(actor)), actor.maxs, actor.origin + v_forward * pushforward, MOVE_NORMAL, actor);
 	if(trace_ent.takedamage && vdist(actor.origin - trace_ent.origin, >, 110))
 	{
 		setorigin(actor, actor.origin + '0 0 1');
