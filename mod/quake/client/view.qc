@@ -536,6 +536,60 @@ void View_CheckButtonStatus()
 	}
 }
 
+bool autocvar__con_chat_maximized;
+bool autocvar_con_chatrect;
+float autocvar_con_chatwidth;
+float autocvar_con_chat;
+float autocvar_con_chatsize;
+vector autocvar_hud_panel_chat_pos = '0.01 0.7 0';
+vector autocvar_hud_panel_chat_size = '0.46 0.19 0';
+void HUD_Chat()
+{
+	vector panel_pos = autocvar_hud_panel_chat_pos; //'0.01 0.7 0';
+	vector panel_size = autocvar_hud_panel_chat_size; //'0.46 0.19 0';
+	float panel_bg_border = 2;
+	float panel_bg_alpha = 1;
+	float panel_bg_padding = 3;
+
+	// Scale the pos and size vectors to absolute coordinates
+	panel_pos.x *= vid_conwidth; panel_pos.y *= vid_conheight;
+	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight;
+
+	if(autocvar__con_chat_maximized) // draw at full screen height if maximized
+	{
+		panel_pos.y = panel_bg_border;
+		panel_size.y = vid_conheight - panel_bg_border * 2;
+		panel_bg_alpha = max(0.75, panel_bg_alpha);
+	}
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	if (!autocvar_con_chatrect)
+		cvar_set("con_chatrect", "1");
+
+	// can't use a name ending with _x, _y and _z for a float autocvar as for autocvar specs
+	// it prevents ambiguity with component names of vector autocvars
+	if (cvar_string("con_chatrect_x") != ftos(pos.x / vid_conwidth))
+		cvar_set("con_chatrect_x", ftos(pos.x / vid_conwidth));
+	if (cvar_string("con_chatrect_y") != ftos(pos.y / vid_conheight))
+		cvar_set("con_chatrect_y", ftos(pos.y / vid_conheight));
+	// can't use direct comparison here, it would always returns true even if
+	// both arguments are equal because con_chatwidth is saved with cvar_set
+	//if (autocvar_con_chatwidth != mySize.x / vid_conwidth)
+	if (fabs(autocvar_con_chatwidth - mySize.x / vid_conwidth) > 0.00001)
+		cvar_set("con_chatwidth", ftos(mySize.x / vid_conwidth));
+	if (autocvar_con_chat != floor(mySize.y / autocvar_con_chatsize - 0.5))
+		cvar_set("con_chat", ftos(floor(mySize.y / autocvar_con_chatsize - 0.5)));
+}
+
 bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
@@ -641,6 +695,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	Sbar_Draw();
 	HUD_CenterPrint();
 	HUD_Crosshair(this);
+	HUD_Chat();
 	Draw_ShowNames_All();
 
 	status_effects_HUD_Powerups_add();
