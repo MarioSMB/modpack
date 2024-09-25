@@ -109,7 +109,7 @@ void W_Katana_TryLunge(entity actor)
 	if(trace_ent.takedamage && vdist(actor.origin - trace_ent.origin, >, 110))
 	{
 		setorigin(actor, actor.origin + '0 0 1');
-		actor.velocity = v_forward * (pushforward * 1.5);
+		actor.velocity = normalize(actor.origin - trace_ent.origin);
 		UNSET_ONGROUND(actor);
 	}
 }
