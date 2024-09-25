@@ -98,10 +98,7 @@ void W_Katana_TryLunge(entity actor)
 		return;
 	if(!IS_ONGROUND(actor) && !autocvar_sv_quake_katana_midair)
 		return;
-	if(!IS_ONGROUND(actor))
-		makevectors(actor.v_angle);
-	else
-		makevectors(actor.angles);
+	makevectors(actor.v_angle);
 	float pushforward = 400;
 	if(!IS_ONGROUND(actor))
 		pushforward *= 1.5;
@@ -109,9 +106,7 @@ void W_Katana_TryLunge(entity actor)
 	if(trace_ent.takedamage && vdist(actor.origin - trace_ent.origin, >, 110))
 	{
 		setorigin(actor, actor.origin + '0 0 1');
-		vector ang = vectoangles(trace_ent.origin - actor.origin);
-		makevectors(ang);
-		actor.velocity = v_forward * (vlen(actor.origin - trace_ent.origin) * 2.5);
+		actor.velocity += normalize(trace_ent.origin - actor.origin) * (vlen(actor.origin - trace_ent.origin) * 2.5);
 		UNSET_ONGROUND(actor);
 	}
 }
