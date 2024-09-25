@@ -54,7 +54,7 @@ PRECACHE(Keen)
 "Small, fits through tight spaces\n" \
 "Short hops, big jump when stationary\n" \
 "Takes no fall damage\n" \
-"Has a pogo stick instead of an Axe"
+"Has a pogo stick"
 #endif
 CLASS(Keen, Champions)
     ATTRIB(Keen, netname, string, "keen");

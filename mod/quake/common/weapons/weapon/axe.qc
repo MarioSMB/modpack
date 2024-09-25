@@ -116,6 +116,9 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
+		float aspeed = 1;
+		if(actor.m_champion && actor.m_champion.qcc_meleespeed)
+			aspeed *= actor.m_champion.qcc_meleespeed;
 		float r = random();
 		if(random() < 0.7)
 			_sound(actor, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
@@ -138,7 +141,7 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 						player_axec1(actor);
 					wep_axe_axec1(actor.(weaponentity));
 				}
-				weapon_prepareattack(thiswep, actor, weaponentity, 0.8); // long recover
+				weapon_prepareattack(thiswep, actor, weaponentity, 0.8 * aspeed); // long recover
 			}
 			else
 			{
@@ -157,9 +160,9 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 				}
 						
 				if(actor.axe_hit_chain > 1)
-					weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
+					weapon_prepareattack(thiswep, actor, weaponentity, 0.6 * aspeed);
 				else
-					weapon_prepareattack(thiswep, actor, weaponentity, 0.4);
+					weapon_prepareattack(thiswep, actor, weaponentity, 0.4 * aspeed);
 							
 			}
 		}
@@ -192,7 +195,7 @@ METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 			float fire_delay = 0.5;
 			if(random() < 0.5)
 				fire_delay = 0.4;
-			weapon_prepareattack(thiswep, actor, weaponentity, fire_delay);
+			weapon_prepareattack(thiswep, actor, weaponentity, fire_delay * aspeed);
 		}
 	}
 }

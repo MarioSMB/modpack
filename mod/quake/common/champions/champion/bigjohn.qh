@@ -66,8 +66,8 @@ PRECACHE(BigJohn)
 "Damage taken reduced by 50%\n" \
 "Movement speed 15% slower\n" \
 "20% reduced health regeneration\n" \
-"Press %ABILITY% to Lighten\n" \
-"Lighten reverses stat changes"
+"Press %ABILITY% to run faster\n" \
+"Melee weapon is 40% faster"
 #endif
 CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, netname, string, "bigjohn");
@@ -75,6 +75,7 @@ CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, qcc_health_regen_rate, float, 1.2);
     ATTRIB(BigJohn, qcc_meleename, string, "gaunt");
     ATTRIB(BigJohn, m_viewofs, vector, '0 0 26');
+    ATTRIB(BigJohn, qcc_meleespeed, float, 0.6);
 #ifdef GAMEQC
     ATTRIB(BigJohn, m_model, Model, MDL_BigJohn);
     ATTRIB(BigJohn, m_model_head, Model, MDL_BigJohn_Head);

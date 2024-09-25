@@ -265,7 +265,7 @@ void viewmodel_draw(entity this)
 			show_viewmodel = false;
 	}
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active || !show_viewmodel) ? 0 : MASK_NORMAL;
-	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
+	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, csqcplayer.m_alpha) : csqcplayer.m_alpha);
 	int wepskin = this.m_skin;
 	Weapon wep = this.activeweapon;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);

@@ -14,11 +14,11 @@ void Sorlag_AcidPoolTouch(entity this, entity toucher)
 		return;
 	if(IS_PLAYER(toucher) && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
 		return;
-	if(StatusEffects_active(STATUSEFFECT_Poisoned, toucher))
-		return; // TODO: refresh?
 
 	float poisontime = 7;
-	StatusEffects_apply(STATUSEFFECT_Poisoned, toucher, time + poisontime, 0);
+	float curtime = StatusEffects_gettime(STATUSEFFECT_Poisoned, toucher);
+	if((time + poisontime) > curtime)
+		StatusEffects_apply(STATUSEFFECT_Poisoned, toucher, time + poisontime, 0);
 }
 
 void Sorlag_AcidPoolAnim(entity this)

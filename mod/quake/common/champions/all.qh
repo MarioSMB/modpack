@@ -66,6 +66,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_meleename, string, string_null);
     ATTRIB(Champions, qcc_thirdperson, bool, false);
     ATTRIB(Champions, qcc_meleerange, float, 1);
+    ATTRIB(Champions, qcc_meleespeed, float, 1);
     ATTRIB(Champions, qcc_anim_axrun, vector, '0 0 0');
     ATTRIB(Champions, qcc_anim_rockrun, vector, '0 0 0');
     ATTRIB(Champions, qcc_anim_axstnd, vector, '0 0 0');

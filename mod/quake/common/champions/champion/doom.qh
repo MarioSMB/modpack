@@ -62,7 +62,8 @@ PRECACHE(Doom)
 #define DOOM_STATS \
 "300% increased melee damage\n" \
 "50% increased shotgun damage\n" \
-"20% chance to not consume ammo"
+"20% chance to not consume ammo\n" \
+"Always gibs slain monsters"
 #endif
 CLASS(Doom, Champions)
     ATTRIB(Doom, netname, string, "doom");

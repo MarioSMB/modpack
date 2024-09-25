@@ -57,7 +57,7 @@ void teddy_projectile_think(entity this)
 		return;
 
 	teddy_setup(this);
-	this.wait = time + 7;
+	this.wait = time + 4;
 }
 
 void ThrowTeddy(entity this)
