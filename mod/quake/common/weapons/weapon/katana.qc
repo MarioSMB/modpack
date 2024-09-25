@@ -3,6 +3,8 @@
 #include "../../monsters/_mod.qh"
 
 #ifdef SVQC
+bool autocvar_sv_quake_katana_midair = true;
+
 void player_katana4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); }
 void player_katana3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_katana4); }
 void player_katana2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_katana3); }
@@ -94,9 +96,12 @@ void W_Katana_TryLunge(entity actor)
 {
 	if(actor.flags & FL_SWIM)
 		return;
-	if(!IS_ONGROUND(actor))
+	if(!IS_ONGROUND(actor) && !autocvar_sv_quake_katana_midair)
 		return;
-	makevectors(actor.angles);
+	if(!IS_ONGROUND(actor))
+		makevectors(actor.v_angle);
+	else
+		makevectors(actor.angles);
 	float pushforward = 400;
 	tracebox(actor.origin, actor.mins + ('0 0 1' * PHYS_STEPHEIGHT(actor)), actor.maxs, actor.origin + v_forward * pushforward, MOVE_NORMAL, actor);
 	if(trace_ent.takedamage && vdist(actor.origin - trace_ent.origin, >, 110))
