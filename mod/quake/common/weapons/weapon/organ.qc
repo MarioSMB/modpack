@@ -35,6 +35,8 @@ void organ_die(entity this, entity inflictor, entity attacker, int deathtype)
 	this.nextthink = time;
 	Send_Effect(EFFECT_SMOKE_RING, this.origin + '0 0 8', '0 0 50', 1);
 	sound(this, CH_VOICE, SND_ORGAN_EXPLODE, 1, ATTN_NORM);
+
+	music_reset(this);
 }
 
 void organ_pain(entity this, entity attacker, float damage, int deathtype)
@@ -165,12 +167,24 @@ void organ_fire(entity this)
 void organ_think(entity this)
 {
 	setthink(this, organ_think);
-	this.nextthink = time + 0.1;
+	this.nextthink = time;
 
 	if(this.wait && time > this.wait)
 	{
 		organ_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 		return;
+	}
+
+	.entity weaponentity = weaponentities[0];
+	if(IS_PLAYER(this.realowner) && this.realowner.(weaponentity) && this.realowner.(weaponentity).music_song != this.(weaponentity).music_song)
+	{
+		this.(weaponentity).music_pos = this.realowner.(weaponentity).music_pos;
+		this.(weaponentity).music_speed = this.realowner.(weaponentity).music_speed;
+		this.(weaponentity).music_nextnote = this.realowner.(weaponentity).music_nextnote;
+		this.(weaponentity).music_repeatstart = this.realowner.(weaponentity).music_repeatstart;
+		this.(weaponentity).music_repeatend = this.realowner.(weaponentity).music_repeatend;
+		this.(weaponentity).music_starttime = time;
+		strcpy(this.(weaponentity).music_song, this.realowner.(weaponentity).music_song);
 	}
 
 	if(time < this.attack_finished)
@@ -215,6 +229,15 @@ void organ_setup(entity this)
 	this.th_die = organ_die;
 	this.th_pain = organ_pain;
 	this.attack_finished = time + 1;
+
+	// hack so music can work
+	.entity weaponentity = weaponentities[0];
+	this.(weaponentity) = this;
+	this.(weaponentity).m_weapon = WEP_ORGAN;
+	this.v_angle = this.angles;
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
 }
 
 void organ_projectile_touch(entity this, entity toucher)

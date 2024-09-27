@@ -9,6 +9,8 @@
 .int music_repeatend;
 .string music_song;
 
+void music_reset(entity this);
+
 void music_RemovePlayer(entity this);
 
 void CreatureFrame_Music(entity this);

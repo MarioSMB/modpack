@@ -1839,7 +1839,7 @@ void CreatureFrame_All()
 {
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
-		if(IS_PLAYER(it)) // musical monsters?
+		if(IS_PLAYER(it) || it.classname == "organ") // musical monsters?
 			CreatureFrame_Music(it);
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);

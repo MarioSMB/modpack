@@ -630,6 +630,13 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	actor.th_die = zombie_die;
 	actor.th_missile = zombie_missile;
 
+	if(random() <= 0.1 && fexists("progs/mon_zombieking.mdl"))
+	{
+		precache_model("progs/mon_zombieking.mdl");
+		_setmodel(actor, "progs/mon_zombieking.mdl");
+		setsize(actor, this.m_mins, this.m_maxs);
+	}
+
 	if(actor.charmed)
 		actor.spawnflags &= ~SPAWN_CRUCIFIED;
 
