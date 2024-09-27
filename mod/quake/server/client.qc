@@ -10,6 +10,7 @@
 #include "chat_grabber.qh"
 #include "combat.qh"
 #include "command/banning.qh"
+#include "command/cmd.qh"
 #include "getreplies.qh"
 #include "ipban.qh"
 #include "player.qh"
@@ -2494,6 +2495,20 @@ called when a player disconnects from a server
 */
 void ClientDisconnect(entity this)
 {
+	/* from "ignore" command */
+	strfree(this.ignore_list);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	{
+		if(it.crypto_idfp && it.crypto_idfp != "")
+			continue;
+		string mylist = ignore_removefromlist(it, this);
+		if(it.ignore_list)
+			strunzone(it.ignore_list);
+
+		it.ignore_list = strzone(mylist);
+	});
+	/* from "ignore" command */
+	
 	if(gameover)
 		return;
 	// if the level end trigger has been activated, just return
@@ -2827,6 +2842,111 @@ REPLICATE_APPLYCHANGE("cl_quake_spectate",
 		ClientCommand_spectate(this);
 );
 
+entity GetIndexedEntity(float argc, float start_index);
+float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
+void print_to(entity to, string input);
+
+void ClientCommand_ignore(entity caller, int argc)
+{
+	// TOOD: proper commands system hanlding
+			if (argc >= 2)
+			{
+				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
+
+				if(!argv(1) || argv(1) == "")
+				{
+					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
+					return;
+				}
+
+				entity ignore_to = GetIndexedEntity(argc, 1);
+				float ignore_accepted = VerifyClientEntity(ignore_to, true, false);
+
+				if (ignore_accepted > 0 && IS_REAL_CLIENT(ignore_to))   // the target is a real client
+				{
+					if (ignore_to != caller) // and we're allowed to ignore them heh
+					{
+						if(ignore_playerinlist(ignore_to, caller))
+						{
+							sprint(caller, ignore_to.netname, " ^7is already ignored!\n");
+							return;
+						}
+
+						// advanced ignore mode, works if both the player and the sender have a stats UID
+						if(advanced && ignore_to.crypto_idfp && ignore_to.crypto_idfp != "")
+						{
+							for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+							{
+								string pos = db_get(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)));
+								if(pos == "")
+								{
+									db_put(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)), ignore_to.crypto_idfp);
+									sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+									return;
+								}
+							}
+
+							sprint(caller, "You may only ignore up to ", ftos(IGNORE_MAXPLAYERS), " players, remove one before trying again.\n");
+							return;
+						}
+
+						if(caller.ignore_list)
+							strunzone(caller.ignore_list);
+						caller.ignore_list = strzone(cons(caller.ignore_list, ftos(etof(ignore_to))));
+
+						sprint(caller, "You no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+					}
+					else { sprint(caller, "You can't ^2ignore^7 yourself.\n"); }
+				}
+				else { print_to(caller, "ignore: Unable to ignore this player, check their ID."); }
+
+				return;
+			}
+
+		sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
+}
+
+void ClientCommand_unignore(entity caller, int argc)
+{
+			if (argc >= 2)
+			{
+				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
+
+				if(!argv(1) || argv(1) == "")
+				{
+					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
+					return;
+				}
+
+				entity unignore_to = GetIndexedEntity(argc, 1);
+				float unignore_accepted = VerifyClientEntity(unignore_to, true, false);
+
+				if (unignore_accepted > 0 && IS_REAL_CLIENT(unignore_to))   // the target is a real client
+				{
+					if (unignore_to != caller)
+					{
+						string mylist = ignore_removefromlist(caller, unignore_to);
+						if(!advanced)
+						{
+							if(caller.ignore_list)
+								strunzone(caller.ignore_list);
+
+							caller.ignore_list = strzone(mylist);
+						}
+
+						sprint(caller, "You can now receive messages from ", unignore_to.netname, " ^7again.\n");
+						return;
+					}
+					else { sprint(caller, "You can't ^2unignore^7 yourself.\n"); }
+				}
+				else {  print_to(caller, "unignore: Unable to stop ignoring this player, check their ID."); }
+
+				return;
+			}
+
+		sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
+}
+
 void exploder_think(entity this)
 {
 	te_explosion2(this.origin, this.count, this.cnt);
@@ -3138,6 +3258,18 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "notarget")
 	{
 		NotargetCheat(this);
+		return;
+	}
+
+	if(cmd_name == "ignore")
+	{
+		ClientCommand_ignore(this, argc);
+		return;
+	}
+
+	if(cmd_name == "unignore")
+	{
+		ClientCommand_unignore(this, argc);
 		return;
 	}
 

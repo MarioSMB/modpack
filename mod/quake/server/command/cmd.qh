@@ -1,0 +1,12 @@
+#pragma once
+
+.string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
+
+const int IGNORE_MAXPLAYERS = 16; // maximum players to be ignored in the personal chat
+
+// functions for ignore command
+string ignore_removefromlist(entity list, entity ignore);
+
+bool ignore_playerinlist(entity sender, entity targ);
+
+void ignore_clearall(entity this);
