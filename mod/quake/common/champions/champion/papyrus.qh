@@ -76,7 +76,7 @@ PRECACHE(Papyrus)
 #define PAPYRUS_STATS \
 "Half a second invincibility frames\n" \
 "Press %ABILITY% to throw a bone\n" \
-"Sometimes become 50 damage laser skull"
+"Sometimes fires 50 damage laser skull"
 #endif
 CLASS(Papyrus, Champions)
     ATTRIB(Papyrus, netname, string, "papyrus");

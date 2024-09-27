@@ -91,6 +91,7 @@ STATIC_INIT_LATE(LoadMenuSkinValues)
 	}
 }
 
+float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSecondary);
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 {
 	int evtype = 0;
@@ -129,6 +130,9 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 			_cursor_position.y = nSecondary;
 			break;
 	}
+
+	if(HUD_Panel_Chat_InputEvent(inputType, nPrimary, nSecondary))
+		return true;
 
 	if(cl_shop_input_event(evtype, nPrimary, nSecondary, 0))
 		return true;

@@ -543,6 +543,63 @@ float autocvar_con_chat;
 float autocvar_con_chatsize;
 vector autocvar_hud_panel_chat_pos = '0.01 0.7 0';
 vector autocvar_hud_panel_chat_size = '0.46 0.19 0';
+
+float chat_maximized_scroll_ofs;
+float chat_maximized_reset_scroll_time;
+float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if(!autocvar__con_chat_maximized)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
+		return true;
+	}
+
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if(nPrimary == K_MWHEELUP)
+	{
+		if (!key_pressed)
+			return true;
+		chat_maximized_scroll_ofs += 5 * cvar("con_chatsize");
+		return true;
+	}
+	else if(nPrimary == K_MWHEELDOWN)
+	{
+		if (!key_pressed)
+			return true;
+		chat_maximized_scroll_ofs -= 5 * cvar("con_chatsize");
+		if (chat_maximized_scroll_ofs < 0)
+			chat_maximized_scroll_ofs = 0;
+		return true;
+	}
+	else if(nPrimary == K_PGUP)
+	{
+		if (!key_pressed)
+			return true;
+		chat_maximized_scroll_ofs += vid_conheight / 2;
+		return true;
+	}
+	else if(nPrimary == K_PGDN)
+	{
+		if (!key_pressed)
+			return true;
+		chat_maximized_scroll_ofs -= vid_conheight / 2;
+		if (chat_maximized_scroll_ofs < 0)
+			chat_maximized_scroll_ofs = 0;
+		return true;
+	}
+
+	return false;
+}
+
 void HUD_Chat()
 {
 	vector panel_pos = autocvar_hud_panel_chat_pos; //'0.01 0.7 0';
@@ -550,6 +607,11 @@ void HUD_Chat()
 	float panel_bg_border = 2;
 	float panel_bg_alpha = 1;
 	float panel_bg_padding = 3;
+
+	if(autocvar__con_chat_maximized)
+		chat_maximized_reset_scroll_time = time + 3;
+	else if (time > chat_maximized_reset_scroll_time)
+		chat_maximized_scroll_ofs = 0;
 
 	// Scale the pos and size vectors to absolute coordinates
 	panel_pos.x *= vid_conwidth; panel_pos.y *= vid_conheight;
@@ -560,6 +622,7 @@ void HUD_Chat()
 		panel_pos.y = panel_bg_border;
 		panel_size.y = vid_conheight - panel_bg_border * 2;
 		panel_bg_alpha = max(0.75, panel_bg_alpha);
+		panel_size.y += chat_maximized_scroll_ofs;
 	}
 
 	vector pos, mySize;

@@ -57,7 +57,8 @@ PRECACHE(BanjoKazooie)
 #define BANJO_STATS \
 "Hold %ABILITY% to glide\n" \
 "Jumps 20% higher\n" \
-"Has Kazooie as a weapon"
+"Has Kazooie as a weapon\n" \
+"Right-click to cycle eggs"
 #endif
 CLASS(BanjoKazooie, Champions)
     ATTRIB(BanjoKazooie, netname, string, "banjo");
