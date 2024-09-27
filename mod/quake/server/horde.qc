@@ -896,6 +896,7 @@ void SpawnAmmo(entity this)
 	spawn_tfog_silent(pos + '0 0 8'); // added aug30
 }
 
+bool health_customize(entity this, entity client);
 void SpawnItem(entity this)
 {
 	entity item = spawn();
@@ -907,6 +908,7 @@ void SpawnItem(entity this)
 	{
 		item.classname = "item_health";
 		settouch(item, horde_health_touch);
+		setcefc(item, health_customize);
 		_setmodel(item, "maps/b_bh10.bsp");
 		item.noise = "items/r_item1.wav";
 		item.healamount = 15;
@@ -918,6 +920,7 @@ void SpawnItem(entity this)
 	{
 		item.classname = "item_health";
 		settouch(item, horde_health_touch);
+		setcefc(item, health_customize);
 		_setmodel(item, "maps/b_bh25.bsp");
 		item.noise = "items/health1.wav";
 		item.healamount = 25;

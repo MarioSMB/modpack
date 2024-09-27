@@ -199,9 +199,15 @@ const int H_MEGA = BIT(1);
 .float	healamount, healtype;
 void health_touch(entity this, entity toucher);
 
+bool health_customize(entity this, entity client)
+{
+	return !(client.m_champion && client.m_champion.qcc_health_nopickup);
+}
+
 spawnfunc(item_health)
 {	
 	settouch(this, health_touch);
+	setcefc(this, health_customize);
 
 	if(this.spawnflags & H_ROTTEN)
 	{

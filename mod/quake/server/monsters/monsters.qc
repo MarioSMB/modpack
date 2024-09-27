@@ -293,7 +293,7 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 Monster monster_randomize(entity this, Monster mon)
 {
 	this.nightmare_checked = true;
-	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp")
+	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
 	bool seasonlocked = Monsters_SeasonLocked();

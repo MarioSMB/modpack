@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 bool autocvar_sv_quake_katana_midair = true;
-bool autocvar_sv_quake_katana_projectiles = true;
+bool autocvar_sv_quake_katana_projectiles = false;
 
 void player_katana4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); }
 void player_katana3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_katana4); }
