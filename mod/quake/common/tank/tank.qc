@@ -108,7 +108,7 @@ void Tank_PlayerPostThink(entity this)
 	if(time > this.tank.tank_rot)
 	{
 		this.tank.tank_rot = time + 0.5;
-		T_Damage(this, this, this, 1, DEATH_CRUSH.m_id);
+		T_Damage(this, NULL, NULL, 1, DEATH_CRUSH.m_id);
 	}
 
 	if(PHYS_INPUT_BUTTON_CROUCH(this) && time > this.tank_horn_delay)
