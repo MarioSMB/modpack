@@ -1292,16 +1292,18 @@ entity HordeFindSpawnpoint(float squad_type)
 	return NULL;
 }
 
-bool horde_squad_allowed(entity this, entity squad, bool isbosswave, bool allowany)
+bool horde_squad_allowed(entity this, entity squad, int bosswave, int spawntype, bool allowany)
 {
 	if(allowany)
 		return true;
 
+	if(!(squad.spawnflags & spawntype))
+		return false;
 	if(autocvar_skill < 3 && (squad.spawnflags & HORDE_HARD))
 		return false;
 	if(autocvar_skill > 1 && (squad.spawnflags & HORDE_EASY))
 		return false;
-	if((squad.spawnflags & HORDE_FINALBOSS) && ((this.wave % isbosswave) != 0))
+	if((squad.spawnflags & HORDE_FINALBOSS) && ((this.wave % bosswave) != 0))
 		return false;
 	if((squad.spawnflags & HORDE_ARMY) && !this.army)
 		return false;
@@ -1317,9 +1319,9 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 	int fbosswave = (autocvar_skill == 3) ? 3 : 9;
 	bool allowany = (autocvar_skill == 3 && this.wave > 9);
 	RandomSelection_Init();
-	IL_EACH(g_squads, it.spawnflags & spawntype,
+	IL_EACH(g_squads, true,
 	{
-		if(!horde_squad_allowed(this, it, fbosswave, allowany))
+		if(!horde_squad_allowed(this, it, fbosswave, spawntype, allowany))
 			continue;
 		// final boss will be given priority over other boss spawns
 		// TODO: less priority on nightmare?
