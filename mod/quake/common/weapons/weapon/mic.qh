@@ -9,7 +9,7 @@ SOUND(MIC_MUSICNOTE, "weapons/mic_music");
 CLASS(Mic, Weapon)
 /* ammotype  */ ATTRIB(Mic, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Mic, impulse, int, 9);
-/* spawnflags*/ ATTRIB(Mic, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* spawnflags*/ ATTRIB(Mic, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Mic, aflag, int, 10);
 /* modelname */ ATTRIB(Mic, mdl, string, "mic");
 /* crosshair */ ATTRIB(Mic, w_crosshair, string, "gfx/crosshairtuba");

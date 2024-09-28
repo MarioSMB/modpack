@@ -7,7 +7,7 @@ SOUND(OTAMATONE_MUSICNOTE, "weapons/otamatone_music");
 CLASS(Otamatone, Weapon)
 /* ammotype  */ ATTRIB(Otamatone, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Otamatone, impulse, int, 8);
-/* spawnflags*/ ATTRIB(Otamatone, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* spawnflags*/ ATTRIB(Otamatone, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Otamatone, aflag, int, 5);
 /* modelname */ ATTRIB(Otamatone, mdl, string, "otamatone");
 /* crosshair */ ATTRIB(Otamatone, w_crosshair, string, "gfx/crosshairtuba");

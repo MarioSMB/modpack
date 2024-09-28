@@ -84,7 +84,8 @@ void tank_cleanup(entity this)
 {
 	this.tank = NULL; // tank will clean itself up
 	this.items &= ~IT_TANK;
-	this.effects &= ~EF_NODRAW;
+	//this.effects &= ~EF_NODRAW;
+	this.alpha = 1;
 }
 
 .float tank_rot;
@@ -107,7 +108,7 @@ void Tank_PlayerPostThink(entity this)
 
 	if(time > this.tank.tank_rot)
 	{
-		this.tank.tank_rot = time + 0.5;
+		this.tank.tank_rot = time + 1;
 		T_Damage(this, NULL, NULL, 1, DEATH_CRUSH.m_id);
 	}
 
@@ -421,7 +422,7 @@ void Tank_Pain(entity this, entity attacker, float damage, int deathtype)
 
 void Tank_Dying(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	Tank_Eject(this, true);
+	Tank_Eject(this, (deathtype != DEATH_CRUSH.m_id));
 }
 
 void Tank_Eject(entity this, bool dying)
@@ -488,7 +489,8 @@ void Tank_Spawn(entity this)
 
 	this.items |= IT_TANK;
 	this.effects |= EF_MUZZLEFLASH;
-	this.effects |= EF_NODRAW; // hide the player!
+	//this.effects |= EF_NODRAW; // hide the player!
+	this.alpha = -1;
 
 	if(IS_REAL_CLIENT(this))
 		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_TANK_ENTER);
