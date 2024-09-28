@@ -177,7 +177,9 @@ void zer_paina1(entity this) { set_animofs(this, anim_zer_paina, 1, zer_paina2);
 
 void zer_pain(entity this, entity attacker, float damage, int deathtype)
 {
-	if(this.pain_finished > time && deathtype != DEATH_VOID.m_id)
+	if(deathtype != DEATH_VOID.m_id)
+		return;
+	if(this.pain_finished > time)
 		return;
 
 	_sound(this, CH_VOICE, "zer/pain1.wav", 1, ATTN_NORM);
