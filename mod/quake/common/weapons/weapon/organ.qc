@@ -211,7 +211,7 @@ void organ_think(entity this)
 
 void organ_setup(entity this)
 {
-	FOREACH_ENTITY_CLASS("organ", it.realowner == this.realowner && it.takedamage,
+	FOREACH_ENTITY_CLASS("organ", it.realowner == this.realowner && it.monster_attack,
 	{
 		organ_die(it, NULL, NULL, DEATH_GENERIC.m_id);
 	});
@@ -224,7 +224,7 @@ void organ_setup(entity this)
 	this.solid = SOLID_TRIGGER;
 	this.health = 120;
 	this.frame = organ_anim_idle;
-	this.takedamage = DAMAGE_AIM;
+	this.takedamage = DAMAGE_NO;
 	this.monster_attack = true;
 	this.th_die = organ_die;
 	this.th_pain = organ_pain;

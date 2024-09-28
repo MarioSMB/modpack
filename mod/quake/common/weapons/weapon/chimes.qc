@@ -184,7 +184,7 @@ void chimes_think(entity this)
 
 void chimes_setup(entity this)
 {
-	FOREACH_ENTITY_CLASS("chimes", it.realowner == this.realowner && it.takedamage,
+	FOREACH_ENTITY_CLASS("chimes", it.realowner == this.realowner && it.monster_attack,
 	{
 		chimes_die(it, NULL, NULL, DEATH_GENERIC.m_id);
 	});
@@ -197,7 +197,7 @@ void chimes_setup(entity this)
 	this.solid = SOLID_TRIGGER;
 	this.health = 120;
 	this.frame = chimes_anim_rear;
-	this.takedamage = DAMAGE_AIM;
+	this.takedamage = DAMAGE_NO;
 	this.monster_attack = true;
 	this.th_die = chimes_die;
 	this.th_pain = chimes_pain;

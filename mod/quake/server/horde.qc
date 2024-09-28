@@ -1292,22 +1292,34 @@ entity HordeFindSpawnpoint(float squad_type)
 	return NULL;
 }
 
+bool horde_squad_allowed(entity this, entity squad, bool isbosswave, bool allowany)
+{
+	if(allowany)
+		return true;
+
+	if(autocvar_skill < 3 && (squad.spawnflags & HORDE_HARD))
+		return false;
+	if(autocvar_skill > 1 && (squad.spawnflags & HORDE_EASY))
+		return false;
+	if((squad.spawnflags & HORDE_FINALBOSS) && ((this.wave % isbosswave) != 0))
+		return false;
+	if((squad.spawnflags & HORDE_ARMY) && !this.army)
+		return false;
+	if(!(squad.spawnflags & HORDE_ARMY) && this.army)
+		return false;
+
+	return true;
+}
+
 entity Horde_GetSquadEntity(entity this, int spawntype)
 {
 	// finalbosses will spawn every 3 waves on nightmare! 9 otherwise
 	int fbosswave = (autocvar_skill == 3) ? 3 : 9;
+	bool allowany = (autocvar_skill == 3 && this.wave > 9);
 	RandomSelection_Init();
 	IL_EACH(g_squads, it.spawnflags & spawntype,
 	{
-		if(autocvar_skill < 3 && (it.spawnflags & HORDE_HARD))
-			continue;
-		if(autocvar_skill > 1 && (it.spawnflags & HORDE_EASY))
-			continue;
-		if((it.spawnflags & HORDE_FINALBOSS) && ((this.wave % fbosswave) != 0))
-			continue;
-		if((it.spawnflags & HORDE_ARMY) && !this.army)
-			continue;
-		if(!(it.spawnflags & HORDE_ARMY) && this.army)
+		if(!horde_squad_allowed(this, it, fbosswave, allowany))
 			continue;
 		// final boss will be given priority over other boss spawns
 		// TODO: less priority on nightmare?
