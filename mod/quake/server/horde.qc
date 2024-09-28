@@ -1317,7 +1317,8 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 {
 	// finalbosses will spawn every 3 waves on nightmare! 9 otherwise
 	int fbosswave = (autocvar_skill == 3) ? 3 : 9;
-	bool allowany = (autocvar_skill == 3 && this.wave > 9);
+	//bool allowany = (autocvar_skill == 3 && this.wave > 9);
+	bool allowany = false; // TODO: restore original once we get perks!
 	RandomSelection_Init();
 	IL_EACH(g_squads, true,
 	{
