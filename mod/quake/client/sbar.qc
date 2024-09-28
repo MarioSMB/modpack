@@ -1339,7 +1339,7 @@ void Sbar_Draw()
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				// armor
-				if(StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects))
+				if(StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects) && !(STAT(ITEMS) & IT_TANK))
 				{
 					Sbar_DrawNum('24 0 0', itos(666), 3, '0 1 1');
 					Sbar_DrawPic('0 0 0', "gfx/quake/disc");

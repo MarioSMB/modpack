@@ -42,3 +42,4 @@
 #include "bongos.qh"
 #include "katana.qh"
 #include "organ.qh"
+#include "chimes.qh"

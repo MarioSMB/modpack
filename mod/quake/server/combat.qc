@@ -339,6 +339,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
+	if(targ.classname == "vortex" && inflictor.owner != targ.owner)
+		return;
 	if(IS_PLAYER(targ) && inflictor.classname == "Vengeance")
 		return;
 	IsExplosionDamage = false;
@@ -374,6 +376,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 	if(targ.classname == "block" && !IS_PLAYER(attacker))
 		damage = 1;
+
 
 	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ) && !StatusEffects_active(STATUSEFFECT_EmpathyShields, inflictor) && (targ != attacker))
 	{
@@ -431,7 +434,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 // figure momentum add
-	if((inflictor != NULL) && deathtype != DEATH_HURTTRIGGER.m_id &&(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
+	if((inflictor != NULL) && inflictor.classname != "vortex" && deathtype != DEATH_HURTTRIGGER.m_id &&
+		(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
 	{
 		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
@@ -443,14 +447,19 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 // check for godmode or invincibility
 	if(targ.flags & FL_GODMODE)
 		return;
-	if(StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
+	if(damage < 666 && !targ.tank && StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
 	{
-		if(targ.invincible_sound < time)
+		if(inflictor.classname == "vortex")
+			damage *= 0.5;
+		else
 		{
-			_sound(targ, CH_TRIGGER_SINGLE, "items/protect3.wav", 1, ATTN_NORM);
-			targ.invincible_sound = time + 2;
+			if(targ.invincible_sound < time)
+			{
+				_sound(targ, CH_TRIGGER_SINGLE, "items/protect3.wav", 1, ATTN_NORM);
+				targ.invincible_sound = time + 2;
+			}
+			return;
 		}
-		return;
 	}
 
 	// special case for killable chthon (yoder, december 16 2020)

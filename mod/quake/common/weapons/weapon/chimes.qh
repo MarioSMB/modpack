@@ -1,0 +1,31 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(CHIMES_DROP, "weapons/sword_swing");
+SOUND(CHIMES_EXPLODE, "weapons/ice_shatter");
+
+SOUND(CHIMES_MUSICNOTE, "weapons/chimes_music");
+
+MODEL(CHIMES, "progs/chimes.mdl");
+#endif
+
+CLASS(Chimes, Weapon)
+/* ammotype  */ ATTRIB(Chimes, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Chimes, impulse, int, 6);
+/* spawnflags*/ ATTRIB(Chimes, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD);
+/* ammo */      ATTRIB(Chimes, aflag, int, 0);
+/* modelname */ ATTRIB(Chimes, mdl, string, "chimes");
+/* crosshair */ ATTRIB(Chimes, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(Chimes, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(Chimes, w_crosshair_color, vector, '1 0 0');
+/* wepimg    */ ATTRIB(Chimes, model2, string, "chimes");
+/* refname   */ ATTRIB(Chimes, netname, string, "chimes");
+/* wepname   */ ATTRIB(Chimes, m_name, string, _("Chimes"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Chimes, m_musicnote, Sound, SND_CHIMES_MUSICNOTE);
+#endif
+
+ENDCLASS(Chimes)
+REGISTER_WEAPON(CHIMES, NEW(Chimes));
+
+SPAWNFUNC_WEAPON(weapon_chimes, WEP_CHIMES)

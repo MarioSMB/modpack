@@ -782,6 +782,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_NAILS;
 				break;
 			}
+			case WEP_CHIMES:
+			{
+				if(random() > 0.33)
+					mytype = IT_ROCKETS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;

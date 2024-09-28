@@ -483,6 +483,7 @@ METHOD(Norb, mr_setup, bool(Norb this, entity actor))
 	precache_sound("orb/idle1.wav");
 	precache_sound("orb/pain1.wav");
 	precache_sound("orb/pain2.wav");
+	precache_sound("orb/pain3.wav");
 	precache_sound("orb/sight1.wav");
 	precache_sound("orb/sight2.wav");
 	precache_sound("orb/sight3.wav");

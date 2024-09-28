@@ -67,4 +67,5 @@
 #include "vore.qh"
 #include "voreling.qh"
 #include "wrath.qh"
+#include "zerstorer.qh"
 #include "zombie.qh"
