@@ -184,7 +184,7 @@ void HUD_Crosshair(entity this)
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
 			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
 			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
-			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha && !STAT(SKATING))
+			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha && !STAT(SKATING) && !(STAT(ITEMS) & IT_TANK))
 			{
 				crosshair_chase_state = 2;
 				bool hit = false;
