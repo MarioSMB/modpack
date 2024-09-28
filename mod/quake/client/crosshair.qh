@@ -8,7 +8,6 @@
 bool autocvar_crosshair_enabled;
 string autocvar_crosshair;
 string autocvar_crosshair_2d = "54";
-float autocvar_crosshair_chase_playeralpha = 0.25;
 float autocvar_crosshair_size;
 float autocvar_crosshair_alpha;
 bool autocvar_crosshair_effect_scalefade;

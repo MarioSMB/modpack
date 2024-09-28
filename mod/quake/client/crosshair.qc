@@ -182,30 +182,6 @@ void HUD_Crosshair(entity this)
 		else if(autocvar_chase_active && autocvar_crosshair_chase)
 		{
 			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
-			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
-			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha && !STAT(SKATING) && !(STAT(ITEMS) & IT_TANK))
-			{
-				crosshair_chase_state = 2;
-				bool hit = false;
-				if (pointinsidebox(view_origin, csqcplayer.absmin, csqcplayer.absmax))
-					hit = true;
-				else
-				{
-					traceline(view_origin, view_origin + 65535 * wcross_forward, MOVE_NORMAL, NULL);
-					if(trace_ent == csqcplayer)
-						hit = true;
-				}
-				float prev_alpha = csqcplayer.alpha;
-				float new_alpha;
-				if(hit)
-					new_alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
-				else
-					new_alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
-
-				if (new_alpha != prev_alpha)
-					HUD_Crosshair_ApplyPlayerAlpha(new_alpha);
-			}
 			traceline(player_org, player_org + 32768 * wcross_forward, MOVE_WORLDONLY, NULL);
 			wcross_origin = vec2(project_3d_to_2d(trace_endpos));
 		}
