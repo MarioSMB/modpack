@@ -87,6 +87,7 @@ void tank_cleanup(entity this)
 	this.effects &= ~EF_NODRAW;
 }
 
+.float tank_rot;
 void Tank_PlayerPostThink(entity this)
 {
 	if(this.tank.jump_flag < -300 && IS_ONGROUND(this))
@@ -103,6 +104,12 @@ void Tank_PlayerPostThink(entity this)
 	}
 	if(!IS_ONGROUND(this))
 		this.tank.jump_flag = this.tank.velocity_z;
+
+	if(time > this.tank.tank_rot)
+	{
+		this.tank.tank_rot = time + 0.5;
+		T_Damage(this, this, this, 1, DEATH_CRUSH.m_id);
+	}
 
 	if(PHYS_INPUT_BUTTON_CROUCH(this) && time > this.tank_horn_delay)
 	{
@@ -532,6 +539,8 @@ void Tank_Spawn(entity this)
 
 	newtank.velocity = '0 0 0';
 	newtank.angles_y = this.angles_y;
+
+	newtank.tank_rot = time + 3;
 
 	setthink(newtank, Tank_Think);
 	newtank.nextthink = time + 0.1;
