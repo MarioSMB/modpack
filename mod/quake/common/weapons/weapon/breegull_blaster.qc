@@ -162,7 +162,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 
 	entity player = this.owner;
 	entity dummy = new(dummy);
-	setorigin(dummy, player.origin);
+	setorigin(dummy, player.origin + '0 0 1');
 	dummy.angles = player.angles;
 	dummy.v_angle = player.v_angle;
 	dummy.colormap = player.colormap;
