@@ -1326,7 +1326,7 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 		// final boss will be given priority over other boss spawns
 		// TODO: less priority on nightmare?
 		int prio = 1;
-		if((it.spawnflags & HORDE_FINALBOSS) && ((this.wave % fbosswave) != 0))
+		if((it.spawnflags & HORDE_FINALBOSS) && !((this.wave % fbosswave) != 0))
 			prio = 2;
 		RandomSelection_AddEnt(it, 1, prio);
 	});
