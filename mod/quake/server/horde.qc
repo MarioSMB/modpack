@@ -1606,6 +1606,7 @@ void RespawnAllPlayers()
 When each enemy spawned by the horde manager dies, they trigger this.owner.use, which is wavecheck.
 Wavecheck sees if all spawned monsters are dead, so it can determine if it needs to start a new wave.
 */
+void Caleb_bloodrage_clear(entity this);
 void Wavecheck(entity this)
 {
 	if(this.wait) // still in the process of spawning monsters, don't wavecheck
@@ -1648,6 +1649,11 @@ void Wavecheck(entity this)
 		if(!key_spawned) // key was already spawned, don't spawn another yet!
 			GetKey(this);
 
+		// TODO: generic round over function
+		FOREACH_CLIENT(IS_PLAYER(it) && it.m_champion == CHAMPION_Caleb,
+		{
+			Caleb_bloodrage_clear(this);
+		});
 		horde_failed_time = 0; // reset the failed timer too
 		this.nextthink = time + 20; // in case the players are slow to find the key
 		this.active = false;

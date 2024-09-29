@@ -2285,7 +2285,7 @@ void PlayerPostThink(entity this)
 		}
 	}
 
-	if(this.deadflag == DEAD_NO)
+	if(this.deadflag == DEAD_NO && IS_PLAYER(this))
 	{
 		if(cutscene_running)
 			xpackEnding(this);
@@ -2316,7 +2316,7 @@ void PlayerPostThink(entity this)
 			}
 		}
 
-		if(!this.tank)
+		if(!this.tank) //!this.clockwork MAYBE TODO
 			W_Passives(this);
 
 		if(this.cnt > 0 && !this.button0)
