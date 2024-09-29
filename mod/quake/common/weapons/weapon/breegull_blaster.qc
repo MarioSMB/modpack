@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 float autocvar_sv_quake_clockwork_time = 7;
+float autocvar_sv_quake_clockwork_time_horde = 7;
 
 PRECACHE(BreegullBlaster)
 {
@@ -177,7 +178,10 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	dummy.cnt = player.scale;
 	dummy.active = true;
 	dummy.weaponentity_fld = this.weaponentity_fld;
-	dummy.count = time + autocvar_sv_quake_clockwork_time; // short duration!
+	if(horde_ent)
+		dummy.count = time + autocvar_sv_quake_clockwork_time_horde; // short duration!
+	else
+		dummy.count = time + autocvar_sv_quake_clockwork_time; // short duration!
 	setthink(dummy, Dummy_Think);
 	dummy.nextthink = time + 0.1;
 	set_movetype(dummy, MOVETYPE_TOSS);
