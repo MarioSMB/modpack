@@ -102,7 +102,7 @@ void Clockwork_Explode(entity this)
 
 void Clockwork_Touch(entity this, entity toucher)
 {
-	if(toucher.takedamage)
+	if(toucher.takedamage && (!IS_PLAYER(toucher) || !autocvar_g_friendlyfire_virtual))
 	{
 		Clockwork_Explode(this);
 		return;

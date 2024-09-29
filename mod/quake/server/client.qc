@@ -2316,7 +2316,7 @@ void PlayerPostThink(entity this)
 			}
 		}
 
-		if(!this.tank) //!this.clockwork MAYBE TODO
+		if(!this.tank && !this.clockwork)
 			W_Passives(this);
 
 		if(this.cnt > 0 && !this.button0)
