@@ -159,7 +159,7 @@ void GorothSmashBoom(entity this)
 	else
 		setthink(this, SUB_Remove);
 	
-	T_RadiusDamage(this, this.owner, 60, DEATH_MONSTER_GOROTH.m_id, this.owner);
+	T_RadiusDamage(this, this.owner, 30, DEATH_MONSTER_GOROTH.m_id, this.owner);
 	
 	// Explosions occur as the missile travels
 	float r = random() * 2 - 1;
@@ -223,7 +223,7 @@ void gor_smash16(entity this)
 {
 	set_animofs(this, anim_goroth_smash, 16, gor_smash17);
 	this.enemy.punchangle_x = -2;
-	T_RadiusDamage(this, this, 400 * this.scale, DEATH_MONSTER_GOROTH.m_id, this);
+	T_RadiusDamage(this, this, 80 * this.scale, DEATH_MONSTER_GOROTH.m_id, this);
 	
 	GorothLavaSplash(this, '454 18 -40');
 	
@@ -234,7 +234,7 @@ void gor_smash16(entity this)
 		vec.y += (ang * this.scale);
 		makevectors(vec);
 		GorothSmashMissile(this, v_forward, 31);
-		ang += 45;
+		ang += 110;
 	}
 }
 void gor_smash15(entity this) { set_animofs(this, anim_goroth_smash, 15, gor_smash16); }

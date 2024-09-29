@@ -63,7 +63,7 @@ void organ_note_touch(entity this, entity toucher)
 	float mydmg = 17;
 	float damg = mydmg + random() * mydmg;
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
@@ -72,7 +72,7 @@ void organ_note_touch(entity this, entity toucher)
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
+	//T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
 
 	//sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	//this.origin = this.origin - 8 * normalize(this.velocity);
@@ -267,7 +267,7 @@ void organ_projectile_think(entity this)
 
 	sound(this, CH_WEAPON_B, SND_ORGAN_LAND, 1, ATTN_NORM);
 	organ_setup(this);
-	this.wait = time + 60;
+	this.wait = time + 300;
 }
 
 void W_DropOrgan(entity this, .entity weaponentity)

@@ -241,7 +241,7 @@ void chimes_projectile_think(entity this)
 		return;
 
 	chimes_setup(this);
-	this.wait = time + 60;
+	this.wait = time + 300;
 }
 
 void W_DropChimes(entity this, .entity weaponentity)
