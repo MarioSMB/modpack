@@ -32,6 +32,8 @@ void QCC_ClearPlayer(entity this, bool clearweapons);
 
 void QCC_UpdateStats(entity this);
 
+void QCC_SavePlayer(entity this);
+
 void champions_PutPlayerInServer(entity this);
 
 void champions_PlayerPreThink(entity this);

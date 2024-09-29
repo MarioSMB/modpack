@@ -600,6 +600,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.tank && targ.health <= 0)
 		Tank_Eject(targ, true); // resets health
 
+	if(targ.m_transform && targ.health <= 0)
+		QCC_SavePlayer(targ);
+
 	if(targ.clockwork && targ.health <= 0)
 	{
 		showpain = false;

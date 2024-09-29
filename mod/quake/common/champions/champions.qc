@@ -146,6 +146,24 @@ void QCC_UpdateStats(entity this)
 	}
 }
 
+void QCC_SavePlayer(entity this)
+{
+	if(this.m_transform)
+	{
+		QCC_ClearTransform(this);
+		// hard delay of weapons so you don't get stuck spamming!
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity))
+			{
+				wep_set_anim(this.(weaponentity), 0, w_ready);
+				ATTACK_FINISHED(this, weaponentity) = time + 1;
+			}
+		}
+	}
+}
+
 void QCC_UpdatePlayer(entity this)
 {
 	if(!QCC_Allowed(this) || this.clockwork)
