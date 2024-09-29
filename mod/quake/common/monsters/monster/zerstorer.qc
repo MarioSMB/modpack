@@ -328,7 +328,7 @@ void Zer_Attack(entity this)
 void vortex_fade(entity this)
 {
 	particle(this.origin, '0 0 1' * (20 + random() * 20), 150, 75);
-	stopsound(this, CH_TRIGGER_SINGLE);
+	//stopsound(this, CH_TRIGGER_SINGLE);
 	delete(this);
 }
 
@@ -392,7 +392,7 @@ void ZerVortex(entity this)
 	vortex.cnt = time + 10;
 	vortex.frame = 0;
 
-	_sound(vortex, CH_TRIGGER_SINGLE, "zer/vortex.wav", 1, 0.25);
+	//_sound(vortex, CH_TRIGGER_SINGLE, "zer/vortex.wav", 1, 0.25);
 }
 
 /*
