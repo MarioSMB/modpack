@@ -2,6 +2,74 @@
 
 #include "../common/shop.qh"
 
+int Shop_Passive_Item(string item)
+{
+	switch(item)
+	{
+		case "rifle": return PASSIVE_PULSERIFLE;
+		case "fireball": return PASSIVE_FIREBALL;
+		case "ammopouch": return PASSIVE_AMMOPOUCH;
+		case "adrenalin": return PASSIVE_ADRENALIN;
+		case "boomer": return PASSIVE_BOOMER;
+		case "looter": return PASSIVE_LOOTER;
+		case "aura": return PASSIVE_AURA;
+		case "electrifying": return PASSIVE_ELECTRIFYING;
+		case "bunnyboots": return PASSIVE_BUNNYBOOTS;
+		case "doublejump": return PASSIVE_DOUBLEJUMP;
+	}
+	return 0;
+}
+
+string Shop_Passive_Message(int itemid)
+{
+	switch(itemid)
+	{
+		case PASSIVE_PULSERIFLE: return "Pulse Rifle Sidearm activated";
+		case PASSIVE_FIREBALL: return "Fireball Launcher activated";
+		case PASSIVE_AMMOPOUCH: return "Ammo capacity increased";
+		case PASSIVE_ADRENALIN: return "Fire rate increased";
+		case PASSIVE_BOOMER: return "Slain foes will explode";
+		case PASSIVE_LOOTER: return "Bonus loot drops more often";
+		case PASSIVE_AURA: return "Your aura damages nearby enemies";
+		case PASSIVE_ELECTRIFYING: return "Slain foes will let out a shockwave";
+		case PASSIVE_BUNNYBOOTS: return "Bunny Boots let you auto jump";
+		case PASSIVE_DOUBLEJUMP: return "Double Jump booster activated";
+	}
+	return "";
+}
+
+bool shop_buypassive(entity this, string item)
+{
+	int passive = Shop_Passive_Item(item);
+	if(!passive)
+		return false;
+
+	if(!(shop_passives & passive))
+	{
+		sprint(this, "Invalid item\n");
+		return true;
+	}
+
+	if(this.frags < SHOP_COST_PASSIVE)
+	{
+		sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
+		return true;
+	}
+
+	if(STAT(PASSIVES, this) & passive)
+	{
+		sprint(this, "You already have this item\n");
+		return true;
+	}
+
+	this.frags -= SHOP_COST_PASSIVE;
+	STAT(PASSIVES, this) |= passive;
+	sprint(this, strcat(Shop_Passive_Message(passive), "\n"));
+	_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
+
+	return true;
+}
+
 void shop_buyitem(entity this, string item)
 {
 	if(!IS_PLAYER(this) || this.health <= 0)
@@ -99,86 +167,8 @@ void shop_buyitem(entity this, string item)
 		return;
 	}
 
-	if(item == "rifle")
-	{
-		if(!(shop_passives & PASSIVE_PULSERIFLE))
-		{
-			sprint(this, "Invalid item\n");
-			return;
-		}
-
-		if(this.frags < SHOP_COST_PASSIVE)
-		{
-			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
-			return;
-		}
-
-		if(STAT(PASSIVES, this) & PASSIVE_PULSERIFLE)
-		{
-			sprint(this, "You already have the Pulse Rifle\n");
-			return;
-		}
-
-		this.frags -= SHOP_COST_PASSIVE;
-		STAT(PASSIVES, this) |= PASSIVE_PULSERIFLE;
-		sprint(this, "Pulse Rifle Sidearm activated\n");
-		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
+	if(shop_buypassive(this, item))
 		return;
-	}
-
-	if(item == "fireball")
-	{
-		if(!(shop_passives & PASSIVE_FIREBALL))
-		{
-			sprint(this, "Invalid item\n");
-			return;
-		}
-
-		if(this.frags < SHOP_COST_PASSIVE)
-		{
-			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
-			return;
-		}
-
-		if(STAT(PASSIVES, this) & PASSIVE_FIREBALL)
-		{
-			sprint(this, "You already have the Fireball\n");
-			return;
-		}
-
-		this.frags -= SHOP_COST_PASSIVE;
-		STAT(PASSIVES, this) |= PASSIVE_FIREBALL;
-		sprint(this, "Fireball Launcher activated\n");
-		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
-		return;
-	}
-
-	if(item == "ammopouch")
-	{
-		if(!(shop_passives & PASSIVE_AMMOPOUCH))
-		{
-			sprint(this, "Invalid item\n");
-			return;
-		}
-
-		if(this.frags < SHOP_COST_PASSIVE)
-		{
-			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
-			return;
-		}
-
-		if(STAT(PASSIVES, this) & PASSIVE_AMMOPOUCH)
-		{
-			sprint(this, "You already have the Ammo Pouch\n");
-			return;
-		}
-
-		this.frags -= SHOP_COST_PASSIVE;
-		STAT(PASSIVES, this) |= PASSIVE_AMMOPOUCH;
-		sprint(this, "Ammo capacity increased\n");
-		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
-		return;
-	}
 
 	Weapon wep = Weapon_from_name(item);
 	if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_NOSTEAL) || !(shop_weapons & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_CHAMPION))

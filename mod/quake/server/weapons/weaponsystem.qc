@@ -109,6 +109,8 @@ void weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, fl
 		float arate = 1;
 		if(actor.m_champion && actor.m_champion.qcc_attackrate)
 			arate *= actor.m_champion.qcc_attackrate;
+		if(STAT(PASSIVES, actor) & PASSIVE_ADRENALIN)
+			arate *= 0.8;
 		ATTACK_FINISHED(actor, weaponentity) = ATTACK_FINISHED(actor, weaponentity) + attacktime * arate;
 
 		if(autocvar_g_weaponswitch_debug_alternate && W_DualWielding(actor) && !(actor.weaponentity.m_weapon.spawnflags & WEP_FLAG_NOALTERNATE))

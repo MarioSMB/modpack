@@ -537,7 +537,7 @@ void horde_health_touch(entity this, entity toucher)
 		return;
 	if(toucher.m_transform)
 		return;
-	if(toucher.m_champion && toucher.m_champion.qcc_health_nopickup)
+	if(toucher.m_champion && toucher.m_champion.qcc_health_nopickup && this.healtype != 2)
 		return;
 	
 	if(!T_Heal(toucher, this.healamount, 0))
@@ -1317,8 +1317,8 @@ entity Horde_GetSquadEntity(entity this, int spawntype)
 {
 	// finalbosses will spawn every 3 waves on nightmare! 9 otherwise
 	int fbosswave = (autocvar_skill == 3) ? 3 : 9;
-	//bool allowany = (autocvar_skill == 3 && this.wave > 9);
-	bool allowany = false; // TODO: restore original once we get perks!
+	bool allowany = (autocvar_skill == 3 && this.wave > 9);
+	//bool allowany = false;
 	RandomSelection_Init();
 	IL_EACH(g_squads, true,
 	{
@@ -2009,15 +2009,18 @@ void horde_setup_powerup(entity this, int powerup)
 }
 
 void horde_spawn_tank(entity this);
-void horde_spawn_powerup(entity this)
+void horde_spawn_powerup(entity this, entity attacker)
 {
 	if(!powerup_chance)
 		powerup_chance = DEFAULT_POWERUP_CHANCE;
+
+	if(STAT(PASSIVES, attacker) & PASSIVE_LOOTER)
+		powerup_chance *= 0.8;
 	
 	if(random() < powerup_chance) // "if(1)" to guarantee powerup drop
 	{
 		// if the odds are in our favour, let there be tanks!
-		if(random() < 0.2)
+		if(random() <= 0.15)
 		{
 			horde_spawn_tank(this);
 			return;

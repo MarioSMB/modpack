@@ -56,6 +56,10 @@
 #define SET_JUMP_HELD(s)                    ((s).flags &= ~FL_JUMPRELEASED)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
+#define IS_DOUBLEJUMPED(s)                     ((s).flags & FL_DOUBLEJUMPED)
+#define SET_DOUBLEJUMPED(s)                    ((s).flags |= FL_DOUBLEJUMPED)
+#define UNSET_DOUBLEJUMPED(s)                  ((s).flags &= ~FL_DOUBLEJUMPED)
+
 // if more buttons are needed, start using impulse bits as buttons
 
 #define PHYS_INPUT_BUTTON_BACKWARD(s)       (PHYS_INPUT_MOVEVALUES(s).x < 0)

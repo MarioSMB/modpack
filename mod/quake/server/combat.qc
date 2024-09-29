@@ -11,10 +11,68 @@
 bool IsExplosionDamage;
 
 // Yoder Sept24 2021 Horde Merge
-void horde_spawn_powerup(entity this);
+void horde_spawn_powerup(entity this, entity attacker);
 
 //============================================================================
 
+void DelayedExplosionThink(entity this)
+{
+	float damage = bound(20, this.max_health * 0.7, 100);
+	T_RadiusDamage(this, this.enemy, damage, DEATH_EXPLODE.m_id, this.owner);
+
+	// Allow for sound to finish and just remove
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 4;
+
+	// Play any explosion sounds on temporary entity
+	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/resist_rocket.wav", 1, ATTN_NORM);
+}
+
+void explosion_delayed(entity targ, entity attacker)
+{
+	entity t = new_pure(DelayedExplosion);
+	t.nextthink = time;
+	setthink(t, DelayedExplosionThink);
+	t.enemy = attacker;
+	t.owner = targ;
+	t.max_health = targ.max_health;
+	t.solid = SOLID_NOT;
+	set_movetype(t, MOVETYPE_NONE);
+	setsize(t, '0 0 0', '0 0 0');
+	setorigin(t, targ.origin);
+}
+
+void DelayedElectrifyThink(entity this)
+{
+	setthink(this, SUB_Remove);
+	this.nextthink = time;
+
+	int hitcount = 0;
+	FOREACH_ENTITY_RADIUS(this.origin, 200, IS_MONSTER(it),
+	{
+		if(it.health <= 0 || !it.takedamage || it.charmed)
+			continue;
+		SendCSQCLightningBeam(this.origin, it.origin);
+		T_Damage(it, this.enemy, this.enemy, 40, DEATH_DISCHARGE.m_id);
+		hitcount += 1;
+	});
+
+	Send_Effect(EFFECT_ELECTRIFY, this.origin, '0 0 0', 1);
+}
+
+void electrify_delayed(entity targ, entity attacker)
+{
+	entity t = new_pure(DelayedElectrify);
+	t.nextthink = time;
+	setthink(t, DelayedElectrifyThink);
+	t.enemy = attacker;
+	t.owner = targ;
+	t.solid = SOLID_NOT;
+	set_movetype(t, MOVETYPE_NONE);
+	setsize(t, '0 0 0', '0 0 0');
+	setorigin(t, targ.origin);
+}
 
 /*
 =============
@@ -248,7 +306,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			}
 			
 			// check to see about spawning a powerup
-			horde_spawn_powerup(targ);
+			horde_spawn_powerup(targ, attacker);
 		}
 		else if(!(targ.flags & FL_CLONE) && !targ.charmed)
 			monsters_killed += 1;
@@ -258,6 +316,12 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			attacker.frags += 1;
 		if(horde_ent && !targ.charmed)
 			Horde_GiveScore(HORDE_TEAMSCORE_KILL);
+
+		if(STAT(PASSIVES, attacker) & PASSIVE_BOOMER)
+			explosion_delayed(targ, attacker);
+
+		if(STAT(PASSIVES, attacker) & PASSIVE_ELECTRIFYING)
+			electrify_delayed(targ, attacker);
 	}
 
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
@@ -652,6 +716,11 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 			{
 				int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(head.origin));
 				if(!(cont & DPCONTENTS_LIQUIDSMASK))
+					points = 0;
+			}
+			if(deathtype == DEATH_EXPLODE.m_id)
+			{
+				if(IS_PLAYER(head))
 					points = 0;
 			}
 			if(points > 0)

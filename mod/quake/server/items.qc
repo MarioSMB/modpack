@@ -201,7 +201,7 @@ void health_touch(entity this, entity toucher);
 
 bool health_customize(entity this, entity client)
 {
-	return !(client.m_champion && client.m_champion.qcc_health_nopickup);
+	return !(client.m_champion && client.m_champion.qcc_health_nopickup && this.healtype != 2);
 }
 
 spawnfunc(item_health)
@@ -253,7 +253,7 @@ void health_touch(entity this, entity toucher)
 		return;
 	if(toucher.m_transform)
 		return;
-	if(toucher.m_champion && toucher.m_champion.qcc_health_nopickup)
+	if(toucher.m_champion && toucher.m_champion.qcc_health_nopickup && this.healtype != 2)
 		return;
 
 	bool pickedup = false;

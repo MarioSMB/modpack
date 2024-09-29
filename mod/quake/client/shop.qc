@@ -36,6 +36,13 @@ string Shop_Passive_PrettyName(int itemid)
 		case PASSIVE_PULSERIFLE: return "Pulse Rifle Sidearm";
 		case PASSIVE_FIREBALL: return "Fireball Launcher";
 		case PASSIVE_AMMOPOUCH: return "Ammo Pouch";
+		case PASSIVE_ADRENALIN: return "Adrenalin";
+		case PASSIVE_BOOMER: return "Boomer";
+		case PASSIVE_LOOTER: return "Looter";
+		case PASSIVE_AURA: return "Aura of Pain";
+		case PASSIVE_ELECTRIFYING: return "Electrifying";
+		case PASSIVE_BUNNYBOOTS: return "Bunny Boots";
+		case PASSIVE_DOUBLEJUMP: return "Double Jump";
 	}
 	return "";
 }
@@ -47,6 +54,13 @@ string Shop_Passive_Name(int itemid)
 		case PASSIVE_PULSERIFLE: return "rifle";
 		case PASSIVE_FIREBALL: return "fireball";
 		case PASSIVE_AMMOPOUCH: return "ammopouch";
+		case PASSIVE_ADRENALIN: return "adrenalin";
+		case PASSIVE_BOOMER: return "boomer";
+		case PASSIVE_LOOTER: return "looter";
+		case PASSIVE_AURA: return "aura";
+		case PASSIVE_ELECTRIFYING: return "electrifying";
+		case PASSIVE_BUNNYBOOTS: return "bunnyboots";
+		case PASSIVE_DOUBLEJUMP: return "doublejump";
 	}
 	return "";
 }

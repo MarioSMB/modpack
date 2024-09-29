@@ -3,6 +3,7 @@ REGISTER_DEATHTYPE(CHECKPOINT,              DEATH_SELF_CHECKPOINT,          NULL
 REGISTER_DEATHTYPE(CRUSH,                   DEATH_SELF_CRUSH,               NULL,                           "")
 REGISTER_DEATHTYPE(DISCHARGE,               DEATH_SELF_DISCHARGE,           DEATH_MURDER_DISCHARGE,         "")
 REGISTER_DEATHTYPE(DROWN,                   DEATH_SELF_DROWN,               DEATH_MURDER_DROWN,             "")
+REGISTER_DEATHTYPE(EXPLODE,                 DEATH_SELF_EXPLODE,             DEATH_MURDER_EXPLODE,           "")
 REGISTER_DEATHTYPE(FALL,                    DEATH_SELF_FALL,                DEATH_MURDER_FALL,              "")
 REGISTER_DEATHTYPE(FIRE,                    DEATH_SELF_FIRE,                DEATH_MURDER_FIRE,              "")
 REGISTER_DEATHTYPE(GENERIC,                 DEATH_SELF_GENERIC,             NULL,                           "")

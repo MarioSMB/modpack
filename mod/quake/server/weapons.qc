@@ -547,8 +547,24 @@ void W_Fireball(entity this)
 		W_Fireball_Attack(this, selected);
 }
 
+void W_Aura(entity this)
+{
+	this.effects |= EF_STARDUST;
+	if(time < this.aura_finished)
+		return;
+
+	this.aura_finished = time + 0.25;
+
+	FOREACH_ENTITY_RADIUS(this.origin, 80, IS_MONSTER(it) && it.takedamage && it.health > 0 && !it.charmed,
+	{
+		T_Damage(it, this, this, 15, DEATH_CRUSH.m_id);
+	});
+}
+
 void W_Passives(entity this)
 {
+	this.effects &= ~EF_STARDUST;
+
 	// passive attacks while invisible would trigger monsters!
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, this))
 		return;
@@ -558,6 +574,9 @@ void W_Passives(entity this)
 
 	if(STAT(PASSIVES, this) & PASSIVE_FIREBALL)
 		W_Fireball(this);
+
+	if(STAT(PASSIVES, this) & PASSIVE_AURA)
+		W_Aura(this);
 }
 
 void ExtraBlood(entity targ, vector org, vector vel, float damage)

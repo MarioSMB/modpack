@@ -183,6 +183,18 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 			doublejump = true;
 	}
 
+	if(STAT(PASSIVES, this) & PASSIVE_BUNNYBOOTS)
+		pogo = true;
+
+	if(STAT(PASSIVES, this) & PASSIVE_DOUBLEJUMP)
+	{
+		if(!IS_DOUBLEJUMPED(this) && !IS_JUMP_HELD(this) && !IS_ONGROUND(this))
+		{
+			doublejump = true;
+			SET_DOUBLEJUMPED(this);
+		}
+	}
+
 	if(!IS_ONGROUND(this) && !doublejump)
 		return;
 
@@ -566,6 +578,9 @@ void PM_Main(entity this, float dt)
 		Duke_PreJump(this);
 	if(this.m_champion == CHAMPION_BanjoKazooie)
 		Banjo_PreJump(this);
+
+	if(IS_ONGROUND(this))
+		UNSET_DOUBLEJUMPED(this);
 
 	if(PHYS_INPUT_BUTTON_JUMP(this))
 		PlayerJump(this, maxspeed_mod, dt);

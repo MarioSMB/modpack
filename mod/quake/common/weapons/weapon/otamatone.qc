@@ -55,10 +55,18 @@ void otamatone_note_touch(entity this, entity toucher)
 
 void otamatone_zapnearby(entity this)
 {
+	int cont = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(this.origin));
+	if(cont & DPCONTENTS_LIQUIDSMASK)
+	{
+		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, NULL);
+		setthink(this, SUB_Remove);
+		return;
+	}
+
 	bool hitenemy = false;
 	FOREACH_ENTITY_RADIUS(this.origin, 200, IS_MONSTER(it) || (IS_PLAYER(it) && !autocvar_g_friendlyfire_virtual),
 	{
-		if(it.health <= 0 || !it.takedamage || it == this.owner)
+		if(it.health <= 0 || !it.takedamage || it == this.owner || it.charmed)
 			continue;
 		SendCSQCLightningBeam(this.origin, it.origin);
 		// may cause heavy lag when fired near water!

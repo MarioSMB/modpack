@@ -30,6 +30,7 @@ const float PARRY_TIME = 0.333;
 
 .float pulserifle_finished;
 .float fireball_finished;
+.float aura_finished;
 
 bool W_Parry(entity this, entity targ);
 

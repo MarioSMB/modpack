@@ -54,6 +54,7 @@ spawnfunc(info_intermission)
 void clear_powerups(entity this)
 {
 	this.powerups = 0;
+	this.effects &= ~EF_STARDUST;
 
 	FOREACH(StatusEffect, it.instanceOfPowerups,
 	{
