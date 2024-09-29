@@ -37,3 +37,7 @@ void DropBackpack(entity this);
 void BackpackTouch(entity this, entity toucher);
 
 bool T_Heal(entity e, float healamount, bool ignore);
+
+void bound_other_ammo(entity this);
+
+int GetAmmoLimit(entity this, int itemid);

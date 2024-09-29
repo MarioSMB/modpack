@@ -101,7 +101,7 @@ void shop_buyitem(entity this, string item)
 
 	if(item == "rifle")
 	{
-		if(shop_passive != IT_PULSERIFLE)
+		if(!(shop_passives & PASSIVE_PULSERIFLE))
 		{
 			sprint(this, "Invalid item\n");
 			return;
@@ -113,14 +113,14 @@ void shop_buyitem(entity this, string item)
 			return;
 		}
 
-		if(this.items & IT_PULSERIFLE)
+		if(STAT(PASSIVES, this) & PASSIVE_PULSERIFLE)
 		{
 			sprint(this, "You already have the Pulse Rifle\n");
 			return;
 		}
 
 		this.frags -= SHOP_COST_PASSIVE;
-		this.items |= IT_PULSERIFLE;
+		STAT(PASSIVES, this) |= PASSIVE_PULSERIFLE;
 		sprint(this, "Pulse Rifle Sidearm activated\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		return;
@@ -128,7 +128,7 @@ void shop_buyitem(entity this, string item)
 
 	if(item == "fireball")
 	{
-		if(shop_passive != IT_FIREBALL)
+		if(!(shop_passives & PASSIVE_FIREBALL))
 		{
 			sprint(this, "Invalid item\n");
 			return;
@@ -140,15 +140,42 @@ void shop_buyitem(entity this, string item)
 			return;
 		}
 
-		if(this.items & IT_FIREBALL)
+		if(STAT(PASSIVES, this) & PASSIVE_FIREBALL)
 		{
 			sprint(this, "You already have the Fireball\n");
 			return;
 		}
 
 		this.frags -= SHOP_COST_PASSIVE;
-		this.items |= IT_FIREBALL;
+		STAT(PASSIVES, this) |= PASSIVE_FIREBALL;
 		sprint(this, "Fireball Launcher activated\n");
+		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
+		return;
+	}
+
+	if(item == "ammopouch")
+	{
+		if(!(shop_passives & PASSIVE_AMMOPOUCH))
+		{
+			sprint(this, "Invalid item\n");
+			return;
+		}
+
+		if(this.frags < SHOP_COST_PASSIVE)
+		{
+			sprint(this, "You do not have enough points to buy this item, keep fragging!\n");
+			return;
+		}
+
+		if(STAT(PASSIVES, this) & PASSIVE_AMMOPOUCH)
+		{
+			sprint(this, "You already have the Ammo Pouch\n");
+			return;
+		}
+
+		this.frags -= SHOP_COST_PASSIVE;
+		STAT(PASSIVES, this) |= PASSIVE_AMMOPOUCH;
+		sprint(this, "Ammo capacity increased\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		return;
 	}
@@ -248,11 +275,20 @@ void shop_setup_weapons()
 
 void shop_setup_passive()
 {
-	shop_passive = 0; // reset initially
-	if(random() > 0.5)
-		shop_passive = IT_PULSERIFLE;
-	else
-		shop_passive = IT_FIREBALL;
+	shop_passives = 0; // reset initially
+
+	for(int j = 0; j < SHOP_PASSIVE_COUNT; ++j)
+	{
+		RandomSelection_Init();
+		for(int k = 0; k < PASSIVE_COUNT; ++k)
+		{
+			int passive = BIT(k);
+			if(shop_passives & passive)
+				continue;
+			RandomSelection_AddFloat(passive, 1, 1);
+		}
+		shop_passives |= RandomSelection_chosen_float;
+	}
 }
 
 // This must be called in SV_ParseClientCommand

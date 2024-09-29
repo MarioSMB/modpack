@@ -428,22 +428,34 @@ WEAPONS
 
 void bound_other_ammo(entity this)
 {
-	if(this.ammo_shells > 100)
-		this.ammo_shells = 100;
-	if(this.ammo_nails > 200)
-		this.ammo_nails = 200;
-	if(this.ammo_rockets > 100)
-		this.ammo_rockets = 100;		
-	if(this.ammo_cells > 100)
-		this.ammo_cells = 100;
+	this.ammo_shells = min(this.ammo_shells, GetAmmoLimit(this, IT_SHELLS));
+	this.ammo_nails = min(this.ammo_nails, GetAmmoLimit(this, IT_NAILS));
+	this.ammo_rockets = min(this.ammo_rockets, GetAmmoLimit(this, IT_ROCKETS));
+	this.ammo_cells = min(this.ammo_cells, GetAmmoLimit(this, IT_CELLS));
 
-	// rogue
-	if(this.ammo_lava_nails > 200)
-		this.ammo_lava_nails = 200;
-	if(this.ammo_multi_rockets > 100)
-		this.ammo_multi_rockets = 100;
-	if(this.ammo_plasma > 100)
-		this.ammo_plasma = 100;
+	this.ammo_lava_nails = min(this.ammo_lava_nails, GetAmmoLimit(this, IT_LAVA_NAILS));
+	this.ammo_multi_rockets = min(this.ammo_multi_rockets, GetAmmoLimit(this, IT_MULTI_ROCKETS));
+	this.ammo_plasma = min(this.ammo_plasma, GetAmmoLimit(this, IT_PLASMA_AMMO));
+}
+
+int GetAmmoLimit(entity this, int itemid)
+{
+	float ascale = 1;
+	if(STAT(PASSIVES, this) & PASSIVE_AMMOPOUCH)
+		ascale *= 2;
+	switch(itemid)
+	{
+		case IT_SHELLS: return 100 * ascale;
+		case IT_NAILS: return 200 * ascale;
+		case IT_ROCKETS: return 100 * ascale;
+		case IT_CELLS: return 100 * ascale;
+		case IT_LAVA_NAILS: return 200 * ascale;
+		case IT_MULTI_ROCKETS: return 100 * ascale;
+		case IT_PLASMA_AMMO: return 100 * ascale;
+	}
+
+	// TODO? mention if anything gets here!
+	return 0;
 }
 
 /*
@@ -481,7 +493,7 @@ bool weapon_customize(entity this, entity client)
 bool pulserifle_customize(entity this, entity client)
 {
 	bool have_item = false;
-	if(this.classname == "weapon_rifle" && (client.items & IT_PULSERIFLE))
+	if(this.classname == "weapon_rifle" && (STAT(PASSIVES, client) & PASSIVE_PULSERIFLE))
 		have_item = true;
 	if((deathmatch == 2 || coop) && have_item)
 		return false;
@@ -501,9 +513,9 @@ void pulserifle_touch(entity this, entity toucher)
 	{
 		case "weapon_rifle":
 		{
-			if(leave && (toucher.items & IT_PULSERIFLE))
+			if(leave && (STAT(PASSIVES, toucher) & PASSIVE_PULSERIFLE))
 				return;
-			newitems = IT_PULSERIFLE;
+			newitems = PASSIVE_PULSERIFLE;
 			toucher.ammo_cells = toucher.ammo_cells + 24;
 			break;
 		}
@@ -518,14 +530,14 @@ void pulserifle_touch(entity this, entity toucher)
 	{
 		_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
 		_sound(toucher, CHAN_WEAPON, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
-		if(!(toucher.items & IT_PULSERIFLE))
+		if(!(STAT(PASSIVES, toucher) & PASSIVE_PULSERIFLE))
 			centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
 	}
 	else
 		_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
 
 	bound_other_ammo(toucher);
-	toucher.items |= newitems;
+	STAT(PASSIVES, toucher) |= newitems;
 
 	W_SetCurrentAmmo(toucher);
 	if(leave)
@@ -858,43 +870,43 @@ void ammo_touch(entity this, entity toucher)
 	Weapon best = w_getbestweapon(toucher, weaponentity);
 	bool pickedup = false;
 
-	if(this.ammo_shells && toucher.ammo_shells < 100)
+	if(this.ammo_shells && toucher.ammo_shells < GetAmmoLimit(toucher, IT_SHELLS))
 	{
 		toucher.ammo_shells += this.ammo_shells;
 		SendItemPickup(toucher, this.items, this.ammo_shells);
 		pickedup = true;
 	}
-	if(this.ammo_nails && toucher.ammo_nails < 200)
+	if(this.ammo_nails && toucher.ammo_nails < GetAmmoLimit(toucher, IT_NAILS))
 	{
 		toucher.ammo_nails += this.ammo_nails;
 		SendItemPickup(toucher, this.items, this.ammo_nails);
 		pickedup = true;
 	}
-	if(this.ammo_rockets && toucher.ammo_rockets < 100)
+	if(this.ammo_rockets && toucher.ammo_rockets < GetAmmoLimit(toucher, IT_ROCKETS))
 	{
 		toucher.ammo_rockets += this.ammo_rockets;
 		SendItemPickup(toucher, this.items, this.ammo_rockets);
 		pickedup = true;
 	}
-	if(this.ammo_cells && toucher.ammo_cells < 100)
+	if(this.ammo_cells && toucher.ammo_cells < GetAmmoLimit(toucher, IT_CELLS))
 	{
 		toucher.ammo_cells += this.ammo_cells;
 		SendItemPickup(toucher, this.items, this.ammo_cells);
 		pickedup = true;
 	}
-	if(this.ammo_lava_nails && toucher.ammo_lava_nails < 200)
+	if(this.ammo_lava_nails && toucher.ammo_lava_nails < GetAmmoLimit(toucher, IT_LAVA_NAILS))
 	{
 		toucher.ammo_lava_nails += this.ammo_lava_nails;
 		SendItemPickup(toucher, this.items, this.ammo_lava_nails);
 		pickedup = true;
 	}
-	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < 100)
+	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < GetAmmoLimit(toucher, IT_MULTI_ROCKETS))
 	{
 		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
 		SendItemPickup(toucher, this.items, this.ammo_multi_rockets);
 		pickedup = true;
 	}
-	if(this.ammo_plasma && toucher.ammo_plasma < 100)
+	if(this.ammo_plasma && toucher.ammo_plasma < GetAmmoLimit(toucher, IT_PLASMA_AMMO))
 	{
 		toucher.ammo_plasma += this.ammo_plasma;
 		SendItemPickup(toucher, this.items, this.ammo_plasma);

@@ -10,3 +10,4 @@ const int SHOP_COST_PASSIVE = 100;
 
 const int SHOP_ITEM_MAX = 16;
 const int SHOP_WEAPON_COUNT = 3;
+const int SHOP_PASSIVE_COUNT = 3;

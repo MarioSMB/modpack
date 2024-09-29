@@ -24,6 +24,13 @@ int tempdb;
 
 .int snd_looping;
 
+float camera_active;		// Demo camera is active if set to true
+float chase_active_backup;
+float camera_roll;
+vector camera_direction;
+
+void ConsoleCommand_macro_init();
+
 string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
 #define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)

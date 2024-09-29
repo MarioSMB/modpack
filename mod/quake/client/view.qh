@@ -1,5 +1,18 @@
 #pragma once
 
+bool autocvar_camera_chase_smoothly;
+bool autocvar_camera_enable;
+bool autocvar_camera_forward_follows;
+bool autocvar_camera_free;
+float autocvar_camera_look_attenuation;
+float autocvar_camera_look_player;
+float autocvar_camera_mouse_threshold;
+bool autocvar_camera_reset;
+float autocvar_camera_speed_attenuation;
+float autocvar_camera_speed_chase;
+float autocvar_camera_speed_free;
+float autocvar_camera_speed_roll;
+
 entity viewmodels[MAX_WEAPONSLOTS];
 
 void HUD_CenterPrint ();
@@ -36,6 +49,8 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 .Weapon last_switchweapon;
+
+void CSQC_Demo_Camera();
 
 // TODO: item pickup flashing? maybe not (seizure fest)
 // requires some kind of stat

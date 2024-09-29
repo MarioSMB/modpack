@@ -191,7 +191,7 @@ void organ_think(entity this)
 		return;
 
 	bool found = false;
-	FOREACH_ENTITY_RADIUS(this.origin, 800, IS_MONSTER(it) || (IS_PLAYER(it) && it != this.realowner && !autocvar_g_friendlyfire_virtual),
+	FOREACH_ENTITY_RADIUS(this.origin, 800, (IS_MONSTER(it) && !it.charmed) || (IS_PLAYER(it) && it != this.realowner && !autocvar_g_friendlyfire_virtual),
 	{
 		if(it.takedamage && it.health > 0)
 		{

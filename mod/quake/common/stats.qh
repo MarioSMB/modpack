@@ -182,11 +182,11 @@ REGISTER_STAT(SHIELD_TIME, float)
 #ifdef SVQC
 float shop_opentime;
 vector shop_weapons;
-int shop_passive;
+int shop_passives;
 #endif
 REGISTER_STAT(SHOP_OPEN, float, shop_opentime)
 REGISTER_STAT(SHOP_WEAPONS, vectori, shop_weapons)
-REGISTER_STAT(SHOP_PASSIVE, int, shop_passive)
+REGISTER_STAT(SHOP_PASSIVES, int, shop_passives)
 
 #ifdef SVQC
 .int ammo_lava_nails;
@@ -261,3 +261,5 @@ REGISTER_STAT(BREEGULL_EGGTYPE, int)
 .entity clockwork;
 #endif
 REGISTER_STAT(CLOCKWORK, bool, (this.clockwork) ? true : false)
+
+REGISTER_STAT(PASSIVES, int)

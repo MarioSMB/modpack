@@ -38,6 +38,8 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 	tempdb = db_create();
 	binddb = db_create();
 
+	ConsoleCommand_macro_init();
+
 	registercvar("cl_quake_spectate", "0");
 	registercvar("cl_quake_goatstuff", "0.3");
 }
@@ -46,6 +48,9 @@ void Shutdown()
 {
 	db_close(tempdb);
 	db_close(binddb);
+
+	if(camera_active)
+		cvar_set("chase_active",ftos(chase_active_backup));
 }
 
 string draw_currentSkin;
@@ -156,15 +161,67 @@ STATIC_INIT(fix_commands)
 	registercommand("-showaccuracy");
 }
 
+#define CONSOLE_COMMANDS_MOVEMENT() \
+	CONSOLE_COMMAND("+forward", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("-forward", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("+back", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("-back", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("+moveup", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("-moveup", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("+movedown", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("-movedown", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("+moveright", { --camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveright", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("+moveleft", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveleft", { --camera_direction.y; }) \
+	CONSOLE_COMMAND("+roll_right", { ++camera_roll; }) \
+	CONSOLE_COMMAND("-roll_right", { --camera_roll; }) \
+	CONSOLE_COMMAND("+roll_left", { --camera_roll; }) \
+	CONSOLE_COMMAND("-roll_left", { ++camera_roll; }) \
+
+void ConsoleCommand_macro_init()
+{
+	// then init movement commands
+	#ifndef CAMERATEST
+	if (isdemo())
+	{
+	#endif
+	#define CONSOLE_COMMAND(name, execution) \
+		registercommand(name);
+
+	CONSOLE_COMMANDS_MOVEMENT();
+		#undef CONSOLE_COMMAND
+	#ifndef CAMERATEST
+}
+	#endif
+}
+
+bool ConsoleCommand_macro_movement(string s, int argc)
+{
+	if (camera_active)
+	{
+		#define CONSOLE_COMMAND(name, execution) \
+			{ if (name == s) { { execution } return true; } }
+
+		CONSOLE_COMMANDS_MOVEMENT();
+		#undef CONSOLE_COMMAND
+	}
+
+	return false;
+}
+
 bool CSQC_ConsoleCommand(string command)
 {
-	tokenize_console(command);
+	int argc = tokenize_console(command);
 	string s = strtolower(argv(0));
 
 	if(cl_shop_command(s))
 		return true;
 
 	if(cl_music_command(s, command))
+		return true;
+
+	if(ConsoleCommand_macro_movement(s, argc))
 		return true;
 
 	if(s == "+showaccuracy" || s == "-showaccuracy")

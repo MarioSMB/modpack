@@ -547,16 +547,16 @@ void W_Fireball(entity this)
 		W_Fireball_Attack(this, selected);
 }
 
-void W_PassiveAttacks(entity this)
+void W_Passives(entity this)
 {
 	// passive attacks while invisible would trigger monsters!
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, this))
 		return;
 
-	if(this.items & IT_PULSERIFLE)
+	if(STAT(PASSIVES, this) & PASSIVE_PULSERIFLE)
 		W_PulseRifle(this);
 
-	if(this.items & IT_FIREBALL)
+	if(STAT(PASSIVES, this) & PASSIVE_FIREBALL)
 		W_Fireball(this);
 }
 

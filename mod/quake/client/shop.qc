@@ -33,8 +33,9 @@ string Shop_Passive_PrettyName(int itemid)
 {
 	switch(itemid)
 	{
-		case IT_PULSERIFLE: return "Pulse Rifle Sidearm";
-		case IT_FIREBALL: return "Fireball Launcher";
+		case PASSIVE_PULSERIFLE: return "Pulse Rifle Sidearm";
+		case PASSIVE_FIREBALL: return "Fireball Launcher";
+		case PASSIVE_AMMOPOUCH: return "Ammo Pouch";
 	}
 	return "";
 }
@@ -43,8 +44,9 @@ string Shop_Passive_Name(int itemid)
 {
 	switch(itemid)
 	{
-		case IT_PULSERIFLE: return "rifle";
-		case IT_FIREBALL: return "fireball";
+		case PASSIVE_PULSERIFLE: return "rifle";
+		case PASSIVE_FIREBALL: return "fireball";
+		case PASSIVE_AMMOPOUCH: return "ammopouch";
 	}
 	return "";
 }
@@ -79,6 +81,21 @@ string ShopItem_Name(int index)
 	return "";
 }
 
+vector ShopItem_Color(int index)
+{
+	int sname = shoplist[index];
+	//int sdata = shopdata[index];
+	switch(sname)
+	{
+		case SHOP_ITEM_HEAL: return '1 0.25 0.25';
+		case SHOP_ITEM_ARMOR: return '0.25 1 0.25';
+		case SHOP_ITEM_AMMO: return '0.45 0.35 1';
+		case SHOP_ITEM_PASSIVE: return '1 1 0.25';
+		case SHOP_ITEM_WEAPON: return '1 1 1';
+	}
+	return '1 1 1';
+}
+
 int ShopItem_Cost(int index)
 {
 	int sname = shoplist[index];
@@ -104,7 +121,7 @@ bool ShopItem_Owned(int index)
 		case SHOP_ITEM_HEAL: return false;
 		case SHOP_ITEM_ARMOR: return false;
 		case SHOP_ITEM_AMMO: return false;
-		case SHOP_ITEM_PASSIVE: return (STAT(ITEMS) & sdata);
+		case SHOP_ITEM_PASSIVE: return (STAT(PASSIVES) & sdata);
 		case SHOP_ITEM_WEAPON:
 		{
 			Weapon wep = REGISTRY_GET(Weapons, sdata);
@@ -147,9 +164,15 @@ void entity_list(string id, vector pos, vector size)
 	itemcount += 1;
 	shoplist[itemcount] = SHOP_ITEM_AMMO;
 	itemcount += 1;
-	shoplist[itemcount] = SHOP_ITEM_PASSIVE;
-	shopdata[itemcount] = STAT(SHOP_PASSIVE);
-	itemcount += 1;
+	for(int j = 0; j < PASSIVE_COUNT; ++j)
+	{
+		int passive = BIT(j);
+		if(!(STAT(SHOP_PASSIVES & passive)))
+			continue;
+		shoplist[itemcount] = SHOP_ITEM_PASSIVE;
+		shopdata[itemcount] = passive;
+		itemcount += 1;
+	}
 	FOREACH(Weapons, it != WEP_Null,
 	{
 		if(!(STAT(SHOP_WEAPONS) & it.m_wepset))
@@ -189,7 +212,7 @@ void entity_list(string id, vector pos, vector size)
 		bool can_afford = (owned || entcs_GetClientFrags(player_localnum) >= ShopItem_Cost(index));
 		if((STAT(ITEMS) & IT_TANK) && (shoplist[index] == SHOP_ITEM_HEAL || shoplist[index] == SHOP_ITEM_ARMOR))
 			can_afford = false;
-		vector textcolor = ((can_afford) ? '1 1 1' : '0.75 0.75 0.75');
+		vector textcolor = ((can_afford) ? ShopItem_Color(index) : '0.75 0.75 0.75');
 		float textalpha = ((can_afford) ? 1 : 0.25);
 		sui_drawtext('0 0 0', '8 8 0', strcat(coststr, ShopItem_PrettyName(index)), textcolor, textalpha, 0);
 		sui_pop_frame();
@@ -233,7 +256,7 @@ void cl_shop_draw()
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '280 140 0';
+	vector ent_menu_size = '280 180 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 	

@@ -438,43 +438,43 @@ void horde_ammo_touch(entity this, entity toucher)
 	// if player is at max ammo for ammo's type, return
 	bool pickedup = false;
 
-	if(this.ammo_shells && toucher.ammo_shells < 100)
+	if(this.ammo_shells && toucher.ammo_shells < GetAmmoLimit(toucher, IT_SHELLS))
 	{
 		toucher.ammo_shells += this.ammo_shells;
 		SendItemPickup(toucher, this.items, this.ammo_shells);
 		pickedup = true;
 	}
-	if(this.ammo_nails && toucher.ammo_nails < 200)
+	if(this.ammo_nails && toucher.ammo_nails < GetAmmoLimit(toucher, IT_NAILS))
 	{
 		toucher.ammo_nails += this.ammo_nails;
 		SendItemPickup(toucher, this.items, this.ammo_nails);
 		pickedup = true;
 	}
-	if(this.ammo_rockets && toucher.ammo_rockets < 100)
+	if(this.ammo_rockets && toucher.ammo_rockets < GetAmmoLimit(toucher, IT_ROCKETS))
 	{
 		toucher.ammo_rockets += this.ammo_rockets;
 		SendItemPickup(toucher, this.items, this.ammo_rockets);
 		pickedup = true;
 	}
-	if(this.ammo_cells && toucher.ammo_cells < 100)
+	if(this.ammo_cells && toucher.ammo_cells < GetAmmoLimit(toucher, IT_CELLS))
 	{
 		toucher.ammo_cells += this.ammo_cells;
 		SendItemPickup(toucher, this.items, this.ammo_cells);
 		pickedup = true;
 	}
-	if(this.ammo_lava_nails && toucher.ammo_lava_nails < 200)
+	if(this.ammo_lava_nails && toucher.ammo_lava_nails < GetAmmoLimit(toucher, IT_LAVA_NAILS))
 	{
 		toucher.ammo_lava_nails += this.ammo_lava_nails;
 		SendItemPickup(toucher, this.items, this.ammo_lava_nails);
 		pickedup = true;
 	}
-	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < 100)
+	if(this.ammo_multi_rockets && toucher.ammo_multi_rockets < GetAmmoLimit(toucher, IT_MULTI_ROCKETS))
 	{
 		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
 		SendItemPickup(toucher, this.items, this.ammo_multi_rockets);
 		pickedup = true;
 	}
-	if(this.ammo_plasma && toucher.ammo_plasma < 100)
+	if(this.ammo_plasma && toucher.ammo_plasma < GetAmmoLimit(toucher, IT_PLASMA_AMMO))
 	{
 		toucher.ammo_plasma += this.ammo_plasma;
 		SendItemPickup(toucher, this.items, this.ammo_plasma);

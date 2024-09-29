@@ -1398,6 +1398,8 @@ void PutObserverInServer(entity this)
 	this.exptime = 0;
 	this.clientcamera = this;
 
+	STAT(PASSIVES, this) = 0;
+
 	Clockwork_Clear(this);
 
 	this.classname = STR_OBSERVER;
@@ -1464,6 +1466,8 @@ void PutPlayerInServer(entity this)
 	// hipnotic fields
 	this.gravity = 1.0;
 	this.gorging = false;
+
+	STAT(PASSIVES, this) = 0;
 
 	Clockwork_Clear(this);
 
@@ -2312,7 +2316,7 @@ void PlayerPostThink(entity this)
 		}
 
 		if(!this.tank)
-			W_PassiveAttacks(this);
+			W_Passives(this);
 
 		if(this.cnt > 0 && !this.button0)
 		{

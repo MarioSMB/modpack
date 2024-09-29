@@ -17,10 +17,14 @@ const int IT_LAVA_NAILS          = BIT(10);
 const int IT_PLASMA_AMMO         = BIT(11);
 const int IT_MULTI_ROCKETS       = BIT(12);
 
-const int IT_PULSERIFLE          = BIT(13);
-const int IT_FIREBALL            = BIT(14);
+const int IT_TANK                = BIT(13);
 
-const int IT_TANK                = BIT(15);
+
+const int PASSIVE_PULSERIFLE        = BIT(0);
+const int PASSIVE_FIREBALL          = BIT(1);
+const int PASSIVE_AMMOPOUCH         = BIT(2);
+
+const int PASSIVE_COUNT = 3;
 
 
 const int POWERUP_INVISIBILITY         = BIT(0);
@@ -41,4 +45,4 @@ const int POWERUP_FIELDGEN             = BIT(10);
 const int POWERUP_JUMPBOOTS            = BIT(11);
 const int POWERUP_SHARPSHOOTER         = BIT(12);
 
-const int POWERUP_COUNT                = 14;
+//const int POWERUP_COUNT                = 13;
