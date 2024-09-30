@@ -649,7 +649,7 @@ void SentryDie(entity this, entity inflictor, entity attacker, int deathtype)
 void lvl1_sentry_stand(entity this);
 void SentryBuilt(entity this)
 {
-	if(this.builder.health <= 0 || !IS_PLAYER(this.builder))
+	if(this.builder.health <= 0 || this.builder.died || countdown || ceasefire || !IS_PLAYER(this.builder))
 	{
 		delete(this);
 		return;
@@ -664,7 +664,7 @@ void SentryBuilt(entity this)
 	gun.solid = SOLID_SLIDEBOX;
 	gun.classname = "sentry";
 	
-	gun.health = 150;
+	gun.health = 100;
 	gun.takedamage = DAMAGE_AIM;
 	gun.th_die = SentryDie;
 	

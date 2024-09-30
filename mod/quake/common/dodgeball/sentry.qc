@@ -31,15 +31,12 @@ void lvl3_sentry_stand(entity this)
 
 void SentryFindTarget(entity this)
 {
-	if(!IS_PLAYER(this.builder))
+	if(!IS_PLAYER(this.builder) || this.builder.health <= 0 || this.builder.died || countdown || ceasefire)
 	{
 		spawn_tfog(this.origin + '0 0 32');
 		delete(this);
 		return;
 	}
-
-	if(countdown || ceasefire)
-		return;
 
 	entity found = NULL;
 	float bestdist = 0;
