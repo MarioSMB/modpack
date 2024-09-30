@@ -124,7 +124,7 @@ void organ_note_think(entity this)
 void organ_fire(entity this)
 {
 	vector neworg = this.origin + '0 0 8';
-	float organ_count = 6;
+	float organ_count = 3;
 	makevectors(this.angles);
 	for(int j = 0; j < organ_count; ++j)
 	{

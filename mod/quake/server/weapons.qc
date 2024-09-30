@@ -1439,6 +1439,8 @@ void NoclipCheat(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return;
 
 	if(this.move_movetype == MOVETYPE_WALK)
 	{
@@ -1455,6 +1457,8 @@ void NoclipCheat(entity this)
 void GodCheat(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		return;
 
 	if(this.flags & FL_GODMODE)
@@ -1473,6 +1477,8 @@ void NotargetCheat(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return;
 
 	if(this.flags & FL_NOTARGET)
 	{
@@ -1489,6 +1495,8 @@ void NotargetCheat(entity this)
 void GiveCheat(entity this, string input)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		return;
 
 	Weapon wep = WEP_Null;

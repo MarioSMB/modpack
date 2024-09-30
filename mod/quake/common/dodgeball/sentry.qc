@@ -52,7 +52,7 @@ void SentryFindTarget(entity this)
 		if(!visible(this, it))
 			continue;
 		float newdist = vlen2(it.origin - this.origin);
-		if(!newdist || newdist < bestdist)
+		if(!bestdist || newdist < bestdist)
 		{
 			bestdist = newdist;
 			found = it;
