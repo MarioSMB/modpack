@@ -17,29 +17,26 @@ METHOD(Ball, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 {
 	if(fire & 1)
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
-	if(time > STAT(CATCHING, actor) && time > STAT(DEFLECTING, actor))
+	if(time > STAT(CATCHING, actor) && time > STAT(DEFLECTING, actor) && STAT(HAS_BALL, actor))
 	//if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		if(STAT(HAS_BALL, actor))
-		{
-			if(IS_PLAYER(actor))
-				player_ball1(actor);
-			wep_ball_ball1(actor.(weaponentity));
-			weapon_prepareattack(thiswep, actor, weaponentity, 0.4);
-		}
-		else
-		{
-			wep_ball_ball1(actor.(weaponentity));
-			Catch(actor);
-			weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
-		}
+		if(IS_PLAYER(actor))
+			player_ball1(actor);
+		wep_ball_ball1(actor.(weaponentity));
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.4);
 	}
 
 	if(fire & 2)
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
-	if(time > STAT(CATCHING, actor) && time > STAT(DEFLECTING, actor) && STAT(HAS_BALL, actor))
+	if(time > STAT(CATCHING, actor) && time > STAT(DEFLECTING, actor))
 	{
-		Deflect(actor);
+		if(STAT(HAS_BALL, actor))
+			Deflect(actor);
+		else
+		{
+			wep_ball_ball1(actor.(weaponentity));
+			Catch(actor);
+		}
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
 	}
 }

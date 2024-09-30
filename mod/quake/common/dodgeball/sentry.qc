@@ -34,6 +34,8 @@ void SentryFindTarget(entity this)
 	if(!IS_PLAYER(this.builder) || this.builder.health <= 0 || this.builder.died || countdown || ceasefire)
 	{
 		spawn_tfog(this.origin + '0 0 32');
+		if(this.trigger_field)
+			delete(this.trigger_field);
 		delete(this);
 		return;
 	}
