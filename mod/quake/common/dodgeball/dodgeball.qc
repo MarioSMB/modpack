@@ -480,6 +480,8 @@ void dodgeball_Rejoin(entity this)
 
 	if(!countdown && !ceasefire)
 		this.died = true;
+	else
+		this.died = false;
 }
 
 void dodgeball_PlayerPreThink(entity this)
