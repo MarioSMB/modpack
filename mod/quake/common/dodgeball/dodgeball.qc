@@ -478,10 +478,10 @@ void dodgeball_Rejoin(entity this)
 	this.team_no = (last_team == 1) ? 2 : 1;
 	last_team = this.team_no;
 
-	if(!countdown && !ceasefire)
-		this.died = true;
-	else
-		this.died = false;
+	//if(!countdown && !ceasefire)
+		//this.died = true;
+	//else
+		//this.died = false;
 }
 
 void dodgeball_PlayerPreThink(entity this)
