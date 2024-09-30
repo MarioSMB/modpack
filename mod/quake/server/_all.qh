@@ -15,7 +15,7 @@ const string STR_OBSERVER = "observer";
 
 #define IS_CLIENT(v) (v.flags & FL_CLIENT)
 /** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */
-//#define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
+#define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
 //#define IS_FAKE_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)
 #define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
 /** was: (clienttype(v) == CLIENTTYPE_NOTACLIENT) */

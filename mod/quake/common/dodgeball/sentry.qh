@@ -1,0 +1,22 @@
+#pragma once
+
+#ifdef SVQC
+.entity builder;
+.int level;
+
+void SentryFindTarget(entity this);
+
+void lvl2_sentry_stand(entity this);
+void lvl3_sentry_stand(entity this);
+
+void lvl1_sentry_atk1(entity this);
+void lvl2_sentry_atk1(entity this);
+void lvl3_sentry_atk1(entity this);
+void lvl3_sentry_atk2(entity this);
+
+void lvl1_sentry_atk2(entity this);
+void lvl2_sentry_atk2(entity this);
+void lvl2_sentry_atk3(entity this);
+void lvl3_sentry_atk3(entity this);
+void lvl3_sentry_atk4(entity this);
+#endif

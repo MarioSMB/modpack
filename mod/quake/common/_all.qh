@@ -57,6 +57,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "waypoints/_mod.qh"
 #include "slide/_mod.qh"
 #include "tank/_mod.qh"
+#include "dodgeball/_mod.qh"
 
 #ifdef CSQC
 #include "../common/triggers/trigger/viewloc.qh"

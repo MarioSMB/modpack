@@ -263,3 +263,22 @@ REGISTER_STAT(BREEGULL_EGGTYPE, int)
 REGISTER_STAT(CLOCKWORK, bool, (this.clockwork) ? true : false)
 
 REGISTER_STAT(PASSIVES, int)
+
+#ifdef SVQC
+.int team_no;
+.bool died;
+int team1_score;
+int team2_score;
+int autocvar_sv_quake_dodgeball_pointlimit = 6;
+#endif
+REGISTER_STAT(HAS_BALL, bool)
+REGISTER_STAT(CATCHING, float)
+REGISTER_STAT(DEFLECTING, float)
+REGISTER_STAT(FROZEN, float)
+REGISTER_STAT(SPECIAL, int)
+REGISTER_STAT(STAMINA, int)
+REGISTER_STAT(DODGEBALL_TEAM, int, this.team_no)
+REGISTER_STAT(DODGEBALL_SCORE_TEAM1, int, team1_score)
+REGISTER_STAT(DODGEBALL_SCORE_TEAM2, int, team2_score)
+REGISTER_STAT(DODGEBALL_SCORE_LIMIT, int, autocvar_sv_quake_dodgeball_pointlimit)
+REGISTER_STAT(DIED, bool, this.died)

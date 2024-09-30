@@ -162,6 +162,8 @@ bool T_Heal(entity e, float healamount, bool ignore)
 		return false;
 	if(e.clockwork)
 		return false;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return false;
 	if(e.m_champion)
 		hp_heal_max *= e.m_champion.qcc_health_heal_max;
 	if(e.health <= 0)
@@ -205,7 +207,16 @@ bool health_customize(entity this, entity client)
 }
 
 spawnfunc(item_health)
-{	
+{
+	if(!(this.spawnflags & H_MEGA))
+	{
+		if(qonquer_itemreplace(this))
+		{
+			delete(this);
+			return;
+		}
+	}
+
 	settouch(this, health_touch);
 	setcefc(this, health_customize);
 
@@ -374,6 +385,12 @@ void armor_touch(entity this, entity toucher)
 
 spawnfunc(item_armor1)
 {
+	if(qonquer_itemreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, armor_touch);
 	this.armortype = 0.3;
 	this.armorvalue = 100;
@@ -390,6 +407,12 @@ spawnfunc(item_armor1)
 
 spawnfunc(item_armor2)
 {
+	if(qonquer_itemreplace(this))
+	{
+		delete(this);
+		return;
+	}
+	
 	settouch(this, armor_touch);
 	this.armortype = 0.6;
 	this.armorvalue = 150;
@@ -980,6 +1003,12 @@ Small box is 20, Big box is 40.
 
 spawnfunc(item_shells)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+	
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1007,6 +1036,12 @@ Small box is 25, Big box is 50.
 
 spawnfunc(item_spikes)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1034,6 +1069,12 @@ Small box is 25, Big box is 50.
 
 spawnfunc(item_lava_spikes)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1064,6 +1105,12 @@ Small box is 5, Big box is 10.
 
 spawnfunc(item_rockets)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1092,6 +1139,12 @@ Small box is 5, Big box is 10.
 
 spawnfunc(item_multi_rockets)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1122,6 +1175,12 @@ Small box is 6, Big box is 12.
 
 spawnfunc(item_cells)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1149,6 +1208,12 @@ Small box is 6, Big box is 12.
 */
 spawnfunc(item_plasma)
 {
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)

@@ -573,6 +573,7 @@ void LinkDoors(entity this)
 {
 	if(this.enemy)
 		return;		// already linked by another door
+	qonquer_fixdoor(this);
 	if(this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;

@@ -5,6 +5,7 @@
 #include "gamelog.qh"
 #include "horde.qh"
 #include "ipban.qh"
+#include "../common/dodgeball/dodgeball.qh"
 #include "../common/triggers/func/button.qh"
 #include "../common/triggers/func/earthquake.qh"
 #include "../common/triggers/trigger/changelevel.qh"
@@ -1331,6 +1332,12 @@ void SV_OnEntityPreSpawnFunction(entity this)
 {
 	set_movetype(this, this.movetype);
 
+	if(this.classname == "info_qonquer")
+	{
+		this.currentammo = 1;
+		this.classname = "horde_manager";
+	}
+
 	// to be called last as it removes entities
 	Copper_OnEntityPrespawn(this);
 }
@@ -1891,6 +1898,8 @@ void StartFrame()
 	horde_StartFrame();
 
 	editor_StartFrame();
+
+	dodgeball_StartFrame();
 
 	FixPhysics();
 

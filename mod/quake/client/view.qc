@@ -4,6 +4,7 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include "../common/sui_sys.qh"
 #include "../common/champions/_mod.qh"
+#include "../common/dodgeball/dodgeball.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/viewloc.qh"
@@ -284,6 +285,8 @@ void viewmodel_draw(entity this)
 		// TODO? very niche case, weapon overrides would be nice though!
 		if(csqcplayer && csqcplayer.m_champion && wep == WEP_AXE && csqcplayer.m_champion.qcc_meleename)
 			name = csqcplayer.m_champion.qcc_meleename;
+		if(wep == WEP_BALL)
+			name = dodgeball_viewmodel(this);
 		bool swap = name != this.name_last;
 		if (swap || swapskin)
 		{

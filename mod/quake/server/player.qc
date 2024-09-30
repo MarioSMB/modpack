@@ -1,6 +1,7 @@
 #include "player.qh"
 
 #include "world.qh"
+#include "../common/dodgeball/dodgeball.qh"
 
 /*
 ==============================================================================
@@ -860,20 +861,22 @@ void DeathBubbles(entity this, int num_bubbles)
 string get_deathsound(entity this, int chance);
 void DeathSound(entity this)
 {
+	int atten = ATTN_NONE;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		atten = ATTN_NORM;
 	// water death sounds
 	if(this.waterlevel == 3)
 	{
 		DeathBubbles(this, 20);
-		player_sound(this, CH_VOICE, "h2odeath.wav", ATTN_NONE);
+		player_sound(this, CH_VOICE, "h2odeath.wav", atten);
 		return;
 	}
 	
 	int rs = rint((random() * 4) + 1);
 	this.noise = get_deathsound(this, rs);
 
-	playersound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
+	playersound(this, CH_VOICE, this.noise, 1, atten);
 }
-
 
 void PlayerDead(entity this)
 {
@@ -881,6 +884,8 @@ void PlayerDead(entity this)
 	setthink(this, func_null);
 // allow respawn after a certain time
 	this.deadflag = DEAD_DEAD;
+
+	dodgeball_respawn2(this);
 }
 
 vector VelocityForDamage(entity this, entity inflictor, float dm)
@@ -1003,6 +1008,10 @@ void CorpseThink(entity this)
 
 void GibPlayer(entity this, entity inflictor, entity attacker)
 {
+	int atten = ATTN_NONE;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		atten = ATTN_NORM;
+
 	ThrowHead(this, inflictor, get_playerhead(this), this.health);
 	ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 	ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
@@ -1012,26 +1021,27 @@ void GibPlayer(entity this, entity inflictor, entity attacker)
 	ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
 
 	this.deadflag = DEAD_DEAD;
+	dodgeball_GibPlayer(this, inflictor, attacker);
 
 	if(attacker.classname == "teledeath")
 	{
-		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/teledth1.wav", 1, atten);
 		return;
 	}
 
 	if(attacker.classname == "teledeath2")
 	{
-		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/teledth1.wav", 1, atten);
 		return;
 	}
 		
 	if(random() < 0.25)
 	{
-		playersound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
-		playersound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		playersound(this, CHAN_BODY, "player/gib.wav", 1, atten);
+		playersound(this, CH_VOICE, "player/udeath.wav", 1, atten);
 	}
 	else
-		playersound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, "player/udeath.wav", 1, atten);
 }
 
 void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
@@ -1050,6 +1060,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	champions_PlayerDies(this);
 
 	slide_PlayerDies(this);
+
+	dodgeball_PlayerDies(this);
 
 	cannon_clear(this);
 
@@ -1075,7 +1087,9 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	W_Spellbook_ClearSpells(this);
 
-	if(deathmatch || coop)
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		DropBall(this);
+	else if(deathmatch || coop)
 		DropBackpack(this);
 
 	this.view_ofs = '0 0 -8';
@@ -1087,7 +1101,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
 
-	if(this.health < -40 || STAT(SKATING, this) || horde_ent)
+	if(this.health < -40 || STAT(SKATING, this) || horde_ent || STAT(FROZEN, this) > time)
 	{
 		GibPlayer(this, inflictor, attacker);
 		if(horde_ent)

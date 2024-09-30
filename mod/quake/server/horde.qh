@@ -66,6 +66,14 @@ void horde_key_give(int key_item);
 
 void horde_key_spend(float key_item);
 
+bool qonquer_monstercompat(entity this, entity mon);
+
+bool qonquer_ammoreplace(entity this);
+
+bool qonquer_itemreplace(entity this);
+
+void qonquer_fixdoor(entity this);
+
 // Yoder Sept24, Horde Merge
 void PrecacheMonsters();
 

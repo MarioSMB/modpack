@@ -3,6 +3,7 @@
 #include <lib/csqcmodel/sv_model.qh>
 #include <common/csqcmodel_settings.qh>
 #include "../common/physics.qh"
+#include "../common/dodgeball/dodgeball.qh"
 #include "../common/slide/slide.qh"
 #include "../common/champions/_mod.qh"
 #include "../common/editor.qh"
@@ -71,7 +72,7 @@ void SetChangeParms(entity this)
 		setspawnparms(this);
 		return;
 	}
-	if(this.health <= 0 || deathmatch || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_SLIDE)
+	if(this.health <= 0 || deathmatch || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_SLIDE || world.worldtype == WORLDTYPE_DODGEBALL)
 	{
 		SetNewParms();
 		return;
@@ -108,8 +109,14 @@ void SetChangeParms(entity this)
 
 void SetNewParms()
 {
-	Weapon start_weapon = (autocvar_horde) ? WEP_CHAINSAW : WEP_AXE;
+	Weapon start_weapon = WEP_AXE;
+	if(autocvar_horde)
+		start_weapon = WEP_CHAINSAW;
+	else if(world.worldtype == WORLDTYPE_DODGEBALL)
+		start_weapon = WEP_BALL;
 	WepSet weps = (WEPSET(SHOTGUN) | start_weapon.m_wepset);
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		weps = start_weapon.m_wepset;
 	parm1 = weps.x;
 	parm2 = weps.y;
 	parm3 = weps.z;
@@ -130,7 +137,8 @@ void SetNewParms()
 
 void DecodeLevelParms(entity this)
 {
-	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SLIDE)
+	WepSet oldweps = vec3(parm1, parm2, parm3);
+	if(world.model == "maps/quake.bsp" || world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp" || world.worldtype == WORLDTYPE_HUB || world.worldtype == WORLDTYPE_SLIDE || world.worldtype == WORLDTYPE_DODGEBALL || (oldweps & WEPSET(BALL)))
 		SetNewParms();		// take away all stuff on starting new episode
 
 	// Yoder Oct25, reset weapons between map loads
@@ -224,6 +232,13 @@ string get_playermodel(entity this)
 {
 	if(STAT(SKATING, this))
 		return "progs/skater.mdl";
+	else if(world.worldtype == WORLDTYPE_DODGEBALL)
+	{
+		if(STAT(HAS_BALL, this))
+			return "progs/player_db2.mdl";
+		else
+			return "progs/player_db.mdl";
+	}
 	else if(STAT(SLIDE_ON, this))
 	{
 		if(this.cvar_cl_quake_model == "goat" && !CHAMPION_Goat.m_condition(CHAMPION_Goat, this))
@@ -960,6 +975,11 @@ void ClientKill(entity this)
 {
 	if(gameover || intermission_running)
 		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+	{
+		sprint(this, "Pointless...\n");
+		return;
+	}
 	if(time < this.suicide_delay)
 	{
 		sprint(this, "You must wait before suiciding again... Get help.\n");
@@ -1046,7 +1066,10 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 // choose a info_player_deathmatch point
 	if(autocvar_horde)
 	{ // run simpler logic for horde - just need a spot with noone on top of it...
-    	entity hordeSpawn = find(NULL, classname, "info_player_coop");
+		string horde_spawnpoint = "info_player_coop";
+		if(horde_ent.currentammo)
+			horde_spawnpoint = "info_player_start";
+    	entity hordeSpawn = find(NULL, classname, horde_spawnpoint);
 
     	while(hordeSpawn)
     	{
@@ -1066,7 +1089,7 @@ entity SelectSpawnPoint(entity this, bool forceSpawn)
 				return hordeSpawn;
 
 			// Get the next spot in the chain
-			hordeSpawn = find(hordeSpawn, classname, "info_player_coop");
+			hordeSpawn = find(hordeSpawn, classname, horde_spawnpoint);
 		}
 
 		if(coop) // fix for singleplayer
@@ -1398,6 +1421,8 @@ void PutObserverInServer(entity this)
 	this.deadflag = DEAD_NO;
 	this.exptime = 0;
 	this.clientcamera = this;
+	this.waterlevel = WATERLEVEL_NONE;
+	this.watertype = CONTENT_EMPTY;
 
 	STAT(PASSIVES, this) = 0;
 
@@ -1430,6 +1455,7 @@ void PutObserverInServer(entity this)
 	Tank_PlayerDie(this);
 	champions_RemovePlayer(this);
 	music_RemovePlayer(this);
+	dodgeball_RemovePlayer(this);
 }
 
 void PutPlayerInServer(entity this)
@@ -1453,6 +1479,8 @@ void PutPlayerInServer(entity this)
 	this.effects = EF_TELEPORT_BIT;
 	this.drawonlytoclient = NULL;
 	this.clientcamera = this;
+	this.waterlevel = WATERLEVEL_NONE;
+	this.watertype = CONTENT_EMPTY;
 
 	this.alpha = 1;
 	this.colormod = '1 1 1';
@@ -1515,7 +1543,10 @@ void PutPlayerInServer(entity this)
 	}
 	else
 		shouldTelefrag = false;
-	spot = SelectSpawnPoint(this, shouldTelefrag);
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		spot = SelectTeamSpawn(this, this.team_no);
+	else
+		spot = SelectSpawnPoint(this, false);
 	if(!spot)
 	{
 		this.takedamage = DAMAGE_NO;
@@ -1582,6 +1613,8 @@ void PutPlayerInServer(entity this)
 
 	slide_PutPlayerInServer(this);
 
+	dodgeball_PutPlayerInServer(this);
+
 // oh, this is a hack!
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
@@ -1605,7 +1638,7 @@ void PutPlayerInServer(entity this)
 	this.velocity = '0 0 0'; // 1998-07-21 Player moves after respawn fix by Xian
 
 	STAT(QCC_CHAMPION, this) = 0;
-	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE)
+	if(!STAT(SKATING, this) && world.worldtype != WORLDTYPE_SLIDE && world.worldtype != WORLDTYPE_DODGEBALL)
 		champions_PutPlayerInServer(this);
 
 	player_stand1(this);
@@ -1692,12 +1725,14 @@ spawnfunc(info_player_deathmatch)
 
 spawnfunc(info_player_team1)
 {
-	spawnfunc_info_player_deathmatch(this);
+	if(world.worldtype != WORLDTYPE_DODGEBALL)
+		spawnfunc_info_player_deathmatch(this);
 }
 
 spawnfunc(info_player_team2)
 {
-	spawnfunc_info_player_deathmatch(this);
+	if(world.worldtype != WORLDTYPE_DODGEBALL)
+		spawnfunc_info_player_deathmatch(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2023,6 +2058,9 @@ void PlayerPreThink(entity this)
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
 
+	if(STAT(FROZEN, this) > time)
+		return;
+
 	if(PHYS_INPUT_BUTTON_USE(this) && !this.usekeypressed)
 		PlayerUseKey(this);
 	this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
@@ -2031,6 +2069,8 @@ void PlayerPreThink(entity this)
 		champions_PlayerPreThink(this);
 
 	cannon_PlayerPreThink(this);
+
+	dodgeball_PlayerPreThink(this);
 
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
@@ -2068,7 +2108,7 @@ Check for turning off powerups
 */
 void CheckPowerups(entity this)
 {
-
+	dodgeball_PlayerPowerups(this);
 }
 
 void DrownPlayer(entity this)
@@ -2139,6 +2179,8 @@ void CheckHealthRot(entity this)
 		return;
 	if(this.clockwork)
 		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return;
 
 	if(this.healthrot_nextcheck > time)
 		return;
@@ -2166,6 +2208,8 @@ void Regenerate_Health(entity this)
 	if(this.tank)
 		return;
 	if(this.clockwork)
+		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		return;
 
 	float regen_rate = 1;
@@ -2279,7 +2323,7 @@ void PlayerPostThink(entity this)
 				return;
 			}
 			else if (timeleft <= countdown_time) {
-				if (timeleft != this.idlekick_lasttimeleft)
+				if (timeleft != this.idlekick_lasttimeleft && IS_REAL_CLIENT(this))
 					play2(this, SND(TALK2));
 				this.idlekick_lasttimeleft = timeleft;
 			}
@@ -2473,6 +2517,8 @@ void ClientConnect(entity this)
 
 	chat_grabber_ClientConnect(this);
 
+	dodgeball_ClientConnect(this);
+
 	if (PlayerInList(this, autocvar_g_chatban_list)) // chatban
 		this.muted = true;
 
@@ -2541,6 +2587,8 @@ void ClientDisconnect(entity this)
 	music_RemovePlayer(this);
 
 	Tank_PlayerDie(this);
+
+	dodgeball_RemovePlayer(this);
 
 	sphere_remove(this);
 

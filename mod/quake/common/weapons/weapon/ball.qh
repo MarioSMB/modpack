@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Ball, Weapon)
+/* ammotype  */ ATTRIB(Ball, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Ball, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Ball, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Ball, aflag, int, 0);
+/* modelname */ ATTRIB(Ball, mdl, string, "dodgeball");
+/* crosshair */ ATTRIB(Ball, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Ball, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Ball, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Ball, model2, string, "ball");
+/* refname   */ ATTRIB(Ball, netname, string, "ball");
+/* wepname   */ ATTRIB(Ball, m_name, string, _("Ball"));
+
+ENDCLASS(Ball)
+REGISTER_WEAPON(BALL, NEW(Ball));
+
+//SPAWNFUNC_WEAPON(weapon_ball, WEP_AXE)

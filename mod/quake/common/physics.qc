@@ -559,6 +559,7 @@ void PM_Main(entity this, float dt)
 	PM_RollView(this);
 
 	float maxspeed_mod = 1;
+	maxspeed_mod *= dodgeball_GetMoveSpeed(this);
 	if(this.m_champion)
 	{
 		maxspeed_mod *= this.m_champion.qcc_movespeed;
@@ -592,6 +593,8 @@ void PM_Main(entity this, float dt)
 	else if(PHYS_SLIDE(this))
 		slide_physics(this);
 	else if(champions_PlayerPhysics(this, dt))
+		return;
+	else if(dodgeball_PlayerPhysics(this))
 		return;
 
 	WaterMove(this, dt);

@@ -561,11 +561,17 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 // coop damage avoidance (if enabled)
-	if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
+	if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ) && world.worldtype != WORLDTYPE_DODGEBALL)
 	{
 		if(autocvar_g_friendlyfire_virtual)
 			return;
 		take *= autocvar_g_friendlyfire;
+	}
+
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+	{
+		if(targ.team_no > 0 && targ.team_no == attacker.team_no && targ != attacker)
+			return;
 	}
 		
 // do the damage

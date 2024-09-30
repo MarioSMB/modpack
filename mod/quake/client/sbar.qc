@@ -486,6 +486,17 @@ void Sbar_Score(int margin)
 		Sbar_DrawXNum(vec2(-3*12, -12), score, 3, 12, '1 1 1');
 		Sbar_DrawXNum(vec2(-32*4, 0), STAT(HORDE_WAVE), 4, 32, (((STAT(HORDE_WAVE) % 3) == 0) ? '1 0 0 ' : '1 1 1'));
 	}
+	else if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL)
+	{
+		int dteam = STAT(DODGEBALL_TEAM);
+		if(dteam > 0)
+		{
+			int myscore = (dteam == 1) ? STAT(DODGEBALL_SCORE_TEAM1) : STAT(DODGEBALL_SCORE_TEAM2);
+			int scorelimit = STAT(DODGEBALL_SCORE_LIMIT);
+			Sbar_DrawXNum(vec2(-3*12, -12), scorelimit, 3, 12, '1 1 1');
+			Sbar_DrawXNum(vec2(-32*4, 0), myscore, 4, 32, '1 1 1');
+		}
+	}
 	else if(autocvar_sbar_scorerank && deathmatch && me >= 0 && me < maxclients)
 	{
 		// Layout:
@@ -1208,6 +1219,19 @@ void Sbar_DrawFace()
 	Sbar_DrawPic('112 0 0', pic);
 }
 
+void Sbar_DrawHealth()
+{
+	int myhealth = rint(STAT(HEALTH));
+	vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
+	bool have_fieldgen = (StatusEffects_active(STATUSEFFECT_FieldGen, g_statuseffects) && STAT(FIELDGEN_HEALTH) > 0);
+	if(have_fieldgen)
+	{
+		myhealth += rint(STAT(FIELDGEN_HEALTH));
+		hpcolor = '0 1 1';
+	}
+	Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
+}
+
 void Sbar_DrawShieldOverlay()
 {
 	if(time > STAT(SHIELD_TIME) || !StatusEffects_active(STATUSEFFECT_Shield, g_statuseffects))
@@ -1365,19 +1389,13 @@ void Sbar_Draw()
 				Sbar_DrawFace();
 
 				// health
-				int myhealth = rint(STAT(HEALTH));
-				vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
-				bool have_fieldgen = (StatusEffects_active(STATUSEFFECT_FieldGen, g_statuseffects) && STAT(FIELDGEN_HEALTH) > 0);
-				entity thiswep = viewmodels[0]; // TODO: unhardcode
-				if(have_fieldgen)
-				{
-					myhealth += rint(STAT(FIELDGEN_HEALTH));
-					hpcolor = '0 1 1';
-				}
-				Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
+				Sbar_DrawHealth();
 
+				entity thiswep = viewmodels[0]; // TODO: unhardcode
 				if(STAT(SKATING) || (STAT(ITEMS) & IT_TANK))
 					{ /* nothing */}
+				else if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL)
+					Sbar_DrawNum('248 0 0', itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'));
 				else if(thiswep.activeweapon.spawnflags & WEP_FLAG_MANA)
 					Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
 				else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)

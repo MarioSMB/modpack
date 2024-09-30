@@ -17,7 +17,7 @@ Sound SND_Mime_Death_Random() {
     return REGISTRY_GET(Sounds, SND_Mime_Death1.m_id + rint(random() * 1));
 }
 
-MODEL(Ball, "progs/ball.mdl");
+MODEL(MimeBall, "progs/ball.mdl");
 PRECACHE(Mime)
 {
 #ifdef SVQC

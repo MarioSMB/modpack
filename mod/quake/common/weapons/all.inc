@@ -42,6 +42,7 @@
 #include "weapon/bongos.qh"
 #include "weapon/katana.qh"
 #include "weapon/organ.qh"
+#include "weapon/ball.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

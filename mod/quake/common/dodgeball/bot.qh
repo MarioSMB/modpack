@@ -1,0 +1,13 @@
+#pragma once
+
+#ifdef SVQC
+int autocvar_sv_quake_dodgeball_bots_perteam = 2;
+
+.float fb_time;
+.float move_mode;
+.float strafe_time;
+
+bool SpawnBot(int tno);
+
+void DropBot(int tno);
+#endif

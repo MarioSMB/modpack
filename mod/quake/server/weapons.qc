@@ -9,6 +9,7 @@
 #include "weapons/weaponsystem.qh"
 #include "world.qh"
 #include "../common/slide/slide.qh"
+#include "../common/dodgeball/dodgeball.qh"
 
 /*
 */
@@ -1398,7 +1399,7 @@ void W_SetCurrentAmmo(entity this)
 {
 	if(this.exptime != 0)
 		return;
-	if(!this.clockwork)
+	if(!this.clockwork && this.health > 0)
 		player_run(this);		// get out of any weapon firing states
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
@@ -1587,6 +1588,8 @@ Called every frame so impulse events can be handled as well as possible
 void W_WeaponFrame(entity this, .entity weaponentity)
 {
 	if(this.exptime != 0)
+		return;
+	if(world.worldtype == WORLDTYPE_DODGEBALL && (ceasefire || STAT(FROZEN, this) > time || this.died))
 		return;
 	if(!STAT(SKATING, this) && this.m_champion && this.m_champion.m_weaponframe)
 	{

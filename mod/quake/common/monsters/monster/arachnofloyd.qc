@@ -273,7 +273,7 @@ void arf_fire_lightning(entity this, float offs)
 	vector dir = this.enemy.origin - org;
 	dir = normalize(dir);
 	
-	traceline(org, org + dir*600, true, this);
+	traceline(org, org + dir*300, true, this);
 	
 	//fx_beam(org2, trace_endpos, this);
 	SendCSQCLightningBeam(org2, trace_endpos);

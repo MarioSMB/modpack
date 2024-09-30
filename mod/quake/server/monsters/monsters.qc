@@ -337,6 +337,12 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	if(!autocvar_horde && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD))
 		mon = monster_randomize(this, mon);
 
+	if(check_appear && qonquer_monstercompat(this, mon))
+	{
+		delete(this);
+		return;
+	}
+
 	if(!mon || mon == MON_Null) { return; } // invalid monster
 	if(deathmatch) { delete(this); return; }
 	if(Inhibit_Coop(this) || RemovedOutsideCoop(this))

@@ -76,6 +76,8 @@ bool QCC_Allowed(entity this)
 		return false;
 	if(STAT(SKATING, this))
 		return false;
+	if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL)
+		return false;
 	return true;
 }
 

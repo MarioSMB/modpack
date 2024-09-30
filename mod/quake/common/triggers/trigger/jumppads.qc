@@ -41,6 +41,8 @@ void trigger_push_touch(entity this, entity toucher)
 
 	if(toucher.health > 0 || toucher.classname == "grenade" || toucher.classname == "ogre_grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
 	{
+		if(toucher.classname == "sentry")
+			return;
 		if(toucher.flags & FL_INSHELTER)
 			return;
 		if(this.spawnflags & ADDITIVE_PUSH) // yoder add, Jan 28 2021
@@ -60,10 +62,13 @@ void trigger_push_touch(entity this, entity toucher)
 			this.attack_finished = time + 0.05;
 		}
 		else
-			toucher.velocity = this.speed * this.movedir * 10;
+		{
+			float pushpower = (world.worldtype == WORLDTYPE_DODGEBALL) ? 4 : 10;
+			toucher.velocity = this.speed * this.movedir * pushpower;
+		}
 		if(IS_PLAYER(toucher))
 		{
-			if(toucher.fly_sound < time)
+			if(toucher.fly_sound < time && IS_REAL_CLIENT(toucher))
 			{
 				toucher.fly_sound = time + 1.5;
 				_sound(toucher, CH_TRIGGER, this.noise, 1, ATTN_NORM);

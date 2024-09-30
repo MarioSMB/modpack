@@ -219,6 +219,70 @@ spawnfunc(info_horde_key)
 {
 	this.wait = false;
 }
+
+void qonquer_replace(entity this, Monster mon)
+{
+	entity ent = spawn();
+	setorigin(ent, this.origin);
+	ent.spawnfunc_checked = true;
+	// since qonquer only supports vanilla monsters, we have a baseline for compatibility
+	switch(mon)
+	{
+		default:
+			spawnfunc_info_monster_start(ent);
+			break;
+		case MON_FIEND:
+		case MON_VORE:
+		case MON_SHAMBLER:
+			spawnfunc_info_monster_start_boss(ent);
+			break;
+		case MON_OGRE:
+		case MON_ENFORCER:
+			spawnfunc_info_monster_start_ranged(ent);
+			break;
+		case MON_SCRAG:
+			spawnfunc_info_monster_start_flying(ent);
+			break;
+	}
+}
+
+bool qonquer_monstercompat(entity this, Monster mon)
+{
+	if(!(this.spawnflags & 8))
+		return false;
+	if(horde_ent.currentammo)
+	{
+		qonquer_replace(this, mon);
+		return true;
+	}
+	return false;
+}
+
+bool qonquer_ammoreplace(entity this)
+{
+	if(horde_ent.currentammo)
+	{
+		entity ent = spawn();
+		setorigin(ent, this.origin);
+		ent.spawnfunc_checked = true;
+		spawnfunc_info_horde_ammo(ent);
+		return true;
+	}
+	return false;
+}
+
+bool qonquer_itemreplace(entity this)
+{
+	if(horde_ent.currentammo)
+	{
+		entity ent = spawn();
+		setorigin(ent, this.origin);
+		ent.spawnfunc_checked = true;
+		spawnfunc_info_horde_item(ent);
+		return true;
+	}
+	return false;
+}
 //============================================================================
 void PrecacheMonsters()
 {
@@ -1861,6 +1925,11 @@ void SetHorde(entity this)
 // define entity 
 spawnfunc(horde_manager)
 {
+	if(horde_ent)
+	{
+		delete(this);
+		return;
+	}
 	// AY, Dec06 2021, auto set horde cvar
 	if(!autocvar_horde && !deathmatch)
 		cvar_set("horde", "1");
@@ -1890,6 +1959,60 @@ spawnfunc(horde_manager)
 
 	if(!this.count)
 		this.count = 1; // number of final bosses on wave 9
+}
+
+// quonquer compatibility
+spawnfunc(info_qonquer)
+{
+	this.currentammo = 1;
+	spawnfunc_horde_manager(this);
+
+	entity ent = new(info_horde_key);
+	setorigin(ent, this.origin);
+	ent.spawnfunc_checked = true;
+	spawnfunc_info_horde_key(ent);
+	DropToFloor_QC_DelayedInit(ent);
+}
+
+.string targetstart;
+.string targetend;
+void qonquer_fixdoor(entity this)
+{
+	if(!this.targetname || this.targetname == "")
+		return;
+	if(!horde_ent.currentammo)
+		return;
+	// first attempt to fix any doors that trigger at the start
+	FOREACH_ENTITY_STRING(targetstart, this.targetname,
+	{
+		if(it.classname == "info_qonquer_wave")
+		{
+			this.targetname = "horde_event";
+			break;
+		}
+	});
+
+	// then mark any doors that trigger at the end as key doors
+	FOREACH_ENTITY_STRING(targetend, this.targetname,
+	{
+		if(it.classname == "info_qonquer_wave")
+		{
+			this.targetname = string_null;
+			this.items = IT_KEY1;
+			this.wait = -1;
+			this.message = string_null;
+			break;
+		}
+	});
+}
+
+spawnfunc(info_qonquer_wave)
+{
+	if(!this.targetstart || this.targetstart == "")
+	{
+		delete(this);
+		return;
+	}
 }
 
 void PowerupFade(entity this)
