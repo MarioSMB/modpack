@@ -159,6 +159,10 @@ void organ_fire(entity this)
 		musicnote.velocity = musicnote.movedir;
 	}
 
+	.entity weaponentity = weaponentities[0];
+	if(this.(weaponentity) && this.(weaponentity).music_song)
+		return;
+
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	r *= 1; // TODO: per-instrument offsets
 	sound7(this, CH_WEAPON_SINGLE, SND(ORGAN_FIRE), 1, ATTN_NORM, r, 0);
