@@ -45,6 +45,8 @@ void dodgeball_RemovePlayer(entity this);
 
 void dodgeball_StartFrame();
 
+void dodgeball_Rejoin(entity this);
+
 void dodgeball_PlayerPreThink(entity this);
 
 void dodgeball_PlayerPowerups(entity this);

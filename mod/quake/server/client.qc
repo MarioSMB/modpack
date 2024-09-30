@@ -1306,6 +1306,7 @@ void ObserverThink(entity this)
 				this.flags &= ~FL_SPAWNING;
 				this.classname = STR_PLAYER;
 				this.rejoin_delay = time + autocvar_sv_quake_rejoin_delay; // prevent fast spec-rejoin
+				dodgeball_Rejoin(this);
 				// get the spawn parms as they were at level start
 				setspawnparms(this);
 				PutClientInServer(this);

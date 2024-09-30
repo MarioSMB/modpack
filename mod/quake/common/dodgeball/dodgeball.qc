@@ -470,6 +470,18 @@ void dodgeball_ClientConnect(entity this)
 	last_team = this.team_no;
 }
 
+void dodgeball_Rejoin(entity this)
+{
+	if(world.worldtype != WORLDTYPE_DODGEBALL)
+		return;
+
+	this.team_no = (last_team == 1) ? 2 : 1;
+	last_team = this.team_no;
+
+	if(!countdown && !ceasefire)
+		this.died = true;
+}
+
 void dodgeball_PlayerPreThink(entity this)
 {
 	if(world.worldtype != WORLDTYPE_DODGEBALL)
