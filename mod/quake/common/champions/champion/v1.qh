@@ -66,6 +66,7 @@ PRECACHE(V1)
 "Press %ABILITY% to slide\n" \
 "Press again midair to ground slam\n" \
 "Can jump high while sliding\n" \
+"Takes no fall damage\n" \
 "Has a katana that slices enemies\n" \
 "Cannot regenerate health normally\n" \
 "Health refills by killing enemies"
@@ -73,6 +74,7 @@ PRECACHE(V1)
 CLASS(V1, Champions)
     ATTRIB(V1, netname, string, "v1");
     ATTRIB(V1, m_name, string, "V1");
+    ATTRIB(V1, qcc_falldamage, float, 0);
     ATTRIB(V1, qcc_health_regen_stable, float, 0);
     ATTRIB(V1, qcc_health_nopickup, bool, true);
 #ifdef GAMEQC

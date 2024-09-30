@@ -16,6 +16,8 @@ int Shop_Passive_Item(string item)
 		case "electrifying": return PASSIVE_ELECTRIFYING;
 		case "bunnyboots": return PASSIVE_BUNNYBOOTS;
 		case "doublejump": return PASSIVE_DOUBLEJUMP;
+		case "arcana": return PASSIVE_ARCANA;
+		case "sponge": return PASSIVE_SPONGE;
 	}
 	return 0;
 }
@@ -34,6 +36,8 @@ string Shop_Passive_Message(int itemid)
 		case PASSIVE_ELECTRIFYING: return "Slain foes will let out a shockwave";
 		case PASSIVE_BUNNYBOOTS: return "Bunny Boots let you auto jump";
 		case PASSIVE_DOUBLEJUMP: return "Double Jump booster activated";
+		case PASSIVE_ARCANA: return "Spell efficiency increased";
+		case PASSIVE_SPONGE: return "Damaged taken capped at 50";
 	}
 	return "";
 }
@@ -64,7 +68,9 @@ bool shop_buypassive(entity this, string item)
 
 	this.frags -= SHOP_COST_PASSIVE;
 	STAT(PASSIVES, this) |= passive;
-	sprint(this, strcat(Shop_Passive_Message(passive), "\n"));
+	string themsg = Shop_Passive_Message(passive);
+	if(themsg != "")
+		centerprint(this, strcat(themsg, "\n"));
 	_sound(this, CH_TRIGGER_SINGLE, "weapons/pulse/install.wav", 1, ATTN_NORM);
 
 	return true;

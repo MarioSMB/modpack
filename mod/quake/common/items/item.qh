@@ -30,8 +30,10 @@ const int PASSIVE_AURA              = BIT(6);
 const int PASSIVE_ELECTRIFYING      = BIT(7);
 const int PASSIVE_BUNNYBOOTS        = BIT(8);
 const int PASSIVE_DOUBLEJUMP        = BIT(9);
+const int PASSIVE_ARCANA            = BIT(10);
+const int PASSIVE_SPONGE            = BIT(11);
 
-const int PASSIVE_COUNT = 10;
+const int PASSIVE_COUNT = 12;
 
 
 const int POWERUP_INVISIBILITY         = BIT(0);

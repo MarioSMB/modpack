@@ -173,6 +173,8 @@ void W_TakeMana(entity ent, float amount)
 {
 	if(StatusEffects_active(STATUSEFFECT_SharpShooter, ent))
 		return;
+	if(STAT(PASSIVES, ent) & PASSIVE_ARCANA)
+		amount = max(1, amount * 0.6);
 	STAT(MANA, ent) -= amount;
 	ent.mana_regen_pause = time + 1.5;
 }

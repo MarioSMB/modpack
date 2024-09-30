@@ -43,6 +43,8 @@ string Shop_Passive_PrettyName(int itemid)
 		case PASSIVE_ELECTRIFYING: return "Electrifying";
 		case PASSIVE_BUNNYBOOTS: return "Bunny Boots";
 		case PASSIVE_DOUBLEJUMP: return "Double Jump";
+		case PASSIVE_ARCANA: return "Arcane efficiency";
+		case PASSIVE_SPONGE: return "Damage Sponge";
 	}
 	return "";
 }
@@ -61,6 +63,8 @@ string Shop_Passive_Name(int itemid)
 		case PASSIVE_ELECTRIFYING: return "electrifying";
 		case PASSIVE_BUNNYBOOTS: return "bunnyboots";
 		case PASSIVE_DOUBLEJUMP: return "doublejump";
+		case PASSIVE_ARCANA: return "arcana";
+		case PASSIVE_SPONGE: return "sponge";
 	}
 	return "";
 }

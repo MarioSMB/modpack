@@ -412,6 +412,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(Pan_CheckDamage(targ, inflictor, attacker))
 		return;
 
+	if(STAT(PASSIVES, targ) & PASSIVE_SPONGE)
+		damage = min(damage, 50);
+
 	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
 	{
 		// allow some damage to pass through

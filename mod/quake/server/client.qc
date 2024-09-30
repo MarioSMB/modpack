@@ -2195,12 +2195,13 @@ void Regenerate_Health(entity this)
 
 void Regenerate_Mana(entity this)
 {
-	if(this.mana_regen_time < time && STAT(MANA, this) < 100 && time > this.mana_regen_pause)
+	float max_mana = 100;
+	if(STAT(PASSIVES, this) & PASSIVE_ARCANA)
+		max_mana *= 2;
+
+	if(this.mana_regen_time < time && STAT(MANA, this) < max_mana && time > this.mana_regen_pause)
 	{
-		STAT(MANA, this) += 3;
-		
-		if(STAT(MANA, this) > 100)
-			STAT(MANA, this) = 100;
+		STAT(MANA, this) = min(STAT(MANA, this) + 3, max_mana);
 
 		float regen_rate = MANA_REGEN_RATE;
 		if(time < this.mana_regen_boost)
