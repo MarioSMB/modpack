@@ -779,9 +779,8 @@ void water_die(entity this)
 	}
 }
 
-void skate_spawn(entity this)
+void skate_reset(entity this)
 {
-	STAT(SKATING, this) = (world.worldtype == WORLDTYPE_SKATE);
 	this.buttonjump_held = false;
 	STAT(BOARD_FALLING, this) = false;
 	STAT(TRICK, this) = 0;
@@ -792,6 +791,18 @@ void skate_spawn(entity this)
 	this.second_trick = 0;
 	this.diff_grinds = 0;
 	this.spawn_time = time; // checking wrong direction for skate
+}
+
+void skate_spawn(entity this)
+{
+	STAT(SKATING, this) = (world.worldtype == WORLDTYPE_SKATE);
+	skate_reset(this);
+}
+
+void skate_unspawn(entity this)
+{
+	STAT(SKATING, this) = false;
+	skate_reset(this);
 }
 
 #endif

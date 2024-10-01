@@ -43,6 +43,8 @@ void skate_land(entity this);
 void skate_fire(entity this, .entity weaponentity);
 
 void skate_spawn(entity this);
+
+void skate_unspawn(entity this);
 #endif
 
 .float skatespeed;

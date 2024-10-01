@@ -1429,6 +1429,8 @@ void PutObserverInServer(entity this)
 
 	Clockwork_Clear(this);
 
+	skate_unspawn(this);
+
 	this.classname = STR_OBSERVER;
 	this.health = -666;
 	setmodel(this, MDL_Null);
