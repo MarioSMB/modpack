@@ -185,7 +185,7 @@
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f1",             CPID_ROUND,             "1 f2", strcat(_("^BGRound %s starts in"), "\n", BOLD("^COUNT")), "")
 
     MSG_CENTER_NOTIF(ROUND_START_SOON,                   N_ENABLE,    0, 0, "",               CPID_ROUND,            "0 0",  BOLD(_("^BGThe round will begin soon...")), "")
-    MSG_CENTER_NOTIF(ROUND_WON,                          N_ENABLE,    1, 2, "s1 f1 f2",       CPID_ROUND,            "3 0",  strcat(_("^BG%s team has won!"), "\n", BOLD("^F2Gold %s ^BGx ^F1Green %s")), "")
+    MSG_CENTER_NOTIF(ROUND_WON,                          N_ENABLE,    1, 2, "s1 f1 f2",       CPID_ROUND,            "5 0",  strcat(_("^BG%s team has won!"), "\n", BOLD("^F2Gold %s ^BGx ^F1Green %s")), "")
 
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                 N_ENABLE,  1, 0, "s1",             CPID_Null,              "0 0",  BOLD(_("^K3You killed ^BG%s")), "")
     MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED,              N_ENABLE,  1, 0, "s1",             CPID_Null,              "0 0",  BOLD(_("^K1You were killed by ^BG%s^K1!")), "")

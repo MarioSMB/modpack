@@ -793,7 +793,7 @@ void execute_changelevel(entity this)
 	intermission_running = 1;
 	
 // enforce a wait time before allowing changelevel
-	if(deathmatch)
+	if(deathmatch || world.worldtype == WORLDTYPE_DODGEBALL)
 		intermission_exittime = time + 5;
 	else
 		intermission_exittime = time + 2;

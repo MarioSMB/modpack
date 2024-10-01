@@ -1358,7 +1358,15 @@ void Sbar_Draw()
 			}
 			else if(sb_lines)
 			{
-				Sbar_DrawAlphaPic('0 0 0', "gfx/quake/sbar", autocvar_sbar_alpha_bg);
+				vector bgcolor = '1 1 1';
+				if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL && STAT(DODGEBALL_TEAM) > 0)
+				{
+					if(STAT(DODGEBALL_TEAM) == 1)
+						bgcolor = '1 0.7 0.1';
+					else if(STAT(DODGEBALL_TEAM) == 2)
+						bgcolor = '0.1 1 0.1';
+				}
+				Sbar_DrawAlphaPic_Color('0 0 0', "gfx/quake/sbar", autocvar_sbar_alpha_bg, bgcolor);
 
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten

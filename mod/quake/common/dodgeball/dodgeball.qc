@@ -290,7 +290,7 @@ void CheckRounds()
 
 	if(team1_score >= autocvar_sv_quake_dodgeball_pointlimit || team2_score >= autocvar_sv_quake_dodgeball_pointlimit)
 	{
-		mapname = "quake";
+		mapname = "dodgestart";
 		NextLevel();
 	}
 }
