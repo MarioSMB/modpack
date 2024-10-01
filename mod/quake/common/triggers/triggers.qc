@@ -114,10 +114,13 @@ string process_string(string input)
 }
 
 float autocvar_sv_quake_message_range = 512;
-void centerprint_proximity(entity player, string input)
+void centerprint_proximity(entity player, string input, entity source)
 {
 	centerprint(player, input); // always send to the player no matter what
-	FOREACH_ENTITY_RADIUS(player.origin, autocvar_sv_quake_message_range, it != player && IS_PLAYER(it) && IS_REAL_CLIENT(it),
+	// if the original source will be triggered again, skip proximity messages
+	if(source.wait > 0 && source.wait < 999)
+		return;
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && vdist(it.origin - player.origin, <=, autocvar_sv_quake_message_range),
 	{
 		centerprint(it, input);
 	});
@@ -172,7 +175,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 	if(!nomessage && IS_PLAYER(actor) && this.message != "")
 	if(IS_REAL_CLIENT(actor))
 	{
-		centerprint_proximity(actor, process_string(this.message));
+		centerprint_proximity(actor, process_string(this.message), this);
 		if(!this.noise || this.noise == "")
 			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
 		else

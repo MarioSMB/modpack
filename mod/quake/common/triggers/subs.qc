@@ -846,7 +846,7 @@ void SUB_PrintMessage(entity this, entity actor)
 	// print the message
 	if(IS_PLAYER(actor) && IS_REAL_CLIENT(actor))
 	{
-		centerprint_proximity(actor, process_string(this.message));
+		centerprint_proximity(actor, process_string(this.message), this);
 		
 		// non-triggers might play the noise themselves (buttons, etc)
 		if((!this.noise || this.noise == "") && (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT) && this.sounds != -1)

@@ -345,7 +345,7 @@ void skillbutton_hit_top(entity this)
 	// the console
 	if(this.enemy && IS_PLAYER(this.enemy))
 	{
-		centerprint_proximity(this.enemy, process_string(this.message));
+		centerprint_proximity(this.enemy, process_string(this.message), this);
 		this.enemy = NULL;
 	}
 }

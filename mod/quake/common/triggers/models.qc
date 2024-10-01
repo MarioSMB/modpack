@@ -106,7 +106,7 @@ void wall_touch(entity this, entity toucher)
 
 	if(this.message && this.message != "")
 	{
-		centerprint_proximity(toucher, this.message);
+		centerprint_proximity(toucher, this.message, this);
 		if(this.noise2 && this.noise2 != "")
 			_sound(toucher, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 		else
