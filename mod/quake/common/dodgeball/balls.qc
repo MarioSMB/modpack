@@ -453,7 +453,7 @@ void roflcopter_explode(entity this)
 	T_RadiusDamage(this, this.owner, 100, DEATH_CRUSH.m_id, NULL);
 	
 	int i = 10;
-	while (i > 0)
+	while(i > 0)
 	{
 		entity ball = spawn();
 		ball.owner = this.owner;

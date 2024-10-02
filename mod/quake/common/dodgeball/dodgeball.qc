@@ -178,6 +178,7 @@ STATIC_INIT_LATE(Dodgeball)
 PRECACHE(Dodgeball_Precache)
 {
 	precache_model("progs/v_nododgeball.mdl"); // always precached for the weapon
+	precache_model("progs/v_dodgeball.mdl");
 
 	if(world.worldtype != WORLDTYPE_DODGEBALL)
 		return;
@@ -208,7 +209,6 @@ PRECACHE(Dodgeball_Precache)
 	precache_model("progs/headless_db.mdl");
 	precache_model("progs/v_catch.mdl");
 	precache_model("progs/v_deflect.mdl");
-	precache_model("progs/v_dodgeball.mdl");
 	precache_model("progs/v_dodgeball2.mdl");
 	precache_model("progs/v_dodgeball3.mdl");
 	precache_model("progs/v_dodgeball4.mdl");

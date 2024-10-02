@@ -1496,7 +1496,7 @@ void GiveCheat(entity this, string input)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return;
-	if(world.worldtype == WORLDTYPE_DODGEBALL)
+	if(world.worldtype == WORLDTYPE_DODGEBALL || input == "ball")
 		return;
 
 	Weapon wep = WEP_Null;

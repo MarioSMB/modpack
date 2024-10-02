@@ -120,7 +120,7 @@ void centerprint_proximity(entity player, string input, entity source)
 	// if the original source will be triggered again, skip proximity messages
 	if(source.wait > 0 && source.wait < 999)
 		return;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && vdist(it.origin - player.origin, <=, autocvar_sv_quake_message_range),
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != player && vdist(it.origin - player.origin, <=, autocvar_sv_quake_message_range),
 	{
 		centerprint(it, input);
 	});

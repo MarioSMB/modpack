@@ -331,6 +331,8 @@ void GiveAllWeapons(entity this)
 	{
 		if(it.spawnflags & WEP_FLAG_CHAMPION)
 			continue;
+		if(it == WEP_BALL)
+			continue; // TODO?
 		STAT(WEAPONS, this) |= it.m_wepset;
 	});
 	//this.items |= (IT_KEY1 | IT_KEY2); // breaks levels

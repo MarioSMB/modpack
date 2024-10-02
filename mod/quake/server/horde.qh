@@ -79,5 +79,7 @@ void PrecacheMonsters();
 
 void Horde_GiveScore(int score);
 
+void RespawnAllPlayers();
+
 IntrusiveList g_squads;
 STATIC_INIT(g_squads) { g_squads = IL_NEW(); }

@@ -371,6 +371,10 @@ void PrecacheMonsters()
 	precache_sound("items/sharp2.wav");
 	precache_sound("items/sharp3.wav");
 
+	// revival
+	precache_model("progs/revival.mdl");
+	precache_sound("items/revival.wav");
+
 	// tank
 	precache_model("progs/g_tank.mdl");
 
@@ -1702,7 +1706,7 @@ void Wavecheck(entity this)
 	// Made it this far, means wave completed successfully
 	LOG_DEBUG("wavecheck looks good! Respawning players");
 	RespawnAllPlayers();
-	
+
 	this.wait = 1;
 	setthink(this, Countdown);
 
@@ -1885,7 +1889,8 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 eidolon");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 armagon");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 judicator");
-		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 zerstorer"); // technically flying, but small enough to use regular spawns
+		// TODO: sounds may be the source of a crash, disabling for now!
+		//Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 zerstorer"); // technically flying, but small enough to use regular spawns
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 	}
 
@@ -2134,6 +2139,15 @@ void horde_setup_powerup(entity this, int powerup)
 			this.classname = "item_artifact_sharp_shooter";
 			break;
 		}
+		case POWERUP_REVIVAL:
+		{
+			this.noise = "items/revival.wav";
+			_setmodel(this, "progs/revival.mdl");
+			this.netname = "Revival";
+			this.powerups = POWERUP_REVIVAL;
+			this.classname = "item_revival";
+			break;
+		}
 	}
 }
 
@@ -2183,6 +2197,13 @@ void horde_spawn_powerup(entity this, entity attacker)
 		RandomSelection_AddFloat(POWERUP_EMPATHY_SHIELDS, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_JUMPBOOTS, 0.5, 1);
 		RandomSelection_AddFloat(POWERUP_SHARPSHOOTER, 0.5, 1);
+		int ndead = 0;
+		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag != DEAD_NO,
+		{
+			ndead += 1;
+		});
+		if(ndead > 0)
+			RandomSelection_AddFloat(POWERUP_REVIVAL, 2 * ndead, 1);
 		horde_setup_powerup(powerup, RandomSelection_chosen_float);
 		//powerup.effects = EF_DIMLIGHT;
 		

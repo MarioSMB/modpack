@@ -749,7 +749,7 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 	if(wpn == WEP_AXE || wpn == WEP_SHOTGUN)
 		return wpn;
 	RandomSelection_Init();
-	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN,
+	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN && it != WEP_BALL,
 	{
 		// hack to allow instruments to replace regular weapon spawns
 		int mytype = it.ammo_type;
@@ -1766,7 +1766,7 @@ void powerup_touch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
-	if(toucher.tank && this.classname != "item_hornofconjuring")
+	if(toucher.tank && this.classname != "item_hornofconjuring" && this.classname != "item_revival")
 		return;
 
 	string pname = (this.netname != "") ? this.netname : "Powerup";
@@ -1804,7 +1804,7 @@ void powerup_touch(entity this, entity toucher)
 
 	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
-	if(!(this.powerups & POWERUP_HORN_OF_CONJURING))
+	if(!(this.powerups & POWERUP_HORN_OF_CONJURING) && !(this.powerups & POWERUP_REVIVAL))
 		toucher.powerups |= this.powerups;
 	this.model = string_null;
 
@@ -1915,6 +1915,12 @@ void powerup_touch(entity this, entity toucher)
 	{
 		float sharptime = (horde_ent) ? 10 : 30;
 		StatusEffects_apply(STATUSEFFECT_SharpShooter, toucher, time + sharptime, 0);
+	}
+
+	if(this.powerups & POWERUP_REVIVAL)
+	{
+		if(horde_ent)
+			RespawnAllPlayers();
 	}
 
 	if(toucher.m_champion && toucher.m_champion.m_pickup_powerup)
@@ -2180,6 +2186,24 @@ spawnfunc(item_artifact_sharp_shooter)
 	if(!this.sharp_finished)
 		this.sharp_finished = 30;
 	setsize(this, '-16 -16 -24', '16 16 32');
+	StartItem(this);
+}
+
+/*QUAKED item_revival (0 .5 .8) (-16 -16 0) (16 16 32)
+Revival heart, brings back fallen allies
+Does nothing outside of horde
+*/
+spawnfunc(item_revival)
+{
+	settouch(this, powerup_touch);
+
+	precache_model("progs/revival.mdl");
+	precache_sound("items/revival.wav");
+	_setmodel(this, "progs/revival.mdl");
+	this.noise = "items/revival.wav";
+	this.netname = "Revival";
+	this.powerups = POWERUP_REVIVAL;
+	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
 
