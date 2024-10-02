@@ -172,10 +172,10 @@ bool SentryFire(entity this, float ox, vector up, float power)
 	ball.angles = vectoangles(ball.velocity);
 	
 	ball.cnt = power;
-	if(autocvar_sv_quake_dodgeball_classic)
+	//if(autocvar_sv_quake_dodgeball_classic)
 		settouch(ball, sentry_ball_touch);
-	else
-		settouch(ball, ball_touch);
+	//else
+		//settouch(ball, ball_touch);
 	
 	ball.nextthink = time + 5;
 	setthink(ball, SUB_Remove);

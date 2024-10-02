@@ -508,8 +508,8 @@ void roflcopter_explode(entity this)
 			setthink(sball, SUB_Remove);
 
 			STAT(SPECIAL, sball) = 1;
-			sball.velocity_x = crandom()*300;
-			sball.velocity_y = crandom()*300;
+			sball.velocity_x = crandom()*autocvar_sv_quake_dodgeball_copter_dropradius;
+			sball.velocity_y = crandom()*autocvar_sv_quake_dodgeball_copter_dropradius;
 			sball.avelocity = '300 300 300';
 			sball.angles = vectoangles(sball.velocity);
 
