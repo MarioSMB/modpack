@@ -507,7 +507,6 @@ void roflcopter_explode(entity this)
 			sball.nextthink = time + 10 + random()*10;
 			setthink(sball, SUB_Remove);
 
-			STAT(SPECIAL, sball) = 1;
 			sball.velocity_x = crandom()*autocvar_sv_quake_dodgeball_copter_dropradius;
 			sball.velocity_y = crandom()*autocvar_sv_quake_dodgeball_copter_dropradius;
 			sball.avelocity = '300 300 300';
@@ -517,16 +516,19 @@ void roflcopter_explode(entity this)
 			{
 				_setmodel(sball, "progs/ball_db.mdl");
 				sball.skin = 1;
+				STAT(SPECIAL, sball) = 1;
 			}
 			else if(random() < 0.6)
 			{
 				_setmodel(sball, "progs/ball3_db.mdl");
 				sball.skin = 1;
+				STAT(SPECIAL, sball) = 2;
 			}
 			else
 			{
 				_setmodel(sball, "progs/ball3_db.mdl");
 				sball.skin = 2;
+				STAT(SPECIAL, sball) = 3;
 			}
 
 			set_movetype(sball, MOVETYPE_BOUNCE);
@@ -534,8 +536,6 @@ void roflcopter_explode(entity this)
 			sball.classname = "dodgeball";
 			
 			settouch(sball, specialball_pickup);
-			
-			_setmodel(sball, "progs/ball_db.mdl");
 			setsize(sball, '-5 -5 -5', '5 5 5');
 			setorigin(sball, this.origin);
 
