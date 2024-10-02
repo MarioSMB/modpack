@@ -22,6 +22,8 @@ void s_explode1(entity this);
 void ball_touch(entity this, entity toucher)
 {
 	this.numbounces += 1;
+	if(this.move_movetype == MOVETYPE_FLYMISSILE)
+		set_movetype(this, MOVETYPE_BOUNCE);
 	if(this.numbounces > 1)
 		this.owner = NULL;
 	
@@ -451,46 +453,94 @@ void roflcopter_explode(entity this)
 {
 	// TODO: roflcopter deathtype
 	T_RadiusDamage(this, this.owner, 100, DEATH_CRUSH.m_id, NULL);
-	
-	int i = 10;
-	while(i > 0)
+
+	if(autocvar_sv_quake_dodgeball_classic)
 	{
-		entity ball = spawn();
-		ball.owner = this.owner;
-		set_movetype(ball, MOVETYPE_BOUNCE);
-		ball.solid = SOLID_BBOX;
-		ball.classname = "dodgeball";
-		STAT(SPECIAL, ball) = 1;
-		ball.velocity_x = crandom()*300;
-		ball.velocity_y = crandom()*300;
-		ball.avelocity = '300 300 300';
-		ball.angles = vectoangles(ball.velocity);
-		ball.nextthink = time + 5;
-		setthink(ball, SUB_Remove);
-		
-		if(random() < 0.3)
+		int i = 10;
+		while(i > 0)
 		{
-			_setmodel(ball, "progs/ball_db.mdl");
-			ball.skin = 1;
-			settouch(ball, iceball_touch);
+			entity ball = spawn();
+			ball.owner = this.owner;
+			set_movetype(ball, MOVETYPE_BOUNCE);
+			ball.solid = SOLID_BBOX;
+			ball.classname = "dodgeball";
+			STAT(SPECIAL, ball) = 1;
+			ball.velocity_x = crandom()*300;
+			ball.velocity_y = crandom()*300;
+			ball.avelocity = '300 300 300';
+			ball.angles = vectoangles(ball.velocity);
+			ball.nextthink = time + 5;
+			setthink(ball, SUB_Remove);
+			
+			if(random() < 0.3)
+			{
+				_setmodel(ball, "progs/ball_db.mdl");
+				ball.skin = 1;
+				settouch(ball, iceball_touch);
+			}
+			else if(random() < 0.6)
+			{
+				_setmodel(ball, "progs/ball3_db.mdl");
+				ball.skin = 1;
+				settouch(ball, bombball_touch);
+			}
+			else
+			{
+				_setmodel(ball, "progs/ball3_db.mdl");
+				ball.skin = 2;
+				settouch(ball, fireball_touch);
+			}
+			
+			setsize(ball, '0 0 0', '0 0 0');
+			setorigin (ball, this.origin);
+			
+			i = i - 1;
 		}
-		else if(random() < 0.6)
+	}
+	else
+	{
+		int sballcount = 5;
+		while(sballcount > 0)
 		{
-			_setmodel(ball, "progs/ball3_db.mdl");
-			ball.skin = 1;
-			settouch(ball, bombball_touch);
+			entity sball = spawn();
+			STAT(SPECIAL, sball) = 1;
+			sball.nextthink = time + 10 + random()*10;
+			setthink(sball, SUB_Remove);
+
+			STAT(SPECIAL, sball) = 1;
+			sball.velocity_x = crandom()*300;
+			sball.velocity_y = crandom()*300;
+			sball.avelocity = '300 300 300';
+			sball.angles = vectoangles(sball.velocity);
+
+			if(random() < 0.3)
+			{
+				_setmodel(sball, "progs/ball_db.mdl");
+				sball.skin = 1;
+			}
+			else if(random() < 0.6)
+			{
+				_setmodel(sball, "progs/ball3_db.mdl");
+				sball.skin = 1;
+			}
+			else
+			{
+				_setmodel(sball, "progs/ball3_db.mdl");
+				sball.skin = 2;
+			}
+
+			set_movetype(sball, MOVETYPE_BOUNCE);
+			sball.solid = SOLID_BBOX;
+			sball.classname = "dodgeball";
+			
+			settouch(sball, ball_touch);
+			
+			_setmodel(sball, "progs/ball_db.mdl");
+			setsize(sball, '-5 -5 -5', '5 5 5');
+			setorigin(sball, this.origin);
+
+			sballcount -= 1;
 		}
-		else
-		{
-			_setmodel(ball, "progs/ball3_db.mdl");
-			ball.skin = 2;
-			settouch(ball, fireball_touch);
-		}
-		
-		setsize(ball, '0 0 0', '0 0 0');
-		setorigin (ball, this.origin);
-		
-		i = i - 1;
 	}
 	
 	if(this.propeller)
