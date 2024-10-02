@@ -7,5 +7,7 @@ void DropBall(entity this);
 
 void ball_touch(entity this, entity toucher);
 
+void specialball_pickup(entity this, entity toucher);
+
 void teleport_back(entity this);
 #endif

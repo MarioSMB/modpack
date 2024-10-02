@@ -533,7 +533,7 @@ void roflcopter_explode(entity this)
 			sball.solid = SOLID_BBOX;
 			sball.classname = "dodgeball";
 			
-			settouch(sball, ball_touch);
+			settouch(sball, specialball_pickup);
 			
 			_setmodel(sball, "progs/ball_db.mdl");
 			setsize(sball, '-5 -5 -5', '5 5 5');
