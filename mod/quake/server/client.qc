@@ -1620,9 +1620,6 @@ void PutPlayerInServer(entity this)
 	dodgeball_PutPlayerInServer(this);
 
 // oh, this is a hack!
-	_setmodel(this, "progs/eyes.mdl");
-	modelindex_eyes = this.modelindex;
-
 	_setmodel(this, "progs/bolt2.mdl");
 	modelindex_bolt = this.modelindex;
 

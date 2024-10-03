@@ -8,11 +8,12 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.fps.gratis/zzz-quake1-assets_02.pk3
- - http://dl.xonotic.fps.gratis/zzz-quake1-newextras_06.pk3
- - http://dl.xonotic.fps.gratis/q1-campaign_01.pk3
+ - https://dl.xonotic.fps.gratis/zzz-quake1-assets_05.pk3
+ - https://dl.xonotic.fps.gratis/zzz-quake1-champions_01.pk3
+ - https://dl.xonotic.fps.gratis/zzz-quake1-items_01.pk3
+ - https://dl.xonotic.fps.gratis/zzz-quake1-monsters_01.pk3
 
-Optional mission packs:
+Some optional mission packs:
  - http://dl.xonotic.fps.gratis/q1-horde_01.pk3
  - http://dl.xonotic.fps.gratis/q1-hipnotic_02.pk3
  - http://dl.xonotic.fps.gratis/q1-rogue_01.pk3
@@ -39,8 +40,10 @@ On server launch, you'll need to set a few cvars to make everything work:
 `coop 1`  
 `deathmatch 0`   
 `sv_playerphysicsqc 1`  
-`sv_gameplayfix_droptofloorstartsolid 1`  
-`sv_gameplayfix_q1bsptracelinereportstexture 0`  
+`mod_q1bsp_polygoncollisions 0`
+`sv_gameplayfix_droptofloorstartsolid_nudgetocorrect 0`
+`sv_legacy_bbox_expand 1`
+`sv_areagrid_link_SOLID_NOT 1`
 `exec physicsq.cfg`  
 
 
