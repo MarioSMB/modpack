@@ -8,7 +8,7 @@ METHOD(BigJohn, m_getmovespeed, float(Champions this, entity actor))
 }
 
 #ifdef SVQC
-METHOD(BigJohn, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+METHOD(BigJohn, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	if(targ.m_champion == this)
 		return 0.5;

@@ -17,7 +17,7 @@ METHOD(Doom, m_killed, void(Champions this, entity targ, entity inflictor, entit
 		targ.health = -100;
 }
 
-METHOD(Doom, m_damage, float(Doom this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+METHOD(Doom, m_dealdamage, float(Doom this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
 	if(attacker.m_champion == this)

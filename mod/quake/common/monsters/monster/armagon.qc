@@ -606,7 +606,7 @@ void armagon_repulse_attack(entity this)
 		entity head = findradius(this.origin, 300);
 		while(head)
 		{
-			if(head != this && !(head.flags & FL_NOTARGET) && ((IS_PLAYER(head) && !this.charmed) || (IS_MONSTER(head) && this.charmed)) && head.health > 0)
+			if(head != this && !(head.flags & FL_NOTARGET) && head.health > 0 && Damage_ValidTarget(head, this))
 			{
 				if(visible(this, head))
 				{
@@ -647,7 +647,7 @@ void armagon_stand_attack(entity this)
 	if(time < this.attack_finished)
 		return;
 
-	if(vdist(spot2 - spot1, <, 200) && ((IS_PLAYER(this.enemy) && !this.charmed) || (IS_MONSTER(this.enemy) && this.charmed)))
+	if(vdist(spot2 - spot1, <, 200) && Damage_ValidTarget(this.enemy, this))
 	{
 		armagon_repulse_attack(this);
 		return;
@@ -697,7 +697,7 @@ bool ArmagonCheckAttack(entity this)
 
 	float ang = this.angles_y + this.fixangle;
 	float delta = this.ideal_yaw - ang;
-	if((fabs(delta) > 10 && vdist(spot2 - spot1, >, 200)) || ((!IS_PLAYER(this.enemy) && !this.charmed) || (!IS_MONSTER(this.enemy) && this.charmed)))
+	if((fabs(delta) > 10 && vdist(spot2 - spot1, >, 200)) || !Damage_ValidTarget(this.enemy, this))
 		return false;
 	if(vdist(spot2 - spot1, <, 400))
 	{  // melee attack

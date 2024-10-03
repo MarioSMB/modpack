@@ -130,7 +130,7 @@ vector tuba_calc_velocity(entity actor, entity note)
 {
 	vector oldvel = v_forward * 200 + v_up * 600;
 	RandomSelection_Init();
-	FOREACH_ENTITY_RADIUS(actor.origin, 1000, IS_MONSTER(it) && it.health > 0 && !it.charmed && (normalize(it.origin - actor.origin) * v_forward) > 0.1,
+	FOREACH_ENTITY_RADIUS(actor.origin, 1000, it.health > 0 && (normalize(it.origin - actor.origin) * v_forward) > 0.1 && Damage_ValidTarget(it, actor),
 	{
 		if(!checkpvs(actor.origin + actor.view_ofs, it))
 			continue;

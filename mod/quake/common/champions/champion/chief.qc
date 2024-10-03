@@ -30,7 +30,8 @@ METHOD(Chief, m_playerthink, void(Chief this, entity actor))
 	{
 		bool found = false;
 		int targlimit = 0;
-		FOREACH_ENTITY_RADIUS(actor.origin, 750, IS_MONSTER(it) && it.health > 0 && !it.charmed,
+		// TODO: currently designed to only work on monsters
+		FOREACH_ENTITY_RADIUS(actor.origin, 750, it.health > 0 && IS_MONSTER(it) && Damage_ValidTarget(it, actor),
 		{
 			targlimit += 1;
 			if(targlimit > 20)

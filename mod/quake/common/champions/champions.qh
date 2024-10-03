@@ -30,9 +30,11 @@ void QCC_ClearWeapons(entity this);
 
 void QCC_ClearPlayer(entity this, bool clearweapons);
 
+void QCC_UpdatePlayer(entity this);
+
 void QCC_UpdateStats(entity this);
 
-void QCC_SavePlayer(entity this);
+void QCC_SavePlayer(entity targ, entity inflictor, entity attacker, int deathtype);
 
 void champions_PutPlayerInServer(entity this);
 

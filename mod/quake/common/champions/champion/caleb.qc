@@ -170,6 +170,7 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 		Caleb_crazy_reset(actor); // no crazy while this is going on!
 		if(time > actor.bloodrage_time)
 		{
+			// offsets to -1 so you can have zero hearts before you die
 			STAT(QCC_BLOODRAGE_COUNT, actor) = max(-1, STAT(QCC_BLOODRAGE_COUNT, actor) - 1);
 			if(STAT(QCC_BLOODRAGE_COUNT, actor) < 0)
 			{
@@ -261,39 +262,48 @@ METHOD(Caleb, m_clear, void(Champions this, entity actor))
 	actor.caleb_bats = NULL;
 }
 
-METHOD(Caleb, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+// TODO: generic list of deathtypes that should never be blocked
+bool Caleb_forcedamage(int deathtype)
 {
-	bool dont_ignore = (deathtype != DEATH_VOID.m_id && deathtype != DEATH_HURTTRIGGER.m_id && 
-		deathtype != DEATH_KILL.m_id && deathtype != DEATH_GENERIC.m_id && deathtype != DEATH_LAVA.m_id && deathtype != DEATH_CHECKPOINT.m_id);
-	if(targ.m_champion == this && targ.health > 0 && dont_ignore && !(targ.flags & FL_GODMODE) && !targ.tank)
+	switch(deathtype)
 	{
-		if(STAT(QCC_BLOODRAGE, targ))
-			return 0;
-		if(coop && attacker != targ && IS_PLAYER(attacker) && IS_PLAYER(targ))
-		{
-			if(autocvar_g_friendlyfire_virtual)
-				return 1;
-		}
-		if((targ.health - damage) < 1)
-		{
-			string quip = "";
-			float r =  random();
-			if(r < 0.33)
-				quip = "quips/1034.wav";
-			else if(r < 0.66)
-				quip = "quips/1045.wav";
-			else
-				quip = "quips/1052.wav";
-
-			player_sound(targ, CH_VOICE, quip, ATTN_NORM);
-			STAT(QCC_BLOODRAGE, targ) = true;
-			STAT(QCC_BLOODRAGE_COUNT, targ) = 0;
-			targ.bloodrage_time = time + 5;
-			targ.health = 1;
-			return 0;
-		}
+		case DEATH_VOID.m_id:
+		case DEATH_HURTTRIGGER.m_id:
+		case DEATH_KILL.m_id:
+		case DEATH_GENERIC.m_id:
+		case DEATH_LAVA.m_id:
+		case DEATH_CHECKPOINT.m_id:
+			return true;
 	}
-	return 1;
+	return false;
+}
+
+METHOD(Caleb, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+{
+	if(!STAT(QCC_BLOODRAGE, targ) || targ.m_champion != this || targ.tank || targ.clockwork || (targ.flags & FL_GODMODE) || Caleb_forcedamage(deathtype))
+		return 1;
+	return 0;
+}
+
+METHOD(Caleb, m_saveplayer, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
+{
+	if(targ.m_champion != this || targ.tank || targ.clockwork || Caleb_forcedamage(deathtype))
+		return;
+
+	string quip = "";
+	float r =  random();
+	if(r < 0.33)
+		quip = "quips/1034.wav";
+	else if(r < 0.66)
+		quip = "quips/1045.wav";
+	else
+		quip = "quips/1052.wav";
+
+	player_sound(targ, CH_VOICE, quip, ATTN_NORM);
+	STAT(QCC_BLOODRAGE, targ) = true;
+	STAT(QCC_BLOODRAGE_COUNT, targ) = 0;
+	targ.bloodrage_time = time + 5;
+	targ.health = 1;
 }
 #endif
 

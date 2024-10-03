@@ -31,6 +31,8 @@ const float KILLSPREE_GAP = 3; // amount of time that can lapse for a kill to no
 
 bool CanDamage(entity targ, entity inflictor);
 
+bool Damage_ValidTarget(entity targ, entity attacker);
+
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype);
 
 void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore);

@@ -103,7 +103,7 @@ void Clockwork_Explode(entity this)
 
 void Clockwork_Touch(entity this, entity toucher)
 {
-	if(toucher.takedamage && (!IS_PLAYER(toucher) || !autocvar_g_friendlyfire_virtual))
+	if(toucher.takedamage && Damage_ValidTarget(toucher, this))
 	{
 		Clockwork_Explode(this);
 		return;
@@ -254,7 +254,7 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 		}
 		case 1:
 		{
-			if(toucher.takedamage && !IS_PLAYER(toucher))
+			if(toucher.takedamage && Damage_ValidTarget(toucher, this.owner))
 				StatusEffects_apply(STATUSEFFECT_Burning, toucher, time + 7, 0);
 			te_knightspike(this.origin);
 			break;
@@ -262,7 +262,7 @@ void W_BreegullBlaster_Touch(entity this, entity toucher)
 		case 2: break; // handled
 		case 3:
 		{
-			if(toucher.takedamage && !IS_PLAYER(toucher))
+			if(toucher.takedamage && Damage_ValidTarget(toucher, this.owner))
 				StatusEffects_apply(STATUSEFFECT_Slowness, toucher, time + 7, 0);
 			if(StatusEffects_active(STATUSEFFECT_Burning, toucher))
 			{

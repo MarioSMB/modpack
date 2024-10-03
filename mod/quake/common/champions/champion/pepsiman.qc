@@ -17,7 +17,7 @@ void can_think(entity this)
 		return;
 	}
 
-	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, (IS_PLAYER(it) && !autocvar_g_friendlyfire_virtual) || (IS_MONSTER(it) && !it.charmed),
+	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, it != this.owner && it.takedamage && Damage_ValidTarget(it, this.owner),
 	{
 		if(time < it.pain_finished)
 			continue;

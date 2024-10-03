@@ -2325,6 +2325,8 @@ void DropBackpack(entity this)
 
 	if(STAT(SKATING, this))
 		return; // skaters don't drop loot!
+	if(this.charmed)
+		return; // no pet looting thank you very much
 
 	// Yoder Sept24 2021 Horde Merge
 	// don't drop backpacks in horde mode

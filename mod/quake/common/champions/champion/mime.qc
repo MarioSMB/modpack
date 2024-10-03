@@ -5,7 +5,7 @@ void BallTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;		// don't explode on owner
-	if(toucher.takedamage == DAMAGE_AIM && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(toucher)))
+	if(toucher.takedamage == DAMAGE_AIM && Damage_ValidTarget(toucher, this.owner))
 		T_Damage(toucher, this, this.owner, 30, DEATH_TRAP.m_id);
 
 	if(this.attack_finished < time)

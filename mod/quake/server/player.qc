@@ -862,7 +862,7 @@ string get_deathsound(entity this, int chance);
 void DeathSound(entity this)
 {
 	int atten = ATTN_NONE;
-	if(world.worldtype == WORLDTYPE_DODGEBALL)
+	if(deathmatch || world.worldtype == WORLDTYPE_DODGEBALL)
 		atten = ATTN_NORM;
 	// water death sounds
 	if(this.waterlevel == 3)
@@ -1009,7 +1009,7 @@ void CorpseThink(entity this)
 void GibPlayer(entity this, entity inflictor, entity attacker)
 {
 	int atten = ATTN_NONE;
-	if(world.worldtype == WORLDTYPE_DODGEBALL)
+	if(deathmatch || world.worldtype == WORLDTYPE_DODGEBALL)
 		atten = ATTN_NORM;
 
 	ThrowHead(this, inflictor, get_playerhead(this), this.health);

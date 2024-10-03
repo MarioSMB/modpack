@@ -362,7 +362,7 @@ void vortex_think(entity this)
 
 	FOREACH_ENTITY_RADIUS(this.origin, this.distance, it.classname != this.classname && it.owner != this.owner && it.takedamage && it.health > 0,
 	{
-		if((IS_PLAYER(it) && this.charmed) || (IS_MONSTER(it) && !this.charmed))
+		if(!Damage_ValidTarget(it, this.owner))
 			continue;
 
 		T_Damage(it, this, this.owner, 20, DEATH_MONSTER_ZERSTORER.m_id);

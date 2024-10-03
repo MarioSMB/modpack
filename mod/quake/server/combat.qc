@@ -49,9 +49,9 @@ void DelayedElectrifyThink(entity this)
 	this.nextthink = time;
 
 	int hitcount = 0;
-	FOREACH_ENTITY_RADIUS(this.origin, 200, IS_MONSTER(it),
+	FOREACH_ENTITY_RADIUS(this.origin, 200, it != this.owner,
 	{
-		if(it.health <= 0 || !it.takedamage || it.charmed)
+		if(it.health <= 0 || !it.takedamage || !Damage_ValidTarget(it, this.enemy))
 			continue;
 		SendCSQCLightningBeam(this.origin, it.origin);
 		T_Damage(it, this.enemy, this.enemy, 40, DEATH_DISCHARGE.m_id);
@@ -209,6 +209,50 @@ bool CanDamage(entity targ, entity inflictor)
 	return false;
 }
 
+// checks if a target is a player in PvP or a monster that isn't charmed
+// NOTE: accepts an attacker rather than an inflictor, check .owner if a projectile!
+bool Damage_ValidTarget(entity targ, entity attacker)
+{
+	// may happen if a projectile lacks an owner, just assume it's valid
+	if(!attacker)
+		return true;
+	// no PvP thank you very much
+	if(coop && IS_PLAYER(targ) && IS_PLAYER(attacker) && targ != attacker)
+		return false;
+	// decoys are never valid targets
+	if(targ.monsterdef && targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY)
+		return false;
+
+	// first very the target
+	if(IS_MONSTER(targ) && targ.charmed)
+	{
+		// can't hurt our pets
+		if(targ.charmer == attacker || targ.charmer == attacker.charmer)
+			return false;
+		// no friendly fire!
+		if(coop && IS_PLAYER(targ.charmer))
+			return false;
+
+		// otherwise monsters are not friends even if charmed
+		return true;
+	}
+	// next validate the attacker
+	if(IS_MONSTER(attacker) && attacker.charmed)
+	{
+		// master says no
+		if(attacker.charmer == targ || attacker.charmer == targ.charmer)
+			return false;
+		// no hurt friends
+		if(coop && IS_PLAYER(attacker.charmer))
+			return false;
+
+		// otherwise probably owned by an enemy!
+		return true;
+	}
+
+	// NOTE: may be a dead target or not technically damageable, do safety checks!
+	return true;
+}
 
 /*
 ============
@@ -393,11 +437,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		showpain = false;
 	}
 
-	if(targ.charmed && (IS_PLAYER(attacker) || attacker == targ.charmer || attacker.charmer == targ.charmer))
-		return; // no hurting our pets!
-
-	if(attacker.charmed && (IS_PLAYER(targ) || targ == attacker.charmer || targ.charmer == attacker.charmer))
-		return; // no hurting us either!
+	if(!Damage_ValidTarget(targ, attacker))
+		return;
 
 	if(discharged && StatusEffects_active(STATUSEFFECT_Wetsuit, targ))
 		return;
@@ -412,7 +453,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(Pan_CheckDamage(targ, inflictor, attacker))
 		return;
 
-	if(STAT(PASSIVES, targ) & PASSIVE_SPONGE)
+	if((STAT(PASSIVES, targ) & PASSIVE_SPONGE) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_HURTTRIGGER.m_id)
 		damage = min(damage, 50);
 
 	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
@@ -432,23 +473,22 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.m_champion)
 		damage *= targ.m_champion.qcc_damagetaken;
 
-	if(attacker.m_champion && attacker.m_champion.m_damage)
-		damage *= attacker.m_champion.m_damage(attacker.m_champion, targ, inflictor, attacker, damage, deathtype);
-	if(targ.m_champion && targ.m_champion.m_damage)
-		damage *= targ.m_champion.m_damage(targ.m_champion, targ, inflictor, attacker, damage, deathtype);
+	if(attacker.m_champion && attacker.m_champion.m_dealdamage)
+		damage *= attacker.m_champion.m_dealdamage(attacker.m_champion, targ, inflictor, attacker, damage, deathtype);
+	if(targ.m_champion && targ.m_champion.m_takedamage)
+		damage *= targ.m_champion.m_takedamage(targ.m_champion, targ, inflictor, attacker, damage, deathtype);
 
 // check for quad damage powerup on the attacker
 	if(StatusEffects_active(STATUSEFFECT_Quad, attacker))
-		damage = damage * 4;
+		damage *= 4;
 
 	if(targ.classname == "block" && !IS_PLAYER(attacker))
 		damage = 1;
 
-
-	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ) && !StatusEffects_active(STATUSEFFECT_EmpathyShields, inflictor) && (targ != attacker))
+	if(StatusEffects_active(STATUSEFFECT_EmpathyShields, targ) && !StatusEffects_active(STATUSEFFECT_EmpathyShields, attacker) && (targ != attacker))
 	{
 		empathyused = true;
-		damage = damage/2;
+		damage *= 0.5;
 		T_Damage(attacker, targ, targ, damage, deathtype);
 		empathyused = false;
 	}
@@ -596,8 +636,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
-	targ.health = targ.health - take;
-	targ.armorvalue = targ.armorvalue - save;
+	targ.health -= take;
+	targ.armorvalue -= save;
 
 	if(save >= targ.armorvalue)
 	{
@@ -609,8 +649,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.tank && targ.health <= 0)
 		Tank_Eject(targ, true); // resets health
 
-	if(targ.m_transform && targ.health <= 0)
-		QCC_SavePlayer(targ);
+	if(targ.health <= 0)
+		QCC_SavePlayer(targ, inflictor, attacker, deathtype);
 
 	if(targ.clockwork && targ.health <= 0)
 	{

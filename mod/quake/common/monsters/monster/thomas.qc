@@ -233,9 +233,9 @@ void thomas_touch(entity this, entity toucher)
 {
 	if(this.health <= 0 || !this.takedamage || !toucher.takedamage)
 		return;
-	if(this.charmed && (IS_PLAYER(toucher) || toucher == this.charmer || toucher.charmer == this.charmer))
-		return;
 	if(!IS_PLAYER(toucher) && !IS_MONSTER(toucher))
+		return;
+	if(!Damage_ValidTarget(toucher, this))
 		return;
 
 	T_Damage(toucher, this, this, 100, DEATH_MONSTER_THOMAS.m_id);

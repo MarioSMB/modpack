@@ -89,9 +89,9 @@ void mic_note_explode(entity this, entity ignore)
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
 	bool hitany = true; // might as well?
-	FOREACH_ENTITY_RADIUS(this.origin, 600, it != ignore && !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it)) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
+	FOREACH_ENTITY_RADIUS(this.origin, 600, it != ignore && !(it.flags & FL_NOTARGET) && (Damage_ValidTarget(it, this.owner) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
 	{
-		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
+		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD))
 		{
 			vector targ_pos = (it.absmin + it.absmax) * 0.5;
 			traceline(this.origin, targ_pos, MOVE_NOMONSTERS, this);

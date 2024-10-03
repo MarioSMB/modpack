@@ -8,11 +8,11 @@ METHOD(Sorlag, m_activate, void(Sorlag this, entity actor))
 
 void Sorlag_AcidPoolTouch(entity this, entity toucher)
 {
-	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO || toucher.charmed)
+	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO || !Damage_ValidTarget(toucher, this.owner))
 		return;
 	if(toucher.m_champion == CHAMPION_Sorlag)
 		return;
-	if(IS_PLAYER(toucher) && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	if(!Damage_ValidTarget(toucher, this.owner))
 		return;
 
 	float poisontime = 7;

@@ -5,7 +5,7 @@ void BoneTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;		// don't explode on owner
-	if(toucher.takedamage == DAMAGE_AIM && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(toucher)))
+	if(toucher.takedamage == DAMAGE_AIM && Damage_ValidTarget(toucher, this.owner))
 		T_Damage(toucher, this, this.owner, 30 * this.scale, DEATH_TRAP.m_id);
 
 	if(this.attack_finished < time)
@@ -75,7 +75,7 @@ void skull_fire(entity this)
 	WriteVector(MSG_BROADCAST, org);
 	WriteVector(MSG_BROADCAST, trace_endpos);
 
-	LightningDamage(org, trace_endpos, this.owner, 50, DEATH_TRAP.m_id);
+	LightningDamage(org, trace_endpos, this.owner, 50, DEATH_LASER_SKULL.m_id);
 
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.5;
@@ -147,11 +147,25 @@ METHOD(Papyrus, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
-METHOD(Papyrus, m_damage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+// TODO: generic list of deathtypes that should never be blocked
+bool Papyrus_forcedamage(int deathtype)
 {
-	bool dont_ignore = (deathtype != DEATH_VOID.m_id && deathtype != DEATH_HURTTRIGGER.m_id && 
-		deathtype != DEATH_KILL.m_id && deathtype != DEATH_GENERIC.m_id && deathtype != DEATH_LAVA.m_id && deathtype != DEATH_CHECKPOINT.m_id);
-	if(targ.m_champion == this && targ.health > 0 && dont_ignore && !(targ.flags & FL_GODMODE) && targ != attacker)
+	switch(deathtype)
+	{
+		case DEATH_VOID.m_id:
+		case DEATH_HURTTRIGGER.m_id:
+		case DEATH_KILL.m_id:
+		case DEATH_GENERIC.m_id:
+		case DEATH_LAVA.m_id:
+		case DEATH_CHECKPOINT.m_id:
+			return true;
+	}
+	return false;
+}
+
+METHOD(Papyrus, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+{
+	if(targ.m_champion == this && targ.health > 0 && damage > 0 && !(targ.flags & FL_GODMODE) && targ != attacker && !Papyrus_forcedamage(deathtype))
 	{
 		if(time < targ.papyrus_dmgtime)
 			return 0;

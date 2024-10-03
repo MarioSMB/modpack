@@ -64,9 +64,9 @@ void otamatone_zapnearby(entity this)
 	}
 
 	bool hitenemy = false;
-	FOREACH_ENTITY_RADIUS(this.origin, 200, IS_MONSTER(it) || (IS_PLAYER(it) && !autocvar_g_friendlyfire_virtual),
+	FOREACH_ENTITY_RADIUS(this.origin, 200, true,
 	{
-		if(it.health <= 0 || !it.takedamage || it == this.owner || it.charmed)
+		if(it.health <= 0 || !it.takedamage || it == this.owner || !Damage_ValidTarget(it, this.owner))
 			continue;
 		SendCSQCLightningBeam(this.origin, it.origin);
 		// may cause heavy lag when fired near water!

@@ -385,7 +385,7 @@ entity W_PickNearbyTarget(entity this, float hitrange, bool checkinfront, bool h
 	RandomSelection_Init();
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
-	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && (IS_MONSTER(it) || (deathmatch && IS_PLAYER(it)) || (hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door")),
+	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && ((hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door") || Damage_ValidTarget(it, this)),
 	{
 		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
@@ -556,7 +556,7 @@ void W_Aura(entity this)
 
 	this.aura_finished = time + 0.25;
 
-	FOREACH_ENTITY_RADIUS(this.origin, 80, IS_MONSTER(it) && it.takedamage && it.health > 0 && !it.charmed,
+	FOREACH_ENTITY_RADIUS(this.origin, 80, Damage_ValidTarget(it, this) && it.takedamage && it.health > 0,
 	{
 		T_Damage(it, this, this, 15, DEATH_CRUSH.m_id);
 	});
@@ -795,6 +795,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	entity attacker = (IS_MONSTER(from.owner) || IS_PLAYER(from.owner) ? from.owner : from);
 
 	traceline(p1, p2, false, from);
+	entity e1 = trace_ent;
 	if(trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
 		if(trace_ent.resist_cells != 0)
@@ -809,15 +810,15 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(IS_PLAYER(from))
 		{
 			if(IS_PLAYER(trace_ent))
-				trace_ent.velocity_z = trace_ent.velocity_z + 400;
+				trace_ent.velocity_z += 400;
 		}
 		if(trace_ent.reflectlightning)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
 	}
-	entity e1 = trace_ent;
 	ldmg = damage;
 
 	traceline(p1 + f, p2 + f, false, from);
+	entity e2 = trace_ent;
 	if(trace_ent != e1 && trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
 		if(trace_ent.resist_cells != 0)
@@ -833,7 +834,6 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(trace_ent.reflectlightning)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
 	}
-	entity e2 = trace_ent;
 	ldmg = damage;
 
 	traceline(p1 - f, p2 - f, false, from);

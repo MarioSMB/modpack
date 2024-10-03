@@ -148,22 +148,26 @@ void QCC_UpdateStats(entity this)
 	}
 }
 
-void QCC_SavePlayer(entity this)
+void QCC_SavePlayer(entity targ, entity inflictor, entity attacker, int deathtype)
 {
-	if(this.m_transform)
+	if(targ.m_transform)
 	{
-		QCC_ClearTransform(this);
+		QCC_ClearTransform(targ);
+		QCC_UpdatePlayer(targ);
 		// hard delay of weapons so you don't get stuck spamming!
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(this.(weaponentity))
+			if(targ.(weaponentity))
 			{
-				wep_set_anim(this.(weaponentity), 0, w_ready);
-				ATTACK_FINISHED(this, weaponentity) = time + 1;
+				wep_set_anim(targ.(weaponentity), 0, w_ready);
+				ATTACK_FINISHED(targ, weaponentity) = time + 1;
 			}
 		}
 	}
+
+	if(targ.m_champion && targ.m_champion.m_saveplayer)
+		targ.m_champion.m_saveplayer(targ.m_champion, targ, inflictor, attacker, deathtype);
 }
 
 void QCC_UpdatePlayer(entity this)

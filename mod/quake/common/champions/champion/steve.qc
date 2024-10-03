@@ -106,7 +106,7 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 	}
 }
 
-METHOD(Steve, m_damage, float(Steve this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+METHOD(Steve, m_takedamage, float(Steve this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	if(targ.m_champion == this && targ.armorvalue > 0)
 		return 0.66;

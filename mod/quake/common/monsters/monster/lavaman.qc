@@ -61,13 +61,11 @@ void lavaman_hunt(entity this)
 	if(!this.enemy)
 	{
 		RandomSelection_Init();
-		FOREACH_ENTITY_RADIUS(this.origin, 1024, true,
+		FOREACH_ENTITY_RADIUS(this.origin, 1024, it != this,
 		{
-			if(this.charmed && !IS_MONSTER(it))
+			if(this.enemy == it || it.health <= 0 || (it.flags & FL_NOTARGET))
 				continue;
-			if(!this.charmed && !IS_PLAYER(it))
-				continue;
-			if(it == this || this.enemy == it || it.health <= 0 || (it.flags & FL_NOTARGET))
+			if(!Damage_ValidTarget(it, this))
 				continue;
 			traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
 			if(trace_fraction != 1)

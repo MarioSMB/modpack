@@ -29,11 +29,9 @@ METHOD(Burning, m_tick, void(StatusEffects this, entity actor))
         {
             FOREACH_ENTITY_RADIUS(actor.origin, 100, it.takedamage,
             {
-                if(IS_PLAYER(it))
-                    continue;
-                if(it.charmed && actor.charmed)
-                    continue;
                 if(StatusEffects_active(STATUSEFFECT_Burning, it))
+                    continue;
+                if(!Damage_ValidTarget(it, actor))
                     continue;
                 StatusEffects_apply(STATUSEFFECT_Burning, it, time + mytime, 0);
             });

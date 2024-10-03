@@ -246,8 +246,7 @@ void skullw_waitforlink(entity this)
 	setorigin(this, this.movelast.origin);	// move to new location
 
 	// Is the enemy too close or dead?
-	if(vdist(this.enemy.origin - this.origin, >, this.movelast.distance)
-		|| this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET) || (this.charmed && (IS_PLAYER(this.enemy) || this.charmer == this.enemy)))
+	if(vdist(this.enemy.origin - this.origin, >, this.movelast.distance) || this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET) || !Damage_ValidTarget(this.enemy, this))
 	{
 		// Move to new location
 

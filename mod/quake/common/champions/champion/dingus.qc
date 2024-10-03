@@ -37,7 +37,7 @@ METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 	if(actor.velocity == '0 0 0')
 		return;
 
-	if((IS_PLAYER(toucher) && !autocvar_g_friendlyfire_virtual) || (IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
+	if(toucher.takedamage && Damage_ValidTarget(toucher, actor))
 	{
 		makevectors(actor.angles);
 		vector vec = normalize(toucher.origin - actor.origin);
