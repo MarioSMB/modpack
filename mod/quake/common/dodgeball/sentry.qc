@@ -102,20 +102,7 @@ void sentry_ball_touch(entity this, entity toucher)
 				setthink(this, SUB_Remove);
 				return;
 			}
-			
-			if(random() <= chance)
-			{	// critical hit!
-				damage *= 3;
-				te_tarexplosion(this.origin);
-				
-				entity exp = spawn();
-				exp.classname = "s_explode";
-				exp.nextthink = time;
-				setthink(exp, s_explode1);
-				_setmodel(exp, "progs/s_explod.spr");
-				setorigin(exp, this.origin);
-			}
-			int dtype = DEATH_CRUSH.m_id; // TODO: normal
+
 			if(this.cnt)
 			{
 				if(IS_PLAYER(toucher))
@@ -124,17 +111,10 @@ void sentry_ball_touch(entity this, entity toucher)
 					if(toucher.velocity_z < 10)
 						toucher.velocity_z += 300;
 				}
-
-				dtype = DEATH_CRUSH.m_id; // TODO: power
-				if(this.origin_z >= toucher.origin_z + 20 && IS_PLAYER(toucher))
-				{
-					dtype = DEATH_CRUSH.m_id; // TODO: headshot
-					damage *= 2;
-				}
 			}
 			
 			SpawnBlood(this.origin, this.velocity*0.2, damage, toucher);
-			T_Damage(toucher, this, this.owner, damage, dtype);
+			T_Damage(toucher, this, this.owner, damage, DEATH_BALL_SENTRY.m_id);
 			
 			if(this.cnt)
 				_sound(this, CH_WEAPON_SINGLE, "dodgeball/hit2_db.wav", 1, ATTN_NORM);

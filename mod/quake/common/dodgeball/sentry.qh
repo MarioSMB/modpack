@@ -1,5 +1,13 @@
 #pragma once
 
+// sentry ball
+MSG_INFO_NOTIF(DEATH_MURDER_BALL_SENTRY,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was tagged by ^BG%s^K1's sentry"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL_SENTRY,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 couldn't avoid a sentry"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL_SENTRY,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were hit by a sentry ball!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL_SENTRY,             1,  NULL,           INFO_DEATH_MURDER_BALL_SENTRY,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL_SENTRY,               1,  NULL,           INFO_DEATH_SELF_BALL_SENTRY,              CENTER_DEATH_SELF_BALL_SENTRY)
+REGISTER_DEATHTYPE(BALL_SENTRY,               DEATH_SELF_BALL_SENTRY,           DEATH_MURDER_BALL_SENTRY,         "")
+
 #ifdef SVQC
 .entity builder;
 .int level;

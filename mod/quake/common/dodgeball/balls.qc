@@ -82,8 +82,7 @@ void ball_touch(entity this, entity toucher)
 				if((this.cnt == 1 || this.cnt == 3) && this.numbounces == 1)
 				{
 					damage = damage * 0.1;
-					// TODO: catching deathtype
-					T_Damage(toucher, this, this.owner, damage, DEATH_CRUSH.m_id);
+					T_Damage(toucher, this, this.owner, damage, DEATH_BALL_CATCH.m_id);
 				}
 				
 				if(autocvar_sv_quake_dodgeball_classic && this.numbounces == 1 && toucher.team_no != this.owner.team_no)
@@ -134,7 +133,6 @@ void ball_touch(entity this, entity toucher)
 				_setmodel(exp, "progs/s_explod.spr");
 				setorigin(exp, this.origin);
 			}
-			int dtype = DEATH_CRUSH.m_id; // TODO: normal hit
 			bool headshot = false;
 			if(this.cnt == 1 || this.cnt == 3)
 			{
@@ -144,18 +142,16 @@ void ball_touch(entity this, entity toucher)
 					if(toucher.velocity_z < 10)
 						toucher.velocity_z += 300;
 				}
-				
-				dtype = DEATH_CRUSH.m_id; // TODO: power
+
 				if(this.origin_z >= (toucher.origin_z + (toucher.maxs_z * 0.7)) && IS_PLAYER(toucher))
 				{
 					headshot = true;
-					dtype = DEATH_CRUSH.m_id; // TODO: headshot
 					damage *= 2;
 				}
 			}
 			
 			SpawnBlood(this.origin, this.velocity*0.2, damage, toucher);
-			T_Damage(toucher, this, this.owner, damage, dtype);
+			T_Damage(toucher, this, this.owner, damage, DEATH_BALL.m_id);
 			if(headshot && toucher.health <= 0)
 			{
 				if(IS_REAL_CLIENT(this.owner))
@@ -346,8 +342,7 @@ void iceball_touch(entity this, entity toucher)
 			Freeze(toucher);
 			DropBall(toucher);
 		}
-		// TODO: ice deathtype
-		T_Damage(toucher, this, this.owner, 10, DEATH_CRUSH.m_id);
+		T_Damage(toucher, this, this.owner, 10, DEATH_BALL_ICE.m_id);
 	}
 	
 	_sound(this, CH_WEAPON_SINGLE, "dodgeball/icehit_db.wav", 1, ATTN_NORM);
@@ -364,13 +359,9 @@ void iceball_touch(entity this, entity toucher)
 void homingball_touch(entity this, entity toucher)
 {
 	if(toucher.health)
-	{
-		// TODO: homing deathtype
-		T_Damage(toucher, this, this.owner, 50, DEATH_CRUSH.m_id);
-	}
+		T_Damage(toucher, this, this.owner, 50, DEATH_BALL_HOMING.m_id);
 
-	// TODO: homing deathtype
-	T_RadiusDamage(this, this.owner, 50, DEATH_CRUSH.m_id, toucher);
+	T_RadiusDamage(this, this.owner, 50, DEATH_BALL_HOMING.m_id, toucher);
 	
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
@@ -427,8 +418,7 @@ void homingball_think(entity this)
 
 void bombball_touch(entity this, entity toucher)
 {
-	// TODO: bomb deathtype
-	T_RadiusDamage(this, this.owner, 160, DEATH_CRUSH.m_id, NULL);
+	T_RadiusDamage(this, this.owner, 160, DEATH_BALL_BOMB.m_id, NULL);
 
 	this.origin = this.origin - 8*normalize(this.velocity);
 
@@ -451,8 +441,7 @@ void fireball_touch(entity this, entity toucher)
 
 void roflcopter_explode(entity this)
 {
-	// TODO: roflcopter deathtype
-	T_RadiusDamage(this, this.owner, 100, DEATH_CRUSH.m_id, NULL);
+	T_RadiusDamage(this, this.owner, 100, DEATH_COPTER_EXPLODE.m_id, NULL);
 
 	if(autocvar_sv_quake_dodgeball_classic)
 	{
@@ -492,9 +481,9 @@ void roflcopter_explode(entity this)
 			}
 			
 			setsize(ball, '0 0 0', '0 0 0');
-			setorigin (ball, this.origin);
+			setorigin(ball, this.origin);
 			
-			i = i - 1;
+			i -= 1;
 		}
 	}
 	else
@@ -516,23 +505,26 @@ void roflcopter_explode(entity this)
 			{
 				_setmodel(sball, "progs/ball_db.mdl");
 				sball.skin = 1;
+				sball.netname = "Ice Ball";
 				STAT(SPECIAL, sball) = 1;
 			}
 			else if(random() < 0.6)
 			{
 				_setmodel(sball, "progs/ball3_db.mdl");
 				sball.skin = 1;
-				STAT(SPECIAL, sball) = 2;
+				sball.netname = "Bomb Ball";
+				STAT(SPECIAL, sball) = 3;
 			}
 			else
 			{
 				_setmodel(sball, "progs/ball3_db.mdl");
 				sball.skin = 2;
-				STAT(SPECIAL, sball) = 3;
+				sball.netname = "Fire Ball";
+				STAT(SPECIAL, sball) = 4;
 			}
 
 			set_movetype(sball, MOVETYPE_BOUNCE);
-			sball.solid = SOLID_BBOX;
+			sball.solid = SOLID_TRIGGER;
 			sball.classname = "dodgeball";
 			
 			settouch(sball, specialball_pickup);
@@ -560,8 +552,7 @@ void roflcopter_die(entity this, entity inflictor, entity attacker, int deathtyp
 
 void roflcopter_explode2(entity this)
 {
-	// TODO: roflcopter deathtype
-	T_RadiusDamage(this, this.owner, 100, DEATH_CRUSH.m_id, NULL);
+	T_RadiusDamage(this, this.owner, 100, DEATH_COPTER_EXPLODE.m_id, NULL);
 	if(this.propeller)
 		delete(this.propeller);
 	
@@ -599,7 +590,10 @@ void roflcopter_think(entity this)
 	if(this.frags < time)
 	{
 		makevectors(this.angles);
-		this.velocity = v_forward * 100;
+		float copterspeed = 100;
+		if(autocvar_sv_quake_dodgeball_classic)
+			copterspeed = 5;
+		this.velocity = v_forward * copterspeed;
 	}
 	else
 		this.velocity = '0 0 100';
@@ -626,11 +620,7 @@ void propeller_touch(entity this, entity toucher)
 	if(toucher.team_no == this.owner.team_no)
 		return;
 
-	int dtype = DEATH_CRUSH.m_id;
-	if(toucher.origin_z + 22 < this.origin_z)
-		dtype = DEATH_CRUSH.m_id; // TODO: bottom deathtype
-
-	T_Damage(toucher, this, this.owner.owner, 50000, dtype);
+	T_Damage(toucher, this, this.owner.owner, 50000, DEATH_COPTER_PROPELLER.m_id);
 }
 
 void Launch_Roflcopter(entity this)
@@ -678,7 +668,7 @@ void Launch_Roflcopter(entity this)
 void SentryExplode(entity this)
 {
 	sprint(this.builder, "Your sentry gun was destroyed.\n");
-	T_RadiusDamage(this, this, 80, DEATH_CRUSH.m_id, NULL);
+	//T_RadiusDamage(this, this, 80, DEATH_CRUSH.m_id, NULL);
 	if(this.trigger_field)
 		delete(this.trigger_field);
 	

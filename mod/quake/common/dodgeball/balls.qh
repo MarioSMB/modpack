@@ -1,5 +1,61 @@
 #pragma once
 
+// ball hit
+MSG_INFO_NOTIF(DEATH_MURDER_BALL,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was bruised by ^BG%s^K1's ball"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was tagged by a ball"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were hit by a ball!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL,             1,  NULL,           INFO_DEATH_MURDER_BALL,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL,               1,  NULL,           INFO_DEATH_SELF_BALL,              CENTER_DEATH_SELF_BALL)
+REGISTER_DEATHTYPE(BALL,               DEATH_SELF_BALL,           DEATH_MURDER_BALL,         "")
+
+// catching ball
+MSG_INFO_NOTIF(DEATH_MURDER_BALL_CATCH,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 failed to catch ^BG%s^K1's ball"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL_CATCH,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 failed to catch a ball"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL_CATCH,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You failed a saving catch!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL_CATCH,             1,  NULL,           INFO_DEATH_MURDER_BALL_CATCH,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL_CATCH,               1,  NULL,           INFO_DEATH_SELF_BALL_CATCH,              CENTER_DEATH_SELF_BALL_CATCH)
+REGISTER_DEATHTYPE(BALL_CATCH,               DEATH_SELF_BALL_CATCH,           DEATH_MURDER_BALL_CATCH,         "")
+
+// ice ball
+MSG_INFO_NOTIF(DEATH_MURDER_BALL_ICE,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was turned into a popsicle by ^BG%s^K1's ice ball"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL_ICE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was frozen by an ice ball"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL_ICE,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were frozen solid!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL_ICE,             1,  NULL,           INFO_DEATH_MURDER_BALL_ICE,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL_ICE,               1,  NULL,           INFO_DEATH_SELF_BALL_ICE,              CENTER_DEATH_SELF_BALL_ICE)
+REGISTER_DEATHTYPE(BALL_ICE,               DEATH_SELF_BALL_ICE,           DEATH_MURDER_BALL_ICE,         "")
+
+// homing ball
+MSG_INFO_NOTIF(DEATH_MURDER_BALL_HOMING,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was inevitably hit by ^BG%s^K1's homing ball"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL_HOMING,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 got in the way of their own homing ball"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL_HOMING,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1The homing ball got you!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL_HOMING,             1,  NULL,           INFO_DEATH_MURDER_BALL_HOMING,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL_HOMING,               1,  NULL,           INFO_DEATH_SELF_BALL_HOMING,              CENTER_DEATH_SELF_BALL_HOMING)
+REGISTER_DEATHTYPE(BALL_HOMING,               DEATH_SELF_BALL_HOMING,           DEATH_MURDER_BALL_HOMING,         "")
+
+// bomb ball
+MSG_INFO_NOTIF(DEATH_MURDER_BALL_BOMB,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was blown to bits by ^BG%s^K1's bomb ball"), "")
+MSG_INFO_NOTIF(DEATH_SELF_BALL_BOMB,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 blew themself up with a bomb ball"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_BALL_BOMB,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were caught in a bomb ball explosion!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_BALL_BOMB,             1,  NULL,           INFO_DEATH_MURDER_BALL_BOMB,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_BALL_BOMB,               1,  NULL,           INFO_DEATH_SELF_BALL_BOMB,              CENTER_DEATH_SELF_BALL_BOMB)
+REGISTER_DEATHTYPE(BALL_BOMB,               DEATH_SELF_BALL_BOMB,           DEATH_MURDER_BALL_BOMB,         "")
+
+// roflcopter explosion
+MSG_INFO_NOTIF(DEATH_MURDER_COPTER_EXPLODE,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 was a casualty in ^BG%s^K1's roflcopter explosion"), "")
+MSG_INFO_NOTIF(DEATH_SELF_COPTER_EXPLODE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was caught in a roflcopter explosion"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_COPTER_EXPLODE,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were blown up by a roflcopter!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_COPTER_EXPLODE,             1,  NULL,           INFO_DEATH_MURDER_COPTER_EXPLODE,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_COPTER_EXPLODE,               1,  NULL,           INFO_DEATH_SELF_COPTER_EXPLODE,              CENTER_DEATH_SELF_COPTER_EXPLODE)
+REGISTER_DEATHTYPE(COPTER_EXPLODE,               DEATH_SELF_COPTER_EXPLODE,           DEATH_MURDER_COPTER_EXPLODE,         "")
+
+// roflcopter propeller
+MSG_INFO_NOTIF(DEATH_MURDER_COPTER_PROPELLER,                  1,  2, 0, "s1 s2", "",     "",                     _("^BG%s^K1 got too close to ^BG%s^K1's roflcopter"), "")
+MSG_INFO_NOTIF(DEATH_SELF_COPTER_PROPELLER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was clipped by a roflcopter"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_COPTER_PROPELLER,              1,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You got too close to a roflcopter!")), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_COPTER_PROPELLER,             1,  NULL,           INFO_DEATH_MURDER_COPTER_PROPELLER,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_COPTER_PROPELLER,               1,  NULL,           INFO_DEATH_SELF_COPTER_PROPELLER,              CENTER_DEATH_SELF_COPTER_PROPELLER)
+REGISTER_DEATHTYPE(COPTER_PROPELLER,               DEATH_SELF_COPTER_PROPELLER,           DEATH_MURDER_COPTER_PROPELLER,         "")
+
 #ifdef SVQC
 void ThrowBall(entity this);
 
