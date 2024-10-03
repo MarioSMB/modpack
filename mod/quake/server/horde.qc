@@ -322,10 +322,7 @@ void PrecacheMonsters()
 	precache_sound("items/protect3.wav");
 
 	// fire flower
-	precache_model("progs/g_fflower.mdl");
 	precache_model("progs/fireball.mdl");
-	precache_sound("items/powerup_mario.wav");
-	precache_sound("items/powerdown_mario.wav");
 	precache_sound("items/fireball_fire.wav");
 
 	// horn

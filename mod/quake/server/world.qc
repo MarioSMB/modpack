@@ -60,9 +60,6 @@ PRECACHE(Hipnotic)
 	precache_sound ("misc/foot6.wav");
 	precache_sound ("misc/foot7.wav");
 
-
-	precache_model ("progs/playham.mdl");
-
 	precache_model ("progs/v_laserg.mdl");
 	precache_model ("progs/v_hammer.mdl");
 	precache_model ("progs/v_prox.mdl");
