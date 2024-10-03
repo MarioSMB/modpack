@@ -50,6 +50,7 @@ const int SKIN_BLOCKY			= 26;
 const int SKIN_MACE				= 27;
 const int SKIN_STOP				= 28;
 const int SKIN_COPPER			= 29;
+const int SKIN_LAST				= 29;
 
 #ifdef SVQC
 .entity hammer_prevwep; // for starting spin

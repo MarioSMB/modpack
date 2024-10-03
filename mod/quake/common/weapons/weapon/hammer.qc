@@ -1176,6 +1176,16 @@ METHOD(Hammer, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 		p_hammer_charge_low_01(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}
+
+	if(fire & 2)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
+	if(!(time < actor.attack2_finished))
+	{
+		actor.(weaponentity).hammer_skin += 1;
+		if(actor.(weaponentity).hammer_skin > SKIN_LAST)
+			actor.(weaponentity).hammer_skin = SKIN_DEFAULT;
+		actor.attack2_finished = time + 0.25;
+	}
 }
 METHOD(Hammer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {

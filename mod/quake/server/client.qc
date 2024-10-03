@@ -1575,6 +1575,7 @@ void PutPlayerInServer(entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			this.(weaponentity).m_weapon = WEP_Null;
+			this.(weaponentity).hammer_skin = 1;
 		}
 
 		return;
