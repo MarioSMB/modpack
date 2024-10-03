@@ -5,6 +5,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 .int currentspell;
 
+.int hammer_skin;
+
 #ifdef SVQC
 
 	bool wepent_send(entity this, entity to, int sf);

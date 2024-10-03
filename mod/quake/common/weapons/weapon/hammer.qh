@@ -1,0 +1,100 @@
+#pragma once
+
+CLASS(Hammer, Weapon)
+/* ammotype  */ ATTRIB(Hammer, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Hammer, impulse, int, 0);
+/* spawnflags*/ ATTRIB(Hammer, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
+/* ammo */      ATTRIB(Hammer, aflag, int, 0);
+/* modelname */ ATTRIB(Hammer, mdl, string, "hammer_default");
+/* crosshair */ ATTRIB(Hammer, w_crosshair, string, "gfx/crosshaircrylink");
+/* crosshair */ ATTRIB(Hammer, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Hammer, w_crosshair_color, vector, '1 0.75 1');
+/* wepimg    */ ATTRIB(Hammer, model2, string, "hammer");
+/* refname   */ ATTRIB(Hammer, netname, string, "hammer");
+/* wepname   */ ATTRIB(Hammer, m_name, string, _("Hammer"));
+/* framerate */ ATTRIB(Hammer, m_delta, float, 0.05);
+
+ENDCLASS(Hammer)
+REGISTER_WEAPON(HAMMER, NEW(Hammer));
+
+// TODO: when we have an actual mjolnir again, give hammer its own spawns!
+SPAWNFUNC_WEAPON(weapon_mjolnir, WEP_HAMMER)
+
+// SKINS
+const int SKIN_DEFAULT			= 1;
+const int SKIN_BLOODY			= 2;
+const int SKIN_ALK				= 3;
+const int SKIN_BASEBALL			= 4;
+const int SKIN_FODDY			= 5;
+const int SKIN_MAILBOX			= 6;
+const int SKIN_ROCKET			= 7;
+const int SKIN_BRICK			= 8;
+const int SKIN_SBLADE			= 9;
+const int SKIN_BURGER			= 10;
+const int SKIN_BUSTER			= 11;
+const int SKIN_GUITAR			= 12;
+const int SKIN_PICKAXE			= 13;
+const int SKIN_DWARVEN			= 14;
+const int SKIN_JESTER			= 15;
+const int SKIN_ERROR			= 16;
+const int SKIN_SAILOR			= 17;
+const int SKIN_FLOYD			= 18;
+const int SKIN_KEBBY			= 19;
+const int SKIN_SQUEAKY			= 20;
+const int SKIN_DOOMYTURNEL		= 21;
+const int SKIN_KATANA			= 22;
+const int SKIN_PIRATE			= 23;
+const int SKIN_GOLD				= 24;
+const int SKIN_GOLDB			= 25;
+const int SKIN_BLOCKY			= 26;
+const int SKIN_MACE				= 27;
+const int SKIN_STOP				= 28;
+const int SKIN_COPPER			= 29;
+
+#ifdef SVQC
+.entity hammer_prevwep; // for starting spin
+
+.int hammer_skin;
+
+.int lastnote;
+						
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const float hammer_damage_LOW			= 30;
+const float hammer_damage_MED			= 80;
+const float hammer_damage_HIGH			= 200;
+
+const float hammer_swing_cooldown		= 0.4;		// (self.hammer_attack_finished_hammer = time + swing_speed)
+
+const float hammer_charge_LOW 			= .2;		// (between 0 - 0.7 seconds)
+const float hammer_charge_MED  			= 2;		// (between 0.7 - 1.4 seconds)
+const float hammer_charge_HIGH 			= 4;		// (anytime after 1.4 + seconds)
+
+const float hammer_knockback 			= 135;		// (charge_multi * backwards force on hit enemies)
+const float hammer_knockback_up			= 25;		// (charge_multi * upwards force on hit enemies)
+
+const float hammer_knockback_quad		= 250;		// (charge_multi * backwards force on hit enemies with Quad)
+const float hammer_knockback_quad_up	= 50;		// (charge_multi * upwards force on hit enemies with Quad)
+
+const float hammer_kill_force 			= 2;		// (charge_multi * dmg_dealt * force gibs)
+	
+const float hammer_dash_forward 		= 125;		// (charge_multi * forward velocity)
+const float hammer_dash_upward 			= 60;		// (charge_multi * capped vertical velocity)
+
+//vector hammer_dash_upward 	= '0 0 10';	// (charge_multi * UNCAPPED vertical velocity)
+	
+const float hammer_hop_backward		= -55;		// (charge_multi * backward velocity)
+const float hammer_hop_upward_LOW 	= 64;		// (charge_multi * vertical velocity)
+const float hammer_hop_upward_MED 	= 128;		// (charge_multi * vertical velocity)
+const float hammer_hop_upward_HIGH 	= 192;		// (charge_multi * vertical velocity)
+
+void Hammer_Charging_Sound(entity this, int charge_multi);
+
+void Spark_Activate(entity this, float spark_type, float spark_charge);
+
+void W_SwingHammer(entity this, int charge_multi);
+
+void x_spark_01(entity this);
+
+void x_blood_01(entity this);
+#endif

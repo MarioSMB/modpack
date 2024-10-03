@@ -66,6 +66,9 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
     /** (CLIENT) impact effect for weapon explosion */
     METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
+    /** (CLIENT) framerate of the weapon animations, uses regular setting if 0 */
+    ATTRIB(Weapon, m_delta, float, 0);
 ENDCLASS(Weapon)
 
 // weapon flags

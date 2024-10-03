@@ -6,8 +6,25 @@
 
 #ifdef CSQC
 void CSQCModel_InterpolateAnimation_1To2_Note(entity this, int sf, bool set_times);
-void CSQCModel_InterpolateAnimation_Do(entity this);
+//void CSQCModel_InterpolateAnimation_Do(entity this);
 void CSQCModel_InterpolateAnimation_1To2_PreNote(entity this, int sf);
+
+void wepent_CSQCModel_InterpolateAnimation_Do(entity this, float delta)
+{
+	if(!delta)
+		delta = 0.1; // quake weapons use 10 fps
+	//if(autocvar_cl_nolerp || (delta == 0))
+	//{
+		//this.lerpfrac = 0;
+	//}
+	//else
+	//{
+		if(this.frame2time == 0) // if frame2 was not previously displayed, only frame1 can make sense
+			this.lerpfrac = 0;
+		else
+			this.lerpfrac = 1 - bound(0, (time - this.frame1time) / delta, 1);
+	//}
+}
 #endif
 
 #define WEPENT_SET_NORMAL(var, x) MACRO_BEGIN \
@@ -22,7 +39,7 @@ MACRO_END
     \
     PROP(false, m_frame, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_frame); }, \
-	{ CSQCModel_InterpolateAnimation_1To2_PreNote((viewmodels[this.m_wepent_slot]), BIT(23)); (viewmodels[this.m_wepent_slot]).frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note((viewmodels[this.m_wepent_slot]), BIT(23), true); CSQCModel_InterpolateAnimation_Do((viewmodels[this.m_wepent_slot])); }) \
+	{ CSQCModel_InterpolateAnimation_1To2_PreNote((viewmodels[this.m_wepent_slot]), BIT(23)); (viewmodels[this.m_wepent_slot]).frame = ReadByte(); CSQCModel_InterpolateAnimation_1To2_Note((viewmodels[this.m_wepent_slot]), BIT(23), true); wepent_CSQCModel_InterpolateAnimation_Do((viewmodels[this.m_wepent_slot]), (viewmodels[this.m_wepent_slot]).activeweapon.m_delta); }) \
     \
     PROP(false, skin, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.skin); }, \
@@ -31,6 +48,10 @@ MACRO_END
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
 	{ (viewmodels[this.m_wepent_slot]).m_gunalign = ReadByte(); }) \
+    \
+    PROP(false, hammer_skin, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.hammer_skin); }, \
+	{ (viewmodels[this.m_wepent_slot]).hammer_skin = ReadByte(); }) \
     \
 	/**/
 

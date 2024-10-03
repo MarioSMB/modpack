@@ -71,6 +71,9 @@ const int START_OFF = BIT(0);
 .float t_length = length;	// preserve old func_door_secret maphacks
 .float t_width = width;
 
+// used by some traps
+.bool struck_by_mjolnir;
+
 //----------------
 // STATES & ACTIVE
 //----------------

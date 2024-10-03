@@ -7,7 +7,7 @@
 #include "weapon/rocket_launcher.qh"
 #include "weapon/thunderbolt.qh"
 #include "weapon/laser_cannon.qh"
-#include "weapon/mjolnir.qh"
+#include "weapon/hammer.qh"
 #include "weapon/proximity_gun.qh"
 #include "weapon/lava_nailgun.qh"
 #include "weapon/lava_super_nailgun.qh"

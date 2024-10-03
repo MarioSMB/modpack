@@ -11,7 +11,7 @@
 #include "thunderbolt.qc"
 #include "laser_cannon.qc"
 #include "mayo.qc"
-#include "mjolnir.qc"
+#include "hammer.qc"
 #include "proximity_gun.qc"
 #include "lava_nailgun.qc"
 #include "lava_super_nailgun.qc"

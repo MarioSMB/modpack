@@ -1414,6 +1414,8 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= wep.ammo_type;
 		if(wep != WEP_PIANO)
 			this.(weaponentity).piano_prevwep = wep; // for piano hax
+		if(wep != WEP_HAMMER)
+			this.(weaponentity).hammer_prevwep = wep; // for hammer hax
 	}
 }
 

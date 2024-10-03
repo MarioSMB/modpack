@@ -253,9 +253,10 @@ void viewmodel_animate(entity this)
 
 .string name_last;
 
+void wepent_CSQCModel_InterpolateAnimation_Do(entity this, float delta);
 void viewmodel_draw(entity this)
 {
-	CSQCModel_InterpolateAnimation_Do(this);
+	wepent_CSQCModel_InterpolateAnimation_Do(this, this.activeweapon.m_delta);
 
 	bool show_viewmodel = true;
 	if(STAT(SKATING) || STAT(SLIDE_ON) || (STAT(ITEMS) & IT_TANK) || STAT(CANNON))
@@ -274,6 +275,7 @@ void viewmodel_draw(entity this)
 		| EF_NODEPTHTEST)
 		&~ (EF_FULLBRIGHT); // can mask team color, so get rid of it
 	bool swapskin = this.skin != wepskin;
+	if(!wep) a = -1;
 	this.drawmask = mask;
 	this.alpha = a;
 	this.skin = wepskin;
@@ -282,6 +284,9 @@ void viewmodel_draw(entity this)
 	if(a >= 0)
 	{
 		string name = wep.mdl;
+		string newname = wep.wr_viewmodel(wep, this);
+		if(newname)
+			name = newname;
 		// TODO? very niche case, weapon overrides would be nice though!
 		if(csqcplayer && csqcplayer.m_champion && wep == WEP_AXE && csqcplayer.m_champion.qcc_meleename)
 			name = csqcplayer.m_champion.qcc_meleename;

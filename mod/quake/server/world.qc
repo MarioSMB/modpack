@@ -1992,9 +1992,9 @@ void DropToFloor_QC(entity this)
 	// NOTE: SV_NudgeOutOfSolid is used in the engine here
 	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 	{
+		move_out_of_solid(this);
 		if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
 			set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
-		move_out_of_solid(this);
 	}
 
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
@@ -2020,9 +2020,9 @@ void DropToFloor_QC(entity this)
 			setorigin(this, trace_endpos);
 			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
 			{
+				move_out_of_solid(this);
 				if(_Movetype_UnstickEntity(this) == UNSTICK_STUCK)
 					set_movetype(this, MOVETYPE_NONE); // fix for laggy mg maps
-				move_out_of_solid(this);
 			}
 			SET_ONGROUND(this);
 			this.groundentity = trace_ent;
