@@ -494,7 +494,8 @@ void PM_AirMove(entity this, float maxspd_mod, float dt)
 	{
 		// do nothing
 	}
-	else if(this.move_movetype == MOVETYPE_NOCLIP)
+	// NOTE: not using else if here as it causes the player to lose control for a second after teleporting (annoying)
+	if(this.move_movetype == MOVETYPE_NOCLIP)
 	{
 		// noclip
 		makevectors(this.v_angle);
