@@ -1390,6 +1390,8 @@ spawnfunc(worldspawn)
 	string themap = autocvar_sv_worldbasename;
 	if(coop && changelevel_checkinlist(themap, autocvar_sv_quake_maplist))
 	{
+		cvar_settemp("deathmatch", "1");
+		cvar_settemp("coop", "0");
 		deathmatch = 1;
 		coop = 0;
 		cvar_settemp("timelimit", ftos(autocvar_sv_quake_timelimit));
@@ -1720,8 +1722,20 @@ void CheckRules_World()
 	if(timelimit && time >= timelimit)
 	{
 		//mapname = "quake";
-		if(deathmatch && fexists("maps/dmhub.bsp"))
-			mapname = "dmhub";
+		if(deathmatch)
+		{
+			if(fexists("maps/dmhub.bsp"))
+				mapname = "dmhub";
+			else if(autocvar_sv_quake_maplist != "")
+			{
+				RandomSelection_Init();
+				FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
+				{
+					RandomSelection_AddString(it, 1, 1);
+				});
+				mapname = RandomSelection_chosen_string;
+			}
+		}
 		NextLevel();
 		return;
 	}

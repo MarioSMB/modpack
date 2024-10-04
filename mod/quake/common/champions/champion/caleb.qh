@@ -179,6 +179,8 @@ REGISTER_CHAMPION(Caleb, NEW(Caleb));
 .float bloodrage_heartbeat;
 .entity caleb_bats;
 
+.entity bloodrage_killer;
+
 .bool caleb_cannon;
 #endif
 

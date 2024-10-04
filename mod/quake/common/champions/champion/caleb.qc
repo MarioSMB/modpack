@@ -95,6 +95,7 @@ void Caleb_bloodrage_clear(entity this)
 	STAT(QCC_BLOODRAGE_COUNT, this) = 0;
 	this.bloodrage_time = 0;
 	this.bloodrage_heartbeat = 0;
+	this.bloodrage_killer = NULL;
 }
 
 void Caleb_bats_think(entity this)
@@ -174,7 +175,7 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 			if(STAT(QCC_BLOODRAGE_COUNT, actor) < 0)
 			{
 				STAT(QCC_BLOODRAGE_COUNT, actor) = 0;
-				T_Damage(actor, NULL, NULL, 4000, DEATH_GENERIC.m_id);
+				T_Damage(actor, actor.bloodrage_killer, actor.bloodrage_killer, 4000, DEATH_GENERIC.m_id);
 				return;
 			}
 			actor.bloodrage_time = time + 5;
@@ -236,7 +237,7 @@ METHOD(Caleb, m_cannon_land, bool(Champions this, entity actor))
 
 METHOD(Caleb, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
 {
-	if(attacker.m_champion == this && STAT(QCC_BLOODRAGE, attacker) && IS_MONSTER(targ))
+	if(attacker.m_champion == this && STAT(QCC_BLOODRAGE, attacker) && (IS_MONSTER(targ) || (deathmatch && IS_PLAYER(targ))))
 	{
 		STAT(QCC_BLOODRAGE_COUNT, attacker) += 1;
 		attacker.bloodrage_time = time + 5;
@@ -302,6 +303,7 @@ METHOD(Caleb, m_saveplayer, void(Champions this, entity targ, entity inflictor, 
 	STAT(QCC_BLOODRAGE, targ) = true;
 	STAT(QCC_BLOODRAGE_COUNT, targ) = 0;
 	targ.bloodrage_time = time + 5;
+	targ.bloodrage_killer = attacker;
 	targ.health = 1;
 }
 #endif
