@@ -75,6 +75,8 @@ bool mushroom_heal(entity this, entity toucher)
 		return false;
 	if(toucher.m_transform)
 		return false;
+	if(deathmatch && toucher != this.realowner)
+		return false;
 	
 	if(!T_Heal(toucher, this.healamount, 0))
 		return false;
@@ -170,7 +172,7 @@ METHOD(Mushroom, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_ThrowMushroom(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 1.5);
+		weapon_prepareattack(thiswep, actor, weaponentity, 1);
 	}
 }
 METHOD(Mushroom, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

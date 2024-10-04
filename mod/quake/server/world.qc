@@ -1387,17 +1387,6 @@ spawnfunc(worldspawn)
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
 
-	string themap = autocvar_sv_worldbasename;
-	if(coop && changelevel_checkinlist(themap, autocvar_sv_quake_maplist))
-	{
-		cvar_settemp("deathmatch", "1");
-		cvar_settemp("coop", "0");
-		deathmatch = 1;
-		coop = 0;
-		cvar_settemp("timelimit", ftos(autocvar_sv_quake_timelimit));
-		cvar_settemp("fraglimit", ftos(autocvar_sv_quake_fraglimit));
-	}
-
 	// NOTE: let's set this when a trigger_changelevel changes it again, not here
 	// setting it here causes map restarts to lose position!
 	//cvar_set("_spawntarget", "");
@@ -1489,6 +1478,17 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+
+	string themap = autocvar_sv_worldbasename;
+	if(!wantrestart && coop && changelevel_checkinlist(themap, autocvar_sv_quake_maplist))
+	{
+		cvar_settemp("deathmatch", "1");
+		cvar_settemp("coop", "0");
+		deathmatch = 1;
+		coop = 0;
+		cvar_settemp("timelimit", ftos(autocvar_sv_quake_timelimit));
+		cvar_settemp("fraglimit", ftos(autocvar_sv_quake_fraglimit));
+	}
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -1659,6 +1659,25 @@ spawnfunc(__init_dedicated_server)
 	static_init_precache();
 }
 
+string PickDMMap()
+{
+	if(deathmatch)
+	{
+		if(fexists("maps/dmhub.bsp"))
+			return "dmhub";
+		else if(autocvar_sv_quake_maplist != "")
+		{
+			RandomSelection_Init();
+			FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
+			{
+				RandomSelection_AddString(it, 1, 1);
+			});
+			return RandomSelection_chosen_string;
+		}
+	}
+	return mapname;
+}
+
 /*
 ============
 CheckRules_World
@@ -1699,6 +1718,7 @@ void CheckRules_World()
 		}
 		else
 		{
+			mapname = PickDMMap();
 			NextLevel();
 			return;
 		}
@@ -1722,20 +1742,7 @@ void CheckRules_World()
 	if(timelimit && time >= timelimit)
 	{
 		//mapname = "quake";
-		if(deathmatch)
-		{
-			if(fexists("maps/dmhub.bsp"))
-				mapname = "dmhub";
-			else if(autocvar_sv_quake_maplist != "")
-			{
-				RandomSelection_Init();
-				FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
-				{
-					RandomSelection_AddString(it, 1, 1);
-				});
-				mapname = RandomSelection_chosen_string;
-			}
-		}
+		mapname = PickDMMap();
 		NextLevel();
 		return;
 	}

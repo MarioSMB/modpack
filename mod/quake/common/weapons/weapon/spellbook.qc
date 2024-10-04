@@ -523,7 +523,7 @@ void W_Spell_IceCannon(entity this, .entity weaponentity)
 
 	if(!targ || !targ.takedamage || targ.health <= 0)
 		return;
-	if(!((IS_PLAYER(targ) && !autocvar_g_friendlyfire_virtual) || IS_MONSTER(targ)))
+	if(!Damage_ValidTarget(targ, this))
 		return;
 
 	T_Damage(targ, this, this, 5, WEP_SPELLBOOK.m_id);
@@ -785,7 +785,7 @@ void seek_and_fire1(entity this)
 	entity targ = NULL;
 	while(head)
 	{
-		if(IS_MONSTER(head) && head.health > 0 && !head.charmed)
+		if(head != this && Damage_ValidTarget(head, this.realowner))
 		{
 			float newdist = vlen2(head.origin - this.origin);
 			if((!olddist || newdist <= olddist) && visible(this, head))
@@ -842,7 +842,7 @@ void seek_and_fire2(entity this)
 	entity head = findradius(this.origin, 800);			
 	while(head)
 	{
-		if(IS_MONSTER(head) && head.health > 0 && !head.charmed)
+		if(head != this && Damage_ValidTarget(head, this.realowner))
 		{
 			if(visible(this, head))
 				this.enemy = head;		
@@ -1150,6 +1150,8 @@ void summon_heal(entity this)
 	// TODO: allows boosting health quite high, maybe nerf? going to 100 would make it hard to see any bonus!?
 	FOREACH_ENTITY_RADIUS(this.origin, 64, IS_PLAYER(it) && it.health > 0 && it.health < 150 && it.exptime == 0,
 	{
+		if(deathmatch && it != this.realowner)
+			continue;
 		if(T_Heal(it, 1, true))
 		{
 			if(it.health > 150)
