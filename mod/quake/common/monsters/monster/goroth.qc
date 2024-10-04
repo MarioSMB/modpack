@@ -318,7 +318,7 @@ void gor_magic21(entity this)
 {
 	set_animofs(this, anim_goroth_magic, 21, gor_magic22);
 	this.enemy.punchangle_x = -2;
-	T_RadiusDamage(this, this, 400, DEATH_MONSTER_GOROTH.m_id, this);
+	T_RadiusDamage(this, this, 120, DEATH_MONSTER_GOROTH.m_id, this);
 		
 	GorothLavaSplash(this, '454 0 -40');
 		
