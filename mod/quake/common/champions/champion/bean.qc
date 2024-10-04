@@ -15,6 +15,8 @@ void teddy_think(entity this)
 	float invtime = 1;
 	FOREACH_ENTITY_RADIUS(this.origin, 120, IS_PLAYER(it) && it.health > 0,
 	{
+		if(deathmatch && it != this.realowner)
+			continue;
 		float curtime = StatusEffects_gettime(STATUSEFFECT_Invulnerability, it);
 		if((time + invtime) > curtime)
 		{
