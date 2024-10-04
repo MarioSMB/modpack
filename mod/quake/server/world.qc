@@ -1386,7 +1386,7 @@ spawnfunc(worldspawn)
 		serverflags = 0; // clean up serverflags!
 
 	string themap = substring(world.model, 5, -4);
-	if(coop && autocvar_sv_quake_maplist != "" && strstrofs(themap, autocvar_sv_quake_maplist, 0) >= 0)
+	if(coop && autocvar_sv_quake_maplist != "" && strstrofs(autocvar_sv_quake_maplist, themap, 0) >= 0)
 	{
 		deathmatch = 1;
 		coop = 0;
