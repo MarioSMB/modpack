@@ -195,7 +195,7 @@ void organ_think(entity this)
 		return;
 
 	bool found = false;
-	FOREACH_ENTITY_RADIUS(this.origin, 800, it.takedamage && it.health > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, 800, it.takedamage && it.health > 0 && it != this.realowner && it != this,
 	{
 		if(Damage_ValidTarget(it, this.realowner))
 		{
