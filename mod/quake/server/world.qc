@@ -1661,8 +1661,17 @@ spawnfunc(__init_dedicated_server)
 
 string PickDMMap(bool gotohub)
 {
-	if(gotohub && fexists("maps/dmhub.bsp"))
-		return "dmhub";
+	if(gotohub)
+	{
+		int pcount = 0;
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			pcount += 1;
+		});
+		// poor thing's stuck all alone, let's put them out of their misery
+		if(pcount <= 1)
+			return "quake";
+	}
 	else if(autocvar_sv_quake_maplist != "")
 	{
 		RandomSelection_Init();
