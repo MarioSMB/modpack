@@ -214,10 +214,11 @@ bool CanDamage(entity targ, entity inflictor)
 bool Damage_ValidTarget(entity targ, entity attacker)
 {
 	// may happen if a projectile lacks an owner, just assume it's valid
-	if(!attacker)
+	// also never check self-damage here!
+	if(!attacker || targ == attacker)
 		return true;
 	// no PvP thank you very much
-	if(coop && IS_PLAYER(targ) && IS_PLAYER(attacker) && targ != attacker)
+	if(coop && IS_PLAYER(targ) && IS_PLAYER(attacker))
 		return false;
 	// decoys are never valid targets
 	if(targ.monsterdef && targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY)
@@ -438,7 +439,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	if(!Damage_ValidTarget(targ, attacker))
-		return;
+		damage = 0;
 
 	if(discharged && StatusEffects_active(STATUSEFFECT_Wetsuit, targ))
 		return;

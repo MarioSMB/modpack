@@ -385,7 +385,9 @@ entity W_PickNearbyTarget(entity this, float hitrange, bool checkinfront, bool h
 	RandomSelection_Init();
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
-	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && ((hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door") || Damage_ValidTarget(it, this)),
+	entity player = (this.owner) ? this.owner : this;
+
+	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && ((hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door") || Damage_ValidTarget(it, player)),
 	{
 		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
@@ -556,7 +558,7 @@ void W_Aura(entity this)
 
 	this.aura_finished = time + 0.25;
 
-	FOREACH_ENTITY_RADIUS(this.origin, 80, Damage_ValidTarget(it, this) && it.takedamage && it.health > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, 80, it != this && it.takedamage && it.health > 0 && Damage_ValidTarget(it, this),
 	{
 		T_Damage(it, this, this, 15, DEATH_CRUSH.m_id);
 	});
