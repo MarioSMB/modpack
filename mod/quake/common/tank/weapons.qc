@@ -312,7 +312,7 @@ void MineExplode(entity this)
 
 void MineExplodeTouch(entity this, entity toucher)
 {
-	if(toucher == this.owner || toucher.owner == this.owner || toucher == this.owner.tank || (IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual))
+	if(toucher == this.owner || toucher.owner == this.owner || toucher == this.owner.tank || !Damage_ValidTarget(toucher, this.owner))
 		return;
 	setthink(this, MineExplode);
 	this.nextthink = time;
@@ -361,7 +361,7 @@ void MineLand(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == this.owner)
 		return;
 
-	if(toucher && toucher.takedamage && toucher.health > 0 && (!IS_PLAYER(toucher) || !autocvar_g_friendlyfire_virtual))
+	if(toucher && toucher.takedamage && toucher.health > 0 && Damage_ValidTarget(toucher, this.owner))
 	{
 		setthink(this, MineExplode);
 		this.nextthink = time;

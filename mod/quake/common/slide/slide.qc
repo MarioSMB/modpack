@@ -159,7 +159,7 @@ void slide_PlayerTouch(entity this, entity toucher)
 		return;
 	if(!toucher || toucher.takedamage != DAMAGE_AIM)
 		return;
-	if(IS_PLAYER(toucher) && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0))
+	if(IS_PLAYER(toucher))
 		return;
 
 	UNSET_ONGROUND(toucher);

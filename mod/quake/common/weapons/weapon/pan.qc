@@ -31,7 +31,7 @@ void wep_pan_pan1(entity this) { wep_set_anim(this, 1, wep_pan_pan2); }
 void edie_SpikeTouch(entity this, entity toucher); // TODO
 bool Pan_CheckDamage(entity targ, entity inflictor, entity attacker)
 {
-	if(IS_PLAYER(attacker) && !autocvar_g_friendlyfire_virtual)
+	if(!Damage_ValidTarget(targ, attacker))
 		return false;
 	if((!IS_PLAYER(targ) && targ.monsterdef != MON_GREMLIN) || targ.health <= 0 || StatusEffects_active(STATUSEFFECT_Invulnerability, targ))
 		return false;

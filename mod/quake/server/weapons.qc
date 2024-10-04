@@ -60,7 +60,7 @@ bool W_Projectile_CanParry(entity this, entity proj)
 	// hacky way to guess if it's a projectile
 	if(!(proj.move_movetype == MOVETYPE_FLYMISSILE || proj.move_movetype == MOVETYPE_FLY || proj.move_movetype == MOVETYPE_BOUNCE || proj.move_movetype == MOVETYPE_TOSS))
 		return false;
-	bool parryplayer = (autocvar_sv_quake_parry_playershots && IS_PLAYER(proj.owner));
+	bool parryplayer = ((autocvar_sv_quake_parry_playershots || deathmatch) && IS_PLAYER(proj.owner));
 	if(!IS_MONSTER(proj.owner) && !parryplayer)
 		return false;
 	if(IS_MONSTER(proj) || IS_PLAYER(proj))

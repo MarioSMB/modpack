@@ -637,6 +637,27 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
+	if(attacker == targ)
+	{
+		// don't reset pushltime for self damage as it may be an attempt to
+		// escape a lava pit or similar
+		//targ.pushltime = 0;
+	}
+	else if(IS_PLAYER(attacker))
+	{
+		targ.pusher = attacker;
+		targ.pushltime = time + autocvar_g_maxpushtime;
+	}
+	else if(time < targ.pushltime)
+	{
+		attacker = targ.pusher;
+		targ.pushltime = max(targ.pushltime, time + 0.6);
+	}
+	else
+	{
+		targ.pushltime = 0;
+	}
+
 	targ.health -= take;
 	targ.armorvalue -= save;
 

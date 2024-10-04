@@ -8,6 +8,11 @@ float autocvar_g_friendlyfire;
 
 .bool damagedbycontents;
 
+.float pushltime;
+.entity pusher;
+
+float autocvar_g_maxpushtime = 8.0;
+
 bool empathyused; // hipnotic
 
 bool discharged; // hipnotic

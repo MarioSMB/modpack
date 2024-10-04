@@ -143,11 +143,13 @@ float Tank_Damage(entity targ, entity inflictor, entity attacker, float damage, 
 		if(DEATH_ISWEAPON(deathtype, WEP_LIGHTNING))
 		{
 			damage = 3;
+		#if 0
 			if(!autocvar_g_friendlyfire_virtual)
 			{
 				targ.angles_y += random() * 20;
 				targ.fixangle = 1;
 			}
+		#endif
 		}
 	}
 	return damage;
@@ -162,8 +164,8 @@ void Tank_Touch(entity this, entity toucher)
 
 	this.tank.tank_touch_delay = time + 0.1;
 
-	if(IS_PLAYER(toucher) && !toucher.tank && autocvar_g_friendlyfire_virtual)
-		return; // no friendly bouncing sorry!
+	if(IS_PLAYER(toucher) && !toucher.tank)
+		return; // never allow pushing other players around?
 	if(toucher.takedamage != DAMAGE_AIM)
 		return;
 

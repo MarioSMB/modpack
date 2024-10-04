@@ -1424,6 +1424,8 @@ void PutObserverInServer(entity this)
 	this.clientcamera = this;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
+	this.pushltime = 0;
+	this.pusher = NULL;
 
 	STAT(PASSIVES, this) = 0;
 
@@ -1484,6 +1486,8 @@ void PutPlayerInServer(entity this)
 	this.clientcamera = this;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
+	this.pushltime = 0;
+	this.pusher = NULL;
 
 	this.alpha = 1;
 	this.colormod = '1 1 1';

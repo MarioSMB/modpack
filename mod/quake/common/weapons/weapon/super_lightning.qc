@@ -102,7 +102,7 @@ void LightningTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	if(IS_PLAYER(this.realowner) && IS_PLAYER(toucher) && toucher != this.realowner && (autocvar_g_friendlyfire_virtual || autocvar_g_friendlyfire <= 0 || toucher.tank))
+	if(IS_PLAYER(this.realowner) && IS_PLAYER(toucher) && toucher != this.realowner && (!Damage_ValidTarget(toucher, this.realowner) || toucher.tank))
 	{
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);

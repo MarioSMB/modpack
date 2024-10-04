@@ -13,7 +13,7 @@ void cannon_PlayerTouch(entity this, entity toucher)
 {
 	if(!toucher || !toucher.takedamage || toucher.health < 0 || !this.cannonball || !this.cannon_prev)
 		return;
-	if(IS_PLAYER(toucher) && autocvar_g_friendlyfire_virtual)
+	if(IS_PLAYER(toucher))
 		return;
 	if(vdist(this.velocity, <, this.cannon_prev.speed * 0.5))
 		return;
