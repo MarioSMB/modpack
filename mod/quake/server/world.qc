@@ -208,6 +208,11 @@ bool IsMGMap()
 	return (world.model == "maps/hub.bsp" || substring(world.model, 0, 7) == "maps/mg" || substring(world.model, 0, 10) == "maps/horde");
 }
 
+bool IsImpelMap()
+{
+	return (substring(world.model, 0, 8) == "maps/aop");
+}
+
 // copper-specific lighting hack
 string light_str(float f)
 {

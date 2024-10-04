@@ -1124,8 +1124,8 @@ bool FindTarget(entity this)
 		}
 	}
 
-	//if(this.spawnflags & 4)
-		//return false;
+	if((this.spawnflags & 4) && IsImpelMap())
+		return false;
 
 	// if the first spawnflag bit is set, the monster will only wake up on
 	// really seeing the player, not another monster getting angry
