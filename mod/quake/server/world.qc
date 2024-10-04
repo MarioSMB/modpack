@@ -1377,6 +1377,8 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
+string autocvar_sv_worldbasename;
+bool changelevel_checkinlist(string map_name, string list);
 spawnfunc(worldspawn)
 {
 	CheckEngineExtensions();
@@ -1385,8 +1387,8 @@ spawnfunc(worldspawn)
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
 
-	string themap = substring(world.model, 5, -4);
-	if(coop && autocvar_sv_quake_maplist != "" && strstrofs(autocvar_sv_quake_maplist, themap, 0) >= 0)
+	string themap = autocvar_sv_worldbasename;
+	if(coop && changelevel_checkinlist(themap, autocvar_sv_quake_maplist))
 	{
 		deathmatch = 1;
 		coop = 0;
