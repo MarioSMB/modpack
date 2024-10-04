@@ -51,7 +51,7 @@ void kazoo_note_spreadout(entity this)
 		BecomeCartoonExplosion(this);
 		return;
 	}
-	entity selected = W_PickNearbyTarget(this, 500, false, true);
+	entity selected = W_PickNearbyTarget(this, this.owner, 500, false, true);
 	if(selected)
 	{
 		vector targ_pos = (selected.absmin + selected.absmax) * 0.5;

@@ -80,7 +80,7 @@ void sphere_think(entity this)
 	{
 		makevectors(this.owner.v_angle);
 
-		entity selected = W_PickNearbyTarget(this, 700, true, false);
+		entity selected = W_PickNearbyTarget(this, this.owner, 700, true, false);
 		if(selected)
 		{
 			this.owner.vsphere_last = time + 3;

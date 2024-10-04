@@ -175,7 +175,7 @@ void chimes_think(entity this)
 	if(time < this.attack_finished)
 		return;
 
-	entity selected = W_PickNearbyTarget(this, 700, false, false);
+	entity selected = W_PickNearbyTarget(this, this.realowner, 700, false, false);
 	if(selected)
 		chimes_fire(this, selected);
 

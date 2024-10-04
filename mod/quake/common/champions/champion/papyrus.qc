@@ -69,7 +69,7 @@ void skull_fire(entity this)
 	vector dir = this.enemy.origin + '0 0 16' - org;
 	dir = normalize(dir);
 
-	traceline(org, org + dir*600, true, this);
+	traceline(org, org + dir*400, true, this);
 
 	WriteHeader(MSG_BROADCAST, TE_CSQC_PAPYRUS_LASER);
 	WriteVector(MSG_BROADCAST, org);
@@ -139,7 +139,7 @@ METHOD(Papyrus, m_playerthink, void(Champions this, entity actor))
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 		if(random() < 0.1)
 			SendPapyrusLine(actor, bound(1, ceil(random() * 5), 5));
-		entity selected = W_PickNearbyTarget(actor, 1200, true, false);
+		entity selected = W_PickNearbyTarget(actor, actor, 400, true, false);
 		if(selected)
 			Papyrus_ChargeLaser(actor, selected);
 		else

@@ -749,7 +749,7 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 	if(wpn == WEP_AXE || wpn == WEP_SHOTGUN)
 		return wpn;
 	RandomSelection_Init();
-	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN && it != WEP_BALL,
+	FOREACH(Weapons, it != WEP_Null && it != WEP_AXE && it != WEP_SHOTGUN && it != WEP_BALL && !(it.spawnflags & WEP_FLAG_CHAMPION),
 	{
 		// hack to allow instruments to replace regular weapon spawns
 		int mytype = it.ammo_type;

@@ -379,15 +379,13 @@ JUNK
 ====================================
 */
 
-entity W_PickNearbyTarget(entity this, float hitrange, bool checkinfront, bool hitany)
+entity W_PickNearbyTarget(entity this, entity attacker, float hitrange, bool checkinfront, bool hitany)
 {
 	float cur_dist = 0;
 	RandomSelection_Init();
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
-	entity player = (this.owner) ? this.owner : this;
-
-	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && ((hitany && it.takedamage && it.health > 0 && !IS_PLAYER(it) && !IS_MONSTER(it) && it.classname != "door") || Damage_ValidTarget(it, player)),
+	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && it.takedamage && it.health > 0 && Damage_ValidTarget(it, attacker) && ((IS_PLAYER(it) || IS_MONSTER(it)) || (hitany && it.classname != "door")),
 	{
 		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
@@ -533,7 +531,7 @@ void W_PulseRifle(entity this)
 	this.pulserifle_finished = time + 1;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, 500, true, false);
+	entity selected = W_PickNearbyTarget(this, this, 500, true, false);
 	if(selected)
 		W_FireRifleTarget(this, selected);
 }
@@ -545,7 +543,7 @@ void W_Fireball(entity this)
 	this.fireball_finished = time + 2;
 	makevectors(this.v_angle);
 
-	entity selected = W_PickNearbyTarget(this, 500, true, false);
+	entity selected = W_PickNearbyTarget(this, this, 500, true, false);
 	if(selected)
 		W_Fireball_Attack(this, selected);
 }
