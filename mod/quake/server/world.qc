@@ -1659,21 +1659,18 @@ spawnfunc(__init_dedicated_server)
 	static_init_precache();
 }
 
-string PickDMMap()
+string PickDMMap(bool gotohub)
 {
-	if(deathmatch)
+	if(gotohub && fexists("maps/dmhub.bsp"))
+		return "dmhub";
+	else if(autocvar_sv_quake_maplist != "")
 	{
-		if(fexists("maps/dmhub.bsp"))
-			return "dmhub";
-		else if(autocvar_sv_quake_maplist != "")
+		RandomSelection_Init();
+		FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
 		{
-			RandomSelection_Init();
-			FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
-			{
-				RandomSelection_AddString(it, 1, 1);
-			});
-			return RandomSelection_chosen_string;
-		}
+			RandomSelection_AddString(it, 1, 1);
+		});
+		return RandomSelection_chosen_string;
 	}
 	return mapname;
 }
@@ -1718,7 +1715,8 @@ void CheckRules_World()
 		}
 		else
 		{
-			mapname = PickDMMap();
+			if(deathmatch)
+				mapname = PickDMMap(true);
 			NextLevel();
 			return;
 		}
@@ -1742,7 +1740,8 @@ void CheckRules_World()
 	if(timelimit && time >= timelimit)
 	{
 		//mapname = "quake";
-		mapname = PickDMMap();
+		if(deathmatch)
+			mapname = PickDMMap(true);
 		NextLevel();
 		return;
 	}

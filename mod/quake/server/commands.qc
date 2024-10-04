@@ -174,6 +174,16 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "gotorandom")
+	{
+		if(autocvar_sv_quake_maplist != "")
+		{
+			mapname = PickDMMap(false);
+			NextLevel();
+		}
+		return;
+	}
+
 	if(cmdname == "vote")
 	{
 		VoteCommand(CMD_REQUEST_COMMAND, NULL, argc, command);
