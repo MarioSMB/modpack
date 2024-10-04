@@ -1385,6 +1385,15 @@ spawnfunc(worldspawn)
 	if(world.model == "maps/quake.bsp")
 		serverflags = 0; // clean up serverflags!
 
+	string themap = substring(world.model, 5, -4);
+	if(coop && autocvar_sv_quake_maplist != "" && strstrofs(themap, autocvar_sv_quake_maplist, 0) >= 0)
+	{
+		deathmatch = 1;
+		coop = 0;
+		cvar_settemp("timelimit", ftos(autocvar_sv_quake_timelimit));
+		cvar_settemp("fraglimit", ftos(autocvar_sv_quake_fraglimit));
+	}
+
 	// NOTE: let's set this when a trigger_changelevel changes it again, not here
 	// setting it here causes map restarts to lose position!
 	//cvar_set("_spawntarget", "");
