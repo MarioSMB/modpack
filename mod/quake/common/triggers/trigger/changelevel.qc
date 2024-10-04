@@ -125,6 +125,17 @@ void changelevel_touch(entity this, entity toucher)
 	else
 		cvar_set("_spawntarget", "");
 
+	if(changelevel_checkinlist(this.map, autocvar_sv_quake_maplist))
+	{
+		cvar_set("deathmatch", "1");
+		cvar_set("coop", "0");
+	}
+	else
+	{
+		cvar_set("deathmatch", "0");
+		cvar_set("coop", "1");
+	}
+
 	// coded fix for aop's lack of a spawnflag
 	if(((this.spawnflags & NO_INTERMISSION) || mapname == "aopstart") &&(deathmatch == 0) && (!this.endtext || this.endtext == ""))
 	{

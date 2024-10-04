@@ -695,7 +695,7 @@ void weapon_touch(entity this, entity toucher)
 		toucher.m_champion.m_pickup_weapon(toucher.m_champion, toucher, this);
 
 // change to the weapon
-	if(STAT(WEAPONS, toucher) & wep.m_wepset)
+	if((STAT(WEAPONS, toucher) & wep.m_wepset) && (coop || deathmatch == 2))
 		STAT(DUAL_WEAPONS, toucher) |= wep.m_wepset;
 	else
 		STAT(WEAPONS, toucher) |= wep.m_wepset;
@@ -834,7 +834,7 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 
 void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
-	if(autocvar_skill == 3)
+	if(autocvar_skill == 3 || deathmatch)
 		wpn = W_RandomizeWeapon(wpn);
 
 	string mymdl = strcat("progs/g_", wpn.mdl, ".mdl");
