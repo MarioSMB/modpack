@@ -6,8 +6,10 @@ int autocvar_skill;
 bool autocvar_sv_curl_serverpackages_auto;
 string autocvar_sessionid;
 
-float autocvar_sv_quake_timelimit = 2880;
+float autocvar_sv_quake_matchlimit = 2880;
 string autocvar_sv_quake_maplist = "";
+float autocvar_sv_quake_timelimit = 15;
+float autocvar_sv_quake_fraglimit = 20;
 
 // protocol bytes
 const int SVC_CUTSCENE = 34;

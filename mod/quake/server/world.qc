@@ -1691,7 +1691,7 @@ void CheckRules_World()
 		}
 	}
 
-	float matchlimit = autocvar_sv_quake_timelimit * 60;
+	float matchlimit = autocvar_sv_quake_matchlimit * 60;
 	if(server_is_dedicated && !deathmatch && matchlimit && time >= matchlimit && autocvar_quit_when_empty)
 	{
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level

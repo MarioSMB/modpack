@@ -129,11 +129,15 @@ void changelevel_touch(entity this, entity toucher)
 	{
 		cvar_set("deathmatch", "1");
 		cvar_set("coop", "0");
+		cvar_set("timelimit", ftos(autocvar_sv_quake_timelimit));
+		cvar_set("fraglimit", ftos(autocvar_sv_quake_fraglimit));
 	}
 	else
 	{
 		cvar_set("deathmatch", "0");
 		cvar_set("coop", "1");
+		cvar_set("timelimit", "0");
+		cvar_set("fraglimit", "0");
 	}
 
 	// coded fix for aop's lack of a spawnflag
