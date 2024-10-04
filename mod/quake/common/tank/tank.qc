@@ -409,7 +409,7 @@ void Tank_Die(entity this)
 	else
 		_sound(this, CHAN_BODY, "tank/tankexp2.wav", 1, ATTN_NORM);
 
-	T_RadiusDamage(this, this.owner, 100, DEATH_TRAP.m_id, NULL);
+	T_RadiusDamage(this, this.owner, 100, DEATH_EXPLODE.m_id, NULL);
 
 	te_explosion(this.origin);
 

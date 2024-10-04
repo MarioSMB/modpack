@@ -6,7 +6,7 @@ void BallTouch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;		// don't explode on owner
 	if(toucher.takedamage == DAMAGE_AIM && Damage_ValidTarget(toucher, this.owner))
-		T_Damage(toucher, this, this.owner, 30, DEATH_TRAP.m_id);
+		T_Damage(toucher, this, this.owner, 30, this.projectiledeathtype);
 
 	if(this.attack_finished < time)
 		_sound(this, CH_WEAPON_SINGLE, "player_mime/bounce.wav", 0.7, ATTN_NORM);	// bounce sound
@@ -22,7 +22,7 @@ void Mime_ThrowBall(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.projectiledeathtype = DEATH_TRAP.m_id;
+	missile.projectiledeathtype = DEATH_MIMEBALL.m_id;
 	missile.bouncefactor = 1;
 	missile.bouncestop = 0.1;
 // set missile speed	

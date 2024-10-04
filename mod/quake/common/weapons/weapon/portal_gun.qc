@@ -214,4 +214,8 @@ METHOD(PortalGun, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
+METHOD(PortalGun, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_FRAG;
+}
 #endif

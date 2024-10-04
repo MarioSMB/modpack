@@ -24,7 +24,7 @@ void grape_launch(entity this)
 	setthink(newmis, SUB_Remove);
 	newmis.velocity = dir * 300;
 	settouch(newmis, spike_touch);
-	newmis.projectiledeathtype = DEATH_TRAP.m_id; // TODO
+	newmis.projectiledeathtype = DEATH_GRAPE.m_id;
 
 	delete(this);
 }

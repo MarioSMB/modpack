@@ -256,4 +256,8 @@ METHOD(Fish, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
+METHOD(Fish, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_FRAG;
+}
 #endif

@@ -137,7 +137,7 @@ void PlasmaTouch(entity this, entity toucher)
 		}
 		// Switch around this to make sure reflection happens once
 		entity newmis = launch_plasma(toucher, org, dir);
-		newmis.projectiledeathtype = DEATH_TRAP.m_id; // TODO: reflection deathtype
+		newmis.projectiledeathtype = this.projectiledeathtype;
 	}
 	else if(IS_PLAYER(this.realowner)) // only do an area explosion if it wasn't reflected?
 		PlasmaGroundOut(this);
@@ -243,5 +243,9 @@ METHOD(PlasmaGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
 METHOD(PlasmaGun, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
+}
+METHOD(PlasmaGun, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_FRAG;
 }
 #endif

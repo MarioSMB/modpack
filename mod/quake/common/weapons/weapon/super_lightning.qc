@@ -266,4 +266,8 @@ METHOD(SuperLightning, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
+METHOD(SuperLightning, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_FRAG;
+}
 #endif

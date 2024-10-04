@@ -78,4 +78,8 @@ METHOD(LavaNailgun, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
+METHOD(LavaNailgun, wr_killmessage, Notification(entity thiswep))
+{
+	return WEAPON_FRAG;
+}
 #endif

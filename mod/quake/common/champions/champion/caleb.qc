@@ -118,10 +118,14 @@ void Caleb_bats_think(entity this)
 	this.count = time + 0.5;
 
 	entity player = this.owner;
+	int hitenemies = 0;
 	FOREACH_ENTITY_RADIUS(player.origin, 250, it != this && it != player && it.health > 0 && !(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && Damage_ValidTarget(it, player) && checkpvs(player.origin, it),
 	{
+		hitenemies += 1;
+		if(hitenemies > 3)
+			break;
 		float oldhealth = it.health;
-		T_Damage(it, this, this.owner, 5, DEATH_TRAP.m_id);
+		T_Damage(it, this, this.owner, 5, DEATH_VAMPIREBATS.m_id);
 		float hpamount = oldhealth - it.health;
 		if(hpamount > 0)
 		{

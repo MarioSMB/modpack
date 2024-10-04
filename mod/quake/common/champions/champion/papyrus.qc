@@ -6,7 +6,7 @@ void BoneTouch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;		// don't explode on owner
 	if(toucher.takedamage == DAMAGE_AIM && Damage_ValidTarget(toucher, this.owner))
-		T_Damage(toucher, this, this.owner, 30 * this.scale, DEATH_TRAP.m_id);
+		T_Damage(toucher, this, this.owner, 30 * this.scale, this.projectiledeathtype);
 
 	if(this.attack_finished < time)
 		_sound(this, CH_WEAPON_SINGLE, "player_papyrus/lburn2.wav", 0.7, ATTN_NORM);	// bounce sound
@@ -24,7 +24,7 @@ void Papyrus_ThrowBone(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
-	missile.projectiledeathtype = DEATH_TRAP.m_id;
+	missile.projectiledeathtype = DEATH_BONETROUSLE.m_id;
 	missile.bouncefactor = 1;
 	missile.bouncestop = 0.1;
 // set missile speed	

@@ -813,7 +813,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 				trace_ent.velocity_z += 400;
 		}
 		if(trace_ent.reflectlightning)
-			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 	ldmg = damage;
 
@@ -832,7 +832,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
 		if(trace_ent.reflectlightning)
-			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 	ldmg = damage;
 
@@ -850,7 +850,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
 		if(trace_ent.reflectlightning)
-			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, DEATH_TRAP.m_id);
+			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 }
 
@@ -871,7 +871,7 @@ void LightningReflection(vector lstart, entity lsource, float ldamage, int death
 	{
 		vector dir = normalize(trace_endpos - lstart);
 		entity missile = launch_plasma(lsource, lstart, dir);
-		missile.projectiledeathtype = DEATH_TRAP.m_id;
+		missile.projectiledeathtype = deathtype;
 	}
 	else
 	{
