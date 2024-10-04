@@ -322,6 +322,8 @@ void GiveAllWeapons(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return; // no more singleplayer functionality, unless they're smart enough to enable this!
+	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return;
 
 	this.ammo_rockets = 100;
 	this.ammo_nails = 200;

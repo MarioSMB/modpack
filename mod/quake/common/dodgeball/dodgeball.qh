@@ -6,6 +6,7 @@
 int autocvar_sv_quake_dodgeball_balls = 1;
 int autocvar_sv_quake_dodgeball_copter_dropradius = 300;
 bool autocvar_sv_quake_dodgeball_classic = false;
+float autocvar_sv_quake_dodgeball_timelimit = 20;
 
 .float team_no, numbounces, died, throw_finished;
 

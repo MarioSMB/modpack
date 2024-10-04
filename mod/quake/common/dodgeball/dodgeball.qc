@@ -131,6 +131,8 @@ STATIC_INIT_LATE(Dodgeball)
 	if(world.worldtype != WORLDTYPE_DODGEBALL)
 		return;
 
+	cvar_settemp("timelimit", ftos(autocvar_sv_quake_dodgeball_timelimit));
+
 	ceasefire = true;
 	last_team = (random() > 0.5) ? 1 : 2;
 
@@ -139,7 +141,7 @@ STATIC_INIT_LATE(Dodgeball)
 	precache_sound("music/db_gold_wins.wav");
 	precache_sound("music/db_green_wins.wav");
 
-	int ballcount = bound(1, autocvar_sv_quake_dodgeball_balls, 10);
+	int ballcount = max(1, autocvar_sv_quake_dodgeball_balls);
 
 	while(ballcount > 0)
 	{

@@ -546,9 +546,9 @@ void Sbar_Score(int margin)
 		}
 	}
 
-	if(autocvar_sbar_gametime && (deathmatch || STAT(SKATING) || STAT(WORLDTYPE) == WORLDTYPE_SLIDE))
+	if(autocvar_sbar_gametime && (deathmatch || STAT(SKATING) || STAT(WORLDTYPE) == WORLDTYPE_SLIDE || STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL))
 	{
-		if(deathmatch && STAT(TIMELIMIT))
+		if((deathmatch || STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL) && STAT(TIMELIMIT))
 		{
 			string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
 			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), '1 1 1', 12, '12 12 0');

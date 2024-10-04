@@ -894,6 +894,9 @@ void DropSpecialBall(entity this)
 	
 	STAT(SPECIAL, ball) = STAT(SPECIAL, this);
 	settouch(ball, specialball_pickup);
+
+	setthink(ball, SUB_Remove);
+	ball.nextthink = time + 20;
 	
 	if(STAT(SPECIAL, this) == 1)
 	{	// ice

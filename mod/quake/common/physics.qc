@@ -430,7 +430,7 @@ void PM_UserFriction(entity this, float dt)
 	float control = (speed < PHYS_STOPSPEED(this)) ? PHYS_STOPSPEED(this) : speed;
 	float newspeed = speed - dt * control * friction;
 
-	if(newspeed < 0)
+	if(newspeed <= 0)
 		newspeed = 0;
 	else
 		newspeed /= speed;
@@ -483,7 +483,10 @@ void PM_AirMove(entity this, float maxspd_mod, float dt)
 	float wishspeed = vlen(wishvel);
 	if (wishspeed > maxspeed)
 	{
-		wishvel *= maxspeed / wishspeed;
+		if(maxspeed == 0)
+			wishvel *= maxspeed;
+		else
+			wishvel *= maxspeed / wishspeed;
 		wishspeed = maxspeed;
 	}
 
@@ -491,7 +494,7 @@ void PM_AirMove(entity this, float maxspd_mod, float dt)
 	{
 		// do nothing
 	}
-	if(this.move_movetype == MOVETYPE_NOCLIP)
+	else if(this.move_movetype == MOVETYPE_NOCLIP)
 	{
 		// noclip
 		makevectors(this.v_angle);

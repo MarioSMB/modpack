@@ -1441,8 +1441,8 @@ void NoclipCheat(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)
 		return;
-	if(world.worldtype == WORLDTYPE_DODGEBALL)
-		return;
+	//if(world.worldtype == WORLDTYPE_DODGEBALL)
+		//return;
 
 	if(this.move_movetype == MOVETYPE_WALK)
 	{
