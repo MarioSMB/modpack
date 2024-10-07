@@ -178,7 +178,7 @@ void W_BreegullBlaster_ClockworkTouch(entity this, entity toucher)
 	dummy.cnt = player.scale;
 	dummy.active = true;
 	dummy.weaponentity_fld = this.weaponentity_fld;
-	if(horde_ent)
+	if(horde_ent || deathmatch)
 		dummy.count = time + autocvar_sv_quake_clockwork_time_horde; // short duration!
 	else
 		dummy.count = time + autocvar_sv_quake_clockwork_time; // short duration!

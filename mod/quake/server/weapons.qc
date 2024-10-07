@@ -1038,7 +1038,7 @@ void InternalFireThink(entity this)
 			return;
 		}
 	}
-	if(IS_PLAYER(this.enemy) || !this.enemy.takedamage)
+	if((IS_PLAYER(this.enemy) && !Damage_ValidTarget(this.enemy, this.owner)) || !this.enemy.takedamage)
 	{
 		BecomeExplosion(this);
 		return;

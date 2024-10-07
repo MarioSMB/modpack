@@ -417,6 +417,8 @@ void GotoNextMap()
 	{
 		if(autocvar_horde)
 			changelevel(HordeRandomMap());
+		else if(deathmatch)
+			changelevel(PickDMMap(true));
 		else
 			changelevel(nextmap);
 	}
