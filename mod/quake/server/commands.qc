@@ -179,7 +179,10 @@ void GameCommand(string command)
 		if(autocvar_sv_quake_maplist != "")
 		{
 			mapname = PickDMMap(false);
-			NextLevel();
+			if(deathmatch)
+				NextLevel();
+			else
+				changelevel(mapname);
 		}
 		return;
 	}
