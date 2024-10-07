@@ -7,6 +7,34 @@ void PrintToChatAll(string text)
 	bprint(text);
 }
 
+string NearestLocation(vector p)
+{
+    string ret = "somewhere";
+    return ret;
+}
+
+string PlayerHealth(entity this)
+{
+	float myhealth = floor(this.health);
+	if(myhealth == -666)
+		return "spectating";
+	else if(myhealth == -2342 || (myhealth == 2342 && intermission_running))
+		return "observing";
+	else if(myhealth <= 0 || this.deadflag != DEAD_NO || this.died)
+		return "dead";
+	return ftos(myhealth);
+}
+
+string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	if(!wepent || !IS_PLAYER(this))
+		return "N/A";
+	else if(wepent.m_weapon != WEP_Null)
+		return wepent.m_weapon.m_name;
+	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
+}
+
 string formatmessage(entity this, string msg)
 {
 	float p = 0;
@@ -22,10 +50,6 @@ string formatmessage(entity this, string msg)
 	else if(this.items & IT_ROCKETS) ammoitems = "rockets";
 	else if(this.items & IT_NAILS) ammoitems = "nails";
 	else if(this.items & IT_SHELLS) ammoitems = "shells";
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	Weapon wep = this.(weaponentity).m_weapon;
-	string wepname = wep.m_name;
 
 	traceline(this.cursor_trace_start, this.cursor_trace_start + normalize(this.cursor_trace_endpos - this.cursor_trace_start) * 16384, MOVE_NORMAL, this);
 	vector cursor = trace_endpos;
@@ -53,23 +77,27 @@ string formatmessage(entity this, string msg)
 		string replacement = substring(msg, p, 2);
 		string escape = substring(msg, p + 1, 1);
 
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 		switch(escape)
 		{
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
 			case "a": replacement = ftos(floor(this.armorvalue)); break;
-			case "h": replacement = ftos(floor(this.health)); break;
-			case "l": replacement = vtos(this.origin); break;
-			case "y": replacement = vtos(cursor); break;
-			//case "d": replacement = vtos(this.death_origin); break;
-			case "w": replacement = wepname; break;
+			case "h": replacement = PlayerHealth(this); break;
+			case "l": replacement = NearestLocation(this.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "o": replacement = vtos(this.origin); break;
+			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
+			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
-			//case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
-			//case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
+			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 - time))); break;
+			case "T": replacement = seconds_tostring(floor(time)); break;
 		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));

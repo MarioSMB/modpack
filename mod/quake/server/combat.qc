@@ -221,10 +221,10 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 	if(coop && IS_PLAYER(targ) && IS_PLAYER(attacker))
 		return false;
 	// decoys are never valid targets
-	if(targ.monsterdef && targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY)
+	if(targ.monsterdef && (targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
 		return false;
 
-	// first very the target
+	// first verify the target
 	if(IS_MONSTER(targ) && targ.charmed)
 	{
 		// can't hurt our pets

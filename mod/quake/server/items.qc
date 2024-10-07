@@ -823,6 +823,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_ROCKETS;
 				break;
 			}
+			case WEP_HAMMER:
+			{
+				if(random() > 0.5)
+					mytype = IT_CELLS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;
