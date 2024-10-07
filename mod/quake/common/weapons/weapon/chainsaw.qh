@@ -5,7 +5,7 @@ CLASS(Chainsaw, Weapon)
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 1);
 /* spawnflags*/ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Chainsaw, aflag, int, 0);
-/* modelname */ ATTRIB(Chainsaw, mdl, string, "saw");
+/* modelname */ ATTRIB(Chainsaw, mdl, string, "chainsaw");
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshair55");
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair_size, float, 0.6);
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair_color, vector, '0.5 0.5 0');

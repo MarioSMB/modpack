@@ -5,7 +5,7 @@ CLASS(SuperNailgun, Weapon)
 /* impulse   */ ATTRIB(SuperNailgun, impulse, int, 5);
 /* spawnflags*/ ATTRIB(SuperNailgun, spawnflags, int, WEP_FLAG_HUDFALLBACK);
 /* ammo */      ATTRIB(SuperNailgun, aflag, int, 30);
-/* modelname */ ATTRIB(SuperNailgun, mdl, string, "nail2");
+/* modelname */ ATTRIB(SuperNailgun, mdl, string, "supernailgun");
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair, string, "gfx/crosshairhagar");
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair_size, float, 0.8);
 /* crosshair */ ATTRIB(SuperNailgun, w_crosshair_color, vector, '1 1 0.5');

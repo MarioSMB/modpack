@@ -61,7 +61,7 @@ PRECACHE(Spellbook)
 	precache_model("progs/skull_pike_1.mdl");
 	precache_model("progs/skull_pike_2.mdl");
 	precache_model("progs/fire_rune.spr");
-	precache_model("progs/flame2.mdl");
+	precache_model("progs/quake_flame2.mdl");
 	precache_model("progs/skull.mdl");
 	precache_sound("weapons/skull_attack.wav");
 
@@ -973,7 +973,7 @@ void summon_curse(entity this)
 		flame.realowner = this.realowner;
 		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
 		flame.solid = SOLID_TRIGGER;
-		_setmodel(flame, "progs/flame2.mdl");
+		_setmodel(flame, "progs/quake_flame2.mdl");
 		flame.frame = 0;
 		setsize(flame, '0 0 -16', '0 0 0'); 
 		flame.cnt = time + 17 + (random() * 2); 

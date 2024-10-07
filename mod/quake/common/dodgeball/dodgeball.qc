@@ -217,7 +217,7 @@ PRECACHE(Dodgeball_Precache)
 	precache_model("progs/v_hdodgeball.mdl");
 	precache_model("progs/v_roflcopterball.mdl");
 	precache_model("progs/v_spanner_ball.mdl");
-	precache_model("progs/flame2.mdl");
+	precache_model("progs/quake_flame2.mdl");
 	precache_model("progs/ice_db.mdl");
 	precache_model("progs/bigball_db.mdl");
 	precache_model("progs/prop_db.mdl");

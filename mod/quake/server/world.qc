@@ -452,8 +452,8 @@ Default style is 0
 */
 spawnfunc(light_torch_small_walltorch)
 {
-	precache_model("progs/flame.mdl");
-	_setmodel(this, "progs/flame.mdl");
+	precache_model("progs/quake_flame.mdl");
+	_setmodel(this, "progs/quake_flame.mdl");
 	bool allow_fire = true;
 	if((this.spawnflags & 1))
 		allow_fire = false;
@@ -469,8 +469,8 @@ Large yellow flame ball
 */
 spawnfunc(light_flame_large_yellow)
 {
-	precache_model("progs/flame2.mdl");
-	_setmodel(this, "progs/flame2.mdl");
+	precache_model("progs/quake_flame2.mdl");
+	_setmodel(this, "progs/quake_flame2.mdl");
 	this.frame = 1;
 	bool allow_fire = true;
 	if((this.spawnflags & 2))
@@ -485,8 +485,8 @@ Small yellow flame ball
 */
 spawnfunc(light_flame_small_yellow)
 {
-	precache_model("progs/flame2.mdl");
-	_setmodel(this, "progs/flame2.mdl");
+	precache_model("progs/quake_flame2.mdl");
+	_setmodel(this, "progs/quake_flame2.mdl");
 	bool allow_fire = true;
 	if((this.spawnflags & 2))
 		allow_fire = false;
@@ -500,8 +500,8 @@ Small white flame ball
 */
 spawnfunc(light_flame_small_white)
 {
-	precache_model("progs/flame2.mdl");
-	_setmodel(this, "progs/flame2.mdl");
+	precache_model("progs/quake_flame2.mdl");
+	_setmodel(this, "progs/quake_flame2.mdl");
 	bool allow_fire = true;
 	if((this.spawnflags & 2))
 		allow_fire = false;
@@ -820,10 +820,10 @@ PRECACHE(Junk)
 
 	precache_model("progs/v_axe.mdl");
 	precache_model("progs/v_shot.mdl");
-	precache_model("progs/v_nail.mdl");
+	precache_model("progs/v_nailgun.mdl");
 	precache_model("progs/v_rock.mdl");
 	precache_model("progs/v_shot2.mdl");
-	precache_model("progs/v_nail2.mdl");
+	precache_model("progs/v_supernailgun.mdl");
 	precache_model("progs/v_rock2.mdl");
 
 	precache_model("progs/bolt.mdl");		// for lightning gun
@@ -844,8 +844,8 @@ PRECACHE(Junk)
 
 	precache_model("progs/bit.mdl");
 
-	precache_model("progs/v_saw.mdl");		//dhm - Chainsaw
-	precache_model("progs/g_saw.mdl");		//dhm - Chainsaw
+	precache_model("progs/v_chainsaw.mdl");		//dhm - Chainsaw
+	precache_model("progs/g_chainsaw.mdl");		//dhm - Chainsaw
 	precache_sound("weapons/sawidle.wav");		//chainsaw idle
 	precache_sound("weapons/sawridle.wav");	//chainsaw idle
 	precache_sound("weapons/sawatck.wav");		//chainsaw attack
