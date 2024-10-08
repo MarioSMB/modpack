@@ -38,13 +38,13 @@ Usage
 On server launch, you'll need to set a few cvars to make everything work:
 
 `coop 1`  
-`deathmatch 0`   
+`deathmatch 0`  
 `sv_playerphysicsqc 1`  
-`mod_q1bsp_polygoncollisions 0`
-`sv_gameplayfix_droptofloorstartsolid_nudgetocorrect 0`
-`sv_legacy_bbox_expand 1`
-`sv_areagrid_link_SOLID_NOT 1`
-`exec physicsq.cfg`  
+`mod_q1bsp_polygoncollisions 0`  
+`sv_gameplayfix_droptofloorstartsolid_nudgetocorrect 0`  
+`sv_legacy_bbox_expand 1`  
+`sv_areagrid_link_SOLID_NOT 1`  
+`exec physicsq.cfg`    
 
 
 Mission packs will be enabled automatically if you add their pk3 to the server

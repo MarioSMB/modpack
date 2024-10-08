@@ -49,7 +49,7 @@ void DelayedElectrifyThink(entity this)
 	this.nextthink = time;
 
 	int hitcount = 0;
-	FOREACH_ENTITY_RADIUS(this.origin, 200, it != this.owner,
+	FOREACH_ENTITY_RADIUS(this.origin, 200, it != this.owner && it != this.enemy,
 	{
 		if(it.health <= 0 || !it.takedamage || !Damage_ValidTarget(it, this.enemy))
 			continue;
