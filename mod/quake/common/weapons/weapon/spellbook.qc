@@ -434,9 +434,11 @@ void cyclone_touch(entity this, entity toucher)
 	if(time < toucher.cyclone_timer)
 		return;
 
-	toucher.cyclone_timer = time + ((IS_MONSTER(toucher)) ? 1.5 : 0.75);
+	bool is_enemy = (toucher != this.realowner && Damage_ValidTarget(toucher, this.realowner));
 
-	if(IS_MONSTER(toucher) && toucher.takedamage)
+	toucher.cyclone_timer = time + ((is_enemy) ? 1.5 : 0.75);
+
+	if(is_enemy && toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.realowner, 50, this.projectiledeathtype);
 		ThrowIce(toucher);
@@ -785,7 +787,7 @@ void seek_and_fire1(entity this)
 	entity targ = NULL;
 	while(head)
 	{
-		if(head != this && Damage_ValidTarget(head, this.realowner))
+		if(head != this && head != this.realowner && head.takedamage && Damage_ValidTarget(head, this.realowner))
 		{
 			float newdist = vlen2(head.origin - this.origin);
 			if((!olddist || newdist <= olddist) && visible(this, head))
@@ -842,7 +844,7 @@ void seek_and_fire2(entity this)
 	entity head = findradius(this.origin, 800);			
 	while(head)
 	{
-		if(head != this && Damage_ValidTarget(head, this.realowner))
+		if(head != this && head != this.realowner && head.takedamage && Damage_ValidTarget(head, this.realowner))
 		{
 			if(visible(this, head))
 				this.enemy = head;		
