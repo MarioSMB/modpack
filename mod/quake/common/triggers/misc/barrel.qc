@@ -28,6 +28,15 @@ void barrel_detonate(entity this, entity inflictor, entity attacker, int deathty
 	this.nextthink = time + 0.15;
 }
 
+void barrel_detonate_use(entity this, entity actor, entity trigger)
+{
+	this.enemy = actor;
+	this.classname = "explo_box";
+	this.takedamage = DAMAGE_NO;
+	setthink(this, barrel_explode);
+	this.nextthink = time + 0.1;
+}
+
 void barrel_spawn(entity this)
 {
 	if(!this.mdl || this.mdl == "")
@@ -40,6 +49,7 @@ void barrel_spawn(entity this)
 	if(!this.health)
 		this.health = 20;
 	this.th_die = barrel_detonate;
+	this.use = barrel_detonate_use;
 	this.takedamage = DAMAGE_AIM;
 	this.killstring = " blew up";
 
