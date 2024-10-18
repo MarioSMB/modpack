@@ -233,7 +233,8 @@ void misc_model_alkaline(entity this)
 
 spawnfunc(misc_model)
 {
-	if(IsMGMap())
+	// HACK: we use the AOP version of misc_model for the mumbo skull!
+	if(world.model == "maps/quake.bsp" || IsMGMap())
 	{
 		misc_model_aop(this);
 		return;
