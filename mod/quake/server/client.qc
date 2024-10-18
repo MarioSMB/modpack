@@ -3483,6 +3483,43 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "pingent")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+
+		entity foundent = ftoe(stof(argv(1)));
+		if(!foundent)
+		{
+			sprint(this, "Need to provide an entity number\n");
+			return;
+		}
+
+		entity e = WaypointSprite_Spawn(WP_Entity, 10, 0, NULL, (foundent.absmin + foundent.absmax) * 0.5, NULL, 0, foundent, waypointsprite_attachedforping, false, NULL);
+		e.realowner = this;
+		e.wp_extra = num_for_edict(foundent);
+		e.waypointsprite_visible_for_player = ping_waypointsprite_visible_for_player;
+		return;
+	}
+
+	if(cmd_name == "pingpos")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+
+		vector thepos = stov(argv(1));
+		if(thepos == '0 0 0')
+		{
+			sprint(this, "Gotta provide a position in quotes\n");
+			return;
+		}
+
+		entity e = WaypointSprite_Spawn(WP_Waypoint, 20, 0, NULL, thepos, NULL, 0, NULL, waypointsprite_attachedforping, false, NULL);
+		e.realowner = this;
+		e.waypointsprite_visible_for_player = ping_waypointsprite_visible_for_player;
+		return;
+	}
+
 	if(cmd_name == "say" || cmd_name == "say_team")
 	{
 		if(argc >= 2) Say(this, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
