@@ -296,6 +296,9 @@ Monster monster_randomize(entity this, Monster mon)
 	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
+	if(substring(world.model, 0, 9) == "maps/ffj_")
+		return MON_FLOYD;
+
 	bool seasonlocked = Monsters_SeasonLocked();
 
 	RandomSelection_Init();

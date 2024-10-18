@@ -310,6 +310,10 @@ spawnfunc(monster_enforcer)
 	}
 	monster_start(this, true, MON_ENFORCER);
 }
+
+// alkaline
+spawnfunc(monster_dreadnaught) { monster_start(this, true, MON_ENFORCER); }
+spawnfunc(monster_centurion) { monster_start(this, true, MON_ENFORCER); }
 #endif // SVQC
 
 #ifdef SVQC

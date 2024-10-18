@@ -10,6 +10,7 @@ float horde_skill; // skill level at beginning of horde, saved to avoid tamperin
 
 int keys_silver; // number of silver keys the players are carrying
 int keys_gold; // number of gold keys the players are carrying
+int keys_platinum; // number of platinum keys the players are carrying
 
 .float storednextthink;
 .void(entity this) storedthink;

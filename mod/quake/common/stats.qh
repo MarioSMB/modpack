@@ -255,6 +255,7 @@ REGISTER_STAT(CANNON, bool)
 #endif
 REGISTER_STAT(KEYS_SILVER, int, keys_silver)
 REGISTER_STAT(KEYS_GOLD, int, keys_gold)
+REGISTER_STAT(KEYS_PLATINUM, int, keys_platinum)
 
 REGISTER_STAT(BREEGULL_EGGTYPE, int)
 #ifdef SVQC

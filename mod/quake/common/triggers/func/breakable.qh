@@ -1,0 +1,13 @@
+#pragma once
+
+#ifdef SVQC
+const int BREAKABLE_GREENMETAL = 0;
+const int BREAKABLE_REDMETAL = 1;
+const int BREAKABLE_CONCRETE = 2;
+const int BREAKABLE_GLASS = 3;
+const int BREAKABLE_WOOD = 5;
+
+const int BREAKABLE_NO_MONSTERS = 1;
+const int BREAKABLE_ALWAYS_SHOOTABLE = 2;
+const int BREAKABLE_ONLY_EXPLOSION = 4;
+#endif

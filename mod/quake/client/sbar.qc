@@ -984,6 +984,17 @@ void Sbar_DrawInventory()
 			drawfont = oldfont;
 		}
 	}
+	if(myitems & IT_KEY3)
+	{
+		// TODO: custom icon
+		Sbar_DrawPic(vec2(192 + 4 * 16, -16), "gfx/quake/sb_key2");
+		if(STAT(KEYS_PLATINUM) > 0)
+		{
+			drawfont = 8; // FONT_USER
+			drawstring_aspect(sbar + vec2(192 + 5 * 16, -8) - '2 0 0', ftos(STAT(KEYS_PLATINUM)), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
+		}
+	}
 #if 0
 	// base powerups
 	for(int j = 2; j < 6; ++j)
@@ -1287,7 +1298,7 @@ void Sbar_DrawChampionOverlay()
 	if(csqcplayer && csqcplayer.m_champion != oldchampion && !csqcplayer.m_champion.qcc_noselect)
 	{
 		oldchampion = csqcplayer.m_champion;
-		champion_messagetime = time + 3;
+		champion_messagetime = time + 6;
 	}
 	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_overlay)
 		csqcplayer.m_champion.m_overlay(csqcplayer.m_champion);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "breakable.qh"
 #include "door.qh"
 #include "earthquake.qh"
 #include "exploder.qh"

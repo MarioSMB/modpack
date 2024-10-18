@@ -1460,6 +1460,44 @@ spawnfunc(item_key2)
 }
 
 
+// alkaline platinum key
+spawnfunc(item_key3)
+{
+	SUB_SetWorldtype(this);
+	switch(this.worldtype)
+	{
+		default:
+		case WORLDTYPE_MEDIEVAL:
+		case WORLDTYPE_HUB:
+		{
+			precache_model("progs/w_p_key.mdl");
+			_setmodel(this, "progs/w_p_key.mdl");
+			this.netname = "platinum key";
+			break;
+		}
+		case WORLDTYPE_METAL:
+		{
+			precache_model("progs/m_p_key.mdl");
+			_setmodel(this, "progs/m_p_key.mdl");
+			this.netname = "platinum runekey";
+			break;
+		}
+		case WORLDTYPE_BASE:
+		{
+			precache_sound("progs/b_p_key.mdl");
+			_setmodel(this, "progs/b_p_key.mdl");
+			this.netname = "platinum keycard";
+			break;
+		}
+	}
+	key_setsounds(this);
+	setcefc(this, key_customize);
+	settouch(this, key_touch);
+	this.items = IT_KEY3;
+	setsize(this, '-16 -16 -24', '16 16 32');
+	StartItem(this);
+}
+
 
 /*
 ===============================================================================
@@ -2213,6 +2251,19 @@ spawnfunc(item_revival)
 	this.powerups = POWERUP_REVIVAL;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
+}
+
+// alkaline trifecta powerup
+// just spawns a random powerup
+spawnfunc(item_artifact_trifecta)
+{
+	float r = random();
+	if(r > 0.66)
+		spawnfunc_item_artifact_super_damage(this);
+	else if(r > 0.33)
+		spawnfunc_item_artifact_invulnerability(this);
+	else
+		spawnfunc_item_artifact_sharp_shooter(this);
 }
 
 /*

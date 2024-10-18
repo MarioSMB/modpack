@@ -685,6 +685,9 @@ float EdieCheckAttack(entity this)
 /*QUAKED monster_edie(1 0 0)(-32 -32 -24)(32 32 64)
 */
 spawnfunc(monster_edie) { monster_start(this, true, MON_EDIE); }
+
+// alkaline
+spawnfunc(monster_banshee) { monster_start(this, true, MON_EDIE); }
 #endif // SVQC
 
 #ifdef SVQC

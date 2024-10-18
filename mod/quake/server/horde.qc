@@ -684,6 +684,9 @@ void horde_set_keys(entity temp_player)
 	
 	if(keys_gold > 0)
 		temp_player.items |= IT_KEY2;
+
+	if(keys_platinum > 0)
+		temp_player.items |= IT_KEY3;
 }
 	
 
@@ -721,6 +724,12 @@ void horde_key_give(int key_item)
 		if(keys_gold == 1)
 			horde_key_give_all(IT_KEY2);
 	}
+	else if(key_item & IT_KEY3)
+	{
+		keys_platinum += 1;
+		if(keys_platinum == 1)
+			horde_key_give_all(IT_KEY3);
+	}
 	horde_print_keys();
 }
 
@@ -737,6 +746,12 @@ void horde_key_spend(float key_item)
 		keys_gold -= 1;
 		if(keys_gold == 0)
 			horde_key_remove_all(IT_KEY2);
+	}
+	else if(key_item & IT_KEY3)
+	{
+		keys_platinum -= 1;
+		if(keys_platinum == 0)
+			horde_key_remove_all(IT_KEY3);
 	}
 	horde_print_keys();
 }

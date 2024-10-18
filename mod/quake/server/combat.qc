@@ -5,6 +5,7 @@
 #include "monsters/ai_minions.qh"
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
+#include "../common/triggers/func/breakable.qh"
 #include "../common/triggers/triggers.qh"
 #include "weapons/weaponsystem.qh"
 
@@ -445,6 +446,13 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
+	if(targ.classname == "func_breakable")
+	{
+		if((targ.spawnflags & BREAKABLE_NO_MONSTERS) && IS_MONSTER(attacker))
+			return;
+		if((targ.spawnflags & BREAKABLE_ONLY_EXPLOSION) && !IsExplosionDamage)
+			return;
+	}
 	if(targ.classname == "vortex" && inflictor.owner != targ.owner)
 		return;
 	if(IS_PLAYER(targ) && inflictor.classname == "Vengeance")

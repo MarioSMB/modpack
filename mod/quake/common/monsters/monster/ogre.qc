@@ -491,6 +491,9 @@ spawnfunc(monster_ogre_marksman)
 	this.classname = "monster_ogre_marksman"; // TODO: separate monster?
 	monster_start(this, true, MON_OGRE);
 }
+
+// alkaline
+spawnfunc(monster_ogreb) { monster_start(this, true, MON_OGRE); }
 #endif // SVQC
 
 #ifdef SVQC
