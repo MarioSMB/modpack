@@ -8,5 +8,5 @@
 
 bool FogPushSettingsFrom(entity client, entity source, float transitionTime);
 
-void SetFog(entity client, float density, vector color, float transitionTime);
+void SetFog(entity client, float density, vector thecolor, float transitionTime);
 #endif

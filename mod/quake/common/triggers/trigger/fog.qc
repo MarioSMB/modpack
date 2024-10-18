@@ -102,18 +102,18 @@ void stuffcmd_float(entity client, float f)
 	stuffcmd_int( client, decpart, 10000);
 }
 
-void SetFog(entity client, float density, vector color, float transitionTime)
+void SetFog(entity client, float density, vector thecolor, float transitionTime)
 {
 	client.fog_density = density;
-	client.fog_color = color;
+	client.fog_color = thecolor;
 	stuffcmd(client, "\nfog ");
 	stuffcmd_float(client, density);
 	stuffcmd(client, " ");
-	stuffcmd_float(client, color_x);
+	stuffcmd_float(client, thecolor.x);
 	stuffcmd(client, " ");
-	stuffcmd_float(client, color_y);
+	stuffcmd_float(client, thecolor.y);
 	stuffcmd(client, " ");
-	stuffcmd_float(client, color_z);
+	stuffcmd_float(client, thecolor.z);
 	if(transitionTime > 0)
 	{
 		stuffcmd(client, " ");
@@ -241,9 +241,9 @@ void trigger_fog_transition_touch(entity this, entity toucher)
 	entity fog2 = GetFogInfoEntity(this, target);
 
 	float density = ((1 - tween) * fog1.fog_density) + (tween * fog2.fog_density);
-	vector color = ((1 - tween) * fog1.fog_color) + (tween * fog2.fog_color);
+	vector thecolor = ((1 - tween) * fog1.fog_color) + (tween * fog2.fog_color);
 
-	SetFog(toucher, density, color, 0);
+	SetFog(toucher, density, thecolor, 0);
 }
 
 /*QUAKED trigger_fog_transition (0.5 .5 .8) (? ? ?) (? ? ?)

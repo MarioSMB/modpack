@@ -935,7 +935,7 @@ void SkullMissileTouch(entity this, entity toucher)
 	s_explode1(this);
 }
 
-void flame_touch(entity this, entity toucher)
+void spell_fire_touch(entity this, entity toucher)
 {
 	if(!toucher || !toucher.takedamage || toucher == this.realowner)
 		return;
@@ -979,7 +979,7 @@ void summon_curse(entity this)
 		flame.frame = 0;
 		setsize(flame, '0 0 -16', '0 0 0'); 
 		flame.cnt = time + 17 + (random() * 2); 
-		settouch(flame, flame_touch);
+		settouch(flame, spell_fire_touch);
 		setthink(flame, fire_particles);
 		flame.nextthink = time + 0.05;
 		setorigin(flame, this.origin);

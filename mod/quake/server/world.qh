@@ -78,6 +78,8 @@ void dropclient_do(entity this);
 
 bool dropclient_schedule(entity this);
 
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath);
+
 void SendCSQCLightningBeam(vector v1, vector v2);
 
 void dedicated_print(string input);

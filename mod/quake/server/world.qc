@@ -1344,6 +1344,60 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	Copper_OnEntityPrespawn(this);
 }
 
+/** Retrieves the value of a map entity field from fullspawndata.
+ * This bypasses field value changes made by the engine,
+ * eg string-to-float and escape sequence substitution.
+ *
+ * Avoids the need to declare fields just to read them once :)
+ *
+ * Returns the last instance of the field to match DarkPlaces behaviour.
+ *
+ * Path support: converts \ to / and checks the file exists, if vfspath is true.
+ * Returns string_null if the entity does not have the field, or the file is not in the VFS.
+ *
+ * FIXME: entities with //comments are not supported.
+ */
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath)
+{
+	string v = string_null;
+
+	if (!e.fullspawndata) // Engine lacks support, warning spam in CheckEngineExtensions()
+		return v;
+
+	if (strstrofs(e.fullspawndata, "//", 0) >= 0)
+	{
+		// tokenize and tokenize_console return early if "//" is reached,
+		// which can leave an odd number of tokens and break key:value pairing.
+		LOG_WARNF("^1EDICT %s fullspawndata contains unsupported //comment^7%s", ftos(num_for_edict(e)), e.fullspawndata);
+		return v;
+	}
+
+	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), fieldname));
+	//print(strcat("FULLSPAWNDATA:", e.fullspawndata, "\n"));
+
+	// tokenize treats \ as an escape, but tokenize_console returns the required literal
+	for (int t = tokenize_console(e.fullspawndata) - 3; t > 0; t -= 2)
+	{
+		//print(sprintf("\tTOKEN %s:%s\t%s:%s\n", ftos(t), ftos(t + 1), argv(t), argv(t + 1)));
+		if (argv(t) == fieldname)
+		{
+			v = argv(t + 1);
+			break;
+		}
+	}
+
+	//print(strcat("RESULT: ", v, "\n\n"));
+
+	if (v && vfspath)
+	{
+		v = strreplace("\\", "/", v);
+		if (whichpack(v) == "")
+			return string_null;
+	}
+
+	return v;
+}
+
 int nJoinAllowed(entity this, entity ignore);
 //bool autocvar_g_full_getstatus_responses;
 string autocvar_g_xonoticversion;

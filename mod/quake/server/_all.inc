@@ -25,6 +25,7 @@
 #include "shop.qc"
 #include "explosions.qc"
 #include "vote.qc"
+#include "rubicon2.qc"
 
 #include "command/_all.inc"
 #include "weapons/_mod.inc"
