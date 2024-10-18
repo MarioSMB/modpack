@@ -200,7 +200,7 @@ spawnfunc(info_null)
 #ifdef SVQC
 bool Inhibit_Coop(entity this)
 {
-	return (coop && (this.spawnflags & NOT_IN_COOP));
+	return (coop && (this.spawnflags & NOT_IN_COOP) && IsMGMap());
 }
 
 /*
@@ -616,7 +616,7 @@ Returns true if COOP_ONLY spawnflag is set and we're not in coop.
 */
 bool RemovedOutsideCoop(entity this)
 {
-	return (!coop && (this.spawnflags & COOP_ONLY));
+	return (!coop && (this.spawnflags & COOP_ONLY) && IsMGMap());
 }
 
 .void(entity, entity, entity) trigger_init_use;

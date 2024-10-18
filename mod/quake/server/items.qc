@@ -1484,7 +1484,7 @@ spawnfunc(item_key3)
 		}
 		case WORLDTYPE_BASE:
 		{
-			precache_sound("progs/b_p_key.mdl");
+			precache_model("progs/b_p_key.mdl");
 			_setmodel(this, "progs/b_p_key.mdl");
 			this.netname = "platinum keycard";
 			break;

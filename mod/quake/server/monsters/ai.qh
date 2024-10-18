@@ -18,6 +18,8 @@ const float MAX_CHARMER_DISTANCE = 200;
 const float MIN_CHARMER_DISTANCE = 150;
 const float TOOCLOSE_CHARMER_DISTANCE = 120;
 
+const int MONSTER_IGNOREPLAYER = 131072; // alkaline (doesn't apply in MG maps)
+
 const float MIN_ANGLE_DELTA = 10;
 
 .float visible_distance; // weird hipnotic feature
