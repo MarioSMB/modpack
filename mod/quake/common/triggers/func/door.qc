@@ -333,6 +333,24 @@ void door_touch(entity this, entity toucher)
 				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 		}
+		else if(this.owner.items == IT_KEY3)
+		{
+			if(this.worldtype == WORLDTYPE_BASE)
+			{
+				centerprint(toucher, "You need the platinum keycard");
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
+			}
+			else if(this.worldtype == WORLDTYPE_METAL)
+			{
+				centerprint(toucher, "You need the platinum runekey");
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);			
+			}
+			else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
+			{
+				centerprint(toucher, "You need the platinum key");
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
+			}
+		}
 		return;
 	}
 
@@ -723,8 +741,10 @@ spawnfunc(func_door)
 	
 	if(this.spawnflags & DOOR_SILVER_KEY)
 		this.items = IT_KEY1;
-	if(this.spawnflags & DOOR_GOLD_KEY)
+	else if(this.spawnflags & DOOR_GOLD_KEY)
 		this.items = IT_KEY2;
+	else if(this.spawnflags & DOOR_PLAT_KEY)
+		this.items = IT_KEY3;
 	
 	if(!this.speed)
 		this.speed = 100;

@@ -7,6 +7,7 @@ const int DOOR_GOLD_KEY = BIT(3);
 const int DOOR_SILVER_KEY = BIT(4);
 const int DOOR_TOGGLE = BIT(5);
 const int DOOR_CRUSHER = BIT(6); // mg flag
+const int DOOR_PLAT_KEY = 16384; // alkaline
 
 .float speed2; // Yoder add, July 10 2020, used by func_doors' "door_go_down"
 

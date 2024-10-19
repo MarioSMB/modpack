@@ -224,6 +224,9 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 	// decoys are never valid targets
 	if(targ.monsterdef && (targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
 		return false;
+	// in the event of our owner being lost, just treat the target as braindead
+	if(targ.charmed && !targ.charmer)
+		return false;
 
 	// first verify the target
 	if(IS_MONSTER(targ) && targ.charmed)

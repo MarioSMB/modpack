@@ -79,7 +79,7 @@ void SetChangeParms(entity this)
 	}
 
 // remove items
-	this.items &= ~(IT_KEY1 | IT_KEY2);
+	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_KEY3);
 	this.items &= ~IT_TANK;
 	this.items &= ~IT_SUPERHEALTH; // rogue
 	this.gravity = 1.0;

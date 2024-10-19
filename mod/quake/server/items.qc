@@ -100,7 +100,7 @@ void ItemSpawn(entity this, entity actor, entity trigger)
 void PlaceItem(entity this)
 {
 	this.mdl = this.model;		// so it can be restored on respawn
-	if(!(this.items & IT_KEY1) && !(this.items & IT_KEY2))
+	if(!(this.items & IT_KEY1) && !(this.items & IT_KEY2) && !(this.items & IT_KEY3))
 		this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
 	if(this.classname != "item_sigil" && ((this.spawnflags & DROPTOFLOOR_DISABLE) || (this.spawnflags & ITEM_SUSPENDED)))

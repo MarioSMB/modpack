@@ -112,6 +112,15 @@ void button_touch(entity this, entity toucher)
 				else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
 					centerprint(toucher, "You need the gold key");
 			}
+			else if(this.items == IT_KEY3)
+			{
+				if(this.worldtype == WORLDTYPE_BASE)
+					centerprint(toucher, "You need the platinum keycard");
+				else if(this.worldtype == WORLDTYPE_METAL)
+					centerprint(toucher, "You need the platinum runekey");			
+				else if(this.worldtype == WORLDTYPE_MEDIEVAL || this.worldtype == WORLDTYPE_HUB)
+					centerprint(toucher, "You need the platinum key");
+			}
 			return;
 		}
 		else
@@ -248,8 +257,10 @@ spawnfunc(func_button)
 
 	if(this.spawnflags & DOOR_SILVER_KEY)
 		this.items = IT_KEY1;
-	if(this.spawnflags & DOOR_GOLD_KEY)
+	else if(this.spawnflags & DOOR_GOLD_KEY)
 		this.items = IT_KEY2;
+	else if(this.spawnflags & DOOR_PLAT_KEY)
+		this.items = IT_KEY3;
 
 	if(this.spawnflags & 128)
 		this.use = func_button_init;

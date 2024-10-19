@@ -787,7 +787,7 @@ void seek_and_fire1(entity this)
 	entity targ = NULL;
 	while(head)
 	{
-		if(head != this && head != this.realowner && head.takedamage && Damage_ValidTarget(head, this.realowner))
+		if(head != this && head != this.realowner && head.takedamage && (IS_MONSTER(head) || IS_PLAYER(head)) && Damage_ValidTarget(head, this.realowner))
 		{
 			float newdist = vlen2(head.origin - this.origin);
 			if((!olddist || newdist <= olddist) && visible(this, head))

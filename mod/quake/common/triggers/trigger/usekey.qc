@@ -1,6 +1,7 @@
 #ifdef SVQC
 
 const int USE_GOLD_KEY = BIT(0);
+const int USE_PLAT_KEY = 16384; // alkaline
 
 void keytrigger_use(entity this, entity actor, entity trigger)
 {
@@ -35,6 +36,15 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 					centerprint(actor, "You need the gold runekey");
 				else if(world.worldtype == WORLDTYPE_MEDIEVAL)
 					centerprint(actor, "You need the gold key");
+			}
+			else if(this.items == IT_KEY3)
+			{
+				if(world.worldtype == WORLDTYPE_BASE)
+					centerprint(actor, "You need the platinum keycard");
+				else if(world.worldtype == WORLDTYPE_METAL)
+					centerprint(actor, "You need the platinum runekey");
+				else if(world.worldtype == WORLDTYPE_MEDIEVAL)
+					centerprint(actor, "You need the platinum key");
 			}
 		}
 		_sound(this, CH_INFO, this.noise3, 1, ATTN_NORM);
@@ -98,6 +108,8 @@ spawnfunc(trigger_usekey)
 
 	if(this.spawnflags & USE_GOLD_KEY)
 		this.items = IT_KEY2;
+	else if(this.spawnflags & USE_PLAT_KEY)
+		this.items = IT_KEY3;
 	else
 		this.items = IT_KEY1;
 
