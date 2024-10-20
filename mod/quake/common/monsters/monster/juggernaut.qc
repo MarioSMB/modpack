@@ -675,6 +675,10 @@ spawnfunc(monster_juggernaut2)
 {
 	monster_start(this, true, MON_JUGGERNAUT);
 }
+
+// alkaline
+spawnfunc(monster_hunter) { monster_start(this, true, MON_JUGGERNAUT); }
+spawnfunc(monster_tormentor) { monster_start(this, true, MON_JUGGERNAUT); }
 #endif // SVQC
 
 #ifdef SVQC

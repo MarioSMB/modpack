@@ -987,7 +987,7 @@ void Sbar_DrawInventory()
 	if(myitems & IT_KEY3)
 	{
 		// TODO: custom icon
-		Sbar_DrawPic(vec2(192 + 4 * 16, -16), "gfx/quake/sb_key2");
+		Sbar_DrawPic(vec2(192 + 5 * 16, -16), "gfx/quake/sb_key2");
 		if(STAT(KEYS_PLATINUM) > 0)
 		{
 			drawfont = 8; // FONT_USER

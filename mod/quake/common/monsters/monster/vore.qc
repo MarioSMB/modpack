@@ -201,6 +201,9 @@ spawnfunc(monster_shalrath)
 	}
 	monster_start(this, true, MON_VORE);
 }
+
+// alkaline
+spawnfunc(monster_rider) { monster_start(this, true, MON_VORE); }
 #endif // SVQC
 
 #ifdef SVQC

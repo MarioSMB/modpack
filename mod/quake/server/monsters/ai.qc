@@ -447,12 +447,57 @@ spawnfunc(path_corner)
 		this.wait = 999999;
 	if(!this.wait && this.pausetime)
 		this.wait = this.pausetime;
-		
+
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_movetarget);
 	setsize(this, '-8 -8 -8', '8 8 8');
 }
 
+// path_angry from alkaline
+// TODO: maybe doesn't work, we don't have their full followingpath logic!
+
+entity findunlocked(entity start, .string fld, string match);
+void path_angry_touch(entity this, entity toucher)
+{
+	if(toucher.goalentity != this.owner)
+		return;		// not running towards this
+
+	if(this.owner.target && this.owner.target != "")
+	{
+		entity next, first;
+		first = next = findunlocked(NULL, targetname, this.owner.target);
+
+		//next = find(NULL, targetname, this.owner.target);
+		toucher.goalentity = next;
+	}
+	else
+	{
+		toucher.goalentity = toucher.enemy;
+		toucher.oldenemy = NULL;
+	}
+}
+
+spawnfunc(path_angry)
+{
+	if(!this.targetname || this.targetname == "")
+	{
+		objerror(this, "path_angry: no targetname");
+		return;
+	}
+
+	// if monsters have their enemy field set they'll never touch their goalentity (why?? Mario: because AI doesn't do pathing while "angry")
+	// so we create a trigger field around it 
+	entity trg = spawn();
+
+	trg.solid = SOLID_TRIGGER;
+	settouch(trg, path_angry_touch);
+	trg.owner = this;
+	trg.classname = "path_angry_trigger";
+	this.owner = trg;
+	setorigin(trg, this.origin);
+	//setsize (this, '-8 -8 -8', '8 8 8');
+	setsize(trg, '-24 -24 -24', '24 24 24');
+}
 
 /*
 =============
@@ -487,7 +532,7 @@ void t_movetarget(entity this, entity toucher)
 	if(this.target && this.target != "")
 	{
 		toucher.goalentity = toucher.movetarget = findunlocked(NULL, targetname, this.target);
-		if (!toucher.movetarget)
+		if (!toucher.movetarget || this.wait == -1)
 		{
 			toucher.pausetime = -1;
 			toucher.th_stand(toucher);
@@ -1002,6 +1047,7 @@ void HuntTarget(entity this)
 	this.attack_finished = time + 1; // initial delay for attacking
 }
 
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptargets, bool nomessage);
 void FoundTarget(entity this)
 {
 	// prevent getting stuck without an enemy (some triggers set the think frame to this)
@@ -1035,8 +1081,22 @@ void FoundTarget(entity this)
 	}
 
 	Monster mon = this.monsterdef;
-	if(mon.mr_sight && !mon.mr_sight(mon, this))
+	if(!(this.spawnflags & MONSTER_NOSIGHTSOUND) && mon.mr_sight && !mon.mr_sight(mon, this))
 		return;
+
+	if((this.spawnflags & MONSTER_WAKETRIGGER) && this.target4 && this.target4 != "")
+	{
+		SUB_UseTargets_Ex(this, this.enemy, this.enemy, BIT(1) | BIT(2) | BIT(3), false);
+		this.target4 = "";
+	}
+
+	// initial jump when angry - from Copper
+	if(this.move_movetype == MOVETYPE_STEP && this.movedir != '0 0 0')
+	{
+		this.velocity = this.movedir;
+		UNSET_ONGROUND(this);
+		this.movedir = '0 0 0';	// don't leap again if an infight starts
+	}
 
 	this.show_hostile = time + 1;		// wake up other monsters
 	this.aggro_time = time; // stay on target for a bit

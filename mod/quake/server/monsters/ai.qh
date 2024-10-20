@@ -9,6 +9,7 @@ const int AS_MELEE = 3;
 const int AS_MISSILE = 4;
 const int AS_DODGING = 5; // hipnotic
 
+const int MONSTER_NOSIGHTSOUND = 16; // alkaline
 const int MONSTER_ATTACK_FRIEND = 32;
 const int SPAWNFLAG_NEARSIGHTED = 8192;
 const int SPAWNFLAG_NO_CONTENTS_DAMAGE = 16384;
@@ -19,6 +20,8 @@ const float MIN_CHARMER_DISTANCE = 150;
 const float TOOCLOSE_CHARMER_DISTANCE = 120;
 
 const int MONSTER_IGNOREPLAYER = 131072; // alkaline (doesn't apply in MG maps)
+const int MONSTER_HEALTHTRIGGER = 1048576; // alkaline
+const int MONSTER_WAKETRIGGER = 2097152; // alkaline
 
 const float MIN_ANGLE_DELTA = 10;
 

@@ -603,6 +603,9 @@ If lying_down in hipnotic, the zombie will be lying down when spawned and will r
 when awakened by the player.
 */
 spawnfunc(monster_zombie) { monster_start(this, true, MON_ZOMBIE); }
+
+//alkaline
+spawnfunc(monster_zombie2) { monster_start(this, true, MON_ZOMBIE); }
 #endif // SVQC
 
 #ifdef SVQC

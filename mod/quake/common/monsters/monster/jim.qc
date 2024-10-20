@@ -759,6 +759,7 @@ spawnfunc(monster_bob) { monster_start(this, true, MON_JIM); }
 
 // alkaline
 spawnfunc(monster_drone) { monster_start(this, true, MON_JIM); }
+spawnfunc(monster_turret) { monster_start(this, true, MON_JIM); }
 #endif // SVQC
 
 #ifdef SVQC
