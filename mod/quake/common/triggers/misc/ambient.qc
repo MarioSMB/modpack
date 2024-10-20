@@ -259,4 +259,28 @@ spawnfunc(ambient_riftpower)
 	ambientsound(this.origin, "ambient/riftpowr.wav", this.volume, ATTN_STATIC);
 }
 
+// alkaline
+/*QUAKED ambient_general (0.3 0.1 0.6) (-10 -10 -8) (10 10 8)
+Plays any looped sound
+
+Keys:
+
+"noise" is the wav file to play
+
+"volume" default 0.5
+
+"speed" attenuation, default 3
+*/
+spawnfunc(ambient_general)
+{
+	if(!this.noise || this.noise == "")
+	{
+		objerror(this, "ambient_general needs .noise set");
+		return;
+	}
+	precache_sound(this.noise);
+	ambientsound(this.origin, this.noise, 0.5, ATTN_STATIC);
+}
+
+
 #endif

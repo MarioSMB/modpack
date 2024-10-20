@@ -31,7 +31,7 @@ void door_blocked(entity this, entity blocker)
 	if((!this.model || this.model == ""))
 		return;
 
-	if((this.spawnflags & DOOR_CRUSHER))
+	if((this.spawnflags & DOOR_CRUSHER) || (this.spawnflags & DOOR_CRUSHING))
 		return;
 	
 // if a door has a negative wait, it would never come back if blocked,

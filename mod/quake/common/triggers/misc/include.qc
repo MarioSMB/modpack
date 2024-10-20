@@ -6,6 +6,7 @@
 #include "bloodsplatter.qc"
 #include "command.qc"
 #include "corpse.qc"
+#include "drip.qc"
 #include "finale.qc"
 #include "fireball.qc"
 #include "gib.qc"

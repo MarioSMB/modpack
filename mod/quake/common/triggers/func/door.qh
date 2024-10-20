@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 const int DOOR_START_OPEN = BIT(0);
+const int DOOR_CRUSHING = BIT(1); // alkaline
 const int DOOR_DONT_LINK = BIT(2);
 const int DOOR_GOLD_KEY = BIT(3);
 const int DOOR_SILVER_KEY = BIT(4);

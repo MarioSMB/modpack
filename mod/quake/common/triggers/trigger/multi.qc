@@ -411,4 +411,24 @@ spawnfunc(trigger_once_box)
 	spawnfunc_trigger_multiple_box(this);
 }
 
+// trigger_textstory from alkaline
+// very rough port that just prints the message every few seconds like a normal trigger
+spawnfunc(trigger_textstory)
+{
+	if(!this.wait)
+		this.wait = 5;
+	if(this.spawnflags & 1) // TEXTSTORY_SILENT
+		this.noise = "";
+	spawnfunc_trigger_multiple(this);
+}
+
+spawnfunc(target_textstory)
+{
+	if(!this.wait)
+		this.wait = 5;
+	if(this.spawnflags & 1)
+		this.noise = "";
+	this.use = multi_use;
+}
+
 #endif

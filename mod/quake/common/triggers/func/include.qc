@@ -24,6 +24,7 @@
 #include "rubble.qc"
 #include "skill.qc"
 #include "spawn.qc"
+#include "togglevisiblewall.qc"
 #include "togglewall.qc"
 #include "toss.qc"
 #include "train.qc"
