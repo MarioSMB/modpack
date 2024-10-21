@@ -231,12 +231,130 @@ void misc_model_alkaline(entity this)
 
 //////
 
+/// copper
+const int SPAWN_MODEL_TOGGLEVIS = 1;
+const int SPAWN_MODEL_STARTINVIS = 2;
+const int SPAWN_MODEL_ANIMONCE = 4;
+
+.int oldstyle;
+
+void misc_model_animate(entity this)
+{
+	vector anim;
+	if(this.state)
+		anim = this.pos2;
+	else
+		anim = this.pos1;
+	
+	this.frame += 1;
+	if(this.frame > anim_z)
+	{
+		this.frame = anim_x;
+		if((this.spawnflags & SPAWN_MODEL_ANIMONCE) && !this.state)
+		{
+			this.state = !this.state;
+			this.frame = this.pos1_y;
+			this.nextthink = time + this.speed;
+			return;
+		}
+	}
+	this.nextthink = time + this.speed;
+}
+
+void misc_model_use_copper(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
+	if(this.spawnflags & SPAWN_MODEL_TOGGLEVIS)
+	{
+		if(this.state)
+		{
+			this.modelindex = this.oldstyle;
+			_setmodel(this, this.model);
+			setsize(this, '-16 -16 -16', '16 16 16');
+			if(this.pos1 == '0 0 0')
+			{
+				this.nextthink = time + this.speed;
+				setthink(this, misc_model_animate);
+			}
+		}
+		else
+		{
+			this.oldstyle = this.modelindex;
+			this.modelindex = 0;
+			this.nextthink = 0;
+		}
+	}
+	else
+	{
+		if(this.state)
+			this.frame = this.pos2_y;
+		else
+			this.frame = this.pos1_y;
+		this.nextthink = time + this.speed;
+		setthink(this, misc_model_animate);
+	}
+}
+
+void misc_model_copper(entity this)
+{ 
+	precache_model(this.model);
+	
+	if(this.mangle != '0 0 0')
+		this.angles = this.mangle;
+	else if(this.angles != '0 0 0')
+	{
+		if(this.angles == '0 -1 0')
+			this.angles = '-90 0 0';
+		else if(this.angles == '0 -2 0')
+			this.angles = '90 0 0';
+	}
+	if(this.ideal_yaw)
+		this.angles_y = random() * 360;
+	this.solid = SOLID_NOT;
+	_setmodel(this, this.model);
+	setsize(this, '-16 -16 -16', '16 16 16');
+	
+	set_movetype(this, MOVETYPE_NONE);
+	
+	if((!this.targetname || this.targetname == "") && !this.impulse && this.pos1 == '0 0 0')
+		return;
+	
+	if(!this.speed)
+		this.speed = 0.1;
+		
+	// toggle animation
+	if(!this.targetname || this.targetname == "")
+	{
+		this.use = misc_model_use_copper;
+		if(this.spawnflags & SPAWN_MODEL_STARTINVIS)
+		{
+			this.oldstyle = this.modelindex;
+			this.modelindex = 0;
+			this.state = 0;
+		}
+		else
+			this.state = 1;
+	}
+	if(this.pos1 == '0 0 0')
+	{
+		this.frame = this.pos1_y;
+		setthink(this, misc_model_animate);
+		this.nextthink = time + 0.1;
+	}		
+}
+
 spawnfunc(misc_model)
 {
 	// HACK: we use the AOP version of misc_model for the mumbo skull!
 	if(world.model == "maps/quake.bsp" || IsMGMap())
 	{
 		misc_model_aop(this);
+		return;
+	}
+
+	if(this.model && this.model != "")
+	{
+		misc_model_copper(this);
 		return;
 	}
 
