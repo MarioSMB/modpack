@@ -181,6 +181,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 
 	bool pogo = false;
 	bool doublejump = false;
+	bool forcedheight = false;
 	if(this.viewloc && this.waterlevel >= 2)
 		doublejump = true;
 	if(this.m_champion)
@@ -199,6 +200,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 		{
 			doublejump = true;
 			mjumpheight *= 1.5;
+			forcedheight = true; // don't allow champions to override
 			SET_DOUBLEJUMPED(this);
 		}
 	}
@@ -215,7 +217,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 
 	if(STAT(CLOCKWORK, this))
 		mjumpheight *= 0.75;
-	if(this.m_champion)
+	if(this.m_champion && !forcedheight)
 	{
 		mjumpheight *= this.m_champion.qcc_jumpheight;
 		if(this.m_champion.m_playerjump)
@@ -223,7 +225,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	}
 	if(StatusEffects_active(STATUSEFFECT_JumpBoots, actor))
 		mjumpheight *= 1.5;
-	if(this.viewloc)
+	if(this.viewloc && !forcedheight)
 	{
 		if(this.waterlevel >= 2)
 			mjumpheight *= 0.7;
@@ -257,7 +259,10 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	else
 		player_sound(this, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 #endif
-	this.velocity_z += mjumpheight;
+	if(forcedheight)
+		this.velocity_z = mjumpheight;
+	else
+		this.velocity_z += mjumpheight;
 }
 
 /*
