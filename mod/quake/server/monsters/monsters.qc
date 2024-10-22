@@ -296,14 +296,8 @@ Monster monster_randomize(entity this, Monster mon)
 	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp" || world.model == "maps/hip2m4.bsp" || world.model == "maps/r1m2.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
-	if(substring(world.model, 0, 9) == "maps/ffj_")
-	{
-		tracebox(this.origin, MON_FLOYD.m_mins, MON_FLOYD.m_maxs, this.origin, MOVE_WORLDONLY, this);
-		if(!trace_startsolid)
-			return MON_FLOYD;
-	}
-
 	bool seasonlocked = Monsters_SeasonLocked();
+	bool floyd = (substring(world.model, 0, 9) == "maps/ffj_");
 
 	RandomSelection_Init();
 	FOREACH(Monsters, it != MON_Null,
@@ -327,7 +321,8 @@ Monster monster_randomize(entity this, Monster mon)
 		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, this);
 		if(trace_startsolid)
 			continue;
-		RandomSelection_AddEnt(it, 1, 1);
+		int prio = (floyd && it == MON_FLOYD) ? 2 : 1;
+		RandomSelection_AddEnt(it, 1, prio);
 	});
 
 	if(!RandomSelection_chosen_ent)
