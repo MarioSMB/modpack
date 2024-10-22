@@ -115,6 +115,18 @@ void wall_touch(entity this, entity toucher)
 	this.attack_finished = time + 2;
 }
 
+void func_wall_touch_hacked(entity this, entity toucher)
+{
+	if(!IS_PLAYER(toucher))
+		return;
+
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BACKPACK_GOT, process_string(this.netname));
+
+	SUB_UseTargets(this, toucher, toucher);
+
+	delete(this);
+}
+
 /*QUAKED func_wall(0 .5 .8) ?
 This is just a solid wall if not inhibitted
 */
@@ -145,6 +157,12 @@ spawnfunc(func_wall)
 
 	_setmodel(this, this.model);
 	//if(!this.touch)
+	if(world.model == "maps/ctsj2_hcm.bsp" && this.target && this.target != "")
+	{
+		this.solid = SOLID_TRIGGER;
+		settouch(this, func_wall_touch_hacked);
+	}
+	else
 		settouch(this, wall_touch);
 	
 	if(this.spawnflags & SPAWN_WALL_STARTINVIS)

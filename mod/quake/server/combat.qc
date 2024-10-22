@@ -176,33 +176,36 @@ bool CanDamage(entity targ, entity inflictor)
 	if(targ.takedamage == DAMAGE_NO)
 		return false;
 
+	vector inflictor_org = (inflictor.absmin + inflictor.absmax) * 0.5;
+	vector targ_org = (targ.absmin + targ.absmax) * 0.5;
+
 // bmodels need special checking because their origin is 0,0,0
 	if(targ.move_movetype == MOVETYPE_PUSH)
 	{
-		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), MOVE_NOMONSTERS, inflictor);
+		traceline(inflictor_org, targ_org, MOVE_NOMONSTERS, inflictor);
 		if(trace_fraction == 1 || trace_ent == targ)
 			return true;
 		return false;
 	}
 	
-	traceline(inflictor.origin, targ.origin, MOVE_NOMONSTERS, inflictor);
+	traceline(inflictor_org, targ_org, MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #if 1
-	traceline(inflictor.origin, targ.origin + '15 15 0', MOVE_NOMONSTERS, inflictor);
+	traceline(inflictor_org, targ_org + '15 15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 -15 0', MOVE_NOMONSTERS, inflictor);
+	traceline(inflictor_org, targ_org + '-15 -15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 15 0', MOVE_NOMONSTERS, inflictor);
+	traceline(inflictor_org, targ_org + '-15 15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '15 -15 0', MOVE_NOMONSTERS, inflictor);
+	traceline(inflictor_org, targ_org + '15 -15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #else
-	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, MOVE_NOMONSTERS, inflictor);
+	tracebox(inflictor_org, '-15 -15 0', '15 15 0', targ_org, MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #endif
@@ -460,7 +463,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	if(IS_PLAYER(targ) && inflictor.classname == "Vengeance")
 		return;
-	IsExplosionDamage = false;
+	// TODO: why was it doing this?
+	//IsExplosionDamage = false;
 
 	if(Pan_CheckDamage(targ, inflictor, attacker))
 		return;
@@ -784,14 +788,16 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 
 	IsExplosionDamage = true;
 
-	entity head = findradius(inflictor.origin, damage + 40);
+	vector inflictor_org = (inflictor.absmin + inflictor.absmax) * 0.5;
+
+	entity head = findradius(inflictor_org, damage + 40);
 	while(head)
 	{
 		entity next = head.chain;
 		if(head != ignore && head.takedamage)
 		{
 			vector org = head.origin + (head.mins + head.maxs) * 0.5;
-			float points = max(0, 0.5 * vlen(inflictor.origin - org));
+			float points = max(0, 0.5 * vlen(inflictor_org - org));
 			points = damage - points;
 			if(head == attacker || (head.monsterdef && (head.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)))
 				points *= 0.5;

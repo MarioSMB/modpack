@@ -3,16 +3,17 @@
 void barrel_explode(entity this)
 {
 	// did say this.owner
+	vector org = (this.absmin + this.absmax) * 0.5;
 	T_RadiusDamage(this, this.enemy, 160, DEATH_TRAP.m_id, NULL);
 	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	particle(this.origin, '0 0 0', 75, 255);
+	particle(org, '0 0 0', 75, 255);
 
 	// yoder add, 27/09/2020 to make barrels fire targets on explode
 	SUB_UseTargets(this, this.enemy, NULL);
 
 	setmodel(this, MDL_Null);
 	setsize(this, '0 0 0', '0 0 0');
-	setorigin(this, this.origin + '0 0 32');
+	setorigin(this, org + '0 0 32');
 	setthink(this, BecomeExplosion);
 	this.nextthink = time;
 
