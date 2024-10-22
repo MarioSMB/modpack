@@ -8,6 +8,14 @@ void trigger_skill_touch(entity this, entity toucher)
 	cvar_set("skill", this.message);
 }
 
+void trigger_skill_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+
+	trigger_skill_touch(this, actor);
+}
+
 /*QUAKED trigger_setskill(.5 .5 .5) ?
 sets skill level to the value of "message".
 Only used on start map.
@@ -16,6 +24,7 @@ spawnfunc(trigger_setskill)
 {
 	InitTrigger(this);
 	settouch(this, trigger_skill_touch);
+	this.use = trigger_skill_use;
 }
 
 
