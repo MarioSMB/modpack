@@ -105,6 +105,9 @@ spawnfunc(monster_spider)
 {
 	monster_start(this, true, MON_SPIDER_DROID);
 }
+
+// alkaline
+spawnfunc(monster_spiderbot) { monster_start(this, true, MON_SPIDER_DROID); }
 #endif // SVQC
 
 #ifdef SVQC

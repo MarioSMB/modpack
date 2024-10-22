@@ -15,7 +15,6 @@ int Shop_Passive_Item(string item)
 		case "aura": return PASSIVE_AURA;
 		case "electrifying": return PASSIVE_ELECTRIFYING;
 		case "bunnyboots": return PASSIVE_BUNNYBOOTS;
-		case "doublejump": return PASSIVE_DOUBLEJUMP;
 		case "arcana": return PASSIVE_ARCANA;
 		case "sponge": return PASSIVE_SPONGE;
 	}
@@ -35,7 +34,6 @@ string Shop_Passive_Message(int itemid)
 		case PASSIVE_AURA: return "Your aura damages nearby enemies";
 		case PASSIVE_ELECTRIFYING: return "Slain foes will let out a shockwave";
 		case PASSIVE_BUNNYBOOTS: return "Bunny Boots let you auto jump";
-		case PASSIVE_DOUBLEJUMP: return "Double Jump booster activated";
 		case PASSIVE_ARCANA: return "Spell efficiency increased";
 		case PASSIVE_SPONGE: return "Damaged taken capped at 50";
 	}

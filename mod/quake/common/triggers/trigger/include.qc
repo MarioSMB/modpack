@@ -17,6 +17,7 @@
 #include "registered.qc"
 #include "relay.qc"
 #include "remove.qc"
+#include "repeat.qc"
 #include "repeater.qc"
 #include "secret.qc"
 #include "setgravity.qc"

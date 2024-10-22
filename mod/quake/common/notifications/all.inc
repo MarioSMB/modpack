@@ -164,6 +164,7 @@
 
     MSG_INFO_NOTIF(POWERDOWN_ANTIGRAV,                      N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Antigrav failing..."), "")
     MSG_INFO_NOTIF(POWERDOWN_BIOSUIT,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Air supply in Biosuit expiring"), "")
+    MSG_INFO_NOTIF(POWERDOWN_DOUBLEJUMPBOOTS,               N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Double Jump Boots losing charge..."), "")
     MSG_INFO_NOTIF(POWERDOWN_EMPATHY,                       N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Empathy Shields are running out"), "")
     MSG_INFO_NOTIF(POWERDOWN_INVISIBLE,                     N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Ring of Shadows magic is fading"), "")
     MSG_INFO_NOTIF(POWERDOWN_JUMPBOOTS,                     N_DISABLE,  0, 0, "", "",                                    "",     _("^K2Jump Boots battery is depleting..."), "")
@@ -275,6 +276,7 @@
 
     MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")
     MSG_CENTER_NOTIF(POWERDOWN_BIOSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Biosuit expiring"), "")
+    MSG_CENTER_NOTIF(POWERDOWN_DOUBLEJUMPBOOTS,         N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Double Jump Boots losing charge..."), "")
     MSG_CENTER_NOTIF(POWERDOWN_EMPATHY,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Empathy Shields are running out"), "")
     MSG_CENTER_NOTIF(POWERDOWN_INVISIBLE,               N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Ring of Shadows magic is fading"), "")
     MSG_CENTER_NOTIF(POWERDOWN_JUMPBOOTS,               N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Jump Boots battery is depleting..."), "")
@@ -364,6 +366,7 @@
 
     MSG_MULTI_NOTIF(POWERDOWN_ANTIGRAV,                 N_ENABLE,  NULL,           INFO_POWERDOWN_ANTIGRAV,                CENTER_POWERDOWN_ANTIGRAV)
     MSG_MULTI_NOTIF(POWERDOWN_BIOSUIT,                  N_ENABLE,  NULL,           INFO_POWERDOWN_BIOSUIT,                 CENTER_POWERDOWN_BIOSUIT)
+    MSG_MULTI_NOTIF(POWERDOWN_DOUBLEJUMPBOOTS,          N_ENABLE,  NULL,           INFO_POWERDOWN_DOUBLEJUMPBOOTS,         CENTER_POWERDOWN_DOUBLEJUMPBOOTS)
     MSG_MULTI_NOTIF(POWERDOWN_EMPATHY,                  N_ENABLE,  NULL,           INFO_POWERDOWN_EMPATHY,                 CENTER_POWERDOWN_EMPATHY)
     MSG_MULTI_NOTIF(POWERDOWN_INVISIBLE,                N_ENABLE,  NULL,           INFO_POWERDOWN_INVISIBLE,               CENTER_POWERDOWN_INVISIBLE)
     MSG_MULTI_NOTIF(POWERDOWN_JUMPBOOTS,                N_ENABLE,  NULL,           INFO_POWERDOWN_JUMPBOOTS,               CENTER_POWERDOWN_JUMPBOOTS)

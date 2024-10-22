@@ -2,6 +2,7 @@
 #include "antigrav.qh"
 #include "biosuit.qh"
 #include "burning.qh"
+#include "double_jump_boots.qh"
 #include "empathy_shields.qh"
 #include "fieldgen.qh"
 #include "invisibility.qh"

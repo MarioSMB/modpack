@@ -1957,6 +1957,17 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}
 
+	if(this.powerups & POWERUP_DOUBLEJUMPBOOTS)
+	{
+		StatusEffects_apply(STATUSEFFECT_DoubleJumpBoots, toucher, time + 666, 0);
+		if(coop && !horde_ent) // Respawn this powerup in coop, since it might be required for progression
+		{
+			this.target = string_null; // but don't fire off targets again
+			setthink(this, SUB_regen);
+			this.nextthink = time + 2.5;
+		}
+	}
+
 	if(this.sharp_finished)
 	{
 		float sharptime = (horde_ent) ? 10 : 30;
@@ -2190,8 +2201,15 @@ spawnfunc(item_artifact_empathy_shields)
 	StartItem(this);
 }
 
+spawnfunc(item_jboots_timed);
 spawnfunc(item_jboots)
 {
+	if(substring(world.model, 0, 9) == "maps/ffj_")
+	{
+		spawnfunc_item_jboots_timed(this);
+		return;
+	}
+
 	settouch(this, powerup_touch);
 
 	precache_model("progs/jumpblue.mdl");
@@ -2210,8 +2228,16 @@ spawnfunc(item_jboots)
 
 spawnfunc(item_jboots_timed)
 {
-	// we don't have super jump boots, just allow spawns to work
-	spawnfunc_item_jboots(this);
+	settouch(this, powerup_touch);
+
+	precache_model("progs/jumpgold.mdl");
+	precache_sound("items/jboots_got_timed.wav");
+	this.noise = "items/jboots_got_timed.wav";
+	_setmodel(this, "progs/jumpgold.mdl");
+	this.netname = "Double Jump Boots";
+	this.powerups = POWERUP_DOUBLEJUMPBOOTS;
+	setsize(this, '-16 -16 0', '16 16 32');
+	StartItem(this);
 }
 
 /*QUAKED item_artifact_sharp_shooter(0 .5 .8)(-16 -16 -24)(16 16 32)

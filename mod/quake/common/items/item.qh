@@ -31,11 +31,10 @@ const int PASSIVE_LOOTER            = BIT(5);
 const int PASSIVE_AURA              = BIT(6);
 const int PASSIVE_ELECTRIFYING      = BIT(7);
 const int PASSIVE_BUNNYBOOTS        = BIT(8);
-const int PASSIVE_DOUBLEJUMP        = BIT(9);
-const int PASSIVE_ARCANA            = BIT(10);
-const int PASSIVE_SPONGE            = BIT(11);
+const int PASSIVE_ARCANA            = BIT(9);
+const int PASSIVE_SPONGE            = BIT(10);
 
-const int PASSIVE_COUNT = 12;
+const int PASSIVE_COUNT = 11;
 
 
 const int POWERUP_INVISIBILITY         = BIT(0);
@@ -58,4 +57,6 @@ const int POWERUP_SHARPSHOOTER         = BIT(12);
 
 const int POWERUP_REVIVAL              = BIT(13);
 
-//const int POWERUP_COUNT                = 13;
+const int POWERUP_DOUBLEJUMPBOOTS      = BIT(14);
+
+//const int POWERUP_COUNT                = 14;

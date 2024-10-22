@@ -2,6 +2,7 @@
 #include "antigrav.qc"
 #include "biosuit.qc"
 #include "burning.qc"
+#include "double_jump_boots.qc"
 #include "empathy_shields.qc"
 #include "fieldgen.qc"
 #include "invisibility.qc"

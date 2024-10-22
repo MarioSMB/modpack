@@ -293,11 +293,15 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 Monster monster_randomize(entity this, Monster mon)
 {
 	this.nightmare_checked = true;
-	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp" || world.model == "maps/hip2m4.bsp")
+	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp" || world.model == "maps/hip2m4.bsp" || world.model == "maps/r1m2.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
 	if(substring(world.model, 0, 9) == "maps/ffj_")
-		return MON_FLOYD;
+	{
+		tracebox(this.origin, MON_FLOYD.m_mins, MON_FLOYD.m_maxs, this.origin, MOVE_WORLDONLY, this);
+		if(!trace_startsolid)
+			return MON_FLOYD;
+	}
 
 	bool seasonlocked = Monsters_SeasonLocked();
 

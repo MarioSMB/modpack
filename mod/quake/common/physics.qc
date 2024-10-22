@@ -172,6 +172,13 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 		return;
 	}
 
+	entity actor = this;
+#ifdef CSQC
+	actor = g_statuseffects;
+#endif
+
+	float mjumpheight = 270;
+
 	bool pogo = false;
 	bool doublejump = false;
 	if(this.viewloc && this.waterlevel >= 2)
@@ -186,22 +193,18 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	if(STAT(PASSIVES, this) & PASSIVE_BUNNYBOOTS)
 		pogo = true;
 
-	if(STAT(PASSIVES, this) & PASSIVE_DOUBLEJUMP)
+	if(StatusEffects_active(STATUSEFFECT_DoubleJumpBoots, actor))
 	{
 		if(!IS_DOUBLEJUMPED(this) && !IS_JUMP_HELD(this) && !IS_ONGROUND(this))
 		{
 			doublejump = true;
+			mjumpheight *= 1.5;
 			SET_DOUBLEJUMPED(this);
 		}
 	}
 
 	if(!IS_ONGROUND(this) && !doublejump)
 		return;
-
-	entity actor = this;
-#ifdef CSQC
-	actor = g_statuseffects;
-#endif
 
 	if(IS_JUMP_HELD(this) && !StatusEffects_active(STATUSEFFECT_JumpBoots, actor) && !pogo)
 		return;		// don't pogo stick
@@ -210,7 +213,6 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 
 	UNSET_ONGROUND(this);
 
-	float mjumpheight = 270;
 	if(STAT(CLOCKWORK, this))
 		mjumpheight *= 0.75;
 	if(this.m_champion)
@@ -255,7 +257,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	else
 		player_sound(this, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 #endif
-	this.velocity_z = this.velocity_z + mjumpheight;
+	this.velocity_z += mjumpheight;
 }
 
 /*

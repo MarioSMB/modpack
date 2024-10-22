@@ -1,0 +1,9 @@
+#pragma once
+
+CLASS(DoubleJumpBoots, Powerups)
+    ATTRIB(DoubleJumpBoots, netname, string, "doublejumpboots");
+    ATTRIB(DoubleJumpBoots, m_name, string, _("Double Jump Boots"));
+    ATTRIB(DoubleJumpBoots, m_color, vector, '0.5 1 0.5');
+    //ATTRIB(DoubleJumpBoots, m_icon, string, "r_agrav1");
+ENDCLASS(DoubleJumpBoots)
+REGISTER_STATUSEFFECT(DoubleJumpBoots, NEW(DoubleJumpBoots));
