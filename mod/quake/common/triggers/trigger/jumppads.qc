@@ -334,11 +334,105 @@ spawnfunc(trigger_monsterjump_box)
 	this.classname = "trigger_monsterjump";
 }
 
+// MAJORY HACKERY AHEAD
+// this is required since we don't use the same function names as Quake
+// TODO: hopefully we don't need this
+//void callfunction_fixed(...) = #605;
+// dummy functions to avoid crashing
+void fakemonster_start(entity this)
+{
+	if(deathmatch) { delete(this); return; }
+
+	this.nextthink = this.nextthink + random() * 0.5;
+	setthink(this, monster_start_go);
+	this.max_health = this.health;
+	this.monsterdef = MON_SCRAG;
+
+	if(this.super_damage_finished > 0)
+		StatusEffects_apply(STATUSEFFECT_Quad, this, time + this.super_damage_finished, 0);
+
+	monsters_total += 1;
+}
+
+void func_illusionary(entity this) {}
+void trigger_changelevel(entity this) {}
+void flymonster_start(entity this) { fakemonster_start(this); }
+void notnull_hack(entity this)
+{
+	string thinkfunc = GetField_fullspawndata(this, "think", false);
+	string touchfunc = GetField_fullspawndata(this, "touch", false);
+	string usefunc = GetField_fullspawndata(this, "use", false);
+	bool have_think = (thinkfunc && isfunction(thinkfunc));
+	bool have_touch = (touchfunc && isfunction(touchfunc));
+	bool have_use = (usefunc && isfunction(usefunc));
+	if(thinkfunc && isfunction(strcat("spawnfunc_", thinkfunc)))
+	{
+		thinkfunc = strcat("spawnfunc_", thinkfunc);
+		have_think = true;
+	}
+	if(usefunc && isfunction(strcat("spawnfunc_", usefunc)))
+	{
+		usefunc = strcat("spawnfunc_", usefunc);
+		have_use = true;
+	}
+
+	if(have_think || have_touch || have_use)
+	{
+		// cannot assign directly for some reason so hax needed
+		for (int i = 0, n = numentityfields(); i < n; ++i) {
+	        string k = entityfieldname(i);
+	        if (k == "selfthink" && have_think) {
+	            // safeguard against various stuff ;)
+	            putentityfieldstring(i, this, thinkfunc);
+	        }
+	        else if (k == "selftouch" && have_touch) {
+	            // safeguard against various stuff ;)
+	            putentityfieldstring(i, this, touchfunc);
+	        }
+	        else if (k == "use" && have_use) {
+	        	// safeguard against various stuff ;)
+	        	putentityfieldstring(i, this, usefunc);
+	        }
+	    }
+
+	    if(have_think)
+	    {
+	    	this.nextthink = time + stof(GetField_fullspawndata(this, "nextthink", false));
+	    	this.think = think_self;
+
+	    	// HACK: workaround some wonky handling of player frames in ffj_lob
+	    	if(this.model == "progs/player.mdl" && this.frame == 86)
+	    		this.frame = 91;
+	    }
+	    else
+	    {
+	    	setthink(this, func_null);
+	    	this.nextthink = 0;
+	    }
+	    if(have_touch)
+	    	this.touch = touch_self;
+	    else
+	    	settouch(this, func_null);
+
+	    if(!have_use)
+	    	this.use = func_null;
+	}
+	else
+	{
+		// mappers LOVE to abuse notnulls, let's reset some commonly abused fields to avoid crashes
+		setthink(this, func_null);
+		settouch(this, func_null);
+		this.nextthink = 0;
+		this.use = func_null;
+	}
+}
+
 /*QUAKED info_notnull(0 0.5 0)(-4 -4 -4)(4 4 4)
 Used as a positional target for lightning.
 */
 spawnfunc(info_notnull)
 {
+	notnull_hack(this);
 }
 
 #endif

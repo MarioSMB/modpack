@@ -277,6 +277,12 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "findtarget")
+	{
+		FOREACH_ENTITY_STRING_ORDERED(targetname, argv(1), LOG_INFOF("%i (%s)\n", it, it.classname));
+		return;
+	}
+
 	if(cmdname == "stuffto")
 	{
 		cmd_stuffto(argc);

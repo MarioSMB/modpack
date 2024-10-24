@@ -643,6 +643,10 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	if(actor.charmed)
 		actor.spawnflags &= ~SPAWN_CRUCIFIED;
 
+	// some non-rogue maps set this bit despite it not being used
+	if(!IsRogueMap())
+		actor.spawnflags &= ~SPAWN_LYING;
+
 	if(actor.spawnflags & SPAWN_CRUCIFIED)
 	{
 		actor.takedamage = DAMAGE_AIM;

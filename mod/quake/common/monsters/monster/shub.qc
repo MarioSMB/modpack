@@ -186,14 +186,16 @@ void finale_intermission(entity this)
 
 void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	if(!this.charmed && this.target && this.target != "")
+	bool no_end = !find(NULL, classname, "trigger_changelevel");
+
+	if(!this.charmed && ((this.target && this.target != "") || no_end))
 		finale_intermission(this);
 
 	// make fake versions of all players as standins, and move the real
 	// players to the intermission spot
 
 	// used later to tell if a telefragging player should appear
-	this.count = (!this.charmed && this.target && this.target != "" && deathtype == DEATH_TELEFRAG.m_id);
+	this.count = (!this.charmed && ((this.target && this.target != "") || no_end) && deathtype == DEATH_TELEFRAG.m_id);
 	
 	// wait for 1 second
 	entity timer = spawn();

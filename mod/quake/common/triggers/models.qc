@@ -177,6 +177,13 @@ spawnfunc(func_wall)
 	}
 }
 
+void func_illusionary_think(entity this)
+{
+	setthink(this, func_illusionary_think);
+	this.nextthink = time + 0.1;
+
+	CSQCMODEL_AUTOUPDATE(this);
+}
 
 /*QUAKED func_illusionary(0 .5 .8) ?
 A simple entity that looks solid but lets you walk through it.
@@ -188,6 +195,8 @@ spawnfunc(func_illusionary)
 	this.solid = SOLID_NOT;
 	SetBrushEntityModelNoLOD(this);
 	CSQCMODEL_AUTOINIT(this);
+	setthink(this, func_illusionary_think);
+	this.nextthink = time + 0.1;
 	//_makestatic_hidden(this);
 }
 

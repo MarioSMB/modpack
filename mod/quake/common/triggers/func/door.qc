@@ -716,11 +716,15 @@ spawnfunc(func_door)
 
 	switch(this.sounds)
 	{
+		default:
 		case 0: this.noise1 = "misc/null.wav"; this.noise2 = "misc/null.wav"; break;
 		case 1: this.noise1 = "doors/drclos4.wav"; this.noise2 = "doors/doormv1.wav"; break;
 		case 2: this.noise1 = "doors/hydro2.wav"; this.noise2 = "doors/hydro1.wav"; break;
 		case 3: this.noise1 = "doors/stndr2.wav"; this.noise2 = "doors/stndr1.wav"; break;
 		case 4: this.noise1 = "doors/ddoor2.wav"; this.noise2 = "doors/ddoor1.wav"; break;
+		case 6: this.noise1 = "doors/q2door2.wav"; this.noise2 = "doors/q2door1.wav"; break;
+		case 7: this.noise1 = "plats/plat2.wav"; this.noise2 = "plats/plat1.wav"; break;
+		case 8: this.noise1 = "plats/medplat2.wav"; this.noise2 = "plats/medplat1.wav"; break;
 	}
 
 	switch(this.worldtype)
@@ -731,10 +735,10 @@ spawnfunc(func_door)
 		case WORLDTYPE_BASE: this.noise3 = "doors/basetry.wav"; this.noise4 = "doors/baseuse.wav"; break;
 	}
 
-	if(this.noise1 != "") precache_sound(this.noise1);
-	if(this.noise2 != "") precache_sound(this.noise2);
-	if(this.noise3 != "") precache_sound(this.noise3);
-	if(this.noise4 != "") precache_sound(this.noise4);
+	if(this.noise1 && this.noise1 != "") precache_sound(this.noise1);
+	if(this.noise2 && this.noise2 != "") precache_sound(this.noise2);
+	if(this.noise3 && this.noise3 != "") precache_sound(this.noise3);
+	if(this.noise4 && this.noise4 != "") precache_sound(this.noise4);
 
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";

@@ -237,10 +237,11 @@ void SUB_CalcMove(entity this, vector tdest, float tspeedtype, float tspeed, voi
 // divide by speed to get time to reach dest
 	float traveltime = len / tspeed;
 
-	if(traveltime < 0.1)
+	// changed from the 0.1 default
+	if(traveltime < 0.025)
 	{
 		this.velocity = '0 0 0';
-		this.nextthink = this.ltime + 0.1;
+		this.nextthink = this.ltime + 0.025;
 		return;
 	}
 	
