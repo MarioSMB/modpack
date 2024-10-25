@@ -29,11 +29,16 @@ void exploder_use(entity this, entity actor, entity trigger)
 		this.delay = 0;
 		this.enemy = trigger;
 		setthink(this, exploder_fire);
+		settouch(this, func_null);
+		this.use = func_null;
 	}
 	else
 	{
 		this.enemy = trigger;
-		exploder_fire(this);
+		this.nextthink = time;
+		setthink(this, exploder_fire);
+		settouch(this, func_null);
+		this.use = func_null;
 	}
 }
 
