@@ -160,6 +160,13 @@ spawnfunc(trigger_changelevel)
 		return;
 	}
 
+	// hack: any maps that aren't the main campaign auto redirect to our hub instead
+	if(this.map == "start")
+	{
+		if(world.model != "maps/e1m7.bsp" && world.model != "maps/e2m6.bsp" && world.model != "maps/e3m6.bsp" && world.model != "maps/e4m7.bsp")
+			this.map = "quake";
+	}
+
 	this.killstring = " tried to leave";
 
 	if(this.targetname && this.targetname != "" && !IsMGMap())

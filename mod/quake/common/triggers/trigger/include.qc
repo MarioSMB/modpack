@@ -24,6 +24,7 @@
 #include "setskill.qc"
 #include "shelter_portal.qc"
 #include "teleport.qc"
+#include "timer.qc"
 #include "usekey.qc"
 #include "viewloc.qc"
 #include "waterfall.qc"
