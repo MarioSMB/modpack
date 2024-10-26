@@ -375,7 +375,8 @@ spawnfunc(light)
 {
 	if(!this.targetname || this.targetname == "")
 	{	// inert light
-		delete(this);
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
 		return;
 	}
 	
