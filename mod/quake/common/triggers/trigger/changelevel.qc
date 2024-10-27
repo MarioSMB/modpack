@@ -163,7 +163,7 @@ spawnfunc(trigger_changelevel)
 	// hack: any maps that aren't the main campaign auto redirect to our hub instead
 	if(this.map == "start")
 	{
-		if(world.model != "maps/e1m7.bsp" && world.model != "maps/e2m6.bsp" && world.model != "maps/e3m6.bsp" && world.model != "maps/e4m7.bsp")
+		if(world.model != "maps/quake.bsp" && world.model != "maps/e1m7.bsp" && world.model != "maps/e2m6.bsp" && world.model != "maps/e3m6.bsp" && world.model != "maps/e4m7.bsp")
 			this.map = "quake";
 	}
 
