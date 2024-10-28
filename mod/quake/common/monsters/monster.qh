@@ -63,7 +63,7 @@ ENDCLASS(Monster)
 #include "../../server/monsters/ai.qh"
 #include "../../server/monsters/fight.qh"
 #include "../../server/monsters/monsters.qh"
-#include "../../server/rogue/new_ai.qh"
+#include "../../server/monsters/ai_rogue.qh"
 #include "../../server/weapons.qh"
 #endif
 #ifdef GAMEQC

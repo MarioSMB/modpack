@@ -2,6 +2,4 @@
 
 void ViolentDeath(entity this, int gibCount);
 
-entity StartGib(entity this, string gibname);
-
 void ai_track(entity this, entity destEnt, float trackSpeed);

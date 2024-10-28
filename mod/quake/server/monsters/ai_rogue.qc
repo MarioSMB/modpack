@@ -1,4 +1,4 @@
-#include "new_ai.qh"
+#include "ai_rogue.qh"
 
 .float orbitPosition;
 
@@ -118,22 +118,4 @@ void ViolentDeath(entity this, int gibCount)
 		AccelerateGib(this, "progs/gib3.mdl", (-8 * gibCount));
 		gibCount = gibCount - 3;
 	}	
-}
-
-entity StartGib(entity this, string gibname)
-{
-	entity gib = spawn();
-	gib.origin = this.origin;
-	_setmodel(gib, gibname);
-	setsize(gib, '0 0 0', '0 0 0');
-	
-	set_movetype(gib, MOVETYPE_BOUNCE);
-	gib.solid = SOLID_NOT;
-	setthink(gib, SUB_Remove);
-	gib.ltime = time;
-	gib.nextthink = time + 10 + random()*10;
-	gib.frame = 0;
-	gib.flags = 0;
-	
-	return gib;
 }

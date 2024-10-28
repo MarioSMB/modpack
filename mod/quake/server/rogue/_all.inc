@@ -1,4 +1,3 @@
-#include "new_ai.qc"
 #include "newplats.qc"
 #include "newmisc.qc"
 #include "lightnin.qc"

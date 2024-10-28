@@ -365,11 +365,11 @@ void overlord_pain(entity this, entity attacker, float damage, int deathtype)
 void ol_toss(entity this, string gibName)
 {
 	makevectors(this.angles);
-	vector flingVelocity = v_forward*250 + v_up*300;
-	flingVelocity = flingVelocity + v_up * (random() * 100 - 50);
-	flingVelocity = flingVelocity + v_right * (random() * 200 - 100);
+	vector flingVelocity = v_forward * 250 + v_up * 300;
+	flingVelocity += v_up * (random() * 100 - 50);
+	flingVelocity += v_right * (random() * 200 - 100);
 	
-	entity myGib = StartGib(this, gibName);
+	entity myGib = ThrowGib(this, this, gibName, 200);
 	myGib.velocity = flingVelocity;
 }
 

@@ -2,4 +2,5 @@
 #include "ai.qc"
 #include "ai_ammoresist.qc"
 #include "ai_minions.qc"
+#include "ai_rogue.qc"
 #include "spikemine.qc"

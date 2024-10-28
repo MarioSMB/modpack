@@ -893,7 +893,7 @@ vector VelocityForDamage(entity this, entity inflictor, float dm)
 	vector v;
 
 	// check if the inflictor had velocity, e.g. like a rocket or explode box
-	if(inflictor.velocity != '0 0 0')
+	if(inflictor && inflictor.velocity != '0 0 0')
 	{
 		// impact some of inflictor's velocity on the gibs
 		v = 0.2 * inflictor.velocity;
