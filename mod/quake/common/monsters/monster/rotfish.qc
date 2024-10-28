@@ -166,6 +166,9 @@ void fish_pain(entity this, entity attacker, float damage, int deathtype)
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
 */
 spawnfunc(monster_fish) { monster_start(this, true, MON_ROTFISH); }
+
+// alkaline
+spawnfunc(monster_frogman) { this.spawnflags |= 2; monster_start(this, true, MON_ROTFISH); }
 #endif // SVQC
 
 #ifdef SVQC

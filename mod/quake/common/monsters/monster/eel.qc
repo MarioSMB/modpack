@@ -204,9 +204,6 @@ spawnfunc(monster_eel)
 {
 	monster_start(this, true, MON_EEL);
 }
-
-// alkaline
-spawnfunc(monster_frogman) { monster_start(this, true, MON_EEL); }
 #endif // SVQC
 
 #ifdef SVQC

@@ -300,6 +300,9 @@ bool SoldierCheckAttack(entity this)
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
 spawnfunc(monster_army) { monster_start(this, true, MON_GRUNT); }
+
+// alkaline
+spawnfunc(monster_nailgrunt) { monster_start(this, true, MON_GRUNT); }
 #endif // SVQC
 
 #ifdef SVQC
