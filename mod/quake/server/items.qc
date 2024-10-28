@@ -2240,6 +2240,24 @@ spawnfunc(item_jboots_timed)
 	StartItem(this);
 }
 
+spawnfunc(item_backpack)
+{
+	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells))
+	{
+		objerror(this, "Empty backpack");
+		return;	// nothing in it
+	}
+
+	this.flags = FL_ITEM;
+	this.solid = SOLID_TRIGGER;
+	set_movetype(this, MOVETYPE_TOSS);
+	precache_model("progs/backpack.mdl");
+	_setmodel(this, "progs/backpack.mdl");
+	setsize(this, '-16 -16 0', '16 16 56');
+
+	settouch(this, BackpackTouch);
+}
+
 /*QUAKED item_artifact_sharp_shooter(0 .5 .8)(-16 -16 -24)(16 16 32)
 From Arcane Dimensions, reused as an infinite ammo powerup
 */
