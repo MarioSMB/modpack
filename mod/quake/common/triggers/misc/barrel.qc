@@ -81,6 +81,15 @@ spawnfunc(misc_explobox)
 	barrel_spawn(this);
 }
 
+// qdoom
+spawnfunc(ExplosiveBarrel)
+{
+	if(random() > 0.5)
+		this.mdl = "maps/b_explob.bsp";
+	else
+		this.mdl = "maps/b_exbox2.bsp";
+	barrel_spawn(this);
+}
 
 
 /*QUAKED misc_explobox2(0 .5 .8)(0 0 0)(32 32 64)
@@ -116,7 +125,6 @@ spawnfunc(func_explobox)
 	this.mdl = this.model;
 	barrel_spawn(this);
 }
-
 
 void func_explode_detonate(entity this)
 {

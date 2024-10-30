@@ -252,6 +252,24 @@ spawnfunc(item_health)
 	StartItem(this);
 }
 
+// qdoom
+spawnfunc(medikit)
+{
+	this.spawnflags |= H_MEGA;
+	spawnfunc_item_health(this);
+}
+
+spawnfunc(stimpack)
+{
+	this.spawnflags |= H_ROTTEN;
+	spawnfunc_item_health(this);
+}
+
+spawnfunc(health_bonus)
+{
+	spawnfunc_item_health(this);
+}
+
 void health_touch(entity this, entity toucher)
 {
 	if(toucher.exptime != 0)
@@ -402,6 +420,12 @@ spawnfunc(item_armor1)
 	StartItem(this);
 }
 
+// qdoom
+spawnfunc(armor_bonus)
+{
+	spawnfunc_item_armor1(this);
+}
+
 /*QUAKED item_armor2(0 .5 .8)(-16 -16 0)(16 16 32)
 */
 
@@ -422,6 +446,12 @@ spawnfunc(item_armor2)
 	this.skin = 1;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
+}
+
+// qdoom
+spawnfunc(green_armor)
+{
+	spawnfunc_item_armor2(this);
 }
 
 /*QUAKED item_armorInv(0 .5 .8)(-16 -16 0)(16 16 32)
@@ -1422,6 +1452,19 @@ spawnfunc(item_key1)
 	StartItem(this);
 }
 
+// qdoom
+spawnfunc(red_item_keycard)
+{
+	spawnfunc_item_key1(this);
+}
+
+// qdoom
+// TODO: not sure if this is the right one
+spawnfunc(yellow_item_keycard)
+{
+	spawnfunc_item_key1(this);
+}
+
 /*QUAKED item_key2(0 .5 .8)(-16 -16 -24)(16 16 32)
 GOLD key
 In order for keys to work
@@ -1457,6 +1500,12 @@ spawnfunc(item_key2)
 	this.items = IT_KEY2;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
+}
+
+// qdoom
+spawnfunc(blue_item_keycard)
+{
+	spawnfunc_item_key2(this);
 }
 
 
@@ -2256,6 +2305,16 @@ spawnfunc(item_backpack)
 	setsize(this, '-16 -16 0', '16 16 56');
 
 	settouch(this, BackpackTouch);
+}
+
+// qdoom
+spawnfunc(doombackpack)
+{
+	this.ammo_shells = floor(random() * 20);
+	this.ammo_nails = floor(random() * 80);
+	this.ammo_rockets = floor(random() * 4);
+
+	spawnfunc_item_backpack(this);
 }
 
 /*QUAKED item_artifact_sharp_shooter(0 .5 .8)(-16 -16 -24)(16 16 32)

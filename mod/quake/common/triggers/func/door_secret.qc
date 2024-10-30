@@ -238,4 +238,10 @@ spawnfunc(func_door_secret)
 		this.wait = 5;		// 5 seconds before closing
 }
 
+// qdoom
+spawnfunc(func_door_secret_doom)
+{
+	spawnfunc_func_door_secret(this);
+}
+
 #endif
