@@ -2464,7 +2464,7 @@ string rogue_getcdtrack(int numb)
 .string music;
 string getcdtrack(int numb)
 {
-	if(world.music)
+	if(world.music && !intermission_running)
 		return world.music;
 	if(IsHipnoticMap())
 		return hip_getcdtrack(numb);
