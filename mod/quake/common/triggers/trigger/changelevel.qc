@@ -54,6 +54,8 @@ void changelevel_think(entity this)
 	//}
 }
 
+// qdoom-specific hack to allow delayed exit on e1m8_q1
+.float chlevel_delay;
 void changelevel_touch(entity this, entity toucher)
 {
 	// simply don't react if a non-player triggers it
@@ -71,6 +73,16 @@ void changelevel_touch(entity this, entity toucher)
 	}
 
 	if(!fexists(strcat("maps/", this.map, ".bsp")))
+		return;
+
+	// qdoom compatibility
+	if(this.delay)
+	{
+		this.chlevel_delay = time + this.delay;
+		this.delay = 0;
+		return;
+	}
+	else if(time < this.chlevel_delay)
 		return;
 
 	toucher.chlevel_targ = this;

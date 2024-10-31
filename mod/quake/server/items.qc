@@ -253,9 +253,14 @@ spawnfunc(item_health)
 }
 
 // qdoom
-spawnfunc(medikit)
+spawnfunc(soulsphere)
 {
 	this.spawnflags |= H_MEGA;
+	spawnfunc_item_health(this);
+}
+
+spawnfunc(medikit)
+{
 	spawnfunc_item_health(this);
 }
 
@@ -267,6 +272,7 @@ spawnfunc(stimpack)
 
 spawnfunc(health_bonus)
 {
+	this.spawnflags |= H_ROTTEN;
 	spawnfunc_item_health(this);
 }
 
@@ -423,7 +429,7 @@ spawnfunc(item_armor1)
 // qdoom
 spawnfunc(armor_bonus)
 {
-	spawnfunc_item_armor1(this);
+	//spawnfunc_item_armor1(this);
 }
 
 /*QUAKED item_armor2(0 .5 .8)(-16 -16 0)(16 16 32)
@@ -1459,8 +1465,7 @@ spawnfunc(red_item_keycard)
 }
 
 // qdoom
-// TODO: not sure if this is the right one
-spawnfunc(yellow_item_keycard)
+spawnfunc(blue_item_keycard)
 {
 	spawnfunc_item_key1(this);
 }
@@ -1503,7 +1508,7 @@ spawnfunc(item_key2)
 }
 
 // qdoom
-spawnfunc(blue_item_keycard)
+spawnfunc(yellow_item_keycard)
 {
 	spawnfunc_item_key2(this);
 }

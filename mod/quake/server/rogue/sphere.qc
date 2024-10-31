@@ -139,9 +139,3 @@ spawnfunc(item_sphere)
 	this.avelocity = '40 40 40';
 	StartItem(this);
 }
-
-// qdoom
-spawnfunc(soulsphere)
-{
-	spawnfunc_item_sphere(this);
-}

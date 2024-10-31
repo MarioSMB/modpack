@@ -222,6 +222,9 @@ spawnfunc(func_door_secret)
 	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 
+	// avoid linking to regular doors
+	this.spawnflags |= DOOR_DONT_LINK;
+
 	settouch(this, secret_touch);
 	setblocked(this, secret_blocked);
 	this.speed = 50;
