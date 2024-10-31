@@ -1421,6 +1421,21 @@ void key_setsounds(entity this)
 	}
 }
 
+void key_spend(entity player, int key_item)
+{
+	// attempt to catch QDoom levels which do not consume keys
+	if(substring(world.model, -7, 7) == "_q1.bsp")
+		return; // keep the key!
+
+	// Yoder Sept24, 2021 Horde merge
+	if(horde_ent || autocvar_sv_quake_globalkeys)
+	{
+		horde_key_spend(key_item);
+	}
+	else // standard behaviour
+		player.items &= ~key_item;
+}
+
 /*QUAKED item_key1(0 .5 .8)(-16 -16 -24)(16 16 32)
 SILVER key
 In order for keys to work
@@ -2990,23 +3005,11 @@ bool target_items_takeinv(entity this, entity e, entity actor)
 
 		if(it & IT_KEY1)
 		{
-			if(autocvar_sv_quake_globalkeys)
-			{
-				horde_key_spend(IT_KEY1);
-				//delete(this);
-			}
-			else
-				e.items &= ~IT_KEY1;
+			key_spend(e, IT_KEY1);
 		}
 		if(it & IT_KEY2)
 		{
-			if(autocvar_sv_quake_globalkeys)
-			{
-				horde_key_spend(IT_KEY2);
-				//delete(this);
-			}
-			else
-				e.items &= ~IT_KEY2;
+			key_spend(e, IT_KEY2);
 		}
 	}
 
@@ -3080,21 +3083,8 @@ void target_items_setinv(entity this, entity e, entity actor)
 		else
 			StatusEffects_remove(STATUSEFFECT_Quad, e, STATUSEFFECT_REMOVE_CLEAR);
 
-		if(autocvar_sv_quake_globalkeys)
-		{
-			horde_key_spend(IT_KEY1);
-			//delete(this);
-		}
-		else
-			e.items &= ~IT_KEY1;
-
-		if(autocvar_sv_quake_globalkeys)
-		{
-			horde_key_spend(IT_KEY2);
-			//delete(this);
-		}
-		else
-			e.items &= ~IT_KEY2;
+		key_spend(e, IT_KEY1);
+		key_spend(e, IT_KEY2);
 
 		e.worldtype = 0;
 		if(it & IT_KEY1)

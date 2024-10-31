@@ -51,10 +51,7 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 		return;
 	}
 
-	if(horde_ent || autocvar_sv_quake_globalkeys)
-		horde_key_spend(this.items);
-	else
-		actor.items &= ~this.items;
+	key_spend(actor, this.items);
 
 	// we can't just remove (this) here, because this is a touch function
 	// called while C code is looping through area links...

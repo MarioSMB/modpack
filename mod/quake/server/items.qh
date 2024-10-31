@@ -41,3 +41,5 @@ bool T_Heal(entity e, float healamount, bool ignore);
 void bound_other_ammo(entity this);
 
 int GetAmmoLimit(entity this, int itemid);
+
+void key_spend(entity player, int key_item);

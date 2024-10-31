@@ -1,8 +1,5 @@
 #ifdef SVQC
 
-//Yoder Sept24 Horde Merge
-void horde_key_spend(int key_item);
-
 /*
 
 Doors are similar to buttons, but can spawn a fat trigger field around them
@@ -354,11 +351,7 @@ void door_touch(entity this, entity toucher)
 		return;
 	}
 
-	// Yoder sept24, 2021, horde merge
-	if(horde_ent || autocvar_sv_quake_globalkeys)
-		horde_key_spend(this.owner.items);
-	else // standard behaviour
-		toucher.items &= ~this.owner.items;
+	key_spend(toucher, this.owner.items);
 	settouch(this.owner, func_null);
 	entity t = this.owner.enemy;
 	while(t != this.owner)// get paired doors
