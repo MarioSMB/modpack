@@ -6,15 +6,15 @@ MODEL(MON_OGRE, M_Model("ogre.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_OGRE_MACHINEGUN,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was nailed by an Ogre%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_OGRE_MACHINEGUN,                1,  NULL,           INFO_DEATH_SELF_MON_OGRE_MACHINEGUN,               CENTER_DEATH_SELF_MONSTER)
-REGISTER_DEATHTYPE(MONSTER_OGRE_MACHINEGUN,            			DEATH_SELF_MON_OGRE_MACHINEGUN,         DEATH_MURDER_MONSTER,           	"monster")
+REGISTER_DEATHTYPE(MONSTER_OGRE_MACHINEGUN,            			DEATH_SELF_MON_OGRE_MACHINEGUN,         DEATH_MURDER_MONSTER,   NULL, NULL, "monster")
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_OGRE_GRENADE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was blown up by an Ogre%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_OGRE_GRENADE,                1,  NULL,           INFO_DEATH_SELF_MON_OGRE_GRENADE,               CENTER_DEATH_SELF_MONSTER)
-REGISTER_DEATHTYPE(MONSTER_OGRE_GRENADE,            			DEATH_SELF_MON_OGRE_GRENADE,            DEATH_MURDER_MONSTER,           	"monster")
+REGISTER_DEATHTYPE(MONSTER_OGRE_GRENADE,            			DEATH_SELF_MON_OGRE_GRENADE,            DEATH_MURDER_MONSTER,   NULL, NULL, "monster")
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_OGRE_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was chopped into bits by an Ogre%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_OGRE_MELEE,                1,  NULL,           INFO_DEATH_SELF_MON_OGRE_MELEE,               CENTER_DEATH_SELF_MONSTER)
-REGISTER_DEATHTYPE(MONSTER_OGRE_MELEE,            				DEATH_SELF_MON_OGRE_MELEE,            	DEATH_MURDER_MONSTER,           	"monster")
+REGISTER_DEATHTYPE(MONSTER_OGRE_MELEE,            				DEATH_SELF_MON_OGRE_MELEE,            	DEATH_MURDER_MONSTER,   NULL, NULL, "monster")
 #endif
 
 CLASS(Ogre, Monster)

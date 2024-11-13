@@ -16,7 +16,6 @@ AUTOCVAR(g_prophunt_start_ammo_shells, float, 60, "");
 AUTOCVAR(g_prophunt_start_ammo_nails, float, 320, "");
 AUTOCVAR(g_prophunt_start_ammo_rockets, float, 160, "");
 AUTOCVAR(g_prophunt_start_ammo_cells, float, 180, "");
-AUTOCVAR(g_prophunt_start_ammo_plasma, float, 180, "");
 AUTOCVAR(g_prophunt_start_ammo_fuel, float, 0, "");
 
 AUTOCVAR(g_prophunt_edit, int, 0, "Allow editing sandbox objects, set to 2 to only allow props to edit objects");

@@ -60,7 +60,7 @@ AUTOCVAR_NOREF(g_ph_weapon_stay, float, 0, "");
 int prophunt_propteam;
 #endif
 #ifdef GAMEQC
-REGISTER_STAT(PROPHUNT_PROPTEAM, int, prophunt_propteam)
+REGISTER_STAT(PROPHUNT_PROPTEAM, INT, prophunt_propteam)
 #endif
 
 #ifdef GAMEQC

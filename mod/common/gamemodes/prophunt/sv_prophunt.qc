@@ -466,7 +466,6 @@ MUTATOR_HOOKFUNCTION(ph, PlayerSpawn)
 		SetResource(player, RES_BULLETS, 0);
 		SetResource(player, RES_ROCKETS, 0);
 		SetResource(player, RES_CELLS, 0);
-		SetResource(player, RES_PLASMA, 0);
 		SetResource(player, RES_FUEL, 0);
 		player.player_blocked = false;
 
@@ -670,7 +669,6 @@ MUTATOR_HOOKFUNCTION(ph, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_prophunt_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_prophunt_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_prophunt_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_prophunt_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_prophunt_start_ammo_fuel;
 }
 

@@ -8,7 +8,7 @@ SOUND(DOTC_DRONE_SCOUT_PROJ_EXPLODE, "dotc/explosion2");
 
 MSG_INFO_NOTIF(DEATH_SELF_DOTC_SCOUT_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was gunned down by a Scout drone%s%s"), "")
 MSG_MULTI_NOTIF(DEATH_SELF_DOTC_SCOUT_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_SCOUT_PROJECTILE,         CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
-REGISTER_DEATHTYPE(DOTC_SCOUT_PROJECTILE,                   DEATH_SELF_DOTC_SCOUT_PROJECTILE,              DEATH_MURDER_DOTC_DRONE_PROJECTILE,            "")
+REGISTER_DEATHTYPE(DOTC_SCOUT_PROJECTILE,                   DEATH_SELF_DOTC_SCOUT_PROJECTILE,              DEATH_MURDER_DOTC_DRONE_PROJECTILE,  NULL, NULL, "")
 
 #ifdef SVQC
 AUTOCVAR(g_dotc_scout_health, float, 50, "");

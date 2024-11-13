@@ -9,8 +9,8 @@ int models_allowed;
 bool g_overkill; // reliable check for overkill
 #endif
 
-//REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
-//REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
+//REGISTER_STAT(JUMPVELOCITY_CROUCH, FLOAT, autocvar_sv_jumpvelocity_backflip);
+//REGISTER_STAT(MODELS_ALLOWED, INT, models_allowed);
 
 REGISTER_PLAYERSOUND(cjump)
 
