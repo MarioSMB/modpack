@@ -1727,7 +1727,7 @@ string PickDMMap(bool gotohub)
 		if(pcount <= 1)
 			return "quake";
 	}
-	else if(autocvar_sv_quake_maplist != "")
+	if(autocvar_sv_quake_maplist != "")
 	{
 		RandomSelection_Init();
 		FOREACH_WORD(autocvar_sv_quake_maplist, it != autocvar_sv_worldbasename,
@@ -1816,6 +1816,7 @@ void CheckRules_World()
 		{
 			if(it.frags >= fraglimit)
 			{
+				mapname = PickDMMap(true);
 				NextLevel();
 				return;
 			}
