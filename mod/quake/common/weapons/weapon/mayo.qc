@@ -14,6 +14,14 @@ PRECACHE(Mayo)
 	precache_model("progs/piano_musicnote_white.mdl");
 }
 
+void W_FireMayo(entity this, .entity weaponentity);
+void wep_mayo_shot6(entity this) { wep_set_anim(this, 6, w_ready); }
+void wep_mayo_shot5(entity this) { wep_set_anim(this, 5, wep_mayo_shot6); }
+void wep_mayo_shot4(entity this) { wep_set_anim(this, 4, wep_mayo_shot5); W_FireMayo(this.owner, this.weaponentity_fld); }
+void wep_mayo_shot3(entity this) { wep_set_anim(this, 3, wep_mayo_shot4); }
+void wep_mayo_shot2(entity this) { wep_set_anim(this, 2, wep_mayo_shot3); }
+void wep_mayo_shot1(entity this) { wep_set_anim(this, 1, wep_mayo_shot2); }
+
 void Mayo_PoolAnim(entity this);
 void Mayo_PoolTouch(entity this, entity toucher);
 void MayoExplode(entity this, bool dopool)
@@ -164,8 +172,7 @@ METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 	{
 		if(IS_PLAYER(actor))
 			player_rocket1(actor);
-		wep_generic_rocket1(actor.(weaponentity));
-		W_FireMayo(actor, weaponentity);
+		wep_mayo_shot1(actor.(weaponentity));
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);
 	}
 }

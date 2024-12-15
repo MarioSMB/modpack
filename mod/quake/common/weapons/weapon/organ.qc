@@ -173,7 +173,7 @@ void organ_think(entity this)
 	setthink(this, organ_think);
 	this.nextthink = time;
 
-	if(this.wait && time > this.wait)
+	if((this.wait && time > this.wait) || wasfreed(this.realowner))
 	{
 		organ_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 		return;

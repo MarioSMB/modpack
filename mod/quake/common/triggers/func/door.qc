@@ -735,12 +735,14 @@ spawnfunc(func_door)
 
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
-	
+
+	// NOTE: higher key level overrides previous key to avoid breaking aop2m2
 	if(this.spawnflags & DOOR_SILVER_KEY)
 		this.items = IT_KEY1;
-	else if(this.spawnflags & DOOR_GOLD_KEY)
+	if(this.spawnflags & DOOR_GOLD_KEY)
 		this.items = IT_KEY2;
-	else if(this.spawnflags & DOOR_PLAT_KEY)
+	// still try to avoid overriding with platinum key where possible
+	if((this.spawnflags & DOOR_PLAT_KEY) && !this.items)
 		this.items = IT_KEY3;
 	
 	if(!this.speed)

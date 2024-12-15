@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Wand, Weapon)
+/* ammotype  */ ATTRIB(Wand, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Wand, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Wand, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Wand, aflag, int, 0);
+/* modelname */ ATTRIB(Wand, mdl, string, "wand");
+/* crosshair */ ATTRIB(Wand, w_crosshair, string, "gfx/crosshaircrylink");
+/* crosshair */ ATTRIB(Wand, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(Wand, w_crosshair_color, vector, '0.5 0.25 0');
+/* wepimg    */ ATTRIB(Wand, model2, string, "wand");
+/* refname   */ ATTRIB(Wand, netname, string, "wand");
+/* wepname   */ ATTRIB(Wand, m_name, string, _("Wand"));
+
+ENDCLASS(Wand)
+REGISTER_WEAPON(WAND, NEW(Wand));
+
+SPAWNFUNC_WEAPON(weapon_wand, WEP_WAND)

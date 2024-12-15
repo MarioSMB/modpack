@@ -44,3 +44,4 @@
 #include "organ.qc"
 #include "chimes.qc"
 #include "ball.qc"
+#include "wand.qc"
