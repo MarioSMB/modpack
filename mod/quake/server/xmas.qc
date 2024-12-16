@@ -62,15 +62,16 @@ void xmas_present_weapon(entity this, entity toucher)
 	}
 }
 
-void xmas_present_explode(entity this, entity toucher)
+void xmas_present_ammo(entity this, entity toucher)
 {
-	float damg = 40;
-	if(toucher.health)
-		T_Damage(toucher, this, this, damg, DEATH_TRAP.m_id);
-
-	T_RadiusDamage(this, this, 50, DEATH_TRAP.m_id, toucher);
-	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
-	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	toucher.ammo_shells += 30; SendItemPickup(toucher, IT_SHELLS, 30);
+	toucher.ammo_nails += 60; SendItemPickup(toucher, IT_NAILS, 60);
+	toucher.ammo_rockets += 20; SendItemPickup(toucher, IT_ROCKETS, 20);
+	toucher.ammo_cells += 30; SendItemPickup(toucher, IT_CELLS, 30);
+	toucher.ammo_lava_nails += 60; SendItemPickup(toucher, IT_LAVA_NAILS, 60);
+	toucher.ammo_multi_rockets += 20; SendItemPickup(toucher, IT_MULTI_ROCKETS, 20);
+	toucher.ammo_plasma += 40; SendItemPickup(toucher, IT_PLASMA_AMMO, 40);
+	bound_other_ammo(toucher);
 }
 
 void xmas_present_monster(entity this, entity toucher)
@@ -97,7 +98,7 @@ void xmas_present_touch(entity this, entity toucher)
 	else if(r < 0.50)
 		xmas_present_weapon(this, toucher);
 	else if(r < 0.75)
-		xmas_present_explode(this, toucher);
+		xmas_present_ammo(this, toucher);
 	else
 		xmas_present_monster(this, toucher);
 
@@ -130,7 +131,7 @@ bool xmas_replace(entity this, Monster mon)
 		//return false;
 
 	// probably a shambler, spawn a tree!
-	if(mon.m_maxs_z >= 48 && (!this.target || this.target == ""))
+	if(mon.m_maxs_z >= 48 && (!this.target || this.target == "") && random() > 0.5)
 	{
 		entity tree = new(tree);
 		tree.solid = SOLID_NOT;
