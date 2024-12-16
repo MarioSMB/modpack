@@ -867,6 +867,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_CELLS;
 				break;
 			}
+			case WEP_WAND:
+			{
+				if(random() > 0.5)
+					mytype = IT_CELLS;
+				break;
+			}
 		}
 		if(mytype != wpn.ammo_type)
 			continue;
