@@ -1,0 +1,3 @@
+#pragma once
+
+bool xmas_replace(entity this, Monster mon);
