@@ -7,6 +7,7 @@
 #include "../common/triggers/triggers.qh"
 #include "weapons.qh"
 #include "weapons/selection.qh"
+#include "xmas.qh"
 
 void SendItemPickup(entity this, int item, float amount)
 {
@@ -211,6 +212,12 @@ spawnfunc(item_health)
 	if(!(this.spawnflags & H_MEGA))
 	{
 		if(qonquer_itemreplace(this))
+		{
+			delete(this);
+			return;
+		}
+
+		if(xmas_replace(this))
 		{
 			delete(this);
 			return;
@@ -1058,6 +1065,12 @@ spawnfunc(item_shells)
 		delete(this);
 		return;
 	}
+
+	if(xmas_replace(this))
+	{
+		delete(this);
+		return;
+	}
 	
 	settouch(this, ammo_touch);
 
@@ -1092,6 +1105,12 @@ spawnfunc(item_spikes)
 		return;
 	}
 
+	if(xmas_replace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1120,6 +1139,12 @@ Small box is 25, Big box is 50.
 spawnfunc(item_lava_spikes)
 {
 	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
+	if(xmas_replace(this))
 	{
 		delete(this);
 		return;
@@ -1161,6 +1186,12 @@ spawnfunc(item_rockets)
 		return;
 	}
 
+	if(xmas_replace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1190,6 +1221,12 @@ Small box is 5, Big box is 10.
 spawnfunc(item_multi_rockets)
 {
 	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
+	if(xmas_replace(this))
 	{
 		delete(this);
 		return;
@@ -1231,6 +1268,12 @@ spawnfunc(item_cells)
 		return;
 	}
 
+	if(xmas_replace(this))
+	{
+		delete(this);
+		return;
+	}
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -1259,6 +1302,12 @@ Small box is 6, Big box is 12.
 spawnfunc(item_plasma)
 {
 	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
+	if(xmas_replace(this))
 	{
 		delete(this);
 		return;

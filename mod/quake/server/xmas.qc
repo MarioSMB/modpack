@@ -116,25 +116,18 @@ void xmas_decor_think(entity this)
 	this.angles = this.owner.angles;
 }
 
-bool xmas_replace(entity this, Monster mon)
+bool xmas_replace(entity this)
 {
-	if(this.targetname && this.targetname != "")
-		return false;
-	if(mon.spawnflags & MONSTER_TYPE_BOSS)
-		return false;
-	if((mon.spawnflags & MONSTER_TYPE_SWIM) || (mon.spawnflags & MONSTER_TYPE_FLY))
-		return false;
-	// but allow targets (we can just redirect it)
-	if(random() > 0.35)
+	if(random() > 0.45)
 		return false;
 	//if(!Monsters_SeasonLocked())
 		//return false;
 
-	// probably a shambler, spawn a tree!
-	if(mon.m_maxs_z >= 48 && (!this.target || this.target == "") && random() > 0.5)
+	if((!this.target || this.target == "") && random() < 0.15)
 	{
 		entity tree = new(tree);
 		tree.solid = SOLID_NOT;
+		tree.scale = 0.45;
 		tree.angles = this.angles;
 		set_movetype(tree, MOVETYPE_TOSS);
 		setorigin(tree, this.origin);
@@ -145,6 +138,7 @@ bool xmas_replace(entity this, Monster mon)
 		entity decor = new(tree_decor);
 		decor.owner = tree;
 		decor.solid = SOLID_NOT;
+		decor.scale = 0.45;
 		decor.angles = this.angles;
 		set_movetype(decor, MOVETYPE_NONE);
 		setorigin(decor, this.origin);

@@ -8,7 +8,6 @@
 #include "../../common/triggers/teleporters.qh"
 #include "../../common/triggers/triggers.qh"
 #include "../weapons.qh"
-#include "../xmas.qh"
 
 /* ALL MONSTERS SHOULD BE 1 0 0 IN COLOR */
 
@@ -341,12 +340,6 @@ void monster_start(entity this, bool check_appear, Monster mon)
 		mon = monster_randomize(this, mon);
 
 	if(check_appear && qonquer_monstercompat(this, mon))
-	{
-		delete(this);
-		return;
-	}
-
-	if(check_appear && xmas_replace(this, mon))
 	{
 		delete(this);
 		return;
