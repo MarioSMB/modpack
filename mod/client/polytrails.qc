@@ -1,141 +1,150 @@
 //FEATURE: Player glowy trails in CTS
 
-AUTOCVAR(cl_polytrails, bool, false, "");
-AUTOCVAR(cl_polytrail_segmentsize, float, 10, "");
-AUTOCVAR(cl_polytrail_lifetime, float, .2, "");
-AUTOCVAR(cl_polytrail_noise, float, 0, "");
-AUTOCVAR(cl_polytrail_reset_distance, float, 0, "");
+#include "polytrails.qh"
+#include "polytrails_weapons.qh"
 
-CLASS(PolyTrail, Object)
-    ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
-    ATTRIB(PolyTrail, polytrail_tex, string, string_null);
-    /** Lifetime per segment */
-    ATTRIB(PolyTrail, polytrail_lifetime, float, autocvar_cl_polytrail_lifetime);
-    ATTRIBARRAY(PolyTrail, polytrail_rgb, vector, 3);
-    ATTRIBARRAY(PolyTrail, polytrail_alpha, float, 3);
-    ATTRIBARRAY(PolyTrail, polytrail_thickness, float, 3);
+#define POLYTRAIL_SEEK(_p, _rel) ((POLYTRAIL_BUFSIZE + (_p).polytrail_bufidx + (_rel)) % POLYTRAIL_BUFSIZE)
+void Trail_draw(entity this)
+{
+    if (wasfreed(this.polytrail_follow))
+        this.polytrail_follow = NULL;
 
-    /**
-     * Increase as necessary if the buffer is overflowing
-     * symptom: tail of trail is wrong
-     * cause: projectiles are too fast for the segment size
-     */
-    const int POLYTRAIL_BUFSIZE = 1 << 7;
-    /** One or more positional points */
-    ATTRIBARRAY(PolyTrail, polytrail_bufpos, vector, POLYTRAIL_BUFSIZE);
-    /** Noise for ending position */
-    ATTRIBARRAY(PolyTrail, polytrail_bufnoise, vector, POLYTRAIL_BUFSIZE);
-    /** Time of input */
-    ATTRIBARRAY(PolyTrail, polytrail_buftime, float, POLYTRAIL_BUFSIZE);
-    /** Current read index */
-    ATTRIB(PolyTrail, polytrail_bufidx, float, -1);
-    /** Counts positions stored */
-    ATTRIB(PolyTrail, polytrail_cnt, float, 0);
-    #define POLYTRAIL_SEEK(_p, _rel) ((POLYTRAIL_BUFSIZE + (_p).polytrail_bufidx + (_rel)) % POLYTRAIL_BUFSIZE)
+    // NOTE: need an internal reset distance for warpzones to work properly TODO?
+    float reset_distance = 200;
 
-    void Trail_draw(entity this);
-    void Trail_recreate(entity this);
-    ATTRIB(PolyTrail, draw, void(entity this), Trail_draw);
-    void Trail_draw(entity this) {
-        if (wasfreed(this.polytrail_follow))
-            this.polytrail_follow = NULL;
-
-        if (!this.polytrail_follow) {
-            float when = this.polytrail_buftime[this.polytrail_bufidx];
-            if (time - when > this.polytrail_lifetime) {
-                delete(this);
-                return;
-            }
-        } else if(autocvar_cl_polytrail_reset_distance > 0 && this.polytrail_cnt > 0 && vdist(this.origin - this.polytrail_follow.origin, >, autocvar_cl_polytrail_reset_distance)) {
-        	Trail_recreate(this);
-        } else {
-            setorigin(this, this.polytrail_follow.origin);
-            if (this.polytrail_cnt < 0 || vdist(this.origin - this.polytrail_bufpos[this.polytrail_bufidx], >=, autocvar_cl_polytrail_segmentsize)) {
-                int i = POLYTRAIL_SEEK(this, 1);
-                this.polytrail_bufpos[i] = this.origin;
-                float f = autocvar_cl_polytrail_noise;
-                this.polytrail_bufnoise[i] = randompos(f * '-1 -1 -1', f * '1 1 1');
-                this.polytrail_buftime[i] = time;
-                this.polytrail_bufidx = i;
-                this.polytrail_cnt = bound(this.polytrail_cnt, i + 1, POLYTRAIL_BUFSIZE);
-            }
+    if (!this.polytrail_follow) {
+        float when = this.polytrail_buftime[this.polytrail_bufidx];
+        if (time - when > this.polytrail_lifetime) {
+            delete(this);
+            return;
         }
-
-        vector from = this.origin;
-        int count = this.polytrail_cnt;
-        for (int i = 0; i < count; ++i) {
-            int idx = POLYTRAIL_SEEK(this, -i);
-            float when = this.polytrail_buftime[idx];
-            // head: 0, tail: 1
-            float rtime = (time - when) / this.polytrail_lifetime;
-            if (rtime >= 1) {
-                break;
+    } else if(reset_distance > 0 && this.polytrail_cnt > 0 && vdist(this.origin - this.polytrail_follow.origin, >, reset_distance)) {
+        Trail_recreate(this);
+    } else {
+        setorigin(this, this.polytrail_follow.origin);
+        if (this.polytrail_cnt < 0 || vdist(this.origin - this.polytrail_bufpos[this.polytrail_bufidx], >=, this.polytrail_segmentsize)) {
+            int i = POLYTRAIL_SEEK(this, 1);
+            this.polytrail_bufpos[i] = this.origin;
+            float f = this.polytrail_noise;
+            // TODO: alternate noise functions (none, chaotic, helix, zigzag, waves, ...)
+            switch(this.polytrail_noisefunc)
+            {
+                default:
+                case "none": this.polytrail_bufnoise[i] = '0 0 0'; break;
+                case "chaotic": this.polytrail_bufnoise[i] = randompos(f * '-1 -1 -1', f * '1 1 1'); break;
             }
-            vector to = this.polytrail_bufpos[idx];
-            to += lerpvratio('0 0 0', this.polytrail_bufnoise[idx], rtime);
-            vector rgb = lerpv3ratio(this.polytrail_rgb[0], this.polytrail_rgb[1], this.polytrail_rgb[2], rtime);
-            float a = lerp3ratio(this.polytrail_alpha[0], this.polytrail_thickness[1], this.polytrail_alpha[2], rtime);
-            int thickness = lerp3ratio(this.polytrail_thickness[0], this.polytrail_thickness[1], this.polytrail_thickness[2], rtime);
-            vector thickdir = normalize(cross(normalize(to - from), view_origin - from)) * (thickness / 2);
-            vector A = from + thickdir;
-            vector B = from - thickdir;
-            vector C = to + thickdir;
-            vector D = to - thickdir;
-            R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN, false);
-            R_PolygonVertex(B, '0 0 0', rgb, a);
-            R_PolygonVertex(A, '0 1 0', rgb, a);
-            R_PolygonVertex(C, '1 1 0', rgb, a);
-            R_PolygonVertex(D, '1 0 0', rgb, a);
-            R_EndPolygon();
-            from = to;
+            this.polytrail_buftime[i] = time;
+            this.polytrail_bufidx = i;
+            this.polytrail_cnt = bound(this.polytrail_cnt, i + 1, POLYTRAIL_BUFSIZE);
         }
     }
-    CONSTRUCTOR(PolyTrail, entity _follow) {
-        CONSTRUCT(PolyTrail);
-        this.polytrail_follow = _follow;
-    }
-ENDCLASS(PolyTrail)
 
+    vector from = this.origin;
+    int count = this.polytrail_cnt;
+    for (int i = 0; i < count; ++i) {
+        int idx = POLYTRAIL_SEEK(this, -i);
+        float when = this.polytrail_buftime[idx];
+        // head: 0, tail: 1
+        float rtime = (time - when) / this.polytrail_lifetime;
+        if (rtime >= 1) {
+            break;
+        }
+        vector to = this.polytrail_bufpos[idx];
+        to += lerpvratio('0 0 0', this.polytrail_bufnoise[idx], rtime);
+        vector rgb = lerpv3ratio(this.polytrail_head_color, this.polytrail_body_color, this.polytrail_tail_color, rtime);
+        float a = lerp3ratio(this.polytrail_head_alpha, this.polytrail_body_alpha, this.polytrail_tail_alpha, rtime);
+        int thickness = lerp3ratio(this.polytrail_head_thickness, this.polytrail_body_thickness, this.polytrail_tail_thickness, rtime);
+        vector thickdir = normalize(cross(normalize(to - from), view_origin - from)) * (thickness / 2);
+        vector A = from + thickdir;
+        vector B = from - thickdir;
+        vector C = to + thickdir;
+        vector D = to - thickdir;
+        R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN, false);
+        R_PolygonVertex(B, '0 0 0', rgb, a);
+        R_PolygonVertex(A, '0 1 0', rgb, a);
+        R_PolygonVertex(C, '1 1 0', rgb, a);
+        R_PolygonVertex(D, '1 0 0', rgb, a);
+        R_EndPolygon();
+        from = to;
+    }
+}
 #undef POLYTRAIL_SEEK
 
 void Trail_recreate(entity this)
 {
-    PolyTrail t = NEW(PolyTrail, this.polytrail_follow);
-    t.polytrail_tex = this.polytrail_tex;
-    t.polytrail_rgb[0] = this.polytrail_rgb[0];
-    t.polytrail_rgb[1] = this.polytrail_rgb[1];
-    t.polytrail_rgb[2] = this.polytrail_rgb[2];
-    t.polytrail_alpha[0] = this.polytrail_alpha[0];
-    t.polytrail_alpha[1] = this.polytrail_alpha[1];
-    t.polytrail_alpha[2] = this.polytrail_alpha[2];
-    t.polytrail_thickness[0] = this.polytrail_thickness[0];
-    t.polytrail_thickness[1] = this.polytrail_thickness[1];
-    t.polytrail_thickness[2] = this.polytrail_thickness[2];
-
+    PolyTrail t = NEW(PolyTrail);
+    t.polytrail_follow = this.polytrail_follow;
     IL_PUSH(g_drawables, t);
+    t.polytrail_tex = this.polytrail_tex;
+    t.polytrail_head_alpha = this.polytrail_head_alpha;
+    t.polytrail_head_color = this.polytrail_head_color;
+    t.polytrail_head_thickness = this.polytrail_head_thickness;
+    t.polytrail_body_alpha = this.polytrail_body_alpha;
+    t.polytrail_body_color = this.polytrail_body_color;
+    t.polytrail_body_thickness = this.polytrail_body_thickness;
+    t.polytrail_tail_alpha = this.polytrail_tail_alpha;
+    t.polytrail_tail_color = this.polytrail_tail_color;
+    t.polytrail_tail_thickness = this.polytrail_tail_thickness;
+    t.polytrail_lifetime = this.polytrail_lifetime;
+    t.polytrail_segmentsize = this.polytrail_segmentsize;
+    t.polytrail_noise = this.polytrail_noise;
+    t.polytrail_noisefunc = this.polytrail_noisefunc;
 
     this.polytrail_follow = NULL;
+}
+
+void PolyTrail_Spawn(entity this, entity _follow)
+{
+    this.polytrail_follow = _follow;
+    IL_PUSH(g_drawables, this);
+
+    if(autocvar_cl_polytrails_teamcolor && _follow.colormap > 0)
+    {
+        vector teamcolor = colormapPaletteColor(_follow.colormap & 0x0F, true);
+        // keep original head color so it matches projectile
+        this.polytrail_body_color = teamcolor;
+        this.polytrail_tail_color = teamcolor;
+    }
 }
 
 REGISTER_MUTATOR(polytrails, true);
 
 MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     return = false;
-    if (!autocvar_cl_polytrails || (warpzone_warpzones_exist && autocvar_cl_polytrail_reset_distance <= 0)) return;
+    if (!autocvar_cl_polytrails) return;
     entity proj = M_ARGV(0, entity);
-    PolyTrail t = NEW(PolyTrail, proj);
-    t.polytrail_tex = "gfx/trails/plain.tga";
-    t.polytrail_rgb[0] = '1 0 0';
-    t.polytrail_rgb[1] = '0 1 0';
-    t.polytrail_rgb[2] = '0 0 1';
-    t.polytrail_alpha[0] = 1;
-    t.polytrail_alpha[1] = 0.5;
-    t.polytrail_alpha[2] = 0;
-    t.polytrail_thickness[0] = 10;
-    t.polytrail_thickness[1] = 5;
-    t.polytrail_thickness[2] = 0;
-
-    IL_PUSH(g_drawables, t);
+    
+    switch(proj.cnt)
+    {
+        case PROJECTILE_ELECTRO:
+            if(autocvar_cl_polytrails_electro_orb)
+            {
+                proj.traileffect = EFFECT_Null.m_id;
+                PolyTrail_Spawn(NEW(ElectroOrbTrail), proj);
+            }
+            break;
+        case PROJECTILE_CRYLINK_BOUNCING:
+            if(autocvar_cl_polytrails_crylink_bouncing)
+            {
+                proj.traileffect = EFFECT_Null.m_id;
+                PolyTrail_Spawn(NEW(CrylinkBouncingTrail), proj);
+            }
+            break;
+         case PROJECTILE_ELECTRO_BEAM:
+            if(autocvar_cl_polytrails_electro_bolt)
+            {
+                proj.traileffect = EFFECT_Null.m_id;
+                PolyTrail_Spawn(NEW(ElectroBoltTrail), proj);
+            }
+            break;
+        case PROJECTILE_CRYLINK:
+            if(autocvar_cl_polytrails_crylink_bolt)
+            {
+                proj.traileffect = EFFECT_Null.m_id;
+                PolyTrail_Spawn(NEW(CrylinkBoltTrail), proj);
+            }
+            break;
+    }
 }
 
 AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, if higher any mode)");
@@ -235,8 +244,8 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
 
     if(!player.ptrail || wasfreed(player.ptrail))
     {
-        player.ptrail = NEW(PolyTrail, player);
-        IL_PUSH(g_drawables, player.ptrail);
+        player.ptrail = NEW(PolyTrail);
+        PolyTrail_Spawn(player.ptrail, player);
     }
     switch(autocvar_cl_glowtrails_texture)
     {
@@ -246,23 +255,23 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
         case 2: player.ptrail.polytrail_tex = "particles/gauntletbeam.tga"; break;
     }
 
-    player.ptrail.polytrail_thickness[0] = autocvar_cl_glowtrails_thickness_max;
-    player.ptrail.polytrail_thickness[1] = autocvar_cl_glowtrails_thickness_med;
-    player.ptrail.polytrail_thickness[2] = autocvar_cl_glowtrails_thickness_min;
+    player.ptrail.polytrail_head_thickness = autocvar_cl_glowtrails_thickness_max;
+    player.ptrail.polytrail_body_thickness = autocvar_cl_glowtrails_thickness_med;
+    player.ptrail.polytrail_tail_thickness = autocvar_cl_glowtrails_thickness_min;
 
     float myalpha = ((autocvar_cl_glowtrails_usealpha) ? ((player.alpha == 0 || player.alpha == 1) ? autocvar_cl_glowtrails_usealpha : player.alpha) : 1);
-    player.ptrail.polytrail_alpha[0] = myalpha;
-    player.ptrail.polytrail_alpha[1] = myalpha * 0.5;
-    player.ptrail.polytrail_alpha[2] = 0;
+    player.ptrail.polytrail_head_alpha = myalpha;
+    player.ptrail.polytrail_body_alpha = myalpha * 0.5;
+    player.ptrail.polytrail_tail_alpha = 0;
 
     if(gametype == MAPINFO_TYPE_CTS)
     {
         float myspeed = vlen(player.velocity);
         myspeed = bound(0, myspeed * autocvar_cl_glowtrails_scale, 200);
 
-        player.ptrail.polytrail_rgb[0] = polytrails_get_color(myspeed, 200);
-        player.ptrail.polytrail_rgb[1] = polytrails_get_color(myspeed * 0.75, 200);
-        player.ptrail.polytrail_rgb[2] = polytrails_get_color(myspeed * 0.5, 200);
+        player.ptrail.polytrail_head_color = polytrails_get_color(myspeed, 200);
+        player.ptrail.polytrail_body_color = polytrails_get_color(myspeed * 0.75, 200);
+        player.ptrail.polytrail_tail_color = polytrails_get_color(myspeed * 0.5, 200);
     }
     else
     {
@@ -273,8 +282,8 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
         else
             col = entcs_GetColor(pnum);
 
-        player.ptrail.polytrail_rgb[0] = col;
-        player.ptrail.polytrail_rgb[1] = col;
-        player.ptrail.polytrail_rgb[2] = col;
+        player.ptrail.polytrail_head_color = col;
+        player.ptrail.polytrail_body_color = col;
+        player.ptrail.polytrail_tail_color = col;
     }
 }
