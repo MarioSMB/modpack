@@ -105,3 +105,14 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 		return true;
 	}
 }
+
+MUTATOR_HOOKFUNCTION(mutator_mod, EditProjectile)
+{
+	entity proj = M_ARGV(0, entity);
+	if(proj.cnt == PROJECTILE_BLASTER && proj.colormap > 0)
+	{
+		vector teamcolor = colormapPaletteColor(proj.colormap & 0x0F, true);
+		proj.colormod = teamcolor;
+		proj.glowmod = teamcolor;
+	}
+}
