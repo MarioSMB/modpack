@@ -12,8 +12,7 @@ void HUD_MorningRescue()
 	// vectors for top right, bottom right, bottom and bottom left corners
 	vector topright = vec2(vid_conwidth, 0);
 	//vector bottom = vec2(vid_conwidth / 2, vid_conheight);
-	// NOTE: flashy screen can cause epilepsy!
-	//vector bottomright = vec2(vid_conwidth, vid_conheight);
+	vector bottomright = vec2(vid_conwidth, vid_conheight);
 	vector bottomleft = vec2(0, vid_conheight);
 
 	vector mrpos = bottomleft;
@@ -25,7 +24,9 @@ void HUD_MorningRescue()
 
 	// NOTE: flashy screen can cause epilepsy!
 	//vector mrcolor = vec2(1, random());
-	//drawfill('0 0 0', bottomright, mrcolor, mralpha * random(), DRAWFLAG_ADDITIVE);
+	vector mrcolor = '1 0.4 0';
+	// NOTE: was mralpha * random()
+	drawfill('0 0 0', bottomright, mrcolor, mralpha, DRAWFLAG_ADDITIVE);
 
 	mrpos_y -= 200 * mralpha;
 	drawpic (mrpos, "gfx/morningrescue", '57 200 0', '1 1 1', mralpha, DRAWFLAG_NORMAL);
