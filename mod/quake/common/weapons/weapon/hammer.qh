@@ -99,3 +99,5 @@ void x_spark_01(entity this);
 
 void x_blood_01(entity this);
 #endif
+
+string hammer_getskin(int skinid);

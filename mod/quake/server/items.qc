@@ -721,6 +721,9 @@ void weapon_touch(entity this, entity toucher)
 		case IT_PLASMA_AMMO: toucher.ammo_plasma += newwep.aflag; break;
 	}
 
+	if(newwep == WEP_HAMMER && this.hammer_skin)
+		toucher.(weaponentity).hammer_skin = this.hammer_skin;
+
 	if(!(STAT(WEAPONS, toucher) & wep.m_wepset))
 	{
 		if(this.netname != "")
@@ -895,6 +898,11 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		wpn = W_RandomizeWeapon(wpn);
 
 	string mymdl = strcat("progs/g_", wpn.mdl, ".mdl");
+	if(wpn == WEP_HAMMER)
+	{
+		this.hammer_skin = bound(1, floor(random() * SKIN_LAST), SKIN_LAST);
+		mymdl = strcat("progs/g_", hammer_getskin(this.hammer_skin), ".mdl");
+	}
 	precache_model(mymdl); // TODO: model registry
 	_setmodel(this, mymdl);
 	this.weapon = wpn.m_id;

@@ -1202,10 +1202,9 @@ METHOD(Hammer, wr_killmessage, Notification(entity thiswep))
 }
 #endif
 
-#ifdef CSQC
-METHOD(Hammer, wr_viewmodel, string(Hammer this, entity wep))
+string hammer_getskin(int skinid)
 {
-	switch(wep.hammer_skin)
+	switch(skinid)
 	{
 		default:
 		case SKIN_DEFAULT: return "hammer_default";
@@ -1239,5 +1238,11 @@ METHOD(Hammer, wr_viewmodel, string(Hammer this, entity wep))
 		case SKIN_COPPER: return "hammer_copper_axe";
 	}
 	return "hammer_default";
+}
+
+#ifdef CSQC
+METHOD(Hammer, wr_viewmodel, string(Hammer this, entity wep))
+{
+	return hammer_getskin(wep.hammer_skin);
 }
 #endif
