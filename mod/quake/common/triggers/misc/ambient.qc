@@ -82,6 +82,12 @@ spawnfunc(ambient_generic)
 	ambientsound(this.origin, this.noise, this.volume, this.delay);
 }
 
+// quoth compat
+spawnfunc(ambient_generalpurpose)
+{
+	spawnfunc_ambient_generic(this);
+}
+
 void play_sound_use(entity this, entity actor, entity trigger)
 {
 	if(this.spawnflags & 1)
