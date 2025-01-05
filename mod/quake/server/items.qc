@@ -547,11 +547,14 @@ bool weapon_customize(entity this, entity client)
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 	{
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		if(wep == WEP_HAMMER && this.hammer_skin)
 		{
-			.entity weaponentity = weaponentities[slot];
-			if(client.(weaponentity).m_weapon == WEP_HAMMER && client.(weaponentity).hammer_skin != this.hammer_skin)
-				return true;
+			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(client.(weaponentity).hammer_skin != this.hammer_skin)
+					return true;
+			}
 		}
 		if((STAT(DUAL_WEAPONS, client) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
 			return false;
