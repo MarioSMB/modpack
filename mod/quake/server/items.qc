@@ -547,11 +547,15 @@ bool weapon_customize(entity this, entity client)
 	Weapon wep = REGISTRY_GET(Weapons, this.weapon);
 	if((deathmatch == 2 || coop) && (STAT(WEAPONS, client) & wep.m_wepset))
 	{
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(client.(weaponentity).m_weapon == WEP_HAMMER && client.(weaponentity).hammer_skin != this.hammer_skin)
+				return true;
+		}
 		if((STAT(DUAL_WEAPONS, client) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
 			return false;
 		if(client.collected_weapons & wep.m_wepset)
-			return false;
-		if(wep == WEP_HAMMER && client.hammer_skin == this.hammer_skin)
 			return false;
 	}
 	return true;
@@ -708,8 +712,13 @@ void weapon_touch(entity this, entity toucher)
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset) || (newwep == WEP_HAMMER && this.hammer_skin == toucher.(weaponentity).hammer_skin)))
-		return;
+	if(leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
+	{
+		if(newwep == WEP_HAMMER && this.hammer_skin && this.hammer_skin != toucher.(weaponentity).hammer_skin)
+			{ /* do nothing */ }
+		else
+			return;
+	}
 
 	wep = newwep;
 	switch(newwep.ammo_type)
@@ -743,7 +752,7 @@ void weapon_touch(entity this, entity toucher)
 		toucher.m_champion.m_pickup_weapon(toucher.m_champion, toucher, this);
 
 // change to the weapon
-	if((STAT(WEAPONS, toucher) & wep.m_wepset) && (coop || deathmatch == 2))
+	if((STAT(WEAPONS, toucher) & wep.m_wepset) && wep != WEP_HAMMER && (coop || deathmatch == 2))
 		STAT(DUAL_WEAPONS, toucher) |= wep.m_wepset;
 	else
 		STAT(WEAPONS, toucher) |= wep.m_wepset;
