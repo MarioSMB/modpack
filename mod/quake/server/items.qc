@@ -552,7 +552,7 @@ bool weapon_customize(entity this, entity client)
 			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
-				if(client.(weaponentity).hammer_skin != this.hammer_skin)
+				if(client.(weaponentity).hammer_skin && client.(weaponentity).hammer_skin != this.hammer_skin)
 					return true;
 			}
 		}
