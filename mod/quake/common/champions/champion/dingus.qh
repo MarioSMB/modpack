@@ -19,6 +19,9 @@ Sound SND_Dingus_Death_Random() {
 
 PRECACHE(Dingus)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/dingus_face");
+#endif
 #ifdef SVQC
     precache_sound("player_dingus/plyrjmp8.wav");       // player jump
     precache_sound("player_dingus/land.wav");           // player landing

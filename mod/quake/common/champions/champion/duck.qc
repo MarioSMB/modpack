@@ -77,3 +77,12 @@ METHOD(Duck, m_condition, bool(Champions this, entity actor))
 	return !PlayerInList(actor, autocvar_sv_allow_customplayermodels_ducklist);
 }
 #endif
+
+#ifdef CSQC
+METHOD(Duck, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/duck_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

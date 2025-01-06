@@ -26,6 +26,13 @@ Sound SND_Mario_Death_Random() {
 SOUND(Mario_Crush, "items/goomba");
 PRECACHE(Mario)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/mario_face1");
+    precache_pic("gfx/quake/mario_face2");
+    precache_pic("gfx/quake/mario_face3");
+    precache_pic("gfx/quake/mario_face4");
+    precache_pic("gfx/quake/mario_face5");
+#endif
 #ifdef SVQC
     precache_sound("player_mario/plyrjmp8.wav");       // player jump
     precache_sound("player_mario/land.wav");           // player landing

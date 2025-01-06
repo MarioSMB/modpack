@@ -405,3 +405,12 @@ METHOD(Duke, m_physics, bool(Champions this, entity actor, float dt))
 	}
 	return false;
 }
+
+#ifdef CSQC
+METHOD(Duke, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/duke_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

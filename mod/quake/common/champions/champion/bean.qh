@@ -22,6 +22,23 @@ MODEL(TEDDY, "progs/teddy.mdl");
 
 PRECACHE(Bean)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/bean_face_invis");
+    precache_pic("gfx/quake/bean_face_invul2");
+    precache_pic("gfx/quake/bean_face_inv2");
+    precache_pic("gfx/quake/bean_face_quad");
+
+    precache_pic("gfx/quake/bean_face1");
+    precache_pic("gfx/quake/bean_face_p1");
+    precache_pic("gfx/quake/bean_face2");
+    precache_pic("gfx/quake/bean_face_p2");
+    precache_pic("gfx/quake/bean_face3");
+    precache_pic("gfx/quake/bean_face_p3");
+    precache_pic("gfx/quake/bean_face4");
+    precache_pic("gfx/quake/bean_face_p4");
+    precache_pic("gfx/quake/bean_face5");
+    precache_pic("gfx/quake/bean_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_bean/plyrjmp8.wav");       // player jump
     precache_sound("player_bean/land.wav");           // player landing
@@ -68,6 +85,9 @@ CLASS(Bean, Champions)
     ATTRIB(Bean, m_soundpath, string, "player_bean/");
     METHOD(Bean, m_sound_pain, string()) { return SND(Bean_Pain_Random()); }
     METHOD(Bean, m_sound_death, string()) { return SND(Bean_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Bean, m_faceprefix, string, "gfx/quake/bean_");
 #endif
 #ifdef CSQC
     ATTRIB(Bean, message, string, BEAN_STATS);

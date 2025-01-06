@@ -52,3 +52,12 @@ METHOD(Chief, m_playerthink, void(Chief this, entity actor))
 	}
 }
 #endif
+
+#ifdef CSQC
+METHOD(Chief, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/chief_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

@@ -29,6 +29,23 @@ Sound SND_BigJohn_Appear_Random() {
 }
 PRECACHE(BigJohn)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/bigjohn_face_invis");
+    precache_pic("gfx/quake/bigjohn_face_invul2");
+    precache_pic("gfx/quake/bigjohn_face_inv2");
+    precache_pic("gfx/quake/bigjohn_face_quad");
+
+    precache_pic("gfx/quake/bigjohn_face1");
+    precache_pic("gfx/quake/bigjohn_face_p1");
+    precache_pic("gfx/quake/bigjohn_face2");
+    precache_pic("gfx/quake/bigjohn_face_p2");
+    precache_pic("gfx/quake/bigjohn_face3");
+    precache_pic("gfx/quake/bigjohn_face_p3");
+    precache_pic("gfx/quake/bigjohn_face4");
+    precache_pic("gfx/quake/bigjohn_face_p4");
+    precache_pic("gfx/quake/bigjohn_face5");
+    precache_pic("gfx/quake/bigjohn_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_bigjohn/plyrjmp8.wav");       // player jump
     precache_sound("player_bigjohn/land.wav");           // player landing
@@ -82,6 +99,9 @@ CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, m_soundpath, string, "player_bigjohn/");
     METHOD(BigJohn, m_sound_pain, string()) { return SND(BigJohn_Pain_Random()); }
     METHOD(BigJohn, m_sound_death, string()) { return SND(BigJohn_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(BigJohn, m_faceprefix, string, "gfx/quake/bigjohn_");
 #endif
 #ifdef CSQC
     ATTRIB(BigJohn, message, string, BIGJOHN_STATS);

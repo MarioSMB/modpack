@@ -10,6 +10,9 @@ SOUND(Chief_Pain, "player_chief/pain");
 SOUND(Chief_Death1, "player_chief/death1");
 PRECACHE(Chief)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/chief_face");
+#endif
 #ifdef SVQC
     precache_model("progs/v_mcsword.mdl");
 

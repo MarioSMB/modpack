@@ -150,3 +150,12 @@ METHOD(Sorlag, m_playerthink, void(Sorlag this, entity actor))
 	}
 }
 #endif
+
+#ifdef CSQC
+METHOD(Sorlag, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/sorlag_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

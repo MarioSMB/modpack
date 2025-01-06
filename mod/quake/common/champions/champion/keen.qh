@@ -23,6 +23,23 @@ SOUND(Keen_Pogo, "player_keen/pogo");
 SOUND(Keen_Appear, "player_keen/start");
 PRECACHE(Keen)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/keen_face_invis");
+    precache_pic("gfx/quake/keen_face_invul2");
+    precache_pic("gfx/quake/keen_face_inv2");
+    precache_pic("gfx/quake/keen_face_quad");
+
+    precache_pic("gfx/quake/keen_face1");
+    precache_pic("gfx/quake/keen_face_p1");
+    precache_pic("gfx/quake/keen_face2");
+    precache_pic("gfx/quake/keen_face_p2");
+    precache_pic("gfx/quake/keen_face3");
+    precache_pic("gfx/quake/keen_face_p3");
+    precache_pic("gfx/quake/keen_face4");
+    precache_pic("gfx/quake/keen_face_p4");
+    precache_pic("gfx/quake/keen_face5");
+    precache_pic("gfx/quake/keen_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_keen/plyrjmp8.wav");       // player jump
     precache_sound("player_keen/land.wav");           // player landing
@@ -71,6 +88,9 @@ CLASS(Keen, Champions)
     ATTRIB(Keen, m_soundpath, string, "player_keen/");
     METHOD(Keen, m_sound_pain, string()) { return SND(Keen_Pain_Random()); }
     METHOD(Keen, m_sound_death, string()) { return SND(Keen_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Keen, m_faceprefix, string, "gfx/quake/keen_");
 #endif
 #ifdef CSQC
     ATTRIB(Keen, message, string, KEEN_STATS);

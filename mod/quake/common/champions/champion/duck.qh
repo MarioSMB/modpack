@@ -27,6 +27,9 @@ Sound SND_Duck_Death_Random() {
 MODEL(Grape, "progs/grape.mdl");
 PRECACHE(Duck)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/duck_face");
+#endif
 #ifdef SVQC
     precache_sound("player_duck/plyrjmp8.wav");       // player jump
     precache_sound("player_duck/land.wav");           // player landing

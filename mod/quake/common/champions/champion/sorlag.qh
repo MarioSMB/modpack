@@ -22,6 +22,9 @@ Sound SND_Sorlag_Death_Random() {
 }
 PRECACHE(Sorlag)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/sorlag_face");
+#endif
 #ifdef SVQC
     precache_sound("player_sorlag/plyrjmp8.wav");       // player jump
     precache_sound("player_sorlag/land.wav");           // player landing

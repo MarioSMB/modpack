@@ -70,3 +70,26 @@ METHOD(Mario, m_touch, void(Champions this, entity actor, entity toucher))
 	}
 }
 #endif
+
+#ifdef CSQC
+string Mario_PickFace(int frm)
+{
+	switch(frm)
+	{
+		default:
+		case 4: return "gfx/quake/mario_face1";
+		case 3: return "gfx/quake/mario_face2";
+		case 2: return "gfx/quake/mario_face3";
+		case 1: return "gfx/quake/mario_face4";
+		case 0: return "gfx/quake/mario_face5";
+	}
+}
+
+METHOD(Mario, m_drawface, bool(Champions this))
+{
+	int f = bound(0, rint(STAT(HEALTH) / 20), 4);
+	string pic = Mario_PickFace(f);
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

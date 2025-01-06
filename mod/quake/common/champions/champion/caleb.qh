@@ -23,6 +23,23 @@ Sound SND_Caleb_Death_Random() {
 }
 PRECACHE(Caleb)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/caleb_face_invis");
+    precache_pic("gfx/quake/caleb_face_invul2");
+    precache_pic("gfx/quake/caleb_face_inv2");
+    precache_pic("gfx/quake/caleb_face_quad");
+
+    precache_pic("gfx/quake/caleb_face1");
+    precache_pic("gfx/quake/caleb_face_p1");
+    precache_pic("gfx/quake/caleb_face2");
+    precache_pic("gfx/quake/caleb_face_p2");
+    precache_pic("gfx/quake/caleb_face3");
+    precache_pic("gfx/quake/caleb_face_p3");
+    precache_pic("gfx/quake/caleb_face4");
+    precache_pic("gfx/quake/caleb_face_p4");
+    precache_pic("gfx/quake/caleb_face5");
+    precache_pic("gfx/quake/caleb_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_caleb/plyrjmp8.wav");       // player jump
     precache_sound("player_caleb/land.wav");           // player landing
@@ -166,6 +183,9 @@ CLASS(Caleb, Champions)
     ATTRIB(Caleb, m_soundpath, string, "player_caleb/");
     METHOD(Caleb, m_sound_pain, string()) { return SND(Caleb_Pain_Random()); }
     METHOD(Caleb, m_sound_death, string()) { return SND(Caleb_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Caleb, m_faceprefix, string, "gfx/quake/caleb_");
 #endif
 #ifdef CSQC
     ATTRIB(Caleb, message, string, CALEB_STATS);

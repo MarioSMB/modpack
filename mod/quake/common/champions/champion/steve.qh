@@ -24,6 +24,23 @@ Sound SND_Steve_Death_Random() {
 }
 PRECACHE(Steve)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/steve_face_invis");
+    precache_pic("gfx/quake/steve_face_invul2");
+    precache_pic("gfx/quake/steve_face_inv2");
+    precache_pic("gfx/quake/steve_face_quad");
+
+    precache_pic("gfx/quake/steve_face1");
+    precache_pic("gfx/quake/steve_face_p1");
+    precache_pic("gfx/quake/steve_face2");
+    precache_pic("gfx/quake/steve_face_p2");
+    precache_pic("gfx/quake/steve_face3");
+    precache_pic("gfx/quake/steve_face_p3");
+    precache_pic("gfx/quake/steve_face4");
+    precache_pic("gfx/quake/steve_face_p4");
+    precache_pic("gfx/quake/steve_face5");
+    precache_pic("gfx/quake/steve_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_steve/plyrjmp8.wav");       // player jump
     precache_sound("player_steve/land.wav");           // player landing
@@ -72,7 +89,10 @@ CLASS(Steve, Champions)
     METHOD(Steve, m_sound_pain, string()) { return SND(Steve_Pain_Random()); }
     METHOD(Steve, m_sound_death, string()) { return SND(Steve_Death_Random()); }
 #endif
- #ifdef CSQC
+#ifdef CSQC
+    ATTRIB(Steve, m_faceprefix, string, "gfx/quake/steve_");
+#endif
+#ifdef CSQC
     ATTRIB(Steve, message, string, STEVE_STATS);
 #endif
 ENDCLASS(Steve)

@@ -28,6 +28,9 @@ Sound SND_Duke_Death_Random() {
 }
 PRECACHE(Duke)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/duke_face");
+#endif
 #ifdef SVQC
     precache_sound("player_duke/plyrjmp8.wav");       // player jump
     precache_sound("player_duke/land.wav");           // player landing

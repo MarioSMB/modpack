@@ -25,6 +25,23 @@ Sound SND_Goat_Death_Random() {
 }
 PRECACHE(Goat)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/goat_face_invis");
+    precache_pic("gfx/quake/goat_face_invul2");
+    precache_pic("gfx/quake/goat_face_inv2");
+    precache_pic("gfx/quake/goat_face_quad");
+
+    precache_pic("gfx/quake/goat_face1");
+    precache_pic("gfx/quake/goat_face_p1");
+    precache_pic("gfx/quake/goat_face2");
+    precache_pic("gfx/quake/goat_face_p2");
+    precache_pic("gfx/quake/goat_face3");
+    precache_pic("gfx/quake/goat_face_p3");
+    precache_pic("gfx/quake/goat_face4");
+    precache_pic("gfx/quake/goat_face_p4");
+    precache_pic("gfx/quake/goat_face5");
+    precache_pic("gfx/quake/goat_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_goat/plyrjmp8.wav");       // player jump
     precache_sound("player_goat/land.wav");           // player landing
@@ -70,6 +87,9 @@ CLASS(Goat, Champions)
     ATTRIB(Goat, m_soundpath, string, "player_goat/");
     METHOD(Goat, m_sound_pain, string()) { return SND(Goat_Pain_Random()); }
     METHOD(Goat, m_sound_death, string()) { return SND(Goat_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Goat, m_faceprefix, string, "gfx/quake/goat_");
 #endif
 #ifdef CSQC
     ATTRIB(Goat, message, string, "BAAAAAAAHHHHH");

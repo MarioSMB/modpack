@@ -21,6 +21,18 @@ Sound SND_Pepsiman_Death_Random() {
 
 PRECACHE(Pepsiman)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/pepsiman_face_0");
+    precache_pic("gfx/quake/pepsiman_face_1");
+    precache_pic("gfx/quake/pepsiman_face_2");
+    precache_pic("gfx/quake/pepsiman_face_3");
+    precache_pic("gfx/quake/pepsiman_face_4");
+    precache_pic("gfx/quake/pepsiman_face_5");
+    precache_pic("gfx/quake/pepsiman_face_6");
+    precache_pic("gfx/quake/pepsiman_face_7");
+    precache_pic("gfx/quake/pepsiman_face_8");
+    precache_pic("gfx/quake/pepsiman_face_9");
+#endif
 #ifdef SVQC
     precache_sound("player_pepsiman/plyrjmp8.wav");       // player jump
     precache_sound("player_pepsiman/land.wav");           // player landing

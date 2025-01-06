@@ -25,6 +25,24 @@ Sound SND_Doom_Death_Random() {
 }
 PRECACHE(Doom)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/doom_face_invis");
+    precache_pic("gfx/quake/doom_face_invul2");
+    precache_pic("gfx/quake/doom_face_inv2");
+    precache_pic("gfx/quake/doom_face_quad");
+
+    // no looking around yet sorry
+    precache_pic("gfx/quake/doom_face1");
+    precache_pic("gfx/quake/doom_face_p1");
+    precache_pic("gfx/quake/doom_face2");
+    precache_pic("gfx/quake/doom_face_p2");
+    precache_pic("gfx/quake/doom_face3");
+    precache_pic("gfx/quake/doom_face_p3");
+    precache_pic("gfx/quake/doom_face4");
+    precache_pic("gfx/quake/doom_face_p4");
+    precache_pic("gfx/quake/doom_face5");
+    precache_pic("gfx/quake/doom_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_doom/plyrjmp8.wav");       // player jump
     precache_sound("player_doom/land.wav");           // player landing
@@ -75,6 +93,9 @@ CLASS(Doom, Champions)
     ATTRIB(Doom, m_soundpath, string, "player_doom/");
     METHOD(Doom, m_sound_pain, string()) { return SND(Doom_Pain_Random()); }
     METHOD(Doom, m_sound_death, string()) { return SND(Doom_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Doom, m_faceprefix, string, "gfx/quake/doom_");
 #endif
 #ifdef CSQC
     ATTRIB(Doom, message, string, DOOM_STATS);

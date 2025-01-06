@@ -122,6 +122,7 @@ CLASS(Champions, Object)
 #endif
 #ifdef CSQC
     METHOD(Champions, m_overlay, void(Champions this)) { };
+    METHOD(Champions, m_drawface, bool(Champions this)) { return false; };
 #endif
 ENDCLASS(Champions)
 

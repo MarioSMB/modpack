@@ -160,3 +160,12 @@ void Dusk_PlayerSpawn(entity actor)
 	actor.dusk_revived = false;
 }
 #endif
+
+#ifdef CSQC
+METHOD(Dusk, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/dusk_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

@@ -25,6 +25,23 @@ Sound SND_V1_Death_Random() {
 
 PRECACHE(V1)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/v1_face_invis");
+    precache_pic("gfx/quake/v1_face_invul2");
+    precache_pic("gfx/quake/v1_face_inv2");
+    precache_pic("gfx/quake/v1_face_quad");
+
+    precache_pic("gfx/quake/v1_face1");
+    precache_pic("gfx/quake/v1_face_p1");
+    precache_pic("gfx/quake/v1_face2");
+    precache_pic("gfx/quake/v1_face_p2");
+    precache_pic("gfx/quake/v1_face3");
+    precache_pic("gfx/quake/v1_face_p3");
+    precache_pic("gfx/quake/v1_face4");
+    precache_pic("gfx/quake/v1_face_p4");
+    precache_pic("gfx/quake/v1_face5");
+    precache_pic("gfx/quake/v1_face_p5");
+#endif
 #ifdef SVQC
     precache_sound("player_v1/plyrjmp8.wav");       // player jump
     precache_sound("player_v1/land.wav");           // player landing
@@ -83,6 +100,9 @@ CLASS(V1, Champions)
     ATTRIB(V1, m_soundpath, string, "player_v1/");
     METHOD(V1, m_sound_pain, string()) { return SND(V1_Pain_Random()); }
     METHOD(V1, m_sound_death, string()) { return SND(V1_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(V1, m_faceprefix, string, "gfx/quake/v1_");
 #endif
 #ifdef CSQC
     ATTRIB(V1, message, string, V1_STATS);

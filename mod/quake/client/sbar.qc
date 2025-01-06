@@ -1206,6 +1206,13 @@ void Sbar_DrawFace()
 	if(myitems & IT_TANK)
 		return;
 
+	Champions champ = (csqcplayer) ? csqcplayer.m_champion : NULL;
+	if(champ && champ.m_drawface)
+	{
+		if(champ.m_drawface(champ))
+			return; // drawn by champion
+	}
+
 	int myhealth = STAT(HEALTH);
 	if(oldhealth != myhealth && myhealth < oldhealth && (oldhealth - myhealth) >= 3)
 		health_gettime = time + 0.2;

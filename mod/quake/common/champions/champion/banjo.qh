@@ -23,6 +23,13 @@ Sound SND_Banjo_Death_Random() {
 }
 PRECACHE(BanjoKazooie)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/banjo_face1");
+    precache_pic("gfx/quake/banjo_face2");
+    precache_pic("gfx/quake/banjo_face3");
+    precache_pic("gfx/quake/banjo_face4");
+    precache_pic("gfx/quake/banjo_face5");
+#endif
 #ifdef SVQC
     precache_sound("player_banjo/plyrjmp8.wav");       // player jump
     precache_sound("player_banjo/land.wav");           // player landing

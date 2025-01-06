@@ -224,3 +224,26 @@ METHOD(BanjoKazooie, m_physics, bool(Champions this, entity actor, float dt))
 	}
 	return false;
 }
+
+#ifdef CSQC
+string Banjo_PickFace(int frm)
+{
+	switch(frm)
+	{
+		default:
+		case 4: return "gfx/quake/banjo_face1";
+		case 3: return "gfx/quake/banjo_face2";
+		case 2: return "gfx/quake/banjo_face3";
+		case 1: return "gfx/quake/banjo_face4";
+		case 0: return "gfx/quake/banjo_face5";
+	}
+}
+
+METHOD(BanjoKazooie, m_drawface, bool(Champions this))
+{
+	int f = bound(0, rint(STAT(HEALTH) / 20), 4);
+	string pic = Banjo_PickFace(f);
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif

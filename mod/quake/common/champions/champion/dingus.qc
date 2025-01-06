@@ -65,3 +65,12 @@ METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 	}
 }
 #endif
+
+#ifdef CSQC
+METHOD(Dingus, m_drawface, bool(Champions this))
+{
+	string pic = "gfx/quake/dingus_face";
+	Sbar_DrawPic('112 0 0', pic);
+	return true;
+}
+#endif
