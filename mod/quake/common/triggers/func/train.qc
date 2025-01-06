@@ -791,6 +791,9 @@ spawnfunc(misc_teleporttrain)
 		this.use = teleball_init;
 }
 
+// Ritual compat
+spawnfunc(misc_teleporttrain_shub2) { spawnfunc_misc_teleporttrain(this); }
+
 // --------------------------------------------------------------------------------
 // hipnotic train2
 

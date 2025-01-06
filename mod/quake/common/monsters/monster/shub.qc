@@ -359,6 +359,9 @@ void shub_use(entity this, entity actor, entity trigger)
 /*QUAKED monster_oldone(1 0 0)(-16 -16 -24)(16 16 32)
 */
 spawnfunc(monster_oldone) { monster_start(this, true, MON_SHUB); }
+
+// Ritual compat
+spawnfunc(monster_newone) { monster_start(this, true, MON_SHUB); }
 #endif // SVQC
 
 #ifdef SVQC
