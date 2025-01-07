@@ -4,4 +4,5 @@
 #include "fog.qh"
 #include "ladder.qh"
 #include "multi.qh"
+#include "teleport.qh"
 #include "viewloc.qh"

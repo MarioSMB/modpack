@@ -1,5 +1,7 @@
 #ifdef SVQC
 
+const int RITUAL_PLAYERONLY = BIT(0);
+
 void hurt_setdamage(entity ent, float amount)
 {
 	ent.dmg = amount;
@@ -31,6 +33,9 @@ void hurt_touch(entity this, entity toucher)
 		// Yoder Sept24 2021 Horde merge
 		// allows for monster-only hurt volumes
 		if((this.spawnflags & MONSTER_ONLY) && !IS_MONSTER(toucher))
+			return;
+		// ritual campaign uses a "player only" spawnflags to not instakill shub
+		if((this.spawnflags & RITUAL_PLAYERONLY) && !IS_PLAYER(toucher) && substring(world.model, 0, 8) == "maps/ze1")
 			return;
 		this.solid = SOLID_NOT;
 		T_Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id);

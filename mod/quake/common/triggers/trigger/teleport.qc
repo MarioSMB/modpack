@@ -96,6 +96,18 @@ void teleport_reactivate(entity this, entity actor, entity trigger)
 	this.use = teleport_use;
 }
 
+void trigger_teleport_delayedsetup(entity this)
+{
+	// workaround for Ritual and some mappers setting "infinite" nextthink to make a targeted teleporter still touched
+	// TODO: generic support for this, currently nextthink is set to 0 way too early for us to catch it
+	if(this.targetname && this.targetname != "" && world.model == "maps/ze1end.bsp")
+	{
+		entity killer = find(NULL, killtarget, this.targetname);
+		if(killer)
+			this.spawnflags |= IGNORE_TARGETNAME;
+	}
+}
+
 void trigger_teleport_setup(entity this)
 {
 	settouch(this, teleport_touch);
@@ -113,6 +125,9 @@ void trigger_teleport_setup(entity this)
 		if (!(this.spawnflags & TELEPORT_TRIGGER_FIRST))
 			teleport_hum(this);
 	}
+
+	setthink(this, trigger_teleport_delayedsetup);
+	this.nextthink = time + 0.1;
 }
 
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT CTF_ONLY
