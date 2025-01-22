@@ -336,7 +336,7 @@ Monster monster_randomize(entity this, Monster mon)
 
 void monster_start(entity this, bool check_appear, Monster mon)
 {
-	if(!autocvar_horde && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD))
+	if(!autocvar_horde && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD) && !(mon.spawnflags & MON_FLAG_STATIONARY))
 		mon = monster_randomize(this, mon);
 
 	if(check_appear && qonquer_monstercompat(this, mon))
