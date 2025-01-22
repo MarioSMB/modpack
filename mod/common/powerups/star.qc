@@ -1,7 +1,7 @@
 #include "star.qh"
 
 #ifdef SVQC
-METHOD(Star, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(Star, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -18,7 +18,7 @@ METHOD(Star, m_remove, void(StatusEffects this, entity actor, int removal_type))
     actor.effects &= ~(EF_DIMLIGHT | EF_FULLBRIGHT);
     SUPER(Star).m_remove(this, actor, removal_type);
 }
-METHOD(Star, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(Star, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -30,7 +30,7 @@ METHOD(Star, m_apply, void(StatusEffects this, entity actor, float eff_time, flo
     }
     SUPER(Star).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(Star, m_tick, void(StatusEffects this, entity actor))
+METHOD(Star, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     actor.effects |= (EF_DIMLIGHT | EF_FULLBRIGHT);
@@ -60,7 +60,7 @@ entity rainbowvision_noise2;
 
 AUTOCVAR_SAVE(hud_progressbar_star_color,   vector,   '0.8 0.8 0.1',   "");
 
-METHOD(Star, m_tick, void(StatusEffects this, entity actor))
+METHOD(Star, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;
