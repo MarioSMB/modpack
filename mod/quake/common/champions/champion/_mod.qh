@@ -16,6 +16,7 @@
 #include "keyleth.qh"
 #include "mario.qh"
 #include "mime.qh"
+#include "mshake.qh"
 #include "nyx.qh"
 #include "papyrus.qh"
 #include "pepsiman.qh"

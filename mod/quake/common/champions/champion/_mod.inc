@@ -16,6 +16,7 @@
 #include "keyleth.qc"
 #include "mario.qc"
 #include "mime.qc"
+#include "mshake.qc"
 #include "nyx.qc"
 #include "papyrus.qc"
 #include "pepsiman.qc"

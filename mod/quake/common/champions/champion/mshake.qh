@@ -1,0 +1,94 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MasterShake, "progs/player_mshake.mdl");
+
+SOUND(MasterShake_Pain1, "player_mshake/pain1");
+SOUND(MasterShake_Pain2, "player_mshake/pain2");
+SOUND(MasterShake_Pain3, "player_mshake/pain3");
+SOUND(MasterShake_Pain4, "player_mshake/pain4");
+Sound SND_MasterShake_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_MasterShake_Pain1.m_id + rint(random() * 3));
+}
+
+SOUND(MasterShake_Death1, "player_mshake/death1");
+SOUND(MasterShake_Death2, "player_mshake/death2");
+Sound SND_MasterShake_Death_Random() {
+    return (random() > 0.5) ? SND_MasterShake_Death1 : SND_MasterShake_Death2;
+}
+PRECACHE(MasterShake)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/mshake_face");
+#endif
+#ifdef SVQC
+    precache_model("progs/s_milk.mdl");
+    precache_model("progs/s_milkpool.mdl");
+
+    precache_sound("player_mshake/plyrjmp8.wav");       // player jump
+    precache_sound("player_mshake/land.wav");           // player landing
+    precache_sound("player_mshake/land2.wav");      // player hurt landing
+    precache_sound("player_mshake/drown1.wav");     // drowning pain
+    precache_sound("player_mshake/drown2.wav");     // drowning pain
+    precache_sound("player_mshake/gasp1.wav");      // gasping for air
+    precache_sound("player_mshake/gasp2.wav");      // taking breath
+    precache_sound("player_mshake/h2odeath.wav");       // drowning death
+
+    precache_sound("player_mshake/pain1.wav");
+    precache_sound("player_mshake/pain2.wav");
+    precache_sound("player_mshake/pain3.wav");
+
+    precache_sound("player_mshake/death1.wav");
+    precache_sound("player_mshake/death2.wav");
+
+    precache_sound("player_mshake/axhit1.wav");
+
+    precache_sound("player_mshake/lburn1.wav");     // lava burn
+    precache_sound("player_mshake/lburn2.wav");     // lava burn
+
+    precache_sound("player_mshake/start1.wav");
+    precache_sound("player_mshake/start2.wav");
+    precache_sound("player_mshake/start3.wav");
+    precache_sound("player_mshake/start4.wav");
+    precache_sound("player_mshake/start5.wav");
+    precache_sound("player_mshake/start6.wav");
+    precache_sound("player_mshake/start7.wav");
+
+    precache_sound("player_mshake/forbidden.wav");
+    precache_sound("player_mshake/falling.wav");
+    precache_sound("player_mshake/slurp.wav");
+
+    precache_sound("weapons/jarsmash.wav");
+    precache_sound("weapons/grape_impact.wav");
+#endif
+}
+#endif
+#ifdef CSQC
+#define MSHAKE_STATS \
+"Press %ABILITY% to forbid dancing\n" \
+"Drops healing fluid when hurt"
+#endif
+CLASS(MasterShake, Champions)
+    ATTRIB(MasterShake, netname, string, "mshake");
+    ATTRIB(MasterShake, m_name, string, "Master Shake");
+    ATTRIB(MasterShake, qcc_pogo, bool, true);
+    ATTRIB(MasterShake, m_scale, float, 0.75);
+    ATTRIB(MasterShake, m_hidden, bool, true);
+#ifdef GAMEQC
+    ATTRIB(MasterShake, m_model, Model, MDL_MasterShake);
+    ATTRIB(MasterShake, m_model_head, Model, MDL_Null);
+    ATTRIB(MasterShake, m_soundpath, string, "player_mshake/");
+    METHOD(MasterShake, m_sound_pain, string()) { return SND(MasterShake_Pain_Random()); }
+    METHOD(MasterShake, m_sound_death, string()) { return SND(MasterShake_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(MasterShake, message, string, MSHAKE_STATS);
+#endif
+ENDCLASS(MasterShake)
+REGISTER_CHAMPION(MasterShake, NEW(MasterShake));
+
+#ifdef SVQC
+.bool mshake_cannon;
+#endif

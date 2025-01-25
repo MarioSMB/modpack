@@ -569,8 +569,15 @@ void PM_Main(entity this, float dt)
 
 	PM_RollView(this);
 
+	entity actor = this;
+#ifdef CSQC
+	actor = g_statuseffects;
+#endif
+
 	float maxspeed_mod = 1;
 	maxspeed_mod *= dodgeball_GetMoveSpeed(this);
+	if(StatusEffects_active(STATUSEFFECT_Slowness, actor))
+		maxspeed_mod *= 0.25;
 	if(this.m_champion)
 	{
 		maxspeed_mod *= this.m_champion.qcc_movespeed;
