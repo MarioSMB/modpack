@@ -20,6 +20,9 @@ Sound SND_Mime_Death_Random() {
 MODEL(MimeBall, "progs/ball.mdl");
 PRECACHE(Mime)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/mime_face");
+#endif
 #ifdef SVQC
     precache_sound("player_mime/plyrjmp8.wav");       // player jump
     precache_sound("player_mime/land.wav");           // player landing
