@@ -202,6 +202,38 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 			print_to(player, maplist_reply);
 		return true;
 	}
+
+	if(cmd_name == "checklists")
+	{
+		entity ent = edict_num(stof(argv(1)));
+		if(!ent)
+		{
+			print_to(player, "Entity doesn't exist");
+			return true;
+		}
+		print_to(player, strcat("Info for entity ", ent.classname, ":"));
+		vector lists = ent.il_lists;
+		if (lists) {
+			for (int i = 0; i < IL_MAX; ++i) {
+				IntrusiveList list = il_links[i];
+				if ((lists & list.il_listmask) && IL_CONTAINS(list, ent)) {
+					print_to(player, strcat("Part of ", vtos(list.il_listmask), " ", etos(list)));
+				}
+			}
+		}
+		return true;
+	}
+
+	if(cmd_name == "checklinks")
+	{
+		print_to(player, "Listing every il_link entity");
+		for (int i = 0; i < IL_MAX; ++i)
+		{
+			IntrusiveList list = il_links[i];
+			print_to(player, strcat("#", ftos(i), ": ", ((list) ? etos(list) : "empty")));
+		}
+		return true;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)

@@ -11,6 +11,7 @@
 	#include "polytrails.qc"
 #endif
 
+//#define QUAKE_ONE
 #ifdef QUAKE_ONE
 	#include "../quake/client/progs.inc"
 #endif

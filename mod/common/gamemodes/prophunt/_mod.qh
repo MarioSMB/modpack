@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include "prophunt.qh"
+#ifdef CSQC
+    #include "cl_prophunt.qh"
+#endif
+#ifdef SVQC
+    #include "sv_prophunt.qh"
+#endif

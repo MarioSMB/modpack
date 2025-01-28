@@ -1,7 +1,7 @@
 //FEATURE: Command to turn off crosshairs on all players, for an extra challenge
 
 #ifdef GAMEQC
-REGISTER_STAT(NOCROSS, bool);
+REGISTER_STAT(NOCROSS, BOOL);
 
 REGISTER_MUTATOR(nocross, true);
 #endif

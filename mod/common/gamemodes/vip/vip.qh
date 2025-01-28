@@ -12,7 +12,7 @@ CLASS(VIP, Gametype)
     METHOD(VIP, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "item_flag_team2" || v == "team_CTF_blueflag")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
     METHOD(VIP, m_isTwoBaseMode, bool())
     {
@@ -31,7 +31,7 @@ CLASS(VIP, Gametype)
     METHOD(VIP, m_isForcedSupported, bool(Gametype this))
     {
         // ALL CTF maps work in VIP!
-        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF.m_flags))
+        if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF.gametype_flags))
             return true;
         return false;
     }

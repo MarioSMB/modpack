@@ -3,7 +3,7 @@
 #ifdef GAMEQC
 REGISTER_MUTATOR(pickspawns, true);
 
-REGISTER_STAT(PICK_SPAWNS, bool);
+REGISTER_STAT(PICK_SPAWNS, BOOL);
 #endif
 
 #ifdef SVQC
@@ -121,6 +121,8 @@ MUTATOR_HOOKFUNCTION(pickspawns, Ent_Update)
 	if(ent.classname == "ENT_CLIENT_SPAWNPOINT")
 	if(STAT(PICK_SPAWNS))
 	{
+		if(!IL_CONTAINS(g_radaricons, ent))
+			IL_PUSH(g_radaricons, ent);
 		ent.teamradar_icon = RADARICON_WAYPOINT.m_id;
 		ent.teamradar_color = ((serverflags & SERVERFLAG_TEAMPLAY) ? Team_ColorRGB(ent.team - 1) : '1 1 1');
 	}

@@ -8,7 +8,7 @@ SOUND(DOTC_DRONE_RART_PROJ_EXPLODE, W_Sound("rocket_impact"));
 
 MSG_INFO_NOTIF(DEATH_SELF_DOTC_RART_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was destroyed by a Rocket Artillery drone%s%s"), "")
 MSG_MULTI_NOTIF(DEATH_SELF_DOTC_RART_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_RART_PROJECTILE,          CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
-REGISTER_DEATHTYPE(DOTC_RART_PROJECTILE,                   DEATH_SELF_DOTC_RART_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,             "")
+REGISTER_DEATHTYPE(DOTC_RART_PROJECTILE,                   DEATH_SELF_DOTC_RART_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,    NULL, NULL, "")
 
 #ifdef SVQC
 AUTOCVAR(g_dotc_rart_health, float, 150, "");

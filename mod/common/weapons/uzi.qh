@@ -99,7 +99,7 @@ CLASS(Uzi, Weapon)
 #undef X
 
 ENDCLASS(Uzi)
-REGISTER_WEAPON(UZI, mac10, NEW(Uzi));
+REGISTER_WEAPON(UZI, NEW(Uzi));
 
 SPAWNFUNC_WEAPON(weapon_mac10, WEP_UZI)
 

@@ -427,6 +427,8 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	if(!IS_REAL_CLIENT(player))
 		return;
 
+	stuffcmd(player, "cmd radio $cl_radio\n");
+
 	int realclients = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{

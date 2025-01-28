@@ -35,7 +35,7 @@ AUTOCVAR(sv_minigames_boggle_timelimit, float, 60, "");
 
 .LinkedList boggle_words;
 
-REGISTER_STAT(BOGGLE_TIMER, float)
+REGISTER_STAT(BOGGLE_TIMER, FLOAT)
 
 #ifdef SVQC
 REGISTER_MUTATOR(boggle_timer, true);
