@@ -95,8 +95,10 @@ void ClientBeam_Draw(entity this)
 	string tex = "particles/lgbeam";
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
-	//vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
-	vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+	vector rgb = WEP_VAPORIZER.m_color;
+	if(autocvar_cl_vaporizerbeam_teamcolor)
+		rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (this.nextthink - time);
@@ -128,7 +130,13 @@ void FireClientBeam(vector start, vector end, bool hit)
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(NULL, particleeffectnum(((e.cnt) ? EFFECT_VAPORIZER_HIT(e.team) : EFFECT_VAPORIZER(e.team))), e.vorg1, e.vorg2);
+		vector rgb = WEP_VAPORIZER.m_color;
+		if(autocvar_cl_vaporizerbeam_teamcolor)
+			rgb = colormapPaletteColor(entcs_GetClientColors(e.sv_entnum - 1) & 0x0F, true);
+
+		particles_colormin = particles_colormax = rgb;
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((e.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), e.vorg1, e.vorg2, 1, PARTICLES_USECOLOR);
+
 		e.draw = func_null;
 		e.drawmask = MASK_NORMAL;
 		delete(e);
@@ -258,18 +266,36 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	vector shot_endpos = trace_endpos;
 
 	bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots
+	int eff_flags = PARTICLES_USEALPHA | PARTICLES_USEFADE;
 
-	int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
 	if(is_vortex)
 	{
-		if(autocvar_cl_particles_oldvortexbeam)
-		{ /* keep insta beam */ }
-		else
-			eff = particleeffectnum(EFFECT_VORTEX_BEAM);
-	}
+		float charge = 1;
+		float myowner = player_localentnum;
+		if(WEP_CVAR(WEP_VORTEX, charge))
+		{
+			float mydmg = hit_damage;
+			charge = WEP_CVAR(WEP_VORTEX, charge_mindmg) / mydmg + (1 - WEP_CVAR(WEP_VORTEX, charge_mindmg) / mydmg) * wep.vortex_charge;
+		}
 
-	if(is_vortex)
-		WarpZone_TrailParticles(player, eff, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos));
+		charge = sqrt(charge); // divide evenly among trail spacing and alpha
+		particles_alphamin = particles_alphamax = particles_fade = charge;
+		if((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2)
+		{
+			float mycolors = entcs_GetClientColors(myowner - 1);
+			vector rgb = vortex_glowcolor(mycolors, max(0.25, charge));
+			// in the event of charging being turned off, fall back to player colours
+			if(rgb == '0 0 0')
+				rgb = colormapPaletteColor(mycolors & 0x0F, true);
+			particles_colormin = particles_colormax = rgb;
+			eff_flags |= PARTICLES_USECOLOR;
+		}
+
+		if(autocvar_cl_particles_oldvortexbeam)
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
+		else
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
+	}
 	else if(wep.activeweapon == WEP_VAPORIZER)
 		FireClientBeam(w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), hit);
 

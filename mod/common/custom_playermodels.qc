@@ -278,7 +278,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
 		return;
 
 	Send_Effect(EFFECT_SMOKE_RING, player.origin, '0 0 50', 2);
-	sound(player, CH_TRIGGER, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, SND_VORTEX_IMPACT, VOL_BASE, ATTN_NORM);
 	player.ninja_sneak = time + autocvar_sv_smokeball_time;
 	player.ninja_cooldown = time + autocvar_sv_smokeball_refire;
 	player.ninja_prevalpha = player.alpha;

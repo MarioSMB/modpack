@@ -61,9 +61,6 @@ STATIC_INIT(cl_hooks_compat)
 MUTATOR_HOOKFUNCTION(cl_customhook, DrawGrapplingHook)
 {
 	entity thehook = M_ARGV(0, entity);
-	if(thehook.HookType != NET_ENT_CLIENT_HOOK)
-		return;
-
 	float t = M_ARGV(3, float);
 	int hooktype = autocvar_cl_customhook;
 	int ownnum = thehook.sv_entnum;

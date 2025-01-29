@@ -113,7 +113,7 @@ void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)
 	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	sound (this, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound (this, CH_WEAPON_A, SND_MORTAR_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_GRENADE_EXPLODE, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, 
 				NULL, NULL, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);

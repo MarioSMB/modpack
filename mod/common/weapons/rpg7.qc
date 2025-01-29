@@ -247,7 +247,7 @@ MUTATOR_HOOKFUNCTION(cl_rpg, EditProjectile)
 
 	if(proj.cnt == PROJECTILE_RPG)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_DEVASTATOR_FLY, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-3 -3 -3';
 		proj.maxs = '3 3 3';
 	}
