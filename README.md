@@ -2,9 +2,10 @@ SMB modpack
 ===========
 
 QuakeC source for the SMB server mods
-
+<!---
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
-
+!-->
+[![Build Status](https://img.shields.io/github/actions/workflow/status/MarioSMB/modpack/build.yml)](https://github.com/MarioSMB/modpack/actions)
 
 Requirements
 ============
