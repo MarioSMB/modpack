@@ -1,3 +1,4 @@
+#include "dynamic_spawnshield.qc"
 #include "hats.qc"
 #include "pick_spawns.qc"
 
