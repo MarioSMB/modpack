@@ -22,8 +22,11 @@ void HUD_MorningRescue()
 	if(mralpha >= 1)
 		mralpha = bound(0, 1 - 2 * (time - (mr_fadetime - 1)), 1);
 
-	vector mrcolor = vec2(1, random());
-	drawfill('0 0 0', bottomright, mrcolor, mralpha * random(), DRAWFLAG_ADDITIVE);
+	// NOTE: flashy screen can cause epilepsy!
+	//vector mrcolor = vec2(1, random());
+	vector mrcolor = '1 0.4 0';
+	// NOTE: was mralpha * random()
+	drawfill('0 0 0', bottomright, mrcolor, mralpha * 0.5, DRAWFLAG_ADDITIVE);
 
 	mrpos_y -= 200 * mralpha;
 	drawpic (mrpos, "gfx/morningrescue", '57 200 0', '1 1 1', mralpha, DRAWFLAG_NORMAL);

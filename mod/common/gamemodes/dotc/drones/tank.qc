@@ -8,7 +8,7 @@ SOUND(DOTC_DRONE_TANK_PROJ_EXPLODE, "dotc/explosion1");
 
 MSG_INFO_NOTIF(DEATH_SELF_DOTC_TANK_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was obliterated by a Tank drone%s%s"), "")
 MSG_MULTI_NOTIF(DEATH_SELF_DOTC_TANK_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_TANK_PROJECTILE,          CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
-REGISTER_DEATHTYPE(DOTC_TANK_PROJECTILE,                   DEATH_SELF_DOTC_TANK_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,             "")
+REGISTER_DEATHTYPE(DOTC_TANK_PROJECTILE,                   DEATH_SELF_DOTC_TANK_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,   NULL, NULL, "")
 
 #ifdef SVQC
 entity dotc_spawn_tank(entity this, entity own);

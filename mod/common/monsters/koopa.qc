@@ -7,7 +7,7 @@ MODEL(MON_KOOPA_DEAD, M_Model("koopa_shell.md3"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_KOOPA,             			1, 2, 1, "s1 s2loc spree_lost", "s1",    	"notify_death",         			"^BG%s^K1 was bitten by a Koopa Troopa%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_KOOPA,                		1,  NULL,           						INFO_DEATH_SELF_MON_KOOPA,   		CENTER_DEATH_SELF_MONSTER)
-REGISTER_DEATHTYPE(MONSTER_KOOPA,            				DEATH_SELF_MON_KOOPA,            			DEATH_MURDER_MONSTER,           	"monster")
+REGISTER_DEATHTYPE(MONSTER_KOOPA,            				DEATH_SELF_MON_KOOPA,            			DEATH_MURDER_MONSTER,      NULL, NULL, "monster")
 #endif
 
 CLASS(Koopa, Monster)

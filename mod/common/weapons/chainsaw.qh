@@ -98,7 +98,7 @@ CLASS(Chainsaw, Weapon)
 #undef X
 
 ENDCLASS(Chainsaw)
-REGISTER_WEAPON(CHAINSAW, chainsaw, NEW(Chainsaw));
+REGISTER_WEAPON(CHAINSAW, NEW(Chainsaw));
 
 SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
 

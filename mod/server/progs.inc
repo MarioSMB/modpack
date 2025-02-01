@@ -4,6 +4,7 @@
 	#include "../common/all.inc"
 
 	#include "chat.qc"
+	#include "chat_grabber.qc"
 	#include "commands.qc"
 	#include "compat.qc"
 	#include "damage.qc"

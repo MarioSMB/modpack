@@ -282,7 +282,7 @@ void dotc_CoreThink(entity this)
 			if(random() < 0.25)
 			{
 				te_explosion(this.origin);
-				sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_MORTAR_IMPACT, VOL_BASE, ATTEN_NORM);
 			}
 
 			// Particles

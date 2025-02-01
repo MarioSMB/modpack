@@ -17,13 +17,13 @@ const int MAX_CL_STATS = 256;
 
 #if defined(CSQC)
     #define g_stat_HEALTH getstati(STAT_HEALTH)
-    #define g_stat_ARMOR getstat_int(STAT_ARMOR)
-    #define g_stat_SHELLS getstat_int(STAT_SHELLS)
-    #define g_stat_NAILS getstat_int(STAT_NAILS)
-    #define g_stat_ROCKETS getstat_int(STAT_ROCKETS)
-    #define g_stat_CELLS getstat_int(STAT_CELLS)
-    #define g_stat_ACTIVEWEAPON getstat_int(STAT_ACTIVEWEAPON)
-    #define g_stat_ITEMS getstat_int(STAT_ITEMS)
+    #define g_stat_ARMOR getstati(STAT_ARMOR)
+    #define g_stat_SHELLS getstati(STAT_SHELLS)
+    #define g_stat_NAILS getstati(STAT_NAILS)
+    #define g_stat_ROCKETS getstati(STAT_ROCKETS)
+    #define g_stat_CELLS getstati(STAT_CELLS)
+    #define g_stat_ACTIVEWEAPON getstati(STAT_ACTIVEWEAPON)
+    #define g_stat_ITEMS getstat_INT(STAT_ITEMS)
     #define g_stat_VIEWHEIGHT getstati(STAT_VIEWHEIGHT)
 #elif defined(SVQC)
     #define stat_HEALTH health
@@ -37,28 +37,28 @@ const int MAX_CL_STATS = 256;
     #define stat_VIEWHEIGHT view_ofs_z
 #endif
 
-REGISTER_STAT(WEAPONS, vectori)
+REGISTER_STAT(WEAPONS, VECTORI)
 
-REGISTER_STAT(PL_VIEW_OFS, vector)
-REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
+REGISTER_STAT(PL_VIEW_OFS, VECTOR)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, VECTOR)
 
-REGISTER_STAT(PL_MIN, vector)
-REGISTER_STAT(PL_CROUCH_MIN, vector)
+REGISTER_STAT(PL_MIN, VECTOR)
+REGISTER_STAT(PL_CROUCH_MIN, VECTOR)
 
-REGISTER_STAT(PL_MAX, vector)
-REGISTER_STAT(PL_CROUCH_MAX, vector)
+REGISTER_STAT(PL_MAX, VECTOR)
+REGISTER_STAT(PL_CROUCH_MAX, VECTOR)
 
 #ifdef SVQC
 int monsters_killed, monsters_total;
 #endif
-REGISTER_STAT(MONSTERS_TOTAL, int, monsters_total)
-REGISTER_STAT(MONSTERS_KILLED, int, monsters_killed)
+REGISTER_STAT(MONSTERS_TOTAL, INT, monsters_total)
+REGISTER_STAT(MONSTERS_KILLED, INT, monsters_killed)
 
 #ifdef SVQC
 int secrets_found, secrets_total;
 #endif
-REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
-REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
+REGISTER_STAT(SECRETS_TOTAL, INT, secrets_total)
+REGISTER_STAT(SECRETS_FOUND, INT, secrets_found)
 
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
@@ -75,15 +75,15 @@ float autocvar_slowmo;
 
 noref bool autocvar_sv_gameplayfix_nogravityonground;
 noref bool autocvar_sv_gameplayfix_q2airaccelerate;
-REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
+REGISTER_STAT(MOVEFLAGS, INT, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
                               | (autocvar_sv_gameplayfix_nogravityonground ? MOVEFLAG_NOGRAVITYONGROUND : 0)
                               | (autocvar_sv_gameplayfix_gravityunaffectedbyticrate ? MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE : 0))
 
-REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
+REGISTER_STAT(TIMELIMIT, FLOAT, autocvar_timelimit)
 
-REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
-REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
+REGISTER_STAT(MOVEVARS_TICRATE, FLOAT, autocvar_sys_ticrate)
+REGISTER_STAT(MOVEVARS_TIMESCALE, FLOAT, autocvar_slowmo)
 
 #ifdef SVQC
 int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
@@ -99,37 +99,37 @@ int autocvar_sv_gameplayfix_noairborncorpse = 1;
 int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 int autocvar_sv_gameplayfix_delayprojectiles = 0;
 #endif
-REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
-REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
-REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int, autocvar_sv_gameplayfix_stepdown)
-REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, float, autocvar_sv_gameplayfix_stepdown_maxspeed)
-REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmultipletimes)
-REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
-REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
-REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
-REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_slidemoveprojectiles)
-REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
-REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
-REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
-REGISTER_STAT(GAMEPLAYFIX_DELAYPROJECTILES, int, autocvar_sv_gameplayfix_delayprojectiles)
+REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, INT, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, INT, autocvar_sv_gameplayfix_easierwaterjump)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, INT, autocvar_sv_gameplayfix_stepdown)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, FLOAT, autocvar_sv_gameplayfix_stepdown_maxspeed)
+REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, INT, autocvar_sv_gameplayfix_stepmultipletimes)
+REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, INT, autocvar_sv_gameplayfix_unstickplayers)
+REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, INT, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, INT, autocvar_sv_gameplayfix_fixedcheckwatertransition)
+REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, INT, autocvar_sv_gameplayfix_slidemoveprojectiles)
+REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, INT, autocvar_sv_gameplayfix_grenadebouncedownslopes)
+REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, INT, autocvar_sv_gameplayfix_noairborncorpse)
+REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, INT, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
+REGISTER_STAT(GAMEPLAYFIX_DELAYPROJECTILES, INT, autocvar_sv_gameplayfix_delayprojectiles)
 
 #ifdef SVQC
 int autocvar_sv_jumpstep;
 int autocvar_sv_nostep;
 #endif
-REGISTER_STAT(MOVEVARS_JUMPSTEP, int, autocvar_sv_jumpstep)
-REGISTER_STAT(NOSTEP, int, autocvar_sv_nostep)
+REGISTER_STAT(MOVEVARS_JUMPSTEP, INT, autocvar_sv_jumpstep)
+REGISTER_STAT(NOSTEP, INT, autocvar_sv_nostep)
 
-REGISTER_STAT(MOVEVARS_GRAVITY, float, autocvar_sv_gravity)
+REGISTER_STAT(MOVEVARS_GRAVITY, FLOAT, autocvar_sv_gravity)
 .float gravity;
 // FIXME: Was 0 on server, 1 on client. Still want that?
-REGISTER_STAT(MOVEVARS_ENTGRAVITY, float, (this.gravity) ? this.gravity : 1)
-REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
+REGISTER_STAT(MOVEVARS_ENTGRAVITY, FLOAT, (this.gravity) ? this.gravity : 1)
+REGISTER_STAT(MOVEVARS_STEPHEIGHT, FLOAT, autocvar_sv_stepheight)
 
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #endif
-REGISTER_STAT(MOVEVARS_WALLFRICTION, int)
+REGISTER_STAT(MOVEVARS_WALLFRICTION, INT)
 
 // unique to quake
 #ifdef SVQC
@@ -139,10 +139,10 @@ float autocvar_sv_wateraccelerate;
 float autocvar_edgefriction;
 #endif
 
-REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, int, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
-REGISTER_STAT(MOVEVARS_FRICTION_WATER, float)
-REGISTER_STAT(MOVEVARS_WATERACCELERATE, float)
-REGISTER_STAT(MOVEVARS_FRICTION_EDGE, float)
+REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, INT, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
+REGISTER_STAT(MOVEVARS_FRICTION_WATER, FLOAT)
+REGISTER_STAT(MOVEVARS_WATERACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_FRICTION_EDGE, FLOAT)
 
 // handled slightly differently
 #ifdef SVQC
@@ -153,40 +153,40 @@ float autocvar_sv_stopspeed;
 float autocvar_sv_maxairspeed;
 float autocvar_sv_airaccelerate;
 #endif
-REGISTER_STAT(MOVEVARS_FRICTION, float)
-REGISTER_STAT(MOVEVARS_ACCELERATE, float)
-REGISTER_STAT(MOVEVARS_MAXSPEED, float)
-REGISTER_STAT(MOVEVARS_STOPSPEED, float)
-REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
-REGISTER_STAT(MOVEVARS_AIRACCELERATE, float)
+REGISTER_STAT(MOVEVARS_FRICTION, FLOAT)
+REGISTER_STAT(MOVEVARS_ACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_MAXSPEED, FLOAT)
+REGISTER_STAT(MOVEVARS_STOPSPEED, FLOAT)
+REGISTER_STAT(MOVEVARS_MAXAIRSPEED, FLOAT)
+REGISTER_STAT(MOVEVARS_AIRACCELERATE, FLOAT)
 
 #ifdef SVQC
 int autocvar_sv_wallclip;
 #endif
-REGISTER_STAT(MOVEVARS_WALLCLIP, int)
+REGISTER_STAT(MOVEVARS_WALLCLIP, INT)
 
-REGISTER_STAT(SERVERFLAGS, int, serverflags)
+REGISTER_STAT(SERVERFLAGS, INT, serverflags)
 
 #ifdef SVQC
 .int powerups;
 #endif
-REGISTER_STAT(POWERUPS, int, this.powerups)
+REGISTER_STAT(POWERUPS, INT, this.powerups)
 
 #ifdef SVQC
 .float exptime;
 #endif
-REGISTER_STAT(EXPTIME, float, this.exptime)
+REGISTER_STAT(EXPTIME, FLOAT, this.exptime)
 
-REGISTER_STAT(SHIELD_TIME, float)
+REGISTER_STAT(SHIELD_TIME, FLOAT)
 
 #ifdef SVQC
 float shop_opentime;
 vector shop_weapons;
 int shop_passives;
 #endif
-REGISTER_STAT(SHOP_OPEN, float, shop_opentime)
-REGISTER_STAT(SHOP_WEAPONS, vectori, shop_weapons)
-REGISTER_STAT(SHOP_PASSIVES, int, shop_passives)
+REGISTER_STAT(SHOP_OPEN, FLOAT, shop_opentime)
+REGISTER_STAT(SHOP_WEAPONS, VECTORI, shop_weapons)
+REGISTER_STAT(SHOP_PASSIVES, INT, shop_passives)
 
 #ifdef SVQC
 .int ammo_lava_nails;
@@ -194,76 +194,76 @@ REGISTER_STAT(SHOP_PASSIVES, int, shop_passives)
 .int ammo_plasma;
 .float field_generator_health;
 #endif
-REGISTER_STAT(LAVA_NAILS, int, this.ammo_lava_nails)
-REGISTER_STAT(MULTI_ROCKETS, int, this.ammo_multi_rockets)
-REGISTER_STAT(PLASMA_AMMO, int, this.ammo_plasma)
+REGISTER_STAT(LAVA_NAILS, INT, this.ammo_lava_nails)
+REGISTER_STAT(MULTI_ROCKETS, INT, this.ammo_multi_rockets)
+REGISTER_STAT(PLASMA_AMMO, INT, this.ammo_plasma)
 
-REGISTER_STAT(FIELDGEN_HEALTH, float, this.field_generator_health)
+REGISTER_STAT(FIELDGEN_HEALTH, FLOAT, this.field_generator_health)
 
 #ifdef SVQC
 #include "../server/horde.qh"
 #endif
-REGISTER_STAT(HORDE, bool, (horde_ent) ? true : false)
-REGISTER_STAT(HORDE_WAVE, int, (horde_ent) ? horde_ent.wave : 0)
+REGISTER_STAT(HORDE, BOOL, (horde_ent) ? true : false)
+REGISTER_STAT(HORDE_WAVE, INT, (horde_ent) ? horde_ent.wave : 0)
 
 #ifdef SVQC
 #include "kickflip/skate.qh"
 #endif
-REGISTER_STAT(BOARD_FALLING, bool)
-REGISTER_STAT(SKATING, bool)
-REGISTER_STAT(TRICK, int)
-REGISTER_STAT(SKATESPEED, float, this.skatespeed)
-REGISTER_STAT(PUSH_FAST_TIME, float, this.push_fast_time)
-REGISTER_STAT(GRIND_START_TIME, float, this.grind_start_time)
-REGISTER_STAT(GRIND_STOP_TIME, float, this.grind_stop_time)
+REGISTER_STAT(BOARD_FALLING, BOOL)
+REGISTER_STAT(SKATING, BOOL)
+REGISTER_STAT(TRICK, INT)
+REGISTER_STAT(SKATESPEED, FLOAT, this.skatespeed)
+REGISTER_STAT(PUSH_FAST_TIME, FLOAT, this.push_fast_time)
+REGISTER_STAT(GRIND_START_TIME, FLOAT, this.grind_start_time)
+REGISTER_STAT(GRIND_STOP_TIME, FLOAT, this.grind_stop_time)
 
-REGISTER_STAT(MANA, float)
+REGISTER_STAT(MANA, FLOAT)
 
 #ifdef SVQC
 int top_score;
 #endif
-REGISTER_STAT(TOP_SCORE, int, top_score)
+REGISTER_STAT(TOP_SCORE, INT, top_score)
 
-REGISTER_STAT(DUAL_WEAPONS, vectori)
+REGISTER_STAT(DUAL_WEAPONS, VECTORI)
 
-REGISTER_STAT(QCC_CHAMPION, int)
-REGISTER_STAT(QCC_STUNNED, float)
-REGISTER_STAT(QCC_ABILITYTIME, float)
-REGISTER_STAT(QCC_LASTWJ, float)
+REGISTER_STAT(QCC_CHAMPION, INT)
+REGISTER_STAT(QCC_STUNNED, FLOAT)
+REGISTER_STAT(QCC_ABILITYTIME, FLOAT)
+REGISTER_STAT(QCC_LASTWJ, FLOAT)
 #ifdef SVQC
 .bool jetpack_status;
 #endif
-REGISTER_STAT(QCC_JETPACK, bool, this.jetpack_status)
-REGISTER_STAT(QCC_JETPACKFUEL, bool)
-REGISTER_STAT(QCC_BLOODRAGE, bool)
-REGISTER_STAT(QCC_BLOODRAGE_COUNT, int)
+REGISTER_STAT(QCC_JETPACK, BOOL, this.jetpack_status)
+REGISTER_STAT(QCC_JETPACKFUEL, BOOL)
+REGISTER_STAT(QCC_BLOODRAGE, BOOL)
+REGISTER_STAT(QCC_BLOODRAGE_COUNT, INT)
 
 #ifdef SVQC
 #include "slide/slide.qh"
 #endif
-REGISTER_STAT(SLIDE_ON, bool)
+REGISTER_STAT(SLIDE_ON, BOOL)
 
 #ifdef SVQC
 .int worldtype;
 #endif
-REGISTER_STAT(WORLDTYPE, int, world.worldtype)
+REGISTER_STAT(WORLDTYPE, INT, world.worldtype)
 
-REGISTER_STAT(CANNON, bool)
+REGISTER_STAT(CANNON, BOOL)
 
 #ifdef SVQC
 #include "../server/horde.qh"
 #endif
-REGISTER_STAT(KEYS_SILVER, int, keys_silver)
-REGISTER_STAT(KEYS_GOLD, int, keys_gold)
-REGISTER_STAT(KEYS_PLATINUM, int, keys_platinum)
+REGISTER_STAT(KEYS_SILVER, INT, keys_silver)
+REGISTER_STAT(KEYS_GOLD, INT, keys_gold)
+REGISTER_STAT(KEYS_PLATINUM, INT, keys_platinum)
 
-REGISTER_STAT(BREEGULL_EGGTYPE, int)
+REGISTER_STAT(BREEGULL_EGGTYPE, INT)
 #ifdef SVQC
 .entity clockwork;
 #endif
-REGISTER_STAT(CLOCKWORK, bool, (this.clockwork) ? true : false)
+REGISTER_STAT(CLOCKWORK, BOOL, (this.clockwork) ? true : false)
 
-REGISTER_STAT(PASSIVES, int)
+REGISTER_STAT(PASSIVES, INT)
 
 #ifdef SVQC
 .int team_no;
@@ -272,14 +272,14 @@ int team1_score;
 int team2_score;
 int autocvar_sv_quake_dodgeball_pointlimit = 6;
 #endif
-REGISTER_STAT(HAS_BALL, bool)
-REGISTER_STAT(CATCHING, float)
-REGISTER_STAT(DEFLECTING, float)
-REGISTER_STAT(FROZEN, float)
-REGISTER_STAT(SPECIAL, int)
-REGISTER_STAT(STAMINA, int)
-REGISTER_STAT(DODGEBALL_TEAM, int, this.team_no)
-REGISTER_STAT(DODGEBALL_SCORE_TEAM1, int, team1_score)
-REGISTER_STAT(DODGEBALL_SCORE_TEAM2, int, team2_score)
-REGISTER_STAT(DODGEBALL_SCORE_LIMIT, int, autocvar_sv_quake_dodgeball_pointlimit)
-REGISTER_STAT(DIED, bool, this.died)
+REGISTER_STAT(HAS_BALL, BOOL)
+REGISTER_STAT(CATCHING, FLOAT)
+REGISTER_STAT(DEFLECTING, FLOAT)
+REGISTER_STAT(FROZEN, FLOAT)
+REGISTER_STAT(SPECIAL, INT)
+REGISTER_STAT(STAMINA, INT)
+REGISTER_STAT(DODGEBALL_TEAM, INT, this.team_no)
+REGISTER_STAT(DODGEBALL_SCORE_TEAM1, INT, team1_score)
+REGISTER_STAT(DODGEBALL_SCORE_TEAM2, INT, team2_score)
+REGISTER_STAT(DODGEBALL_SCORE_LIMIT, INT, autocvar_sv_quake_dodgeball_pointlimit)
+REGISTER_STAT(DIED, BOOL, this.died)

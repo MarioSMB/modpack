@@ -7,7 +7,7 @@ MODEL(MON_GOOMBA_DEAD, M_Model("goomba_dead.md3"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_GOOMBA,             			1, 2, 1, "s1 s2loc spree_lost", "s1",    	"notify_death",         			"^BG%s^K1 was devoured by a Goomba%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_GOOMBA,                		1,  NULL,           						INFO_DEATH_SELF_MON_GOOMBA,   		CENTER_DEATH_SELF_MONSTER)
-REGISTER_DEATHTYPE(MONSTER_GOOMBA,            				DEATH_SELF_MON_GOOMBA,            			DEATH_MURDER_MONSTER,           	"monster")
+REGISTER_DEATHTYPE(MONSTER_GOOMBA,            				DEATH_SELF_MON_GOOMBA,            			DEATH_MURDER_MONSTER,     NULL, NULL, "monster")
 #endif
 
 CLASS(Goomba, Monster)

@@ -16,10 +16,10 @@ AUTOCVAR(g_player_crush_sound, bool, false, "Play boowip sound");
 SOUND(GOOMBA, "misc/goomba");
 #endif
 
-REGISTER_STAT(PLAYER_CRUSH, bool, autocvar_g_player_crush)
-REGISTER_STAT(PLAYER_CRUSH_SIMPLE, int, autocvar_g_player_crush_simple)
-REGISTER_STAT(PLAYER_CRUSH_BOUNCE, float, autocvar_g_player_crush_bounce)
-REGISTER_STAT(PLAYER_CRUSH_BOUNCE_JUMP, float, autocvar_g_player_crush_bounce_jump)
+REGISTER_STAT(PLAYER_CRUSH, BOOL, autocvar_g_player_crush)
+REGISTER_STAT(PLAYER_CRUSH_SIMPLE, INT, autocvar_g_player_crush_simple)
+REGISTER_STAT(PLAYER_CRUSH_BOUNCE, FLOAT, autocvar_g_player_crush_bounce)
+REGISTER_STAT(PLAYER_CRUSH_BOUNCE_JUMP, FLOAT, autocvar_g_player_crush_bounce_jump)
 
 void pc_PlayerTouch(entity this, entity toucher)
 {

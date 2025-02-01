@@ -3,7 +3,7 @@
 #ifdef GAMEQC
 REGISTER_MUTATOR(pickspawns, true);
 
-REGISTER_STAT(PICK_SPAWNS, bool);
+REGISTER_STAT(PICK_SPAWNS, BOOL);
 #endif
 
 #ifdef SVQC

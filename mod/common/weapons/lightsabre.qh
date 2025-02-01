@@ -99,7 +99,7 @@ CLASS(Lightsabre, Weapon)
 #undef X
 
 ENDCLASS(Lightsabre)
-REGISTER_WEAPON(LIGHTSABRE, lightsabre, NEW(Lightsabre));
+REGISTER_WEAPON(LIGHTSABRE, NEW(Lightsabre));
 
 SPAWNFUNC_WEAPON(weapon_lightsabre, WEP_LIGHTSABRE)
 

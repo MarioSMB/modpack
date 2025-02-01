@@ -82,7 +82,7 @@ void M_Vore_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MORTAR_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.realowner.vore_spike = NULL;
 

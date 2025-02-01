@@ -1,7 +1,7 @@
 #include "life.qh"
 
 #ifdef SVQC
-METHOD(Life, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(Life, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -13,7 +13,7 @@ METHOD(Life, m_remove, void(StatusEffects this, entity actor, int removal_type))
         stopsound(actor, CH_TRIGGER_SINGLE); // get rid of the pickup sound
     SUPER(Life).m_remove(this, actor, removal_type);
 }
-METHOD(Life, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(Life, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -26,7 +26,7 @@ METHOD(Life, m_apply, void(StatusEffects this, entity actor, float eff_time, flo
     }
     SUPER(Life).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(Life, m_tick, void(StatusEffects this, entity actor))
+METHOD(Life, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     SUPER(Life).m_tick(this, actor);
@@ -35,7 +35,7 @@ METHOD(Life, m_tick, void(StatusEffects this, entity actor))
 #ifdef CSQC
 AUTOCVAR_SAVE(hud_progressbar_life_color,   vector,   '0.8 0.2 0.2',   "");
 
-METHOD(Life, m_tick, void(StatusEffects this, entity actor))
+METHOD(Life, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;

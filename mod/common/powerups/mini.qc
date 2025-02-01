@@ -11,7 +11,7 @@ void minishroom_ResetSize(entity this)
     STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
 }
 
-METHOD(Mini, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(Mini, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -46,7 +46,7 @@ METHOD(Mini, m_remove, void(StatusEffects this, entity actor, int removal_type))
     }
     SUPER(Mini).m_remove(this, actor, removal_type);
 }
-METHOD(Mini, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(Mini, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -71,7 +71,7 @@ METHOD(Mini, m_apply, void(StatusEffects this, entity actor, float eff_time, flo
     }
     SUPER(Mini).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(Mini, m_tick, void(StatusEffects this, entity actor))
+METHOD(Mini, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     SUPER(Mini).m_tick(this, actor);
@@ -80,7 +80,7 @@ METHOD(Mini, m_tick, void(StatusEffects this, entity actor))
 #ifdef CSQC
 AUTOCVAR_SAVE(hud_progressbar_mini_color,   vector,   '0.2 0.2 0.8',   "");
 
-METHOD(Mini, m_tick, void(StatusEffects this, entity actor))
+METHOD(Mini, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;

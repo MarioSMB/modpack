@@ -16,7 +16,6 @@ float autocvar_g_pickup_shells_weapon;
 float autocvar_g_pickup_nails_weapon;
 float autocvar_g_pickup_rockets_weapon;
 float autocvar_g_pickup_cells_weapon;
-float autocvar_g_pickup_plasma_weapon;
 float autocvar_g_pickup_fuel_weapon;
 
 void dotc_ItemSpawn_Give(entity player)
@@ -39,7 +38,6 @@ void dotc_ItemSpawn_Give(entity player)
 			case RES_BULLETS: SetResource(player, RES_BULLETS, max(GetResource(player, RES_BULLETS), autocvar_g_pickup_nails_weapon)); break;
 			case RES_ROCKETS: SetResource(player, RES_ROCKETS, max(GetResource(player, RES_ROCKETS), autocvar_g_pickup_rockets_weapon)); break;
 			case RES_CELLS:   SetResource(player, RES_CELLS, max(GetResource(player, RES_CELLS), autocvar_g_pickup_cells_weapon)); break;
-			case RES_PLASMA:  SetResource(player, RES_PLASMA, max(GetResource(player, RES_PLASMA), autocvar_g_pickup_plasma_weapon)); break;
 			case RES_FUEL:    SetResource(player, RES_FUEL, max(GetResource(player, RES_FUEL), autocvar_g_pickup_fuel_weapon)); break;
 		}
 	});
@@ -108,7 +106,6 @@ void dotc_ItemSupply_TriggerTouch(entity this, entity toucher)
 		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
 		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
 		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
 		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
 		SetResource(this, RES_HEALTH, warmup_start_health);
 		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
@@ -120,7 +117,6 @@ void dotc_ItemSupply_TriggerTouch(entity this, entity toucher)
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
 		SetResource(this, RES_CELLS, start_ammo_cells);
-		SetResource(this, RES_PLASMA, start_ammo_plasma);
 		SetResource(this, RES_FUEL, start_ammo_fuel);
 		SetResource(this, RES_HEALTH, start_health);
 		SetResource(this, RES_ARMOR, start_armorvalue);

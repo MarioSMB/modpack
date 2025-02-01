@@ -62,5 +62,5 @@ ENDCLASS(Mini)
 REGISTER_STATUSEFFECT(Mini, NEW(Mini));
 
 #ifdef GAMEQC
-REGISTER_STAT(MINI_WATER_MINSPEED, float, autocvar_g_powerup_mini_water_minspeed);
+REGISTER_STAT(MINI_WATER_MINSPEED, FLOAT, autocvar_g_powerup_mini_water_minspeed);
 #endif

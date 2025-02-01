@@ -1,0 +1,133 @@
+#pragma once
+
+// copied from Mario/polytrails - a messy version until it is merged
+
+// =========
+//  Electro
+// =========
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_head_alpha, float, 1, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_head_color, vector, '0.75 0.75 1', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_head_thickness, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_body_alpha, float, 0.5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_body_color, vector, '0.45 0.45 1', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_body_thickness, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_tail_color, vector, '0.1 0.1 0.75', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_tail_thickness, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_lifetime, float, 0.27, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_segmentsize, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_noise, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_noisefunc, string, "chaotic", "");
+CLASS(ElectroBoltTrail, PolyTrail)
+    ATTRIB(ElectroBoltTrail, polytrail_tex, string, "particles/lgbeam.tga");
+    ATTRIB(ElectroBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_electro_bolt_lifetime);
+    ATTRIB(ElectroBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_electro_bolt_noise);
+    ATTRIB(ElectroBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_electro_bolt_segmentsize);
+    ATTRIB(ElectroBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_electro_bolt_noisefunc);
+    ATTRIB(ElectroBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_electro_bolt_head_alpha);
+    ATTRIB(ElectroBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_electro_bolt_head_color);
+    ATTRIB(ElectroBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_electro_bolt_head_thickness);
+    ATTRIB(ElectroBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_electro_bolt_body_alpha);
+    ATTRIB(ElectroBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_electro_bolt_body_color);
+    ATTRIB(ElectroBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_electro_bolt_body_thickness);
+    ATTRIB(ElectroBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_electro_bolt_tail_alpha);
+    ATTRIB(ElectroBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_electro_bolt_tail_color);
+    ATTRIB(ElectroBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_electro_bolt_tail_thickness);
+ENDCLASS(ElectroBoltTrail)
+
+AUTOCVAR_SAVE(cl_polytrails_electro_orb, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_head_alpha, float, 1, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_head_color, vector, '0.8 0.8 1', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_head_thickness, float, 15, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_body_alpha, float, 0.5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_body_color, vector, '0.5 0.5 1', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_body_thickness, float, 7, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_tail_color, vector, '0.1 0.1 0.7', "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_tail_thickness, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_lifetime, float, 0.18, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_segmentsize, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_noise, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_noisefunc, string, "chaotic", "");
+CLASS(ElectroOrbTrail, PolyTrail)
+    ATTRIB(ElectroOrbTrail, polytrail_tex, string, "particles/lgbeam.tga");
+    ATTRIB(ElectroOrbTrail, polytrail_lifetime, float, autocvar_cl_polytrails_electro_orb_lifetime);
+    ATTRIB(ElectroOrbTrail, polytrail_noise, float, autocvar_cl_polytrails_electro_orb_noise);
+    ATTRIB(ElectroOrbTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_electro_orb_segmentsize);
+    ATTRIB(ElectroOrbTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_electro_orb_noisefunc);
+    ATTRIB(ElectroOrbTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_electro_orb_head_alpha);
+    ATTRIB(ElectroOrbTrail, polytrail_head_color, vector, autocvar_cl_polytrails_electro_orb_head_color);
+    ATTRIB(ElectroOrbTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_electro_orb_head_thickness);
+    ATTRIB(ElectroOrbTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_electro_orb_body_alpha);
+    ATTRIB(ElectroOrbTrail, polytrail_body_color, vector, autocvar_cl_polytrails_electro_orb_body_color);
+    ATTRIB(ElectroOrbTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_electro_orb_body_thickness);
+    ATTRIB(ElectroOrbTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_electro_orb_tail_alpha);
+    ATTRIB(ElectroOrbTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_electro_orb_tail_color);
+    ATTRIB(ElectroOrbTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_electro_orb_tail_thickness);
+ENDCLASS(ElectroOrbTrail)
+
+// =========
+//  Crylink
+// =========
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_alpha, float, 0.5, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_color, vector, '0.7 0 1', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_thickness, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_body_alpha, float, 0.2, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_body_color, vector, '0.5 0 1', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_body_thickness, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_tail_color, vector, '0.1 0 0.8', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_tail_thickness, float, 13, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_lifetime, float, 0.15, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_segmentsize, float, 80, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_noise, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_noisefunc, string, "none", "");
+CLASS(CrylinkBouncingTrail, PolyTrail)
+    ATTRIB(CrylinkBouncingTrail, polytrail_tex, string, "gfx/crosshair_ring.tga"); // TODO: dedicated texture
+    ATTRIB(CrylinkBouncingTrail, polytrail_lifetime, float, autocvar_cl_polytrails_crylink_bouncing_lifetime);
+    ATTRIB(CrylinkBouncingTrail, polytrail_noise, float, autocvar_cl_polytrails_crylink_bouncing_noise);
+    ATTRIB(CrylinkBouncingTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_crylink_bouncing_segmentsize);
+    ATTRIB(CrylinkBouncingTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_crylink_bouncing_noisefunc);
+    ATTRIB(CrylinkBouncingTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_crylink_bouncing_head_alpha);
+    ATTRIB(CrylinkBouncingTrail, polytrail_head_color, vector, autocvar_cl_polytrails_crylink_bouncing_head_color);
+    ATTRIB(CrylinkBouncingTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_crylink_bouncing_head_thickness);
+    ATTRIB(CrylinkBouncingTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_crylink_bouncing_body_alpha);
+    ATTRIB(CrylinkBouncingTrail, polytrail_body_color, vector, autocvar_cl_polytrails_crylink_bouncing_body_color);
+    ATTRIB(CrylinkBouncingTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_crylink_bouncing_body_thickness);
+    ATTRIB(CrylinkBouncingTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_crylink_bouncing_tail_alpha);
+    ATTRIB(CrylinkBouncingTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_crylink_bouncing_tail_color);
+    ATTRIB(CrylinkBouncingTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bouncing_tail_thickness);
+ENDCLASS(CrylinkBouncingTrail)
+
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_alpha, float, 0.75, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_color, vector, '0.7 0 1', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_thickness, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_body_alpha, float, 0.2, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_body_color, vector, '0.5 0 1', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_body_thickness, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_tail_color, vector, '0.1 0 0.8', "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_tail_thickness, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_lifetime, float, 0.15, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_segmentsize, float, 80, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_noise, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_noisefunc, string, "none", "");
+CLASS(CrylinkBoltTrail, PolyTrail)
+    ATTRIB(CrylinkBoltTrail, polytrail_tex, string, "gfx/crosshair_ring.tga"); // TODO: dedicated texture
+    ATTRIB(CrylinkBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_crylink_bolt_lifetime);
+    ATTRIB(CrylinkBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_crylink_bolt_noise);
+    ATTRIB(CrylinkBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_crylink_bolt_segmentsize);
+    ATTRIB(CrylinkBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_crylink_bolt_noisefunc);
+    ATTRIB(CrylinkBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_crylink_bolt_head_alpha);
+    ATTRIB(CrylinkBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_crylink_bolt_head_color);
+    ATTRIB(CrylinkBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_crylink_bolt_head_thickness);
+    ATTRIB(CrylinkBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_crylink_bolt_body_alpha);
+    ATTRIB(CrylinkBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_crylink_bolt_body_color);
+    ATTRIB(CrylinkBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_crylink_bolt_body_thickness);
+    ATTRIB(CrylinkBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_crylink_bolt_tail_alpha);
+    ATTRIB(CrylinkBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_crylink_bolt_tail_color);
+    ATTRIB(CrylinkBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bolt_tail_thickness);
+ENDCLASS(CrylinkBoltTrail)

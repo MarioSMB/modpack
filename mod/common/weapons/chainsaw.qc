@@ -26,14 +26,14 @@ MUTATOR_HOOKFUNCTION(chainsaw_physics, PlayerPhysics_UpdateStats)
 
 void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(chainsaw, melee_animtime), w_ready);
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_CHAINSAW, melee_animtime), w_ready);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_CHAINSAW, melee_ammo), weaponentity);
 
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, melee_damage), WEP_CVAR(chainsaw, melee_range), WEP_CHAINSAW.m_id);
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(WEP_CHAINSAW, melee_damage), WEP_CVAR(WEP_CHAINSAW, melee_range), WEP_CHAINSAW.m_id);
 
 	vector targpos = (actor.origin + actor.view_ofs
-			+ (v_forward * WEP_CVAR(chainsaw, melee_range)));
+			+ (v_forward * WEP_CVAR(WEP_CHAINSAW, melee_range)));
 
 	WarpZone_traceline_antilag(actor, actor.origin + actor.view_ofs, targpos, false, actor, ANTILAG_LATENCY(actor));
 
@@ -47,31 +47,31 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 	if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
 	{
 		if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-			melee_damage = WEP_CVAR(chainsaw, melee_damage);
+			melee_damage = WEP_CVAR(WEP_CHAINSAW, melee_damage);
 		else
-			melee_damage = WEP_CVAR(chainsaw, melee_nonplayerdamage);
-		Damage_DamageInfo(trace_endpos, melee_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, melee_force), WEP_CHAINSAW.m_id, trace_ent.species, actor);
+			melee_damage = WEP_CVAR(WEP_CHAINSAW, melee_nonplayerdamage);
+		Damage_DamageInfo(trace_endpos, melee_damage, 0, 0, v_forward * WEP_CVAR(WEP_CHAINSAW, melee_force), WEP_CHAINSAW.m_id, trace_ent.species, actor);
 	}
 
 	entity target_victim;
 	if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 		&& (trace_ent.takedamage == DAMAGE_AIM)
 		//&& (trace_ent != this.swing_alreadyhit)
-		&& (is_player || WEP_CVAR(chainsaw, melee_nonplayerdamage)))
+		&& (is_player || WEP_CVAR(WEP_CHAINSAW, melee_nonplayerdamage)))
 	{
 		target_victim = trace_ent; // so it persists through other calls
 
 		if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-			melee_damage = WEP_CVAR(chainsaw, melee_damage);
+			melee_damage = WEP_CVAR(WEP_CHAINSAW, melee_damage);
 		else
-			melee_damage = WEP_CVAR(chainsaw, melee_nonplayerdamage);
+			melee_damage = WEP_CVAR(WEP_CHAINSAW, melee_nonplayerdamage);
 
 		//print(strcat(actor.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(melee_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 		Damage(target_victim, actor, actor,
 			melee_damage, WEP_CHAINSAW.m_id, weaponentity,
 			actor.origin + actor.view_ofs,
-			v_forward * WEP_CVAR(chainsaw, melee_force));
+			v_forward * WEP_CVAR(WEP_CHAINSAW, melee_force));
 
 		if(accuracy_isgooddamage(actor, target_victim)) { accuracy_add(actor, WEP_CHAINSAW, 0, melee_damage); }
 	}
@@ -95,9 +95,9 @@ void W_Chainsaw_Melee_Think(entity this)
 	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR(chainsaw, swing_time) * W_WeaponRateFactor(this.realowner);
+	meleetime = WEP_CVAR(WEP_CHAINSAW, swing_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * WEP_CVAR(chainsaw, swing_traces));
+	f = ((1 - swing) * WEP_CVAR(WEP_CHAINSAW, swing_traces));
 
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner))
@@ -109,12 +109,12 @@ void W_Chainsaw_Melee_Think(entity this)
 	// if okay, perform the traces needed for this frame
 	for(i=this.swing_prev; i < f; ++i)
 	{
-		swing_factor = ((1 - (i / WEP_CVAR(chainsaw, swing_traces))) * 2 - 1);
+		swing_factor = ((1 - (i / WEP_CVAR(WEP_CHAINSAW, swing_traces))) * 2 - 1);
 
 		targpos = (this.realowner.origin + this.realowner.view_ofs
-			+ (v_forward * WEP_CVAR(chainsaw, swing_range))
-			+ (v_up * swing_factor * WEP_CVAR(chainsaw, swing_up))
-			+ (v_right * swing_factor * WEP_CVAR(chainsaw, swing_side)));
+			+ (v_forward * WEP_CVAR(WEP_CHAINSAW, swing_range))
+			+ (v_up * swing_factor * WEP_CVAR(WEP_CHAINSAW, swing_up))
+			+ (v_right * swing_factor * WEP_CVAR(WEP_CHAINSAW, swing_side)));
 
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
@@ -127,37 +127,37 @@ void W_Chainsaw_Melee_Think(entity this)
 		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
 		{
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (WEP_CVAR(chainsaw, swing_damage) * min(1, swing_factor + 1));
+				swing_damage = (WEP_CVAR(WEP_CHAINSAW, swing_damage) * min(1, swing_factor + 1));
 			else
-				swing_damage = (WEP_CVAR(chainsaw, swing_nonplayerdamage) * min(1, swing_factor + 1));
-			Damage_DamageInfo(trace_endpos, swing_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, swing_force), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner);
+				swing_damage = (WEP_CVAR(WEP_CHAINSAW, swing_nonplayerdamage) * min(1, swing_factor + 1));
+			Damage_DamageInfo(trace_endpos, swing_damage, 0, 0, v_forward * WEP_CVAR(WEP_CHAINSAW, swing_force), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner);
 		}
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.takedamage == DAMAGE_AIM)
 			//&& (trace_ent != this.swing_alreadyhit)
-			&& (is_player || WEP_CVAR(chainsaw, swing_nonplayerdamage)))
+			&& (is_player || WEP_CVAR(WEP_CHAINSAW, swing_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (WEP_CVAR(chainsaw, swing_damage) * min(1, swing_factor + 1));
+				swing_damage = (WEP_CVAR(WEP_CHAINSAW, swing_damage) * min(1, swing_factor + 1));
 			else
-				swing_damage = (WEP_CVAR(chainsaw, swing_nonplayerdamage) * min(1, swing_factor + 1));
+				swing_damage = (WEP_CVAR(WEP_CHAINSAW, swing_nonplayerdamage) * min(1, swing_factor + 1));
 
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
 				swing_damage, WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
-				v_forward * WEP_CVAR(chainsaw, swing_force));
+				v_forward * WEP_CVAR(WEP_CHAINSAW, swing_force));
 
 			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_CHAINSAW, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 
-			/*if(WEP_CVAR(chainsaw, swing_multihit)) // allow multiple hits with one swing, but not against the same player twice.
+			/*if(WEP_CVAR(WEP_CHAINSAW, swing_multihit)) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				this.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
@@ -189,19 +189,19 @@ void W_Chainsaw_Melee_Think(entity this)
 void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_CHAINSAW_SWING, VOL_BASE, ATTEN_NORM);
-	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(chainsaw, swing_animtime), w_ready);
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_CHAINSAW, swing_animtime), w_ready);
 
-	if(WEP_CVAR(chainsaw, swing_animtime))
+	if(WEP_CVAR(WEP_CHAINSAW, swing_animtime))
 		animdecide_setaction(actor, ANIMACTION_MELEE, true);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, swing_ammo), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_CHAINSAW, swing_ammo), weaponentity);
 
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Chainsaw_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR(chainsaw, swing_delay) * W_WeaponRateFactor(actor);
+	meleetemp.nextthink = time + WEP_CVAR(WEP_CHAINSAW, swing_delay) * W_WeaponRateFactor(actor);
 	meleetemp.weaponentity_fld = weaponentity;
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, swing_damage), WEP_CVAR(chainsaw, swing_range), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY);
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(WEP_CHAINSAW, swing_damage), WEP_CVAR(WEP_CHAINSAW, swing_range), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY);
 }
 
 .float chainsaw_ammorot;
@@ -210,19 +210,19 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 METHOD(Chainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(chainsaw, swing_range)))
+    if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(WEP_CHAINSAW, swing_range)))
         PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false);
     else
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false);
 }
 METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(WEP_CVAR(chainsaw, reload_ammo)) // forced reload // WEAPONTODO
+	if(WEP_CVAR(WEP_CHAINSAW, reload_ammo)) // forced reload // WEAPONTODO
     {
         float ammo_amount = 0;
-        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, melee_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(WEP_CHAINSAW, melee_ammo))
             ammo_amount = 1;
-        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, swing_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(WEP_CHAINSAW, swing_ammo))
             ammo_amount += 1;
 
         if(!ammo_amount)
@@ -234,7 +234,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 
     if(actor.(weaponentity).clip_load >= 0)
     if(fire & 1)
-    if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(chainsaw, melee_refire)))
+    if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_CHAINSAW, melee_refire)))
     {
     	W_Chainsaw_Attack1(thiswep, actor, weaponentity, fire);
     	if(!actor.(weaponentity).chainsaw_held_down)
@@ -274,7 +274,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(!IS_DUCKED(actor)) // no crouchmelee please
     if(fire & 2)
-    if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(chainsaw, swing_refire)))
+    if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(WEP_CHAINSAW, swing_refire)))
     {
         // attempt forcing playback of the anim by switching to another anim (that we never play) here...
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Chainsaw_Attack2);
@@ -289,22 +289,22 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 }
 METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(chainsaw, melee_ammo);
-    ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, melee_ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_CHAINSAW, melee_ammo);
+    ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(WEP_CHAINSAW, melee_ammo);
     return ammo_amount;
 }
 METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(IS_BOT_CLIENT(actor))
-    if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR(chainsaw, swing_range)))
+    if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR(WEP_CHAINSAW, swing_range)))
         return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(chainsaw, swing_ammo);
-    ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, swing_ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_CHAINSAW, swing_ammo);
+    ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(WEP_CHAINSAW, swing_ammo);
     return ammo_amount;
 }
 METHOD(Chainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, min(WEP_CVAR(chainsaw, melee_ammo), WEP_CVAR(chainsaw, swing_ammo)), SND_RELOAD); // WEAPONTODO
+    W_Reload(actor, weaponentity, min(WEP_CVAR(WEP_CHAINSAW, melee_ammo), WEP_CVAR(WEP_CHAINSAW, swing_ammo)), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Chainsaw, wr_suicidemessage, Notification(entity thiswep))
 {
