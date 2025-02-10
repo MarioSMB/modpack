@@ -16,6 +16,7 @@
 #include "ent_cs.qc"
 
 #include "deathtypes/all.qc"
+#include "effects/qc/_mod.inc"
 #include "effects/all.qc"
 #include "notifications/all.qc"
 #include "triggers/include.qc"

@@ -41,6 +41,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "physics.qh"
 
 
+#include "effects/qc/_mod.qh"
 #include "effects/all.qh"
 #include "models/all.qh"
 #include "sounds/all.qh"

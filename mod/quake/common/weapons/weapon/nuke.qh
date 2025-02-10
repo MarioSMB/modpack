@@ -1,0 +1,32 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(NUKE_DROP, "weapons/sword_swing");
+SOUND(NUKE_LAND, "enviro/physics/axemet1");
+
+SOUND(NUKE_EXPLODE, "weapons/r_exp3");
+SOUND(NUKE_EXPLODE_ALT, "weapons/nuke_explode_alt");
+Sound SND_NUKE_EXPLODE_RANDOM() {
+	return (random() < 0.1) ? SND_NUKE_EXPLODE_ALT : SND_NUKE_EXPLODE;
+}
+
+MODEL(NUKE, "progs/nuke.mdl");
+#endif
+
+CLASS(Nuke, Weapon)
+/* ammotype  */ ATTRIB(Nuke, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Nuke, impulse, int, 7);
+/* spawnflags*/ ATTRIB(Nuke, spawnflags, int, WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Nuke, aflag, int, 0);
+/* modelname */ ATTRIB(Nuke, mdl, string, "nuke");
+/* crosshair */ ATTRIB(Nuke, w_crosshair, string, "gfx/crosshairfireball");
+/* crosshair */ ATTRIB(Nuke, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(Nuke, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(Nuke, model2, string, "nuke");
+/* refname   */ ATTRIB(Nuke, netname, string, "nuke");
+/* wepname   */ ATTRIB(Nuke, m_name, string, _("Nuke"));
+
+ENDCLASS(Nuke)
+REGISTER_WEAPON(NUKE, NEW(Nuke));
+
+SPAWNFUNC_WEAPON(weapon_nuke, WEP_NUKE)

@@ -13,7 +13,7 @@ void earthquake_rumble(entity this)
 		stop_earthquake(this);
 	else
 	{
-		_sound(this, CH_TRIGGER_SINGLE, "equake/rumble.wav", 1, ATTN_NONE );
+		_sound(this, CH_TRIGGER_SINGLE, "equake/rumble.wav", 1, ATTN_NONE);
 		setthink(this, earthquake_rumble);
 		this.nextthink = time + 1;
 	}
@@ -22,6 +22,7 @@ void earthquake_rumble(entity this)
 void start_earthquake(entity this)
 {
 	earthquake_active = true;
+	earthquake_intensity = this.weapon * 0.5;
 	if(this.spawnflags & EQ_RANDOM)
 		this.attack_finished = time + random() * this.delay;
 	else
@@ -63,7 +64,6 @@ spawnfunc(earthquake)
 	
 	precache_sound("equake/rumble.wav");
 	earthquake_active = false;
-	earthquake_intensity = this.weapon * 0.5;
 	
 	setsize(this, '0 0 0', '0 0 0');
 	setthink(this, stop_earthquake);

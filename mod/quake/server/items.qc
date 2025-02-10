@@ -843,6 +843,12 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_ROCKETS;
 				break;
 			}
+			case WEP_NUKE:
+			{
+				if(random() < 0.33)
+					mytype = IT_ROCKETS;
+				break;
+			}
 			case WEP_OTAMATONE:
 			{
 				if(random() > 0.5)

@@ -45,3 +45,5 @@ EFFECT(0, QCC_MUSHROOM,             "spawn_point_yellow")
 EFFECT(0, OTAMATONE_FIRE,           "arc_smoke")
 
 EFFECT(0, ELECTRIFY,                "arc_lightning")
+
+EFFECT(0, NUKE_EXPLODE,             "fireball_explode")

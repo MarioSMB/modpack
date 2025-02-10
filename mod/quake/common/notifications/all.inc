@@ -180,6 +180,7 @@
 
     MSG_INFO_NOTIF(WEAPON_FRAG,                             N_CONSOLE,  2, 0, "s1 s2", "",      "",             _("^BG%s^K1 was fragged by ^BG%s"), "")
     MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  2, 0, "s1 s2", "",                      "",          _("^BG%s%s^K1 is now thinking with portals"), "")
+    MSG_INFO_NOTIF(WEAPON_NUKE_SUICIDE,                     N_CONSOLE,  2, 0, "s1 s2", "",                      "",          _("^BG%s%s^K1 became Death, the destroyer of worlds"), "")
 
 #undef N_DISABLE
 #undef N_CONSOLE
@@ -378,6 +379,7 @@
 
     MSG_MULTI_NOTIF(WEAPON_FRAG,                        N_ENABLE,  NULL,           INFO_WEAPON_FRAG,                       NULL)
     MSG_MULTI_NOTIF(WEAPON_THINKING_WITH_PORTALS,       N_ENABLE,  NULL,           INFO_WEAPON_THINKING_WITH_PORTALS,      CENTER_DEATH_SELF_GENERIC)
+    MSG_MULTI_NOTIF(WEAPON_NUKE_SUICIDE,                N_ENABLE,  NULL,           INFO_WEAPON_NUKE_SUICIDE,               CENTER_DEATH_SELF_GENERIC)
 
 #undef N_DISABL
 #undef N_ENABLE

@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
+#endif

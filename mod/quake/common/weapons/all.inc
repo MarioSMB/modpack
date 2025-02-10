@@ -44,6 +44,7 @@
 #include "weapon/organ.qh"
 #include "weapon/ball.qh"
 #include "weapon/wand.qh"
+#include "weapon/nuke.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

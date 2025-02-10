@@ -45,3 +45,4 @@
 #include "chimes.qh"
 #include "ball.qh"
 #include "wand.qh"
+#include "nuke.qh"

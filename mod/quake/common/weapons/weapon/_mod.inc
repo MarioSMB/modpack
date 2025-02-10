@@ -45,3 +45,4 @@
 #include "chimes.qc"
 #include "ball.qc"
 #include "wand.qc"
+#include "nuke.qc"
