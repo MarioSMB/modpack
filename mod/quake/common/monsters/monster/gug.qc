@@ -51,7 +51,7 @@ void gug_quake_think(entity this)
 	this.nextthink = time + 0.08;
 	setthink(this, gug_quake_think);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 800, it != this.owner && it.takedamage == DAMAGE_AIM && !(it.flags & FL_FLY),
+	FOREACH_ENTITY_RADIUS(this.origin, 800, it != this.owner && it.takedamage == DAMAGE_AIM && IS_ONGROUND(it) && !(it.flags & FL_FLY),
 	{
 		vector org = (it.absmin + it.absmax) * 0.5;
 		float points = max(0, 0.01 * vlen(it.origin - org));
@@ -246,7 +246,7 @@ void gug_step_sound(entity this)
 	else
 		_sound(this, CH_VOICE, "gug/step4.wav", 1, 0.7);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 150, IS_PLAYER(it),
+	FOREACH_ENTITY_RADIUS(this.origin, 150, IS_PLAYER(it) && IS_ONGROUND(it),
 	{
 		gug_screen_shake(this, 0.2, it);
 	});
