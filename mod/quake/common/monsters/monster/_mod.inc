@@ -29,6 +29,7 @@
 #include "grenling.qc"
 #include "grunt.qc"
 #include "guardian.qc"
+#include "gug.qc"
 #include "hell_knight.qc"
 #include "jim.qc"
 #include "judicator.qc"

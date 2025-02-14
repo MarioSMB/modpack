@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GUG,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's skull was caved in by a Gug"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GUG,            1,  NULL,           INFO_DEATH_SELF_MON_GUG,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GUG,        DEATH_SELF_MON_GUG,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GUG, "progs/gug.mdl");
+MODEL(MON_GUG_HEAD, "progs/gib1.mdl");
+
+SOUND(MON_GUG_SIGHT, "gug/sight");
+#endif
+
+CLASS(Gug, Monster)
+    ATTRIB(Gug, spawnflags, int, 0);
+    ATTRIB(Gug, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Gug, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Gug, m_model, Model, MDL_MON_GUG);
+    ATTRIB(Gug, m_model_head, Model, MDL_MON_GUG_HEAD);
+    ATTRIB(Gug, m_sound, Sound, SND_MON_GUG_SIGHT);
+#endif
+    ATTRIB(Gug, netname, string, "gug");
+    ATTRIB(Gug, monster_name, string, _("Gug"));
+ENDCLASS(Gug)
+
+REGISTER_MONSTER(GUG, NEW(Gug));

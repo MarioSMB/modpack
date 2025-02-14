@@ -3443,6 +3443,18 @@ void SV_ParseClientCommand(entity this, string command)
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)
 			return;
+		if(argv(1) == "list")
+		{
+			string monlist = "";
+			FOREACH(Monsters, it != MON_Null,
+			{
+				monlist = cons(monlist, it.netname);
+			});
+
+			sprint(this, strcat("Available monsters: ", monlist));
+			return;
+		}
+
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
 		string arg = argv(1);
