@@ -2,7 +2,7 @@
 
 #include "../all.qh"
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_GUG,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's skull was caved in by a Gug"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_GUG,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was hawk tuah'd by a Gug"), "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_GUG,            1,  NULL,           INFO_DEATH_SELF_MON_GUG,           CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_GUG,        DEATH_SELF_MON_GUG,        DEATH_MURDER_MONSTER,           "monster")
 

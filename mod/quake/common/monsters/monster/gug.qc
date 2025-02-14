@@ -451,15 +451,15 @@ void BileFragTouch(entity this, entity toucher)
 	vector org = this.origin - 8 * normalize(this.velocity);
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, 20, this.projectiledeathtype);
-		T_RadiusDamage(this, this.owner, 60 * 0.5, this.projectiledeathtype, toucher);
+		T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
+		T_RadiusDamage(this, this.owner, 50 * 0.4, this.projectiledeathtype, toucher);
 	}
 	else
 	{
 		if(this.nextthink > time)
 			return;
 
-		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
+		T_RadiusDamage(this, this.owner, 50 * 0.4, this.projectiledeathtype, NULL);
 	}
 	te_explosion2(org, 240, 3);
 	_sound(this, CH_WEAPON_SINGLE, "gug/bile.wav", 0.5 + 0.5 * random(), 0.8);
