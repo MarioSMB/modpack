@@ -670,7 +670,7 @@ void gug_death25(entity this)
 {
 	set_anim(this, 224, gug_death26);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 550, IS_PLAYER(it),
+	FOREACH_ENTITY_RADIUS(this.origin, 550, IS_PLAYER(it) && IS_ONGROUND(it),
 	{
 		gug_screen_shake(this, 0.4, it);
 	});

@@ -3451,7 +3451,7 @@ void SV_ParseClientCommand(entity this, string command)
 				monlist = cons(monlist, it.netname);
 			});
 
-			sprint(this, strcat("Available monsters: ", monlist));
+			sprint(this, strcat("Available monsters: ", monlist, "\n"));
 			return;
 		}
 
