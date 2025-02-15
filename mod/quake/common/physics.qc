@@ -356,11 +356,7 @@ void PM_WaterMove(entity this, float maxspd_mod, float dt)
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(maxspeed, vlen(wishvel));
-	entity actor = this;
-#ifdef CSQC
-	actor = g_statuseffects;
-#endif
-	if(StatusEffects_active(STATUSEFFECT_Wetsuit, actor))
+	if(StatusEffects_active(STATUSEFFECT_Wetsuit, this))
 	{
 		if(this.waterlevel == 2)
 			wishspeed *= 1.25;
@@ -385,7 +381,7 @@ void PM_WaterMove(entity this, float maxspd_mod, float dt)
 		return;
 
 	float accel = ((PHYS_WATERACCELERATE(this)) < 0 ? PHYS_ACCELERATE(this) : PHYS_WATERACCELERATE(this));
-	if(StatusEffects_active(STATUSEFFECT_Wetsuit, actor))
+	if(StatusEffects_active(STATUSEFFECT_Wetsuit, this))
 	{
 		if(this.waterlevel == 2)
 			accel *= 0.8;
@@ -553,6 +549,12 @@ void PM_Main(entity this, float dt)
 
 	if(this.move_movetype == MOVETYPE_NONE)
 		return;
+
+	if(StatusEffects_active(STATUSEFFECT_Confused, this))
+	{
+		this.movement_x *= -1;
+		this.movement_y *= -1;
+	}
 
 	viewloc_PlayerPhysics(this);
 

@@ -1,0 +1,11 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Confused, StatusEffects)
+    ATTRIB(Confused, netname, string, "confused");
+    ATTRIB(Confused, m_color, vector, '0.67 0.1 0.46');
+    ATTRIB(Confused, m_hidden, bool, true);
+    ATTRIB(Confused, m_lifetime, float, 10);
+ENDCLASS(Confused)
+REGISTER_STATUSEFFECT(Confused, NEW(Confused));

@@ -27,8 +27,6 @@ bool CheckAttack(entity this)
 {
 	if(this.enemy_range == RANGE_FAR)
 		return false;
-	if(this.enemy_range != RANGE_MELEE && !this.th_missile)
-		return false;
 
 	if(time < this.attack_finished)
 		return false;
@@ -47,7 +45,8 @@ bool CheckAttack(entity this)
 	if(trace_inopen && trace_inwater)
 		return false;			// sight line crossed contents
 
-	if(this.enemy_range == RANGE_MELEE && z_overlap(this, this.enemy))
+	// melee attack if in range, or wave arms randomly now and then if target is invisible
+	if((this.enemy_range == RANGE_MELEE && z_overlap(this, this.enemy)) || (StatusEffects_active(STATUSEFFECT_Invisibility, this.enemy) && random() < 0.1))
 	{	// melee attack
 		if(this.th_melee)
 		{
@@ -55,6 +54,9 @@ bool CheckAttack(entity this)
 			return true;
 		}
 	}
+
+	if(!this.th_missile)
+		return false;
 
 	float chance;
 	if(this.enemy_range == RANGE_MELEE)

@@ -150,6 +150,7 @@ bool mshake_FreezeEnemies(entity this)
 			continue;
 
 		StatusEffects_apply(STATUSEFFECT_Slowness, it, time + 3, 0);
+		StatusEffects_apply(STATUSEFFECT_Confused, it, time + 3, 0);
 		hitenemy = true;
 	});
 

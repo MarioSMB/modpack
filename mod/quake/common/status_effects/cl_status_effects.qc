@@ -2,6 +2,9 @@
 
 METHOD(StatusEffects, m_active, bool(StatusEffects this, entity actor))
 {
+	// TODO: status effects per-entity on the client
+	actor = g_statuseffects;
+
 	if(!actor) return false;
 	TC(StatusEffects, this);
 	return (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE);

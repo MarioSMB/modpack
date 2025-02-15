@@ -3471,6 +3471,32 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "status_effect")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		string arg = argv(1);
+		if(arg == "list")
+		{
+			string msg = "";
+			FOREACH(StatusEffect, true,
+			{
+				msg = cons(msg, it.netname);
+			});
+			sprint(this, strcat("List of status effects: ", msg, "\n"));
+			return;
+		}
+
+		FOREACH(StatusEffect, it.netname == arg,
+		{
+			StatusEffects_apply(it, this, time + stof(argv(2)), 0);
+			sprint(this, strcat("Applying effect ", it.netname, " for ", argv(2), " seconds\n"));
+			return;
+		});
+		sprint(this, "Could not find a status effect with that name, do \"list\" to see all\n");
+		return;
+	}
+
 	if(cmd_name == "effect")
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)

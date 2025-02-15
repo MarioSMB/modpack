@@ -383,6 +383,9 @@ void t_movetogoal(entity this, float dist)
 	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 		dist *= 0.15;
 
+	if(random() < 0.75 && StatusEffects_active(STATUSEFFECT_Confused, this))
+		this.ideal_yaw = crandom() * 180;
+
 #if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
