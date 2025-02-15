@@ -258,6 +258,11 @@ classfield(Skeleton) .int bone_hat;
 classfield(Skeleton) .vector hat_height;
 classfield(Skeleton) .float hat_scale;
 
+STATIC_INIT(hats)
+{
+	localcmd("\nalias cl_hat \"seta cl_magical_hax ${* ?}; sendcvar cl_magical_hax\"\n");
+}
+
 MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
 {
 	entity ent = M_ARGV(0, entity);

@@ -7,7 +7,6 @@
 * Persistent custom player models, so you can always show off that pony complexion!
 * Arena gamemode returning from the early days, the duel gamemode that pits 2 players against eachother until someone scores enough victories
 * Conquest gamemode, a more ambitious version of domination in which you need to stand by control points to capture them
-* DotC (Defense of the Core) gamemode, a highly ambitious and unfinished mode based on the DotA series
 * Jailbreak gamemode, a variation on clan arena in which you can free your fallen teammates from the enemy's jail cell
 * Runematch gamemode, another mode from the days of old making its return, in which random 'runes' appear on the map, and the player needs to collect and hold all of them
 * SNAFU gamemode... needs no explanation
@@ -17,6 +16,7 @@
 * Boggle minigame, a fun word search game
 * Nim minigame, the classic matchstick game with balls
 * Voracity minigame, a little number navigation game
+* Dynamic Spawnshield mutator, copied from The Regulars, adjusts spawn shield length to benefit those getting spawnkilled
 * Hats!
 * Pick Spawns mutator, allowing you to choose where you spawn
 * Command to turn off crosshairs on all players, for an extra challenge
@@ -39,13 +39,14 @@
 * Ability to replace monster model paths, to easily load in custom models
 * Akimbo mutator for all your dual wielding needs
 * Freeze mutator, a portable version of freeze tag that can work in just about any gamemode (except freezetag!)
+* Random Spawns mutator, spawn at random locations throughout the map
 * Keep Running mutator which slowly kills players who stand still, a more extreme version of campcheck
 * Piggy-backing lets you ride your teammates to victory
+* Random Spawns mutator, spawn at random locations throughout the map
 * Little mutator to switch things up by replacing vehicle spawns with a random vehicle
 * Rifle Arena, a classic mode a bit like instagib, with the fabled sniper rifle and limited health
 * Shotgun Arena, a funny mode similar to overkill with just the shotgun, and crazy push force
 * Spawn Invisible mutator, to give spawning players a chance without making them completely invulnerable
-* Option to keep players from spawning at the same spawnpoint twice
 * Zombie Apocalypse mutator, which spawns random monsters around the map constantly
 * Option to change all or individual player's size
 * Options to replace any entity on maps
