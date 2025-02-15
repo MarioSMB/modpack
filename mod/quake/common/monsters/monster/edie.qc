@@ -399,10 +399,10 @@ void edie_melee_hit(entity this, float dist, float kickback, float dmg)
 				else
 					T_Damage(e, this, this, dmg * 0.25, DEATH_MONSTER_EDIE.m_id);
 
-				if(!this.gug_slapped)
+				if(!this.edie_slapped)
 				{
 					_sound(this, CH_WEAPON_SINGLE, "edie/mangle.wav", 1, ATTN_NORM);
-					this.gug_slapped = true;
+					this.edie_slapped = true;
 				}
 
 				// large targets don't get kicked back
@@ -420,7 +420,7 @@ void edie_melee_hit(entity this, float dist, float kickback, float dmg)
 		}
 		e = e.chain;
 	}
-	this.gug_slapped = false;
+	this.edie_slapped = false;
 }
 
 void edie_bswing1(entity this);

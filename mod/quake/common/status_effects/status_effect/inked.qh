@@ -1,0 +1,11 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Inked, StatusEffects)
+    ATTRIB(Inked, netname, string, "inked");
+    ATTRIB(Inked, m_color, vector, '0.1 0.1 0.1');
+    ATTRIB(Inked, m_hidden, bool, true);
+    ATTRIB(Inked, m_lifetime, float, 10);
+ENDCLASS(Inked)
+REGISTER_STATUSEFFECT(Inked, NEW(Inked));

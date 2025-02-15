@@ -287,7 +287,7 @@ void ai_gug_swing(entity this, float dist, float yawspd)
 	this.yaw_speed = 15;
 }
 
-.float gug_slapped;
+.bool gug_slapped;
 void gug_hit(entity this, float dist, float power, float clawdmg, float stime)
 {
 	makevectors(this.angles);
@@ -318,13 +318,15 @@ void gug_hit(entity this, float dist, float power, float clawdmg, float stime)
 				UNSET_ONGROUND(it);
 			}
 
-			if(time >= it.gug_slapped)
+			if(!this.gug_slapped)
 			{
-				it.gug_slapped = time + 0.5; // prevent spam
+				this.gug_slapped = true; // prevent spam
 				_sound(this, CH_WEAPON_SINGLE, "shambler/smack.wav", 1, ATTN_NORM);
 			}
 		}
 	});
+
+	this.gug_slapped = false;
 }
 
 void gug_swingl23(entity this) { set_anim(this, 128, gug_run1); ai_gug_swing(this, 18, 20); }
@@ -452,14 +454,14 @@ void BileFragTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
-		T_RadiusDamage(this, this.owner, 50 * 0.4, this.projectiledeathtype, toucher);
+		T_RadiusDamage(this, this.owner, 10, this.projectiledeathtype, toucher);
 	}
 	else
 	{
 		if(this.nextthink > time)
 			return;
 
-		T_RadiusDamage(this, this.owner, 50 * 0.4, this.projectiledeathtype, NULL);
+		T_RadiusDamage(this, this.owner, 10, this.projectiledeathtype, NULL);
 	}
 	te_explosion2(org, 240, 3);
 	_sound(this, CH_WEAPON_SINGLE, "gug/bile.wav", 0.5 + 0.5 * random(), 0.8);
@@ -482,11 +484,11 @@ void BileBombTouch(entity this, entity toucher)
 		return;
 	}
 	vector org = this.origin - 8 * normalize(this.velocity);
-	float damage = 85 * 0.5;
+	float damage = 25;
 	damage += random() * 6; // add a bit of extra randomness to it for funsies
 	if(toucher.takedamage)
 	{
-		T_Damage(toucher, this, this.owner, 25, this.projectiledeathtype);
+		T_Damage(toucher, this, this.owner, 20, this.projectiledeathtype);
 		T_RadiusDamage(this, this.owner, damage, this.projectiledeathtype, toucher);
 	}
 	else
@@ -510,6 +512,7 @@ void BileBombTouch(entity this, entity toucher)
 		missile.angles = vectoangles(missile.velocity);
 		settouch(missile, BileFragTouch);
 		missile.owner = this.owner;
+		missile.poisonous = this.poisonous;
 		missile.realowner = this.realowner;
 		missile.nextthink = time + 0.2 + 0.4 * random();
 		setthink(missile, BileFragThink);
@@ -533,6 +536,7 @@ void BileBombThink(entity this)
 		entity missile = spawn();
 		missile.projectiledeathtype = this.projectiledeathtype;
 		missile.owner = this.owner;
+		missile.poisonous = this.poisonous;
 		missile.realowner = this.realowner;
 		set_movetype(missile, MOVETYPE_TOSS);
 		missile.solid = SOLID_BBOX;
@@ -562,6 +566,7 @@ void gug_bilebomb(entity this)
 	entity missile = spawn();
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_GUG.m_id;
+	missile.poisonous = true;
 	set_movetype(missile, MOVETYPE_TOSS);
 	missile.solid = SOLID_BBOX;
 	float dist = vlen(this.enemy.origin - this.origin);

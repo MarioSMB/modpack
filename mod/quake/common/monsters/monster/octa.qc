@@ -14,7 +14,7 @@ const int anim_octa_dieb = 115;
 
 // LITTLE CUTY
 
-void octaflame_touch(entity this, entity toucher)
+void octa_ink_touch(entity this, entity toucher)
 {
 	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO || toucher.tank)
 		return;
@@ -37,19 +37,19 @@ void octaflame_touch(entity this, entity toucher)
 	if(IS_PLAYER(toucher))
 	{
 		// poison the player if they aren't already, damage them if they are!
-		if(StatusEffects_active(STATUSEFFECT_Poisoned, toucher))
+		if(StatusEffects_active(STATUSEFFECT_Inked, toucher))
 			T_Damage(toucher, this, this.owner, 2, this.projectiledeathtype);
 		else
 		{
 			float poisontime = floor(8 + 2*random());
-			StatusEffects_apply(STATUSEFFECT_Poisoned, toucher, time + poisontime, 0);
+			StatusEffects_apply(STATUSEFFECT_Inked, toucher, time + poisontime, 0);
 		}
 	}
 	else
 		T_Damage(toucher, this, this.owner, 20, this.projectiledeathtype);
 }
 
-void octaflame_think(entity this)
+void octa_ink_think(entity this)
 {
 	this.cnt += 1;
 	if(this.cnt > 6)
@@ -68,7 +68,7 @@ void octaflame_think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void octaflame_spawn(entity this, vector org, vector dir)
+void octa_ink_spawn(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
 	newmis.classname = "PBurst";
@@ -97,8 +97,8 @@ void octaflame_spawn(entity this, vector org, vector dir)
 	newmis.colormod = '1 1 1' * ink_color;
 
 	newmis.nextthink = time + 0.1;
-	setthink(newmis, octaflame_think);
-	settouch(newmis, octaflame_touch);
+	setthink(newmis, octa_ink_think);
+	settouch(newmis, octa_ink_touch);
 }
 
 void octa_fire(entity this)
@@ -117,7 +117,7 @@ void octa_fire(entity this)
 		targ_org = this.enemy.origin - this.enemy.view_ofs;
 #endif
 	vector dir = normalize(targ_org - this.origin);
-	octaflame_spawn(this, org, dir);
+	octa_ink_spawn(this, org, dir);
 }
 
 void octa_atk6(entity this);

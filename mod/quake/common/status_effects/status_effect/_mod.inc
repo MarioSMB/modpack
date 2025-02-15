@@ -6,6 +6,7 @@
 #include "double_jump_boots.qc"
 #include "empathy_shields.qc"
 #include "fieldgen.qc"
+#include "inked.qc"
 #include "invisibility.qc"
 #include "invulnerability.qc"
 #include "jump_boots.qc"

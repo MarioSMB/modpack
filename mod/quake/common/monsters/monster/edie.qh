@@ -30,5 +30,5 @@ REGISTER_MONSTER(EDIE, NEW(Edie));
 
 #ifdef SVQC
 .float multiplier;
-.bool gug_slapped;
+.bool edie_slapped;
 #endif
