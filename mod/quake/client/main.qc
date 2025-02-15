@@ -159,6 +159,8 @@ STATIC_INIT(fix_commands)
 {
 	registercommand("+showaccuracy");
 	registercommand("-showaccuracy");
+
+	registercommand("viewpos");
 }
 
 #define CONSOLE_COMMANDS_MOVEMENT() \
@@ -214,6 +216,21 @@ bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
 	string s = strtolower(argv(0));
+
+	if(s == "viewpos")
+	{
+		// TODO: is there really no function for this?
+		vector org = view_origin;
+		vector ang = view_angles;
+		org.x = floor(org.x);
+		org.y = floor(org.y);
+		org.z = floor(org.z);
+		ang.x = floor(ang.x);
+		ang.y = floor(ang.y);
+		ang.z = floor(ang.z);
+		LOG_INFOF("Viewpos: (%d %d %d) %d %d %d", org.x, org.y, org.z, ang.x, ang.y, ang.z);
+		return true;
+	}
 
 	if(cl_shop_command(s))
 		return true;
