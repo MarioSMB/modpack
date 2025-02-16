@@ -288,9 +288,6 @@ void axe_die(entity this, entity inflictor, entity attacker, int deathtype)
 */
 spawnfunc(monster_axegrunt) { monster_start(this, true, MON_AXEGRUNT); }
 
-// alkaline
-spawnfunc(monster_kamikaze) { monster_start(this, true, MON_AXEGRUNT); }
-
 // qdoom
 spawnfunc(monster_zombieman) { monster_start(this, true, MON_AXEGRUNT); }
 #endif // SVQC

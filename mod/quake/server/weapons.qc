@@ -387,7 +387,7 @@ entity W_PickNearbyTarget(entity this, entity attacker, float hitrange, bool che
 
 	FOREACH_ENTITY_RADIUS(this.origin, hitrange, !(it.flags & FL_NOTARGET) && it.takedamage && it.health > 0 && it != attacker && it != this && Damage_ValidTarget(it, attacker) && ((IS_PLAYER(it) || IS_MONSTER(it)) || (hitany && it.classname != "door")),
 	{
-		if(it.takedamage && it.health > 0 && (!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
+		if((!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD) && !it.charmed)
 		{
 			vector targ_pos = (it.absmin + it.absmax) * 0.5;
 			traceline(this.origin, targ_pos, MOVE_NOMONSTERS, this);

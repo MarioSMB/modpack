@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_KAMIKAZEGRUNT,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 had an unfortunate encounter with a Kamikaze Grunt"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_KAMIKAZEGRUNT,               1,  NULL,           INFO_DEATH_SELF_MON_KAMIKAZEGRUNT,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_KAMIKAZEGRUNT,           DEATH_SELF_MON_KAMIKAZEGRUNT,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_KAMIKAZEGRUNT, "progs/kamikaze_grunt_small.mdl");
+MODEL(MON_KAMIKAZEGRUNT_HEAD, "progs/h_guard.mdl");
+
+SOUND(MON_KAMIKAZEGRUNT_SIGHT, "soldier/sight1");
+#endif
+
+CLASS(KamikazeGrunt, Monster)
+    ATTRIB(KamikazeGrunt, spawnflags, int, 0);
+    ATTRIB(KamikazeGrunt, m_mins, vector, '-16 -16 -24');
+    ATTRIB(KamikazeGrunt, m_maxs, vector, '16 16 24');
+#ifdef GAMEQC
+    ATTRIB(KamikazeGrunt, m_model, Model, MDL_MON_KAMIKAZEGRUNT);
+    ATTRIB(KamikazeGrunt, m_model_head, Model, MDL_MON_KAMIKAZEGRUNT_HEAD);
+    ATTRIB(KamikazeGrunt, m_sound, Sound, SND_MON_KAMIKAZEGRUNT_SIGHT);
+#endif
+    ATTRIB(KamikazeGrunt, netname, string, "kamikaze");
+    ATTRIB(KamikazeGrunt, monster_name, string, _("Kamikaze Grunt"));
+ENDCLASS(KamikazeGrunt)
+
+REGISTER_MONSTER(KAMIKAZEGRUNT, NEW(KamikazeGrunt));

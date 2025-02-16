@@ -131,6 +131,7 @@ void organ_fire(entity this)
 		// copied from piano
 		entity musicnote = spawn();
 		musicnote.owner = this.realowner;
+		musicnote.realowner = this.realowner;
 		set_movetype(musicnote, MOVETYPE_FLYMISSILE);
 		//musicnote.solid = SOLID_BBOX;
 		musicnote.effects = EF_FULLBRIGHT;

@@ -88,12 +88,12 @@ void Resist_Axe(entity targ, vector org)
 
 void Resist_Shells(entity targ, vector org, vector vel, float damage)
 {
-	if(targ.health > 0 && targ.pain_finished < time)
-	{
-		targ.pain_finished = time + 0.3 + random();
+	//if(targ.health > 0 && targ.pain_finished < time)
+	//{
+		//targ.pain_finished = time + 0.3 + random();
 		// All monsters should have a pain sound define, hence no check
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
-	}
+	//}
 	
 	// Drastically reduce blood particles
 	if(targ.resist_shells < 1)
@@ -111,12 +111,12 @@ void Resist_Shells(entity targ, vector org, vector vel, float damage)
 
 void Resist_Nails(entity targ, vector org)
 {
-	if(targ.health > 0 && targ.pain_finished < time && targ.resist_nails < 1)
-	{
-		targ.pain_finished = time + 0.3 + random();
+	//if(targ.health > 0 && targ.pain_finished < time && targ.resist_nails < 1)
+	//{
+		//targ.pain_finished = time + 0.3 + random();
 		// All monsters should have a pain sound define, hence no check
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
-	}	
+	//}	
 	if(random() < 0.5)
 		te_spike(org);
 	else
@@ -127,12 +127,12 @@ void Resist_Nails(entity targ, vector org)
 
 void Resist_Rockets(entity targ, vector org)
 {
-	if(targ.health > 0 && targ.pain_finished < time && targ.resist_rockets < 1)
-	{
-		targ.pain_finished = time + 0.3 + random();
+	//if(targ.health > 0 && targ.pain_finished < time && targ.resist_rockets < 1)
+	//{
+		//targ.pain_finished = time + 0.3 + random();
 		// All monsters should have a pain sound define, hence no check
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
-	}
+	//}
 	SpawnExplosion(EXPLODE_BURST_SMOKE,org,"weapons/resist_rocket.wav");
 	SpawnProjectileSmoke(org, 200, 50, 150);
 	SpawnProjectileSmoke(org, 200, 50, 250);
@@ -147,12 +147,12 @@ void Resist_Rockets(entity targ, vector org)
 
 void Resist_Lightning(entity targ, vector org)
 {
-	if(targ.health > 0 && targ.pain_finished < time && targ.resist_cells < 1)
-	{
-		targ.pain_finished = time + 0.3 + random();
+	//if(targ.health > 0 && targ.pain_finished < time && targ.resist_cells < 1)
+	//{
+		//targ.pain_finished = time + 0.3 + random();
 		// All monsters should have a pain sound define, hence no check
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
-	}	
+	//}	
 	// Don't spawn smoke constantly (let the sprite finish)
 	if(targ.lightning_timer < time)
 	{
@@ -167,12 +167,12 @@ void Resist_Lightning(entity targ, vector org)
 
 void Resist_Plasma(entity targ, vector org)
 {
-	if(targ.health > 0 && targ.pain_finished < time && targ.resist_cells < 1)
-	{
-		targ.pain_finished = time + 0.3 + random();
+	//if(targ.health > 0 && targ.pain_finished < time && targ.resist_cells < 1)
+	//{
+		//targ.pain_finished = time + 0.3 + random();
 		// All monsters should have a pain sound define, hence no check
 		//_sound(targ, CH_VOICE, targ.pain_sound, 1, ATTN_NORM);
-	}	
+	//}	
 	SpawnExplosion(EXPLODE_BURST_SMOKE, org, "weapons/plasma_hit.wav");
 	SpawnProjectileSmoke(org, 200, 50, 150);
 	SpawnProjectileSmoke(org, 200, 50, 250);
