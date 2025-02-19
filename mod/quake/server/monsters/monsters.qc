@@ -293,11 +293,12 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 Monster monster_randomize(entity this, Monster mon)
 {
 	this.nightmare_checked = true;
-	if((mon.spawnflags & MONSTER_TYPE_DECOY) || (mon.spawnflags & MON_FLAG_BLOCKY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp" || world.model == "maps/hip2m4.bsp" || world.model == "maps/r1m2.bsp" || substring(world.model, 0, 9) == "maps/mcj_")
+	if((mon.spawnflags & MONSTER_TYPE_DECOY) || world.model == "maps/eod7.bsp" || world.model == "maps/zigisp1.bsp" || world.model == "maps/markiesm1.bsp" || world.model == "maps/r2m1.bsp" || world.model == "maps/hip2m4.bsp" || world.model == "maps/r1m2.bsp")
 		return mon; // map is broken currently with random mobs TODO
 
 	bool seasonlocked = Monsters_SeasonLocked();
 	bool floyd = (substring(world.model, 0, 9) == "maps/ffj_");
+	bool minecraft = (substring(world.model, 0, 9) == "maps/mcj_");
 
 	RandomSelection_Init();
 	FOREACH(Monsters, it != MON_Null,
@@ -319,6 +320,8 @@ Monster monster_randomize(entity this, Monster mon)
 		if((mon.spawnflags & MONSTER_TYPE_FLY) && !(it.spawnflags & MONSTER_TYPE_FLY))
 			continue;
 		if((it.spawnflags & MON_FLAG_XMAS) && seasonlocked)
+			continue;
+		if(!(it.spawnflags & MON_FLAG_BLOCKY) && minecraft)
 			continue;
 		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, this);
 		if(trace_startsolid)
