@@ -185,6 +185,8 @@ void Wither_FastFire(entity this)
 		entity newmis = launch_spike(this, this.origin, vec);
 		newmis.projectiledeathtype = DEATH_MONSTER_WITHER.m_id;
 		newmis.velocity = vec*600;
+		if(this.owner.spawnflags & MON_WITHER_FRIENDLY)
+			newmis.colormod = '1 0.25 0';
 		newmis.owner = this.owner;
 		settouch(newmis, wither_skull_touch);
 		newmis.classname = "wizard_spike";
