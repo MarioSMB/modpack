@@ -578,7 +578,7 @@ void skullw_summon7(entity this)
 	// If the spawn locaiton all clear, spawn something!
 	if(this.skullwizard_summonflag)
 	{
-		minion_spawn(this, this.pos1, MON_LOSTSOUL);
+		minion_spawn(this, this.pos1, new(monster), MON_LOSTSOUL);
 		this.pos2 = this.pos1 - '0 0 16';	// Where to spawn particles
 		skullw_sumball(this, '26 -4 14', 4);
 	}

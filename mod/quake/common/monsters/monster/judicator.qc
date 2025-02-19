@@ -1560,7 +1560,7 @@ void Spawn_judgeMin(entity this)
 		this.pos1 = this.bossminchain.origin;
 		this.judge_summonflag = find_minionspace(this.pos1);			
 		if(this.judge_summonflag) 
-			minion_spawn(this, this.pos1, MON_GAUNT);
+			minion_spawn(this, this.pos1, new(monster), MON_GAUNT);
 		
 		// Next spawn point
 		this.bossminchain = this.bossminchain.entchain;

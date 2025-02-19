@@ -1,0 +1,51 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_WITHER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was blasted by the Wither"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_WITHER,               1,  NULL,           INFO_DEATH_SELF_MON_WITHER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_WITHER,           DEATH_SELF_MON_WITHER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_WITHER, "progs/wither.mdl");
+MODEL(MON_WITHER_HEAD, "progs/wither_skull.mdl");
+
+SOUND(MON_WITHER_PAIN1, "wither/hurt1");
+SOUND(MON_WITHER_PAIN2, "wither/hurt2");
+SOUND(MON_WITHER_PAIN3, "wither/hurt3");
+SOUND(MON_WITHER_PAIN4, "wither/hurt4");
+Sound SND_MON_WITHER_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_PAIN1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_WITHER_IDLE1, "wither/idle1");
+SOUND(MON_WITHER_IDLE2, "wither/idle2");
+SOUND(MON_WITHER_IDLE3, "wither/idle3");
+SOUND(MON_WITHER_IDLE4, "wither/idle4");
+Sound SND_MON_WITHER_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_IDLE1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_WITHER_EXPLODE1, "wither/explode1");
+SOUND(MON_WITHER_EXPLODE2, "wither/explode2");
+SOUND(MON_WITHER_EXPLODE3, "wither/explode3");
+SOUND(MON_WITHER_EXPLODE4, "wither/explode4");
+Sound SND_MON_WITHER_EXPLODE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_EXPLODE1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Wither, Monster)
+    ATTRIB(Wither, spawnflags, int, MON_FLAG_BLOCKY | MONSTER_TYPE_FLY | MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Wither, m_mins, vector, '-24 -24 -24');
+    ATTRIB(Wither, m_maxs, vector, '24 24 48');
+#ifdef GAMEQC
+    ATTRIB(Wither, m_model, Model, MDL_MON_WITHER);
+    ATTRIB(Wither, m_model_head, Model, MDL_MON_WITHER_HEAD);
+    ATTRIB(Wither, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Wither, netname, string, "wither");
+    ATTRIB(Wither, monster_name, string, _("Wither"));
+ENDCLASS(Wither)
+
+REGISTER_MONSTER(WITHER, NEW(Wither));

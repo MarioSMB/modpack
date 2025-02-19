@@ -1,0 +1,74 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_PIGLIN,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was killed by Piglin magic"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_PIGLIN,               1,  NULL,           INFO_DEATH_SELF_MON_PIGLIN,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_PIGLIN,           DEATH_SELF_MON_PIGLIN,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_PIGLIN, "progs/piglin.mdl");
+
+SOUND(MON_PIGLIN_PAIN1, "piglin/hurt1");
+SOUND(MON_PIGLIN_PAIN2, "piglin/hurt2");
+SOUND(MON_PIGLIN_PAIN3, "piglin/hurt3");
+Sound SND_MON_PIGLIN_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_PAIN1.m_id + floor(prandom() * 3));
+}
+
+SOUND(MON_PIGLIN_DEATH1, "piglin/death1");
+SOUND(MON_PIGLIN_DEATH2, "piglin/death2");
+SOUND(MON_PIGLIN_DEATH3, "piglin/death3");
+SOUND(MON_PIGLIN_DEATH4, "piglin/death4");
+Sound SND_MON_PIGLIN_DEATH_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_DEATH1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_PIGLIN_IDLE1, "piglin/idle1");
+SOUND(MON_PIGLIN_IDLE2, "piglin/idle2");
+SOUND(MON_PIGLIN_IDLE3, "piglin/idle3");
+SOUND(MON_PIGLIN_IDLE4, "piglin/idle4");
+Sound SND_MON_PIGLIN_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_IDLE1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_PIGLIN_SIGHT1, "piglin/angry1");
+SOUND(MON_PIGLIN_SIGHT2, "piglin/angry2");
+SOUND(MON_PIGLIN_SIGHT3, "piglin/angry3");
+SOUND(MON_PIGLIN_SIGHT4, "piglin/angry4");
+Sound SND_MON_PIGLIN_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_SIGHT1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_PIGLIN_STEP1, "piglin/step1");
+SOUND(MON_PIGLIN_STEP2, "piglin/step2");
+SOUND(MON_PIGLIN_STEP3, "piglin/step3");
+SOUND(MON_PIGLIN_STEP4, "piglin/step4");
+SOUND(MON_PIGLIN_STEP5, "piglin/step5");
+Sound SND_MON_PIGLIN_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_STEP1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_PIGLIN_CHARGE1, "piglin/retreat1");
+SOUND(MON_PIGLIN_CHARGE2, "piglin/retreat2");
+SOUND(MON_PIGLIN_CHARGE3, "piglin/retreat3");
+SOUND(MON_PIGLIN_CHARGE4, "piglin/retreat4");
+Sound SND_MON_PIGLIN_CHARGE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PIGLIN_CHARGE1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Piglin, Monster)
+    ATTRIB(Piglin, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Piglin, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Piglin, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Piglin, m_model, Model, MDL_MON_PIGLIN);
+    ATTRIB(Piglin, m_model_head, Model, MDL_Null);
+    ATTRIB(Piglin, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Piglin, netname, string, "piglin");
+    ATTRIB(Piglin, monster_name, string, _("Piglin"));
+ENDCLASS(Piglin)
+
+REGISTER_MONSTER(PIGLIN, NEW(Piglin));

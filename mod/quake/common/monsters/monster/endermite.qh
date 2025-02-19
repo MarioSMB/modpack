@@ -1,0 +1,47 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ENDERMITE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was nibbled by an Endermite"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ENDERMITE,               1,  NULL,           INFO_DEATH_SELF_MON_ENDERMITE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ENDERMITE,           DEATH_SELF_MON_ENDERMITE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ENDERMITE, "progs/endermite.mdl");
+
+SOUND(MON_ENDERMITE_IDLE1, "silverfish/say1");
+SOUND(MON_ENDERMITE_IDLE2, "silverfish/say2");
+SOUND(MON_ENDERMITE_IDLE3, "silverfish/say3");
+SOUND(MON_ENDERMITE_IDLE4, "silverfish/say4");
+Sound SND_MON_ENDERMITE_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMITE_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_ENDERMITE_STEP1, "silverfish/step1");
+SOUND(MON_ENDERMITE_STEP2, "silverfish/step2");
+SOUND(MON_ENDERMITE_STEP3, "silverfish/step3");
+SOUND(MON_ENDERMITE_STEP4, "silverfish/step4");
+Sound SND_MON_ENDERMITE_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMITE_STEP1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_ENDERMITE_PAIN1, "silverfish/hit1");
+SOUND(MON_ENDERMITE_PAIN2, "silverfish/hit2");
+SOUND(MON_ENDERMITE_PAIN3, "silverfish/hit3");
+Sound SND_MON_ENDERMITE_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMITE_PAIN1.m_id + floor(prandom() * 3));
+}
+#endif
+
+CLASS(Endermite, Monster)
+    ATTRIB(Endermite, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Endermite, m_mins, vector, '-8 -8 -8');
+    ATTRIB(Endermite, m_maxs, vector, '8 8 8');
+#ifdef GAMEQC
+    ATTRIB(Endermite, m_model, Model, MDL_MON_ENDERMITE);
+    ATTRIB(Endermite, m_model_head, Model, MDL_Null);
+    ATTRIB(Endermite, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Endermite, netname, string, "endermite");
+    ATTRIB(Endermite, monster_name, string, _("Endermite"));
+ENDCLASS(Endermite)
+
+REGISTER_MONSTER(ENDERMITE, NEW(Endermite));

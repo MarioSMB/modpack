@@ -1,0 +1,15 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Withering, StatusEffects)
+    ATTRIB(Withering, netname, string, "withering");
+    ATTRIB(Withering, m_color, vector, '0.32 1 0.31');
+    ATTRIB(Withering, m_hidden, bool, true);
+    ATTRIB(Withering, m_lifetime, float, 10);
+ENDCLASS(Withering)
+REGISTER_STATUSEFFECT(Withering, NEW(Withering));
+
+#ifdef SVQC
+.float withering_time;
+#endif

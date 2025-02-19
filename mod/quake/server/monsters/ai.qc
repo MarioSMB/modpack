@@ -817,11 +817,14 @@ returns 1 if the entity is in front(in sight) of this
 */
 bool infront(entity this, entity targ)
 {
-	fixedmakevectors(this.angles);
+	if(IS_PLAYER(this))
+		makevectors(this.v_angle);
+	else
+		fixedmakevectors(this.angles);
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
 	float dottarget = VISIONCONE_NORMAL;
-	if(this.spawnflags & SPAWNFLAG_NEARSIGHTED)
+	if(IS_PLAYER(this) || (this.spawnflags & SPAWNFLAG_NEARSIGHTED))
 		dottarget = VISIONCONE_NEARSIGHTED;
 	
 	return (dot > dottarget);
@@ -1193,6 +1196,9 @@ bool FindTarget(entity this)
 	if((this.spawnflags & MONSTER_IGNOREPLAYER) && !IsMGMap())
 		return false;
 
+	if(this.monsterdef.spawnflags & MON_FLAG_IGNOREPLAYER)
+		return false;
+
 	// if the first spawnflag bit is set, the monster will only wake up on
 	// really seeing the player, not another monster getting angry
 
@@ -1257,10 +1263,14 @@ bool FindTarget(entity this)
 		{
 			if(client.show_hostile < time && !infront(this, client))
 				return false;
+			if(client.show_hostile < time && (this.monsterdef.spawnflags & MON_FLAG_LOOKAT) && !infront(client, this))
+				return false;
 		}
 		else if(r == RANGE_MID)
 		{
 			if( /* client.show_hostile < time || */ !infront(this, client))
+				return false;
+			if((this.monsterdef.spawnflags & MON_FLAG_LOOKAT) && !infront(client, this))
 				return false;
 		}
 	}
@@ -1367,6 +1377,10 @@ void ai_stand(entity this)
 {
 	if(FindTarget(this))
 		return;
+
+	// for physics
+	if(IS_ONGROUND(this) && !t_checkbottom(this))
+		UNSET_ONGROUND(this);
 
 	if(this.pausetime != -1 && time > this.pausetime)
 	{

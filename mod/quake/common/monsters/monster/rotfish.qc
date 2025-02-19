@@ -128,15 +128,15 @@ void f_death1(entity this, entity inflictor, entity attacker)
 	this.solid = SOLID_NOT;
 }
 
-void f_pain9(entity this) { set_animofs(this, anim_fish_swim, 9, f_run1); ai_pain(this, 6); }
-void f_pain8(entity this) { set_animofs(this, anim_fish_swim, 8, f_pain9); ai_pain(this, 6); }
-void f_pain7(entity this) { set_animofs(this, anim_fish_swim, 7, f_pain8); ai_pain(this, 6); }
-void f_pain6(entity this) { set_animofs(this, anim_fish_swim, 6, f_pain7); ai_pain(this, 6); }
-void f_pain5(entity this) { set_animofs(this, anim_fish_swim, 5, f_pain6); ai_pain(this, 6); }
-void f_pain4(entity this) { set_animofs(this, anim_fish_swim, 4, f_pain5); ai_pain(this, 6); }
-void f_pain3(entity this) { set_animofs(this, anim_fish_swim, 3, f_pain4); ai_pain(this, 6); }
-void f_pain2(entity this) { set_animofs(this, anim_fish_swim, 2, f_pain3); ai_pain(this, 6); }
-void f_pain1(entity this) { set_animofs(this, anim_fish_swim, 1, f_pain2); }
+void f_pain9(entity this) { set_animofs(this, anim_fish_pain, 9, f_run1); ai_pain(this, 6); }
+void f_pain8(entity this) { set_animofs(this, anim_fish_pain, 8, f_pain9); ai_pain(this, 6); }
+void f_pain7(entity this) { set_animofs(this, anim_fish_pain, 7, f_pain8); ai_pain(this, 6); }
+void f_pain6(entity this) { set_animofs(this, anim_fish_pain, 6, f_pain7); ai_pain(this, 6); }
+void f_pain5(entity this) { set_animofs(this, anim_fish_pain, 5, f_pain6); ai_pain(this, 6); }
+void f_pain4(entity this) { set_animofs(this, anim_fish_pain, 4, f_pain5); ai_pain(this, 6); }
+void f_pain3(entity this) { set_animofs(this, anim_fish_pain, 3, f_pain4); ai_pain(this, 6); }
+void f_pain2(entity this) { set_animofs(this, anim_fish_pain, 2, f_pain3); ai_pain(this, 6); }
+void f_pain1(entity this) { set_animofs(this, anim_fish_pain, 1, f_pain2); }
 
 void fish_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
@@ -165,7 +165,16 @@ void fish_pain(entity this, entity attacker, float damage, int deathtype)
 
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
 */
-spawnfunc(monster_fish) { monster_start(this, true, MON_ROTFISH); }
+spawnfunc(monster_fish)
+{
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_MCGUARDIAN);
+		return;
+	}
+
+	monster_start(this, true, MON_ROTFISH);
+}
 
 // alkaline
 spawnfunc(monster_frogman) { this.spawnflags |= 2; monster_start(this, true, MON_ROTFISH); }

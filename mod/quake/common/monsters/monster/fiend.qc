@@ -315,7 +315,19 @@ void Demon_JumpTouch(entity this, entity toucher)
 
 /*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
-spawnfunc(monster_demon1) { monster_start(this, true, MON_FIEND); }
+spawnfunc(monster_demon1)
+{
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		if(random() < 0.5)
+			monster_start(this, true, MON_VAMPIRE);
+		else
+			monster_start(this, true, MON_CREEPER);
+		return;
+	}
+
+	monster_start(this, true, MON_FIEND);
+}
 
 // qdoom
 spawnfunc(monster_pinky) { monster_start(this, true, MON_FIEND); }

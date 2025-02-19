@@ -299,7 +299,16 @@ bool SoldierCheckAttack(entity this)
 
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
-spawnfunc(monster_army) { monster_start(this, true, MON_GRUNT); }
+spawnfunc(monster_army)
+{
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_SKELETON);
+		return;
+	}
+
+	monster_start(this, true, MON_GRUNT);
+}
 
 // alkaline
 spawnfunc(monster_nailgrunt) { monster_start(this, true, MON_GRUNT); }

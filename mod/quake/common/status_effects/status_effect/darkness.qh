@@ -1,0 +1,11 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Darkness, StatusEffects)
+    ATTRIB(Darkness, netname, string, "darkness");
+    ATTRIB(Darkness, m_color, vector, '0.25 0.1 0.25');
+    ATTRIB(Darkness, m_hidden, bool, true);
+    ATTRIB(Darkness, m_lifetime, float, 10);
+ENDCLASS(Darkness)
+REGISTER_STATUSEFFECT(Darkness, NEW(Darkness));

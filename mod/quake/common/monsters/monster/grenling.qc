@@ -344,6 +344,7 @@ METHOD(Grenling, mr_setup, bool(Grenling this, entity actor))
 	actor.th_melee = gren_fast;
 	actor.th_pain = Gren_Pain;
 	actor.th_die = gren_die;
+	//actor.checkattack = GrenCheckAttack;
 
     return true;
 }

@@ -479,6 +479,12 @@ Normal: use the original skin and fire normal grenades.
 */
 spawnfunc(monster_ogre)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_MCSPIDER);
+		return;
+	}
+
 	if(random() < 0.2 && fexists("progs/cook.mdl"))
 	{
 		monster_start(this, true, MON_COOK);

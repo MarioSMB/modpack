@@ -430,6 +430,18 @@ frame: frame to be frozen in. (default 73)
 */
 spawnfunc(monster_hell_knight)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		float r = random();
+		if(r < 0.33)
+			monster_start(this, true, MON_BLAZE);
+		else if(r < 0.66)
+			monster_start(this, true, MON_PIGLIN);
+		else
+			monster_start(this, true, MON_BREEZE);
+		return;
+	}
+
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, true, MON_DARK_KNIGHT);

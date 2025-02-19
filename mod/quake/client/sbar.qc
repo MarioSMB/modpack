@@ -1247,6 +1247,9 @@ void Sbar_DrawHealth()
 		myhealth += rint(STAT(FIELDGEN_HEALTH));
 		hpcolor = '0 1 1';
 	}
+	if(StatusEffects_active(STATUSEFFECT_Withering, g_statuseffects))
+		hpcolor = '0.1 0.1 0.1';
+
 	Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
 }
 

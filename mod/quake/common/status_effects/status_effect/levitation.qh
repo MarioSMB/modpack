@@ -1,0 +1,9 @@
+#pragma once
+
+CLASS(Levitation, StatusEffects)
+    ATTRIB(Levitation, netname, string, "levitation");
+    ATTRIB(Levitation, m_color, vector, '1 0.99 0.81');
+    ATTRIB(Levitation, m_hidden, bool, true);
+    ATTRIB(Levitation, m_lifetime, float, 10);
+ENDCLASS(Levitation)
+REGISTER_STATUSEFFECT(Levitation, NEW(Levitation));

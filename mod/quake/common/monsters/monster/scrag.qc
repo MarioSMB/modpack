@@ -355,6 +355,23 @@ void Wiz_Missile(entity this)
 */
 spawnfunc(monster_wizard)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		Monster mon = MON_PHANTOM;
+		float r = random();
+		if(r < 0.33)
+		{
+			mon = MON_GHAST;
+			tracebox(this.origin, mon.m_mins, mon.m_maxs, this.origin, MOVE_NOMONSTERS, this);
+			if(trace_startsolid)
+				mon = MON_PHANTOM;
+		}
+		else if(r < 66)
+			mon = MON_VEX;
+		monster_start(this, true, mon);
+		return;
+	}
+
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, true, MON_GRENLING);

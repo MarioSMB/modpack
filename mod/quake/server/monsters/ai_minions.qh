@@ -18,7 +18,7 @@ const float MIN_THROWSPD = 200;		// Monster jump speed
 const float MIN_THROWRND = 50;		// Some randomness
 const float MIN_THROWSIDE = 50;		// Sideways movement (+/-)
 
-entity minion_spawn(entity own, vector org, Monster mon);
+entity minion_spawn(entity own, vector org, entity monster, Monster mon);
 
 void update_minioncount(entity msource, float countupd);
 

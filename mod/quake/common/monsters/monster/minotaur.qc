@@ -614,7 +614,7 @@ void mino_summon7(entity this)
 	// If the spawn locaiton all clear, spawn something!
 	if(this.minotaur_summonflag)
 	{
-		minion_spawn(this, this.pos1, MON_GARGOYLE);
+		minion_spawn(this, this.pos1, new(monster), MON_GARGOYLE);
 		this.pos2 = this.pos1 - '0 0 16';	// Origin of gargoyle
 		mino_sumball(this, 0);
 	}

@@ -1,0 +1,43 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SLIME,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slimed by a Slime"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SLIME,               1,  NULL,           INFO_DEATH_SELF_MON_SLIME,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SLIME,           DEATH_SELF_MON_SLIME,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SLIME, "progs/slime.mdl");
+
+SOUND(MON_SLIME_BIG1, "slime/big1");
+SOUND(MON_SLIME_BIG2, "slime/big2");
+SOUND(MON_SLIME_BIG3, "slime/big3");
+SOUND(MON_SLIME_BIG4, "slime/big4");
+Sound SND_MON_SLIME_BIG_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SLIME_BIG1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SLIME_SMALL1, "slime/small1");
+SOUND(MON_SLIME_SMALL2, "slime/small2");
+SOUND(MON_SLIME_SMALL3, "slime/small3");
+SOUND(MON_SLIME_SMALL4, "slime/small4");
+SOUND(MON_SLIME_SMALL5, "slime/small5");
+Sound SND_MON_SLIME_SMALL_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SLIME_SMALL1.m_id + floor(prandom() * 5));
+}
+#endif
+
+CLASS(Slime, Monster)
+    ATTRIB(Slime, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Slime, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Slime, m_maxs, vector, '32 32 60');
+#ifdef GAMEQC
+    ATTRIB(Slime, m_model, Model, MDL_MON_SLIME);
+    ATTRIB(Slime, m_model_head, Model, MDL_Null);
+    ATTRIB(Slime, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Slime, netname, string, "slime");
+    ATTRIB(Slime, monster_name, string, _("Slime"));
+ENDCLASS(Slime)
+
+REGISTER_MONSTER(SLIME, NEW(Slime));

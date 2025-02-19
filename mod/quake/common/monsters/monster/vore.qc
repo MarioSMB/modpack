@@ -194,6 +194,12 @@ void ShalMissileTouch(entity this, entity toucher)
 */
 spawnfunc(monster_shalrath)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_ENDERMAN);
+		return;
+	}
+
 	if(coop == 2 && orig_random(this) < 0.2)
 	{
 		monster_start(this, true, MON_LEGOND);

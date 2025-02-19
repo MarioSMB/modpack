@@ -1,0 +1,39 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_VEX,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was vexxed by a Vex"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_VEX,            1,  NULL,           INFO_DEATH_SELF_MON_VEX,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_VEX,        DEATH_SELF_MON_VEX,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_VEX, "progs/vex.mdl");
+
+SOUND(MON_VEX_IDLE1, "vex/idle1");
+SOUND(MON_VEX_IDLE2, "vex/idle2");
+SOUND(MON_VEX_IDLE3, "vex/idle3");
+SOUND(MON_VEX_IDLE4, "vex/idle4");
+Sound SND_MON_VEX_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_VEX_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_VEX_CHARGE1, "vex/charge1");
+SOUND(MON_VEX_CHARGE2, "vex/charge2");
+SOUND(MON_VEX_CHARGE3, "vex/charge3");
+Sound SND_MON_VEX_CHARGE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_VEX_CHARGE1.m_id + floor(prandom() * 3));
+}
+#endif
+
+CLASS(Vex, Monster)
+    ATTRIB(Vex, spawnflags, int, MON_FLAG_BLOCKY | MONSTER_TYPE_FLY);
+    ATTRIB(Vex, m_mins, vector, '-12 -12 -12');
+    ATTRIB(Vex, m_maxs, vector, '12 12 8');
+#ifdef GAMEQC
+    ATTRIB(Vex, m_model, Model, MDL_MON_VEX);
+    ATTRIB(Vex, m_model_head, Model, MDL_Null);
+#endif
+    ATTRIB(Vex, netname, string, "vex");
+    ATTRIB(Vex, monster_name, string, _("Vex"));
+ENDCLASS(Vex)
+
+REGISTER_MONSTER(VEX, NEW(Vex));

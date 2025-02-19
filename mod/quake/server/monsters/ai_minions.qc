@@ -180,16 +180,19 @@ void Explode_Egg(entity this)
 	this.nextthink = time + 0.1;
 }
 
-entity minion_spawn(entity own, vector org, Monster mon)
+entity minion_spawn(entity own, vector org, entity monster, Monster mon)
 {
 	entity targ = own.enemy;
 
 	if(!mon || mon == MON_Null || (mon.spawnflags & MONSTER_TYPE_DECOY))
+	{
+		delete(monster);
 		return NULL;
+	}
 
 	update_minioncount(own, 1);
 
-	entity monster = new(monster);
+	//entity monster = new(monster);
 	monster.monsterdef = mon;
 	monster.spawnfunc_checked = true;
 	//monster.angles = own.angles;
@@ -298,7 +301,7 @@ void Hatch_Egg(entity this)
 	else if(this.owner.classtype == CT_MONSHAL)
 		minion_voreling(this.oldorigin, this.enemy);
 #endif
-	entity minion = minion_spawn(this.owner, this.oldorigin, this.owner.monsterdef);
+	entity minion = minion_spawn(this.owner, this.oldorigin, new(monster), this.owner.monsterdef);
 	this.owner = minion; // TODO?
 
 	// Skip a couple of frames

@@ -1,0 +1,48 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_WITHER_SKELETON,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was desecrated by a Wither Skeleton"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_WITHER_SKELETON,               1,  NULL,           INFO_DEATH_SELF_MON_WITHER_SKELETON,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_WITHER_SKELETON,           DEATH_SELF_MON_WITHER_SKELETON,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_WITHER_SKELETON, "progs/wither_skeleton.mdl");
+
+SOUND(MON_WITHER_SKELETON_PAIN1, "wither_skeleton/hurt1");
+SOUND(MON_WITHER_SKELETON_PAIN2, "wither_skeleton/hurt2");
+SOUND(MON_WITHER_SKELETON_PAIN3, "wither_skeleton/hurt3");
+SOUND(MON_WITHER_SKELETON_PAIN4, "wither_skeleton/hurt4");
+Sound SND_MON_WITHER_SKELETON_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_SKELETON_PAIN1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_WITHER_SKELETON_IDLE1, "wither_skeleton/idle1");
+SOUND(MON_WITHER_SKELETON_IDLE2, "wither_skeleton/idle2");
+SOUND(MON_WITHER_SKELETON_IDLE3, "wither_skeleton/idle3");
+Sound SND_MON_WITHER_SKELETON_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_SKELETON_IDLE1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_WITHER_SKELETON_STEP1, "wither_skeleton/step1");
+SOUND(MON_WITHER_SKELETON_STEP2, "wither_skeleton/step2");
+SOUND(MON_WITHER_SKELETON_STEP3, "wither_skeleton/step3");
+SOUND(MON_WITHER_SKELETON_STEP4, "wither_skeleton/step4");
+Sound SND_MON_WITHER_SKELETON_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WITHER_SKELETON_STEP1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(WitherSkeleton, Monster)
+    ATTRIB(WitherSkeleton, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_INFIGHT);
+    ATTRIB(WitherSkeleton, m_mins, vector, '-16 -16 -24');
+    ATTRIB(WitherSkeleton, m_maxs, vector, '16 16 48');
+#ifdef GAMEQC
+    ATTRIB(WitherSkeleton, m_model, Model, MDL_MON_WITHER_SKELETON);
+    ATTRIB(WitherSkeleton, m_model_head, Model, MDL_Null);
+    ATTRIB(WitherSkeleton, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(WitherSkeleton, netname, string, "wither_skeleton");
+    ATTRIB(WitherSkeleton, monster_name, string, _("Wither Skeleton"));
+ENDCLASS(WitherSkeleton)
+
+REGISTER_MONSTER(WITHER_SKELETON, NEW(WitherSkeleton));

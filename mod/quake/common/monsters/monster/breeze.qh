@@ -1,0 +1,62 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BREEZE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was blown away by a Breeze"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BREEZE,               1,  NULL,           INFO_DEATH_SELF_MON_BREEZE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BREEZE,           DEATH_SELF_MON_BREEZE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BREEZE, "progs/breeze_head.mdl");
+MODEL(MON_BREEZE_BODY, "progs/breeze_body.mdl");
+
+SOUND(MON_BREEZE_PAIN1, "breeze/hurt1");
+SOUND(MON_BREEZE_PAIN2, "breeze/hurt2");
+SOUND(MON_BREEZE_PAIN3, "breeze/hurt3");
+Sound SND_MON_BREEZE_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BREEZE_PAIN1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_BREEZE_IDLE1, "breeze/idle1");
+SOUND(MON_BREEZE_IDLE2, "breeze/idle2");
+SOUND(MON_BREEZE_IDLE3, "breeze/idle3");
+SOUND(MON_BREEZE_IDLE4, "breeze/idle4");
+Sound SND_MON_BREEZE_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BREEZE_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_BREEZE_IDLE_AIR1, "breeze/idle_air1");
+SOUND(MON_BREEZE_IDLE_AIR2, "breeze/idle_air2");
+SOUND(MON_BREEZE_IDLE_AIR3, "breeze/idle_air3");
+SOUND(MON_BREEZE_IDLE_AIR4, "breeze/idle_air4");
+Sound SND_MON_BREEZE_IDLE_AIR_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BREEZE_IDLE_AIR1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_BREEZE_CHARGE1, "breeze/charge1");
+SOUND(MON_BREEZE_CHARGE2, "breeze/charge2");
+SOUND(MON_BREEZE_CHARGE3, "breeze/charge3");
+Sound SND_MON_BREEZE_CHARGE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BREEZE_CHARGE1.m_id + floor(prandom() * 3));
+}
+
+SOUND(MON_BREEZE_EXPLODE1, "breeze/wind_burst1");
+SOUND(MON_BREEZE_EXPLODE2, "breeze/wind_burst2");
+SOUND(MON_BREEZE_EXPLODE3, "breeze/wind_burst3");
+Sound SND_MON_BREEZE_EXPLODE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BREEZE_EXPLODE1.m_id + floor(prandom() * 3));
+}
+#endif
+
+CLASS(Breeze, Monster)
+    ATTRIB(Breeze, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_METAL);
+    ATTRIB(Breeze, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Breeze, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Breeze, m_model, Model, MDL_MON_BREEZE);
+    ATTRIB(Breeze, m_model_head, Model, MDL_Null);
+    ATTRIB(Breeze, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Breeze, netname, string, "breeze");
+    ATTRIB(Breeze, monster_name, string, _("Breeze"));
+ENDCLASS(Breeze)
+
+REGISTER_MONSTER(BREEZE, NEW(Breeze));

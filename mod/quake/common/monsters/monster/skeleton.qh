@@ -1,0 +1,100 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SKELETON,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was shot by a Skeleton"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SKELETON,               1,  NULL,           INFO_DEATH_SELF_MON_SKELETON,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SKELETON,           DEATH_SELF_MON_SKELETON,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SKELETON, "progs/skeleton.mdl");
+
+SOUND(MON_SKELETON_PAIN1, "skeleton/hurt1");
+SOUND(MON_SKELETON_PAIN2, "skeleton/hurt2");
+SOUND(MON_SKELETON_PAIN3, "skeleton/hurt3");
+SOUND(MON_SKELETON_PAIN4, "skeleton/hurt4");
+Sound SND_MON_SKELETON_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SKELETON_PAIN1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_STRAY_PAIN1, "stray/hurt1");
+SOUND(MON_STRAY_PAIN2, "stray/hurt2");
+SOUND(MON_STRAY_PAIN3, "stray/hurt3");
+SOUND(MON_STRAY_PAIN4, "stray/hurt4");
+Sound SND_MON_STRAY_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_STRAY_PAIN1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_STRAY_IDLE1, "stray/idle1");
+SOUND(MON_STRAY_IDLE2, "stray/idle2");
+SOUND(MON_STRAY_IDLE3, "stray/idle3");
+SOUND(MON_STRAY_IDLE4, "stray/idle4");
+Sound SND_MON_STRAY_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_STRAY_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_STRAY_STEP1, "stray/step1");
+SOUND(MON_STRAY_STEP2, "stray/step2");
+SOUND(MON_STRAY_STEP3, "stray/step3");
+SOUND(MON_STRAY_STEP4, "stray/step4");
+Sound SND_MON_STRAY_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_STRAY_STEP1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_BOGGED_PAIN1, "bogged/hurt1");
+SOUND(MON_BOGGED_PAIN2, "bogged/hurt2");
+SOUND(MON_BOGGED_PAIN3, "bogged/hurt3");
+SOUND(MON_BOGGED_PAIN4, "bogged/hurt4");
+Sound SND_MON_BOGGED_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BOGGED_PAIN1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_BOGGED_IDLE1, "bogged/ambient1");
+SOUND(MON_BOGGED_IDLE2, "bogged/ambient2");
+SOUND(MON_BOGGED_IDLE3, "bogged/ambient3");
+SOUND(MON_BOGGED_IDLE4, "bogged/ambient4");
+Sound SND_MON_BOGGED_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BOGGED_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_BOGGED_STEP1, "bogged/step1");
+SOUND(MON_BOGGED_STEP2, "bogged/step2");
+SOUND(MON_BOGGED_STEP3, "bogged/step3");
+SOUND(MON_BOGGED_STEP4, "bogged/step4");
+Sound SND_MON_BOGGED_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BOGGED_STEP1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SKELETON_IDLE1, "skeleton/say1");
+SOUND(MON_SKELETON_IDLE2, "skeleton/say2");
+SOUND(MON_SKELETON_IDLE3, "skeleton/say3");
+Sound SND_MON_SKELETON_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SKELETON_IDLE1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_SKELETON_STEP1, "skeleton/step1");
+SOUND(MON_SKELETON_STEP2, "skeleton/step2");
+SOUND(MON_SKELETON_STEP3, "skeleton/step3");
+SOUND(MON_SKELETON_STEP4, "skeleton/step4");
+Sound SND_MON_SKELETON_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SKELETON_STEP1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SKELETON_ARROWHIT1, "skeleton/bowhit1");
+SOUND(MON_SKELETON_ARROWHIT2, "skeleton/bowhit2");
+SOUND(MON_SKELETON_ARROWHIT3, "skeleton/bowhit3");
+SOUND(MON_SKELETON_ARROWHIT4, "skeleton/bowhit4");
+Sound SND_MON_SKELETON_ARROWHIT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SKELETON_ARROWHIT1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Skeleton, Monster)
+    ATTRIB(Skeleton, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_INFIGHT);
+    ATTRIB(Skeleton, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Skeleton, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Skeleton, m_model, Model, MDL_MON_SKELETON);
+    ATTRIB(Skeleton, m_model_head, Model, MDL_Null);
+    ATTRIB(Skeleton, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Skeleton, netname, string, "skeleton");
+    ATTRIB(Skeleton, monster_name, string, _("Skeleton"));
+ENDCLASS(Skeleton)
+
+REGISTER_MONSTER(SKELETON, NEW(Skeleton));

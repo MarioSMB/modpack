@@ -1,0 +1,76 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SHULKER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was levitated by a Shulker"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SHULKER,               1,  NULL,           INFO_DEATH_SELF_MON_SHULKER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SHULKER,           DEATH_SELF_MON_SHULKER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SHULKER, "progs/shulker.mdl");
+
+SOUND(MON_SHULKER_PAIN1, "shulker/hurt1");
+SOUND(MON_SHULKER_PAIN2, "shulker/hurt2");
+SOUND(MON_SHULKER_PAIN3, "shulker/hurt3");
+Sound SND_MON_SHULKER_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_PAIN1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_SHULKER_PAIN_CLOSED1, "shulker/hurt_closed1");
+SOUND(MON_SHULKER_PAIN_CLOSED2, "shulker/hurt_closed2");
+SOUND(MON_SHULKER_PAIN_CLOSED3, "shulker/hurt_closed3");
+SOUND(MON_SHULKER_PAIN_CLOSED4, "shulker/hurt_closed4");
+SOUND(MON_SHULKER_PAIN_CLOSED5, "shulker/hurt_closed5");
+Sound SND_MON_SHULKER_PAIN_CLOSED_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_PAIN_CLOSED1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_SHULKER_DEATH1, "shulker/death1");
+SOUND(MON_SHULKER_DEATH2, "shulker/death2");
+SOUND(MON_SHULKER_DEATH3, "shulker/death3");
+SOUND(MON_SHULKER_DEATH4, "shulker/death4");
+Sound SND_MON_SHULKER_DEATH_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_DEATH1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SHULKER_SHOOT1, "shulker/shoot1");
+SOUND(MON_SHULKER_SHOOT2, "shulker/shoot2");
+SOUND(MON_SHULKER_SHOOT3, "shulker/shoot3");
+SOUND(MON_SHULKER_SHOOT4, "shulker/shoot4");
+Sound SND_MON_SHULKER_SHOOT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_SHOOT1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SHULKER_EXPLODE1, "shulker/hit1");
+SOUND(MON_SHULKER_EXPLODE2, "shulker/hit2");
+SOUND(MON_SHULKER_EXPLODE3, "shulker/hit3");
+SOUND(MON_SHULKER_EXPLODE4, "shulker/hit4");
+Sound SND_MON_SHULKER_EXPLODE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_EXPLODE1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_SHULKER_CHARGE1, "shulker/ambient1");
+SOUND(MON_SHULKER_CHARGE2, "shulker/ambient2");
+SOUND(MON_SHULKER_CHARGE3, "shulker/ambient3");
+SOUND(MON_SHULKER_CHARGE4, "shulker/ambient4");
+SOUND(MON_SHULKER_CHARGE5, "shulker/ambient5");
+SOUND(MON_SHULKER_CHARGE6, "shulker/ambient6");
+SOUND(MON_SHULKER_CHARGE7, "shulker/ambient7");
+Sound SND_MON_SHULKER_CHARGE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_SHULKER_CHARGE1.m_id + floor(prandom() * 7));
+}
+#endif
+
+CLASS(Shulker, Monster)
+    ATTRIB(Shulker, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_STATIONARY | MON_FLAG_METAL);
+    ATTRIB(Shulker, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Shulker, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(Shulker, m_model, Model, MDL_MON_SHULKER);
+    ATTRIB(Shulker, m_model_head, Model, MDL_Null);
+    ATTRIB(Shulker, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Shulker, netname, string, "shulker");
+    ATTRIB(Shulker, monster_name, string, _("Shulker"));
+ENDCLASS(Shulker)
+
+REGISTER_MONSTER(SHULKER, NEW(Shulker));

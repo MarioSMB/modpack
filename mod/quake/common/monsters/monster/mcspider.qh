@@ -1,0 +1,41 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MCSPIDER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was eaten by a Spider"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MCSPIDER,               1,  NULL,           INFO_DEATH_SELF_MON_MCSPIDER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MCSPIDER,           DEATH_SELF_MON_MCSPIDER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MCSPIDER, "progs/mcspider.mdl");
+
+SOUND(MON_MCSPIDER_IDLE1, "mcspider/say1");
+SOUND(MON_MCSPIDER_IDLE2, "mcspider/say2");
+SOUND(MON_MCSPIDER_IDLE3, "mcspider/say3");
+SOUND(MON_MCSPIDER_IDLE4, "mcspider/say4");
+Sound SND_MON_MCSPIDER_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_MCSPIDER_IDLE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_MCSPIDER_STEP1, "mcspider/step1");
+SOUND(MON_MCSPIDER_STEP2, "mcspider/step2");
+SOUND(MON_MCSPIDER_STEP3, "mcspider/step3");
+SOUND(MON_MCSPIDER_STEP4, "mcspider/step4");
+Sound SND_MON_MCSPIDER_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_MCSPIDER_STEP1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(MCSpider, Monster)
+    ATTRIB(MCSpider, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(MCSpider, m_mins, vector, '-24 -24 -24');
+    ATTRIB(MCSpider, m_maxs, vector, '24 24 24');
+#ifdef GAMEQC
+    ATTRIB(MCSpider, m_model, Model, MDL_MON_MCSPIDER);
+    ATTRIB(MCSpider, m_model_head, Model, MDL_Null);
+    ATTRIB(MCSpider, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(MCSpider, netname, string, "mcspider");
+    ATTRIB(MCSpider, monster_name, string, _("Spider"));
+ENDCLASS(MCSpider)
+
+REGISTER_MONSTER(MCSPIDER, NEW(MCSpider));

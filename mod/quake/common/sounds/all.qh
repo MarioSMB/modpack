@@ -2,7 +2,7 @@
 
 #include "sound.qh"
 
-REGISTRY(Sounds, BITS(9))
+REGISTRY(Sounds, BITS(10))
 REGISTER_REGISTRY(Sounds)
 
 #define SOUND(name, thepath) \

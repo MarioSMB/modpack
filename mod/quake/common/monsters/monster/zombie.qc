@@ -602,7 +602,16 @@ If crucified, stick the bounding box 12 pixels back into a wall to look right.
 If lying_down in hipnotic, the zombie will be lying down when spawned and will rise up
 when awakened by the player.
 */
-spawnfunc(monster_zombie) { monster_start(this, true, MON_ZOMBIE); }
+spawnfunc(monster_zombie)
+{
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_MCZOMBIE);
+		return;
+	}
+
+	monster_start(this, true, MON_ZOMBIE);
+}
 
 //alkaline
 spawnfunc(monster_zombie2) { monster_start(this, true, MON_ZOMBIE); }

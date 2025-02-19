@@ -244,6 +244,7 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 		// otherwise monsters are not friends even if charmed
 		return true;
 	}
+
 	// next validate the attacker
 	if(IS_MONSTER(attacker) && attacker.charmed)
 	{
@@ -251,8 +252,8 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 		if(attacker.charmer == targ || attacker.charmer == targ.charmer)
 			return false;
 		// no hurt friends
-		if(coop && IS_PLAYER(attacker.charmer))
-			return false;
+		//if(coop && IS_PLAYER(attacker.charmer))
+			//return false;
 
 		// otherwise probably owned by an enemy!
 		return true;
@@ -444,6 +445,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			return;
 		showpain = false;
 	}
+
+	// major hack to keep the high push force
+	if(deathtype == DEATH_MONSTER_BREEZE.m_id)
+		damage *= 0.05;
 
 	if(!Damage_ValidTarget(targ, attacker))
 		damage = 0;
@@ -766,7 +771,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	{
 		targ.th_pain(targ, attacker, take, deathtype);
 	// nightmare mode monsters don't go into pain frames often
-		if(autocvar_skill == 3)
+		if(autocvar_skill == 3 && IS_MONSTER(targ))
 			targ.pain_finished = time + 5;		
 	}
 }

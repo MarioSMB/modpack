@@ -47,3 +47,7 @@ EFFECT(0, OTAMATONE_FIRE,           "arc_smoke")
 EFFECT(0, ELECTRIFY,                "arc_lightning")
 
 EFFECT(0, NUKE_EXPLODE,             "fireball_explode")
+
+EFFECT(0, ENDERMAN,                 "spawn_point_pink")
+EFFECT(0, ENDERMAN_ANGRY,           "spawn_point_neutral")
+EFFECT(1, GUARDIAN_BEAM,            "nex_beam")

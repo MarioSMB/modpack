@@ -26,7 +26,7 @@ Sound SND_MON_CREEPER_EXPLODE_RANDOM() {
 #endif
 
 CLASS(Creeper, Monster)
-    ATTRIB(Creeper, spawnflags, int, 0);
+    ATTRIB(Creeper, spawnflags, int, MON_FLAG_BLOCKY);
     ATTRIB(Creeper, m_mins, vector, '-16 -16 -24');
     ATTRIB(Creeper, m_maxs, vector, '16 16 40');
 #ifdef GAMEQC

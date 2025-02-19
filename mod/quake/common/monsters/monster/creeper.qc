@@ -5,6 +5,8 @@ const int anim_creeper_stand = 0;
 const int anim_creeper_walk = 2;
 const int anim_creeper_death = 41;
 
+const int MON_CREEPER_NERD = BIT(1);
+
 void creeper_stand1(entity this);
 void creeper_stand8(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
 void creeper_stand7(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
@@ -105,7 +107,7 @@ void creeper_explode1(entity this)
 
 //===========================================================================
 
-void creeper_pain6(entity this) { set_anim(this, anim_creeper_stand, creeper_run); this.colormod = '1 1 1'; }
+void creeper_pain6(entity this) { set_anim(this, anim_creeper_stand, creeper_run); this.colormod = (this.charmed) ? '0 1 0' : '1 1 1'; }
 void creeper_pain5(entity this) { set_anim(this, anim_creeper_stand, creeper_pain6); }
 void creeper_pain4(entity this) { set_anim(this, anim_creeper_stand, creeper_pain5); this.colormod = '1 0.8 0.8'; }
 void creeper_pain3(entity this) { set_anim(this, anim_creeper_stand, creeper_pain4);}
@@ -160,10 +162,15 @@ void creeper_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	_sound(this, CH_VOICE, "creeper/death.wav", 1, ATTN_NORM);
 
-	if(this.health < -55)
+	if(deathtype == DEATH_MONSTER_SKELETON.m_id)
 	{
-		creeper_vanish(this);
-		return;
+		RandomSelection_Init();
+		FOREACH(Weapons, it.spawnflags & WEP_FLAG_MUSIC,
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		STAT(WEAPONS, this) = RandomSelection_chosen_ent.m_wepset;
+		DropBackpack(this);
 	}
 
 	this.colormod = '1 0.6 0.6';
@@ -187,7 +194,15 @@ METHOD(Creeper, mr_setup, bool(Creeper this, entity actor))
 	precache_sound("creeper/explode4.wav");
 	precache_sound("creeper/ranged.wav");
 
+	if(random() < 0.2)
+		actor.spawnflags |= MON_CREEPER_NERD;
+
 	actor.yaw_speed = 180;
+
+	if(actor.spawnflags & MON_CREEPER_NERD)
+		actor.skin = 1;
+	else
+		actor.skin = 0;
 
     actor.health = 100;
     actor.th_stand = creeper_stand1;

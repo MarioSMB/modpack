@@ -1,0 +1,67 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MCZOMBIE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slain by a Zombie"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MCZOMBIE,               1,  NULL,           INFO_DEATH_SELF_MON_MCZOMBIE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MCZOMBIE,           DEATH_SELF_MON_MCZOMBIE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MCZOMBIE, "progs/mczombie.mdl");
+MODEL(MON_MCZOMBIE_HEAD, "progs/h_mczombie.mdl");
+
+SOUND(MON_MCZOMBIE_PAIN1, "mczombie/hurt1");
+SOUND(MON_MCZOMBIE_PAIN2, "mczombie/hurt2");
+Sound SND_MON_MCZOMBIE_PAIN_RANDOM() {
+    return (random() < 0.5) ? SND_MON_MCZOMBIE_PAIN1 : SND_MON_MCZOMBIE_PAIN2;
+}
+SOUND(MON_MCZOMBIE_IDLE1, "mczombie/say1");
+SOUND(MON_MCZOMBIE_IDLE2, "mczombie/say2");
+SOUND(MON_MCZOMBIE_IDLE3, "mczombie/say3");
+Sound SND_MON_MCZOMBIE_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_MCZOMBIE_IDLE1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_MCZOMBIE_STEP1, "mczombie/step1");
+SOUND(MON_MCZOMBIE_STEP2, "mczombie/step2");
+SOUND(MON_MCZOMBIE_STEP3, "mczombie/step3");
+SOUND(MON_MCZOMBIE_STEP4, "mczombie/step4");
+SOUND(MON_MCZOMBIE_STEP5, "mczombie/step5");
+Sound SND_MON_MCZOMBIE_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_MCZOMBIE_STEP1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_HUSK_PAIN1, "husk/hurt1");
+SOUND(MON_HUSK_PAIN2, "husk/hurt2");
+Sound SND_MON_HUSK_PAIN_RANDOM() {
+    return (random() < 0.5) ? SND_MON_HUSK_PAIN1 : SND_MON_HUSK_PAIN2;
+}
+SOUND(MON_HUSK_IDLE1, "husk/idle1");
+SOUND(MON_HUSK_IDLE2, "husk/idle2");
+SOUND(MON_HUSK_IDLE3, "husk/idle3");
+Sound SND_MON_HUSK_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_HUSK_IDLE1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_HUSK_STEP1, "husk/step1");
+SOUND(MON_HUSK_STEP2, "husk/step2");
+SOUND(MON_HUSK_STEP3, "husk/step3");
+SOUND(MON_HUSK_STEP4, "husk/step4");
+SOUND(MON_HUSK_STEP5, "husk/step5");
+Sound SND_MON_HUSK_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_HUSK_STEP1.m_id + floor(prandom() * 5));
+}
+#endif
+
+CLASS(MCZombie, Monster)
+    ATTRIB(MCZombie, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(MCZombie, m_mins, vector, '-16 -16 -24');
+    ATTRIB(MCZombie, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(MCZombie, m_model, Model, MDL_MON_MCZOMBIE);
+    ATTRIB(MCZombie, m_model_head, Model, MDL_MON_MCZOMBIE_HEAD);
+    ATTRIB(MCZombie, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(MCZombie, netname, string, "mczombie");
+    ATTRIB(MCZombie, monster_name, string, _("Zombie"));
+ENDCLASS(MCZombie)
+
+REGISTER_MONSTER(MCZOMBIE, NEW(MCZombie));

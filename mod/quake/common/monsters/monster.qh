@@ -19,6 +19,9 @@ const int MONSTER_TYPE_DECOY = BIT(14); // hipnotic flag for decoy monsters
 const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
 const int MON_FLAG_HIDDEN = BIT(16);
 const int MON_FLAG_XMAS = BIT(17); // seasonal monster
+const int MON_FLAG_LOOKAT = BIT(18); // must be looking at the monster for it to aggro
+const int MON_FLAG_IGNOREPLAYER = BIT(19); // doesn't automatically aggro unless attacked
+const int MON_FLAG_BLOCKY = BIT(20); // from a blocky world, excludes from random selection
 
 // entity properties of monsterinfo:
 .entity monsterdef;

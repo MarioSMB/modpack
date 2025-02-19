@@ -341,6 +341,12 @@ bool DogCheckAttack(entity this)
 */
 spawnfunc(monster_dog)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_GOAT);
+		return;
+	}
+
 	if(coop == 2 && orig_random(this) < 0.5)
 	{
 		monster_start(this, true, MON_SPIDER_DROID);

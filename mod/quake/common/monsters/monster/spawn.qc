@@ -244,7 +244,24 @@ The Spawn (and hellspawn)
 The spawn type is random by default.
 If you want a specific type, select "Blue", "Green", or "Spots".
 */
-spawnfunc(monster_tarbaby) { monster_start(this, true, MON_SPAWN); }
+spawnfunc(monster_tarbaby)
+{
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		if(random() < 0.33)
+			monster_start(this, true, MON_SHULKER);
+		else
+		{
+			if(random() < 0.5)
+				monster_start(this, true, MON_SLIME);
+			else
+				monster_start(this, true, MON_MAGMACUBE);
+		}
+		return;
+	}
+	
+	monster_start(this, true, MON_SPAWN);
+}
 #endif // SVQC
 
 #ifdef SVQC

@@ -669,6 +669,10 @@ float BoundsAngleSize(vector v, vector s)
 	return v * s;
 }
 
+bool door_iscopper(entity this)
+{
+	return ((this.spawnflags & SPAWN_ALT_TARG) && (this.target2 != "" || this.target3 != "" || this.target4 != ""));
+}
 
 /*QUAKED func_door(0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -742,7 +746,7 @@ spawnfunc(func_door)
 	if(this.spawnflags & DOOR_GOLD_KEY)
 		this.items = IT_KEY2;
 	// still try to avoid overriding with platinum key where possible
-	if((this.spawnflags & DOOR_PLAT_KEY) && !this.items)
+	if((this.spawnflags & DOOR_PLAT_KEY) && !this.items && !door_iscopper(this))
 		this.items = IT_KEY3;
 	
 	if(!this.speed)

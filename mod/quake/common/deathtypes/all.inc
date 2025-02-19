@@ -30,3 +30,4 @@ REGISTER_DEATHTYPE(TRAP,                    DEATH_SELF_TRAP,                DEAT
 REGISTER_DEATHTYPE(VAMPIREBATS,             DEATH_SELF_VAMPIREBATS,         DEATH_MURDER_VAMPIREBATS,       "")
 REGISTER_DEATHTYPE(VOID,                    DEATH_SELF_VOID,                DEATH_MURDER_VOID,              "")
 REGISTER_DEATHTYPE(WEAPON,                  NULL,                           NULL,                           "")
+REGISTER_DEATHTYPE(WITHERING,               DEATH_SELF_WITHERING,           NULL,                           "")

@@ -298,6 +298,12 @@ void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 */
 spawnfunc(monster_enforcer)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_SKELETON);
+		return;
+	}
+
 	if(world.model == "maps/aop2m2.bsp")
 	{
 		monster_start(this, true, MON_DARK_KNIGHT);

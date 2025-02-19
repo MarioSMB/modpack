@@ -1,0 +1,62 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_PHANTOM,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was annoyingly bitten by a Phantom"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_PHANTOM,            1,  NULL,           INFO_DEATH_SELF_MON_PHANTOM,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_PHANTOM,        DEATH_SELF_MON_PHANTOM,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_PHANTOM, "progs/phantom.mdl");
+
+SOUND(MON_PHANTOM_SIGHT1, "phantom/swoop1");
+SOUND(MON_PHANTOM_SIGHT2, "phantom/swoop2");
+SOUND(MON_PHANTOM_SIGHT3, "phantom/swoop3");
+SOUND(MON_PHANTOM_SIGHT4, "phantom/swoop4");
+Sound SND_MON_PHANTOM_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PHANTOM_SIGHT1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_PHANTOM_DIE1, "phantom/death1");
+SOUND(MON_PHANTOM_DIE2, "phantom/death2");
+SOUND(MON_PHANTOM_DIE3, "phantom/death3");
+Sound SND_MON_PHANTOM_DIE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PHANTOM_DIE1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_PHANTOM_PAIN1, "phantom/hurt1");
+SOUND(MON_PHANTOM_PAIN2, "phantom/hurt2");
+SOUND(MON_PHANTOM_PAIN3, "phantom/hurt3");
+Sound SND_MON_PHANTOM_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PHANTOM_PAIN1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_PHANTOM_IDLE1, "phantom/idle1");
+SOUND(MON_PHANTOM_IDLE2, "phantom/idle2");
+SOUND(MON_PHANTOM_IDLE3, "phantom/idle3");
+SOUND(MON_PHANTOM_IDLE4, "phantom/idle4");
+SOUND(MON_PHANTOM_IDLE5, "phantom/idle5");
+Sound SND_MON_PHANTOM_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PHANTOM_IDLE1.m_id + floor(prandom() * 5));
+}
+SOUND(MON_PHANTOM_FLAP1, "phantom/flap1");
+SOUND(MON_PHANTOM_FLAP2, "phantom/flap2");
+SOUND(MON_PHANTOM_FLAP3, "phantom/flap3");
+SOUND(MON_PHANTOM_FLAP4, "phantom/flap4");
+SOUND(MON_PHANTOM_FLAP5, "phantom/flap5");
+SOUND(MON_PHANTOM_FLAP6, "phantom/flap6");
+Sound SND_MON_PHANTOM_FLAP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PHANTOM_FLAP1.m_id + floor(prandom() * 6));
+}
+#endif
+
+CLASS(Phantom, Monster)
+    ATTRIB(Phantom, spawnflags, int, MON_FLAG_BLOCKY | MONSTER_TYPE_FLY);
+    ATTRIB(Phantom, m_mins, vector, '-12 -12 -12');
+    ATTRIB(Phantom, m_maxs, vector, '12 12 8');
+#ifdef GAMEQC
+    ATTRIB(Phantom, m_model, Model, MDL_MON_PHANTOM);
+    ATTRIB(Phantom, m_model_head, Model, MDL_Null);
+#endif
+    ATTRIB(Phantom, netname, string, "phantom");
+    ATTRIB(Phantom, monster_name, string, _("Phantom"));
+ENDCLASS(Phantom)
+
+REGISTER_MONSTER(PHANTOM, NEW(Phantom));

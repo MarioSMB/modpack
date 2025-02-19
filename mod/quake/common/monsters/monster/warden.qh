@@ -1,0 +1,97 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_WARDEN,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 could not hide from the Warden"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_WARDEN,               1,  NULL,           INFO_DEATH_SELF_MON_WARDEN,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_WARDEN,           DEATH_SELF_MON_WARDEN,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_WARDEN, "progs/warden.mdl");
+
+SOUND(MON_WARDEN_PAIN1, "warden/hurt_1");
+SOUND(MON_WARDEN_PAIN2, "warden/hurt_2");
+SOUND(MON_WARDEN_PAIN3, "warden/hurt_3");
+SOUND(MON_WARDEN_PAIN4, "warden/hurt_4");
+Sound SND_MON_WARDEN_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_PAIN1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_WARDEN_IDLE1, "warden/listening_1");
+SOUND(MON_WARDEN_IDLE2, "warden/listening_2");
+SOUND(MON_WARDEN_IDLE3, "warden/listening_3");
+SOUND(MON_WARDEN_IDLE4, "warden/listening_4");
+SOUND(MON_WARDEN_IDLE5, "warden/listening_5");
+Sound SND_MON_WARDEN_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_IDLE1.m_id + floor(prandom() * 5));
+}
+SOUND(MON_WARDEN_IDLE_ANGRY1, "warden/angry_1");
+SOUND(MON_WARDEN_IDLE_ANGRY2, "warden/angry_2");
+SOUND(MON_WARDEN_IDLE_ANGRY3, "warden/angry_3");
+SOUND(MON_WARDEN_IDLE_ANGRY4, "warden/angry_4");
+SOUND(MON_WARDEN_IDLE_ANGRY5, "warden/angry_5");
+Sound SND_MON_WARDEN_IDLE_ANGRY_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_IDLE_ANGRY1.m_id + floor(prandom() * 5));
+}
+SOUND(MON_WARDEN_CLICK1, "warden/tendril_clicks_1");
+SOUND(MON_WARDEN_CLICK2, "warden/tendril_clicks_2");
+SOUND(MON_WARDEN_CLICK3, "warden/tendril_clicks_3");
+SOUND(MON_WARDEN_CLICK4, "warden/tendril_clicks_4");
+SOUND(MON_WARDEN_CLICK5, "warden/tendril_clicks_5");
+SOUND(MON_WARDEN_CLICK6, "warden/tendril_clicks_6");
+Sound SND_MON_WARDEN_CLICK_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_CLICK1.m_id + floor(prandom() * 6));
+}
+SOUND(MON_WARDEN_STEP1, "warden/step_1");
+SOUND(MON_WARDEN_STEP2, "warden/step_2");
+SOUND(MON_WARDEN_STEP3, "warden/step_3");
+SOUND(MON_WARDEN_STEP4, "warden/step_4");
+Sound SND_MON_WARDEN_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_STEP1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_WARDEN_SIGHT1, "warden/roar_1");
+SOUND(MON_WARDEN_SIGHT2, "warden/roar_2");
+SOUND(MON_WARDEN_SIGHT3, "warden/roar_3");
+SOUND(MON_WARDEN_SIGHT4, "warden/roar_4");
+SOUND(MON_WARDEN_SIGHT5, "warden/roar_5");
+Sound SND_MON_WARDEN_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_SIGHT1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_WARDEN_HEARTBEAT1, "warden/heartbeat_1");
+SOUND(MON_WARDEN_HEARTBEAT2, "warden/heartbeat_2");
+SOUND(MON_WARDEN_HEARTBEAT3, "warden/heartbeat_3");
+SOUND(MON_WARDEN_HEARTBEAT4, "warden/heartbeat_4");
+Sound SND_MON_WARDEN_HEARTBEAT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_HEARTBEAT1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_WARDEN_CHARGE1, "warden/sonic_charge1");
+SOUND(MON_WARDEN_CHARGE2, "warden/sonic_charge2");
+SOUND(MON_WARDEN_CHARGE3, "warden/sonic_charge3");
+SOUND(MON_WARDEN_CHARGE4, "warden/sonic_charge4");
+Sound SND_MON_WARDEN_CHARGE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_CHARGE1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_WARDEN_BOOM1, "warden/sonic_boom1");
+SOUND(MON_WARDEN_BOOM2, "warden/sonic_boom2");
+SOUND(MON_WARDEN_BOOM3, "warden/sonic_boom3");
+SOUND(MON_WARDEN_BOOM4, "warden/sonic_boom4");
+Sound SND_MON_WARDEN_BOOM_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_WARDEN_BOOM1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Warden, Monster)
+    ATTRIB(Warden, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Warden, m_mins, vector, '-24 -24 -24');
+    ATTRIB(Warden, m_maxs, vector, '24 24 60');
+#ifdef GAMEQC
+    ATTRIB(Warden, m_model, Model, MDL_MON_WARDEN);
+    ATTRIB(Warden, m_model_head, Model, MDL_Null);
+    ATTRIB(Warden, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Warden, netname, string, "warden");
+    ATTRIB(Warden, monster_name, string, _("Warden"));
+ENDCLASS(Warden)
+
+REGISTER_MONSTER(WARDEN, NEW(Warden));

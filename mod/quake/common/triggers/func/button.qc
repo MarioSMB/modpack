@@ -188,6 +188,10 @@ void button_sounds(entity this)
 	precache_sound(this.noise);
 }
 
+bool button_iscopper(entity this)
+{
+	return ((this.spawnflags & SPAWN_ALT_TARG) && (this.target2 != "" || this.target3 != "" || this.target4 != ""));
+}
 
 /*QUAKED func_button(0 .5 .8) ?
 When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
@@ -254,7 +258,7 @@ spawnfunc(func_button)
 		this.items = IT_KEY1;
 	else if(this.spawnflags & DOOR_GOLD_KEY)
 		this.items = IT_KEY2;
-	else if(this.spawnflags & DOOR_PLAT_KEY)
+	else if((this.spawnflags & DOOR_PLAT_KEY) && !button_iscopper(this))
 		this.items = IT_KEY3;
 
 	if(this.spawnflags & 128)

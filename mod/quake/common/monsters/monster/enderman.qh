@@ -1,0 +1,53 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ENDERMAN,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was displaced by an Enderman"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ENDERMAN,               1,  NULL,           INFO_DEATH_SELF_MON_ENDERMAN,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ENDERMAN,           DEATH_SELF_MON_ENDERMAN,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ENDERMAN, "progs/enderman.mdl");
+MODEL(MON_ENDERMAN_HEAD, "progs/h_enderman.mdl");
+
+SOUND(MON_ENDERMAN_PAIN1, "enderman/hit1");
+SOUND(MON_ENDERMAN_PAIN2, "enderman/hit2");
+SOUND(MON_ENDERMAN_PAIN3, "enderman/hit3");
+SOUND(MON_ENDERMAN_PAIN4, "enderman/hit4");
+Sound SND_MON_ENDERMAN_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMAN_PAIN1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_ENDERMAN_IDLE1, "enderman/idle1");
+SOUND(MON_ENDERMAN_IDLE2, "enderman/idle2");
+SOUND(MON_ENDERMAN_IDLE3, "enderman/idle3");
+SOUND(MON_ENDERMAN_IDLE4, "enderman/idle4");
+SOUND(MON_ENDERMAN_IDLE5, "enderman/idle5");
+Sound SND_MON_ENDERMAN_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMAN_IDLE1.m_id + floor(prandom() * 5));
+}
+SOUND(MON_ENDERMAN_SCREAM1, "enderman/scream1");
+SOUND(MON_ENDERMAN_SCREAM2, "enderman/scream2");
+SOUND(MON_ENDERMAN_SCREAM3, "enderman/scream3");
+SOUND(MON_ENDERMAN_SCREAM4, "enderman/scream4");
+Sound SND_MON_ENDERMAN_SCREAM_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_ENDERMAN_SCREAM1.m_id + floor(prandom() * 4));
+}
+
+SOUND(MON_ENDERMAN_SIGHT, "enderman/stare");
+#endif
+
+CLASS(Enderman, Monster)
+    ATTRIB(Enderman, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_LOOKAT);
+    ATTRIB(Enderman, m_mins, vector, '-24 -24 -24');
+    ATTRIB(Enderman, m_maxs, vector, '24 24 64');
+#ifdef GAMEQC
+    ATTRIB(Enderman, m_model, Model, MDL_MON_ENDERMAN);
+    ATTRIB(Enderman, m_model_head, Model, MDL_MON_ENDERMAN_HEAD);
+    ATTRIB(Enderman, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Enderman, netname, string, "enderman");
+    ATTRIB(Enderman, monster_name, string, _("Enderman"));
+ENDCLASS(Enderman)
+
+REGISTER_MONSTER(ENDERMAN, NEW(Enderman));

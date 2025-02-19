@@ -147,6 +147,7 @@
     MSG_INFO_NOTIF(DEATH_SELF_TRAP,                         N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 fell prey to a trap"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VAMPIREBATS,                  N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 drained themselves"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  2, 0, "s1 s2", "",        "",                       "^BG%s^K1 %s", "")
+    MSG_INFO_NOTIF(DEATH_SELF_WITHERING,                    N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 withered away"), "")
     MSG_INFO_NOTIF(DEATH_SELF_WRATH,                        N_CONSOLE,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 angered a powerful being"), "")
 
     MSG_INFO_NOTIF(ITEM_AMMO_PICKUP,                        N_DISABLE,  0, 0, "", "",                           "",              _("^BGYou picked up some ammo"), "")
@@ -239,6 +240,7 @@
     MSG_CENTER_NOTIF(DEATH_SELF_TRAP,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^BGYou stepped on a trap!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_VAMPIREBATS,            N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You somehow sucked yourself!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_VOID,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Watch your step!")), "")
+    MSG_CENTER_NOTIF(DEATH_SELF_WITHERING,              N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You withered away!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_WRATH,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You angered the Gods!")), "")
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGDisconnecting in ^COUNT...")), "")
@@ -352,6 +354,7 @@
     MSG_MULTI_NOTIF(DEATH_SELF_TRAP,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_TRAP,                   CENTER_DEATH_SELF_TRAP)
     MSG_MULTI_NOTIF(DEATH_SELF_VAMPIREBATS,             N_ENABLE,  NULL,           INFO_DEATH_SELF_VAMPIREBATS,            CENTER_DEATH_SELF_VAMPIREBATS)
     MSG_MULTI_NOTIF(DEATH_SELF_VOID,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_VOID,                   CENTER_DEATH_SELF_VOID)
+    MSG_MULTI_NOTIF(DEATH_SELF_WITHERING,               N_ENABLE,  NULL,           INFO_DEATH_SELF_WITHERING,              CENTER_DEATH_SELF_WITHERING)
     MSG_MULTI_NOTIF(DEATH_SELF_WRATH,                   N_ENABLE,  NULL,           INFO_DEATH_SELF_WRATH,                  CENTER_DEATH_SELF_WRATH)
 
     MSG_MULTI_NOTIF(ITEM_BACKPACK_GOT,                  N_ENABLE,  NULL,           INFO_ITEM_BACKPACK_GOT,                 CENTER_ITEM_BACKPACK_GOT)

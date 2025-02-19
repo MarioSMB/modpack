@@ -1,0 +1,43 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BLAZE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was burnt to a crisp by a Blaze"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BLAZE,               1,  NULL,           INFO_DEATH_SELF_MON_BLAZE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BLAZE,           DEATH_SELF_MON_BLAZE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BLAZE, "progs/blaze_head.mdl");
+MODEL(MON_BLAZE_BODY, "progs/blaze_body.mdl");
+MODEL(MON_BLAZE_HEAD, "progs/h_blaze.mdl");
+
+SOUND(MON_BLAZE_PAIN1, "blaze/hit1");
+SOUND(MON_BLAZE_PAIN2, "blaze/hit2");
+SOUND(MON_BLAZE_PAIN3, "blaze/hit3");
+SOUND(MON_BLAZE_PAIN4, "blaze/hit4");
+Sound SND_MON_BLAZE_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BLAZE_PAIN1.m_id + floor(prandom() * 4));
+}
+SOUND(MON_BLAZE_IDLE1, "blaze/breathe1");
+SOUND(MON_BLAZE_IDLE2, "blaze/breathe2");
+SOUND(MON_BLAZE_IDLE3, "blaze/breathe3");
+SOUND(MON_BLAZE_IDLE4, "blaze/breathe4");
+Sound SND_MON_BLAZE_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_BLAZE_IDLE1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Blaze, Monster)
+    ATTRIB(Blaze, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_METAL | MONSTER_TYPE_FLY);
+    ATTRIB(Blaze, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Blaze, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Blaze, m_model, Model, MDL_MON_BLAZE);
+    ATTRIB(Blaze, m_model_head, Model, MDL_MON_BLAZE_HEAD);
+    ATTRIB(Blaze, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Blaze, netname, string, "blaze");
+    ATTRIB(Blaze, monster_name, string, _("Blaze"));
+ENDCLASS(Blaze)
+
+REGISTER_MONSTER(BLAZE, NEW(Blaze));

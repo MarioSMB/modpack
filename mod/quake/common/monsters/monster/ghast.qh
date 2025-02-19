@@ -1,0 +1,54 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GHAST,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was exploded by the Ghast"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GHAST,               1,  NULL,           INFO_DEATH_SELF_MON_GHAST,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GHAST,           DEATH_SELF_MON_GHAST,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GHAST, "progs/ghast.mdl");
+
+SOUND(MON_GHAST_PAIN1, "ghast/scream1");
+SOUND(MON_GHAST_PAIN2, "ghast/scream2");
+SOUND(MON_GHAST_PAIN3, "ghast/scream3");
+SOUND(MON_GHAST_PAIN4, "ghast/scream4");
+SOUND(MON_GHAST_PAIN5, "ghast/scream5");
+Sound SND_MON_GHAST_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GHAST_PAIN1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_GHAST_IDLE1, "ghast/moan1");
+SOUND(MON_GHAST_IDLE2, "ghast/moan2");
+SOUND(MON_GHAST_IDLE3, "ghast/moan3");
+SOUND(MON_GHAST_IDLE4, "ghast/moan4");
+SOUND(MON_GHAST_IDLE5, "ghast/moan5");
+SOUND(MON_GHAST_IDLE6, "ghast/moan6");
+SOUND(MON_GHAST_IDLE7, "ghast/moan7");
+Sound SND_MON_GHAST_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GHAST_IDLE1.m_id + floor(prandom() * 7));
+}
+
+SOUND(MON_GHAST_EXPLODE1, "ghast/explode1");
+SOUND(MON_GHAST_EXPLODE2, "ghast/explode2");
+SOUND(MON_GHAST_EXPLODE3, "ghast/explode3");
+SOUND(MON_GHAST_EXPLODE4, "ghast/explode4");
+Sound SND_MON_GHAST_EXPLODE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GHAST_EXPLODE1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Ghast, Monster)
+    ATTRIB(Ghast, spawnflags, int, MON_FLAG_BLOCKY | MONSTER_TYPE_FLY);
+    ATTRIB(Ghast, m_mins, vector, '-40 -40 -24');
+    ATTRIB(Ghast, m_maxs, vector, '40 40 48');
+#ifdef GAMEQC
+    ATTRIB(Ghast, m_model, Model, MDL_MON_GHAST);
+    ATTRIB(Ghast, m_model_head, Model, MDL_Null);
+    ATTRIB(Ghast, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Ghast, netname, string, "ghast");
+    ATTRIB(Ghast, monster_name, string, _("Ghast"));
+ENDCLASS(Ghast)
+
+REGISTER_MONSTER(GHAST, NEW(Ghast));

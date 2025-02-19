@@ -419,6 +419,12 @@ bool ShamCheckAttack(entity this)
 */
 spawnfunc(monster_shambler)
 {
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		monster_start(this, true, MON_WARDEN);
+		return;
+	}
+
 	if(coop == 2 && orig_random(this) < 0.2)
 	{
 		if(orig_random(this) < 0.1)

@@ -1,0 +1,70 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GOAT,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was rammed by a Goat"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GOAT,               1,  NULL,           INFO_DEATH_SELF_MON_GOAT,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GOAT,           DEATH_SELF_MON_GOAT,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GOAT, "progs/goat.mdl");
+
+SOUND(MON_GOAT_IDLE1, "goat/scream1");
+SOUND(MON_GOAT_IDLE2, "goat/scream2");
+SOUND(MON_GOAT_IDLE3, "goat/scream3");
+SOUND(MON_GOAT_IDLE4, "goat/scream4");
+SOUND(MON_GOAT_IDLE5, "goat/scream5");
+SOUND(MON_GOAT_IDLE6, "goat/scream6");
+SOUND(MON_GOAT_IDLE7, "goat/scream7");
+SOUND(MON_GOAT_IDLE8, "goat/scream8");
+SOUND(MON_GOAT_IDLE9, "goat/scream9");
+Sound SND_MON_GOAT_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GOAT_IDLE1.m_id + floor(prandom() * 9));
+}
+SOUND(MON_GOAT_STEP1, "goat/step1");
+SOUND(MON_GOAT_STEP2, "goat/step2");
+SOUND(MON_GOAT_STEP3, "goat/step3");
+SOUND(MON_GOAT_STEP4, "goat/step4");
+SOUND(MON_GOAT_STEP5, "goat/step5");
+SOUND(MON_GOAT_STEP6, "goat/step6");
+Sound SND_MON_GOAT_STEP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GOAT_STEP1.m_id + floor(prandom() * 6));
+}
+
+SOUND(MON_GOAT_RAM1, "goat/screaming_pre_ram1");
+SOUND(MON_GOAT_RAM2, "goat/screaming_pre_ram2");
+SOUND(MON_GOAT_RAM3, "goat/screaming_pre_ram3");
+SOUND(MON_GOAT_RAM4, "goat/screaming_pre_ram4");
+SOUND(MON_GOAT_RAM5, "goat/screaming_pre_ram5");
+Sound SND_MON_GOAT_RAM_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GOAT_RAM1.m_id + floor(prandom() * 5));
+}
+
+SOUND(MON_GOAT_PAIN1, "goat/screaming_hurt1");
+SOUND(MON_GOAT_PAIN2, "goat/screaming_hurt2");
+SOUND(MON_GOAT_PAIN3, "goat/screaming_hurt3");
+Sound SND_MON_GOAT_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GOAT_PAIN1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_GOAT_DEATH1, "goat/screaming_death1");
+SOUND(MON_GOAT_DEATH2, "goat/screaming_death2");
+SOUND(MON_GOAT_DEATH3, "goat/screaming_death3");
+Sound SND_MON_GOAT_DEATH_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_GOAT_DEATH1.m_id + floor(prandom() * 3));
+}
+#endif
+
+CLASS(MCGoat, Monster)
+    ATTRIB(MCGoat, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_INFIGHT);
+    ATTRIB(MCGoat, m_mins, vector, '-24 -24 -24');
+    ATTRIB(MCGoat, m_maxs, vector, '24 24 16');
+#ifdef GAMEQC
+    ATTRIB(MCGoat, m_model, Model, MDL_MON_GOAT);
+    ATTRIB(MCGoat, m_model_head, Model, MDL_Null);
+    ATTRIB(MCGoat, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(MCGoat, netname, string, "goat");
+    ATTRIB(MCGoat, monster_name, string, _("Goat"));
+ENDCLASS(MCGoat)
+
+REGISTER_MONSTER(GOAT, NEW(MCGoat));
