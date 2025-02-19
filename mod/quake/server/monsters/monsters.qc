@@ -321,6 +321,8 @@ Monster monster_randomize(entity this, Monster mon)
 			continue;
 		if(!(it.spawnflags & MON_FLAG_BLOCKY) && minecraft)
 			continue;
+		if((it.spawnflags & MON_FLAG_BLOCKY) && !minecraft)
+			continue;
 		tracebox(this.origin, it.m_mins, it.m_maxs, this.origin, MOVE_WORLDONLY, this);
 		if(trace_startsolid)
 			continue;
