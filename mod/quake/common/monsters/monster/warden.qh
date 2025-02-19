@@ -82,7 +82,7 @@ Sound SND_MON_WARDEN_BOOM_RANDOM() {
 #endif
 
 CLASS(Warden, Monster)
-    ATTRIB(Warden, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Warden, spawnflags, int, MON_FLAG_BLOCKY | MON_FLAG_EXPLOSIONRESISTANT);
     ATTRIB(Warden, m_mins, vector, '-24 -24 -24');
     ATTRIB(Warden, m_maxs, vector, '24 24 60');
 #ifdef GAMEQC

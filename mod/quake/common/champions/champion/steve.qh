@@ -79,7 +79,6 @@ CLASS(Steve, Champions)
     ATTRIB(Steve, netname, string, "steve");
     ATTRIB(Steve, m_name, string, "Steve");
     ATTRIB(Steve, qcc_pogo, bool, true);
-    ATTRIB(Steve, m_scale, float, 0.75);
     ATTRIB(Steve, qcc_movespeed, float, 0.85);
     ATTRIB(Steve, qcc_falldamage, float, 5);
 #ifdef GAMEQC
