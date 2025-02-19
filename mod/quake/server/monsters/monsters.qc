@@ -313,8 +313,6 @@ Monster monster_randomize(entity this, Monster mon)
 			continue;
 		if(it.spawnflags & MONSTER_TYPE_SWIM)
 			continue;
-		if(it.spawnflags & MON_FLAG_BLOCKY)
-			continue;
 		if((it.spawnflags & MONSTER_TYPE_FLY) && !(mon.spawnflags & MONSTER_TYPE_FLY))
 			continue;
 		if((mon.spawnflags & MONSTER_TYPE_FLY) && !(it.spawnflags & MONSTER_TYPE_FLY))
