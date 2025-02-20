@@ -6,6 +6,10 @@ PRECACHE(Music)
 	precache_model("progs/piano_musicnote_white.mdl");
 }
 
+//#define MIDI_SUPPORT
+#ifdef MIDI_SUPPORT
+void midi_reset(entity this);
+#endif
 void music_reset(entity this)
 {
 	.entity weaponentity = weaponentities[0];
@@ -18,6 +22,10 @@ void music_reset(entity this)
 	this.(weaponentity).music_repeatend = 0;
 	this.(weaponentity).music_starttime = 0;
 	strfree(this.(weaponentity).music_song);
+
+#ifdef MIDI_SUPPORT
+	midi_reset(this);
+#endif
 }
 
 void music_RemovePlayer(entity this)
@@ -40,8 +48,41 @@ int note_from_char(int input)
 	return 0; // C as a default?
 }
 
+void music_makenote(entity this)
+{
+	entity musicnote = new(musicnote);
+	makevectors(this.v_angle);
+	setorigin(musicnote, this.origin + v_forward * 45);
+	_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+	vector mycolor;
+	mycolor.x = max(0.25, random() * 5);
+	mycolor.y = max(0.25, random() * 5);
+	mycolor.z = max(0.25, random() * 5);
+	musicnote.colormod = mycolor;
+	musicnote.scale = 0.75;
+	setsize(musicnote, '0 0 0', '0 0 0');
+	musicnote.angles = '0 1 0' * this.angles_y;
+	set_movetype(musicnote, MOVETYPE_NOCLIP);
+	SUB_SetFade(musicnote, time + 0.1, 0.5);
+	musicnote.velocity = '0 0 200';
+}
+
+#ifdef MIDI_SUPPORT
+const int MIDI_TRACKS = 16; // TODO: smaller? lots of globals!
+.int midi_buffer[MIDI_TRACKS];
+void midi_frame(entity this);
+#endif
+
 void CreatureFrame_Music(entity this)
 {
+#ifdef MIDI_SUPPORT
+	if(this.midi_buffer[0] >= 0)
+	{
+		midi_frame(this);
+		return;
+	}
+#endif
+
 	.entity weaponentity = weaponentities[0]; // TODO?
 	string mymusic = this.(weaponentity).music_song;
 	if(!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MUSIC))
@@ -160,21 +201,7 @@ void CreatureFrame_Music(entity this)
 
 		//if(random() <= 0.7)
 		//{
-			entity musicnote = new(musicnote);
-			makevectors(this.v_angle);
-			setorigin(musicnote, this.origin + v_forward * 45);
-			_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-			vector mycolor;
-			mycolor.x = max(0.25, random() * 5);
-			mycolor.y = max(0.25, random() * 5);
-			mycolor.z = max(0.25, random() * 5);
-			musicnote.colormod = mycolor;
-			musicnote.scale = 0.75;
-			setsize(musicnote, '0 0 0', '0 0 0');
-			musicnote.angles = '0 1 0' * this.angles_y;
-			set_movetype(musicnote, MOVETYPE_NOCLIP);
-			SUB_SetFade(musicnote, time + 0.1, 0.5);
-			musicnote.velocity = '0 0 200';
+			music_makenote(this);
 		//}
 	}
 
@@ -253,6 +280,247 @@ void Music_Copy(entity this)
 	});
 }
 
+#ifdef MIDI_SUPPORT
+// midi_buffer defined above
+.int midi_buffersize[MIDI_TRACKS];
+.int midi_division;
+.int midi_tempo;
+.int midi_tracks;
+.int midi_time; // current Time, increments by 1 each frame
+.float midi_tictime; // internal timer between midi frames
+.int midi_pos[MIDI_TRACKS]; // current buffer position
+.int midi_nexttime[MIDI_TRACKS]; // storage of the upcoming timer to save needing to check it every frame
+
+.float midi_lastnote; // prevent spamming too many note models!
+
+void midi_reset(entity this)
+{
+	this.midi_division = 0;
+	this.midi_tempo = 0;
+	this.midi_tracks = 0;
+	this.midi_tictime = 0;
+	this.midi_time = 0;
+	for(int track = 0; track < MIDI_TRACKS; ++track)
+	{
+		if(this.midi_buffersize[track] > 0)
+			buf_del(this.midi_buffer[track]);
+		this.midi_buffer[track] = -1;
+		this.midi_buffersize[track] = 0;
+		this.midi_pos[track] = 0;
+		this.midi_nexttime[track] = 0;
+	}
+	LOG_INFO("RESET");
+}
+
+void midi_track_frame(entity this, int track)
+{
+	if(this.midi_buffersize[track] <= 0)
+		return;
+	if(this.midi_pos[track] >= this.midi_buffersize[track])
+		return;
+
+	// hack to save looping every frame
+	// wait until time has caught up if we find a frame higher than time
+	if(this.midi_nexttime[track] && this.midi_time < this.midi_nexttime[track])
+		return;
+
+	this.midi_nexttime[track] = 0;
+
+	.entity weaponentity = weaponentities[0]; // TODO?
+
+	for(int j = this.midi_pos[track]; j < this.midi_buffersize[track]; ++j)
+	{
+		string s = bufstr_get(this.midi_buffer[track], j);
+
+		tokenizebyseparator(s, ", ");
+		//int Track = stoi(argv(0));
+		int Time = stoi(argv(1));
+		string Type = argv(2);
+
+		if(this.midi_time < Time)
+		{
+			this.midi_nexttime[track] = Time;
+			break;
+		}
+
+		// keep pos updated to last valid entry
+		this.midi_pos[track] = j + 1;
+
+		switch(Type)
+		{
+			// File Structure Records TODO: move to a structure handler?
+			case "End_of_file": // not handled this way TODO?
+			case "Header": // WTF
+			// End_of_file handled above
+			case "Start_track": // TODO: tracks?
+			case "End_track":
+			// File Meta-Events
+			case "Title_t":
+			case "Copyright_t":
+			case "Instrument_name_t": // TODO? we could guess instruments
+			case "Marker_t":
+			case "Cue_point_t":
+			case "Lyric_t":
+			case "Text_t":
+			case "Sequence_number": // TODO? not sure what this actually is
+			case "MIDI_port":
+			case "Channel_prefix":
+			case "Time_signature": // TODO?
+			case "Key_signature": // TODO?
+			// Tempo handled below
+			case "SMPTE_offset":
+			case "Sequencer_specific":
+			case "Unknown_meta_event":
+			// Channel Events
+			case "Pitch_bend_c": // TODO
+			case "Control_c":
+			case "Program_c":
+			case "Channel_aftertouch_c":
+			case "Poly_aftertouch_c":
+			// System Exclusive Events
+			case "Poly_aftertouch_c":
+				break;
+			case "Tempo":
+			{
+				this.midi_tempo = stoi(argv(3));
+				break;
+			}
+			case "Note_on_c":
+			{
+				LOG_INFO("Note: ", s);
+				//int Channel = stoi(argv(3));
+				int Note = stoi(argv(4));
+				int Velocity = stoi(argv(5));
+
+				// A Note_on_c event with Velocity zero is equivalent to a Note_off_c
+				if(Velocity == 0)
+					continue; // TODO: actually stop the sound, if we get looped sounds
+				if(this.(weaponentity).m_weapon.m_nopitch)
+					Note = 100 / bound(0.8, random() * 2, 1.3);
+
+				Sound msound = this.(weaponentity).m_weapon.m_musicnote;
+				if(msound && msound != SND_Null)
+					sound7(this, CH_AMBIENT, Sound_fixpath(msound), 1, ATTN_NORM, Note + 50, 0);
+				if(time >= this.midi_lastnote)
+				{
+					this.midi_lastnote = time + 0.1;
+					music_makenote(this);
+				}
+				break;
+			}
+			case "Note_off_c":
+				break; // TODO: loop sounds, cancel track's channel when stopping sound?
+		}
+	}
+}
+
+void midi_frame(entity this)
+{
+	if(time < this.midi_tictime)
+		return;
+
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MUSIC))
+	{
+		music_reset(this);
+		return;
+	}
+
+	float ticks = this.midi_tempo / this.midi_division;
+	ticks /= 1000000;
+	this.midi_tictime = time + ticks;
+
+	//LOG_INFOF("%d %d", this.midi_tictime, this.midi_time);
+
+	int completed = 0;
+	for(int track = 0; track <= this.midi_tracks; ++track)
+	{
+		midi_track_frame(this, track);
+		if(this.midi_pos[track] >= this.midi_buffersize[track])
+			completed += 1;
+	}
+
+	if(completed >= this.midi_tracks)
+	{
+		music_reset(this);
+		return;
+	}
+
+	this.midi_time += 1;
+}
+
+void midi_process(entity this, string input)
+{
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MUSIC))
+	{
+		sprint(this, "You need to be holding an instrument to play music!\n");
+		return;
+	}
+
+	int fh = fopen(input, FILE_READ);
+	if(fh < 0)
+	{
+		sprint(this, "File does not exist on the server, sorry!\n");
+		return;
+	}
+
+	music_reset(this);
+
+	int buf = buf_create();
+
+	this.midi_buffer[0] = buf;
+
+	bool header_done = false;
+
+	string s;
+	while((s = fgets(fh)))
+	{
+		// first word (minus ,) is the track number
+		int tracknum = stoi(substring(car(s), 0, -2));
+
+		// Header
+		// cheaper to check this way, but may be inaccurate for broken MIDIs
+		if(!header_done)
+		{
+			header_done = true;
+			LOG_INFO("Doing setup");
+			tokenizebyseparator(s, ", ");
+			//int Track = stoi(argv(0));
+			//int Time = stoi(argv(1));
+			//string Type = argv(2);
+			//int format = stoi(argv(3));
+			int nTracks = stoi(argv(4));
+			int division = stoi(argv(5));
+
+			this.midi_division = division;
+			this.midi_tracks = nTracks;
+
+			for(int track = 0; track <= this.midi_tracks; ++track)
+			{
+				this.midi_buffer[track] = buf_create();
+			}
+		}
+
+		if(s == "0, 0, End_of_file")
+			continue;
+
+		bufstr_set(this.midi_buffer[tracknum], this.midi_buffersize[tracknum], s);
+		this.midi_buffersize[tracknum] += 1;
+	}
+
+	fclose(fh);
+
+	// default division is 120
+	if(!this.midi_division)
+		this.midi_division = 120;
+	// default tempo is 500000
+	this.midi_tempo = 500000;
+
+	this.midi_tictime = time;
+}
+#endif
+
 // This must be called in SV_ParseClientCommand
 // input entity this
 // input string cmd: same as in SV_ParseClientCommand
@@ -274,6 +542,13 @@ bool sv_music_command(entity this, string cmd, float argc)
 				sprint(this, "Song is too long!\n");
 				return true;
 			}
+#ifdef MIDI_SUPPORT
+			if(substring(mymusic, -4, 4) == ".txt")
+			{
+				midi_process(this, MakeConsoleSafe(mymusic));
+				return true;
+			}
+#endif
 			Music_Process(this, mymusic);
 			return true;
 		}

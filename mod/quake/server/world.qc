@@ -1300,7 +1300,7 @@ void Copper_OnEntityPrespawn(entity this)
 	// since coop only stuff relies entirely on there being multiple players, we must sadly turn it off
 	bool forcecoop = false;
 	// some maps require co-op to function correctly (ironically), so force enable it here
-	if(world.model == "maps/rmx_rj.bsp")
+	if(world.model == "maps/rmx_rj.bsp" || substring(world.model, 0, 9) == "maps/mcj_")
 		forcecoop = true;
 	if(forcecoop)
 	{

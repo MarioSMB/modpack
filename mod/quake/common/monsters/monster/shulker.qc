@@ -138,7 +138,7 @@ void shulker_shoot(entity this)
 
 void shulker_teleport(entity this)
 {
-	vector extrasize = '1 1 1' * 1200;
+	vector extrasize = '1 1 1' * 400;
 	vector from = this.origin;
 	if(MoveToRandomLocationWithinBounds(this, this.absmin - extrasize, this.absmax + extrasize,
 											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 

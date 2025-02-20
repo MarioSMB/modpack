@@ -556,6 +556,8 @@ bool weapon_customize(entity this, entity client)
 					return true;
 			}
 		}
+		if(this.target && this.target != "")
+			return true;
 		if((STAT(DUAL_WEAPONS, client) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL))
 			return false;
 		if(client.collected_weapons & wep.m_wepset)
@@ -719,6 +721,13 @@ void weapon_touch(entity this, entity toucher)
 	{
 		if(newwep == WEP_HAMMER && this.hammer_skin && this.hammer_skin != toucher.(weaponentity).hammer_skin)
 			{ /* do nothing */ }
+		else if(this.target && this.target != "")
+		{
+			_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+			SUB_UseTargets(this, toucher, NULL);
+			this.target = string_null;
+			return;
+		}
 		else
 			return;
 	}
@@ -2394,10 +2403,22 @@ spawnfunc(item_jboots_timed)
 
 spawnfunc(item_backpack)
 {
-	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells))
+	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells) || (this.spawnflags & 1))
 	{
-		objerror(this, "Empty backpack");
-		return;	// nothing in it
+		// empty, assume it's a copper backpack!
+		this.skin = 1;
+	
+		this.ammo_shells = floor(3 * random() + 6);
+		this.ammo_nails = floor(5 * random() + 12);
+		if(this.spawnflags & 1)
+		{
+			this.ammo_shells *= 2;
+			this.ammo_nails *= 2;
+			
+			this.ammo_rockets = 2;
+			this.ammo_cells = 3;
+			this.skin = 2;
+		}
 	}
 
 	this.flags = FL_ITEM;
@@ -2522,6 +2543,8 @@ void BackpackTouch(entity this, entity toucher)
 
 	if(this.ammo_shells)
 		SendItemPickup(toucher, IT_SHELLS, this.ammo_shells);
+	if(this.ammo_nails)
+		SendItemPickup(toucher, IT_NAILS, this.ammo_nails);
 	if(this.ammo_rockets)
 		SendItemPickup(toucher, IT_ROCKETS, this.ammo_rockets);
 	if(this.ammo_cells)

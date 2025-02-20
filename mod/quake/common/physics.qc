@@ -409,7 +409,10 @@ void PM_WaterJump(entity this)
 
 void PM_UserFriction(entity this, float dt)
 {
-	if(this.velocity == '0 0 0')
+	// NOTE: can't do this because the engine does stupid rounding to '0 -0 0'
+	//if(this.velocity == '0 0 0')
+		//return;
+	if(vdist(this.velocity, <=, 0))
 		return;
 
 	float speed = vlen(this.velocity);
