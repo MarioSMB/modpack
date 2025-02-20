@@ -151,6 +151,7 @@ void shulker_teleport(entity this)
 		soundat(NULL, this.origin, CH_TRIGGER, "shulker/portal2.wav", 1, ATTEN_NORM);
 		te_teleport(this.origin);
 		te_teleport(from);
+		UNSET_ONGROUND(this);
 	}
 }
 

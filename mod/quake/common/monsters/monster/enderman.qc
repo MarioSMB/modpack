@@ -100,6 +100,7 @@ void enderman_teleport(entity this)
 		soundat(NULL, this.origin, CH_TRIGGER, "enderman/portal2.wav", 1, ATTEN_NORM);
 		te_teleport(this.origin);
 		te_teleport(from);
+		UNSET_ONGROUND(this);
 
 		if(random() < 0.5)
 			minion_spawn(this, from, new(monster), MON_ENDERMITE);
