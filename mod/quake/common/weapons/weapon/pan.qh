@@ -16,7 +16,7 @@ CLASS(Pan, Weapon)
 ENDCLASS(Pan)
 REGISTER_WEAPON(PAN, NEW(Pan));
 
-//SPAWNFUNC_WEAPON(weapon_axe, WEP_AXE)
+SPAWNFUNC_WEAPON(weapon_pan, WEP_PAN)
 
 #ifdef SVQC
 bool Pan_CheckDamage(entity targ, entity inflictor, entity attacker);

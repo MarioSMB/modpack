@@ -3467,7 +3467,9 @@ void SV_ParseClientCommand(entity this, string command)
 				break;
 			});
 		}
-		horn_spawnmonster(trace_endpos, ((cmd_name == "addmob2") ? NULL : this), mon);
+		entity monster = horn_spawnmonster(trace_endpos, ((cmd_name == "addmob2") ? NULL : this), mon);
+		if(monster)
+			monster.flags |= FL_CLONE; // mark as clone so it doesn't add to the monster counts
 		return;
 	}
 

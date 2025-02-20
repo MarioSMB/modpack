@@ -63,7 +63,7 @@ void creeper_detonate(entity this)
 	Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
 	T_RadiusDamage(this, this, 160, DEATH_MONSTER_CREEPER.m_id, this);
 
-	delete(this);
+	Killed(this, this, this, DEATH_MONSTER_CREEPER.m_id);
 }
 
 void creeper_explode20(entity this) { set_anim(this, anim_creeper_stand, creeper_run); }
@@ -160,6 +160,13 @@ void creeper_die1(entity this) { set_animofs(this, anim_creeper_death, 1, creepe
 
 void creeper_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(deathtype == DEATH_MONSTER_CREEPER.m_id && attacker == this)
+	{
+		// exploded to death
+		delete(this);
+		return;
+	}
+
 	_sound(this, CH_VOICE, "creeper/death.wav", 1, ATTN_NORM);
 
 	if(deathtype == DEATH_MONSTER_SKELETON.m_id)
