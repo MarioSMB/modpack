@@ -926,8 +926,12 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if(autocvar_skill == 3 || deathmatch)
 		wpn = W_RandomizeWeapon(wpn);
 
+	string simplemdl = strcat("progs/g_", wpn.mdl, "_simple.mdl");
+
 	string mymdl = strcat("progs/g_", wpn.mdl, ".mdl");
-	if(wpn == WEP_HAMMER)
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists(simplemdl))
+		mymdl = simplemdl;
+	else if(wpn == WEP_HAMMER)
 	{
 		this.hammer_skin = bound(1, floor(random() * SKIN_LAST), SKIN_LAST);
 		mymdl = strcat("progs/g_", hammer_getskin(this.hammer_skin), ".mdl");
