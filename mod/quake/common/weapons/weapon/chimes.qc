@@ -125,7 +125,7 @@ void chimes_think(entity this)
 	setthink(this, chimes_think);
 	this.nextthink = time;
 
-	if(this.wait && time > this.wait)
+	if((this.wait && time > this.wait) || wasfreed(this.realowner))
 	{
 		chimes_die(this, NULL, NULL, DEATH_GENERIC.m_id);
 		return;

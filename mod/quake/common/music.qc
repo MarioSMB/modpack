@@ -322,7 +322,7 @@ void midi_reset(entity this)
 	//LOG_INFO("RESET");
 }
 
-// TODO: buf_copy is broken!
+// TODO: buf_copy is broken?
 void midi_buffer_copy(int src, int dst)
 {
 	int bsize = buf_getsize(src);
