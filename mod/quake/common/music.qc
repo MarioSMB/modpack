@@ -322,6 +322,18 @@ void midi_reset(entity this)
 	//LOG_INFO("RESET");
 }
 
+// TODO: buf_copy is broken!
+void midi_buffer_copy(int src, int dst)
+{
+	int bsize = buf_getsize(src);
+
+	for(int j = 0; j < bsize; ++j)
+	{
+		string s = bufstr_get(src, j);
+		bufstr_set(dst, j, s);
+	}
+}
+
 bool midi_copy(entity this, entity from)
 {
 	if(from.midi_buffersize[0] <= 0)
@@ -335,10 +347,10 @@ bool midi_copy(entity this, entity from)
 	this.midi_tictime = from.midi_tictime;
 	this.midi_time = from.midi_time;
 
-	for(int track = 0; track <= this.midi_tracks; ++track)
+	for(int track = 0; track <= from.midi_tracks; ++track)
 	{
 		int buf = buf_create();
-		buf_copy(from.midi_buffer[track], buf);
+		midi_buffer_copy(from.midi_buffer[track], buf);
 		this.midi_buffer[track] = buf;
 		this.midi_buffersize[track] = from.midi_buffersize[track];
 
@@ -605,7 +617,7 @@ bool sv_music_command(entity this, string cmd, float argc)
 					return true;
 				}
 				this.last_midicheck = time + 3;
-				int dh = search_begin("midis/*.txt", true, true);
+				int dh = search_begin("midis/*.txt", false, true);
 				if(dh < 0)
 					return true;
 				string output = "";
@@ -613,7 +625,7 @@ bool sv_music_command(entity this, string cmd, float argc)
     			for (int i = 0; i < n; ++i)
     			{
     				string s = search_getfilename(dh, i);
-    				s = substring(s, 0, -4); // no extension
+    				s = substring(s, 6, -5); // no extension
     				output = cons(output, strcat(s, "\n"));
     			}
     			sprint(this, strcat("List of MIDIs:\n", output));
