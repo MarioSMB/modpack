@@ -628,10 +628,10 @@ bool sv_music_command(entity this, string cmd, float argc)
     				s = substring(s, 6, -5); // no extension
     				output = cons(output, strcat(s, "\n"));
     			}
-    			sprint(this, strcat("List of MIDIs:\n", output));
+    			sprint(this, strcat("List of MIDIs:\n ", output));
 				return true;
 			}
-			string midi_test = strcat("midis/", MakeConsoleSafe(mymusic), ".txt");
+			string midi_test = strcat("midis/", MakeConsoleSafe(argv(1)), ".txt");
 			if(fexists(midi_test))
 			{
 				midi_process(this, midi_test);
