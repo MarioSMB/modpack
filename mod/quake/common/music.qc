@@ -257,6 +257,9 @@ void Music_Process(entity this, string input)
 	});
 }
 
+#ifdef MIDI_SUPPORT
+bool midi_copy(entity this, entity from);
+#endif
 void Music_Copy(entity this)
 {
 	.entity weaponentity = weaponentities[0]; // TODO?
@@ -269,6 +272,11 @@ void Music_Copy(entity this)
 	// copy the music of a nearby player
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
+#ifdef MIDI_SUPPORT
+		if(midi_copy(this, it))
+			break;
+#endif
+
 		if(!it.(weaponentity).music_pos)
 			continue; // cheap escape
 		this.(weaponentity).music_pos = it.(weaponentity).music_pos;
@@ -312,6 +320,33 @@ void midi_reset(entity this)
 		this.midi_nexttime[track] = 0;
 	}
 	//LOG_INFO("RESET");
+}
+
+bool midi_copy(entity this, entity from)
+{
+	if(from.midi_buffersize[0] <= 0)
+		return false;
+
+	midi_reset(this);
+
+	this.midi_division = from.midi_division;
+	this.midi_tempo = from.midi_tempo;
+	this.midi_tracks = from.midi_tracks;
+	this.midi_tictime = from.midi_tictime;
+	this.midi_time = from.midi_time;
+
+	for(int track = 0; track <= this.midi_tracks; ++track)
+	{
+		int buf = buf_create();
+		buf_copy(from.midi_buffer[track], buf);
+		this.midi_buffer[track] = buf;
+		this.midi_buffersize[track] = from.midi_buffersize[track];
+
+		this.midi_nexttime[track] = from.midi_nexttime[track];
+		this.midi_pos[track] = from.midi_pos[track];
+	}
+
+	return true;
 }
 
 // written by YuxiUx
@@ -400,7 +435,7 @@ void midi_track_frame(entity this, int track)
 			}
 			case "Note_on_c":
 			{
-				LOG_INFO("Note: ", s);
+				//LOG_INFO("Note: ", s);
 				//int Channel = stoi(argv(3));
 				int Note = stoi(argv(4));
 				int Velocity = stoi(argv(5));
@@ -413,7 +448,7 @@ void midi_track_frame(entity this, int track)
 				else
 				{
 					Note = noteToFreq(Note);
-					LOG_INFO("Pitch: ", ftos(Note));
+					//LOG_INFO("Pitch: ", ftos(Note));
 				}
 
 				Sound msound = this.(weaponentity).m_weapon.m_musicnote;
@@ -486,10 +521,6 @@ void midi_process(entity this, string input)
 
 	music_reset(this);
 
-	int buf = buf_create();
-
-	this.midi_buffer[0] = buf;
-
 	bool header_done = false;
 
 	string s;
@@ -503,7 +534,7 @@ void midi_process(entity this, string input)
 		if(!header_done)
 		{
 			header_done = true;
-			LOG_INFO("Doing setup");
+			//LOG_INFO("Doing setup");
 			tokenizebyseparator(s, ", ");
 			//int Track = stoi(argv(0));
 			//int Time = stoi(argv(1));
@@ -540,6 +571,10 @@ void midi_process(entity this, string input)
 }
 #endif
 
+#ifdef MIDI_SUPPORT
+.float last_midicheck;
+#endif
+
 // This must be called in SV_ParseClientCommand
 // input entity this
 // input string cmd: same as in SV_ParseClientCommand
@@ -562,7 +597,29 @@ bool sv_music_command(entity this, string cmd, float argc)
 				return true;
 			}
 #ifdef MIDI_SUPPORT
-			string midi_test = strcat("midis/", MakeConsoleSafe(argv(1)), ".txt");
+			if(mymusic == "list")
+			{
+				if(time < this.last_midicheck)
+				{
+					sprint(this, "Hey you - no spamming!\n");
+					return true;
+				}
+				this.last_midicheck = time + 3;
+				int dh = search_begin("midis/*.txt", true, true);
+				if(dh < 0)
+					return true;
+				string output = "";
+				int n = search_getsize(dh);
+    			for (int i = 0; i < n; ++i)
+    			{
+    				string s = search_getfilename(dh, i);
+    				s = substring(s, 0, -4); // no extension
+    				output = cons(output, strcat(s, "\n"));
+    			}
+    			sprint(this, strcat("List of MIDIs:\n", output));
+				return true;
+			}
+			string midi_test = strcat("midis/", MakeConsoleSafe(mymusic), ".txt");
 			if(fexists(midi_test))
 			{
 				midi_process(this, midi_test);
