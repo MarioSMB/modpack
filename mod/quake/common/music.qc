@@ -6,7 +6,7 @@ PRECACHE(Music)
 	precache_model("progs/piano_musicnote_white.mdl");
 }
 
-//#define MIDI_SUPPORT
+#define MIDI_SUPPORT
 #ifdef MIDI_SUPPORT
 void midi_reset(entity this);
 #endif
@@ -70,13 +70,15 @@ void music_makenote(entity this)
 #ifdef MIDI_SUPPORT
 const int MIDI_TRACKS = 16; // TODO: smaller? lots of globals!
 .int midi_buffer[MIDI_TRACKS];
+.int midi_buffersize[MIDI_TRACKS];
 void midi_frame(entity this);
 #endif
 
 void CreatureFrame_Music(entity this)
 {
 #ifdef MIDI_SUPPORT
-	if(this.midi_buffer[0] >= 0)
+	// MIDIs always have a 0 track (TODO: safer method of checking?)
+	if(this.midi_buffersize[0] > 0)
 	{
 		midi_frame(this);
 		return;
@@ -282,7 +284,7 @@ void Music_Copy(entity this)
 
 #ifdef MIDI_SUPPORT
 // midi_buffer defined above
-.int midi_buffersize[MIDI_TRACKS];
+// midi_buffersize defined above
 .int midi_division;
 .int midi_tempo;
 .int midi_tracks;
@@ -309,7 +311,15 @@ void midi_reset(entity this)
 		this.midi_pos[track] = 0;
 		this.midi_nexttime[track] = 0;
 	}
-	LOG_INFO("RESET");
+	//LOG_INFO("RESET");
+}
+
+// written by YuxiUx
+// https://gist.github.com/YuxiUx/ef84328d95b10d0fcbf537de77b936cd
+float noteToFreq(int note)
+{
+	float a = 100; //frequency of A (coomon value is 440Hz)
+	return (a / 32) * pow(2, ((note - 9) / 12.0));
 }
 
 void midi_track_frame(entity this, int track)
@@ -336,6 +346,9 @@ void midi_track_frame(entity this, int track)
 		//int Track = stoi(argv(0));
 		int Time = stoi(argv(1));
 		string Type = argv(2);
+
+		if(Time)
+			Time = floor(Time * PHYS_INPUT_FRAMETIME * 16 * (120 / this.midi_division));
 
 		if(this.midi_time < Time)
 		{
@@ -397,10 +410,15 @@ void midi_track_frame(entity this, int track)
 					continue; // TODO: actually stop the sound, if we get looped sounds
 				if(this.(weaponentity).m_weapon.m_nopitch)
 					Note = 100 / bound(0.8, random() * 2, 1.3);
+				else
+				{
+					Note = noteToFreq(Note);
+					LOG_INFO("Pitch: ", ftos(Note));
+				}
 
 				Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 				if(msound && msound != SND_Null)
-					sound7(this, CH_AMBIENT, Sound_fixpath(msound), 1, ATTN_NORM, Note + 50, 0);
+					sound7(this, CH_AMBIENT, Sound_fixpath(msound), 1, ATTN_NORM, Note, 0);
 				if(time >= this.midi_lastnote)
 				{
 					this.midi_lastnote = time + 0.1;
@@ -440,7 +458,8 @@ void midi_frame(entity this)
 			completed += 1;
 	}
 
-	if(completed >= this.midi_tracks)
+	// must be above since we count 0
+	if(completed > this.midi_tracks)
 	{
 		music_reset(this);
 		return;
@@ -543,9 +562,10 @@ bool sv_music_command(entity this, string cmd, float argc)
 				return true;
 			}
 #ifdef MIDI_SUPPORT
-			if(substring(mymusic, -4, 4) == ".txt")
+			string midi_test = strcat("midis/", MakeConsoleSafe(argv(1)), ".txt");
+			if(fexists(midi_test))
 			{
-				midi_process(this, MakeConsoleSafe(mymusic));
+				midi_process(this, midi_test);
 				return true;
 			}
 #endif
