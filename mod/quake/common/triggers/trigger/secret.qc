@@ -1,21 +1,7 @@
 #ifdef SVQC
 
-/*QUAKED trigger_secret(.5 .5 .5) ?
-secret counter trigger
-sounds
-1)	secret
-2)	beep beep
-3)
-4)
-set "message" to text string
-*/
-spawnfunc(trigger_secret)
+void trigger_secret_setup(entity this)
 {
-	if(Inhibit_Coop(this))
-	{
-		delete(this);
-		return;
-	}
 	secrets_total += 1;
 	this.wait = -1;
 	if(!this.message)
@@ -37,6 +23,40 @@ spawnfunc(trigger_secret)
 	spawnfunc_trigger_multiple(this);
 
 	this.classname = "trigger_secret";
+}
+
+spawnfunc(target_secret)
+{
+	if(deathmatch) { delete(this); return; }
+
+	// multi already handles use action, but notouch overlaps with nomessage
+	this.spawnflags &= ~SPAWNFLAG_NOTOUCH;
+	trigger_secret_setup(this);
+}
+
+/*QUAKED trigger_secret(.5 .5 .5) ?
+secret counter trigger
+sounds
+1)	secret
+2)	beep beep
+3)
+4)
+set "message" to text string
+*/
+spawnfunc(trigger_secret)
+{
+	if(Inhibit_Coop(this))
+	{
+		delete(this);
+		return;
+	}
+	if(this.spawnflags & SPAWNFLAG_NOTOUCH)
+	{
+		spawnfunc_target_secret(this);
+		return;
+	}
+	
+	trigger_secret_setup(this);
 }
 
 #endif

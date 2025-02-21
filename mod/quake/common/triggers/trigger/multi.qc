@@ -25,7 +25,6 @@ void InitTriggerSounds(entity this)
 }
 
 // the wait time has passed, so set back up for another activation
-// the wait time has passed, so set back up for another activation
 void multi_wait(entity this)
 {
 	if(this.max_health)
@@ -245,7 +244,10 @@ Spawnflags:
 spawnfunc(trigger_multiple);
 void trigger_multiple_use(entity this, entity actor, entity trigger)
 {
+	bool was_secret = (this.classname == "trigger_secret");
 	spawnfunc_trigger_multiple(this);
+	if(was_secret)
+		this.classname = "trigger_secret";
 }
 spawnfunc(trigger_multiple)
 {
