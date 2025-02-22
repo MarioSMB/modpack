@@ -20,6 +20,7 @@
 #include "nyx.qc"
 #include "papyrus.qc"
 #include "pepsiman.qc"
+#include "poop.qc"
 #include "ranger.qc"
 #include "sorlag.qc"
 #include "steve.qc"

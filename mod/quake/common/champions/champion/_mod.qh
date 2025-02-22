@@ -20,6 +20,7 @@
 #include "nyx.qh"
 #include "papyrus.qh"
 #include "pepsiman.qh"
+#include "poop.qh"
 #include "ranger.qh"
 #include "sorlag.qh"
 #include "steve.qh"
