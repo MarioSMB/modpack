@@ -589,6 +589,7 @@ void midi_process(entity this, string input)
 			}
 		}
 
+		// currently EOF is handled by reaching it rather than counting indexes
 		if(s == "0, 0, End_of_file")
 			continue;
 
@@ -606,6 +607,112 @@ void midi_process(entity this, string input)
 
 	this.midi_tictime = time;
 }
+// NOTE: disabled until bigger files can be opened
+#if 0
+void midi_process_url(entity this, entity fh)
+{
+	music_reset(this);
+
+	bool header_done = false;
+
+	string s;
+	while((s = url_fgets(fh)))
+	{
+		// first word (minus ,) is the track number
+		int tracknum = stoi(substring(car(s), 0, -2));
+
+		// Header
+		// cheaper to check this way, but may be inaccurate for broken MIDIs
+		if(!header_done)
+		{
+			header_done = true;
+			if(substring(s, 0, 12) != "0, 0, Header")
+			{
+				header_done = false;
+				break;
+			}
+			//LOG_INFO("Doing setup");
+			tokenizebyseparator(s, ", ");
+			//int Track = stoi(argv(0));
+			//int Time = stoi(argv(1));
+			//string Type = argv(2);
+			//int format = stoi(argv(3));
+			int nTracks = stoi(argv(4));
+			int division = stoi(argv(5));
+
+			this.midi_division = division;
+			this.midi_tracks = nTracks;
+
+			for(int track = 0; track <= this.midi_tracks; ++track)
+			{
+				this.midi_buffer[track] = buf_create();
+			}
+		}
+
+		// currently EOF is handled by reaching it rather than counting indexes
+		if(s == "0, 0, End_of_file")
+			continue;
+
+		bufstr_set(this.midi_buffer[tracknum], this.midi_buffersize[tracknum], s);
+		this.midi_buffersize[tracknum] += 1;
+	}
+
+	url_fclose(fh);
+
+	// aborted early or didn't even find a header
+	if(!header_done)
+	{
+		sprint(this, "Not a valid MIDI text!\n");
+		return;
+	}
+
+	// default division is 120
+	if(!this.midi_division)
+		this.midi_division = 120;
+	// default tempo is 500000
+	this.midi_tempo = 500000;
+
+	this.midi_tictime = time;
+}
+void midi_url_onget(entity fh, entity this, int status)
+{
+	switch(status)
+	{
+		case URL_READY_CLOSED:
+		{
+			break;
+		}
+		case URL_READY_ERROR:
+		{
+			sprint(this, "Could not read a MIDI text from the given URL\n");
+			break;
+		}
+		case URL_READY_CANREAD:
+		{
+			midi_process_url(this, fh);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+}
+
+void midi_openurl(entity this, string url)
+{
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_MUSIC))
+	{
+		sprint(this, "You need to be holding an instrument to play music!\n");
+		return;
+	}
+
+	sprint(this, "Attempting to load MIDI text, please wait...\n");
+
+	url_single_fopen(url, FILE_READ, midi_url_onget, this);
+}
+#endif
 #endif
 
 #ifdef MIDI_SUPPORT
@@ -656,6 +763,13 @@ bool sv_music_command(entity this, string cmd, float argc)
     			sprint(this, strcat("List of MIDIs:\n ", output));
 				return true;
 			}
+#if 0
+			if(strstrofs(mymusic, "://", 0) >= 0)
+			{
+				midi_openurl(this, argv(1));
+				return true;
+			}
+#endif
 			string midi_test = strcat("midis/", MakeConsoleSafe(argv(1)), ".txt");
 			if(fexists(midi_test))
 			{
