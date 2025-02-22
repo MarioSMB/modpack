@@ -65,10 +65,18 @@ void music_makenote(entity this)
 	set_movetype(musicnote, MOVETYPE_NOCLIP);
 	SUB_SetFade(musicnote, time + 0.1, 0.5);
 	musicnote.velocity = '0 0 200';
+
+	// also play the instrument if we can
+	if(IS_PLAYER(this))
+	{
+		.entity weaponentity = weaponentities[0]; // TODO?
+		if(this.(weaponentity) && time > this.(weaponentity).weapon_nextthink)
+			wep_generic_rocket1(this.(weaponentity));
+	}
 }
 
 #ifdef MIDI_SUPPORT
-const int MIDI_TRACKS = 16; // TODO: smaller? lots of globals!
+const int MIDI_TRACKS = 17; // must be up by 1 since MIDI isn't zero-indexed
 .int midi_buffer[MIDI_TRACKS];
 .int midi_buffersize[MIDI_TRACKS];
 void midi_frame(entity this);
@@ -300,6 +308,7 @@ void Music_Copy(entity this)
 .float midi_tictime; // internal timer between midi frames
 .int midi_pos[MIDI_TRACKS]; // current buffer position
 .int midi_nexttime[MIDI_TRACKS]; // storage of the upcoming timer to save needing to check it every frame
+.int midi_volume[MIDI_TRACKS]; // the rough volume set by Control_c, may be unset
 
 .float midi_lastnote; // prevent spamming too many note models!
 
@@ -433,13 +442,23 @@ void midi_track_frame(entity this, int track)
 			case "Unknown_meta_event":
 			// Channel Events
 			case "Pitch_bend_c": // TODO
-			case "Control_c":
+			// Control_c handled below
 			case "Program_c":
 			case "Channel_aftertouch_c":
 			case "Poly_aftertouch_c":
 			// System Exclusive Events
 			case "Poly_aftertouch_c":
 				break;
+			case "Control_c":
+			{
+				// 1 (modulation), 7 (volume), 10 (pan), 11 (expression), and 64 (sustain)
+				// 91 (reverberation), 93 (chorus)
+				int Control_num = stoi(argv(4));
+				int Value = stoi(argv(5));
+				if(Control_num == 7)
+					this.midi_volume[track] = Value;
+				break;
+			}
 			case "Tempo":
 			{
 				this.midi_tempo = stoi(argv(3));
@@ -465,7 +484,13 @@ void midi_track_frame(entity this, int track)
 
 				Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 				if(msound && msound != SND_Null)
-					sound7(this, CH_AMBIENT, Sound_fixpath(msound), 1, ATTN_NORM, Note, 0);
+				{
+					// volume is scaled by 127 to keep the maximum within the 0-1 limit of DarkPlaces
+					int midivolume = bound(0, this.midi_volume[track], 127);
+					// default to volume 1 otherwise
+					float vol = (midivolume > 0) ? (midivolume / 127) : 1;
+					sound7(this, CH_AMBIENT, Sound_fixpath(msound), vol, ATTN_NORM, Note, 0);
+				}
 				if(time >= this.midi_lastnote)
 				{
 					this.midi_lastnote = time + 0.1;
