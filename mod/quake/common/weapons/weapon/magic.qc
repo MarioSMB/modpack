@@ -62,7 +62,7 @@ void magic_fire_touch(entity this, entity toucher)
 	float mydmg = (this.dmg) ? this.dmg : 15;
 	float damg = mydmg + random() * (mydmg * 0.2);
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune
@@ -73,11 +73,14 @@ void magic_fire_touch(entity this, entity toucher)
 		}
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 
-		float burntime = 4;
-		// only add more burn time if there isn't already a longer timer running!
-		float curtime = StatusEffects_gettime(STATUSEFFECT_Burning, toucher);
-		if((time + burntime) > curtime)
-			StatusEffects_apply(STATUSEFFECT_Burning, toucher, time + burntime, 0);
+		if(Damage_ValidTarget(toucher, this.owner))
+		{
+			float burntime = 4;
+			// only add more burn time if there isn't already a longer timer running!
+			float curtime = StatusEffects_gettime(STATUSEFFECT_Burning, toucher);
+			if((time + burntime) > curtime)
+				StatusEffects_apply(STATUSEFFECT_Burning, toucher, time + burntime, 0);
+		}
 	}
 
 	// don't do radius damage to the toucher, because all the damage
@@ -219,6 +222,23 @@ void magic_stormcloud_launch(entity this, .entity weaponentity)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/magic_stormcloud_shoot2.wav", 1, ATTN_NORM);
 }
 
+bool magic_bubble_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAGIC_BUBBLE);
+	if(this.owner == to)
+		sf |= BIT(0);
+	else
+		sf &= ~BIT(0);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & BIT(1))
+	{
+		WriteVector(MSG_ENTITY, this.origin);
+	}
+
+	return true;
+}
+
 void magic_bubble_deflect(entity this)
 {
 	FOREACH_ENTITY_RADIUS(this.origin, 100, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(this, it),
@@ -263,6 +283,9 @@ void magic_bubble_think(entity this)
 
 	setorigin(this, this.owner.origin);
 
+	if(this.origin != this.oldorigin)
+		this.SendFlags |= 1;
+
 	if(time >= this.delay)
 	{
 		magic_bubble_deflect(this);
@@ -287,6 +310,7 @@ void magic_bubble_launch(entity this, .entity weaponentity)
 	setthink(shield, magic_bubble_think);
 	shield.nextthink = time;
 	shield.cnt = 10; // deflection count
+	Net_LinkEntity(shield, false, 0, magic_bubble_send);
 
 	setorigin(shield, this.origin);
 	_setmodel(shield, "progs/magic_bubble.mdl");
@@ -364,5 +388,57 @@ METHOD(Magic, wr_suicidemessage, Notification(entity thiswep))
 METHOD(Magic, wr_killmessage, Notification(entity thiswep))
 {
 	return WEAPON_FRAG;
+}
+#endif
+#ifdef CSQC
+void magic_bubble_draw(entity this)
+{
+	InterpolateOrigin_Do(this);
+	//Movetype_Physics_MatchTicrate(this, TICRATE, false);
+	if(this.count && csqcplayer)
+	{
+		setorigin(this, csqcplayer.origin);
+		this.angles_y = csqcplayer.angles_y;
+	}
+}
+
+void magic_bubble_setup(entity shield)
+{
+	shield.effects = EF_ADDITIVE;
+	set_movetype(shield, MOVETYPE_NOCLIP);
+	shield.solid = SOLID_TRIGGER;
+	shield.avelocity = '7 0 11';
+	shield.scale = 0.5;
+	shield.alpha = 0.1;
+
+	_setmodel(shield, "progs/magic_bubble.mdl");
+	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
+}
+
+NET_HANDLE(ENT_CLIENT_MAGIC_BUBBLE, bool isnew)
+{
+	int sf = ReadByte();
+	if(sf & BIT(0))
+		this.count = true;
+	else
+		this.count = false;
+	this.draw = magic_bubble_draw;
+	if (isnew) IL_PUSH(g_drawables, this);
+	this.drawmask = MASK_NORMAL;
+
+	InterpolateOrigin_Undo(this);
+	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
+
+	if(sf & BIT(1))
+	{
+		if(isnew)
+			magic_bubble_setup(this);
+		this.origin = ReadVector();
+		setorigin(this, this.origin);
+	}
+
+	InterpolateOrigin_Note(this);
+
+	return true;
 }
 #endif
