@@ -257,6 +257,7 @@ void magic_bubble_deflect(entity this)
 	});
 }
 
+.vector prevorigin;
 void magic_bubble_think(entity this)
 {
 	if(!this.owner || this.owner.magic_bubble != this || time >= this.wait || this.owner.health <= 0)
@@ -283,8 +284,11 @@ void magic_bubble_think(entity this)
 
 	setorigin(this, this.owner.origin);
 
-	if(this.origin != this.oldorigin)
+	if(this.origin != this.prevorigin)
+	{
+		this.prevorigin = this.origin;
 		this.SendFlags |= 1;
+	}
 
 	if(time >= this.delay)
 	{
