@@ -241,7 +241,7 @@ bool magic_bubble_send(entity this, entity to, int sf)
 
 void magic_bubble_deflect(entity this)
 {
-	FOREACH_ENTITY_RADIUS(this.origin, 100, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(this, it),
+	FOREACH_ENTITY_RADIUS(this.origin, 100, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(this.owner, it),
 	{
 		entity oldown = it.owner;
 		it.owner = this;
