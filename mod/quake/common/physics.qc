@@ -537,6 +537,20 @@ void cannon_PlayerPhysics(entity this, float dt)
 }
 
 bool CheckLadder(entity this);
+bool CheckWallClimb(entity this);
+
+vector PlayerTouchWall(entity this);
+
+bool CheckWallClimb(entity this)
+{
+	if(!this.m_champion || !this.m_champion.qcc_wallclimb)
+		return false;
+	if(IS_ONGROUND(this))
+		return false;
+
+	vector plane_normal = PlayerTouchWall(this);
+	return (plane_normal != '0 0 0');
+}
 
 void PM_Main(entity this, float dt)
 {
@@ -631,7 +645,7 @@ void PM_Main(entity this, float dt)
 		return;
 	}
 
-	if((this.waterlevel >= 2 || CheckLadder(this)) && this.move_movetype != MOVETYPE_NOCLIP)
+	if((this.waterlevel >= 2 || CheckLadder(this) || CheckWallClimb(this)) && this.move_movetype != MOVETYPE_NOCLIP)
 	{
 		PM_WaterMove(this, maxspeed_mod, dt);
 		return;

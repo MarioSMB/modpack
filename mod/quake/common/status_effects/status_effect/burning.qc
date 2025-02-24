@@ -21,6 +21,7 @@ METHOD(Burning, m_tick, void(StatusEffects this, entity actor))
         actor.burning_time = time + 1;
     }
 
+#if 0
     if(!IS_PLAYER(actor))
     {
         float mytime = StatusEffects_gettime(STATUSEFFECT_Burning, actor) - time;
@@ -37,6 +38,7 @@ METHOD(Burning, m_tick, void(StatusEffects this, entity actor))
             });
         }
     }
+#endif
 
     actor.effects |= EF_FLAME;
     SUPER(Burning).m_tick(this, actor);

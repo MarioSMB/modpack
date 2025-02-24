@@ -46,3 +46,4 @@
 #include "ball.qc"
 #include "wand.qc"
 #include "nuke.qc"
+#include "magic.qc"

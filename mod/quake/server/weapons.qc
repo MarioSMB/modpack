@@ -60,6 +60,8 @@ bool W_Projectile_CanParry(entity this, entity proj)
 	// hacky way to guess if it's a projectile
 	if(!(proj.move_movetype == MOVETYPE_FLYMISSILE || proj.move_movetype == MOVETYPE_FLY || proj.move_movetype == MOVETYPE_BOUNCE || proj.move_movetype == MOVETYPE_TOSS))
 		return false;
+	if(proj.flags & FL_ITEM)
+		return false;
 	bool parryplayer = ((autocvar_sv_quake_parry_playershots || deathmatch) && IS_PLAYER(proj.owner));
 	if(!IS_MONSTER(proj.owner) && !parryplayer)
 		return false;
@@ -1313,6 +1315,26 @@ entity launch_spike(entity this, vector org, vector dir)
 	return newmis;
 }
 
+void bubble_bob(entity this);
+void mermaid_bubble_spawnbubbles(entity this, int numbubbles)
+{
+	vector org = findbetterlocation(this.origin, 8);
+	for(int j = 0; j < numbubbles; ++j)
+	{
+		entity bubble = new(bubble);
+		_setmodel(bubble, "progs/s_bubble.spr");
+		setorigin(bubble, org);
+		set_movetype(bubble, MOVETYPE_NOCLIP);
+		bubble.solid = SOLID_NOT;
+		bubble.velocity = '0 0 15';
+		bubble.nextthink = time + (random() * 0.5);
+		setthink(bubble, bubble_bob);
+		bubble.frame = 0;
+		bubble.cnt = 0;
+		setsize(bubble, '-8 -8 -8', '8 8 8');
+	}
+}
+
 void spike_touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
@@ -1373,6 +1395,14 @@ void spike_touch(entity this, entity toucher)
 			_sound(this, CH_WEAPON_SINGLE, "judge/magic_hit.wav", 1, ATTN_NORM);
 			T_RadiusDamage(this, this.owner, this.dmg, this.projectiledeathtype, this.owner); // tonedown
 			te_explosion2(this.origin, 100, 5);
+		}
+		else if(this.classname == "mermaid_bubble")
+		{
+			if(pointcontents(this.origin) == CONTENT_WATER)
+				mermaid_bubble_spawnbubbles(this, 10);
+			else
+				te_wizspike(this.origin);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/bubble_impact.wav", 1, ATTN_NORM);
 		}
 		else if(this.classname == "grape")
 		{

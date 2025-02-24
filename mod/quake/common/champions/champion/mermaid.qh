@@ -1,0 +1,82 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Mermaid, "progs/mermaid.mdl");
+
+SOUND(Mermaid_Pain1, "shantae/pain1");
+SOUND(Mermaid_Pain2, "shantae/pain2");
+SOUND(Mermaid_Pain3, "shantae/pain3");
+Sound SND_Mermaid_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Mermaid_Pain1.m_id + floor(prandom() * 3));
+}
+
+PRECACHE(Mermaid)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/mermaid_face");
+#endif
+#ifdef SVQC
+    precache_sound("shantae/plyrjmp8.wav");       // player jump
+    precache_sound("shantae/land.wav");           // player landing
+    precache_sound("shantae/land2.wav");      // player hurt landing
+    precache_sound("shantae/drown1.wav");     // drowning pain
+    precache_sound("shantae/drown2.wav");     // drowning pain
+    precache_sound("shantae/gasp1.wav");      // gasping for air
+    precache_sound("shantae/gasp2.wav");      // taking breath
+    precache_sound("shantae/h2odeath.wav");       // drowning death
+
+    precache_sound("shantae/axhit1.wav");
+
+    precache_sound("shantae/lburn1.wav");     // lava burn
+    precache_sound("shantae/lburn2.wav");     // lava burn
+
+    precache_sound("shantae/death.wav");
+    precache_sound("shantae/mermaid_start.wav");
+
+    precache_model("progs/s_bubble.spr");
+    precache_sound("weapons/magic_bubble_pop1.wav");
+    precache_sound("weapons/bubble_shoot.wav");
+    precache_sound("weapons/bubble_impact.wav");
+
+    precache_model("progs/v_sorclaw.mdl");
+#endif
+}
+#endif
+CLASS(Mermaid, Champions)
+    ATTRIB(Mermaid, netname, string, "mermaid");
+    ATTRIB(Mermaid, m_name, string, "Mermaid");
+    ATTRIB(Mermaid, m_hidden, bool, true);
+    ATTRIB(Mermaid, qcc_noselect, bool, true);
+    ATTRIB(Mermaid, qcc_jumpheight, float, 0.7);
+    ATTRIB(Mermaid, qcc_health_regen_rate, float, 2);
+    ATTRIB(Mermaid, qcc_health_rot_max, float, 1.5);
+    ATTRIB(Mermaid, qcc_movespeed, float, 0.3);
+    ATTRIB(Mermaid, qcc_swimspeed, float, 5);
+    ATTRIB(Mermaid, qcc_clearwater, bool, true);
+    ATTRIB(Mermaid, qcc_nodrown, bool, true);
+    ATTRIB(Mermaid, qcc_meleename, string, "sorclaw");
+    ATTRIB(Mermaid, qcc_thirdperson, bool, true);
+    ATTRIB(Mermaid, qcc_thirdperson_distance, float, 50);
+    ATTRIB(Mermaid, qcc_anim_axrun, vector, '10 0 11');
+    ATTRIB(Mermaid, qcc_anim_rockrun, vector, '10 0 11');
+    ATTRIB(Mermaid, qcc_anim_axstnd, vector, '0 0 10');
+    ATTRIB(Mermaid, qcc_anim_stand, vector, '0 0 10');
+#ifdef GAMEQC
+    ATTRIB(Mermaid, m_model, Model, MDL_Mermaid);
+    ATTRIB(Mermaid, m_model_head, Model, MDL_Null);
+    ATTRIB(Mermaid, m_soundpath, string, "shantae/");
+    METHOD(Mermaid, m_sound_pain, string()) { return SND(Mermaid_Pain_Random()); }
+    METHOD(Mermaid, m_sound_death, string()) { return "shantae/death.wav"; }
+#endif
+#ifdef CSQC
+    ATTRIB(Mermaid, message, string, "You are transformed!");
+#endif
+ENDCLASS(Mermaid)
+REGISTER_CHAMPION(Mermaid, NEW(Mermaid));
+
+#ifdef SVQC
+.float mermaid_bubble_time;
+.bool mermaid_cannon;
+#endif

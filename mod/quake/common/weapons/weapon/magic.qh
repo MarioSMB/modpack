@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(Magic, Weapon)
+/* ammotype  */ ATTRIB(Magic, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Magic, impulse, int, 2);
+/* spawnflags*/ ATTRIB(Magic, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Magic, aflag, int, 0);
+/* modelname */ ATTRIB(Magic, mdl, string, "magic");
+/* crosshair */ ATTRIB(Magic, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Magic, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Magic, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Magic, model2, string, "magic");
+/* refname   */ ATTRIB(Magic, netname, string, "magic");
+/* wepname   */ ATTRIB(Magic, m_name, string, _("Magic"));
+
+ENDCLASS(Magic)
+REGISTER_WEAPON(MAGIC, NEW(Magic));
+
+//SPAWNFUNC_WEAPON(weapon_magic, WEP_MAGIC)
+
+#ifdef SVQC
+.entity magic_bubble;
+#endif

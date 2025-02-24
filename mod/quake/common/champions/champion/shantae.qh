@@ -1,0 +1,129 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Shantae, "progs/player_shantae.mdl");
+MODEL(Shantae_Head, "progs/h_player_shantae.mdl");
+
+SOUND(Shantae_Pain1, "player_shantae/pain1");
+SOUND(Shantae_Pain2, "player_shantae/pain2");
+SOUND(Shantae_Pain3, "player_shantae/pain3");
+SOUND(Shantae_Pain4, "player_shantae/pain4");
+SOUND(Shantae_Pain5, "player_shantae/pain5");
+Sound SND_Shantae_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Shantae_Pain1.m_id + floor(prandom() * 5));
+}
+
+SOUND(Shantae_Death1, "player_shantae/death1");
+SOUND(Shantae_Death2, "player_shantae/death2");
+SOUND(Shantae_Death3, "player_shantae/death3");
+SOUND(Shantae_Death4, "player_shantae/death4");
+Sound SND_Shantae_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Shantae_Death1.m_id + floor(prandom() * 4));
+}
+
+PRECACHE(Shantae)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/shantae_face_invis");
+    precache_pic("gfx/quake/shantae_face_invul2");
+    precache_pic("gfx/quake/shantae_face_inv2");
+    precache_pic("gfx/quake/shantae_face_quad");
+
+    precache_pic("gfx/quake/shantae_face1");
+    precache_pic("gfx/quake/shantae_face_p1");
+    precache_pic("gfx/quake/shantae_face2");
+    precache_pic("gfx/quake/shantae_face_p2");
+    precache_pic("gfx/quake/shantae_face3");
+    precache_pic("gfx/quake/shantae_face_p3");
+    precache_pic("gfx/quake/shantae_face4");
+    precache_pic("gfx/quake/shantae_face_p4");
+    precache_pic("gfx/quake/shantae_face5");
+    precache_pic("gfx/quake/shantae_face_p5");
+#endif
+#ifdef SVQC
+    precache_sound("player_shantae/plyrjmp8.wav");       // player jump
+    precache_sound("player_shantae/land.wav");           // player landing
+    precache_sound("player_shantae/land2.wav");      // player hurt landing
+    precache_sound("player_shantae/drown1.wav");     // drowning pain
+    precache_sound("player_shantae/drown2.wav");     // drowning pain
+    precache_sound("player_shantae/gasp1.wav");      // gasping for air
+    precache_sound("player_shantae/gasp2.wav");      // taking breath
+    precache_sound("player_shantae/h2odeath.wav");       // drowning death
+
+    precache_sound("player_shantae/axhit1.wav");
+
+    precache_sound("player_shantae/lburn1.wav");     // lava burn
+    precache_sound("player_shantae/lburn2.wav");     // lava burn
+
+    precache_sound("player_shantae/falling.wav");
+    precache_sound("player_shantae/cannon_land.wav");
+
+    precache_sound("player_shantae/start1.wav");
+    precache_sound("player_shantae/start2.wav");
+    precache_sound("player_shantae/start3.wav");
+    precache_sound("player_shantae/start4.wav");
+    precache_sound("player_shantae/start5.wav");
+    precache_sound("player_shantae/start6.wav");
+    precache_sound("player_shantae/start7.wav");
+
+    precache_sound("player_shantae/transform1.wav");
+    precache_sound("player_shantae/transform2.wav");
+    precache_sound("player_shantae/transform3.wav");
+    precache_sound("player_shantae/transform4.wav");
+    precache_sound("player_shantae/transform5.wav");
+    precache_sound("player_shantae/transform6.wav");
+    precache_sound("player_shantae/transform7.wav");
+
+    precache_sound("player_shantae/attack1.wav");
+    precache_sound("player_shantae/attack2.wav");
+
+    precache_sound("player_shantae/player_transform.wav");
+
+    precache_model("progs/v_hair.mdl");
+#endif
+}
+#endif
+#ifdef CSQC
+#define SHANTAE_STATS \
+"Press %ABILITY% to transform:\n" \
+"- Become Monkey normally\n" \
+"- Climbs walls, jumps high\n" \
+"- Become Mermaid in water\n" \
+"- Shoots bubbles while in water\n" \
+"Jumps 15% higher\n" \
+"Melee hair whip has double range\n" \
+"Has Magic as a weapon\n" \
+"Right click cycle between spells:\n" \
+"- Fire Charge burns enemies\n" \
+"- Storm Puff zaps neaby foes\n" \
+"- Bubble deflects 10 projectiles\n"
+#endif
+CLASS(Shantae, Champions)
+    ATTRIB(Shantae, netname, string, "shantae");
+    ATTRIB(Shantae, m_name, string, "Shantae");
+    ATTRIB(Shantae, qcc_meleename, string, "hair");
+    ATTRIB(Shantae, qcc_meleerange, float, 2);
+    ATTRIB(Shantae, qcc_jumpheight, float, 1.15);
+#ifdef GAMEQC
+    ATTRIB(Shantae, m_model, Model, MDL_Shantae);
+    ATTRIB(Shantae, m_model_head, Model, MDL_Shantae_Head);
+    ATTRIB(Shantae, m_soundpath, string, "player_shantae/");
+    METHOD(Shantae, m_sound_pain, string()) { return SND(Shantae_Pain_Random()); }
+    METHOD(Shantae, m_sound_death, string()) { return SND(Shantae_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Shantae, m_faceprefix, string, "gfx/quake/shantae_");
+#endif
+#ifdef CSQC
+    ATTRIB(Shantae, message, string, SHANTAE_STATS);
+#endif
+ENDCLASS(Shantae)
+REGISTER_CHAMPION(Shantae, NEW(Shantae));
+
+#ifdef SVQC
+.bool shantae_cannon;
+
+.float shantae_transformtime;
+#endif

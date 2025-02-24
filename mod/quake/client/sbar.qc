@@ -118,6 +118,10 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/egg3");
 	precache_pic("gfx/quake/egg4");
 	precache_pic("gfx/quake/egg5");
+
+	precache_pic("gfx/quake/magic0");
+	precache_pic("gfx/quake/magic1");
+	precache_pic("gfx/quake/magic2");
 }
 
 string Sbar_PickWeapon(Weapon wpn)
@@ -1439,6 +1443,19 @@ void Sbar_Draw()
 						case 3: pic = "egg3"; break;
 						case 4: pic = "egg4"; break;
 						case 5: pic = "egg5"; break;
+					}
+					// need to call drawpic directly here as the original ammo size is 24 pixels...
+					drawpic(sbar + '224 0 0', strcat("gfx/quake/", pic), '24 24 0', '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				}
+				else if(thiswep.activeweapon == WEP_MAGIC)
+				{
+					string pic = "";
+					switch(STAT(MAGIC_TYPE))
+					{
+						default:
+						case 0: pic = "magic0"; break;
+						case 1: pic = "magic1"; break;
+						case 2: pic = "magic2"; break;
 					}
 					// need to call drawpic directly here as the original ammo size is 24 pixels...
 					drawpic(sbar + '224 0 0', strcat("gfx/quake/", pic), '24 24 0', '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);

@@ -51,9 +51,8 @@ PRECACHE(Poop)
 }
 #endif
 #ifdef CSQC
-#define MSHAKE_STATS \
-"Press %ABILITY% to forbid dancing\n" \
-"Drops healing fluid when hurt"
+#define POOP_STATS \
+"Better hold it in"
 #endif
 CLASS(Poop, Champions)
     ATTRIB(Poop, netname, string, "poop");
@@ -68,7 +67,7 @@ CLASS(Poop, Champions)
     METHOD(Poop, m_sound_death, string()) { return SND(Poop_Death_Random()); }
 #endif
 #ifdef CSQC
-    ATTRIB(Poop, message, string, MSHAKE_STATS);
+    ATTRIB(Poop, message, string, POOP_STATS);
 #endif
 ENDCLASS(Poop)
 REGISTER_CHAMPION(Poop, NEW(Poop));

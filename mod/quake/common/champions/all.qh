@@ -48,12 +48,15 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_movespeed, float, 1);
     ATTRIB(Champions, qcc_swimspeed, float, 1);
     ATTRIB(Champions, qcc_pogo, bool, false);
+    ATTRIB(Champions, qcc_wallclimb, bool, false);
     ATTRIB(Champions, qcc_noselect, bool, false);
     ATTRIB(Champions, qcc_attackrate, float, 1);
     ATTRIB(Champions, qcc_damagetaken, float, 1);
     ATTRIB(Champions, qcc_jumpheight, float, 1);
     ATTRIB(Champions, qcc_falldamage, float, 1);
     ATTRIB(Champions, qcc_slimedamage, float, 1);
+    ATTRIB(Champions, qcc_clearwater, bool, false);
+    ATTRIB(Champions, qcc_nodrown, bool, false);
     ATTRIB(Champions, qcc_breathtime, float, 1);
     ATTRIB(Champions, qcc_health_regen_rate, float, 1);
     ATTRIB(Champions, qcc_health_regen_stable, float, 1);
@@ -65,6 +68,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_ammo_cap, float, 1);
     ATTRIB(Champions, qcc_meleename, string, string_null);
     ATTRIB(Champions, qcc_thirdperson, bool, false);
+    ATTRIB(Champions, qcc_thirdperson_distance, float, 0);
     ATTRIB(Champions, qcc_meleerange, float, 1);
     ATTRIB(Champions, qcc_meleespeed, float, 1);
     ATTRIB(Champions, qcc_anim_axrun, vector, '0 0 0');

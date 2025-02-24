@@ -62,6 +62,11 @@ void clear_powerups(entity this)
 		if(StatusEffects_active(it, this))
 			StatusEffects_remove(it, this, STATUSEFFECT_REMOVE_CLEAR);
 	});
+
+	// TODO: let champions do stuff here?
+	if(this.magic_bubble)
+		delete(this.magic_bubble);
+	this.magic_bubble = NULL;
 }
 
 bool reset_flag;
@@ -121,7 +126,6 @@ void SetNewParms()
 	parm2 = weps.y;
 	parm3 = weps.z;
 	parm4 = 0;
-	parm16 = 0;
 	parm5 = 25;
 	parm6 = 0;
 	parm7 = 0;
@@ -133,6 +137,7 @@ void SetNewParms()
 	parm13 = 0;
 	parm14 = 0;
 	parm15 = start_weapon.m_id; // always use axe as the alternate weapon
+	parm16 = 0;
 }
 
 void DecodeLevelParms(entity this)
@@ -2121,6 +2126,9 @@ void CheckPowerups(entity this)
 void DrownPlayer(entity this)
 {
 	if(this.deadflag != DEAD_NO)
+		return;
+
+	if(this.m_champion && this.m_champion.qcc_nodrown)
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)

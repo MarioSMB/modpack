@@ -367,7 +367,7 @@ void champion_menu_info(int index)
 	sui_fill('300 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('300 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '300 150 0';
+	vector ent_menu_size = '300 200 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('300 10 0', ent_menu_size);
 	
@@ -435,7 +435,7 @@ void cl_champion_draw()
 	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
-	vector ent_menu_size = '230 290 0'; // NOTE: update y value by at least 10 when adding new champions!
+	vector ent_menu_size = '230 310 0'; // NOTE: update y value by at least 10 when adding new champions!
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 	

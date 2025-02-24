@@ -252,8 +252,8 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 		if(attacker.charmer == targ || attacker.charmer == targ.charmer)
 			return false;
 		// no hurt friends
-		//if(coop && IS_PLAYER(attacker.charmer))
-			//return false;
+		if(coop && IS_PLAYER(attacker.charmer) && (IS_PLAYER(targ) || IS_PLAYER(targ.charmer)))
+			return false;
 
 		// otherwise probably owned by an enemy!
 		return true;

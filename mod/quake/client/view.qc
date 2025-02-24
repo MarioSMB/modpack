@@ -339,6 +339,8 @@ void HUD_Contents()
 			liquidalpha = autocvar_hud_contents_water_alpha;
 			liquidcolor = autocvar_hud_contents_water_color;
 			incontent = 1;
+			if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.qcc_clearwater)
+				liquidalpha *= 0.2;
 			break;
 
 		case CONTENT_LAVA:
@@ -472,6 +474,8 @@ void View_EventChase(entity this)
 
 			// make the camera smooth back
 			float chase_distance = 100;
+			if(this.m_champion && this.m_champion.qcc_thirdperson_distance)
+				chase_distance = this.m_champion.qcc_thirdperson_distance;
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
 				eventchase_current_distance += autocvar_cl_eventchase_speed * (chase_distance - eventchase_current_distance) * frametime; // slow down the further we get
