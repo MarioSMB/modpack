@@ -287,7 +287,7 @@ void magic_bubble_think(entity this)
 	if(this.origin != this.prevorigin)
 	{
 		this.prevorigin = this.origin;
-		this.SendFlags |= 1;
+		this.SendFlags |= BIT(1);
 	}
 
 	if(time >= this.delay)
