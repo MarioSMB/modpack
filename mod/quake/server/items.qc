@@ -3604,6 +3604,18 @@ spawnfunc(target_items)
 		this.weapon = WEP_AXE.m_id;
 		this.items &= ~4096;
 	}
+
+	if(this.items & 131072)
+	{
+		this.items |= IT_KEY1;
+		this.items &= ~131072;
+	}
+
+	if(this.items & 262144)
+	{
+		this.items |= IT_KEY2;
+		this.items &= ~262144;
+	}
 	
 	if(this.items > 0)
 	{
