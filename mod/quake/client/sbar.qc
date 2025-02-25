@@ -907,9 +907,14 @@ void Sbar_DrawInventory()
 			{
 				FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
 				{
-					wep = it;
-					if(it.spawnflags & WEP_FLAG_HUDFALLBACK)
+					if(!(wep.spawnflags & WEP_FLAG_HUDFALLBACK))
+						wep = it;
+					// always prefer champion weapons
+					if(it.spawnflags & WEP_FLAG_CHAMPION)
+					{
+						wep = it;
 						break;
+					}
 				});
 			}
 			if(wep != WEP_Null)
@@ -927,6 +932,13 @@ void Sbar_DrawInventory()
 				vector col;
 				if(WeaponIsFromRogue(wep))
 					col = '1 0 0';
+				else if(wep.spawnflags & WEP_FLAG_CHAMPION)
+				{
+					if(thiswep.activeweapon == wep)
+						col = '0 1 1';
+					else
+						col = '0.2 0.4 0.9';
+				}
 				else if(flashon)//(thiswep.activeweapon == wep)
 					col = '1 1 0';
 				else
