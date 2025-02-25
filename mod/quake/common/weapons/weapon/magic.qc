@@ -242,8 +242,13 @@ bool magic_bubble_send(entity this, entity to, int sf)
 void magic_bubble_deflect(entity this)
 {
 	entity player = this.owner;
-	FOREACH_ENTITY_RADIUS(this.origin, 100, time > it.parry_time && time > it.parry_cooldown && W_Projectile_CanParry(player, it),
+	FOREACH_ENTITY_RADIUS(this.origin, 100, time > it.parry_time && time > it.parry_cooldown,
 	{
+		// no deflecting player projectiles in coop!
+		if(coop && IS_PLAYER(player) && IS_PLAYER(it.owner))
+			continue;
+		if(!W_Projectile_CanParry(player, it))
+			continue;
 		entity oldown = it.owner;
 		it.owner = player;
 		it.realowner = player;

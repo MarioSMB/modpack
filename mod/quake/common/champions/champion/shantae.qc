@@ -18,6 +18,20 @@ METHOD(Shantae, m_activate, void(Shantae this, entity actor))
 		W_SwitchWeapon(actor, WEP_MAGIC, weaponentity);
 		actor.(weaponentity).cnt = WEP_AXE.m_id;
 	}
+	else if(time < actor.shantae_transformtime)
+	{
+		// just transformed back, restore weapons!
+		if(STAT(WEAPONS, actor) & actor.shantae_oldweapon.m_wepset)
+			W_SwitchWeapon(actor, actor.shantae_oldweapon, weaponentity);
+
+		Weapon prevwep = REGISTRY_GET(Weapons, actor.shantae_prevweapon);
+		if(STAT(WEAPONS, actor) & prevwep.m_wepset)
+			actor.(weaponentity).cnt = actor.shantae_prevweapon;
+	}
+
+	// always clear them anyway
+	actor.shantae_oldweapon = WEP_Null;
+	actor.shantae_prevweapon = 0;
 }
 
 METHOD(Shantae, m_playerthink, void(Champions this, entity actor))
@@ -34,6 +48,9 @@ METHOD(Shantae, m_playerthink, void(Champions this, entity actor))
 		actor.transform_health = 70;
 		actor.m_transform = CHAMPION_Monkey;
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
+		.entity weaponentity = weaponentities[0]; // TODO?
+		actor.shantae_oldweapon = actor.(weaponentity).m_weapon;
+		actor.shantae_prevweapon = actor.(weaponentity).cnt;
 
 		if(actor.waterlevel >= WATERLEVEL_SWIMMING && actor.watertype == CONTENT_WATER)
 		{

@@ -126,4 +126,6 @@ REGISTER_CHAMPION(Shantae, NEW(Shantae));
 .bool shantae_cannon;
 
 .float shantae_transformtime;
+.entity shantae_oldweapon;
+.int shantae_prevweapon;
 #endif
