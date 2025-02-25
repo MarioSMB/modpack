@@ -3194,8 +3194,20 @@ bool target_items_testinv(entity this, entity e)
 
 	if(this.items)
 	{
-		float myitems = zeroconvert(this.items);
-		if((myitems & e.items) != myitems)
+		int myitems = zeroconvert(this.items);
+		if((myitems & IT_KEY1) && autocvar_sv_quake_globalkeys)
+		{
+			myitems &= ~IT_KEY1;
+			if(keys_silver <= 0)
+				return false;
+		}
+		if((myitems & IT_KEY2) && autocvar_sv_quake_globalkeys)
+		{
+			myitems &= ~IT_KEY2;
+			if(keys_gold <= 0)
+				return false;
+		}
+		if(myitems && (myitems & e.items) != myitems)
 			return false;
 	}
 
