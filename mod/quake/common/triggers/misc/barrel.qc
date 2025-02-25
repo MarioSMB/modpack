@@ -41,7 +41,12 @@ void barrel_detonate_use(entity this, entity actor, entity trigger)
 void barrel_spawn(entity this)
 {
 	if(!this.mdl || this.mdl == "")
-		this.mdl = "maps/b_explob.bsp";
+	{
+		if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_explob_tnt.bsp"))
+			this.mdl = "maps/b_explob_tnt.bsp";
+		else
+			this.mdl = "maps/b_explob.bsp";
+	}
 
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_NONE); // enhanced uses MOVETYPE_PUSH, doesn't use regular thinking
@@ -78,6 +83,9 @@ TESTING THING
 spawnfunc(misc_explobox)
 {
 	this.mdl = "maps/b_explob.bsp";
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_explob_tnt.bsp"))
+		this.mdl = "maps/b_explob_tnt.bsp";
+
 	barrel_spawn(this);
 }
 
@@ -99,6 +107,8 @@ Smaller exploding box, REGISTERED ONLY
 spawnfunc(misc_explobox2)
 {
 	this.mdl = "maps/b_exbox2.bsp";
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_exbox2_tnt.bsp"))
+		this.mdl = "maps/b_exbox2_tnt.bsp";
 	barrel_spawn(this);
 }
 

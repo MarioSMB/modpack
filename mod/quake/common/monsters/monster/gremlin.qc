@@ -857,7 +857,10 @@ void GremlinDropBackpack(entity this)
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_TOSS);
-	_setmodel(item, "progs/backpack.mdl");
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/backpack_simple.mdl"))
+		_setmodel(item, "progs/backpack_simple.mdl");
+	else
+		_setmodel(item, "progs/backpack.mdl");
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, BackpackTouch);
 

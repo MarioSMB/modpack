@@ -862,6 +862,13 @@ PRECACHE(Junk)
 	precache_sound("player/yeah2.wav");          		// ...
 
 	precache_sound("items/sharp2.wav");
+
+	// check if backpack exists to validate all items?
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/backpack_simple.mdl"))
+	{
+		precache_model("progs/backpack_simple.mdl");
+		precache_sound("items/equip_iron3.wav");
+	}
 }
 
 string cvar_changes, cvar_purechanges;

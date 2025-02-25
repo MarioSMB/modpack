@@ -229,32 +229,47 @@ spawnfunc(item_health)
 
 	if(this.spawnflags & H_ROTTEN)
 	{
-		precache_model("maps/b_bh10.bsp");
-
-		precache_sound("items/r_item1.wav");
-		_setmodel(this, "maps/b_bh10.bsp");
+		this.mdl = "maps/b_bh10.bsp";
 		this.noise = "items/r_item1.wav";
 		this.healamount = 15;
 		this.healtype = 0;
+
+		if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_bh10_simple.bsp"))
+		{
+			this.mdl = "maps/b_bh10_simple.bsp";
+			this.noise = "items/burp.wav";
+		}
 	}
 	else if(this.spawnflags & H_MEGA)
 	{
-		precache_model("maps/b_bh100.bsp");
-		precache_sound("items/r_item2.wav");
-		_setmodel(this, "maps/b_bh100.bsp");
+		this.mdl = "maps/b_bh100.bsp";
 		this.noise = "items/r_item2.wav";
 		this.healamount = 100;
 		this.healtype = 2;
+
+		if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_bh100_simple.bsp"))
+		{
+			this.mdl = "maps/b_bh100_simple.bsp";
+			this.noise = "items/burp.wav";
+		}
 	}
 	else
 	{
-		precache_model("maps/b_bh25.bsp");
-		precache_sound("items/health1.wav");
-		_setmodel(this, "maps/b_bh25.bsp");
+		this.mdl = "maps/b_bh25.bsp";
 		this.noise = "items/health1.wav";
 		this.healamount = 25;
 		this.healtype = 1;
+
+		if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("maps/b_bh25_simple.bsp"))
+		{
+			this.mdl = "maps/b_bh25_simple.bsp";
+			this.noise = "items/burp.wav";
+		}
 	}
+
+	precache_model(this.mdl);
+	precache_sound(this.noise);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -404,8 +419,10 @@ void armor_touch(entity this, entity toucher)
 	// NOTE: disabling spammy message as you already know from the HUD that you got it!
 	//sprint(toucher, "You got armor\n");
 // armor touch sound
-	_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/armor_simple.mdl"))
+		_sound(toucher, CH_TRIGGER_SINGLE, "items/equip_iron3.wav", 1, ATTN_NORM);
+	else
+		_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
@@ -426,8 +443,13 @@ spawnfunc(item_armor1)
 	this.armortype = 0.3;
 	this.armorvalue = 100;
 	this.armorid = IT_ARMOR1;
-	precache_model("progs/armor.mdl");
-	_setmodel(this, "progs/armor.mdl");
+	this.mdl = "progs/armor.mdl";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/armor_simple.mdl"))
+		this.mdl = "progs/armor_simple.mdl";
+
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	this.skin = 0;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -454,8 +476,13 @@ spawnfunc(item_armor2)
 	this.armortype = 0.6;
 	this.armorvalue = 150;
 	this.armorid = IT_ARMOR2;
-	precache_model("progs/armor.mdl");
-	_setmodel(this, "progs/armor.mdl");
+	this.mdl = "progs/armor.mdl";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/armor_simple.mdl"))
+		this.mdl = "progs/armor_simple.mdl";
+
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	this.skin = 1;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -477,8 +504,13 @@ spawnfunc(item_armorInv)
 	this.armortype = 0.8;
 	this.armorvalue = 200;
 	this.armorid = IT_ARMOR3;
-	precache_model("progs/armor.mdl");
-	_setmodel(this, "progs/armor.mdl");
+	this.mdl = "progs/armor.mdl";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/armor_simple.mdl"))
+		this.mdl = "progs/armor_simple.mdl";
+
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	this.skin = 2;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -610,6 +642,8 @@ void pulserifle_touch(entity this, entity toucher)
 		if(!(STAT(PASSIVES, toucher) & PASSIVE_PULSERIFLE))
 			centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
 	}
+	else if(substring(world.model, 0, 9) == "maps/mcj_")
+		_sound(toucher, CHAN_ITEM, "items/pop.wav", 1, ATTN_NORM);
 	else
 		_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
 
@@ -723,7 +757,10 @@ void weapon_touch(entity this, entity toucher)
 			{ /* do nothing */ }
 		else if(this.target && this.target != "")
 		{
-			_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+			if(substring(world.model, 0, 9) == "maps/mcj_")
+				_sound(toucher, CHAN_ITEM, "items/pop.wav", 1, ATTN_NORM);
+			else
+				_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 			SUB_UseTargets(this, toucher, NULL);
 			this.target = string_null;
 			return;
@@ -755,8 +792,10 @@ void weapon_touch(entity this, entity toucher)
 			Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_WEAPON_PICKUP);
 	}
 // weapon touch sound
-	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+		_sound(toucher, CHAN_ITEM, "items/pop.wav", 1, ATTN_NORM);
+	else
+		_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 
 	bound_other_ammo(toucher);
 
@@ -1117,12 +1156,12 @@ spawnfunc(item_shells)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		setmodel(this, MDL_ITEM_SHELLS_BIG);
+		this.mdl = "maps/b_shell0.bsp";
 		this.aflag = 40;
 	}
 	else
 	{
-		setmodel(this, MDL_ITEM_SHELLS);
+		this.mdl = "maps/b_shell1.bsp";
 		this.aflag = 20;
 	}
 	this.ammo_shells = this.aflag;
@@ -1130,6 +1169,23 @@ spawnfunc(item_shells)
 	this.items = IT_SHELLS;
 	this.netname = "shells";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_nail0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_nail1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1156,12 +1212,12 @@ spawnfunc(item_spikes)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		setmodel(this, MDL_ITEM_NAILS_BIG);
+		this.mdl = "maps/b_nail0.bsp";
 		this.aflag = 50;
 	}
 	else
 	{
-		setmodel(this, MDL_ITEM_NAILS);
+		this.mdl = "maps/b_nail1.bsp";
 		this.aflag = 25;
 	}
 	this.ammo_nails = this.aflag;
@@ -1169,6 +1225,23 @@ spawnfunc(item_spikes)
 	this.items = IT_NAILS;
 	this.netname = "nails";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_nail0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_nail1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1195,14 +1268,12 @@ spawnfunc(item_lava_spikes)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		precache_model("maps/b_lnail1.bsp");
-		_setmodel(this, "maps/b_lnail1.bsp");
+		this.mdl = "maps/b_lnail1.bsp";
 		this.aflag = 50;
 	}
 	else
 	{
-		precache_model("maps/b_lnail0.bsp");
-		_setmodel(this, "maps/b_lnail0.bsp");
+		this.mdl = "maps/b_lnail0.bsp";
 		this.aflag = 25;
 	}
 	this.ammo_lava_nails = this.aflag;
@@ -1210,6 +1281,23 @@ spawnfunc(item_lava_spikes)
 	this.items = IT_LAVA_NAILS;
 	this.netname = "lava nails";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_lnail0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_lnail1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1237,12 +1325,12 @@ spawnfunc(item_rockets)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		setmodel(this, MDL_ITEM_ROCKETS_BIG);
+		this.mdl = "maps/b_rock1.bsp";
 		this.aflag = 10;
 	}
 	else
 	{
-		setmodel(this, MDL_ITEM_ROCKETS);
+		this.mdl = "maps/b_rock0.bsp";
 		this.aflag = 5;
 	}
 	this.ammo_rockets = this.aflag;
@@ -1250,6 +1338,23 @@ spawnfunc(item_rockets)
 	this.items = IT_ROCKETS;
 	this.netname = "rockets";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_rock0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_rock1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1277,14 +1382,12 @@ spawnfunc(item_multi_rockets)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		precache_model("maps/b_mrock1.bsp");
-		_setmodel(this, "maps/b_mrock1.bsp");
+		this.mdl = "maps/b_mrock1.bsp";
 		this.aflag = 10;
 	}
 	else
 	{
-		precache_model("maps/b_mrock0.bsp");
-		_setmodel(this, "maps/b_mrock0.bsp");
+		this.mdl = "maps/b_mrock0.bsp";
 		this.aflag = 5;
 	}
 	this.ammo_multi_rockets = this.aflag;
@@ -1292,6 +1395,23 @@ spawnfunc(item_multi_rockets)
 	this.items = IT_MULTI_ROCKETS;
 	this.netname = "multi rockets";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_mrock0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_mrock1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1319,12 +1439,12 @@ spawnfunc(item_cells)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		setmodel(this, MDL_ITEM_CELLS_BIG);
+		this.mdl = "maps/b_batt1.bsp";
 		this.aflag = 12;
 	}
 	else
 	{
-		setmodel(this, MDL_ITEM_CELLS);
+		this.mdl = "maps/b_batt0.bsp";
 		this.aflag = 6;
 	}
 	this.ammo_cells = this.aflag;
@@ -1332,6 +1452,23 @@ spawnfunc(item_cells)
 	this.items = IT_CELLS;
 	this.netname = "cells";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_batt0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_batt1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1358,14 +1495,12 @@ spawnfunc(item_plasma)
 
 	if(this.spawnflags & WEAPON_BIG2)
 	{
-		precache_model("maps/b_plas1.bsp");
-		_setmodel(this, "maps/b_plas1.bsp");
+		this.mdl = "maps/b_plas1.bsp";
 		this.aflag = 12;
 	}
 	else
 	{
-		precache_model("maps/b_plas0.bsp");
-		_setmodel(this, "maps/b_plas0.bsp");
+		this.mdl = "maps/b_plas0.bsp";
 		this.aflag = 6;
 	}
 	this.ammo_plasma = this.aflag;
@@ -1373,6 +1508,23 @@ spawnfunc(item_plasma)
 	this.items = IT_PLASMA_AMMO;
 	this.netname = "plasma";
 	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_plas0_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_plas1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -2425,11 +2577,16 @@ spawnfunc(item_backpack)
 		}
 	}
 
+	this.mdl = "progs/backpack.mdl";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/backpack_simple.mdl"))
+		this.mdl = "progs/backpack_simple.mdl";
+
 	this.flags = FL_ITEM;
 	this.solid = SOLID_TRIGGER;
 	set_movetype(this, MOVETYPE_TOSS);
-	precache_model("progs/backpack.mdl");
-	_setmodel(this, "progs/backpack.mdl");
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
 	setsize(this, '-16 -16 0', '16 16 56');
 
 	settouch(this, BackpackTouch);
@@ -2670,7 +2827,10 @@ void DropBackpack(entity this)
 
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_TOSS);
-	_setmodel(item, "progs/backpack.mdl");
+	if(substring(world.model, 0, 9) == "maps/mcj_" && fexists("progs/backpack_simple.mdl"))
+		_setmodel(item, "progs/backpack_simple.mdl");
+	else
+		_setmodel(item, "progs/backpack.mdl");
 	vector mi = '-16 -16 0', ma = '16 16 56';
 	// TODO: this hack causes a crash, find a better way to move items out of solid!
 #if 0
