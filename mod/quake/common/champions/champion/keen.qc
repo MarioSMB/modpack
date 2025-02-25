@@ -17,6 +17,7 @@ METHOD(Keen, m_playerspawn, void(Champions this, entity actor))
 	actor.jetpack_status = false;
 	STAT(QCC_JETPACKFUEL, actor) = 100;
 	STAT(WEAPONS, actor) |= WEP_POGO.m_wepset;
+	actor.skin = bound(0, (etof(actor) % 10) - 1, 9);
 }
 #endif
 

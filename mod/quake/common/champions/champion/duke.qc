@@ -73,6 +73,8 @@ METHOD(Duke, m_playerspawn, void(Champions this, entity actor))
 
 	actor.jetpack_status = false;
 	STAT(QCC_JETPACKFUEL, actor) = 100;
+
+	actor.skin = bound(0, (etof(actor) % 8) - 1, 7);
 }
 
 METHOD(Duke, m_clear, void(Champions this, entity actor))

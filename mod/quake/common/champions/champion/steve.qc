@@ -11,6 +11,14 @@ METHOD(Steve, m_activate, void(Steve this, entity actor))
 		actor.skin = 1;
 }
 
+METHOD(Steve, m_playerspawn, void(Champions this, entity actor))
+{
+	if(!CHAMPION_Mario.m_condition(CHAMPION_Mario, actor))
+		actor.skin = 2;
+	else if(!CHAMPION_Goat.m_condition(CHAMPION_Goat, actor))
+		actor.skin = 1;
+}
+
 void steve_block_break(entity this)
 {
 	sound(this, CH_TRIGGER_SINGLE, SND_Steve_BlockBreak, 1, ATTN_NORM);

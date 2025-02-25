@@ -22,6 +22,11 @@ METHOD(BigJohn, m_activate, void(Champions this, entity actor))
 	actor.skin = bound(0, (etof(actor) % 5) - 1, 4);
 }
 
+METHOD(BigJohn, m_playerspawn, void(Champions this, entity actor))
+{
+	actor.skin = bound(0, (etof(actor) % 5) - 1, 4);
+}
+
 METHOD(BigJohn, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))

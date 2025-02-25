@@ -126,6 +126,11 @@ METHOD(Dusk, m_activate, void(Dusk this, entity actor))
 	actor.skin = bound(0, (etof(actor) % 6) - 1, 5);
 }
 
+METHOD(Dusk, m_playerspawn, void(Champions this, entity actor))
+{
+	actor.skin = bound(0, (etof(actor) % 6) - 1, 5);
+}
+
 METHOD(Dusk, m_playerthink, void(Dusk this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor) && actor.health > 25)
