@@ -1172,9 +1172,9 @@ spawnfunc(item_shells)
 
 	if(substring(world.model, 0, 9) == "maps/mcj_")
 	{
-		string simplemdl = "progs/b_nail0_simple.mdl";
+		string simplemdl = "progs/b_shell0_simple.mdl";
 		if(this.spawnflags & WEAPON_BIG2)
-			simplemdl = "progs/b_nail1_simple.mdl";
+			simplemdl = "progs/b_shell1_simple.mdl";
 
 		if(fexists(simplemdl))
 		{
