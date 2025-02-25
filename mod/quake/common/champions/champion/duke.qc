@@ -34,6 +34,8 @@ METHOD(Duke, m_activate, void(Champions this, entity actor))
 	else
 		s = "wansom.wav";
 	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+
+	actor.skin = bound(0, (etof(actor) % 8) - 1, 7);
 }
 
 METHOD(Duke, m_playerthink, void(Champions this, entity actor))

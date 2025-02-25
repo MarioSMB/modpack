@@ -5,6 +5,8 @@ METHOD(Keen, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 	STAT(WEAPONS, actor) |= WEP_POGO.m_wepset;
+
+	actor.skin = bound(0, (etof(actor) % 10) - 1, 9);
 }
 METHOD(Keen, m_clear, void(Champions this, entity actor))
 {

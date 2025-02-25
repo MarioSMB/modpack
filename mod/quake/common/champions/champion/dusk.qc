@@ -122,6 +122,8 @@ void Dusk_MakeWisp(entity targ)
 METHOD(Dusk, m_activate, void(Dusk this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "sicklestart.wav", ATTN_NORM);
+
+	actor.skin = bound(0, (etof(actor) % 6) - 1, 5);
 }
 
 METHOD(Dusk, m_playerthink, void(Dusk this, entity actor))

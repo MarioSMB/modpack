@@ -18,6 +18,8 @@ METHOD(BigJohn, m_takedamage, float(Champions this, entity targ, entity inflicto
 METHOD(BigJohn, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, ((random() < 0.5) ? "bigjabl1.wav" : "bigjabl2.wav"), ATTN_NORM);
+
+	actor.skin = bound(0, (etof(actor) % 5) - 1, 4);
 }
 
 METHOD(BigJohn, m_playerthink, void(Champions this, entity actor))
