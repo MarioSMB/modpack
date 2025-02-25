@@ -231,6 +231,7 @@ void QCC_UpdatePlayer(entity this)
 
 		this.view_ofs = champ.m_viewofs;
 		this.scale = champ.m_scale;
+		this.skin = champ.m_skin;
 
 		if(champ != oldchamp)
 		{

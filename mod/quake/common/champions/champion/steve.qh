@@ -65,6 +65,8 @@ PRECACHE(Steve)
     precache_sound("player_steve/lburn2.wav");     // lava burn
 
     precache_sound("player_steve/start.wav");
+
+    precache_model("progs/v_mcaxe.mdl");
 #endif
 }
 #endif
@@ -81,6 +83,7 @@ CLASS(Steve, Champions)
     ATTRIB(Steve, qcc_pogo, bool, true);
     ATTRIB(Steve, qcc_movespeed, float, 0.85);
     ATTRIB(Steve, qcc_falldamage, float, 5);
+    ATTRIB(Steve, qcc_meleename, string, "mcaxe");
 #ifdef GAMEQC
     ATTRIB(Steve, m_model, Model, MDL_Steve);
     ATTRIB(Steve, m_model_head, Model, MDL_Null);

@@ -4,6 +4,11 @@
 METHOD(Steve, m_activate, void(Steve this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+
+	if(!CHAMPION_Mario.m_condition(CHAMPION_Mario, actor))
+		actor.skin = 2;
+	else if(!CHAMPION_Goat.m_condition(CHAMPION_Goat, actor))
+		actor.skin = 1;
 }
 
 void steve_block_break(entity this)

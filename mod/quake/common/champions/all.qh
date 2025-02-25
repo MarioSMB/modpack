@@ -86,6 +86,7 @@ CLASS(Champions, Object)
 #ifdef GAMEQC
     ATTRIB(Champions, m_model, Model, MDL_Null);
     ATTRIB(Champions, m_model_head, Model, MDL_Null);
+    ATTRIB(Champions, m_skin, int, 0);
     ATTRIB(Champions, m_soundpath, string, string_null);
     METHOD(Champions, m_sound_pain, string()) { return "player/pain6.wav"; };
     METHOD(Champions, m_sound_death, string()) { return "player/death1.wav"; };
