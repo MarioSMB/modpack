@@ -404,8 +404,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 			targ.target = targ.deathtarget;
 	}
 
-	if(targ.target && targ.target != "")
-		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
+	SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
 
 	//targ.target = oldtarg;
 

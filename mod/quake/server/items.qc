@@ -3194,8 +3194,8 @@ bool target_items_testinv(entity this, entity e)
 
 	if(this.items)
 	{
-		float it = zeroconvert(this.items);
-		if(it & e.items != it)
+		float myitems = zeroconvert(this.items);
+		if((myitems & e.items) != myitems)
 			return false;
 	}
 
