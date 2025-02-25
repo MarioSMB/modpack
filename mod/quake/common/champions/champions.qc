@@ -363,7 +363,7 @@ void champion_menu_info(int index)
 		return;
 
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_drawtext('300 -80 0', '10 10 0', "Champion Stats", '1 1 1', 1, 0);
+	sui_drawtext('300 -120 0', '10 10 0', "Champion Stats", '1 1 1', 1, 0);
 	
 	sui_fill('300 0 0', '4 4 0', '0 0 0', 0.5, 0);
 	sui_fill('300 0 0', '2 2 0', '1 1 1', 0.75, 0);
