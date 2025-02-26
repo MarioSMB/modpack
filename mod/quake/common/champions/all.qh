@@ -119,6 +119,9 @@ CLASS(Champions, Object)
     METHOD(Champions, m_pickup_armor, void(Champions this, entity actor, entity item)) { };
     METHOD(Champions, m_pickup_key, void(Champions this, entity actor, entity item)) { };
     METHOD(Champions, m_pickup_sigil, void(Champions this, entity actor, entity item)) { };
+    METHOD(Champions, m_pickup_secret, void(Champions this, entity actor, entity trigger)) { };
+    METHOD(Champions, m_pushbutton, void(Champions this, entity actor, entity trigger)) { };
+    METHOD(Champions, m_triggermessage, void(Champions this, entity actor, entity trigger)) { };
     METHOD(Champions, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype)) { };
     METHOD(Champions, m_dealdamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype)) { return 1; };
     METHOD(Champions, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype)) { return 1; };

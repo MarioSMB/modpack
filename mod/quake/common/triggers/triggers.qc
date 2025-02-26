@@ -180,6 +180,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
 		else
 			_sound(actor, CH_INFO, this.noise, 1, ATTN_NORM);
+
+		if(actor.m_champion && actor.m_champion.m_triggermessage)
+			actor.m_champion.m_triggermessage(actor.m_champion, actor, this);
 	}
 
 //

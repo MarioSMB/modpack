@@ -1,7 +1,7 @@
 #include "nyx.qh"
 
 #ifdef SVQC
-METHOD(Nyx, m_activate, void(Nyx this, entity actor))
+METHOD(Nyx, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "invis2.wav", ATTN_NORM);
 }
@@ -22,7 +22,7 @@ void Nyx_Invis(entity this)
 	player_sound(this, CH_VOICE, s, ATTN_NORM);
 }
 
-METHOD(Nyx, m_playerthink, void(Nyx this, entity actor))
+METHOD(Nyx, m_playerthink, void(Champions this, entity actor))
 {
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, actor))
 		return;
@@ -54,7 +54,7 @@ vector PlayerTouchWall(entity this)
 	return '0 0 0';
 }
 
-METHOD(Nyx, m_doublejump, bool(Nyx this, entity actor))
+METHOD(Nyx, m_doublejump, bool(Champions this, entity actor))
 {
 	if(actor.waterlevel > 0)
 		return false;

@@ -47,3 +47,4 @@
 #include "wand.qh"
 #include "nuke.qh"
 #include "magic.qh"
+#include "plane.qh"

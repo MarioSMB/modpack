@@ -1,0 +1,20 @@
+#pragma once
+
+CLASS(Plane, Weapon)
+/* ammotype  */ ATTRIB(Plane, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Plane, impulse, int, 2);
+/* spawnflags*/ ATTRIB(Plane, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Plane, aflag, int, 0);
+/* modelname */ ATTRIB(Plane, mdl, string, "paperplane");
+/* crosshair */ ATTRIB(Plane, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Plane, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Plane, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Plane, model2, string, "plane");
+/* refname   */ ATTRIB(Plane, netname, string, "plane");
+/* wepname   */ ATTRIB(Plane, m_name, string, _("Paper Plane"));
+/* framerate */ ATTRIB(Plane, m_delta, float, 0.05);
+
+ENDCLASS(Plane)
+REGISTER_WEAPON(PLANE, NEW(Plane));
+
+//SPAWNFUNC_WEAPON(weapon_plane, WEP_PLANE)

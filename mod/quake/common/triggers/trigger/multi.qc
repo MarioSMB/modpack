@@ -56,6 +56,8 @@ bool multi_trigger(entity this)
 		secrets_found += 1;
 		if(IS_REAL_CLIENT(this.enemy))
 			centerprint(this.enemy, process_string(this.message));
+		if(this.enemy.m_champion && this.enemy.m_champion.m_pickup_secret)
+			this.enemy.m_champion.m_pickup_secret(this.enemy.m_champion, this.enemy, this);
 		settouch(this, func_null);
 		setthink(this, SUB_Remove);
 		this.nextthink = time;

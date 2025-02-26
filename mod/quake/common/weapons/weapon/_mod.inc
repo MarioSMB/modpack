@@ -47,3 +47,4 @@
 #include "wand.qc"
 #include "nuke.qc"
 #include "magic.qc"
+#include "plane.qc"

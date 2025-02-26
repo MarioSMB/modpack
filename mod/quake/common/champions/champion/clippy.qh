@@ -1,0 +1,103 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Clippy, "progs/player_clippy.mdl");
+
+SOUND(Clippy_Pain1, "player_clippy/pain1");
+SOUND(Clippy_Pain2, "player_clippy/pain2");
+Sound SND_Clippy_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Clippy_Pain1.m_id + rint(random() * 1));
+}
+
+SOUND(Clippy_Death1, "player_clippy/death1");
+SOUND(Clippy_Death2, "player_clippy/death2");
+Sound SND_Clippy_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Clippy_Death1.m_id + rint(random() * 1));
+}
+
+PRECACHE(Clippy)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/clippy_face");
+
+    precache_pic("gfx/quake/sb_clippy_line1");
+    precache_pic("gfx/quake/sb_clippy_line2");
+    precache_pic("gfx/quake/sb_clippy_line3");
+    precache_pic("gfx/quake/sb_clippy_line4");
+    precache_pic("gfx/quake/sb_clippy_line5");
+    precache_pic("gfx/quake/sb_clippy_line6");
+    precache_pic("gfx/quake/sb_clippy_line7");
+    precache_pic("gfx/quake/sb_clippy_line8");
+    precache_pic("gfx/quake/sb_clippy_line9");
+    precache_pic("gfx/quake/sb_clippy_line10");
+    precache_pic("gfx/quake/sb_clippy_line11");
+    precache_pic("gfx/quake/sb_clippy_line12");
+    precache_pic("gfx/quake/sb_clippy_line13");
+    precache_pic("gfx/quake/sb_clippy_line14");
+#endif
+#ifdef SVQC
+    precache_sound("player_clippy/plyrjmp8.wav");       // player jump
+    precache_sound("player_clippy/land.wav");           // player landing
+    precache_sound("player_clippy/land2.wav");      // player hurt landing
+    precache_sound("player_clippy/drown1.wav");     // drowning pain
+    precache_sound("player_clippy/drown2.wav");     // drowning pain
+    precache_sound("player_clippy/gasp1.wav");      // gasping for air
+    precache_sound("player_clippy/gasp2.wav");      // taking breath
+    precache_sound("player_clippy/h2odeath.wav");       // drowning death
+
+    precache_sound("player_clippy/pain1.wav");
+    precache_sound("player_clippy/pain2.wav");
+
+    precache_sound("player_clippy/death1.wav");
+    precache_sound("player_clippy/death2.wav");
+
+    precache_sound("player_clippy/axhit1.wav");
+    precache_sound("player_clippy/axhit2.wav");
+
+    precache_sound("player_clippy/lburn1.wav");     // lava burn
+    precache_sound("player_clippy/lburn2.wav");     // lava burn
+
+    precache_sound("player_clippy/start.wav");
+    precache_sound("player_clippy/talk.wav");
+    precache_sound("player_clippy/falling.wav");
+    precache_sound("player_clippy/cannon_land.wav");
+#endif
+}
+#endif
+CLASS(Clippy, Champions)
+    ATTRIB(Clippy, netname, string, "clippy");
+    ATTRIB(Clippy, m_name, string, "Clippy");
+    ATTRIB(Clippy, m_hidden, bool, true);
+    ATTRIB(Clippy, qcc_pogo, bool, true);
+#ifdef GAMEQC
+    ATTRIB(Clippy, m_model, Model, MDL_Clippy);
+    ATTRIB(Clippy, m_model_head, Model, MDL_Null);
+    ATTRIB(Clippy, m_soundpath, string, "player_clippy/");
+    METHOD(Clippy, m_sound_pain, string()) { return SND(Clippy_Pain_Random()); }
+    METHOD(Clippy, m_sound_death, string()) { return SND(Clippy_Death_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Clippy, message, string, "It looks like you're having trouble choosing a champion, let me help you!");
+#endif
+ENDCLASS(Clippy)
+REGISTER_CHAMPION(Clippy, NEW(Clippy));
+
+#ifdef SVQC
+.bool clippy_cannon;
+.float clippy_dmgtime;
+.float clippy_annoytime;
+
+void SendClippyLine(entity this, int liner);
+#endif
+
+#ifdef CSQC
+const int CLIPPY_MAX_ENTRIES = 1;
+
+int clippy_index;
+int clippy_count;
+float clippy_times[CLIPPY_MAX_ENTRIES];
+string clippy_icons[CLIPPY_MAX_ENTRIES];
+void Sbar_Clippy_Push(int liner);
+#endif

@@ -1,12 +1,12 @@
 #include "chief.qh"
 
 #ifdef SVQC
-METHOD(Chief, m_activate, void(Chief this, entity actor))
+METHOD(Chief, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 }
 
-METHOD(Chief, m_pickup_armor, void(Chief this, entity actor, entity item))
+METHOD(Chief, m_pickup_armor, void(Champions this, entity actor, entity item))
 {
 	actor.field_generator_health = max(actor.field_generator_health, item.armorvalue);
 	actor.field_generator_time = -150;
@@ -24,7 +24,7 @@ bool chief_visible(entity this, entity targ)
 	return true;
 }
 
-METHOD(Chief, m_playerthink, void(Chief this, entity actor))
+METHOD(Chief, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{

@@ -60,6 +60,9 @@ void button_fire(entity this)
 			this.items = 0;
 	}
 
+	if(this.enemy && this.enemy.m_champion && this.enemy.m_champion.m_pushbutton)
+		this.enemy.m_champion.m_pushbutton(this.enemy.m_champion, this.enemy, this);
+
 	if(this.noise && this.noise != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 

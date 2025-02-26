@@ -4,6 +4,7 @@
 #include "bigjohn.qc"
 #include "caleb.qc"
 #include "chief.qc"
+#include "clippy.qc"
 #include "demon.qc"
 #include "dingus.qc"
 #include "doom.qc"
