@@ -41,6 +41,8 @@ void mermaid_bubble1(entity this) { set_anim(this, 21, mermaid_bubble2); }
 METHOD(Mermaid, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "mermaid_start.wav", ATTN_NORM);
+
+	STAT(WEAPONS, actor) |= WEP_MAGIC.m_wepset;
 }
 
 METHOD(Mermaid, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))

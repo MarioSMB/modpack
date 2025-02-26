@@ -459,6 +459,8 @@ void View_EventChase(entity this)
 			vector view_offset = '0 0 24';
 			if(STAT(ITEMS) & IT_TANK)
 				view_offset.z = 48;
+			else if(this.m_champion && this.m_champion.qcc_thirdperson_offset)
+				view_offset.z = this.m_champion.qcc_thirdperson_offset;
 
 			if(view_offset)
 			{

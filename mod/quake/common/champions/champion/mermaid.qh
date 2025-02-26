@@ -59,6 +59,7 @@ CLASS(Mermaid, Champions)
     ATTRIB(Mermaid, qcc_meleename, string, "sorclaw");
     ATTRIB(Mermaid, qcc_thirdperson, bool, true);
     ATTRIB(Mermaid, qcc_thirdperson_distance, float, 50);
+    ATTRIB(Mermaid, qcc_thirdperson_offset, float, 48);
     ATTRIB(Mermaid, qcc_anim_axrun, vector, '10 0 11');
     ATTRIB(Mermaid, qcc_anim_rockrun, vector, '10 0 11');
     ATTRIB(Mermaid, qcc_anim_axstnd, vector, '0 0 10');

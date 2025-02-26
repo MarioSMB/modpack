@@ -4,6 +4,8 @@
 METHOD(Monkey, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "monkey_start.wav", ATTN_NORM);
+
+	STAT(WEAPONS, actor) |= WEP_MAGIC.m_wepset;
 }
 
 METHOD(Monkey, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))
