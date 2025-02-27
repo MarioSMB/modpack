@@ -7,7 +7,10 @@ STATIC_INIT(rogue_fixguardian)
 	cvar_settemp("sv_gameplayfix_q1bsptracelinereportstexture", "0"); // fixes a collision bug in Xonotic
 
 	// copied fix from darkplaces, which disables this setting when rogue game is detected
-	cvar_settemp("sv_gameplayfix_findradiusdistancetobox", "0");
+	if(IsRogueMap())
+		cvar_settemp("sv_gameplayfix_findradiusdistancetobox", "0");
+	else
+		cvar_settemp("sv_gameplayfix_findradiusdistancetobox", "1");
 }
 
 PRECACHE(Rogue)
