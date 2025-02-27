@@ -16,6 +16,11 @@ METHOD(Clippy, m_activate, void(Champions this, entity actor))
 		W_SwitchWeapon(actor, WEP_PLANE, weaponentity);
 }
 
+METHOD(Clippy, m_condition, bool(Champions this, entity actor))
+{
+	return (actor.move_movetype == MOVETYPE_NOCLIP);
+}
+
 METHOD(Clippy, m_playerspawn, void(Champions this, entity actor))
 {
 	SendClippyLine(actor, 4);
