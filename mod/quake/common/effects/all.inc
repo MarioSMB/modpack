@@ -53,3 +53,5 @@ EFFECT(0, ENDERMAN_ANGRY,           "spawn_point_neutral")
 EFFECT(1, GUARDIAN_BEAM,            "nex_beam")
 
 //EFFECT(0, MAGIC_FIRE,               "hagar_explode")
+
+EFFECT(0, POOP_STINK,               "poisonfield")

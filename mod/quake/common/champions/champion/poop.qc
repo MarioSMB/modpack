@@ -97,15 +97,8 @@ void Poop_PooSpit(entity this)
 	newmis.solid = SOLID_CORPSE;
 	newmis.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	makevectors(this.v_angle);
-	if(this.v_angle_x)
-		newmis.velocity = v_forward * -600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
-	else
-	{
-		newmis.velocity = qc_aim(this, 10000);
-		newmis.velocity *= -600;
-		newmis.velocity_z = 200;
-	}
+	newmis.velocity = randomvec() * 400;
+	newmis.velocity_z = 100;
 
 	newmis.poisonous = true;
 	newmis.projectiledeathtype = WEP_NAPALM.m_id;
@@ -148,6 +141,12 @@ void Poop_Attack(entity this)
 
 METHOD(Poop, m_playerthink, void(Champions this, entity actor))
 {
+	if(time > actor.poop_particletime)
+	{
+		actor.poop_particletime = time + 20 + (random() * 4);
+		Send_Effect(EFFECT_POOP_STINK, actor.origin, '0 0 0', 1);
+	}
+
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Poop_Attack(actor);
