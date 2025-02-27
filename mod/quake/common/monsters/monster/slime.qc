@@ -106,6 +106,21 @@ void slime_die(entity this, entity inflictor, entity attacker, int deathtype)
 	else
 		sound(this, CH_VOICE, SND_MON_SLIME_BIG_RANDOM(), 1, ATTN_NORM);
 
+	switch(deathtype)
+	{
+		case DEATH_VOID.m_id:
+		case DEATH_HURTTRIGGER.m_id:
+		case DEATH_KILL.m_id:
+		case DEATH_GENERIC.m_id:
+		case DEATH_LAVA.m_id:
+		case DEATH_CHECKPOINT.m_id:
+		{
+			Send_Effect(EFFECT_SMOKE_RING, this.origin, '0 0 80', 1);
+			delete(this);
+			return;
+		}
+	}
+
 	this.colormod = '1 0.6 0.6';
 	this.angles_z = 0;
 	slime_die1(this);

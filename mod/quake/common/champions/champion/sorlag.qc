@@ -1,7 +1,7 @@
 #include "sorlag.qh"
 
 #ifdef SVQC
-METHOD(Sorlag, m_activate, void(Sorlag this, entity actor))
+METHOD(Sorlag, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
 }
@@ -141,7 +141,7 @@ void Sorlag_Attack(entity this)
 	ent.cnt = 4;
 }
 
-METHOD(Sorlag, m_playerthink, void(Sorlag this, entity actor))
+METHOD(Sorlag, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
