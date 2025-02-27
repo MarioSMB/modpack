@@ -2664,6 +2664,8 @@ PLAYER BACKPACKS
 ===============================================================================
 */
 
+.Weapon champion_weapon;
+
 void BackpackTouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -2738,6 +2740,10 @@ void BackpackTouch(entity this, entity toucher)
 
 	EnableComboWeapons(toucher);
 
+	// hack to swap back to old champion attack (TODO: better system for champion weapons)
+	if(this.champion_weapon && this.champion_weapon != WEP_Null && (STAT(WEAPONS, toucher) & this.champion_weapon.m_wepset))
+		wep = this.champion_weapon;
+
 // change to the weapon
 	if(wep != WEP_Null && toucher.cvar_cl_autoswitch)
 	{
@@ -2791,7 +2797,12 @@ void DropBackpack(entity this)
 	.entity weaponentity = weaponentities[0];
 	Weapon wep = this.(weaponentity).m_weapon;
 	if(wep.spawnflags & WEP_FLAG_CHAMPION)
+	{
+		item.champion_weapon = wep;
 		wep = REGISTRY_GET(Weapons, this.(weaponentity).cnt);
+	}
+	else
+		item.champion_weapon = WEP_Null;
 	item.weapon = wep.m_id;
 	item.netname = wep.m_name;
 	STAT(WEAPONS, item) = weps;
