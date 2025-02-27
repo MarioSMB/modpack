@@ -807,6 +807,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(trace_ent.magic_bubble)
+			ldmg *= 0.5;
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, from, ldmg, deathtype);
 		if(IS_PLAYER(from))
@@ -830,6 +832,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(trace_ent.magic_bubble)
+			ldmg *= 0.5;
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
@@ -848,6 +852,8 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		}
 		if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
+		if(trace_ent.magic_bubble)
+			ldmg *= 0.5;
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
