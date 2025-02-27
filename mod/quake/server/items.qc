@@ -862,6 +862,8 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 		// hack to allow instruments to replace regular weapon spawns
 		if(deathmatch && (it.spawnflags & WEP_FLAG_MUSIC))
 			continue; // but not in deathmatch
+		if(deathmatch && it == WEP_NUKE)
+			continue; // lol no
 		int mytype = it.ammo_type;
 		switch(it)
 		{

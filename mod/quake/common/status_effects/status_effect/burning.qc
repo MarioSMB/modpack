@@ -16,7 +16,7 @@ METHOD(Burning, m_tick, void(StatusEffects this, entity actor))
     }
     if(time > actor.burning_time)
     {
-        float damage = (IS_PLAYER(actor) ? 1 : 10);
+        float damage = ((IS_PLAYER(actor) && !deathmatch) ? 1 : 10);
         T_Damage(actor, NULL, NULL, damage, DEATH_BURNING.m_id);
         actor.burning_time = time + 1;
     }

@@ -78,6 +78,7 @@ void crossbow_bolt_touch(entity this, entity toucher)
 	//delete(this);
 }
 
+.float crossbow_dmgtime;
 void crossbow_bolt_think(entity this)
 {
 	if(time > this.count)
@@ -92,6 +93,9 @@ void crossbow_bolt_think(entity this)
 
 	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, it.takedamage && it != this.owner,
 	{
+		if(time < it.crossbow_dmgtime)
+			continue;
+		it.crossbow_dmgtime = time + 0.1; // prevent instant death
 		float damg = ((this.dmg) ? this.dmg : 25);
 		if(it.resist_nails != 0)
 			damg = Resist_Damage(it, IT_NAILS, damg);

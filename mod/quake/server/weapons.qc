@@ -814,7 +814,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			if(IS_PLAYER(trace_ent))
 				trace_ent.velocity_z += 400;
 		}
-		if(trace_ent.reflectlightning)
+		if(trace_ent.reflectlightning || trace_ent.magic_bubble)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 	ldmg = damage;
@@ -833,7 +833,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
-		if(trace_ent.reflectlightning)
+		if(trace_ent.reflectlightning || trace_ent.magic_bubble)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 	ldmg = damage;
@@ -851,7 +851,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 		if(ldmg > 0)
 			T_Damage(trace_ent, from, attacker, ldmg, deathtype);
 
-		if(trace_ent.reflectlightning)
+		if(trace_ent.reflectlightning || trace_ent.magic_bubble)
 			LightningReflection(trace_endpos, trace_ent, ldmg * 0.5, deathtype);
 	}
 }

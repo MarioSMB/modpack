@@ -45,7 +45,7 @@ void wep_fish_fish6(entity this) { wep_set_anim(this, 6, wep_fish_fish7); }
 void wep_fish_fish5(entity this)
 {
 	wep_set_anim(this, 5, wep_fish_fish6);
-	if(this.fish_time < SUPERFISHTIME)
+	if(this.fish_time < SUPERFISHTIME || deathmatch)
 		_sound(this.owner, CH_WEAPON_SINGLE, "weapons/whush.wav", 1, ATTN_NORM);
 	else
 		_sound(this.owner, CH_WEAPON_SINGLE, "weapons/mega.wav", 1, ATTN_NORM);
@@ -97,7 +97,7 @@ void fishtouch(entity this, entity toucher)
 		return;
 	}
 	float hurt = 0;
-	if(this.fish_time == SUPERFISHTIME)
+	if(this.fish_time == SUPERFISHTIME && !deathmatch)
 	{
 		hurt = 300;
 		T_Damage(toucher, this, this.owner, hurt, this.projectiledeathtype);
@@ -184,7 +184,7 @@ void fishmissile(entity this, .entity weaponentity)
 		fish.fish_time = SUPERFISHTIME;
 	set_movetype(fish, MOVETYPE_FLYMISSILE);
 	fish.solid = SOLID_BBOX;
-	if(fish.fish_time == SUPERFISHTIME)
+	if(!deathmatch && fish.fish_time == SUPERFISHTIME)
 	{
 		fish.skin = 1;
 		fish.effects |= EF_DIMLIGHT;

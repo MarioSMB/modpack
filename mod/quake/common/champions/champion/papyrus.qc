@@ -173,7 +173,7 @@ METHOD(Papyrus, m_takedamage, float(Champions this, entity targ, entity inflicto
 	if(targ.m_champion == this && targ.health > 0 && damage > 0 && !(targ.flags & FL_GODMODE) && targ != attacker && !Papyrus_forcedamage(deathtype))
 	{
 		if(time < targ.papyrus_dmgtime)
-			return 0;
+			return ((deathmatch) ? 0.5 : 0);
 		targ.papyrus_dmgtime = time + 0.5;
 	}
 	return 1;

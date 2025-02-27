@@ -15,7 +15,7 @@ METHOD(Poisoned, m_tick, void(StatusEffects this, entity actor))
     if(time > actor.poisoned_time)
     {
         float poison_dmg = 1;
-        if(IS_MONSTER(actor))
+        if(IS_MONSTER(actor) || deathmatch)
             poison_dmg = 5;
         T_Damage(actor, NULL, NULL, poison_dmg, DEATH_POISONED.m_id);
         actor.poisoned_time = time + 1;
