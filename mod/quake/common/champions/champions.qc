@@ -164,6 +164,8 @@ void QCC_SavePlayer(entity targ, entity inflictor, entity attacker, int deathtyp
 				ATTACK_FINISHED(targ, weaponentity) = time + 1;
 			}
 		}
+
+		STAT(QCC_ABILITYTIME, this) = max(STAT(QCC_ABILITYTIME, this), time + 2);
 	}
 
 	if(targ.m_champion && targ.m_champion.m_saveplayer)
