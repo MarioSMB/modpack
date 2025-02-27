@@ -99,8 +99,8 @@ void T_PaperPlaneTouch(entity this, entity toucher)
 	this.angles = vectoangles(this.velocity);
 	this.nextthink = time + 30; // stay for 30 seconds then remove
 	setthink(this, SUB_Remove);
-		
-	if(toucher.takedamage)
+
+	if(toucher.takedamage && vdist(this.velocity, >, 0))
 		T_Damage(toucher, this, this.owner, 30, this.projectiledeathtype); 
 }
 
@@ -115,7 +115,8 @@ void W_Plane_Fire(entity this, .entity weaponentity)
 	missile.classname = "paperplane";
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
+	missile.solid = SOLID_CORPSE;
+	missile.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	missile.velocity = dir * 500;
 	missile.angles = vectoangles(missile.velocity);
 	missile.weaponentity_fld = weaponentity;
