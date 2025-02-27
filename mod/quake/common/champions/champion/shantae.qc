@@ -65,7 +65,7 @@ METHOD(Shantae, m_playerspawn, void(Champions this, entity actor))
 	STAT(WEAPONS, actor) |= WEP_MAGIC.m_wepset;
 
 	.entity weaponentity = weaponentities[0]; // TODO?
-	if(deathmatch && actor.(weaponentity).m_weapon == WEP_SHOTGUN)
+	if(actor.(weaponentity).m_weapon == WEP_SHOTGUN)
 	{
 		W_SwitchWeapon(actor, WEP_MAGIC, weaponentity);
 		actor.(weaponentity).cnt = WEP_AXE.m_id;
