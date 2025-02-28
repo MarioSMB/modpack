@@ -22,6 +22,13 @@ REPLICATE_INIT(float, cvar_cl_quake_goatstuff);
 REPLICATE(cvar_cl_quake_goatstuff, float, "cl_quake_goatstuff");
 #endif
 
+#ifdef GAMEQC
+// server flags
+// NOTE: the engine doesn't clear serverflags on map change (gotomap)
+const int SERVERFLAG_PLAYERSTATS = BIT(2);
+const int SERVERFLAG_PLAYERSTATS_CUSTOM = BIT(3);
+#endif
+
 // generic entity flags
 // engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
 #ifdef CSQC

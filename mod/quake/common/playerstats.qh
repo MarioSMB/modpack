@@ -1,0 +1,132 @@
+#pragma once
+
+#ifdef SVQC
+//float PS_PM_IN_DB = -1;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+int PS_GR_OUT_DB = -1;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
+//float PS_GR_IN_DB = -1;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+float PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+#endif
+
+#ifdef MENUQC
+int PS_D_IN_DB = -1; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+#endif
+
+#ifdef SVQC
+//string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
+//string PS_GR_OUT_TL;   // playerstats_gamereport_out_teams_last
+string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_last
+string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
+//string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
+//string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
+//string PS_B_IN_PL;     // playerstats_playerbasic_in_players_last
+//string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
+#endif
+
+#ifdef MENUQC
+string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
+#endif
+
+#ifdef SVQC
+
+int statsflags;
+
+// time the player was alive and kicking
+const string PLAYERSTATS_ALIVETIME  = "alivetime";
+const string PLAYERSTATS_AVGLATENCY = "avglatency";
+const string PLAYERSTATS_WINS = "wins";
+const string PLAYERSTATS_MATCHES = "matches";
+const string PLAYERSTATS_JOINS = "joins";
+const string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
+const string PLAYERSTATS_RANK = "rank";
+const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
+
+const string PLAYERSTATS_TOTAL = "total-";
+const string PLAYERSTATS_SCOREBOARD = "scoreboard-";
+const string PLAYERSTATS_ANTICHEAT = "anticheat-";
+
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10 = "achievement-kill-spree-10";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15 = "achievement-kill-spree-15";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20 = "achievement-kill-spree-20";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25 = "achievement-kill-spree-25";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30 = "achievement-kill-spree-30";
+const string PLAYERSTATS_ACHIEVEMENT_BOTLIKE = "achievement-botlike";
+const string PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD = "achievement-firstblood";
+const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
+
+// delay map switch until this is set
+bool PlayerStats_GameReport_DelayMapVote;
+
+//void PlayerStats_GameReport_Reset_All();
+
+// call at initialization
+void PlayerStats_GameReport_Init();
+
+// add a new player
+void PlayerStats_GameReport_AddPlayer(entity e);
+
+// add a new team
+//void PlayerStats_GameReport_AddTeam(float t);
+
+// add a new event
+void PlayerStats_GameReport_AddEvent(string event_id);
+
+// call on each event to track, or at player disconnect OR match end for "global stuff"
+#define PlayerStats_GameReport_Event_Player(ent, eventid, val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
+#define PlayerStats_GameReport_Event_Team(team, eventid, val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
+float PlayerStats_GameReport_Event(string prefix, string event_id, float value);
+
+//void PlayerStats_GameReport_Accuracy(entity p);
+
+// call this whenever a player leaves
+void PlayerStats_GameReport_FinalizePlayer(entity p);
+
+// call this at the end of the match
+void PlayerStats_GameReport(bool finished);
+
+void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
+
+.string playerstats_id;
+.float scoreboard_pos;
+
+//string autocvar_g_playerstats_uri;
+
+string autocvar_g_playerstats_gamereport_ladder;
+string autocvar_g_playerstats_gamereport_uri = "https://stats.xonotic.org/stats/submit";
+
+const float PS_B_STATUS_ERROR = -2;
+const float PS_B_STATUS_IDLE = -1;
+const float PS_B_STATUS_WAITING = 0;
+const float PS_B_STATUS_RECEIVED = 1;
+const float PS_B_STATUS_UPDATING = 2;
+.float playerstats_basicstatus;
+string autocvar_g_playerstats_playerbasic_uri = "https://stats.xonotic.org";
+
+void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest);
+void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer);
+void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status);
+#endif //SVQC
+#ifdef MENUQC
+float PS_D_NEXTUPDATETIME;
+float PS_D_LASTGAMECOUNT;
+const float PS_D_STATUS_ERROR = -2;
+const float PS_D_STATUS_IDLE = -1;
+const float PS_D_STATUS_WAITING = 0;
+const float PS_D_STATUS_RECEIVED = 1;
+float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
+string autocvar_g_playerstats_playerdetail_uri = "https://stats.xonotic.org/player/me";
+float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
+void PlayerStats_PlayerDetail();
+void PlayerStats_PlayerDetail_CheckUpdate();
+void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
+
+#endif
+
+#ifdef GAMEQC
+
+REPLICATE_INIT(int, cvar_cl_allow_uid2name);
+REPLICATE_INIT(bool, cvar_cl_allow_uidranking);
+REPLICATE_INIT(int, cvar_cl_allow_uidtracking);
+
+#endif

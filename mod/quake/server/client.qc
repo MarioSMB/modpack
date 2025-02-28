@@ -769,6 +769,9 @@ void IntermissionThink(entity this)
 
 	if(!this.button0 && !this.button1 && !this.button2 && !this.button3)
 		return;
+
+	// don't start mapvote until after playerstats gamereport is sent
+	if(PlayerStats_GameReport_DelayMapVote) { return; }
 	
 	ExitIntermission();
 }
@@ -1440,6 +1443,12 @@ void PutObserverInServer(entity this)
 
 	skate_unspawn(this);
 
+	if (this.alivetime)
+	{
+		PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+		this.alivetime = 0;
+	}
+
 	this.classname = STR_OBSERVER;
 	this.health = -666;
 	setmodel(this, MDL_Null);
@@ -1677,6 +1686,8 @@ void PutPlayerInServer(entity this)
 	postSpawn.enemy = spot;
 	setthink(postSpawn, RunPostPutClientInServer);
 	postSpawn.nextthink = time + 0.05;
+
+	this.alivetime = time;
 
 	stuffcmd(this, "-attack\n"); // prevent shooting after respawning
 
@@ -2522,6 +2533,8 @@ void ClientConnect(entity this)
 
 	this.flags |= FL_CLIENT;
 
+	PlayerStats_PlayerBasic_CheckUpdate(this);
+
 	this.netname_previous = strzone(this.netname);
 
 	this.disableclientprediction = -1;
@@ -2578,6 +2591,8 @@ void ClientDisconnect(entity this)
 	
 	if(gameover)
 		return;
+
+	PlayerStats_GameReport_FinalizePlayer(this);
 	// if the level end trigger has been activated, just return
 	// since they aren't *really* leaving
 
@@ -2826,6 +2841,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	{
 		LogDeath("frag", deathtype, attacker, targ);
 		attacker.frags += 1;
+
+		if(IS_PLAYER(targ) && targ.playerid)
+		{
+			PlayerStats_GameReport_Event_Player(attacker, sprintf("kills-%d", targ.playerid), 1);
+			PlayerStats_GameReport_Event_Player(attacker, strcat(PLAYERSTATS_TOTAL, "kills"), 1);
+		}
 
 		if(!frag_centermessage_override(attacker, targ, deathtype, attacker_name))
 		{

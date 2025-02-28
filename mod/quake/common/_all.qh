@@ -41,6 +41,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "shop.qh"
 #include "viewloc.qh"
 #include "ent_cs.qh"
+#include "playerstats.qh"
 
 #include "physics.qh"
 

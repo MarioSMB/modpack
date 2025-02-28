@@ -14,6 +14,7 @@
 #include "sui_sys.qc"
 #include "viewloc.qc"
 #include "ent_cs.qc"
+#include "playerstats.qc"
 
 #include "deathtypes/all.qc"
 #include "effects/qc/_mod.inc"

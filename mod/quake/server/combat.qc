@@ -274,6 +274,15 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		targ.health = -99; // don't let sbar look bad if a player
 
 	if(IS_PLAYER(targ))
+	{
+		if(targ.alivetime)
+		{
+			PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ALIVETIME, time - targ.alivetime);
+			targ.alivetime = 0;
+		}
+	}
+
+	if(IS_PLAYER(targ))
 		WaypointSprite_PlayerDead(targ);
 
 	StatusEffects_removeall(targ, STATUSEFFECT_REMOVE_CLEAR);
