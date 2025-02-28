@@ -1860,6 +1860,9 @@ void NextLevel()
 
 	VoteReset(true);
 
+	// send statistics
+	PlayerStats_GameReport(true);
+
 	// TODO: pick the one with the most players
 	entity o = find(NULL, classname, "trigger_changelevel");
 
