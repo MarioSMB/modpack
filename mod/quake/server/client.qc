@@ -2541,6 +2541,8 @@ void ClientConnect(entity this)
 
 	PlayerStats_PlayerBasic_CheckUpdate(this);
 
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
+
 	this.netname_previous = strzone(this.netname);
 
 	this.disableclientprediction = -1;
