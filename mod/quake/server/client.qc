@@ -808,9 +808,6 @@ void execute_changelevel(entity this)
 	else
 		intermission_exittime = time + 2;
 
-	// send statistics
-	PlayerStats_GameReport(true);
-
 #if 0
 	WriteByte(MSG_ALL, SVC_CDTRACK);
 	WriteByte(MSG_ALL, 3);
