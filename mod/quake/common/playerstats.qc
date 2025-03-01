@@ -223,8 +223,8 @@ void PlayerStats_GameReport(bool finished)
 		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_RANK, etof(it));
 
 		// scoreboard data
-		if(IS_PLAYER(it))
-		{
+		//if(it.scoreboard_pos)
+		//{
 			// scoreboard is valid!
 			PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
@@ -240,7 +240,7 @@ void PlayerStats_GameReport(bool finished)
 				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_WINS, true);
 				PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_MATCHES, 1);
 			}
-		}
+		//}
 
 		// collect final player information
 		PlayerStats_GameReport_FinalizePlayer(it);
@@ -309,7 +309,9 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 // TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
-	return "dm";
+	if(horde_ent)
+		return "horde";
+	return ((coop) ? "coop" : "dm");
 }
 
 #ifdef SVQC
