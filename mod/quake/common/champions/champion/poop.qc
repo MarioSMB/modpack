@@ -1,6 +1,8 @@
 #include "poop.qh"
 
 #ifdef SVQC
+int autocvar_sv_quake_poop_count = 4;
+
 METHOD(Poop, m_activate, void(Poop this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
@@ -136,7 +138,7 @@ void Poop_Attack(entity this)
 	setthink(ent, Poop_PooSpitProc);
 	ent.nextthink = time + 0.16;
 	ent.owner = this;
-	ent.cnt = 4;
+	ent.cnt = autocvar_sv_quake_poop_count;
 }
 
 METHOD(Poop, m_playerthink, void(Champions this, entity actor))
