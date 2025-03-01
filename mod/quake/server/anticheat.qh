@@ -1,0 +1,15 @@
+#pragma once
+
+void anticheat_init(entity this);
+void anticheat_report_to_eventlog(entity this);
+void anticheat_report_to_playerstats(entity this);
+void anticheat_register_to_playerstats();
+
+void anticheat_physics(entity this);
+void anticheat_spectatecopy(entity this, entity spectatee);
+void anticheat_prethink(entity this);
+
+void anticheat_startframe();
+void anticheat_endframe();
+
+void anticheat_fixangle(entity this);

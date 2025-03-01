@@ -1433,6 +1433,7 @@ void PutObserverInServer(entity this)
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
+	this.death_time = 0;
 	this.exptime = 0;
 	this.clientcamera = this;
 	this.waterlevel = WATERLEVEL_NONE;
@@ -1558,6 +1559,7 @@ void PutPlayerInServer(entity this)
 	this.th_die = PlayerDie;
 	
 	this.deadflag = DEAD_NO;
+	this.death_time = 0;
 // paustime is set by teleporters to keep the player from moving a while
 	this.pausetime = 0;
 
@@ -2540,6 +2542,8 @@ void ClientConnect(entity this)
 	this.flags |= FL_CLIENT;
 
 	PlayerStats_PlayerBasic_CheckUpdate(this);
+	accuracy_init(this);
+	anticheat_init(this);
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -2548,6 +2552,7 @@ void ClientConnect(entity this)
 	this.disableclientprediction = -1;
 
 	this.just_joined = true;
+
 
 	StatusEffectsStorage_attach(this);
 
@@ -2600,9 +2605,11 @@ void ClientDisconnect(entity this)
 	if(gameover)
 		return;
 
-	PlayerStats_GameReport_FinalizePlayer(this);
 	// if the level end trigger has been activated, just return
 	// since they aren't *really* leaving
+
+	accuracy_free(this);
+	PlayerStats_GameReport_FinalizePlayer(this);
 
 	// yoder oct13, horde fix for dc-ing players
 	this.health = 0;
@@ -2635,6 +2642,8 @@ void ClientDisconnect(entity this)
 	W_Spellbook_ClearSpells(this);
 
 	set_suicide_frame(this);
+
+	anticheat_report_to_eventlog(this);
 
 	strfree(this.weaponorder_byimpulse);
 	GetCvars(this, this, -1);

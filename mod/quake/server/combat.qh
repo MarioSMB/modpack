@@ -6,6 +6,8 @@ float autocvar_g_friendlyfire;
 
 .float pain_finished;
 
+.float death_time;
+
 .bool damagedbycontents;
 
 .float pushltime;

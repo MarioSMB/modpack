@@ -1,0 +1,39 @@
+#pragma once
+
+/**
+ * Weapon Accuracy stats
+ *
+ * These stats are sent to all the clients to be displayed on the scoreboard
+ * and also to Xonstats.
+ *
+ * Note that weapon damage is counted differently from player damage:
+ *  - it isn't limited by target's health in case you kill them
+ *  - it ignores handicap, shield, strength and similar powerups / buffs
+ *  - it doesn't count more than a single full hit if you hit multiple targets
+ *    with a single shot in order to never assign more than 100% accuracy per hit
+ *  - obviously damage caused by fall, lava, trigger_hurt and telefrags isn't
+ *    counted as weapon damage in any way
+ */
+
+.entity accuracy;
+.float accuracy_frags[REGISTRY_MAX(Weapons)];
+
+.float accuracy_hit[REGISTRY_MAX(Weapons)];
+.float accuracy_fired[REGISTRY_MAX(Weapons)];
+.float accuracy_cnt_hit[REGISTRY_MAX(Weapons)];
+.float accuracy_cnt_fired[REGISTRY_MAX(Weapons)];
+
+
+// init/free
+void accuracy_init(entity e);
+void accuracy_free(entity e);
+
+// force a resend of a player's accuracy stats
+//void accuracy_resend(entity e);
+
+// update accuracy stats
+void accuracy_add(entity e, Weapon w, float fired, float hit);
+
+// helper
+bool accuracy_isgooddamage(entity attacker, entity targ);
+bool accuracy_canbegooddamage(entity attacker);
