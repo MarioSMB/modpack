@@ -2348,9 +2348,6 @@ void Shutdown()
 		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 
-		// playerstats with unfinished match
-		PlayerStats_GameReport(false);
-
 		db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		db_close(ServerProgsDB);
 		LOG_TRACE("Saving persistent data... done!");
