@@ -1,5 +1,4 @@
 // generated file; do not modify
-#include "accuracy.qh"
 #include "common.qh"
 #include "music.qh"
 #include "selection.qh"

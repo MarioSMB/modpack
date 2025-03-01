@@ -50,7 +50,6 @@ void Physics_UpdateStats(entity this)
 void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-	anticheat_physics(this);
 	if (autocvar_sv_maxidle > 0) {
 		if (buttons != this.buttons_old
 		    || this.movement != this.movement_old

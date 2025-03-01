@@ -1623,22 +1623,15 @@ spawnfunc(worldspawn)
 
 	Ban_LoadBans();
 
-	// NOTE for matchid:
-	// changing the logic generating it is okay. But:
-	// it HAS to stay <= 64 chars
-	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
-	// strftime(false, "%s") isn't reliable, see strftime_s description
-	matchid = strzone(sprintf("%d.%s.%06d", autocvar_sv_eventlog_files_counter, strftime_s(), random() * 1000000));
-
 	if(autocvar_sv_eventlog)
 	{
-		//string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
-		//matchid = strzone(s);
+		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		matchid = strzone(s);
 		string gtype = ((coop) ? "coop" : "dm");
 		if(horde_ent)
 			gtype = "horde";
 
-		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, matchid));
+		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, s));
 
 		GameLogEcho(":gameinfo:end");
 	}
@@ -2052,15 +2045,8 @@ void StartFrame()
 
 	slide_check_time();
 
-	anticheat_startframe();
-
 	GlobalStats_updateglobal();
-	FOREACH_CLIENT(true,
-	{
-		GlobalStats_update(it);
-		// physics frames: update anticheat stuff
-		anticheat_prethink(it);
-	});
+	FOREACH_CLIENT(true, GlobalStats_update(it));
 }
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
@@ -2337,7 +2323,6 @@ void Physics_Frame()
 
 void EndFrame()
 {
-	anticheat_endframe();
 	Physics_Frame();
 
 	IL_ENDFRAME();

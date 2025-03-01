@@ -7,7 +7,6 @@
 #include "rogue/sphere.qh"
 #include "../common/triggers/func/breakable.qh"
 #include "../common/triggers/triggers.qh"
-#include "weapons/accuracy.qh"
 #include "weapons/weaponsystem.qh"
 
 bool IsExplosionDamage;
@@ -90,14 +89,6 @@ vector qc_aim(entity this, float missilespeed)
 	return = v_forward;
 	if(!IS_PLAYER(this) || W_DualWielding(this))
 		return;
-
-	// track max damage
-	.entity weaponentity = weaponentities[0];
-	Weapon wep = WEP_Null;
-	if(this.(weaponentity))
-		wep = this.(weaponentity).m_weapon;
-	if (IS_PLAYER(this) && accuracy_canbegooddamage(this))
-		accuracy_add(this, wep, missilespeed * 0.1, 0); // TODO: terrible way to tell max damage
 
 	// if sv_aim is so high it can't possibly accept anything, skip out early
 	if (autocvar_sv_aim >= 1)
@@ -284,7 +275,6 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 
 	if(IS_PLAYER(targ))
 	{
-		targ.death_time = time;
 		if(targ.alivetime)
 		{
 			PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ALIVETIME, time - targ.alivetime);
@@ -385,10 +375,7 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 		if(targ.flags & FL_MINION)
 			update_minioncount(targ.owner, -1);
 		if(IS_PLAYER(attacker) && !(targ.flags & FL_CLONE) && !targ.charmed)
-		{
 			attacker.frags += 1;
-			PlayerStats_GameReport_Event_Player(attacker, strcat(PLAYERSTATS_TOTAL, "kills"), 1);
-		}
 		if(horde_ent && !targ.charmed)
 			Horde_GiveScore(HORDE_TEAMSCORE_KILL);
 
@@ -814,8 +801,6 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 
 	IsExplosionDamage = true;
 
-	float stat_damagedone = 0;
-
 	vector inflictor_org = (inflictor.absmin + inflictor.absmax) * 0.5;
 
 	entity head = findradius(inflictor_org, damage + 40);
@@ -846,12 +831,6 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 			{
 				if(CanDamage(head, inflictor))
 				{
-					if(IS_PLAYER(head) || IS_MONSTER(head))
-					{
-						if(accuracy_isgooddamage(attacker, head))
-							stat_damagedone += points;
-					}
-
 					if(DEATH_ISSPECIAL(deathtype))
 						T_Damage(head, inflictor, attacker, points, deathtype);
 					else
@@ -861,10 +840,6 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 		}
 		head = next;
 	}
-
-	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(damage, damage * 0.5), stat_damagedone));
-
 	inside_radius = false;
 	IsExplosionDamage = false;
 }

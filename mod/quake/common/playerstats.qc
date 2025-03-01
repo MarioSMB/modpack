@@ -148,6 +148,7 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 	return val;
 }
 
+#if 0
 void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
@@ -162,6 +163,7 @@ void PlayerStats_GameReport_Accuracy(entity p)
 	});
 	#undef ACCMAC
 }
+#endif
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
 {
@@ -182,8 +184,8 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_JOINS, 1);
 
-	PlayerStats_GameReport_Accuracy(p);
-	anticheat_report_to_playerstats(p); // TODO: needed?
+	//PlayerStats_GameReport_Accuracy(p);
+	//anticheat_report_to_playerstats(p);
 
 	if(IS_REAL_CLIENT(p))
 	{
@@ -210,9 +212,6 @@ void PlayerScore_PlayerStats(entity p)
 {
 	PlayerStats_GameReport_Event_Player(p, strcat(PLAYERSTATS_SCOREBOARD, "kills"), p.frags);
 	PlayerStats_GameReport_Event_Player(p, strcat(PLAYERSTATS_SCOREBOARD, "dmg"), p.frags);
-
-	PlayerStats_GameReport_Event_Player(p, strcat(PLAYERSTATS_SCOREBOARD, "score"), p.frags);
-	PlayerStats_GameReport_Event_Player(p, strcat(PLAYERSTATS_TOTAL, "score"), p.frags);
 }
 
 void PlayerStats_GameReport(bool finished)
@@ -301,7 +300,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-frags"));
 		});
 
-		anticheat_register_to_playerstats();
+		//anticheat_register_to_playerstats();
 	}
 	else { PlayerStats_GameReport_DelayMapVote = false; }
 }
@@ -310,7 +309,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 // TODO: remove duel hack after servers have migrated to the proper duel gametype!
 string PlayerStats_GetGametype()
 {
-	return "cts"; // complete the stage, closest Xonotic equivalent, allows singleplayer recording
+	return "dm";
 }
 
 #ifdef SVQC
@@ -871,9 +870,6 @@ STATIC_INIT_LATE(PlayerStats)
 
 	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, "dmg"));
 	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, "dmg"));
-
-	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, "score"));
-	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, "score"));
 
 	// just count game start as now
 	game_starttime = time;

@@ -3,9 +3,6 @@
 const int CMD_REQUEST_COMMAND = 1; // copied from xonotic commands system
 const int CMD_REQUEST_USAGE = 2;
 
-#define ANTILAG_LATENCY(e) min(0.4, e.ping * 0.001)
-// add one ticrate?
-
 .string weaponorder_byimpulse;
 
 float autocvar_sv_quake_kill_delay = 5;
