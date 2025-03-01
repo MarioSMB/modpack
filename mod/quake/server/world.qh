@@ -34,8 +34,6 @@ bool gameover;
 
 .bool nightmare_checked;
 
-string matchid;
-
 // copper junk
 // mostly unused unless necessary for compat
 .int customflags;

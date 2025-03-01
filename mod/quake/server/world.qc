@@ -655,10 +655,6 @@ bool MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, fl
 	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance, false);
 }
 
-const float LATENCY_THINKRATE = 10;
-.float latency_sum;
-.float latency_cnt;
-.float latency_time;
 entity pingplreport;
 void PingPLReport_Think(entity this)
 {
@@ -675,15 +671,6 @@ void PingPLReport_Think(entity this)
 		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
 		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
 		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
-
-		// record latency times for clients throughout the match so we can report it to playerstats
-		if(time > (e.latency_time + LATENCY_THINKRATE))
-		{
-			e.latency_sum += e.ping;
-			e.latency_cnt += 1;
-			e.latency_time = time;
-			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
-		}
 	}
 	else
 	{
@@ -1432,8 +1419,6 @@ void SetMod()
 
 	//bool fullstatus = autocvar_g_full_getstatus_responses;
 	string s = ((coop) ? "coop" : "dm"); // the gametype
-	if(horde_ent)
-		s = "horde";
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(NULL, NULL)));
@@ -1616,8 +1601,6 @@ spawnfunc(worldspawn)
 	// 63 testing
 	lightstyle(63, "a");
 
-	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
-
 	static_init_late();
 	static_init_precache();
 
@@ -1626,10 +1609,8 @@ spawnfunc(worldspawn)
 	if(autocvar_sv_eventlog)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
-		matchid = strzone(s);
+		//matchid = strzone(s);
 		string gtype = ((coop) ? "coop" : "dm");
-		if(horde_ent)
-			gtype = "horde";
 
 		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, s));
 
