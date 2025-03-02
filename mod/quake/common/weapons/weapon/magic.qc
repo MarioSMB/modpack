@@ -3,15 +3,19 @@
 #include "../../monsters/_mod.qh"
 
 #ifdef SVQC
-void wep_magic_shot4(entity this) { wep_set_anim(this, 4, w_ready); }
-void wep_magic_shot3(entity this) { wep_set_anim(this, 3, wep_magic_shot4); }
-void wep_magic_shot2(entity this) { wep_set_anim(this, 2, wep_magic_shot3); }
-void wep_magic_shot1(entity this) { wep_set_anim(this, 1, wep_magic_shot2); this.owner.effects |= EF_MUZZLEFLASH; }
+void wep_magic_shot4(entity this) { wep_set_anim(this, 9, w_ready); }
+void wep_magic_shot3(entity this) { wep_set_anim(this, 8, wep_magic_shot4); }
+void wep_magic_shot2(entity this) { wep_set_anim(this, 7, wep_magic_shot3); }
+void wep_magic_shot1(entity this) { wep_set_anim(this, 6, wep_magic_shot2); this.owner.effects |= EF_MUZZLEFLASH; }
 
 PRECACHE(Magic)
 {
 	precache_model("progs/g_magic.mdl");
 	precache_model("progs/v_magic.mdl");
+
+	precache_model("progs/v_magic_fire.mdl");
+	precache_model("progs/v_magic_stormcloud.mdl");
+	precache_model("progs/v_magic_bubble.mdl");
 
 	precache_sound("weapons/magic_switch.wav");
 	precache_sound("weapons/boobies.wav");
@@ -450,5 +454,18 @@ NET_HANDLE(ENT_CLIENT_MAGIC_BUBBLE, bool isnew)
 	InterpolateOrigin_Note(this);
 
 	return true;
+}
+#endif
+
+#ifdef CSQC
+METHOD(Magic, wr_viewmodel, string(entity this, entity wep))
+{
+	switch(STAT(MAGIC_TYPE))
+	{
+		case 0: return "magic_fire";
+		case 1: return "magic_stormcloud";
+		case 2: return "magic_bubble";
+	}
+	return "magic";
 }
 #endif

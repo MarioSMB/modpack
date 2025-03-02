@@ -278,7 +278,7 @@ void player_stand1(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 
@@ -323,7 +323,7 @@ void player_stand1(entity this)
 			if(this.(weaponentity).m_frame > 7)
 				this.(weaponentity).m_frame = 0;
 		}
-		if(wep == WEP_CHAINSAW)
+		else if(wep == WEP_CHAINSAW)
 		{
 			this.(weaponentity).m_frame += 1;
 			if(this.(weaponentity).m_frame >= 5)
@@ -331,9 +331,15 @@ void player_stand1(entity this)
 			if(this.view_ofs != '0 0 0')
 				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 		}
-		if(wep == WEP_SPELLBOOK)
+		else if(wep == WEP_MAGIC)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame > 5)
+				this.(weaponentity).m_frame = 0;
+		}
+		else if(wep == WEP_SPELLBOOK)
 			spellbook_frame(this, weaponentity);
-		if(wep == WEP_PORTAL_GUN)
+		else if(wep == WEP_PORTAL_GUN)
 			portalgun_frame(this, weaponentity);
 	}
 
@@ -372,7 +378,7 @@ void player_run(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 	if(!this.velocity_x && !this.velocity_y)
@@ -411,7 +417,7 @@ void player_run(entity this)
 			if(this.(weaponentity).m_frame > 7)
 				this.(weaponentity).m_frame = 0;
 		}
-		if(wep == WEP_CHAINSAW)
+		else if(wep == WEP_CHAINSAW)
 		{
 			this.(weaponentity).m_frame += 1;
 			if(this.(weaponentity).m_frame >= 5)
@@ -419,9 +425,15 @@ void player_run(entity this)
 			if(this.view_ofs != '0 0 0')
 				_sound(this, CH_WEAPON_SINGLE, "weapons/sawridle.wav", 1, ATTN_NORM);
 		}
-		if(wep == WEP_SPELLBOOK)
+		else if(wep == WEP_MAGIC)
+		{
+			this.(weaponentity).m_frame += 1;
+			if(this.(weaponentity).m_frame > 5)
+				this.(weaponentity).m_frame = 0;
+		}
+		else if(wep == WEP_SPELLBOOK)
 			spellbook_frame(this, weaponentity);
-		if(wep == WEP_PORTAL_GUN)
+		else if(wep == WEP_PORTAL_GUN)
 			portalgun_frame(this, weaponentity);
 	}
 
