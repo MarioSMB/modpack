@@ -1836,8 +1836,7 @@ void sigil_touch(entity this, entity toucher)
 	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_MULTI, ITEM_RUNE_GOT, toucher.netname);
 	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_RUNE_GOT_SELF);
 
-	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
-	stuffcmd(toucher, "bf\n");
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NONE); // was ATTN_NORM, changed for global sigil pickups
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	this.noise = string_null; // so triggers don't play it again
