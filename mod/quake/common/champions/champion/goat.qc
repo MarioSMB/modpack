@@ -89,7 +89,7 @@ METHOD(Goat, m_touch, void(Champions this, entity actor, entity toucher))
 			toucher.velocity_z = (125 * pushforce);
 		}
 
-		te_explosion2(toucher.origin, 230, 5);
+		te_explosion2(toucher.origin, ((random() < 0.5) ? 230 : 240), 5);
 
 		float thedamage = 30;
 		if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
