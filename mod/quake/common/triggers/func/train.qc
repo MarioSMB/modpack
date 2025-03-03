@@ -136,7 +136,10 @@ void flytrain_blocked(entity this, entity blocker)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + this.dmgtime;
-	T_Damage(blocker, this, this, this.dmg, DEATH_CRUSH.m_id);
+	float damage = this.dmg;
+	if(IS_MONSTER(blocker))
+		damage = max(1000, this.dmg);
+	T_Damage(blocker, this, this, damage, DEATH_CRUSH.m_id);
 }
 
 void flytrain_killed(entity this, entity inflictor, entity attacker, int deathtype)
