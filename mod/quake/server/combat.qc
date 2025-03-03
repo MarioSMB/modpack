@@ -419,6 +419,11 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 // ====
 float shield_hit(entity targ, entity inflictor, entity attacker, float damage);
 
+bool NoPushies(entity targ, entity attacker)
+{
+	return !(coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing);
+}
+
 
 /*
 ============
@@ -562,7 +567,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 
 	bool nopush = false;
 	// optionally no pushing players around
-	if(coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing)
+	if(NoPushies(targ, attacker))
 		nopush = true;
 	// special case: v1's slam doesn't push enemies around
 	// TODO: let champions customise this

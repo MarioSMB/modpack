@@ -744,7 +744,11 @@ void hithammer(entity this, entity hitent, vector org, vector dir, float charge_
 		}	
 		
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-				
+		
+		if(NoPushies(hitent, actor))
+		{
+			// do nothing
+		}	
 		if(StatusEffects_active(STATUSEFFECT_Quad, actor)) // do big knockback with a quad
 		{
 			if((hitent.move_movetype == MOVETYPE_STEP || hitent.move_movetype == MOVETYPE_WALK) && 

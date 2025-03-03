@@ -813,7 +813,7 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 			T_Damage(trace_ent, from, from, ldmg, deathtype);
 		if(IS_PLAYER(from))
 		{
-			if(IS_PLAYER(trace_ent))
+			if(IS_PLAYER(trace_ent) && !NoPushies(trace_ent, from))
 				trace_ent.velocity_z += 400;
 		}
 		if(trace_ent.reflectlightning || trace_ent.magic_bubble)

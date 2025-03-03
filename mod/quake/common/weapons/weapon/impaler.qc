@@ -39,7 +39,7 @@ void T_SpearTouch(entity this, entity toucher)
 			knockback = max(50, 300 - vlen(this.maxs - this.mins)); 
 		else
 			knockback = 0;
-		if(knockback > 10)
+		if(knockback > 10 && !NoPushies(toucher, this.owner))
 		{
 			UNSET_ONGROUND(toucher);
 			makevectors(this.angles);
