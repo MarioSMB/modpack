@@ -453,6 +453,8 @@ void SendCDTrack(entity to, int numb)
 
 void ExitIntermission()
 {
+	chat_grabber_CheckClients();
+
 // skip any text in deathmatch
 	if(deathmatch)
 	{
@@ -1920,8 +1922,6 @@ void NextLevel()
 	gameover = true;
 
 	target_music_kill();
-
-	chat_grabber_CheckClients();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");

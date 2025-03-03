@@ -50,6 +50,8 @@ const int FL_DOUBLEJUMPED 			= BIT(20);
 
 #ifdef GAMEQC
 const int EF_SHOCK = 262144;
+
+const int EF_AFTEREFFECT = 524288;
 #endif
 
 const int WORLDTYPE_MEDIEVAL = 0;

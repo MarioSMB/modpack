@@ -1,7 +1,9 @@
 #include "csqcmodel_hooks.qh"
 
 #include "../client/main.qh"
+#include "../common/constants.qh"
 #include "../common/effects/all.qh"
+#include "../common/physics.qh"
 #include "../common/sounds/all.qh"
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
@@ -36,6 +38,44 @@ void Projectile_DrawTrail(entity this, vector to)
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
 		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
+}
+
+void SUB_SetFade(entity ent, float vanish_time, float fading_time);
+.vector colormod;
+.float aftereffect_time;
+void CSQCModel_AfterEffect(entity this)
+{
+	if(time < this.aftereffect_time)
+		return;
+	if(vdist(this.velocity, <=, 100))
+		return;
+
+	this.aftereffect_time = time + PHYS_INPUT_TIMELENGTH;
+
+	entity body = new(aftereffect);
+	body.solid = SOLID_NOT;
+	_setmodel(body, this.model);
+	setsize(body, this.mins, this.maxs);
+	setorigin(body, this.origin);
+	body.angles = this.angles;
+	//body.v_angle = this.v_angle;
+	body.frame = this.frame;
+	float myalpha = (this.alpha) ? this.alpha : 1;
+	body.alpha = myalpha * 0.5;
+	//body.colormod = '-1 -1 -1';
+	body.colormap = this.colormap;
+	body.effects = this.effects;
+	body.effects &= ~EF_AFTEREFFECT; // lol no
+	body.modelflags = this.modelflags;
+	body.renderflags = RF_NOSHADOW | RF_ADDITIVE;
+	body.drawmask = MASK_NORMAL;
+
+	if(this.entnum == player_localentnum)
+		body.renderflags |= RF_EXTERNALMODEL;
+	else
+		body.renderflags &= ~RF_EXTERNALMODEL;
+
+	SUB_SetFade(body, time, 0.25);
 }
 
 void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
@@ -106,6 +146,8 @@ void CSQCModel_Effects_Apply(entity this)
 		this.effects |= EF_NOSELFSHADOW;
 	if(eff & EF_DYNAMICMODELLIGHT)
 		this.renderflags |= RF_DYNAMICMODELLIGHT;
+	if(eff & EF_AFTEREFFECT)
+		CSQCModel_AfterEffect(this);
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(this.csqcmodel_modelflags & MF_ROCKET)
 		tref = EFFECT_TR_ROCKET.m_id;
