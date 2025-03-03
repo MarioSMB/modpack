@@ -3,6 +3,7 @@
 int autocvar_sv_aim = 2;
 bool autocvar_g_friendlyfire_virtual;
 float autocvar_g_friendlyfire;
+bool autocvar_sv_quake_nopushing;
 
 .float pain_finished;
 

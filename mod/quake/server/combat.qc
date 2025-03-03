@@ -560,8 +560,17 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		targ.dmg_take = targ.dmg_take + take;
 	}
 
+	bool nopush = false;
+	// optionally no pushing players around
+	if(coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing)
+		nopush = true;
+	// special case: v1's slam doesn't push enemies around
+	// TODO: let champions customise this
+	if(DEATH_IS(deathtype, DEATH_CRUSH) && attacker.m_champion == CHAMPION_V1)
+		nopush = true;
+
 // figure momentum add
-	if((inflictor != NULL) && inflictor.classname != "vortex" && deathtype != DEATH_HURTTRIGGER.m_id &&
+	if((inflictor != NULL) && !nopush && inflictor.classname != "vortex" && deathtype != DEATH_HURTTRIGGER.m_id &&
 		(targ.move_movetype == MOVETYPE_WALK || (targ.move_movetype == MOVETYPE_STEP && DEATH_ISWEAPON(deathtype, WEP_TUBA) && inflictor == attacker && !(targ.monsterdef.spawnflags & MON_FLAG_STATIONARY))) )
 	{
 		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
