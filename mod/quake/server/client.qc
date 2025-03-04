@@ -1498,6 +1498,8 @@ void PutPlayerInServer(entity this)
 	this.pushltime = 0;
 	this.pusher = NULL;
 
+	this.clipgroup = 0;
+
 	this.alpha = 1;
 	this.colormod = '1 1 1';
 
@@ -1507,6 +1509,11 @@ void PutPlayerInServer(entity this)
 	this.weaponmodel = "";
 
 	STAT(DUAL_WEAPONS, this) = '0 0 0';
+
+	if(coop && autocvar_g_player_collisions)
+		this.clipgroup = CLIPGROUP_PLAYER;
+	else
+		this.clipgroup = 0;
 
 	// hipnotic fields
 	this.gravity = 1.0;

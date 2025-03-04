@@ -9,6 +9,9 @@ float autocvar_sv_quake_kill_delay = 5;
 
 bool autocvar_sv_quake_globalkeys = true;
 
+const int CLIPGROUP_PLAYER = 1;
+bool autocvar_g_player_collisions;
+
 float autocvar_sv_maxidle;
 int autocvar_sv_maxidle_minplayers;
 

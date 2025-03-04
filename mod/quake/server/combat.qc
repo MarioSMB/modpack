@@ -421,7 +421,7 @@ float shield_hit(entity targ, entity inflictor, entity attacker, float damage);
 
 bool NoPushies(entity targ, entity attacker)
 {
-	return !(coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing);
+	return (coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing);
 }
 
 
