@@ -812,7 +812,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 	while(head)
 	{
 		entity next = head.chain;
-		if(head != ignore && head.takedamage && head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)
+		if(head != ignore && head.takedamage && (attacker == head || (head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)))
 		{
 			vector org = head.origin + (head.mins + head.maxs) * 0.5;
 			float points = max(0, 0.5 * vlen(inflictor_org - org));
