@@ -121,6 +121,7 @@ void W_Plane_Fire(entity this, .entity weaponentity)
 	missile.angles = vectoangles(missile.velocity);
 	missile.weaponentity_fld = weaponentity;
 	missile.projectiledeathtype = WEP_PLANE.m_id;
+	missile.clipgroup = this.clipgroup;
 	setthink(missile, PlaneScrewUp);
 	missile.nextthink = time + 0.1;
 	settouch(missile, T_PaperPlaneTouch);

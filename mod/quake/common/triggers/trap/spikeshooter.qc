@@ -63,6 +63,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		lavaball.angles = vectoangles(lavaball.velocity);
 		lavaball.owner = this;
 		lavaball.projectiledeathtype = DEATH_TRAP.m_id;
+		lavaball.clipgroup = this.clipgroup;
 		settouch(lavaball, T_MissileTouch);
 		_setmodel (lavaball, "progs/lavarock.mdl");
 		setsize (lavaball, '-4 -4 -4', '4 4 4');

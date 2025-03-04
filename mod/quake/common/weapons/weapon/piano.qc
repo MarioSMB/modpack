@@ -185,6 +185,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 
 	entity musicnote = spawn();
 	musicnote.projectiledeathtype = WEP_PIANO.m_id;
+	musicnote.clipgroup = this.clipgroup;
 	musicnote.owner = this;
 	musicnote.dmg = 27;
 	set_movetype(musicnote, MOVETYPE_BOUNCE);

@@ -421,7 +421,7 @@ float shield_hit(entity targ, entity inflictor, entity attacker, float damage);
 
 bool NoPushies(entity targ, entity attacker)
 {
-	return (coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && autocvar_sv_quake_nopushing);
+	return (coop && targ != attacker && IS_PLAYER(targ) && IS_PLAYER(attacker) && (autocvar_sv_quake_nopushing || targ.cvar_cl_quake_donotdisturb));
 }
 
 
@@ -812,7 +812,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 	while(head)
 	{
 		entity next = head.chain;
-		if(head != ignore && head.takedamage)
+		if(head != ignore && head.takedamage && head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)
 		{
 			vector org = head.origin + (head.mins + head.maxs) * 0.5;
 			float points = max(0, 0.5 * vlen(inflictor_org - org));

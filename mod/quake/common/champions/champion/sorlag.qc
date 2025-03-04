@@ -108,6 +108,7 @@ void Sorlag_AcidSpit(entity this)
 
 	newmis.poisonous = true;
 	newmis.projectiledeathtype = WEP_NAPALM.m_id;
+	newmis.clipgroup = this.clipgroup;
 	newmis.avelocity = '300 300 300';
 	newmis.angles = vectoangles(newmis.avelocity);
 	_setmodel(newmis, "progs/s_sorspit.mdl");

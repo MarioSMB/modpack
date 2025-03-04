@@ -503,6 +503,7 @@ void BileBombTouch(entity this, entity toucher)
 		missile.owner = this;
 		set_movetype(missile, MOVETYPE_BOUNCE);
 		missile.projectiledeathtype = this.projectiledeathtype;
+		missile.clipgroup = this.clipgroup;
 		missile.solid = SOLID_BBOX;
 		makevectors(this.angles);
 		missile.velocity_x = mrandom(1000);
@@ -535,6 +536,7 @@ void BileBombThink(entity this)
 	{
 		entity missile = spawn();
 		missile.projectiledeathtype = this.projectiledeathtype;
+		missile.clipgroup = this.clipgroup;
 		missile.owner = this.owner;
 		missile.poisonous = this.poisonous;
 		missile.realowner = this.realowner;
@@ -566,6 +568,7 @@ void gug_bilebomb(entity this)
 	entity missile = spawn();
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_GUG.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.poisonous = true;
 	set_movetype(missile, MOVETYPE_TOSS);
 	missile.solid = SOLID_BBOX;

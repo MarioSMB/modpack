@@ -253,6 +253,8 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	if(light)
 		missile.effects = EF_DIMLIGHT;
 	missile.projectiledeathtype = WEP_LASER_CANNON.m_id;
+	missile.clipgroup = this.clipgroup;
+	missile.clipgroup = this.clipgroup;
 
 	_setmodel(missile, "progs/lasrspik.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
@@ -521,6 +523,7 @@ void W_FireRifleTarget(entity this, entity targ)
 	missile.velocity = dir * 1000;
 	missile.angles = vectoangles(missile.velocity);
 	missile.projectiledeathtype = DEATH_PULSERIFLE.m_id;
+	missile.clipgroup = this.clipgroup;
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
@@ -990,6 +993,7 @@ void SpawnFireSpark(entity this)
 	missile.realowner = this.owner;
 	missile.classname = "flame";
 	missile.projectiledeathtype = WEP_NAPALM.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.velocity = VelocityForDamage(this, this, 0);
 	missile.velocity_z = missile.velocity_z + 100 + 50 * random();
 	settouch(missile, MakeFlame);
@@ -1219,6 +1223,7 @@ entity SpawnInternalFire(entity this, entity targ)
 	entity missile = spawn();
 	set_movetype(missile, MOVETYPE_NONE);
 	missile.projectiledeathtype = this.projectiledeathtype;
+	missile.clipgroup = this.clipgroup;
 	missile.solid = SOLID_NOT;
 	missile.owner = this.owner;
 	missile.realowner = this.owner;
@@ -1265,6 +1270,7 @@ void stick_spike(entity this, vector org, vector dir)
 	newmis.owner = this.owner;
 	newmis.realowner = this.realowner;
 	newmis.projectiledeathtype = this.projectiledeathtype;
+	newmis.clipgroup = this.clipgroup;
 
 	// make it not solid and stop it
 	set_movetype(newmis, MOVETYPE_NONE);
@@ -1305,6 +1311,7 @@ entity launch_spike(entity this, vector org, vector dir)
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
+	newmis.clipgroup = this.clipgroup;
 
 	newmis.angles = vectoangles(dir);
 	
@@ -1598,6 +1605,7 @@ entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 	proj.owner = this;
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = WEP_NAPALM.m_id; // placeholder
+	proj.clipgroup = this.clipgroup;
 	setorigin(proj, org);
 	proj.velocity = dir * pspeed;
 	proj.bouncefactor = 1;

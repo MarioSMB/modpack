@@ -52,6 +52,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	entity newmis = new(enforcer_laser);
 	newmis.owner = this;
 	newmis.projectiledeathtype = DEATH_MONSTER_ENFORCER.m_id;
+	newmis.clipgroup = this.clipgroup;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;

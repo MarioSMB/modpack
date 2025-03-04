@@ -357,6 +357,7 @@ void lavaman_missile(entity this, int AttackNumber)
 //	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	set_movetype(fireball, MOVETYPE_BOUNCE);
 	fireball.projectiledeathtype = DEATH_MONSTER_LAVAMAN.m_id;
+	fireball.clipgroup = this.clipgroup;
 	fireball.solid = SOLID_BBOX;
 	fireball.angles = vectoangles(vec);
 	settouch(fireball, lavaman_touch);

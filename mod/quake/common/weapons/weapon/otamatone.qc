@@ -134,6 +134,7 @@ void W_FireOtamatone(entity this, .entity weaponentity)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_OTAMATONE.m_id;
+		musicnote.clipgroup = this.clipgroup;
 
 		//musicnote.scale = 0.4;
 		musicnote.angles = '0 1 0' * this.angles_y;

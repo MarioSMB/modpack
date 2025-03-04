@@ -143,6 +143,7 @@ void LaunchRocket(entity this, vector org, vector vec)
 	entity newmis = spawn();
 	newmis.owner = this;
 	newmis.projectiledeathtype = DEATH_MONSTER_LEGOND.m_id;
+	newmis.clipgroup = this.clipgroup;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	_setmodel(newmis, "progs/missile2.mdl");

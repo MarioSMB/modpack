@@ -401,6 +401,7 @@ void W_FireMine(entity this)
 	set_movetype(mine, MOVETYPE_BOUNCE);
 	mine.solid = SOLID_TRIGGER;
 	mine.projectiledeathtype = DEATH_CRUSH.m_id;
+	mine.clipgroup = this.clipgroup;
 	mine.effects = EF_FULLBRIGHT;
 
 	if(this.minetype > 0)

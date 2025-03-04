@@ -120,6 +120,7 @@ void W_FireKazoo(entity this, .entity weaponentity)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_KAZOO.m_id;
+		musicnote.clipgroup = this.clipgroup;
 
 		musicnote.scale = 0.4;
 		musicnote.angles = '0 1 0' * this.angles_y;

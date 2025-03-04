@@ -66,6 +66,7 @@ void OgreFireGrenade(entity this)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_OGRE.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.classname = "ogre_grenade";
 	missile.dmg = 40;
 		

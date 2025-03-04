@@ -145,6 +145,7 @@ void edie_Fire(entity this, float valx, float valy, float valz, bool moving)
 	missile.solid = SOLID_BBOX;
 	missile.classname = "edie_nail";
 	missile.projectiledeathtype = DEATH_MONSTER_EDIE.m_id;
+	missile.clipgroup = this.clipgroup;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 0.8, 1.2);
 
 	if(!moving && random() < 0.2) //randomly make him shoot badly sometimes, even when stopped and aiming.

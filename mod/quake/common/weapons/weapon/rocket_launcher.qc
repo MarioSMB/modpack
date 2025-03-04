@@ -15,6 +15,7 @@ entity W_FireRocket(entity this)
 	missile.solid = SOLID_BBOX;
 	missile.classname = "missile";
 	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
+	missile.clipgroup = this.clipgroup;
 		
 // set missile speed	
 

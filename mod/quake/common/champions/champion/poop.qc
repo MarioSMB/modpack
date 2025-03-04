@@ -104,6 +104,7 @@ void Poop_PooSpit(entity this)
 
 	newmis.poisonous = true;
 	newmis.projectiledeathtype = WEP_NAPALM.m_id;
+	newmis.clipgroup = this.clipgroup;
 	newmis.avelocity = '300 300 300';
 	newmis.angles = vectoangles(newmis.avelocity);
 	newmis.colormod = '0.54 0.27 0.07';

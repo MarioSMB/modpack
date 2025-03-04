@@ -59,6 +59,7 @@ void mic_fire_note(entity this, entity targ)
 	musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	musicnote.classname = "tubanote";
 	musicnote.projectiledeathtype = WEP_MIC.m_id;
+	musicnote.clipgroup = this.clipgroup;
 	musicnote.effects = EF_FULLBRIGHT;
 
 	musicnote.angles = '0 1 0' * this.owner.angles_y;
@@ -177,6 +178,7 @@ void W_FireMic(entity this, .entity weaponentity)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_MIC.m_id;
+		musicnote.clipgroup = this.clipgroup;
 		musicnote.effects = EF_FULLBRIGHT;
 
 		musicnote.angles = '0 1 0' * this.angles_y;

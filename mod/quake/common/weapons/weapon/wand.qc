@@ -73,6 +73,7 @@ void W_FireWand(entity this, .entity weaponentity)
 	missile.classname = "vore_ball";
 	missile.owner = missile.realowner = this;
 	missile.projectiledeathtype = WEP_WAND.m_id;
+	missile.clipgroup = this.clipgroup;
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);

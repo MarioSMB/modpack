@@ -177,6 +177,7 @@ void fishmissile(entity this, .entity weaponentity)
 	fish.owner = this;
 	fish.fish_time = this.(weaponentity).fish_time;
 	fish.projectiledeathtype = WEP_FISH.m_id;
+	fish.clipgroup = this.clipgroup;
 	fish.model = "feesh.mdl";
 	if(fish.fish_time > 4 && fish.fish_time < SUPERFISHTIME)
 		fish.fish_time = 4;

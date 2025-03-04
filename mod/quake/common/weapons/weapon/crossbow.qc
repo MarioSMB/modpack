@@ -22,6 +22,7 @@ void crossbow_bolt_stick(entity this, vector org, vector dir)
 	newmis.owner = this.owner;
 	newmis.realowner = this.realowner;
 	newmis.projectiledeathtype = this.projectiledeathtype;
+	newmis.clipgroup = this.clipgroup;
 
 	// make it not solid and stop it
 	set_movetype(newmis, MOVETYPE_NONE);

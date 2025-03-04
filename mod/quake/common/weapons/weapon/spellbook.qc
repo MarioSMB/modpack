@@ -84,6 +84,7 @@ entity rune_summon(entity this, vector spot, Model rune_model, entity eff, int s
 	entity rune = new(rune);
 	rune.owner = rune.realowner = this;
 	rune.solid = SOLID_NOT;
+	rune.clipgroup = this.clipgroup;
 	rune.currentspell = spell_type;
 	setmodel(rune, rune_model);
 	setsize(rune, '-48 -48 0', '48 48 4');
@@ -487,6 +488,7 @@ void summon_cyclone(entity rune)
 	setthink(ent, cyclone_think);
 	ent.nextthink = time;
 	ent.projectiledeathtype = WEP_SPELLBOOK.m_id;
+	ent.clipgroup = rune.clipgroup;
 }
 
 void W_Spell_Frost(entity this, vector spot)
@@ -679,6 +681,7 @@ void summon_boneshard(entity rune)
 	arms.arms_spawned = rune; // keep track separately for position updates
 	arms.solid = SOLID_CORPSE;
 	arms.projectiledeathtype = WEP_SPELLBOOK.m_id;
+	arms.clipgroup = rune.clipgroup;
 	arms.cnt = rune.cnt + 1; // just incase the rune itself doesn't remove them!
 	set_movetype(arms, MOVETYPE_FLYMISSILE);
 	_setmodel(arms, "progs/bone_shard.mdl");			
@@ -974,6 +977,7 @@ void summon_curse(entity this)
 		flame.owner = this;
 		flame.realowner = this.realowner;
 		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
+		flame.clipgroup = this.clipgroup;
 		flame.solid = SOLID_TRIGGER;
 		_setmodel(flame, "progs/quake_flame2.mdl");
 		flame.frame = 0;
@@ -1077,6 +1081,7 @@ void summon_meteors(entity this)
 		flame.owner = this.realowner;
 		flame.realowner = this.realowner;
 		flame.projectiledeathtype = WEP_SPELLBOOK.m_id;
+		flame.clipgroup = this.clipgroup;
 		flame.classname = "missile";
 		set_movetype(flame, MOVETYPE_FLYMISSILE);
 		//setorigin(flame, this.origin);

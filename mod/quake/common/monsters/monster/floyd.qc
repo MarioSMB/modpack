@@ -99,6 +99,7 @@ void FLaunchLaser(entity this, vector org, vector vec)
 	newmis.effects = EF_DIMLIGHT;
 	newmis.flags = FL_PROJECTILE;
 	newmis.projectiledeathtype = DEATH_MONSTER_FLOYD.m_id;
+	newmis.clipgroup = this.clipgroup;
 
 	_setmodel(newmis, "progs/flaser.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		

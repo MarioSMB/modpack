@@ -371,6 +371,7 @@ void JLaunchLaser(entity this, vector org, vector vec)
 	newmis.effects = EF_DIMLIGHT;
 	newmis.flags = FL_PROJECTILE;
 	newmis.projectiledeathtype = DEATH_MONSTER_JIM.m_id;
+	newmis.clipgroup = this.clipgroup;
 
 	_setmodel(newmis, "progs/proj_laz.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		

@@ -23,6 +23,7 @@ void Mime_ThrowBall(entity this)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MIMEBALL.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.bouncefactor = 1;
 	missile.bouncestop = 0.1;
 // set missile speed	

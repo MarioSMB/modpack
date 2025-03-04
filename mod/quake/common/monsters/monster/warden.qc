@@ -195,6 +195,7 @@ void warden_shriek_spawn(entity this, vector org, vector dir)
 	newmis.solid = SOLID_TRIGGER;
 	newmis.pos1 = '48 48 48';
 	newmis.projectiledeathtype = DEATH_MONSTER_WARDEN.m_id;
+	newmis.clipgroup = this.clipgroup;
 	newmis.cnt = time + 1.5;
 	newmis.scale = 0.2;
 	setsize(newmis, -newmis.pos1 * newmis.scale, newmis.pos1 * newmis.scale);

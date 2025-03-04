@@ -110,6 +110,7 @@ void sphere_spawn(entity item, entity player)
 	missile.weapon = 0;
 	missile.delay = time + 30;
 	missile.projectiledeathtype = DEATH_SPHERE.m_id;
+	missile.clipgroup = player.clipgroup;
 	_setmodel(missile, "progs/sphere.mdl");
 	setsize(missile, '0 0 0', '0 0 0');     
 	setorigin(missile, item.origin);

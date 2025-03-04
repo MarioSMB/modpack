@@ -179,6 +179,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 	musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	musicnote.classname = "tubanote";
 	musicnote.projectiledeathtype = WEP_TUBA.m_id;
+	musicnote.clipgroup = this.clipgroup;
 	musicnote.effects = EF_FULLBRIGHT;
 
 	musicnote.angles = vectoangles(musicnote.velocity);

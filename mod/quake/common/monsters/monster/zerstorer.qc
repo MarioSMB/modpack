@@ -414,6 +414,7 @@ void ZerMissile(entity this)
 	missile.classname = "vore_ball";
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_ZERSTORER.m_id;
+	missile.clipgroup = this.clipgroup;
 
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;

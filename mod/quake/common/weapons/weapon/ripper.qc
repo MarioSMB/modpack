@@ -94,6 +94,7 @@ void W_FireRipper(entity this, .entity weaponentity)
 
 	entity disc = spawn();
 	disc.projectiledeathtype = WEP_RIPPER.m_id;
+	disc.clipgroup = this.clipgroup;
 	disc.owner = disc.realowner = this;
 	set_movetype(disc, MOVETYPE_FLYMISSILE);
 	disc.solid = SOLID_BBOX;

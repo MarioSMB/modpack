@@ -135,6 +135,7 @@ void W_FireMayo(entity this, .entity weaponentity)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_MAYO.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.scale = 0.5;
 // set missile speed	
 

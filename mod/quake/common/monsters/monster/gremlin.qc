@@ -1008,6 +1008,7 @@ void Gremlin_FireRocket(entity this)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
+	missile.clipgroup = this.clipgroup;
 
 // set missile speed
 

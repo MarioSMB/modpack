@@ -108,6 +108,7 @@ void mshake_DropMilk(entity this, float amount)
 	proj.owner = this;
 	proj.realowner = this;
 	proj.projectiledeathtype = DEATH_GENERIC.m_id; // dummy deathtype
+	proj.clipgroup = this.clipgroup;
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.solid = SOLID_BBOX;
 	proj.scale = 0.75;

@@ -604,6 +604,7 @@ void SkaarjMissile(entity this, vector org, vector dir)
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "skaarjmissile";
 	newmis.projectiledeathtype = DEATH_MONSTER_SKAARJ.m_id;
+	newmis.clipgroup = this.clipgroup;
 		
 	// set missile speed	
 	newmis.velocity = dir * 500;

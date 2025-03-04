@@ -85,6 +85,7 @@ void W_FireNapalm(entity this, .entity weaponentity)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_NAPALM.m_id;
+	missile.clipgroup = this.clipgroup;
 	missile.classname = "flame";
 	missile.takedamage = DAMAGE_NO;
 	makevectors(this.v_angle);

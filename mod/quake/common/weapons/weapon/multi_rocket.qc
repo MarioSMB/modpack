@@ -110,6 +110,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum, .entity weapon
 	missile.delay = time + 4;
 	missile.frame = frameNum;
 	missile.projectiledeathtype = WEP_MULTI_ROCKET.m_id;
+	missile.clipgroup = this.clipgroup;
 	settouch(missile, MultiRocketTouch);
 
 	if(deathmatch || coop)

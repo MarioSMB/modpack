@@ -77,6 +77,7 @@ void octa_ink_spawn(entity this, vector org, vector dir)
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_TRIGGER;
 	newmis.projectiledeathtype = DEATH_MONSTER_OCTA.m_id;
+	newmis.clipgroup = this.clipgroup;
 
 	_setmodel(newmis, "progs/madfox/wink.spr");
 	setsize(newmis, '0 0 0', '0 0 0');

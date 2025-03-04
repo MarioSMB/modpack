@@ -329,6 +329,7 @@ void juggernaut_launch_rocket(entity this)
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "juggy_rocket";
 	newmis.projectiledeathtype = DEATH_MONSTER_JUGGERNAUT.m_id;
+	newmis.clipgroup = this.clipgroup;
 	makevectors(this.angles);
 	float ammo = this.ammo_rockets;
 	vector forward = (v_forward * 30);

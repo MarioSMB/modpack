@@ -345,6 +345,7 @@ entity launch_fireball(entity this, vector org, vector dir)
 	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	fireball.solid = SOLID_BBOX;
 	fireball.projectiledeathtype = DEATH_MONSTER_DRAGON.m_id;
+	fireball.clipgroup = this.clipgroup;
 	fireball.classname = "fireball";
 	_setmodel(fireball, "progs/fireball.mdl");
 	setorigin(fireball, org);

@@ -139,6 +139,7 @@ void organ_fire(entity this)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_ORGAN.m_id;
+		musicnote.clipgroup = this.clipgroup;
 
 		musicnote.angles = '0 1 0' * this.angles_y;
 

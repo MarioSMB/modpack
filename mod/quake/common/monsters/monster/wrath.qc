@@ -220,6 +220,7 @@ void WrathMissile(entity this, int AttackNumber)
 	missile.avelocity = '300 300 300';
 	missile.enemy = this.enemy;
 	missile.projectiledeathtype = DEATH_MONSTER_WRATH.m_id;
+	missile.clipgroup = this.clipgroup;
 	settouch(missile, WrathMissileTouch);
 	missile.nextthink = time + 0.1;
 	setthink(missile, WrathHome);

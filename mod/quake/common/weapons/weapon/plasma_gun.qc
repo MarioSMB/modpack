@@ -161,6 +161,7 @@ entity launch_plasma(entity this, vector org, vector dir)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_PLASMA_GUN.m_id;
+	missile.clipgroup = this.clipgroup;
 	
 // set missile speed
 //ooppee new code... it was that damn 0.01. I changed it to 600 to match the

@@ -98,6 +98,7 @@ void W_FireProximityGrenade(entity this, .entity weaponentity)
 	missile.health = 5;
 	missile.state = 0;
 	missile.projectiledeathtype = WEP_PROXIMITY_GUN.m_id;
+	missile.clipgroup = this.clipgroup;
 
 // set missile speed
 

@@ -219,6 +219,7 @@ void W_FireSuperLightning(entity this, .entity weaponentity)
 	missile.velocity = missile.velocity * 2000;
 	missile.angles = vectoangles(missile.velocity);
 	missile.projectiledeathtype = WEP_LIGHTME.m_id;
+	missile.clipgroup = this.clipgroup;
 	settouch(missile, LightningTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);

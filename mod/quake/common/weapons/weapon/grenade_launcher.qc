@@ -39,6 +39,7 @@ void W_FireGrenade(entity this, .entity weaponentity)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_GRENADE_LAUNCHER.m_id;
+	missile.clipgroup = this.clipgroup;
 // set missile speed	
 
 	makevectors(this.v_angle);

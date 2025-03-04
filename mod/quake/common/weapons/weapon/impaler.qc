@@ -87,6 +87,7 @@ void T_SpearTouch(entity this, entity toucher)
 		missile.avelocity_z = crandom() * 500;
 		missile.count = 0;
 		missile.projectiledeathtype = WEP_SPEAR.m_id;
+		missile.clipgroup = this.clipgroup;
 		settouch(missile, T_SpearTouch);
 		missile.nextthink = time + 4;
 		setthink(missile, SUB_Remove);
@@ -438,6 +439,7 @@ void W_FireSpear(entity this, .entity weaponentity)
 	missile.avelocity_z = crandom() * 500;
 	missile.count = 0;
 	missile.projectiledeathtype = WEP_SPEAR.m_id;
+	missile.clipgroup = this.clipgroup;
 	settouch(missile, T_SpearTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);

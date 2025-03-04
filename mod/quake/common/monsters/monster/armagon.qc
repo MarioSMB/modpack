@@ -56,6 +56,7 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_ARMAGON.m_id;
+	missile.clipgroup = this.clipgroup;
 
 // set missile speed
 	missile.velocity = vec * 1000;

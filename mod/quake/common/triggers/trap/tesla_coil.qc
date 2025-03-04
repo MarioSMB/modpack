@@ -66,6 +66,7 @@ void SpawnTeslaLightning(entity this, entity targ)
 	setthink(lgt, TeslaLightningThink);
 	lgt.nextthink = time;
 	lgt.projectiledeathtype = this.projectiledeathtype;
+	lgt.clipgroup = this.clipgroup;
 }
 
 void trap_tesla_think(entity this)

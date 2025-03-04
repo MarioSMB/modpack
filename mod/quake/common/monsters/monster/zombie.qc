@@ -172,6 +172,7 @@ void ZombieFireGrenade(entity this, vector st)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_ZOMBIE.m_id;
+	missile.clipgroup = this.clipgroup;
 
 // calc org
 	fixedmakevectors(this.angles);

@@ -20,6 +20,7 @@ void MiniGrenadeLaunch(entity this, float offsetAngle)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = this.projectiledeathtype;
+	missile.clipgroup = this.clipgroup;
 		
 // set missile speed	
 	missile.v_angle = this.v_angle;
@@ -94,6 +95,7 @@ void W_FireMultiGrenade(entity this, .entity weaponentity)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_MULTI_GRENADE.m_id;
+	missile.clipgroup = this.clipgroup;
 		
 // set missile speed	
 	makevectors(this.v_angle);

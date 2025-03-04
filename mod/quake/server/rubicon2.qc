@@ -474,6 +474,7 @@ void smoke_think(entity this)
 		smoke.cnt = 0;
 		smoke.alpha = this.alpha;
 		smoke.projectiledeathtype = DEATH_STEAM.m_id;
+		smoke.clipgroup = this.clipgroup;
 		
 		setthink(this, smoke_think);
 		this.nextthink = time + this.wait;
@@ -621,6 +622,7 @@ entity make_flame(entity this, vector org, vector dir)
 	newmis.dmg = 5;
 	newmis.frame = 0;
 	newmis.projectiledeathtype = DEATH_BURNING.m_id;
+	newmis.clipgroup = this.clipgroup;
 	
 	//add glow to new flame
 	this.missle = newmis;

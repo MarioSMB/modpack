@@ -89,6 +89,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
 		musicnote.projectiledeathtype = WEP_DOOT.m_id;
+		musicnote.clipgroup = this.clipgroup;
 		musicnote.effects = EF_FULLBRIGHT;
 
 		musicnote.angles = '0 1 0' * this.angles_y;

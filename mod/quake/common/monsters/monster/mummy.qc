@@ -138,6 +138,7 @@ void mummyFireGrenade(entity this, vector st)
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = DEATH_MONSTER_MUMMY.m_id;
+	missile.clipgroup = this.clipgroup;
 
 // calc org
 	vector org = this.origin + st.x * v_forward + st.y * v_right + (st.z - 24) * v_up;
