@@ -67,26 +67,23 @@ void fishbounce(entity this, entity toucher)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/hit1.wav", 0.8, ATTN_NORM);
 }
 
-void shockwave(vector point, float radius, float kick)
+void shockwave(entity proj, vector point, float radius, float kick)
 {
 	float damgidx = kick / radius;
-	entity e = findradius(point, radius);
-	while(e)
+	FOREACH_ENTITY_RADIUS(point, radius, it.takedamage && it.move_movetype != MOVETYPE_NONE && it.classname != "door",
 	{
-		if(e.takedamage && e.move_movetype != MOVETYPE_NONE && e.classname != "door")
+		if(it != proj.owner && it.clipgroup && it.clipgroup == proj.clipgroup)
+			continue;
+		vector temp = it.origin - point;
+		if(vdist(temp, <, radius))
 		{
-			vector temp = e.origin - point;
-			if(vdist(temp, <, radius))
-			{
-				float punch = kick - (damgidx * vlen(temp));
-				temp = normalize(temp);
-				temp = temp * punch;
-				UNSET_ONGROUND(e);
-				e.velocity = e.velocity + temp;
-			}
+			float punch = kick - (damgidx * vlen(temp));
+			temp = normalize(temp);
+			temp = temp * punch;
+			UNSET_ONGROUND(it);
+			it.velocity += temp;
 		}
-		e = e.chain;
-	}
+	});
 }
 
 void fishtouch(entity this, entity toucher)
@@ -109,7 +106,7 @@ void fishtouch(entity this, entity toucher)
 		//setthink(this, SUB_Remove);
 		//this.nextthink = 0.2;
 		vector shockorg = this.origin - '0 0 30';
-		shockwave(shockorg, 500, 2000);
+		shockwave(this, shockorg, 500, 2000);
 		return;
 	}
 

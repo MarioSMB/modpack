@@ -94,6 +94,8 @@ void crossbow_bolt_think(entity this)
 
 	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, it.takedamage && it != this.owner,
 	{
+		if(it.clipgroup && it.clipgroup == this.clipgroup)
+			continue;
 		if(time < it.crossbow_dmgtime)
 			continue;
 		it.crossbow_dmgtime = time + 0.1; // prevent instant death

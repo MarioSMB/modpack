@@ -57,6 +57,8 @@ bool W_Projectile_CanParry(entity this, entity proj)
 {
 	if(!proj.owner || proj.owner == this || proj.velocity == '0 0 0')
 		return false;
+	if(proj.clipgroup && proj.clipgroup == this.clipgroup)
+		return false;
 	// hacky way to guess if it's a projectile
 	if(!(proj.move_movetype == MOVETYPE_FLYMISSILE || proj.move_movetype == MOVETYPE_FLY || proj.move_movetype == MOVETYPE_BOUNCE || proj.move_movetype == MOVETYPE_TOSS))
 		return false;
@@ -89,6 +91,7 @@ entity W_ParryProjectile(entity this)
 		entity oldown = targ.owner;
 		targ.owner = this;
 		targ.realowner = this;
+		targ.clipgroup = this.clipgroup;
 		targ.enemy = oldown;
 		targ.parry_time = time; // hack to make parry code trigger on target
 		if(autocvar_sv_quake_reflectshots)
