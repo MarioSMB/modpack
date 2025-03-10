@@ -46,6 +46,8 @@ MUTATOR_HOOKFUNCTION(chat_grabber, ClientConnect)
 	entity this = M_ARGV(0, entity);
 	if(autocvar_chat_dest_udp == "")
 		return;
+	if(!IS_REAL_CLIENT(this))
+		return;
 
 	if(PlayerInIPList(this, autocvar__player_list))
 		return;
@@ -63,6 +65,8 @@ MUTATOR_HOOKFUNCTION(chat_grabber, ClientDisconnect)
 {
 	entity this = M_ARGV(0, entity);
 	if(autocvar_chat_dest_udp == "")
+		return;
+	if(!IS_REAL_CLIENT(this))
 		return;
 
 	entity client = this;
@@ -98,6 +102,18 @@ void chat_grabber_CheckClients()
 MUTATOR_HOOKFUNCTION(chat_grabber, MatchEnd_BeforeScores)
 {
 	chat_grabber_CheckClients();
+}
+
+// hacky ctf new record reporting
+ACCUMULATE
+void write_recordmarker(entity pl, float tstart, float dt)
+{
+	if(g_ctf)
+	{
+		string nickname = strdecolorize(GetCallerName(pl));
+		string output = sprintf("- %s set a new record on **%s** with __%s__", nickname, ftos(dt));
+		sendto(autocvar_chat_dest_udp, output);
+	}
 }
 
 void sendto(string destination, string msg)
