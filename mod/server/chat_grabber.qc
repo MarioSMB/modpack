@@ -7,7 +7,7 @@ bool autocvar_chat_grabber_show_mapchange = true; // show map changes
 
 REGISTER_MUTATOR(chat_grabber, true);
 
-MUTATOR_HOOKFUNCTION(chat_grabber, BuildMutatorsString)
+STATIC_INIT_LATE(chat_grabber)
 {
 	if(autocvar_chat_dest_udp == "")
 		return;
