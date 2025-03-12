@@ -197,6 +197,10 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		return true;
 	}
 
+	// allow toggling mid-match
+	if(!autocvar_g_piggyback)
+		return;
+
 #define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
 
 	if(!CS_CVAR(player).cvar_cl_noride)
