@@ -35,6 +35,9 @@ MUTATOR_HOOKFUNCTION(chat_grabber, PreFormatMessage)
 	string nickname = strdecolorize(GetCallerName(client));
 	string output = strdecolorize(msg);
 
+	if(output == "")
+		return;
+
 	string formatted = sprintf("<**%s**>: %s", nickname, output);
 	if(autocvar_chat_grabber_show_id)
 		formatted = sprintf("#%d %s", client.playerid, formatted);
