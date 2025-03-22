@@ -254,30 +254,20 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 
 	if(cmd_name == "gotorandom")
 	{
-		if(autocvar_g_maplist == "")
+		if(maplist_reply == "")
 		{
 			localcmd("\nendmatch\n");
-			LOG_INFO("g_maplist is empty, ending match...");
+			LOG_INFO("cached map list is empty, ending match...");
 		}
 
-		if(autocvar_g_maplist_gotorandom_fancy)
+		// HACK: maplist_reply contains all the *supported* maps
+		RandomSelection_Init();
+		FOREACH_WORD(maplist_reply, true,
 		{
-			// TODO: we can't actually rely on this...
-			string foundmap = _MapInfo_GlobItem(MapInfo_FilterList_Lookup(floor(random() * (MapInfo_count + 1))));
-			localcmd(strcat("\nchangelevel ", foundmap, "\n"));
-			LOG_INFO("Switching to ", foundmap);
-			return true;
-		}
-		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
-		int pos = MaplistMethod_Random();
-		if(pos == -1)
-		{
-			LOG_INFO("Failed to select a map, try again.");
-			return true;
-		}
+			RandomSelection_AddString(it, 1, 1);
+		});
 
-		string themap = argv(pos);
+		string themap = RandomSelection_chosen_string;
 		localcmd(strcat("\nchangelevel ", themap, "\n"));
 		LOG_INFO("Switching to ", themap);
 		return true;
