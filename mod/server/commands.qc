@@ -15,10 +15,18 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias randomvar \"sv_cmd randomvar ${* ?}\"\n");
 }
 
+string random_maplist;
+
 const int MAX_MAPLISTS = 8;
 string newmaplist[MAX_MAPLISTS];
 STATIC_INIT(mod_buildmaplist)
 {
+	random_maplist = "";
+	FOREACH_WORD(autocvar_g_maplist, MapInfo_CheckMap(it),
+	{
+		random_maplist = cons(random_maplist, it);
+	});
+
 	if(!autocvar_g_maplist_generate_lists)
 		return;
 
@@ -253,15 +261,14 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 
 	if(cmd_name == "gotorandom")
 	{
-		if(maplist_reply == "")
+		if(random_maplist == "")
 		{
 			localcmd("\nendmatch\n");
 			LOG_INFO("cached map list is empty, ending match...");
 		}
 
-		// HACK: maplist_reply contains all the *supported* maps
 		RandomSelection_Init();
-		FOREACH_WORD(maplist_reply, true,
+		FOREACH_WORD(random_maplist, true,
 		{
 			RandomSelection_AddString(it, 1, 1);
 		});
