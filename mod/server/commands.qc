@@ -2,7 +2,6 @@
 
 AUTOCVAR(g_maplist_max_perpage, int, 200, "Maximum maps per maplist page (shouldn't be too low or too high, as last page will be filled with the remainder)");
 AUTOCVAR(g_maplist_generate_lists, bool, false, "Generate a new list for maps using paged design (may cause crashes)");
-AUTOCVAR(g_maplist_gotorandom_fancy, bool, false, "Attempt a fancy lookup for the next map (relies on hacky measures)");
 AUTOCVAR(g_maplist_allow_personal, bool, false, "List maps the player hasn't beaten yet in a different color (probably slow, be warned!)");
 
 STATIC_INIT(mod_cmds)
