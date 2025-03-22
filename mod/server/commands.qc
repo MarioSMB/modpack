@@ -15,18 +15,22 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias randomvar \"sv_cmd randomvar ${* ?}\"\n");
 }
 
+REGISTER_MUTATOR(maplist_random, true);
 string random_maplist;
 
-const int MAX_MAPLISTS = 8;
-string newmaplist[MAX_MAPLISTS];
-STATIC_INIT(mod_buildmaplist)
+MUTATOR_HOOKFUNCTION(maplist_random, SetModname)
 {
 	random_maplist = "";
 	FOREACH_WORD(autocvar_g_maplist, MapInfo_CheckMap(it),
 	{
 		random_maplist = cons(random_maplist, it);
 	});
+}
 
+const int MAX_MAPLISTS = 8;
+string newmaplist[MAX_MAPLISTS];
+STATIC_INIT(mod_buildmaplist)
+{
 	if(!autocvar_g_maplist_generate_lists)
 		return;
 
