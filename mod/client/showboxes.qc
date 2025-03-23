@@ -66,10 +66,18 @@ void draw_bboxes()
 	if(autocvar_cl_showbboxes <= 0)
 		return;
 	// NOTE: does not include CSQC entities without a draw() function!
-	IL_EACH(g_drawables, autocvar_cl_showbboxes_maxdistance <= 0 || vdist(it.origin - view_origin, <=, autocvar_cl_showbboxes_maxdistance), draw_bbox(it));
+	IL_EACH(g_drawables, it.origin != '0 0 0' && (autocvar_cl_showbboxes_maxdistance <= 0 || vdist(it.origin - view_origin, <=, autocvar_cl_showbboxes_maxdistance)), draw_bbox(it));
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, HUD_Draw_overlay)
+entity showbboxes_ent;
+void showbboxes_draw(entity this)
 {
 	draw_bboxes();
+}
+
+STATIC_INIT_LATE(showbboxes)
+{
+	showbboxes_ent = new_pure(showbboxes_ent);
+	IL_PUSH(g_drawables, showbboxes_ent);
+	showbboxes_ent.draw = showbboxes_draw;
 }
