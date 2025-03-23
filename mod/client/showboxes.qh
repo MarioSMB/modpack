@@ -1,0 +1,12 @@
+#pragma once
+
+AUTOCVAR(cl_showbboxes, float, 0, "Show bounding boxes (client debugging)");
+AUTOCVAR(cl_showbboxes_maxdistance, float, 3000, "Max distance at which bounding boxes are drawn");
+
+void DrawSurface(string thetexture, vector forwardright, vector forwardleft, vector backleft, vector backright, vector thecolor, float thealpha);
+
+void DrawBox(vector org, vector themin, vector themax, string toptex, string bottomtex, string backtex, string righttex, string lefttex, string fronttex, vector thecolor, float thealpha);
+
+void draw_bbox(entity this);
+
+void draw_bboxes();
