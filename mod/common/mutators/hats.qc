@@ -219,7 +219,7 @@ string hats_GetRandom()
 		search_end(glob);
 		if(found)
 		{
-			string foundfile = substring(RandomSelection_chosen_string, 12, -4);
+			string foundfile = substring(RandomSelection_chosen_string, 12, -5);
 			return foundfile;
 		}
 	}
