@@ -22,6 +22,7 @@ void hats_Precache(string pattern);
 AUTOCVAR(g_hats, bool, false, "Allow clients to use hats");
 AUTOCVAR(g_hats_default, string, "", "Default hat when player has none on");
 AUTOCVAR(g_hats_nolegacy, bool, false, "Use new default offsets (not recommended yet)");
+AUTOCVAR(g_hats_randomize, bool, false, "Pick a random hat from the hats folder as a default");
 
 REGISTER_MUTATOR(hats, autocvar_g_hats && !cvar("g_overkill"))
 {
@@ -197,6 +198,35 @@ void hats_SpawnHat(entity this)
 	CSQCMODEL_AUTOINIT(this.hatentity);
 }
 
+string hats_GetRandom()
+{
+	int glob = search_begin("models/hats/*", true, true);
+	if(glob >= 0)
+	{
+		bool found = false;
+		RandomSelection_Init();
+		for (int i = 0, n = search_getsize(glob); i < n; ++i)
+		{
+			string file = search_getfilename(glob, i);
+			string ext = substring(file, -3, 3);
+			// TODO: proper format support? not sure what that would look like!
+			if(ext == "obj" || ext == "md3" || ext == "iqm")
+			{
+				RandomSelection_AddString(file, 1, 1);
+				found = true;
+			}
+		}
+		search_end(glob);
+		if(found)
+		{
+			string foundfile = substring(RandomSelection_chosen_string, 12, -4);
+			return foundfile;
+		}
+	}
+
+	return autocvar_g_hats_default; // fall back to default anyway
+}
+
 MUTATOR_HOOKFUNCTION(hats, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -205,8 +235,10 @@ MUTATOR_HOOKFUNCTION(hats, PlayerSpawn)
 	player.hatentity.alpha = default_weapon_alpha;
 	if(CS_CVAR(player).cvar_cl_hat != "")
 		player.hatname = strzone(CS_CVAR(player).cvar_cl_hat);
-	else
+	else if(!autocvar_g_hats_randomize)
 		player.hatname = strzone(autocvar_g_hats_default);
+	else if(player.hatname == "")
+		player.hatname = strzone(hats_GetRandom());
 }
 
 MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
