@@ -39,10 +39,8 @@ MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 			if(fexists(themdl)) { precache_model(themdl); }
 		});
 
-		themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/h_ok_grenade.iqm");
-		if(fexists(themdl)) { precache_model(themdl); }
-		themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/v_ok_grenade.md3");
-		if(fexists(themdl)) { precache_model(themdl); }
+		MDL_PROJECTILE_NADE.model_precache(MDL_PROJECTILE_NADE);
+		MDL_NADE_VIEW.model_precache(MDL_NADE_VIEW);
 	}
 
 	if(sv_weapons_sounddir && sv_weapons_sounddir != "" && sv_weapons_sounddir != "default")
