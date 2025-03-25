@@ -32,18 +32,20 @@ const int MODELS_MIME = BIT(14);
 const int MODELS_GOATY = BIT(15);
 #endif
 
-#ifdef SVQC
-.string cvar_cl_model;
-.int cvar_cl_pony_skin;
-.int cvar_cl_sparkle;
-#elif defined(CSQC)
-string cvar_cl_model;
-int cvar_cl_pony_skin;
-int cvar_cl_sparkle;
-#endif
+#ifdef GAMEQC
+REPLICATE_INIT(int, cvar_cl_pony_skin);
+REPLICATE_INIT(int, cvar_cl_sparkle);
+REPLICATE_INIT(string, cvar_cl_model);
+REPLICATE_INIT(string, cvar_cl_newrecord_sound);
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_model, string, "cl_custommodel");
+REPLICATE(cvar_cl_newrecord_sound, string, "cl_newrecord_sound");
+#endif
+
+#ifdef SVQC
+REPLICATE_APPLYCHANGE("cl_newrecord_sound", { if(store.cvar_cl_newrecord_sound != "") precache_sound(store.cvar_cl_newrecord_sound); });
+#endif
 
 #ifdef SVQC
 
@@ -91,16 +93,22 @@ PRECACHE(cpmodels_precache)
 #undef CHECK_MODEL
 }
 
+bool newrecord_override(entity this)
+{
+	if(this.cvar_cl_newrecord_sound != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+	{
+		play2all(this.cvar_cl_newrecord_sound);
+		return true;
+	}
+	return false;
+}
+
 .bool cow;
 .bool cow2;
 
 .float ninja_sneak;
 .float ninja_cooldown;
 .float ninja_prevalpha;
-
-REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
-REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
-REPLICATE(cvar_cl_model, string, "cl_custommodel");
 
 void cpmodels_UpdateWeaponSkin(entity actor, int newskin)
 {
