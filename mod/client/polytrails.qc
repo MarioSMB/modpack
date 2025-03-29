@@ -75,6 +75,7 @@ void Trail_recreate(entity this)
     PolyTrail t = NEW(PolyTrail);
     t.polytrail_follow = this.polytrail_follow;
     IL_PUSH(g_drawables, t);
+    t.polytrail_teamcolor = this.polytrail_teamcolor;
     t.polytrail_tex = this.polytrail_tex;
     t.polytrail_head_alpha = this.polytrail_head_alpha;
     t.polytrail_head_color = this.polytrail_head_color;
@@ -98,7 +99,7 @@ void PolyTrail_Spawn(entity this, entity _follow)
     this.polytrail_follow = _follow;
     IL_PUSH(g_drawables, this);
 
-    if(autocvar_cl_polytrails_teamcolor && _follow.colormap > 0)
+    if((autocvar_cl_polytrails_teamcolor || this.polytrail_teamcolor) && _follow.colormap > 0)
     {
         vector teamcolor = colormapPaletteColor(_follow.colormap & 0x0F, true);
         // keep original head color so it matches projectile

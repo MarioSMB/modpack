@@ -17,9 +17,10 @@ AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_tail_color, vector, '0.1 0.1 0.7', "");
 AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_tail_thickness, float, 0, "");
 AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_lifetime, float, 0.07, "");
 AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_segmentsize, float, 10, "");
-AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noise, float, 0, "");
-AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noisefunc, string, "none", "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noise, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noisefunc, string, "chaotic", "");
 CLASS(BlasterBoltTrail, PolyTrail)
+    ATTRIB(BlasterBoltTrail, polytrail_teamcolor, bool, true);
     ATTRIB(BlasterBoltTrail, polytrail_tex, string, "particles/laserbeam.tga");
     ATTRIB(BlasterBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_blaster_bolt_lifetime);
     ATTRIB(BlasterBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_blaster_bolt_noise);

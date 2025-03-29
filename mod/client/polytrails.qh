@@ -7,6 +7,7 @@ AUTOCVAR_SAVE(cl_polytrails_teamcolor, bool, false, "");
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
     ATTRIB(PolyTrail, polytrail_tex, string, string_null);
+    ATTRIB(PolyTrail, polytrail_teamcolor, bool, false);
     /** Lifetime per segment */
     ATTRIB(PolyTrail, polytrail_lifetime, float, 0.2);
     ATTRIB(PolyTrail, polytrail_noise, float, 0);
