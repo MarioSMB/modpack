@@ -45,6 +45,9 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
 
 	localcmd("\nalias snap \"cmd snap ${* ?}\"\n");
+
+	EFFECT_BLASTER_IMPACT.eent_eff_name = "electro_ballexplode";
+	EFFECT_BLASTER_MUZZLEFLASH.eent_eff_name = "electro_muzzleflash";
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
