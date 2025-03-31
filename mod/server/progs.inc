@@ -21,6 +21,7 @@
 	#include "tp.qc"
 	#include "weapons.qc"
 	#include "announcer.qc"
+	#include "player_sounds.qc"
 
 	#include "mutators/all.inc"
 #endif
