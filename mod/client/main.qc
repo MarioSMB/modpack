@@ -119,6 +119,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		if(time >= wcross_lastcheck)
 		{
 			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward) + (randomvec() * (10000 * drawframetime));
+			wcross_origin.z = 0;
 			wcross_prevorigin = wcross_origin;
 			wcross_lastcheck = time + 0.04; // delay a bit so it's not choppy
 		}
