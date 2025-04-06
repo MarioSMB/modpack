@@ -108,3 +108,21 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 		return true;
 	}
 }
+
+bool autocvar_cl_rumraisin;
+vector wcross_prevorigin;
+float wcross_lastcheck;
+MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
+{
+	if(autocvar_cl_rumraisin)
+	{
+		if(time >= wcross_lastcheck)
+		{
+			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward) + (randomvec() * (10000 * drawframetime));
+			wcross_prevorigin = wcross_origin;
+			wcross_lastcheck = time + 0.04; // delay a bit so it's not choppy
+		}
+		else
+			wcross_origin = wcross_prevorigin;
+	}
+}

@@ -95,9 +95,9 @@ PRECACHE(cpmodels_precache)
 
 bool newrecord_override(entity this)
 {
-	if(this.cvar_cl_newrecord_sound != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
+	if(CS_CVAR(this).cvar_cl_newrecord_sound != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
 	{
-		play2all(this.cvar_cl_newrecord_sound);
+		play2all(CS_CVAR(this).cvar_cl_newrecord_sound);
 		return true;
 	}
 	return false;
