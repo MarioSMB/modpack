@@ -1,5 +1,10 @@
 //FEATURE: Moaning Lescue
 
+const int RESCUE_NONE = 0;
+const int RESCUE_MORNING = 1;
+const int RESCUE_QUAD = 2;
+const int RESCUE_SPECIAL = 3;
+
 REGISTER_NET_TEMP(TE_CSQC_MORNINGRESCUE);
 
 #ifdef CSQC
@@ -80,9 +85,9 @@ void HUD_MorningRescue()
 	draw_endBoldFont();
 }
 #elif defined(SVQC)
-void MorningRescue(entity e)
+void MorningRescue(entity e, int rescue)
 {
-	if(e == NULL)
+	if(!e)
 		return;
 
 	int accepted = VerifyClientEntity(e, true, false);
@@ -91,6 +96,7 @@ void MorningRescue(entity e)
 	{
 		msg_entity = e;
 		WriteHeader(MSG_ONE, TE_CSQC_MORNINGRESCUE);
+		WriteByte(MSG_ONE, rescue);
 	}
 }
 #endif
@@ -103,8 +109,7 @@ const float QUADRATIC_SPEED = 150;
 const float QUADRATIC_TURNSPEED = 0.35;
 const float QUADRATIC_SIZE = 24;
 const float QUADRATIC_CHANCE = 0.35;
-float quadratic_spawntime, quadratic_fadetime;
-bool quadratic;
+float quadratic_spawntime;
 void HUD_Quadratic()
 {
 	for(int j = MAX_QUADRATIC - 1; j >= 0; --j)
@@ -152,6 +157,73 @@ void HUD_Quadratic()
 		quadratic_dirs[j] = dirs;
 	}
 }
+
+
+const int MAX_SPECIALCOMMAND = 15;
+vector specialcommand_slots[MAX_SPECIALCOMMAND];
+vector specialcommand_colors[MAX_SPECIALCOMMAND];
+const float SPECIALCOMMAND_SPEED = 150;
+const float SPECIALCOMMAND_TURNSPEED = 2;
+const float SPECIALCOMMAND_SIZE = 0.025;
+const float SPECIALCOMMAND_CHANCE = 0.35;
+float sc_spawntime, sc_changetime;
+vector sc_color = '1 1 1';
+void SpecialCommand()
+{
+	if(time >= sc_changetime)
+	{
+		sc_changetime = time + 1;
+		sc_color = randomvec() * 1.5;
+		sc_color.x = bound(0.2, sc_color.x, 0.75);
+		sc_color.y = bound(0.2, sc_color.y, 0.75);
+		sc_color.z = bound(0.2, sc_color.z, 0.75);
+	}
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
+
+	if(!precache_pic("gfx/smile"))
+		return; // damn party poopers
+
+	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
+	{
+		vector slot = specialcommand_slots[j];
+		if(slot.y)
+			slot.y += SPECIALCOMMAND_SPEED * frametime;
+		//if(slot.z)
+			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		if(slot.y >= vid_conheight)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = 1; // start it off 0 so we can use it
+				slot.z = floor(random() * REGISTRY_COUNT(Weapons));
+				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
+				vector newcolor = randomvec() * 2;
+				newcolor.x = bound(0.4, newcolor.x, 1);
+				newcolor.y = bound(0.4, newcolor.y, 1);
+				newcolor.z = bound(0.4, newcolor.z, 1);
+				specialcommand_colors[j] = newcolor;
+			}
+		}
+		else
+		{
+			vector splash_size = '0 0 0';
+			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			entity wep = REGISTRY_GET(Weapons, slot.z);
+			if(wep == WEP_Null)
+				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			else
+				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+		}
+
+		specialcommand_slots[j] = slot;
+	}
+}
 #endif
 
 #ifdef SVQC
@@ -166,10 +238,22 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 
 	if(cmd_name == "supermentalrescue")
 	{
+		string cmdtype = argv(1);
+
+		if(cmdtype == "list" || cmdtype == "help")
+		{
+			LOG_INFO("Use command without arguments for the regular effect, or one of the following arguments: quad special");
+			return true;
+		}
+		int rescue = RESCUE_MORNING; // default to morning
+		if(cmdtype == "quad")
+			rescue = RESCUE_QUAD;
+		else if(cmdtype == "special")
+			rescue = RESCUE_SPECIAL;
 		FOREACH_CLIENT(true,
 		{
 			if(IS_REAL_CLIENT(it))
-				MorningRescue(it);
+				MorningRescue(it, rescue);
 			if(IS_PLAYER(it))
 			{
 				Unfreeze(it, true);
@@ -190,6 +274,44 @@ STATIC_INIT_LATE(cl_morningrescue_override)
 	localcmd("\nalias solve_quadratic \"cl_cmd solve_quadratic ${* ?}\"\n");
 }
 
+bool HUD_PickRescue(int rescue)
+{
+	switch(rescue)
+	{
+		case RESCUE_NONE: return false;
+		case RESCUE_MORNING: HUD_MorningRescue(); return true;
+		case RESCUE_QUAD: HUD_Quadratic(); return false;
+	}
+	return false;
+}
+
+void HUD_StartRescue(int rescue)
+{
+	morningrescue = rescue;
+	switch(rescue)
+	{
+		default:
+		case RESCUE_NONE: return;
+		case RESCUE_MORNING:
+		{
+			localcmd("play2 sound/misc/morningrescue\n");
+			mr_appeartime = time;
+			mr_fadetime = time + 9;
+			break;
+		}
+		case RESCUE_QUAD:
+		{
+			mr_fadetime = time + 5;
+			break;
+		}
+		case RESCUE_SPECIAL:
+		{
+			mr_fadetime = time + 10;
+			break;
+		}
+	}
+}
+
 REGISTER_MUTATOR(cl_morningrescue, true);
 
 MUTATOR_HOOKFUNCTION(cl_morningrescue, DrawScoreboard)
@@ -199,24 +321,16 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, DrawScoreboard)
 
 MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 {
-	if(!morningrescue && !quadratic)
+	if(morningrescue == RESCUE_NONE)
 		return false;
 
 	if(time <= mr_fadetime)
 	{
-		HUD_MorningRescue();
-		return false;
+		if(HUD_PickRescue(morningrescue))
+			return false;
 	}
 	else
-		morningrescue = false;
-
-	if(time <= quadratic_fadetime)
-	{
-		HUD_Quadratic();
-		// don't return true, we want regular HUD effects!
-	}
-	else
-		quadratic = false;
+		morningrescue = RESCUE_NONE;
 
 	return false;
 }
@@ -231,8 +345,8 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, CSQC_ConsoleCommand)
 
 	if(cmd_name == "solve_quadratic")
 	{
-		quadratic = true;
-		quadratic_fadetime = time + 5;
+		morningrescue = RESCUE_QUAD;
+		mr_fadetime = time + 5;
 		return true;
 	}
 }
@@ -241,12 +355,11 @@ NET_HANDLE(TE_CSQC_MORNINGRESCUE, bool isNew)
 {
 	return = true;
 
-	if(morningrescue)
+	int rescue = ReadByte();
+
+	if(morningrescue != RESCUE_NONE)
 		return;
 
-	localcmd("play2 sound/misc/morningrescue\n");
-	morningrescue = true;
-	mr_appeartime = time;
-	mr_fadetime = time + 9;
+	HUD_StartRescue(rescue);
 }
 #endif
