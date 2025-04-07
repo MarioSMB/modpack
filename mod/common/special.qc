@@ -281,6 +281,7 @@ bool HUD_PickRescue(int rescue)
 		case RESCUE_NONE: return false;
 		case RESCUE_MORNING: HUD_MorningRescue(); return true;
 		case RESCUE_QUAD: HUD_Quadratic(); return false;
+		case RESCUE_SPECIAL: SpecialCommand(); return false;
 	}
 	return false;
 }
