@@ -214,7 +214,7 @@ void SpecialCommand()
 			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
 			entity wep = REGISTRY_GET(Weapons, slot.z);
-			if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_MODWEAPON) || (wep.spawnflags & WEP_FLAG_SPECIALATTACK))
+			if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_HIDDEN) || (wep.spawnflags & WEP_FLAG_SPECIALATTACK))
 				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
 			else
 				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
