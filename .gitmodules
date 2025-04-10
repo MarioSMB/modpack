@@ -1,3 +1,4 @@
 [submodule "xonotic"]
 	path = xonotic
 	url = https://gitlab.com/smbxon/xonotic-data.pk3dir.git
+	branch = main
