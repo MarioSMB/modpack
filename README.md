@@ -1,6 +1,15 @@
 SMB modpack
 ===========
 
+UPDATE
+======
+To ensure the future of this mod a tough decision was made to fork the Xonotic code repository.  
+As a result you may encounter an error when updating, something along the lines of: `fatal: remote error: upload-pack: not our ref`  
+
+To resolve this, you must delete the modpack directory and clone it again.  
+Apologies for the inconvenience!
+
+
 QuakeC source for the SMB server mods
 <!---
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
