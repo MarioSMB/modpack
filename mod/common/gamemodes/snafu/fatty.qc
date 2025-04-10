@@ -137,7 +137,7 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 			}
 
 			if(IS_PLAYER(attacker))
-				UpdateFrags(attacker, 1);
+				GameRules_scoring_add_team(attacker, SCORE, 1);
 			
 			Gai info = REGISTRY_GET(Gais, this.gaid);
 			setsize(this, info.deadmins, info.deadmaxs);

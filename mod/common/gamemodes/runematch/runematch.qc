@@ -428,7 +428,7 @@ MUTATOR_HOOKFUNCTION(rune, SV_StartFrame)
 
 	IL_EACH(g_runematch_runes, it.classname == "rune" && IS_PLAYER(it.owner),
 	{
-		UpdateFrags(it.owner, autocvar_g_runematch_pointamt);
+		GameRules_scoring_add_team(it.owner, SCORE, autocvar_g_runematch_pointamt);
 	});
 }
 
