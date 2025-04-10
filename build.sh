@@ -51,6 +51,12 @@ mkdir -vp $(dirname "$0")/compiled
 mv -v *.lno $(dirname "$0")/compiled
 mv -v *.dat $(dirname "$0")/compiled
 
+if [ -n "${L10N:-}" ]; then
+    tput bold; tput setaf 3; echo "Not merging localizations."; tput sgr0
+else
+    ./lang/merge.sh
+fi
+
 if [ -n "${ZIP:-}" ]; then
     tput bold; tput setaf 3; echo "Done without compression."; tput sgr0
 else
