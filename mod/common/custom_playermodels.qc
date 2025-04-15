@@ -14,6 +14,8 @@ bool g_overkill; // reliable check for overkill
 
 REGISTER_PLAYERSOUND(cjump)
 
+REGISTER_PLAYERSOUND(newrecord)
+
 const int MODELS_PONY = BIT(0);
 const int MODELS_WEEGEE = BIT(1);
 const int MODELS_ROSALINA = BIT(2);
@@ -36,20 +38,16 @@ const int MODELS_GOATY = BIT(15);
 REPLICATE_INIT(int, cvar_cl_pony_skin);
 REPLICATE_INIT(int, cvar_cl_sparkle);
 REPLICATE_INIT(string, cvar_cl_model);
-REPLICATE_INIT(string, cvar_cl_newrecord_sound);
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_model, string, "cl_custommodel");
-REPLICATE(cvar_cl_newrecord_sound, string, "cl_newrecord_sound");
-#endif
-
-#ifdef SVQC
-REPLICATE_APPLYCHANGE("cl_newrecord_sound", { if(store.cvar_cl_newrecord_sound != "") precache_sound(store.cvar_cl_newrecord_sound); });
 #endif
 
 #ifdef SVQC
 
 REGISTER_MUTATOR(cpmodels, true);
+
+AUTOCVAR(sv_newrecord_permodel, bool, false, "Allow per-player new record sounds");
 
 AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
@@ -95,12 +93,10 @@ PRECACHE(cpmodels_precache)
 
 bool newrecord_override(entity this)
 {
-	if(CS_CVAR(this).cvar_cl_newrecord_sound != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_idlist))
-	{
-		play2all(CS_CVAR(this).cvar_cl_newrecord_sound);
-		return true;
-	}
-	return false;
+	if(!autocvar_sv_newrecord_permodel)
+		return false;
+	PlayerSound(this, playersound_newrecord, CH_INFO, VOL_BASEVOICE, VOICETYPE_RADIO);
+	return true;
 }
 
 .bool cow;
