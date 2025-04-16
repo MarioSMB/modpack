@@ -111,7 +111,7 @@ MUTATOR_HOOKFUNCTION(chat_grabber, MatchEnd_BeforeScores)
 ACCUMULATE
 void write_recordmarker(entity pl, float tstart, float dt)
 {
-	if(g_ctf)
+	if(g_ctf && autocvar_chat_dest_udp != "")
 	{
 		string nickname = strdecolorize(GetCallerName(pl));
 		string output = sprintf("- %s set a new record on **%s** with __%s__", nickname, mapname, ftos_decimals(dt, 2));
