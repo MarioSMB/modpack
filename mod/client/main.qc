@@ -46,7 +46,8 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	localcmd("\nalias snap \"cmd snap ${* ?}\"\n");
 
-	EFFECT_BLASTER_IMPACT.eent_eff_name = "electro_ballexplode";
+	// fork uses this effect already
+	//EFFECT_BLASTER_IMPACT.eent_eff_name = "electro_ballexplode";
 	EFFECT_BLASTER_MUZZLEFLASH.eent_eff_name = "electro_muzzleflash";
 }
 
