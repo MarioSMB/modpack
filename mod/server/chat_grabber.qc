@@ -22,13 +22,16 @@ STATIC_INIT_LATE(chat_grabber)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(chat_grabber, PreFormatMessage)
+MUTATOR_HOOKFUNCTION(chat_grabber, ChatMessage)
 {
 	entity this = M_ARGV(0, entity);
-	string msg = M_ARGV(1, string);
+	string msg = M_ARGV(2, string);
+	entity privatesay = M_ARGV(3, entity);
 	if(autocvar_chat_dest_udp == "")
 		return;
 	if(this.muted)
+		return;
+	if(msg == "" || privatesay)
 		return;
 
 	entity client = this;
