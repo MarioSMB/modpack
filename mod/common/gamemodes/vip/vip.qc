@@ -536,9 +536,6 @@ void vip_SoulGem_touch(entity this, entity toucher)
 	if(toucher.vip_held)
 		return;
 
-	if(STAT(FROZEN, toucher))
-		return;
-
 	if(!allowed_to_spawn)
 		return;
 

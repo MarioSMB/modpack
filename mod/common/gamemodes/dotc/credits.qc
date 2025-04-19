@@ -34,7 +34,6 @@ void dotc_CreditTouch(entity this, entity toucher)
 	}
 
 	if( (!IS_PLAYER(toucher))
-	||	(STAT(FROZEN, toucher))
 	||	(toucher.deadflag != DEAD_NO)
 	||	(SAME_TEAM(toucher, this))
 	||	(time < this.item_spawnshieldtime)

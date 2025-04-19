@@ -159,7 +159,7 @@ void cq_ControlPoint_Think(entity this)
 	entity head = WarpZone_FindRadius(this.origin, this.target_range, true);
 	while(head)
 	{
-		if(IS_PLAYER(head) && !STAT(FROZEN, head) && !IS_DEAD(head) && (!head.vehicle || autocvar_g_conquest_capture_vehicle))
+		if(IS_PLAYER(head) && !IS_DEAD(head) && (!head.vehicle || autocvar_g_conquest_capture_vehicle))
 		{
 			if(SAME_TEAM(head, this))
 				++found_teammates;

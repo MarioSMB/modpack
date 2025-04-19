@@ -326,6 +326,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 	|| (time < STAT(ROUNDSTARTTIME))
 	//|| (autocvar_chase_active)
 	|| (STAT(FROZEN))
+	|| (StatusEffects_active(STATUSEFFECT_Frozen, csqcplayer))
 	|| (spectatee_status)
 	) { return false; }
 
