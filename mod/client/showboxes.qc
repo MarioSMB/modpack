@@ -64,7 +64,7 @@ void draw_bbox(entity this)
 ACCUMULATE
 void CSQCModel_Effects_Apply(entity this)
 {
-	if(autocvar_cl_showbboxes_players > 0 && !this.csqcmodel_isdead && (this.isplayermodel & ISPLAYER_MODEL) && !(this.isplayermodel & ISPLAYER_LOCAL))
+	if(autocvar_cl_showbboxes_players > 0 && !this.csqcmodel_isdead && (this.isplayermodel & ISPLAYER_MODEL) && !(this.isplayermodel & ISPLAYER_LOCAL) && this.entnum != player_localentnum)
 	{
 		float alph = (this.alpha) ? this.alpha : 1;
 		vector rgb = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true);
