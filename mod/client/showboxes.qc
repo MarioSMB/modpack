@@ -61,23 +61,34 @@ void draw_bbox(entity this)
 	DrawBox(this.origin, this.mins, this.maxs, "", "", "", "", "", "", rgb, alph);
 }
 
-void draw_bboxes()
+ACCUMULATE
+void CSQCModel_Effects_Apply(entity this)
+{
+	if(autocvar_cl_showbboxes_players > 0 && !this.csqcmodel_isdead && (this.isplayermodel & ISPLAYER_MODEL) && !(this.isplayermodel & ISPLAYER_LOCAL))
+	{
+		float alph = (this.alpha) ? this.alpha : 1;
+		vector rgb = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true);
+
+		alph = min(alph, alph * autocvar_cl_showbboxes_players);
+
+		DrawBox(this.origin, this.mins, this.maxs, "", "", "", "", "", "", rgb, alph);
+	}
+}
+
+MUTATOR_HOOKFUNCTION(mutator_mod, DrawWorld)
 {
 	if(autocvar_cl_showbboxes <= 0)
 		return;
 	// NOTE: does not include CSQC entities without a draw() function!
-	IL_EACH(g_drawables, it.origin != '0 0 0' && (autocvar_cl_showbboxes_maxdistance <= 0 || vdist(it.origin - view_origin, <=, autocvar_cl_showbboxes_maxdistance)), draw_bbox(it));
-}
-
-entity showbboxes_ent;
-void showbboxes_draw(entity this)
-{
-	draw_bboxes();
-}
-
-STATIC_INIT_LATE(showbboxes)
-{
-	showbboxes_ent = new_pure(showbboxes_ent);
-	IL_PUSH(g_drawables, showbboxes_ent);
-	showbboxes_ent.draw = showbboxes_draw;
+	//IL_EACH(g_drawables, it.origin != '0 0 0' && (autocvar_cl_showbboxes_maxdistance <= 0 || vdist(it.origin - view_origin, <=, autocvar_cl_showbboxes_maxdistance)), draw_bbox(it));
+	FOREACH_ENTITY_ORDERED(!is_pure(it),
+	{
+		if(it.origin == '0 0 0')
+			continue; // TODO: platform hitboxes
+		if(it.isplayermodel & ISPLAYER_MODEL)
+			continue; // player drawing handled elsewhere to avoid prediction issues
+		if(autocvar_cl_showbboxes_maxdistance > 0 && vdist(it.origin - view_origin, >, autocvar_cl_showbboxes_maxdistance))
+			continue;
+		draw_bbox(it);
+	});
 }
