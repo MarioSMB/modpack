@@ -689,9 +689,9 @@ spawnfunc(item_soulgem_team4)
 void vip_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-		field_team(ST_VIP_SCORE, "scores", SFL_SORT_PRIO_PRIMARY);
-		field(SP_VIP_SURVIVALS, "survivals", 0);
-		field(SP_VIP_VIPKILLS, "vipkills", SFL_SORT_PRIO_SECONDARY);
+		field_team(ST_VIP_SCORE, _("SCO^scores"), SFL_SORT_PRIO_PRIMARY);
+		field(SP_VIP_SURVIVALS, _("SCO^survivals"), 0);
+		field(SP_VIP_VIPKILLS, _("SCO^vipkills"), SFL_SORT_PRIO_SECONDARY);
 	});
 }
 

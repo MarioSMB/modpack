@@ -491,8 +491,8 @@ MUTATOR_HOOKFUNCTION(cq, TeamBalance_CheckAllowedTeams)
 void cq_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, 0, SFL_SORT_PRIO_PRIMARY, {
-		field(SP_CONQUEST_LIBERATED, "liberated", 0);
-		field(SP_CONQUEST_CAPTURED, "captured", 0);
+		field(SP_CONQUEST_LIBERATED, _("SCO^liberated"), 0);
+		field(SP_CONQUEST_CAPTURED, _("SCO^captured"), 0);
 	});
 }
 

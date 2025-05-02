@@ -69,7 +69,7 @@ float snafu_spawn_delay;
 void snafu_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-		field_team(ST_SNAFU_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+		field_team(ST_SNAFU_ROUNDS, _("SCO^rounds"), SFL_SORT_PRIO_PRIMARY);
 	});
 }
 
@@ -343,7 +343,7 @@ void snafu_game_stopped()
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		centerprint(it, "The tadpole is ^1DEAD^7 you ^1LOSERS!");
+		centerprint(it, _("The tadpole is ^1DEAD^7 you ^1LOSERS!"));
 		set_movetype(it, MOVETYPE_NONE);
 		it.origin = RandomSelection_chosen_ent.origin + '0 0 200';
 
@@ -397,7 +397,7 @@ void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float 
 	this.wait = time + 3;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		centerprint(it, "^1The tadpole is under attack!\n^2DEFEND^7 the tadpole!");
+		centerprint(it, _("^1The tadpole is under attack!\n^2DEFEND^7 the tadpole!"));
 	});
 
 }
