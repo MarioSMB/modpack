@@ -1,4 +1,4 @@
-//FEATURE: Command to add locations to maps for callouts in chat, useful for mappers who don't want to work from the editor
+//FEATURE: Command to add locations to maps for callouts in chat, useful for mappers who don't want to work from the editor. Enable with sv_location_editor 1, when in the location you want one do cmd addloc
 
 #ifdef GAMEQC
 REGISTER_MUTATOR(location_ent, true);

@@ -1,1 +1,0 @@
-entity dotc_projectile(entity this, Sound msound, entity fxflash, entity fxexplode, Sound sfxexplode, float pgravity, float phealth, int pdeathtype, int projectile_id);

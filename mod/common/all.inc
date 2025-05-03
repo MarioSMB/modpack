@@ -8,10 +8,7 @@
 #include "effects.inc"
 #include "hook.qc"
 #include "location.qc"
-#include "projectiles.qh"
 #include "minigames/all.inc"
-//#include "powerups/all.inc"
-//#include "mpowerups.qc"
 #include "monsters/all.inc"
 #include "nocross.qc"
 #include "mutators/all.inc"
@@ -20,7 +17,6 @@
 #include "polytrails.qh"
 #include "radio/module.inc"
 #include "special.qc"
-#include "weapons/all.inc"
 #include "weapons.qc"
 
 #define IMPLEMENTATION

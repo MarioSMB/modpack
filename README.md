@@ -35,10 +35,6 @@ Required content packs:
  - https://dl.xonotic.fps.gratis/zzz-quickmenu_029.pk3
  - https://dl.xonotic.fps.gratis/zzz-minigames-v006-114-ga3a4a87.pk3
 
-Optional content packs:
- - https://dl.xonotic.fps.gratis/zzz-mod-extra-v006-62-g9667a44.pk3
- - https://dl.xonotic.fps.gratis/zzz-mod-weapons-v006-107-g5176c47.pk3
-
 
 Usage
 =====
