@@ -307,6 +307,12 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		traceline(shot_endpos - normalize(force) * 16, shot_endpos + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		w_backoff = -1 * normalize(force);
 		vector org2 = shot_endpos + w_backoff * 6;
+
+		// set globally so weapon impacts can use them
+		float tcolors = entcs_GetClientColors(player_localentnum - 1);
+		particles_colormin = colormapPaletteColor(tcolors & 0x0F, false);
+		particles_colormax = colormapPaletteColor(tcolors & 0x0F, true);
+
 		pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	}
 

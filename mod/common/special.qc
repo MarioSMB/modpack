@@ -4,6 +4,7 @@ const int RESCUE_NONE = 0;
 const int RESCUE_MORNING = 1;
 const int RESCUE_QUAD = 2;
 const int RESCUE_SPECIAL = 3;
+const int RESCUE_PI = 4;
 
 REGISTER_NET_TEMP(TE_CSQC_MORNINGRESCUE);
 
@@ -224,6 +225,70 @@ void SpecialCommand()
 		specialcommand_slots[j] = slot;
 	}
 }
+
+#define PI \
+"     3.141592653589793238462643383279\n" \
+"   5028841971693993751058209749445923\n" \
+"  07816406286208998628034825342117067\n" \
+"  9821    48086         5132         \n" \
+" 823      06647        09384         \n" \
+"46        09550        58223         \n" \
+"17        25359        4081          \n" \
+"          2848         1117          \n" \
+"          4502         8410          \n" \
+"          2701         9385          \n" \
+"         21105        55964          \n" \
+"         46229        48954          \n" \
+"         9303         81964          \n" \
+"         4288         10975          \n" \
+"        66593         34461          \n" \
+"       284756         48233          \n" \
+"       78678          31652        71\n" \
+"      2019091         456485       66\n" \
+"     9234603           48610454326648\n" \
+"    2133936            0726024914127 \n" \
+"    3724587             00660631558  \n" \
+"    817488               152092096     "
+
+float pi_spawntime;
+void HUD_Pi()
+{
+	//vector pos = '0 0 0';
+	//pos.x = (vid_conwidth * 0.5) - stringwidth(PI, false, fontsize);
+	//pos.y = vid_conheight * 0.5;
+	vector fontsize = hud_fontsize;
+	vector pos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+	pos.x -= 7 * fontsize.x;
+	pos.y -= 12 * fontsize.y;
+
+	float talpha = 1 - bound(0, 1 - 2 * (time - mr_appeartime), 1);
+	if(talpha >= 1)
+		talpha = bound(0, 1 - 2 * (time - (mr_fadetime - 1)), 1);
+
+	if(mr_fadetime - time <= 1)
+		pi_spawntime += vid_conwidth * frametime;
+	else
+		pi_spawntime = 0;
+
+	draw_beginBoldFont();
+	
+	int n = tokenizebyseparator(PI, "\n");
+	for(int j = 0; j < n; ++j)
+	{
+		vector offset = '0 0 0';
+		offset.y += fontsize.y * j;
+		if(mr_fadetime - time <= 1)
+		{
+			if(j % 2)
+				offset.x -= pi_spawntime;
+			else
+				offset.x += pi_spawntime;
+		}
+		drawstring(pos + offset, argv(j), fontsize, '1 1 1', talpha, DRAWFLAG_NORMAL);
+	}
+	draw_endBoldFont();
+}
+#undef PI
 #endif
 
 #ifdef SVQC
@@ -250,6 +315,8 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 			rescue = RESCUE_QUAD;
 		else if(cmdtype == "special")
 			rescue = RESCUE_SPECIAL;
+		else if(cmdtype == "pi")
+			rescue = RESCUE_PI;
 		FOREACH_CLIENT(true,
 		{
 			if(IS_REAL_CLIENT(it))
@@ -265,6 +332,18 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 			}
 		});
 		return true;
+	}
+}
+
+ACCUMULATE void ctf_CaptureRecord(entity flag, entity player)
+{
+	if(IS_REAL_CLIENT(player))
+	{
+		float cap_time = (time - flag.ctf_pickuptime);
+
+		string cap_string = ftos_decimals(cap_time, 2);
+		if(cap_string == "3.14")
+			MorningRescue(player, RESCUE_PI);
 	}
 }
 #elif defined(CSQC)
@@ -283,6 +362,7 @@ bool HUD_PickRescue(int rescue)
 		case RESCUE_MORNING: HUD_MorningRescue(); return true;
 		case RESCUE_QUAD: HUD_Quadratic(); return false;
 		case RESCUE_SPECIAL: SpecialCommand(); return false;
+		case RESCUE_PI: HUD_Pi(); return false;
 	}
 	return false;
 }
@@ -309,6 +389,12 @@ void HUD_StartRescue(int rescue)
 		case RESCUE_SPECIAL:
 		{
 			mr_fadetime = time + 10;
+			break;
+		}
+		case RESCUE_PI:
+		{
+			mr_appeartime = time;
+			mr_fadetime = time + 3;
 			break;
 		}
 	}
