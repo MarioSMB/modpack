@@ -191,6 +191,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 
 			if(!autocvar_g_maplist_generate_lists)
 			{
+				if(maplist_reply == "^7Map list is empty")
+				{
+					print_to(player, "The map list is empty currently, no results can be found.");
+					return true;
+				}
 				// unfortunately checking all of g_maplist can result in other gamemodes' maps appearing
 				//string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
 				// to save on completely rebuilding the list, just attempt to strip out the beginning text
