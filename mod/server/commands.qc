@@ -257,12 +257,23 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		{
 			localcmd("\nendmatch\n");
 			LOG_INFO("cached map list is empty, ending match...");
+			return true;
 		}
+
+		bool trynew = (argv(1) == "new");
 
 		RandomSelection_Init();
 		FOREACH_WORD(autocvar_g_maplist, MapInfo_CheckMap(it),
 		{
-			RandomSelection_AddString(it, 1, 1);
+			int prio = 1;
+			if(trynew)
+			{
+				if((g_race || g_cts) && !race_readTime(it, 1))
+					prio = 2;
+				else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time"))))
+					prio = 2;
+			}
+			RandomSelection_AddString(it, 1, prio);
 		});
 
 		string themap = RandomSelection_chosen_string;
