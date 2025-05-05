@@ -1,4 +1,4 @@
-AUTOCVAR(_independent_players_list, string, "", "Enable to allow passing through teammates, requires sv_qcphysics and a compatible engine");
+AUTOCVAR(_independent_players_list, string, "", "List of players who cannot physically interact with anyone else, for the troublemakers who need not be banned");
 
 REGISTER_MUTATOR(independent_players, true); // always enabled, allows toggling mid-match
 
