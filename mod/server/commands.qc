@@ -99,11 +99,12 @@ void print_maplist(entity player, string nmaplist, float nargc)
 
 	string param = strtolower(argv(1));
 	string col;
+	bool ctf_withrecords = (g_ctf && autocvar_g_ctf_leaderboard);
 	if(param == "newforme")
 	{
-		if(!g_race && !g_cts)
+		if(!g_race && !g_cts && !ctf_withrecords)
 		{
-			print_to(player, "This command only works in CTS and Race.");
+			print_to(player, "This command only works in CTS, Race and CTF with leaderboards.");
 			return;
 		}
 
@@ -121,13 +122,20 @@ void print_maplist(entity player, string nmaplist, float nargc)
 	}
 	else if(param == "new")
 	{
-		if(!g_race && !g_cts)
+		if(!g_race && !g_cts && !g_ctf)
 		{
-			print_to(player, "This command only works in CTS and Race.");
+			print_to(player, "This command only works in CTS, Race and CTF.");
 			return;
 		}
-		FOREACH_WORD(nmaplist, !race_readTime(it, 1),
+		FOREACH_WORD(nmaplist, true,
 		{
+			bool isnewmap = false;
+			if((g_race || g_cts) && !race_readTime(it, 1))
+				isnewmap = true;
+			else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time"))))
+				isnewmap = true;
+			if(!isnewmap)
+				continue;
 			col = ((i % 2) ? "^2" : "^3");
 			print_to(player, strcat(col, it));
 		});
@@ -137,9 +145,9 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		param = strtolower(argv(2));
 		FOREACH_WORD(nmaplist, strstrofs(strtolower(it), param, 0) >= 0,
 		{
-			if((g_race || g_cts) && !race_readTime(it, 1))
+			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time")))))
 				col = ((i % 2) ? "^4*" : "^5*");
-			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts || ctf_withrecords) && !race_HasRecord(player, it))
 				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
@@ -150,9 +158,9 @@ void print_maplist(entity player, string nmaplist, float nargc)
 	{
 		FOREACH_WORD(nmaplist, startsWithNocase(strdecolorize(it), param),
 		{
-			if((g_race || g_cts) && !race_readTime(it, 1))
+			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time")))))
 				col = ((i % 2) ? "^4*" : "^5*");
-			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts || ctf_withrecords) && !race_HasRecord(player, it))
 				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
@@ -183,7 +191,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 
 			if(!autocvar_g_maplist_generate_lists)
 			{
-				string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
+				// unfortunately checking all of g_maplist can result in other gamemodes' maps appearing
+				//string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
+				// to save on completely rebuilding the list, just attempt to strip out the beginning text
+				int sep = strstrofs(maplist_reply, ":", 0);
+				string themaplist = strdecolorize(substring(maplist_reply, sep + 2, -1));
 				print_maplist(player, themaplist, cmd_argc);
 			}
 			else
