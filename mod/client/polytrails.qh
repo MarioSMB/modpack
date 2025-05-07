@@ -2,7 +2,7 @@
 
 // NOTE: not saved yet as i'm sure if i want this enabled by default permanently
 AUTOCVAR(cl_polytrails, bool, true, "");
-AUTOCVAR_SAVE(cl_polytrails_teamcolor, bool, false, "");
+AUTOCVAR_SAVE(cl_polytrails_teamcolor, bool, true, "");
 
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
