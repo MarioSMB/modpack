@@ -111,7 +111,7 @@ void ClientBeam_Draw(entity this)
 	Draw_ClientBeam_trace_callback_tex = string_null;
 }
 
-void FireClientBeam(vector start, vector end, bool hit)
+void FireClientBeam(entity rlplayer, entity wepent, vector start, vector end, bool hit)
 {
 	entity e = spawn();
 	setthink(e, SUB_Remove);
@@ -126,15 +126,37 @@ void FireClientBeam(vector start, vector end, bool hit)
 	e.sv_entnum = player_localentnum;
 	e.team = myteam;
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, e.vorg1, normalize(e.vorg2 - e.vorg1) * 1000, 1);
+	vector rgb = WEP_VAPORIZER.m_color;
+	if(autocvar_cl_vaporizerbeam_teamcolor)
+		rgb = colormapPaletteColor(entcs_GetClientColors(e.sv_entnum - 1) & 0x0F, true);
+
+	particles_colormin = particles_colormax = rgb;
+
+	// TODO: muzzle flashes were changed in newer xonotic
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	vector forward, right, up;
+	MAKE_VECTORS(viewangles, forward, right, up);
+	Weapon thiswep = wepent.activeweapon;
+
+	if(autocvar_chase_active)
+		pointparticles(thiswep.m_muzzleeffect, start, forward * 1000, 1);
+	else if(autocvar_r_drawviewmodel)
+	{
+		vector md = wepent.movedir_aligned;
+		vector dv = forward * md.x + right * -md.y + up * md.z;
+		vector org = rlplayer.origin + rlplayer.view_ofs + dv;
+
+		pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);
+
+		if(thiswep.m_muzzlemodel != MDL_Null)
+		{
+			W_MuzzleFlash_Model(wepent, thiswep.m_muzzlemodel);
+			W_MuzzleFlash_Model_AttachToShotorg(wepent, wepent.muzzle_flash, '5 0 0');
+		}
+	}
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		vector rgb = WEP_VAPORIZER.m_color;
-		if(autocvar_cl_vaporizerbeam_teamcolor)
-			rgb = colormapPaletteColor(entcs_GetClientColors(e.sv_entnum - 1) & 0x0F, true);
-
-		particles_colormin = particles_colormax = rgb;
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((e.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), e.vorg1, e.vorg2, 1, PARTICLES_USECOLOR);
 
 		e.draw = func_null;
@@ -297,7 +319,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
 	}
 	else if(wep.activeweapon == WEP_VAPORIZER)
-		FireClientBeam(w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), hit);
+		FireClientBeam(rlplayer, wep, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), hit);
 
 	//sound(player, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
