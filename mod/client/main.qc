@@ -1,4 +1,5 @@
 #include "oregon.qh"
+#include "particles.qh"
 
 STATIC_INIT(mod_cvars)
 {
@@ -41,6 +42,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias placeitems \"cl_cmd placeitems ${* ?}\"\n");
 	localcmd("\nalias propedit \"cl_cmd propedit ${* ?}\"\n");
 	localcmd("\nalias oregon \"cl_cmd oregon ${* ?}\"\n");
+	localcmd("\nalias particle \"cl_cmd particle ${* ?}\n");
 
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
 
@@ -106,6 +108,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 	if(cmd_name == "oregon")
 	{
 		Oregon_HandleCommand(argv(1));
+		return true;
+	}
+
+	if(cmd_name == "particle")
+	{
+		Particle_HandleCommand(M_ARGV(1, int));
 		return true;
 	}
 }
