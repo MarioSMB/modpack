@@ -83,6 +83,64 @@ void particles_updatecvars(int action, string input)
 	cvar_operation(action, strcat(input, "_lightteamcolor"), "0");
 }
 
+void particles_copycvars(string from, string to)
+{
+	string s;
+#define PCVAR(in) \
+	s = strcat(from, (in)); if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS) cvar_operation(COP_SET, strcat(to, (in)), cvar_string(s))
+
+	PCVAR("_countabsolute");
+	PCVAR("_count");
+	PCVAR("_type");
+	PCVAR("_blend");
+	PCVAR("_orientation");
+	PCVAR("_color");
+	PCVAR("_color_min");
+	PCVAR("_color_max");
+	PCVAR("_tex");
+	PCVAR("_size");
+	PCVAR("_sizeincrease");
+	PCVAR("_alpha");
+	PCVAR("_time");
+	PCVAR("_gravity");
+	PCVAR("_bounce");
+	PCVAR("_airfriction");
+	PCVAR("_liquidfriction");
+	PCVAR("_originoffset");
+	PCVAR("_relativeoriginoffset");
+	PCVAR("_velocityoffset");
+	PCVAR("_relativevelocityoffset");
+	PCVAR("_originjitter");
+	PCVAR("_velocityjitter");
+	PCVAR("_velocitymultiplier");
+	PCVAR("_lightradius");
+	PCVAR("_lightradiusfade");
+	PCVAR("_lighttime");
+	PCVAR("_lightcolor");
+	PCVAR("_lightshadow");
+	PCVAR("_lightcubemapnum");
+	PCVAR("_lightcorona");
+	PCVAR("_underwater");
+	PCVAR("_notunderwater");
+	PCVAR("_trailspacing");
+	PCVAR("_stretchfactor");
+	PCVAR("_staincolor_min");
+	PCVAR("_staincolor_max");
+	PCVAR("_stainalpha");
+	PCVAR("_stainsize");
+	PCVAR("_staintex");
+	PCVAR("_stainless");
+	PCVAR("_rotate");
+	PCVAR("_startangle");
+	PCVAR("_spin");
+	PCVAR("_delayspawn");
+	PCVAR("_delaycollision");
+	PCVAR("_teamcolor");
+	PCVAR("_lightteamcolor");
+
+#undef PCVAR
+}
+
 bool cvar_inlist(string input, string list)
 {
 	if(list == "")
@@ -161,6 +219,28 @@ void Particle_HandleCommand(int argc)
 			LOG_INFO("Successfully applied action to all particle cvars for ", eff_list);
 			break;
 		}
+		case "copy":
+		{
+			string eff_from = argv(2);
+			string list_from = argv(3);
+			string eff_to = argv(4);
+			string list_to = argv(5);
+			if(eff_from == "" || list_from == "" || eff_to == "" || list_to == "")
+			{
+				LOG_INFO("You need to provide an effect and list to copy from, and an effect and list to copy to");
+				LOG_INFO("Example: ^3particle copy eff_from list_from eff_to list_to");
+				return;
+			}
+			// first register AND clear the destination to make sure all cvars exist with empty values
+			string targ = strcat("cl_particle_", eff_to, "_", list_to);
+			particles_updatecvars(COP_REG, targ);
+			particles_updatecvars(COP_CLR, targ);
+
+			string source = strcat("cl_particle_", eff_from, "_", list_from);
+			particles_copycvars(source, targ);
+			LOG_INFO("Copied all particlde cvars from ^3", source, " ^7to ^3", targ);
+			break;
+		}
 		case "test":
 		{
 			string eff = argv(2);
@@ -172,6 +252,9 @@ void Particle_HandleCommand(int argc)
 			string dist_arg = argv(3);
 			float eff_dist = (dist_arg == "") ? 256 : stof(dist_arg);
 			WarpZone_TraceLine(view_origin, view_origin + view_forward * eff_dist, MOVE_NORMAL, NULL);
+			float tcolors = entcs_GetClientColors(player_localentnum - 1);
+			particles_colormin = colormapPaletteColor(tcolors & 0x0F, false);
+			particles_colormax = colormapPaletteColor(tcolors & 0x0F, true);
 			if(!SpawnParticles_list(strcat("cl_particle_", eff), trace_endpos, trace_plane_normal * 150, false))
 				__pointparticles(_particleeffectnum(eff), trace_endpos, trace_plane_normal * 150, 1);
 			break;
@@ -208,6 +291,37 @@ void Particle_HandleCommand(int argc)
 			LOG_INFO("Cleaned up ", ftos(cleaned), " dangling effect cvars");
 			break;
 		}
+		case "save":
+		{
+			string file = argv(2);
+			if(file == "")
+				file = "particles_save.cfg";
+
+			int fh = fopen(file, FILE_WRITE);
+			if(fh < 0)
+			{
+				LOG_INFO("Couldn't open the file for writing");
+				return;
+			}
+
+			int h = buf_create();
+			buf_cvarlist(h, "cl_particle_", "_"); // exclude all _ cvars as they are temporary
+			int n = buf_getsize(h);
+
+			fputs(fh, sprintf("// Particle effects config, saved %s\n\n", strftime(false, "%Y-%m-%d %H:%M:%S")));
+
+			for(int j = 0; j < n; ++j)
+			{
+				string k = bufstr_get(h, j);
+				if(k == "cl_particle_disable")
+					continue;
+				fputs(fh, sprintf("seta %s \"%s\"\n", k, cvar_string(k)));
+			}
+			fclose(fh);
+			buf_del(h);
+			LOG_INFO("Wrote particle effects to data/", file);
+			break;
+		}
 		case "info":
 		{
 			LOG_HELP("Available parameters:");
@@ -219,12 +333,13 @@ void Particle_HandleCommand(int argc)
 		default:
 		case "help":
 		{
-			LOG_HELP("Please note that this system is a work in progress!");
 			LOG_HELP("Currently available commands:");
 			LOG_HELP("help - Display this information");
 			LOG_HELP("test <effect> [distance] - Plays the given effect at an optionally provided distance in front of the player");
-			LOG_HELP("info - Lists information about each of the particle effect parameters");
-			LOG_HELP("clean - Attempts to remove all unused effect cvars, use with caution");
+			LOG_HELP("copy <effect_from> <list_from> <effect_to> <list_to> - Copies all particle cvars from the provided effect and list to the target effect and list");
+			LOG_HELP("save [filename] - Saves all existing particle cvars into a config file, a filename can be provided or \"particles_save.cfg\" will be the default");
+			//LOG_HELP("info - Lists information about each of the particle effect parameters");
+			LOG_HELP("clean - Attempts to remove all unused effect cvars, ^1use with caution");
 			// put these at the bottom or separated
 			LOG_HELP("\nSome operations allow you to modify all the effect cvars at once:");
 			LOG_HELP("- create <effect> <list> - Creates all the needed cvars with default values, e.g. \"particle create laser_impact spark\"");
