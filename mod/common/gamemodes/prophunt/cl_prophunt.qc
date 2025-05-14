@@ -2,6 +2,30 @@
 
 REGISTER_MUTATOR(cl_ph, true);
 
+void HUD_HunterEyes()
+{
+	vector screenVector = vec2(vid_conwidth, vid_conheight);
+	drawfill('0 0 0', screenVector, '0.01 0.01 0.01', 1, DRAWFLAG_NORMAL);
+
+	draw_beginBoldFont();
+	vector pos = screenVector * 0.5;
+	string s = _("Round will start soon, no peeking!");
+	pos.x -= stringwidth_colors(s, hud_fontsize) * 0.5;
+	drawstring(pos, s, hud_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+	draw_endBoldFont();
+}
+
+MUTATOR_HOOKFUNCTION(cl_ph, HUD_Draw_overlay)
+{
+	if(!ISGAMETYPE(PROPHUNT))
+		return false;
+
+	bool inround = (STAT(ROUNDSTARTTIME) != -1 && time < STAT(ROUNDSTARTTIME));
+
+	if(myteam != NUM_SPECTATOR && (myteam + 1) != STAT(PROPHUNT_PROPTEAM) && !warmup_stage && inround)
+		HUD_HunterEyes();
+}
+
 MUTATOR_HOOKFUNCTION(cl_ph, DrawInfoMessages)
 {
 	return (ISGAMETYPE(PROPHUNT) && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_IN_SCOREBOARD);
