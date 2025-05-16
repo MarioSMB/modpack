@@ -972,7 +972,7 @@ void JB_ControlPoint_Touch(entity this, entity toucher)
 	if(jb_roundover)
 		return;
 
-	if(GetResource(toucher, RES_HEALTH) < 1 || STAT(FROZEN, toucher))
+	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
 
 	if(game_stopped)

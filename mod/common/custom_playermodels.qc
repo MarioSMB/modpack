@@ -14,6 +14,8 @@ bool g_overkill; // reliable check for overkill
 
 REGISTER_PLAYERSOUND(cjump)
 
+REGISTER_PLAYERSOUND(newrecord)
+
 const int MODELS_PONY = BIT(0);
 const int MODELS_WEEGEE = BIT(1);
 const int MODELS_ROSALINA = BIT(2);
@@ -32,22 +34,20 @@ const int MODELS_MIME = BIT(14);
 const int MODELS_GOATY = BIT(15);
 #endif
 
-#ifdef SVQC
-.string cvar_cl_model;
-.int cvar_cl_pony_skin;
-.int cvar_cl_sparkle;
-#elif defined(CSQC)
-string cvar_cl_model;
-int cvar_cl_pony_skin;
-int cvar_cl_sparkle;
-#endif
+#ifdef GAMEQC
+REPLICATE_INIT(int, cvar_cl_pony_skin);
+REPLICATE_INIT(int, cvar_cl_sparkle);
+REPLICATE_INIT(string, cvar_cl_model);
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_model, string, "cl_custommodel");
+#endif
 
 #ifdef SVQC
 
 REGISTER_MUTATOR(cpmodels, true);
+
+AUTOCVAR(sv_newrecord_permodel, bool, false, "Allow per-player new record sounds");
 
 AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
@@ -91,16 +91,20 @@ PRECACHE(cpmodels_precache)
 #undef CHECK_MODEL
 }
 
+bool newrecord_override(entity this)
+{
+	if(!autocvar_sv_newrecord_permodel)
+		return false;
+	PlayerSound(this, playersound_newrecord, CH_INFO, VOL_BASEVOICE, VOICETYPE_RADIO);
+	return true;
+}
+
 .bool cow;
 .bool cow2;
 
 .float ninja_sneak;
 .float ninja_cooldown;
 .float ninja_prevalpha;
-
-REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
-REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
-REPLICATE(cvar_cl_model, string, "cl_custommodel");
 
 void cpmodels_UpdateWeaponSkin(entity actor, int newskin)
 {

@@ -28,15 +28,19 @@ MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 	sv_weapons_sounddir = strzone(ReadString());
 	if(sv_weapons_modeloverride && sv_weapons_modeloverride != "" && sv_weapons_modeloverride != "default")
 	{
+		string themdl;
 		FOREACH(Weapons, it != WEP_Null,
 		{
-			string themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/v_", it.mdl, ".md3");
+			themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/v_", it.mdl, ".md3");
 			if(fexists(themdl)) { precache_model(themdl); }
 			themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/h_", it.mdl, ".iqm");
 			if(fexists(themdl)) { precache_model(themdl); }
 			themdl = strcat("models/weapons_", sv_weapons_modeloverride, "/g_", it.mdl, ".md3");
 			if(fexists(themdl)) { precache_model(themdl); }
 		});
+
+		MDL_PROJECTILE_NADE.model_precache(MDL_PROJECTILE_NADE);
+		MDL_NADE_VIEW.model_precache(MDL_NADE_VIEW);
 	}
 
 	if(sv_weapons_sounddir && sv_weapons_sounddir != "" && sv_weapons_sounddir != "default")

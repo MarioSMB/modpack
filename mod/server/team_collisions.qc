@@ -2,8 +2,10 @@
 
 AUTOCVAR(g_team_collisions, bool, false, "Enable to allow passing through teammates, requires sv_qcphysics and a compatible engine");
 AUTOCVAR(g_team_collisions_projectiles, bool, true, "Apply passthrough to projectiles as well");
+AUTOCVAR(g_team_collisions_hooks, bool, false, "Apply teammate passthrough to grappling hooks");
 AUTOCVAR(g_player_collisions, bool, false, "Enable to allow passing through players, requires sv_qcphysics and a compatible engine");
 AUTOCVAR(g_player_collisions_projectiles, bool, true, "Apply passthrough to projectiles as well");
+AUTOCVAR(g_player_collisions_hooks, bool, false, "Apply passthrough to grappling hooks");
 
 const int CLIPGROUP_PLAYER = 1;
 
@@ -27,5 +29,17 @@ MUTATOR_HOOKFUNCTION(team_collisions, EditProjectile)
 	if(teamplay && autocvar_g_team_collisions && autocvar_g_team_collisions_projectiles && Team_IsValidTeam(player.team)) // allow toggling mid match
 		proj.clipgroup = player.clipgroup;
 	else if(autocvar_g_player_collisions && autocvar_g_player_collisions_projectiles)
+		proj.clipgroup = player.clipgroup;
+}
+
+MUTATOR_HOOKFUNCTION(team_collisions, GrappleHookThink)
+{
+	entity proj = M_ARGV(0, entity);
+	entity player = proj.realowner;
+
+	// in teamplay matches, make the projectile's clipgroup match the player's
+	if(teamplay && autocvar_g_team_collisions && autocvar_g_team_collisions_hooks && Team_IsValidTeam(player.team)) // allow toggling mid match
+		proj.clipgroup = player.clipgroup;
+	else if(autocvar_g_player_collisions && autocvar_g_player_collisions_hooks)
 		proj.clipgroup = player.clipgroup;
 }

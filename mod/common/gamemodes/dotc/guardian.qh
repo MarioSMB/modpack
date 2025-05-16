@@ -1,4 +1,0 @@
-MODEL(DOTC_GUARDIAN_BODY, "models/dotc/guardian_body.dpm");
-MODEL(DOTC_GUARDIAN_LEGS, "models/dotc/guardian_legs.dpm");
-MODEL(DOTC_GUARDIAN_PLASMA, "models/dotc/guardian_plasma.dpm");
-MODEL(DOTC_GUARDIAN_RAIL, "models/dotc/guardian_rail.dpm");

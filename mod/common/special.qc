@@ -1,5 +1,11 @@
 //FEATURE: Moaning Lescue
 
+const int RESCUE_NONE = 0;
+const int RESCUE_MORNING = 1;
+const int RESCUE_QUAD = 2;
+const int RESCUE_SPECIAL = 3;
+const int RESCUE_PI = 4;
+
 REGISTER_NET_TEMP(TE_CSQC_MORNINGRESCUE);
 
 #ifdef CSQC
@@ -26,7 +32,8 @@ void HUD_MorningRescue()
 	//vector mrcolor = vec2(1, random());
 	vector mrcolor = '1 0.4 0';
 	// NOTE: was mralpha * random()
-	drawfill('0 0 0', bottomright, mrcolor, mralpha * 0.5, DRAWFLAG_ADDITIVE);
+	if(autocvar_hud_panel_radar_maximised_zoom_scale == 1)
+		drawfill('0 0 0', bottomright, mrcolor, mralpha * 0.5, DRAWFLAG_ADDITIVE);
 
 	mrpos_y -= 200 * mralpha;
 	drawpic (mrpos, "gfx/morningrescue", '57 200 0', '1 1 1', mralpha, DRAWFLAG_NORMAL);
@@ -79,9 +86,9 @@ void HUD_MorningRescue()
 	draw_endBoldFont();
 }
 #elif defined(SVQC)
-void MorningRescue(entity e)
+void MorningRescue(entity e, int rescue)
 {
-	if(e == NULL)
+	if(!e)
 		return;
 
 	int accepted = VerifyClientEntity(e, true, false);
@@ -90,6 +97,7 @@ void MorningRescue(entity e)
 	{
 		msg_entity = e;
 		WriteHeader(MSG_ONE, TE_CSQC_MORNINGRESCUE);
+		WriteByte(MSG_ONE, rescue);
 	}
 }
 #endif
@@ -102,8 +110,7 @@ const float QUADRATIC_SPEED = 150;
 const float QUADRATIC_TURNSPEED = 0.35;
 const float QUADRATIC_SIZE = 24;
 const float QUADRATIC_CHANCE = 0.35;
-float quadratic_spawntime, quadratic_fadetime;
-bool quadratic;
+float quadratic_spawntime;
 void HUD_Quadratic()
 {
 	for(int j = MAX_QUADRATIC - 1; j >= 0; --j)
@@ -151,6 +158,137 @@ void HUD_Quadratic()
 		quadratic_dirs[j] = dirs;
 	}
 }
+
+
+const int MAX_SPECIALCOMMAND = 15;
+vector specialcommand_slots[MAX_SPECIALCOMMAND];
+vector specialcommand_colors[MAX_SPECIALCOMMAND];
+const float SPECIALCOMMAND_SPEED = 150;
+const float SPECIALCOMMAND_TURNSPEED = 2;
+const float SPECIALCOMMAND_SIZE = 0.025;
+const float SPECIALCOMMAND_CHANCE = 0.35;
+float sc_spawntime, sc_changetime;
+vector sc_color = '1 1 1';
+void SpecialCommand()
+{
+	if(time >= sc_changetime)
+	{
+		sc_changetime = time + 1;
+		sc_color = randomvec() * 1.5;
+		sc_color.x = bound(0.2, sc_color.x, 0.75);
+		sc_color.y = bound(0.2, sc_color.y, 0.75);
+		sc_color.z = bound(0.2, sc_color.z, 0.75);
+	}
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
+
+	if(!precache_pic("gfx/smile"))
+		return; // damn party poopers
+
+	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
+	{
+		vector slot = specialcommand_slots[j];
+		if(slot.y)
+			slot.y += SPECIALCOMMAND_SPEED * frametime;
+		//if(slot.z)
+			//slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		if(slot.y >= vid_conheight)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = 1; // start it off 0 so we can use it
+				slot.z = floor(random() * REGISTRY_COUNT(Weapons));
+				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
+				vector newcolor = randomvec() * 2;
+				newcolor.x = bound(0.4, newcolor.x, 1);
+				newcolor.y = bound(0.4, newcolor.y, 1);
+				newcolor.z = bound(0.4, newcolor.z, 1);
+				specialcommand_colors[j] = newcolor;
+			}
+		}
+		else
+		{
+			vector splash_size = '0 0 0';
+			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			entity wep = REGISTRY_GET(Weapons, slot.z);
+			if(wep == WEP_Null || (wep.spawnflags & WEP_FLAG_HIDDEN) || (wep.spawnflags & WEP_FLAG_SPECIALATTACK))
+				drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			else
+				drawpic_skin(vec2(slot), wep.model2, vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+		}
+
+		specialcommand_slots[j] = slot;
+	}
+}
+
+#define PI \
+"     3.141592653589793238462643383279\n" \
+"   5028841971693993751058209749445923\n" \
+"  07816406286208998628034825342117067\n" \
+"  9821    48086         5132         \n" \
+" 823      06647        09384         \n" \
+"46        09550        58223         \n" \
+"17        25359        4081          \n" \
+"          2848         1117          \n" \
+"          4502         8410          \n" \
+"          2701         9385          \n" \
+"         21105        55964          \n" \
+"         46229        48954          \n" \
+"         9303         81964          \n" \
+"         4288         10975          \n" \
+"        66593         34461          \n" \
+"       284756         48233          \n" \
+"       78678          31652        71\n" \
+"      2019091         456485       66\n" \
+"     9234603           48610454326648\n" \
+"    2133936            0726024914127 \n" \
+"    3724587             00660631558  \n" \
+"    817488               152092096     "
+
+float pi_spawntime;
+void HUD_Pi()
+{
+	//vector pos = '0 0 0';
+	//pos.x = (vid_conwidth * 0.5) - stringwidth(PI, false, fontsize);
+	//pos.y = vid_conheight * 0.5;
+	vector fontsize = hud_fontsize;
+	vector pos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+	pos.x -= 7 * fontsize.x;
+	pos.y -= 12 * fontsize.y;
+
+	float talpha = 1 - bound(0, 1 - 2 * (time - mr_appeartime), 1);
+	if(talpha >= 1)
+		talpha = bound(0, 1 - 2 * (time - (mr_fadetime - 1)), 1);
+
+	if(mr_fadetime - time <= 1)
+		pi_spawntime += vid_conwidth * frametime;
+	else
+		pi_spawntime = 0;
+
+	draw_beginBoldFont();
+	
+	int n = tokenizebyseparator(PI, "\n");
+	for(int j = 0; j < n; ++j)
+	{
+		vector offset = '0 0 0';
+		offset.y += fontsize.y * j;
+		if(mr_fadetime - time <= 1)
+		{
+			if(j % 2)
+				offset.x -= pi_spawntime;
+			else
+				offset.x += pi_spawntime;
+		}
+		drawstring(pos + offset, argv(j), fontsize, '1 1 1', talpha, DRAWFLAG_NORMAL);
+	}
+	draw_endBoldFont();
+}
+#undef PI
 #endif
 
 #ifdef SVQC
@@ -165,13 +303,28 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 
 	if(cmd_name == "supermentalrescue")
 	{
+		string cmdtype = argv(1);
+
+		if(cmdtype == "list" || cmdtype == "help")
+		{
+			LOG_INFO("Use command without arguments for the regular effect, or one of the following arguments: quad special");
+			return true;
+		}
+		int rescue = RESCUE_MORNING; // default to morning
+		if(cmdtype == "quad")
+			rescue = RESCUE_QUAD;
+		else if(cmdtype == "special")
+			rescue = RESCUE_SPECIAL;
+		else if(cmdtype == "pi")
+			rescue = RESCUE_PI;
 		FOREACH_CLIENT(true,
 		{
 			if(IS_REAL_CLIENT(it))
-				MorningRescue(it);
+				MorningRescue(it, rescue);
 			if(IS_PLAYER(it))
 			{
-				Unfreeze(it, true);
+				if(g_freezetag)
+					freezetag_Unfreeze(it, true);
 
 				float hp = GetResource(it, RES_HEALTH);
 				if(hp > 0)
@@ -181,12 +334,70 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 		return true;
 	}
 }
+
+ACCUMULATE void ctf_CaptureRecord(entity flag, entity player)
+{
+	if(IS_REAL_CLIENT(player))
+	{
+		float cap_time = (time - flag.ctf_pickuptime);
+
+		string cap_string = ftos_decimals(cap_time, 2);
+		if(cap_string == "3.14")
+			MorningRescue(player, RESCUE_PI);
+	}
+}
 #elif defined(CSQC)
 bool morningrescue;
 
 STATIC_INIT_LATE(cl_morningrescue_override)
 {
 	localcmd("\nalias solve_quadratic \"cl_cmd solve_quadratic ${* ?}\"\n");
+}
+
+bool HUD_PickRescue(int rescue)
+{
+	switch(rescue)
+	{
+		case RESCUE_NONE: return false;
+		case RESCUE_MORNING: HUD_MorningRescue(); return true;
+		case RESCUE_QUAD: HUD_Quadratic(); return false;
+		case RESCUE_SPECIAL: SpecialCommand(); return false;
+		case RESCUE_PI: HUD_Pi(); return false;
+	}
+	return false;
+}
+
+void HUD_StartRescue(int rescue)
+{
+	morningrescue = rescue;
+	switch(rescue)
+	{
+		default:
+		case RESCUE_NONE: return;
+		case RESCUE_MORNING:
+		{
+			localcmd("play2 sound/misc/morningrescue\n");
+			mr_appeartime = time;
+			mr_fadetime = time + 9;
+			break;
+		}
+		case RESCUE_QUAD:
+		{
+			mr_fadetime = time + 5;
+			break;
+		}
+		case RESCUE_SPECIAL:
+		{
+			mr_fadetime = time + 10;
+			break;
+		}
+		case RESCUE_PI:
+		{
+			mr_appeartime = time;
+			mr_fadetime = time + 3;
+			break;
+		}
+	}
 }
 
 REGISTER_MUTATOR(cl_morningrescue, true);
@@ -198,24 +409,16 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, DrawScoreboard)
 
 MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 {
-	if(!morningrescue && !quadratic)
+	if(morningrescue == RESCUE_NONE)
 		return false;
 
-	if(time <= mr_fadetime && autocvar_hud_panel_radar_maximised_zoom_scale == 1)
+	if(time <= mr_fadetime)
 	{
-		HUD_MorningRescue();
-		return false;
+		if(HUD_PickRescue(morningrescue))
+			return false;
 	}
 	else
-		morningrescue = false;
-
-	if(time <= quadratic_fadetime)
-	{
-		HUD_Quadratic();
-		// don't return true, we want regular HUD effects!
-	}
-	else
-		quadratic = false;
+		morningrescue = RESCUE_NONE;
 
 	return false;
 }
@@ -230,8 +433,8 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, CSQC_ConsoleCommand)
 
 	if(cmd_name == "solve_quadratic")
 	{
-		quadratic = true;
-		quadratic_fadetime = time + 5;
+		morningrescue = RESCUE_QUAD;
+		mr_fadetime = time + 5;
 		return true;
 	}
 }
@@ -240,12 +443,11 @@ NET_HANDLE(TE_CSQC_MORNINGRESCUE, bool isNew)
 {
 	return = true;
 
-	if(morningrescue)
+	int rescue = ReadByte();
+
+	if(morningrescue != RESCUE_NONE)
 		return;
 
-	localcmd("play2 sound/misc/morningrescue\n");
-	morningrescue = true;
-	mr_appeartime = time;
-	mr_fadetime = time + 9;
+	HUD_StartRescue(rescue);
 }
 #endif

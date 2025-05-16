@@ -2,11 +2,12 @@
 
 // NOTE: not saved yet as i'm sure if i want this enabled by default permanently
 AUTOCVAR(cl_polytrails, bool, true, "");
-AUTOCVAR_SAVE(cl_polytrails_teamcolor, bool, false, "");
+AUTOCVAR_SAVE(cl_polytrails_teamcolor, bool, true, "");
 
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
     ATTRIB(PolyTrail, polytrail_tex, string, string_null);
+    ATTRIB(PolyTrail, polytrail_teamcolor, bool, false);
     /** Lifetime per segment */
     ATTRIB(PolyTrail, polytrail_lifetime, float, 0.2);
     ATTRIB(PolyTrail, polytrail_noise, float, 0);

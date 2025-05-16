@@ -1,6 +1,15 @@
 SMB modpack
 ===========
 
+UPDATE
+======
+To ensure the future of this mod a tough decision was made to fork the Xonotic code repository.  
+As a result you may encounter an error when updating, something along the lines of: `fatal: remote error: upload-pack: not our ref`  
+
+To resolve this, you must delete the modpack directory and clone it again.  
+Apologies for the inconvenience!
+
+
 QuakeC source for the SMB server mods
 <!---
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
@@ -25,10 +34,6 @@ Required content packs:
  - https://dl.xonotic.fps.gratis/zzz-misc-v006-122-g0a722ad.pk3
  - https://dl.xonotic.fps.gratis/zzz-quickmenu_029.pk3
  - https://dl.xonotic.fps.gratis/zzz-minigames-v006-114-ga3a4a87.pk3
-
-Optional content packs:
- - https://dl.xonotic.fps.gratis/zzz-mod-extra-v006-62-g9667a44.pk3
- - https://dl.xonotic.fps.gratis/zzz-mod-weapons-v006-107-g5176c47.pk3
 
 
 Usage

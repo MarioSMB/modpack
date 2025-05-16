@@ -3,6 +3,41 @@
 // copied from Mario/polytrails - a messy version until it is merged
 
 // =========
+//  Blaster
+// =========
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_head_alpha, float, 1, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_head_color, vector, '0.8 0.8 1', "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_head_thickness, float, 15, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_body_alpha, float, 0.5, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_body_color, vector, '0.5 0.5 1', "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_body_thickness, float, 7, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_tail_color, vector, '0.1 0.1 0.7', "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_tail_thickness, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_lifetime, float, 0.07, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_segmentsize, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noise, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_blaster_bolt_noisefunc, string, "chaotic", "");
+CLASS(BlasterBoltTrail, PolyTrail)
+    ATTRIB(BlasterBoltTrail, polytrail_teamcolor, bool, true);
+    ATTRIB(BlasterBoltTrail, polytrail_tex, string, "particles/laserbeam.tga");
+    ATTRIB(BlasterBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_blaster_bolt_lifetime);
+    ATTRIB(BlasterBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_blaster_bolt_noise);
+    ATTRIB(BlasterBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_blaster_bolt_segmentsize);
+    ATTRIB(BlasterBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_blaster_bolt_noisefunc);
+    ATTRIB(BlasterBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_blaster_bolt_head_alpha);
+    ATTRIB(BlasterBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_blaster_bolt_head_color);
+    ATTRIB(BlasterBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_blaster_bolt_head_thickness);
+    ATTRIB(BlasterBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_blaster_bolt_body_alpha);
+    ATTRIB(BlasterBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_blaster_bolt_body_color);
+    ATTRIB(BlasterBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_blaster_bolt_body_thickness);
+    ATTRIB(BlasterBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_blaster_bolt_tail_alpha);
+    ATTRIB(BlasterBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_blaster_bolt_tail_color);
+    ATTRIB(BlasterBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_blaster_bolt_tail_thickness);
+ENDCLASS(BlasterBoltTrail)
+
+// =========
 //  Electro
 // =========
 AUTOCVAR_SAVE(cl_polytrails_electro_bolt, bool, true, "");

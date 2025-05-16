@@ -1,4 +1,5 @@
 #include "oregon.qh"
+#include "particles.qh"
 
 STATIC_INIT(mod_cvars)
 {
@@ -41,10 +42,15 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias placeitems \"cl_cmd placeitems ${* ?}\"\n");
 	localcmd("\nalias propedit \"cl_cmd propedit ${* ?}\"\n");
 	localcmd("\nalias oregon \"cl_cmd oregon ${* ?}\"\n");
+	localcmd("\nalias particle \"cl_cmd particle ${* ?}\n");
 
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
 
 	localcmd("\nalias snap \"cmd snap ${* ?}\"\n");
+
+	// fork uses this effect already
+	//EFFECT_BLASTER_IMPACT.eent_eff_name = "electro_ballexplode";
+	EFFECT_BLASTER_MUZZLEFLASH.eent_eff_name = "electro_muzzleflash";
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
@@ -103,5 +109,30 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 	{
 		Oregon_HandleCommand(argv(1));
 		return true;
+	}
+
+	if(cmd_name == "particle")
+	{
+		Particle_HandleCommand(M_ARGV(1, int));
+		return true;
+	}
+}
+
+bool autocvar_cl_rumraisin;
+vector wcross_prevorigin;
+float wcross_lastcheck;
+MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
+{
+	if(autocvar_cl_rumraisin)
+	{
+		if(time >= wcross_lastcheck)
+		{
+			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward) + (randomvec() * (10000 * drawframetime));
+			wcross_origin.z = 0;
+			wcross_prevorigin = wcross_origin;
+			wcross_lastcheck = time + 0.04; // delay a bit so it's not choppy
+		}
+		else
+			wcross_origin = wcross_prevorigin;
 	}
 }

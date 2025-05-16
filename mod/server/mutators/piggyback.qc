@@ -197,10 +197,14 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		return true;
 	}
 
-#define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
+	// allow toggling mid-match
+	if(!autocvar_g_piggyback)
+		return;
+
+#define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v) || StatusEffects_active(STATUSEFFECT_Frozen, v))
 
 	if(!CS_CVAR(player).cvar_cl_noride)
-	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player))
+	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player) && !StatusEffects_active(STATUSEFFECT_Frozen, player))
 	{
 		entity head, closest_target = NULL;
 
@@ -370,6 +374,7 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 	if(player.hook_state
 	|| player.vehicle
 	|| STAT(FROZEN, player)
+	|| StatusEffects_active(STATUSEFFECT_Frozen, player)
 	) { do_crouch = false; }
 
 	if(!do_crouch && IS_DUCKED(player))

@@ -1,6 +1,8 @@
 // the mod relies on AUTOCVAR() to define cvars for use in a special dumping command, so admins know which cvars are from the mod
 // but, many of these don't have any direct references, so we need to use this custom copy of the AUTOCVAR()
 
+// currently exists in the fork, keeping here for now incase it gets removed (likely)
+#if 0
 #define __AUTOCVAR_NOREF(file, archive, var, type, desc, default) \
 	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
 	{ \
@@ -15,3 +17,4 @@
 #define EVAL__AUTOCVAR_NOREF(...) __VA_ARGS__
 #define AUTOCVAR_NOREF_SAVE(...) _AUTOCVAR_NOREF(true, __VA_ARGS__)
 #define AUTOCVAR_NOREF(...) _AUTOCVAR_NOREF(false, __VA_ARGS__)
+#endif

@@ -4,7 +4,7 @@
 REGISTER_MUTATOR(mod_chat, true);
 
 AUTOCVAR(chat_replacewords, bool, false, "Allow replacing words in chat via chat_replace_* cvars");
-AUTOCVAR(chat_water, bool, false, "Replace chat with a funny message while underwater");
+AUTOCVAR(chat_water, int, 0, "Replace chat with a funny message while underwater");
 
 .entity lasthit;
 
@@ -39,8 +39,8 @@ MUTATOR_HOOKFUNCTION(mod_chat, FormatMessage)
 	switch(M_ARGV(1, string)) // escape
 	{
 		case "p": M_ARGV(2, string) = ((!player.lasthit || player.lasthit.netname == "") ? "(nobody)" : player.lasthit.netname); break;
-		case "H": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('1 0 0' * GetResource(player, RES_HEALTH) / g_pickup_healthsmall_max) + ('0 0 1' * ( GetResource(player, RES_HEALTH) - 100) / g_pickup_healthsmall_max)), rint(GetResource(player, RES_HEALTH))); break;
-		case "A": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('0 2 0' * GetResource(player, RES_ARMOR) / g_pickup_armorsmall_max) + ('0 0 1' * ( GetResource(player, RES_ARMOR) - 100) / g_pickup_armorsmall_max)), rint(GetResource(player, RES_ARMOR))); break;
+		case "H": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('1 0 0' * GetResource(player, RES_HEALTH) / autocvar_g_pickup_healthsmall_max) + ('0 0 1' * ( GetResource(player, RES_HEALTH) - 100) / autocvar_g_pickup_healthsmall_max)), rint(GetResource(player, RES_HEALTH))); break;
+		case "A": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('0 2 0' * GetResource(player, RES_ARMOR) / autocvar_g_pickup_armorsmall_max) + ('0 0 1' * ( GetResource(player, RES_ARMOR) - 100) / autocvar_g_pickup_armorsmall_max)), rint(GetResource(player, RES_ARMOR))); break;
 	}
 }
 
@@ -52,7 +52,7 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 	if(!IS_CLIENT(player) || themsg == "")
 		return; // don't modify map entity strings or other formatted stuff
 
-	if(player.waterlevel >= WATERLEVEL_SUBMERGED && autocvar_chat_water)
+	if((player.waterlevel >= WATERLEVEL_SUBMERGED && autocvar_chat_water == 1) || autocvar_chat_water == 2)
 	{
 		M_ARGV(1, string) = "[glub glub glub]";
 		return;

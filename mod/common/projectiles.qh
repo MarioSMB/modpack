@@ -1,3 +1,0 @@
-// slots 40-50 reserved for mod
-
-int MOD_PROJECTILES = 40;

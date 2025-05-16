@@ -9,6 +9,8 @@
 	#include "cvars.qc"
 	#include "oregon.qc"
 	#include "polytrails.qc"
+	#include "showboxes.qc"
+	#include "particles.qc"
 #endif
 
 #define QUAKE_ONE

@@ -22,18 +22,24 @@ STATIC_INIT_LATE(chat_grabber)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(chat_grabber, PreFormatMessage)
+MUTATOR_HOOKFUNCTION(chat_grabber, ChatMessage)
 {
 	entity this = M_ARGV(0, entity);
-	string msg = M_ARGV(1, string);
+	string msg = M_ARGV(2, string);
+	entity privatesay = M_ARGV(3, entity);
 	if(autocvar_chat_dest_udp == "")
 		return;
 	if(this.muted)
+		return;
+	if(msg == "" || privatesay)
 		return;
 
 	entity client = this;
 	string nickname = strdecolorize(GetCallerName(client));
 	string output = strdecolorize(msg);
+
+	if(output == "")
+		return;
 
 	string formatted = sprintf("<**%s**>: %s", nickname, output);
 	if(autocvar_chat_grabber_show_id)
@@ -45,6 +51,8 @@ MUTATOR_HOOKFUNCTION(chat_grabber, ClientConnect)
 {
 	entity this = M_ARGV(0, entity);
 	if(autocvar_chat_dest_udp == "")
+		return;
+	if(!IS_REAL_CLIENT(this))
 		return;
 
 	if(PlayerInIPList(this, autocvar__player_list))
@@ -63,6 +71,8 @@ MUTATOR_HOOKFUNCTION(chat_grabber, ClientDisconnect)
 {
 	entity this = M_ARGV(0, entity);
 	if(autocvar_chat_dest_udp == "")
+		return;
+	if(!IS_REAL_CLIENT(this))
 		return;
 
 	entity client = this;
@@ -98,6 +108,18 @@ void chat_grabber_CheckClients()
 MUTATOR_HOOKFUNCTION(chat_grabber, MatchEnd_BeforeScores)
 {
 	chat_grabber_CheckClients();
+}
+
+// hacky ctf new record reporting
+ACCUMULATE
+void write_recordmarker(entity pl, float tstart, float dt)
+{
+	if(g_ctf && autocvar_chat_dest_udp != "")
+	{
+		string nickname = strdecolorize(GetCallerName(pl));
+		string output = sprintf("- %s set a new record on **%s** with __%s__", nickname, mapname, ftos_decimals(dt, 2));
+		sendto(autocvar_chat_dest_udp, output);
+	}
 }
 
 void sendto(string destination, string msg)

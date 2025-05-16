@@ -135,7 +135,7 @@ bool Arena_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, champion.netname);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_PLAYER_WIN, champion.netname);
-		UpdateFrags(champion, +1);
+		GameRules_scoring_add_team(champion, SCORE, +1);
 	}
 	else
 	{

@@ -27,3 +27,10 @@ STATIC_INIT(mod_cpmodels)
 		cvar_set("cl_custommodel", "foxy");
 }
 
+MUTATOR_HOOKFUNCTION(mutator_mod, ForcePlayermodels_Skip)
+{
+	entity player = M_ARGV(0, entity);
+	if(player.model == "models/player/goat.dpm" || player.model == "models/player/po.dpm" || player.model == "models/player/dipsy.dpm" || player.model == "models/player/laalaa.dpm" || player.model == "models/player/tinkywinky.dpm")
+		return true;
+	return false;
+}

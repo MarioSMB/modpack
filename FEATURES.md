@@ -38,7 +38,6 @@
 * Ability to load in custom item models and sounds cleanly with a replacement path option
 * Ability to replace monster model paths, to easily load in custom models
 * Akimbo mutator for all your dual wielding needs
-* Freeze mutator, a portable version of freeze tag that can work in just about any gamemode (except freezetag!)
 * Random Spawns mutator, spawn at random locations throughout the map
 * Keep Running mutator which slowly kills players who stand still, a more extreme version of campcheck
 * Piggy-backing lets you ride your teammates to victory
@@ -49,6 +48,7 @@
 * Spawn Invisible mutator, to give spawning players a chance without making them completely invulnerable
 * Zombie Apocalypse mutator, which spawns random monsters around the map constantly
 * Option to change all or individual player's size
+* Hidden player voice messages are accessible: flagcarriertakingdamage getflag affirmative attacking defending roaming onmyway droppedflag negative seenenemy
 * Options to replace any entity on maps
 * Option to require players to have stats enabled, allows blocking players via whitelists and blacklists and even keeping players out with too much elo
 * Teammate collisions, pass through teammates instead of bumping into them!

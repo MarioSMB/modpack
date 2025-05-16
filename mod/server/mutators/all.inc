@@ -1,7 +1,6 @@
 // Main include file for custom mutators
 
 #include "akimbo.qc"
-#include "freeze.qc"
 #include "hook_playeronly.qc"
 #include "itemplacer.qc"
 #include "keeprunning.qc"

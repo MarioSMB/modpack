@@ -12,6 +12,7 @@ enum {
 
 
 // MSG_ANNCE_NOTIFICATIONS
+    MSG_ANNCE_NOTIF(NEWRECORD,                              2, "newrecord",             CH_INFO, VOL_BASEVOICE, ATTEN_NONE, 2)
 
 // MSG_INFO_NOTIFICATIONS
     MULTITEAM_INFO(CONQUEST_CAPTURE,                        1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was captured by the ^TC^TT^BG team"), "", NAME)
