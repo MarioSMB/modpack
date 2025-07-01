@@ -1337,6 +1337,9 @@ void Sbar_DrawChampionOverlay()
 
 void Sbar_Draw()
 {
+	if(autocvar_r_letterbox)
+		return;
+
 	if(!getproperty(VF_DRAWENGINESBAR)) // drawing in engine turned off, fall back to qc implementation
 	{
 		if(sbar == '0 0 0')

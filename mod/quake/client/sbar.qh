@@ -1,6 +1,6 @@
 #pragma once
 
-//float autocvar_r_letterbox;
+float autocvar_r_letterbox;
 //int autocvar_cl_prydoncursor;
 int autocvar_cl_deathscoreboard;
 float autocvar_sbar_alpha_bg;
