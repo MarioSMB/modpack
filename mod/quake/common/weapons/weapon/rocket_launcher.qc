@@ -16,6 +16,7 @@ entity W_FireRocket(entity this)
 	missile.classname = "missile";
 	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
 	missile.clipgroup = this.clipgroup;
+	missile.noise = "weapons/r_exp3.wav";
 		
 // set missile speed	
 

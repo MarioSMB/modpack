@@ -35,7 +35,7 @@ CLASS(MCGuardian, Monster)
     ATTRIB(MCGuardian, m_model_head, Model, MDL_Null);
 #endif
     ATTRIB(MCGuardian, netname, string, "mcguardian");
-    ATTRIB(MCGuardian, monster_name, string, _("Guardian"));
+    ATTRIB(MCGuardian, m_name, string, _("Guardian"));
 ENDCLASS(MCGuardian)
 
 REGISTER_MONSTER(MCGUARDIAN, NEW(MCGuardian));

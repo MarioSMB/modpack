@@ -21,7 +21,7 @@ CLASS(Legond, Monster)
     ATTRIB(Legond, m_sound, Sound, SND_MON_LEGOND_SIGHT);
 #endif
     ATTRIB(Legond, netname, string, "legond");
-    ATTRIB(Legond, monster_name, string, _("Legond"));
+    ATTRIB(Legond, m_name, string, _("Legond"));
 ENDCLASS(Legond)
 
 REGISTER_MONSTER(LEGOND, NEW(Legond));

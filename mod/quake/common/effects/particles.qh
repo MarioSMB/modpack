@@ -1,0 +1,26 @@
+#pragma once
+
+#ifdef CSQC
+bool autocvar_cl_particle_disable;
+
+// engine cvars for particle system
+bool autocvar_cl_particles;
+float autocvar_cl_particles_quality;
+bool autocvar_cl_particles_smoke;
+bool autocvar_cl_particles_sparks;
+bool autocvar_cl_particles_bubbles;
+bool autocvar_cl_particles_blood;
+bool autocvar_cl_particles_rain;
+bool autocvar_cl_particles_snow;
+bool autocvar_cl_particles_quake;
+bool autocvar_cl_particles_forcetraileffects;
+//int autocvar_cl_decals_newsystem_immediatebloodstain;
+float autocvar_cl_decals_time;
+float autocvar_cl_decals_fadetime;
+
+vector hexcolors_to_rgb(int hexValue);
+
+// returns false if nothing was drawn, useful for fallback effects
+bool SpawnParticles_list_full(string input, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, bool istrail, int eff_flags);
+bool SpawnParticles_list(string input, vector org, vector vel, bool istrail);
+#endif

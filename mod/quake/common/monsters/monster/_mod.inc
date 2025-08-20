@@ -8,6 +8,7 @@
 #include "blud.qc"
 #include "breeze.qc"
 #include "cendtroid.qc"
+#include "chicken.qc"
 #include "chthon.qc"
 #include "cook.qc"
 #include "creeper.qc"

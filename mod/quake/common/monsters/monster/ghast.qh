@@ -48,7 +48,7 @@ CLASS(Ghast, Monster)
     ATTRIB(Ghast, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Ghast, netname, string, "ghast");
-    ATTRIB(Ghast, monster_name, string, _("Ghast"));
+    ATTRIB(Ghast, m_name, string, _("Ghast"));
 ENDCLASS(Ghast)
 
 REGISTER_MONSTER(GHAST, NEW(Ghast));

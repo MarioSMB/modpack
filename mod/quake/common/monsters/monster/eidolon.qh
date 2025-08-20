@@ -21,7 +21,7 @@ CLASS(Eidolon, Monster)
     ATTRIB(Eidolon, m_sound, Sound, SND_MON_EIDOLON_SIGHT);
 #endif
     ATTRIB(Eidolon, netname, string, "eidolon");
-    ATTRIB(Eidolon, monster_name, string, _("Eidolon"));
+    ATTRIB(Eidolon, m_name, string, _("Eidolon"));
 ENDCLASS(Eidolon)
 
 REGISTER_MONSTER(EIDOLON, NEW(Eidolon));

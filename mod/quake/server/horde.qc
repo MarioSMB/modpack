@@ -437,7 +437,7 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
-	mon.mr_setup(mon, monster);
+	monster_setup(monster, mon);
 
 	setup_minionsupport(monster);
 	monster.health = min(monster.health, 1750); // limit health to avoid sponges

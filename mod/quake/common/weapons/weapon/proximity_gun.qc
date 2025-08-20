@@ -10,6 +10,7 @@ void ProximityExplode(entity this)
 	T_RadiusDamage(this, this.owner, 95, this.projectiledeathtype, NULL);
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	BecomeExplosion(this);
 }
@@ -19,6 +20,7 @@ void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker, int
 	this.takedamage = DAMAGE_NO;
 	this.realowner.NumProximityGrenades -= 1;
 	this.nextthink = time + 0.1;
+	this.state = 2;
 	this.owner = this.lastvictim;
 	setthink(this, ProximityExplode);
 }
@@ -62,7 +64,7 @@ void ProximityBomb(entity this)
 	{
 		if(head != this && head.health > 0 && (IS_PLAYER(head) || IS_MONSTER(head)) && head.classname != this.classname && head != this.realowner)
 			blowup = true;
-		if((head.classname == this.classname) && (head.state == 0))
+		if((head.classname == this.classname) && (head.state == 0) && head.realowner != this.realowner)
 			blowup = true;
 		traceline(this.origin, head.origin, MOVE_NOMONSTERS, this);
 		if(trace_fraction != 1.0)
@@ -130,6 +132,19 @@ void W_FireProximityGrenade(entity this, .entity weaponentity)
 	setsize(missile, '-1 -1 -1', '1 1 1');
 }
 
+void W_Proximity_Detonate(entity this, .entity weaponentity)
+{
+	bool didexplode = false;
+	FOREACH_ENTITY_CLASS("proximity_grenade", it.realowner == this && it.state == 1,
+	{
+		ProximityGrenadeExplode(it, NULL, NULL, 0);
+		didexplode = true;
+	});
+
+	if(didexplode)
+		_sound(this, CH_WEAPON_SINGLE, "hipweap/proxwarn.wav", 1, ATTN_NORM);
+}
+
 METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(fire & 1)
@@ -140,6 +155,13 @@ METHOD(ProximityGun, wr_think, void(entity thiswep, entity actor, .entity weapon
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_FireProximityGrenade(actor, weaponentity);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
+	}
+
+	if(fire & 2)
+	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
+	{
+		W_Proximity_Detonate(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.6);
 	}
 }

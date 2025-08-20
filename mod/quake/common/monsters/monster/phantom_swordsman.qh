@@ -18,7 +18,7 @@ CLASS(PhantomSwordsman, Monster)
     ATTRIB(PhantomSwordsman, m_model, Model, MDL_MON_PHANTOM_SWORDSMAN);
 #endif
     ATTRIB(PhantomSwordsman, netname, string, "sword");
-    ATTRIB(PhantomSwordsman, monster_name, string, _("Phantom Swordsman"));
+    ATTRIB(PhantomSwordsman, m_name, string, _("Phantom Swordsman"));
 ENDCLASS(PhantomSwordsman)
 
 REGISTER_MONSTER(PHANTOM_SWORDSMAN, NEW(PhantomSwordsman));

@@ -23,7 +23,7 @@ CLASS(Scrag, Monster)
     ATTRIB(Scrag, m_sound, Sound, SND_MON_SCRAG_SIGHT);
 #endif
     ATTRIB(Scrag, netname, string, "wizard");
-    ATTRIB(Scrag, monster_name, string, _("Scrag"));
+    ATTRIB(Scrag, m_name, string, _("Scrag"));
 ENDCLASS(Scrag)
 
 REGISTER_MONSTER(SCRAG, NEW(Scrag));

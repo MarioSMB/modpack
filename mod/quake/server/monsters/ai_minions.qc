@@ -224,7 +224,7 @@ entity minion_spawn(entity own, vector org, entity monster, Monster mon)
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
 
-	mon.mr_setup(mon, monster);
+	monster_setup(monster, mon);
 
 	setorigin(monster, org);
 

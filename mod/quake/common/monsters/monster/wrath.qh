@@ -21,7 +21,7 @@ CLASS(Wrath, Monster)
     ATTRIB(Wrath, m_sound, Sound, SND_MON_WRATH_SIGHT);
 #endif
     ATTRIB(Wrath, netname, string, "wrath");
-    ATTRIB(Wrath, monster_name, string, _("Wrath"));
+    ATTRIB(Wrath, m_name, string, _("Wrath"));
 ENDCLASS(Wrath)
 
 REGISTER_MONSTER(WRATH, NEW(Wrath));

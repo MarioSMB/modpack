@@ -15,6 +15,7 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
 	newmis.clipgroup = this.clipgroup;
+	newmis.modelflags |= MF_GRENADE;
 
 	newmis.angles = vectoangles(dir);
 	

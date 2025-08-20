@@ -20,7 +20,7 @@ CLASS(Mummy, Monster)
     ATTRIB(Mummy, m_model_head, Model, MDL_MON_MUMMY_HEAD);
 #endif
     ATTRIB(Mummy, netname, string, "mummy");
-    ATTRIB(Mummy, monster_name, string, _("Mummy"));
+    ATTRIB(Mummy, m_name, string, _("Mummy"));
 ENDCLASS(Mummy)
 
 REGISTER_MONSTER(MUMMY, NEW(Mummy));

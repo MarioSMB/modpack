@@ -23,7 +23,7 @@ CLASS(Centroid, Monster)
     ATTRIB(Centroid, m_sound, Sound, SND_MON_CENTROID_SIGHT);
 #endif
     ATTRIB(Centroid, netname, string, "scourge");
-    ATTRIB(Centroid, monster_name, string, _("Centroid"));
+    ATTRIB(Centroid, m_name, string, _("Centroid"));
 ENDCLASS(Centroid)
 
 REGISTER_MONSTER(CENTROID, NEW(Centroid));

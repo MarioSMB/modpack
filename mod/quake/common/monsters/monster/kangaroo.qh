@@ -20,7 +20,7 @@ CLASS(Kangaroo, Monster)
     ATTRIB(Kangaroo, m_model_head, Model, MDL_MON_KANGAROO_HEAD);
 #endif
     ATTRIB(Kangaroo, netname, string, "kangaroo");
-    ATTRIB(Kangaroo, monster_name, string, _("Kangaroo"));
+    ATTRIB(Kangaroo, m_name, string, _("Kangaroo"));
 ENDCLASS(Kangaroo)
 
 REGISTER_MONSTER(KANGAROO, NEW(Kangaroo));

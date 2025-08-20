@@ -1,6 +1,7 @@
 #include "main.qh"
 
 #include "centerprint.qh"
+#include "particles.qh"
 #include "sbar.qh"
 #include "shop.qh"
 #include "../common/champions/_mod.qh"
@@ -9,6 +10,11 @@
 #include "../common/sui_sys.qh"
 #include "../common/weapons/all.qh"
 #include <common/checkextension.qh>
+
+STATIC_INIT_LATE(mod_cvars_override)
+{
+	localcmd("\nalias particle \"cl_cmd particle ${* ?}\n");
+}
 
 bool autocvar_developer_csqcentities;
 
@@ -327,6 +333,12 @@ void GameCommand(string command)
 
 		if (vote_selection)
 			localcmd(strcat("cmd vote ", vote_string, "\n"));
+		return;
+	}
+
+	if(s == "particle")
+	{
+		Particle_HandleCommand(argc);
 		return;
 	}
 

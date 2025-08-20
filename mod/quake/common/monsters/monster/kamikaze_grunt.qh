@@ -23,7 +23,7 @@ CLASS(KamikazeGrunt, Monster)
     ATTRIB(KamikazeGrunt, m_sound, Sound, SND_MON_KAMIKAZEGRUNT_SIGHT);
 #endif
     ATTRIB(KamikazeGrunt, netname, string, "kamikaze");
-    ATTRIB(KamikazeGrunt, monster_name, string, _("Kamikaze Grunt"));
+    ATTRIB(KamikazeGrunt, m_name, string, _("Kamikaze Grunt"));
 ENDCLASS(KamikazeGrunt)
 
 REGISTER_MONSTER(KAMIKAZEGRUNT, NEW(KamikazeGrunt));

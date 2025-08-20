@@ -94,7 +94,7 @@ CLASS(Skeleton, Monster)
     ATTRIB(Skeleton, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Skeleton, netname, string, "skeleton");
-    ATTRIB(Skeleton, monster_name, string, _("Skeleton"));
+    ATTRIB(Skeleton, m_name, string, _("Skeleton"));
 ENDCLASS(Skeleton)
 
 REGISTER_MONSTER(SKELETON, NEW(Skeleton));

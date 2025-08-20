@@ -61,7 +61,7 @@ CLASS(MCZombie, Monster)
     ATTRIB(MCZombie, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(MCZombie, netname, string, "mczombie");
-    ATTRIB(MCZombie, monster_name, string, _("Zombie"));
+    ATTRIB(MCZombie, m_name, string, _("Zombie"));
 ENDCLASS(MCZombie)
 
 REGISTER_MONSTER(MCZOMBIE, NEW(MCZombie));

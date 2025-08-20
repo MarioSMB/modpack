@@ -23,7 +23,7 @@ CLASS(HellKnight, Monster)
     ATTRIB(HellKnight, m_sound, Sound, SND_MON_HELL_KNIGHT_SIGHT);
 #endif
     ATTRIB(HellKnight, netname, string, "hknight");
-    ATTRIB(HellKnight, monster_name, string, _("Hell Knight"));
+    ATTRIB(HellKnight, m_name, string, _("Hell Knight"));
 ENDCLASS(HellKnight)
 
 REGISTER_MONSTER(HELL_KNIGHT, NEW(HellKnight));

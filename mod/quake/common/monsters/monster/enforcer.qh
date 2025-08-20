@@ -28,7 +28,7 @@ CLASS(Enforcer, Monster)
     ATTRIB(Enforcer, m_model_head, Model, MDL_MON_ENFORCER_HEAD);
 #endif
     ATTRIB(Enforcer, netname, string, "enforcer");
-    ATTRIB(Enforcer, monster_name, string, _("Enforcer"));
+    ATTRIB(Enforcer, m_name, string, _("Enforcer"));
 ENDCLASS(Enforcer)
 
 REGISTER_MONSTER(ENFORCER, NEW(Enforcer));

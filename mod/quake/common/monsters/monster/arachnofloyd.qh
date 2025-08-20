@@ -23,7 +23,7 @@ CLASS(Arachnofloyd, Monster)
     ATTRIB(Arachnofloyd, m_sound, Sound, SND_MON_ARACHNOFLOYD_SIGHT);
 #endif
     ATTRIB(Arachnofloyd, netname, string, "arachnofloyd");
-    ATTRIB(Arachnofloyd, monster_name, string, _("Arachnofloyd"));
+    ATTRIB(Arachnofloyd, m_name, string, _("Arachnofloyd"));
 ENDCLASS(Arachnofloyd)
 
 REGISTER_MONSTER(ARACHNOFLOYD, NEW(Arachnofloyd));

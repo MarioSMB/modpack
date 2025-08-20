@@ -27,7 +27,7 @@ CLASS(DarkKnight, Monster)
     ATTRIB(DarkKnight, m_model_head, Model, MDL_MON_DARK_KNIGHT_HEAD);
 #endif
     ATTRIB(DarkKnight, netname, string, "dknight");
-    ATTRIB(DarkKnight, monster_name, string, _("Dark Knight"));
+    ATTRIB(DarkKnight, m_name, string, _("Dark Knight"));
 ENDCLASS(DarkKnight)
 
 REGISTER_MONSTER(DARK_KNIGHT, NEW(DarkKnight));

@@ -28,7 +28,7 @@ CLASS(Norb, Monster)
     ATTRIB(Norb, m_model_head, Model, MDL_MON_NORB_HEAD);
 #endif
     ATTRIB(Norb, netname, string, "norb");
-    ATTRIB(Norb, monster_name, string, _("Norb"));
+    ATTRIB(Norb, m_name, string, _("Norb"));
 ENDCLASS(Norb)
 
 REGISTER_MONSTER(NORB, NEW(Norb));

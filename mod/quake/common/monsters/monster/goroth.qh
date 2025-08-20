@@ -21,7 +21,7 @@ CLASS(Goroth, Monster)
     ATTRIB(Goroth, m_sound, Sound, SND_MON_GOROTH_SIGHT);
 #endif
     ATTRIB(Goroth, netname, string, "goroth");
-    ATTRIB(Goroth, monster_name, string, _("Goroth"));
+    ATTRIB(Goroth, m_name, string, _("Goroth"));
 ENDCLASS(Goroth)
 
 REGISTER_MONSTER(GOROTH, NEW(Goroth));

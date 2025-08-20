@@ -28,7 +28,7 @@ CLASS(LightningEnforcer, Monster)
     ATTRIB(LightningEnforcer, m_model_head, Model, MDL_MON_LIGHTNING_ENFORCER_HEAD);
 #endif
     ATTRIB(LightningEnforcer, netname, string, "lenforcer");
-    ATTRIB(LightningEnforcer, monster_name, string, _("Lightning Enforcer"));
+    ATTRIB(LightningEnforcer, m_name, string, _("Lightning Enforcer"));
 ENDCLASS(LightningEnforcer)
 
 REGISTER_MONSTER(LIGHTNING_ENFORCER, NEW(LightningEnforcer));

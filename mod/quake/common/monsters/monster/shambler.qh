@@ -23,7 +23,7 @@ CLASS(Shambler, Monster)
     ATTRIB(Shambler, m_sound, Sound, SND_MON_SHAMBLER_SIGHT);
 #endif
     ATTRIB(Shambler, netname, string, "shambler");
-    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+    ATTRIB(Shambler, m_name, string, _("Shambler"));
 ENDCLASS(Shambler)
 
 REGISTER_MONSTER(SHAMBLER, NEW(Shambler));

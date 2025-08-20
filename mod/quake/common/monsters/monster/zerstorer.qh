@@ -26,7 +26,7 @@ CLASS(Zerstorer, Monster)
     ATTRIB(Zerstorer, m_model_head, Model, MDL_MON_ZERSTORER_HEAD);
 #endif
     ATTRIB(Zerstorer, netname, string, "zerstorer");
-    ATTRIB(Zerstorer, monster_name, string, _("Zerstorer"));
+    ATTRIB(Zerstorer, m_name, string, _("Zerstorer"));
 ENDCLASS(Zerstorer)
 
 REGISTER_MONSTER(ZERSTORER, NEW(Zerstorer));

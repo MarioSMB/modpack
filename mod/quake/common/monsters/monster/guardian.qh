@@ -20,7 +20,7 @@ CLASS(Guardian, Monster)
     ATTRIB(Guardian, m_model, Model, MDL_MON_GUARDIAN_AZTEC);
 #endif
     ATTRIB(Guardian, netname, string, "guardian");
-    ATTRIB(Guardian, monster_name, string, _("Guardian"));
+    ATTRIB(Guardian, m_name, string, _("Guardian"));
 ENDCLASS(Guardian)
 
 REGISTER_MONSTER(GUARDIAN, NEW(Guardian));

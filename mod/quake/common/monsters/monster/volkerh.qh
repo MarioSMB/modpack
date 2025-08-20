@@ -21,7 +21,7 @@ CLASS(Volkerh, Monster)
     ATTRIB(Volkerh, m_sound, Sound, SND_MON_VOLKERH_SIGHT);
 #endif
     ATTRIB(Volkerh, netname, string, "volkerh");
-    ATTRIB(Volkerh, monster_name, string, _("Volkerh"));
+    ATTRIB(Volkerh, m_name, string, _("Volkerh"));
 ENDCLASS(Volkerh)
 
 REGISTER_MONSTER(VOLKERH, NEW(Volkerh));

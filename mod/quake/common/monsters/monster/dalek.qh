@@ -21,7 +21,7 @@ CLASS(Dalek, Monster)
     ATTRIB(Dalek, m_sound, Sound, SND_MON_DALEK_SIGHT);
 #endif
     ATTRIB(Dalek, netname, string, "dalek");
-    ATTRIB(Dalek, monster_name, string, _("Dalek"));
+    ATTRIB(Dalek, m_name, string, _("Dalek"));
 ENDCLASS(Dalek)
 
 REGISTER_MONSTER(DALEK, NEW(Dalek));

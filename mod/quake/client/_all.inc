@@ -11,6 +11,7 @@
 #include "shop.qc"
 #include "centerprint.qc"
 #include "shownames.qc"
+#include "particles.qc"
 
 #include "../common/_all.inc"
 

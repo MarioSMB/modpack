@@ -23,7 +23,7 @@ CLASS(Edie, Monster)
     ATTRIB(Edie, m_sound, Sound, SND_MON_EDIE_SIGHT);
 #endif
     ATTRIB(Edie, netname, string, "edie");
-    ATTRIB(Edie, monster_name, string, _("Edie"));
+    ATTRIB(Edie, m_name, string, _("Edie"));
 ENDCLASS(Edie)
 
 REGISTER_MONSTER(EDIE, NEW(Edie));

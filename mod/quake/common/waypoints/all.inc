@@ -10,3 +10,5 @@ REGISTER_WAYPOINT(Weapon, _("Weapon"), "", '0 0 0', 1);
 REGISTER_WAYPOINT(Exit, _("Exit"), "", '0 1 1', 1);
 
 REGISTER_WAYPOINT(Entity, _("Entity"), "", '0 1 1', 1);
+
+REGISTER_WAYPOINT(Monster, _("Monster"), "", '1 0 0', 1);

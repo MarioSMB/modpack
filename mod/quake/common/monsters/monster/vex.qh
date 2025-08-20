@@ -33,7 +33,7 @@ CLASS(Vex, Monster)
     ATTRIB(Vex, m_model_head, Model, MDL_Null);
 #endif
     ATTRIB(Vex, netname, string, "vex");
-    ATTRIB(Vex, monster_name, string, _("Vex"));
+    ATTRIB(Vex, m_name, string, _("Vex"));
 ENDCLASS(Vex)
 
 REGISTER_MONSTER(VEX, NEW(Vex));

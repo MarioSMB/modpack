@@ -29,7 +29,7 @@ NET_HANDLE(net_effect, bool isNew)
 
 	if(eff_trail)
 		trailparticles(NULL, eff, v, vel);
-	else
+	else if(!SpawnParticles_list(strcat("cl_particle_", eff.eent_eff_name), v, vel, false))
 		pointparticles(eff, v, vel, eff_cnt);
 	return true;
 }
@@ -90,3 +90,13 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif
+
+#ifdef CSQC
+void Local_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
+{
+	if(!SpawnParticles_list(strcat("cl_particle_", eff.eent_eff_name), eff_loc, eff_vel, false))
+		__pointparticles(particleeffectnum(eff), eff_loc, eff_vel, eff_cnt);
+}
+#endif
+
+#include "particles.qc"

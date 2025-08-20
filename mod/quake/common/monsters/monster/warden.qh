@@ -91,7 +91,7 @@ CLASS(Warden, Monster)
     ATTRIB(Warden, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Warden, netname, string, "warden");
-    ATTRIB(Warden, monster_name, string, _("Warden"));
+    ATTRIB(Warden, m_name, string, _("Warden"));
 ENDCLASS(Warden)
 
 REGISTER_MONSTER(WARDEN, NEW(Warden));

@@ -22,7 +22,7 @@ CLASS(Raindeer, Monster)
     ATTRIB(Raindeer, m_model_head, Model, MDL_MON_RAINDEER_HEAD);
 #endif
     ATTRIB(Raindeer, netname, string, "raindeer");
-    ATTRIB(Raindeer, monster_name, string, _("Raindeer"));
+    ATTRIB(Raindeer, m_name, string, _("Raindeer"));
 ENDCLASS(Raindeer)
 
 REGISTER_MONSTER(RAINDEER, NEW(Raindeer));

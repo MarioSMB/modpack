@@ -117,7 +117,7 @@ void fishtouch(entity this, entity toucher)
 			set_movetype(this, MOVETYPE_BOUNCE);
 			//this.solid = SOLID_BBOX;
 			
-			hurt = 43 * (1.4 + this.fish_time);
+			hurt = 50 * (1.4 + this.fish_time);
 			spawn_touchblood(this, hurt * 90, toucher);
 			T_Damage(toucher, this, this.owner, hurt, this.projectiledeathtype);
 			//this.velocity = this.movedir;
@@ -136,7 +136,7 @@ void fishtouch(entity this, entity toucher)
 	}
 	if(toucher.takedamage)
 	{
-		hurt = 23* (1 + this.fish_time);
+		hurt = 50* (1 + this.fish_time);
 		spawn_touchblood(this, hurt, toucher);
 		T_Damage(toucher, this, this.owner, hurt, this.projectiledeathtype);
 	}

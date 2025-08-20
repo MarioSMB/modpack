@@ -26,7 +26,7 @@ CLASS(Grenling, Monster)
     ATTRIB(Grenling, m_model_head, Model, MDL_MON_GRENLING_HEAD);
 #endif
     ATTRIB(Grenling, netname, string, "grenling");
-    ATTRIB(Grenling, monster_name, string, _("Grenling"));
+    ATTRIB(Grenling, m_name, string, _("Grenling"));
 ENDCLASS(Grenling)
 
 REGISTER_MONSTER(GRENLING, NEW(Grenling));

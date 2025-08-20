@@ -100,6 +100,8 @@ void crossbow_bolt_think(entity this)
 			continue;
 		it.crossbow_dmgtime = time + 0.1; // prevent instant death
 		float damg = ((this.dmg) ? this.dmg : 25);
+		if(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+			damg = 120;
 		if(it.resist_nails != 0)
 			damg = Resist_Damage(it, IT_NAILS, damg);
 		Resist_Nails(it, this.origin);
@@ -142,7 +144,7 @@ void W_FireCrossbow(entity this, float ox, .entity weaponentity)
 	missile.count = time + 6;
 	missile.cnt = 32;
 	settouch(missile, crossbow_bolt_touch);
-	missile.dmg = 25;
+	missile.dmg = 35;
 	missile.classname = "crossbow_bolt"; // identifier for spike touch TODO: clean this mess up
 	missile.projectiledeathtype = WEP_CROSSBOW.m_id;
 	_setmodel(missile, "progs/proj_impalespike.mdl");

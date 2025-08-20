@@ -64,7 +64,7 @@ CLASS(MCGoat, Monster)
     ATTRIB(MCGoat, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(MCGoat, netname, string, "goat");
-    ATTRIB(MCGoat, monster_name, string, _("Goat"));
+    ATTRIB(MCGoat, m_name, string, _("Goat"));
 ENDCLASS(MCGoat)
 
 REGISTER_MONSTER(GOAT, NEW(MCGoat));

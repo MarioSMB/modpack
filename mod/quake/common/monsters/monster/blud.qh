@@ -23,7 +23,7 @@ CLASS(Blud, Monster)
     ATTRIB(Blud, m_sound, Sound, SND_MON_BLUD_SIGHT);
 #endif
     ATTRIB(Blud, netname, string, "blud");
-    ATTRIB(Blud, monster_name, string, _("Blud"));
+    ATTRIB(Blud, m_name, string, _("Blud"));
 ENDCLASS(Blud)
 
 REGISTER_MONSTER(BLUD, NEW(Blud));

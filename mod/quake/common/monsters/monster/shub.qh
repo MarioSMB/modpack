@@ -14,7 +14,7 @@ CLASS(Shub, Monster)
     ATTRIB(Shub, m_model, Model, MDL_MON_SHUB);
 #endif
     ATTRIB(Shub, netname, string, "shub");
-    ATTRIB(Shub, monster_name, string, _("Shub-Niggurath"));
+    ATTRIB(Shub, m_name, string, _("Shub-Niggurath"));
 ENDCLASS(Shub)
 
 REGISTER_MONSTER(SHUB, NEW(Shub));

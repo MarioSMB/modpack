@@ -23,7 +23,7 @@ CLASS(Minotaur, Monster)
     ATTRIB(Minotaur, m_sound, Sound, SND_MON_MINOTAUR_SIGHT);
 #endif
     ATTRIB(Minotaur, netname, string, "minotaur");
-    ATTRIB(Minotaur, monster_name, string, _("Minotaur"));
+    ATTRIB(Minotaur, m_name, string, _("Minotaur"));
 ENDCLASS(Minotaur)
 
 REGISTER_MONSTER(MINOTAUR, NEW(Minotaur));

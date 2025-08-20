@@ -18,7 +18,7 @@ CLASS(Overlord, Monster)
     ATTRIB(Overlord, m_model, Model, MDL_MON_OVERLORD);
 #endif
     ATTRIB(Overlord, netname, string, "overlord");
-    ATTRIB(Overlord, monster_name, string, _("Overlord"));
+    ATTRIB(Overlord, m_name, string, _("Overlord"));
 ENDCLASS(Overlord)
 
 REGISTER_MONSTER(OVERLORD, NEW(Overlord));

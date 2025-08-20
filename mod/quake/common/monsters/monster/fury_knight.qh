@@ -23,7 +23,7 @@ CLASS(FuryKnight, Monster)
     ATTRIB(FuryKnight, m_sound, Sound, SND_MON_FURY_KNIGHT_SIGHT);
 #endif
     ATTRIB(FuryKnight, netname, string, "dfury");
-    ATTRIB(FuryKnight, monster_name, string, _("Fury Knight"));
+    ATTRIB(FuryKnight, m_name, string, _("Fury Knight"));
 ENDCLASS(FuryKnight)
 
 REGISTER_MONSTER(FURY_KNIGHT, NEW(FuryKnight));

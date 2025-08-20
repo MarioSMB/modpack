@@ -23,7 +23,7 @@ CLASS(Judicator, Monster)
     ATTRIB(Judicator, m_sound, Sound, SND_MON_JUDICATOR_SIGHT);
 #endif
     ATTRIB(Judicator, netname, string, "judicator");
-    ATTRIB(Judicator, monster_name, string, _("Judicator"));
+    ATTRIB(Judicator, m_name, string, _("Judicator"));
 ENDCLASS(Judicator)
 
 REGISTER_MONSTER(JUDICATOR, NEW(Judicator));

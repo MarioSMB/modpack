@@ -23,7 +23,7 @@ CLASS(AxeGrunt, Monster)
     ATTRIB(AxeGrunt, m_sound, Sound, SND_MON_AXEGRUNT_SIGHT);
 #endif
     ATTRIB(AxeGrunt, netname, string, "axegrunt");
-    ATTRIB(AxeGrunt, monster_name, string, _("Axe Grunt"));
+    ATTRIB(AxeGrunt, m_name, string, _("Axe Grunt"));
 ENDCLASS(AxeGrunt)
 
 REGISTER_MONSTER(AXEGRUNT, NEW(AxeGrunt));

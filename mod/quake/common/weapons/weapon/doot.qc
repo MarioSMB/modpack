@@ -8,6 +8,8 @@ PRECACHE(Doot)
 
 	precache_model("progs/piano_musicnote_white.mdl");
 	precache_model("progs/x9_burst_6sided_brightyellow.mdl");
+
+	precache_model("progs/sonic_boom.spr");
 }
 
 .float doot_smoketime;
@@ -50,6 +52,90 @@ void doot_note_touch(entity this, entity toucher)
 	BecomeCartoonExplosion(this);
 }
 
+void doot_ring_push(entity this, entity toucher)
+{
+	FOREACH_ENTITY_RADIUS(this.origin, 50, IS_PLAYER(it) && it == this.owner,
+	{
+		float pushforce = 100 / vlen(it.maxs - it.mins);
+
+		it.velocity_z = (400 * pushforce);
+	});
+}
+
+void doot_ring_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner || toucher.owner == this.owner || toucher.solid == SOLID_TRIGGER)
+		return;
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+
+	doot_ring_push(this, toucher);
+	
+	setthink(this, SUB_Remove);
+	settouch(this, func_null);
+	this.nextthink = time;
+}
+
+void doot_ring_think(entity this)
+{
+	if(time > this.cnt)
+	{
+		delete(this);
+		return;
+	}
+
+	entity newmis = spawn();
+	newmis.classname = "sonic_boom";
+	newmis.owner = this;
+	newmis.solid = SOLID_NOT;
+	set_movetype(newmis, MOVETYPE_NONE);
+	// Roll the sonic boom from side to side towards the target
+	//float roll = 350 + random() * 20;
+	newmis.angles = this.angles;
+	//newmis.angles_z = ANGLEMOD(roll);
+	newmis.effects |= EF_NOSHADOW;
+	_setmodel(newmis, "progs/sonic_boom.spr");
+	setsize(newmis, '0 0 0', '0 0 0');
+	setorigin(newmis, this.origin);
+	SUB_SetFade(newmis, time, 0.33);
+	newmis.scale = this.scale;
+
+	this.scale += 0.1;
+	setsize(this, -this.pos1 * this.scale, this.pos1 * this.scale);
+
+	this.nextthink = time + 0.05;
+}
+
+void doot_ring(entity this, vector org, vector dir)
+{
+	entity newmis = spawn();
+	newmis.classname = "sonic_shriek";
+	newmis.owner = this;
+
+	set_movetype(newmis, MOVETYPE_FLYMISSILE);
+	newmis.dphitcontentsmask = DPCONTENTS_SOLID;
+	newmis.solid = SOLID_CORPSE;
+	newmis.pos1 = '32 32 32';
+	newmis.projectiledeathtype = WEP_DOOT.m_id;
+	newmis.clipgroup = this.clipgroup;
+	newmis.cnt = time + 0.3;
+	newmis.scale = 0.2;
+	setsize(newmis, -newmis.pos1 * newmis.scale, newmis.pos1 * newmis.scale);
+	setorigin(newmis, org);
+
+	float aspeed = 400;
+	newmis.velocity = dir * aspeed;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 0.1;
+	setthink(newmis, doot_ring_think);
+	settouch(newmis, doot_ring_touch);
+}
+
 void W_FireDoot(entity this, .entity weaponentity)
 {
 	bool docolors = (random() < 0.07);
@@ -70,6 +156,8 @@ void W_FireDoot(entity this, .entity weaponentity)
 			Send_Effect(EFFECT_SMOKE_RING, offset, v_forward * 50, 1);
 		this.(weaponentity).doot_smoketime = time + 0.25;
 	}
+
+	doot_ring(this, offset, v_forward);
 
 	tracebox(this.origin, '0 0 0', '0 0 0', offset, MOVE_NORMAL, this);
 	vector neworg = trace_endpos;

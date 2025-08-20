@@ -70,7 +70,7 @@ CLASS(Shulker, Monster)
     ATTRIB(Shulker, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Shulker, netname, string, "shulker");
-    ATTRIB(Shulker, monster_name, string, _("Shulker"));
+    ATTRIB(Shulker, m_name, string, _("Shulker"));
 ENDCLASS(Shulker)
 
 REGISTER_MONSTER(SHULKER, NEW(Shulker));

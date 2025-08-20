@@ -45,7 +45,7 @@ CLASS(MagmaCube, Monster)
     ATTRIB(MagmaCube, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(MagmaCube, netname, string, "magmacube");
-    ATTRIB(MagmaCube, monster_name, string, _("Magma Cube"));
+    ATTRIB(MagmaCube, m_name, string, _("Magma Cube"));
 ENDCLASS(MagmaCube)
 
 REGISTER_MONSTER(MAGMACUBE, NEW(MagmaCube));

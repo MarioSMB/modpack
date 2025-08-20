@@ -23,7 +23,7 @@ CLASS(Drole, Monster)
     ATTRIB(Drole, m_sound, Sound, SND_MON_DROLE_SIGHT);
 #endif
     ATTRIB(Drole, netname, string, "drole");
-    ATTRIB(Drole, monster_name, string, _("Drole"));
+    ATTRIB(Drole, m_name, string, _("Drole"));
 ENDCLASS(Drole)
 
 REGISTER_MONSTER(DROLE, NEW(Drole));

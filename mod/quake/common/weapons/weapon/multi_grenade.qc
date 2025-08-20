@@ -9,6 +9,7 @@ void MiniGrenadeExplode(entity this)
 		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, NULL);
 
     te_explosion2(this.origin, 230, 5);
+    sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	BecomeExplosion(this);
 }

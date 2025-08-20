@@ -21,7 +21,7 @@ CLASS(LavaMan, Monster)
     ATTRIB(LavaMan, m_sound, Sound, SND_MON_LAVAMAN_SIGHT);
 #endif
     ATTRIB(LavaMan, netname, string, "lavaman");
-    ATTRIB(LavaMan, monster_name, string, _("LavaMan"));
+    ATTRIB(LavaMan, m_name, string, _("LavaMan"));
 ENDCLASS(LavaMan)
 
 REGISTER_MONSTER(LAVAMAN, NEW(LavaMan));

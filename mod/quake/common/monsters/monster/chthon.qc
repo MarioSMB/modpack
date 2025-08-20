@@ -488,6 +488,8 @@ void lightning_use(entity this, entity actor, entity trigger)
 			e.health -= 3000;
 		else
 			e.health -= 1000;
+		if(e.sprite)
+			WaypointSprite_UpdateHealth(e.sprite, e.health);
 		if(e.health >= 2000)
 			boss_shocka1(e);
 		else if(e.health > 0)

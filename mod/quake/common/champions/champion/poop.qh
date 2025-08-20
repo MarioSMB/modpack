@@ -47,6 +47,7 @@ PRECACHE(Poop)
     precache_sound("player_poop/lburn2.wav");     // lava burn
 
     precache_sound("player_poop/start.wav");
+    precache_sound("player_poop/falling.wav");
 
     precache_model("progs/s_mayo.mdl");
 #endif

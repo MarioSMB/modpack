@@ -41,7 +41,6 @@
 #include "weapon/crossbow.qh"
 #include "weapon/bongos.qh"
 #include "weapon/katana.qh"
-#include "weapon/organ.qh"
 #include "weapon/ball.qh"
 #include "weapon/wand.qh"
 #include "weapon/nuke.qh"

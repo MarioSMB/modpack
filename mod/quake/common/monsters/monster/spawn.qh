@@ -21,7 +21,7 @@ CLASS(Spawn, Monster)
     ATTRIB(Spawn, m_sound, Sound, SND_MON_SPAWN_SIGHT);
 #endif
     ATTRIB(Spawn, netname, string, "spawn");
-    ATTRIB(Spawn, monster_name, string, _("Spawn"));
+    ATTRIB(Spawn, m_name, string, _("Spawn"));
 ENDCLASS(Spawn)
 
 REGISTER_MONSTER(SPAWN, NEW(Spawn));

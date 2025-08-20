@@ -42,7 +42,7 @@ CLASS(WitherSkeleton, Monster)
     ATTRIB(WitherSkeleton, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(WitherSkeleton, netname, string, "wither_skeleton");
-    ATTRIB(WitherSkeleton, monster_name, string, _("Wither Skeleton"));
+    ATTRIB(WitherSkeleton, m_name, string, _("Wither Skeleton"));
 ENDCLASS(WitherSkeleton)
 
 REGISTER_MONSTER(WITHER_SKELETON, NEW(WitherSkeleton));

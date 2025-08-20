@@ -8,6 +8,7 @@
 #include "blud.qh"
 #include "breeze.qh"
 #include "centroid.qh"
+#include "chicken.qh"
 #include "chthon.qh"
 #include "cook.qh"
 #include "creeper.qh"

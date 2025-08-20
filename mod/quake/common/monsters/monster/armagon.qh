@@ -18,7 +18,7 @@ CLASS(Armagon, Monster)
     ATTRIB(Armagon, m_model, Model, MDL_MON_ARMAGON);
 #endif
     ATTRIB(Armagon, netname, string, "armagon");
-    ATTRIB(Armagon, monster_name, string, _("Armagon"));
+    ATTRIB(Armagon, m_name, string, _("Armagon"));
 ENDCLASS(Armagon)
 
 REGISTER_MONSTER(ARMAGON, NEW(Armagon));

@@ -37,7 +37,7 @@ CLASS(Blaze, Monster)
     ATTRIB(Blaze, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Blaze, netname, string, "blaze");
-    ATTRIB(Blaze, monster_name, string, _("Blaze"));
+    ATTRIB(Blaze, m_name, string, _("Blaze"));
 ENDCLASS(Blaze)
 
 REGISTER_MONSTER(BLAZE, NEW(Blaze));

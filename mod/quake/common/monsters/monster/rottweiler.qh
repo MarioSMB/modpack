@@ -23,7 +23,7 @@ CLASS(Rottweiler, Monster)
     ATTRIB(Rottweiler, m_sound, Sound, SND_MON_ROTTWEILER_SIGHT);
 #endif
     ATTRIB(Rottweiler, netname, string, "dog");
-    ATTRIB(Rottweiler, monster_name, string, _("Rottweiler"));
+    ATTRIB(Rottweiler, m_name, string, _("Rottweiler"));
 ENDCLASS(Rottweiler)
 
 REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler));

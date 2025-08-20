@@ -41,7 +41,7 @@ CLASS(Endermite, Monster)
     ATTRIB(Endermite, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Endermite, netname, string, "endermite");
-    ATTRIB(Endermite, monster_name, string, _("Endermite"));
+    ATTRIB(Endermite, m_name, string, _("Endermite"));
 ENDCLASS(Endermite)
 
 REGISTER_MONSTER(ENDERMITE, NEW(Endermite));

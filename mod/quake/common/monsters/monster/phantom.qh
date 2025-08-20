@@ -56,7 +56,7 @@ CLASS(Phantom, Monster)
     ATTRIB(Phantom, m_model_head, Model, MDL_Null);
 #endif
     ATTRIB(Phantom, netname, string, "phantom");
-    ATTRIB(Phantom, monster_name, string, _("Phantom"));
+    ATTRIB(Phantom, m_name, string, _("Phantom"));
 ENDCLASS(Phantom)
 
 REGISTER_MONSTER(PHANTOM, NEW(Phantom));

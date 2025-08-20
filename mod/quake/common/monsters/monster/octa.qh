@@ -21,7 +21,7 @@ CLASS(Octa, Monster)
     ATTRIB(Octa, m_sound, Sound, SND_MON_OCTA_SIGHT);
 #endif
     ATTRIB(Octa, netname, string, "octa");
-    ATTRIB(Octa, monster_name, string, _("Octa"));
+    ATTRIB(Octa, m_name, string, _("Octa"));
 ENDCLASS(Octa)
 
 REGISTER_MONSTER(OCTA, NEW(Octa));

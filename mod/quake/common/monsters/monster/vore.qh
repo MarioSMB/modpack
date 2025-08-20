@@ -23,7 +23,7 @@ CLASS(Vore, Monster)
     ATTRIB(Vore, m_sound, Sound, SND_MON_VORE_SIGHT);
 #endif
     ATTRIB(Vore, netname, string, "shalrath");
-    ATTRIB(Vore, monster_name, string, _("Vore"));
+    ATTRIB(Vore, m_name, string, _("Vore"));
 ENDCLASS(Vore)
 
 REGISTER_MONSTER(VORE, NEW(Vore));

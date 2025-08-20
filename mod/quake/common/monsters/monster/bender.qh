@@ -23,7 +23,7 @@ CLASS(Bender, Monster)
     ATTRIB(Bender, m_sound, Sound, SND_MON_BENDER_SIGHT);
 #endif
     ATTRIB(Bender, netname, string, "bender");
-    ATTRIB(Bender, monster_name, string, _("Bender"));
+    ATTRIB(Bender, m_name, string, _("Bender"));
 ENDCLASS(Bender)
 
 REGISTER_MONSTER(BENDER, NEW(Bender));

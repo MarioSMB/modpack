@@ -276,6 +276,89 @@ void armagon_overright_think(entity this)
 //   this.nextthink = time + 0.1;
 }
 
+void armagon_shockwave_boom(entity this)
+{
+	this.cnt -= 1;
+	this.nextthink = time + 0.1;
+	if(this.cnt > 0 && vdist(this.velocity, >=, 200))
+		setthink(this, armagon_shockwave_boom);
+	else
+		setthink(this, SUB_Remove);
+	
+	T_RadiusDamage(this, this.owner, 30, DEATH_MONSTER_GOROTH.m_id, this.owner);
+	
+	// Explosions occur as the missile travels
+	float r = random() * 2 - 1;
+	
+	makevectors(this.angles);
+	
+	entity expl = spawn();
+	expl.origin = this.origin + r * 32 * v_right;	
+	set_movetype(expl, MOVETYPE_TOSS);
+	expl.velocity = '0 0 200';
+	expl.avelocity_x = random()*600;
+	expl.avelocity_y = random()*600;
+	expl.avelocity_z = random()*600;
+	expl.scale = 0.25;
+	settouch(expl, func_null);
+	_setmodel(expl, "progs/s_explod.spr");
+	expl.solid = SOLID_NOT;
+	setsize(expl, '0 0 0', '0 0 0');
+	expl.nextthink = time;
+	setthink(expl, s_explode1);
+	Send_Effect(EFFECT_ARMAGON_SHOCKWAVE, this.origin, '0 0 0', 1);
+
+	traceline(this.origin, this.origin - '0 0 48', true, this);
+	if(trace_fraction == 1)
+	{
+		delete(this);
+		return;
+	}
+}
+
+void armagon_shockwave_missile(entity this, vector dir, float rmv_t)
+{
+	entity gmis = spawn();
+	gmis.owner = this;
+	gmis.solid = SOLID_NOT;
+	gmis.projectiledeathtype = DEATH_MONSTER_ARMAGON.m_id;
+	gmis.clipgroup = this.clipgroup;
+	set_movetype(gmis, MOVETYPE_WALK);
+	gmis.effects = EF_DIMLIGHT;
+	setsize(gmis, '0 0 0', '0 0 0');
+	makevectors(this.angles);
+	vector org = this.origin - '0 0 24';
+	setorigin(gmis, org);
+	gmis.velocity = dir * 300;
+	gmis.angles = vectoangles(gmis.velocity);
+	gmis.cnt = rmv_t;
+	gmis.nextthink = time;
+	setthink(gmis, armagon_shockwave_boom);
+}
+
+void gug_screen_shake(entity this, float stime, entity eshake);
+void armagon_shockwave(entity this)
+{
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	T_RadiusDamage(this, this, 80, DEATH_MONSTER_ARMAGON.m_id, this);
+	te_explosion(this.origin - '0 0 24');
+
+	FOREACH_ENTITY_RADIUS(this.origin, 550, IS_PLAYER(it) && IS_ONGROUND(it),
+	{
+		gug_screen_shake(this, 0.4, it);
+	});
+
+	float ang = 0;
+	while(ang <= 360)
+	{
+		vector vec = this.v_angle;
+		vec.y += ang;
+		makevectors(vec);
+		armagon_shockwave_missile(this, v_forward, 31);
+		ang += 10;
+	}
+}
+
 void armagon_stand_attack(entity this);
 
 .int arma_frame;
@@ -412,6 +495,20 @@ void armagon_overright4(entity this) { set_animofs(this, anim_armagon_lw2fir, 4,
 void armagon_overright3(entity this) { set_animofs(this, anim_armagon_lw2fir, 3, armagon_overright4); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON); armagon_overright_think(this); }
 void armagon_overright2(entity this) { set_animofs(this, anim_armagon_lw2fir, 2, armagon_overright3); armagon_overright_think(this); }
 void armagon_overright1(entity this) { set_animofs(this, anim_armagon_lw2fir, 1, armagon_overright2); this.count=0; armagon_overright_think(this); }
+
+// TODO: fix animations
+void armagon_shockwave12(entity this) { set_anim(this, anim_armagon_lstand, armagon_run); armagon_think(this); this.attack_finished = time + 1; }
+void armagon_shockwave11(entity this) { set_anim(this, anim_armagon_lstand, armagon_shockwave12); armagon_think(this); }
+void armagon_shockwave10(entity this) { set_anim(this, anim_armagon_lstand, armagon_shockwave11); armagon_think(this); }
+void armagon_shockwave9(entity this) { set_anim(this, anim_armagon_lstand, armagon_shockwave10); armagon_think(this); }
+void armagon_shockwave8(entity this) { set_anim(this, anim_armagon_lstand, armagon_shockwave9); armagon_think(this); }
+void armagon_shockwave7(entity this) { set_anim(this, anim_armagon_lstand, armagon_shockwave8); armagon_shockwave(this); armagon_think(this); }
+void armagon_shockwave6(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_shockwave7); _sound(this, 6, "armagon/footfall.wav",1,ATTN_ARMAGON); armagon_think(this); }
+void armagon_shockwave5(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_shockwave6); armagon_think(this); }
+void armagon_shockwave4(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_shockwave5); armagon_think(this); }
+void armagon_shockwave3(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_shockwave4); armagon_think(this); }
+void armagon_shockwave2(entity this) { set_animofs(this, anim_armagon_lwalk, 2, armagon_shockwave3); armagon_think(this); }
+void armagon_shockwave1(entity this) { set_animofs(this, anim_armagon_lwalk, 1, armagon_shockwave2); armagon_think(this); }
 
 void armagon_plant1(entity this) { set_anim(this, anim_armagon_lstand, armagon_plant1); armagon_stand_attack(this); armagon_think(this); }
 
@@ -584,7 +681,10 @@ void armagon_pain(entity this, entity attacker, float damage, int deathtype)
 
 void armagon_missile_attack(entity this)
 {
-	if(random() < 0.5)
+	float r = random();
+	if(r < 0.25)
+		armagon_shockwave1(this);
+	else if(r < 0.5)
 		armagon_watk1(this);
 	else
 		armagon_wlaseratk1(this);
@@ -662,7 +762,10 @@ void armagon_stand_attack(entity this)
 		return;
 	}
 
-	if(random() < 0.5)
+	float r = random();
+	if(r < 0.25)
+		armagon_shockwave1(this);
+	else if(r < 0.5)
 		armagon_satk1(this);
 	else
 		armagon_slaser1(this);
@@ -742,6 +845,9 @@ METHOD(Armagon, mr_setup, bool(Armagon this, entity actor))
 	precache_sound("armagon/idle2.wav");
 	precache_sound("armagon/idle3.wav");
 	precache_sound("armagon/idle4.wav");
+
+	// TODO
+	precache_model("progs/sonic_boom.spr");
 
 	entity body = new(armagon_body);
 	setorigin(body, actor.origin - '0 0 64');

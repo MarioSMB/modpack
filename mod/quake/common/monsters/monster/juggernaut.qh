@@ -25,7 +25,7 @@ CLASS(Juggernaut, Monster)
     ATTRIB(Juggernaut, m_sound, Sound, SND_MON_JUGGERNAUT_SIGHT);
 #endif
     ATTRIB(Juggernaut, netname, string, "juggernaut");
-    ATTRIB(Juggernaut, monster_name, string, _("Juggernaut"));
+    ATTRIB(Juggernaut, m_name, string, _("Juggernaut"));
 ENDCLASS(Juggernaut)
 
 REGISTER_MONSTER(JUGGERNAUT, NEW(Juggernaut));

@@ -31,7 +31,7 @@ CLASS(Monster, Object)
     /** attributes */
     ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, "Monster");
+    ATTRIB(Monster, m_name, string, "Monster");
     /** short name */
     ATTRIB(Monster, netname, string, "");
     /** model */

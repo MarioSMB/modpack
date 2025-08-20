@@ -137,8 +137,8 @@ void zer_atk3(entity this) { set_animofs(this, anim_zer_atk, 3, zer_atk4); ai_ch
 void zer_atk2(entity this) { set_animofs(this, anim_zer_atk, 2, zer_atk3); ai_face(this); }
 void zer_atk1(entity this) { set_animofs(this, anim_zer_atk, 1, zer_atk2); ai_face(this); }
 
-void ZerVortex(entity this);
-void zer_atkb16(entity this) { set_animofs(this, anim_zer_atkb, 16, zer_run1); ai_charge(this, 10); ZerVortex(this); }
+void ZerVortex_Spam(entity this);
+void zer_atkb16(entity this) { set_animofs(this, anim_zer_atkb, 16, zer_run1); ai_charge(this, 10); ZerVortex_Spam(this); }
 void zer_atkb15(entity this) { set_animofs(this, anim_zer_atkb, 15, zer_atkb16); ai_face(this); }
 void zer_atkb14(entity this) { set_animofs(this, anim_zer_atkb, 14, zer_atkb15); ai_face(this); }
 void zer_atkb13(entity this) { set_animofs(this, anim_zer_atkb, 13, zer_atkb14); ai_charge(this, 10); }
@@ -154,6 +154,26 @@ void zer_atkb4(entity this) { set_animofs(this, anim_zer_atkb, 4, zer_atkb5); ai
 void zer_atkb3(entity this) { set_animofs(this, anim_zer_atkb, 3, zer_atkb4); ai_charge(this, 10); _sound(this, CH_VOICE, "zer/charge.wav", 1, ATTN_NORM); }
 void zer_atkb2(entity this) { set_animofs(this, anim_zer_atkb, 2, zer_atkb3); ai_face(this); }
 void zer_atkb1(entity this) { set_animofs(this, anim_zer_atkb, 1, zer_atkb2); ai_face(this); }
+
+void ZerBullet(entity this);
+void zer_atkc18(entity this) { set_animofs(this, anim_zer_atk, 18, zer_run1); ai_face(this); }
+void zer_atkc17(entity this) { set_animofs(this, anim_zer_atk, 17, zer_atkc18); ai_face(this); ZerBullet(this); }
+void zer_atkc16(entity this) { set_animofs(this, anim_zer_atk, 16, zer_atkc17); ai_charge(this, 10); }
+void zer_atkc15(entity this) { set_animofs(this, anim_zer_atk, 15, zer_atkc16); ai_face(this); }
+void zer_atkc14(entity this) { set_animofs(this, anim_zer_atk, 14, zer_atkc15); ai_face(this); }
+void zer_atkc13(entity this) { set_animofs(this, anim_zer_atk, 13, zer_atkc14); ai_charge(this, 10); }
+void zer_atkc12(entity this) { set_animofs(this, anim_zer_atk, 12, zer_atkc13); ai_face(this); ZerBullet(this); }
+void zer_atkc11(entity this) { set_animofs(this, anim_zer_atk, 11, zer_atkc12); ai_face(this); }
+void zer_atkc10(entity this) { set_animofs(this, anim_zer_atk, 10, zer_atkc11); ai_charge(this, 10); }
+void zer_atkc9(entity this) { set_animofs(this, anim_zer_atk, 9, zer_atkc10); ai_face(this); }
+void zer_atkc8(entity this) { set_animofs(this, anim_zer_atk, 8, zer_atkc9); ai_face(this); ZerBullet(this); }
+void zer_atkc7(entity this) { set_animofs(this, anim_zer_atk, 7, zer_atkc8); ai_face(this); }
+void zer_atkc6(entity this) { set_animofs(this, anim_zer_atk, 6, zer_atkc7); ai_charge(this, 10); }
+void zer_atkc5(entity this) { set_animofs(this, anim_zer_atk, 5, zer_atkc6); ai_face(this); ZerBullet(this); }
+void zer_atkc4(entity this) { set_animofs(this, anim_zer_atk, 4, zer_atkc5); ai_face(this); }
+void zer_atkc3(entity this) { set_animofs(this, anim_zer_atk, 3, zer_atkc4); ai_charge(this, 10); }
+void zer_atkc2(entity this) { set_animofs(this, anim_zer_atk, 2, zer_atkc3); ai_face(this); }
+void zer_atkc1(entity this) { set_animofs(this, anim_zer_atk, 1, zer_atkc2); ai_face(this); }
 
 void zer_pain8(entity this) { set_animofs(this, anim_zer_pain, 8, zer_run1); ai_pain(this, 1); }
 void zer_pain7(entity this) { set_animofs(this, anim_zer_pain, 7, zer_pain8); ai_pain(this, 1); }
@@ -308,20 +328,37 @@ void zer_die(entity this, entity inflictor, entity attacker, int deathtype)
 	}
 }
 
-.float vortex_time;
+const int ZER_ATTACK_MISSILE = 0;
+const int ZER_ATTACK_VORTEX = 1;
+const int ZER_ATTACK_BULLET = 2;
+const int ZER_ATTACK_NONE = 3;
+
 void Zer_Attack(entity this)
 {
-	float achance = 0.3;
-	if((time - this.vortex_time) > 3)
-		achance = 0.7;
-	if(random() > achance || vdist(this.enemy.origin - this.origin, >, 800))
+	int boss_phase = 0;
+	if(this.health <= (this.max_health * 0.5))
+		boss_phase = 1;
+
+	RandomSelection_Init();
+
+	RandomSelection_AddFloat(ZER_ATTACK_MISSILE, 1, 1);
+
+	if(boss_phase == 0)
 	{
-		zer_atk1(this);
+		RandomSelection_AddFloat(ZER_ATTACK_NONE, 1, 1);
+		RandomSelection_AddFloat(ZER_ATTACK_BULLET, 1, 1);
 	}
-	else
+
+	// void attack once half health
+	if(boss_phase >= 1)
+		RandomSelection_AddFloat(ZER_ATTACK_VORTEX, 0.5, 1);
+
+	switch(RandomSelection_chosen_float)
 	{
-		zer_atkb1(this);
-		this.vortex_time = time;
+		case ZER_ATTACK_MISSILE: zer_atk1(this); break;
+		case ZER_ATTACK_VORTEX: zer_atkb1(this); break;
+		case ZER_ATTACK_BULLET: zer_atkc1(this); break;
+		case ZER_ATTACK_NONE: break;
 	}
 }
 
@@ -330,16 +367,6 @@ void vortex_fade(entity this)
 	particle(this.origin, '0 0 1' * (20 + random() * 20), 150, 75);
 	//stopsound(this, CH_TRIGGER_SINGLE);
 	delete(this);
-}
-
-void vortex_die(entity this, entity inflictor, entity attacker, int deathtype)
-{
-	if(this.owner && this.owner.health > 0)
-	{
-		Send_Effect(EFFECT_TR_VORESPIKE, this.origin, CENTER_OR_VIEWOFS(this.owner), 1);
-		T_Damage(this.owner, this, attacker, 200, DEATH_VOID.m_id);
-	}
-	vortex_fade(this);
 }
 
 void vortex_think(entity this)
@@ -360,7 +387,7 @@ void vortex_think(entity this)
 
 	this.attack_finished = time + 0.25;
 
-	FOREACH_ENTITY_RADIUS(this.origin, this.distance, it.classname != this.classname && it.owner != this.owner && it.takedamage && it.health > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, this.distance, it.classname != this.classname && it != this.owner && it.owner != this.owner && it.takedamage && it.health > 0,
 	{
 		if(!Damage_ValidTarget(it, this.owner))
 			continue;
@@ -369,35 +396,117 @@ void vortex_think(entity this)
 	});
 }
 
-void ZerVortex(entity this)
+void ZerVortex(entity this, entity targ)
 {
-	if(!this.enemy || this.enemy.health < 1)
+	if(!targ || targ.health < 1)
 		return;
 
 	entity vortex = new(vortex);
+	vector targ_org = targ.origin + '0 0 8';
 
-	vortex.solid = SOLID_CORPSE;
+	vortex.solid = SOLID_NOT;
 	vortex.owner = this;
 	vortex.realowner = this;
-	vortex.takedamage = DAMAGE_AIM;
-	vortex.health = 50;
-	vortex.distance = 70;
-	vortex.th_die = vortex_die;
+	vortex.takedamage = DAMAGE_NO;
+	vortex.distance = 100;
 	_setmodel(vortex, "progs/vortex.mdl");
 	setsize(vortex, '-32 -32 -24', '32 32 32');
 	vortex.attack_finished = time + 1; // give them a fighting chance!
-	setorigin(vortex, this.enemy.origin + '0 0 8');
+	setorigin(vortex, targ_org);
 	setthink(vortex, vortex_think);
 	vortex.nextthink = time + 0.1;
 	vortex.cnt = time + 10;
 	vortex.frame = 0;
 
+	vector extrasize = '1 1 1' * 400;
+	if(MoveToRandomLocationWithinBounds(vortex, vortex.absmin - extrasize, vortex.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 20, 64, 256, true))
+	{
+		// no special treatment needed, we're just using it as a position!
+		vortex.mangle = '0 1 0' * vortex.angles_y;
+		vortex.angles = '0 0 0';
+		DropToFloor_QC_DelayedInit(vortex);
+		te_teleport(vortex.origin);
+	}
+
 	//_sound(vortex, CH_TRIGGER_SINGLE, "zer/vortex.wav", 1, 0.25);
+}
+
+void ZerVortex_Spam(entity this)
+{
+	if(!this.enemy || this.enemy.health < 1)
+		return;
+
+	int shots = floor(random() * 4) + 1;
+	for(int j = 0; j < shots; ++j)
+	{
+		// TODO: multi-target?
+		ZerVortex(this, this.enemy);
+	}
+}
+
+/*
+================
+ZerBullet
+Quick shots in rapid succession
+================
+*/
+
+
+//============================================================================
+// * The trick to drole rockets is that they start really slow
+// * Over time (4 frames) the rocket speeds up (linked to animation)
+// * requires special projectile and new th_updmissile function
+// * Has a different explosion sound (does not play rocket default)
+//
+//============================================================================
+
+void zer_bullet4(entity this)
+{
+	set_anim(this, 3, SUB_Remove);
+	this.nextthink = time + 5;
+	if(autocvar_skill == 0)
+		this.velocity = this.velocity * 3.5;
+	else
+		this.velocity = this.velocity * 4.5;
+}
+void zer_bullet3(entity this) { set_anim(this, 3, zer_bullet4); this.velocity = this.velocity * 1.5; }
+void zer_bullet2(entity this) { set_anim(this, 2, zer_bullet3); this.velocity = this.velocity * 1.5; }
+void zer_bullet1(entity this) { set_anim(this, 1, zer_bullet2); this.nextthink = time + 0.2; }
+
+void ZerBullet(entity this)
+{
+	if(!this.enemy) return;
+	if(this.health < 1) return;
+
+	makevectors(this.angles);
+	vector org;
+	if(random() < 0.5)
+		org = this.origin + attack_vector('0 24 60');
+	else
+		org = this.origin + attack_vector('0 -24 64');
+	vector dir = normalize((this.enemy.origin + '0 0 -8') - org);
+	vector avel = randomvec() * 100;
+
+	entity newmis = launch_spike(this, org, dir);
+	newmis.poisonous = this.poisonous;
+	_setmodel(newmis, "progs/proj_drole.mdl");
+	newmis.avelocity = avel;
+	newmis.dmg = 15;
+	setsize(newmis, '0 0 0', '0 0 0');
+	newmis.noise = "drole/r_explode.wav";
+	newmis.nextthink = time + 0.025;
+	setthink(newmis, zer_bullet1);
+	newmis.velocity = dir * 80;
+	settouch(newmis, T_MissileTouch); // rocket explosion
+	newmis.projectiledeathtype = DEATH_MONSTER_ZERSTORER.m_id;
 }
 
 /*
 ================
 ZerMissile
+Homing missile
 ================
 */
 
@@ -474,7 +583,7 @@ void ZerMissileTouch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;		// don't explode on owner
 
-	if(toucher.classname == "vortex" || (toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)))
+	if((toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)))
  		T_Damage(toucher, this, this, 110, this.projectiledeathtype);	
 	
 	ZerMissileExplode(this);
@@ -492,6 +601,7 @@ METHOD(Zerstorer, mr_setup, bool(Zerstorer this, entity actor))
 
 	precache_model("progs/q1_zers_star.mdl");
 	precache_model("progs/vortex.mdl");
+	precache_model("progs/proj_drole.mdl");
 
 	precache_sound("zer/death1.wav");
 	precache_sound("zer/death2.wav");
@@ -503,11 +613,12 @@ METHOD(Zerstorer, mr_setup, bool(Zerstorer this, entity actor))
 	precache_sound("zer/fly.wav");
 	precache_sound("zer/charge.wav");
 	precache_sound("zer/vortex.wav");
+	precache_sound("drole/r_explode.wav");
 
 	precache_sound("player/udeath.wav");		// gib death
 	precache_sound("boss2/pop2.wav");
 
-    actor.health = 1200;
+    actor.health = 1500;
     actor.th_stand = zer_stand1;
 	actor.th_walk = zer_walk1;
 	actor.th_run = zer_run1;

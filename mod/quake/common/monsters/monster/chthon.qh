@@ -21,7 +21,7 @@ CLASS(Chthon, Monster)
     ATTRIB(Chthon, m_sound, Sound, SND_MON_CHTHON_SIGHT);
 #endif
     ATTRIB(Chthon, netname, string, "chthon");
-    ATTRIB(Chthon, monster_name, string, _("Chthon"));
+    ATTRIB(Chthon, m_name, string, _("Chthon"));
 ENDCLASS(Chthon)
 
 REGISTER_MONSTER(CHTHON, NEW(Chthon));

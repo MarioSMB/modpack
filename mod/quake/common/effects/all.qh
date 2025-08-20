@@ -7,6 +7,10 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt);
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
 #endif
 
+#ifdef CSQC
+void Local_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt);
+#endif
+
 REGISTRY(Effects, BITS(8))
 REGISTER_REGISTRY(Effects)
 REGISTRY_CHECK(Effects)
@@ -16,3 +20,5 @@ REGISTRY_CHECK(Effects)
 EFFECT(0, Null, string_null)
 REGISTRY_DEFINE_GET(Effects, EFFECT_Null)
 #include "all.inc"
+
+#include "particles.qh"

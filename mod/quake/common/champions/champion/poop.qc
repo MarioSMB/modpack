@@ -27,11 +27,16 @@ void Poop_AcidPoolAnim(entity this)
 {
 	setthink(this, Poop_AcidPoolAnim);
 	this.nextthink = time + 0.1;
-	this.walkframe += 1;
-	if(this.walkframe < 10)
-		this.frame = this.walkframe;
+	if(time >= this.cnt)
+	{
+		this.walkframe += 1;
+		if(this.walkframe < 10)
+			this.frame = this.walkframe;
+		else
+			delete(this);
+	}
 	else
-		delete(this);
+		Send_Effect(EFFECT_POOP_STINK, this.origin, '0 0 0', 1);
 }
 
 void Poop_PooSpitTouch(entity this, entity toucher)
@@ -73,7 +78,8 @@ void Poop_PooSpitTouch(entity this, entity toucher)
 		this.angles_x -= 90;
 		settouch(this, Poop_AcidPoolTouch);
 		this.frame = 0;
-		this.nextthink = time + 4.1;
+		this.cnt = time + 4.1;
+		this.nextthink = time + 0.1;
 		setthink(this, Poop_AcidPoolAnim);
 	}
 }
@@ -146,7 +152,7 @@ METHOD(Poop, m_playerthink, void(Champions this, entity actor))
 {
 	if(time > actor.poop_particletime)
 	{
-		actor.poop_particletime = time + 20 + (random() * 4);
+		actor.poop_particletime = time + 0.25;
 		Send_Effect(EFFECT_POOP_STINK, actor.origin, '0 0 0', 1);
 	}
 

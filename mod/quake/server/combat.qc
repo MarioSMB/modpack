@@ -276,6 +276,9 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 	if(IS_PLAYER(targ))
 		WaypointSprite_PlayerDead(targ);
 
+	if(IS_MONSTER(targ) && targ.sprite)
+		WaypointSprite_Kill(targ.sprite);
+
 	StatusEffects_removeall(targ, STATUSEFFECT_REMOVE_CLEAR);
 
 	if(targ.charmed)
@@ -720,6 +723,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 // react to the damage
+
+	// boss bar
+	if(IS_MONSTER(targ) && targ.sprite)
+		WaypointSprite_UpdateHealth(targ.sprite, targ.health);
 
 	if(((IS_MONSTER(attacker) && attacker.poisonous) || inflictor.poisonous) && IS_PLAYER(targ) && !targ.tank)
 	{

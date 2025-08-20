@@ -37,7 +37,7 @@ CLASS(Slime, Monster)
     ATTRIB(Slime, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Slime, netname, string, "slime");
-    ATTRIB(Slime, monster_name, string, _("Slime"));
+    ATTRIB(Slime, m_name, string, _("Slime"));
 ENDCLASS(Slime)
 
 REGISTER_MONSTER(SLIME, NEW(Slime));

@@ -56,7 +56,7 @@ CLASS(Breeze, Monster)
     ATTRIB(Breeze, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Breeze, netname, string, "breeze");
-    ATTRIB(Breeze, monster_name, string, _("Breeze"));
+    ATTRIB(Breeze, m_name, string, _("Breeze"));
 ENDCLASS(Breeze)
 
 REGISTER_MONSTER(BREEZE, NEW(Breeze));

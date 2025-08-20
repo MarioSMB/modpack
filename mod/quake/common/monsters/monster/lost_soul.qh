@@ -21,7 +21,7 @@ CLASS(LostSoul, Monster)
     ATTRIB(LostSoul, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(LostSoul, netname, string, "lostsoul");
-    ATTRIB(LostSoul, monster_name, string, _("Lost Soul"));
+    ATTRIB(LostSoul, m_name, string, _("Lost Soul"));
 ENDCLASS(LostSoul)
 
 REGISTER_MONSTER(LOSTSOUL, NEW(LostSoul));

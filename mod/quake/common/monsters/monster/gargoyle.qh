@@ -23,7 +23,7 @@ CLASS(Gargoyle, Monster)
     ATTRIB(Gargoyle, m_sound, Sound, SND_MON_GARGOYLE_SIGHT);
 #endif
     ATTRIB(Gargoyle, netname, string, "gargoyle");
-    ATTRIB(Gargoyle, monster_name, string, _("Gargoyle"));
+    ATTRIB(Gargoyle, m_name, string, _("Gargoyle"));
 ENDCLASS(Gargoyle)
 
 REGISTER_MONSTER(GARGOYLE, NEW(Gargoyle));

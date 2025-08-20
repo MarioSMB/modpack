@@ -23,7 +23,7 @@ CLASS(Justice, Monster)
     ATTRIB(Justice, m_sound, Sound, SND_MON_JUSTICE_SIGHT);
 #endif
     ATTRIB(Justice, netname, string, "justice");
-    ATTRIB(Justice, monster_name, string, _("Sword of Justice"));
+    ATTRIB(Justice, m_name, string, _("Sword of Justice"));
 ENDCLASS(Justice)
 
 REGISTER_MONSTER(JUSTICE, NEW(Justice));

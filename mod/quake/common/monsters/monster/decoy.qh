@@ -14,7 +14,7 @@ CLASS(Decoy, Monster)
     ATTRIB(Decoy, m_model, Model, MDL_MON_DECOY);
 #endif
     ATTRIB(Decoy, netname, string, "decoy");
-    ATTRIB(Decoy, monster_name, string, _("Decoy"));
+    ATTRIB(Decoy, m_name, string, _("Decoy"));
 ENDCLASS(Decoy)
 
 REGISTER_MONSTER(DECOY, NEW(Decoy));

@@ -127,12 +127,12 @@ void CheckSlideGround(entity this)
 				r -= 1;
 			}
 		}
-		if(this.jump_flag < -200)
-		{
-			r = min(1, (0 - this.jump_flag) * 0.001);
+		//if(this.jump_flag < -200)
+		//{
+			//r = min(1, (0 - this.jump_flag) * 0.001);
 
-			_sound(this, CHAN_BODY, "bland2.wav", r, ATTN_NORM);
-		}
+			//_sound(this, CHAN_BODY, "bland2.wav", r, ATTN_NORM);
+		//}
 #endif
 	}
 }

@@ -23,7 +23,7 @@ CLASS(Gremlin, Monster)
     ATTRIB(Gremlin, m_sound, Sound, SND_MON_GREMLIN_SIGHT);
 #endif
     ATTRIB(Gremlin, netname, string, "gremlin");
-    ATTRIB(Gremlin, monster_name, string, _("Gremlin"));
+    ATTRIB(Gremlin, m_name, string, _("Gremlin"));
 ENDCLASS(Gremlin)
 
 REGISTER_MONSTER(GREMLIN, NEW(Gremlin));

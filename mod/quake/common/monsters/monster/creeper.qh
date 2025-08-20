@@ -35,7 +35,7 @@ CLASS(Creeper, Monster)
     ATTRIB(Creeper, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Creeper, netname, string, "creeper");
-    ATTRIB(Creeper, monster_name, string, _("Creeper"));
+    ATTRIB(Creeper, m_name, string, _("Creeper"));
 ENDCLASS(Creeper)
 
 REGISTER_MONSTER(CREEPER, NEW(Creeper));

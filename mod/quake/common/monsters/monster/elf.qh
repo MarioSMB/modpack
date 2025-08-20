@@ -28,7 +28,7 @@ CLASS(Elf, Monster)
     ATTRIB(Elf, m_model_head, Model, MDL_MON_ELF_HEAD);
 #endif
     ATTRIB(Elf, netname, string, "elf");
-    ATTRIB(Elf, monster_name, string, _("Elf"));
+    ATTRIB(Elf, m_name, string, _("Elf"));
 ENDCLASS(Elf)
 
 REGISTER_MONSTER(ELF, NEW(Elf));

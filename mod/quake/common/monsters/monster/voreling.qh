@@ -19,7 +19,7 @@ CLASS(Voreling, Monster)
     ATTRIB(Voreling, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Voreling, netname, string, "voreling");
-    ATTRIB(Voreling, monster_name, string, _("Voreling"));
+    ATTRIB(Voreling, m_name, string, _("Voreling"));
 ENDCLASS(Voreling)
 
 REGISTER_MONSTER(VORELING, NEW(Voreling));

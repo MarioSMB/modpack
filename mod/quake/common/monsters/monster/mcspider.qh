@@ -35,7 +35,7 @@ CLASS(MCSpider, Monster)
     ATTRIB(MCSpider, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(MCSpider, netname, string, "mcspider");
-    ATTRIB(MCSpider, monster_name, string, _("Spider"));
+    ATTRIB(MCSpider, m_name, string, _("Spider"));
 ENDCLASS(MCSpider)
 
 REGISTER_MONSTER(MCSPIDER, NEW(MCSpider));

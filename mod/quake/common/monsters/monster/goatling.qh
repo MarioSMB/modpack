@@ -19,7 +19,7 @@ CLASS(Goatling, Monster)
     ATTRIB(Goatling, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Goatling, netname, string, "goatling");
-    ATTRIB(Goatling, monster_name, string, _("Goatling"));
+    ATTRIB(Goatling, m_name, string, _("Goatling"));
 ENDCLASS(Goatling)
 
 REGISTER_MONSTER(GOATLING, NEW(Goatling));

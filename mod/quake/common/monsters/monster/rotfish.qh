@@ -20,7 +20,7 @@ CLASS(Rotfish, Monster)
     ATTRIB(Rotfish, m_model_head, Model, MDL_MON_ROTFISH_HEAD);
 #endif
     ATTRIB(Rotfish, netname, string, "rotfish");
-    ATTRIB(Rotfish, monster_name, string, _("Rotfish"));
+    ATTRIB(Rotfish, m_name, string, _("Rotfish"));
 ENDCLASS(Rotfish)
 
 REGISTER_MONSTER(ROTFISH, NEW(Rotfish));

@@ -29,6 +29,8 @@ bool monster_customize(entity this, entity client);
 
 void monster_start_go(entity this);
 
+void monster_setup(entity this, Monster mon);
+
 void monster_start(entity this, bool check_appear, Monster mon);
 
 bool Monsters_SeasonLocked();

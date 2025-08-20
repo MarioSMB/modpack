@@ -11,7 +11,7 @@
 		: __trailparticles(e, particleeffectnum(effect), org, vel))
 #elif defined(CSQC)
 	#define pointparticles(effect, org, vel, howmany) \
-		__pointparticles(particleeffectnum(effect), org, vel, howmany)
+		Local_Effect(effect, org, vel, howmany)
 	#define trailparticles(e, effect, org, vel) \
 		__trailparticles(e, particleeffectnum(effect), org, vel)
 #endif

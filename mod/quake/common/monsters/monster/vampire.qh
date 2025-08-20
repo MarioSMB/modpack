@@ -28,7 +28,7 @@ CLASS(Vampire, Monster)
     ATTRIB(Vampire, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Vampire, netname, string, "vampire");
-    ATTRIB(Vampire, monster_name, string, _("Sanguine Evoker"));
+    ATTRIB(Vampire, m_name, string, _("Sanguine Evoker"));
 ENDCLASS(Vampire)
 
 REGISTER_MONSTER(VAMPIRE, NEW(Vampire));

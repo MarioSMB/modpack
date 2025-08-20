@@ -23,7 +23,7 @@ CLASS(Skaarj, Monster)
     ATTRIB(Skaarj, m_sound, Sound, SND_MON_SKAARJ_SIGHT);
 #endif
     ATTRIB(Skaarj, netname, string, "skaarj");
-    ATTRIB(Skaarj, monster_name, string, _("Skaarj"));
+    ATTRIB(Skaarj, m_name, string, _("Skaarj"));
 ENDCLASS(Skaarj)
 
 REGISTER_MONSTER(SKAARJ, NEW(Skaarj));

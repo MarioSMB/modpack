@@ -47,7 +47,7 @@ CLASS(Enderman, Monster)
     ATTRIB(Enderman, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Enderman, netname, string, "enderman");
-    ATTRIB(Enderman, monster_name, string, _("Enderman"));
+    ATTRIB(Enderman, m_name, string, _("Enderman"));
 ENDCLASS(Enderman)
 
 REGISTER_MONSTER(ENDERMAN, NEW(Enderman));

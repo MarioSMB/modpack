@@ -23,7 +23,7 @@ CLASS(SpiderDroid, Monster)
     ATTRIB(SpiderDroid, m_sound, Sound, SND_MON_SPIDER_DROID_SIGHT);
 #endif
     ATTRIB(SpiderDroid, netname, string, "spider_droid");
-    ATTRIB(SpiderDroid, monster_name, string, _("Spider Droid"));
+    ATTRIB(SpiderDroid, m_name, string, _("Spider Droid"));
 ENDCLASS(SpiderDroid)
 
 REGISTER_MONSTER(SPIDER_DROID, NEW(SpiderDroid));

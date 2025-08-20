@@ -23,7 +23,7 @@ CLASS(SkullWizard, Monster)
     ATTRIB(SkullWizard, m_sound, Sound, SND_MON_SKULLWIZARD_SIGHT);
 #endif
     ATTRIB(SkullWizard, netname, string, "skullwiz");
-    ATTRIB(SkullWizard, monster_name, string, _("Skull Wizard"));
+    ATTRIB(SkullWizard, m_name, string, _("Skull Wizard"));
 ENDCLASS(SkullWizard)
 
 REGISTER_MONSTER(SKULLWIZARD, NEW(SkullWizard));

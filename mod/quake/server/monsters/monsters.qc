@@ -342,6 +342,22 @@ Monster monster_randomize(entity this, Monster mon)
 	return RandomSelection_chosen_ent;
 }
 
+void monster_setup(entity this, Monster mon)
+{
+	mon.mr_setup(mon, this);
+
+	this.max_health = this.health;
+
+	if(!this.sprite && !horde_ent && this.health > 0 && (mon.spawnflags & MONSTER_TYPE_BOSS))
+	{
+		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 2048, this, '0 0 1' * (this.maxs.z + 32), NULL, 0, this, sprite, true, NULL);
+		wp.wp_extra = this.monsterdef.monsterid;
+		wp.colormod = '1 0 0';
+		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
+	}
+}
+
 void monster_start(entity this, bool check_appear, Monster mon)
 {
 	if(!autocvar_horde && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD) && !(mon.spawnflags & MON_FLAG_STATIONARY))
@@ -400,7 +416,7 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	this.resist_rockets = 0;
 	this.resist_cells = 0;
 
-	mon.mr_setup(mon, this);
+	monster_setup(this, mon);
 
 	setup_minionsupport(this);
 
@@ -413,8 +429,6 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	}
 	else if(!(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
 		monsters_total += 1;
-
-	this.max_health = this.health;
 
 	if(monster_checkspawnedflag(this))
 	{

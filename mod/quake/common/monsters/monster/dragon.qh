@@ -24,7 +24,7 @@ CLASS(Dragon, Monster)
     ATTRIB(Dragon, m_sound, Sound, SND_MON_DRAGON_SIGHT);
 #endif
     ATTRIB(Dragon, netname, string, "dragon");
-    ATTRIB(Dragon, monster_name, string, _("Dragon"));
+    ATTRIB(Dragon, m_name, string, _("Dragon"));
 ENDCLASS(Dragon)
 
 REGISTER_MONSTER(DRAGON, NEW(Dragon));

@@ -31,7 +31,7 @@ CLASS(Cook, Monster)
     ATTRIB(Cook, m_sound, Sound, SND_MON_COOK_SIGHT);
 #endif
     ATTRIB(Cook, netname, string, "cook");
-    ATTRIB(Cook, monster_name, string, _("Cook"));
+    ATTRIB(Cook, m_name, string, _("Cook"));
 ENDCLASS(Cook)
 
 REGISTER_MONSTER(COOK, NEW(Cook));

@@ -65,6 +65,8 @@ METHOD(LavaNailgun, wr_think, void(entity thiswep, entity actor, .entity weapone
 	// TODO: reset sound on switch
 	if(!(fire & 1) && actor.lava_nailgun_fired && time >= ATTACK_FINISHED(actor, weaponentity))
 	{
+		makevectors(actor.v_angle);
+		Send_Effect(EFFECT_LAVANAIL_PUFF, W_Shotorg(actor, weaponentity) + v_forward * 32, '0 0 0', 1);
 		_sound(actor, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
 		actor.lava_nailgun_fired = false;
 	}

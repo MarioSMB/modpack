@@ -68,7 +68,7 @@ CLASS(Piglin, Monster)
     ATTRIB(Piglin, m_sound, Sound, SND_Null);
 #endif
     ATTRIB(Piglin, netname, string, "piglin");
-    ATTRIB(Piglin, monster_name, string, _("Piglin"));
+    ATTRIB(Piglin, m_name, string, _("Piglin"));
 ENDCLASS(Piglin)
 
 REGISTER_MONSTER(PIGLIN, NEW(Piglin));

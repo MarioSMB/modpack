@@ -23,7 +23,7 @@ CLASS(Ogre, Monster)
     ATTRIB(Ogre, m_sound, Sound, SND_MON_OGRE_SIGHT);
 #endif
     ATTRIB(Ogre, netname, string, "ogre");
-    ATTRIB(Ogre, monster_name, string, _("Ogre"));
+    ATTRIB(Ogre, m_name, string, _("Ogre"));
 ENDCLASS(Ogre)
 
 REGISTER_MONSTER(OGRE, NEW(Ogre));

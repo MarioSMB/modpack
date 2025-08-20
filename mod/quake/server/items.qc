@@ -929,12 +929,6 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 					mytype = IT_SHELLS;
 				break;
 			}
-			case WEP_ORGAN:
-			{
-				if(random() > 0.33)
-					mytype = IT_NAILS;
-				break;
-			}
 			case WEP_CHIMES:
 			{
 				if(random() > 0.33)
@@ -2052,7 +2046,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 
 	setthink(monster, monster_start_go);
 	monster.nextthink = time + 0.1;
-	mon.mr_setup(mon, monster);
+	monster_setup(monster, mon);
 	if(monster.charmed)
 		monster.health = max(monster.health, 1000);
 
