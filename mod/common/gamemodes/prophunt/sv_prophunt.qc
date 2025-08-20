@@ -277,6 +277,13 @@ MUTATOR_HOOKFUNCTION(ph, PlayerPowerups)
 		player.effects &= ~EF_FULLBRIGHT; // ignore fullbrightplayers setting
 }
 
+MUTATOR_HOOKFUNCTION(ph, Player_Sound)
+{
+	entity player = M_ARGV(0, entity);
+	int voicetype = M_ARGV(1, int);
+	return (player.team == prophunt_propteam && voicetype != VOICETYPE_TAUNT);
+}
+
 MUTATOR_HOOKFUNCTION(ph, ShowChatBubble)
 {
 	entity player = M_ARGV(0, entity);

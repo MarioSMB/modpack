@@ -90,7 +90,7 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 		return;
 	player.last_elocheck = time + 1; // we don't need to check too often
 
-	float my_elo = GameRules_scoring_add(player, ELO, 0);
+	float my_elo = GameRules_scoring_add(player, SKILL, 0);
 	if(my_elo <= 0) // no elo or not loaded
 		return; // try to return before checking the gametype (slow)
 

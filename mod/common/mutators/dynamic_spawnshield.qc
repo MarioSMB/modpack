@@ -57,7 +57,7 @@ void CheckSpawnkill(entity this, entity attacker)
 		this.spawnkill_series = 0;
 		return;
 	}
-	if((time - this.alivetime) < autocvar_sv_spawnkill_time)
+	if((time - this.alivetime_start) < autocvar_sv_spawnkill_time)
 	{
 		PlayerScore_Add(this, SP_SPWN_KILLED, 1);
 		PlayerScore_Add(attacker, SP_SPWN_KILLS, 1);
@@ -70,13 +70,13 @@ void CheckSpawnkill(entity this, entity attacker)
 	this.spawnkill_series = 0;
 }
 
-// NOTE: needs to be done in PlayerDamaged so we have access to .alivetime
+// NOTE: needs to be done in PlayerDamaged so we have access to .alivetime_start
 MUTATOR_HOOKFUNCTION(dynamic_spawnshield, PlayerDamaged, CBC_ORDER_LAST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
 	entity frag_target = M_ARGV(1, entity);
 
-	if(GetResource(frag_target, RES_HEALTH) < 1 && frag_target.alivetime)
+	if(GetResource(frag_target, RES_HEALTH) < 1 && frag_target.alivetime_start)
 		CheckSpawnkill(frag_target, frag_attacker);
 }
 #endif

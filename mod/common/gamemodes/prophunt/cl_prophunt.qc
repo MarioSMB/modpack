@@ -31,6 +31,16 @@ MUTATOR_HOOKFUNCTION(cl_ph, DrawInfoMessages)
 	return (ISGAMETYPE(PROPHUNT) && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_IN_SCOREBOARD);
 }
 
+MUTATOR_HOOKFUNCTION(cl_ph, HUD_Radar_show)
+{
+	if(!ISGAMETYPE(PROPHUNT))
+		return false;
+
+	bool inround = (STAT(ROUNDSTARTTIME) != -1 && time < STAT(ROUNDSTARTTIME));
+
+	return (myteam != NUM_SPECTATOR && (myteam + 1) != STAT(PROPHUNT_PROPTEAM) && !warmup_stage && inround);
+}
+
 MUTATOR_HOOKFUNCTION(cl_ph, ForcePlayercolors_Skip)
 {
 	if(!ISGAMETYPE(PROPHUNT))
