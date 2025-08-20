@@ -105,7 +105,7 @@ ENDCLASS(ElectroOrbTrail)
 // =========
 //  Crylink
 // =========
-AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing, bool, false, "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_alpha, float, 0.5, "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_color, vector, '0.7 0 1', "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bouncing_head_thickness, float, 5, "");
@@ -136,7 +136,7 @@ CLASS(CrylinkBouncingTrail, PolyTrail)
     ATTRIB(CrylinkBouncingTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bouncing_tail_thickness);
 ENDCLASS(CrylinkBouncingTrail)
 
-AUTOCVAR_SAVE(cl_polytrails_crylink_bolt, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_crylink_bolt, bool, false, "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_alpha, float, 0.75, "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_color, vector, '0.7 0 1', "");
 AUTOCVAR_SAVE(cl_polytrails_crylink_bolt_head_thickness, float, 5, "");
