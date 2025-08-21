@@ -166,3 +166,38 @@ CLASS(CrylinkBoltTrail, PolyTrail)
     ATTRIB(CrylinkBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_crylink_bolt_tail_color);
     ATTRIB(CrylinkBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bolt_tail_thickness);
 ENDCLASS(CrylinkBoltTrail)
+
+// =========
+//  HLAC
+// =========
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt, bool, true, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_head_alpha, float, 1, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_head_color, vector, '1 0.8 0.8', "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_head_thickness, float, 7, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_body_alpha, float, 0.5, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_body_color, vector, '0.5 0.5 1', "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_body_thickness, float, 7, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_tail_alpha, float, 0, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_tail_color, vector, '0.1 0.1 0.7', "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_tail_thickness, float, 4, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_lifetime, float, 0.1, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_segmentsize, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_noise, float, 3, "");
+AUTOCVAR_SAVE(cl_polytrails_hlac_bolt_noisefunc, string, "chaotic", "");
+CLASS(HLACBoltTrail, PolyTrail)
+    ATTRIB(HLACBoltTrail, polytrail_teamcolor, bool, true);
+    ATTRIB(HLACBoltTrail, polytrail_tex, string, "particles/laserbeam.tga");
+    ATTRIB(HLACBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_hlac_bolt_lifetime);
+    ATTRIB(HLACBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_hlac_bolt_noise);
+    ATTRIB(HLACBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_hlac_bolt_segmentsize);
+    ATTRIB(HLACBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_hlac_bolt_noisefunc);
+    ATTRIB(HLACBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_hlac_bolt_head_alpha);
+    ATTRIB(HLACBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_hlac_bolt_head_color);
+    ATTRIB(HLACBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_hlac_bolt_head_thickness);
+    ATTRIB(HLACBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_hlac_bolt_body_alpha);
+    ATTRIB(HLACBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_hlac_bolt_body_color);
+    ATTRIB(HLACBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_hlac_bolt_body_thickness);
+    ATTRIB(HLACBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_hlac_bolt_tail_alpha);
+    ATTRIB(HLACBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_hlac_bolt_tail_color);
+    ATTRIB(HLACBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_hlac_bolt_tail_thickness);
+ENDCLASS(HLACBoltTrail)

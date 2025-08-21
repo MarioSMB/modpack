@@ -154,6 +154,15 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
                 PolyTrail_Spawn(NEW(CrylinkBoltTrail), proj);
             }
             break;
+        case PROJECTILE_HLAC:
+            if(autocvar_cl_polytrails_hlac_bolt)
+            {
+                setmodel(proj, MDL_Null);
+                proj.mins = '0 0 0';
+                proj.maxs = '0 0 0';
+                PolyTrail_Spawn(NEW(HLACBoltTrail), proj);
+            }
+            break;
     }
 }
 
