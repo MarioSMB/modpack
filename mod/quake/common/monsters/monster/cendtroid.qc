@@ -401,12 +401,13 @@ void ScourgeTriggerTouch(entity this, entity toucher)
 //   targ.think = targ.th_run;
 //   if(targ.flags & FL_ONGROUND)
 //      {
-			if(time > this.duration)
+			if(time > targ.duration)
 			{
 				if(random() < 0.5)
-					scourge_strafeleft1(targ);
+					setthink(targ, scourge_strafeleft1);
 				else
-					scourge_straferight1(targ);
+					setthink(targ, scourge_straferight1);
+				targ.nextthink = time;
 				targ.duration = time + 1.5;
 			}
 /*

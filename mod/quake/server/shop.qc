@@ -181,7 +181,7 @@ void shop_buyitem(entity this, string item)
 		return;
 	}
 
-	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (STAT(DUAL_WEAPONS, this) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
+	if((STAT(WEAPONS, this) & wep.m_wepset) && (autocvar_g_weaponswitch_debug != 2 || (STAT(DUAL_WEAPONS, this) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL) || (wep.spawnflags & WEP_FLAG_DUALWIELD)))
 	{
 		sprint(this, "You already have that weapon\n");
 		return;

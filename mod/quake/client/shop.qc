@@ -141,7 +141,7 @@ bool ShopItem_Owned(int index)
 		case SHOP_ITEM_WEAPON:
 		{
 			Weapon wep = REGISTRY_GET(Weapons, sdata);
-			if((STAT(WEAPONS) & wep.m_wepset) && ((STAT(DUAL_WEAPONS) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL)))
+			if((STAT(WEAPONS) & wep.m_wepset) && ((STAT(DUAL_WEAPONS) & wep.m_wepset) || (wep.spawnflags & WEP_FLAG_NODUAL) || (wep.spawnflags & WEP_FLAG_DUALWIELD)))
 				return true;
 			else
 				return false;
