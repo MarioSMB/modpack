@@ -54,6 +54,9 @@ spawnfunc(trigger_ladder)
 	IL_PUSH(g_ladders, this);
 }
 
+// try for Xonotic compatibility
+spawnfunc(func_ladder) { spawnfunc_trigger_ladder(this); }
+
 #endif
 
 #ifdef CSQC
