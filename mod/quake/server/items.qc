@@ -3213,6 +3213,19 @@ bool target_items_testinv(entity this, entity e)
 			if(keys_gold <= 0)
 				return false;
 		}
+		if((myitems & IT_INVISIBILITY) && !StatusEffects_active(STATUSEFFECT_Invisibility, e))
+			return false;
+		if((myitems & IT_INVULNERABILITY) && !StatusEffects_active(STATUSEFFECT_Invulnerability, e))
+			return false;
+		if((myitems & IT_SUIT) && !StatusEffects_active(STATUSEFFECT_Biosuit, e))
+			return false;
+		if((myitems & IT_QUAD) && !StatusEffects_active(STATUSEFFECT_Quad, e))
+			return false;
+		// remove powerups as we handle them above
+		myitems &= ~IT_INVISIBILITY;
+		myitems &= ~IT_INVULNERABILITY;
+		myitems &= ~IT_SUIT;
+		myitems &= ~IT_QUAD;
 		if(myitems && (myitems & e.items) != myitems)
 			return false;
 	}
