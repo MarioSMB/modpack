@@ -44,7 +44,7 @@ const int START_OFF = BIT(0);
 .int svflags; // from copper, with love
 
 .float distance;
-.float volume;
+.float volume, atten;
 
 .float dmg;
 

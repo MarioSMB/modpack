@@ -15,6 +15,7 @@
 #include "fade.qc"
 #include "hurt.qc"
 #include "particlefield.qc"
+#include "pointparticles.qc"
 #include "oncount.qc"
 #include "pendulum.qc"
 #include "plat.qc"

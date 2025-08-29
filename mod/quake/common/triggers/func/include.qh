@@ -6,6 +6,7 @@
 #include "exploder.qh"
 #include "oncount.qh"
 #include "plat.qh"
+#include "pointparticles.qh"
 #include "rainsnow.qh"
 #include "rotate.qh"
 #include "spawn.qh"

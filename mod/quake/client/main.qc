@@ -342,6 +342,12 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(s == "find")
+	{
+		FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+		return;
+	}
+
 	if(cl_champion_command(s))
 		return;
 
