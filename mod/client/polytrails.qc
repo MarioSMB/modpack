@@ -115,7 +115,7 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     if (!autocvar_cl_polytrails) return;
     entity proj = M_ARGV(0, entity);
     
-    switch(proj.cnt)
+    switch(proj.csqcprojectile_type)
     {
         case PROJECTILE_BLASTER:
             if(autocvar_cl_polytrails_blaster_bolt)
