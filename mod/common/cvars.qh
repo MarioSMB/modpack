@@ -2,7 +2,7 @@
 // but, many of these don't have any direct references, so we need to use this custom copy of the AUTOCVAR()
 
 // currently exists in the fork, keeping here for now incase it gets removed (likely)
-#if 0
+#if 1
 #define __AUTOCVAR_NOREF(file, archive, var, type, desc, default) \
 	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
 	{ \
