@@ -349,6 +349,12 @@ spawnfunc(misc_particlefield_box)
 		else
 			this.size = '64 64 64';
 	}
+	// crude hack fix backwards mins/maxs
+	// TODO: why the hell are maps doing this?
+	if(this.size_x < 0) this.size_x = -this.size_x;
+	if(this.size_y < 0) this.size_y = -this.size_y;
+	if(this.size_z < 0) this.size_z = -this.size_z;
+
 	setsize(this, -this.size * 0.5, this.size * 0.5);	// set all values so we can see the field with r_showbboxes
 	this.size = this.size * 0.5;
 	
