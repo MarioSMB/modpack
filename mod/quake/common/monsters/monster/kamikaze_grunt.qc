@@ -200,7 +200,7 @@ void kami_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		kami_gib(this, inflictor);
 
-		if(this.kamikaze_box)
+		if(this.kamikaze_box && !wasfreed(this.kamikaze_box))
 		{
 			setthink(this.kamikaze_box, kamikaze_detonate);
 			this.kamikaze_box.nextthink = time;
@@ -281,10 +281,10 @@ void kamikaze_detonate(entity this)
 		kamikaze_explosiveboom(this, this.owner, this.owner.enemy, DEATH_GENERIC.m_id);
 }
 
-void kami_load8(entity this) { set_animofs(this, anim_kamikaze_load, 8, kami_load8); kamikaze_detonate(this.kamikaze_box); }
+void kami_load8(entity this) { set_animofs(this, anim_kamikaze_load, 8, kami_load8); }
 void kami_load7(entity this) { set_animofs(this, anim_kamikaze_load, 7, kami_load8); }
 void kami_load6(entity this) { set_animofs(this, anim_kamikaze_load, 6, kami_load7); }
-void kami_load5(entity this) { set_animofs(this, anim_kamikaze_load, 5, kami_load5); kamikaze_detonate(this.kamikaze_box); }
+void kami_load5(entity this) { set_animofs(this, anim_kamikaze_load, 5, kami_load6); kamikaze_detonate(this.kamikaze_box); }
 void kami_load4(entity this) { set_animofs(this, anim_kamikaze_load, 4, kami_load5); }
 void kami_load3(entity this) { set_animofs(this, anim_kamikaze_load, 3, kami_load4); }
 void kami_load2(entity this) { set_animofs(this, anim_kamikaze_load, 2, kami_load3); }

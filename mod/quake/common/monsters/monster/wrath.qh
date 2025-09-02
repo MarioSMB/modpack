@@ -13,7 +13,7 @@ SOUND(MON_WRATH_SIGHT, "wrath/wsee");
 #endif
 
 CLASS(Wrath, Monster)
-    ATTRIB(Wrath, spawnflags, int, 0);
+    ATTRIB(Wrath, spawnflags, int, MONSTER_TYPE_FLY);
     ATTRIB(Wrath, m_mins, vector, VEC_HULL_MIN);
     ATTRIB(Wrath, m_maxs, vector, VEC_HULL_MAX);
 #ifdef GAMEQC
