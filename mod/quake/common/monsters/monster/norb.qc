@@ -146,33 +146,33 @@ void orb_run1(entity this)
 	ai_run(this, 20);
 }
 
-void orb_bkrun5(entity this) { set_animofs(this, anim_norb_bckrun, 5, orb_run1); ai_run(this, -4); }
-void orb_bkrun4(entity this) { set_animofs(this, anim_norb_bckrun, 4, orb_bkrun5); ai_run(this, -5); }
-void orb_bkrun3(entity this) { set_animofs(this, anim_norb_bckrun, 3, orb_bkrun4); ai_run(this, -8); }
-void orb_bkrun2(entity this) { set_animofs(this, anim_norb_bckrun, 2, orb_bkrun3); ai_run(this, -5); }
-void orb_bkrun1(entity this) { set_animofs(this, anim_norb_bckrun, 1, orb_bkrun2); ai_run(this, -4); }
+void orb_bkrun5(entity this) { set_animofs(this, anim_norb_bckrun, 5, orb_run1); ai_pain(this, 4); }
+void orb_bkrun4(entity this) { set_animofs(this, anim_norb_bckrun, 4, orb_bkrun5); ai_pain(this, 5); }
+void orb_bkrun3(entity this) { set_animofs(this, anim_norb_bckrun, 3, orb_bkrun4); ai_pain(this, 8); }
+void orb_bkrun2(entity this) { set_animofs(this, anim_norb_bckrun, 2, orb_bkrun3); ai_pain(this, 5); }
+void orb_bkrun1(entity this) { set_animofs(this, anim_norb_bckrun, 1, orb_bkrun2); ai_pain(this, 4); }
 
 void orb_bckrun9(entity this) { set_animofs(this, anim_norb_bckrun, 9, orb_run1); ai_face(this); }
-void orb_bckrun8(entity this) { set_animofs(this, anim_norb_bckrun, 8, orb_bckrun9); ai_run(this, -8); }
-void orb_bckrun7(entity this) { set_animofs(this, anim_norb_bckrun, 7, orb_bckrun8); ai_run(this, -16); }
-void orb_bckrun6(entity this) { set_animofs(this, anim_norb_bckrun, 6, orb_bckrun7); ai_run(this, -10); }
-void orb_bckrun5(entity this) { set_animofs(this, anim_norb_bckrun, 5, orb_bckrun6); ai_run(this, -8); }
-void orb_bckrun4(entity this) { set_animofs(this, anim_norb_bckrun, 4, orb_bckrun5); ai_run(this, -10); }
-void orb_bckrun3(entity this) { set_animofs(this, anim_norb_bckrun, 3, orb_bckrun4); ai_run(this, -16); }
-void orb_bckrun2(entity this) { set_animofs(this, anim_norb_bckrun, 2, orb_bckrun3); ai_run(this, -10); }
-void orb_bckrun1(entity this) { set_animofs(this, anim_norb_bckrun, 1, orb_bckrun2); ai_run(this, -8); }
+void orb_bckrun8(entity this) { set_animofs(this, anim_norb_bckrun, 8, orb_bckrun9); ai_pain(this, 8); }
+void orb_bckrun7(entity this) { set_animofs(this, anim_norb_bckrun, 7, orb_bckrun8); ai_pain(this, 16); }
+void orb_bckrun6(entity this) { set_animofs(this, anim_norb_bckrun, 6, orb_bckrun7); ai_pain(this, 10); }
+void orb_bckrun5(entity this) { set_animofs(this, anim_norb_bckrun, 5, orb_bckrun6); ai_pain(this, 8); }
+void orb_bckrun4(entity this) { set_animofs(this, anim_norb_bckrun, 4, orb_bckrun5); ai_pain(this, 10); }
+void orb_bckrun3(entity this) { set_animofs(this, anim_norb_bckrun, 3, orb_bckrun4); ai_pain(this, 16); }
+void orb_bckrun2(entity this) { set_animofs(this, anim_norb_bckrun, 2, orb_bckrun3); ai_pain(this, 10); }
+void orb_bckrun1(entity this) { set_animofs(this, anim_norb_bckrun, 1, orb_bckrun2); ai_pain(this, 8); }
 
-void orb_roll11(entity this) { set_animofs(this, anim_norb_roll, 11, orb_run1); ai_run(this, 7); }
-void orb_roll10(entity this) { set_animofs(this, anim_norb_roll, 10, orb_roll11); ai_run(this, 6); }
-void orb_roll9(entity this) { set_animofs(this, anim_norb_roll, 9, orb_roll10); ai_run(this, 8); }
-void orb_roll8(entity this) { set_animofs(this, anim_norb_roll, 8, orb_roll9); ai_run(this, 10); }
-void orb_roll7(entity this) { set_animofs(this, anim_norb_roll, 7, orb_roll8); ai_run(this, 12); }
-void orb_roll6(entity this) { set_animofs(this, anim_norb_roll, 6, orb_roll7); ai_run(this, 14); }
-void orb_roll5(entity this) { set_animofs(this, anim_norb_roll, 5, orb_roll6); ai_run(this, 18); }
-void orb_roll4(entity this) { set_animofs(this, anim_norb_roll, 4, orb_roll5); ai_run(this, 16); }
-void orb_roll3(entity this) { set_animofs(this, anim_norb_roll, 3, orb_roll4); ai_run(this, 14); }
-void orb_roll2(entity this) { set_animofs(this, anim_norb_roll, 2, orb_roll3); ai_run(this, 12); }
-void orb_roll1(entity this) { set_animofs(this, anim_norb_roll, 1, orb_roll2); ai_run(this, 8); }
+void orb_roll11(entity this) { set_animofs(this, anim_norb_roll, 11, orb_run1); ai_painforward(this, 7); }
+void orb_roll10(entity this) { set_animofs(this, anim_norb_roll, 10, orb_roll11); ai_painforward(this, 6); }
+void orb_roll9(entity this) { set_animofs(this, anim_norb_roll, 9, orb_roll10); ai_painforward(this, 8); }
+void orb_roll8(entity this) { set_animofs(this, anim_norb_roll, 8, orb_roll9); ai_painforward(this, 10); }
+void orb_roll7(entity this) { set_animofs(this, anim_norb_roll, 7, orb_roll8); ai_painforward(this, 12); }
+void orb_roll6(entity this) { set_animofs(this, anim_norb_roll, 6, orb_roll7); ai_painforward(this, 14); }
+void orb_roll5(entity this) { set_animofs(this, anim_norb_roll, 5, orb_roll6); ai_painforward(this, 18); }
+void orb_roll4(entity this) { set_animofs(this, anim_norb_roll, 4, orb_roll5); ai_painforward(this, 16); }
+void orb_roll3(entity this) { set_animofs(this, anim_norb_roll, 3, orb_roll4); ai_painforward(this, 14); }
+void orb_roll2(entity this) { set_animofs(this, anim_norb_roll, 2, orb_roll3); ai_painforward(this, 12); }
+void orb_roll1(entity this) { set_animofs(this, anim_norb_roll, 1, orb_roll2); ai_painforward(this, 8); }
 
 void orb_pain(entity this, entity attacker, float damage, int deathtype)
 {

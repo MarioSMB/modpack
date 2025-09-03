@@ -30,8 +30,6 @@ METHOD(Dingus, m_condition, bool(Champions this, entity actor))
 
 METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 {
-	if(StatusEffects_active(STATUSEFFECT_Shield, actor))
-		return; // better version
 	if(time < actor.dingus_bash_delay)
 		return;
 	if(actor.velocity == '0 0 0')
@@ -54,9 +52,9 @@ METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 			toucher.velocity_z = (50 * pushforce);
 		}
 
-		float thedamage = 15;
-		if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
-			thedamage = 120;
+		float thedamage = 1000;
+		//if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
+			//thedamage = 120;
 
 		T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
 		player_sound(actor, CH_VOICE, "oops.wav", ATTN_NORM);

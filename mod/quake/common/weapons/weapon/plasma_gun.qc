@@ -65,7 +65,7 @@ void PlasmaGroundOut(entity this)
 	entity start = current;
 	while(monstersHit < 5)
 	{
-		if((current.flags & FL_MONSTER) || IS_PLAYER(current))
+		if(((current.flags & FL_MONSTER) || IS_PLAYER(current)) && Damage_ValidTarget(current, this.owner))
 		{
 			if(current != this.owner && current.takedamage) // only take alive targets?
 			{

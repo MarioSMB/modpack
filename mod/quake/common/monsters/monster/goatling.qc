@@ -50,14 +50,14 @@ void goatling_run1(entity this);
 void goatling_die(entity this, entity inflictor, entity attacker, int deathtype);
 void goatling_diethink(entity this)
 {
-	goatling_die(this, NULL, NULL, DEATH_CRUSH.m_id);
+	Killed(this, NULL, NULL, DEATH_CRUSH.m_id);
 }
 
 void Voreling_ChargeTouch(entity this, entity toucher)
 {
 	if(this.health <= 0)
 	{
-		goatling_die(this, NULL, NULL, DEATH_CRUSH.m_id);
+		goatling_diethink(this);
 		return;
 	}
 	if(toucher.takedamage)

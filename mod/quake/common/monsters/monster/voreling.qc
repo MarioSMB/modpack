@@ -47,14 +47,14 @@ void voreling_run1(entity this);
 void voreling_die(entity this, entity inflictor, entity attacker, int deathtype);
 void voreling_diethink(entity this)
 {
-	voreling_die(this, NULL, NULL, DEATH_CRUSH.m_id);
+	Killed(this, NULL, NULL, DEATH_CRUSH.m_id);
 }
 
 void Voreling_JumpTouch(entity this, entity toucher)
 {
 	if(this.health <= 0)
 	{
-		voreling_die(this, NULL, NULL, DEATH_CRUSH.m_id);
+		voreling_diethink(this);
 		return;
 	}
 	if(toucher.takedamage)

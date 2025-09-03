@@ -136,11 +136,11 @@ void eel_attack2(entity this) { set_animofs(this, anim_eel_eelswim1, 2, eel_atta
 void eel_attack1(entity this) { set_animofs(this, anim_eel_eelswim1, 1, eel_attack2); ai_charge(this, 8); eel_pitch_change(this);}
 
 void eel_death16(entity this) { set_animofs(this, anim_eel_eeldth1, 10, eel_death16); CorpseThink(this); }
-void eel_death15(entity this) { set_animofs(this, anim_eel_eeldth1, 9, eel_death16); DropToFloor_QC_DelayedInit(this); }
+void eel_death15(entity this) { set_animofs(this, anim_eel_eeldth1, 9, eel_death16); }
 void eel_death14(entity this) { set_animofs(this, anim_eel_eeldth1, 8, eel_death15); }
 void eel_death13(entity this) { set_animofs(this, anim_eel_eeldth1, 7, eel_death14); }
 void eel_death12(entity this) { set_animofs(this, anim_eel_eeldth1, 6, eel_death13); }
-void eel_death11(entity this) { set_animofs(this, anim_eel_eeldth1, 5, eel_death12); this.flags &= ~FL_SWIM; }
+void eel_death11(entity this) { set_animofs(this, anim_eel_eeldth1, 5, eel_death12); }
 void eel_death10(entity this) { set_animofs(this, anim_eel_eeldth1, 4, eel_death11); }
 void eel_death9(entity this) { set_animofs(this, anim_eel_eeldth1, 3, eel_death10); }
 void eel_death8(entity this) { set_animofs(this, anim_eel_eeldth1, 2, eel_death9); }

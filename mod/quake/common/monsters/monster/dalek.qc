@@ -19,7 +19,8 @@ void dalek_do_shot(entity this)
 
 	vector org = this.origin + v_forward * 30 + v_right * (-8.5) + '0 0 16';
 
-	LaunchLaser(this, org, this.enemy.origin - this.origin);
+	entity newmis = LaunchLaser(this, org, this.enemy.origin - this.origin);
+	newmis.projectiledeathtype = DEATH_MONSTER_DALEK.m_id;
 	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 }
 
