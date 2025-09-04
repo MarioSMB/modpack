@@ -2261,8 +2261,13 @@ void remote_wavecheck(entity this)
 		LOG_DEBUG("no wavecheck.", ((!horde_ent) ? " no horde ent found." : ""), ((intermission_running) ? " intermission running." : ""));
 		return;
 	}
+	if(wasfreed(horde_ent))
+	{
+		LOG_INFO("Horde ent was deleted, something is very wrong!");
+		return;
+	}
 	LOG_DEBUG("remote wavecheck from: ", this.classname);
-	horde_ent.use(horde_ent, NULL, NULL);
+	Wavecheck(horde_ent);
 }
 
 /* CheckBlockedSpawn
