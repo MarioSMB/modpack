@@ -2182,19 +2182,19 @@ void powerup_touch(entity this, entity toucher)
 
 	if(this.invincible_finished)
 	{
-		float invulntime = (horde_ent) ? 5 : 30;
+		float invulntime = (horde_ent) ? 5 : this.invincible_finished;
 		StatusEffects_apply(STATUSEFFECT_Invulnerability, toucher, time + invulntime, 0);
 	}
 
 	if(this.invisible_finished)
 	{
-		float invistime = (horde_ent) ? 5 : 30;
+		float invistime = (horde_ent) ? 5 : this.invisible_finished;
 		StatusEffects_apply(STATUSEFFECT_Invisibility, toucher, time + invistime, 0);
 	}
 
 	if(this.super_damage_finished)
 	{
-		float quadtime = (horde_ent) ? 5 : 30;
+		float quadtime = (horde_ent) ? 5 : this.super_damage_finished;
 		StatusEffects_apply(STATUSEFFECT_Quad, toucher, time + quadtime, 0);
 	}
 

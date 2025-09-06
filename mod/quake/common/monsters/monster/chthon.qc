@@ -259,7 +259,8 @@ void GibBoss(entity this)
 	}
 
 	te_lavasplash(boss);
-	SUB_UseTargets(this, this.enemy, NULL);
+	// as a monster chthon will call this on death anyway
+	//SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
 }
 
@@ -267,7 +268,8 @@ void boss_death10(entity this)
 {
 	// being removed, don't need new frame
 	//set_animofs(this, anim_boss_death, 9, boss_death10);
-	SUB_UseTargets(this, this.enemy, NULL);
+	// as a monster chthon will call this on death anyway
+	//SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
 }
 void boss_death9(entity this)

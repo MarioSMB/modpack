@@ -59,6 +59,9 @@ void santa_trigger(entity this, entity actor, entity trigger)
 		this.alpha = 1;
 	setthink(this, MonsterFade2);
 	this.nextthink = time + 2 + random();
+
+	if(!(this.flags & FL_CLONE))
+		monsters_killed += 1;
 }
 
 void santa_freetouch(entity this, entity toucher)
@@ -77,6 +80,9 @@ void santa_freetouch(entity this, entity toucher)
 		this.alpha = 1;
 	setthink(this, MonsterFade2);
 	this.nextthink = time + 2 + random();
+
+	if(!(this.flags & FL_CLONE))
+		monsters_killed += 1;
 }
 
 //----------------------------------------------------------------------

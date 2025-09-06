@@ -189,6 +189,11 @@ void LightningTouch(entity this, entity toucher)
 		// if we're already rebounding, abort to avoid doubling back!
 		if(time < this.nextthink && getthink(this) == superlightning_rebound)
 			return;
+
+		// damage metal monsters anyway!
+		if(IS_MONSTER(toucher))
+			T_Damage(toucher, this, this.owner, 16, this.projectiledeathtype);
+
 		set_movetype(this, MOVETYPE_BOUNCE);
 		setthink(this, superlightning_rebound);
 		this.ltime = this.nextthink;
