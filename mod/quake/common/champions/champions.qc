@@ -84,11 +84,14 @@ bool QCC_Allowed(entity this)
 #ifdef SVQC
 void QCC_ClearTransform(entity this)
 {
-	if(this.transform_prevhealth)
-		this.health = this.transform_prevhealth;
-	this.armortype = this.transform_armortype;
-	this.armorvalue = this.transform_armorvalue;
-	armor_set_type(this);
+	if(this.m_transform)
+	{
+		if(this.transform_prevhealth)
+			this.health = this.transform_prevhealth;
+		this.armortype = this.transform_armortype;
+		this.armorvalue = this.transform_armorvalue;
+		armor_set_type(this);
+	}
 	this.transform_prevhealth = 0;
 	this.transform_limited = 0;
 	this.transform_armortype = 0;
