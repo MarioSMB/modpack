@@ -5,6 +5,121 @@
 #include "../../../common/triggers/func/rotate.qh"
 #endif
 
+// TODO: this entire thing is a mess, needs to be synced with the server-side stomp
+#ifdef SVQC
+void armagon_shockwave_send(vector org)
+{
+	WriteHeader(MSG_BROADCAST, TE_CSQC_ARMAGON_SHOCKWAVE);
+	WriteVector(MSG_BROADCAST, org);
+}
+#elif defined(CSQC)
+// TODO: particle effect?
+void armagon_shockwave_boom_explode(entity this)
+{
+	this.frame += 1;
+	if(this.frame > 5)
+	{
+		delete(this);
+		return;
+	}
+	this.nextthink = time + 0.1;
+}
+
+void armagon_shockwave_boom_draw(entity this)
+{
+	Movetype_Physics_NoMatchServer(this);
+}
+
+void armagon_shockwave_boom(entity this)
+{
+	this.cnt -= 1;
+	this.nextthink = time + 0.1;
+	if(this.cnt > 0 && vdist(this.velocity, >=, 200))
+		setthink(this, armagon_shockwave_boom);
+	else
+		setthink(this, SUB_Remove);
+	
+	// Explosions occur as the missile travels
+	float r = random() * 2 - 1;
+	
+	makevectors(this.angles);
+	
+	entity expl = spawn();
+	expl.move_time = time;
+	expl.drawmask = MASK_NORMAL;
+	IL_PUSH(g_drawables, expl);
+	expl.draw = armagon_shockwave_boom_draw;
+	expl.origin = this.origin + r * 32 * v_right;	
+	set_movetype(expl, MOVETYPE_TOSS);
+	expl.velocity = '0 0 200';
+	expl.avelocity_x = random()*600;
+	expl.avelocity_y = random()*600;
+	expl.avelocity_z = random()*600;
+	expl.scale = 0.25;
+	_setmodel(expl, "progs/s_explod.spr");
+	expl.solid = SOLID_NOT;
+	setsize(expl, '0 0 0', '0 0 0');
+	expl.nextthink = time + 0.1;
+	expl.frame = 0;
+	setthink(expl, armagon_shockwave_boom_explode);
+	pointparticles(EFFECT_ARMAGON_SHOCKWAVE, this.origin, '0 0 0', 1);
+
+	traceline(this.origin, this.origin - '0 0 48', true, this);
+	if(trace_fraction == 1)
+	{
+		delete(this);
+		return;
+	}
+}
+
+void armagon_shockwave_missile_draw(entity this)
+{
+	Movetype_Physics_NoMatchServer(this);
+}
+
+void armagon_shockwave_missile(vector org, vector dir, float rmv_t)
+{
+	entity gmis = spawn();
+	IL_PUSH(g_drawables, gmis);
+	gmis.draw = armagon_shockwave_missile_draw;
+	gmis.move_time = time;
+	gmis.solid = SOLID_NOT;
+	gmis.drawmask = MASK_NORMAL;
+	set_movetype(gmis, MOVETYPE_WALK);
+	gmis.effects = EF_DIMLIGHT;
+	setmodel(gmis, MDL_Null);
+	setsize(gmis, '0 0 0', '0 0 0');
+	setorigin(gmis, org - '0 0 24');
+	LOG_INFO("Playing stomp at ", vtos(org));
+	gmis.velocity = dir * 300;
+	gmis.angles = vectoangles(gmis.velocity);
+	gmis.cnt = rmv_t;
+	gmis.nextthink = time;
+	setthink(gmis, armagon_shockwave_boom);
+}
+
+void armagon_shockwave_launch(vector org)
+{
+	float ang = 0;
+	while(ang <= 360)
+	{
+		vector vec = '0 0 0';
+		vec.y += ang;
+		makevectors(vec);
+		armagon_shockwave_missile(org, v_forward, 31);
+		ang += 10;
+	}
+}
+
+NET_HANDLE(TE_CSQC_ARMAGON_SHOCKWAVE, bool isNew)
+{
+	vector org = ReadVector();
+	armagon_shockwave_launch(org);
+
+	return true;
+}
+#endif
+
 #ifdef SVQC
 const int anim_armagon_lwalk = 0; //'0 11 0';
 const int anim_armagon_lw0fir = 12; //'12 24 0';
@@ -285,28 +400,7 @@ void armagon_shockwave_boom(entity this)
 	else
 		setthink(this, SUB_Remove);
 	
-	T_RadiusDamage(this, this.owner, 30, DEATH_MONSTER_GOROTH.m_id, this.owner);
-	
-	// Explosions occur as the missile travels
-	float r = random() * 2 - 1;
-	
-	makevectors(this.angles);
-	
-	entity expl = spawn();
-	expl.origin = this.origin + r * 32 * v_right;	
-	set_movetype(expl, MOVETYPE_TOSS);
-	expl.velocity = '0 0 200';
-	expl.avelocity_x = random()*600;
-	expl.avelocity_y = random()*600;
-	expl.avelocity_z = random()*600;
-	expl.scale = 0.25;
-	settouch(expl, func_null);
-	_setmodel(expl, "progs/s_explod.spr");
-	expl.solid = SOLID_NOT;
-	setsize(expl, '0 0 0', '0 0 0');
-	expl.nextthink = time;
-	setthink(expl, s_explode1);
-	Send_Effect(EFFECT_ARMAGON_SHOCKWAVE, this.origin, '0 0 0', 1);
+	T_RadiusDamage(this, this.owner, 30, DEATH_MONSTER_ARMAGON.m_id, this.owner);
 
 	traceline(this.origin, this.origin - '0 0 48', true, this);
 	if(trace_fraction == 1)
@@ -326,7 +420,6 @@ void armagon_shockwave_missile(entity this, vector dir, float rmv_t)
 	set_movetype(gmis, MOVETYPE_WALK);
 	gmis.effects = EF_DIMLIGHT;
 	setsize(gmis, '0 0 0', '0 0 0');
-	makevectors(this.angles);
 	vector org = this.origin - '0 0 24';
 	setorigin(gmis, org);
 	gmis.velocity = dir * 300;
@@ -357,6 +450,8 @@ void armagon_shockwave(entity this)
 		armagon_shockwave_missile(this, v_forward, 31);
 		ang += 10;
 	}
+
+	armagon_shockwave_send(this.origin);
 }
 
 void armagon_stand_attack(entity this);

@@ -322,7 +322,7 @@ void Laser_Draw(entity this)
 
 NET_HANDLE(TE_CSQC_PAPYRUS_LASER, bool isNew)
 {
-	Net_Accept(lightning);
+	Net_Accept(gaster);
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.25;
 	this.draw = Laser_Draw;
