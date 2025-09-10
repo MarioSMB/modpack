@@ -187,6 +187,8 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 		return true; // hehe
 	if(draggee.classname == "cannon")
 		return true; // what if there's a player inside lol
+	if(draggee.classname == "block")
+		return true; // yay steve
 	// items?
 	if(draggee.flags & FL_ITEM)
 	{
