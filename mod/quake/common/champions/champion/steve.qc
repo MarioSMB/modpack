@@ -33,6 +33,19 @@ void steve_block_break(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+void steve_block_think(entity this)
+{
+	this.nextthink = time;
+
+	if(time >= this.count)
+	{
+		steve_block_break(this);
+		return;
+	}
+
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
 void steve_block_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	vector oldorg = this.origin;
@@ -72,8 +85,9 @@ void Steve_PlaceBlock(entity this)
 	set_movetype(block, MOVETYPE_NONE);
 	block.takedamage = DAMAGE_AIM;
 	block.health = 5;
-	setthink(block, steve_block_break);
-	block.nextthink = time + 30;
+	block.count = time + 30;
+	setthink(block, steve_block_think);
+	block.nextthink = time;
 	block.th_die = steve_block_die;
 	block.skin = (random() <= 0.5) ? 0 : 1;
 	if(random() < 0.1)
