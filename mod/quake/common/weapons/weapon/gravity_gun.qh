@@ -1,0 +1,50 @@
+#pragma once
+
+CLASS(GravityGun, Weapon)
+/* ammotype  */ ATTRIB(GravityGun, ammo_type, int, 0);
+/* impulse   */ ATTRIB(GravityGun, impulse, int, 2);
+/* spawnflags*/ ATTRIB(GravityGun, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
+/* ammo */      ATTRIB(GravityGun, aflag, int, 0);
+/* modelname */ ATTRIB(GravityGun, mdl, string, "gravgun");
+/* crosshair */ ATTRIB(GravityGun, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(GravityGun, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(GravityGun, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(GravityGun, model2, string, "gravgun");
+/* refname   */ ATTRIB(GravityGun, netname, string, "gravgun");
+/* wepname   */ ATTRIB(GravityGun, m_name, string, _("Gravity Gun"));
+
+ENDCLASS(GravityGun)
+REGISTER_WEAPON(GRAVITY_GUN, NEW(GravityGun));
+
+SPAWNFUNC_WEAPON(weapon_gravgun, WEP_GRAVITY_GUN)
+
+#ifdef SVQC
+float autocvar_sv_quake_gravitygun_range = 250;
+
+.entity dragentity;
+
+// on dragger:
+.float draggravity;
+.float dragspeed; // speed of mouse wheel action
+.float dragdistance; // distance of dragentity's draglocalvector from view_ofs
+.vector draglocalvector; // local attachment vector of the dragentity
+.float draglocalangle;
+// on draggee:
+.entity draggedby;
+.float dragmovetype;
+
+void gravgun_postthink(entity this);
+
+void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
+float Drag(entity this, float force_allow_pick, float ischeat);
+void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
+void Drag_Finish(entity dragger);
+bool Drag_IsDraggable(entity draggee, entity dragger);
+float Drag_MayChangeAngles(entity draggee);
+void Drag_MoveForward(entity dragger);
+void Drag_SetSpeed(entity dragger, float s);
+void Drag_MoveBackward(entity dragger);
+void Drag_Update(entity dragger);
+float Drag_CanDrag(entity dragger);
+float Drag_IsDragging(entity dragger);
+#endif

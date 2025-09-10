@@ -218,7 +218,7 @@ void kami_die(entity this, entity inflictor, entity attacker, int deathtype)
 
 void kamikaze_explosivethink(entity this)
 {
-	if(!this.owner || wasfreed(this.owner))
+	if(!this.owner || wasfreed(this.owner) || this.owner.kamikaze_box != this)
 	{
 		delete(this);
 		return;
@@ -257,16 +257,19 @@ void kamikaze_explosiveboom(entity this, entity inflictor, entity attacker, int 
 
 	this.solid = SOLID_NOT;
 
-	// hacky gib check
-	if(this.owner.move_movetype != MOVETYPE_BOUNCE)
+	if(this.owner && !wasfreed(this.owner))
 	{
-		if(this.owner.health <= 0 && this.owner.health > -35)
+		// hacky gib check
+		if(this.owner.move_movetype != MOVETYPE_BOUNCE)
 		{
-			this.owner.health = -50;
-			kami_gib(this.owner, inflictor);
+			if(this.owner.health <= 0 && this.owner.health > -35)
+			{
+				this.owner.health = -50;
+				kami_gib(this.owner, inflictor);
+			}
+			else if(this.owner.health > 0)
+				T_Damage(this.owner, this, attacker, this.owner.health + 50, DEATH_MONSTER_KAMIKAZEGRUNT.m_id);
 		}
-		else if(this.owner.health > 0)
-			T_Damage(this.owner, this, attacker, this.owner.health + 50, DEATH_MONSTER_KAMIKAZEGRUNT.m_id);
 	}
 
 	this.enemy = attacker;

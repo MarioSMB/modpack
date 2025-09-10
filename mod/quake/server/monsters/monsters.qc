@@ -350,7 +350,11 @@ void monster_setup(entity this, Monster mon)
 
 	if(!this.sprite && !horde_ent && this.health > 0 && (mon.spawnflags & MONSTER_TYPE_BOSS))
 	{
-		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 2048, this, '0 0 1' * (this.maxs.z + 32), NULL, 0, this, sprite, true, NULL);
+		float offset = (this.maxs.z + 32);
+		float myscale = (this.scale) ? this.scale : 1;
+		if(mon.view_ofs)
+			offset = mon.view_ofs.z * myscale;
+		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 2048, this, '0 0 1' * offset, NULL, 0, this, sprite, true, NULL);
 		wp.wp_extra = this.monsterdef.monsterid;
 		wp.colormod = '1 0 0';
 		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);

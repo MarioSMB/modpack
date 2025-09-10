@@ -7,7 +7,7 @@ SOUND(KATANA_THROW, "weapons/sword_swing");
 CLASS(Katana, Weapon)
 /* ammotype  */ ATTRIB(Katana, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Katana, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Katana, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_MELEE);
+/* spawnflags*/ ATTRIB(Katana, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE);
 /* ammo */      ATTRIB(Katana, aflag, int, 0);
 /* modelname */ ATTRIB(Katana, mdl, string, "katana");
 /* crosshair */ ATTRIB(Katana, w_crosshair, string, "gfx/crosshairlaser");

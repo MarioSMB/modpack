@@ -1,0 +1,69 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Gordon, "progs/player_gordon.mdl");
+MODEL(Gordon_Head, "progs/h_player_gordon.mdl");
+
+SOUND(Gordon_Pain1, "player_gordon/pain1");
+SOUND(Gordon_Pain2, "player_gordon/pain2");
+SOUND(Gordon_Pain3, "player_gordon/pain3");
+SOUND(Gordon_Pain4, "player_gordon/pain4");
+SOUND(Gordon_Pain5, "player_gordon/pain5");
+Sound SND_Gordon_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Gordon_Pain1.m_id + rint(random() * 4));
+}
+
+SOUND(Gordon_Death, "player_gordon/death");
+
+PRECACHE(Gordon)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/gordon_face");
+#endif
+#ifdef SVQC
+    precache_sound("player_gordon/plyrjmp8.wav");       // player jump
+    precache_sound("player_gordon/land.wav");           // player landing
+    precache_sound("player_gordon/land2.wav");      // player hurt landing
+    precache_sound("player_gordon/drown1.wav");     // drowning pain
+    precache_sound("player_gordon/drown2.wav");     // drowning pain
+    precache_sound("player_gordon/gasp1.wav");      // gasping for air
+    precache_sound("player_gordon/gasp2.wav");      // taking breath
+    precache_sound("player_gordon/h2odeath.wav");       // drowning death
+
+    precache_sound("player_gordon/axhit1.wav");
+
+    precache_sound("player_gordon/lburn1.wav");     // lava burn
+    precache_sound("player_gordon/lburn2.wav");     // lava burn
+
+    precache_sound("player_gordon/start1.wav");
+    precache_sound("player_gordon/start2.wav");
+    precache_sound("player_gordon/start3.wav");
+#endif
+}
+#endif
+#ifdef CSQC
+#define GORDON_STATS \
+"Has Crowbar as a weapon\n" \
+"- increased damage to armored enemies\n" \
+"Also has Gravity Gun\n" \
+"- attack to pull enemies in\n" \
+"- attack again to launch them\n" \
+"- secondary fire drops them instead"
+#endif
+CLASS(Gordon, Champions)
+    ATTRIB(Gordon, netname, string, "gordon");
+    ATTRIB(Gordon, m_name, string, "Gordon Freeman");
+#ifdef GAMEQC
+    ATTRIB(Gordon, m_model, Model, MDL_Gordon);
+    ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);
+    ATTRIB(Gordon, m_soundpath, string, "player_gordon/");
+    METHOD(Gordon, m_sound_pain, string()) { return SND(Gordon_Pain_Random()); }
+    METHOD(Gordon, m_sound_death, string()) { return SND(Gordon_Death); }
+#endif
+#ifdef CSQC
+    ATTRIB(Gordon, message, string, GORDON_STATS);
+#endif
+ENDCLASS(Gordon)
+REGISTER_CHAMPION(Gordon, NEW(Gordon));

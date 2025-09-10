@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BOGLORD,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was obliterated by The Bog Lord"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BOGLORD,            1,  NULL,           INFO_DEATH_SELF_MON_BOGLORD,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BOGLORD,        DEATH_SELF_MON_BOGLORD,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BOGLORD, "progs/mon_bossboglord.mdl");
+MODEL(MON_BOGLORD_HEAD, "progs/h_boglord.mdl");
+
+SOUND(MON_BOGLORD_SIGHT, "boglord/sight");
+#endif
+
+CLASS(BogLord, Monster)
+    ATTRIB(BogLord, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(BogLord, m_mins, vector, '-32 -32 -24');
+    ATTRIB(BogLord, m_maxs, vector, '32 32 80');
+#ifdef GAMEQC
+    ATTRIB(BogLord, m_model, Model, MDL_MON_BOGLORD);
+    ATTRIB(BogLord, m_model_head, Model, MDL_MON_BOGLORD_HEAD);
+    ATTRIB(BogLord, m_sound, Sound, SND_MON_BOGLORD_SIGHT);
+#endif
+    ATTRIB(BogLord, netname, string, "boglord");
+    ATTRIB(BogLord, m_name, string, _("Bog Lord"));
+ENDCLASS(BogLord)
+
+REGISTER_MONSTER(BOGLORD, NEW(BogLord));

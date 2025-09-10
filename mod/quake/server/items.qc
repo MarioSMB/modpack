@@ -1161,7 +1161,7 @@ spawnfunc(item_shells)
 		this.aflag = 20;
 	}
 	this.ammo_shells = this.aflag;
-	this.weapon = 1;
+	//this.weapon = 1;
 	this.items = IT_SHELLS;
 	this.netname = "shells";
 	this.noise = "weapons/lock4.wav";
@@ -1217,7 +1217,7 @@ spawnfunc(item_spikes)
 		this.aflag = 25;
 	}
 	this.ammo_nails = this.aflag;
-	this.weapon = 2;
+	//this.weapon = 2;
 	this.items = IT_NAILS;
 	this.netname = "nails";
 	this.noise = "weapons/lock4.wav";
@@ -1273,7 +1273,7 @@ spawnfunc(item_lava_spikes)
 		this.aflag = 25;
 	}
 	this.ammo_lava_nails = this.aflag;
-	this.weapon = 5;
+	//this.weapon = 5;
 	this.items = IT_LAVA_NAILS;
 	this.netname = "lava nails";
 	this.noise = "weapons/lock4.wav";
@@ -1330,7 +1330,7 @@ spawnfunc(item_rockets)
 		this.aflag = 5;
 	}
 	this.ammo_rockets = this.aflag;
-	this.weapon = 3;
+	//this.weapon = 3;
 	this.items = IT_ROCKETS;
 	this.netname = "rockets";
 	this.noise = "weapons/lock4.wav";
@@ -1387,7 +1387,7 @@ spawnfunc(item_multi_rockets)
 		this.aflag = 5;
 	}
 	this.ammo_multi_rockets = this.aflag;
-	this.weapon = 6;
+	//this.weapon = 6;
 	this.items = IT_MULTI_ROCKETS;
 	this.netname = "multi rockets";
 	this.noise = "weapons/lock4.wav";
@@ -1444,7 +1444,7 @@ spawnfunc(item_cells)
 		this.aflag = 6;
 	}
 	this.ammo_cells = this.aflag;
-	this.weapon = 4;
+	//this.weapon = 4;
 	this.items = IT_CELLS;
 	this.netname = "cells";
 	this.noise = "weapons/lock4.wav";
@@ -1500,7 +1500,7 @@ spawnfunc(item_plasma)
 		this.aflag = 6;
 	}
 	this.ammo_plasma = this.aflag;
-	this.weapon = 7;
+	//this.weapon = 7;
 	this.items = IT_PLASMA_AMMO;
 	this.netname = "plasma";
 	this.noise = "weapons/lock4.wav";

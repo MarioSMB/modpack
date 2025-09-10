@@ -57,6 +57,9 @@ void ocarina_note_touch(entity this, entity toucher)
 		}
 	}
 
+	if(toucher.classname == "rotate_object_continuously" && time > toucher.thaw_time)
+		rotate_object_freeze(toucher);
+
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);

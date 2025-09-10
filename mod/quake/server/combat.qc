@@ -438,6 +438,10 @@ This should be the only function that ever reduces health.
 */
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype)
 {
+	// special hack for ithagnal
+	if(targ.classname == "monster_hitbox")
+		targ = targ.owner;
+
 	float r = random();
 	bool showpain = true;
 	float force = damage;

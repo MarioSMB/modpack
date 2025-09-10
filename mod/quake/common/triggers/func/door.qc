@@ -164,6 +164,8 @@ void door_use(entity this, entity actor, entity trigger)
 
 void door_trigger_touch(entity this, entity toucher)
 {
+	if(toucher.draggedby)
+		toucher = toucher.draggedby; // hehe
 	if(toucher.health <= 0)
 		return;
 	if(toucher.move_movetype == MOVETYPE_NOCLIP)
@@ -274,6 +276,8 @@ Prints messages and opens key doors
 */
 void door_touch(entity this, entity toucher)
 {
+	if(toucher.draggedby)
+		toucher = toucher.draggedby; // hehe
 	if(!IS_PLAYER(toucher))
 		return;
 	if(this.owner.attack_finished > time)

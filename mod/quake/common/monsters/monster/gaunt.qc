@@ -441,7 +441,7 @@ void gaunt_die(entity this, entity inflictor, entity attacker, int deathtype)
 			else
 				te_explosion2(partpos, 225, 10);
 			makevectors(this.angles);
-			float explef = EXPLODE_PLASMA_BIG;
+			int explef = EXPLODE_PLASMA_BIG;
 			if(this.poisonous)
 				explef = EXPLODE_POISON_BIG;
 			SpawnExplosion(explef, this.origin + v_forward*8, "weapons/r_exp3b.wav");

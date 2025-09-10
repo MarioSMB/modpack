@@ -86,6 +86,8 @@ void button_touch(entity this, entity toucher)
 {
 	if(this.customflags & CFL_LOCKED)
 		return;
+	if(toucher.draggedby)
+		toucher = toucher.draggedby; // hehe
 	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
 	if(this.items)

@@ -81,6 +81,10 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
 
 #ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag);
+void detach_sameorigin(entity e);
+void follow_sameorigin(entity e, entity to);
+
 void SetMovetypeFollow(entity ent, entity e);
 #endif
 

@@ -20,6 +20,7 @@
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/trigger/fog.qh"
 #include "vote.qh"
+#include "../common/weapons/weapon/gravity_gun.qh"
 #include "weapons/weaponsystem.qh"
 
 .entity chatbubbleentity;
@@ -899,6 +900,8 @@ void CopyToBodyQueue(entity ent)
 	body.skin = ent.skin;
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
+
+	//Drag_MoveDrag(ent, body);
 
 	IL_PUSH(g_clones, body);
 
@@ -2290,6 +2293,9 @@ void xpackEnding(entity this);
 void PlayerPostThink(entity this)
 {
 	Player_Physics(this);
+
+	// needs to always happen so we know to drop the target!
+	gravgun_postthink(this);
 
 	if(this.view_ofs == '0 0 0')
 	{

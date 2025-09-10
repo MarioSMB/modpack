@@ -12,6 +12,7 @@
 #include "duke.qh"
 #include "dusk.qh"
 #include "goat.qh"
+#include "gordon.qh"
 #include "katria.qh"
 #include "keen.qh"
 #include "keyleth.qh"

@@ -47,3 +47,5 @@
 #include "nuke.qc"
 #include "magic.qc"
 #include "plane.qc"
+#include "crowbar.qc"
+#include "gravity_gun.qc"

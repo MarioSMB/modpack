@@ -47,3 +47,5 @@
 #include "nuke.qh"
 #include "magic.qh"
 #include "plane.qh"
+#include "crowbar.qh"
+#include "gravity_gun.qh"

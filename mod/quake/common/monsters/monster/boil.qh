@@ -1,0 +1,28 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BOIL,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was blown away by a Boil"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BOIL,               1,  NULL,           INFO_DEATH_SELF_MON_BOIL,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BOIL,           DEATH_SELF_MON_BOIL,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BOIL, "progs/mon_boil.mdl");
+
+SOUND(MON_BOIL_SIGHT, "zombie/boil_sight");
+#endif
+
+CLASS(Boil, Monster)
+    ATTRIB(Boil, spawnflags, int, 0);
+    ATTRIB(Boil, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Boil, m_maxs, vector, '16 16 32');
+#ifdef GAMEQC
+    ATTRIB(Boil, m_model, Model, MDL_MON_BOIL);
+    ATTRIB(Boil, m_model_head, Model, MDL_Null);
+    ATTRIB(Boil, m_sound, Sound, SND_MON_BOIL_SIGHT);
+#endif
+    ATTRIB(Boil, netname, string, "boil");
+    ATTRIB(Boil, m_name, string, _("Boil"));
+ENDCLASS(Boil)
+
+REGISTER_MONSTER(BOIL, NEW(Boil));

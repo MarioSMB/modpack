@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ITHAGNAL,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's soul was flayed by the madness of Ithagnal"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ITHAGNAL,                1,  NULL,           INFO_DEATH_SELF_MON_ITHAGNAL,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ITHAGNAL,            DEATH_SELF_MON_ITHAGNAL,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ITHAGNAL, "progs/ithagnal.mdl");
+
+SOUND(MON_ITHAGNAL_SIGHT, "ithagnal/ithwake");
+#endif
+
+CLASS(Ithagnal, Monster)
+    ATTRIB(Ithagnal, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT);
+    ATTRIB(Ithagnal, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Ithagnal, m_maxs, vector, '32 32 64');
+    ATTRIB(Ithagnal, view_ofs, vector, '0 0 436');
+#ifdef GAMEQC
+    ATTRIB(Ithagnal, m_model, Model, MDL_MON_ITHAGNAL);
+    ATTRIB(Ithagnal, m_model_head, Model, MDL_Null);
+    ATTRIB(Ithagnal, m_sound, Sound, SND_MON_ITHAGNAL_SIGHT);
+#endif
+    ATTRIB(Ithagnal, netname, string, "ithagnal");
+    ATTRIB(Ithagnal, m_name, string, _("Ithagnal"));
+ENDCLASS(Ithagnal)
+
+REGISTER_MONSTER(ITHAGNAL, NEW(Ithagnal));

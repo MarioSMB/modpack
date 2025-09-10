@@ -12,6 +12,7 @@
 #include "duke.qc"
 #include "dusk.qc"
 #include "goat.qc"
+#include "gordon.qc"
 #include "katria.qc"
 #include "keen.qc"
 #include "keyleth.qc"

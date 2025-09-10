@@ -27,9 +27,32 @@ enum
 	RotateStateDecelDown
 };
 
+.float rotate_freeze_time;
+.vector rotate_prev_avelocity;
+.float thaw_time; // from ocarina
+
+void rotate_object_freeze(entity this)
+{
+	if(this.state == RotateStateOff)
+		return; // already stopped!
+
+	this.rotate_freeze_time = time + 2;
+	this.thaw_time = time + 5;
+	this.rotate_prev_avelocity = this.avelocity;
+}
+
 void rotate_object_continuously_tick(entity this, float dt)
 {
 	// avelocity handling already done!
+
+	if(this.rotate_freeze_time > time)
+		this.avelocity = '0 0 0';
+	else if(this.rotate_freeze_time)
+	{
+		this.avelocity = this.rotate_prev_avelocity;
+		this.rotate_prev_avelocity = '0 0 0';
+		this.rotate_freeze_time = 0;
+	}
 }
 
 void rotate_object_tween_tick(entity this, float dt)
@@ -54,6 +77,15 @@ void rotate_object_tween_tick(entity this, float dt)
 
 void rotate_object_continuously_use(entity this, entity actor, entity trigger)
 {
+	// if we got triggered, reset state!
+	if(this.rotate_freeze_time)
+	{
+		this.avelocity = this.rotate_prev_avelocity;
+		this.rotate_prev_avelocity = '0 0 0';
+		this.rotate_freeze_time = 0;
+		this.thaw_time = time + 2; // and prevent touchies for a moment
+	}
+
 	if(this.delay <= 0)
 	{
 		//No acceleration, just toggle on or off

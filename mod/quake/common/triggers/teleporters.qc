@@ -20,6 +20,10 @@ void spawn_tfog_silent(vector org)
 
 void tdeath_touch(entity this, entity toucher)
 {
+	// ithagnal hack
+	if(toucher.classname == "monster_hitbox")
+		toucher = toucher.owner;
+
 	if(toucher == this.owner)
 		return;
 

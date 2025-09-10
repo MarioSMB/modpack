@@ -44,6 +44,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
     /** hitbox size */
     ATTRIB(Monster, m_maxs, vector, '0 0 0');
+    /** waypoint offset (overrides if set) */
+    ATTRIB(Monster, view_ofs, vector, '0 0 0');
 
     /** (SERVER) setup monster data */
     /* in quake, most functions are stored as entity properties */

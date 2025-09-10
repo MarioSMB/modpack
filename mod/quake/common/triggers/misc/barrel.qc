@@ -38,6 +38,12 @@ void barrel_detonate_use(entity this, entity actor, entity trigger)
 	this.nextthink = time + 0.1;
 }
 
+void barrel_think(entity this)
+{
+	this.nextthink = time;
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
 void barrel_spawn(entity this)
 {
 	if(!this.mdl || this.mdl == "")
@@ -58,6 +64,8 @@ void barrel_spawn(entity this)
 	this.use = barrel_detonate_use;
 	this.takedamage = DAMAGE_AIM;
 	this.killstring = " blew up";
+	setthink(this, barrel_think);
+	this.nextthink = time + 0.1;
 
 	if(this.classname != "func_explobox")
 	{

@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Crowbar, Weapon)
+/* ammotype  */ ATTRIB(Crowbar, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Crowbar, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Crowbar, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_MELEE);
+/* ammo */      ATTRIB(Crowbar, aflag, int, 0);
+/* modelname */ ATTRIB(Crowbar, mdl, string, "crowbar");
+/* crosshair */ ATTRIB(Crowbar, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Crowbar, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Crowbar, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Crowbar, model2, string, "crowbar");
+/* refname   */ ATTRIB(Crowbar, netname, string, "crowbar");
+/* wepname   */ ATTRIB(Crowbar, m_name, string, _("Crowbar"));
+
+ENDCLASS(Crowbar)
+REGISTER_WEAPON(CROWBAR, NEW(Crowbar));
+
+SPAWNFUNC_WEAPON(weapon_crowbar, WEP_CROWBAR)

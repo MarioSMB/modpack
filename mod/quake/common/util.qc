@@ -794,6 +794,69 @@ int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 #endif
 
 #ifdef SVQC
+void attach_sameorigin(entity e, entity to, string tag)
+{
+    vector org, t_forward, t_left, t_up, e_forward, e_up;
+    float tagscale;
+
+    org = e.origin - gettaginfo(to, gettagindex(to, tag));
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
+    t_forward = v_forward * tagscale;
+    t_left = v_right * -tagscale;
+    t_up = v_up * tagscale;
+
+    e.origin_x = org * t_forward;
+    e.origin_y = org * t_left;
+    e.origin_z = org * t_up;
+
+    // current forward and up directions
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_FromVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_FromAngles(e.angles);
+    fixedmakevectors(e.angles);
+
+    // untransform forward, up!
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
+
+    e.angles = fixedvectoangles2(e_forward, e_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+
+    setattachment(e, to, tag);
+    setorigin(e, e.origin);
+}
+
+void detach_sameorigin(entity e)
+{
+    vector org;
+    org = gettaginfo(e, 0);
+    e.angles = fixedvectoangles2(v_forward, v_up);
+    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+		e.angles = AnglesTransform_ToVAngles(e.angles);
+	else
+		e.angles = AnglesTransform_ToAngles(e.angles);
+    setorigin(e, org);
+    setattachment(e, NULL, "");
+    setorigin(e, e.origin);
+}
+
+void follow_sameorigin(entity e, entity to)
+{
+    set_movetype(e, MOVETYPE_FOLLOW); // make the hole follow
+    e.aiment = to; // make the hole follow bmodel
+    e.punchangle = to.angles; // the original angles of bmodel
+    e.view_ofs = e.origin - to.origin; // relative origin
+    e.v_angle = e.angles - to.angles; // relative angles
+}
+
 .string aiment_classname;
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)

@@ -23,19 +23,19 @@ void s_explode1(entity this) { set_anim(this, 0, s_explode2); }
 void SpawnExplosion(int sprite_type, vector org, string expl_sound)
 {
 	if(sprite_type == EXPLODE_SMALL)
-		__pointparticles(_particleeffectnum("TE_EXPLOSION"), org, '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_MED)
-		__pointparticles(_particleeffectnum("TE_EXPLOSION"), org, '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_BIG)
-		__pointparticles(_particleeffectnum("TE_EXPLOSION"), org, '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_PLASMA_SMALL)
 		__pointparticles(_particleeffectnum("TE_TEI_PLASMAHIT"), org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_PLASMA_MED || sprite_type == EXPLODE_PLASMA_BIG)
-		__pointparticles(_particleeffectnum("electro_combo"), org, '0 0 0', 1);
+		Send_Effect(EFFECT_TE_PLASMABIG, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_POISON_SMALL)
 		te_explosion2(org, 175, 15);
 	else if(sprite_type == EXPLODE_POISON_MED || sprite_type == EXPLODE_POISON_BIG)
-		te_explosion2(org, 170, 20);
+		Send_Effect(EFFECT_TE_POISONBIG, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_ELECT_SMALL || sprite_type == EXPLODE_ELECT_MED || sprite_type == EXPLODE_ELECT_BIG)
 		__pointparticles(_particleeffectnum("electro_ballexplode"), org, '0 0 0', 1);
 	// This must be pre-cached by entity using it!
@@ -43,7 +43,7 @@ void SpawnExplosion(int sprite_type, vector org, string expl_sound)
 	else if(sprite_type == EXPLODE_ICE_BIG)
 		__pointparticles(_particleeffectnum("electro_ballexplode"), org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_BURST_SMOKE)
-		__pointparticles(_particleeffectnum("grenade_explode"), org, '0 0 0', 1);
+		Send_Effect(EFFECT_TE_BSMOKE, org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_BURST_FLAME)
 		__pointparticles(_particleeffectnum("explosion_small"), org, '0 0 0', 1);
 	else if(sprite_type == EXPLODE_BURST_POISON)

@@ -82,6 +82,7 @@ void cannon_launch(entity this, entity cannon)
 
 void cannon_enter(entity this, entity cannon)
 {
+	cannon.attack_finished = time + 0.25; // a short delay before cannon will fire you
 	cannon.realowner = this;
 	STAT(CANNON, this) = true;
 	this.cannon_targ = cannon;
@@ -128,8 +129,9 @@ void cannon_think(entity this)
 			this.angles = '0 1 0' * vang.y;
 		if(this.wait)
 			this.wait += serverframetime;
+		setorigin(player, this.origin + '0 0 8');
 		.entity weaponentity = weaponentities[0];
-		if(PHYS_INPUT_BUTTON_ATCK(player) && time > ATTACK_FINISHED(player, weaponentity))
+		if(PHYS_INPUT_BUTTON_ATCK(player) && time > ATTACK_FINISHED(player, weaponentity) && time > this.attack_finished)
 			cannon_launch(player, this);
 		return;
 	}
