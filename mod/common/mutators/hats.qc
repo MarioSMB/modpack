@@ -281,7 +281,7 @@ MUTATOR_HOOKFUNCTION(hats, GetModelParams)
 
 REGISTER_MUTATOR(mod_hats, true);
 
-AUTOCVAR_NOREF_SAVE(cl_nohats,                    bool,   false,      "Disable hats completely, requires reconnect or sendcvar");
+AUTOCVAR_NOREF_SAVE(cl_nohats,                    bool,   false,      "Disable hats completely");
 AUTOCVAR_NOREF_SAVE(cl_magical_hax,               string, "",      	"Magical hax, use at your own risk");
 
 string get_model_parameters_bone_head;

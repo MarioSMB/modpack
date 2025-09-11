@@ -115,7 +115,7 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     if (!autocvar_cl_polytrails) return;
     entity proj = M_ARGV(0, entity);
     
-    switch(proj.cnt)
+    switch(proj.csqcprojectile_type)
     {
         case PROJECTILE_BLASTER:
             if(autocvar_cl_polytrails_blaster_bolt)
@@ -152,6 +152,15 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
             {
                 proj.traileffect = EFFECT_Null.m_id;
                 PolyTrail_Spawn(NEW(CrylinkBoltTrail), proj);
+            }
+            break;
+        case PROJECTILE_HLAC:
+            if(autocvar_cl_polytrails_hlac_bolt)
+            {
+                setmodel(proj, MDL_Null);
+                proj.mins = '0 0 0';
+                proj.maxs = '0 0 0';
+                PolyTrail_Spawn(NEW(HLACBoltTrail), proj);
             }
             break;
     }

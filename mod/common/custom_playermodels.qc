@@ -57,7 +57,8 @@ AUTOCVAR(sv_smokeball_time, float, 2, "");
 AUTOCVAR(sv_smokeball_refire, float, 10, "");
 AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
-PRECACHE(cpmodels_precache)
+// done BEFORE precache so that they guaranteed get added to the list
+STATIC_INIT_LATE(cpmodels_precache)
 {
 	g_overkill = MUTATOR_IS_ENABLED(ok);
 	models_allowed = 0;
