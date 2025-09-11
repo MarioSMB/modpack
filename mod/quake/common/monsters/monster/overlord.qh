@@ -19,6 +19,7 @@ CLASS(Overlord, Monster)
 #endif
     ATTRIB(Overlord, netname, string, "overlord");
     ATTRIB(Overlord, m_name, string, _("Overlord"));
+    ATTRIB(Overlord, m_description, string, _("Leader of the Wrath"));
 ENDCLASS(Overlord)
 
 REGISTER_MONSTER(OVERLORD, NEW(Overlord));

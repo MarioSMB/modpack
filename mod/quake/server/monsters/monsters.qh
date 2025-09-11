@@ -1,5 +1,6 @@
 #pragma once
 
+int autocvar_sv_quake_bossbars = 1;
 bool autocvar_sv_quake_monsterfix;
 
 .bool charmed;

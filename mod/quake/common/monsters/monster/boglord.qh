@@ -24,6 +24,7 @@ CLASS(BogLord, Monster)
 #endif
     ATTRIB(BogLord, netname, string, "boglord");
     ATTRIB(BogLord, m_name, string, _("Bog Lord"));
+    ATTRIB(BogLord, m_description, string, _("Lord of the swamp"));
 ENDCLASS(BogLord)
 
 REGISTER_MONSTER(BOGLORD, NEW(BogLord));

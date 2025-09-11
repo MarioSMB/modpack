@@ -90,7 +90,6 @@ void armagon_shockwave_missile(vector org, vector dir, float rmv_t)
 	setmodel(gmis, MDL_Null);
 	setsize(gmis, '0 0 0', '0 0 0');
 	setorigin(gmis, org - '0 0 24');
-	LOG_INFO("Playing stomp at ", vtos(org));
 	gmis.velocity = dir * 300;
 	gmis.angles = vectoangles(gmis.velocity);
 	gmis.cnt = rmv_t;

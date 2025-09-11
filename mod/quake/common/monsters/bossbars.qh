@@ -1,0 +1,19 @@
+#pragma once
+
+#ifdef GAMEQC
+IntrusiveList g_bossbars;
+STATIC_INIT(BossBars_List)
+{
+    g_bossbars = IL_NEW();
+}
+#endif
+
+#ifdef SVQC
+void bossbar_spawn(entity this, Monster mon);
+#endif
+
+#ifdef CSQC
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
+
+void HUD_BossBars();
+#endif

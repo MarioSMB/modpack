@@ -311,7 +311,10 @@ void gug_hit(entity this, float dist, float power, float clawdmg, float stime)
 
 			if(!(it.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(it.monsterdef.spawnflags & MON_FLAG_STATIONARY))
 			{
-				float pushforce = 100 / vlen(it.maxs - it.mins);
+				float vsize = vlen(it.maxs - it.mins);
+				if(!vsize)
+					vsize = 1;
+				float pushforce = 100 / vsize;
 
 				it.velocity = dir * (100 * pushforce);
 				it.velocity_z = (330 * pushforce);

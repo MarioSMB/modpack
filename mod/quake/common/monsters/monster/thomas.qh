@@ -23,6 +23,7 @@ CLASS(Thomas, Monster)
 #endif
     ATTRIB(Thomas, netname, string, "thomas");
     ATTRIB(Thomas, m_name, string, _("Thomas"));
+    ATTRIB(Thomas, m_description, string, _("Crazy Train"));
 ENDCLASS(Thomas)
 
 REGISTER_MONSTER(THOMAS, NEW(Thomas));

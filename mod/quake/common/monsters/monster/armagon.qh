@@ -19,6 +19,7 @@ CLASS(Armagon, Monster)
 #endif
     ATTRIB(Armagon, netname, string, "armagon");
     ATTRIB(Armagon, m_name, string, _("Armagon"));
+    ATTRIB(Armagon, m_description, string, _("Biomechanical monstrosity"));
 ENDCLASS(Armagon)
 
 REGISTER_MONSTER(ARMAGON, NEW(Armagon));

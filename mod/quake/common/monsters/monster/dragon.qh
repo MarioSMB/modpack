@@ -25,6 +25,7 @@ CLASS(Dragon, Monster)
 #endif
     ATTRIB(Dragon, netname, string, "dragon");
     ATTRIB(Dragon, m_name, string, _("Dragon"));
+    ATTRIB(Dragon, m_description, string, _("Winged Source of Evil"));
 ENDCLASS(Dragon)
 
 REGISTER_MONSTER(DRAGON, NEW(Dragon));

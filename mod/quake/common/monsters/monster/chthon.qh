@@ -22,6 +22,7 @@ CLASS(Chthon, Monster)
 #endif
     ATTRIB(Chthon, netname, string, "chthon");
     ATTRIB(Chthon, m_name, string, _("Chthon"));
+    ATTRIB(Chthon, m_description, string, _("Demon lord of the underworld"));
 ENDCLASS(Chthon)
 
 REGISTER_MONSTER(CHTHON, NEW(Chthon));

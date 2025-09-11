@@ -22,6 +22,7 @@ CLASS(Legond, Monster)
 #endif
     ATTRIB(Legond, netname, string, "legond");
     ATTRIB(Legond, m_name, string, _("Legond"));
+    ATTRIB(Legond, m_description, string, _("The Dark Reaver"));
 ENDCLASS(Legond)
 
 REGISTER_MONSTER(LEGOND, NEW(Legond));

@@ -5,6 +5,7 @@
 #include "../common/sui_sys.qh"
 #include "../common/champions/_mod.qh"
 #include "../common/dodgeball/dodgeball.qh"
+#include "../common/monsters/bossbars.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/viewloc.qh"
@@ -810,6 +811,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	HUD_CenterPrint();
 	HUD_Crosshair(this);
 	HUD_Chat();
+	HUD_BossBars();
 	Draw_ShowNames_All();
 
 	status_effects_HUD_Powerups_add();

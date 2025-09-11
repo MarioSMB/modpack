@@ -47,10 +47,7 @@ PRECACHE(Gordon)
 #define GORDON_STATS \
 "Has Crowbar as a weapon\n" \
 "- increased damage to armored enemies\n" \
-"Also has Gravity Gun\n" \
-"- attack to pull enemies in\n" \
-"- attack again to launch them\n" \
-"- secondary fire drops them instead"
+"Also has a Gravity Gun"
 #endif
 CLASS(Gordon, Champions)
     ATTRIB(Gordon, netname, string, "gordon");

@@ -22,6 +22,7 @@ CLASS(Volkerh, Monster)
 #endif
     ATTRIB(Volkerh, netname, string, "volkerh");
     ATTRIB(Volkerh, m_name, string, _("Volkerh"));
+    ATTRIB(Volkerh, m_description, string, _("Ethereal ruler of chaos and dreams"));
 ENDCLASS(Volkerh)
 
 REGISTER_MONSTER(VOLKERH, NEW(Volkerh));

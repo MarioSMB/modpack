@@ -32,6 +32,7 @@ CLASS(SuperChicken, Monster)
 #endif
     ATTRIB(SuperChicken, netname, string, "super_chicken");
     ATTRIB(SuperChicken, m_name, string, _("Super Chicken"));
+    ATTRIB(SuperChicken, m_description, string, _("Big Mother Clucker"));
 ENDCLASS(SuperChicken)
 
 REGISTER_MONSTER(SUPER_CHICKEN, NEW(SuperChicken));

@@ -24,6 +24,7 @@ CLASS(Ithagnal, Monster)
 #endif
     ATTRIB(Ithagnal, netname, string, "ithagnal");
     ATTRIB(Ithagnal, m_name, string, _("Ithagnal"));
+    ATTRIB(Ithagnal, m_description, string, _("Shadow God of the Netherworld"));
 ENDCLASS(Ithagnal)
 
 REGISTER_MONSTER(ITHAGNAL, NEW(Ithagnal));

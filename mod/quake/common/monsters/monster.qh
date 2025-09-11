@@ -32,6 +32,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
     ATTRIB(Monster, m_name, string, "Monster");
+    /** concise description */
+    ATTRIB(Monster, m_description, string, "");
     /** short name */
     ATTRIB(Monster, netname, string, "");
     /** model */
@@ -46,6 +48,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, m_maxs, vector, '0 0 0');
     /** waypoint offset (overrides if set) */
     ATTRIB(Monster, view_ofs, vector, '0 0 0');
+    /** health bar color (bosses only) */
+    ATTRIB(Monster, m_color, vector, '0 0 0');
 
     /** (SERVER) setup monster data */
     /* in quake, most functions are stored as entity properties */

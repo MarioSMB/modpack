@@ -27,6 +27,7 @@ CLASS(Zerstorer, Monster)
 #endif
     ATTRIB(Zerstorer, netname, string, "zerstorer");
     ATTRIB(Zerstorer, m_name, string, _("Zerstorer"));
+    ATTRIB(Zerstorer, m_description, string, _("Destroyer from the Mirror Dimension"));
 ENDCLASS(Zerstorer)
 
 REGISTER_MONSTER(ZERSTORER, NEW(Zerstorer));
