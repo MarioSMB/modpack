@@ -457,6 +457,8 @@ void ith_telethrow6(entity this)
 			continue;
 		if(it.flags & FL_ITEM)
 			continue;
+		if(it.classname == "nuke")
+			continue; // let's not be too hasty
 		if(IS_MONSTER(it) || IS_PLAYER(it))
 			continue;
 
@@ -497,6 +499,8 @@ void IthagnalGrab(entity this)
 			continue;
 		if(it.flags & FL_ITEM)
 			continue;
+		if(it.classname == "nuke")
+			continue; // let's not be too hasty
 		if(IS_MONSTER(it) || IS_PLAYER(it))
 			continue;
 
@@ -518,6 +522,8 @@ void ith_teletouch10(entity this)
 			continue;
 		if(it.flags & FL_ITEM)
 			continue;
+		if(it.classname == "nuke")
+			continue; // let's not be too hasty
 		if(IS_MONSTER(it) || IS_PLAYER(it))
 			continue; // no corpse bouncers thank you very much
 

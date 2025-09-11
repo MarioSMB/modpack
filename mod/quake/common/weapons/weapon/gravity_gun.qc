@@ -189,6 +189,8 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 		return true; // what if there's a player inside lol
 	if(draggee.classname == "block")
 		return true; // yay steve
+	if(draggee.classname == "nuke")
+		return true; // sorry oppenheimer
 	// items?
 	if(draggee.flags & FL_ITEM)
 	{
@@ -213,6 +215,9 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 	if(draggee.flags & FL_MONSTER)
 	{
 		if(draggee.health <= 0)
+			return false;
+		// don't move important monsters as they are necessary for progression
+		if(draggee.target && draggee.target != "")
 			return false;
 		if((draggee.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (draggee.monsterdef.spawnflags & MON_FLAG_STATIONARY) || ((draggee.monsterdef.spawnflags & MONSTER_TYPE_DECOY)))
 			return false;

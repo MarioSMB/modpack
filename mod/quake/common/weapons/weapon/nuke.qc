@@ -46,12 +46,14 @@ void nuke_think(entity this)
 
 	if(this.wait && time > this.wait)
 	{
+		this.classname = "nuke_explosion";
 		earthquake_active = true;
 		earthquake_intensity = 20;
 		this.attack_finished = time + 3.5;
 		sound(this, CH_WEAPON_SINGLE, SND_NUKE_EXPLODE_RANDOM(), 1, 0.1);
 		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, this.origin, '0 0 0', '0 0 0', '0 0 0', 0, 800, 0.2, 1, 5);
 		Send_Effect(EFFECT_NUKE_EXPLODE, this.origin + '0 0 16', '0 0 0', 1);
+		set_movetype(this, MOVETYPE_NONE);
 		setthink(this, nuke_explode_think);
 		this.nextthink = time;
 		setmodel(this, MDL_Null);
@@ -62,28 +64,13 @@ void nuke_think(entity this)
 
 void nuke_setup(entity this)
 {
+	this.classname = "nuke";
 	//set_movetype(this, MOVETYPE_NONE);
 	this.owner = NULL; // to allow collisions
 	setthink(this, nuke_think);
 	this.nextthink = time + 0.1;
 	this.solid = SOLID_TRIGGER;
 	settouch(this, func_null);
-}
-
-spawnfunc(nuke)
-{
-	if(!this.speed)
-		this.speed = 2000;
-	if(!this.dmg)
-		this.dmg = 2000;
-	this.solid = SOLID_TRIGGER;
-	set_movetype(this, MOVETYPE_TOSS);
-	setmodel(this, MDL_NUKE);
-	setsize(this, '-16 -16 -16', '16 16 32');
-	this.pos2 = this.angles;
-	if(!this.noalign)
-		DropToFloor_QC_DelayedInit(this);
-	nuke_setup(this);
 }
 
 void nuke_projectile_touch(entity this, entity toucher)
@@ -136,7 +123,8 @@ void W_DropNuke(entity this, .entity weaponentity)
 
 	sound(this, CH_WEAPON_B, SND_NUKE_DROP, 1, ATTN_NORM);
 
-	entity nuke = new(nuke_projectile);
+	entity nuke = spawn();
+	nuke.classname = "nuke_projectile";
 	nuke.owner = this;
 	nuke.realowner = this;
 	set_movetype(nuke, MOVETYPE_TOSS);
