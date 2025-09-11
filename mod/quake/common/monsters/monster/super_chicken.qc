@@ -175,6 +175,7 @@ void egg_pain(entity this, entity attacker, float damage, int deathtype)
 void egg_setup(entity this)
 {
 	//set_movetype(this, MOVETYPE_NONE);
+	this.classname = "chicken_egg";
 	this.owner = NULL; // to allow collisions
 	setthink(this, egg_think);
 	this.nextthink = time + 0.1;
