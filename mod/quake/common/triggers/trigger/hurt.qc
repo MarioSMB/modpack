@@ -5,19 +5,13 @@ const int RITUAL_PLAYERONLY = BIT(0);
 void hurt_setdamage(entity ent, float amount)
 {
 	ent.dmg = amount;
-	if ( !amount )
-		ent.solid = SOLID_NOT;
-	else
-		ent.solid = SOLID_TRIGGER;
-
-   ent.nextthink = -1;
 }
 
-void hurt_on(entity this)
-{
-	this.solid = SOLID_TRIGGER;
-	this.nextthink = -1;
-}
+//void hurt_on(entity this)
+//{
+//	this.solid = SOLID_TRIGGER;
+//	this.nextthink = -1;
+//}
 
 void hurt_use(entity this, entity actor, entity trigger)
 {
@@ -28,6 +22,10 @@ void hurt_touch(entity this, entity toucher)
 {
 	if(this.state)
 		return;
+	if(this.dmg <= 0)
+		return;
+	if(time < this.attack_finished)
+		return;
 	if(toucher.takedamage)
 	{
 		// Yoder Sept24 2021 Horde merge
@@ -37,10 +35,12 @@ void hurt_touch(entity this, entity toucher)
 		// ritual campaign uses a "player only" spawnflags to not instakill shub
 		if((this.spawnflags & RITUAL_PLAYERONLY) && !IS_PLAYER(toucher) && substring(world.model, 0, 8) == "maps/ze1")
 			return;
-		this.solid = SOLID_NOT;
 		T_Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id);
-		setthink(this, hurt_on);
-		this.nextthink = time + this.wait;
+		// why they thought this was a good way to do it is beyond me
+		//this.solid = SOLID_NOT;
+		//setthink(this, hurt_on);
+		//this.nextthink = time + this.wait;
+		this.attack_finished = time + this.wait;
 
 		//MED 12/01/96 added count stuff
 		if(this.cnt > 0)

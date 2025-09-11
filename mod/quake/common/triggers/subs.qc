@@ -651,12 +651,17 @@ void InitTrigger(entity this)
 		this.solid = SOLID_TRIGGER;
 	//SetBrushEntityModelNoLOD(this);
 	vector oldmin = this.mins, oldmax = this.maxs;
+	precache_model(this.model);
 	_setmodel(this, this.model);
-	if(oldmin != '0 0 0' && oldmax != '0 0 0')
-		setsize(this, oldmin, oldmax);
+	if(oldmin != '0 0 0' || oldmax != '0 0 0')
+	{
+		this.mins = oldmin;
+		this.maxs = oldmax;
+	}
+	setsize(this, this.mins, this.maxs);
 	set_movetype(this, MOVETYPE_NONE);
 	//this.modelindex = 0;
-	this.model = string_null;
+	this.model = "";
 
 	if((this.spawnflags & SPAWNFLAG_TRIGGER_FIRST) && !IsMGMap())
 	{
