@@ -22,6 +22,7 @@ CLASS(Eidolon, Monster)
 #endif
     ATTRIB(Eidolon, netname, string, "eidolon");
     ATTRIB(Eidolon, m_name, string, _("Eidolon"));
+    ATTRIB(Eidolon, m_description, string, _("King of the Goats"));
 ENDCLASS(Eidolon)
 
 REGISTER_MONSTER(EIDOLON, NEW(Eidolon));
