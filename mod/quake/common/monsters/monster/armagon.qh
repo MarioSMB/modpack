@@ -20,6 +20,7 @@ CLASS(Armagon, Monster)
     ATTRIB(Armagon, netname, string, "armagon");
     ATTRIB(Armagon, m_name, string, _("Armagon"));
     ATTRIB(Armagon, m_description, string, _("Biomechanical monstrosity"));
+    ATTRIB(Armagon, m_color, vector, '0.71 0.25 0.05');
 ENDCLASS(Armagon)
 
 REGISTER_MONSTER(ARMAGON, NEW(Armagon));

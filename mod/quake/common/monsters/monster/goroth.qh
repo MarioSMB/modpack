@@ -23,6 +23,7 @@ CLASS(Goroth, Monster)
     ATTRIB(Goroth, netname, string, "goroth");
     ATTRIB(Goroth, m_name, string, _("Goroth"));
     ATTRIB(Goroth, m_description, string, _("Elder God of strength and submission"));
+    ATTRIB(Goroth, m_color, vector, '0.21 0.01 0.05');
 ENDCLASS(Goroth)
 
 REGISTER_MONSTER(GOROTH, NEW(Goroth));

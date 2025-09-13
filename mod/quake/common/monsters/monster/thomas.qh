@@ -24,6 +24,7 @@ CLASS(Thomas, Monster)
     ATTRIB(Thomas, netname, string, "thomas");
     ATTRIB(Thomas, m_name, string, _("Thomas"));
     ATTRIB(Thomas, m_description, string, _("Crazy Train"));
+    ATTRIB(Thomas, m_color, vector, '0.1 0.1 1');
 ENDCLASS(Thomas)
 
 REGISTER_MONSTER(THOMAS, NEW(Thomas));

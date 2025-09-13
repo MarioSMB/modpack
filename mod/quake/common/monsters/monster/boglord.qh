@@ -25,6 +25,7 @@ CLASS(BogLord, Monster)
     ATTRIB(BogLord, netname, string, "boglord");
     ATTRIB(BogLord, m_name, string, _("Bog Lord"));
     ATTRIB(BogLord, m_description, string, _("Lord of the swamp"));
+    ATTRIB(BogLord, m_color, vector, '0.47 0.43 0.07');
 ENDCLASS(BogLord)
 
 REGISTER_MONSTER(BOGLORD, NEW(BogLord));

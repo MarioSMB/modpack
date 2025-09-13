@@ -78,10 +78,12 @@ void bossbar_spawn(entity this, Monster mon)
 PRECACHE(BossBars)
 {
 	precache_pic("gfx/quake/bossbar");
+	precache_pic("gfx/quake/bossbar_bg");
 
 	FOREACH(Monsters, it.spawnflags & MONSTER_TYPE_BOSS,
 	{
 		precache_pic(strcat("gfx/quake/bossbar_", it.netname));
+		precache_pic(strcat("gfx/quake/progressbar_", it.netname));
 	});
 }
 
@@ -188,25 +190,29 @@ void HUD_BossBar_Draw(entity this)
 
 	vector tcolor = mon.m_color;
 	if(tcolor == '0 0 0')
-		tcolor = '0.5 0.2 0';
+		tcolor = '1 0.2 0';
 	if(this.count)
 		tcolor = '0.5 0.5 0.5';
 
 	// TODO: proper positioning and stuff!
 	string pic = strcat("gfx/quake/bossbar_", mon.netname);
-	if(precache_pic(pic) != "")
-		drawpic(panel_pos + vec2(-mySize.x * 0.5, 0), pic, mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
-	drawpic(panel_pos + vec2(-mySize.x * 0.5, 0), "gfx/quake/bossbar", mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	bool have_bar = (precache_pic(pic) != "");
+	// background, progress bar, then bar image, nice layering!
+	drawpic_aspect(panel_pos + vec2(-mySize.x * 0.5, 0), "gfx/quake/bossbar_bg", mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+
+	HUD_Panel_DrawProgressBar(pos + vec2(mySize.x * 0.05, mySize.y * 1.25), vec2(mySize.x * 0.9, mySize.y * 0.5), strcat("progressbar_", mon.netname), this.health, false, 0, tcolor, 0.6 * 1, DRAWFLAG_NORMAL);
+
+	if(have_bar)
+		drawpic_aspect(panel_pos + vec2(-mySize.x * 0.5, 0), pic, mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	else
+		drawpic_aspect(panel_pos + vec2(-mySize.x * 0.5, 0), "gfx/quake/bossbar", mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 
 	pos.y += mySize.y * 0.25;
-	drawstring_aspect(pos, mon.m_name, vec2(mySize.x, mySize.y * 0.45), '0.5 0.2 0', 1, DRAWFLAG_NORMAL);
+	if(!have_bar)
+		drawstring_aspect(pos, mon.m_name, vec2(mySize.x, mySize.y * 0.45), '0.5 0.2 0', 1, DRAWFLAG_NORMAL);
 	pos.y += mySize.y * 0.5;
-	if(mon.m_description != "")
+	if(!have_bar && mon.m_description != "")
 		drawstring_aspect(pos, mon.m_description, vec2(mySize.x, mySize.y * 0.2), '0.8 0.2 0', 1, DRAWFLAG_NORMAL);
-
-	pos.y += mySize.y * 0.5;
-
-	HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, mySize.y * 0.5), "progressbar", this.health, false, 0, tcolor, 0.6 * 1, DRAWFLAG_NORMAL);
 
 	drawfont = oldfont;
 }

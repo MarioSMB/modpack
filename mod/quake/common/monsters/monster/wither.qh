@@ -46,6 +46,7 @@ CLASS(Wither, Monster)
 #endif
     ATTRIB(Wither, netname, string, "wither");
     ATTRIB(Wither, m_name, string, _("Wither"));
+    ATTRIB(Wither, m_color, vector, '1 0 1');
 ENDCLASS(Wither)
 
 REGISTER_MONSTER(WITHER, NEW(Wither));

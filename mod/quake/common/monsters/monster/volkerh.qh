@@ -23,6 +23,7 @@ CLASS(Volkerh, Monster)
     ATTRIB(Volkerh, netname, string, "volkerh");
     ATTRIB(Volkerh, m_name, string, _("Volkerh"));
     ATTRIB(Volkerh, m_description, string, _("Ethereal ruler of chaos and dreams"));
+    ATTRIB(Volkerh, m_color, vector, '0.6 0.6 0.6');
 ENDCLASS(Volkerh)
 
 REGISTER_MONSTER(VOLKERH, NEW(Volkerh));

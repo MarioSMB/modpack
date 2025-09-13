@@ -58,3 +58,29 @@ entity playerslots[255]; // 255 is engine limit on maxclients
 
 #define drawfill(position, size, rgb, alpha, flag) \
 	drawfill_builtin(position, size, rgb, alpha, flag)
+
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+float _drawpic_imgaspect;
+vector _drawpic_imgsize;
+vector _drawpic_sz;
+float _drawpic_oldsz;
+//string _drawpic_picpath;
+#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
+	MACRO_BEGIN \
+		_drawpic_imgsize = draw_getimagesize(pic);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz.x;\
+				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
+				if(_drawpic_sz.x)\
+					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz.y;\
+				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
+				if(_drawpic_sz.y)\
+					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
+		}\
+	MACRO_END

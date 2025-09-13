@@ -1,6 +1,6 @@
 #pragma once
 
-int autocvar_sv_quake_bossbars = 1;
+int autocvar_sv_quake_bossbars = 2; // 1: waypoint 2: fancy bar on screen
 bool autocvar_sv_quake_monsterfix;
 
 .bool charmed;

@@ -24,7 +24,8 @@ CLASS(Blud, Monster)
 #endif
     ATTRIB(Blud, netname, string, "blud");
     ATTRIB(Blud, m_name, string, _("Blud"));
-    ATTRIB(Blud, m_description, string, _("Plankton"));
+    ATTRIB(Blud, m_description, string, _("Amalgamated horror"));
+    ATTRIB(Blud, m_color, vector, '0.33 0.31 0.11');
 ENDCLASS(Blud)
 
 REGISTER_MONSTER(BLUD, NEW(Blud));
