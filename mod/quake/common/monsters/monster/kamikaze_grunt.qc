@@ -268,7 +268,7 @@ void kamikaze_explosiveboom(entity this, entity inflictor, entity attacker, int 
 				kami_gib(this.owner, inflictor);
 			}
 			else if(this.owner.health > 0)
-				T_Damage(this.owner, this, attacker, this.owner.health + 50, DEATH_MONSTER_KAMIKAZEGRUNT.m_id);
+				Killed(this.owner, this, this.enemy, DEATH_CRUSH.m_id);
 		}
 	}
 
@@ -281,7 +281,7 @@ void kamikaze_explosiveboom(entity this, entity inflictor, entity attacker, int 
 void kamikaze_detonate(entity this)
 {
 	if(this && !wasfreed(this))
-		kamikaze_explosiveboom(this, this.owner, this.owner.enemy, DEATH_GENERIC.m_id);
+		kamikaze_explosiveboom(this, this.owner, this.owner.enemy, DEATH_MONSTER_KAMIKAZEGRUNT.m_id);
 }
 
 void kami_load8(entity this) { set_animofs(this, anim_kamikaze_load, 8, kami_load8); }
@@ -291,7 +291,7 @@ void kami_load5(entity this) { set_animofs(this, anim_kamikaze_load, 5, kami_loa
 void kami_load4(entity this) { set_animofs(this, anim_kamikaze_load, 4, kami_load5); }
 void kami_load3(entity this) { set_animofs(this, anim_kamikaze_load, 3, kami_load4); }
 void kami_load2(entity this) { set_animofs(this, anim_kamikaze_load, 2, kami_load3); }
-void kami_load1(entity this) { set_animofs(this, anim_kamikaze_load, 1, kami_load2); this.state = 0;}
+void kami_load1(entity this) { set_animofs(this, anim_kamikaze_load, 1, kami_load2); this.state = 0; this.attack_finished = time + 2; }
 
 void kami_spawnbox(entity this)
 {

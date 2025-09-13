@@ -3,6 +3,7 @@
 #include "horde.qh"
 #include "monsters/ai.qh"
 #include "monsters/ai_minions.qh"
+#include "monsters/ai_subs.qh"
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
 #include "../common/triggers/func/breakable.qh"
@@ -823,7 +824,19 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 	while(head)
 	{
 		entity next = head.chain;
-		if(head != ignore && head.takedamage && ((attacker == head || !head.clipgroup) || (head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)))
+		if(head == ignore || ai_immunebreakable(attacker, head))
+		{
+			head = next;
+			continue;
+		}
+		if(ai_foundbreakable(attacker, head, true) && head.brktrigmissile != 0)
+		{
+			if(head.use)
+				head.use(head, attacker, inflictor);
+			head = next;
+			continue;
+		}
+		if(head.takedamage && ((attacker == head || !head.clipgroup) || (head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)))
 		{
 			vector org = head.origin + (head.mins + head.maxs) * 0.5;
 			float points = max(0, 0.5 * vlen(inflictor_org - org));

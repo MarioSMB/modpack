@@ -1,0 +1,14 @@
+#pragma once
+
+// TODO: proper homes for these
+const int BREAK_NOSHOOT = 2;		// Cannot be damaged/shot, trigger only
+const int BREAK_NOMONSTER = 32;		// No damage from monsters
+const int PUSH_NOMONSTER = 32;	// Cannot be damaged by monsters
+
+// why though
+.float brktrigmissile;		// Trigger breakable if hit by - rocket/grenade/shalball
+.float attack_explosive;	// Can attack with explosives (brk check)
+
+bool ai_foundbreakable(entity source, entity targ, bool ignorenoshoot);
+
+bool ai_immunebreakable(entity source, entity targ);

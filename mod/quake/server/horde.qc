@@ -825,11 +825,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_shell1.bsp");
 				_setmodel(item, "maps/b_shell1.bsp");
 				item.aflag = 40;
 			}
 			else
 			{
+				precache_model("maps/b_shell0.bsp");
 				_setmodel(item, "maps/b_shell0.bsp");
 				item.aflag = 20;
 			}
@@ -845,11 +847,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_nail1.bsp");
 				_setmodel(item, "maps/b_nail1.bsp");
 				item.aflag = 50;
 			}
 			else
 			{
+				precache_model("maps/b_nail0.bsp");
 				_setmodel(item, "maps/b_nail0.bsp");
 				item.aflag = 25;
 			}
@@ -865,11 +869,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_rock1.bsp");
 				_setmodel(item, "maps/b_rock1.bsp");
 				item.aflag = 10;
 			}
 			else
 			{
+				precache_model("maps/b_rock0.bsp");
 				_setmodel(item, "maps/b_rock0.bsp");
 				item.aflag = 5;
 			}
@@ -887,11 +893,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_batt1.bsp");
 				_setmodel(item, "maps/b_batt1.bsp");
 				item.aflag = 12;
 			}
 			else
 			{
+				precache_model("maps/b_batt0.bsp");
 				_setmodel(item, "maps/b_batt0.bsp");
 				item.aflag = 6;
 			}
@@ -907,11 +915,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_plas1.bsp");
 				_setmodel(item, "maps/b_plas1.bsp");
 				item.aflag = 12;
 			}
 			else
 			{
+				precache_model("maps/b_plas0.bsp");
 				_setmodel(item, "maps/b_plas0.bsp");
 				item.aflag = 6;
 			}
@@ -927,11 +937,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_lnail1.bsp");
 				_setmodel(item, "maps/b_lnail1.bsp");
 				item.aflag = 50;
 			}
 			else
 			{
+				precache_model("maps/b_lnail0.bsp");
 				_setmodel(item, "maps/b_lnail0.bsp");
 				item.aflag = 25;
 			}
@@ -947,11 +959,13 @@ void SpawnAmmo(entity this)
 			item.noise = "weapons/lock4.wav";
 			if(is_big)
 			{
+				precache_model("maps/b_mrock1.bsp");
 				_setmodel(item, "maps/b_mrock1.bsp");
 				item.aflag = 10;
 			}
 			else
 			{
+				precache_model("maps/b_mrock0.bsp");
 				_setmodel(item, "maps/b_mrock0.bsp");
 				item.aflag = 5;
 			}
