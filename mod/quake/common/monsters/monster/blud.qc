@@ -220,8 +220,6 @@ void blud_run1(entity this)
 		blud_atkc1(this);
 		return;
 	}
-	if(this.flags & FL_FLY)
-		this.attack_state = AS_DODGING;
 	ai_run(this, 16);
 }
 
