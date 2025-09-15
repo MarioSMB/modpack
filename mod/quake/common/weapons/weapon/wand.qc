@@ -61,7 +61,7 @@ void WandMissileTouch(entity this, entity toucher)
 	newmis.solid = SOLID_NOT;
 	setmodel(newmis, MDL_EXPLOSION);
 	setsize(newmis, '0 0 0', '0 0 0');
-	setorigin(newmis, this.origin);
+	setorigin(newmis, findbetterlocation(this.origin, 8));
 	s_explode1(newmis);
 
 	delete(this);

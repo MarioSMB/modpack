@@ -301,7 +301,7 @@ STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE1)
 
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_countabsolute", "1");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_type", "decal");
-	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_tex", "112 119");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_tex", "8 15");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_size", "24 32");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_alpha", "48 96 16");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_originjitter", "48 48 48");
@@ -333,7 +333,7 @@ STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE1)
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_count", "16");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_type", "smoke");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_color", "0x202020 0x635844");
-	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_tex", "8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_tex", "16 23");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_size", "16 32");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_sizeincrease", "3");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_alpha", "16 96 32");
@@ -352,7 +352,7 @@ STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE2)
 
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_countabsolute", "1");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_type", "decal");
-	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_tex", "112 119");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_tex", "8 15");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_size", "32 48");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_alpha", "48 96 16");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_originjitter", "48 48 48");
@@ -395,7 +395,7 @@ STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE2)
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_count", "32");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_type", "smoke");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_color", "0x202020 0x635844");
-	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_tex", "8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_tex", "16 23");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_size", "16 32");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_sizeincrease", "3");
 	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_alpha", "16 96 32");
@@ -421,7 +421,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_count", "1");
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_type", "static");
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_color", "0x606060 0xC0C0C0");
-	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_tex", "62 63");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_tex", "63 63");
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_size", "1 3");
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_sizeincrease", "0.5");
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_alpha", "128 192 64");
@@ -440,7 +440,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 
 	registercvar("cl_particle_TE_PLASMABIG_decal_countabsolute", "1");
 	registercvar("cl_particle_TE_PLASMABIG_decal_type", "decal");
-	registercvar("cl_particle_TE_PLASMABIG_decal_tex", "112 119");
+	registercvar("cl_particle_TE_PLASMABIG_decal_tex", "8 15");
 	registercvar("cl_particle_TE_PLASMABIG_decal_size", "32 48");
 	registercvar("cl_particle_TE_PLASMABIG_decal_alpha", "64 128 0");
 	registercvar("cl_particle_TE_PLASMABIG_decal_originjitter", "48 48 48");
@@ -454,7 +454,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_TE_PLASMABIG_ball_count", "32");
 	registercvar("cl_particle_TE_PLASMABIG_ball_type", "static");
 	registercvar("cl_particle_TE_PLASMABIG_ball_color", "0x545470 0x8b8bc1");
-	registercvar("cl_particle_TE_PLASMABIG_ball_tex", "62 64");
+	registercvar("cl_particle_TE_PLASMABIG_ball_tex", "63 63");
 	registercvar("cl_particle_TE_PLASMABIG_ball_size", "1 4");
 	registercvar("cl_particle_TE_PLASMABIG_ball_alpha", "64 128 24");
 	registercvar("cl_particle_TE_PLASMABIG_ball_airfriction", "0.25");
@@ -466,7 +466,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_TE_PLASMABIG_smoke_count", "32");
 	registercvar("cl_particle_TE_PLASMABIG_smoke_type", "smoke");
 	registercvar("cl_particle_TE_PLASMABIG_smoke_color", "0x545470 0x8b8bc1");
-	registercvar("cl_particle_TE_PLASMABIG_smoke_tex", "8 16");
+	registercvar("cl_particle_TE_PLASMABIG_smoke_tex", "16 23");
 	registercvar("cl_particle_TE_PLASMABIG_smoke_size", "16 24");
 	registercvar("cl_particle_TE_PLASMABIG_smoke_sizeincrease", "3");
 	registercvar("cl_particle_TE_PLASMABIG_smoke_alpha", "96 160 64");
@@ -485,7 +485,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_TE_PLASMABIG_burst_count", "24");
 	registercvar("cl_particle_TE_PLASMABIG_burst_type", "bubble");
 	registercvar("cl_particle_TE_PLASMABIG_burst_color", "0x101010 0xbbb591");
-	registercvar("cl_particle_TE_PLASMABIG_burst_tex", "16 19");
+	registercvar("cl_particle_TE_PLASMABIG_burst_tex", "34 37");
 	registercvar("cl_particle_TE_PLASMABIG_burst_size", "4 8");
 	registercvar("cl_particle_TE_PLASMABIG_burst_sizeincrease", "2");
 	registercvar("cl_particle_TE_PLASMABIG_burst_alpha", "128 192 64");
@@ -496,7 +496,7 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_count", "24");
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_type", "bubble");
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_color", "0x202020 0x606060");
-	registercvar("cl_particle_TE_PLASMABIG_bubbles_tex", "32 46");
+	registercvar("cl_particle_TE_PLASMABIG_bubbles_tex", "32 34");
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_size", "8 12");
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_sizeincrease", "2");
 	registercvar("cl_particle_TE_PLASMABIG_bubbles_alpha", "16 128 32");
@@ -515,7 +515,7 @@ STATIC_INIT(Effect_TE_POISONBIG)
 	registercvar("cl_particle_TE_POISONBIG_decal_countabsolute", "1");
 	registercvar("cl_particle_TE_POISONBIG_decal_type", "decal");
 	registercvar("cl_particle_TE_POISONBIG_decal_color", "0x730059 0x730059");
-	registercvar("cl_particle_TE_POISONBIG_decal_tex", "64 72");
+	registercvar("cl_particle_TE_POISONBIG_decal_tex", "8 15");
 	registercvar("cl_particle_TE_POISONBIG_decal_size", "32 48");
 	registercvar("cl_particle_TE_POISONBIG_decal_originjitter", "48 48 48");
 
@@ -528,7 +528,7 @@ STATIC_INIT(Effect_TE_POISONBIG)
 	registercvar("cl_particle_TE_POISONBIG_ball_count", "32");
 	registercvar("cl_particle_TE_POISONBIG_ball_type", "static");
 	registercvar("cl_particle_TE_POISONBIG_ball_color", "0x433700 0xbba70f");
-	registercvar("cl_particle_TE_POISONBIG_ball_tex", "62 64");
+	registercvar("cl_particle_TE_POISONBIG_ball_tex", "63 63");
 	registercvar("cl_particle_TE_POISONBIG_ball_size", "1 4");
 	registercvar("cl_particle_TE_POISONBIG_ball_alpha", "64 128 24");
 	registercvar("cl_particle_TE_POISONBIG_ball_airfriction", "0.25");
@@ -540,7 +540,7 @@ STATIC_INIT(Effect_TE_POISONBIG)
 	registercvar("cl_particle_TE_POISONBIG_smoke_count", "32");
 	registercvar("cl_particle_TE_POISONBIG_smoke_type", "smoke");
 	registercvar("cl_particle_TE_POISONBIG_smoke_color", "0x433700 0xbba70f");
-	registercvar("cl_particle_TE_POISONBIG_smoke_tex", "8 16");
+	registercvar("cl_particle_TE_POISONBIG_smoke_tex", "16 23");
 	registercvar("cl_particle_TE_POISONBIG_smoke_size", "16 24");
 	registercvar("cl_particle_TE_POISONBIG_smoke_sizeincrease", "3");
 	registercvar("cl_particle_TE_POISONBIG_smoke_alpha", "96 160 64");
@@ -559,7 +559,7 @@ STATIC_INIT(Effect_TE_POISONBIG)
 	registercvar("cl_particle_TE_POISONBIG_burst_count", "24");
 	registercvar("cl_particle_TE_POISONBIG_burst_type", "bubble");
 	registercvar("cl_particle_TE_POISONBIG_burst_color", "0x433700 0xbba70f");
-	registercvar("cl_particle_TE_POISONBIG_burst_tex", "16 19");
+	registercvar("cl_particle_TE_POISONBIG_burst_tex", "34 37");
 	registercvar("cl_particle_TE_POISONBIG_burst_size", "4 8");
 	registercvar("cl_particle_TE_POISONBIG_burst_sizeincrease", "2");
 	registercvar("cl_particle_TE_POISONBIG_burst_alpha", "128 192 64");
@@ -570,7 +570,7 @@ STATIC_INIT(Effect_TE_POISONBIG)
 	registercvar("cl_particle_TE_POISONBIG_bubbles_count", "24");
 	registercvar("cl_particle_TE_POISONBIG_bubbles_type", "bubble");
 	registercvar("cl_particle_TE_POISONBIG_bubbles_color", "0x433700 0xbba70f");
-	registercvar("cl_particle_TE_POISONBIG_bubbles_tex", "32 46");
+	registercvar("cl_particle_TE_POISONBIG_bubbles_tex", "32 38");
 	registercvar("cl_particle_TE_POISONBIG_bubbles_size", "8 12");
 	registercvar("cl_particle_TE_POISONBIG_bubbles_sizeincrease", "2");
 	registercvar("cl_particle_TE_POISONBIG_bubbles_alpha", "16 128 32");
@@ -602,7 +602,7 @@ STATIC_INIT(Effect_TE_BSMOKE)
 	registercvar("cl_particle_TE_BSMOKE_flame_count", "16");
 	registercvar("cl_particle_TE_BSMOKE_flame_type", "smoke");
 	registercvar("cl_particle_TE_BSMOKE_flame_color", "0x202020 0x635844");
-	registercvar("cl_particle_TE_BSMOKE_flame_tex", "8 16");
+	registercvar("cl_particle_TE_BSMOKE_flame_tex", "16 23");
 	registercvar("cl_particle_TE_BSMOKE_flame_size", "4 24");
 	registercvar("cl_particle_TE_BSMOKE_flame_sizeincrease", "5");
 	registercvar("cl_particle_TE_BSMOKE_flame_alpha", "48 128 64");
@@ -615,7 +615,7 @@ STATIC_INIT(Effect_TE_BSMOKE)
 	registercvar("cl_particle_TE_BSMOKE_smoke_count", "32");
 	registercvar("cl_particle_TE_BSMOKE_smoke_type", "bubble");
 	registercvar("cl_particle_TE_BSMOKE_smoke_color", "0x202020 0x606060");
-	registercvar("cl_particle_TE_BSMOKE_smoke_tex", "32 46");
+	registercvar("cl_particle_TE_BSMOKE_smoke_tex", "32 38");
 	registercvar("cl_particle_TE_BSMOKE_smoke_size", "8 12");
 	registercvar("cl_particle_TE_BSMOKE_smoke_sizeincrease", "3");
 	registercvar("cl_particle_TE_BSMOKE_smoke_alpha", "16 128 32");
