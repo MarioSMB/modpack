@@ -11,6 +11,7 @@
 #include "duck.qc"
 #include "duke.qc"
 #include "dusk.qc"
+#include "galena.qc"
 #include "goat.qc"
 #include "gordon.qc"
 #include "katria.qc"

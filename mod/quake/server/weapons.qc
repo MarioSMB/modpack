@@ -1698,12 +1698,17 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 	{
 		.entity wepe1 = weaponentities[0];
 		entity wep1 = this.(wepe1);
-		this.(weaponentity).m_weapon = wep1.m_weapon;
-		if((this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_NODUAL) || (!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_DUALWIELD) && !(STAT(DUAL_WEAPONS, this) & wep1.m_weapon.m_wepset)))
+		if(this.m_champion && this.m_champion.m_offhand && this.m_champion.m_offhand != WEP_Null && !(wep1.m_weapon.spawnflags & WEP_FLAG_TWOHANDED))
+			this.(weaponentity).m_weapon = this.m_champion.m_offhand;
+		else
 		{
-			this.(weaponentity).m_weapon = WEP_Null;
-			this.(weaponentity).weaponname = "";
-			return;
+			this.(weaponentity).m_weapon = wep1.m_weapon;
+			if((this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_NODUAL) || (!(this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_DUALWIELD) && !(STAT(DUAL_WEAPONS, this) & wep1.m_weapon.m_wepset)))
+			{
+				this.(weaponentity).m_weapon = WEP_Null;
+				this.(weaponentity).weaponname = "";
+				return;
+			}
 		}
 	}
 

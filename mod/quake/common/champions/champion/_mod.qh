@@ -11,6 +11,7 @@
 #include "duck.qh"
 #include "duke.qh"
 #include "dusk.qh"
+#include "galena.qh"
 #include "goat.qh"
 #include "gordon.qh"
 #include "katria.qh"

@@ -63,7 +63,7 @@ METHOD(Goat, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Goat, m_touch, void(Champions this, entity actor, entity toucher))
 {
-	if(StatusEffects_active(STATUSEFFECT_Shield, actor))
+	if(StatusEffects_active(STATUSEFFECT_PowerShield, actor))
 		return; // better version
 	if(time < actor.goat_bash_time)
 		return;

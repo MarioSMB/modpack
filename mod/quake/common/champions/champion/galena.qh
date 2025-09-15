@@ -1,0 +1,92 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Galena, "progs/player_galena.mdl");
+MODEL(Galena_Head, "progs/h_player_galena.mdl");
+
+SOUND(Galena_Pain1, "player_galena/pain1");
+SOUND(Galena_Pain2, "player_galena/pain2");
+SOUND(Galena_Pain3, "player_galena/pain3");
+SOUND(Galena_Pain4, "player_galena/pain4");
+Sound SND_Galena_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Galena_Pain1.m_id + rint(random() * 3));
+}
+
+SOUND(Galena_Death1, "player_galena/death1");
+SOUND(Galena_Death2, "player_galena/death2");
+SOUND(Galena_Death3, "player_galena/death3");
+Sound SND_Galena_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Galena_Death1.m_id + rint(random() * 2));
+}
+
+PRECACHE(Galena)
+{
+#ifdef CSQC
+    precache_pic("gfx/quake/katria_face_invis");
+    precache_pic("gfx/quake/katria_face_invul2");
+    precache_pic("gfx/quake/katria_face_inv2");
+    precache_pic("gfx/quake/katria_face_quad");
+
+    precache_pic("gfx/quake/katria_face1");
+    precache_pic("gfx/quake/katria_face_p1");
+    precache_pic("gfx/quake/katria_face2");
+    precache_pic("gfx/quake/katria_face_p2");
+    precache_pic("gfx/quake/katria_face3");
+    precache_pic("gfx/quake/katria_face_p3");
+    precache_pic("gfx/quake/katria_face4");
+    precache_pic("gfx/quake/katria_face_p4");
+    precache_pic("gfx/quake/katria_face5");
+    precache_pic("gfx/quake/katria_face_p5");
+#endif
+#ifdef SVQC
+    precache_sound("player_galena/plyrjmp8.wav");       // player jump
+    precache_sound("player_galena/land.wav");           // player landing
+    precache_sound("player_galena/land2.wav");      // player hurt landing
+    precache_sound("player_galena/drown1.wav");     // drowning pain
+    precache_sound("player_galena/drown2.wav");     // drowning pain
+    precache_sound("player_galena/gasp1.wav");      // gasping for air
+    precache_sound("player_galena/gasp2.wav");      // taking breath
+    precache_sound("player_galena/h2odeath.wav");       // drowning death
+
+    precache_sound("player_galena/axhit1.wav");
+
+    precache_sound("player_galena/lburn1.wav");     // lava burn
+    precache_sound("player_galena/lburn2.wav");     // lava burn
+
+    precache_sound("player_galena/abl1.wav");
+    precache_sound("player_galena/abl2.wav");
+    precache_sound("player_galena/abl3.wav");
+    precache_sound("player_galena/abl4.wav");
+#endif
+}
+#endif
+#ifdef CSQC
+#define GALENA_STATS \
+"Movement speed 10% slower\n" \
+"Has a shield, right click blocks\n" \
+"While blocking:\n" \
+"- Damage reduced by 25%\n" \
+"- Movement reduced by 25%\n" \
+"- Can be timed to parry attacks"
+#endif
+CLASS(Galena, Champions)
+    ATTRIB(Galena, netname, string, "galena");
+    ATTRIB(Galena, m_name, string, "Galena");
+#ifdef GAMEQC
+    ATTRIB(Galena, m_model, Model, MDL_Galena);
+    ATTRIB(Galena, m_model_head, Model, MDL_Galena_Head);
+    ATTRIB(Galena, m_soundpath, string, "player_galena/");
+    METHOD(Galena, m_sound_pain, string()) { return SND(Galena_Pain_Random()); }
+    METHOD(Galena, m_sound_death, string()) { return SND(Galena_Death_Random()); }
+    ATTRIB(Galena, m_offhand, Weapon, WEP_SHIELD);
+#endif
+#ifdef CSQC
+    ATTRIB(Galena, m_faceprefix, string, "gfx/quake/katria_");
+#endif
+#ifdef CSQC
+    ATTRIB(Galena, message, string, GALENA_STATS);
+#endif
+ENDCLASS(Galena)
+REGISTER_CHAMPION(Galena, NEW(Galena));

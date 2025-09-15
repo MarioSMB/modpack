@@ -1,12 +1,12 @@
 #pragma once
 
-CLASS(Shield, Powerups)
-    ATTRIB(Shield, netname, string, "shield");
-    ATTRIB(Shield, m_name, string, _("Power Shield"));
-    ATTRIB(Shield, m_color, vector, '0.5 0.5 1');
-    ATTRIB(Shield, m_icon, string, "r_shield1");
-ENDCLASS(Shield)
-REGISTER_STATUSEFFECT(Shield, NEW(Shield));
+CLASS(PowerShield, Powerups)
+    ATTRIB(PowerShield, netname, string, "shield");
+    ATTRIB(PowerShield, m_name, string, _("Power Shield"));
+    ATTRIB(PowerShield, m_color, vector, '0.5 0.5 1');
+    ATTRIB(PowerShield, m_icon, string, "r_shield1");
+ENDCLASS(PowerShield)
+REGISTER_STATUSEFFECT(PowerShield, NEW(PowerShield));
 
 #ifdef SVQC
 .bool shield_warning;

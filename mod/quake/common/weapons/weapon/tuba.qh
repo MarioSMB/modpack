@@ -9,7 +9,7 @@ SOUND(TUBA_MUSICNOTE, "weapons/tuba_fire");
 CLASS(Tuba, Weapon)
 /* ammotype  */ ATTRIB(Tuba, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Tuba, impulse, int, 7);
-/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MANA | WEP_FLAG_MUSIC);
+/* spawnflags*/ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MANA | WEP_FLAG_MUSIC | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Tuba, aflag, int, 7);
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");

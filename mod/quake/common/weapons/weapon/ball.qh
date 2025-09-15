@@ -3,7 +3,7 @@
 CLASS(Ball, Weapon)
 /* ammotype  */ ATTRIB(Ball, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Ball, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Ball, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Ball, spawnflags, int, WEP_FLAG_HUDFALLBACK | WEP_FLAG_MELEE | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Ball, aflag, int, 0);
 /* modelname */ ATTRIB(Ball, mdl, string, "dodgeball");
 /* crosshair */ ATTRIB(Ball, w_crosshair, string, "gfx/crosshairlaser");

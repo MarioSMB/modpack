@@ -1,16 +1,16 @@
 #include "shield.qh"
 
 #ifdef SVQC
-METHOD(Shield, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(PowerShield, m_remove, void(StatusEffects this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(wasactive)
         stopsound(actor, CH_TRIGGER_SINGLE); // get rid of the pickup sound
     actor.shield_warning = false;
     actor.effects &= ~EF_DIMLIGHT;
-    SUPER(Shield).m_remove(this, actor, removal_type);
+    SUPER(PowerShield).m_remove(this, actor, removal_type);
 }
-METHOD(Shield, m_tick, void(StatusEffects this, entity actor))
+METHOD(PowerShield, m_tick, void(StatusEffects this, entity actor))
 {
     float curtime = StatusEffects_gettime(this, actor);
     if(curtime < time + 3 && !actor.shield_warning)
@@ -21,6 +21,6 @@ METHOD(Shield, m_tick, void(StatusEffects this, entity actor))
         actor.shield_warning = true;
     }
     actor.effects |= EF_DIMLIGHT;
-    SUPER(Shield).m_tick(this, actor);
+    SUPER(PowerShield).m_tick(this, actor);
 }
 #endif

@@ -2247,7 +2247,7 @@ void powerup_touch(entity this, entity toucher)
 	if(this.shield_finished)
 	{
 		float shieldtime = (horde_ent) ? 15 : 30;
-		StatusEffects_apply(STATUSEFFECT_Shield, toucher, time + shieldtime, 0);
+		StatusEffects_apply(STATUSEFFECT_PowerShield, toucher, time + shieldtime, 0);
 	}
 
 	if(this.powerups & POWERUP_V_SPHERE)

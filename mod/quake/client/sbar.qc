@@ -1271,7 +1271,7 @@ void Sbar_DrawHealth()
 
 void Sbar_DrawShieldOverlay()
 {
-	if(time > STAT(SHIELD_TIME) || !StatusEffects_active(STATUSEFFECT_Shield, g_statuseffects))
+	if(time > STAT(SHIELD_TIME) || !StatusEffects_active(STATUSEFFECT_PowerShield, g_statuseffects))
 		return;
 
 	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '1 0 0', bound(0, 0.5 * (STAT(SHIELD_TIME) - time), 0.025), DRAWFLAG_NORMAL);

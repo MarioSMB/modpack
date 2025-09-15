@@ -3,6 +3,7 @@
 #ifdef GAMEQC
     #include "../models/all.qh"
     #include "../sounds/all.qh"
+    #include "../weapons/all.qh"
 #endif
 
 #ifdef GAMEQC
@@ -85,6 +86,7 @@ CLASS(Champions, Object)
     /** For special models like skater */
     ATTRIB(Champions, m_hidden, bool, false);
 #ifdef GAMEQC
+    ATTRIB(Champions, m_offhand, Weapon, WEP_Null);
     ATTRIB(Champions, m_model, Model, MDL_Null);
     ATTRIB(Champions, m_model_head, Model, MDL_Null);
     ATTRIB(Champions, m_skin, int, 0);

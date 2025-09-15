@@ -9,7 +9,7 @@ SOUND(BONGOS_MUSICNOTE, "weapons/bongos_fire");
 CLASS(Bongos, Weapon)
 /* ammotype  */ ATTRIB(Bongos, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Bongos, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Bongos, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Bongos, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Bongos, aflag, int, 5);
 /* modelname */ ATTRIB(Bongos, mdl, string, "bongos");
 /* crosshair */ ATTRIB(Bongos, w_crosshair, string, "gfx/crosshairtuba");

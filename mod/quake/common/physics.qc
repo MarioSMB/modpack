@@ -695,7 +695,7 @@ void player_touch(entity this, entity toucher)
 		}
 	}
 #ifdef SVQC
-	if(StatusEffects_active(STATUSEFFECT_Shield, this))
+	if(StatusEffects_active(STATUSEFFECT_PowerShield, this))
 	{
 		if(IS_MONSTER(toucher) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !(toucher.monsterdef.spawnflags & MONSTER_TYPE_DECOY))
 		{

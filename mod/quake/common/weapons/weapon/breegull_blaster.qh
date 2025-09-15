@@ -3,7 +3,7 @@
 CLASS(BreegullBlaster, Weapon)
 /* ammotype  */ ATTRIB(BreegullBlaster, ammo_type, int, 0);
 /* impulse   */ ATTRIB(BreegullBlaster, impulse, int, 2);
-/* spawnflags*/ ATTRIB(BreegullBlaster, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(BreegullBlaster, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(BreegullBlaster, aflag, int, 0);
 /* modelname */ ATTRIB(BreegullBlaster, mdl, string, "breegull");
 /* crosshair */ ATTRIB(BreegullBlaster, w_crosshair, string, "gfx/crosshairlaser");

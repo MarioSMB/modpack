@@ -3,7 +3,7 @@
 CLASS(Hammer, Weapon)
 /* ammotype  */ ATTRIB(Hammer, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Hammer, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Hammer, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
+/* spawnflags*/ ATTRIB(Hammer, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HIPNOTIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Hammer, aflag, int, 0);
 /* modelname */ ATTRIB(Hammer, mdl, string, "hammer_default");
 /* crosshair */ ATTRIB(Hammer, w_crosshair, string, "gfx/crosshaircrylink");

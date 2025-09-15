@@ -495,7 +495,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if((STAT(PASSIVES, targ) & PASSIVE_SPONGE) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_HURTTRIGGER.m_id)
 		damage = min(damage, 50);
 
-	if(StatusEffects_active(STATUSEFFECT_Shield, targ))
+	if(StatusEffects_active(STATUSEFFECT_PowerShield, targ))
 	{
 		// allow some damage to pass through
 		damage = shield_hit(targ, inflictor, attacker, damage);

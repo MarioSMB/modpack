@@ -79,7 +79,7 @@ METHOD(V1, m_cannon_land, bool(Champions this, entity actor))
 
 METHOD(V1, m_touch, void(Champions this, entity actor, entity toucher))
 {
-	if(StatusEffects_active(STATUSEFFECT_Shield, actor))
+	if(StatusEffects_active(STATUSEFFECT_PowerShield, actor))
 		return; // better version
 	if(time < actor.v1_bash_time)
 		return;

@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(Shield, Weapon)
+/* ammotype  */ ATTRIB(Shield, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Shield, impulse, int, 0);
+/* spawnflags*/ ATTRIB(Shield, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NODUAL | WEP_FLAG_NOALTERNATE | WEP_FLAG_CHAMPION);
+/* ammo */      ATTRIB(Shield, aflag, int, 0);
+/* modelname */ ATTRIB(Shield, mdl, string, "shield");
+/* crosshair */ ATTRIB(Shield, w_crosshair, string, "gfx/crosshair8");
+/* crosshair */ ATTRIB(Shield, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Shield, w_crosshair_color, vector, '1 0.5 0.5');
+/* wepimg    */ ATTRIB(Shield, model2, string, "shield");
+/* refname   */ ATTRIB(Shield, netname, string, "shield");
+/* wepname   */ ATTRIB(Shield, m_name, string, _("Frying Shield"));
+
+ENDCLASS(Shield)
+REGISTER_WEAPON(SHIELD, NEW(Shield));
+
+//SPAWNFUNC_WEAPON(weapon_shield, WEP_SHIELD)

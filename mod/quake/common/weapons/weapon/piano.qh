@@ -7,7 +7,7 @@ SOUND(PIANO_MUSICNOTE, "weapons/piano_music");
 CLASS(Piano, Weapon)
 /* ammotype  */ ATTRIB(Piano, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Piano, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
+/* spawnflags*/ ATTRIB(Piano, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Piano, aflag, int, 30);
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");

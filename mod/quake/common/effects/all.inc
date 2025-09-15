@@ -23,9 +23,79 @@ EFFECT(1, TR_ROCKET,                "TR_ROCKET")
 EFFECT(1, TR_GRENADE,               "TR_GRENADE")
 EFFECT(1, TR_BLOOD,                 "TR_BLOOD")
 EFFECT(1, TR_WIZSPIKE,              "TR_WIZSPIKE")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_WIZSPIKE)
+{
+	registercvar("cl_particle_TR_WIZSPIKE", "smoke trail");
+
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_trailspacing", "1");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_type", "smoke");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_color", "0x433700 0xbba70f");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_tex", "62 64");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_size", "1 2");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_sizeincrease", "4");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_rotate", "0 360 0 30");
+
+	registercvar("cl_particle_TR_WIZSPIKE_trail_trailspacing", "2");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_type", "alphastatic");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_color", "0x101010 0x6b6b0f");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_tex", "8 16");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_size", "1 3");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_sizeincrease", "3");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_alpha", "16 128 128");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_originjitter", "4 4 4");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_gravity", "-0.05");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_rotate", "0 360 0 30");
+}
+#endif
+
 EFFECT(1, TR_SLIGHTBLOOD,           "TR_SLIGHTBLOOD")
 EFFECT(1, TR_KNIGHTSPIKE,           "TR_KNIGHTSPIKE")
 EFFECT(1, TR_VORESPIKE,             "TR_VORESPIKE")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_VORESPIKE)
+{
+	registercvar("cl_particle_TR_VORESPIKE", "smoke trail bubbles");
+
+	registercvar("cl_particle_TR_VORESPIKE_smoke_trailspacing", "1");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_type", "smoke");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_color", "0x6b4b57 0x937387");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_tex", "62 64");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_size", "1 2");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_sizeincrease", "4");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_lightradius", "16");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_lightcolor", "1 0.8 0.9");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_rotate", "0 360 0 30");
+
+	registercvar("cl_particle_TR_VORESPIKE_trail_trailspacing", "4");
+	registercvar("cl_particle_TR_VORESPIKE_trail_type", "alphastatic");
+	registercvar("cl_particle_TR_VORESPIKE_trail_color", "0x3b1f23 0x7e424a");
+	registercvar("cl_particle_TR_VORESPIKE_trail_tex", "8 16");
+	registercvar("cl_particle_TR_VORESPIKE_trail_size", "3 7");
+	registercvar("cl_particle_TR_VORESPIKE_trail_sizeincrease", "4");
+	registercvar("cl_particle_TR_VORESPIKE_trail_alpha", "32 192 48");
+	registercvar("cl_particle_TR_VORESPIKE_trail_originjitter", "4 4 4");
+	registercvar("cl_particle_TR_VORESPIKE_trail_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_VORESPIKE_trail_gravity", "-0.05");
+	registercvar("cl_particle_TR_VORESPIKE_trail_rotate", "0 360 10 30");
+	registercvar("cl_particle_TR_VORESPIKE_trail_notunderwater", "1");
+
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_trailspacing", "0.5");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_type", "bubble");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_color", "0x6b4b57 0x937387");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_tex", "16 19");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_size", "1 2");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_sizeincrease", "4");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_alpha", "96 192 64");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_liquidfriction", "1");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_originjitter", "2 2 2");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_velocityjitter", "8 8 8");
+	registercvar("cl_particle_TR_VORESPIKE_bubbles_underwater", "1");
+}
+#endif
 
 EFFECT(0, RUNE_PUFF_RED,            "spawn_point_red")
 EFFECT(0, RUNE_PUFF_BLUE,           "spawn_point_blue")

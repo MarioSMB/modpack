@@ -9,7 +9,7 @@ SOUND(OCARINA_MUSICNOTE, "weapons/ocarina_music");
 CLASS(Ocarina, Weapon)
 /* ammotype  */ ATTRIB(Ocarina, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Ocarina, impulse, int, 0);
-/* spawnflags*/ ATTRIB(Ocarina, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Ocarina, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Ocarina, aflag, int, 7);
 /* modelname */ ATTRIB(Ocarina, mdl, string, "ocarina");
 /* crosshair */ ATTRIB(Ocarina, w_crosshair, string, "gfx/crosshairtuba");
