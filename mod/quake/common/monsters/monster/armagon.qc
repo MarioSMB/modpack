@@ -166,6 +166,7 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 	this.punchangle_x = -2;
 
 	entity missile = new(missile);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

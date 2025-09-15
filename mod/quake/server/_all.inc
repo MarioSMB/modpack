@@ -3,6 +3,7 @@
 #include "../common/_all.qh"
 
 // mission pack defs
+#include "ad/_all.qh"
 #include "rogue/_all.qh"
 
 //#include "defs.qc"
@@ -33,6 +34,7 @@
 #include "monsters/_all.inc"
 
 // mission packs
+#include "ad/_all.inc"
 #include "rogue/_all.inc"
 
 #include "../common/_all.inc"

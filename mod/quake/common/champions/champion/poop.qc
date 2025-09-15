@@ -100,6 +100,7 @@ void Poop_PooSpitAnim(entity this)
 void Poop_PooSpit(entity this)
 {
 	entity newmis = new(acidspit);
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_TOSS);
 	newmis.solid = SOLID_CORPSE;

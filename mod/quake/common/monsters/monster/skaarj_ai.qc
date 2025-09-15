@@ -12,7 +12,7 @@ bool sk_checkprojectiles(entity this)
 
 	while(e)
 	{
-		if(e.move_movetype == MOVETYPE_FLYMISSILE)
+		if(e.flags & FL_PROJECTILE)
 		{
 			if(e.owner == this.enemy)
 			{

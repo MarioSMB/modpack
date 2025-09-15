@@ -105,6 +105,7 @@ void mshake_DropMilk(entity this, float amount)
 	_sound(this, CH_WEAPON_B, "weapons/jarsmash.wav", 1, ATTN_NORM);
 
 	entity proj = new(milk);
+	//proj.flags = FL_PROJECTILE;
 	proj.owner = this;
 	proj.realowner = this;
 	proj.projectiledeathtype = DEATH_GENERIC.m_id; // dummy deathtype

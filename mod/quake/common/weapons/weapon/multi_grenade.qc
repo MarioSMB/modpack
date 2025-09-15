@@ -17,6 +17,7 @@ void MiniGrenadeExplode(entity this)
 void MiniGrenadeLaunch(entity this, float offsetAngle)
 {
 	entity missile = new(MiniGrenade);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this.owner;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
@@ -92,6 +93,7 @@ void W_FireMultiGrenade(entity this, .entity weaponentity)
 	this.punchangle_x = -2;
 
 	entity missile = new(MultiGrenade);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;

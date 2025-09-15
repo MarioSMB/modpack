@@ -186,6 +186,7 @@ void WrathMissile(entity this, int AttackNumber)
 	makevectors(this.angles);
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.classname = "wrath_missile";
 	missile.solid = SOLID_CORPSE;
 	missile.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;

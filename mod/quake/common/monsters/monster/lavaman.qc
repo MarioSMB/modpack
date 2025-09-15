@@ -353,6 +353,7 @@ void lavaman_missile(entity this, int AttackNumber)
 	vector vec = normalize(d - org);
 
 	entity fireball = new(lavaman_ball);
+	fireball.flags = FL_PROJECTILE;
 	fireball.owner = this;
 //	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	set_movetype(fireball, MOVETYPE_BOUNCE);

@@ -10,6 +10,7 @@ entity W_FireRocket(entity this)
 	this.punchangle_x = -2;
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

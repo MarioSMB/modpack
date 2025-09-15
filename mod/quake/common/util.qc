@@ -1092,6 +1092,18 @@ STATIC_INIT(compressShortVector)
 	}
 }
 
+#ifdef GAMEQC
+/*======================================================================
+mathlib_anglemod 
+
+faster version of id's anglemod
+======================================================================*/
+float anglemod(float v)
+{
+	return v - floor(v/360) * 360;
+}
+#endif
+
 float shutdown_running;
 #ifdef SVQC
 void SV_Shutdown()

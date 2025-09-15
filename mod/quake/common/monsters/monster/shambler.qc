@@ -248,7 +248,11 @@ void CastLightning(entity this)
 	//te_lightning1(NULL, org, trace_endpos); // TODO: entity breaks
 	SendCSQCLightningBeam(org, trace_endpos);
 
-	LightningDamage(org, trace_endpos, this, 10, DEATH_MONSTER_SHAMBLER.m_id);
+	// Check for any breakables first
+	if(ai_foundbreakable(this, trace_ent, false))
+		T_Damage(trace_ent, this, this, 80, DEATH_MONSTER_SHAMBLER.m_id);
+	else
+		LightningDamage(org, trace_endpos, this, 10, DEATH_MONSTER_SHAMBLER.m_id);
 }
 
 void sham_magic12(entity this) { set_animofs(this, anim_sham_magic, 12, sham_run1); }

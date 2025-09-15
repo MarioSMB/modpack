@@ -184,6 +184,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	//this.punchangle_x = 1;
 
 	entity musicnote = spawn();
+	musicnote.flags = FL_PROJECTILE;
 	musicnote.projectiledeathtype = WEP_PIANO.m_id;
 	musicnote.clipgroup = this.clipgroup;
 	musicnote.owner = this;

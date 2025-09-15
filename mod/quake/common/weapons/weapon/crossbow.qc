@@ -18,6 +18,7 @@ PRECACHE(Crossbow)
 void crossbow_bolt_stick(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
+	newmis.flags = FL_PROJECTILE;
 	newmis.classname = "crossbow_bolt_stick";
 	newmis.owner = this.owner;
 	newmis.realowner = this.realowner;

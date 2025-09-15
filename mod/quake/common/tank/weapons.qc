@@ -397,6 +397,7 @@ void W_FireMine(entity this)
 	_sound(this.tank, CH_WEAPON_SINGLE, "tank/minelay.wav", 1, ATTN_NORM);
 			
 	entity mine = spawn();
+	mine.flags = FL_PROJECTILE;
 	mine.owner = this;
 	set_movetype(mine, MOVETYPE_BOUNCE);
 	mine.solid = SOLID_TRIGGER;

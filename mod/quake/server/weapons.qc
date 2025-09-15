@@ -2,6 +2,7 @@
 
 #include "combat.qh"
 #include "client.qh"
+#include "explosions.qh"
 #include "impulse.qh"
 #include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
@@ -60,15 +61,11 @@ bool W_Projectile_CanParry(entity this, entity proj)
 	if(proj.clipgroup && proj.clipgroup == this.clipgroup)
 		return false;
 	// hacky way to guess if it's a projectile
-	if(!(proj.move_movetype == MOVETYPE_FLYMISSILE || proj.move_movetype == MOVETYPE_FLY || proj.move_movetype == MOVETYPE_BOUNCE || proj.move_movetype == MOVETYPE_TOSS))
-		return false;
-	if(proj.flags & FL_ITEM)
+	if(!(proj.flags & FL_PROJECTILE))
 		return false;
 	bool parryplayer = ((autocvar_sv_quake_parry_playershots || deathmatch) && IS_PLAYER(proj.owner));
 	if(!IS_MONSTER(proj.owner) && !parryplayer)
 		return false;
-	if(IS_MONSTER(proj) || IS_PLAYER(proj))
-		return false; // no corpse bouncers thank you very much
 
 	return true;
 }
@@ -249,6 +246,7 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	vec = normalize(vec);
 
 	entity missile = new(hiplaser);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.lastvictim = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -256,7 +254,6 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	if(light)
 		missile.effects = EF_DIMLIGHT;
 	missile.projectiledeathtype = WEP_LASER_CANNON.m_id;
-	missile.clipgroup = this.clipgroup;
 	missile.clipgroup = this.clipgroup;
 
 	_setmodel(missile, "progs/lasrspik.mdl");
@@ -519,6 +516,7 @@ void W_FireRifle_SetupShot(entity actor, entity proj, int shotammo, string snd1,
 void W_FireRifleTarget(entity this, entity targ)
 {
 	entity missile = new(pulse);
+	missile.flags = FL_PROJECTILE;
 	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot1.wav");
 
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
@@ -806,12 +804,24 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	entity e1 = trace_ent;
 	if(trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
-		if(trace_ent.resist_cells != 0)
+		if(ai_immunebreakable(from, trace_ent))
+		{
+			// This is resist lightning function without pain sound
+			// Don't spawn smoke constantly (let the sprite finish)
+			if(from.lightning_timer < time)
+			{
+				from.lightning_timer = time + 0.3;
+				SpawnExplosion(EXPLODE_BURST_SMOKE, trace_endpos, "");
+			}
+			SpawnProjectileSmoke(trace_endpos, 200, 50, 150);
+			ldmg = 0;
+		}
+		else if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
 			Resist_Lightning(trace_ent, trace_endpos);
 		}
-		if(trace_ent.takedamage == DAMAGE_AIM)
+		else if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(trace_ent.magic_bubble)
 			ldmg *= 0.5;
@@ -831,12 +841,24 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	entity e2 = trace_ent;
 	if(trace_ent != e1 && trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
-		if(trace_ent.resist_cells != 0)
+		if(ai_immunebreakable(from, trace_ent))
+		{
+			// This is resist lightning function without pain sound
+			// Don't spawn smoke constantly (let the sprite finish)
+			if(from.lightning_timer < time)
+			{
+				from.lightning_timer = time + 0.3;
+				SpawnExplosion(EXPLODE_BURST_SMOKE, trace_endpos, "");
+			}
+			SpawnProjectileSmoke(trace_endpos, 200, 50, 150);
+			ldmg = 0;
+		}
+		else if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
 			Resist_Lightning(trace_ent, trace_endpos);
 		}
-		if(trace_ent.takedamage == DAMAGE_AIM)
+		else if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(trace_ent.magic_bubble)
 			ldmg *= 0.5;
@@ -851,12 +873,24 @@ void LightningDamage(vector p1, vector p2, entity from, float damage, int deatht
 	traceline(p1 - f, p2 - f, false, from);
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !StatusEffects_active(STATUSEFFECT_Wetsuit, trace_ent))
 	{
-		if(trace_ent.resist_cells != 0)
+		if(ai_immunebreakable(from, trace_ent))
+		{
+			// This is resist lightning function without pain sound
+			// Don't spawn smoke constantly (let the sprite finish)
+			if(from.lightning_timer < time)
+			{
+				from.lightning_timer = time + 0.3;
+				SpawnExplosion(EXPLODE_BURST_SMOKE, trace_endpos, "");
+			}
+			SpawnProjectileSmoke(trace_endpos, 200, 50, 150);
+			ldmg = 0;
+		}
+		else if(trace_ent.resist_cells != 0)
 		{
 			ldmg = Resist_Damage(trace_ent, IT_CELLS, damage);
 			Resist_Lightning(trace_ent, trace_endpos);
 		}
-		if(trace_ent.takedamage == DAMAGE_AIM)
+		else if(trace_ent.takedamage == DAMAGE_AIM)
 			particle(trace_endpos, '0 0 100', 225, ldmg * 4);
 		if(trace_ent.magic_bubble)
 			ldmg *= 0.5;
@@ -1311,6 +1345,7 @@ Used for both the player and the ogre
 entity launch_spike(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
@@ -1605,6 +1640,7 @@ void W_Fireball_Touch(entity this, entity toucher)
 entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 {
 	entity proj = new(fireball);
+	proj.flags = FL_PROJECTILE;
 	proj.owner = this;
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = WEP_NAPALM.m_id; // placeholder

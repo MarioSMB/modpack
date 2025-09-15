@@ -16,3 +16,7 @@ const int EXPLODE_ICE_BIG = 38;
 const int EXPLODE_BURST_SMOKE = 41;
 const int EXPLODE_BURST_FLAME = 42;
 const int EXPLODE_BURST_POISON = 43;
+
+void SpawnExplosion(int sprite_type, vector org, string expl_sound);
+
+void SpawnProjectileSmoke(vector org, float velrnd, float upbase, float uprnd);

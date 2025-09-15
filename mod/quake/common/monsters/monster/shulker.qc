@@ -69,6 +69,7 @@ void ShulkerMissile(entity this)
 	this.effects |= EF_MUZZLEFLASH;
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.classname = "vore_ball";
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_SHULKER.m_id;

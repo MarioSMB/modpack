@@ -95,6 +95,7 @@ void PiglinMissile(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.classname = "vore_ball";
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_PIGLIN.m_id;

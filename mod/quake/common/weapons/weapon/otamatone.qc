@@ -126,6 +126,7 @@ void W_FireOtamatone(entity this, .entity weaponentity)
 	{
 		// copied from piano
 		entity musicnote = spawn();
+		musicnote.flags = FL_PROJECTILE;
 		musicnote.owner = this;
 		set_movetype(musicnote, MOVETYPE_FLYMISSILE);
 		//musicnote.solid = SOLID_BBOX;

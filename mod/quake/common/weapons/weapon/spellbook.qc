@@ -662,6 +662,7 @@ void fire_bone_shard(entity this)
 		it.velocity = dir * 1000;
 		it.angles = vectoangles(dir);
 		it.classname = "flying_arm";
+		it.flags |= FL_PROJECTILE; // TODO: unique projectile? parrying the stationary ones would be weird!
 		it.owner = this; // for super spikes
 		settouch(it, superspike_touch);
 		it.nextthink = time + 5;
@@ -816,6 +817,7 @@ void seek_and_fire1(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/skull_attack.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.realowner = this.realowner;
 

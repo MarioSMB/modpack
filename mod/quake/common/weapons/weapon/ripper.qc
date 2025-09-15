@@ -93,6 +93,7 @@ void W_FireRipper(entity this, .entity weaponentity)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/bzfire.wav", 1, ATTN_NORM);
 
 	entity disc = spawn();
+	disc.flags = FL_PROJECTILE;
 	disc.projectiledeathtype = WEP_RIPPER.m_id;
 	disc.clipgroup = this.clipgroup;
 	disc.owner = disc.realowner = this;

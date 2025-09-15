@@ -171,6 +171,7 @@ void fishmissile(entity this, .entity weaponentity)
 	W_TakeAmmo(this, ammo_rockets, 1);
 
 	entity fish = spawn();
+	fish.flags = FL_PROJECTILE;
 	fish.owner = this;
 	fish.fish_time = this.(weaponentity).fish_time;
 	fish.projectiledeathtype = WEP_FISH.m_id;

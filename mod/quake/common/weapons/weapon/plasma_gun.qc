@@ -156,6 +156,7 @@ void PlasmaLaunch(entity this)
 entity launch_plasma(entity this, vector org, vector dir)
 {
 	entity missile = new(plasma);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);

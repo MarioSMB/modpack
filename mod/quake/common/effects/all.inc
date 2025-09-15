@@ -52,6 +52,145 @@ EFFECT(1, GUARDIAN_BEAM,            "nex_beam")
 
 //EFFECT(0, MAGIC_FIRE,               "hagar_explode")
 
+EFFECT(0, DPP_BURSTSHOCKWAVE1,      "DPP_ITSBURSTSHOCKWAVE1")
+#ifdef CSQC
+STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE1)
+{
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1", "decal sparks ball smoke");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_countabsolute", "1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_type", "decal");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_tex", "112 119");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_size", "24 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_alpha", "48 96 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_decal_originjitter", "48 48 48");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_count", "32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_type", "spark");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_color", "0x903010 0xFFD030");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_size", "1 1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_sizeincrease", "2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_stretchfactor", "2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_alpha", "0 256 224");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_gravity", "0.35");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_airfriction", "0.35");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_velocityoffset", "64 64 128");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_sparks_velocityjitter", "128 128 128");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_count", "4");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_type", "smoke");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_color", "0x801010 0xFFA020");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_tex", "0 8");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_size", "16 24");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_sizeincrease", "4");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_alpha", "16 96 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_airfriction", "0.2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_originjitter", "16 16 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_velocityjitter", "32 32 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_ball_rotate", "0 360 15 30");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_count", "16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_type", "smoke");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_color", "0x202020 0x635844");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_tex", "8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_size", "16 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_sizeincrease", "3");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_alpha", "16 96 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_airfriction", "0.2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_originjitter", "8 8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_velocityjitter", "64 64 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE1_smoke_rotate", "0 360 -15 -30");
+}
+#endif
+
+EFFECT(0, DPP_BURSTSHOCKWAVE2,      "DPP_ITSBURSTSHOCKWAVE2")
+#ifdef CSQC
+STATIC_INIT(Effect_DPP_BURSTSHOCKWAVE2)
+{
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2", "decal ring sparks ball smoke");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_countabsolute", "1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_type", "decal");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_tex", "112 119");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_size", "32 48");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_alpha", "48 96 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_decal_originjitter", "48 48 48");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_countabsolute", "1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_type", "static");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_color", "0x101010 0x79572a");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_tex", "109 109");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_size", "18 21");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_sizeincrease", "80");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_alpha", "175 175 192");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_orientation", "oriented");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_originoffset", "0 0 1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ring_velocityoffset", "0 0 2");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_count", "48");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_type", "spark");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_color", "0x903010 0xFFD030");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_size", "1 1");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_sizeincrease", "2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_stretchfactor", "2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_alpha", "0 256 224");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_gravity", "0.35");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_airfriction", "0.35");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_velocityoffset", "64 64 128");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_sparks_velocityjitter", "128 128 128");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_count", "8");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_type", "smoke");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_color", "0x801010 0xFFA020");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_tex", "0 8");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_size", "16 24");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_sizeincrease", "4");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_alpha", "16 96 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_airfriction", "0.2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_originjitter", "16 16 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_velocityjitter", "32 32 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_ball_rotate", "0 360 15 30");
+
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_count", "32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_type", "smoke");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_color", "0x202020 0x635844");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_tex", "8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_size", "16 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_sizeincrease", "3");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_alpha", "16 96 32");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_airfriction", "0.2");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_originjitter", "8 8 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_velocityjitter", "64 64 16");
+	registercvar("cl_particle_DPP_ITSBURSTSHOCKWAVE2_smoke_rotate", "0 360 -15 -30");
+}
+#endif
+
+EFFECT(0, DPP_BURSTPARTY,           "DPP_ITSPART_BURSTY")
+EFFECT(0, DPP_BURSTPARTG,           "DPP_ITSPART_BURSTG")
+EFFECT(0, DPP_BURSTPARTR,           "DPP_ITSPART_BURSTR")
+EFFECT(0, DPP_BURSTPARTB,           "DPP_ITSPART_BURSTB")
+EFFECT(0, DPP_BURSTPARTP,           "DPP_ITSPART_BURSTP")
+
+EFFECT(0, DPP_BURSTPARTW,           "DPP_ITSPART_BURSTW")
+#ifdef CSQC
+STATIC_INIT(Effect_TE_PLASMABIG)
+{
+	registercvar("cl_particle_DPP_ITSPART_BURSTW", "smoke");
+
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_count", "1");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_type", "static");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_color", "0x606060 0xC0C0C0");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_tex", "62 63");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_size", "1 3");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_sizeincrease", "0.5");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_alpha", "128 192 64");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_velocityjitter", "32 32 32");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_velocitymultiplier", "1");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_airfriction", "0.65");
+	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_rotate", "0 360 45 90");
+}
+#endif
+
 EFFECT(0, TE_PLASMABIG,             "TE_PLASMABIG")
 #ifdef CSQC
 STATIC_INIT(Effect_TE_PLASMABIG)

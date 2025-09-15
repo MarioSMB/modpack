@@ -324,6 +324,7 @@ void juggernaut_launch_rocket(entity this)
 	ai_face(this);
 	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
 	entity newmis = spawn();
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;

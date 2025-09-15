@@ -1,0 +1,3 @@
+#pragma once
+
+void particle_explode(vector e_org, float e_qty, float e_time, float p_style, float e_style);

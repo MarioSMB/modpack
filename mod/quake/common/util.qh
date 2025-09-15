@@ -108,3 +108,7 @@ STATIC_INIT(g_saved_cvars) { g_saved_cvars = IL_NEW(); }
 #ifndef SVQC
 .string message;
 #endif
+
+#ifdef GAMEQC
+float anglemod(float v);
+#endif

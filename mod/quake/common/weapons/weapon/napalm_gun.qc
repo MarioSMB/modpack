@@ -80,6 +80,7 @@ void W_FireNapalm(entity this, .entity weaponentity)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 	this.punchangle_x = -2;
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);

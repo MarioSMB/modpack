@@ -26,6 +26,7 @@ void grape_launch(entity this)
 	settouch(newmis, spike_touch);
 	newmis.projectiledeathtype = DEATH_GRAPE.m_id;
 	newmis.clipgroup = player.clipgroup;
+	newmis.flags = FL_PROJECTILE;
 
 	delete(this);
 }

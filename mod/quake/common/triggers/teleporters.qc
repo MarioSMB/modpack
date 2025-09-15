@@ -30,6 +30,10 @@ void tdeath_touch(entity this, entity toucher)
 	if((autocvar_horde || autocvar_g_friendlyfire_virtual) && IS_PLAYER(toucher))
 		return;
 
+	// Check if found a breakable than cannot be broken
+	if(ai_foundbreakable(this, toucher, false))
+		return;
+
 	// original owner of this teledeath has cleared its bounds, and there's 
 	// no more danger of overlapping bboxes, so remove it
 	vector padding = '2 2 2';

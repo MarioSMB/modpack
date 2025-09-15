@@ -395,12 +395,15 @@ void garg_die(entity this, entity inflictor, entity attacker, int deathtype)
 			dogib = true;
 			SpawnProjectileSmoke(this.origin, 200, 50, 150);
 			SpawnProjectileSmoke(this.origin, 200, 50, 150);
-			//particle_explode(this.origin-'0 0 16', 50+random()*50, 2, this.lip, PARTICLE_BURST_UPWARD);
+			int ptype = (this.poisonous) ? PARTICLE_BURST_GREEN : PARTICLE_BURST_FIRE;
+			particle_explode(this.origin - '0 0 16', 50 + random() * 50, 2, ptype, PARTICLE_BURST_UPWARD);
+#if 0
 			vector partpos = this.origin + '0 0 16';
 			if(this.poisonous)
 				te_explosion2(partpos, 50, 20);
 			else
 				te_explosion2(partpos, 225, 10);
+#endif
 			makevectors(this.angles);
 			float explef = EXPLODE_BIG;
 			if(this.poisonous)

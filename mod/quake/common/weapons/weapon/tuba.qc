@@ -172,6 +172,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 
 	// copied from piano
 	entity musicnote = spawn();
+	musicnote.flags = FL_PROJECTILE;
 	musicnote.owner = this;
 	set_movetype(musicnote, MOVETYPE_TOSS);
 	//musicnote.solid = SOLID_BBOX;

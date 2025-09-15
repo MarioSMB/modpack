@@ -168,6 +168,7 @@ void ZombieFireGrenade(entity this, vector st)
 	_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 
 	entity missile = new(zombie_grenade);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;

@@ -11,6 +11,7 @@ void lavaspike_touch(entity this, entity toucher);
 entity launch_lava_spike(entity this, vector org, vector dir)
 {
 	entity newmis = new(lava_spike);
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;

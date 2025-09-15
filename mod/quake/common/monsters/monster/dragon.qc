@@ -339,8 +339,9 @@ void FireballTouch(entity this, entity toucher)
 
 entity launch_fireball(entity this, vector org, vector dir)
 {
-	this.effects = this.effects | EF_MUZZLEFLASH;
+	this.effects |= EF_MUZZLEFLASH;
 	entity fireball = new(fireball);
+	fireball.flags = FL_PROJECTILE;
 	fireball.owner = this;
 	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	fireball.solid = SOLID_BBOX;

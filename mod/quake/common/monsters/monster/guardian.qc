@@ -236,6 +236,7 @@ entity LaunchGuardianLaser(entity this, vector org, vector vec)
 	vector vec2 = normalize(vec);
 	
 	entity newmis = new(enforcer_laser);
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	newmis.projectiledeathtype = DEATH_MONSTER_GUARDIAN.m_id;
 	newmis.clipgroup = this.clipgroup;

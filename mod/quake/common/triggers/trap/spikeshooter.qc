@@ -56,6 +56,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound (this, CH_WEAPON_SINGLE, "misc/spike.wav", 1, ATTN_NORM);
 		entity lavaball = new(lavaball);
+		lavaball.flags = FL_PROJECTILE;
 		set_movetype(lavaball, MOVETYPE_FLYMISSILE);
 		lavaball.solid = SOLID_BBOX;
 		// set lavaball speed

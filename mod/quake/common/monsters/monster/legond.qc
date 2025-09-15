@@ -141,6 +141,7 @@ void LaunchRocket(entity this, vector org, vector vec)
 	ai_face(this);
 	this.attack_finished = time + 0.8;
 	entity newmis = spawn();
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	newmis.projectiledeathtype = DEATH_MONSTER_LEGOND.m_id;
 	newmis.clipgroup = this.clipgroup;

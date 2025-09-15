@@ -502,6 +502,7 @@ void BileBombTouch(entity this, entity toucher)
 	{
 		bcnt += 1;
 		entity missile = spawn();
+		missile.flags = FL_PROJECTILE;
 		missile.classname = "bilefrag";
 		missile.owner = this;
 		set_movetype(missile, MOVETYPE_BOUNCE);
@@ -538,6 +539,7 @@ void BileBombThink(entity this)
 	while(t < 2)
 	{
 		entity missile = spawn();
+		missile.flags = FL_PROJECTILE;
 		missile.projectiledeathtype = this.projectiledeathtype;
 		missile.clipgroup = this.clipgroup;
 		missile.owner = this.owner;
@@ -569,6 +571,7 @@ void gug_bilebomb(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.projectiledeathtype = DEATH_MONSTER_GUG.m_id;
 	missile.clipgroup = this.clipgroup;

@@ -70,6 +70,7 @@ void W_FireWand(entity this, .entity weaponentity)
 	vector dir = qc_aim(this, 500);
 	
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.classname = "vore_ball";
 	missile.owner = missile.realowner = this;
 	missile.projectiledeathtype = WEP_WAND.m_id;

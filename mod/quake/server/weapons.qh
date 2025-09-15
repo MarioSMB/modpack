@@ -5,6 +5,8 @@ int autocvar_sv_cheats;
 // laser cannon
 .vector old_velocity;
 
+.float lightning_timer;	// Cool down for LG resist effect
+
 .bool elec;
 .bool lightningmodel;
 

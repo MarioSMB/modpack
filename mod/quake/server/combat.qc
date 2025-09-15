@@ -449,6 +449,12 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(!targ.takedamage)
 		return;
 
+	// ad disables this in favour of per-projectile handling
+	// we however do NOT have per-projectile handling (YET)
+	// TODO: needs projectile support!
+	if(ai_immunebreakable(attacker, targ))
+		return;
+
 	// Yoder add, September 9 2020
 	// bosses are immune to damage while frozen (mechanic)
 	if(targ.is_frozen)

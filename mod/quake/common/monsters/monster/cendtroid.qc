@@ -367,7 +367,7 @@ void scourge_melee(entity this)
 //
 void ScourgeTriggerThink(entity this)
 {
-	if(this.lastvictim.health <= 0)
+	if(!this.lastvictim || this.lastvictim.health <= 0 || wasfreed(this.lastvictim))
 	{
 		delete(this);
 		return;
@@ -383,9 +383,9 @@ void ScourgeTriggerThink(entity this)
 //
 void ScourgeTriggerTouch(entity this, entity toucher)
 {
-	if(IS_MONSTER(toucher) || IS_PLAYER(toucher))
+	if(toucher.owner == this || toucher.monsterdef == this.monsterdef)
 		return;
-	if(toucher.move_movetype != MOVETYPE_FLYMISSILE)
+	if(!(toucher.flags & FL_PROJECTILE))
 		return;
 	entity targ = this.lastvictim;
 	if(targ.health <= 0)

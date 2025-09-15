@@ -76,6 +76,7 @@ void T_SpearTouch(entity this, entity toucher)
 	{
 		T_Damage(toucher, this, this.owner, 5000, this.projectiledeathtype);
 		entity missile = spawn();
+		missile.flags = FL_PROJECTILE;
 		missile.owner = this.owner;
 		set_movetype(missile, MOVETYPE_FLYMISSILE);
 		missile.solid = SOLID_BBOX;
@@ -427,6 +428,7 @@ void W_FireSpear(entity this, .entity weaponentity)
 {
 	W_TakeAmmo(this, ammo_rockets, 1);
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

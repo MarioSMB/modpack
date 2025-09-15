@@ -140,6 +140,7 @@ void edie_Fire(entity this, float valx, float valy, float valz, bool moving)
 	//got passed all the checks, let's actually shoot now...
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

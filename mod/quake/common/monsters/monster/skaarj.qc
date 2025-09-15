@@ -599,6 +599,7 @@ void SkaarjMissileTouch(entity this, entity toucher)
 void SkaarjMissile(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
+	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;

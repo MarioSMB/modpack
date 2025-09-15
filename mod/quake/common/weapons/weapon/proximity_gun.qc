@@ -91,6 +91,7 @@ void W_FireProximityGrenade(entity this, .entity weaponentity)
 	this.punchangle_x = -2;
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.owner = missile.realowner = this;
 	missile.lastvictim = this;
 	set_movetype(missile, MOVETYPE_TOSS);

@@ -216,6 +216,7 @@ void W_FireSuperLightning(entity this, .entity weaponentity)
 	W_TakeAmmo(this, ammo_cells, 1);
 	this.punchangle_x = -2;
 	entity missile = new(lightme);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = missile.realowner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

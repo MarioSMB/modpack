@@ -53,6 +53,7 @@ void mic_note_touch(entity this, entity toucher)
 void mic_fire_note(entity this, entity targ)
 {
 	entity musicnote = spawn();
+	musicnote.flags = FL_PROJECTILE;
 	musicnote.owner = this.owner;
 	set_movetype(musicnote, MOVETYPE_FLYMISSILE);
 	musicnote.solid = SOLID_CORPSE;
@@ -171,6 +172,7 @@ void W_FireMic(entity this, .entity weaponentity)
 	{
 		// copied from piano
 		entity musicnote = spawn();
+		musicnote.flags = FL_PROJECTILE;
 		musicnote.owner = this;
 		set_movetype(musicnote, MOVETYPE_FLY);
 		//musicnote.solid = SOLID_BBOX;

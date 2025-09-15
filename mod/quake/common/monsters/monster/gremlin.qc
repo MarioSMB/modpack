@@ -1004,6 +1004,7 @@ void Gremlin_FireRocket(entity this)
 	this.punchangle_x = -2;
 
 	entity missile = new(missile);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;

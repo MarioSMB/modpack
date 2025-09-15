@@ -27,6 +27,7 @@ void mermaid_bubble_shoot(entity this)
 	settouch(newmis, spike_touch);
 	newmis.projectiledeathtype = WEP_MAGIC.m_id;
 	newmis.clipgroup = this.clipgroup;
+	newmis.flags = FL_PROJECTILE;
 }
 
 void mermaid_bubble5(entity this) { set_anim(this, 21, player_run); }

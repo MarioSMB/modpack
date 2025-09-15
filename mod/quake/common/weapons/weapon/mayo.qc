@@ -131,6 +131,7 @@ void W_FireMayo(entity this, .entity weaponentity)
 	this.punchangle_x = -2;
 
 	entity missile = new(grenade);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;

@@ -1,0 +1,18 @@
+#pragma once
+
+// particle BURST explosions
+const int PARTICLE_BURST_YELLOW = 1;		// gold, yellow, yellow
+const int PARTICLE_BURST_GREEN = 2;			// light green, green, green
+const int PARTICLE_BURST_RED = 4;			// grey, red, red
+const int PARTICLE_BURST_BLUE = 8;			// blue, grey, blue
+const int PARTICLE_BURST_PURPLE = 16;		// purple, grey, purple
+const int PARTICLE_BURST_FIRE = 32;			// gold, red, grey (used by ogre)
+const int PARTICLE_BURST_WHITE = 64;		// white, grey, grey
+// Particle BURST styles
+const int PARTICLE_BURST_RING = 256;		// Circular particle burst
+const int PARTICLE_BURST_CENTER = 512;		// Central particle burst
+const int PARTICLE_BURST_UPWARD = 1024;		// Drifting upward burst
+const int PARTICLE_BURST_SHOCKWAVE = 4096;	// Floor impact shockwave
+const int PARTICLE_BURST_SKULLUP = 8192;	// Skull wizard teleport
+const int PARTICLE_BURST_LOSTUP = 16384;	// Lost souls particle burn
+const int PARTICLE_BURST_MINOTAUR = 32768;	// Minotaur magic attack over

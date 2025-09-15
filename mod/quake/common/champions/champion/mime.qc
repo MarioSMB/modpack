@@ -19,6 +19,7 @@ void Mime_ThrowBall(entity this)
 {
 	.entity weaponentity = weaponentities[0]; // TODO?
 	entity missile = new(ball);
+	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;

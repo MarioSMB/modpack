@@ -192,6 +192,7 @@ void GorothSmashBoom(entity this)
 void GorothSmashMissile(entity this, vector dir, float rmv_t)
 {
 	entity gmis = spawn();
+	gmis.flags = FL_PROJECTILE;
 	gmis.owner = this;
 	gmis.solid = SOLID_NOT;
 	gmis.projectiledeathtype = DEATH_MONSTER_GOROTH.m_id;

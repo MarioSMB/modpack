@@ -204,6 +204,7 @@ void IthMissile(entity this, vector pos)
 	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_ITHAGNAL);
 
 	entity missile = spawn();
+	missile.flags = FL_PROJECTILE;
 	missile.classname = "vore_ball";
 	missile.owner = this;
 	missile.clipgroup = this.clipgroup;
@@ -378,6 +379,7 @@ void IthVomit(entity this, vector pos)
 	fixedmakevectors(this.angles);
 	
 	entity vomit = spawn();
+	vomit.flags = FL_PROJECTILE;
 	vomit.classname = "acidspit";
 	_setmodel(vomit, "progs/ithvomit.mdl");
 	vomit.owner = this;
@@ -451,17 +453,8 @@ void ith_telethrow6(entity this)
 	makevectors(this.angles);
 	vector org = QCC_RotatePointYaw('360 0 300' * this.scale, this.angles_y);
 	org = this.origin + org;
-	FOREACH_ENTITY_RADIUS(org, 800, it != this && it.owner != this,
+	FOREACH_ENTITY_RADIUS(org, 800, it != this && it.owner != this && (it.flags & FL_PROJECTILE),
 	{
-		if(!(it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE || it.move_movetype == MOVETYPE_TOSS))
-			continue;
-		if(it.flags & FL_ITEM)
-			continue;
-		if(it.classname == "nuke")
-			continue; // let's not be too hasty
-		if(IS_MONSTER(it) || IS_PLAYER(it))
-			continue;
-
 		it.velocity = normalize(this.enemy.origin - it.origin) * 800 + v_right * crandom() * 300;
 		it.owner = this;
 		it.clipgroup = this.clipgroup;
@@ -493,17 +486,8 @@ void IthagnalGrab(entity this)
 {
 	vector org = QCC_RotatePointYaw('360 0 300' * this.scale, this.angles_y);
 	org = this.origin + org;
-	FOREACH_ENTITY_RADIUS(org, 800, it != this && it.owner != this,
+	FOREACH_ENTITY_RADIUS(org, 800, it != this && it.owner != this && (it.flags & FL_PROJECTILE),
 	{
-		if(!(it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE || it.move_movetype == MOVETYPE_TOSS))
-			continue;
-		if(it.flags & FL_ITEM)
-			continue;
-		if(it.classname == "nuke")
-			continue; // let's not be too hasty
-		if(IS_MONSTER(it) || IS_PLAYER(it))
-			continue;
-
 		it.velocity = '0 0 0';
 		set_movetype(it, MOVETYPE_FLYMISSILE);
 		setorigin(it, it.origin);
@@ -516,17 +500,8 @@ void ith_teletouch10(entity this)
 	float thr = false;
 	vector org = QCC_RotatePointYaw('359 0 300' * this.scale, this.angles_y);
 	org = this.origin + org;
-	FOREACH_ENTITY_RADIUS(org, 666, true,
+	FOREACH_ENTITY_RADIUS(org, 666, it.flags & FL_PROJECTILE,
 	{
-		if(!(it.move_movetype == MOVETYPE_FLYMISSILE || it.move_movetype == MOVETYPE_FLY || it.move_movetype == MOVETYPE_BOUNCE || it.move_movetype == MOVETYPE_TOSS))
-			continue;
-		if(it.flags & FL_ITEM)
-			continue;
-		if(it.classname == "nuke")
-			continue; // let's not be too hasty
-		if(IS_MONSTER(it) || IS_PLAYER(it))
-			continue; // no corpse bouncers thank you very much
-
 		thr = true;
 		break;
 	});
