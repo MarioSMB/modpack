@@ -321,6 +321,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 #define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
 			HANDLE(ROCKET)             this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(MERMAID_BUBBLE)     this.traileffect = EFFECT_TR_BUBBLES.m_id; break;
+			HANDLE(MAGIC_FIREBALL)     this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(CROSSBOW_BOLT)      this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(VORE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(SCRAG_SPIKE)        this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;

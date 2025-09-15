@@ -109,7 +109,7 @@ void magic_fire_launch(entity this, .entity weaponentity)
 
 	entity newmis = launch_spike(this, org, dir);
 	newmis.scale = 2;
-	setmodel(newmis, MDL_LAVABALL);
+	//setmodel(newmis, MDL_LAVABALL);
 	setsize(newmis, '0 0 0', '0 0 0');
 	newmis.dmg = 25;
 	newmis.nextthink = time + 5;
@@ -128,6 +128,8 @@ void magic_fire_launch(entity this, .entity weaponentity)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/magic_fire_shoot3.wav", 1, ATTN_NORM);
 	settouch(newmis, magic_fire_touch);
 	newmis.avelocity = randomvec() * 180;
+
+	CSQCProjectile(newmis, true, PROJECTILE_MAGIC_FIREBALL, true);
 }
 
 void magic_stormcloud_think(entity this)
@@ -166,6 +168,8 @@ void magic_stormcloud_think(entity this)
 		T_Damage(it, this, this.owner, 8, this.projectiledeathtype);
 		hitenemy = true;
 	});
+
+	Send_Effect(EFFECT_STORMCLOUD, this.origin, '0 0 -250', 1);
 
 	if(hitenemy) //&& random() < 0.8)
 	{

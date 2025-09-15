@@ -947,3 +947,33 @@ STATIC_INIT(Effect_TR_BUBBLES)
 	registercvar("cl_particle_TR_BUBBLES_trail_rotate", "0 360 0 30");
 }
 #endif
+
+EFFECT(0, STORMCLOUD,              "stormcloud")
+#ifdef CSQC
+STATIC_INIT(Effect_STORMCLOUD)
+{
+	registercvar("cl_particle_stormcloud", "zap smoke");
+
+	registercvar("cl_particle_stormcloud_zap_type", "static");
+	registercvar("cl_particle_stormcloud_zap_airfriction", "2");
+	registercvar("cl_particle_stormcloud_zap_alpha", "256 256 512");
+	registercvar("cl_particle_stormcloud_zap_color", "0xDDFDFF 0xFDFDFF");
+	registercvar("cl_particle_stormcloud_zap_count", "10");
+	registercvar("cl_particle_stormcloud_zap_originjitter", "20 20 20");
+	registercvar("cl_particle_stormcloud_zap_rotate", "0 180 -180 180");
+	registercvar("cl_particle_stormcloud_zap_sizeincrease", "-5");
+	registercvar("cl_particle_stormcloud_zap_size", "0 5");
+	registercvar("cl_particle_stormcloud_zap_stretchfactor", "1");
+	registercvar("cl_particle_stormcloud_zap_tex", "71 74");
+	registercvar("cl_particle_stormcloud_zap_velocitymultiplier", "1");
+
+	registercvar("cl_particle_stormcloud_smoke_type", "smoke");
+	registercvar("cl_particle_stormcloud_smoke_alpha", "40 40 350");
+	registercvar("cl_particle_stormcloud_smoke_color", "0x80C0FF 0x80C0FF");
+	registercvar("cl_particle_stormcloud_smoke_countabsolute", "1");
+	registercvar("cl_particle_stormcloud_smoke_sizeincrease", "400");
+	registercvar("cl_particle_stormcloud_smoke_size", "4 4");
+	registercvar("cl_particle_stormcloud_smoke_tex", "38 38");
+	registercvar("cl_particle_stormcloud_smoke_velocitymultiplier", "1");
+}
+#endif

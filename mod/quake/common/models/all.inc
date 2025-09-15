@@ -29,6 +29,7 @@ MODEL(CHAT,                                 "models/misc/chatbubble.spr");
 // projectiles TODO
 MODEL(PROJECTILE_ROCKET,                    "progs/missile.mdl");
 MODEL(PROJECTILE_MERMAID_BUBBLE,            "progs/s_bubble.spr");
+MODEL(PROJECTILE_MAGIC_FIREBALL,            "progs/lavaball.mdl");
 MODEL(PROJECTILE_CROSSBOW_BOLT,             "progs/proj_impalespike.mdl");
 MODEL(PROJECTILE_VORE_SPIKE,                "progs/v_spike.mdl");
 MODEL(PROJECTILE_SCRAG_SPIKE,               "progs/w_spike.mdl");
