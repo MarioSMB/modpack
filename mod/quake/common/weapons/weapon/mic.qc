@@ -84,6 +84,8 @@ void mic_fire_note(entity this, entity targ)
 
 	setorigin(musicnote, this.origin);
 	settouch(musicnote, mic_note_touch);
+
+	IL_PUSH(g_projectiles, musicnote);
 }
 
 void mic_note_explode(entity this, entity ignore)
@@ -201,6 +203,8 @@ void W_FireMic(entity this, .entity weaponentity)
 		vector spread = '0 0 0';
 		vector spread_dir = dir + (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
 		musicnote.velocity = spread_dir * 450 + v_up * 20;
+
+		IL_PUSH(g_projectiles, musicnote);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

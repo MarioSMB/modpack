@@ -1,6 +1,7 @@
 #include "csqcmodel_hooks.qh"
 
 #include "../client/main.qh"
+#include "../client/weapons/projectile.qh"
 #include "../common/constants.qh"
 #include "../common/effects/all.qh"
 #include "../common/physics.qh"
@@ -9,36 +10,7 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
-entityclass(Projectile);
-classfield(Projectile).int traileffect;
-
-classfield(Projectile).vector trail_oldorigin;
-classfield(Projectile).float trail_oldtime;
-
-classfield(Projectile).int cnt;   // sound index
-
 .float alpha;
-
-void Projectile_ResetTrail(entity this, vector to)
-{
-	this.trail_oldorigin = to;
-	this.trail_oldtime = time;
-}
-
-void Projectile_DrawTrail(entity this, vector to)
-{
-	vector from = this.trail_oldorigin;
-	// float t0 = this.trail_oldtime;
-	this.trail_oldorigin = to;
-	this.trail_oldtime = time;
-
-	if (this.traileffect)
-	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
-		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
-	}
-}
 
 void SUB_SetFade(entity ent, float vanish_time, float fading_time);
 .vector colormod;

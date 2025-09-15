@@ -38,10 +38,12 @@ void hknight_shot(entity this, float offset)
 	entity newmis = launch_spike(this, org, vec);
 	newmis.projectiledeathtype = DEATH_MONSTER_HELL_KNIGHT.m_id;
 	newmis.classname = "knight_spike";
-	_setmodel(newmis, "progs/k_spike.mdl");
+	//_setmodel(newmis, "progs/k_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
 	_sound(this, CH_WEAPON_SINGLE, "hknight/attack1.wav", 1, ATTN_NORM);
+
+	CSQCProjectile(newmis, true, PROJECTILE_KNIGHT_SPIKE, true);
 }
 
 void CheckForCharge(entity this)

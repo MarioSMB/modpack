@@ -431,6 +431,8 @@ void W_FireMine(entity this)
 	setorigin(mine, this.tank.origin);
 
 	mine.skin = this.minetype;
+
+	IL_PUSH(g_projectiles, mine);
 }
 
 /*****************\

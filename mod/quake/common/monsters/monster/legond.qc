@@ -155,6 +155,8 @@ void LaunchRocket(entity this, vector org, vector vec)
 	newmis.nextthink = (time + 5);
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, Legond_MissileTouch);
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void LegondFireRocket(entity this)

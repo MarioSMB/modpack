@@ -362,6 +362,8 @@ entity launch_fireball(entity this, vector org, vector dir)
 	fireball.nextthink = time + 6;
 	setthink(fireball, SUB_Remove);
 
+	IL_PUSH(g_projectiles, fireball);
+
 	return fireball;
 }
 

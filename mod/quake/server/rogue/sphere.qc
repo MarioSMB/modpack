@@ -47,7 +47,7 @@ void sphere_attack(entity this, entity targ)
 {
 	this.enemy = targ;
 
-	this.flags |= FL_PROJECTILE; // TODO?
+	//this.flags |= FL_PROJECTILE; // TODO?
 	this.solid = SOLID_TRIGGER;
 	settouch(this, sphere_impact);
 

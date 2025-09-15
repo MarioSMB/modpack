@@ -127,10 +127,6 @@ void ShalHome(entity this);
 void ShalMissile(entity this)
 {
 	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
-	float dist = vlen(this.enemy.origin - this.origin);
-	float flytime = dist * 0.002;
-	if(flytime < 0.1)
-		flytime = 0.1;
 
 	this.effects |= EF_MUZZLEFLASH;
 	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_NORM);
@@ -144,18 +140,22 @@ void ShalMissile(entity this)
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	_setmodel(missile, "progs/v_spike.mdl");
+	//_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
 
 	missile.origin = this.origin + '0 0 10';
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
-	missile.nextthink = flytime + time;
+	missile.nextthink = time;
 	missile.count = time + 10;
 	setthink(missile, ShalHome);
 	missile.enemy = this.enemy;
 	settouch(missile, ShalMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, false, PROJECTILE_VORE_SPIKE, true);
 }
 
 void ShalHome(entity this)
@@ -168,8 +168,9 @@ void ShalHome(entity this)
 	}
 	vector dir = normalize(vtemp - this.origin);
 	this.velocity = dir * 250;
-	this.nextthink = time + 0.2;
-	setthink(this, ShalHome);	
+	this.nextthink = time;
+	setthink(this, ShalHome);
+	UpdateCSQCProjectile(this);
 }
 
 void ShalMissileTouch(entity this, entity toucher)
@@ -184,12 +185,15 @@ void ShalMissileTouch(entity this, entity toucher)
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	setmodel(this, MDL_EXPLOSION);
-	this.solid = SOLID_NOT;
-	setsize(this, '0 0 0', '0 0 0');
-	s_explode1(this);
+	entity newmis = spawn();
+	set_movetype(newmis, MOVETYPE_NONE);
+	newmis.solid = SOLID_NOT;
+	setmodel(newmis, MDL_EXPLOSION);
+	setsize(newmis, '0 0 0', '0 0 0');
+	setorigin(newmis, this.origin);
+	s_explode1(newmis);
+
+	delete(this);
 }
 
 /*QUAKED monster_shalrath(1 0 0)(-32 -32 -24)(32 32 48) Ambush

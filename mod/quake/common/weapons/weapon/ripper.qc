@@ -115,6 +115,8 @@ void W_FireRipper(entity this, .entity weaponentity)
 	setsize(disc, '0 0 0', '0 0 0');
 	vector org = W_Shotorg(this, weaponentity); // v_forward * 8, not used because it goes through mobs!
 	setorigin(disc, org);
+
+	IL_PUSH(g_projectiles, disc);
 }
 
 METHOD(Ripper, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

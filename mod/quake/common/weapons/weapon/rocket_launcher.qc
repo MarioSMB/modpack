@@ -32,10 +32,14 @@ entity W_FireRocket(entity this)
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
 
-	_setmodel(missile, "progs/missile.mdl");
+	//_setmodel(missile, "progs/missile.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	vector org = this.origin + '0 0 16'; // v_forward * 8, not used because it goes through mobs!
 	setorigin(missile, org);
+
+	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, true, PROJECTILE_ROCKET, true);
 
 	return missile;
 }

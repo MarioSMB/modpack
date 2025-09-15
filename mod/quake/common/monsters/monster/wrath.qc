@@ -226,6 +226,8 @@ void WrathMissile(entity this, int AttackNumber)
 	missile.nextthink = time + 0.1;
 	setthink(missile, WrathHome);
 	missile.cnt = time + 10;
+
+	IL_PUSH(g_projectiles, missile);
 	
 	this.attack_finished = time + 2;
 }

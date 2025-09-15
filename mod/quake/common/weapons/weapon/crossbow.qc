@@ -47,6 +47,8 @@ void crossbow_bolt_stick(entity this, vector org, vector dir)
 	// no velocities
 	newmis.avelocity = '0 0 0';
 	newmis.velocity = '0 0 0';
+
+	//IL_PUSH(g_projectiles, newmis);
 }
 
 void crossbow_bolt_touch(entity this, entity toucher)
@@ -93,13 +95,13 @@ void crossbow_bolt_think(entity this)
 	this.nextthink = time;
 	//this.velocity = this.pos2 * this.speed;
 
+	if(time <= this.crossbow_dmgtime)
+		return; // cooldown to prevent damage spam
+
 	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, it.takedamage && it != this.owner,
 	{
 		if(it.clipgroup && it.clipgroup == this.clipgroup)
 			continue;
-		if(time < it.crossbow_dmgtime)
-			continue;
-		it.crossbow_dmgtime = time + 0.1; // prevent instant death
 		float damg = ((this.dmg) ? this.dmg : 25);
 		if(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
 			damg = 120;
@@ -108,6 +110,8 @@ void crossbow_bolt_think(entity this)
 		Resist_Nails(it, this.origin);
 		spawn_touchblood(this, damg, it);
 		T_Damage(it, this, this.owner, damg, this.projectiledeathtype);
+
+		this.crossbow_dmgtime = time + 0.1; // prevent instant death
 
 		float r = random();
 		if(r > 0.66)
@@ -148,11 +152,13 @@ void W_FireCrossbow(entity this, float ox, .entity weaponentity)
 	missile.dmg = 35;
 	missile.classname = "crossbow_bolt"; // identifier for spike touch TODO: clean this mess up
 	missile.projectiledeathtype = WEP_CROSSBOW.m_id;
-	_setmodel(missile, "progs/proj_impalespike.mdl");
+	//_setmodel(missile, "progs/proj_impalespike.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 
 	setthink(missile, crossbow_bolt_think);
 	missile.nextthink = time;
+
+	CSQCProjectile(missile, true, PROJECTILE_CROSSBOW_BOLT, true);
 
 	this.punchangle_x = -2;
 }

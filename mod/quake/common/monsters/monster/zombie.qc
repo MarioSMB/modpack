@@ -197,6 +197,8 @@ void ZombieFireGrenade(entity this, vector st)
 	_setmodel(missile, "progs/zom_gib.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, org);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 

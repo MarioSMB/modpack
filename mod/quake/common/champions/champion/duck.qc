@@ -28,6 +28,8 @@ void grape_launch(entity this)
 	newmis.clipgroup = player.clipgroup;
 	newmis.flags = FL_PROJECTILE;
 
+	IL_PUSH(g_projectiles, newmis);
+
 	delete(this);
 }
 

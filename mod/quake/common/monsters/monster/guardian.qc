@@ -259,6 +259,8 @@ entity LaunchGuardianLaser(entity this, vector org, vector vec)
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, GuardianLaser_Touch);
 
+	IL_PUSH(g_projectiles, newmis);
+
 	return newmis;
 }
 

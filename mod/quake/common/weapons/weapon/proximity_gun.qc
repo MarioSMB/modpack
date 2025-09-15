@@ -131,6 +131,8 @@ void W_FireProximityGrenade(entity this, .entity weaponentity)
 	_setmodel(missile, "progs/proxbomb.mdl");
 	setorigin(missile, W_Shotorg(this, weaponentity));
 	setsize(missile, '-1 -1 -1', '1 1 1');
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void W_Proximity_Detonate(entity this, .entity weaponentity)

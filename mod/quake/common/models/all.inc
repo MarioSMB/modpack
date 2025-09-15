@@ -24,4 +24,12 @@ MODEL(RUNE_VORELING,                        "progs/voreling_rune.spr");
 MODEL(RUNE_BONE,                            "progs/bone_rune.spr");
 MODEL(RUNE_FIRE,                            "progs/fire_rune.spr");
 
-MODEL(CHAT,                             "models/misc/chatbubble.spr");
+MODEL(CHAT,                                 "models/misc/chatbubble.spr");
+
+// projectiles TODO
+MODEL(PROJECTILE_ROCKET,                    "progs/missile.mdl");
+MODEL(PROJECTILE_MERMAID_BUBBLE,            "progs/s_bubble.spr");
+MODEL(PROJECTILE_CROSSBOW_BOLT,             "progs/proj_impalespike.mdl");
+MODEL(PROJECTILE_VORE_SPIKE,                "progs/v_spike.mdl");
+MODEL(PROJECTILE_SCRAG_SPIKE,               "progs/w_spike.mdl");
+MODEL(PROJECTILE_KNIGHT_SPIKE,              "progs/k_spike.mdl");

@@ -524,6 +524,8 @@ void BileBombTouch(entity this, entity toucher)
 		_setmodel(missile, "progs/bilefrag.mdl");
 		setsize(missile, '0 0 0', '0 0 0');
 		setorigin(missile, this.origin);
+
+		IL_PUSH(g_projectiles, missile);
 	}
 	te_explosion2(org, 240, 3);
 	_sound(this, CH_WEAPON_SINGLE, "gug/bile.wav", 1, 0.8);
@@ -562,6 +564,8 @@ void BileBombThink(entity this)
 		_setmodel(missile, "progs/bilebomb.mdl");
 		setsize(missile, '0 0 0', '0 0 0');
 		setorigin(missile, org);
+
+		IL_PUSH(g_projectiles, missile);
 		t += 1;
 	}
 	delete(this);
@@ -601,6 +605,8 @@ void gug_bilebomb(entity this)
 	_setmodel(missile, "progs/bilebomb.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin + '0 0 75');
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void gug_bile26(entity this) { set_anim(this, 169, gug_run1); }

@@ -163,6 +163,8 @@ void mummyFireGrenade(entity this, vector st)
 	_setmodel(missile, "progs/zom_gib.mdl");
 	setsize(missile, '0 0 0', '0 0 0');        
 	setorigin(missile, org);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void mummy_atta13(entity this) { set_animofs(this, anim_mummy_atta, 13, mummy_run1); ai_face(this); mummyFireGrenade(this, '-10 -22 30'); }

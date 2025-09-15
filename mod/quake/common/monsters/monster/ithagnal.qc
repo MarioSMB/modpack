@@ -194,11 +194,6 @@ void IthMissile(entity this, vector pos)
 	org = this.origin + org;
 
 	vector dir = normalize((this.enemy.origin + '0 0 10') - org);
-	float dist = vlen(this.enemy.origin - org);
-	float flytime = dist * 0.002;
-
-	if(flytime < 0.1)
-		flytime = 0.1;
 
 	this.effects |= EF_MUZZLEFLASH;
 	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_ITHAGNAL);
@@ -212,7 +207,7 @@ void IthMissile(entity this, vector pos)
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	_setmodel(missile, "progs/v_spike.mdl");
+	//_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
 
@@ -220,10 +215,17 @@ void IthMissile(entity this, vector pos)
 	missile.velocity = dir * 200;
 	missile.count = time + 7;
 	missile.avelocity = '300 300 300';
-	missile.nextthink = flytime + time + random(); // added some randomness to their timers
+	missile.nextthink = time;
 	setthink(missile, ShalHome);
 	missile.enemy = this.enemy;
 	settouch(missile, ShalMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, false, PROJECTILE_VORE_SPIKE, true);
+
+	// perform an immediate update (TODO: why doesn't linking it do this anyway?)
+	UpdateCSQCProjectile(this);
 }
 
 // Ithagnal raises her hand to charge several voreballs, then launches them
@@ -403,6 +405,8 @@ void IthVomit(entity this, vector pos)
 
 	setthink(vomit, Ith_AcidSpitAnim);
 	vomit.nextthink = time + 0.1;
+
+	IL_PUSH(g_projectiles, vomit);
 }
 
 // Ithagnal vomits corrosive bile across the floor, don't step in it!
@@ -466,6 +470,8 @@ void ith_telethrow6(entity this)
 		if(it.classname == "grenade")
 			settouch(it, T_MissileTouch);
 		it.angles = vectoangles(it.velocity);
+
+		UpdateCSQCProjectile(it);
 	});
 }
 void ith_telethrow5(entity this) { set_animofs(this, anim_ithagnal_telethrow, 5, ith_telethrow6); }
@@ -491,6 +497,7 @@ void IthagnalGrab(entity this)
 		it.velocity = '0 0 0';
 		set_movetype(it, MOVETYPE_FLYMISSILE);
 		setorigin(it, it.origin);
+		UpdateCSQCProjectile(it);
 	});
 }
 

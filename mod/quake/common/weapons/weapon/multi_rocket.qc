@@ -158,6 +158,8 @@ void MultiRocketLaunch(entity this, float offset, float frameNum, .entity weapon
 		setthink(missile, HomingMissileAcquire);
 		missile.nextthink = time + 0.1;
 	}
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void W_FireMultiRocket(entity this, .entity weaponentity)

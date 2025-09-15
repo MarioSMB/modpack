@@ -7,6 +7,7 @@
 #include "rogue/lava_wpn.qh"
 #include "monsters/ai.qh"
 #include "monsters/ai_ammoresist.qh"
+#include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"
 #include "world.qh"
 #include "../common/slide/slide.qh"
@@ -60,7 +61,6 @@ bool W_Projectile_CanParry(entity this, entity proj)
 		return false;
 	if(proj.clipgroup && proj.clipgroup == this.clipgroup)
 		return false;
-	// hacky way to guess if it's a projectile
 	if(!(proj.flags & FL_PROJECTILE))
 		return false;
 	bool parryplayer = ((autocvar_sv_quake_parry_playershots || deathmatch) && IS_PLAYER(proj.owner));
@@ -100,6 +100,8 @@ entity W_ParryProjectile(entity this)
 		targ.angles = vectoangles(targ.velocity);
 		if(IS_MONSTER(oldown))
 			targ.dmg *= 3;
+
+		UpdateCSQCProjectile(targ);
 	}
 	return targ;
 }
@@ -273,6 +275,8 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	setthink(missile, HIP_LaserThink);
 	settouch(missile, HIP_LaserTouch);
 	missile.count = 0;
+
+	IL_PUSH(g_projectiles, missile);
 
 	return missile;
 }
@@ -528,6 +532,8 @@ void W_FireRifleTarget(entity this, entity targ)
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void W_PulseRifle(entity this)
@@ -1363,6 +1369,8 @@ entity launch_spike(entity this, vector org, vector dir)
 
 	newmis.velocity = dir * 1000;
 
+	IL_PUSH(g_projectiles, newmis);
+
 	return newmis;
 }
 
@@ -1435,10 +1443,12 @@ void spike_touch(entity this, entity toucher)
 			stick_spike(this, this.origin, this.velocity);
 			_sound(this, CH_WEAPON_SINGLE, "weapons/punch_ice2.wav", 1, ATTN_NORM);
 		}
-		else if(this.classname == "wizard_spike" || this.classname == "dfury_spike" || this.classname == "boglord_bolt")
+		else if(this.classname == "wizard_spike")
+			Send_Effect(EFFECT_TE_WIZSPIKE, this.origin, '0 0 0', 1);
+		else if(this.classname == "dfury_spike" || this.classname == "boglord_bolt")
 			te_wizspike(this.origin);
 		else if(this.classname == "knight_spike")
-			te_knightspike(this.origin);
+			Send_Effect(EFFECT_TE_KNIGHTSPIKE, this.origin, '0 0 0', 1);
 		else if(this.classname == "bullet")
 			te_gunshot(this.origin);
 		else if(this.classname == "judge_spike")
@@ -1659,6 +1669,9 @@ entity Launch_Fireball(entity this, vector org, vector dir, float pspeed)
 	//proj.effects = EF_FLAME;
 	setthink(proj, SUB_Remove);
 	proj.nextthink = time + 10;
+
+	IL_PUSH(g_projectiles, proj);
+
 	return proj;
 }
 

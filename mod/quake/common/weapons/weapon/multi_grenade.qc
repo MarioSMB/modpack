@@ -48,6 +48,8 @@ void MiniGrenadeLaunch(entity this, float offsetAngle)
 // set missile duration
 	missile.nextthink = time + 1 +(crandom() * 0.5);
 	setthink(missile, MiniGrenadeExplode);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void MultiGrenadeExplode(entity this)
@@ -122,6 +124,8 @@ void W_FireMultiGrenade(entity this, .entity weaponentity)
 	_setmodel(missile, "progs/mervup.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity));
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 METHOD(MultiGrenadeLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

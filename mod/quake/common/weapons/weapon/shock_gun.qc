@@ -121,6 +121,8 @@ void W_FireShock(entity this, .entity weaponentity)
 	_setmodel(missile, "progs/pbullet.mdl");   // Plasma bullet model
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, W_Shotorg(this, weaponentity) + v_forward * 8);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

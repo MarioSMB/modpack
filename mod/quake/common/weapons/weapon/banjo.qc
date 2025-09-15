@@ -104,6 +104,8 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		vector right = (doleft) ? v_right * -1 : v_right;
 		vector spread_dir = dir + (spread_side - ((banjo_count * spread.x) * 0.5)) * right + (spread_up - ((banjo_count * spread.y) * 0.5)) * v_up;
 		musicnote.velocity = spread_dir * 600;
+
+		IL_PUSH(g_projectiles, musicnote);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

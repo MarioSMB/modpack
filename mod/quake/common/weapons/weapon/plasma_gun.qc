@@ -188,6 +188,8 @@ entity launch_plasma(entity this, vector org, vector dir)
 	setthink(missile, PlasmaLaunch);
 	missile.nextthink = time + 0.1;
 
+	IL_PUSH(g_projectiles, missile);
+
 	return missile;
 }
 

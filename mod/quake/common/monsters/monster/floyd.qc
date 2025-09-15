@@ -113,6 +113,8 @@ void FLaunchLaser(entity this, vector org, vector vec)
 	newmis.nextthink = time + 5;
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, FLaser_Touch);
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void floyd_fire(entity this, float muzzle)

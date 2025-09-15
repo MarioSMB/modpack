@@ -278,6 +278,8 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 		setsize(musicnote, '0 0 0', '0 0 0'); 	
 		setorigin(musicnote, W_Shotorg(this, weaponentity) + v_forward*12 + '0 0 -8' + v_right * 8); 
 	}
+
+	IL_PUSH(g_projectiles, musicnote);
 }
 
 METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

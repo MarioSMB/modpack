@@ -132,6 +132,8 @@ void W_Plane_Fire(entity this, .entity weaponentity)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, org);
 
+	IL_PUSH(g_projectiles, missile);
+
 	float r = random();
 	if(r < 0.25)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/momwoosh1.wav", 1, ATTN_NORM);

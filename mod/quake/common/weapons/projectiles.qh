@@ -1,0 +1,8 @@
+#pragma once
+
+const int PROJECTILE_ROCKET = 1;
+const int PROJECTILE_MERMAID_BUBBLE = 2;
+const int PROJECTILE_CROSSBOW_BOLT = 3;
+const int PROJECTILE_VORE_SPIKE = 4;
+const int PROJECTILE_SCRAG_SPIKE = 5;
+const int PROJECTILE_KNIGHT_SPIKE = 6;

@@ -40,8 +40,8 @@ void WandHome(entity this)
 		this.velocity = dir * 250;
 	}
 
-	this.nextthink = time + 0.2;
-	setthink(this, WandHome);
+	this.nextthink = time;
+	UpdateCSQCProjectile(this);
 }
 
 void WandMissileTouch(entity this, entity toucher)
@@ -56,12 +56,15 @@ void WandMissileTouch(entity this, entity toucher)
 
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	setmodel(this, MDL_EXPLOSION);
-	this.solid = SOLID_NOT;
-	setsize(this, '0 0 0', '0 0 0');
-	s_explode1(this);
+	entity newmis = spawn();
+	set_movetype(newmis, MOVETYPE_NONE);
+	newmis.solid = SOLID_NOT;
+	setmodel(newmis, MDL_EXPLOSION);
+	setsize(newmis, '0 0 0', '0 0 0');
+	setorigin(newmis, this.origin);
+	s_explode1(newmis);
+
+	delete(this);
 }
 
 void W_FireWand(entity this, .entity weaponentity)
@@ -78,7 +81,7 @@ void W_FireWand(entity this, .entity weaponentity)
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	_setmodel(missile, "progs/v_spike.mdl");
+	//_setmodel(missile, "progs/v_spike.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 
 	setorigin(missile, this.origin + this.view_ofs);
@@ -90,6 +93,10 @@ void W_FireWand(entity this, .entity weaponentity)
 	missile.cnt = time + 0.33;
 	setthink(missile, WandHome);
 	settouch(missile, WandMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, false, PROJECTILE_VORE_SPIKE, true);
 }
 
 METHOD(Wand, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

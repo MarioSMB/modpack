@@ -357,10 +357,12 @@ void juggernaut_launch_rocket(entity this)
 	setsize(newmis, '0 0 0', '0 0 0');
 	setorigin(newmis, org);
 	newmis.effects = EF_MUZZLEFLASH;
+	IL_PUSH(g_projectiles, newmis);
 	this.ammo_rockets = (this.ammo_rockets - 1);
 	this.count = (this.count + 1);
 	if(this.count < floor(((random() * (autocvar_skill + 1)) * 1.5)) && this.ammo_rockets > 0)
 		juggernaut_firea6(this);
+
 }
 
 void juggernaut_laser_touch(entity this, entity toucher)

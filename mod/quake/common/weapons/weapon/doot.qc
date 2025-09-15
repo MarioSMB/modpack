@@ -212,6 +212,8 @@ void W_FireDoot(entity this, .entity weaponentity)
 		vector spread = '0.15 0.15 0';
 		vector spread_dir = dir + (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
 		musicnote.velocity = spread_dir * 450 + v_up * 100;
+
+		IL_PUSH(g_projectiles, musicnote);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

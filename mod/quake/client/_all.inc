@@ -12,6 +12,7 @@
 #include "centerprint.qc"
 #include "shownames.qc"
 #include "particles.qc"
+#include "weapons/_mod.inc"
 
 #include "../common/_all.inc"
 

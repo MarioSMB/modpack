@@ -662,7 +662,7 @@ void fire_bone_shard(entity this)
 		it.velocity = dir * 1000;
 		it.angles = vectoangles(dir);
 		it.classname = "flying_arm";
-		it.flags |= FL_PROJECTILE; // TODO: unique projectile? parrying the stationary ones would be weird!
+		//it.flags |= FL_PROJECTILE; // TODO: unique projectile? parrying the stationary ones would be weird!
 		it.owner = this; // for super spikes
 		settouch(it, superspike_touch);
 		it.nextthink = time + 5;
@@ -834,6 +834,8 @@ void seek_and_fire1(entity this)
 	missile.nextthink = flytime + time;
 	setthink(missile, SkullMissHome);
 	settouch(missile, SkullMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void seek_and_fire2(entity this)

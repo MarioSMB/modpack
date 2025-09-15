@@ -90,6 +90,8 @@ void ShulkerMissile(entity this)
 	setthink(missile, ShulkerHome);
 	missile.enemy = this.enemy;
 	settouch(missile, ShulkerMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void ShulkerHome(entity this)

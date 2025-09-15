@@ -374,6 +374,8 @@ void lavaman_missile(entity this, int AttackNumber)
 	setthink(fireball, SUB_Remove);
 	fireball.nextthink = time + 6;
 
+	IL_PUSH(g_projectiles, fireball);
+
 	_sound(this, CH_WEAPON_SINGLE, "boss1/throw.wav", 1, ATTN_NORM);
 	
 // check for dead enemy

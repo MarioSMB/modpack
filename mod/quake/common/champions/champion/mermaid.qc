@@ -14,7 +14,7 @@ void mermaid_bubble_shoot(entity this)
 	dir += (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
 	entity newmis = launch_spike(this, this.origin + this.view_ofs, dir);
 	newmis.classname = "mermaid_bubble";
-	_setmodel(newmis, "progs/s_bubble.spr");
+	//_setmodel(newmis, "progs/s_bubble.spr");
 	newmis.alpha = 0.75;
 	newmis.scale = 5 + (random() * 2);
 	newmis.avelocity = randomvec() * 200;
@@ -28,6 +28,11 @@ void mermaid_bubble_shoot(entity this)
 	newmis.projectiledeathtype = WEP_MAGIC.m_id;
 	newmis.clipgroup = this.clipgroup;
 	newmis.flags = FL_PROJECTILE;
+
+	// already done by launch_spike TODO
+	//IL_PUSH(g_projectiles, newmis);
+
+	CSQCProjectile(newmis, true, PROJECTILE_MERMAID_BUBBLE, true);
 }
 
 void mermaid_bubble5(entity this) { set_anim(this, 21, player_run); }
@@ -35,7 +40,11 @@ void mermaid_bubble4(entity this) { set_anim(this, 22, mermaid_bubble5); }
 void mermaid_bubble3(entity this)
 {
 	set_anim(this, 23, mermaid_bubble4);
-	mermaid_bubble_shoot(this);
+	int bubblecnt = 1;
+	if(this.waterlevel >= WATERLEVEL_SWIMMING && this.watertype == CONTENT_WATER)
+		bubblecnt = 3;
+	for(int j = 0; j < bubblecnt; ++j)
+		mermaid_bubble_shoot(this);
 }
 void mermaid_bubble2(entity this) { set_anim(this, 22, mermaid_bubble3); }
 void mermaid_bubble1(entity this) { set_anim(this, 21, mermaid_bubble2); }
@@ -65,7 +74,7 @@ METHOD(Mermaid, m_playerthink, void(Champions this, entity actor))
 		return;
 	}
 
-	if(PHYS_INPUT_BUTTON_ATCK(actor) && actor.waterlevel >= WATERLEVEL_SWIMMING && actor.watertype == CONTENT_WATER && time > actor.mermaid_bubble_time && !actor.tank && !STAT(CANNON, actor))
+	if(PHYS_INPUT_BUTTON_ATCK(actor) && time > actor.mermaid_bubble_time && !actor.tank && !STAT(CANNON, actor))
 	{
 		_sound(actor, CH_VOICE, "weapons/bubble_shoot.wav", 1, ATTN_NORM);
 		actor.mermaid_bubble_time = time + 0.5;

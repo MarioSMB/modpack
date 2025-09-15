@@ -1,5 +1,6 @@
 // generated file; do not modify
 #include "common.qh"
+#include "csqcprojectile.qh"
 #include "music.qh"
 #include "selection.qh"
 #include "weaponsystem.qh"

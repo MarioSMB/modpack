@@ -8,3 +8,6 @@
 .float fade_rate;
 
 bool W_DualWielding(entity player);
+
+IntrusiveList g_projectiles;
+STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }

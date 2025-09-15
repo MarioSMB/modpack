@@ -164,6 +164,8 @@ void W_FireMayo(entity this, .entity weaponentity)
 	_setmodel(missile, "progs/grenade_mayo.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity) + v_right * 12);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

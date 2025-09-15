@@ -82,7 +82,8 @@ void OgreFireGrenade(entity this)
 	missile.avelocity = '300 300 300';
 
 	missile.angles = vectoangles(missile.velocity);
-	
+
+	// TODO: separate projectile type?
 	if((this.spawnflags & OGRE_BOSS))
 	{
 		settouch(missile, MultiGrenadeTouch);
@@ -101,6 +102,8 @@ void OgreFireGrenade(entity this)
 		setsize(missile, '0 0 0', '0 0 0');		
 		setorigin(missile, this.origin);
 	}
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 

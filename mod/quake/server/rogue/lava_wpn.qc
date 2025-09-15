@@ -29,6 +29,8 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 
 	newmis.velocity = dir * 1000;
 
+	IL_PUSH(g_projectiles, newmis);
+
 	return newmis;
 }
 

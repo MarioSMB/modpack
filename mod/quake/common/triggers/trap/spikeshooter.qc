@@ -72,6 +72,8 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		lavaball.avelocity = '0 0 400';
 		lavaball.nextthink = time + 5;
 		setthink(lavaball, SUB_Remove);
+
+		IL_PUSH(g_projectiles, lavaball);
 	}
 	else if(this.spawnflags & SPAWNFLAG_ROCKET)
 	{
@@ -81,6 +83,8 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		rocket.velocity = this.movedir*1000;
 		rocket.angles = vectoangles(rocket.velocity);
 		setorigin(rocket, this.origin + this.movedir*8);
+
+		UpdateCSQCProjectile(rocket);
 	}
 	else
 	{

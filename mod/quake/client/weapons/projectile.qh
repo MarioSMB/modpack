@@ -1,0 +1,33 @@
+#pragma once
+
+#include "../../common/sounds/sound.qh"
+
+bool autocvar_cl_projectiles_sloppy;
+
+entityclass(Projectile);
+classfield(Projectile).int traileffect;
+
+classfield(Projectile).vector iorigin1, iorigin2;
+classfield(Projectile).float spawntime;
+classfield(Projectile).vector trail_oldorigin;
+classfield(Projectile).float trail_oldtime;
+classfield(Projectile).float fade_time, fade_rate;
+
+classfield(Projectile).float alphamod;
+classfield(Projectile).int count; // set if clientside projectile
+classfield(Projectile).int cnt;   // sound index
+classfield(Projectile).float gravity;
+classfield(Projectile).int snd_looping;
+classfield(Projectile).bool silent;
+
+void SUB_Stop(entity this, entity toucher);
+
+void Projectile_ResetTrail(entity this, vector to);
+
+void Projectile_DrawTrail(entity this, vector to);
+
+void Projectile_Draw(entity this);
+
+void loopsound(entity e, int ch, Sound samp, float vol, float attn);
+
+void Ent_RemoveProjectile(entity this);

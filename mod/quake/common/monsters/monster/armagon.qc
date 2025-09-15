@@ -185,6 +185,8 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 	_setmodel(missile, "progs/missile.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, src);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void armagon_launch_laser(entity this, float ofs)

@@ -385,6 +385,8 @@ void JLaunchLaser(entity this, vector org, vector vec)
 	newmis.nextthink = time + 5;
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, JLaser_Touch);
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void jim_laser(entity this)

@@ -3,6 +3,10 @@
 #include "weapon.qh"
 
 #ifdef GAMEQC
+#include "projectiles.qh"
+#endif
+
+#ifdef GAMEQC
 // TODO: cleaner way to list these?
 noref string autocvar_cl_quake_weaponpriority = "katana crowbar breegull plane magic shield gravgun mushroom pogo rocketlauncher multirocketlauncher impaler nuke cannon lightning plasma shock lightme otamatone laser_gun mic grenadelauncher multigrenade proximitygun tuba napalm fish chimes mayo spellbook hammer portalgun ocarina supernailgun lavasupernailgun organ crossbow piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun banjo ball wand chainsaw pan axe bongos";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;

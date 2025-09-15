@@ -56,6 +56,8 @@ void Papyrus_ThrowBone(entity this)
 	_setmodel(missile, "progs/bone.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity));
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void skull_fire(entity this)

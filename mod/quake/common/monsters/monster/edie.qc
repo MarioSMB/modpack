@@ -215,6 +215,8 @@ void edie_Fire(entity this, float valx, float valy, float valz, bool moving)
 	setsize(missile, '0 0 0', '0 0 0');		
 
 	setorigin(missile, org);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void edie_stand1(entity this);

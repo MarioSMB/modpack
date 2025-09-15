@@ -499,13 +499,6 @@ STATIC_INIT(PlayerSlots_Spawn)
 
 // optional stuff
 
-void loopsound(entity e, int ch, Sound samp, float vol, float attn)
-{
-	TC(int, ch);
-	sound(e, ch, samp, vol, attn);
-	e.snd_looping = ch;
-}
-
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;

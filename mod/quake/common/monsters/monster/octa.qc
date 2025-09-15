@@ -71,7 +71,6 @@ void octa_ink_think(entity this)
 void octa_ink_spawn(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
-	newmis.flags = FL_PROJECTILE;
 	newmis.classname = "PBurst";
 	newmis.owner = this;
 

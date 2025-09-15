@@ -247,6 +247,8 @@ void W_FireSuperLightning(entity this, .entity weaponentity)
 	}
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, W_Shotorg(this, weaponentity)); // lol what
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 METHOD(SuperLightning, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

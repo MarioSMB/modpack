@@ -620,6 +620,8 @@ void SkaarjMissile(entity this, vector org, vector dir)
 	_setmodel(newmis, "progs/big_bullet.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 	setorigin(newmis, org);
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void skaarj_fire(entity this, vector org1, vector org2)

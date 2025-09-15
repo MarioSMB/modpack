@@ -1031,6 +1031,8 @@ void Gremlin_FireRocket(entity this)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin + v_forward * 8 + '0 0 16');
 //   GremlinRecoil(dir,-1000);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 /*

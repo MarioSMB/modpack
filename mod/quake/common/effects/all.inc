@@ -31,16 +31,16 @@ STATIC_INIT(Effect_TR_WIZSPIKE)
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_trailspacing", "1");
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_type", "smoke");
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_color", "0x433700 0xbba70f");
-	registercvar("cl_particle_TR_WIZSPIKE_smoke_tex", "62 64");
-	registercvar("cl_particle_TR_WIZSPIKE_smoke_size", "1 2");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_tex", "24 32");
+	registercvar("cl_particle_TR_WIZSPIKE_smoke_size", "0.1 0.2");
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_sizeincrease", "4");
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_velocityjitter", "16 16 16");
 	registercvar("cl_particle_TR_WIZSPIKE_smoke_rotate", "0 360 0 30");
 
 	registercvar("cl_particle_TR_WIZSPIKE_trail_trailspacing", "2");
-	registercvar("cl_particle_TR_WIZSPIKE_trail_type", "alphastatic");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_type", "static");
 	registercvar("cl_particle_TR_WIZSPIKE_trail_color", "0x101010 0x6b6b0f");
-	registercvar("cl_particle_TR_WIZSPIKE_trail_tex", "8 16");
+	registercvar("cl_particle_TR_WIZSPIKE_trail_tex", "0 8");
 	registercvar("cl_particle_TR_WIZSPIKE_trail_size", "1 3");
 	registercvar("cl_particle_TR_WIZSPIKE_trail_sizeincrease", "3");
 	registercvar("cl_particle_TR_WIZSPIKE_trail_alpha", "16 128 128");
@@ -53,47 +53,218 @@ STATIC_INIT(Effect_TR_WIZSPIKE)
 
 EFFECT(1, TR_SLIGHTBLOOD,           "TR_SLIGHTBLOOD")
 EFFECT(1, TR_KNIGHTSPIKE,           "TR_KNIGHTSPIKE")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_KNIGHTSPIKE)
+{
+	registercvar("cl_particle_TR_KNIGHTSPIKE", "sparks trail flame bubbles");
+
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_notunderwater", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_trailspacing", "4");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_count", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_type", "snow");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_color", "0x7f1707 0xe7ab5f");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_size", "1 1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_sizeincrease", "-1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_gravity", "0");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_time", "0.5 1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_originjitter", "4 4 4");
+
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_notunderwater", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_count", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_type", "spark");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_color", "0xFFAB57 0xFF0A0A");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_stretchfactor", "0");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_size", "1 2");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_alpha", "64 256 160");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_gravity", "0.3");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_bounce", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_airfriction", "0.5");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_gravity", "0.05");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_liquidfriction", "5");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_originjitter", "0 0 0");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_velocityjitter", "50 50 50");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_rotate", "0 360 1000 1000");
+
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_trailspacing", "3");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_type", "static");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_color", "0x801010 0xFFA020");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_size", "5 1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_alpha", "10 20 15");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_velocityjitter", "25 25 25");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_airfriction", "3");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_liquidfriction", "3");
+
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_trailspacing", "9");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_type", "bubble");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_tex", "62 62");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_color", "0x404040 0x808080");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_size", "2 2");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_alpha", "64 256 128");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_gravity", "-0.125");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_bounce", "1.5");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_liquidfriction", "0.25");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_originjitter", "16 16 16");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_bubbles_velocityjitter", "96 96 96");
+}
+#endif
 EFFECT(1, TR_VORESPIKE,             "TR_VORESPIKE")
 #ifdef CSQC
 STATIC_INIT(Effect_TR_VORESPIKE)
 {
-	registercvar("cl_particle_TR_VORESPIKE", "smoke trail bubbles");
+	registercvar("cl_particle_TR_VORESPIKE", "light trail sparks smoke");
 
-	registercvar("cl_particle_TR_VORESPIKE_smoke_trailspacing", "1");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_type", "smoke");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_color", "0x6b4b57 0x937387");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_tex", "62 64");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_size", "1 2");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_sizeincrease", "4");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_velocityjitter", "16 16 16");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_lightradius", "16");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_lightcolor", "1 0.8 0.9");
-	registercvar("cl_particle_TR_VORESPIKE_smoke_rotate", "0 360 0 30");
+	registercvar("cl_particle_TR_VORESPIKE_light_lightradius", "64");
+	registercvar("cl_particle_TR_VORESPIKE_light_lighttime", "0");
+	registercvar("cl_particle_TR_VORESPIKE_light_lightcolor", "0.3 0.1 0.2");
 
-	registercvar("cl_particle_TR_VORESPIKE_trail_trailspacing", "4");
-	registercvar("cl_particle_TR_VORESPIKE_trail_type", "alphastatic");
-	registercvar("cl_particle_TR_VORESPIKE_trail_color", "0x3b1f23 0x7e424a");
-	registercvar("cl_particle_TR_VORESPIKE_trail_tex", "8 16");
-	registercvar("cl_particle_TR_VORESPIKE_trail_size", "3 7");
-	registercvar("cl_particle_TR_VORESPIKE_trail_sizeincrease", "4");
-	registercvar("cl_particle_TR_VORESPIKE_trail_alpha", "32 192 48");
-	registercvar("cl_particle_TR_VORESPIKE_trail_originjitter", "4 4 4");
+	registercvar("cl_particle_TR_VORESPIKE_trail_trailspacing", "1");
+	registercvar("cl_particle_TR_VORESPIKE_trail_count", "1");
+	registercvar("cl_particle_TR_VORESPIKE_trail_type", "snow");
+	registercvar("cl_particle_TR_VORESPIKE_trail_tex", "33 33");
+	registercvar("cl_particle_TR_VORESPIKE_trail_color", "0x502030 0x502030");
+	registercvar("cl_particle_TR_VORESPIKE_trail_size", "1 2");
+	registercvar("cl_particle_TR_VORESPIKE_trail_sizeincrease", "-1");
+	registercvar("cl_particle_TR_VORESPIKE_trail_gravity", "0");
+	registercvar("cl_particle_TR_VORESPIKE_trail_time", "0.5 2");
 	registercvar("cl_particle_TR_VORESPIKE_trail_velocityjitter", "16 16 16");
-	registercvar("cl_particle_TR_VORESPIKE_trail_gravity", "-0.05");
-	registercvar("cl_particle_TR_VORESPIKE_trail_rotate", "0 360 10 30");
-	registercvar("cl_particle_TR_VORESPIKE_trail_notunderwater", "1");
+	registercvar("cl_particle_TR_VORESPIKE_trail_originjitter", "4 4 4");
 
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_trailspacing", "0.5");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_type", "bubble");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_color", "0x6b4b57 0x937387");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_tex", "16 19");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_size", "1 2");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_sizeincrease", "4");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_alpha", "96 192 64");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_liquidfriction", "1");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_originjitter", "2 2 2");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_velocityjitter", "8 8 8");
-	registercvar("cl_particle_TR_VORESPIKE_bubbles_underwater", "1");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_trailspacing", "1");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_type", "spark");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_tex", "33 33");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_stretchfactor", "0.25");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_color", "0x502030 0x502030");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_size", "0.5 1.0");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_alpha", "192 256 1024");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_gravity", "0.05");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_originjitter", "8 8 8");
+	registercvar("cl_particle_TR_VORESPIKE_sparks_velocityjitter", "56 56 56");
+
+	registercvar("cl_particle_TR_VORESPIKE_smoke_trailspacing", "3");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_type", "smoke");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_color", "0x502030 0x502030");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_size", "5 10");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_alpha", "10 20 15");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_velocityjitter", "25 25 25");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_airfriction", "3");
+	registercvar("cl_particle_TR_VORESPIKE_smoke_liquidfriction", "3");
+}
+#endif
+
+EFFECT(0, TE_KNIGHTSPIKE,           "TE_KNIGHTSPIKE")
+#ifdef CSQC
+STATIC_INIT(Effect_TE_KNIGHTSPIKE)
+{
+	registercvar("cl_particle_TE_KNIGHTSPIKE", "decal light sparks boom flame bubbles");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_countabsolute", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_type", "decal");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_tex", "0 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_size", "3 9");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_alpha", "32 96 0");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_decal_originjitter", "6 6 6");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_countabsolute", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_type", "decal");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_size", "1 6");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_alpha", "1024 1024 0");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_lightradius", "64");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_lightradiusfade", "64");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_lightshadow", "0");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_light_lightcolor", "1 0.75 0");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_tex", "0 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_notunderwater", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_count", "512");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_type", "alphastatic");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_color", "0x903010 0xFFD030");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_size", "1 6");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_alpha", "0 128 512");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_gravity", "-0.1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_airfriction", "6");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_velocityoffset", "0 0 32");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_sparks_velocityjitter", "384 384 384");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_tex", "0 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_notunderwater", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_count", "512");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_type", "static");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_color", "0x903010 0xFFD030");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_size", "0.1 0.2");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_alpha", "0 256 256");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_gravity", "0.1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_airfriction", "6");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_liquidfriction", "12");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_velocityoffset", "0 0 32");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_boom_velocityjitter", "162 162 162");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_tex", "0 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_count", "16");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_type", "smoke");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_color", "0x903010 0xFFD030");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_size", "6 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_alpha", "64 128 128");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_gravity", "-0.05");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_liquidfriction", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_originjitter", "16 16 16");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_flame_velocityjitter", "16 16 16");
+
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_underwater", "1");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_count", "64");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_type", "bubble");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_tex", "62 62");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_color", "0x404040 0x808080");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_size", "2 2");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_alpha", "64 256 128");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_gravity", "-0.125");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_bounce", "1.5");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_liquidfriction", "0.25");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_originjitter", "8 8 8");
+	registercvar("cl_particle_TE_KNIGHTSPIKE_bubbles_velocityjitter", "64 64 64");
+}
+#endif
+
+EFFECT(0, TE_WIZSPIKE,           "TE_WIZSPIKE")
+#ifdef CSQC
+STATIC_INIT(Effect_TE_WIZSPIKE)
+{
+	registercvar("cl_particle_TE_WIZSPIKE", "flash bubbles");
+
+	registercvar("cl_particle_TE_WIZSPIKE_flash_notunderwater", "1");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_count", "8");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_type", "static");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_tex", "24 32");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_color", "0x6fff00 0xfdff00");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_alpha", "32 128 256");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_originjitter", "8 8 8");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_velocityjitter", "32 32 32");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_size", "6 10");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_gravity", "1");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_bounce", "1");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_sizeincrease", "2");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_liquidfriction", "10");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_lightradius", "128");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_lightradiusfade", "192");
+	registercvar("cl_particle_TE_WIZSPIKE_flash_lightcolor", "0.4 1 0");
+
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_underwater", "1");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_count", "16");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_tex", "24 32");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_blend", "invmod");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_type", "static");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_color", "0x6fff00 0xfdff00");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_alpha", "32 128 128");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_originjitter", "4 4 4");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_velocityoffset", "0 0 20");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_velocityjitter", "32 32 32");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_size", ".1 .1");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_bounce", "1");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_sizeincrease", "10");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_liquidfriction", "10");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_lightradius", "128");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_lightradiusfade", "192");
+	registercvar("cl_particle_TE_WIZSPIKE_bubbles_lightcolor", "0.4 1 0");
 }
 #endif
 
@@ -743,5 +914,36 @@ STATIC_INIT(Effect_NUKE_EXPLODE)
 	registercvar("cl_particle_nuke_explode_debris_size", "2 6");
 	registercvar("cl_particle_nuke_explode_debris_tex", "66 68");
 	registercvar("cl_particle_nuke_explode_debris_velocityjitter", "324 324 524");
+}
+#endif
+
+EFFECT(1, TR_BUBBLES,              "TR_BUBBLES")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_BUBBLES)
+{
+	registercvar("cl_particle_TR_BUBBLES", "smoke trail");
+
+	registercvar("cl_particle_TR_BUBBLES_smoke_trailspacing", "12");
+	registercvar("cl_particle_TR_BUBBLES_smoke_type", "bubble");
+	registercvar("cl_particle_TR_BUBBLES_smoke_color", "0x90d5ff 0x696969");
+	registercvar("cl_particle_TR_BUBBLES_smoke_count", "1");
+	registercvar("cl_particle_TR_BUBBLES_smoke_tex", "74 74");
+	registercvar("cl_particle_TR_BUBBLES_smoke_size", "0.1 0.2");
+	registercvar("cl_particle_TR_BUBBLES_smoke_sizeincrease", "4");
+	registercvar("cl_particle_TR_BUBBLES_smoke_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_BUBBLES_smoke_rotate", "0 360 0 30");
+	registercvar("cl_particle_TR_BUBBLES_smoke_gravity", "-0.05");
+	registercvar("cl_particle_TR_BUBBLES_smoke_underwater", "1");
+
+	registercvar("cl_particle_TR_BUBBLES_trail_trailspacing", "2");
+	registercvar("cl_particle_TR_BUBBLES_trail_type", "static");
+	registercvar("cl_particle_TR_BUBBLES_trail_color", "^4 ^5");
+	registercvar("cl_particle_TR_BUBBLES_trail_tex", "24 31");
+	registercvar("cl_particle_TR_BUBBLES_trail_size", "1 3");
+	registercvar("cl_particle_TR_BUBBLES_trail_sizeincrease", "3");
+	registercvar("cl_particle_TR_BUBBLES_trail_alpha", "16 128 128");
+	registercvar("cl_particle_TR_BUBBLES_trail_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_BUBBLES_trail_originjitter", "2 2 2");
+	registercvar("cl_particle_TR_BUBBLES_trail_rotate", "0 360 0 30");
 }
 #endif

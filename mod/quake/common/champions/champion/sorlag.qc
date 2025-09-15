@@ -118,6 +118,8 @@ void Sorlag_AcidSpit(entity this)
 	setthink(newmis, Sorlag_AcidSpitAnim);
 	settouch(newmis, Sorlag_AcidSpitTouch);
 	newmis.nextthink = time + 0.1;
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void Sorlag_AcidSpitProc(entity this)

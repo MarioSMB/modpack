@@ -10,6 +10,7 @@
 #include "../common/triggers/func/earthquake.qh"
 #include "../common/triggers/trigger/changelevel.qh"
 #include "vote.qh"
+#include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"
 
 void dropclient_do(entity this)
@@ -2003,6 +2004,8 @@ void StartFrame()
 
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected; // we don't use remove_unsafely as quake does infact use spikes
+
+	IL_EACH(g_projectiles, it.csqcprojectile_clientanimate, CSQCProjectile_Check(it));
 
 	earthquake_frame();
 

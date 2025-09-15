@@ -544,6 +544,8 @@ void ZerMissile(entity this)
 	settouch(missile, ZerMissileTouch);
 
 	missile.frame = 7;
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void ZerMissileExplode(entity this)

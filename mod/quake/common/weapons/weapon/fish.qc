@@ -209,6 +209,8 @@ void fishmissile(entity this, .entity weaponentity)
 	fish.cnt = time + 10;
 	setthink(fish, fishthink);
 	fish.nextthink = time + 0.01;
+
+	IL_PUSH(g_projectiles, fish);
 }
 
 void fishcharge(entity this)

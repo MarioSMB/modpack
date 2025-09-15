@@ -121,6 +121,8 @@ void Poop_PooSpit(entity this)
 	setthink(newmis, Poop_PooSpitAnim);
 	settouch(newmis, Poop_PooSpitTouch);
 	newmis.nextthink = time + 0.1;
+
+	IL_PUSH(g_projectiles, newmis);
 }
 
 void Poop_PooSpitProc(entity this)

@@ -142,6 +142,8 @@ void W_FireKazoo(entity this, .entity weaponentity)
 		vector spread_dir = dir + (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
 		musicnote.movedir = spread_dir * 150 + v_up * 20;
 		musicnote.velocity = musicnote.movedir;
+
+		IL_PUSH(g_projectiles, musicnote);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

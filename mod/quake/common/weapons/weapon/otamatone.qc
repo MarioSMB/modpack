@@ -158,6 +158,8 @@ void W_FireOtamatone(entity this, .entity weaponentity)
 		settouch(musicnote, otamatone_note_touch);
 
 		musicnote.velocity = dir * 500;
+
+		IL_PUSH(g_projectiles, musicnote);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

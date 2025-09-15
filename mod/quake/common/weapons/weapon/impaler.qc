@@ -95,6 +95,9 @@ void T_SpearTouch(entity this, entity toucher)
 		_setmodel(missile, "progs/impstuck.mdl");
 		setsize(missile, '0 0 0', '0 0 0');
 		setorigin(missile, this.origin + v_forward);
+
+		IL_PUSH(g_projectiles, missile);
+
 		delete(this);
 	}
 	else if(toucher && toucher.takedamage && toucher.armorvalue == 0 && (IS_PLAYER(toucher) || toucher.classname == "wall_explode" || IS_MONSTER(toucher)))
@@ -448,6 +451,9 @@ void W_FireSpear(entity this, .entity weaponentity)
 	_setmodel(missile, "progs/impaler.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, W_Shotorg(this, weaponentity) + (v_forward * 8));
+
+	IL_PUSH(g_projectiles, missile);
+
 	this.velocity = this.velocity - (v_forward * (600 - this.armorvalue)) + '0 0 50';
 	this.punchangle_x = -10;
 }

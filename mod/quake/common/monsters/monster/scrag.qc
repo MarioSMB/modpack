@@ -178,11 +178,12 @@ void Wiz_FastFire(entity this)
 		_sound(this.owner, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, vec);
 		newmis.projectiledeathtype = DEATH_MONSTER_SCRAG.m_id;
-		newmis.velocity = vec*600;
+		newmis.velocity = vec * 600;
 		newmis.owner = this.owner;
 		newmis.classname = "wizard_spike";
-		_setmodel(newmis, "progs/w_spike.mdl");
-		setsize(newmis, '0 0 0', '0 0 0');		
+		//_setmodel(newmis, "progs/w_spike.mdl");
+		setsize(newmis, '0 0 0', '0 0 0');
+		CSQCProjectile(newmis, true, PROJECTILE_SCRAG_SPIKE, true);
 	}
 
 	delete(this);

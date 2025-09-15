@@ -70,6 +70,8 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, Laser_Touch);
 
+	IL_PUSH(g_projectiles, newmis);
+
 	return newmis;
 }
 

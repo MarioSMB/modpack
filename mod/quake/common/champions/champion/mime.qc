@@ -59,6 +59,8 @@ void Mime_ThrowBall(entity this)
 	_setmodel(missile, "progs/ball.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity));
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 METHOD(Mime, m_activate, void(Champions this, entity actor))

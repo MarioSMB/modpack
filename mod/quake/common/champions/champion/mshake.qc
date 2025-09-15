@@ -131,6 +131,8 @@ void mshake_DropMilk(entity this, float amount)
 	_setmodel(proj, "progs/s_milk.mdl");
 	setsize(proj, '0 0 0', '0 0 0');
 	setorigin(proj, CENTER_OR_VIEWOFS(this));
+
+	IL_PUSH(g_projectiles, proj);
 }
 
 METHOD(MasterShake, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))

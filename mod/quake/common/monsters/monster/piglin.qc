@@ -115,6 +115,8 @@ void PiglinMissile(entity this)
 	setthink(missile, PiglinHome);
 	missile.enemy = this.enemy;
 	settouch(missile, PiglinMissileTouch);
+
+	IL_PUSH(g_projectiles, missile);
 }
 
 void PiglinHome(entity this)
