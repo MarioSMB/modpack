@@ -243,9 +243,9 @@ METHOD(Galena, m_physics, bool(Champions this, entity actor, float dt))
 		player_sound(actor, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	#endif
-		vector forward, right, up;
-		MAKE_VECTORS(PHYS_INPUT_ANGLES(actor), forward, right, up);
-		actor.velocity += tap_direction_x * 300 * forward + tap_direction_y * 300 * right;
+		vector vang = PHYS_INPUT_ANGLES(actor);
+		makevectors('0 1 0' * vang.y);
+		actor.velocity += tap_direction_x * 300 * v_forward + tap_direction_y * 300 * v_right;
 		actor.velocity_z += 200;
 		UNSET_ONGROUND(actor);
 	}
