@@ -306,6 +306,10 @@ void Particle_Parse_cvar(string input, vector org_from, vector org_to, vector di
 	s = strcat(input, "_teamcolor"); if(pcvar_valid(s)) teamcolor = cvar(s);
 	s = strcat(input, "_lightteamcolor"); if(pcvar_valid(s)) lightteamcolor = cvar(s);
 
+	// quake has no use for team colors
+	teamcolor = 0;
+	lightteamcolor = 0;
+
 	if(((teamcolor == 1) || teamcolor == 2) && (eff_flags & PARTICLES_USECOLOR))
 	{
 		info_color_min = particles_colormin;
