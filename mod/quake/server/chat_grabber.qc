@@ -30,6 +30,8 @@ void chat_grabber_PreFormatMessage(entity this, string msg)
 	entity client = this;
 	string nickname = strdecolorize(GetCallerName(client));
 	string output = strdecolorize(msg);
+	// bot doesn't support quotes
+	output = strreplace("\"", "'", output);
 
 	string formatted = sprintf("<**%s**>: %s", nickname, output);
 	if(autocvar_chat_grabber_show_id)
