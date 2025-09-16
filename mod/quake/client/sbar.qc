@@ -635,6 +635,7 @@ string Sbar_ItemIcon(int item)
 		case IT_LAVA_NAILS: return "r_ammolava";
 		case IT_MULTI_ROCKETS: return "r_ammomulti";
 		case IT_PLASMA_AMMO: return "r_ammoplasma";
+		case IT_DRILLS: return "sb_drills";
 	}
 	return string_null;
 }
@@ -650,6 +651,7 @@ string Sbar_ItemName(int item)
 		case IT_LAVA_NAILS: return "lava nails";
 		case IT_MULTI_ROCKETS: return "multi rockets";
 		case IT_PLASMA_AMMO: return "plasma";
+		case IT_DRILLS: return "drills";
 	}
 	return string_null;
 }
@@ -665,6 +667,7 @@ int Sbar_ItemStat(int item)
 		case IT_LAVA_NAILS: return STAT(LAVA_NAILS);
 		case IT_MULTI_ROCKETS: return STAT(MULTI_ROCKETS);
 		case IT_PLASMA_AMMO: return STAT(PLASMA_AMMO);
+		case IT_DRILLS: return STAT(DRILLS);
 	}
 	return 0;
 }
@@ -932,6 +935,8 @@ void Sbar_DrawInventory()
 				vector col;
 				if(WeaponIsFromRogue(wep))
 					col = '1 0 0';
+				else if(wep.spawnflags & WEP_FLAG_SWAB)
+					col = '0.4 0.2 1';
 				else if(wep.spawnflags & WEP_FLAG_CHAMPION)
 				{
 					if(thiswep.activeweapon == wep)
@@ -951,7 +956,7 @@ void Sbar_DrawInventory()
 		}
 
 		// ammo counts
-		for(int j = 0; j < 7; j++)
+		for(int j = 0; j < 8; j++)
 		{
 			int itemstat;
 			int offset;
@@ -965,6 +970,7 @@ void Sbar_DrawInventory()
 				case 4: itemstat = STAT(LAVA_NAILS); break;
 				case 5: itemstat = STAT(MULTI_ROCKETS); break;
 				case 6: itemstat = STAT(PLASMA_AMMO); break;
+				case 7: itemstat = STAT(DRILLS); break;
 			}
 			// hack: only render mission pack ammo if we have ammo
 			if(j > 3 && itemstat <= 0)
@@ -973,7 +979,7 @@ void Sbar_DrawInventory()
 			//drawfont = 11;
 			//drawstring(sbar + vec2(48 * j, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 			//drawfont = oldf;
-			Sbar_DrawString(vec2(48 * j, -24), ftos(itemstat));
+			drawstring(sbar + vec2(40 * j + 4, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
 

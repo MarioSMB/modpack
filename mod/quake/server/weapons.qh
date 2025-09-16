@@ -27,6 +27,8 @@ const float PARRY_TIME = 0.333;
 .float ammo_multi_rockets;
 .float ammo_plasma;
 
+.float ammo_drills;
+
 .bool reflectlightning;
 .bool reflectplasma;
 

@@ -17,3 +17,5 @@ bool ai_checkmelee(entity this, float attackdist, float attackzaxis);
 void ai_melee(entity this, int deathtype, int melee_range, bool check_parry);
 
 void ai_melee_side(entity this, int deathtype, int melee_range, bool check_parry);
+
+bool ai_meleesmash(entity this, int deathtype, float melee_range, float dmg_multiplier);

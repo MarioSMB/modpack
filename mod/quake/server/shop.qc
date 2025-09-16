@@ -165,6 +165,7 @@ void shop_buyitem(entity this, string item)
 		this.ammo_lava_nails += 60; SendItemPickup(this, IT_LAVA_NAILS, 60);
 		this.ammo_multi_rockets += 20; SendItemPickup(this, IT_MULTI_ROCKETS, 20);
 		this.ammo_plasma += 40; SendItemPickup(this, IT_PLASMA_AMMO, 40);
+		this.ammo_drills += 20; SendItemPickup(this, IT_DRILLS, 20);
 		bound_other_ammo(this);
 		sprint(this, "Ammunition restocked\n");
 		_sound(this, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
@@ -202,6 +203,7 @@ void shop_buyitem(entity this, string item)
 		case IT_LAVA_NAILS: this.ammo_lava_nails += wep.aflag; break;
 		case IT_MULTI_ROCKETS: this.ammo_multi_rockets += wep.aflag; break;
 		case IT_PLASMA_AMMO: this.ammo_plasma += wep.aflag; break;
+		case IT_DRILLS: this.ammo_drills += wep.aflag; break;
 	}
 
 	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_GOT, wep.m_name);

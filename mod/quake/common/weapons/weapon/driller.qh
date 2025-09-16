@@ -1,0 +1,20 @@
+#pragma once
+
+CLASS(Driller, Weapon)
+/* ammotype  */ ATTRIB(Driller, ammo_type, int, IT_DRILLS);
+/* impulse   */ ATTRIB(Driller, impulse, int, 7);
+/* spawnflags*/ ATTRIB(Driller, spawnflags, int, WEP_FLAG_SWAB);
+/* ammo */      ATTRIB(Driller, aflag, int, 5);
+/* modelname */ ATTRIB(Driller, mdl, string, "driller");
+/* crosshair */ ATTRIB(Driller, w_crosshair, string, "gfx/crosshairfireball");
+/* crosshair */ ATTRIB(Driller, w_crosshair_size, float, 0.65);
+/* crosshair */ ATTRIB(Driller, w_crosshair_color, vector, '1 0.75 0');
+/* wepimg    */ ATTRIB(Driller, model2, string, "driller");
+/* refname   */ ATTRIB(Driller, netname, string, "driller");
+/* replace   */ ATTRIB(Driller, weaponreplace, string, "rocketlauncher");
+/* wepname   */ ATTRIB(Driller, m_name, string, _("Driller"));
+
+ENDCLASS(Driller)
+REGISTER_WEAPON(DRILLER, NEW(Driller));
+
+//SPAWNFUNC_WEAPON(weapon_driller, WEP_DRILLER)

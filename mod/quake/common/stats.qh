@@ -192,11 +192,13 @@ REGISTER_STAT(SHOP_PASSIVES, INT, shop_passives)
 .int ammo_lava_nails;
 .int ammo_multi_rockets;
 .int ammo_plasma;
+.int ammo_drills;
 .float field_generator_health;
 #endif
 REGISTER_STAT(LAVA_NAILS, INT, this.ammo_lava_nails)
 REGISTER_STAT(MULTI_ROCKETS, INT, this.ammo_multi_rockets)
 REGISTER_STAT(PLASMA_AMMO, INT, this.ammo_plasma)
+REGISTER_STAT(DRILLS, INT, this.ammo_drills)
 
 REGISTER_STAT(FIELDGEN_HEALTH, FLOAT, this.field_generator_health)
 

@@ -107,7 +107,7 @@ void SetChangeParms(entity this)
 	parm11 = this.ammo_lava_nails;
 	parm12 = this.ammo_multi_rockets;
 	parm13 = this.ammo_plasma;
-	parm14 = this.currentspell;
+	parm14 = this.ammo_drills;
 	if(this.(weaponentity))
 		parm15 = this.(weaponentity).cnt;
 	parm16 = this.items;
@@ -176,8 +176,8 @@ void DecodeLevelParms(entity this)
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
+	this.ammo_drills = parm14;
 
-	this.currentspell = parm14;
 	if(this.(weaponentity))
 		this.(weaponentity).skin = parm14;
 	if(this.(weaponentity))

@@ -1494,7 +1494,7 @@ void W_SetCurrentAmmo(entity this)
 		player_run(this);		// get out of any weapon firing states
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
-	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
+	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS | IT_DRILLS);
 
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -1629,6 +1629,7 @@ void GiveCheat(entity this, string input)
 			case IT_LAVA_NAILS: this.ammo_lava_nails += wep.aflag; break;
 			case IT_MULTI_ROCKETS: this.ammo_multi_rockets += wep.aflag; break;
 			case IT_PLASMA_AMMO: this.ammo_plasma += wep.aflag; break;
+			case IT_DRILLS: this.ammo_drills += wep.aflag; break;
 		}
 	}
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);

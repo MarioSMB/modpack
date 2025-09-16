@@ -414,7 +414,7 @@ EFFECT(0, DPP_BURSTPARTP,           "DPP_ITSPART_BURSTP")
 
 EFFECT(0, DPP_BURSTPARTW,           "DPP_ITSPART_BURSTW")
 #ifdef CSQC
-STATIC_INIT(Effect_TE_PLASMABIG)
+STATIC_INIT(Effect_DPP_BURSTPARTW)
 {
 	registercvar("cl_particle_DPP_ITSPART_BURSTW", "smoke");
 
@@ -431,6 +431,8 @@ STATIC_INIT(Effect_TE_PLASMABIG)
 	registercvar("cl_particle_DPP_ITSPART_BURSTW_smoke_rotate", "0 360 45 90");
 }
 #endif
+
+EFFECT(0, DRILL_TOUCH,              "sparks")
 
 EFFECT(0, TE_PLASMABIG,             "TE_PLASMABIG")
 #ifdef CSQC

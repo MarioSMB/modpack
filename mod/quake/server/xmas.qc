@@ -71,6 +71,7 @@ void xmas_present_ammo(entity this, entity toucher)
 	toucher.ammo_lava_nails += 60; SendItemPickup(toucher, IT_LAVA_NAILS, 60);
 	toucher.ammo_multi_rockets += 20; SendItemPickup(toucher, IT_MULTI_ROCKETS, 20);
 	toucher.ammo_plasma += 40; SendItemPickup(toucher, IT_PLASMA_AMMO, 40);
+	toucher.ammo_drills += 20; SendItemPickup(toucher, IT_DRILLS, 20);
 	bound_other_ammo(toucher);
 }
 

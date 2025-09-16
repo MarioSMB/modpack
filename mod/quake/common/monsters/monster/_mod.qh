@@ -40,6 +40,7 @@
 #include "grunt.qh"
 #include "guardian.qh"
 #include "gug.qh"
+#include "hammer_ogre.qh"
 #include "hell_knight.qh"
 #include "ithagnal.qh"
 #include "jim.qh"

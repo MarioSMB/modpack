@@ -70,7 +70,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 	// give it to our gremlin
 	this.(weaponentity).m_weapon = best;
 	// take some ammo while we are at it
-	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS);
+	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS | IT_DRILLS);
 	if(best != WEP_Null)
 		Send_Notification(NOTIF_ONE, victim, MSG_MULTI, ITEM_WEAPON_STOLE, best.m_name);
 
@@ -124,6 +124,13 @@ bool GremlinAttemptWeaponSteal(entity this)
 			amount = min(victim.ammo_plasma, 40);
 			victim.ammo_plasma -= amount;
 			this.ammo_plasma += amount;
+			break;
+		}
+		case IT_DRILLS:
+		{
+			amount = min(victim.ammo_drills, 40);
+			victim.ammo_drills -= amount;
+			this.ammo_drills += amount;
 			break;
 		}
 	}
@@ -831,7 +838,7 @@ void GremlinDropBackpack(entity this)
 	entity item = spawn();
 	item.origin = this.origin - '0 0 24';
 
-	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS);
+	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA_AMMO | IT_LAVA_NAILS | IT_MULTI_ROCKETS | IT_DRILLS);
 	item.items = this.items;
 	item.powerups = this.powerups;
 

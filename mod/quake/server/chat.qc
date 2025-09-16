@@ -46,6 +46,7 @@ string formatmessage(entity this, string msg)
 	if(this.items & IT_LAVA_NAILS) ammoitems = "lava nails";
 	else if(this.items & IT_PLASMA_AMMO) ammoitems = "plasma";
 	else if(this.items & IT_MULTI_ROCKETS) ammoitems = "multi rockets";
+	else if(this.items & IT_DRILLS) ammoitems = "drills";
 	else if(this.items & IT_CELLS) ammoitems = "cells";
 	else if(this.items & IT_ROCKETS) ammoitems = "rockets";
 	else if(this.items & IT_NAILS) ammoitems = "nails";

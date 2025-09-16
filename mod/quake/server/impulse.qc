@@ -351,6 +351,7 @@ void GiveAllWeapons(entity this)
 	this.ammo_lava_nails = 200;
 	this.ammo_multi_rockets = 100;
 	this.ammo_plasma = 100;
+	this.ammo_drills = 100;
 
 	//this.items |= (IT_PULSERIFLE | IT_PULSEPOWER1 | IT_PULSEPOWER2);
 

@@ -545,6 +545,12 @@ void horde_ammo_touch(entity this, entity toucher)
 		SendItemPickup(toucher, this.items, this.ammo_plasma);
 		pickedup = true;
 	}
+	if(this.ammo_drills && toucher.ammo_drills < GetAmmoLimit(toucher, IT_DRILLS))
+	{
+		toucher.ammo_drills += this.ammo_drills;
+		SendItemPickup(toucher, this.items, this.ammo_drills);
+		pickedup = true;
+	}
 
 	if(!pickedup)
 		return;
@@ -576,9 +582,12 @@ void horde_ammo_touch(entity this, entity toucher)
 		it.ammo_lava_nails += this.ammo_lava_nails;
 		it.ammo_multi_rockets += this.ammo_multi_rockets;
 		it.ammo_plasma += this.ammo_plasma;
+		it.ammo_drills += this.ammo_drills;
 
 		// temp swap and set bounds
 		bound_other_ammo(it);
+
+		EnableComboWeapons(it);
 			
 		// temp swap again and set current ammo
 		W_SetCurrentAmmo(it);
@@ -816,6 +825,7 @@ void SpawnAmmo(entity this)
 	RandomSelection_AddFloat(IT_LAVA_NAILS, 0.3, 1);
 	RandomSelection_AddFloat(IT_PLASMA_AMMO, 0.1, 1);
 	RandomSelection_AddFloat(IT_MULTI_ROCKETS, 0.2, 1);
+	RandomSelection_AddFloat(IT_DRILLS, 0.2, 1);
 
 	switch(RandomSelection_chosen_float)
 	{
@@ -973,6 +983,28 @@ void SpawnAmmo(entity this)
 			item.weapon = 6;
 			item.items = IT_MULTI_ROCKETS;
 			item.netname = "multi rockets";
+			break;
+		}
+		case IT_DRILLS:
+		{
+			item.classname = "item_multi_rockets";
+			item.noise = "weapons/lock4.wav";
+			if(is_big)
+			{
+				precache_model("progs/m_drill2.mdl");
+				_setmodel(item, "progs/m_drill2.mdl");
+				item.aflag = 10;
+			}
+			else
+			{
+				precache_model("progs/m_drill1.mdl");
+				_setmodel(item, "progs/m_drill1.mdl");
+				item.aflag = 5;
+			}
+			item.ammo_drills = item.aflag;
+			item.weapon = 6;
+			item.items = IT_DRILLS;
+			item.netname = "drills";
 			break;
 		}
 	}
@@ -1812,6 +1844,7 @@ void Horde_SetupSquads()
 	if(!found)
 	{
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "2 enforcer");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 hogreham");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 scourge");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 sword");
@@ -1863,6 +1896,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 dfury");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 hknight");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 dfury");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 hogreham");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "3 wizard");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "2 gargoyle");

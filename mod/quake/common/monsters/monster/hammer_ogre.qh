@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_HAMMER_OGRE,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was pulverized by a Hammer Ogre"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_HAMMER_OGRE,                1,  NULL,           INFO_DEATH_SELF_MON_HAMMER_OGRE,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_HAMMER_OGRE,            DEATH_SELF_MON_HAMMER_OGRE,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_HAMMER_OGRE, "progs/mon_hogreham.mdl");
+MODEL(MON_HAMMER_OGRE_HEAD, "progs/h_hogreham.mdl");
+
+SOUND(MON_HAMMER_OGRE_SIGHT, "ogre/ogwake");
+#endif
+
+CLASS(HammerOgre, Monster)
+    ATTRIB(HammerOgre, spawnflags, int, 0);
+    ATTRIB(HammerOgre, m_mins, vector, '-32 -32 -24');
+    ATTRIB(HammerOgre, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(HammerOgre, m_model, Model, MDL_MON_HAMMER_OGRE);
+    ATTRIB(HammerOgre, m_model_head, Model, MDL_MON_HAMMER_OGRE_HEAD);
+    ATTRIB(HammerOgre, m_sound, Sound, SND_MON_HAMMER_OGRE_SIGHT);
+#endif
+    ATTRIB(HammerOgre, netname, string, "hogreham");
+    ATTRIB(HammerOgre, m_name, string, _("Hammer Ogre"));
+ENDCLASS(HammerOgre)
+
+REGISTER_MONSTER(HAMMER_OGRE, NEW(HammerOgre));

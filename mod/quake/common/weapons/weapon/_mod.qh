@@ -50,3 +50,4 @@
 #include "crowbar.qh"
 #include "gravity_gun.qh"
 #include "shield.qh"
+#include "driller.qh"

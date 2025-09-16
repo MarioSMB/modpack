@@ -16,7 +16,7 @@ void SendItemPickup(entity this, int item, float amount)
 
 	msg_entity = this;
 	WriteHeader(MSG_ONE, TE_CSQC_ITEMPICKUP);
-	WriteByte(MSG_ONE, item);
+	WriteInt24_t(MSG_ONE, item);
 	WriteShort(MSG_ONE, rint(amount));
 }
 
@@ -534,6 +534,7 @@ void bound_other_ammo(entity this)
 	this.ammo_lava_nails = min(this.ammo_lava_nails, GetAmmoLimit(this, IT_LAVA_NAILS));
 	this.ammo_multi_rockets = min(this.ammo_multi_rockets, GetAmmoLimit(this, IT_MULTI_ROCKETS));
 	this.ammo_plasma = min(this.ammo_plasma, GetAmmoLimit(this, IT_PLASMA_AMMO));
+	this.ammo_drills = min(this.ammo_drills, GetAmmoLimit(this, IT_DRILLS));
 }
 
 int GetAmmoLimit(entity this, int itemid)
@@ -550,6 +551,7 @@ int GetAmmoLimit(entity this, int itemid)
 		case IT_LAVA_NAILS: return 200 * ascale;
 		case IT_MULTI_ROCKETS: return 100 * ascale;
 		case IT_PLASMA_AMMO: return 100 * ascale;
+		case IT_DRILLS: return 100 * ascale;
 	}
 
 	// TODO? mention if anything gets here!
@@ -727,6 +729,17 @@ void EnableComboWeapons(entity this)
 			STAT(WEAPONS, this) |= WEPSET(PLASMA_GUN);		
 		}
 	}
+
+	if(!(STAT(WEAPONS, this) & WEPSET(DRILLER)))
+	{
+		if(this.ammo_drills > 0 && 
+							(STAT(WEAPONS, this) & WEPSET(ROCKET_LAUNCHER)))
+		{
+			// NOTE: disabling spammy message as you already know from the HUD that you got it!
+			//sprint (this, "This is NOT a drill!\n");
+			STAT(WEAPONS, this) |= WEPSET(DRILLER);		
+		}
+	}
 }
 
 /*
@@ -779,6 +792,7 @@ void weapon_touch(entity this, entity toucher)
 		case IT_LAVA_NAILS: toucher.ammo_lava_nails += newwep.aflag; break;
 		case IT_MULTI_ROCKETS: toucher.ammo_multi_rockets += newwep.aflag; break;
 		case IT_PLASMA_AMMO: toucher.ammo_plasma += newwep.aflag; break;
+		case IT_DRILLS: toucher.ammo_drills += newwep.aflag; break;
 	}
 
 	if(newwep == WEP_HAMMER && this.hammer_skin)
@@ -1068,11 +1082,19 @@ void ammo_touch(entity this, entity toucher)
 		SendItemPickup(toucher, this.items, this.ammo_plasma);
 		pickedup = true;
 	}
+	if(this.ammo_drills && toucher.ammo_drills < GetAmmoLimit(toucher, IT_DRILLS))
+	{
+		toucher.ammo_drills += this.ammo_drills;
+		SendItemPickup(toucher, this.items, this.ammo_drills);
+		pickedup = true;
+	}
 
 	if(!pickedup)
 		return;
 
 	bound_other_ammo(toucher);
+
+	EnableComboWeapons(toucher);
 
 // ammo touch sound
 	if(this.noise && this.noise != "")
@@ -1510,6 +1532,62 @@ spawnfunc(item_plasma)
 		string simplemdl = "progs/b_plas0_simple.mdl";
 		if(this.spawnflags & WEAPON_BIG2)
 			simplemdl = "progs/b_plas1_simple.mdl";
+
+		if(fexists(simplemdl))
+		{
+			this.mdl = simplemdl;
+			this.noise = "items/pop.wav";
+		}
+	}
+
+	precache_sound(this.noise);
+	precache_model(this.mdl);
+	_setmodel(this, this.mdl);
+	setsize(this, '0 0 0', '32 32 56');
+	StartItem(this);
+}
+
+/*QUAKED item_drills (0 .5 .8) (0 0 0) (32 32 32) big
+Small box is 5, Big box is 10.
+*/
+
+spawnfunc(item_drills)
+{
+	if(qonquer_ammoreplace(this))
+	{
+		delete(this);
+		return;
+	}
+
+	if(xmas_replace(this))
+	{
+		delete(this);
+		return;
+	}
+
+	settouch(this, ammo_touch);
+
+	if(this.spawnflags & WEAPON_BIG2)
+	{
+		this.mdl = "progs/m_drill2.mdl";
+		this.aflag = 10;
+	}
+	else
+	{
+		this.mdl = "progs/m_drill1.mdl";
+		this.aflag = 5;
+	}
+	this.ammo_drills = this.aflag;
+	//this.weapon = 6;
+	this.items = IT_DRILLS;
+	this.netname = "drills";
+	this.noise = "weapons/lock4.wav";
+
+	if(substring(world.model, 0, 9) == "maps/mcj_")
+	{
+		string simplemdl = "progs/b_mdrill1_simple.mdl";
+		if(this.spawnflags & WEAPON_BIG2)
+			simplemdl = "progs/b_mdrill2_simple.mdl";
 
 		if(fexists(simplemdl))
 		{
@@ -2694,6 +2772,7 @@ void BackpackTouch(entity this, entity toucher)
 	toucher.ammo_lava_nails += this.ammo_lava_nails;
 	toucher.ammo_multi_rockets += this.ammo_multi_rockets;
 	toucher.ammo_plasma += this.ammo_plasma;
+	toucher.ammo_drills += this.ammo_drills;
 
 	//if(!newitem)
 		//newitem = toucher.weapon;
@@ -2713,6 +2792,8 @@ void BackpackTouch(entity this, entity toucher)
 		SendItemPickup(toucher, IT_MULTI_ROCKETS, this.ammo_multi_rockets);
 	if(this.ammo_plasma)
 		SendItemPickup(toucher, IT_PLASMA_AMMO, this.ammo_plasma);
+	if(this.ammo_drills)
+		SendItemPickup(toucher, IT_DRILLS, this.ammo_drills);
 
 	if(wepmsg != "")
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_WEAPON_GOT, wepmsg);
@@ -2770,7 +2851,7 @@ void DropBackpack(entity this)
 	WepSet weps = STAT(WEAPONS, this);
 	weps &= ~WEPSET_CHAMPIONS;
 
-	if(weps == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma))
+	if(weps == '0 0 0' && !(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells + this.ammo_lava_nails + this.ammo_multi_rockets + this.ammo_plasma + this.ammo_drills))
 		return;	// nothing in it
 
 	if(STAT(SKATING, this))
@@ -2822,6 +2903,7 @@ void DropBackpack(entity this)
 	item.ammo_lava_nails = this.ammo_lava_nails;
 	item.ammo_multi_rockets = this.ammo_multi_rockets;
 	item.ammo_plasma = this.ammo_plasma;
+	item.ammo_drills = this.ammo_drills;
 
 	item.velocity_z = 300;
 	item.velocity_x = -100 +(random() * 200);

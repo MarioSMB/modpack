@@ -50,3 +50,4 @@
 #include "crowbar.qc"
 #include "gravity_gun.qc"
 #include "shield.qc"
+#include "driller.qc"

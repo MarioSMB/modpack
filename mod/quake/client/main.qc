@@ -593,7 +593,7 @@ NET_HANDLE(TE_CSQC_LIGHTNING, bool isNew)
 
 NET_HANDLE(TE_CSQC_ITEMPICKUP, bool isNew)
 {
-	int theitem = ReadByte();
+	int theitem = ReadInt24_t();
 	float amount = ReadShort();
 	Sbar_Notify_Push(amount, theitem);
 	return true;

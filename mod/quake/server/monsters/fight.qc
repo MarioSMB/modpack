@@ -199,3 +199,45 @@ void ai_melee_side(entity this, int deathtype, int melee_range, bool check_parry
 	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, deathtype);
 }
+
+/*======================================================================
+ ai_meleesmash (generic)
+ - large smashing damage overhead attack, usually a single strike
+   really assuming the monster is stationary while attacking
+ returns true if the target was hit, for contact damage
+======================================================================*/
+bool ai_meleesmash(entity this, int deathtype, float melee_range, float dmg_multiplier)
+{
+	if(!this.enemy)
+		return false; // removed before stroke
+	//ai_damagebreakable(this, 3 * dmg_multiplier); // Damage any breakables
+	// Is the enemy too far away, ++ extra Z height
+	if(!ai_checkmelee(this, melee_range, true))
+		return false;
+
+	// Can the target bleed? - no blood/damage, quick exit
+	// This candamage test not in origina id code (sync'd to melee_side)
+	if(!CanDamage(this.enemy, this))
+		return false;
+
+	// This function is designed for monsters attacking players or infighting
+	// If this is infighting do more damage as it will look more impressive
+	// Also if this damage is enough to kill in a single blow, gib for effect
+	if(IS_MONSTER(this.enemy))
+		dmg_multiplier *= 2;
+
+	// 1-9 damage
+	float ldmg = (random() + random() + random()) * dmg_multiplier;
+	if(ldmg < 1)
+		ldmg = 1;
+	if(this.enemy.health < ldmg)
+		ldmg *= 3;
+	T_Damage(this.enemy, this, this, ldmg, deathtype);
+
+	// Lots of blood and gore
+	fixedmakevectors(this.angles);
+	SpawnMeatSpray(this, this.origin + v_forward * (crandom() * 100), v_right * (crandom() * 100));
+	SpawnMeatSpray(this, this.origin + v_forward * (crandom() * 100), v_right * (crandom() * 100));
+
+	return true;
+}

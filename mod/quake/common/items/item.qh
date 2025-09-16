@@ -17,9 +17,11 @@ const int IT_LAVA_NAILS          = BIT(10);
 const int IT_PLASMA_AMMO         = BIT(11);
 const int IT_MULTI_ROCKETS       = BIT(12);
 
-const int IT_TANK                = BIT(13);
+const int IT_DRILLS              = BIT(13);
 
-const int IT_KEY3                = BIT(14);
+const int IT_TANK                = BIT(14);
+
+const int IT_KEY3                = BIT(15);
 
 
 const int PASSIVE_PULSERIFLE        = BIT(0);
