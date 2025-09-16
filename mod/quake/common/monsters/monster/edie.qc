@@ -142,6 +142,7 @@ void edie_Fire(entity this, float valx, float valy, float valz, bool moving)
 	entity missile = spawn();
 	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.classname = "edie_nail";

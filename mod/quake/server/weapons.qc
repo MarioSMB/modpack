@@ -1353,6 +1353,7 @@ entity launch_spike(entity this, vector org, vector dir)
 	entity newmis = spawn();
 	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
+	newmis.realowner = this;
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
 	newmis.clipgroup = this.clipgroup;

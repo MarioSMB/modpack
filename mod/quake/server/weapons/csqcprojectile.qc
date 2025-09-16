@@ -53,10 +53,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 			WriteByte(MSG_ENTITY, fr);
 		}
 
-		if(teamplay)
-			WriteByte(MSG_ENTITY, this.realowner.team);
-		else
-			WriteByte(MSG_ENTITY, this.realowner.clientcolors); // NOTE: doesn't work on non-clients
+		WriteByte(MSG_ENTITY, this.realowner.clientcolors); // NOTE: doesn't work on non-clients
 	}
 
 	if(sf & 2)

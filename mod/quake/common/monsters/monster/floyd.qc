@@ -94,6 +94,7 @@ void FLaunchLaser(entity this, vector org, vector vec)
 	
 	entity newmis = spawn();
 	newmis.owner = this;
+	newmis.realowner = this;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;

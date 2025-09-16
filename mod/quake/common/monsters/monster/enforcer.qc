@@ -52,6 +52,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	entity newmis = new(enforcer_laser);
 	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
+	newmis.realowner = this;
 	newmis.projectiledeathtype = DEATH_MONSTER_ENFORCER.m_id;
 	newmis.clipgroup = this.clipgroup;
 	set_movetype(newmis, MOVETYPE_FLY);

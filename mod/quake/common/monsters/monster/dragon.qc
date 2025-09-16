@@ -343,6 +343,7 @@ entity launch_fireball(entity this, vector org, vector dir)
 	entity fireball = new(fireball);
 	fireball.flags = FL_PROJECTILE;
 	fireball.owner = this;
+	fireball.realowner = this;
 	set_movetype(fireball, MOVETYPE_FLYMISSILE);
 	fireball.solid = SOLID_BBOX;
 	fireball.projectiledeathtype = DEATH_MONSTER_DRAGON.m_id;

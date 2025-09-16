@@ -545,8 +545,8 @@ void BileBombThink(entity this)
 		missile.projectiledeathtype = this.projectiledeathtype;
 		missile.clipgroup = this.clipgroup;
 		missile.owner = this.owner;
-		missile.poisonous = this.poisonous;
 		missile.realowner = this.realowner;
+		missile.poisonous = this.poisonous;
 		set_movetype(missile, MOVETYPE_TOSS);
 		missile.solid = SOLID_BBOX;
 		float spd = vlen(this.velocity);

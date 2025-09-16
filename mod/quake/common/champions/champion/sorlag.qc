@@ -93,6 +93,7 @@ void Sorlag_AcidSpit(entity this)
 	entity newmis = new(acidspit);
 	newmis.flags = FL_PROJECTILE;
 	newmis.owner = this;
+	newmis.realowner = this;
 	set_movetype(newmis, MOVETYPE_TOSS);
 	newmis.solid = SOLID_CORPSE;
 	newmis.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
