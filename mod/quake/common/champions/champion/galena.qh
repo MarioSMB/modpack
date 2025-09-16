@@ -65,6 +65,8 @@ PRECACHE(Galena)
 #ifdef CSQC
 #define GALENA_STATS \
 "Movement speed 10% slower\n" \
+"Press %ABILITY% to dodge\n" \
+"Has a sword\n" \
 "Has a shield, right click blocks\n" \
 "While blocking:\n" \
 "- Damage reduced by 25%\n" \
