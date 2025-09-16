@@ -150,7 +150,7 @@ METHOD(Driller, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_FireDriller(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 1);
+		weapon_prepareattack(thiswep, actor, weaponentity, 2);
 	}
 }
 METHOD(Driller, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
