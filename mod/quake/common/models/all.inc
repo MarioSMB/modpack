@@ -34,3 +34,4 @@ MODEL(PROJECTILE_CROSSBOW_BOLT,             "progs/proj_impalespike.mdl");
 MODEL(PROJECTILE_VORE_SPIKE,                "progs/v_spike.mdl");
 MODEL(PROJECTILE_SCRAG_SPIKE,               "progs/w_spike.mdl");
 MODEL(PROJECTILE_KNIGHT_SPIKE,              "progs/k_spike.mdl");
+MODEL(PROJECTILE_SPELLBOOK_METEOR,          "progs/lavaball.mdl");

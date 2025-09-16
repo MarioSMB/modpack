@@ -50,6 +50,8 @@
 #include "weapon/gravity_gun.qh"
 #include "weapon/shield.qh"
 #include "weapon/driller.qh"
+#include "weapon/railgun.qh"
+#include "weapon/sword.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 

@@ -1,0 +1,24 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(SWORD_SWING, "weapons/sword_swing");
+#endif
+
+CLASS(Sword, Weapon)
+/* ammotype  */ ATTRIB(Sword, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Sword, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Sword, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(Sword, aflag, int, 0);
+/* modelname */ ATTRIB(Sword, mdl, string, "sword");
+/* crosshair */ ATTRIB(Sword, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Sword, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Sword, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Sword, model2, string, "sword");
+/* refname   */ ATTRIB(Sword, netname, string, "sword");
+/* wepname   */ ATTRIB(Sword, m_name, string, _("Sword"));
+/* parry anim*/ ATTRIB(Sword, m_parryframe, int, 4);
+
+ENDCLASS(Sword)
+REGISTER_WEAPON(SWORD, NEW(Sword));
+
+SPAWNFUNC_WEAPON(weapon_sword, WEP_SWORD)

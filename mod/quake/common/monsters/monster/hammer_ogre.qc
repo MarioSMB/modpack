@@ -304,6 +304,8 @@ void hogreham_dieA3(entity this)
 {
 	set_animofs(this, anim_hogreham_deathA, 3, hogreham_dieA4);
 	ai_forward(this, 3);
+	if(this.spawnflags & MON_HOGRE_METAL)
+		STAT(WEAPONS, this) = WEP_HAMMER.m_wepset;
 	DropBackpack(this);
 }
 void hogreham_dieA2(entity this) { set_animofs(this, anim_hogreham_deathA, 2, hogreham_dieA3); ai_forward(this, 14); }
@@ -324,6 +326,8 @@ void hogreham_dieB4(entity this)
 {
 	set_animofs(this, anim_hogreham_deathB, 4, hogreham_dieB5);
 	ai_back(this, 1);
+	if(this.spawnflags & MON_HOGRE_METAL)
+		STAT(WEAPONS, this) = WEP_HAMMER.m_wepset;
 	DropBackpack(this);
 }
 void hogreham_dieB3(entity this) { set_animofs(this, anim_hogreham_deathB, 3, hogreham_dieB4); ai_back(this, 3); }

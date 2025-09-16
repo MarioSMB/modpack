@@ -1,0 +1,26 @@
+#pragma once
+
+CLASS(Railgun, Weapon)
+/* ammotype  */ ATTRIB(Railgun, ammo_type, int, IT_CELLS);
+/* impulse   */ ATTRIB(Railgun, impulse, int, 8);
+/* spawnflags*/ ATTRIB(Railgun, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED | WEP_FLAG_HITUNDEAD);
+/* ammo */      ATTRIB(Railgun, aflag, int, 15);
+/* modelname */ ATTRIB(Railgun, mdl, string, "railgun");
+/* crosshair */ ATTRIB(Railgun, w_crosshair, string, "gfx/crosshairnex");
+/* crosshair */ ATTRIB(Railgun, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(Railgun, w_crosshair_color, vector, '0 1 1');
+/* wepimg    */ ATTRIB(Railgun, model2, string, "railgun");
+/* refname   */ ATTRIB(Railgun, netname, string, "railgun");
+/* wepname   */ ATTRIB(Railgun, m_name, string, _("Railgun"));
+/* framerate */ ATTRIB(Railgun, m_delta, float, 0.05);
+
+ENDCLASS(Railgun)
+REGISTER_WEAPON(RAILGUN, NEW(Railgun));
+
+SPAWNFUNC_WEAPON(weapon_railgun, WEP_RAILGUN)
+
+#ifdef SVQC
+vector SniperLightningDamage(entity this, vector org, vector dir);
+
+void DrawSniperLightning(entity this, vector org, vector dest, float hit);
+#endif

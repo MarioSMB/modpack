@@ -48,7 +48,10 @@ void W_Parry_ResetWeapon(entity this)
 		.entity weaponentity = weaponentities[slot];
 		if(this.(weaponentity))
 		{
-			wep_set_anim(this.(weaponentity), 1, w_ready);
+			int frm = this.(weaponentity).m_weapon.m_parryframe;
+			if(!frm)
+				frm = 1; // TODO: just let it fall back? shouldn't do any harm!
+			wep_set_anim(this.(weaponentity), frm, w_ready);
 			ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 		}
 	}

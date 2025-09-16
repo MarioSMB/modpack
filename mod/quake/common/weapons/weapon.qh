@@ -69,6 +69,8 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (CLIENT) framerate of the weapon animations, uses regular setting if 0 */
     ATTRIB(Weapon, m_delta, float, 0);
+    /** (SERVER) weapon frame to use during parrying TODO: support actual animations? */
+    ATTRIB(Weapon, m_parryframe, int, 1);
 ENDCLASS(Weapon)
 
 // weapon flags

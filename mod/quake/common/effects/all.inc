@@ -273,7 +273,55 @@ EFFECT(0, RUNE_PUFF_BLUE,           "spawn_point_blue")
 EFFECT(0, RUNE_CYCLONE,             "respawn_ghost")
 EFFECT(0, RUNE_HEAL,                "healing_fx")
 EFFECT(0, RUNE_FROST_REGEN,         "ammoregen_fx")
-EFFECT(0, RUNE_METEOR_IMPACT,       "laser_impact")
+EFFECT(0, RUNE_METEOR_IMPACT,       "rune_meteor_impact")
+#ifdef CSQC
+STATIC_INIT(Effect_RUNE_METEOR_IMPACT)
+{
+	registercvar("cl_particle_rune_meteor_impact", "smoke");
+
+	registercvar("cl_particle_rune_meteor_impact_smoke_alpha", "128 256 256");
+	registercvar("cl_particle_rune_meteor_impact_smoke_color_max", "1 0.5 0.12");
+	registercvar("cl_particle_rune_meteor_impact_smoke_color_min", "0.5 0 0");
+	registercvar("cl_particle_rune_meteor_impact_smoke_count", "4");
+	registercvar("cl_particle_rune_meteor_impact_smoke_originjitter", "1 1 1");
+	registercvar("cl_particle_rune_meteor_impact_smoke_size", "12 12 0");
+	registercvar("cl_particle_rune_meteor_impact_smoke_sizeincrease", "32");
+	registercvar("cl_particle_rune_meteor_impact_smoke_tex", "48 55 0");
+	registercvar("cl_particle_rune_meteor_impact_smoke_type", "smoke");
+	registercvar("cl_particle_rune_meteor_impact_smoke_velocityjitter", "16 16 16");
+}
+#endif
+
+EFFECT(1, TR_METEOR,           "TR_METEOR")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_METEOR)
+{
+	registercvar("cl_particle_TR_METEOR", "flame bubbles");
+
+	registercvar("cl_particle_TR_METEOR_flame_trailspacing", "4");
+	registercvar("cl_particle_TR_METEOR_flame_type", "static");
+	registercvar("cl_particle_TR_METEOR_flame_color", "0x801010 0xFFA020");
+	registercvar("cl_particle_TR_METEOR_flame_size", "5 1");
+	registercvar("cl_particle_TR_METEOR_flame_alpha", "64 256 256");
+	registercvar("cl_particle_TR_METEOR_flame_velocityjitter", "25 25 25");
+	registercvar("cl_particle_TR_METEOR_flame_airfriction", "3");
+	registercvar("cl_particle_TR_METEOR_flame_liquidfriction", "3");
+	registercvar("cl_particle_TR_METEOR_flame_tex", "0 8");
+
+	registercvar("cl_particle_TR_METEOR_bubbles_trailspacing", "9");
+	registercvar("cl_particle_TR_METEOR_bubbles_type", "bubble");
+	registercvar("cl_particle_TR_METEOR_bubbles_tex", "62 62");
+	registercvar("cl_particle_TR_METEOR_bubbles_color", "0x404040 0x808080");
+	registercvar("cl_particle_TR_METEOR_bubbles_size", "2 2");
+	registercvar("cl_particle_TR_METEOR_bubbles_alpha", "64 256 128");
+	registercvar("cl_particle_TR_METEOR_bubbles_gravity", "-0.125");
+	registercvar("cl_particle_TR_METEOR_bubbles_bounce", "1.5");
+	registercvar("cl_particle_TR_METEOR_bubbles_liquidfriction", "0.25");
+	registercvar("cl_particle_TR_METEOR_bubbles_originjitter", "16 16 16");
+	registercvar("cl_particle_TR_METEOR_bubbles_velocityjitter", "96 96 96");
+	registercvar("cl_particle_TR_METEOR_bubbles_underwater", "1");
+}
+#endif
 
 EFFECT(0, MAYO_SMASH,               "iceorglass")
 EFFECT(0, BROWN_NOTE,               "smoke_large")

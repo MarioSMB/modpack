@@ -51,3 +51,5 @@
 #include "gravity_gun.qh"
 #include "shield.qh"
 #include "driller.qh"
+#include "railgun.qh"
+#include "sword.qh"

@@ -1,7 +1,7 @@
 #include "driller.qh"
 
 #ifdef SVQC
-PRECACHE(Crossbow)
+PRECACHE(Driller)
 {
 	precache_model("progs/v_driller.mdl");
 	//precache_model("progs/g_driller.mdl");
@@ -127,7 +127,7 @@ void W_FireDriller(entity this, .entity weaponentity)
 	missile.count = time + 6;
 	missile.cnt = 32;
 	settouch(missile, drill_touch);
-	missile.dmg = 35;
+	missile.dmg = 25;
 	missile.classname = "drill";
 	missile.projectiledeathtype = WEP_DRILLER.m_id;
 	_setmodel(missile, "progs/drill.mdl");
@@ -150,7 +150,7 @@ METHOD(Driller, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_FireDriller(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 2);
+		weapon_prepareattack(thiswep, actor, weaponentity, 1.25);
 	}
 }
 METHOD(Driller, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

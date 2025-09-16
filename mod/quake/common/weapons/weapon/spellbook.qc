@@ -1062,8 +1062,8 @@ void meteor_touch(entity this, entity toucher)
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	//Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	//Send_Effect(EFFECT_RUNE_METEOR_IMPACT, this.origin, '0 0 0', 1);
-	te_explosion2(this.origin, 230, 5);
+	Send_Effect(EFFECT_RUNE_METEOR_IMPACT, this.origin, '0 0 0', 1);
+	//te_explosion2(this.origin, 230, 5);
 
 	delete(this);
 }
@@ -1106,6 +1106,8 @@ void summon_meteors(entity this)
 		flame.nextthink = time + 5;
 		settouch(flame, meteor_touch);
 		_sound(flame, CH_WEAPON_SINGLE, "weapons/launch_fireball.wav", 0.5, ATTN_NORM);
+
+		CSQCProjectile(flame, true, PROJECTILE_SPELLBOOK_METEOR, true);
 	}
 }
 
