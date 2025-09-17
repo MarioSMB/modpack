@@ -70,7 +70,8 @@ void OgreFireGrenade(entity this)
 	missile.clipgroup = this.clipgroup;
 	missile.classname = "ogre_grenade";
 	missile.dmg = 40;
-		
+	missile.noise = "weapons/r_exp3b.wav";
+
 // set missile speed	
 
 	fixedmakevectors(this.angles);

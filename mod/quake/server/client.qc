@@ -1513,7 +1513,7 @@ void PutPlayerInServer(entity this)
 
 	STAT(DUAL_WEAPONS, this) = '0 0 0';
 
-	if(coop && autocvar_g_player_collisions)
+	if(coop && autocvar_g_player_collisions && world.worldtype != WORLDTYPE_DODGEBALL)
 		this.clipgroup = CLIPGROUP_PLAYER;
 	else
 		this.clipgroup = 0;
