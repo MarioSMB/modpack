@@ -210,7 +210,7 @@ bool ai_meleesmash(entity this, int deathtype, float melee_range, float dmg_mult
 {
 	if(!this.enemy)
 		return false; // removed before stroke
-	//ai_damagebreakable(this, 3 * dmg_multiplier); // Damage any breakables
+	ai_damagebreakable(this, 3 * dmg_multiplier); // Damage any breakables
 	// Is the enemy too far away, ++ extra Z height
 	if(!ai_checkmelee(this, melee_range, true))
 		return false;

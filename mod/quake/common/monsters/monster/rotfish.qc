@@ -71,6 +71,8 @@ void fish_melee(entity this)
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;
 
+	ai_damagebreakable(this, 5);					// Damage any breakables
+
 	_sound(this, CH_VOICE, ((this.model == "progs/dopefish.mdl") ? "dopefish/bite.wav" : "fish/bite.wav"), 1, ATTN_NORM);
 	float ldmg = (random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_ROTFISH.m_id);

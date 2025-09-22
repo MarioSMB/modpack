@@ -290,6 +290,8 @@ void Demon_JumpTouch(entity this, entity toucher)
 	if(this.health <= 0 || (!this.takedamage))
 		return;
 
+	ai_jumpbreakable(this, toucher, 50);				// Damage any breakables
+
 	if(toucher.takedamage && this.attack_finished < time)
 	{
 		if(vdist(this.velocity, >, 400))

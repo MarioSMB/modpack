@@ -75,6 +75,7 @@ void Tar_JumpTouch(entity this, entity toucher)
 {
 	if((this.health <= 0 || !this.takedamage))
 		return;
+	ai_jumpbreakable(this, toucher, 20);			// Damage any breakables
 	if(toucher.takedamage && toucher.classname != this.classname)
 	{
 		if(vdist(this.velocity, >, 400))

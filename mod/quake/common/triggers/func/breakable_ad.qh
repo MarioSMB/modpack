@@ -1,0 +1,107 @@
+#pragma once
+
+#ifdef SVQC
+const int BREAK_STARTOFF = 1;		// Will wait for trigger to spawn
+const int BREAK_NOSHOOT = 2;		// Cannot be damaged/shot, trigger only
+const int BREAK_EXPLOSION = 4;		// Spawn sprite/particle explosion
+const int BREAK_SILENT = 8;			// No initial break sound
+const int BREAK_DAMAGE = 16;		// Rubble does damage on touch
+const int BREAK_NOMONSTER = 32;		// No damage from monsters
+const int BREAK_NOSOUND = 64;		// No impact sound for rubble
+const int BREAK_NOROTATE = 128;		// No Y rotation for rubble
+const int BREAK_MOVEDIR = 4096;		// Set by entity, movedir/angles active
+
+const int MONTRIG_NODELAY = 1;		// No delay between monster and breakable trigger
+const int MONTRIG_WAKEUPANIM = 2;	// Monster trigger does special wakeup animation
+
+const int BREAKWALL_START_ON = 1;	// Switchable bmodel for breakable setups
+const int BREAKWALL_SOLID = 2;		// Solid player collision when active
+const int BREAKWALL_FADEOUT = 4;	// Will fade out after a certain amount of time
+
+const int BREAK_DEFCOUNT = 4;		// Default amount of rubble
+const int BREAK_DEFCNT = 4;			// Random amount of rubble
+
+const int BTYPE_ROCK = 1;			// Default rock/brick
+const int BTYPE_WOOD = 2;
+const int BTYPE_GLASS = 3;
+const int BTYPE_METAL = 4;
+const int BTYPE_BRICK = 5;
+const int BTYPE_FLESH = 6;			// Added 1.7 patch 2
+const int BTYPE_MAX = 6;
+const int BTYPE_CERAMIC = 9;		// Not used anymore
+const int BTYPE_CUSTOM = 10;
+
+const int BMODTYPE_SELF = 1;		// Single self models
+const int BMODTYPE_CUSTOM = 5;		// Custom models
+const int BMODTYPE_ROCK1 = 10;		// ID rock4_1 (dark large bricks)
+const int BMODTYPE_ROCK2 = 11;		// ID rock4_2 (light stone)
+const int BMODTYPE_ROCK3 = 12;		// ID rock3_8 (light vertical)
+const int BMODTYPE_ROCK4 = 13;		// ID city5_3 (white plaster)
+const int BMODTYPE_ROCK5 = 14;		// ID stone1_7b (dark blue ver)
+const int BMODTYPE_ROCK6 = 15;		// ID cliff4 (black rock)
+const int BMODTYPE_ROCK7 = 16;		// Mak cliff_grey_6 (white rock)
+const int BMODTYPE_ROCK8 = 17;		// Mak cliff_blck_4 (dark rock)
+const int BMODTYPE_ROCK9 = 18;		// ID city3_2 (red plaster)
+const int BMODTYPE_WOOD1 = 20;		// ID dung01_3 (dark)
+const int BMODTYPE_WOOD2 = 21;		// ID dung01_2 (light)
+const int BMODTYPE_WOOD3 = 22;		// ID wizwood1_7 (mouldy)
+const int BMODTYPE_WOOD4 = 23;		// ID wood1_1 (E4 light)
+const int BMODTYPE_GLASS1 = 30;		// ID window1_2 (blue sqr)
+const int BMODTYPE_GLASS2 = 31;		// ID window01_4 (red stain)
+const int BMODTYPE_GLASS3 = 32;		// ID window02_1 (yellow stain)
+const int BMODTYPE_GLASS4 = 33;		// ID window01_3 (purple stain)
+const int BMODTYPE_METAL1 = 40;		// ID metal1_2 (brown generic)
+const int BMODTYPE_METAL2 = 41;		// ID metal4_5 (metal4_4 generic)
+const int BMODTYPE_METAL3 = 42;		// ID metal4_7 (rivet metal panels)
+const int BMODTYPE_METAL4 = 43;		// ID cop1_1 (green generic)
+const int BMODTYPE_METAL5 = 44;		// ID metal2_8 (blue generic)
+const int BMODTYPE_BRICK1 = 50;		// ID wbrick1_5 (large brown)
+const int BMODTYPE_BRICK2 = 51;		// ID city2_3 (small sewer green)
+const int BMODTYPE_BRICK3 = 52;		// ID city6_8 (small drywall greyish)
+const int BMODTYPE_BRICK4 = 53;		// ID wiz1_4 (large white)
+const int BMODTYPE_BRICK5 = 54;		// ID city2_1 (small red brick)
+const int BMODTYPE_BRICK6 = 55;		// ID city1_6 (small brown brick)
+const int BMODTYPE_BRICK7 = 56;		// ID city4_5 (small blue brick)
+const int BMODTYPE_BRICK8 = 57;		// ID egypt01b (medium sandy brick)
+const int BMODTYPE_FLESH1 = 60;		// Blood Gib 4/5 models
+const int BMODTYPE_FLESH2 = 61;		// Poison Gib 4/5 models
+const int BMODTYPE_FLESH3 = 62;		// Stone Gib 4/5 models
+const int BMODTYPE_CERAMIC1 = 90;	// Blank atm
+
+// Breakable system
+.float		bleedcolour;		// Alternative colour for 'bleeding' objects
+.float		brksound;			// Initial sound type
+.float		brkimpsound;		// Impact sound type
+.float		brkimpqty;			// Total impact sounds setup
+.float		brkobjects;			// Breakable sub object type
+.string		brkobj1;			// Breakable object 1 (bsp/mdl)
+.string		brkobj2;			// Breakable object 2 (bsp/mdl)
+.string		brkobj3;			// Breakable object 3 (bsp/mdl)
+.string		brkobj4;			// Breakable object 4 (bsp/mdl)
+.float		brkmdltype;			// Breakable model setup types
+.float		brkobjqty;			// Total breakable sub objects setup
+.vector		brkvelbase;			// Base amount for velocity of broken parts
+.vector		brkveladd;			// Random additions for velocity of broken parts
+.float		brkavel;			// Amount of breaking object angle velocity
+.float		brkfade;			// Fade time before rumble fades away
+.vector		brkvol;				// Spawning volume for breakable point entity
+.float		brkgravity;			// Change the gravity for rumble, useful for underwater
+.float		brkpuff;			// Puff of smoke for model breakables
+.float		brkmondmg;			// Damage multipler for monster attacks
+.float		brktrigmissile;		// Trigger breakable if hit by - rocket/grenade/shalball
+.float		brktrigjump;		// Trigger breakable if hit by jumping monster attack
+.float		brktrignoplayer;	// Players cannot damage this breakable
+.float		brkdelaydamage;		// Pause from damage when triggered on
+
+// other junk fields
+.float		exactskin;			// 1-x exact skin number to choose
+.vector		bbmins;				// Saved bounding box size (minimum)
+.vector		bbmaxs;				// Saved bounding box size (maximum)
+.float		nospawndamage;		// Will not do any telefrag damage on spawn
+.float		jumpsquash;			// Player jumped on this, squash contents!
+
+.bool bsporigin;
+.float waitmin2;
+
+void func_breakable_ad(entity this);
+#endif

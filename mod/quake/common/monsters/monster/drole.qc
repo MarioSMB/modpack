@@ -229,7 +229,7 @@ void drole_claw(entity this, float side)
 	if(!this.enemy) return;
 	if(this.health < 1) return;
 	ai_face(this);						// Turn towards enemy target
-	//ai_damagebreakable(this, 50);			// Damage any breakables
+	ai_damagebreakable(this, 50);			// Damage any breakables
 
 	if(!ai_checkmelee(this, 90, 64) || !this.enemy.takedamage)
 	{

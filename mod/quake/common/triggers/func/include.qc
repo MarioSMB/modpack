@@ -3,6 +3,7 @@
 #include "bob.qc"
 #include "bobbingwater.qc"
 #include "breakable.qc"
+#include "breakable_ad.qc"
 #include "breakawaywall.qc"
 #include "button.qc"
 #include "clock.qc"

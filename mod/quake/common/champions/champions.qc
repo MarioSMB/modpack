@@ -122,7 +122,7 @@ void QCC_ClearPlayer(entity this, bool clearweapons)
 
 void QCC_UpdateStats(entity this)
 {
-	if(intermission_running || !QCC_Allowed(this) || this.clockwork)
+	if(intermission_running || !QCC_Allowed(this) || this.clockwork || this.exptime != 0 || this.deadflag >= DEAD_DEAD || this.health <= 0)
 		return;
 
 	if(this.m_champion)

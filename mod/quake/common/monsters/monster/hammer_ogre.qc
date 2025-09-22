@@ -461,6 +461,8 @@ METHOD(HammerOgre, mr_setup, bool(HammerOgre this, entity actor))
 	precache_sound("gibs/gibheavy1.wav");
 	precache_sound("gibs/gibwood.wav");
 
+	precache_sound("weapons/r_exp3b.wav");
+
 	if(random() < 0.2)
 		actor.spawnflags |= MON_HOGRE_METAL;
 

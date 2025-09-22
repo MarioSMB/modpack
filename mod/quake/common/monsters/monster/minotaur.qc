@@ -155,8 +155,7 @@ void mino_claw(entity this, float side)
 	if(!this.enemy) return;
 	if(this.health < 1) return;
 	ai_face(this);						// Turn towards enemy target
-	// TODO!!
-	//ai_damagebreakable(50);			// Damage any breakables
+	ai_damagebreakable(this, 50);			// Damage any breakables
 
 	if(!this.enemy.takedamage || !ai_checkmelee(this, 100, 64))
 	{
@@ -238,7 +237,7 @@ void mino_JumpTouch(entity this, entity toucher)
 {
 	if(this.health < 1)
 		return;
-	//ai_jumpbreakable(30);			// Damage any breakables
+	ai_jumpbreakable(this, toucher, 30);			// Damage any breakables
 	settouch(this, func_null);			// No more touching
 	this.count += 1;	// Total amount of touch jumps
 	setthink(this, mino_jump10);	// Exit frame

@@ -7,21 +7,63 @@
 bool ai_foundbreakable(entity source, entity targ, bool ignorenoshoot)
 {
 	// Found a breakable in the way?
-	if(targ.classname == "misc_breakablemodel")
+	if((targ.classname == "func_breakable" && targ.bsporigin) || targ.classname == "misc_breakablemodel")
 	{
 		// Check if a monster and nomonster damage/trigger allowed?
-		if(IS_MONSTER(source) && (targ.spawnflags & BREAK_NOMONSTER)) return false;
+		if(IS_MONSTER(source) && (targ.spawnflags & BREAK_NOMONSTER))
+			return false;
 		// Ignoring noshoot spawnflag? (designed for jump/missile events)
-		else if(ignorenoshoot) return true;
+		else if(ignorenoshoot)
+			return true;
 		// is breakable explosive damage only and attacker can use explosives?
-		else if(targ.brktrigmissile && source.attack_explosive) return true;
+		else if(targ.brktrigmissile && source.attack_explosive)
+			return true;
 		// Can the breakable be damaged?
-		else if(targ.spawnflags & BREAK_NOSHOOT) return false;
+		else if(targ.spawnflags & BREAK_NOSHOOT)
+			return false;
 		// Its a breakable that breaks!
-		else return true;
+		else
+			return true;
 	}
 	return false;
 }
+
+/*======================================================================
+ ai_tracebreakable
+  Check if the monster (self) can see any breakables infront (target)
+  Triple trace infront (self.angles) origin, +upward and +downward
+======================================================================*/
+bool ai_tracebreakable(entity this, float tracedist, float traceang)
+{
+	// Take current facing angle of monster
+	makevectors(this.angles);
+	vector spot1 = this.origin;
+	vector spot2 = '0 0 0';
+
+	// Work out look up/down height for additional tracelines
+	float mon_height = (this.maxs_z - this.mins_z) * traceang;
+	
+	// Trace directly infront of entity using angles
+	spot2 = spot1 + (v_forward * tracedist);
+	traceline(spot1, spot2, false, this);
+	if(ai_foundbreakable(this, trace_ent, false))
+		return true;
+
+	// Trace from origin and look UP!
+	spot2 = spot1 + (v_forward * tracedist) + (v_up * mon_height);
+	traceline(spot1, spot2, false, this);
+	if(ai_foundbreakable(this, trace_ent, false))
+		return true;
+
+	// Trace from origin and look DOWN!
+	spot2 = spot1 + (v_forward * tracedist) - (v_up * mon_height);
+	traceline(spot1, spot2, false, this);
+	if(ai_foundbreakable(this, trace_ent, false))
+		return true;
+
+	// No breakable found
+	return false;
+};
 
 /*======================================================================
  ai_immunebreakable
@@ -30,7 +72,7 @@ bool ai_foundbreakable(entity source, entity targ, bool ignorenoshoot)
 bool ai_immunebreakable(entity source, entity targ)
 {
 	// Found a breakable? (BSP or model)
-	if(targ.classname == "misc_breakablemodel")
+	if((targ.classname == "func_breakable" && targ.bsporigin) || targ.classname == "misc_breakablemodel")
 	{
 		// Check no damage spawnflag?
 		if(IS_MONSTER(source) && (targ.spawnflags & BREAK_NOMONSTER))
@@ -44,6 +86,43 @@ bool ai_immunebreakable(entity source, entity targ)
 			return true;
 	}
 	return false;
+}
+
+/*======================================================================
+ ai_damagebreakable
+  If any breakables found, damage them to see if they will break
+  Use the triple trace forward, upward and dowward to find breakables
+======================================================================*/
+void ai_damagebreakable(entity this, float brkdmg)
+{
+	// Setup damage modifier
+	float ldmg = (random() + random() + random()) * brkdmg;
+
+	// Triple trace directly infront of monster using angles
+	if(ai_tracebreakable(this, 128, 0.35))
+	{
+		// Check for any monster damage modifier on breakable
+		if(IS_MONSTER(this) && trace_ent.brkmondmg > 0)
+			ldmg *= trace_ent.brkmondmg;
+		// Apply damage to breakable
+		T_Damage(trace_ent, this, this, ldmg, DEATH_GENERIC.m_id);
+	}
+}
+
+/*======================================================================
+ ai_jumpbreakable
+  Check if the monster can trigger a breakable from jump attack
+======================================================================*/
+void ai_jumpbreakable(entity this, entity toucher, float brkdmg)
+{
+	if(ai_foundbreakable(this, toucher, true) && toucher.brktrigjump != 0)
+	{
+		// Found a breakable which is prone to jump damage
+		if(toucher.use)
+			toucher.use(toucher, this, this);
+	}
+	else
+		ai_damagebreakable(this, brkdmg);	// Damage any breakables
 }
 
 /*======================================================================

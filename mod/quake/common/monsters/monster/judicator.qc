@@ -961,7 +961,7 @@ void judge_JumpTouch(entity this, entity toucher)
 	if(this.state == JUDGE_DEAD)
 		return;
 
-	//ai_jumpbreakable(30);			// Damage any breakables
+	ai_jumpbreakable(this, toucher, 30);			// Damage any breakables
 	settouch(this, func_null);			// No more touching
 	this.count += 1;	// Total amount of touch jumps
 	setthink(this, judge_jump6);	// Exit frame

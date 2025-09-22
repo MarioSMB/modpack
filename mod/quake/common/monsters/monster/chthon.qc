@@ -329,7 +329,10 @@ void boss_launch_missile(entity this, entity targ, vector offset)
 	entity newmis = launch_spike(this, org, vec);
 	newmis.projectiledeathtype = DEATH_MONSTER_CHTHON.m_id;
 	newmis.classname = "chthon_lavaball";
-	_setmodel(newmis, "progs/lavaball.mdl");
+	if(world.model == "maps/ee6.bsp")
+		_setmodel(newmis, "progs/ee_p_sphere.mdl");
+	else
+		_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.owner = this;
 	newmis.dmg = 100;
 	newmis.avelocity = '200 100 300';
@@ -387,6 +390,15 @@ spawnfunc(monster_boss) { monster_start(this, true, MON_CHTHON); }
 METHOD(Chthon, mr_setup, bool(Chthon this, entity actor))
 {
 	TC(Chthon, this);
+
+	if(world.model == "maps/ee6.bsp")
+	{
+		precache_model("progs/ee-boss.mdl");
+		precache_model("progs/ee_p_sphere.mdl");
+
+		_setmodel(actor, "progs/ee-boss.mdl");
+		setsize(actor, this.m_mins, this.m_maxs);
+	}
 
 	precache_model("progs/lavaball.mdl");
 

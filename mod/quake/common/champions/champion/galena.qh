@@ -69,8 +69,8 @@ PRECACHE(Galena)
 "Has a sword\n" \
 "Has a shield, right click blocks\n" \
 "While blocking:\n" \
-"- Damage reduced by 25%\n" \
-"- Movement reduced by 25%\n" \
+"- Damage reduced by 75%\n" \
+"- Movement reduced by 75%\n" \
 "- Can be timed to parry attacks"
 #endif
 CLASS(Galena, Champions)
@@ -92,3 +92,7 @@ CLASS(Galena, Champions)
 #endif
 ENDCLASS(Galena)
 REGISTER_CHAMPION(Galena, NEW(Galena));
+
+#ifdef SVQC
+.float galena_dodge_time;
+#endif

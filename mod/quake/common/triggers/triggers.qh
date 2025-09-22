@@ -85,6 +85,14 @@ const int STATE_DOWN = 3;
 const int STATE_OFF = 0;
 const int STATE_ON = 1;
 
+// ad junk
+const int STATE_DISABLED = 4;
+const int STATE_ENABLED = 5;
+const int STATE_DELETE = 6;
+const int STATE_MOVING = 7;
+const int STATE_ONE = 1;
+const int STATE_TWO = 2;
+
 float orig_random(entity this);
 void CorpseThink(entity this);
 .bool impaled;

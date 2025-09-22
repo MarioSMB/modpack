@@ -346,7 +346,7 @@ void misc_model_copper(entity this)
 spawnfunc(misc_model)
 {
 	// HACK: we use the AOP version of misc_model for the mumbo skull!
-	if(world.model == "maps/quake.bsp" || IsMGMap())
+	if((world.model == "maps/quake.bsp" && this.model == "models/mumbo.mdl") || IsMGMap())
 	{
 		misc_model_aop(this);
 		return;
@@ -358,7 +358,6 @@ spawnfunc(misc_model)
 		return;
 	}
 
-	// TODO: copper version
 	misc_model_alkaline(this);
 }
 

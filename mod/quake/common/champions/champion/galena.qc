@@ -242,6 +242,7 @@ METHOD(Galena, m_physics, bool(Champions this, entity actor, float dt))
 	#ifdef SVQC
 		player_sound(actor, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
+		actor.galena_dodge_time = time + 0.33;
 	#endif
 		vector vang = PHYS_INPUT_ANGLES(actor);
 		makevectors('0 1 0' * vang.y);
@@ -275,8 +276,26 @@ METHOD(Galena, m_getmovespeed, float(Champions this, entity actor))
 }
 
 #ifdef SVQC
+// TODO: generic list of deathtypes that should never be blocked
+bool Galena_forcedamage(int deathtype)
+{
+	switch(deathtype)
+	{
+		case DEATH_VOID.m_id:
+		case DEATH_HURTTRIGGER.m_id:
+		case DEATH_KILL.m_id:
+		case DEATH_GENERIC.m_id:
+		case DEATH_LAVA.m_id:
+		case DEATH_CHECKPOINT.m_id:
+			return true;
+	}
+	return false;
+}
+
 METHOD(Galena, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
+	if(targ.m_champion == this && targ.galena_dodge_time > time && !Galena_forcedamage(deathtype))
+		return 0;
 	if(targ.m_champion == this && PHYS_INPUT_BUTTON_ATCK2(targ) && galena_canblock(targ))
 		return 0.25;
 	return 1;

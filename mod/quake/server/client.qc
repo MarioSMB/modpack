@@ -1475,6 +1475,7 @@ void PutObserverInServer(entity this)
 	dodgeball_RemovePlayer(this);
 }
 
+.bool dualwielding_prev;
 void PutPlayerInServer(entity this)
 {
 	entity spot = SelectSpawnPoint(this, false);
@@ -1676,6 +1677,8 @@ void PutPlayerInServer(entity this)
 		W_WeaponFrame(this, weaponentity);
 	}
 
+	this.dualwielding_prev = -1;
+
 	if(deathmatch || coop)
 	{
 		fixedmakevectors(this.angles);
@@ -1861,8 +1864,14 @@ void NextLevel()
 
 	VoteReset(true);
 
-	// TODO: pick the one with the most players
-	entity o = find(NULL, classname, "trigger_changelevel");
+	// favours one players have found, but otherwise just picks randomly
+	entity o = NULL;
+	RandomSelection_Init();
+	FOREACH_ENTITY_CLASS("trigger_changelevel", true,
+	{
+		RandomSelection_AddEnt(it, 1, (it.chlevel_found) ? 2 : 1);
+	});
+	o = RandomSelection_chosen_ent;
 
 	// go back to same map if no trigger_changelevel
 	if(!o || is_start_map())
@@ -1953,7 +1962,7 @@ void PlayerDeathThink(entity this)
 	if(IS_ONGROUND(this))
 	{
 		float forward = vlen(this.velocity);
-		forward = forward - 20;
+		forward -= 20;
 		if(forward <= 0)
 			this.velocity = '0 0 0';
 		else	
@@ -2289,7 +2298,6 @@ Called every frame after physics are run
 ================
 */
 void xpackEnding(entity this);
-.bool dualwielding_prev;
 void PlayerPostThink(entity this)
 {
 	Player_Physics(this);
@@ -3535,7 +3543,8 @@ void SV_ParseClientCommand(entity this, string command)
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)
 			return;
-		IL_EACH(g_moveables, it.pure_data == 0,
+		string lookfor = argv(1);
+		IL_EACH(g_moveables, it.pure_data == 0 && (lookfor == "" || it.classname == lookfor),
 		{
 			entity e = WaypointSprite_Spawn(WP_Entity, 10, 0, NULL, (it.absmin + it.absmax) * 0.5, NULL, 0, it, waypointsprite_attachedforping, false, NULL);
 			e.realowner = this;

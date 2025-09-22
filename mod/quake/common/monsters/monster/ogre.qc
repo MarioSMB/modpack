@@ -120,6 +120,7 @@ void chainsaw(entity this, float side)
 {
 	if(!this.enemy)
 		return;
+	ai_damagebreakable(this, 20);							// Damage any breakables
 	if(!CanDamage(this.enemy, this))
 		return;
 
@@ -506,6 +507,9 @@ spawnfunc(monster_ogre_marksman)
 
 // alkaline
 spawnfunc(monster_ogreb) { monster_start(this, true, MON_OGRE); }
+
+// ad
+spawnfunc(monster_hogre) { monster_start(this, true, MON_OGRE); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -521,6 +525,8 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	precache_sound("ogre/ogidle2.wav");
 	precache_sound("ogre/ogpain1.wav");
 	precache_sound("ogre/ogsawatk.wav");
+
+	precache_sound("weapons/r_exp3b.wav");
 
 	// none specified - choose random. 25% boss on normal, hard, bloodbath
 	if((actor.spawnflags <= 1) && autocvar_skill > 0 && random() <= 0.25 && IsRogueMap())

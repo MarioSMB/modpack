@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ICE_GOLEM,                   1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was shattered by the Ice Golem"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ICE_GOLEM,              1,  NULL,           INFO_DEATH_SELF_MON_ICE_GOLEM,             CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ICE_GOLEM,          DEATH_SELF_MON_ICE_GOLEM,          DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ICE_GOLEM, "progs/mon_bossicegolem.mdl");
+
+SOUND(MON_ICE_GOLEM_SIGHT, "golem/sight");
+#endif
+
+CLASS(IceGolem, Monster)
+    ATTRIB(IceGolem, spawnflags, int, MONSTER_TYPE_BOSS);
+    ATTRIB(IceGolem, m_mins, vector, '-32 -32 -24');
+    ATTRIB(IceGolem, m_maxs, vector, '32 32 128');
+#ifdef GAMEQC
+    ATTRIB(IceGolem, m_model, Model, MDL_MON_ICE_GOLEM);
+    ATTRIB(IceGolem, m_sound, Sound, SND_MON_ICE_GOLEM_SIGHT);
+#endif
+    ATTRIB(IceGolem, netname, string, "icegolem");
+    ATTRIB(IceGolem, m_name, string, _("Ice Golem"));
+    ATTRIB(IceGolem, m_description, string, _("Frozen sentry"));
+    ATTRIB(IceGolem, m_color, vector, '0.23 0.21 0.78');
+ENDCLASS(IceGolem)
+
+REGISTER_MONSTER(ICE_GOLEM, NEW(IceGolem));

@@ -1,10 +1,12 @@
 #include "breakable.qh"
 
+#include "breakable_ad.qh"
+
 #ifdef SVQC
 
 /*
 ===============================================================================
-func_breakable
+func_breakable - Alkaline Edition
 ===============================================================================
 */
 
@@ -89,23 +91,7 @@ void func_breakable_die(entity this, entity inflictor, entity attacker, int deat
 	func_breakable_break(this, attacker, inflictor);
 }
 
-
-/*QUAKED func_breakable (0 .5 .8) ? NO_MONSTERS
-A visible object that can be destroyed by shooting it. If it has a targetname, it will not be directly damageable.
-
-NO_MONSTERS: object ignores damage from monsters
-
-"health" Default 20
-
-"cnt" number of pieces of debris to spawn. default 6.
-
-"style" The style of the debris:
-0 = green metal (default)
-1 = red metal
-2 = concrete
-3 = glass
-*/
-spawnfunc(func_breakable)
+void func_breakable_copper(entity this)
 {
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
@@ -177,6 +163,35 @@ spawnfunc(func_breakable)
 
 	if(this.switchshadstyle)
 		lightstyle(this.switchshadstyle, "a");
+}
+
+
+/*QUAKED func_breakable (0 .5 .8) ? NO_MONSTERS
+A visible object that can be destroyed by shooting it. If it has a targetname, it will not be directly damageable.
+
+NO_MONSTERS: object ignores damage from monsters
+
+"health" Default 20
+
+"cnt" number of pieces of debris to spawn. default 6.
+
+"style" The style of the debris:
+0 = green metal (default)
+1 = red metal
+2 = concrete
+3 = glass
+*/
+spawnfunc(func_breakable)
+{
+	// it is near-impossible to tell if a func_breakable came from copper or ad due to overlapping fields/spawnflags
+	// the best we can do is guess by falling back where ad would otherwise delete the entity
+	if((!this.targetname || this.targetname == "") && (this.spawnflags & BREAK_NOSHOOT))
+	{
+		func_breakable_copper(this);
+		return;
+	}
+
+	func_breakable_ad(this);
 }
 
 #endif

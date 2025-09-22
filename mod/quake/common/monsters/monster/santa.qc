@@ -157,6 +157,7 @@ void SantaMelee(entity this)
 		return;
 		
 	ai_charge(this, 10);	// + ai_face()
+	ai_damagebreakable(this, 50);
 	if(!ai_checkmelee(this, 100, 0))
 		return;
 

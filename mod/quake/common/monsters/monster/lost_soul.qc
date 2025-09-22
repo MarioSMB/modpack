@@ -387,7 +387,7 @@ void lost_bite(entity this)
 	if(this.health < 1) return;
 		
 	ai_charge(this, 10);							// Get closer for extra bite
-	//ai_damagebreakable(this, 10);					// Damage any breakables
+	ai_damagebreakable(this, 10);					// Damage any breakables
 	if(!ai_checkmelee(this, 60, 0))
 		return;	// Too far away
 

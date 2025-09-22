@@ -57,6 +57,7 @@ void Voreling_JumpTouch(entity this, entity toucher)
 		voreling_diethink(this);
 		return;
 	}
+	ai_jumpbreakable(this, toucher, 20);			// Damage any breakables
 	if(toucher.takedamage)
 	{
 		if(vdist(this.velocity, >, 300))

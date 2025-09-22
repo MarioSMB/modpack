@@ -370,7 +370,7 @@ void dfury_JumpTouch(entity this, entity toucher)
 {
 	if(this.health < 1)
 		return;
-	//ai_jumpbreakable(this, 30);			// Damage any breakables
+	ai_jumpbreakable(this, toucher, 30);			// Damage any breakables
 	settouch(this, func_null);			// No more touching
 	setthink(this, dfury_lunge9);	// Exit frame
 

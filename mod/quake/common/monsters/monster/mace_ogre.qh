@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MACE_OGRE,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was smashed by a Mace Ogre"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MACE_OGRE,                1,  NULL,           INFO_DEATH_SELF_MON_MACE_OGRE,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MACE_OGRE,            DEATH_SELF_MON_MACE_OGRE,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MACE_OGRE, "progs/mon_hogremac.mdl");
+MODEL(MON_MACE_OGRE_HEAD, "progs/h_hogre.mdl");
+
+SOUND(MON_MACE_OGRE_SIGHT, "ogre/ogwake");
+#endif
+
+CLASS(MaceOgre, Monster)
+    ATTRIB(MaceOgre, spawnflags, int, 0);
+    ATTRIB(MaceOgre, m_mins, vector, '-32 -32 -24');
+    ATTRIB(MaceOgre, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(MaceOgre, m_model, Model, MDL_MON_MACE_OGRE);
+    ATTRIB(MaceOgre, m_model_head, Model, MDL_MON_MACE_OGRE_HEAD);
+    ATTRIB(MaceOgre, m_sound, Sound, SND_MON_MACE_OGRE_SIGHT);
+#endif
+    ATTRIB(MaceOgre, netname, string, "hogremac");
+    ATTRIB(MaceOgre, m_name, string, _("Mace Ogre"));
+ENDCLASS(MaceOgre)
+
+REGISTER_MONSTER(MACE_OGRE, NEW(MaceOgre));

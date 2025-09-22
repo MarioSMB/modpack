@@ -181,6 +181,8 @@ void Elf_JumpTouch(entity this, entity toucher)
 {
 	if(this.health <= 0)
 		return;
+	ai_jumpbreakable(this, toucher, 20);			// Damage any breakables
+
 	settouch(this, func_null);			// No more touching
 	this.count += 1;	// Total amount of touch jumps
 	setthink(this, elf_leap7);

@@ -53,6 +53,7 @@ void SnowmMelee(entity this)
 		return;
 	if(this.health < 1)
 		return;
+	ai_damagebreakable(this, 10);							// Damage any breakables
 	if(!this.enemy.takedamage)
 		return;
 		
