@@ -3,5 +3,6 @@
 #include "kill.qh"
 #include "lock.qh"
 #include "music.qh"
+#include "screenshake.qh"
 #include "sound.qh"
 #include "state.qh"

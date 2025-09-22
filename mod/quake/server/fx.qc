@@ -65,7 +65,7 @@ void T_Shake(entity this)
 	this.nextthink = time + 0.05;
 }
 
-void screenshake_use(entity this, entity actor, entity trigger)
+void trigger_screenshake_use(entity this, entity actor, entity trigger)
 {
 	this.storednextthink = time + this.wait; // when to end
 	this.delay = time + (this.wait / 3); // how long to ramp up
@@ -106,7 +106,7 @@ spawnfunc(trigger_screenshake)
 	if(!this.dmg) // no intensity!
 		this.dmg = 3;
 
-	this.use = screenshake_use;
+	this.use = trigger_screenshake_use;
 }
 
 //============================================================================

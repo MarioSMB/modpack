@@ -798,6 +798,58 @@ void server_reset()
 	reset_timer.nextthink = time + autocvar_sv_quake_autoreset;
 }
 
+void intermission_moveplayers(entity spot)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		it.view_ofs = '0 0 0';
+		if(spot)
+		{
+			it.angles = it.v_angle = spot.mangle;
+			it.fixangle = true;		// turn this way immediately
+			it.goalentity = spot;
+		}
+		W_Spellbook_ClearSpells(it);
+		tank_cleanup(it);
+		cannon_clear(it);
+		Clockwork_Clear(it);
+		QCC_ClearTransform(it);
+		it.nextthink = time + 0.5;
+		it.takedamage = DAMAGE_NO;
+		it.clientcamera = it;
+		it.solid = SOLID_NOT;
+		it.mangle = it.v_angle;
+		it.flags |= FL_NOTARGET; // fix a silly monster bug
+		//it.health = -2342; // can't do this because of parms
+		set_movetype(it, MOVETYPE_NONE);
+		clear_powerups(it);
+		FogPushSettingsFrom(it, spot, 0);
+		if(spot)
+		{
+			//it.modelindex = 0;
+			setmodel(it, MDL_Null);
+			setsize(it, VEC_HULL_MIN, VEC_HULL_MAX);
+			setorigin(it, spot.origin);
+		}
+	});
+}
+
+void intermission_frame()
+{
+	if(!intermission_running)
+		return;
+
+	if(!intermission_cycletime || time < intermission_cycletime)
+		return;
+
+	entity pos = FindIntermission(NULL);
+
+	intermission_moveplayers(pos);
+
+	intermission_cycletime = time + 6;
+}
+
+
 void execute_changelevel(entity this)
 {
 	intermission_running = 1;
@@ -818,36 +870,9 @@ void execute_changelevel(entity this)
 
 	entity pos = FindIntermission(this);
 
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		it.view_ofs = '0 0 0';
-		if(pos)
-		{
-			it.angles = it.v_angle = pos.mangle;
-			it.fixangle = true;		// turn this way immediately
-		}
-		W_Spellbook_ClearSpells(it);
-		tank_cleanup(it);
-		cannon_clear(it);
-		Clockwork_Clear(it);
-		QCC_ClearTransform(it);
-		it.nextthink = time + 0.5;
-		it.takedamage = DAMAGE_NO;
-		it.clientcamera = it;
-		it.solid = SOLID_NOT;
-		it.flags |= FL_NOTARGET; // fix a silly monster bug
-		//it.health = -2342; // can't do this because of parms
-		set_movetype(it, MOVETYPE_NONE);
-		clear_powerups(it);
-		FogPushSettingsFrom(it, pos, 0);
-		if(pos)
-		{
-			//it.modelindex = 0;
-			setmodel(it, MDL_Null);
-			setsize(it, VEC_HULL_MIN, VEC_HULL_MAX);
-			setorigin(it, pos.origin);
-		}
-	});
+	intermission_moveplayers(pos);
+
+	intermission_cycletime = time + 6; // switch cameras every so often
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
 

@@ -2031,6 +2031,8 @@ void StartFrame()
 
 	slide_check_time();
 
+	intermission_frame();
+
 	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));
 }

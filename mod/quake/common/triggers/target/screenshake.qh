@@ -1,0 +1,8 @@
+#pragma once
+
+#ifdef SVQC
+.float strength;
+.float super_time;
+
+void screenshake_oneshot(entity source, float attack, float sustain, float release, float str);
+#endif

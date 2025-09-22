@@ -92,6 +92,9 @@ const int ITEM_SUSPENDED = 4;
 
 void ItemSpawn(entity this, entity actor, entity trigger)
 {
+	if(this.solid == SOLID_TRIGGER)
+		return; // already spawned
+
 	this.solid = SOLID_TRIGGER;
 	this.model = this.mdl;
 	setthink(this, FixItem);

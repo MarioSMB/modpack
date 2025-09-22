@@ -28,6 +28,8 @@ string autocvar_hostname;
 
 string intermissiontext;
 
+float intermission_cycletime = 0;
+
 .float suicide_delay;
 
 .bool just_joined;
@@ -114,6 +116,10 @@ void centerprint_all(string s);
 void NextLevel();
 
 void server_reset();
+
+void intermission_moveplayers(entity spot);
+
+void intermission_frame();
 
 string getcdtrack(int numb);
 

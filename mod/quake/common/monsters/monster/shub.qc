@@ -117,7 +117,16 @@ void old_thrash5(entity this) { set_animofs(this, anim_old_shake, 5, old_thrash6
 void old_thrash4(entity this) { set_animofs(this, anim_old_shake, 4, old_thrash5); shub_lightstyle(this, 0, "i"); }
 void old_thrash3(entity this) { set_animofs(this, anim_old_shake, 3, old_thrash4); shub_lightstyle(this, 0, "k"); }
 void old_thrash2(entity this) { set_animofs(this, anim_old_shake, 2, old_thrash3); shub_lightstyle(this, 0, "k"); }
-void old_thrash1(entity this) { set_animofs(this, anim_old_shake, 1, old_thrash2); shub_lightstyle(this, 0, "m"); _sound(this, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_SHUB); }
+void old_thrash1(entity this)
+{
+	set_animofs(this, anim_old_shake, 1, old_thrash2);
+	shub_lightstyle(this, 0, "m");
+	_sound(this, CH_TRIGGER_SINGLE, "boss2/death.wav", 1, ATTN_SHUB);
+
+	// only do epic screen shakes on special ending maps
+	if(world.model == "maps/end.bsp" || world.model == "maps/udobend.bsp")
+		screenshake_oneshot(this, 0.2, 0.8, 0.8, 1.5);
+}
 
 //============================================================================
 
@@ -161,27 +170,7 @@ void finale_intermission(entity this)
 	WriteByte(MSG_ALL, SVC_FINALE);
 	WriteString(MSG_ALL, "");
 
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		W_Spellbook_ClearSpells(it);
-		tank_cleanup(it);
-		cannon_clear(it);
-		clear_powerups(it);
-		Clockwork_Clear(it);
-		it.view_ofs = '0 0 0';
-		if(pos)
-			it.angles = it.v_angle = pos.mangle;
-		it.fixangle = true;		// turn this way immediately
-		it.nextthink = time + 0.5;
-		it.takedamage = DAMAGE_NO;
-		it.solid = SOLID_NOT;
-		it.clientcamera = it;
-		set_movetype(it, MOVETYPE_NONE);
-		//it.modelindex = 0;
-		setmodel(it, MDL_Null);
-		if(pos)
-			setorigin(it, pos.origin);
-	});
+	intermission_moveplayers(pos);
 }
 
 void finale_1(entity this, entity inflictor, entity attacker, int deathtype)
