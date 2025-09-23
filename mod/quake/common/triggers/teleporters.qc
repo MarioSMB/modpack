@@ -5,6 +5,8 @@ const int SILENT = BIT(1);
 const int CTF_ONLY = BIT(2); // rogue
 const int IGNORE_TARGETNAME = BIT(2); // mg
 
+// copper
+const int SPAWN_NO_TFOG = 32;
 const int SPAWN_NO_TFRAG = 64;
 
 void spawn_tfog(vector org)

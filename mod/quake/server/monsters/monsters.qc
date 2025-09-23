@@ -247,14 +247,61 @@ void StartMonster(entity this, entity actor, entity trigger)
 	monster_start_go(this);
 }
 
+entity find_touching(entity this, bool onlymonsters)
+{
+	vector org = this.origin + 0.5 * (this.mins + this.maxs);
+	vector padding = '2 2 2';
+	// do it like this so we don't have to rely on everything having its hitbox setup
+	vector mymin = this.origin + this.monsterdef.m_mins;
+	vector mymax = this.origin + this.monsterdef.m_maxs;
+	entity found = NULL;
+	FOREACH_ENTITY_RADIUS(org, this.size_z + 64, true,
+	{
+		if(it.health <= 0 ||
+			(it.solid == SOLID_NOT || it.solid == SOLID_TRIGGER) ||
+			!boxesoverlap(mymin - padding, mymax + padding, it.absmin, it.absmax) ||
+			(onlymonsters && !IS_MONSTER(it)))
+		{
+			continue;
+		}
+		found = it;
+		break;
+	});
+
+	return found;
+}
+
 void Monster_Appear_Delayed(entity this)
 {
+	if((this.spawnflags & SPAWN_NO_TFRAG) && find_touching(this, true))
+	{
+		this.nextthink = time + 0.25;
+		return;
+	}
+
+	if((this.spawnflags & SPAWN_TRIGGERED) && !(this.spawnflags & SPAWN_NO_TFOG))
+		spawn_tfog(this.origin);
+
 	monster_start(this, false, this.monsterdef);
 }
 
 const int SPAWN_INSTAWAKE = 128;
+// NOTE: relies on .count being set properly
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
+	if(this.count == -4)
+	{
+		// copied from playercount_convert
+		int clients = 0;
+		// let's not count bots
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it),
+		{
+			++clients;
+		});
+
+		this.count = clients;
+	}
+
 	// 0 means infinite
 	bool addnew = (this.count == 0);
 	if(this.count > 1)
@@ -265,12 +312,15 @@ void Monster_Appear(entity this, entity actor, entity trigger)
 
 	if(addnew)
 	{
-		// the new monster will NOT be triggered here, ready for the next time this trigger is activated
+		// the copied monster will NOT be setup here, ready for the next time this trigger is activated
 		entity newmon = spawn();
 		copyentity_qc(this, newmon);
+		IL_PUSH(g_moveables, newmon);
 	}
 
 	float timer = (this.delay) ? this.delay : 0;
+	if(this.wait) // copper uses wait instead
+		timer = this.wait + random() * this.rand;
 	setthink(this, Monster_Appear_Delayed);
 	this.nextthink = time + timer;
 	this.use = func_null; // will be set to a normal value upon spawning
