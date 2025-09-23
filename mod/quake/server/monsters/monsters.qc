@@ -255,6 +255,21 @@ void Monster_Appear_Delayed(entity this)
 const int SPAWN_INSTAWAKE = 128;
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
+	// 0 means infinite
+	bool addnew = (this.count == 0);
+	if(this.count > 1)
+	{
+		this.count -= 1;
+		addnew = true;
+	}
+
+	if(addnew)
+	{
+		// the new monster will NOT be triggered here, ready for the next time this trigger is activated
+		entity newmon = spawn();
+		copyentity_qc(this, newmon);
+	}
+
 	float timer = (this.delay) ? this.delay : 0;
 	setthink(this, Monster_Appear_Delayed);
 	this.nextthink = time + timer;
@@ -281,11 +296,26 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 	if(this.targetname == "" || !this.targetname)
 		return false;
 
+	// if we're not in coop mode, count -4 will always evaluate to 1, so go ahead and default 
+	// this field back to 0 so the kill count doesn't change during play if it doesn't have to
+	if(this.count == -4 && !coop)
+		this.count = 0;
+
 	setthink(this, func_null);
 	this.monsterdef = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
 	this.use = Monster_Appear;
 	this.flags = FL_MONSTER; // set so this monster can get butchered
+
+	if(!this.count)
+		this.count = 1;
+	if(this.count == -1)
+		this.count = 0;
+	if(this.count != -4 && this.count != 0)
+		this.flags |= FL_SPAWNING; // mark monster as spawning so we can tally the total monsters here
+
+	if(this.flags & FL_SPAWNING)
+		monsters_total += this.count;
 
 	return true;
 }
@@ -433,10 +463,10 @@ void monster_start(entity this, bool check_appear, Monster mon)
 	// in horde, mosnters shouldn't increase total count until spawned
 	if(autocvar_horde)
 	{
-		if(!monster_checkspawnedflag(this) && !(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
+		if(!monster_checkspawnedflag(this) && !(this.flags & FL_DECOY) && !(this.flags & FL_CLONE) && !(this.flags & FL_SPAWNING))
 			monsters_total += 1;
 	}
-	else if(!(this.flags & FL_DECOY) && !(this.flags & FL_CLONE))
+	else if(!(this.flags & FL_DECOY) && !(this.flags & FL_CLONE) && !(this.flags & FL_SPAWNING))
 		monsters_total += 1;
 
 	if(monster_checkspawnedflag(this))
