@@ -1333,7 +1333,7 @@ void func_breakable_ad(entity this)
 	breakable_defaults(this);
 
 	// No point setting up a breakable if it cannot be triggered or shoot
-	if(this.targetname == "" && this.spawnflags & BREAK_NOSHOOT)
+	if(this.targetname == "" && (this.spawnflags & BREAK_NOSHOOT))
 	{
 		// Check for external event triggers and warn on console
 		if(this.brktrigjump != 0 || this.brktrigmissile != 0)

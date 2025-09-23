@@ -91,7 +91,7 @@ void func_breakable_die(entity this, entity inflictor, entity attacker, int deat
 	func_breakable_break(this, attacker, inflictor);
 }
 
-void func_breakable_copper(entity this)
+void func_breakable_alkaline(entity this)
 {
 	this.solid = SOLID_BSP;
 	set_movetype(this, MOVETYPE_PUSH);
@@ -165,6 +165,14 @@ void func_breakable_copper(entity this)
 		lightstyle(this.switchshadstyle, "a");
 }
 
+// no general way to tell unfortunately, just list some packs here that do use it
+bool IsAlkalineMap()
+{
+	if(substring(world.model, 0, 7) == "maps/ee" || substring(world.model, 0, 9) == "maps/ffj_")
+		return true;
+	return false;
+}
+
 
 /*QUAKED func_breakable (0 .5 .8) ? NO_MONSTERS
 A visible object that can be destroyed by shooting it. If it has a targetname, it will not be directly damageable.
@@ -183,11 +191,11 @@ NO_MONSTERS: object ignores damage from monsters
 */
 spawnfunc(func_breakable)
 {
-	// it is near-impossible to tell if a func_breakable came from copper or ad due to overlapping fields/spawnflags
+	// it is near-impossible to tell if a func_breakable came from alkaline or ad due to overlapping fields/spawnflags
 	// the best we can do is guess by falling back where ad would otherwise delete the entity
-	if((!this.targetname || this.targetname == "") && (this.spawnflags & BREAK_NOSHOOT))
+	if((!this.targetname || this.targetname == "") && (this.spawnflags & BREAK_NOSHOOT) || IsAlkalineMap())
 	{
-		func_breakable_copper(this);
+		func_breakable_alkaline(this);
 		return;
 	}
 
