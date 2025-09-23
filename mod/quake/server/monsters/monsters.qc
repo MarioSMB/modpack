@@ -249,17 +249,18 @@ void StartMonster(entity this, entity actor, entity trigger)
 
 entity find_touching(entity this, bool onlymonsters)
 {
-	vector org = this.origin + 0.5 * (this.mins + this.maxs);
-	vector padding = '2 2 2';
 	// do it like this so we don't have to rely on everything having its hitbox setup
-	vector mymin = this.origin + this.monsterdef.m_mins;
-	vector mymax = this.origin + this.monsterdef.m_maxs;
+	vector mymin = this.monsterdef.m_mins;
+	vector mymax = this.monsterdef.m_maxs;
+	vector org = this.origin + 0.5 * (mymin + mymax);
+	vector mysize = (mymax - mymin);
+	vector padding = '2 2 2';
 	entity found = NULL;
-	FOREACH_ENTITY_RADIUS(org, this.size_z + 64, true,
+	FOREACH_ENTITY_RADIUS(org, mysize.z + 64, true,
 	{
 		if(it.health <= 0 ||
 			(it.solid == SOLID_NOT || it.solid == SOLID_TRIGGER) ||
-			!boxesoverlap(mymin - padding, mymax + padding, it.absmin, it.absmax) ||
+			!boxesoverlap(this.origin + mymin - padding, this.origin + mymax + padding, it.absmin, it.absmax) ||
 			(onlymonsters && !IS_MONSTER(it)))
 		{
 			continue;
