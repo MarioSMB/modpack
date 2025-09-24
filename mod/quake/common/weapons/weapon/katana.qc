@@ -82,7 +82,7 @@ void W_FireKatana(entity this, .entity weaponentity)
 	int oldsolid = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	float arange = 110;
-	traceline(source, source + v_forward * arange, false, this);
+	traceline_antilag(this, source, source + v_forward * arange, false, this, ANTILAG_LATENCY(this));
 	this.dphitcontentsmask = oldsolid;
 	if(trace_fraction == 1.0)
 		return;
@@ -126,6 +126,8 @@ void W_FireKatana(entity this, .entity weaponentity)
 		}
 		trace_ent.axhitme = true;
 		float damage = 80;
+		if(deathmatch && autocvar_skill == 3)
+			damage = 100;
 		T_Damage(trace_ent, this, this, damage, WEP_KATANA.m_id);
 	}
 	else

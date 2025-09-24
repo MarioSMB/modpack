@@ -277,6 +277,8 @@
     MSG_CENTER_NOTIF(TANK_ENTER,                        N_ENABLE,     0, 0, "pass_key",                 CPID_TANK, "0 0", _("^BGPress ^F2%s^BG to exit the tank"), "")
     MSG_CENTER_NOTIF(TANK_LOCKON,                       N_ENABLE,     1, 0, "s1",                       CPID_TANK, "0 0", _("^BG%s^BG's plasma has a lock on you!"), "")
 
+    MSG_CENTER_NOTIF(PLAYER_WIN,                        N_ENABLE,     1, 0, "s1",                       CPID_Null, "0 0", _("^BG%s^BG wins!"), "")
+
     MSG_CENTER_NOTIF(POWERDOWN_ANTIGRAV,                N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Antigrav failing..."), "")
     MSG_CENTER_NOTIF(POWERDOWN_BIOSUIT,                 N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Air supply in Biosuit expiring"), "")
     MSG_CENTER_NOTIF(POWERDOWN_DOUBLEJUMPBOOTS,         N_ENABLE,     0, 0, "",                         CPID_POWER,"0 0", _("^K2Double Jump Boots losing charge..."), "")

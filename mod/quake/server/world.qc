@@ -1868,6 +1868,7 @@ void CheckRules_World()
 		{
 			if(it.frags >= fraglimit)
 			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_PLAYER_WIN, it.netname);
 				mapname = PickDMMap(true);
 				NextLevel();
 				return;
