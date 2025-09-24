@@ -80,6 +80,7 @@ CLASS(Sorlag, Champions)
     ATTRIB(Sorlag, m_soundpath, string, "player_sorlag/");
     METHOD(Sorlag, m_sound_pain, string()) { return SND(Sorlag_Pain_Random()); }
     METHOD(Sorlag, m_sound_death, string()) { return SND(Sorlag_Death_Random()); }
+    METHOD(Sorlag, m_sound_jump, string()) { return "player_sorlag/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Sorlag, message, string, SORLAG_STATS);

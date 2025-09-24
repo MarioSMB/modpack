@@ -1297,13 +1297,14 @@ void remove_except_protected(entity e)
 const int SPAWN_COOPONLY = 4096;
 const int SPAWN_NOTCOOP = 8192;
 
-void Copper_OnEntityPrespawn(entity this)
+// returns true if the entity was deleted
+bool Copper_OnEntityPreSpawn(entity this)
 {
 	// copper-specific hack
 	if(this.version && this.version <= 1.30)
 	{
 		delete(this);
-		return;
+		return true;
 	}
 	// since coop only stuff relies entirely on there being multiple players, we must sadly turn it off
 	bool forcecoop = false;
@@ -1315,13 +1316,13 @@ void Copper_OnEntityPrespawn(entity this)
 		if(((this.spawnflags & SPAWN_NOTCOOP) && coop) || ((this.spawnflags & SPAWN_COOPONLY) && !coop))
 		{
 			delete(this);
-			return;
+			return true;
 		}
 	}
 	else if(this.spawnflags & SPAWN_COOPONLY)
 	{
 		delete(this);
-		return;
+		return true;
 	}
 
 	// support impulse triggering on anything
@@ -1337,6 +1338,41 @@ void Copper_OnEntityPrespawn(entity this)
 			this.impulse = 0;
 		}
 	}
+
+	return false;
+}
+
+// ad junk
+.bool nightmare;
+.int cooponly;
+
+bool AD_OnEntityPreSpawn(entity this)
+{
+	if(this.nightmare && autocvar_skill < 3)
+	{
+		delete(this);
+		return true;
+	}
+
+	if(this.cooponly || this.cooponly == -1)
+	{
+		// Only one condition will let a cooponly item spawn
+		// cooponly =  1  coop = 0 inhibit = true
+		// cooponly =  1  coop = 1 inhibit = false
+		// cooponly = -1  coop = 0 inhibit = false (fixed)
+		// cooponly = -1  coop = 1 inhibit = true
+		if(this.cooponly && coop)
+			return false;
+		else if(this.cooponly == -1 && !coop)
+			return false;
+		else
+		{
+			delete(this);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void SV_OnEntityPreSpawnFunction(entity this)
@@ -1349,8 +1385,10 @@ void SV_OnEntityPreSpawnFunction(entity this)
 		this.classname = "horde_manager";
 	}
 
-	// to be called last as it removes entities
-	Copper_OnEntityPrespawn(this);
+	if(Copper_OnEntityPreSpawn(this))
+		return;
+
+	AD_OnEntityPreSpawn(this);
 }
 
 /** Retrieves the value of a map entity field from fullspawndata.
@@ -1728,6 +1766,7 @@ string PickDMMap(bool gotohub)
 {
 	if(gotohub)
 	{
+#if 0
 		int pcount = 0;
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
@@ -1736,6 +1775,9 @@ string PickDMMap(bool gotohub)
 		// poor thing's stuck all alone, let's put them out of their misery
 		if(pcount <= 1)
 			return "quake";
+#else
+		return "dm";
+#endif
 	}
 	if(autocvar_sv_quake_maplist != "")
 	{

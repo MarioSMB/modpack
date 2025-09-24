@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(SubMachineGun, Weapon)
+/* ammotype  */ ATTRIB(SubMachineGun, ammo_type, int, 0);
+/* impulse   */ ATTRIB(SubMachineGun, impulse, int, 4);
+/* spawnflags*/ ATTRIB(SubMachineGun, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(SubMachineGun, aflag, int, 0);
+/* modelname */ ATTRIB(SubMachineGun, mdl, string, "smg");
+/* crosshair */ ATTRIB(SubMachineGun, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(SubMachineGun, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(SubMachineGun, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(SubMachineGun, model2, string, "smg");
+/* refname   */ ATTRIB(SubMachineGun, netname, string, "smg");
+/* wepname   */ ATTRIB(SubMachineGun, m_name, string, _("SubMachine Gun"));
+
+ENDCLASS(SubMachineGun)
+REGISTER_WEAPON(SMG, NEW(SubMachineGun));
+
+//SPAWNFUNC_WEAPON(weapon_smg, WEP_SMG)
+
+#ifdef SVQC
+void W_FireSubMachineGun(entity this, float ox, .entity weaponentity);
+#endif

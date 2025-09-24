@@ -76,6 +76,7 @@ CLASS(BanjoKazooie, Champions)
     ATTRIB(BanjoKazooie, m_soundpath, string, "player_banjo/");
     METHOD(BanjoKazooie, m_sound_pain, string()) { return SND(Banjo_Pain_Random()); }
     METHOD(BanjoKazooie, m_sound_death, string()) { return SND(Banjo_Death_Random()); }
+    METHOD(BanjoKazooie, m_sound_jump, string()) { return "player_banjo/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(BanjoKazooie, message, string, BANJO_STATS);

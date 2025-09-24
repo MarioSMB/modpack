@@ -13,6 +13,7 @@
 #include "command/banning.qh"
 #include "command/cmd.qh"
 #include "getreplies.qh"
+#include "grapple.qh"
 #include "ipban.qh"
 #include "player.qh"
 #include "rogue/sphere.qh"
@@ -116,13 +117,26 @@ void SetChangeParms(entity this)
 void SetNewParms()
 {
 	Weapon start_weapon = WEP_AXE;
+	Weapon prev_weapon = WEP_SHOTGUN;
 	if(autocvar_horde)
 		start_weapon = WEP_CHAINSAW;
 	else if(world.worldtype == WORLDTYPE_DODGEBALL)
 		start_weapon = WEP_BALL;
+	else if(deathmatch && autocvar_skill == 3)
+	{
+		start_weapon = WEP_RAILGUN;
+		prev_weapon = WEP_KATANA;
+	}
 	WepSet weps = (WEPSET(SHOTGUN) | start_weapon.m_wepset);
 	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		weps = start_weapon.m_wepset;
+	else if(deathmatch && autocvar_skill == 3)
+		weps = WEPSET(RAILGUN);
+
+	int start_items = 0;
+	if(deathmatch && autocvar_skill == 3)
+		start_items = IT_GRAPPLE;
+
 	parm1 = weps.x;
 	parm2 = weps.y;
 	parm3 = weps.z;
@@ -130,15 +144,15 @@ void SetNewParms()
 	parm5 = 25;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = 0;
-	parm9 = WEP_SHOTGUN.m_id;
+	parm8 = (deathmatch && autocvar_skill == 3) ? 100 : 0;
+	parm9 = prev_weapon.m_id;
 	parm10 = 0;
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
 	parm14 = 0;
 	parm15 = start_weapon.m_id; // always use axe as the alternate weapon
-	parm16 = 0;
+	parm16 = start_items;
 }
 
 void DecodeLevelParms(entity this)
@@ -149,6 +163,9 @@ void DecodeLevelParms(entity this)
 
 	// Yoder Oct25, reset weapons between map loads
 	if(autocvar_horde)
+		SetNewParms();
+
+	if(deathmatch)
 		SetNewParms();
 
 	if(world.model == "maps/hipstart.bsp"
@@ -253,7 +270,12 @@ string get_playermodel(entity this)
 			return "progs/surfer1.mdl";
 	}
 	if(this.m_champion)
-		return this.m_champion.m_model.model_str();
+	{
+		if(this.m_champion.m_getplayermodel)
+			return this.m_champion.m_getplayermodel(this.m_champion, this);
+		else
+			return this.m_champion.m_model.model_str(); // unused fallback
+	}
 	return "progs/player.mdl";
 }
 
@@ -308,6 +330,15 @@ string get_painsound(entity this, int chance)
 	return "player/pain6.wav";
 }
 
+string get_jumpsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_jump();
+
+	// never actually reached, thanks gmqcc
+	return "player/plyrjmp8.wav";
+}
+
 void playersound(entity this, int chan, string sample, float vol, float atten)
 {
 	if(this.spawnsilent)
@@ -324,9 +355,7 @@ void player_sound(entity this, int chan, string sample, float atten)
 	if(this.clockwork)
 		return; // no player sounds thank you very much
 	string soundpath;
-	if(STAT(SKATING, this))
-		soundpath = "player/";
-	else if(this.m_champion)
+	if(this.m_champion && !STAT(SKATING, this))
 		soundpath = this.m_champion.m_soundpath;
 	else
 		soundpath = "player/";
@@ -1470,6 +1499,8 @@ void PutObserverInServer(entity this)
 
 	skate_unspawn(this);
 
+	GrappleReset(this.hook);
+
 	this.classname = STR_OBSERVER;
 	this.health = -666;
 	setmodel(this, MDL_Null);
@@ -1667,6 +1698,8 @@ void PutPlayerInServer(entity this)
 	slide_PutPlayerInServer(this);
 
 	dodgeball_PutPlayerInServer(this);
+
+	GrappleReset(this.hook);
 
 // oh, this is a hack!
 	_setmodel(this, "progs/bolt2.mdl");
@@ -2425,6 +2458,8 @@ void PlayerPostThink(entity this)
 
 		if(!this.tank && !this.clockwork)
 			W_Passives(this);
+
+		GrappleHookFrame(this);
 
 		if(this.cnt > 0 && !this.button0)
 		{

@@ -53,6 +53,7 @@ CLASS(Demon, Champions)
     ATTRIB(Demon, m_soundpath, string, "player_keyleth/");
     METHOD(Demon, m_sound_pain, string()) { return "demon/dpain1.wav"; }
     METHOD(Demon, m_sound_death, string()) { return "demon/ddeath.wav"; }
+    METHOD(Demon, m_sound_jump, string()) { return "demon/djump.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Demon, message, string, "You are transformed!");

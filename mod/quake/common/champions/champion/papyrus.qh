@@ -88,6 +88,7 @@ CLASS(Papyrus, Champions)
     ATTRIB(Papyrus, m_soundpath, string, "player_papyrus/");
     METHOD(Papyrus, m_sound_pain, string()) { return SND(Papyrus_Pain_Random()); }
     METHOD(Papyrus, m_sound_death, string()) { return SND(Papyrus_Death_Random()); }
+    METHOD(Papyrus, m_sound_jump, string()) { return "player_papyrus/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Papyrus, m_faceprefix, string, "gfx/quake/papyrus_");

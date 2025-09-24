@@ -492,11 +492,28 @@ void player_run(entity this)
 				else if(this.m_champion == CHAMPION_Pepsiman) // TODO: allow champions to customise footsteps
 				{
 					if(r < 0.33)
-					   _sound(this, CH_VOICE, "player_pepsiman/foot1.wav", 0.5, ATTN_NORM);
+						_sound(this, CH_VOICE, "player_pepsiman/foot1.wav", 0.5, ATTN_NORM);
 					else if(r < 0.66)
-					   _sound(this, CH_VOICE, "player_pepsiman/foot2.wav", 0.5, ATTN_NORM);
+						_sound(this, CH_VOICE, "player_pepsiman/foot2.wav", 0.5, ATTN_NORM);
 					else
-					   _sound(this, CH_VOICE, "player_pepsiman/foot3.wav", 0.5, ATTN_NORM);
+						_sound(this, CH_VOICE, "player_pepsiman/foot3.wav", 0.5, ATTN_NORM);
+				}
+				else if(this.m_champion == CHAMPION_Enyo)
+				{
+					if(r < 0.14)
+						_sound(this, CH_VOICE, "player_enyo/foot1.wav", 0.5, ATTN_NORM);
+					else if(r < 0.29)
+					   _sound(this, CH_VOICE, "player_enyo/foot2.wav", 0.5, ATTN_NORM);
+					else if(r < 0.43)
+					   _sound(this, CH_VOICE, "player_enyo/foot3.wav", 0.5, ATTN_NORM);
+					else if(r < 0.58)
+					   _sound(this, CH_VOICE, "player_enyo/foot4.wav", 0.5, ATTN_NORM);
+					else if(r < 0.72)
+					   _sound(this, CH_VOICE, "player_enyo/foot5.wav", 0.5, ATTN_NORM);
+					else if(r < 0.86)
+					   _sound(this, CH_VOICE, "player_enyo/foot6.wav", 0.5, ATTN_NORM);
+					else
+					   _sound(this, CH_VOICE, "player_enyo/foot7.wav", 0.5, ATTN_NORM);
 				}
 				else
 				{

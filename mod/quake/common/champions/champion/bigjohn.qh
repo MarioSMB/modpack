@@ -99,6 +99,7 @@ CLASS(BigJohn, Champions)
     ATTRIB(BigJohn, m_soundpath, string, "player_bigjohn/");
     METHOD(BigJohn, m_sound_pain, string()) { return SND(BigJohn_Pain_Random()); }
     METHOD(BigJohn, m_sound_death, string()) { return SND(BigJohn_Death_Random()); }
+    METHOD(BigJohn, m_sound_jump, string()) { return "player_bigjohn/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(BigJohn, m_faceprefix, string, "gfx/quake/bigjohn_");

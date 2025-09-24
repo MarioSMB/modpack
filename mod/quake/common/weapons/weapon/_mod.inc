@@ -53,3 +53,4 @@
 #include "driller.qc"
 #include "railgun.qc"
 #include "sword.qc"
+#include "smg.qc"

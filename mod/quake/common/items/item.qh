@@ -23,6 +23,8 @@ const int IT_TANK                = BIT(14);
 
 const int IT_KEY3                = BIT(15);
 
+const int IT_GRAPPLE             = BIT(16);
+
 
 const int PASSIVE_PULSERIFLE        = BIT(0);
 const int PASSIVE_FIREBALL          = BIT(1);

@@ -70,6 +70,7 @@ CLASS(Mermaid, Champions)
     ATTRIB(Mermaid, m_soundpath, string, "shantae/");
     METHOD(Mermaid, m_sound_pain, string()) { return SND(Mermaid_Pain_Random()); }
     METHOD(Mermaid, m_sound_death, string()) { return "shantae/death.wav"; }
+    METHOD(Mermaid, m_sound_jump, string()) { return "shantae/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Mermaid, message, string, "You are transformed!");

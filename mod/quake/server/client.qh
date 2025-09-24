@@ -96,6 +96,7 @@ int modelindex_bolt; // aop
 void player_sound(entity this, int chan, string sample, float atten);
 string get_playermodel(entity this);
 string get_playerhead(entity this);
+string get_jumpsound(entity this);
 
 .float spawnsilent; // silent but deadly
 void playersound(entity this, int chan, string sample, float vol, float atten);

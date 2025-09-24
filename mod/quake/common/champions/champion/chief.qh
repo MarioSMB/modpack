@@ -56,6 +56,7 @@ CLASS(Chief, Champions)
     ATTRIB(Chief, m_soundpath, string, "player_chief/");
     METHOD(Chief, m_sound_pain, string()) { return SND(Chief_Pain); }
     METHOD(Chief, m_sound_death, string()) { return SND(Chief_Death1); }
+    METHOD(Chief, m_sound_jump, string()) { return "player_chief/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Chief, message, string, CHIEF_STATS);

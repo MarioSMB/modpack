@@ -79,6 +79,7 @@ CLASS(Pepsiman, Champions)
     ATTRIB(Pepsiman, m_soundpath, string, "player_pepsiman/");
     METHOD(Pepsiman, m_sound_pain, string()) { return SND(Pepsiman_Pain_Random()); }
     METHOD(Pepsiman, m_sound_death, string()) { return SND(Pepsiman_Death_Random()); }
+    METHOD(Pepsiman, m_sound_jump, string()) { return "player_pepsiman/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Pepsiman, message, string, PEPSIMAN_STATS);

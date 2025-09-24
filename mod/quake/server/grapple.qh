@@ -1,0 +1,14 @@
+#pragma once
+
+bool autocvar_sv_quake_hook_classic;
+float autocvar_sv_quake_hook_speed = 800;
+
+const int TE_BEAM = 13; 
+
+.entity hook; // this is my hook
+.bool on_hook; // we're on it
+.bool hook_out; // it's out
+
+void GrappleReset(entity this);
+
+void GrappleHookFrame(entity this);

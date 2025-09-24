@@ -1451,6 +1451,12 @@ void spike_touch(entity this, entity toucher)
 			Send_Effect(EFFECT_TE_WIZSPIKE, this.origin, '0 0 0', 1);
 		else if(this.classname == "dfury_spike" || this.classname == "boglord_bolt")
 			te_wizspike(this.origin);
+		else if(this.classname == "smg_bolt")
+		{
+			te_spike(this.origin);
+			Send_Effect(EFFECT_TE_WIZSPIKE, this.origin, '0 0 0', 1);
+			//_sound(this, CH_WEAPON_SINGLE, "weapons/dsfirxpl.wav", 1, ATTN_NORM);
+		}
 		else if(this.classname == "knight_spike")
 			Send_Effect(EFFECT_TE_KNIGHTSPIKE, this.origin, '0 0 0', 1);
 		else if(this.classname == "bullet")

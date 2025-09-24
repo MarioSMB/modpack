@@ -34,6 +34,7 @@ CLASS(Ranger, Champions)
     ATTRIB(Ranger, m_soundpath, string, "player/");
     METHOD(Ranger, m_sound_pain, string()) { return SND(Ranger_Pain_Random()); }
     METHOD(Ranger, m_sound_death, string()) { return SND(Ranger_Death_Random()); }
+    METHOD(Ranger, m_sound_jump, string()) { return "player/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Ranger, message, string, "No additional bonus stats");

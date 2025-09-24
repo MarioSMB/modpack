@@ -1,0 +1,69 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(Valkyrie, "progs/player_valkyrie.mdl");
+MODEL(Valkyrie_Head, "progs/h_player_enyo.mdl");
+
+PRECACHE(Valkyrie)
+{
+#ifdef SVQC
+    precache_sound("player_enyo/plyrjmp8.wav");       // player jump
+    precache_sound("player_enyo/land.wav");           // player landing
+    precache_sound("player_enyo/land2.wav");      // player hurt landing
+    precache_sound("player_enyo/drown1.wav");     // drowning pain
+    precache_sound("player_enyo/drown2.wav");     // drowning pain
+    precache_sound("player_enyo/gasp1.wav");      // gasping for air
+    precache_sound("player_enyo/gasp2.wav");      // taking breath
+    precache_sound("player_enyo/h2odeath.wav");       // drowning death
+
+    precache_sound("player_enyo/axhit1.wav");
+
+    precache_sound("player_enyo/lburn1.wav");     // lava burn
+    precache_sound("player_enyo/lburn2.wav");     // lava burn
+
+    precache_sound("player_enyo/taunts/deathfromabove.wav");
+    precache_sound("player_enyo/taunts/flymydarlings.wav");
+    precache_sound("player_enyo/taunts/looksosmall.wav");
+
+    precache_model("progs/v_enyosword.mdl");
+#endif
+}
+#endif
+CLASS(Valkyrie, Champions)
+    ATTRIB(Valkyrie, netname, string, "valkyrie");
+    ATTRIB(Valkyrie, m_name, string, "Valkyrie");
+    ATTRIB(Valkyrie, m_hidden, bool, true);
+    ATTRIB(Valkyrie, m_scale, float, 0.5);
+    ATTRIB(Valkyrie, qcc_noselect, bool, true);
+    //ATTRIB(Valkyrie, qcc_movespeed, float, 2);
+    ATTRIB(Valkyrie, qcc_thirdperson, bool, true);
+    ATTRIB(Valkyrie, qcc_thirdperson_distance, float, 24);
+    ATTRIB(Valkyrie, qcc_thirdperson_offset, float, 25);
+    ATTRIB(Valkyrie, qcc_health_regen_rate, float, 0.5);
+    ATTRIB(Valkyrie, qcc_health_rot_max, float, 3);
+    ATTRIB(Valkyrie, qcc_anim_axrun, vector, '143 0 6');
+    ATTRIB(Valkyrie, qcc_anim_rockrun, vector, '149 0 6');
+    ATTRIB(Valkyrie, qcc_anim_axstnd, vector, '160 0 12');
+    ATTRIB(Valkyrie, qcc_anim_stand, vector, '155 0 5');
+    ATTRIB(Valkyrie, qcc_meleename, string, "enyosword");
+#ifdef GAMEQC
+    ATTRIB(Valkyrie, m_model, Model, MDL_Valkyrie);
+    ATTRIB(Valkyrie, m_model_head, Model, MDL_Valkyrie_Head);
+    ATTRIB(Valkyrie, m_soundpath, string, "player_enyo/");
+    METHOD(Valkyrie, m_sound_pain, string()) { return SND(Enyo_Pain_Random()); }
+    METHOD(Valkyrie, m_sound_death, string()) { return SND(Enyo_Death); }
+    METHOD(Valkyrie, m_sound_jump, string()) { return SND(Enyo_Jump_Random()); }
+#endif
+#ifdef CSQC
+    ATTRIB(Valkyrie, message, string, "You are transformed!");
+#endif
+ENDCLASS(Valkyrie)
+REGISTER_CHAMPION(Valkyrie, NEW(Valkyrie));
+
+#ifdef SVQC
+.float valyrie_noflytime;
+
+void valkyrie_nail1(entity this);
+#endif

@@ -60,6 +60,7 @@ CLASS(Dingus, Champions)
     ATTRIB(Dingus, m_soundpath, string, "player_dingus/");
     METHOD(Dingus, m_sound_pain, string()) { return SND(Dingus_Pain_Random()); }
     METHOD(Dingus, m_sound_death, string()) { return SND(Dingus_Death_Random()); }
+    METHOD(Dingus, m_sound_jump, string()) { return "player_dingus/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Dingus, message, string, "Timey Wimey");

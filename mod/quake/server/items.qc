@@ -139,6 +139,13 @@ Sets the clipping size and plants the object on the floor
 */
 void StartItem(entity this)
 {
+	// instagib
+	if(deathmatch && autocvar_skill == 3)
+	{
+		delete(this);
+		return;
+	}
+	
 	if(this.classname != "item_sigil" && (Inhibit_Coop(this) || RemovedOutsideCoop(this)))
 	{
 		delete(this);

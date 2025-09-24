@@ -183,6 +183,7 @@ CLASS(Caleb, Champions)
     ATTRIB(Caleb, m_soundpath, string, "player_caleb/");
     METHOD(Caleb, m_sound_pain, string()) { return SND(Caleb_Pain_Random()); }
     METHOD(Caleb, m_sound_death, string()) { return SND(Caleb_Death_Random()); }
+    METHOD(Caleb, m_sound_jump, string()) { return "player_caleb/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Caleb, m_faceprefix, string, "gfx/quake/caleb_");

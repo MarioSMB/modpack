@@ -20,8 +20,16 @@ bool changelevel_checkinlist(string map_name, string list)
 {
 	if (map_name == "" || list == "")
 		return false;
-
+#if 0
 	return (strstrofs(list, map_name, 0) >= 0);
+#else
+	FOREACH_WORD(list, it == map_name,
+	{
+		return true;
+	});
+
+	return false;
+#endif
 }
 
 void changelevel_think(entity this)

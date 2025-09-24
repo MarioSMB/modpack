@@ -88,6 +88,7 @@ CLASS(Nyx, Champions)
     ATTRIB(Nyx, m_soundpath, string, "player_nyx/");
     METHOD(Nyx, m_sound_pain, string()) { return SND(Nyx_Pain_Random()); }
     METHOD(Nyx, m_sound_death, string()) { return SND(Nyx_Death_Random()); }
+    METHOD(Nyx, m_sound_jump, string()) { return "player_nyx/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Nyx, m_faceprefix, string, "gfx/quake/katria_");

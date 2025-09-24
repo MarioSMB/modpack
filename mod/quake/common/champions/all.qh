@@ -33,7 +33,7 @@ PRECACHE(Champions)
 
 REPLICATE_INIT(string, cvar_cl_quake_model);
 
-REGISTRY(Champion, 32)
+REGISTRY(Champion, 64)
 REGISTER_REGISTRY(Champion)
 #define REGISTER_CHAMPION(id, inst) REGISTER(Champion, CHAMPION, id, m_id, inst)
 
@@ -93,6 +93,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, m_soundpath, string, string_null);
     METHOD(Champions, m_sound_pain, string()) { return "player/pain6.wav"; };
     METHOD(Champions, m_sound_death, string()) { return "player/death1.wav"; };
+    METHOD(Champions, m_sound_jump, string()) { return "player/plyrjmp8.wav"; };
     METHOD(Champions, m_touch, void(Champions this, entity actor, entity toucher)) { };
     METHOD(Champions, m_hideweapon, bool(Champions this, entity actor)) { return false; };
     METHOD(Champions, m_playerjump, float(Champions this, entity actor)) { return 1; };
@@ -130,6 +131,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_saveplayer, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype)) { };
     METHOD(Champions, m_cannon_launch, void(Champions this, entity actor, entity cannon)) { };
     METHOD(Champions, m_cannon_land, bool(Champions this, entity actor)) { return false; };
+    METHOD(Champions, m_getplayermodel, string(Champions this, entity actor)) { return this.m_model.model_str(); };
 #endif
 #ifdef CSQC
     METHOD(Champions, m_overlay, void(Champions this)) { };

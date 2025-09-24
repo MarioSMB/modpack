@@ -88,6 +88,7 @@ CLASS(Keen, Champions)
     ATTRIB(Keen, m_soundpath, string, "player_keen/");
     METHOD(Keen, m_sound_pain, string()) { return SND(Keen_Pain_Random()); }
     METHOD(Keen, m_sound_death, string()) { return SND(Keen_Death_Random()); }
+    METHOD(Keen, m_sound_jump, string()) { return "player_keen/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Keen, m_faceprefix, string, "gfx/quake/keen_");

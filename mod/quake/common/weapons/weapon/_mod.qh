@@ -53,3 +53,4 @@
 #include "driller.qh"
 #include "railgun.qh"
 #include "sword.qh"
+#include "smg.qh"

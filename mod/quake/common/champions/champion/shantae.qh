@@ -112,6 +112,7 @@ CLASS(Shantae, Champions)
     ATTRIB(Shantae, m_soundpath, string, "player_shantae/");
     METHOD(Shantae, m_sound_pain, string()) { return SND(Shantae_Pain_Random()); }
     METHOD(Shantae, m_sound_death, string()) { return SND(Shantae_Death_Random()); }
+    METHOD(Shantae, m_sound_jump, string()) { return "player_shantae/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Shantae, m_faceprefix, string, "gfx/quake/shantae_");

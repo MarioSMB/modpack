@@ -63,6 +63,7 @@ CLASS(Monkey, Champions)
     ATTRIB(Monkey, m_soundpath, string, "shantae/");
     METHOD(Monkey, m_sound_pain, string()) { return SND(Monkey_Pain_Random()); }
     METHOD(Monkey, m_sound_death, string()) { return "shantae/death.wav"; }
+    METHOD(Monkey, m_sound_jump, string()) { return "shantae/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Monkey, message, string, "You are transformed!");

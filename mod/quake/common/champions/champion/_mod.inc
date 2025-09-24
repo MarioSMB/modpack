@@ -11,6 +11,7 @@
 #include "duck.qc"
 #include "duke.qc"
 #include "dusk.qc"
+#include "enyo.qc"
 #include "galena.qc"
 #include "goat.qc"
 #include "gordon.qc"
@@ -31,3 +32,4 @@
 #include "sorlag.qc"
 #include "steve.qc"
 #include "v1.qc"
+#include "valkyrie.qc"

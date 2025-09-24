@@ -68,6 +68,7 @@ CLASS(Poop, Champions)
     ATTRIB(Poop, m_soundpath, string, "player_poop/");
     METHOD(Poop, m_sound_pain, string()) { return SND(Poop_Pain_Random()); }
     METHOD(Poop, m_sound_death, string()) { return SND(Poop_Death_Random()); }
+    METHOD(Poop, m_sound_jump, string()) { return "player_poop/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Poop, message, string, POOP_STATS);

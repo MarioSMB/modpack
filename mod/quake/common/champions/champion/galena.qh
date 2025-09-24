@@ -82,6 +82,7 @@ CLASS(Galena, Champions)
     ATTRIB(Galena, m_soundpath, string, "player_galena/");
     METHOD(Galena, m_sound_pain, string()) { return SND(Galena_Pain_Random()); }
     METHOD(Galena, m_sound_death, string()) { return SND(Galena_Death_Random()); }
+    METHOD(Galena, m_sound_jump, string()) { return "player_galena/plyrjmp8.wav"; }
     ATTRIB(Galena, m_offhand, Weapon, WEP_SHIELD);
 #endif
 #ifdef CSQC

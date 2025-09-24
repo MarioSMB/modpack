@@ -58,6 +58,7 @@ CLASS(Gordon, Champions)
     ATTRIB(Gordon, m_soundpath, string, "player_gordon/");
     METHOD(Gordon, m_sound_pain, string()) { return SND(Gordon_Pain_Random()); }
     METHOD(Gordon, m_sound_death, string()) { return SND(Gordon_Death); }
+    METHOD(Gordon, m_sound_jump, string()) { return "player_gordon/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Gordon, message, string, GORDON_STATS);

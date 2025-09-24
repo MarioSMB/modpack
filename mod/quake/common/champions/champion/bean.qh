@@ -85,6 +85,7 @@ CLASS(Bean, Champions)
     ATTRIB(Bean, m_soundpath, string, "player_bean/");
     METHOD(Bean, m_sound_pain, string()) { return SND(Bean_Pain_Random()); }
     METHOD(Bean, m_sound_death, string()) { return SND(Bean_Death_Random()); }
+    METHOD(Bean, m_sound_jump, string()) { return "player_bean/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Bean, m_faceprefix, string, "gfx/quake/bean_");

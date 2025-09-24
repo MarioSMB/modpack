@@ -269,6 +269,13 @@ REGISTER_STAT(MAGIC_TYPE, INT)
 
 REGISTER_STAT(PASSIVES, INT)
 
+REGISTER_STAT(WINGCHARGE, FLOAT)
+
+#ifdef SVQC
+.float transform_limited;
+#endif
+REGISTER_STAT(TRANSFORM_LIMITED, FLOAT, this.transform_limited)
+
 #ifdef SVQC
 .int team_no;
 .bool died;

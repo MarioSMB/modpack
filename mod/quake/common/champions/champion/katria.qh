@@ -89,6 +89,7 @@ CLASS(Katria, Champions)
     ATTRIB(Katria, m_soundpath, string, "player_katria/");
     METHOD(Katria, m_sound_pain, string()) { return SND(Katria_Pain_Random()); }
     METHOD(Katria, m_sound_death, string()) { return SND(Katria_Death_Random()); }
+    METHOD(Katria, m_sound_jump, string()) { return "player_katria/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Katria, m_faceprefix, string, "gfx/quake/katria_");

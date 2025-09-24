@@ -93,6 +93,7 @@ CLASS(Doom, Champions)
     ATTRIB(Doom, m_soundpath, string, "player_doom/");
     METHOD(Doom, m_sound_pain, string()) { return SND(Doom_Pain_Random()); }
     METHOD(Doom, m_sound_death, string()) { return SND(Doom_Death_Random()); }
+    METHOD(Doom, m_sound_jump, string()) { return "player_doom/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Doom, m_faceprefix, string, "gfx/quake/doom_");

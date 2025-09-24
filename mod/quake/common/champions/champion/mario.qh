@@ -77,6 +77,7 @@ CLASS(Mario, Champions)
     ATTRIB(Mario, m_soundpath, string, "player_mario/");
     METHOD(Mario, m_sound_pain, string()) { return SND(Mario_Pain_Random()); }
     METHOD(Mario, m_sound_death, string()) { return SND(Mario_Death_Random()); }
+    METHOD(Mario, m_sound_jump, string()) { return "player_mario/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Mario, message, string, "It's-a Me, Mario!");

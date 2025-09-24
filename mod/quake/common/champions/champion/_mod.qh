@@ -11,6 +11,7 @@
 #include "duck.qh"
 #include "duke.qh"
 #include "dusk.qh"
+#include "enyo.qh"
 #include "galena.qh"
 #include "goat.qh"
 #include "gordon.qh"
@@ -31,3 +32,4 @@
 #include "sorlag.qh"
 #include "steve.qh"
 #include "v1.qh"
+#include "valkyrie.qh"

@@ -62,6 +62,7 @@ CLASS(Mime, Champions)
     ATTRIB(Mime, m_soundpath, string, "player_mime/");
     METHOD(Mime, m_sound_pain, string()) { return SND(Mime_Pain_Random()); }
     METHOD(Mime, m_sound_death, string()) { return SND(Mime_Death_Random()); }
+    METHOD(Mime, m_sound_jump, string()) { return "player_mime/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Mime, message, string, "Mr. Mime!");

@@ -82,6 +82,7 @@ CLASS(MasterShake, Champions)
     ATTRIB(MasterShake, m_soundpath, string, "player_mshake/");
     METHOD(MasterShake, m_sound_pain, string()) { return SND(MasterShake_Pain_Random()); }
     METHOD(MasterShake, m_sound_death, string()) { return SND(MasterShake_Death_Random()); }
+    METHOD(MasterShake, m_sound_jump, string()) { return "player_mshake/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(MasterShake, message, string, MSHAKE_STATS);

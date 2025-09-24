@@ -77,6 +77,7 @@ CLASS(Duck, Champions)
     ATTRIB(Duck, m_soundpath, string, "player_duck/");
     METHOD(Duck, m_sound_pain, string()) { return SND(Duck_Pain_Random()); }
     METHOD(Duck, m_sound_death, string()) { return SND(Duck_Death_Random()); }
+    METHOD(Duck, m_sound_jump, string()) { return "player_duck/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Duck, message, string, "Got any grapes?");

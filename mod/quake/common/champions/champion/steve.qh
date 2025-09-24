@@ -90,6 +90,7 @@ CLASS(Steve, Champions)
     ATTRIB(Steve, m_soundpath, string, "player_steve/");
     METHOD(Steve, m_sound_pain, string()) { return SND(Steve_Pain_Random()); }
     METHOD(Steve, m_sound_death, string()) { return SND(Steve_Death_Random()); }
+    METHOD(Steve, m_sound_jump, string()) { return "player_steve/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Steve, m_faceprefix, string, "gfx/quake/steve_");

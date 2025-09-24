@@ -96,6 +96,7 @@ CLASS(Keyleth, Champions)
     ATTRIB(Keyleth, m_soundpath, string, "player_keyleth/");
     METHOD(Keyleth, m_sound_pain, string()) { return SND(Keyleth_Pain_Random()); }
     METHOD(Keyleth, m_sound_death, string()) { return SND(Keyleth_Death_Random()); }
+    METHOD(Keyleth, m_sound_jump, string()) { return "player_keyleth/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Keyleth, m_faceprefix, string, "gfx/quake/katria_");

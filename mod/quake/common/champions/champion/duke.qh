@@ -145,6 +145,7 @@ CLASS(Duke, Champions)
     ATTRIB(Duke, m_soundpath, string, "player_duke/");
     METHOD(Duke, m_sound_pain, string()) { return SND(Duke_Pain_Random()); }
     METHOD(Duke, m_sound_death, string()) { return SND(Duke_Death_Random()); }
+    METHOD(Duke, m_sound_jump, string()) { return "player_duke/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
     ATTRIB(Duke, message, string, DUKE_STATS);
