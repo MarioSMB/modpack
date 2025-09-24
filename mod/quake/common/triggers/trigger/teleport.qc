@@ -143,6 +143,41 @@ spawnfunc(trigger_teleport)
 		this.use = teleport_reactivate;
 }
 
+// alkaline version
+void SetAngles(entity this)
+{
+	if(this.angles == '0 -1 0')
+		this.angles = '90 0 0';
+	else if(this.angles == '0 -2 0')
+		this.angles = '-90 0 0';
+}
+
+spawnfunc(trigger_teleport_instadestination)
+{
+	if(!this.targetname || this.targetname == "")
+	{
+		objerror(this, "no targetname");
+		return;
+	}
+
+	this.classname = "info_teleport_destination";
+	
+	this.solid = SOLID_TRIGGER;
+	_setmodel(this, this.model);	// set size and link into world
+	set_movetype(this, MOVETYPE_NONE);
+	this.modelindex = 0;
+	this.model = "";
+
+	//this.style = TELEDEST_STYLE_INSTANT;
+
+	SetAngles(this);
+
+	if(this.mangle == '0 0 0' && this.angles != '0 0 0')
+		this.mangle = this.angles;
+
+	this.origin = (this.absmin + this.absmax) * 0.5;
+}
+
 void effect_teleport_use(entity this, entity actor, entity trigger)
 {
 	te_teleport(this.origin);

@@ -1,0 +1,7 @@
+#pragma once
+
+// Scale the pos and size vectors to absolute coordinates
+#define HUD_Panel_ScalePosSize() MACRO_BEGIN \
+	panel_pos.x *= vid_conwidth; panel_pos.y *= vid_conheight; \
+	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight; \
+MACRO_END

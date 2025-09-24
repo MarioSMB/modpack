@@ -5,12 +5,15 @@
 //#include <lib/csqcmodel/cl_player.qc>
 
 #include "main.qc"
+#include "draw.qc"
 #include "view.qc"
 #include "crosshair.qc"
+#include "hud.qc"
 #include "sbar.qc"
 #include "shop.qc"
 #include "centerprint.qc"
 #include "shownames.qc"
+#include "voting.qc"
 #include "particles.qc"
 #include "weapons/_mod.inc"
 

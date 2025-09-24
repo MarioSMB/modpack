@@ -122,14 +122,15 @@ METHOD(Valkyrie, m_overlay, void(Champions this))
 	if(intermission || STAT(HEALTH) == -666 || !STAT(TRANSFORM_LIMITED))
 		return;
 
-	vector pos;
-	pos.x = 256;
-	pos.y = vid_conheight - 48;
-	pos.z = 0;
+	// NOTE: relies on enyo champion loading cvars
+	vector panel_pos = stov(cvar_string("sbar_enyo_pos"));
+	vector panel_size = stov(cvar_string("sbar_enyo_size"));
 
-	vector mySize = '0 0 0';
-	mySize.x = 256;
-	mySize.y = 32;
+	HUD_Panel_ScalePosSize();
+
+	vector pos = panel_pos;
+
+	vector mySize = panel_size;
 
 	vector col;
 	col.x = time % (M_PI * 2);
@@ -141,7 +142,7 @@ METHOD(Valkyrie, m_overlay, void(Champions this))
 	if(charge)
 		charge /= 15;
 
-	HUD_Panel_DrawProgressBar(pos + '34 8 0', vec2(mySize.x * 0.87, mySize.y * 0.5), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+	HUD_Panel_DrawProgressBar(pos + vec2(mySize.x * 0.13, mySize.y * 0.25), vec2(mySize.x * 0.87, mySize.y * 0.5), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
 	drawpic(pos, "gfx/quake/enyo_wingcharge", mySize, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 #endif

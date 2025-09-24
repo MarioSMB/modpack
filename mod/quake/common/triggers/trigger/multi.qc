@@ -422,7 +422,10 @@ spawnfunc(trigger_textstory)
 	if(!this.wait)
 		this.wait = 5;
 	if(this.spawnflags & 1) // TEXTSTORY_SILENT
+	{
+		this.spawnflags &= ~1; // same as MULTI_NOTOUCH
 		this.noise = "";
+	}
 	spawnfunc_trigger_multiple(this);
 }
 

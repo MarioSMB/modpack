@@ -1,6 +1,7 @@
 #include "centerprint.qh"
 
 #include "../common/notifications/all.qh"
+#include "draw.qh"
 
 // CenterPrint (#16)
 
@@ -27,15 +28,6 @@ bool centerprint_showing;
 string centerprint_title;
 string centerprint_title_left;
 string centerprint_title_right;
-
-float stringwidth(string text, float handleColors, vector sz)
-{
-	vector dfs = drawfontscale;
-	drawfontscale = '1 1 0';
-	float r = stringwidth_builtin(text, handleColors, sz);
-	drawfontscale = dfs;
-	return r;
-}
 
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num)
 {

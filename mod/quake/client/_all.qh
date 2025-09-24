@@ -12,8 +12,6 @@ vector mousepos;
 
 float completed_time;
 
-vector drawfontscale;
-
 vector SIZE_CURSOR = '32 32 0';
 vector OFFSET_CURSOR = '0 0 0';
 
@@ -43,44 +41,3 @@ float deathmatch, coop; // also engine globals
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 .float ping, ping_packetloss, ping_movementloss;
-
-#define drawpic(position, pic, size, rgb, alpha, flag) \
-	drawpic_builtin(position, pic, size, rgb, alpha, flag)
-
-#define drawstring(position, text, scale, rgb, alpha, flag) \
-	drawstring_builtin(position, text, scale, rgb, alpha, flag)
-
-#define drawcolorcodedstring(position, text, scale, alpha, flag) \
-	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
-
-#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
-	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
-
-#define drawfill(position, size, rgb, alpha, flag) \
-	drawfill_builtin(position, size, rgb, alpha, flag)
-
-// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-float _drawpic_imgaspect;
-vector _drawpic_imgsize;
-vector _drawpic_sz;
-float _drawpic_oldsz;
-//string _drawpic_picpath;
-#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
-	MACRO_BEGIN \
-		_drawpic_imgsize = draw_getimagesize(pic);\
-		if(_drawpic_imgsize != '0 0 0') {\
-			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
-			_drawpic_sz = mySize;\
-			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
-				_drawpic_oldsz = _drawpic_sz.x;\
-				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
-				if(_drawpic_sz.x)\
-					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
-			} else {\
-				_drawpic_oldsz = _drawpic_sz.y;\
-				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
-				if(_drawpic_sz.y)\
-					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
-			}\
-		}\
-	MACRO_END

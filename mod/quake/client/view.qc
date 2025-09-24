@@ -15,6 +15,7 @@
 #include "../common/triggers/trigger/viewloc.qh"
 #include "crosshair.qh"
 #include "shownames.qh"
+#include "voting.qh"
 
 void CSQCModel_InterpolateAnimation_Do(entity this);
 
@@ -809,9 +810,11 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Sbar_Draw();
 	HUD_CenterPrint();
+	HUD_Votes();
 	HUD_Crosshair(this);
 	HUD_Chat();
 	HUD_BossBars();
+	HUD_Champions();
 	Draw_ShowNames_All();
 
 	status_effects_HUD_Powerups_add();

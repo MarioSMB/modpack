@@ -85,6 +85,12 @@ METHOD(Enyo, m_playerspawn, void(Champions this, entity actor))
 #endif
 
 #ifdef CSQC
+STATIC_INIT(Enyo)
+{
+	registercvar("sbar_enyo_pos", "0.17 0.935");
+	registercvar("sbar_enyo_size", "0.18 0.04");
+}
+
 METHOD(Enyo, m_drawface, bool(Champions this))
 {
 	string pic = "gfx/quake/enyo_face";
@@ -92,41 +98,52 @@ METHOD(Enyo, m_drawface, bool(Champions this))
 	return true;
 }
 
+float enyo_messagetime;
+float enyo_prevstatus;
 METHOD(Enyo, m_overlay, void(Champions this))
 {
 	if(intermission || STAT(HEALTH) == -666)
 		return;
 
-	vector pos;
-	pos.x = 256;
-	pos.y = vid_conheight - 48;
-	pos.z = 0;
+	float oldfont = drawfont;
+	drawfont = 8;
 
-	vector mySize = '0 0 0';
-	mySize.x = 256;
-	mySize.y = 32;
+	vector panel_pos = stov(cvar_string("sbar_enyo_pos"));
+	vector panel_size = stov(cvar_string("sbar_enyo_size"));
+
+	HUD_Panel_ScalePosSize();
+
+	vector pos = panel_pos;
+
+	vector mySize = panel_size;
 
 	vector col = '0 1 1';
-	if(STAT(WINGCHARGE) >= 100)
-	{
-		col.x = time % (M_PI * 2);
-		col.y = 1;
-		col.z = 1;
-		col = hsv_to_rgb(col);
-	}
-
 	float charge = STAT(WINGCHARGE);
 	if(charge)
 		charge /= 100;
 
 	if(charge >= 1)
 	{
-		string s;
-		s = sprintf(_("Press %s"), getcommandkey(_("(Crouch)"), "+crouch"));
-		drawstring_aspect(pos - vec2(0, mySize.y * 0.5), s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		col.x = time % (M_PI * 2);
+		col.y = 1;
+		col.z = 1;
+		col = hsv_to_rgb(col);
+		if(enyo_prevstatus < 1)
+			enyo_messagetime = time + 6;
 	}
 
-	HUD_Panel_DrawProgressBar(pos + '34 8 0', vec2(mySize.x * 0.87, mySize.y * 0.5), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+	enyo_prevstatus = charge;
+
+	if(charge >= 1 && time < enyo_messagetime)
+	{
+		string s;
+		s = sprintf(_("Press %s"), getcommandkey(_("(Crouch)"), "+crouch"));
+		drawstring_aspect(pos - vec2(0, mySize.y * 0.5), s, vec2(mySize.x, mySize.y * 0.33), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
+
+	HUD_Panel_DrawProgressBar(pos + vec2(mySize.x * 0.13, mySize.y * 0.25), vec2(mySize.x * 0.87, mySize.y * 0.5), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
 	drawpic(pos, "gfx/quake/enyo_wingcharge", mySize, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	drawfont = oldfont;
 }
 #endif

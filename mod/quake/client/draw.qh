@@ -1,0 +1,124 @@
+#pragma once
+
+vector drawfontscale;
+// just handle fonts manually? TODO
+#if 0
+#define draw_beginBoldFont() drawfont = FONT_USER + 2
+#define draw_endBoldFont() drawfont = FONT_USER + 1
+#endif
+
+float expandingbox_sizefactor_from_fadelerp(float fadelerp);
+
+vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float boxxsizefactor);
+void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag);
+
+void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);
+
+// The following functions / macros must be called from within
+// the panel HUD / scoreboard code so that pos and size are scaled
+// when the hud_dynamic code is running.
+// Make use of stringwidth_builtin and draw*_builtin everywhere else.
+
+float stringwidth(string text, float handleColors, vector sz);
+
+#define drawpic(position, pic, size, rgb, alpha, flag) \
+	drawpic_builtin(position, pic, size, rgb, alpha, flag)
+
+#define drawcharacter(position, character, scale, rgb, alpha, flag) \
+	drawcharacter_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawstring(position, text, scale, rgb, alpha, flag) \
+	drawstring_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawcolorcodedstring(position, text, scale, alpha, flag) \
+	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
+
+#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
+	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawfill(position, size, rgb, alpha, flag) \
+	drawfill_builtin(position, size, rgb, alpha, flag)
+
+#define drawsetcliparea(xposition, yposition, w, h) \
+	drawsetcliparea_builtin(xposition, yposition, w, h)
+
+// Since drawsubpic usually gets called multiple times from within an
+// utility function, instead of scaling pos and size in every call
+// we scale them once for all in the beginning of that utility function.
+// That's why drawsubpic isn't remapped.
+/*
+#define drawsubpic(position, size, pic, srcPosition, srcSize, rgb, alpha, flag) \
+	drawsubpic_builtin(HUD_Shift(position), HUD_Scale(size), pic, HUD_Shift(srcPosition), HUD_Scale(srcSize), rgb, alpha, flag)
+*/
+
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+noref float _drawpic_imgaspect;
+noref vector _drawpic_imgsize;
+noref vector _drawpic_sz;
+noref float _drawpic_oldsz;
+noref string _drawpic_picpath;
+#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
+	MACRO_BEGIN \
+		_drawpic_imgsize = draw_getimagesize(pic);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz.x;\
+				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
+				if(_drawpic_sz.x)\
+					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz.y;\
+				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
+				if(_drawpic_sz.y)\
+					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
+		}\
+	MACRO_END
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
+	MACRO_BEGIN \
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "")\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
+		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
+		_drawpic_picpath = string_null;\
+	MACRO_END
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
+	MACRO_BEGIN \
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "")\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
+		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
+		_drawpic_picpath = string_null;\
+	MACRO_END
+
+#if 0
+void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+#endif
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag);
+
+// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag);
+
+void drawstring_expanding(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp);
+
+void drawcolorcodedstring_expanding(vector position, string text, vector theScale, float theAlpha, float flag, float fadelerp);
+
+void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp);
+// this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
+float PolyDrawModelSurface(entity e, float i_s);
+void PolyDrawModel(entity e);
+
+void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag);

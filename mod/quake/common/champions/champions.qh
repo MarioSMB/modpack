@@ -54,3 +54,8 @@ bool cl_champion_input_event(float evtype, float scanx, float chary, float devid
 
 void cl_champion_draw();
 #endif
+
+// HUD elements
+#ifdef CSQC
+void HUD_Champions();
+#endif
