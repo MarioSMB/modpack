@@ -163,7 +163,7 @@ void Draw_ShowNames(entity this)
 
 void Draw_ShowNames_All()
 {
-	if (!autocvar_hud_shownames || intermission) return;
+	if (!autocvar_hud_shownames || intermission || deathmatch) return;
 	LL_EACH(shownames_ent, true, {
 		entity entcs = entcs_receiver(i);
 		if (!entcs)
