@@ -33,9 +33,11 @@ METHOD(Enyo, m_playerthink, void(Champions this, entity actor))
 	if(time > actor.last_wingbonus && STAT(WINGCHARGE, actor) < 100)
 	{
 		actor.last_wingbonus = time + 1;
-		STAT(WINGCHARGE, actor) += 1;
+		int points = 2;
+		if(deathmatch && autocvar_skill == 3)
+			points = 4;
 
-		enyo_WingCharge(actor, 1);
+		enyo_WingCharge(actor, points);
 	}
 }
 
@@ -43,7 +45,10 @@ METHOD(Enyo, m_killed, void(Champions this, entity targ, entity inflictor, entit
 {
 	if(attacker.m_champion == this && (IS_MONSTER(targ) || (deathmatch && IS_PLAYER(targ))))
 	{
-		enyo_WingCharge(attacker, 5);
+		float points = 5;
+		if(deathmatch && autocvar_skill == 3)
+			points = 15;
+		enyo_WingCharge(attacker, points);
 		if(random() < 0.15)
 		{
 			float r = random();

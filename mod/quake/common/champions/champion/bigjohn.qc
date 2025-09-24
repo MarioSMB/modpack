@@ -11,7 +11,11 @@ METHOD(BigJohn, m_getmovespeed, float(Champions this, entity actor))
 METHOD(BigJohn, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
 	if(targ.m_champion == this)
+	{
+		if(deathmatch)
+			return 0.75;
 		return 0.5;
+	}
 	return 1;
 }
 

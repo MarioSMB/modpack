@@ -297,7 +297,11 @@ METHOD(Galena, m_takedamage, float(Champions this, entity targ, entity inflictor
 	if(targ.m_champion == this && targ.galena_dodge_time > time && !Galena_forcedamage(deathtype))
 		return 0;
 	if(targ.m_champion == this && PHYS_INPUT_BUTTON_ATCK2(targ) && galena_canblock(targ))
+	{
+		if(deathmatch)
+			return 0.6;
 		return 0.25;
+	}
 	return 1;
 }
 

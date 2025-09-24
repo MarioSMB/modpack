@@ -47,10 +47,10 @@ void W_FireSubMachineGun(entity this, float ox, .entity weaponentity)
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/hplasma.wav", 1, ATTN_NORM);
 	ATTACK_FINISHED(this, weaponentity) = time + 0.1;
-	vector dir = qc_aim(this, 2000);
+	vector dir = qc_aim(this, 3000);
 	// NOTE: position fix by Seven and Sajt applied here
 	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_right * ox, dir);
-	missile.velocity = dir * 2000;
+	missile.velocity = dir * 3000;
 	missile.classname = "smg_bolt";
 	missile.projectiledeathtype = WEP_NAILGUN.m_id;
 	_setmodel(missile, "progs/ee_p_pm_yl.mdl");

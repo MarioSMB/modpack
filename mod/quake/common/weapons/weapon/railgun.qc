@@ -84,8 +84,15 @@ void W_FireSniperLightning(entity this)
 
 	vector dir = qc_aim(this, 4000);
 
+	float lag = antilag_getlag(this);
+	if(lag)
+		antilag_takeback_all(this, lag);
+
 	vector endpos = SniperLightningDamage(this, org, dir);
 	DrawSniperLightning(this, org, endpos, 0);
+
+	if(lag)
+		antilag_restore_all(this);
 }
 
 vector SniperLightningDamage(entity this, vector org, vector dir)

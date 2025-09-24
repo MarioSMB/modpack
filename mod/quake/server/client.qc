@@ -1575,6 +1575,9 @@ void PutPlayerInServer(entity this)
 	else
 		this.clipgroup = 0;
 
+	if(deathmatch && autocvar_skill == 3)
+		this.effects |= EF_FULLBRIGHT;
+
 	// hipnotic fields
 	this.gravity = 1.0;
 	this.gorging = false;
@@ -1755,6 +1758,8 @@ void PutPlayerInServer(entity this)
 
 	// spawns fire targets when spawned at
 	SUB_UseTargets(spot, this, NULL);
+
+	antilag_clear(this, this);
 }
 
 

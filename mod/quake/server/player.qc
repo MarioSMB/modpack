@@ -1118,6 +1118,8 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 
 	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		DropBall(this);
+	else if(deathmatch && autocvar_skill == 3)
+		{ /* do nothing */ }
 	else if(deathmatch || coop)
 		DropBackpack(this);
 

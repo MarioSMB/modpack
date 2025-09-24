@@ -23,6 +23,9 @@ REPLICATE(cvar_cl_quake_goatstuff, float, "cl_quake_goatstuff");
 
 REPLICATE_INIT(float, cvar_cl_quake_donotdisturb);
 REPLICATE(cvar_cl_quake_donotdisturb, float, "cl_quake_donotdisturb");
+
+REPLICATE_INIT(bool, cvar_cl_noantilag);
+REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
 #endif
 
 // generic entity flags

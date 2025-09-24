@@ -7,6 +7,7 @@
 #include "rogue/_all.qh"
 
 //#include "defs.qc"
+#include "antilag.qc"
 #include "combat.qc"
 #include "items.qc"
 #include "weapons.qc"
