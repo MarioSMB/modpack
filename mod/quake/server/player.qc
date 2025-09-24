@@ -518,9 +518,9 @@ void player_run(entity this)
 				else if(this.waterlevel == 1)
 				{
 					if(r < 0.5)
-						_sound(this, CH_VOICE, "player/walkh2o1.wav", 0.5, ATTN_NORM);
+						_sound(this, CH_VOICE, "player/walkh2o1.wav", 1, ATTN_NORM);
 					else
-						_sound(this, CH_VOICE, "player/walkh2o2.wav", 0.5, ATTN_NORM);
+						_sound(this, CH_VOICE, "player/walkh2o2.wav", 1, ATTN_NORM);
 				}
 				else
 				{
