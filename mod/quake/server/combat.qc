@@ -706,7 +706,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	targ.health -= take;
-	targ.armorvalue -= save;
+	targ.armorvalue = max(targ.armorvalue - save, 0);
 
 	if(save >= targ.armorvalue)
 	{
