@@ -1575,7 +1575,7 @@ void PutPlayerInServer(entity this)
 	else
 		this.clipgroup = 0;
 
-	if(deathmatch && autocvar_skill == 3)
+	if(deathmatch)// && autocvar_skill == 3)
 		this.effects |= EF_FULLBRIGHT;
 
 	// hipnotic fields

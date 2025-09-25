@@ -1223,7 +1223,7 @@ bool FindTarget(entity this)
 		//this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
 		{
-			if(autocvar_sv_quake_pets_teleport && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
+			if(autocvar_sv_quake_pets_teleport && !horde_ent && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
 				TeleportToCharmer(this);
 
 			UpdateCharmerGoal(this);
