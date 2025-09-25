@@ -27,6 +27,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	{
 		spawnentity.charmer = actor;
 		spawnentity.charmed = true;
+		spawnentity.clipgroup = actor.clipgroup;
 	}
 
 	int olddm = deathmatch;

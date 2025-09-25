@@ -1,5 +1,7 @@
 #pragma once
 
+bool autocvar_sv_quake_pets_teleport = true;
+
 #define ANGLEMOD(a) ((a) - 360.0 * floor((a) / 360.0))
 
 .int attack_state;

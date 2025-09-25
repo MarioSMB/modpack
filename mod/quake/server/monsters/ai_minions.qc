@@ -203,6 +203,7 @@ entity minion_spawn(entity own, vector org, entity monster, Monster mon)
 	monster.charmer = own.charmer;
 	monster.colormod = own.colormod;
 	monster.flags = FL_MONSTER | FL_CLONE | FL_MINION; // TODO: clone is temporary to prevent monster counts being affected!
+	monster.clipgroup = own.clipgroup;
 
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { monster.flags |= FL_SWIM; }
 	if(mon.spawnflags & MONSTER_TYPE_FLY) { monster.flags |= FL_FLY; }

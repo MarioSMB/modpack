@@ -2130,6 +2130,7 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 		monster.charmed = true;
 		monster.charmer = actor;
 		monster.colormod = '0 1 0';
+		monster.clipgroup = actor.clipgroup;
 	}
 
 	setthink(monster, monster_start_go);

@@ -1007,6 +1007,64 @@ void UpdateCharmerGoal(entity this)
 	}
 }
 
+// addition by Mario: attempt to teleport to an empty space near the charmer
+// TODO: specially try to avoid spawning infront of the player
+void TeleportToCharmer(entity this)
+{
+#if 0
+	vector extrasize = '1 1 1' * MAX_CHARMER_DISTANCE;
+	vector from = this.origin;
+	if(MoveToRandomLocationWithinBounds(this, this.charmer.absmin - extrasize, this.charmer.absmax + extrasize,
+											DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, 
+											Q3SURFACEFLAG_SKY, 20, 64, 256, true))
+	{
+		// no special treatment needed, we're just using it as a position!
+		this.mangle = '0 1 0' * this.angles_y;
+		this.angles = '0 0 0';
+		te_teleport(this.origin);
+		te_teleport(from);
+		UNSET_ONGROUND(this);
+	}
+#else
+	// do an initial trace (cheaper than tracetoss) to make sure starting spot is safe, as an early return
+	tracebox(this.charmer.origin, this.mins, this.maxs, this.charmer.origin, MOVE_NOMONSTERS, this.charmer);
+	if(trace_startsolid)
+		return;
+
+	makevectors(this.charmer.angles);
+
+	// randomly place the monster behind or to the side!
+	// TODO: more variation? just need to avoid putting it infront!
+	vector dir;
+	float r = random();
+	if(r < 0.33)
+		dir = v_right;
+	else if(r < 0.66)
+		dir = -v_right;
+	else
+		dir = -v_forward;
+
+	vector from = this.origin;
+	vector oldvel = this.velocity;
+	this.velocity = dir * 600 + v_up * 220;
+	setorigin(this, this.charmer.origin);
+	tracetoss(this, this.charmer);
+
+	// didn't get far enough
+	if(trace_startsolid || vdist(trace_endpos - this.charmer.origin, <, 32))
+	{
+		setorigin(this, from);
+		this.velocity = oldvel;
+	}
+
+	this.velocity = oldvel;
+	setorigin(this, trace_endpos);
+	te_teleport(this.origin);
+	te_teleport(from);
+	UNSET_ONGROUND(this);
+#endif
+}
+
 //============================================================================
 void HuntCharmer(entity this)
 {
@@ -1165,6 +1223,9 @@ bool FindTarget(entity this)
 		//this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
 		{
+			if(autocvar_sv_quake_pets_teleport && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
+				TeleportToCharmer(this);
+
 			UpdateCharmerGoal(this);
 //          this.goalentity = this.charmer;
 			if(vdist(this.origin - this.goalentity.origin, <, MIN_CHARMER_DISTANCE))
