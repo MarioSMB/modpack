@@ -52,7 +52,6 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 	return boxsize * (0.5 * (1 - sz));
 }
 
-#if 0
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
@@ -66,7 +65,6 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 	drawpic_aspect_skin_expanding(position, pic, theScale, rgb, theAlpha, flag, fadelerp);
 	drawpic_skin(position, pic, theScale, rgb, theAlpha * fadelerp, flag);
 }
-#endif
 
 float stringwidth(string text, float handleColors, vector sz)
 {

@@ -3584,13 +3584,19 @@ void SV_ParseClientCommand(entity this, string command)
 			return;
 		}
 
-		FOREACH(StatusEffect, it.netname == arg,
+		float amount = stof(argv(2));
+		if(amount <= 0)
+			amount = 30;
+		bool found = false;
+
+		FOREACH(StatusEffect, it.netname == arg || arg == "all",
 		{
-			StatusEffects_apply(it, this, time + stof(argv(2)), 0);
-			sprint(this, strcat("Applying effect ", it.netname, " for ", argv(2), " seconds\n"));
-			return;
+			StatusEffects_apply(it, this, time + amount, 0);
+			sprint(this, strcat("Applying effect ", it.netname, " for ", ftos(amount), " seconds\n"));
+			found = true;
 		});
-		sprint(this, "Could not find a status effect with that name, do \"list\" to see all\n");
+		if(!found)
+			sprint(this, "Could not find a status effect with that name, do \"list\" to see all\n");
 		return;
 	}
 

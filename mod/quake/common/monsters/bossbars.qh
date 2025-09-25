@@ -13,7 +13,5 @@ void bossbar_spawn(entity this, Monster mon);
 #endif
 
 #ifdef CSQC
-void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
-
 void HUD_BossBars();
 #endif

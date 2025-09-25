@@ -80,7 +80,7 @@ noref string _drawpic_picpath;
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	MACRO_BEGIN \
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		_drawpic_picpath = strcat("gfx/quake", "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "")\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
@@ -90,7 +90,7 @@ noref string _drawpic_picpath;
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	MACRO_BEGIN \
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		_drawpic_picpath = strcat("gfx/quake", "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "")\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\

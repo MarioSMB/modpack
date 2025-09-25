@@ -5,6 +5,7 @@ CLASS(JumpBoots, Powerups)
     ATTRIB(JumpBoots, m_name, string, _("Jump Boots"));
     ATTRIB(JumpBoots, m_color, vector, '0.5 0.5 1');
     //ATTRIB(JumpBoots, m_icon, string, "r_agrav1");
+    ATTRIB(JumpBoots, m_hidden, bool, true); // TODO
 ENDCLASS(JumpBoots)
 REGISTER_STATUSEFFECT(JumpBoots, NEW(JumpBoots));
 

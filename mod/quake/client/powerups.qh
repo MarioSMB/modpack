@@ -1,0 +1,5 @@
+#pragma once
+
+void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime, bool isInfinite);
+
+void HUD_Powerups();

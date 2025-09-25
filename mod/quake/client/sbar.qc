@@ -998,6 +998,8 @@ void Sbar_DrawInventory()
 	}
 #endif
 
+	// doing powerups outside the sbar now
+#if 0
 	if(!(myitems & IT_TANK))
 	{
 		int pcount = 0;
@@ -1012,6 +1014,7 @@ void Sbar_DrawInventory()
 				break; // we have limited HUD space unfortunately!
 		});
 	}
+#endif
 
 #if 0
 	// TODO: unique positions for multiple powerups?

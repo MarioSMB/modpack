@@ -15,6 +15,7 @@
 #include "shownames.qc"
 #include "voting.qc"
 #include "particles.qc"
+#include "powerups.qc"
 #include "weapons/_mod.inc"
 
 #include "../common/_all.inc"

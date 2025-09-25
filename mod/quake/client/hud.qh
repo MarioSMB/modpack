@@ -5,3 +5,8 @@
 	panel_pos.x *= vid_conwidth; panel_pos.y *= vid_conheight; \
 	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight; \
 MACRO_END
+
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
+
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, bool icon_right_align, vector color, float theAlpha);
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, bool isInfinite, int icon_right_align, vector color, float theAlpha, float fadelerp);

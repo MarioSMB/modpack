@@ -113,69 +113,6 @@ NET_HANDLE(ENT_CLIENT_BOSSBAR, bool isnew)
 	return true;
 }
 
-void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
-{
-	TC(bool, vertical); TC(int, drawflag);
-	if(!length_ratio || !theAlpha)
-		return;
-	if(length_ratio > 1)
-		length_ratio = 1;
-	if (baralign == 3)
-	{
-		if(length_ratio < -1)
-			length_ratio = -1;
-	}
-	else if(length_ratio < 0)
-		return;
-
-	vector square;
-	vector width, height;
-	// vertical mode not supported!
-	{
-		pic = strcat("gfx/quake/", pic);
-		if(precache_pic(pic) == "") {
-			pic = "gfx/hud/default/progressbar";
-		}
-
-		if (baralign == 1) // right align
-			theOrigin.x += (1 - length_ratio) * theSize.x;
-		else if (baralign == 2) // center align
-			theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
-		else if (baralign == 3) // center align, positive values on the right, negative on the left
-		{
-			theSize.x *= 0.5;
-			if (length_ratio > 0)
-				theOrigin.x += theSize.x;
-			else
-			{
-				theOrigin.x += (1 + length_ratio) * theSize.x;
-				length_ratio = -length_ratio;
-			}
-		}
-		theSize.x *= length_ratio;
-
-		vector bW;
-		width = eX * theSize.x;
-		height = eY * theSize.y;
-		if(theSize.x <= theSize.y * 2)
-		{
-			// button not wide enough
-			// draw just left and right part then
-			square = eX * theSize.x * 0.5;
-			bW = eX * (0.25 * theSize.x / (theSize.y * 2));
-			drawsubpic(theOrigin,          square + height, pic, '0 0 0', eY + bW, theColor, theAlpha, drawflag);
-			drawsubpic(theOrigin + square, square + height, pic, eX - bW, eY + bW, theColor, theAlpha, drawflag);
-		}
-		else
-		{
-			square = eX * theSize.y;
-			drawsubpic(theOrigin,                  height  +     square, pic, '0    0 0', '0.25 1 0', theColor, theAlpha, drawflag);
-			drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5  1 0', theColor, theAlpha, drawflag);
-			drawsubpic(theOrigin + width - square, height  +     square, pic, '0.75 0 0', '0.25 1 0', theColor, theAlpha, drawflag);
-		}
-	}
-}
-
 void HUD_BossBar_Draw(entity this)
 {
 	Monster mon = this.monsterdef; // validity checked during loop
