@@ -12,10 +12,10 @@ PRECACHE(Shield)
 }
 
 void wep_shield_hold(entity this);
-void wep_shield_shield4(entity this) { wep_set_anim(this, 6, w_ready); }
-void wep_shield_shield3(entity this) { wep_set_anim(this, 3, wep_shield_hold); W_Parry(this.owner, NULL); }
-void wep_shield_shield2(entity this) { wep_set_anim(this, 2, wep_shield_shield3); W_Parry_Trigger(this.owner, 0); }
-void wep_shield_shield1(entity this) { wep_set_anim(this, 1, wep_shield_shield2); }
+void wep_shield_shield4(entity this) { wep_set_anim(this, 6, w_ready); this.weapon_nextthink = time + 0.05; }
+void wep_shield_shield3(entity this) { wep_set_anim(this, 3, wep_shield_hold); this.weapon_nextthink = time + 0.05; W_Parry(this.owner, NULL); }
+void wep_shield_shield2(entity this) { wep_set_anim(this, 2, wep_shield_shield3); this.weapon_nextthink = time + 0.05; W_Parry_Trigger(this.owner, 0); }
+void wep_shield_shield1(entity this) { wep_set_anim(this, 1, wep_shield_shield2); this.weapon_nextthink = time + 0.05; }
 
 void wep_shield_hold(entity this)
 {

@@ -11,7 +11,8 @@ CLASS(Shield, Weapon)
 /* crosshair */ ATTRIB(Shield, w_crosshair_color, vector, '1 0.5 0.5');
 /* wepimg    */ ATTRIB(Shield, model2, string, "shield");
 /* refname   */ ATTRIB(Shield, netname, string, "shield");
-/* wepname   */ ATTRIB(Shield, m_name, string, _("Frying Shield"));
+/* wepname   */ ATTRIB(Shield, m_name, string, _("Shield"));
+/* framerate */ ATTRIB(Shield, m_delta, float, 0.05);
 
 ENDCLASS(Shield)
 REGISTER_WEAPON(SHIELD, NEW(Shield));
