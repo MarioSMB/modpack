@@ -184,7 +184,7 @@ void chimes_think(entity this)
 
 void chimes_clear(entity this)
 {
-	FOREACH_ENTITY_CLASS("chimes", it.realowner == this.realowner && it.monster_attack,
+	FOREACH_ENTITY_CLASS("chimes", it.realowner == this && it.monster_attack,
 	{
 		chimes_die(it, NULL, NULL, DEATH_GENERIC.m_id);
 	});
