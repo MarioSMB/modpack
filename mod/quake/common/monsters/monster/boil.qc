@@ -217,7 +217,7 @@ void boil_pain(entity this, entity attacker, float damage, int deathtype)
 
 void boil_explode(entity this)
 {
-	T_RadiusDamage(this, this, 75, DEATH_BALL_HOMING.m_id, this);
+	T_RadiusDamage(this, this, 75, DEATH_MONSTER_BOIL.m_id, this);
 	
 	if(this.poisonous)
 		te_explosion2(this.origin, 51, 8); // Switch explosions effect based on poison flag
