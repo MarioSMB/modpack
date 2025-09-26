@@ -66,7 +66,7 @@ PRECACHE(Galena)
 #define GALENA_STATS \
 "Movement speed 10% slower\n" \
 "Press %ABILITY% to dodge\n" \
-"Has a sword\n" \
+"Has a sword, right click charges\n" \
 "Has a shield, right click blocks\n" \
 "While blocking:\n" \
 "- Damage reduced by 75%\n" \
