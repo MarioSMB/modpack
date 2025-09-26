@@ -96,4 +96,8 @@ REGISTER_CHAMPION(Galena, NEW(Galena));
 
 #ifdef SVQC
 .float galena_dodge_time;
+.float galena_charge_time;
+#endif
+#ifdef GAMEQC
+.bool galena_charge;
 #endif

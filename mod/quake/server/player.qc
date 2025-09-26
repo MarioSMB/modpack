@@ -212,8 +212,6 @@ PLAYER
 ==============================================================================
 */
 
-void player_run(entity this);
-
 void spellbook_frame(entity this, .entity weaponentity)
 {
 	//Weapon wep = this.(weaponentity).m_weapon;
