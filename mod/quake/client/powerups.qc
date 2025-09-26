@@ -65,7 +65,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 STATIC_INIT(Powerups)
 {
-	registercvar("sbar_powerups_pos", "0.4 0.9");
+	registercvar("sbar_powerups_pos", "0.4 0.85");
 	registercvar("sbar_powerups_size", "0.2 0.035");
 }
 

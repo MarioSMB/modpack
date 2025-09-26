@@ -2696,6 +2696,8 @@ void ClientDisconnect(entity this)
 
 	cannon_clear(this);
 
+	chimes_clear(this);
+
 	W_Spellbook_ClearSpells(this);
 
 	set_suicide_frame(this);

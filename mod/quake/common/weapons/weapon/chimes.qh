@@ -29,3 +29,7 @@ ENDCLASS(Chimes)
 REGISTER_WEAPON(CHIMES, NEW(Chimes));
 
 SPAWNFUNC_WEAPON(weapon_chimes, WEP_CHIMES)
+
+#ifdef SVQC
+void chimes_clear(entity this);
+#endif

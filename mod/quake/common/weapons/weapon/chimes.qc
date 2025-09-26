@@ -182,6 +182,14 @@ void chimes_think(entity this)
 	this.attack_finished = time + 0.7;
 }
 
+void chimes_clear(entity this)
+{
+	FOREACH_ENTITY_CLASS("chimes", it.realowner == this.realowner && it.monster_attack,
+	{
+		chimes_die(it, NULL, NULL, DEATH_GENERIC.m_id);
+	});
+}
+
 void chimes_setup(entity this)
 {
 	FOREACH_ENTITY_CLASS("chimes", it.realowner == this.realowner && it.monster_attack,

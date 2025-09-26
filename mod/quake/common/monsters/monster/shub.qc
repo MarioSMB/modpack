@@ -264,7 +264,7 @@ void finale_4(entity this)
 
 		// start the end text
 		WriteByte(MSG_ALL, SVC_FINALE);
-		WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
+		WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. The Goat salutes you.");
 		// put a player model down, but only if it was a telefrag!
 		if(this.count)
 		{
