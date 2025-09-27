@@ -51,7 +51,8 @@ void W_Cat_Touch(entity this, entity toucher)
 		Send_Effect(EFFECT_MEOWMERE_IMPACT, this.origin, '0 0 0', 1);
 		spamsound(this, CH_SHOTS, SND_MEOWMERE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 
-		T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, toucher);
+		if(!deathmatch)
+			T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, toucher);
 
 		if(this.cat_bouncecnt >= 5)
 		{
@@ -91,7 +92,7 @@ void W_Cat_Think(entity this)
 		spawn_touchblood(this, damg, it);
 		T_Damage(it, this, this.owner, damg, this.projectiledeathtype);
 
-		this.cat_dmgtime = time + 0.1; // prevent instant death
+		this.cat_dmgtime = time + 0.2; // prevent instant death
 
 		Send_Effect(EFFECT_MEOWMERE_GLIMMER, this.origin, '0 0 -20', 1);
 		spamsound(this, CH_SHOTS, SND_MEOWMERE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
@@ -130,7 +131,7 @@ void W_Cat_Fire(entity this, vector org, .entity weaponentity)
 	missile.projectiledeathtype = WEP_MEOWMERE.m_id;
 	missile.cnt = 32; // rough area of effect during travel
 	missile.cat_bouncecnt = 0;
-	missile.dmg = 50;
+	missile.dmg = 30;
 	missile.bouncefactor = 1;
 	missile.bouncestop = 0.1;
 

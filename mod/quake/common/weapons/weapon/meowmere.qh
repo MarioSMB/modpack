@@ -13,7 +13,7 @@ Sound SND_MEOWMERE_BOUNCE_RANDOM() {
 CLASS(Meowmere, Weapon)
 /* ammotype  */ ATTRIB(Meowmere, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Meowmere, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Meowmere, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
+/* spawnflags*/ ATTRIB(Meowmere, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Meowmere, aflag, int, 0);
 /* modelname */ ATTRIB(Meowmere, mdl, string, "meowmere");
 /* crosshair */ ATTRIB(Meowmere, w_crosshair, string, "gfx/crosshairlaser");

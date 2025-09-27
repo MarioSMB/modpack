@@ -353,6 +353,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.solid = SOLID_NOT;
 				break;
 			case PROJECTILE_CAT:
+				this.dphitcontentsmask = DPCONTENTS_SOLID;
 				this.solid = SOLID_TRIGGER;
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
