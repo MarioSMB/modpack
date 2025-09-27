@@ -327,6 +327,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(SCRAG_SPIKE)        this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
 			HANDLE(KNIGHT_SPIKE)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
 			HANDLE(SPELLBOOK_METEOR)   this.traileffect = EFFECT_TR_METEOR.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -350,6 +351,14 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				//break;
 			case PROJECTILE_CROSSBOW_BOLT:
 				this.solid = SOLID_NOT;
+				break;
+			case PROJECTILE_CAT:
+				this.solid = SOLID_TRIGGER;
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, func_null);
+				this.bouncefactor = 1;
+				this.bouncestop = 0.1;
+				this.gravity = 0.25;
 				break;
 			default:
 				break;

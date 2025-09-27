@@ -1,0 +1,30 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(MEOWMERE_SWING, "weapons/sword_swing");
+
+SOUND(MEOWMERE_BOUNCE1, "weapons/cat_bounce1");
+SOUND(MEOWMERE_BOUNCE2, "weapons/cat_bounce2");
+Sound SND_MEOWMERE_BOUNCE_RANDOM() {
+    return (random() > 0.5) ? SND_MEOWMERE_BOUNCE1 : SND_MEOWMERE_BOUNCE2;
+}
+#endif
+
+CLASS(Meowmere, Weapon)
+/* ammotype  */ ATTRIB(Meowmere, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Meowmere, impulse, int, 1);
+/* spawnflags*/ ATTRIB(Meowmere, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(Meowmere, aflag, int, 0);
+/* modelname */ ATTRIB(Meowmere, mdl, string, "meowmere");
+/* crosshair */ ATTRIB(Meowmere, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Meowmere, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Meowmere, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Meowmere, model2, string, "meowmere");
+/* refname   */ ATTRIB(Meowmere, netname, string, "meowmere");
+/* wepname   */ ATTRIB(Meowmere, m_name, string, _("Meowmere"));
+/* parry anim*/ ATTRIB(Meowmere, m_parryframe, int, 4);
+
+ENDCLASS(Meowmere)
+REGISTER_WEAPON(MEOWMERE, NEW(Meowmere));
+
+SPAWNFUNC_WEAPON(weapon_meowmere, WEP_MEOWMERE)

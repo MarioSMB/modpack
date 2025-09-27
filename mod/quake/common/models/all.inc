@@ -35,3 +35,4 @@ MODEL(PROJECTILE_VORE_SPIKE,                "progs/v_spike.mdl");
 MODEL(PROJECTILE_SCRAG_SPIKE,               "progs/w_spike.mdl");
 MODEL(PROJECTILE_KNIGHT_SPIKE,              "progs/k_spike.mdl");
 MODEL(PROJECTILE_SPELLBOOK_METEOR,          "progs/lavaball.mdl");
+MODEL(PROJECTILE_CAT,                       "progs/proj_cat.mdl");

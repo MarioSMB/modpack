@@ -1028,3 +1028,114 @@ STATIC_INIT(Effect_STORMCLOUD)
 	registercvar("cl_particle_stormcloud_smoke_velocitymultiplier", "1");
 }
 #endif
+
+EFFECT(0, MEOWMERE_IMPACT,      "meowmere_impact")
+#ifdef CSQC
+STATIC_INIT(Effect_MEOWMERE_IMPACT)
+{
+	registercvar("cl_particle_meowmere_impact", "sparks");
+	registercvar("cl_particle_meowmere_impact_sparks_airfriction", "6");
+	registercvar("cl_particle_meowmere_impact_sparks_alpha", "256 256 256");
+	registercvar("cl_particle_meowmere_impact_sparks_color_max", "0.6 0.6 1");
+	registercvar("cl_particle_meowmere_impact_sparks_color_min", "1 0.6 0.6");
+	registercvar("cl_particle_meowmere_impact_sparks_count", "64");
+	registercvar("cl_particle_meowmere_impact_sparks_liquidfriction", "6");
+	registercvar("cl_particle_meowmere_impact_sparks_originjitter", "20 20 20");
+	registercvar("cl_particle_meowmere_impact_sparks_rotate", "0 360 -3600 3600");
+	registercvar("cl_particle_meowmere_impact_sparks_size", "4 4 0");
+	registercvar("cl_particle_meowmere_impact_sparks_tex", "8 15 0");
+	registercvar("cl_particle_meowmere_impact_sparks_type", "smoke");
+	registercvar("cl_particle_meowmere_impact_sparks_velocityjitter", "400 400 400");
+}
+#endif
+
+EFFECT(0, MEOWMERE_GLIMMER,      "meowmere_glimmer")
+#ifdef CSQC
+STATIC_INIT(Effect_MEOWMERE_GLIMMER)
+{
+	registercvar("cl_particle_meowmere_glimmer", "sparks");
+	registercvar("cl_particle_meowmere_glimmer_sparks_airfriction", "6");
+	registercvar("cl_particle_meowmere_glimmer_sparks_alpha", "256 256 256");
+	registercvar("cl_particle_meowmere_glimmer_sparks_color_max", "0.8 0.8 1");
+	registercvar("cl_particle_meowmere_glimmer_sparks_color_min", "1 0.8 0.8");
+	registercvar("cl_particle_meowmere_glimmer_sparks_count", "64");
+	registercvar("cl_particle_meowmere_glimmer_sparks_gravity", "0.05");
+	registercvar("cl_particle_meowmere_glimmer_sparks_liquidfriction", "6");
+	registercvar("cl_particle_meowmere_glimmer_sparks_originjitter", "8 8 8");
+	registercvar("cl_particle_meowmere_glimmer_sparks_size", "2 2 0");
+	registercvar("cl_particle_meowmere_glimmer_sparks_tex", "63 63 0");
+	registercvar("cl_particle_meowmere_glimmer_sparks_type", "snow");
+	registercvar("cl_particle_meowmere_glimmer_sparks_velocityjitter", "200 200 200");
+}
+#endif
+
+EFFECT(1, MEOWMERE_TRAIL,      "meowmere_trail")
+#ifdef CSQC
+STATIC_INIT(Effect_MEOWMERE_TRAIL)
+{
+	registercvar("cl_particle_meowmere_trail", "red orange yellow green cyan blue purple");
+
+	registercvar("cl_particle_meowmere_trail_red_type", "static");
+	registercvar("cl_particle_meowmere_trail_red_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_red_color", "0x802828 0x802828");
+	registercvar("cl_particle_meowmere_trail_red_relativeoriginoffset", "0 0 -6");
+	registercvar("cl_particle_meowmere_trail_red_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_red_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_red_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_red_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_orange_type", "static");
+	registercvar("cl_particle_meowmere_trail_orange_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_orange_color", "0x804d28 0x804d28");
+	registercvar("cl_particle_meowmere_trail_orange_relativeoriginoffset", "0 0 -4");
+	registercvar("cl_particle_meowmere_trail_orange_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_orange_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_orange_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_orange_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_yellow_type", "static");
+	registercvar("cl_particle_meowmere_trail_yellow_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_yellow_color", "0x807728 0x807728");
+	registercvar("cl_particle_meowmere_trail_yellow_relativeoriginoffset", "0 0 -2");
+	registercvar("cl_particle_meowmere_trail_yellow_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_yellow_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_yellow_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_yellow_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_green_type", "static");
+	registercvar("cl_particle_meowmere_trail_green_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_green_color", "0x318028 0x318028");
+	registercvar("cl_particle_meowmere_trail_green_relativeoriginoffset", "0 0 0");
+	registercvar("cl_particle_meowmere_trail_green_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_green_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_green_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_green_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_cyan_type", "static");
+	registercvar("cl_particle_meowmere_trail_cyan_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_cyan_color", "0x288076 0x288076");
+	registercvar("cl_particle_meowmere_trail_cyan_relativeoriginoffset", "0 0 2");
+	registercvar("cl_particle_meowmere_trail_cyan_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_cyan_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_cyan_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_cyan_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_blue_type", "static");
+	registercvar("cl_particle_meowmere_trail_blue_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_blue_color", "0x283880 0x283880");
+	registercvar("cl_particle_meowmere_trail_blue_relativeoriginoffset", "0 0 4");
+	registercvar("cl_particle_meowmere_trail_blue_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_blue_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_blue_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_blue_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_meowmere_trail_purple_type", "static");
+	registercvar("cl_particle_meowmere_trail_purple_alpha", "256 256 968");
+	registercvar("cl_particle_meowmere_trail_purple_color", "0x482880 0x482880");
+	registercvar("cl_particle_meowmere_trail_purple_relativeoriginoffset", "0 0 6");
+	registercvar("cl_particle_meowmere_trail_purple_size", "2 2");
+	registercvar("cl_particle_meowmere_trail_purple_tex", "38 38");
+	registercvar("cl_particle_meowmere_trail_purple_trailspacing", "2");
+	registercvar("cl_particle_meowmere_trail_purple_velocitymultiplier", "-0.100000");
+}
+#endif

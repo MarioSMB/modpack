@@ -54,3 +54,4 @@
 #include "railgun.qh"
 #include "sword.qh"
 #include "smg.qh"
+#include "meowmere.qh"

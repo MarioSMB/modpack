@@ -1289,7 +1289,7 @@ void Sbar_DrawHealth(vector pos, vector icon_size)
 STATIC_INIT(Sbar)
 {
 	//registercvar("sbar_pos", "0.378 0.9398");
-	registercvar("sbar_size", "0.24 0.065");
+	registercvar("sbar_size", "0.25 0.07");
 
 	registercvar("sbar_keys_pos", "0.4 0.9");
 	registercvar("sbar_keys_size", "0.2 0.035");

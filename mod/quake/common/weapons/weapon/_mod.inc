@@ -54,3 +54,4 @@
 #include "railgun.qc"
 #include "sword.qc"
 #include "smg.qc"
+#include "meowmere.qc"
