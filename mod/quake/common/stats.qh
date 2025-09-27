@@ -296,3 +296,8 @@ REGISTER_STAT(DODGEBALL_SCORE_LIMIT, INT, autocvar_sv_quake_dodgeball_pointlimit
 REGISTER_STAT(DIED, BOOL, this.died)
 
 REGISTER_STAT(SKILL, INT, autocvar_skill)
+
+#ifdef SVQC
+bool autocvar_sv_quake_instagib_pogostick;
+#endif
+REGISTER_STAT(INSTAGIB_POGO, BOOL, autocvar_sv_quake_instagib_pogostick)

@@ -194,6 +194,9 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	if(STAT(PASSIVES, this) & PASSIVE_BUNNYBOOTS)
 		pogo = true;
 
+	if(deathmatch && STAT(SKILL, this) == 3 && STAT(INSTAGIB_POGO, this))
+		pogo = true;
+
 	if(StatusEffects_active(STATUSEFFECT_DoubleJumpBoots, actor))
 	{
 		if(!IS_DOUBLEJUMPED(this) && !IS_JUMP_HELD(this) && !IS_ONGROUND(this))
