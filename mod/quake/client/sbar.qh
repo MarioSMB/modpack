@@ -11,6 +11,7 @@ float autocvar_scr_viewsize;
 bool autocvar_sbar_gametime;
 bool autocvar_sbar_scorerank;
 float autocvar_sbar_miniscoreboard_size;
+bool autocvar_sbar_edit;
 
 float autocvar_sbar_notify_time = 1.75;
 float autocvar_sbar_notify_fadetime = 0.75;

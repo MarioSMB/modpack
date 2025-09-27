@@ -114,7 +114,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 	vector picpos, numpos;
 	string text = isInfinite ? "\xE2\x88\x9E" : ftos(theTime); // Use infinity symbol (U+221E)
 
-	float panel_fg_alpha = 1;
+	float panel_fg_alpha = autocvar_sbar_alpha_fg;
 
 	if (vertical)
 	{

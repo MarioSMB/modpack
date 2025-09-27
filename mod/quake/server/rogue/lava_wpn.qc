@@ -56,17 +56,10 @@ void lavaspike_touch(entity this, entity toucher)
 		spawn_touchblood(this, 9, toucher);
 		if(IS_PLAYER(toucher))
 		{
-			float old_armortype = toucher.armortype;
-			float old_armorvalue = toucher.armorvalue;
-			int old_armormask = toucher.items & (IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
-			toucher.armortype = 0;
-			toucher.armorvalue = 0;
-			T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype);
-			toucher.armortype = old_armortype;
-			toucher.armorvalue = old_armorvalue;
-			toucher.items |= old_armormask;
+			// special ability: lava weapons pierce armor
+			T_Damage(toucher, this, this.owner, 9, this.projectiledeathtype | HITTYPE_ARMORPIERCE);
 		}
-		else		// is a monster
+		else // is a monster
 		{
 			if(toucher.monsterdef != MON_LAVAMAN) // special case: lava monsters don't take damage from lava weapons
 				T_Damage(toucher, this, this.owner, 15, this.projectiledeathtype);
@@ -121,7 +114,7 @@ void superlavaspike_touch(entity this, entity toucher)
 //				toucher.armorvalue = old_armorvalue;
 			}
 		}
-		else		// is a monster, do 50% more damage
+		else // is a monster, do 50% more damage
 		{
 			if(toucher.monsterdef != MON_LAVAMAN) // special case: lava monsters don't take damage from lava weapons
 			{

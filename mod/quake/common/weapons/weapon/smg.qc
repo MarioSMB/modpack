@@ -52,7 +52,7 @@ void W_FireSubMachineGun(entity this, float ox, .entity weaponentity)
 	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_right * ox, dir);
 	missile.velocity = dir * 3000;
 	missile.classname = "smg_bolt";
-	missile.projectiledeathtype = WEP_NAILGUN.m_id;
+	missile.projectiledeathtype = WEP_SMG.m_id;
 	_setmodel(missile, "progs/ee_p_pm_yl.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 	//missile.noise = "weapons/dsfirxpl.wav";

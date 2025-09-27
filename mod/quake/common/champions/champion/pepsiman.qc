@@ -88,7 +88,7 @@ METHOD(Pepsiman, m_cannon_land, bool(Champions this, entity actor))
 #ifdef CSQC
 float pepsiman_facetime = 0;
 int pepsiman_face = 0;
-METHOD(Pepsiman, m_drawface, bool(Champions this))
+METHOD(Pepsiman, m_drawface, bool(Champions this, vector pos, vector icon_size))
 {
 	if(time >= pepsiman_facetime)
 	{
@@ -98,7 +98,8 @@ METHOD(Pepsiman, m_drawface, bool(Champions this))
 		pepsiman_facetime = time + 0.1;
 	}
 	string pic = strcat("gfx/quake/pepsiman_face_", ftos(pepsiman_face));
-	Sbar_DrawPic('112 0 0', pic);
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	return true;
 }
 #endif

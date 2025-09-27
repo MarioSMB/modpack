@@ -2418,8 +2418,17 @@ void PlayerPostThink(entity this)
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
 			if (timeleft <= 0) {
-				if (dropclient_schedule(this))
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
+				if(autocvar_sv_quake_idlekick)
+				{
+					if (dropclient_schedule(this))
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname, maxidle_time);
+				}
+				else
+				{
+					// otherwise just make them spectate
+					stuffcmd(this, "\ncl_quake_spectate 1\n");
+					this.parm_idlesince = time; // but don't keep trying!
+				}
 				return;
 			}
 			else if (timeleft <= countdown_time) {

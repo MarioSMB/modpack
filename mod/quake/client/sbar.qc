@@ -151,6 +151,20 @@ string Sbar_PickNum(string frm)
 	return strcat("gfx/quake/num_", frm);
 }
 
+vector Sbar_BgColor()
+{
+	vector bgcolor = '1 1 1';
+	if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL && STAT(DODGEBALL_TEAM) > 0)
+	{
+		if(STAT(DODGEBALL_TEAM) == 1)
+			bgcolor = '1 0.7 0.1';
+		else if(STAT(DODGEBALL_TEAM) == 2)
+			bgcolor = '0.1 1 0.1';
+	}
+
+	return bgcolor;
+}
+
 vector sbar;
 int sb_lines;
 
@@ -290,8 +304,17 @@ void Sbar_SortFrags()
 Sbar_SoloScoreboard
 ===============
 */
-void Sbar_SoloScoreboard()
+void Sbar_SoloScoreboard(vector pos, vector mySize)
 {
+	int oldfont = drawfont;
+	drawfont = 8 + 1; // FONT_USER
+
+	vector text_size = vec2(mySize.x * 0.35, mySize.y * 0.35);
+	vector offset = (text_size * 0.25 * 0.5);
+
+	vector text_pos = pos + offset;
+
+	vector col = '0.6 0.2 0';
 	float t = (intermission ? completed_time : time);
 	//int minutes = rint(t / 60);
 	//int seconds = rint(t - 60*floor(t/60));
@@ -302,14 +325,30 @@ void Sbar_SoloScoreboard()
 
 	// monsters and secrets are now both on the top row
 	if(totalmonsters)
-		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), totalmonsters));
+		drawstring_aspect(text_pos, sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), totalmonsters), text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else if(STAT(MONSTERS_KILLED)) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
-		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)));
+		drawstring_aspect(text_pos, sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)), text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	if(!deathmatch)
+	{
+		string skill_text;
+		int skill = STAT(SKILL);
+		vector dcol = col;
+		switch(skill)
+		{
+			default:
+			case 0: skill_text = "Easy"; break;
+			case 1: skill_text = "Normal"; break;
+			case 2: skill_text = "Hard"; break;
+			case 3: skill_text = "Nightmare"; dcol = '1 0 0'; break;
+		}
+		drawstring_aspect(text_pos + vec2(mySize.x * 0.25, 0), skill_text, text_size, dcol, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
 
 	if(STAT(SECRETS_TOTAL))
-		Sbar_DrawString(vec2(8+22*8, 4), sprintf("Secrets:%3d /%3d", STAT(SECRETS_FOUND), STAT(SECRETS_TOTAL)));
+		drawstring_aspect(text_pos + vec2(mySize.x * 0.5, 0), sprintf("Secrets:%3d /%3d", STAT(SECRETS_FOUND), STAT(SECRETS_TOTAL)), text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else if(STAT(SECRETS_FOUND)) // LA: And similarly for secrets
-		Sbar_DrawString(vec2(8+22*8, 4), sprintf("Secrets:%3d", STAT(SECRETS_FOUND)));
+		drawstring_aspect(text_pos + vec2(mySize.x * 0.5, 0), sprintf("Secrets:%3d", STAT(SECRETS_FOUND)), text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// format is like this: e1m1:The Sligpate Complex
 	string worldstr = sprintf("%s:%s", autocvar_cl_worldbasename, autocvar_cl_worldmessage);
@@ -327,10 +366,10 @@ void Sbar_SoloScoreboard()
 		worldstr = substring(worldstr, 0, worldlen - (maxlen - worldlen));
 
 	// print the filename and message
-	Sbar_DrawString('8 12 0', worldstr);
+	drawstring_aspect(text_pos + vec2(0, mySize.y * 0.5), worldstr, text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print the time
-	Sbar_DrawString(vec2(8 + maxlen*8, 12), timestr);
+	drawstring_aspect(text_pos + vec2(mySize.x * 0.5, mySize.y * 0.5), timestr, text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// port of the intermission display of monster kills
 	if(STAT(HORDE))
@@ -339,7 +378,7 @@ void Sbar_SoloScoreboard()
 		sbar.x = (vid_conwidth - 320) >> 1;
 		sbar.y = (vid_conheight - 200) >> 1;
 
-		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter_horde", drawgetimagesize("gfx/quake/inter_horde"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter_horde", drawgetimagesize("gfx/quake/inter_horde"), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		Sbar_DrawNum('180 64 0', timestr, strlen(timestr), '1 1 1');
 
@@ -350,6 +389,8 @@ void Sbar_SoloScoreboard()
 
 		sbar = oldsbar;
 	}
+
+	drawfont = oldfont;
 }
 
 /*
@@ -744,9 +785,9 @@ void Sbar_DrawNotify()
 	notify_count = count;
 }
 
-void Sbar_DrawScoreboard()
+void Sbar_DrawScoreboard(vector pos, vector mySize)
 {
-	Sbar_SoloScoreboard();
+	Sbar_SoloScoreboard(pos, mySize);
 	// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 	if(maxclients > 1) // singleplayer
 		Sbar_DeathmatchOverlay();
@@ -835,6 +876,62 @@ Weapon GetDrawWeapon(Weapon wep, Weapon awep)
 	return wep;
 }
 
+void Sbar_DrawKeys()
+{
+	int oldfont = drawfont;
+	drawfont = 8 + 1;
+
+	vector panel_pos = stov(cvar_string("sbar_keys_pos"));
+	vector panel_size = stov(cvar_string("sbar_keys_size"));
+
+	HUD_Panel_ScalePosSize();
+
+	vector pos = panel_pos;
+	vector mySize = panel_size;
+
+	if(autocvar_sbar_edit)
+		drawfill(panel_pos, panel_size, '1 0 0', 0.25, DRAWFLAG_NORMAL);
+
+	int rows = 7; // 2 vanilla, 1 copper, 4 ad
+	int columns = 1;
+	vector icon_size = mySize;
+	icon_size.x = mySize.x / rows;
+	icon_size.y = mySize.y / columns;
+
+	int keys_drawn = 0;
+	int myitems = STAT(ITEMS);
+
+	for(int j = 0; j < 3; ++j)
+	{
+		string pic;
+		int keycount;
+		int keyitem;
+
+		switch(j)
+		{
+			default:
+			case 0: pic = "sb_key1"; keyitem = IT_KEY1; keycount = STAT(KEYS_SILVER); break;
+			case 1: pic = "sb_key2"; keyitem = IT_KEY2; keycount = STAT(KEYS_GOLD); break;
+			// TODO: custom icon!
+			case 2: pic = "sba3_key1"; keyitem = IT_KEY3; keycount = STAT(KEYS_PLATINUM); break;
+		}
+
+		if(!(myitems & keyitem))
+			continue;
+
+		vector key_pos = pos + vec2(icon_size.x * keys_drawn, 0);
+
+		drawpic_aspect(key_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		if(keycount > 0)
+			drawstring_aspect(key_pos + vec2(icon_size.x * 0.1, icon_size.y * 0.5), ftos(keycount), vec2(icon_size.x * 0.25, icon_size.y * 0.5), '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//DrawNumIcon(pos + vec2(icon_size.x * keys_drawn, 0), icon_size, keycount, pic, false, false, 0, col, 1);
+
+		keys_drawn += 1;
+	}
+
+	drawfont = oldfont;
+}
+
 /*
 ===============
 Sbar_DrawInventory
@@ -842,7 +939,7 @@ Sbar_DrawInventory
 */
 WepSet oldweapons;
 float weapon_gettime[72];
-void Sbar_DrawInventory()
+void Sbar_DrawInventory(vector pos, vector mySize)
 {
 	// set flash times
 	float oldfont = drawfont;
@@ -850,6 +947,13 @@ void Sbar_DrawInventory()
 	//int mypowerups = STAT(POWERUPS);
 	WepSet myweapons = STAT(WEAPONS);
 	entity thiswep = viewmodels[0]; // TODO: unhardcode
+	vector bgcolor = Sbar_BgColor();
+
+	int rows = 12; // 10 weapons plus space for the sigils
+	int columns = 2;
+	vector icon_size = mySize;
+	icon_size.x = mySize.x / rows;
+	icon_size.y = mySize.y / columns;
 
 	if(oldweapons != myweapons && time > 5) // time check to prevent initial load showing new weapons
 	{
@@ -861,7 +965,8 @@ void Sbar_DrawInventory()
 	}
 	oldweapons = myweapons;
 
-	Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
+	//Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
+	drawpic(pos, "gfx/quake/scorebar", mySize, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 
 	// weapons
 	if(!(myitems & IT_TANK))
@@ -889,6 +994,10 @@ void Sbar_DrawInventory()
 					}
 				});
 			}
+			// draw a background for each weapon slot
+			vector wep_icon_pos = pos + vec2((j - 1) * icon_size.x, icon_size.y);
+			drawpic(wep_icon_pos, "gfx/quake/inv_wep", icon_size, '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+
 			if(wep != WEP_Null)
 			{
 				float thetime = weapon_gettime[wep.m_id];
@@ -897,10 +1006,12 @@ void Sbar_DrawInventory()
 					flashon = (thiswep.activeweapon == wep);
 				else
 					flashon = (flashon % 5) + 2;
-				drawpic(sbar + vec2(wep_pos * 24, -16), "gfx/quake/inv_wep", '24 16 0', '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				vector wep_icon_pos = pos + vec2(wep_pos * icon_size.x, icon_size.y);
+
+				//drawpic(wep_icon_pos, "gfx/quake/inv_wep", icon_size, '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 				if(flashon)
-					drawfill(sbar + vec2(wep_pos * 24, -16), '24 16 0', '1 1 0', 0.33 * autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-				drawpic(sbar + vec2(wep_pos * 24, -16), Sbar_PickWeapon(wep), '24 16 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawfill(wep_icon_pos, icon_size, '1 1 0', 0.33 * autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				drawpic(wep_icon_pos, Sbar_PickWeapon(wep), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 				vector col;
 				if(WeaponIsFromRogue(wep))
 					col = '1 0 0';
@@ -917,30 +1028,38 @@ void Sbar_DrawInventory()
 					col = '1 1 0';
 				else
 					col = '0.6 0.2 0';
-				drawfont = 8; // FONT_USER
-				drawstring_aspect(sbar + vec2(wep_pos * 24, -8), ftos(imp), '8 8 0', col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawfont = 8 + 1; // FONT_USER
+				drawstring_aspect(wep_icon_pos + vec2(0, icon_size.y * 0.5), ftos(imp), vec2(icon_size.x * 0.25, icon_size.y * 0.5), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 				drawfont = oldfont;
 				wep_pos += 1;
 			}
 		}
 
+		rows = 8; // increase with ammo types
+
 		// ammo counts
 		for(int j = 0; j < 8; j++)
 		{
-			int itemstat;
-			int offset;
+			int ammotype;
 			switch(j)
 			{
 				default:
-				case 0: itemstat = getstati(STAT_SHELLS); break;
-				case 1: itemstat = getstati(STAT_NAILS); break;
-				case 2: itemstat = getstati(STAT_ROCKETS); break;
-				case 3: itemstat = getstati(STAT_CELLS); break;
-				case 4: itemstat = STAT(LAVA_NAILS); break;
-				case 5: itemstat = STAT(MULTI_ROCKETS); break;
-				case 6: itemstat = STAT(PLASMA_AMMO); break;
-				case 7: itemstat = STAT(DRILLS); break;
+				case 0: ammotype = IT_SHELLS; break;
+				case 1: ammotype = IT_NAILS; break;
+				case 2: ammotype = IT_ROCKETS; break;
+				case 3: ammotype = IT_CELLS; break;
+				case 4: ammotype = IT_LAVA_NAILS; break;
+				case 5: ammotype = IT_MULTI_ROCKETS; break;
+				case 6: ammotype = IT_PLASMA_AMMO; break;
+				case 7: ammotype = IT_DRILLS; break;
 			}
+			int itemstat = Sbar_ItemStat(ammotype);
+			vector ammo_icon_pos = pos + vec2(icon_size.x * j * 1.5, 0);
+			string pic = Sbar_ItemIcon(ammotype);
+			if(pic)
+				drawpic_aspect(ammo_icon_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			else
+				drawpic(ammo_icon_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 			// hack: only render mission pack ammo if we have ammo
 			if(j > 3 && itemstat <= 0)
 				continue;
@@ -948,10 +1067,15 @@ void Sbar_DrawInventory()
 			//drawfont = 11;
 			//drawstring(sbar + vec2(48 * j, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 			//drawfont = oldf;
-			drawstring(sbar + vec2(40 * j + 4, -24), ftos(itemstat), '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = 8 + 2; // FONT_USER
+			drawstring_aspect(ammo_icon_pos + vec2(icon_size.x * 0.5, 0), ftos(itemstat), icon_size, '0.5 0.2 0', 0.7 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfont = oldfont;
 		}
 	}
 
+	Sbar_DrawKeys(); // sets their own position
+
+#if 0
 	// items
 	// TODO: cleanup this mess
 	// keys
@@ -986,6 +1110,7 @@ void Sbar_DrawInventory()
 			drawfont = oldfont;
 		}
 	}
+#endif
 #if 0
 	// base powerups
 	for(int j = 2; j < 6; ++j)
@@ -1032,11 +1157,17 @@ void Sbar_DrawInventory()
 		Sbar_DrawPic('288 -16 0', "gfx/quake/sb_sharp");
 #endif
 
+	vector sigil_pos = pos + vec2(icon_size.x * 10.5, icon_size.y);
+	icon_size.x *= 0.35;
+
 	// sigils
 	for(int j = 0; j < 4; ++j)
 	{
+		vector spos = sigil_pos + vec2(icon_size.x * j, 0);
 		if(STAT(SERVERFLAGS) & BIT(j))
-			Sbar_DrawPic(vec2(320 - 32 + j * 8, -16), Sbar_PickSigil(j));
+			drawpic(spos, Sbar_PickSigil(j), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		else
+			drawpic(spos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 	}
 }
 
@@ -1094,7 +1225,7 @@ Sbar_DrawFace
 */
 int oldhealth;
 float health_gettime;
-void Sbar_DrawFace()
+void Sbar_DrawFace(vector pos, vector icon_size)
 {
 	int myitems = STAT(ITEMS); // changed field due to reaching bit limit
 	//int mypowerups = STAT(POWERUPS);
@@ -1106,7 +1237,7 @@ void Sbar_DrawFace()
 	Champions champ = (csqcplayer) ? csqcplayer.m_champion : NULL;
 	if(champ && champ.m_drawface)
 	{
-		if(champ.m_drawface(champ))
+		if(champ.m_drawface(champ, pos, icon_size))
 			return; // drawn by champion
 	}
 
@@ -1131,10 +1262,11 @@ void Sbar_DrawFace()
 		pic = Sbar_PickFace(f, washurt);
 	}
 		
-	Sbar_DrawPic('112 0 0', pic);
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-void Sbar_DrawHealth()
+void Sbar_DrawHealth(vector pos, vector icon_size)
 {
 	int myhealth = rint(STAT(HEALTH));
 	vector hpcolor = (STAT(HEALTH) <= 25) ? '1 0 0' : '1 1 1';
@@ -1147,7 +1279,20 @@ void Sbar_DrawHealth()
 	if(StatusEffects_active(STATUSEFFECT_Withering, g_statuseffects))
 		hpcolor = '0.1 0.1 0.1';
 
-	Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
+	//Sbar_DrawNum('136 0 0', itos(myhealth), 3, hpcolor);
+	vector oldsbar = sbar;
+	sbar = '0 0 0';
+	Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(myhealth), 3, hpcolor, icon_size.x, icon_size);
+	sbar = oldsbar;
+}
+
+STATIC_INIT(Sbar)
+{
+	//registercvar("sbar_pos", "0.378 0.9398");
+	registercvar("sbar_size", "0.24 0.065");
+
+	registercvar("sbar_keys_pos", "0.4 0.9");
+	registercvar("sbar_keys_size", "0.2 0.035");
 }
 
 void Sbar_Draw()
@@ -1157,9 +1302,29 @@ void Sbar_Draw()
 
 	if(!getproperty(VF_DRAWENGINESBAR)) // drawing in engine turned off, fall back to qc implementation
 	{
+		//vector panel_pos = stov(cvar_string("sbar_pos"));
+		vector panel_pos = vec2(vid_conwidth, vid_conheight); // we'll fix it later!
+		vector panel_size = stov(cvar_string("sbar_size"));
+
+		HUD_Panel_ScalePosSize();
+
+		// let's make sure it's always at the bottom though!
+		panel_pos.x = vid_conwidth * 0.5;
+		panel_pos.x -= (panel_size.x * 0.5);
+		panel_pos.y = vid_conheight - panel_size.y;
+
+		vector pos = panel_pos;
+		vector mySize = panel_size;
+
+		sbar = panel_pos;
+		sbar.y += (panel_size.y * 0.5);
+		//sbar.x *= 0.5;
+		//sbar.y -= (panel_size.y * 0.5);
+
+		// hacky quake fallback TODO: remove!
 		if(sbar == '0 0 0')
 		{
-			sbar.x = (vid_conwidth - 320)/2;
+			sbar.x = (vid_conwidth - 320) * 0.5;
 			sbar.y = vid_conheight - SBAR_HEIGHT;
 			sbar.z = 0;
 		}
@@ -1181,49 +1346,74 @@ void Sbar_Draw()
 
 		if(cursor_active)
 			{} // no special handling
-		if(sb_showscores || STAT(HEALTH) == -666) // hacky check to see if we're spectating
-			Sbar_DrawScoreboard();
+		if(sb_showscores || STAT(HEALTH) == -666 || (STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard)) // hacky check to see if we're spectating
+		{
+			//Sbar_DrawAlphaPic('0 0 0', "gfx/quake/scorebar", autocvar_sbar_alpha_bg);
+			mySize.y *= 0.5;
+			pos.y += mySize.y;
+			drawpic(pos, "gfx/quake/scorebar", mySize, '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+			Sbar_DrawScoreboard(pos, mySize);
+		}
 		else if(intermission == 1)
 			Sbar_IntermissionOverlay();
 		else if(intermission == 2)
 			Sbar_FinaleOverlay();
 		else // Quake
 		{
-			sbar.x = (vid_conwidth - 320)/2;
+			sbar.x = (vid_conwidth - 320) * 0.5;
 			sbar.y = vid_conheight - SBAR_HEIGHT;
 			sbar.z = 0;
 
-			if(sb_lines > 24)
+			// upper half
+
+			mySize.y *= 0.5;
+
+			if(!intermission)
 			{
-				Sbar_DrawInventory();
+				Sbar_DrawInventory(pos, mySize);
 				//if(maxclients > 1)
 					//Sbar_DrawFrags();
 			}
 
-			if(sb_showscores || (STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard))
+			if(sb_lines)
 			{
-				Sbar_DrawAlphaPic('0 0 0', "gfx/quake/scorebar", autocvar_sbar_alpha_bg);
-				Sbar_DrawScoreboard();
-			}
-			else if(sb_lines)
-			{
-				vector bgcolor = '1 1 1';
-				if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL && STAT(DODGEBALL_TEAM) > 0)
-				{
-					if(STAT(DODGEBALL_TEAM) == 1)
-						bgcolor = '1 0.7 0.1';
-					else if(STAT(DODGEBALL_TEAM) == 2)
-						bgcolor = '0.1 1 0.1';
-				}
-				Sbar_DrawAlphaPic_Color('0 0 0', "gfx/quake/sbar", autocvar_sbar_alpha_bg, bgcolor);
+				vector bgcolor = Sbar_BgColor();
+	
+				//Sbar_DrawAlphaPic_Color('0 0 0', "gfx/quake/scorebar", autocvar_sbar_alpha_bg, bgcolor);
+				//Draw_BorderPicture(
+					//panel_pos - '1 1 0' * 2,
+					//"gfx/quake/scorebar",
+					//panel_size + '1 1 0' * 2 * 2,
+					//bgcolor, autocvar_sbar_alpha_bg,
+					//'1 1 0' * 4 * 2
+				//);
 
-				// keys (hipnotic only)
-				//MED 01/04/97 moved keys here so they would not be overwritten
-				// armor
+				// lower half
+				pos.y += mySize.y;
+				drawpic(pos, "gfx/quake/scorebar", mySize, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+
+				int rows = 15;
+				vector icon_size = mySize;
+				icon_size.x = mySize.x / rows;
+				vector oldsbar = sbar; // TODO
+
+				//Draw_BorderPicture(
+					//sbar + '1 1 0' * 2,
+					//"gfx/quake/backtile",
+					//'24 24 0' - '1 1 0' * 2 * 2, // unlike normal borders, we shrink these to not extend to the edge
+					//bgcolor, autocvar_sbar_alpha_bg,
+					//'1 1 0' * 4 * 2
+				//);
+
+				//drawpic(sbar + '0 0 0', "gfx/quake/backtile", '24 24 0', bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 				if(StatusEffects_active(STATUSEFFECT_Invulnerability, g_statuseffects) && !(STAT(ITEMS) & IT_TANK))
 				{
-					Sbar_DrawNum('24 0 0', itos(666), 3, '0 1 1');
-					Sbar_DrawPic('0 0 0', "gfx/quake/disc");
+					sbar = '0 0 0';
+					//Sbar_DrawNum('24 0 0', itos(666), 3, '0 1 1');
+					//Sbar_DrawPic('0 0 0', "gfx/quake/disc");
+					Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), "666", 3, '0 1 1', icon_size.x, icon_size);
+					drawpic(pos, "gfx/quake/disc", icon_size, bgcolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar = oldsbar;
 				}
 				else
 				{
@@ -1237,24 +1427,52 @@ void Sbar_Draw()
 
 					if(apic)
 					{
-						Sbar_DrawPic('0 0 0', apic);
-						Sbar_DrawNum('24 0 0', itos(getstati(STAT_ARMOR)), 3, ((getstati(STAT_ARMOR) <= 25) ? '1 0 0' : '1 1 1'));
+						//Sbar_DrawPic('0 0 0', apic);
+						drawpic(pos, apic, icon_size, bgcolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+						//Sbar_DrawNum('24 0 0', itos(getstati(STAT_ARMOR)), 3, ((getstati(STAT_ARMOR) <= 25) ? '1 0 0' : '1 1 1'));
+						sbar = '0 0 0';
+						Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(getstati(STAT_ARMOR)), 3, ((getstati(STAT_ARMOR) <= 25) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
+						sbar = oldsbar;
 					}
+					else
+						drawpic(pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 				}
 
+				vector face_pos = pos + vec2(icon_size.x * 6, 0);
+
 				// face
-				Sbar_DrawFace();
+				Sbar_DrawFace(face_pos, icon_size);
 
 				// health
-				Sbar_DrawHealth();
+				Sbar_DrawHealth(face_pos, icon_size);
+
+				vector ammo_pos = pos + vec2(icon_size.x * 11, 0);
 
 				entity thiswep = viewmodels[0]; // TODO: unhardcode
 				if(STAT(SKATING) || (STAT(ITEMS) & IT_TANK))
 					{ /* nothing */}
 				else if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL)
-					Sbar_DrawNum('248 0 0', itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'));
+				{
+					//Sbar_DrawNum('248 0 0', itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'));
+					sbar = '0 0 0';
+					drawpic(pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
+					sbar = oldsbar;
+				}
 				else if(thiswep.activeweapon.spawnflags & WEP_FLAG_MANA)
-					Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
+				{
+					//Sbar_DrawNum('248 0 0', itos(ceil(STAT(MANA))), 3, ((STAT(MANA) <= 10) ? '1 0 0' : '1 1 1'));
+					//sbar = '0 0 0';
+					// TODO: mana icon / draw bar instead?
+					//Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
+					//sbar = oldsbar;
+					float mana = STAT(MANA);
+					if(mana)
+						mana /= 100;
+
+					drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, '0 1 1', 0.6, DRAWFLAG_NORMAL);
+				}
 				else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)
 				{
 					string pic = "";
@@ -1268,8 +1486,8 @@ void Sbar_Draw()
 						case 4: pic = "egg4"; break;
 						case 5: pic = "egg5"; break;
 					}
-					// need to call drawpic directly here as the original ammo size is 24 pixels...
-					drawpic(sbar + '224 0 0', strcat("gfx/quake/", pic), '24 24 0', '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					drawpic(ammo_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 				else if(thiswep.activeweapon == WEP_MAGIC)
 				{
@@ -1281,8 +1499,8 @@ void Sbar_Draw()
 						case 1: pic = "magic1"; break;
 						case 2: pic = "magic2"; break;
 					}
-					// need to call drawpic directly here as the original ammo size is 24 pixels...
-					drawpic(sbar + '224 0 0', strcat("gfx/quake/", pic), '24 24 0', '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					drawpic(ammo_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 				else
 				{
@@ -1292,9 +1510,15 @@ void Sbar_Draw()
 
 					if(pic)
 					{
-						Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
-						Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, ((Sbar_ItemStat(ammotype) <= 10) ? '1 0 0' : '1 1 1'));
+						//Sbar_DrawPic('224 0 0', strcat("gfx/quake/", pic));
+						//Sbar_DrawNum('248 0 0', itos(Sbar_ItemStat(ammotype)), 3, ((Sbar_ItemStat(ammotype) <= 10) ? '1 0 0' : '1 1 1'));
+						sbar = '0 0 0';
+						drawpic(ammo_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+						Sbar_DrawNum_lettersize(ammo_pos + vec2(icon_size.x, 0), itos(Sbar_ItemStat(ammotype)), 3, ((Sbar_ItemStat(ammotype) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
+						sbar = oldsbar;
 					}
+					else
+						drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 				}
 
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode

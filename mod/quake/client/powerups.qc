@@ -65,7 +65,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 STATIC_INIT(Powerups)
 {
-	registercvar("sbar_powerups_pos", "0.4 0.85");
+	registercvar("sbar_powerups_pos", "0.4 0.86");
 	registercvar("sbar_powerups_size", "0.2 0.035");
 }
 
@@ -94,6 +94,9 @@ void HUD_Powerups()
 	vector panel_size = stov(cvar_string("sbar_powerups_size"));
 
 	HUD_Panel_ScalePosSize();
+
+	if(autocvar_sbar_edit)
+		drawfill(panel_pos, panel_size, '1 0 0', 0.25, DRAWFLAG_NORMAL);
 
 	// Set drawing area
 	vector pos = panel_pos;

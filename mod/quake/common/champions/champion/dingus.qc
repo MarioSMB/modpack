@@ -65,10 +65,11 @@ METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 #endif
 
 #ifdef CSQC
-METHOD(Dingus, m_drawface, bool(Champions this))
+METHOD(Dingus, m_drawface, bool(Champions this, vector pos, vector icon_size))
 {
 	string pic = "gfx/quake/dingus_face";
-	Sbar_DrawPic('112 0 0', pic);
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	return true;
 }
 #endif
