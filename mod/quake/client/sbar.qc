@@ -366,7 +366,7 @@ void Sbar_SoloScoreboard(vector pos, vector mySize)
 		worldstr = substring(worldstr, 0, worldlen - (maxlen - worldlen));
 
 	// print the filename and message
-	drawstring_aspect(text_pos + vec2(0, mySize.y * 0.5), worldstr, text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring_aspect(text_pos + vec2(0, mySize.y * 0.5), worldstr, vec2(text_size.x * 2, text_size.y), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print the time
 	drawstring_aspect(text_pos + vec2(mySize.x * 0.5, mySize.y * 0.5), timestr, text_size, col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
