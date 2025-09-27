@@ -59,7 +59,7 @@ STATIC_INIT(Effect_TR_KNIGHTSPIKE)
 	registercvar("cl_particle_TR_KNIGHTSPIKE", "sparks trail flame bubbles");
 
 	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_notunderwater", "1");
-	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_trailspacing", "4");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_trailspacing", "14");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_count", "1");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_type", "snow");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_color", "0x7f1707 0xe7ab5f");
@@ -71,6 +71,7 @@ STATIC_INIT(Effect_TR_KNIGHTSPIKE)
 	registercvar("cl_particle_TR_KNIGHTSPIKE_sparks_originjitter", "4 4 4");
 
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_notunderwater", "1");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_trailspacing", "16");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_count", "1");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_type", "spark");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_color", "0xFFAB57 0xFF0A0A");
@@ -86,7 +87,7 @@ STATIC_INIT(Effect_TR_KNIGHTSPIKE)
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_velocityjitter", "50 50 50");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_trail_rotate", "0 360 1000 1000");
 
-	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_trailspacing", "3");
+	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_trailspacing", "12");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_type", "static");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_color", "0x801010 0xFFA020");
 	registercvar("cl_particle_TR_KNIGHTSPIKE_flame_size", "5 1");
