@@ -90,7 +90,7 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		musicnote.nextthink = time + 5; // Remove/Explode Time
 		//musicnote.think = SUB_Remove; 
 		setthink(musicnote, BecomeCartoonExplosion);
-		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		//_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = (random() < 0.1) ? '0.8 0.35 0' : '0.9 0.22 0.24';
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.avelocity = '0 90 90'; // Roll
@@ -106,6 +106,8 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		musicnote.velocity = spread_dir * 600;
 
 		IL_PUSH(g_projectiles, musicnote);
+
+		CSQCProjectile(musicnote, true, PROJECTILE_BANJO_MUSIC, true);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

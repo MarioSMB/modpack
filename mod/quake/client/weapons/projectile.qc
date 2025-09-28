@@ -328,6 +328,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(KNIGHT_SPIKE)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
 			HANDLE(SPELLBOOK_METEOR)   this.traileffect = EFFECT_TR_METEOR.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
+			HANDLE(BANJO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -360,6 +361,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.bouncefactor = 1;
 				this.bouncestop = 0.1;
 				this.gravity = 0.25;
+				break;
+			case PROJECTILE_BANJO_MUSIC:
+				this.colormod = (random() < 0.1) ? '0.8 0.35 0' : '0.9 0.22 0.24';
+				this.effects |= EF_FULLBRIGHT;
 				break;
 			default:
 				break;

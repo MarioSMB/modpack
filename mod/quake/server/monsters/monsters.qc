@@ -361,7 +361,7 @@ bool Monster_Appear_Check(entity this, Monster monster_id)
 	if(!this.count)
 		this.count = 1;
 	if(this.count == -1)
-		this.count = 0;
+		this.count = 1; // NOTE: set to 0 for infinitely spawning monsters, may cause crashes!!
 	if(this.count != -4 && this.count != 0)
 		this.flags |= FL_SPAWNING; // mark monster as spawning so we can tally the total monsters here
 

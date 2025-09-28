@@ -17,7 +17,7 @@ void Poop_AcidPoolTouch(entity this, entity toucher)
 	if(!Damage_ValidTarget(toucher, this.owner))
 		return;
 
-	float poisontime = 7;
+	float poisontime = 30;
 	float curtime = StatusEffects_gettime(STATUSEFFECT_Poisoned, toucher);
 	if((time + poisontime) > curtime)
 		StatusEffects_apply(STATUSEFFECT_Poisoned, toucher, time + poisontime, 0);
@@ -33,10 +33,14 @@ void Poop_AcidPoolAnim(entity this)
 		if(this.walkframe < 10)
 			this.frame = this.walkframe;
 		else
+		{
 			delete(this);
+			return;
+		}
 	}
 	else
-		Send_Effect(EFFECT_POOP_STINK, this.origin, '0 0 0', 1);
+		particle(this.origin, '0 0 0', 57, 10);
+		//Send_Effect(EFFECT_POOP_STINK, this.origin, '0 0 0', 1);
 }
 
 void Poop_PooSpitTouch(entity this, entity toucher)
@@ -94,7 +98,10 @@ void Poop_PooSpitAnim(entity this)
 		this.walkframe = 0;
 	this.frame = this.walkframe;
 	if(this.velocity == '0 0 0')
+	{
 		delete(this);
+		return;
+	}
 }
 
 void Poop_PooSpit(entity this)
@@ -111,7 +118,7 @@ void Poop_PooSpit(entity this)
 	newmis.velocity_z = 100;
 
 	newmis.poisonous = true;
-	newmis.projectiledeathtype = WEP_NAPALM.m_id;
+	newmis.projectiledeathtype = DEATH_TRAP.m_id;
 	newmis.clipgroup = this.clipgroup;
 	newmis.avelocity = '300 300 300';
 	newmis.angles = vectoangles(newmis.avelocity);
