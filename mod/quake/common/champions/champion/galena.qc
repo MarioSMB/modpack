@@ -18,6 +18,9 @@ bool Galena_charging(entity actor)
 	if(!PHYS_INPUT_BUTTON_ATCK2(actor))
 		return false;
 
+	if(STAT(ITEMS, actor) & IT_TANK)
+		return false;
+
 #if 0
 	// need to be looking in the direction you're moving!
 	makevectors(PHYS_WORLD_ANGLES(actor));
@@ -41,7 +44,7 @@ METHOD(Galena, m_physics, bool(Champions this, entity actor, float dt))
 		return false;
 	}
 
-	if(vdist(actor.velocity, <=, PHYS_MAXSPEED(actor)) && vdist(actor.velocity, >, PHYS_MAXSPEED(actor) * 0.5) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor) && !QCC_HasSpellbook(actor))
+	if(vdist(actor.velocity, <=, PHYS_MAXSPEED(actor)) && vdist(actor.velocity, >, PHYS_MAXSPEED(actor) * 0.5) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor) && !(STAT(ITEMS, actor) & IT_TANK) && !QCC_HasSpellbook(actor))
 	{
 		float tap_direction_x = 0;
 		float tap_direction_y = 0;
@@ -93,6 +96,8 @@ bool galena_canblock(entity actor)
 	if(viewmodels[0].activeweapon.spawnflags & WEP_FLAG_TWOHANDED)
 		return false;
 #endif
+	if(STAT(ITEMS, actor) & IT_TANK)
+		return false;
 	return true;
 }
 

@@ -418,7 +418,7 @@ void VolkerhLightning(entity this)
 
 	vector dir = normalize((this.enemy.origin + '0 0 16') - org);
 
-	traceline(org, org + dir * 4000, true, this);
+	traceline(org, org + dir * 1000, true, this);
 
 	SendCSQCLightningBeam(org, trace_endpos);
 
