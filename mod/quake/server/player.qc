@@ -513,6 +513,13 @@ void player_run(entity this)
 					else
 					   _sound(this, CH_VOICE, "player_enyo/foot7.wav", 0.5, ATTN_NORM);
 				}
+				else if(this.m_champion == CHAMPION_Poop)
+				{
+					if(r < 0.5)
+						_sound(this, CH_VOICE, "player_poop/gasp1.wav", 1, ATTN_NORM);
+					else
+						_sound(this, CH_VOICE, "player_poop/gasp2.wav", 1, ATTN_NORM);
+				}
 				else if(this.waterlevel == 1)
 				{
 					if(r < 0.5)
