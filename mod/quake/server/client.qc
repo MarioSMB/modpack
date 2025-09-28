@@ -1563,6 +1563,9 @@ void PutPlayerInServer(entity this)
 	this.alpha = 1;
 	this.colormod = '1 1 1';
 
+	if(deathmatch && autocvar_skill == 3)
+		this.colormod = '2 2 2';
+
 	this.viewloc = NULL;
 
 	this.weaponframe = 0;
