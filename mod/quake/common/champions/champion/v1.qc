@@ -65,7 +65,8 @@ METHOD(V1, m_cannon_land, bool(Champions this, entity actor))
 		{
 			player_sound(actor, CH_TRIGGER_SINGLE, "slide_impact.wav", ATTN_NORM);
 			Send_Effect(EFFECT_SMOKE_RING, actor.origin, '0 0 10', 1);
-			T_RadiusDamage(actor, actor, 100, DEATH_CRUSH.m_id, actor);
+			if(!deathmatch)
+				T_RadiusDamage(actor, actor, 100, DEATH_CRUSH.m_id, actor);
 			actor.jump_flag = 0;
 			actor.v1_antispam = time + 0.25;
 			return true;

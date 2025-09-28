@@ -14,8 +14,6 @@ void Poop_AcidPoolTouch(entity this, entity toucher)
 		return;
 	if(toucher.m_champion == CHAMPION_Poop)
 		return;
-	if(!Damage_ValidTarget(toucher, this.owner))
-		return;
 
 	float poisontime = 30;
 	float curtime = StatusEffects_gettime(STATUSEFFECT_Poisoned, toucher);
