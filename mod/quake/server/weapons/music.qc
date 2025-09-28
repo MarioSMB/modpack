@@ -23,13 +23,16 @@ void x_cartoonburst1(entity this) { this.frame = 0; this.nextthink = time + 0.02
 
 void BecomeCartoonExplosion(entity this)
 {
-	set_movetype(this, MOVETYPE_NONE);
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	_setmodel(this, "progs/x9_burst_6sided_brightyellow.mdl"); // TODO: white version for easy coloring
-	setsize(this, '0 0 0', '0 0 0');
-	this.solid = SOLID_NOT;
-	x_cartoonburst1(this);
+	entity newmis = spawn();
+	set_movetype(newmis, MOVETYPE_NONE);
+	newmis.solid = SOLID_NOT;
+	_setmodel(newmis, "progs/x9_burst_6sided_brightyellow.mdl"); // TODO: white version for easy coloring
+	setsize(newmis, '0 0 0', '0 0 0');
+	//setorigin(newmis, findbetterlocation(this.origin, 8));
+	setorigin(newmis, this.origin); // most calls to this already adjust position
+	x_cartoonburst1(newmis);
+
+	delete(this);
 }
 
 void MusicNoteBounceTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WORLD ------------------------------------------------------------------------------
