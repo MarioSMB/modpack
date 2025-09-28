@@ -30,12 +30,49 @@ vector VolRotatePointYaw(entity this, vector point, float ang)
 void vol_face(entity this)
 {
 // go for another player if multi player
+#if 0
 	if(this.enemy.health <= 0 || random() < 0.02)
 	{
 		this.enemy = find(this.enemy, classname, "player");
 		if(!this.enemy)
 			this.enemy = find(this.enemy, classname, "player");
 	}
+#else
+	// go for another player if multi player
+	if(this.enemy.health <= 0 || (coop && random() < 0.02))
+		this.enemy = NULL;
+
+	if(!this.enemy)
+	{
+		RandomSelection_Init();
+		if(this.charmed)
+		{
+			FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+			{
+				if(it != this && this.enemy != it && it.health > 0 && !(it.flags & FL_NOTARGET) && !it.charmed)
+				{
+					traceline(CENTER_OR_VIEWOFS(this), it.origin, true, this);
+					if(trace_fraction != 1)
+						continue;
+					RandomSelection_AddEnt(it, 1, 1);
+				}
+			});
+		}
+		else
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && !(it.flags & FL_NOTARGET),
+			{
+				// enable for line of sight
+				//traceline(this.origin + '0 0 16', it.origin, true, this);
+				//if(trace_fraction != 1)
+					//continue;
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+		}
+			
+		this.enemy = RandomSelection_chosen_ent;
+	}
+#endif
 	ai_face(this);
 }
 
