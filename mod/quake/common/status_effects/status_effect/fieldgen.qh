@@ -5,6 +5,7 @@ CLASS(FieldGen, Powerups)
     ATTRIB(FieldGen, m_name, string, _("Force Field Generator"));
     ATTRIB(FieldGen, m_color, vector, '0.5 0.5 1');
     //ATTRIB(FieldGen, m_icon, string, "sb_invuln");
+    ATTRIB(FieldGen, m_hidden, bool, true); // TODO
 ENDCLASS(FieldGen)
 REGISTER_STATUSEFFECT(FieldGen, NEW(FieldGen));
 
