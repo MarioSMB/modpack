@@ -132,6 +132,34 @@ void cmd_stuffto(float argc)
 #endif
 }
 
+void cmd_stufftoall(float argc)
+{
+	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
+	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
+	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
+
+#ifdef STUFFTO_ENABLED
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		bool accepted = VerifyClientEntity(it, true, false);
+		if(accepted > 0)
+		{
+			stuffcmd(it, strcat("\n", argv(1), "\n"));
+			LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), "."));
+			continue;
+		}
+		else
+		{
+			LOG_INFO("stuffto failed on ", GetCallerName(it), ".");
+			continue;
+		}
+	});
+#else
+	LOG_INFO("stuffto command is not enabled on this server.\n");
+	return;
+#endif
+}
+
 void PrintToChatAll(string text);
 
 void GameCommand(string command)
@@ -286,6 +314,12 @@ void GameCommand(string command)
 	if(cmdname == "stuffto")
 	{
 		cmd_stuffto(argc);
+		return;
+	}
+
+	if(cmdname == "stufftoall")
+	{
+		cmd_stufftoall(argc);
 		return;
 	}
 

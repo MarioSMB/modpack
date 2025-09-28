@@ -1,9 +1,7 @@
 #pragma once
 
 #ifdef GAMEQC
-// tuba is in C so there's no custom sound file here
-// TODO: just adjust the pitch of all the instruments moving forward to be in C? may not work with things like mayo!
-SOUND(TUBA_MUSICNOTE, "weapons/tuba_fire");
+SOUND(TUBA_MUSICNOTE, "weapons/tuba_music");
 #endif
 
 CLASS(Tuba, Weapon)

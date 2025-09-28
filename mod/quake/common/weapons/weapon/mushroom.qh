@@ -2,6 +2,7 @@
 
 #ifdef GAMEQC
 SOUND(MUSHROOM_THROW, "weapons/sword_swing");
+SOUND(MUSHROOM_MUSICNOTE, "weapons/mushroom_music");
 
 MODEL(MUSHROOM, "progs/mushroom.mdl");
 #endif
@@ -9,7 +10,7 @@ MODEL(MUSHROOM, "progs/mushroom.mdl");
 CLASS(Mushroom, Weapon)
 /* ammotype  */ ATTRIB(Mushroom, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Mushroom, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Mushroom, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
+/* spawnflags*/ ATTRIB(Mushroom, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_MUSIC | WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
 /* ammo */      ATTRIB(Mushroom, aflag, int, 0);
 /* modelname */ ATTRIB(Mushroom, mdl, string, "mushroom");
 /* crosshair */ ATTRIB(Mushroom, w_crosshair, string, "gfx/crosshairlaser");
@@ -18,6 +19,9 @@ CLASS(Mushroom, Weapon)
 /* wepimg    */ ATTRIB(Mushroom, model2, string, "mushroom");
 /* refname   */ ATTRIB(Mushroom, netname, string, "mushroom");
 /* wepname   */ ATTRIB(Mushroom, m_name, string, _("Mushroom"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Mushroom, m_musicnote, Sound, SND_MUSHROOM_MUSICNOTE);
+#endif
 
 ENDCLASS(Mushroom)
 REGISTER_WEAPON(MUSHROOM, NEW(Mushroom));

@@ -8,6 +8,8 @@ PRECACHE(Music)
 
 #define MIDI_SUPPORT
 #ifdef MIDI_SUPPORT
+int autocvar_sv_quake_music_note_min = 20;
+
 void midi_reset(entity this);
 #endif
 void music_reset(entity this)
@@ -48,8 +50,19 @@ int note_from_char(int input)
 	return 0; // C as a default?
 }
 
-void music_makenote(entity this)
+void music_makenote(entity this, bool shownote)
 {
+	// play the instrument if we can
+	if(IS_PLAYER(this))
+	{
+		.entity weaponentity = weaponentities[0]; // TODO?
+		if(this.(weaponentity) && time > this.(weaponentity).weapon_nextthink)
+			wep_generic_rocket1(this.(weaponentity));
+	}
+
+	if(!shownote)
+		return;
+
 	entity musicnote = new(musicnote);
 	makevectors(this.v_angle);
 	setorigin(musicnote, this.origin + v_forward * 45);
@@ -65,14 +78,6 @@ void music_makenote(entity this)
 	set_movetype(musicnote, MOVETYPE_NOCLIP);
 	SUB_SetFade(musicnote, time + 0.1, 0.5);
 	musicnote.velocity = '0 0 200';
-
-	// also play the instrument if we can
-	if(IS_PLAYER(this))
-	{
-		.entity weaponentity = weaponentities[0]; // TODO?
-		if(this.(weaponentity) && time > this.(weaponentity).weapon_nextthink)
-			wep_generic_rocket1(this.(weaponentity));
-	}
 }
 
 #ifdef MIDI_SUPPORT
@@ -211,7 +216,7 @@ void CreatureFrame_Music(entity this)
 
 		//if(random() <= 0.7)
 		//{
-			music_makenote(this);
+			music_makenote(this, true);
 		//}
 	}
 
@@ -247,7 +252,6 @@ void Music_Process(entity this, string input)
 	this.(weaponentity).music_repeatend = 0;
 	this.(weaponentity).music_starttime = time;
 	strcpy(this.(weaponentity).music_song, mymusic);
-
 
 	// attempt to copy the music playing position from a nearby player to keep songs in sync
 	FOREACH_ENTITY_RADIUS(this.origin, 1024, IS_PLAYER(it) && it != this,
@@ -311,6 +315,7 @@ void Music_Copy(entity this)
 .int midi_volume[MIDI_TRACKS]; // the rough volume set by Control_c, may be unset
 
 .float midi_lastnote; // prevent spamming too many note models!
+.int midi_playtrack; // only play given track (TODO: bitflag? array?!)
 
 void midi_reset(entity this)
 {
@@ -328,6 +333,8 @@ void midi_reset(entity this)
 		this.midi_pos[track] = 0;
 		this.midi_nexttime[track] = 0;
 	}
+	// TODO: should we reset their selected tracks here?
+	//this.midi_playtrack = 0;
 	//LOG_INFO("RESET");
 }
 
@@ -445,7 +452,6 @@ void midi_track_frame(entity this, int track)
 			// Control_c handled below
 			case "Program_c":
 			case "Channel_aftertouch_c":
-			case "Poly_aftertouch_c":
 			// System Exclusive Events
 			case "Poly_aftertouch_c":
 				break;
@@ -466,6 +472,9 @@ void midi_track_frame(entity this, int track)
 			}
 			case "Note_on_c":
 			{
+				if(this.midi_playtrack > 0 && track != this.midi_playtrack)
+					continue; // we do this HERE so that the track keeps up, just incase they change tracks mid-song!
+
 				//LOG_INFO("Note: ", s);
 				//int Channel = stoi(argv(3));
 				int Note = stoi(argv(4));
@@ -479,22 +488,26 @@ void midi_track_frame(entity this, int track)
 				else
 				{
 					Note = noteToFreq(Note);
+					if(Note <= autocvar_sv_quake_music_note_min)
+						continue; // TODO: this is just a hack to work around super low notes drowning out the song
 					//LOG_INFO("Pitch: ", ftos(Note));
 				}
 
+				bool shownote = false;
 				Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 				if(msound && msound != SND_Null)
 				{
-					// volume is scaled by 127 to keep the maximum within the 0-1 limit of DarkPlaces
+					// volume is divided by 127 to keep the maximum within the 0-1 limit of DarkPlaces
 					int midivolume = bound(0, this.midi_volume[track], 127);
 					// default to volume 1 otherwise
 					float vol = (midivolume > 0) ? (midivolume / 127) : 1;
 					sound7(this, CH_AMBIENT, Sound_fixpath(msound), vol, ATTN_NORM, Note, 0);
+					shownote = true; // we played a note, show it!
 				}
 				if(time >= this.midi_lastnote)
 				{
 					this.midi_lastnote = time + 0.1;
-					music_makenote(this);
+					music_makenote(this, shownote);
 				}
 				break;
 			}
@@ -730,9 +743,16 @@ bool sv_music_command(entity this, string cmd, float argc)
 		case "music":
 		{
 			string mymusic = strtolower(argv(1));
-			if(mymusic == "")
+			if(mymusic == "" || mymusic == "copy")
 			{
 				Music_Copy(this);
+				return true;
+			}
+			if(mymusic == "track")
+			{
+#ifdef MIDI_SUPPORT
+				this.midi_playtrack = stoi(argv(2));
+#endif
 				return true;
 			}
 			if(strlen(mymusic) > 16384)
@@ -773,6 +793,8 @@ bool sv_music_command(entity this, string cmd, float argc)
 			string midi_test = strcat("midis/", MakeConsoleSafe(argv(1)), ".txt");
 			if(fexists(midi_test))
 			{
+				// if we're starting a new song, we probably don't want our old tracks set!
+				this.midi_playtrack = 0;
 				midi_process(this, midi_test);
 				return true;
 			}
@@ -814,12 +836,17 @@ bool cl_music_command(string cmd, string command)
 			LOG_INFO("Most signs can be stacked and will work in order they are used, e.g. b++<> will play a dotted minim B double sharp");
 			return true;
 		}
+		else if(argv(1) == "track")
+		{
+			localcmd(strcat("cmd music track ", argv(2), "\n"));
+			return true;
+		}
 		else if(argv(1) != "")
 			mymusic = substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)); // TODO: processing?
 		else
 		{
 			LOG_INFO("Copying nearby players' music (if any)\nIf you were looking for instructions, do \"music help\"");
-			localcmd("cmd music \"\"");
+			localcmd("cmd music copy\n");
 			return true;
 		}
 		if(strlen(mymusic) > 16384) // TODO: safer limit?!

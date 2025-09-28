@@ -3,7 +3,7 @@
 CLASS(Wand, Weapon)
 /* ammotype  */ ATTRIB(Wand, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Wand, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Wand, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Wand, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Wand, aflag, int, 0);
 /* modelname */ ATTRIB(Wand, mdl, string, "wand");
 /* crosshair */ ATTRIB(Wand, w_crosshair, string, "gfx/crosshaircrylink");
@@ -12,6 +12,9 @@ CLASS(Wand, Weapon)
 /* wepimg    */ ATTRIB(Wand, model2, string, "wand");
 /* refname   */ ATTRIB(Wand, netname, string, "wand");
 /* wepname   */ ATTRIB(Wand, m_name, string, _("Wand"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Wand, m_musicnote, Sound, SND_Null);
+#endif
 
 ENDCLASS(Wand)
 REGISTER_WEAPON(WAND, NEW(Wand));

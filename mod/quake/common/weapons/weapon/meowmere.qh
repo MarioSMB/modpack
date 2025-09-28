@@ -2,6 +2,7 @@
 
 #ifdef GAMEQC
 SOUND(MEOWMERE_SWING, "weapons/sword_swing");
+SOUND(MEOWMERE_MUSICNOTE, "weapons/meowmere_music");
 
 SOUND(MEOWMERE_BOUNCE1, "weapons/cat_bounce1");
 SOUND(MEOWMERE_BOUNCE2, "weapons/cat_bounce2");
@@ -13,7 +14,7 @@ Sound SND_MEOWMERE_BOUNCE_RANDOM() {
 CLASS(Meowmere, Weapon)
 /* ammotype  */ ATTRIB(Meowmere, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Meowmere, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Meowmere, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
+/* spawnflags*/ ATTRIB(Meowmere, spawnflags, int, WEP_FLAG_NOAGGRO | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_MELEE | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Meowmere, aflag, int, 0);
 /* modelname */ ATTRIB(Meowmere, mdl, string, "meowmere");
 /* crosshair */ ATTRIB(Meowmere, w_crosshair, string, "gfx/crosshairlaser");
@@ -23,6 +24,9 @@ CLASS(Meowmere, Weapon)
 /* refname   */ ATTRIB(Meowmere, netname, string, "meowmere");
 /* wepname   */ ATTRIB(Meowmere, m_name, string, _("Meowmere"));
 /* parry anim*/ ATTRIB(Meowmere, m_parryframe, int, 4);
+#ifdef GAMEQC
+/* music     */ ATTRIB(Meowmere, m_musicnote, Sound, SND_MEOWMERE_MUSICNOTE);
+#endif
 
 ENDCLASS(Meowmere)
 REGISTER_WEAPON(MEOWMERE, NEW(Meowmere));
