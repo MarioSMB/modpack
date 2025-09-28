@@ -44,6 +44,7 @@ void teddy_setup(entity this)
 	this.angles = this.pos2;
 	//this.monster_attack = true;
 	//this.th_die = teddy_die;
+	this.classname = "teddy";
 }
 
 void teddy_projectile_think(entity this)
@@ -64,7 +65,8 @@ void teddy_projectile_think(entity this)
 
 void ThrowTeddy(entity this)
 {
-	entity teddy = new(teddy);
+	entity teddy = spawn();
+	teddy.classname = "teddy_proj";
 	teddy.realowner = this;
 	teddy.dphitcontentsmask = DPCONTENTS_SOLID;
 	set_movetype(teddy, MOVETYPE_TOSS);

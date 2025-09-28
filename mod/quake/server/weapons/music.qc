@@ -30,6 +30,8 @@ void BecomeCartoonExplosion(entity this)
 	setsize(newmis, '0 0 0', '0 0 0');
 	//setorigin(newmis, findbetterlocation(this.origin, 8));
 	setorigin(newmis, this.origin); // most calls to this already adjust position
+	newmis.angles = this.angles;
+	newmis.colormod = this.colormod;
 	x_cartoonburst1(newmis);
 
 	delete(this);
