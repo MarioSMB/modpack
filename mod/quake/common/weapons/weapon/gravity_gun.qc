@@ -193,6 +193,10 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 		return true; // sorry oppenheimer
 	if(draggee.classname == "teddy")
 		return true;
+	if(draggee.classname == "mushroom")
+		return true;
+	if(draggee.classname == "chimes")
+		return true;
 	if(draggee.classname == "chicken_egg")
 		return true; // BUCKAW
 	// items?

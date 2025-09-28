@@ -67,6 +67,7 @@ void mushroom_setup(entity this)
 	this.monster_attack = true;
 	this.delay = time + 0.49; // somewhat sync with animation
 	this.th_die = mushroom_die;
+	this.classname = "mushroom";
 }
 
 bool mushroom_heal(entity this, entity toucher)
@@ -131,7 +132,8 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 {
 	sound(this, CH_WEAPON_B, SND_MUSHROOM_THROW, 1, ATTN_NORM);
 
-	entity mushroom = new(mushroom);
+	entity mushroom = spawn();
+	mushroom.classname = "mushroom_proj";
 	mushroom.realowner = this;
 	mushroom.dphitcontentsmask = DPCONTENTS_SOLID;
 	set_movetype(mushroom, MOVETYPE_TOSS);
