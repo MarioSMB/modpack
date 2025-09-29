@@ -157,6 +157,9 @@ void HUD_BossBar_Draw(entity this)
 const float BOSSBAR_RANGE = 2048; // TODO: per monster?
 void HUD_BossBars()
 {
+	if(sb_showscores)
+		return;
+
 	entity chosen = NULL;
 	float chosen_dist = 0;
 	IL_EACH(g_bossbars, it.monsterdef && it.monsterdef != MON_Null && vdist(view_origin - it.origin, <=, BOSSBAR_RANGE),

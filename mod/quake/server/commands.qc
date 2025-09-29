@@ -311,6 +311,17 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "findtargets")
+	{
+		string targname = argv(1);
+		FOREACH_ENTITY_STRING_ORDERED(target, targname, LOG_INFOF("target: %i (%s)\n", it, it.classname));
+		FOREACH_ENTITY_STRING_ORDERED(target2, targname, LOG_INFOF("target2: %i (%s)\n", it, it.classname));
+		FOREACH_ENTITY_STRING_ORDERED(target3, targname, LOG_INFOF("target3: %i (%s)\n", it, it.classname));
+		FOREACH_ENTITY_STRING_ORDERED(target4, targname, LOG_INFOF("target4: %i (%s)\n", it, it.classname));
+		FOREACH_ENTITY_STRING_ORDERED(killtarget, targname, LOG_INFOF("killtarget: %i (%s)\n", it, it.classname));
+		return;
+	}
+
 	if(cmdname == "stuffto")
 	{
 		cmd_stuffto(argc);
