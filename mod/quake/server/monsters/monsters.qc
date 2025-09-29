@@ -1,6 +1,7 @@
 #include "monsters.qh"
 
 #include "ai.qh"
+#include "../challenges.qh"
 #include "../combat.qh"
 #include "../horde.qh"
 #include "../player.qh"
@@ -426,6 +427,9 @@ Monster monster_randomize(entity this, Monster mon)
 void monster_setup(entity this, Monster mon)
 {
 	mon.mr_setup(mon, this);
+
+	if(challenge == CHALLENGE_ONEHP)
+		this.health = 1;
 
 	this.max_health = this.health;
 

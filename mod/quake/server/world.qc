@@ -1,6 +1,7 @@
 #include "world.qh"
 
 #include "../common/editor.qh"
+#include "challenges.qh"
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
@@ -1486,7 +1487,10 @@ spawnfunc(worldspawn)
 	cvar_set("_endmatch", "0");
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
+	{
+		cvar_set("sv_quake_challenge", ""); // returned to hub, clean up challenge mode too!
 		serverflags = 0; // clean up serverflags!
+	}
 
 	// NOTE: let's set this when a trigger_changelevel changes it again, not here
 	// setting it here causes map restarts to lose position!
@@ -1970,6 +1974,8 @@ void CreatureFrame_FallDamage(entity this)
 				falldamage *= this.m_champion.qcc_falldamage;
 			if(this.viewloc)
 				falldamage = 0;
+			if(challenge == CHALLENGE_ONEHP)
+				falldamage = 0; // only fair!
 			if(this.watertype == CONTENT_WATER)
 			{
 				if(IS_PLAYER(this))

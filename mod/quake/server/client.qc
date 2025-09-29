@@ -9,6 +9,7 @@
 #include "../common/editor.qh"
 #include "../common/music.qh"
 #include "chat_grabber.qh"
+#include "challenges.qh"
 #include "combat.qh"
 #include "command/banning.qh"
 #include "command/cmd.qh"
@@ -133,6 +134,13 @@ void SetNewParms()
 	else if(deathmatch && autocvar_skill == 3)
 		weps = WEPSET(RAILGUN);
 
+	if(challenge == CHALLENGE_BONK)
+	{
+		weps = WEPSET(HAMMER);
+		start_weapon = WEP_HAMMER;
+		prev_weapon = WEP_HAMMER;
+	}
+
 	int start_items = 0;
 	if(deathmatch && autocvar_skill == 3)
 		start_items = IT_GRAPPLE;
@@ -188,6 +196,12 @@ void DecodeLevelParms(entity this)
 	Weapon wep = REGISTRY_GET(Weapons, parm9);
 	if(this.(weaponentity) && wep != WEP_Null && (STAT(WEAPONS, this) & wep.m_wepset))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
+	if(challenge == CHALLENGE_BONK)
+	{
+		STAT(WEAPONS, this) = WEPSET(HAMMER);
+		this.(weaponentity).m_weapon = WEP_HAMMER;
+		this.(weaponentity).hammer_skin = floor(random() * SKIN_LAST) + 1;
+	}
 	if(STAT(BREEGULL_EGGTYPE, this) <= 0) // allow preserving current selection over the map given one
 		STAT(BREEGULL_EGGTYPE, this) = parm10;
 	this.ammo_lava_nails = parm11;
@@ -1558,6 +1572,12 @@ void PutPlayerInServer(entity this)
 	this.pushltime = 0;
 	this.pusher = NULL;
 
+	if(challenge == CHALLENGE_ONEHP)
+	{
+		this.health = 1;
+		this.max_health = this.health;
+	}
+
 	this.clipgroup = 0;
 
 	this.alpha = 1;
@@ -2311,6 +2331,8 @@ void Regenerate_Health(entity this)
 	if(this.clockwork)
 		return;
 	if(world.worldtype == WORLDTYPE_DODGEBALL)
+		return;
+	if(challenge == CHALLENGE_ONEHP)
 		return;
 
 	float regen_rate = 1;
