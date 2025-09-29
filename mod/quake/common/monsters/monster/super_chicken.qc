@@ -187,6 +187,7 @@ void egg_setup(entity this)
 	this.takedamage = DAMAGE_AIM;
 	this.th_die = egg_die;
 	this.th_pain = egg_pain;
+	this.candrag = true;
 }
 
 void egg_projectile_touch(entity this, entity toucher)

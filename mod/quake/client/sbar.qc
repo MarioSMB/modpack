@@ -971,6 +971,9 @@ void Sbar_DrawInventory(vector pos, vector mySize)
 	// weapons
 	if(!(myitems & IT_TANK))
 	{
+		// NOTE: Xonotic uses the impulse order, but we only want to show one weapon anyway...
+		string s = W_NumberWeaponOrder(autocvar_cl_quake_weaponpriority);
+		string weporder = W_NameWeaponOrder(W_FixWeaponOrder(s, 1));
 		int wep_pos = 0;
 		for(int j = 1; j <= 10; ++j)
 		{
@@ -982,16 +985,14 @@ void Sbar_DrawInventory(vector pos, vector mySize)
 				wep = thiswep.activeweapon;
 			else
 			{
-				FOREACH(Weapons, it != WEP_Null && it.impulse == imp && (myweapons & it.m_wepset),
+				FOREACH_WORD(weporder, true,
 				{
-					if(!(wep.spawnflags & WEP_FLAG_HUDFALLBACK))
-						wep = it;
-					// always prefer champion weapons
-					if(it.spawnflags & WEP_FLAG_CHAMPION)
-					{
-						wep = it;
-						break;
-					}
+					Weapon wepent = Weapon_from_name(it);
+					if(wepent == WEP_Null || wepent.impulse != imp || !(myweapons & wepent.m_wepset))
+						continue;
+					wep = wepent;
+					// TODO: the hud has no idea if the weapon has ammo
+					break; // stop at first? TODO: champion weapons! (they usually have top priority anyway)
 				});
 			}
 			// draw a background for each weapon slot
@@ -1054,14 +1055,26 @@ void Sbar_DrawInventory(vector pos, vector mySize)
 				case 7: ammotype = IT_DRILLS; break;
 			}
 			int itemstat = Sbar_ItemStat(ammotype);
+			// hack: only render mission pack ammo if we have ammo
+			bool doshow = true;
+			if(j > 3 && itemstat <= 0)
+				doshow = false;
 			vector ammo_icon_pos = pos + vec2(icon_size.x * j * 1.5, 0);
 			string pic = Sbar_ItemIcon(ammotype);
+			vector col = '1 1 1';
+			float alph = autocvar_sbar_alpha_fg;
+			if(!doshow)
+			{
+				col = bgcolor;
+				alph = autocvar_sbar_alpha_bg;
+			}
+
 			if(pic)
-				drawpic_aspect(ammo_icon_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_aspect(ammo_icon_pos, strcat("gfx/quake/", pic), icon_size, col, alph, DRAWFLAG_NORMAL);
 			else
 				drawpic(ammo_icon_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", icon_size * 0.85, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-			// hack: only render mission pack ammo if we have ammo
-			if(j > 3 && itemstat <= 0)
+
+			if(!doshow)
 				continue;
 			//int oldf = drawfont;
 			//drawfont = 11;

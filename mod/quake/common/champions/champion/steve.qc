@@ -89,6 +89,7 @@ void Steve_PlaceBlock(entity this)
 	setthink(block, steve_block_think);
 	block.nextthink = time;
 	block.th_die = steve_block_die;
+	block.candrag = true;
 	block.skin = (random() <= 0.5) ? 0 : 1;
 	if(random() < 0.1)
 	{

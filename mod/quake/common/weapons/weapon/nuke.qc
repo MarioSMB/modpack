@@ -65,6 +65,7 @@ void nuke_think(entity this)
 void nuke_setup(entity this)
 {
 	this.classname = "nuke";
+	this.candrag = true;
 	//set_movetype(this, MOVETYPE_NONE);
 	this.owner = NULL; // to allow collisions
 	setthink(this, nuke_think);

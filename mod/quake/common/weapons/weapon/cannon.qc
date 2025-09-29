@@ -155,6 +155,7 @@ void cannon_setup(entity this)
 	this.nextthink = time + 0.1;
 	this.solid = SOLID_TRIGGER;
 	settouch(this, cannon_touch);
+	this.candrag = true;
 }
 
 spawnfunc(cannon)

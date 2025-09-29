@@ -329,6 +329,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(SPELLBOOK_METEOR)   this.traileffect = EFFECT_TR_METEOR.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
 			HANDLE(BANJO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; break;
+			HANDLE(BULLET)             this.traileffect = EFFECT_Null.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");

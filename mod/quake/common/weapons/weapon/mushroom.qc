@@ -68,6 +68,7 @@ void mushroom_setup(entity this)
 	this.delay = time + 0.49; // somewhat sync with animation
 	this.th_die = mushroom_die;
 	this.classname = "mushroom";
+	this.candrag = true;
 }
 
 bool mushroom_heal(entity this, entity toucher)

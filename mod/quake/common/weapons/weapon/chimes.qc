@@ -212,6 +212,7 @@ void chimes_setup(entity this)
 	this.attack_finished = time + 1;
 	this.cnt = time + 0.1;
 	this.delay = time + 1;
+	this.candrag = true;
 
 	// hack so music can work
 	.entity weaponentity = weaponentities[0];

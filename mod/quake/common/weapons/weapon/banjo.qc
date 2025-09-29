@@ -44,6 +44,7 @@ void banjo_note_touch(entity this, entity toucher)
 	//sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	//this.origin = this.origin - 8 * normalize(this.velocity);
 	this.origin = findbetterlocation(this.origin, 8);
+	this.angles = vectoangles(this.velocity);
 
 	BecomeCartoonExplosion(this);
 }
@@ -93,7 +94,7 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		//_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = (random() < 0.1) ? '0.8 0.35 0' : '0.9 0.22 0.24';
 		setsize(musicnote, '0 0 0', '0 0 0');
-		musicnote.avelocity = '0 90 90'; // Roll
+		//musicnote.avelocity = '0 90 90'; // Roll
 
 		setorigin(musicnote, neworg + randomvec() * 10);
 		settouch(musicnote, banjo_note_touch);

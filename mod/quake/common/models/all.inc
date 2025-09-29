@@ -37,3 +37,4 @@ MODEL(PROJECTILE_KNIGHT_SPIKE,              "progs/k_spike.mdl");
 MODEL(PROJECTILE_SPELLBOOK_METEOR,          "progs/lavaball.mdl");
 MODEL(PROJECTILE_CAT,                       "progs/proj_cat.mdl");
 MODEL(PROJECTILE_BANJO_MUSIC,               "progs/piano_musicnote_white.mdl");
+MODEL(PROJECTILE_BULLET,                    "progs/spike.mdl");

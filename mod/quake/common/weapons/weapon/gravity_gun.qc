@@ -185,20 +185,6 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 		return false;
 	if(IS_PLAYER(draggee) && draggee != dragger && dragger.maycheat && !STAT(CANNON, draggee))
 		return true; // hehe
-	if(draggee.classname == "cannon")
-		return true; // what if there's a player inside lol
-	if(draggee.classname == "block")
-		return true; // yay steve
-	if(draggee.classname == "nuke")
-		return true; // sorry oppenheimer
-	if(draggee.classname == "teddy")
-		return true;
-	if(draggee.classname == "mushroom")
-		return true;
-	if(draggee.classname == "chimes")
-		return true;
-	if(draggee.classname == "chicken_egg")
-		return true; // BUCKAW
 	// items?
 	if(draggee.flags & FL_ITEM)
 	{
@@ -232,7 +218,7 @@ bool Drag_IsDraggable(entity draggee, entity dragger)
 		return true;
 	}
 
-	return false;
+	return draggee.candrag;
 }
 
 float Drag_MayChangeAngles(entity draggee)

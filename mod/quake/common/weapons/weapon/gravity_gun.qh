@@ -33,6 +33,8 @@ float autocvar_sv_quake_gravitygun_range = 250;
 .entity draggedby;
 .float dragmovetype;
 
+.bool candrag;
+
 void gravgun_postthink(entity this);
 
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody

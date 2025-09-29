@@ -45,6 +45,7 @@ void teddy_setup(entity this)
 	//this.monster_attack = true;
 	//this.th_die = teddy_die;
 	this.classname = "teddy";
+	this.candrag = true;
 }
 
 void teddy_projectile_think(entity this)

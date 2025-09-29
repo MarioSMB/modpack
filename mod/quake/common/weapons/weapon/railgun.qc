@@ -155,6 +155,7 @@ void DrawSniperLightning(entity this, vector org, vector dest, float hit)
 
 		//sg.flags = FL_PROJECTILE;
 		sg.classname = "lgsegment";
+		sg.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
 		sg.angles = ang;
 		sg.angles_z = random()*360;
 		sg.owner = this;

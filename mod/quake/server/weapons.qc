@@ -326,6 +326,8 @@ void FireBullets(entity this, int shotcount, vector org, vector dir, vector spre
 		missile.classname = "bullet"; // hack
 		missile.velocity = spread_dir * var_speed;
 		missile.projectiledeathtype = deathtype;
+
+		CSQCProjectile(missile, true, PROJECTILE_BULLET, true);
 	}
 }
 
