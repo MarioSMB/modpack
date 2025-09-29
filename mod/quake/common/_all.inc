@@ -35,4 +35,5 @@
 #include "wepent.qc"
 #include "music.qc"
 #include "editor.qc"
+#include "challenges.qc"
 #endif

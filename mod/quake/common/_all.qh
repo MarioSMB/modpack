@@ -49,6 +49,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "ent_cs.qh"
 
 #include "physics.qh"
+#include "challenges.qh"
 
 
 #include "effects/qc/_mod.qh"

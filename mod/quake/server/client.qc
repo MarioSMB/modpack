@@ -8,8 +8,8 @@
 #include "../common/champions/_mod.qh"
 #include "../common/editor.qh"
 #include "../common/music.qh"
+#include "../common/challenges.qh"
 #include "chat_grabber.qh"
-#include "challenges.qh"
 #include "combat.qh"
 #include "command/banning.qh"
 #include "command/cmd.qh"
@@ -134,7 +134,7 @@ void SetNewParms()
 	else if(deathmatch && autocvar_skill == 3)
 		weps = WEPSET(RAILGUN);
 
-	if(challenge == CHALLENGE_BONK)
+	if(Challenge_Active(CHALLENGE_BONK))
 	{
 		weps = WEPSET(HAMMER);
 		start_weapon = WEP_HAMMER;
@@ -196,7 +196,7 @@ void DecodeLevelParms(entity this)
 	Weapon wep = REGISTRY_GET(Weapons, parm9);
 	if(this.(weaponentity) && wep != WEP_Null && (STAT(WEAPONS, this) & wep.m_wepset))
 		this.(weaponentity).m_weapon = REGISTRY_GET(Weapons, parm9);
-	if(challenge == CHALLENGE_BONK)
+	if(Challenge_Active(CHALLENGE_BONK))
 	{
 		STAT(WEAPONS, this) = WEPSET(HAMMER);
 		this.(weaponentity).m_weapon = WEP_HAMMER;
@@ -1572,7 +1572,7 @@ void PutPlayerInServer(entity this)
 	this.pushltime = 0;
 	this.pusher = NULL;
 
-	if(challenge == CHALLENGE_ONEHP)
+	if(Challenge_Active(CHALLENGE_ONEHP))
 	{
 		this.health = 1;
 		this.max_health = this.health;
@@ -2332,7 +2332,7 @@ void Regenerate_Health(entity this)
 		return;
 	if(world.worldtype == WORLDTYPE_DODGEBALL)
 		return;
-	if(challenge == CHALLENGE_ONEHP)
+	if(Challenge_Active(CHALLENGE_ONEHP))
 		return;
 
 	float regen_rate = 1;

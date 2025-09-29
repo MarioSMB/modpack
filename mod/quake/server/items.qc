@@ -1,9 +1,9 @@
 #include "items.qh"
 
-#include "challenges.qh"
 #include "monsters/monsters.qh"
 #include "rogue/sphere.qh"
 #include "rogue/rogue.qh"
+#include "../common/challenges.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
 #include "weapons.qh"
@@ -195,7 +195,7 @@ bool T_Heal(entity e, float healamount, bool ignore)
 	float hp_heal_cap = 250;
 	if(e.m_champion)
 		hp_heal_cap *= e.m_champion.qcc_health_heal_cap;
-	if(challenge == CHALLENGE_ONEHP)
+	if(Challenge_Active(CHALLENGE_ONEHP))
 		hp_heal_cap = 1;
 	if(e.health > hp_heal_cap)
 		e.health = hp_heal_cap;
@@ -773,11 +773,11 @@ void weapon_touch(entity this, entity toucher)
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
-	bool leave = (coop || challenge == CHALLENGE_BONK || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
+	bool leave = (coop || Challenge_Active(CHALLENGE_BONK) || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	if(leave && ((STAT(WEAPONS, toucher) & newwep.m_wepset) || challenge == CHALLENGE_BONK) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
+	if(leave && ((STAT(WEAPONS, toucher) & newwep.m_wepset) || Challenge_Active(CHALLENGE_BONK)) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
 	{
 		if(newwep == WEP_HAMMER && this.hammer_skin && this.hammer_skin != toucher.(weaponentity).hammer_skin)
 			{ /* do nothing */ }
@@ -3428,7 +3428,7 @@ void target_items_setinv(entity this, entity e, entity actor)
 	if(this.health > 0)
 	{
 		e.health = this.health;
-		if(challenge == CHALLENGE_ONEHP)
+		if(Challenge_Active(CHALLENGE_ONEHP))
 			e.health = 1;
 	}
 		
@@ -3516,7 +3516,7 @@ void target_items_setinv(entity this, entity e, entity actor)
 		}
 	}
 
-	if(this.weapon && challenge != CHALLENGE_BONK)
+	if(this.weapon && Challenge_Active(CHALLENGE_BONK))
 		target_items_setweapon(this, e, 2);
 	
 	// after resetweaponstate or else deadthink will be overwritten

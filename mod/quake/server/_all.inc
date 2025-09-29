@@ -9,7 +9,6 @@
 //#include "defs.qc"
 #include "antilag.qc"
 #include "combat.qc"
-#include "challenges.qc"
 #include "items.qc"
 #include "weapons.qc"
 #include "world.qc"

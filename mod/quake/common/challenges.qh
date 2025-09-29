@@ -1,0 +1,16 @@
+#pragma once
+
+#ifdef SVQC
+string autocvar_sv_quake_challenge = "";
+int challenge;
+#endif
+
+enum {
+    CHALLENGE_NONE = BIT(0),
+    CHALLENGE_ONEHP = BIT(1),
+    CHALLENGE_BONK = BIT(2)
+};
+
+const int CHALLENGE_COUNT = 3; // increase when adding new challenges to the enum
+
+bool Challenge_Active(int ctype);

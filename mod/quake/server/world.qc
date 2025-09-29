@@ -1,11 +1,11 @@
 #include "world.qh"
 
 #include "../common/editor.qh"
-#include "challenges.qh"
 #include "frametick.qh"
 #include "gamelog.qh"
 #include "horde.qh"
 #include "ipban.qh"
+#include "../common/challenges.qh"
 #include "../common/dodgeball/dodgeball.qh"
 #include "../common/triggers/func/button.qh"
 #include "../common/triggers/func/earthquake.qh"
@@ -1974,7 +1974,7 @@ void CreatureFrame_FallDamage(entity this)
 				falldamage *= this.m_champion.qcc_falldamage;
 			if(this.viewloc)
 				falldamage = 0;
-			if(challenge == CHALLENGE_ONEHP)
+			if(Challenge_Active(CHALLENGE_ONEHP))
 				falldamage = 0; // only fair!
 			if(this.watertype == CONTENT_WATER)
 			{
