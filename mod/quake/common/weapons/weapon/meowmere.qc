@@ -52,7 +52,7 @@ void W_Cat_Touch(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_MEOWMERE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 
 		if(!deathmatch)
-			T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, toucher);
+			T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, this.owner);
 
 		if(this.cat_bouncecnt >= 5)
 		{
