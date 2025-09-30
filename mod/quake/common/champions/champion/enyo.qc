@@ -87,7 +87,7 @@ METHOD(Enyo, m_playerspawn, void(Champions this, entity actor))
 #ifdef CSQC
 STATIC_INIT(Enyo)
 {
-	registercvar("sbar_enyo_pos", "0.15 0.935");
+	registercvar("sbar_enyo_pos", "0.122 0.955");
 	registercvar("sbar_enyo_size", "0.18 0.04");
 }
 
