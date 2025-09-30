@@ -847,6 +847,8 @@ spawnfunc(monster_sorcerer) { monster_start(this, true, MON_SKULLWIZARD); }
 spawnfunc(monster_warlock) { monster_start(this, true, MON_SKULLWIZARD); }
 spawnfunc(monster_fragwiz) { monster_start(this, true, MON_SKULLWIZARD); }
 spawnfunc(monster_sorceror) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_skull_wizard_boss) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_skull_wizard_lord) { monster_start(this, true, MON_SKULLWIZARD); }
 // drake/zerstorer (trogolodytes)
 spawnfunc(monster_nemesant) { monster_start(this, true, MON_SKULLWIZARD); }
 spawnfunc(monster_trogboss) { monster_start(this, true, MON_SKULLWIZARD); }

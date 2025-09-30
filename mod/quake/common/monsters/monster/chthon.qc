@@ -493,23 +493,42 @@ void lightning_use(entity this, entity actor, entity trigger)
 		}
 	});
 	if(!e)
+	{
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+		{
+			if(it.monsterdef == MON_SHUB && it.health > 0 && !it.charmed)
+			{
+				e = it;
+				break;
+			}
+		});
+	}
+	if(!e)
 		return;
 	e.enemy = actor;
 	if(le1.state == STATE_TOP && e.health > 0)
 	{
 		_sound(e, CH_VOICE, "boss1/pain.wav", 1, ATTN_NORM);
-		if(autocvar_skill == 0)
-			e.health -= 3000;
-		else
-			e.health -= 1000;
+		if(e.monsterdef == MON_CHTHON)
+		{
+			if(autocvar_skill == 0)
+				e.health -= 3000;
+			else
+				e.health -= 1000;
+		}
+		else if(e.monsterdef == MON_SHUB)
+			e.health -= e.max_health;
 		if(e.sprite)
 			WaypointSprite_UpdateHealth(e.sprite, e.health);
-		if(e.health >= 2000)
-			boss_shocka1(e);
-		else if(e.health > 0)
-			boss_shockb1(e);
-		else
-			boss_shockc1(e);
+		if(e.monsterdef == MON_CHTHON)
+		{
+			if(e.health >= 2000)
+				boss_shocka1(e);
+			else if(e.health > 0)
+				boss_shockb1(e);
+			else
+				boss_shockc1(e);
+		}
 	}	
 }
 
