@@ -13,7 +13,11 @@ int Challenge_fromstring(string chalstr)
 
 bool Challenge_Active(int ctype)
 {
-	return (STAT(CHALLENGE) & ctype);
+#ifdef SVQC
+	return !!(challenge & ctype);
+#else
+	return !!(STAT(CHALLENGE) & ctype);
+#endif
 }
 
 #ifdef SVQC
