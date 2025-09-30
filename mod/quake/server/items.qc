@@ -2777,6 +2777,8 @@ void BackpackTouch(entity this, entity toucher)
 
 	int newitem = this.weapon;
 	Weapon wep = REGISTRY_GET(Weapons, newitem);
+	if(Challenge_Active(CHALLENGE_BONK))
+		wep = WEP_Null;
 	string wepmsg = "";
 	if(wep != WEP_Null && !(STAT(WEAPONS, toucher) & wep.m_wepset) && this.netname && this.netname != "")
 		wepmsg = this.netname;
@@ -2822,9 +2824,12 @@ void BackpackTouch(entity this, entity toucher)
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
-	STAT(WEAPONS, toucher) |= STAT(WEAPONS, this);
-	if(wep != WEP_Null)
-		STAT(WEAPONS, toucher) |= wep.m_wepset;
+	if(!Challenge_Active(CHALLENGE_BONK))
+	{
+		STAT(WEAPONS, toucher) |= STAT(WEAPONS, this);
+		if(wep != WEP_Null)
+			STAT(WEAPONS, toucher) |= wep.m_wepset;
+	}
 	bound_other_ammo(toucher);
 
 	// continue as normal?

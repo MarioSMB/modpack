@@ -78,7 +78,7 @@ bool QCC_Allowed(entity this)
 		return false;
 	if(STAT(WORLDTYPE) == WORLDTYPE_DODGEBALL)
 		return false;
-	if(STAT(CHALLENGE) == CHALLENGE_BONK)
+	if(Challenge_Active(CHALLENGE_BONK))
 		return false;
 	return true;
 }
