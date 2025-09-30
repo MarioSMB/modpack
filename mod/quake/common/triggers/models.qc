@@ -150,12 +150,20 @@ spawnfunc(func_wall)
 	}	
 
 	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
-	if(this.spawnflags & SPAWN_WALL_NONSOLID)
+	if((this.spawnflags & SPAWN_WALL_NONSOLID) && world.model != "maps/arcanum2.bsp")
 		this.solid = SOLID_NOT;
 	else
 		this.solid = SOLID_BSP;
 
 	_setmodel(this, this.model);
+
+	// Arcanum Hack:  Invisible walls.
+	if((this.spawnflags & 1) && world.model == "maps/arcanum2.bsp")
+	{
+		this.model = "";
+		return;
+	}
+
 	//if(!this.touch)
 	if(world.model == "maps/ctsj2_hcm.bsp" && this.target && this.target != "")
 	{
