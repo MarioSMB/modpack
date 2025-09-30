@@ -517,6 +517,29 @@ void bogl_death3(entity this) { set_animofs(this, anim_boglord_death, 3, bogl_de
 void bogl_death2(entity this) { set_animofs(this, anim_boglord_death, 2, bogl_death3); }
 void bogl_death1(entity this) { set_animofs(this, anim_boglord_death, 1, bogl_death2); this.solid = SOLID_NOT; }
 
+void boglord_explode(entity this)
+{
+	T_RadiusDamage(this, this, this.dmg, DEATH_MONSTER_BOGLORD.m_id, this);
+	te_explosion(this.origin);
+	SpawnExplosion(EXPLODE_SMALL, this.origin, "weapons/r_exp3b.wav");
+	if(this.spawnflags & MON_BOGL_STRONG)
+	{
+		ThrowHead(this, this.enemy, "progs/h_boglordb.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blclaw1b.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blclaw2b.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blfoot1b.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blfoot2b.mdl", this.health);
+	}
+	else
+	{
+		ThrowHead(this, this.enemy, "progs/h_boglord.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blclaw1.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blclaw2.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blfoot1.mdl", this.health);
+		ThrowGib(this, this.enemy, "progs/gib_blfoot2.mdl", this.health);
+	}
+}
+
 void bogl_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	// Finish and remove all attachments
@@ -526,25 +549,10 @@ void bogl_die(entity this, entity inflictor, entity attacker, int deathtype)
 // check for gib
 	if(this.health < -60 || this.dmg_take > (this.max_health * 0.6))
 	{
-		T_RadiusDamage(this, this, this.dmg, DEATH_MONSTER_BOGLORD.m_id, this);
-		te_explosion(this.origin);
-		SpawnExplosion(EXPLODE_SMALL, this.origin, "weapons/r_exp3b.wav");
-		if(this.spawnflags & MON_BOGL_STRONG)
-		{
-			ThrowHead(this, inflictor, "progs/h_boglordb.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blclaw1b.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blclaw2b.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blfoot1b.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blfoot2b.mdl", this.health);
-		}
-		else
-		{
-			ThrowHead(this, inflictor, "progs/h_boglord.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blclaw1.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blclaw2.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blfoot1.mdl", this.health);
-			ThrowGib(this, inflictor, "progs/gib_blfoot2.mdl", this.health);
-		}
+		// delay by a frame to prevent recursive explosion crashes
+		setthink(this, boglord_explode);
+		this.nextthink = time;
+		this.enemy = inflictor; // for gib direction
 		return;
 	}
 
