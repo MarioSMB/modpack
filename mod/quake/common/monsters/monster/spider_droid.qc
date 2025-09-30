@@ -1,5 +1,7 @@
 #include "spider_droid.qh"
 
+#include "voreling.qh"
+
 #ifdef SVQC
 void spider_stand1(entity this) { set_anim(this, 0, spider_stand1); ai_stand(this); }
 
@@ -103,7 +105,10 @@ void spider_melee(entity this)
 */
 spawnfunc(monster_spider)
 {
-	monster_start(this, true, MON_SPIDER_DROID);
+	if(IsImpelMap())
+		monster_start(this, true, MON_SPIDER_DROID);
+	else
+		monster_start(this, true, MON_VORELING);
 }
 
 // alkaline
