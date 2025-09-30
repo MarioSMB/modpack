@@ -24,3 +24,13 @@ METHOD(Quad, m_tick, void(StatusEffects this, entity actor))
     SUPER(Quad).m_tick(this, actor);
 }
 #endif
+#ifdef CSQC
+METHOD(Quad, m_tick, void(StatusEffects this, entity actor))
+{
+    if(this.m_hidden)
+        return;
+
+    float currentTime = (autocvar_sbar_edit) ? 27 : bound(0, actor.statuseffect_time[this.m_id] - time, 99);
+    addPowerupItem(this.m_name, this.m_icon, this.m_color, currentTime, this.m_lifetime, (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT));
+}
+#endif

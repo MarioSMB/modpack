@@ -17,9 +17,9 @@ bool Challenge_Active(int ctype)
 }
 
 #ifdef SVQC
-void Challenges_DelayedInit(entity this)
+STATIC_INIT(Challenges)
 {
-	delete(this);
+	challenge = CHALLENGE_NONE;
 
 	if(deathmatch)
 		return;
@@ -27,22 +27,13 @@ void Challenges_DelayedInit(entity this)
 	if(world.worldtype == WORLDTYPE_SLIDE || world.worldtype == WORLDTYPE_SKATE || world.worldtype == WORLDTYPE_DODGEBALL)
 		return;
 
-	if(horde_ent)
+	// can't check for horde the classic way this early
+	if(find(NULL, classname, "horde_manager") || find(NULL, classname, "info_qonquer"))
 		return;
 
 	FOREACH_WORD(autocvar_sv_quake_challenge, true,
 	{
 		challenge |= Challenge_fromstring(it);
 	});
-}
-
-STATIC_INIT(Challenges)
-{
-	challenge = CHALLENGE_NONE;
-
-	// delay by a single frame to allow necessary entities to spawn in (namely horde)
-	entity temp = new_pure(challenges_delayedinit);
-	setthink(temp, Challenges_DelayedInit);
-	temp.nextthink = time;
 }
 #endif

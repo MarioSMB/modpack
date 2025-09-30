@@ -93,12 +93,36 @@ void QCC_ClearTransform(entity this)
 		this.armortype = this.transform_armortype;
 		this.armorvalue = this.transform_armorvalue;
 		armor_set_type(this);
+
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity))
+			{
+				Weapon wep = this.(weaponentity).transform_weapon;
+
+				if(wep && wep != WEP_Null && wep != this.(weaponentity).m_weapon && client_hasweapon(this, wep, weaponentity, true, false))
+					W_SwitchWeapon_Force(this, wep, weaponentity);
+				if(this.(weaponentity).transform_prevweapon != 0)
+					this.(weaponentity).cnt = this.(weaponentity).transform_prevweapon;
+			}
+		}
 	}
 	this.transform_prevhealth = 0;
 	this.transform_limited = 0;
 	this.transform_armortype = 0;
 	this.transform_armorvalue = 0;
 	this.m_transform = NULL;
+
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity))
+		{
+			this.(weaponentity).transform_weapon = WEP_Null;
+			this.(weaponentity).transform_prevweapon = 0;
+		}
+	}
 }
 
 void QCC_ClearWeapons(entity this)
@@ -212,6 +236,16 @@ void QCC_UpdatePlayer(entity this)
 			this.armortype = 0;
 			this.armorvalue = 0;
 			this.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+
+			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(this.(weaponentity))
+				{
+					this.(weaponentity).transform_weapon = this.(weaponentity).m_weapon;
+					this.(weaponentity).transform_prevweapon = this.(weaponentity).cnt;
+				}
+			}
 		}
 		champ = this.m_transform;
 	}
@@ -291,6 +325,16 @@ void champions_PlayerDies(entity this)
 	this.transform_health = 0;
 	this.transform_armortype = 0;
 	this.transform_armorvalue = 0;
+
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity))
+		{
+			this.(weaponentity).transform_weapon = WEP_Null;
+			this.(weaponentity).transform_prevweapon = 0;
+		}
+	}
 
 	if(this.m_champion && this.m_champion.m_clear)
 		this.m_champion.m_clear(this.m_champion, this);

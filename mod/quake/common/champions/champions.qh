@@ -9,6 +9,10 @@
 .float transform_armortype;
 .float transform_armorvalue;
 
+// weapon state saving
+.Weapon transform_weapon;
+.int transform_prevweapon;
+
 void QCC_FixClient(entity this);
 
 #ifdef GAMEQC
