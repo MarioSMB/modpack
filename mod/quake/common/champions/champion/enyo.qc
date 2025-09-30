@@ -103,7 +103,7 @@ float enyo_messagetime;
 float enyo_prevstatus;
 METHOD(Enyo, m_overlay, void(Champions this))
 {
-	if(intermission || STAT(HEALTH) == -666)
+	if(intermission || STAT(HEALTH) <= 0 || sb_showscores)
 		return;
 
 	float oldfont = drawfont;

@@ -120,7 +120,7 @@ METHOD(Valkyrie, m_drawface, bool(Champions this, vector pos, vector icon_size))
 
 METHOD(Valkyrie, m_overlay, void(Champions this))
 {
-	if(intermission || STAT(HEALTH) == -666 || !STAT(TRANSFORM_LIMITED))
+	if(intermission || STAT(HEALTH) <= 0 || !STAT(TRANSFORM_LIMITED) || sb_showscores)
 		return;
 
 	// NOTE: relies on enyo champion loading cvars

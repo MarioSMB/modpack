@@ -78,6 +78,8 @@ void HUD_Powerups()
 		return;
 	if(STAT(HEALTH) <= 0)
 		return;
+	if(intermission || sb_showscores)
+		return;
 
 	// Add items to linked list
 	resetPowerupItems();
