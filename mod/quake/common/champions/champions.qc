@@ -89,7 +89,7 @@ void QCC_ClearTransform(entity this)
 	if(this.m_transform)
 	{
 		if(this.transform_prevhealth)
-			this.health = this.transform_prevhealth;
+			this.health = max(1, rint(this.transform_prevhealth));
 		this.armortype = this.transform_armortype;
 		this.armorvalue = this.transform_armorvalue;
 		armor_set_type(this);
@@ -230,6 +230,8 @@ void QCC_UpdatePlayer(entity this)
 			{
 				this.transform_prevhealth = this.health;
 				this.health = this.transform_health;
+				if(Challenge_Active(CHALLENGE_ONEHP))
+					this.health = 1;
 			}
 			this.transform_armortype = this.armortype;
 			this.transform_armorvalue = this.armorvalue;
