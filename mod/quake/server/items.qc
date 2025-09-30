@@ -773,11 +773,11 @@ void weapon_touch(entity this, entity toucher)
 // if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
-	bool leave = (coop || Challenge_Active(CHALLENGE_BONK) || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
+	bool leave = (coop || deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 
 	// if we have the weapon already, try for replacements
 	Weapon newwep = REGISTRY_GET(Weapons, this.weapon);
-	if(leave && ((STAT(WEAPONS, toucher) & newwep.m_wepset) || Challenge_Active(CHALLENGE_BONK)) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset)))
+	if(Challenge_Active(CHALLENGE_BONK) || (leave && (STAT(WEAPONS, toucher) & newwep.m_wepset) && ((STAT(DUAL_WEAPONS, toucher) & newwep.m_wepset) || (newwep.spawnflags & WEP_FLAG_NODUAL) || (toucher.collected_weapons & newwep.m_wepset))))
 	{
 		if(newwep == WEP_HAMMER && this.hammer_skin && this.hammer_skin != toucher.(weaponentity).hammer_skin)
 			{ /* do nothing */ }
