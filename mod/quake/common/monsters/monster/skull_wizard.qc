@@ -839,6 +839,18 @@ bool SkullWizCheckAttack(entity this)
 /*QUAKED monster_skullwiz (0.5 0 1) (-16 -16 -24) (16 16 40)
 ======================================================================*/
 spawnfunc(monster_skullwiz) { monster_start(this, true, MON_SKULLWIZARD); }
+
+// drake
+spawnfunc(monster_necromancer) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_acolyte) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_sorcerer) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_warlock) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_fragwiz) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_sorceror) { monster_start(this, true, MON_SKULLWIZARD); }
+// drake/zerstorer (trogolodytes)
+spawnfunc(monster_nemesant) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_trogboss) { monster_start(this, true, MON_SKULLWIZARD); }
+spawnfunc(monster_troglodyte) { monster_start(this, true, MON_SKULLWIZARD); }
 #endif // SVQC
 
 #ifdef SVQC

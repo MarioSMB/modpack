@@ -244,6 +244,9 @@ void QCC_UpdatePlayer(entity this)
 				{
 					this.(weaponentity).transform_weapon = this.(weaponentity).m_weapon;
 					this.(weaponentity).transform_prevweapon = this.(weaponentity).cnt;
+
+					wep_set_anim(this.(weaponentity), 0, w_ready);
+					ATTACK_FINISHED(this, weaponentity) = time + 0.5;
 				}
 			}
 		}

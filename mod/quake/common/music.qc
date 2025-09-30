@@ -272,6 +272,26 @@ void Music_Process(entity this, string input)
 #ifdef MIDI_SUPPORT
 bool midi_copy(entity this, entity from);
 #endif
+bool music_copy(entity this, entity from)
+{
+#ifdef MIDI_SUPPORT
+	if(midi_copy(this, from))
+		return true;
+#endif
+
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(!from.(weaponentity).music_pos)
+		return false; // cheap escape
+	this.(weaponentity).music_pos = from.(weaponentity).music_pos;
+	this.(weaponentity).music_speed = from.(weaponentity).music_speed;
+	this.(weaponentity).music_nextnote = from.(weaponentity).music_nextnote;
+	this.(weaponentity).music_repeatstart = from.(weaponentity).music_repeatstart;
+	this.(weaponentity).music_repeatend = from.(weaponentity).music_repeatend;
+	this.(weaponentity).music_starttime = time;
+	strcpy(this.(weaponentity).music_song, from.(weaponentity).music_song);
+	return true;
+}
+
 void Music_Copy(entity this)
 {
 	.entity weaponentity = weaponentities[0]; // TODO?
@@ -284,21 +304,20 @@ void Music_Copy(entity this)
 	// copy the music of a nearby player
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
-#ifdef MIDI_SUPPORT
-		if(midi_copy(this, it))
-			break;
-#endif
+		if(music_copy(this, it))
+			break; // one song at a time thank you very much
+	});
+}
 
-		if(!it.(weaponentity).music_pos)
-			continue; // cheap escape
-		this.(weaponentity).music_pos = it.(weaponentity).music_pos;
-		this.(weaponentity).music_speed = it.(weaponentity).music_speed;
-		this.(weaponentity).music_nextnote = it.(weaponentity).music_nextnote;
-		this.(weaponentity).music_repeatstart = it.(weaponentity).music_repeatstart;
-		this.(weaponentity).music_repeatend = it.(weaponentity).music_repeatend;
-		this.(weaponentity).music_starttime = time;
-		strcpy(this.(weaponentity).music_song, it.(weaponentity).music_song);
-		break; // one song at a time thank you very much
+void Music_Conductor_Copy(entity this)
+{
+	.entity weaponentity = weaponentities[0]; // TODO?
+	if(this.(weaponentity).m_weapon != WEP_WAND)
+		return;
+
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
+	{
+		music_copy(it, this);
 	});
 }
 
@@ -796,10 +815,12 @@ bool sv_music_command(entity this, string cmd, float argc)
 				// if we're starting a new song, we probably don't want our old tracks set!
 				this.midi_playtrack = 0;
 				midi_process(this, midi_test);
+				Music_Conductor_Copy(this);
 				return true;
 			}
 #endif
 			Music_Process(this, mymusic);
+			Music_Conductor_Copy(this);
 			return true;
 		}
 	}

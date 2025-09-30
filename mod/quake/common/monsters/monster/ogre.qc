@@ -510,6 +510,11 @@ spawnfunc(monster_ogreb) { monster_start(this, true, MON_OGRE); }
 
 // ad
 spawnfunc(monster_hogre) { monster_start(this, true, MON_OGRE); }
+
+// drake
+spawnfunc(monster_archer) { monster_start(this, true, MON_OGRE); }
+spawnfunc(monster_archer_lord) { monster_start(this, true, MON_OGRE); }
+
 #endif // SVQC
 
 #ifdef SVQC

@@ -290,6 +290,12 @@ spawnfunc(monster_axegrunt) { monster_start(this, true, MON_AXEGRUNT); }
 
 // qdoom
 spawnfunc(monster_zombieman) { monster_start(this, true, MON_AXEGRUNT); }
+
+// drake
+spawnfunc(monster_thug) { monster_start(this, true, MON_AXEGRUNT); }
+spawnfunc(monster_army_axe) { monster_start(this, true, MON_AXEGRUNT); }
+spawnfunc(monster_axeman) { monster_start(this, true, MON_AXEGRUNT); }
+spawnfunc(monster_ax) { monster_start(this, true, MON_AXEGRUNT); }
 #endif // SVQC
 
 #ifdef SVQC

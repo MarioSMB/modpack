@@ -927,6 +927,10 @@ bool MinotaurCheckAttack(entity this)
 QUAKED monster_minotaur (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 ======================================================================*/
 spawnfunc(monster_minotaur) { monster_start(this, true, MON_MINOTAUR); }
+
+// drake
+spawnfunc(monster_yakman) { monster_start(this, true, MON_MINOTAUR); }
+spawnfunc(monster_shuffler) { monster_start(this, true, MON_MINOTAUR); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -990,3 +994,4 @@ METHOD(Minotaur, mr_setup, bool(Minotaur this, entity actor))
     return true;
 }
 #endif
+

@@ -312,6 +312,9 @@ spawnfunc(monster_army)
 
 // alkaline
 spawnfunc(monster_nailgrunt) { monster_start(this, true, MON_GRUNT); }
+
+// drake
+spawnfunc(monster_ranger) { monster_start(this, true, MON_GRUNT); }
 #endif // SVQC
 
 #ifdef SVQC

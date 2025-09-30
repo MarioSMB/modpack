@@ -263,6 +263,11 @@ spawnfunc(monster_tarbaby)
 	
 	monster_start(this, true, MON_SPAWN);
 }
+
+// drake
+spawnfunc(monster_vomit) { monster_start(this, true, MON_SPAWN); }
+spawnfunc(monster_vomitus) { monster_start(this, true, MON_SPAWN); }
+spawnfunc(monster_meatwad) { monster_start(this, true, MON_SPAWN); }
 #endif // SVQC
 
 #ifdef SVQC

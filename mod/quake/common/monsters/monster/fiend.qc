@@ -333,6 +333,9 @@ spawnfunc(monster_demon1)
 
 // qdoom
 spawnfunc(monster_pinky) { monster_start(this, true, MON_FIEND); }
+
+// drake
+spawnfunc(monster_cyberdemon) { monster_start(this, true, MON_FIEND); }
 #endif // SVQC
 
 #ifdef SVQC

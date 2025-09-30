@@ -546,6 +546,11 @@ spawnfunc(monster_polyp)
 	this.spawnflags |= SPAWNFLAG_NO_CONTENTS_DAMAGE;
 	monster_start(this, true, MON_GAUNT);
 }
+
+// drake
+spawnfunc(monster_imp_fire) { monster_start(this, true, MON_GAUNT); }
+spawnfunc(monster_imp_ice) { monster_start(this, true, MON_GAUNT); }
+spawnfunc(monster_imp_lord) { monster_start(this, true, MON_GAUNT); }
 #endif // SVQC
 
 #ifdef SVQC

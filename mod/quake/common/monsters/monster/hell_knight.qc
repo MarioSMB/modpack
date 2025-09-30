@@ -451,6 +451,9 @@ spawnfunc(monster_hell_knight)
 	}
 	monster_start(this, true, MON_HELL_KNIGHT);
 }
+
+// drake
+spawnfunc(monster_golem) { monster_start(this, true, MON_HELL_KNIGHT); }
 #endif // SVQC
 
 #ifdef SVQC
