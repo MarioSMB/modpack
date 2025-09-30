@@ -553,6 +553,7 @@ void bogl_die(entity this, entity inflictor, entity attacker, int deathtype)
 		setthink(this, boglord_explode);
 		this.nextthink = time;
 		this.enemy = inflictor; // for gib direction
+		this.solid = SOLID_NOT;
 		return;
 	}
 
