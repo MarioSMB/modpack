@@ -111,6 +111,7 @@ METHOD(Goat, m_drawplayer, void(Champions this, entity actor))
 		musicnote.scale = 0.75;
 		musicnote.effects = EF_FULLBRIGHT;
 		musicnote.draw = goat_music_draw;
+		musicnote.drawmask = MASK_NORMAL;
 		IL_PUSH(g_drawables, musicnote);
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.angles = '0 1 0' * actor.angles_y;
