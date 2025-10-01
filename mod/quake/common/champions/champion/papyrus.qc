@@ -142,17 +142,12 @@ METHOD(Papyrus, m_playerthink, void(Champions this, entity actor))
 	{
 		if(random() < 0.1)
 			SendPapyrusLine(actor, bound(1, ceil(random() * 5), 5));
-		entity selected = W_PickNearbyTarget(actor, actor, 700, true, false);
+		entity selected = (deathmatch) ? NULL : W_PickNearbyTarget(actor, actor, 700, true, false);
 		if(selected)
-		{
 			Papyrus_ChargeLaser(actor, selected);
-			STAT(QCC_ABILITYTIME, actor) = time + 3;
-		}
 		else
-		{
 			Papyrus_ThrowBone(actor);
-			STAT(QCC_ABILITYTIME, actor) = time + 1;
-		}
+		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	}
 }
 
