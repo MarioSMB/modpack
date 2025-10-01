@@ -201,6 +201,7 @@ void zer_pain(entity this, entity attacker, float damage, int deathtype)
 		return;
 	if(this.pain_finished > time)
 		return;
+	this.pain_finished = time + 1;
 
 	_sound(this, CH_VOICE, "zer/pain1.wav", 1, ATTN_NORM);
 
@@ -209,7 +210,6 @@ void zer_pain(entity this, entity attacker, float damage, int deathtype)
 	else
 		zer_paina1(this);
 
-	this.pain_finished = time + 1;
 }
 
 void zer_gib(entity this, entity inflictor)

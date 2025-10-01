@@ -190,20 +190,24 @@ void orb_pain(entity this, entity attacker, float damage, int deathtype)
 	else
 		_sound(this, CH_VOICE, "orb/pain3.wav", 1, ATTN_NORM);
 
+	// NOTE: delays are needed to prevent an infinite loop as norb steps backward!
 	if(r < 0.4)
 	{
-		orb_bkrun1(this);
 		this.pain_finished = time + 1;
+		setthink(this, orb_bkrun1);
+		this.nextthink = time;
 	}
 	else if(r < 0.7)
 	{
-		orb_bckrun1(this);
 		this.pain_finished = time + 1;
+		setthink(this, orb_bckrun1);
+		this.nextthink = time;
 	}
 	else
 	{
-		orb_roll1(this);
 		this.pain_finished = time + 1;
+		setthink(this, orb_roll1);
+		this.nextthink = time;
 	}
 }
 

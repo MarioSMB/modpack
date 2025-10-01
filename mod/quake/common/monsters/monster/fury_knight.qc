@@ -851,8 +851,8 @@ void dfury_pain(entity this, entity attacker, float damage, int deathtype)
 		dfury_painA1(this);
 	else if(random() < 0.5)
 	{
-		dfury_painD1(this);
 		this.pain_finished = time + 2;
+		dfury_painD1(this);
 	}
 	else
 	{

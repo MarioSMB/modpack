@@ -211,18 +211,18 @@ void floyd_pain(entity this, entity attacker, float damage, int deathtype)
 
 	if(d > 90 && d < 270) //lurch forward if hit in the back
 	{
-		floyd_painc1(this);
 		this.pain_finished = time + 2;
+		floyd_painc1(this);
 	}
 	else if(random() < 0.4)
 	{
-		floyd_paina1(this);
 		this.pain_finished = time + 1;
+		floyd_paina1(this);
 	}
 	else
 	{
-		floyd_painb1(this);
 		this.pain_finished = time + 2;
+		floyd_painb1(this);
 	}
 	
 }

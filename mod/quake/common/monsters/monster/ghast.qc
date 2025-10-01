@@ -313,8 +313,8 @@ void Ghast_Pain(entity this, entity attacker, float damage, int deathtype)
 	sound(this, CH_VOICE, SND_MON_GHAST_PAIN_RANDOM(), 1, ATTN_NORM);
 
 	this.colormod = '1 0.9 0.9';
-	ghast_pain1(this);
 	this.pain_finished = time + 1;
+	ghast_pain1(this);
 }
 
 void Ghast_Missile(entity this)

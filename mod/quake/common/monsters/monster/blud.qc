@@ -380,8 +380,8 @@ void blud_pain(entity this, entity attacker, float damage, int deathtype)
 		_sound(this, CHAN_AUTO, "monsters/blud/blhurt3.wav", 1, ATTN_NORM);
 	else if(random() < 0.6)
 		 _sound(this, CHAN_AUTO, "monsters/blud/blhurt1.wav", 1, ATTN_NORM);
-	blud_pain1(this);
 	this.pain_finished = time + 2;
+	blud_pain1(this);
 }
 
 void gib_blud(entity this)

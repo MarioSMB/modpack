@@ -343,8 +343,8 @@ void Wiz_Pain(entity this, entity attacker, float damage, int deathtype)
 		return;		// didn't flinch
 	_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 
-	wiz_pain1(this);
 	this.pain_finished = time + 1;
+	wiz_pain1(this);
 }
 
 void Wiz_Missile(entity this)

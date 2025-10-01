@@ -511,14 +511,14 @@ void edie_pain(entity this, entity attacker, float damage, int deathtype)
 		if(random() < 0.4)
 		{
 			_sound(this, CH_VOICE, "edie/pain.wav", 1, ATTN_NORM);
-			edie_pain1(this);
 			this.pain_finished = time + 3 + random() * 2;
+			edie_pain1(this);
 		}
 		else
 		{
 			_sound(this, CH_VOICE, "edie/painshrt.wav", 1, ATTN_NORM);
-			edie_painb1(this);
 			this.pain_finished = time + 1 + random() * 2;
+			edie_painb1(this);
 		}
 	}
 	else
@@ -526,14 +526,14 @@ void edie_pain(entity this, entity attacker, float damage, int deathtype)
 		if(random() < 0.1)
 		{
 			_sound(this, CH_VOICE, "edie/pain.wav", 1, ATTN_NORM);
-			edie_pain1(this);
 			this.pain_finished = time + 3 + random() * 2;
+			edie_pain1(this);
 		}
 		else
 		{
 			_sound(this, CH_VOICE, "edie/painshrt.wav", 1, ATTN_NORM);
-			edie_painb1(this);
 			this.pain_finished = time + 1 + random() * 2;
+			edie_painb1(this);
 		}	
 	}
 }

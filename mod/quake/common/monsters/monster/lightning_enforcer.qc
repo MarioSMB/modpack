@@ -138,26 +138,26 @@ void lenf_pain(entity this, entity attacker, float damage, int deathtype)
 	if(r < 0.2)
 	{
 		_sound(this, CHAN_BODY, "monsters/lenforce/lepain1.wav", 1, ATTN_NORM);
-		lenf_paina1(this);
 		this.pain_finished = time + 1;
+		lenf_paina1(this);
 	}
 	else if(r < 0.4)
 	{
 		_sound(this, CHAN_BODY, "monsters/lenforce/lepain2.wav", 1, ATTN_NORM);
-		lenf_painb1(this);
 		this.pain_finished = time + 1;
+		lenf_painb1(this);
 	}
 	else if(r < 0.7)
 	{
 		_sound(this, CHAN_BODY, "monsters/lenforce/lepain3.wav", 1, ATTN_NORM);
-		lenf_painc1(this);
 		this.pain_finished = time + 1;
+		lenf_painc1(this);
 	}
 	else
 	{
 		_sound(this, CHAN_BODY, "monsters/lenforce/lepain4.wav", 1, ATTN_NORM);
-		lenf_paind1(this);
 		this.pain_finished = time + 2;
+		lenf_paind1(this);
 	}
 }
 

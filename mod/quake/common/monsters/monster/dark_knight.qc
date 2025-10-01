@@ -203,13 +203,13 @@ void dknight_pain(entity this, entity attacker, float damage, int deathtype)
 		_sound(this, CH_VOICE, "monsters/dknight/dkhurt2.wav", 1, ATTN_NORM);
 	if(r < 0.85)
 	{
-		dknight_pain1(this);
 		this.pain_finished = time + 1;
+		dknight_pain1(this);
 	}
 	else
 	{
-		dknight_painb1(this);
 		this.pain_finished = time + 1;
+		dknight_painb1(this);
 	}
 }
 

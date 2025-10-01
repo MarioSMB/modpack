@@ -1460,7 +1460,8 @@ void Sbar_Draw()
 					if(mana)
 						mana /= 100;
 
-					drawpic_aspect(ammo_pos, "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					// NOTE: not using aspect here - we want it to stretch with the mana bar!
+					drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 					HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, '0 1 1', 0.6, DRAWFLAG_NORMAL);
 				}
 				else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)

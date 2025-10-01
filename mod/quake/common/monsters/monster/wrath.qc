@@ -129,13 +129,13 @@ void wrath_pain(entity this, entity attacker, float damage, int deathtype)
 		this.pain_finished = time + 0.5;
 		return;
 	}
+	this.pain_finished = time + 3;
 			
 	if(r < 0.07)
 		wrath_pn_a01(this);
 	else 
 		wrath_pn_b01(this);
 
-	this.pain_finished = time + 3;
 	_sound(this, CH_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
 }
 

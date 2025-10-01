@@ -251,8 +251,8 @@ void vex_pain(entity this, entity attacker, float damage, int deathtype)
 		_sound(this, CH_VOICE, "vex/hurt1.wav", 1, ATTN_NORM);
 	else
 		_sound(this, CH_VOICE, "vex/hurt2.wav", 1, ATTN_NORM);
-	vex_pain1(this);
 	this.pain_finished = time + 0.2;
+	vex_pain1(this);
 }
 
 spawnfunc(monster_vex) { monster_start(this, true, MON_VEX); }

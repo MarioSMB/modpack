@@ -188,8 +188,8 @@ void axe_pain(entity this, entity attacker, float damage, int deathtype)
 
 	_sound(this, CH_VOICE, "axegrunt/axgpain.wav", 1, ATTN_NORM);
 	this.state = 3; // pain state
-	axe_pain1(this);
 	this.pain_finished = time + 0.75;
+	axe_pain1(this);
 }
 
 //===========================================================================

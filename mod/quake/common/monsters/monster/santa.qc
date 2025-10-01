@@ -308,8 +308,8 @@ void santa_pain(entity this, entity attacker, float damage, int deathtype)
 	}
 	else
 	{
-		santa_painB1(this);
 		this.pain_finished = time + 2;
+		santa_painB1(this);
 	}
 }
 

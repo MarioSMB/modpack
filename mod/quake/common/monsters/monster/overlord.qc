@@ -353,12 +353,12 @@ void overlord_pain(entity this, entity attacker, float damage, int deathtype)
 	if(r > 0.2)
 		return;
 			
+	this.pain_finished = time + 2;
 	if(r < 0.15)
 		overlord_pn_a01(this);
 	else 
 		overlord_pn_b01(this);
 
-	this.pain_finished = time + 2;
 	_sound(this, CH_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
 }
 

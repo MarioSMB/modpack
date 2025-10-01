@@ -354,7 +354,7 @@ void wither_die(entity this, entity inflictor, entity attacker, int deathtype)
 	wither_death1(this);
 }
 
-void Wither_Pain(entity this, entity attacker, float damage, int deathtype)
+void wither_pain(entity this, entity attacker, float damage, int deathtype)
 {
 	if(this.pain_finished > time)
 		return;
@@ -363,8 +363,8 @@ void Wither_Pain(entity this, entity attacker, float damage, int deathtype)
 	sound(this, CH_VOICE, SND_MON_WITHER_PAIN_RANDOM(), 1, ATTN_NORM);
 
 	this.colormod = '1 0.9 0.9';
-	wither_pain1(this);
 	this.pain_finished = time + 1;
+	wither_pain1(this);
 }
 
 void Wither_Missile(entity this)
@@ -407,7 +407,7 @@ METHOD(Wither, mr_setup, bool(Wither this, entity actor))
 	actor.th_walk = wither_walk1;
 	actor.th_run = wither_run1;
 	actor.th_missile = Wither_Missile;
-	actor.th_pain = Wither_Pain;
+	actor.th_pain = wither_pain;
 	actor.th_die = wither_die;
 
 	actor.resist_shells = actor.resist_cells = 0;

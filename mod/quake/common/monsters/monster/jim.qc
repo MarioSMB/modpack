@@ -617,6 +617,7 @@ void jim_pain(entity this, entity attacker, float damage, int deathtype)
 	else
 		_sound(this, CH_VOICE, "jim/pain2.wav", 1, ATTN_NORM);
 	this.inpain = 0;
+	this.pain_finished = time;
 	
 	// Work out which direction the damage came from (enemy)
 	if(infront(this, attacker))

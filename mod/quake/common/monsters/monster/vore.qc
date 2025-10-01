@@ -94,8 +94,8 @@ void shalrath_pain(entity this, entity attacker, float damage, int deathtype)
 		return;
 
 	_sound(this, CH_VOICE, "shalrath/pain.wav", 1, ATTN_NORM);
-	shal_pain1(this);
 	this.pain_finished = time + 3;
+	shal_pain1(this);
 }
 
 void shalrath_die(entity this, entity inflictor, entity attacker, int deathtype)

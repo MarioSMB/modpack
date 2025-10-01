@@ -148,13 +148,13 @@ void knight_pain(entity this, entity attacker, float damage, int deathtype)
 		_sound(this, CH_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
 	if(r < 0.85)
 	{
-		knight_pain1(this);
 		this.pain_finished = time + 1;
+		knight_pain1(this);
 	}
 	else
 	{
-		knight_painb1(this);
 		this.pain_finished = time + 1;
+		knight_painb1(this);
 	}
 	
 }

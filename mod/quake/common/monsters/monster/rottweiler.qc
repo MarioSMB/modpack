@@ -211,13 +211,13 @@ void dog_pain(entity this, entity attacker, float damage, int deathtype)
 
 	if(attacker || random() > 0.5)
 	{
-		dog_pain1(this);
 		this.pain_finished = time + 1;
+		dog_pain1(this);
 	}
 	else
 	{
-		dog_painb1(this);
 		this.pain_finished = time + 1;
+		dog_painb1(this);
 	}
 }
 

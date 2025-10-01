@@ -192,13 +192,13 @@ void bend_pain(entity this, entity attacker, float damage, int deathtype)
 	
 	if(r < 0.5)
 	{
-		bend_pain1(this);
 		this.pain_finished = time + 1;
+		bend_pain1(this);
 	}
 	else	
 	{
-		bend_paina1(this);
 		this.pain_finished = time + 1;
+		bend_paina1(this);
 	}
 }
 

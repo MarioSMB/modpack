@@ -367,8 +367,8 @@ void hknight_pain(entity this, entity attacker, float damage, int deathtype)
 
 	if(time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
-		hknight_pain1(this);
 		this.pain_finished = time + 1;
+		hknight_pain1(this);
 		return;
 	}
 

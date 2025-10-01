@@ -286,14 +286,14 @@ void Gren_Pain(entity this, entity attacker, float damage, int deathtype)
 	if(random() > 0.5)
 	{
 		_sound(this, CHAN_BODY, "monsters/grenling/grpain1.wav", 1, ATTN_NORM);
-		gren_pain1(this);
 		this.pain_finished = time + 0.2;
+		gren_pain1(this);
 	}
 	else
 	{
 		_sound(this, CHAN_BODY, "monsters/grenling/grpain2.wav", 1, ATTN_NORM);
-		gren_painb1(this);
 		this.pain_finished = time + 0.4;
+		gren_painb1(this);
 	}
 }
 

@@ -740,8 +740,8 @@ void eidolon_pain(entity this, entity attacker, float damage, int deathtype)
 		eidolon_painA1(this);
 	else
 	{
-		eidolon_painB1(this);
 		this.pain_finished = time + 2;
+		eidolon_painB1(this);
 	}
 }
 

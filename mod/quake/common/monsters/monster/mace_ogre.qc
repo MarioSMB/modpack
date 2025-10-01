@@ -246,18 +246,18 @@ void hogremac_pain(entity this, entity attacker, float damage, int deathtype)
 	
 	if(r < 0.33)
 	{
-		hogremac_painA1(this);
 		this.pain_finished = time + 1;
+		hogremac_painA1(this);
 	}
 	else if(r < 0.66)
 	{
-		hogremac_painB1(this);
 		this.pain_finished = time + 2;
+		hogremac_painB1(this);
 	}
 	else
 	{
-		hogremac_painC1(this);
 		this.pain_finished = time + 1.7;
+		hogremac_painC1(this);
 	}
 }
 

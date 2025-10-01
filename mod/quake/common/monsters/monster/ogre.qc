@@ -315,28 +315,28 @@ void ogre_pain(entity this, entity attacker, float damage, int deathtype)
 	
 	if(r < 0.25)
 	{
-		ogre_pain1(this);
 		this.pain_finished = time + 1;
+		ogre_pain1(this);
 	}
 	else if(r < 0.5)
 	{
-		ogre_painb1(this);
 		this.pain_finished = time + 1;
+		ogre_painb1(this);
 	}
 	else if(r < 0.75)
 	{
-		ogre_painc1(this);
 		this.pain_finished = time + 1;
+		ogre_painc1(this);
 	}
 	else if(r < 0.88)
 	{
-		ogre_paind1(this);
 		this.pain_finished = time + 2;
+		ogre_paind1(this);
 	}
 	else
 	{
-		ogre_paine1(this);
 		this.pain_finished = time + 2;
+		ogre_paine1(this);
 	}
 }
 
