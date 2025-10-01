@@ -31,36 +31,6 @@ METHOD(Goat, m_cannon_land, bool(Champions this, entity actor))
 #endif
 
 #ifdef SVQC
-METHOD(Goat, m_playerthink, void(Champions this, entity actor))
-{
-	if(random() < actor.cvar_cl_quake_goatstuff && vdist(actor.velocity, >, 250))
-	{
-		entity musicnote = new(musicnote);
-		makevectors(actor.v_angle);
-		setorigin(musicnote, actor.origin + v_forward * -45);
-		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
-		musicnote.scale = 0.75;
-		musicnote.effects = EF_FULLBRIGHT;
-		setsize(musicnote, '0 0 0', '0 0 0');
-		musicnote.angles = '0 1 0' * actor.angles_y;
-		if(time > actor.goat_brown_time && random() < 0.025)
-		{
-			musicnote.colormod = '0.5 0.25 0';
-			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
-			actor.goat_brown_time = time + 3;
-			set_movetype(musicnote, MOVETYPE_BOUNCE);
-			SUB_SetFade(musicnote, time + 0.1, 3);
-		}
-		else
-		{
-			musicnote.colormod = '0 1 0';
-			set_movetype(musicnote, MOVETYPE_FLY);
-			SUB_SetFade(musicnote, time + 0.1, 0.5);
-		}
-		musicnote.velocity = '0 0 150' + v_forward * -100;
-	}
-}
-
 METHOD(Goat, m_touch, void(Champions this, entity actor, entity toucher))
 {
 	if(StatusEffects_active(STATUSEFFECT_PowerShield, actor))
@@ -123,3 +93,42 @@ METHOD(Goat, m_physics, bool(Champions this, entity actor, float dt))
 	}
 	return false;
 }
+
+#ifdef CSQC
+void goat_music_draw(entity this)
+{
+	Movetype_Physics_NoMatchServer(this);
+}
+
+METHOD(Goat, m_drawplayer, void(Champions this, entity actor))
+{
+	if(random() < STAT(GOATSTUFF) && vdist(actor.velocity, >, 250))
+	{
+		entity musicnote = new(musicnote);
+		makevectors(actor.v_angle);
+		setorigin(musicnote, actor.origin + v_forward * -45);
+		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		musicnote.scale = 0.75;
+		musicnote.effects = EF_FULLBRIGHT;
+		musicnote.draw = goat_music_draw;
+		IL_PUSH(g_drawables, musicnote);
+		setsize(musicnote, '0 0 0', '0 0 0');
+		musicnote.angles = '0 1 0' * actor.angles_y;
+		if(time > actor.goat_brown_time && random() < 0.025)
+		{
+			musicnote.colormod = '0.5 0.25 0';
+			_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
+			actor.goat_brown_time = time + 3;
+			set_movetype(musicnote, MOVETYPE_BOUNCE);
+			SUB_SetFade(musicnote, time + 0.1, 3);
+		}
+		else
+		{
+			musicnote.colormod = '0 1 0';
+			set_movetype(musicnote, MOVETYPE_FLY);
+			SUB_SetFade(musicnote, time + 0.1, 0.5);
+		}
+		musicnote.velocity = '0 0 150' + v_forward * -100;
+	}
+}
+#endif

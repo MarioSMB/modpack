@@ -48,7 +48,6 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 	ConsoleCommand_macro_init();
 
 	registercvar("cl_quake_spectate", "0");
-	registercvar("cl_quake_goatstuff", "0.3");
 	registercvar("cl_quake_donotdisturb", "0");
 }
 

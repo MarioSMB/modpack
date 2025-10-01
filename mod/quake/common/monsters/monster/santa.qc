@@ -59,6 +59,8 @@ void santa_trigger(entity this, entity actor, entity trigger)
 		this.alpha = 1;
 	setthink(this, MonsterFade2);
 	this.nextthink = time + 2 + random();
+	settouch(this, func_null);
+	this.th_pain = func_null;
 
 	if(!(this.flags & FL_CLONE))
 		monsters_killed += 1;
@@ -68,6 +70,7 @@ void santa_freetouch(entity this, entity toucher)
 {
 	settouch(this, func_null);
 	this.use = func_null;
+	this.th_pain = func_null;
 	
 	// "My dear boy, you saved me!"
 	_sound(this, CH_WEAPON_SINGLE, "xmas/santa/good_saved.wav", 1, ATTN_NORM);

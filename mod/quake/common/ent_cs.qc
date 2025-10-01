@@ -1,5 +1,7 @@
 #include "ent_cs.qh"
 
+#include "champions/_mod.qh"
+
 REGISTRY(EntCSProps, BITS(16) - 1)
 REGISTER_REGISTRY(EntCSProps)
 REGISTRY_SORT(EntCSProps)
@@ -26,6 +28,21 @@ STATIC_INIT(EntCSProps_setglobalids)
 void entcs_force_origin(entity player)
 {
 	player.entcs.m_forceupdate = BIT(ENTCS_PROP_ORIGIN_id);
+}
+#endif
+
+#ifdef CSQC
+// hack needed as we offset champion IDs to allow 0 to mean "no champion"
+// TODO: we don't actually need to do this...
+entity Champions_from_id(int champid)
+{
+	entity champ = NULL;
+	FOREACH(Champion, it.m_id == champid,
+	{
+		champ = it;
+		break;
+	});
+	return champ;
 }
 #endif
 
@@ -130,6 +147,10 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
 	{ ent.sv_solid = ReadByte(); })
+
+ENTCS_PROP(CHAMPION, true, m_champion, m_champion, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.m_champion.m_id); },
+	{ ent.m_champion = Champions_from_id(ReadByte()); })
 
 #ifdef SVQC
 

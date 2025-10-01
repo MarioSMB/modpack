@@ -108,7 +108,6 @@ ENDCLASS(Keyleth)
 REGISTER_CHAMPION(Keyleth, NEW(Keyleth));
 
 #ifdef SVQC
-.float keyleth_particletime;
 .bool keyleth_cannon;
 
 .float keyleth_healing;

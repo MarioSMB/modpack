@@ -306,3 +306,8 @@ REGISTER_STAT(INSTAGIB_POGO, BOOL, autocvar_sv_quake_instagib_pogostick)
 #include "challenges.qh"
 #endif
 REGISTER_STAT(CHALLENGE, INT, challenge)
+
+#ifdef SVQC
+float autocvar_sv_quake_goatstuff = 0.3;
+#endif
+REGISTER_STAT(GOATSTUFF, FLOAT, autocvar_sv_quake_goatstuff)

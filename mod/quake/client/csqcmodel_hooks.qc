@@ -6,6 +6,9 @@
 #include "../common/effects/all.qh"
 #include "../common/physics.qh"
 #include "../common/sounds/all.qh"
+#include "../common/ent_cs.qh"
+// TODO: this is order dependent!
+#include "../common/champions/_mod.qh"
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -187,6 +190,14 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		this.drawmask = MASK_NORMAL;
 
 	CSQCModel_Effects_Apply(this);
+
+	if(this.entnum >= 1 && this.entnum <= maxclients)
+	{
+		entity entcs = entcs_receiver(this.entnum - 1);
+		Champions champ = entcs.m_champion;
+		if(champ && champ.m_drawplayer)
+			champ.m_drawplayer(champ, this);
+	}
 }
 
 void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)

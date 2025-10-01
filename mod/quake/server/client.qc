@@ -2705,6 +2705,11 @@ void ClientDisconnect(entity this)
 	// yoder oct13, horde fix for dc-ing players
 	this.health = 0;
 
+	FOREACH_CLIENT(it != this && it.clientcamera == this,
+	{
+		it.clientcamera = it;
+	});
+
 	// let everyone else know
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname, this.frags);
 	if(autocvar_sv_eventlog)

@@ -136,6 +136,7 @@ CLASS(Champions, Object)
 #ifdef CSQC
     METHOD(Champions, m_overlay, void(Champions this)) { };
     METHOD(Champions, m_drawface, bool(Champions this, vector pos, vector icon_size)) { return false; };
+    METHOD(Champions, m_drawplayer, void(Champions this, entity actor)) { };
 #endif
 ENDCLASS(Champions)
 

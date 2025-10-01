@@ -5,12 +5,6 @@
 #ifdef SVQC
 METHOD(Keyleth, m_playerthink, void(Champions this, entity actor))
 {
-	if(time > actor.keyleth_particletime)
-	{
-		actor.keyleth_particletime = time + 0.25;
-		Send_Effect(EFFECT_QCC_HEALING, actor.origin + actor.view_ofs + randomvec() * 12, '0 0 0', 1);
-	}
-
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		_sound(actor, CH_PLAYER_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
@@ -46,5 +40,14 @@ METHOD(Keyleth, m_cannon_land, bool(Champions this, entity actor))
 	stopsound(actor, CH_TRIGGER_SINGLE);
 	actor.keyleth_cannon = false;
 	return false;
+}
+#endif
+
+#ifdef CSQC
+METHOD(Keyleth, m_drawplayer, void(Champions this, entity actor))
+{
+	if(actor.csqcmodel_isdead)
+		return;
+	boxparticles(particleeffectnum(EFFECT_QCC_HEALING), actor, actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), 0);
 }
 #endif
