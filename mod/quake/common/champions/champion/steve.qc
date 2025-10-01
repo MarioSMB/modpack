@@ -54,11 +54,20 @@ void steve_block_die(entity this, entity inflictor, entity attacker, int deathty
 
 	if(this.skin == 3 && this.realowner)
 	{
-		entity mon = horn_spawnmonster(oldorg, this.realowner, MON_GOATLING);
+		RandomSelection_Init();
+		FOREACH(Monsters, it != MON_Null && (it.spawnflags & MON_FLAG_BLOCKY) && !(it.spawnflags & MONSTER_TYPE_BOSS),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		RandomSelection_AddEnt(MON_GOATLING, 1, 1);
+
+		entity mon = horn_spawnmonster(oldorg, this.realowner, RandomSelection_chosen_ent);
 		if(!mon)
 			return; // dunno how but just incase!
 		mon.angles_y += random() * 359;
-		mon.health = 100; // slight buffer since their health ticks down fast
+		mon.health = max(mon.health, 100); // slight buffer since their health ticks down fast
+		if(Challenge_Active(CHALLENGE_ONEHP))
+			mon.health = 1;
 		mon.max_health = mon.health;
 		SpawnChunk(mon.origin, oldorg * 400, 0, 10);
 	}
@@ -91,7 +100,7 @@ void Steve_PlaceBlock(entity this)
 	block.th_die = steve_block_die;
 	block.candrag = true;
 	block.skin = (random() <= 0.5) ? 0 : 1;
-	if(random() < 0.1)
+	if(random() < 0.2)
 	{
 		if(random() <= 0.5)
 			block.skin = 2;
@@ -118,7 +127,7 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		int blocklimit = 5;
+		int blocklimit = autocvar_sv_quake_steve_blocklimit;
 		int blockcount = 0;
 		if(autocvar_sv_cheats || actor.maycheat)
 			blocklimit = 100;

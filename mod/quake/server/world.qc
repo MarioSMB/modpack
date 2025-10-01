@@ -2311,7 +2311,7 @@ void Physics_Frame()
 			continue;
 
 		// TODO: better location for this hack
-		if(IS_MONSTER(it) && (it.charmed || it.category == CATEGORY_MONSTER) && it.health > 0 && time > it.charmed_healthcheck)
+		if(IS_MONSTER(it) && (it.charmed || it.category == CATEGORY_MONSTER) && it.health > 0 && time > it.charmed_healthcheck && !Challenge_Active(CHALLENGE_ONEHP))
 		{
 			float hitamount = 1;
 			float hitdelay = 0.25;
