@@ -49,6 +49,7 @@ void steve_block_break(entity this)
 	setthink(this, SUB_Remove);
 	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
+	this.cnt = 1;
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -146,6 +147,7 @@ METHOD(Steve, m_clear, void(Steve this, entity actor))
 	{
 		setthink(it, steve_block_break);
 		it.nextthink = time + (1 * random());
+		it.cnt = 1; // prevent further breakage
 	});
 }
 
@@ -157,7 +159,7 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 		int blockcount = 0;
 		if(autocvar_sv_cheats || actor.maycheat)
 			blocklimit = 100;
-		IL_EACH(g_blocks, it.realowner == actor,
+		IL_EACH(g_blocks, it.realowner == actor && !it.cnt,
 		{
 			++blockcount;
 		});
@@ -165,7 +167,7 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 		{
 			entity chosen = NULL;
 			float chosen_count = 0;
-			IL_EACH(g_blocks, it.realowner == actor,
+			IL_EACH(g_blocks, it.realowner == actor && !it.cnt,
 			{
 				float mycount = it.count - time;
 				if(!chosen || mycount <= chosen_count)
@@ -179,6 +181,7 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 			{
 				setthink(chosen, steve_block_break);
 				chosen.nextthink = time + (1 * random());
+				chosen.cnt = 1; // marked for doom
 			}
 		}
 

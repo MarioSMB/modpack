@@ -75,6 +75,7 @@ PRECACHE(Steve)
 "Press %ABILITY% to place blocks\n" \
 "Hold Jump to bunnyhop\n" \
 "Takes 500% more fall damage\n" \
+"Armor grants more resistance\n" \
 "15% reduced movement speed"
 #endif
 CLASS(Steve, Champions)
