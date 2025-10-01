@@ -1,5 +1,25 @@
 #include "steve.qh"
 
+// enable to mimic edgefriction for steve
+#if 0
+METHOD(Steve, m_friction, float(Champions this, entity actor))
+{
+	float speed = vlen(actor.velocity);
+	vector start, stop;
+	start.x = stop.x = actor.origin_x + actor.velocity_x / speed * 4;
+	start.y = stop.y = actor.origin_y + actor.velocity_y / speed * 4;
+	start.z = actor.origin_z + actor.mins_z;
+	stop.z = start.z - 34;
+
+	traceline(start, stop, MOVE_NOMONSTERS, actor);
+
+	if(trace_fraction == 1.0)
+		return 10;
+	else
+		return 1;
+}
+#endif
+
 #ifdef SVQC
 METHOD(Steve, m_activate, void(Steve this, entity actor))
 {
@@ -142,7 +162,25 @@ METHOD(Steve, m_playerthink, void(Steve this, entity actor))
 			++blockcount;
 		});
 		if(blockcount >= blocklimit)
-			return;
+		{
+			entity chosen = NULL;
+			float chosen_count = 0;
+			IL_EACH(g_blocks, it.realowner == actor,
+			{
+				float mycount = it.count - time;
+				if(!chosen || mycount <= chosen_count)
+				{
+					chosen = it;
+					chosen_count = mycount;
+				}
+			});
+
+			if(chosen)
+			{
+				setthink(chosen, steve_block_break);
+				chosen.nextthink = time + (1 * random());
+			}
+		}
 
 		Steve_PlaceBlock(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 0.33;
