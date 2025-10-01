@@ -351,6 +351,7 @@ void midi_reset(entity this)
 		this.midi_buffersize[track] = 0;
 		this.midi_pos[track] = 0;
 		this.midi_nexttime[track] = 0;
+		this.midi_volume[track] = 0;
 	}
 	// TODO: should we reset their selected tracks here?
 	//this.midi_playtrack = 0;
