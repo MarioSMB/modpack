@@ -105,7 +105,7 @@ METHOD(Goat, m_drawplayer, void(Champions this, entity actor))
 	if(random() < STAT(GOATSTUFF) && vdist(actor.velocity, >, 250))
 	{
 		entity musicnote = new(musicnote);
-		makevectors(actor.v_angle);
+		makevectors(actor.angles);
 		setorigin(musicnote, actor.origin + v_forward * -45);
 		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.scale = 0.75;
