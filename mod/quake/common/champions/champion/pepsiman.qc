@@ -23,7 +23,8 @@ void can_think(entity this)
 			continue;
 		if(!boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
 			continue;
-		T_Damage(it, this, this.owner, 60, DEATH_CRUSH.m_id);
+		float damage = (IS_PLAYER(it) ? 30 : 60);
+		T_Damage(it, this, this.owner, damage, DEATH_CRUSH.m_id);
 	});
 }
 

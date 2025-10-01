@@ -73,16 +73,9 @@ PRECACHE(Katria)
 #endif
 }
 #endif
-#ifdef CSQC
-#define KATRIA_STATS \
-"20% increased movement speed\n" \
-"50% faster health regeneration"
-#endif
 CLASS(Katria, Champions)
     ATTRIB(Katria, netname, string, "katria");
     ATTRIB(Katria, m_name, string, "Katria");
-    ATTRIB(Katria, qcc_movespeed, float, 1.20);
-    ATTRIB(Katria, qcc_health_regen_rate, float, 0.5);
 #ifdef GAMEQC
     ATTRIB(Katria, m_model, Model, MDL_Katria);
     ATTRIB(Katria, m_model_head, Model, MDL_Katria_Head);
@@ -95,7 +88,7 @@ CLASS(Katria, Champions)
     ATTRIB(Katria, m_faceprefix, string, "gfx/quake/katria_");
 #endif
 #ifdef CSQC
-    ATTRIB(Katria, message, string, KATRIA_STATS);
+    ATTRIB(Katria, message, string, "No additional bonus stats");
 #endif
 ENDCLASS(Katria)
 REGISTER_CHAMPION(Katria, NEW(Katria));
