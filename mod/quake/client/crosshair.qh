@@ -5,6 +5,9 @@
 //const int SHOTTYPE_HITWORLD = 3;
 //const int SHOTTYPE_HITENEMY = 4;
 
+bool autocvar_cl_reticle = 1;
+float autocvar_cl_reticle_normal_alpha = 1;
+float autocvar_cl_reticle_weapon_alpha = 1;
 bool autocvar_crosshair_enabled;
 string autocvar_crosshair;
 string autocvar_crosshair_2d = "54";
@@ -13,6 +16,7 @@ float autocvar_crosshair_alpha;
 bool autocvar_crosshair_effect_scalefade;
 float autocvar_crosshair_effect_time;
 //bool autocvar_crosshair_hittest_blur;
+bool autocvar_cl_reticle_chase;
 bool autocvar_crosshair_dot;
 int autocvar_crosshair_dot_color_custom;
 string autocvar_crosshair_dot_color;

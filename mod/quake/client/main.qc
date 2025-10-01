@@ -4,6 +4,7 @@
 #include "particles.qh"
 #include "sbar.qh"
 #include "shop.qh"
+#include "view.qh"
 #include "../common/champions/_mod.qh"
 #include "../common/music.qh"
 #include "../common/stats.qh"
@@ -150,6 +151,9 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 		return true;
 
 	if(cl_champion_input_event(evtype, nPrimary, nSecondary, 0))
+		return true;
+
+	if(View_InputEvent(inputType, nPrimary, nSecondary))
 		return true;
 
 	if(inputType == 3)

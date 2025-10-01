@@ -18,6 +18,14 @@ bool autocvar_hud_showbinds;
 bool autocvar_hud_showbinds_limit;
 
 bool autocvar_cl_unpress_attack_on_weapon_switch = false;
+//bool autocvar_cl_unpress_zoom_on_spawn = true;
+bool autocvar_cl_unpress_zoom_on_death = true;
+bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
+
+float current_zoomfraction;
+float current_viewzoom = 1;
+
+bool button_zoom;
 
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server

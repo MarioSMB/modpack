@@ -381,6 +381,138 @@ void HUD_Contents()
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 }
 
+bool IsZooming(bool ignore_spectatorbutton_zoom)
+{
+	bool zoomdir = button_zoom;
+	return zoomdir;
+}
+
+const float MAX_ZOOMFACTOR = 30;
+float zoomscroll_factor;
+float zoomscroll_factor_target;
+void ZoomScroll(float nPrimary)
+{
+	bool zoomin = (nPrimary == K_MWHEELUP);
+	if (autocvar_cl_zoomscroll_scale < 0)
+		zoomin = !zoomin;
+
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
+
+	if (zoomin)
+		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
+	else
+		zoomscroll_factor_target = max(1, zoomscroll_factor_target / zoomscroll_scale);
+}
+
+bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
+{
+	if (bInputType == 2 || bInputType == 3)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if (nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
+	{
+		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+			return false; // zoom scroll disabled
+		if (!IsZooming(true))
+			return false;
+		if (key_pressed)
+			ZoomScroll(nPrimary);
+		return true;
+	}
+
+	return false;
+}
+
+//float avgspeed;
+vector GetCurrentFov(float fov)
+{
+	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
+	float velocityzoom, curspeed;
+	vector v;
+
+	zoomdir = IsZooming(false);
+
+	zoomspeed = autocvar_cl_zoomspeed;
+	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
+		zoomspeed = 3.5;
+	zoomsensitivity = autocvar_cl_zoomsensitivity;
+
+	zoomfactor = autocvar_cl_zoomfactor;
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
+		zoomfactor = 2.5;
+
+	if ((player_localnum + 1) != player_localentnum || STAT(CANNON))
+		current_viewzoom = 1;
+	else if (camera_active)
+		current_viewzoom = min(1, current_viewzoom + drawframetime);
+	else
+	{
+		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+		if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
+		{
+			zoomscroll_factor_target = zoomfactor;
+			zoomscroll_factor = zoomfactor;
+		}
+		if (zoomscroll_factor != zoomscroll_factor_target)
+		{
+			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
+				zoomscroll_factor = zoomscroll_factor_target;
+			else if (autocvar_cl_zoomscroll_speed != 0)
+			{
+				// NOTE: this averaging formula is frametime independent
+				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+				float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+				zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+			}
+		}
+		zoomfactor = zoomscroll_factor;
+
+		if(zoomspeed < 0) // instant zoom
+		{
+			if(zoomdir)
+				current_viewzoom = 1 / zoomfactor;
+			else
+				current_viewzoom = 1;
+		}
+		else
+		{
+			if(zoomdir)
+				current_viewzoom = 1 / bound(1, 1 / current_viewzoom + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
+			else
+				current_viewzoom = bound(1 / zoomfactor, current_viewzoom + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
+		}
+	}
+
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
+		current_zoomfraction = 0;
+	else if(STAT(CANNON))
+		current_zoomfraction = 1;
+	else if(almost_equals(current_viewzoom, 1/zoomfactor))
+		current_zoomfraction = 1;
+	else
+		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
+
+	if(zoomsensitivity < 1)
+		setsensitivityscale(current_viewzoom ** (1 - zoomsensitivity));
+	else
+		setsensitivityscale(1);
+
+	velocityzoom = 1;
+
+	float frustumx, frustumy, fovx, fovy;
+	frustumy = tan(fov * (M_PI / 360)) * 0.75 * current_viewzoom * velocityzoom;
+	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	fovx = atan2(frustumx, 1) * (360 / M_PI);
+	fovy = atan2(frustumy, 1) * (360 / M_PI);
+
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
+
 vector GetViewLocationFOV(float fov)
 {
 	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
@@ -403,7 +535,7 @@ void View_UpdateFov()
 	else if(csqcplayer && csqcplayer.viewloc)
 		fov = GetViewLocationFOV(110); // enforce 110 fov, so things don't look odd
 	else
-		fov = GetViewLocationFOV(autocvar_fov);
+		fov = GetCurrentFov(autocvar_fov);
 
 	setproperty(VF_FOV, fov);
 }
@@ -541,6 +673,47 @@ void HUD_Mouse(entity player)
 
 void View_CheckButtonStatus()
 {
+	float is_dead = (STAT(HEALTH) <= 0);
+
+	// FIXME do we need this hack?
+	if(isdemo())
+	{
+		// in demos, input_buttons do not work
+		button_zoom = (autocvar__togglezoom == "-");
+	}
+	else if(button_zoom
+		&& autocvar_cl_unpress_zoom_on_death
+		&& (is_dead || intermission))
+	{
+		// no zoom while dead or in intermission please
+		localcmd("-zoom\n");
+		button_zoom = false;
+	}
+	else if(button_zoom && STAT(CANNON))
+	{
+		// no zoom while in a cannon (already done!)
+		localcmd("-zoom\n");
+		button_zoom = false;
+		setsensitivityscale(1);
+	}
+
+	if(autocvar_fov <= 59.5)
+	{
+		if(!zoomscript_caught)
+		{
+			localcmd("+button9\n");
+			zoomscript_caught = 1;
+		}
+	}
+	else
+	{
+		if(zoomscript_caught)
+		{
+			localcmd("-button9\n");
+			zoomscript_caught = 0;
+		}
+	}
+
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		entity wepent = viewmodels[slot];
@@ -548,6 +721,11 @@ void View_CheckButtonStatus()
 		if(wepent.last_switchweapon != wepent.activeweapon)
 		{
 			wepent.last_switchweapon = wepent.activeweapon;
+			if(slot == 0 && button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
+			{
+				localcmd("-zoom\n");
+				button_zoom = false;
+			}
 			if(slot == 0 && autocvar_cl_unpress_attack_on_weapon_switch)
 			{
 				localcmd("-fire\n");
@@ -725,6 +903,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 		cvar_set("_hud_showbinds_reload", "0");
 	}
 
+	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
+
 	vector vf_size = getpropertyvec(VF_SIZE);
 	vector vf_min = getpropertyvec(VF_MIN);
 	vid_width = vf_size.x;
@@ -764,6 +944,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	// might even be better to add the gametype to TE_CSQC_INIT...?
 	if(!postinit)
 		PostInit();
+
+	View_CheckButtonStatus();
 
 	if(intermission && !intermission_time)
 		intermission_time = time;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../common/weapons/weapon.qh"
+
 bool autocvar_camera_chase_smoothly;
 bool autocvar_camera_enable;
 bool autocvar_camera_forward_follows;
@@ -30,6 +32,16 @@ float autocvar_vid_conwidth;
 float autocvar_vid_conheight;
 float autocvar_vid_pixelheight;
 
+float autocvar_cl_zoomfactor;
+float autocvar_cl_zoomsensitivity;
+float autocvar_cl_zoomspeed;
+bool autocvar_cl_zoomscroll = 1;
+float autocvar_cl_zoomscroll_scale = 0.2;
+float autocvar_cl_zoomscroll_speed = 16;
+string autocvar__togglezoom;
+
+float zoomscript_caught;
+
 //float autocvar_cl_eventchase_distance = 140;
 float autocvar_cl_eventchase_speed = 1.3;
 vector autocvar_cl_eventchase_maxs = '12 12 8';
@@ -51,6 +63,8 @@ vector liquidcolor_prev;
 .Weapon last_switchweapon;
 
 void CSQC_Demo_Camera();
+
+bool View_InputEvent(int bInputType, float nPrimary, float nSecondary);
 
 // TODO: item pickup flashing? maybe not (seizure fest)
 // requires some kind of stat
