@@ -48,7 +48,8 @@ void steve_block_think(entity this)
 
 void steve_block_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
-	vector oldorg = this.origin;
+	vector oldorg = this.origin + '0 0 8';
+	bool inwater = (pointcontents(oldorg) == CONTENT_WATER);
 
 	steve_block_break(this);
 
@@ -57,6 +58,11 @@ void steve_block_die(entity this, entity inflictor, entity attacker, int deathty
 		RandomSelection_Init();
 		FOREACH(Monsters, it != MON_Null && (it.spawnflags & MON_FLAG_BLOCKY) && !(it.spawnflags & MONSTER_TYPE_BOSS),
 		{
+			if(!inwater && (it.spawnflags & MONSTER_TYPE_SWIM))
+				continue;
+			if(inwater && !(it.spawnflags & MONSTER_TYPE_SWIM))
+				continue;
+
 			RandomSelection_AddEnt(it, 1, 1);
 		});
 		RandomSelection_AddEnt(MON_GOATLING, 1, 1);
