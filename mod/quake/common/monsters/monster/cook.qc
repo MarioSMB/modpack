@@ -475,6 +475,9 @@ void cook_die2(entity this)
 
 void cook_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	STAT(WEAPONS, this) = WEP_PAN.m_wepset;
+	DropBackpack(this);
+	
 	if(this.health < -80)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
@@ -487,8 +490,6 @@ void cook_die(entity this, entity inflictor, entity attacker, int deathtype)
 	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
 	set_anim(this, 71, cook_die2);
 	this.solid = SOLID_NOT;
-	STAT(WEAPONS, this) = WEP_PAN.m_wepset;
-	DropBackpack(this);
 }
 
 void cook_pong(entity this)

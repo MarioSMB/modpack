@@ -75,7 +75,16 @@ void T_ShockTouch(entity this, entity toucher)
 
 	// Sound from Doom...
 	_sound(this, CH_WEAPON_SINGLE, "weapons/dsfirxpl.wav", 1, ATTN_NORM);
-	ShockExplosion(this);
+
+	entity newmis = spawn();
+	set_movetype(newmis, MOVETYPE_NONE);
+	newmis.solid = SOLID_NOT;
+	setmodel(newmis, MDL_EXPLOSION);
+	setsize(newmis, '0 0 0', '0 0 0');
+	setorigin(newmis, this.origin);
+	ShockExplosion(newmis);
+
+	delete(this);
 }
 
 void W_FireShock(entity this, .entity weaponentity)
@@ -118,11 +127,13 @@ void W_FireShock(entity this, .entity weaponentity)
 	
 	missile.effects = EF_DIMLIGHT;           // Plasma bullets emit light...
 
-	_setmodel(missile, "progs/pbullet.mdl");   // Plasma bullet model
+	//_setmodel(missile, "progs/pbullet.mdl");   // Plasma bullet model
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, W_Shotorg(this, weaponentity) + v_forward * 8);
 
 	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, true, PROJECTILE_SHOCKGUN_PLASMA, true);
 }
 
 METHOD(ShockGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

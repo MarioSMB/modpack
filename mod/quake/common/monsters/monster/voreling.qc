@@ -14,6 +14,11 @@ const int anim_voreling_death = 58; //'58 63 0'
 const int anim_voreling_deathB = 64; //'64 70 0'
 //const int anim_voreling_base = 71; //'71 72 0'
 
+const int MON_VORELING_CEILING = 4;
+
+.bool dangle; // quoth
+.float attack_timer;
+
 void voreling_idle_sound(entity this)
 {
 	if(random() < 0.05)
@@ -103,6 +108,108 @@ void voreling_jump2(entity this)
 }
 void voreling_jump1(entity this) { set_animofs(this, anim_voreling_jump, 1, voreling_jump2); voreling_idle_sound(this); }
 
+//======================================================================
+// CEILING VORELINGS - Idle/Drop/Touch/Land functions
+//======================================================================
+void voreling_idleup1(entity this);
+void voreling_idleup6(entity this) { set_animofs(this, anim_voreling_idleup, 6, voreling_idleup1); ai_stand(this); }
+void voreling_idleup5(entity this) { set_animofs(this, anim_voreling_idleup, 5, voreling_idleup6); ai_stand(this); }
+void voreling_idleup4(entity this) { set_animofs(this, anim_voreling_idleup, 4, voreling_idleup5); ai_stand(this); }
+void voreling_idleup3(entity this) { set_animofs(this, anim_voreling_idleup, 3, voreling_idleup4); ai_stand(this); }
+void voreling_idleup2(entity this) { set_animofs(this, anim_voreling_idleup, 2, voreling_idleup3); ai_stand(this); }
+void voreling_idleup1(entity this) { set_animofs(this, anim_voreling_idleup, 1, voreling_idleup2); voreling_idle_sound(this); ai_stand(this); }
+
+//----------------------------------------------------------------------
+void voreling_droptouch(entity this, entity toucher)
+{
+	// Check if landed on something that is not the ground?
+	if(!t_checkbottom(this))
+	{
+		// Is the voreling standing on something?
+		if(IS_ONGROUND(this))
+		{
+			UNSET_ONGROUND(this);
+			setorigin(this, this.origin + '0 0 8');	// raise up
+			this.attack_timer = time + 1;	// reset timer
+			
+			makevectors(this.angles);
+			this.velocity = v_forward * 100 + '0 0 200';
+		}
+		return;
+	}
+
+	// No more flying, back to running
+	this.solid = SOLID_SLIDEBOX;
+	set_movetype(this, MOVETYPE_STEP);
+
+	// Reset view offset (based on bbox height)
+	this.view_ofs = '0 0 0';
+	this.view_ofs_z = this.maxs_z * 0.5;
+
+	settouch(this, func_null);			// No more jump touching
+	HuntTarget(this);
+
+	// Restore all think state functions (voreling is off the ceiling)
+	this.th_stand = voreling_idle1;
+	this.th_walk = voreling_walk1;
+	this.th_run = voreling_run1; 
+	//this.th_melee = voreling_bite1;
+	this.th_missile = voreling_jump1;
+
+	// Back to running or standing around!
+	if(!this.enemy)
+		setthink(this, this.th_stand);
+	else
+		setthink(this, this.th_run);
+	this.nextthink = time + 0.1;
+}
+
+//----------------------------------------------------------------------
+void voreling_drop5(entity this)
+{
+	set_animofs(this, anim_voreling_drop, 5, voreling_drop5);
+	if(this.attack_timer < time || this.velocity_z == 0)
+		voreling_droptouch(this, NULL);
+}
+void voreling_drop4(entity this) { set_animofs(this, anim_voreling_drop, 4, voreling_drop5); }
+void voreling_drop3(entity this) { set_animofs(this, anim_voreling_drop, 3, voreling_drop4); }
+void voreling_drop2(entity this) { set_animofs(this, anim_voreling_drop, 2, voreling_drop3); }
+void voreling_drop1(entity this) { set_animofs(this, anim_voreling_drop, 1, voreling_drop2); }
+
+//----------------------------------------------------------------------------
+void voreling_wakeup(entity this)
+{
+	// Dead already?
+	if(this.health < 1)
+		return;
+		
+	// Only call wakeup function once
+	this.th_walk = func_null;
+	this.th_run = func_null;
+
+	// No longer need cling to ceiling spawnflag, remove it
+	this.spawnflags &= ~MON_VORELING_CEILING;
+
+	//this.flags = FL_MONSTER;			// reset flags
+	this.flags &= ~FL_FLY;
+
+	setorigin(this, this.origin - '0 0 32');		// Move down slightly
+	UNSET_ONGROUND(this);
+	
+	set_movetype(this, MOVETYPE_TOSS);		// Affected by gravity
+	this.solid = SOLID_SLIDEBOX;
+	this.attack_timer = time + 1;		// Stuck timer
+
+	this.pain_finished = time + 1.5;	// No pain
+	this.attack_finished = time + (2 + random());	// No attacking
+		
+	makevectors(this.angles);			// Move towards face direction
+	this.velocity = v_forward * 50;		// Slight nudge forward
+
+	settouch(this, voreling_droptouch);
+	voreling_drop1(this);						// Turn around, cat tricks!
+}
+
 void voreling_run8(entity this) { set_animofs(this, anim_voreling_run, 4, voreling_run1); ai_run(this, 10); }
 void voreling_run7(entity this) { set_animofs(this, anim_voreling_run, 3, voreling_run8); ai_run(this, 8); }
 void voreling_run6(entity this) { set_animofs(this, anim_voreling_run, 2, voreling_run7); ai_run(this, 6); }
@@ -166,20 +273,37 @@ spawnfunc(monster_voreling) { monster_start(this, true, MON_VORELING); }
 #ifdef SVQC
 METHOD(Voreling, mr_setup, bool(Voreling this, entity actor))
 {
-    TC(Voreling, this);
+	TC(Voreling, this);
 
 	precache_sound("voreling/death.wav");
 	precache_sound("voreling/pain.wav");
 	precache_sound("voreling/idle.wav");
+	
+	if(actor.dangle)
+		actor.spawnflags |= MON_VORELING_CEILING;
 
-    actor.health = 10;
-    actor.th_pain = voreling_pain;
+	// TODO: large variant?
+	actor.health = 10;
+	actor.th_pain = voreling_pain;
 	actor.th_die = voreling_die;
-	actor.th_stand = voreling_idle1;
-	actor.th_walk = voreling_walk1;
-	actor.th_run = voreling_run1;
-	actor.th_missile = voreling_jump1;
 
-    return true;
+	if(actor.spawnflags & MON_VORELING_CEILING)
+	{
+		actor.th_stand = voreling_idleup1;
+		actor.th_walk = voreling_idleup1;
+		actor.th_run = voreling_wakeup;
+		//actor.th_melee = voreling_wakeup;
+		actor.th_missile = voreling_wakeup;
+		actor.flags |= FL_FLY; // TODO: probably not needed
+	}
+	else
+	{
+		actor.th_stand = voreling_idle1;
+		actor.th_walk = voreling_walk1;
+		actor.th_run = voreling_run1;
+		actor.th_missile = voreling_jump1;
+	}
+
+	return true;
 }
 #endif

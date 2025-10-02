@@ -73,6 +73,7 @@ void juggernaut_death1(entity this) { set_anim(this, 96, juggernaut_death2); thi
 
 void juggernaut_die2(entity this)
 {
+	DropBackpack(this);
 	if(this.mdl == "progs/jugg.mdl")
 	{
 		ThrowHead(this, this, "progs/h_jugg.mdl", this.health);

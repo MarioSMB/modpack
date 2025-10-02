@@ -96,6 +96,7 @@ void steve_block_die(entity this, entity inflictor, entity attacker, int deathty
 		if(Challenge_Active(CHALLENGE_ONEHP))
 			mon.health = 1;
 		mon.max_health = mon.health;
+		mon.steve_spawned = true;
 		SpawnChunk(mon.origin, oldorg * 400, 0, 10);
 	}
 }
@@ -148,6 +149,12 @@ METHOD(Steve, m_clear, void(Steve this, entity actor))
 		setthink(it, steve_block_break);
 		it.nextthink = time + (1 * random());
 		it.cnt = 1; // prevent further breakage
+	});
+
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER,
+	{
+		if(it.charmed && it.charmer == actor && it.steve_spawned && it.health > 20)
+			it.health = 20;
 	});
 }
 

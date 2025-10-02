@@ -172,12 +172,7 @@ void lenf_die7(entity this) { set_anim(this, 47, lenf_die8); }
 void lenf_die6(entity this) { set_anim(this, 46, lenf_die7); }
 void lenf_die5(entity this) { set_anim(this, 45, lenf_die6); ai_forward(this, 2); }
 void lenf_die4(entity this) { set_anim(this, 44, lenf_die5); ai_forward(this, 14); }
-void lenf_die3(entity this)
-{
-	set_anim(this, 43, lenf_die4);
-	this.ammo_cells = 5;
-	DropBackpack(this);
-}
+void lenf_die3(entity this) { set_anim(this, 43, lenf_die4); }
 void lenf_die2(entity this) { set_anim(this, 42, lenf_die3); }
 void lenf_die1(entity this) { set_anim(this, 41, lenf_die2); this.solid = SOLID_NOT; }
 
@@ -189,17 +184,15 @@ void lenf_fdie7(entity this) { set_anim(this, 61, lenf_fdie8); }
 void lenf_fdie6(entity this) { set_anim(this, 60, lenf_fdie7); }
 void lenf_fdie5(entity this) { set_anim(this, 59, lenf_fdie6); }
 void lenf_fdie4(entity this) { set_anim(this, 58, lenf_fdie5); }
-void lenf_fdie3(entity this)
-{
-	set_anim(this, 57, lenf_fdie4);
-	this.ammo_cells = 5;
-	DropBackpack(this);
-}
+void lenf_fdie3(entity this) { set_anim(this, 57, lenf_fdie4); }
 void lenf_fdie2(entity this) { set_anim(this, 56, lenf_fdie3); }
 void lenf_fdie1(entity this) { set_anim(this, 55, lenf_fdie2); this.solid = SOLID_NOT; }
 
 void lenf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	this.ammo_cells = 5;
+	DropBackpack(this);
+	
 	if(this.health < -35)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);

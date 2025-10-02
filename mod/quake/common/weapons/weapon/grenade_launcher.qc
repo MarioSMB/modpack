@@ -65,11 +65,13 @@ void W_FireGrenade(entity this, .entity weaponentity)
 	missile.nextthink = time + 2.5;
 	setthink(missile, GrenadeExplode);
 
-	_setmodel(missile, "progs/grenade.mdl");
+	//_setmodel(missile, "progs/grenade.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity));
 
 	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, true, PROJECTILE_GRENADE, true);
 }
 
 METHOD(GrenadeLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

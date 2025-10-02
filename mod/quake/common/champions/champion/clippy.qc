@@ -171,7 +171,7 @@ void Sbar_DrawClippy()
 
 	vector pos, size;
 	// hardcoded values from Xonotic, TODO
-	vector panel_pos = vec2(0.13 * vid_conwidth, 0.80 * vid_conheight);
+	vector panel_pos = vec2(0.10 * vid_conwidth, 0.80 * vid_conheight);
 	vector panel_size = vec2(0.265 * vid_conwidth, 0.20 * vid_conheight);
 	pos  = panel_pos;
 	size = panel_size;
@@ -222,7 +222,7 @@ void Sbar_DrawClippy()
 		if (icon != "")
 		{
 			icon_pos = pos + icon_left + eY * i * entry_height;
-			drawpic(icon_pos, strcat("gfx/quake/", icon), icon_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect(icon_pos, strcat("gfx/quake/", icon), icon_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 		}
 	}
 

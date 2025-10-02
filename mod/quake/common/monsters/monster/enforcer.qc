@@ -248,12 +248,7 @@ void enf_die7(entity this) { set_animofs(this, anim_enf_death, 7, enf_die8); }
 void enf_die6(entity this) { set_animofs(this, anim_enf_death, 6, enf_die7); }
 void enf_die5(entity this) { set_animofs(this, anim_enf_death, 5, enf_die6); ai_forward(this, 2); }
 void enf_die4(entity this) { set_animofs(this, anim_enf_death, 4, enf_die5); ai_forward(this, 14); }
-void enf_die3(entity this)
-{
-	set_animofs(this, anim_enf_death, 3, enf_die4);
-	this.ammo_cells = 5;
-	DropBackpack(this);
-}
+void enf_die3(entity this) { set_animofs(this, anim_enf_death, 3, enf_die4); }
 void enf_die2(entity this) { set_animofs(this, anim_enf_death, 2, enf_die3); }
 void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); this.solid = SOLID_NOT; }
 
@@ -269,17 +264,15 @@ void enf_fdie7(entity this) { set_animofs(this, anim_enf_fdeath, 7, enf_fdie8); 
 void enf_fdie6(entity this) { set_animofs(this, anim_enf_fdeath, 6, enf_fdie7); }
 void enf_fdie5(entity this) { set_animofs(this, anim_enf_fdeath, 5, enf_fdie6); }
 void enf_fdie4(entity this) { set_animofs(this, anim_enf_fdeath, 4, enf_fdie5); }
-void enf_fdie3(entity this)
-{
-	set_animofs(this, anim_enf_fdeath, 3, enf_fdie4);
-	this.ammo_cells = 5;
-	DropBackpack(this);
-}
+void enf_fdie3(entity this) { set_animofs(this, anim_enf_fdeath, 3, enf_fdie4); }
 void enf_fdie2(entity this) { set_animofs(this, anim_enf_fdeath, 2, enf_fdie3); }
 void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); this.solid = SOLID_NOT; }
 
 void enf_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	this.ammo_cells = 5;
+	DropBackpack(this);
+
 // check for gib
 	if(this.health < -35)
 	{

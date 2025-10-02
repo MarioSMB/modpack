@@ -185,15 +185,16 @@ void HIP_LaserTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	vector oldvel = normalize(this.old_velocity);
-	vector spot1 = this.origin -(16*oldvel);
-	vector spot2 = this.origin +(16*oldvel);
-	traceline(spot1, spot2, false, this);  // see through other monsters
-	this.origin = trace_endpos;
+	//vector oldvel = normalize(this.old_velocity);
+	//vector spot1 = this.origin -(16*oldvel);
+	//vector spot2 = this.origin +(16*oldvel);
+	//traceline(spot1, spot2, false, this);  // see through other monsters
+	//this.origin = trace_endpos;
+	//UpdateCSQCProjectile(this);
 
 	vector org = this.origin;
 
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
 		if(this.lastvictim == toucher)
 			this.dmg = this.dmg / 2;
@@ -209,11 +210,13 @@ void HIP_LaserTouch(entity this, entity toucher)
 //      this.dmg = 0.66 * this.dmg;
 		this.dmg *= 0.9;
 //      this.speed = 0.95 * this.speed;
+#if 0
 		this.velocity = oldvel + (2 * trace_plane_normal);
 		this.velocity = normalize(this.velocity);
 		this.velocity = this.speed * this.velocity;
 		this.old_velocity = this.velocity;
 		UNSET_ONGROUND(this);
+#endif
 		//float r = random();
 		_sound(this, CH_WEAPON_SINGLE, "hipweap/laserric.wav", 1, ATTN_STATIC);
 /*
@@ -225,7 +228,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/ric3.wav", 1, ATTN_STATIC);
 */
 		return;
-		}
+	}
 	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	delete(this);
 
@@ -237,9 +240,9 @@ void HIP_LaserThink(entity this)
 		delete(this);
 		return;
 	}
-	UNSET_ONGROUND(this);
-	this.velocity = this.old_velocity;
-	this.angles = vectoangles(this.velocity);
+	//UNSET_ONGROUND(this);
+	//this.velocity = this.old_velocity;
+	//this.angles = vectoangles(this.velocity);
 	this.nextthink = time + 0.1;
 }
 
@@ -254,14 +257,14 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
 	missile.lastvictim = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	missile.solid = SOLID_BBOX;
 	if(light)
 		missile.effects = EF_DIMLIGHT;
 	missile.projectiledeathtype = WEP_LASER_CANNON.m_id;
 	missile.clipgroup = this.clipgroup;
 
-	_setmodel(missile, "progs/lasrspik.mdl");
+	//_setmodel(missile, "progs/lasrspik.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
 
 	setorigin(missile, org);
@@ -280,6 +283,8 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 	missile.count = 0;
 
 	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, true, PROJECTILE_LASER, true);
 
 	return missile;
 }
@@ -374,8 +379,9 @@ void T_MissileTouch(entity this, entity toucher)
 
 	if(this.classname == "tubanote") // TODO: why is this not used by rockets?
 		sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
-	else if(this.noise && this.noise != "")
-		_sound(this, CH_WEAPON_SINGLE, this.noise, 1, ATTN_NORM);
+	// handled by BecomeExplosion
+	//else if(this.noise && this.noise != "")
+		//_sound(this, CH_WEAPON_SINGLE, this.noise, 1, ATTN_NORM);
 
 	this.origin = this.origin - 8 * normalize(this.velocity);
 

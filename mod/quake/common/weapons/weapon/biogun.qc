@@ -41,8 +41,10 @@ void W_FireBio(entity this, float ox, .entity weaponentity)
 	missile.dmg = 40;
 	missile.classname = "bio"; // identifier for spike touch TODO: clean this mess up
 	missile.projectiledeathtype = WEP_BIOGUN.m_id;
-	_setmodel(missile, "progs/bone_shard.mdl");
+	//_setmodel(missile, "progs/bone_shard.mdl");
 	setsize(missile, '0 0 0', '0 0 0');
+
+	CSQCProjectile(missile, true, PROJECTILE_BIOGUN_BONESHARD, true);
 
 	this.punchangle_x = -2;
 }

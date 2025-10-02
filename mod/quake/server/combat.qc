@@ -475,6 +475,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		return;
 	if(targ.classname == "trigger_explosion" && !IsExplosionDamage)
 		return;
+	if(targ.classname == "mushroom" && attacker == targ.realowner)
+		return;
 	if(targ.classname == "func_breakable" && !targ.bsporigin) // bsporigin as a hack to see if it's from AD
 	{
 		if((targ.spawnflags & BREAKABLE_NO_MONSTERS) && IS_MONSTER(attacker))

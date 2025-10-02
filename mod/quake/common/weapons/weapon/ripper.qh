@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef GAMEQC
+EFFECT(0, RIPPER_BOUNCE,                 "TE_SPARK")
+#endif
+
 CLASS(Ripper, Weapon)
 /* ammotype  */ ATTRIB(Ripper, ammo_type, int, IT_SHELLS);
 /* impulse   */ ATTRIB(Ripper, impulse, int, 3);

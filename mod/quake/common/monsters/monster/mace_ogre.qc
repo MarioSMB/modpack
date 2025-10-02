@@ -269,12 +269,7 @@ void hogremac_dieA7(entity this) { set_animofs(this, anim_hogremac_deathA, 7, ho
 void hogremac_dieA6(entity this) { set_animofs(this, anim_hogremac_deathA, 6, hogremac_dieA7); ai_forward(this, 1); }
 void hogremac_dieA5(entity this) { set_animofs(this, anim_hogremac_deathA, 5, hogremac_dieA6); ai_forward(this, 1); }
 void hogremac_dieA4(entity this) { set_animofs(this, anim_hogremac_deathA, 4, hogremac_dieA5); ai_forward(this, 1); }
-void hogremac_dieA3(entity this)
-{
-	set_animofs(this, anim_hogremac_deathA, 3, hogremac_dieA4);
-	ai_forward(this, 3);
-	DropBackpack(this);
-}
+void hogremac_dieA3(entity this) { set_animofs(this, anim_hogremac_deathA, 3, hogremac_dieA4); ai_forward(this, 3); }
 void hogremac_dieA2(entity this) { set_animofs(this, anim_hogremac_deathA, 2, hogremac_dieA3); ai_forward(this, 14); }
 void hogremac_dieA1(entity this) { set_animofs(this, anim_hogremac_deathA, 1, hogremac_dieA2); this.solid = SOLID_NOT; ai_forward(this, 14); }
 
@@ -289,18 +284,15 @@ void hogremac_dieB8(entity this) { set_animofs(this, anim_hogremac_deathB, 8, ho
 void hogremac_dieB7(entity this) { set_animofs(this, anim_hogremac_deathB, 7, hogremac_dieB8); ai_back(this, 1); }
 void hogremac_dieB6(entity this) { set_animofs(this, anim_hogremac_deathB, 6, hogremac_dieB7); }
 void hogremac_dieB5(entity this) { set_animofs(this, anim_hogremac_deathB, 5, hogremac_dieB6); }
-void hogremac_dieB4(entity this)
-{
-	set_animofs(this, anim_hogremac_deathB, 4, hogremac_dieB5);
-	ai_back(this, 1);
-	DropBackpack(this);
-}
+void hogremac_dieB4(entity this) { set_animofs(this, anim_hogremac_deathB, 4, hogremac_dieB5); ai_back(this, 1); }
 void hogremac_dieB3(entity this) { set_animofs(this, anim_hogremac_deathB, 3, hogremac_dieB4); ai_back(this, 3); }
 void hogremac_dieB2(entity this) { set_animofs(this, anim_hogremac_deathB, 2, hogremac_dieB3); ai_back(this, 10); }
 void hogremac_dieB1(entity this) { set_animofs(this, anim_hogremac_deathB, 1, hogremac_dieB2); this.solid = SOLID_NOT; ai_back(this, 4); }
 
 void hogremac_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	DropBackpack(this);
+	
 // check for gib
 	if(this.health < -80)
 	{

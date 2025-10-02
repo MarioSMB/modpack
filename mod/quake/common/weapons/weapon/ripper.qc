@@ -46,11 +46,13 @@ void disc_touch(entity this, entity toucher)
 	
 	this.owner = NULL;	// can damage the real owner
 	_sound(this, CH_WEAPON_SINGLE, "weapons/bzric.wav", 1, ATTN_NORM);
+	te_gunshot(this.origin);
 	
 	if(this.num_bounces < 6)
 	{
 		this.num_bounces += 1;
-		
+
+#if 0
 		vector oldvel = normalize(this.oldvelocity);
 
 		vector start = this.origin - 16*oldvel;
@@ -62,10 +64,12 @@ void disc_touch(entity this, entity toucher)
 		this.velocity = normalize(this.velocity) * 1000;
 		this.oldvelocity = this.velocity;
 		UNSET_ONGROUND(this);
+		UpdateCSQCProjectile(this);
+#endif
 	}
 	else
 	{
-		te_gunshot(this.origin);
+		//te_gunshot(this.origin);
 		delete(this);
 	}
 }
@@ -79,9 +83,9 @@ void disc_think(entity this)
 		return;
 	}
 
-	UNSET_ONGROUND(this);
-	this.velocity = this.oldvelocity;
-	this.angles = vectoangles(this.velocity);
+	//UNSET_ONGROUND(this);
+	//this.velocity = this.oldvelocity;
+	//this.angles = vectoangles(this.velocity);
 }
 
 void W_FireRipper(entity this, .entity weaponentity)
@@ -97,13 +101,13 @@ void W_FireRipper(entity this, .entity weaponentity)
 	disc.projectiledeathtype = WEP_RIPPER.m_id;
 	disc.clipgroup = this.clipgroup;
 	disc.owner = disc.realowner = this;
-	set_movetype(disc, MOVETYPE_FLYMISSILE);
+	set_movetype(disc, MOVETYPE_BOUNCEMISSILE);
 	disc.solid = SOLID_BBOX;
 	disc.classname = "blade";
 
-	makevectors (this.v_angle);
-	disc.velocity = qc_aim(this, 1000);
-	disc.velocity = disc.velocity * 1000;
+	makevectors(this.v_angle);
+	vector dir = qc_aim(this, 1000);
+	disc.velocity = dir * 1000;
 	disc.oldvelocity = disc.velocity;
 	disc.angles = vectoangles(disc.velocity);
 	settouch(disc, disc_touch);
@@ -111,12 +115,14 @@ void W_FireRipper(entity this, .entity weaponentity)
 	disc.nextthink = time;
 	setthink(disc, disc_think);
 
-	_setmodel(disc, "progs/blade.mdl");
+	//_setmodel(disc, "progs/blade.mdl");
 	setsize(disc, '0 0 0', '0 0 0');
 	vector org = W_Shotorg(this, weaponentity); // v_forward * 8, not used because it goes through mobs!
 	setorigin(disc, org);
 
 	IL_PUSH(g_projectiles, disc);
+
+	CSQCProjectile(disc, true, PROJECTILE_SAWBLADE, true);
 }
 
 METHOD(Ripper, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

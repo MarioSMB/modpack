@@ -384,6 +384,9 @@ void boss_awake(entity this)
 /*QUAKED monster_boss(1 0 0)(-128 -128 -24)(128 128 256)
 */
 spawnfunc(monster_boss) { monster_start(this, true, MON_CHTHON); }
+
+// ad compat
+spawnfunc(monster_firetopboss) { monster_start(this, true, MON_CHTHON); }
 #endif // SVQC
 
 #ifdef SVQC

@@ -728,9 +728,6 @@ void skullw_explode(entity this)
 	ThrowGib(this, this, "progs/h_skullwiz.mdl", -1);
 	entity gib = ThrowGib(this, this, "progs/w_skullbook.mdl", -1);
 	gib.skin = this.skin;
-
-	STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
-	DropBackpack(this);
 }
 
 void skullw_death14(entity this)
@@ -756,6 +753,9 @@ void skullw_death1(entity this) { set_animofs(this, anim_skullwiz_death, 2, skul
 
 void skullw_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
+	DropBackpack(this);
+
 	// Play fade away/death sound
 	_sound(this, CH_VOICE, "skullwiz/death.wav", 1, ATTN_NORM);
 
@@ -771,12 +771,9 @@ void skullw_die(entity this, entity inflictor, entity attacker, int deathtype)
 		// Typical Grenade explosion
 		te_explosion(this.origin);
 		SpawnExplosion(EXPLODE_MED, this.origin, "weapons/r_exp3b.wav");
-
 		ThrowHead(this, inflictor, "progs/h_skullwiz.mdl", -1);
 		entity gib = ThrowGib(this, inflictor, "progs/w_skullbook.mdl", -1);
 		gib.skin = this.skin;
-		STAT(WEAPONS, this) = WEP_SPELLBOOK.m_wepset;
-		DropBackpack(this);
 		return;
 	}
 	// Regular death, collapse and fade away

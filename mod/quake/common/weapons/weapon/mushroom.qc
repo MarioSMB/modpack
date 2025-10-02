@@ -13,6 +13,8 @@ PRECACHE(Mushroom)
 	precache_sound("items/r_item1.wav");
 }
 
+bool mushroom_heal(entity this, entity toucher);
+
 void mushroom_think(entity this)
 {
 	setthink(this, mushroom_think);
@@ -34,17 +36,23 @@ void mushroom_think(entity this)
 
 	Send_Effect(EFFECT_QCC_MUSHROOM, this.origin, '0 0 0', 1);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 512, IS_MONSTER(it) && it.health > 0 && it.enemy && !it.charmed && !(it.effects & EF_NODRAW) && !it.is_frozen && !it.elec && it.enemy.classname != this.classname && !wasfreed(it.enemy),
+	FOREACH_ENTITY_RADIUS(this.origin, 512, true,
 	{
-		if(it.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
-			continue;
-		if(!checkpvs(this.origin, it))
-			continue;
-		it.aggro_time = time;
-		if(IS_PLAYER(it.enemy))
-			it.oldenemy = it.enemy;
-		it.enemy = this;
-		FoundTarget(it);
+		if(IS_MONSTER(it) && it.health > 0 && it.enemy && !it.charmed && !(it.effects & EF_NODRAW) && !it.is_frozen && !it.elec && it.enemy.classname != this.classname && !wasfreed(it.enemy))
+		{
+			if(it.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
+				continue;
+			if(!checkpvs(this.origin, it))
+				continue;
+			it.aggro_time = time;
+			if(IS_PLAYER(it.enemy))
+				it.oldenemy = it.enemy;
+			it.enemy = this;
+			FoundTarget(it);
+		}
+		
+		if(IS_PLAYER(it) && vdist(it.origin - this.origin, <=, 150) && it.health > 0 && it.health < 150 && it.exptime == 0)
+			mushroom_heal(this, it);
 	});
 }
 
@@ -61,7 +69,8 @@ void mushroom_setup(entity this)
 	setthink(this, mushroom_think);
 	this.nextthink = time + 0.1;
 	this.solid = SOLID_TRIGGER;
-	this.health = 30;
+	this.health = 80;
+	this.max_health = this.health;
 	this.takedamage = DAMAGE_AIM;
 	this.angles = '0 0 0';
 	this.monster_attack = true;
@@ -80,28 +89,23 @@ bool mushroom_heal(entity this, entity toucher)
 	if(deathmatch && toucher != this.realowner)
 		return false;
 	
-	if(!T_Heal(toucher, this.healamount, 0))
+	if(!T_Heal(toucher, this.healamount, true))
 		return false;
 	
 	// health touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
-	particle(this.origin, '0 0 0', 26, 32);
+	//particle(toucher.origin, '0 0 0', 26, 32);
+	Send_Effect(EFFECT_QCC_MUSHROOM, toucher.origin, '0 0 0', 1);
 	
-	this.model = string_null;
-	this.solid = SOLID_NOT;
-	delete(this);
+	//this.model = string_null;
+	//this.solid = SOLID_NOT;
+	//delete(this);
 	return true;
 }
 
 void mushroom_touch(entity this, entity toucher)
 {
-	if(IS_PLAYER(toucher) && toucher.health > 0 && time > this.cnt)
-	{
-		if(mushroom_heal(this, toucher))
-			return;
-	}
-
 	if(toucher && toucher.solid != SOLID_BSP)
 		return;
 	if(pointcontents(this.origin) == CONTENT_SKY)
@@ -142,7 +146,7 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 	mushroom.healamount = 10;
 	mushroom.healtype = 0;
 	mushroom.noise = "items/r_item1.wav";
-	mushroom.cnt = time + 0.33; // prevent picking up health instantly
+	mushroom.cnt = time + 1;
 	setmodel(mushroom, MDL_MUSHROOM);
 	//setsize(mushroom, '-8 -8 -16', '8 8 8');
 	vector cmin = this.mins, cmax = this.maxs;

@@ -212,12 +212,7 @@ void bend_die7(entity this) { set_animofs(this, anim_bender_die, 7, bend_die8); 
 void bend_die6(entity this) { set_animofs(this, anim_bender_die, 6, bend_die7); }
 void bend_die5(entity this) { set_animofs(this, anim_bender_die, 5, bend_die6); }
 void bend_die4(entity this) { set_animofs(this, anim_bender_die, 4, bend_die5); }
-void bend_die3(entity this)
-{
-	set_animofs(this, anim_bender_die, 3, bend_die4);
-	this.ammo_nails = 5;
-	DropBackpack(this);
-}
+void bend_die3(entity this) { set_animofs(this, anim_bender_die, 3, bend_die4); }
 void bend_die2(entity this) { set_animofs(this, anim_bender_die, 2, bend_die3); }
 void bend_die1(entity this)
 {
@@ -237,17 +232,15 @@ void bend_diea7(entity this) { set_animofs(this, anim_bender_diea, 7, bend_diea8
 void bend_diea6(entity this) { set_animofs(this, anim_bender_diea, 6, bend_diea7); }
 void bend_diea5(entity this) { set_animofs(this, anim_bender_diea, 5, bend_diea6); }
 void bend_diea4(entity this) { set_animofs(this, anim_bender_diea, 4, bend_diea5); }
-void bend_diea3(entity this)
-{
-	set_animofs(this, anim_bender_diea, 3, bend_diea4);
-	this.ammo_nails = 5;
-	DropBackpack(this);
-}
+void bend_diea3(entity this) { set_animofs(this, anim_bender_diea, 3, bend_diea4); }
 void bend_diea2(entity this) { set_animofs(this, anim_bender_diea, 2, bend_diea3); }
 void bend_diea1(entity this) { set_animofs(this, anim_bender_diea, 1, bend_diea2); _sound(this, CH_WEAPON_SINGLE, "bend/die1.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 
 void bend_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	this.ammo_nails = 5;
+	DropBackpack(this);
+
 // check for gib
 	if(this.health < -40)
 	{

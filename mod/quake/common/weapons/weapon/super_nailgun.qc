@@ -71,8 +71,10 @@ void W_FireSuperSpikes(entity this, .entity weaponentity)
 	newmis.projectiledeathtype = WEP_SUPER_NAILGUN.m_id;
 	newmis.classname = "super_spike";
 	settouch(newmis, superspike_touch);
-	_setmodel(newmis, "progs/s_spike.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');		
+	//_setmodel(newmis, "progs/s_spike.mdl");
+	setsize(newmis, '0 0 0', '0 0 0');
+	CSQCProjectile(newmis, true, PROJECTILE_SUPER_SPIKE, true);
+
 	this.punchangle_x = -2;
 }
 

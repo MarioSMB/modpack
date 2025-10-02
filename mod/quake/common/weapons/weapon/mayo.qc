@@ -32,27 +32,31 @@ void MayoExplode(entity this, bool dopool)
 
 	if(dopool)
 	{
+		entity pool = new(mayo_pool);
+		pool.owner = this.owner;
+		pool.realowner = this.realowner;
+		setorigin(pool, this.origin);
 		vector vel_norm = normalize(this.velocity);
 		vector vec = this.origin - vel_norm;
 		traceline(vec, vec + vel_norm * 16, false, this);
 		if(trace_fraction < 1)
 		{
-			Send_Effect(EFFECT_MAYO_SMASH, this.origin, '0 0 10', 1);
-			//te_explosion2(this.origin, 10, 10);
-			set_movetype(this, MOVETYPE_NONE);
-			this.solid = SOLID_TRIGGER;
-			_setmodel(this, "progs/s_mayo.mdl");
-			setsize(this, '-20 -20 0', '20 20 4');
-			setorigin(this, trace_endpos);
+			Send_Effect(EFFECT_MAYO_SMASH, pool.origin, '0 0 10', 1);
+			//te_explosion2(pool.origin, 10, 10);
+			set_movetype(pool, MOVETYPE_NONE);
+			pool.solid = SOLID_TRIGGER;
+			_setmodel(pool, "progs/s_mayo.mdl");
+			setsize(pool, '-20 -20 0', '20 20 4');
+			setorigin(pool, trace_endpos);
 
 			vec = trace_plane_normal;
-			this.scale = 1.7;
-			this.angles = vectoangles(vec);
-			this.angles_x -= 90;
-			settouch(this, Mayo_PoolTouch);
-			this.frame = 0;
-			this.nextthink = time + 4.1;
-			setthink(this, Mayo_PoolAnim);
+			pool.scale = 1.7;
+			pool.angles = vectoangles(vec);
+			pool.angles_x -= 90;
+			settouch(pool, Mayo_PoolTouch);
+			pool.frame = 0;
+			pool.nextthink = time + 4.1;
+			setthink(pool, Mayo_PoolAnim);
 
 			if(random() < 0.4)
 			{
@@ -61,8 +65,8 @@ void MayoExplode(entity this, bool dopool)
 				setorigin(note, trace_endpos);
 				_setmodel(note, "progs/piano_musicnote_white.mdl");
 				setsize(note, '0 0 0', '0 0 0');
-				if(this.owner)
-					note.angles = '0 1 0' * this.owner.angles_y;
+				if(pool.owner)
+					note.angles = '0 1 0' * pool.owner.angles_y;
 				else
 					note.angles = '0 1 0' * (random() * 180);
 				set_movetype(note, MOVETYPE_FLY);
@@ -70,6 +74,7 @@ void MayoExplode(entity this, bool dopool)
 				note.velocity = vec * 200;
 			}
 		}
+		delete(this);
 	}
 	else
 	{
@@ -161,11 +166,13 @@ void W_FireMayo(entity this, .entity weaponentity)
 	missile.nextthink = time + 2.5;
 	setthink(missile, MayoExplodeThink);
 
-	_setmodel(missile, "progs/grenade_mayo.mdl");
+	//_setmodel(missile, "progs/grenade_mayo.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, W_Shotorg(this, weaponentity) + v_right * 12);
 
 	IL_PUSH(g_projectiles, missile);
+
+	CSQCProjectile(missile, true, PROJECTILE_MAYO, true);
 }
 
 METHOD(Mayo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

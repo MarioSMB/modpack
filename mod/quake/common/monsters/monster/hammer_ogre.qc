@@ -300,14 +300,7 @@ void hogreham_dieA7(entity this) { set_animofs(this, anim_hogreham_deathA, 7, ho
 void hogreham_dieA6(entity this) { set_animofs(this, anim_hogreham_deathA, 6, hogreham_dieA7); ai_forward(this, 1); }
 void hogreham_dieA5(entity this) { set_animofs(this, anim_hogreham_deathA, 5, hogreham_dieA6); ai_forward(this, 1); }
 void hogreham_dieA4(entity this) { set_animofs(this, anim_hogreham_deathA, 4, hogreham_dieA5); ai_forward(this, 1); }
-void hogreham_dieA3(entity this)
-{
-	set_animofs(this, anim_hogreham_deathA, 3, hogreham_dieA4);
-	ai_forward(this, 3);
-	if(this.spawnflags & MON_HOGRE_METAL)
-		STAT(WEAPONS, this) = WEP_HAMMER.m_wepset;
-	DropBackpack(this);
-}
+void hogreham_dieA3(entity this) { set_animofs(this, anim_hogreham_deathA, 3, hogreham_dieA4); ai_forward(this, 3); }
 void hogreham_dieA2(entity this) { set_animofs(this, anim_hogreham_deathA, 2, hogreham_dieA3); ai_forward(this, 14); }
 void hogreham_dieA1(entity this) { set_animofs(this, anim_hogreham_deathA, 1, hogreham_dieA2); this.solid = SOLID_NOT; ai_forward(this, 14); }
 
@@ -322,20 +315,17 @@ void hogreham_dieB8(entity this) { set_animofs(this, anim_hogreham_deathB, 8, ho
 void hogreham_dieB7(entity this) { set_animofs(this, anim_hogreham_deathB, 7, hogreham_dieB8); ai_back(this, 1); }
 void hogreham_dieB6(entity this) { set_animofs(this, anim_hogreham_deathB, 6, hogreham_dieB7); }
 void hogreham_dieB5(entity this) { set_animofs(this, anim_hogreham_deathB, 5, hogreham_dieB6); }
-void hogreham_dieB4(entity this)
-{
-	set_animofs(this, anim_hogreham_deathB, 4, hogreham_dieB5);
-	ai_back(this, 1);
-	if(this.spawnflags & MON_HOGRE_METAL)
-		STAT(WEAPONS, this) = WEP_HAMMER.m_wepset;
-	DropBackpack(this);
-}
+void hogreham_dieB4(entity this) { set_animofs(this, anim_hogreham_deathB, 4, hogreham_dieB5); ai_back(this, 1); }
 void hogreham_dieB3(entity this) { set_animofs(this, anim_hogreham_deathB, 3, hogreham_dieB4); ai_back(this, 3); }
 void hogreham_dieB2(entity this) { set_animofs(this, anim_hogreham_deathB, 2, hogreham_dieB3); ai_back(this, 10); }
 void hogreham_dieB1(entity this) { set_animofs(this, anim_hogreham_deathB, 1, hogreham_dieB2); this.solid = SOLID_NOT; ai_back(this, 4); }
 
 void hogreham_die(entity this, entity inflictor, entity attacker, int deathtype)
 {
+	if(this.spawnflags & MON_HOGRE_METAL)
+		STAT(WEAPONS, this) = WEP_HAMMER.m_wepset;
+	DropBackpack(this);
+	
 // check for gib
 	if(this.health < -80)
 	{

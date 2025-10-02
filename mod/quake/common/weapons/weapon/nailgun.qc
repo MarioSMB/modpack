@@ -48,6 +48,8 @@ void W_FireSpikes(entity this, float ox, .entity weaponentity)
 	entity missile = launch_spike(this, W_Shotorg(this, weaponentity) + v_right * ox, dir);
 	missile.projectiledeathtype = WEP_NAILGUN.m_id;
 
+	CSQCProjectile(missile, true, PROJECTILE_BULLET, true);
+
 	this.punchangle_x = -2;
 }
 

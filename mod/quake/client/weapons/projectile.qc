@@ -330,6 +330,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
 			HANDLE(BANJO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; break;
 			HANDLE(BULLET)             this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(SAWBLADE)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(SUPER_SPIKE)        this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LAVA_NAIL)          this.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(BIOGUN_BONESHARD)   this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(GRENADE)            this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(MAYO)               this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = randomvec() * 320; this.scale = 0.5; break;
+			HANDLE(OCARINA)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; this.scale = 0.5; break;
+			HANDLE(SHOCKGUN_PLASMA)    this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(LASER)              this.traileffect = EFFECT_Null.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -366,6 +375,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_BANJO_MUSIC:
 				this.colormod = (random() < 0.1) ? '0.8 0.35 0' : '0.9 0.22 0.24';
 				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_SAWBLADE:
+				set_movetype(this, MOVETYPE_BOUNCEMISSILE);
+				settouch(this, func_null);
+				break;
+			case PROJECTILE_GRENADE:
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, func_null);
+				break;
+			case PROJECTILE_OCARINA:
+				this.colormod = '0.1 0.1 1';
+				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_SHOCKGUN_PLASMA:
+				this.effects |= EF_DIMLIGHT;
+				break;
+			case PROJECTILE_LASER:
+				set_movetype(this, MOVETYPE_BOUNCEMISSILE);
+				settouch(this, func_null);
 				break;
 			default:
 				break;

@@ -67,6 +67,7 @@ void ocarina_note_touch(entity this, entity toucher)
 	//sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	//this.origin = this.origin - 8 * normalize(this.velocity);
 	this.origin = findbetterlocation(this.origin, 8);
+	this.angles = vectoangles(this.velocity);
 
 	BecomeCartoonExplosion(this);
 }
@@ -112,7 +113,7 @@ void W_FireOcarina(entity this, .entity weaponentity)
 		musicnote.nextthink = time + 3; // Remove/Explode Time
 		//musicnote.think = SUB_Remove; 
 		setthink(musicnote, BecomeCartoonExplosion);
-		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		//_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = '0.1 0.1 1';
 		setsize(musicnote, '0 0 0', '0 0 0');
 		musicnote.avelocity = '0 90 90'; // Roll
@@ -125,6 +126,8 @@ void W_FireOcarina(entity this, .entity weaponentity)
 		musicnote.velocity = spread_dir * 450;
 
 		IL_PUSH(g_projectiles, musicnote);
+
+		CSQCProjectile(musicnote, true, PROJECTILE_OCARINA, true);
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));

@@ -81,7 +81,7 @@ PRECACHE(Keyleth)
 "Jumps 15% higher\n" \
 "Has Mushroom as a weapon\n" \
 "Attracts nearby enemies\n" \
-"Heals a little if touched"
+"Heals a little while nearby"
 #endif
 CLASS(Keyleth, Champions)
     ATTRIB(Keyleth, netname, string, "keyleth");

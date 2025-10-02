@@ -53,7 +53,7 @@ void goatling_diethink(entity this)
 	Killed(this, NULL, NULL, DEATH_CRUSH.m_id);
 }
 
-void Voreling_ChargeTouch(entity this, entity toucher)
+void Goatling_ChargeTouch(entity this, entity toucher)
 {
 	if(this.health <= 0)
 	{
@@ -79,7 +79,7 @@ void goatling_charge2(entity this)
 	set_animofs(this, anim_goatling_charge, 2, goatling_charge3);
 	ai_face(this);
 	
-	settouch(this, Voreling_ChargeTouch);
+	settouch(this, Goatling_ChargeTouch);
 	makevectors(this.angles);
 	this.origin_z += 1;
 	this.velocity = v_forward * 300;

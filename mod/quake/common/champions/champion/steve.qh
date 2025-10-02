@@ -105,6 +105,8 @@ REGISTER_CHAMPION(Steve, NEW(Steve));
 #ifdef SVQC
 int autocvar_sv_quake_steve_blocklimit = 8;
 
+.float steve_spawned;
+
 IntrusiveList g_blocks;
 STATIC_INIT(Steve_Defs)
 {
