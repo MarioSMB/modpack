@@ -139,6 +139,8 @@ bool GremlinAttemptWeaponSteal(entity this)
 	ATTACK_FINISHED(victim, weaponentity) = time + 0.5;
 	W_SwitchWeapon(victim, w_getbestweapon(victim, weaponentity), weaponentity);
 
+	music_copy(this, victim);
+
 	// tag the gremlin as having stolen a weapon
 	this.stoleweapon = true;
 	this.attack_finished = time;

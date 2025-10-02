@@ -9,6 +9,8 @@
 .int music_repeatend;
 .string music_song;
 
+bool music_copy(entity this, entity from);
+
 void music_reset(entity this);
 
 void music_RemovePlayer(entity this);
