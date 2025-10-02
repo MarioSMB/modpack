@@ -319,6 +319,12 @@ void Music_Conductor_Copy(entity this)
 	{
 		music_copy(it, this);
 	});
+
+	IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	{
+		if(IS_MONSTER(it) && it != this)
+			music_copy(it, this);
+	});
 }
 
 #ifdef MIDI_SUPPORT

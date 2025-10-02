@@ -324,9 +324,6 @@ void gremlin_run(entity this, float dist)
 		Weapon wep = this.(weaponentity).m_weapon;
 		this.(weaponentity).weapon_frametime = frametime;
 
-		if(time > ATTACK_FINISHED(this, weaponentity))
-			this.button0 = false;
-
 		vector dir = normalize(this.enemy.origin - this.origin);
 		this.v_angle = vectoangles(dir);
 		if(this.stoleweapon && this.enemy)
@@ -351,6 +348,9 @@ void gremlin_run(entity this, float dist)
 				this.(weaponentity).weapon_think(this.(weaponentity));
 			}
 		}
+
+		if(time > ATTACK_FINISHED(this, weaponentity))
+			this.button0 = false;
 	}
 		
 
