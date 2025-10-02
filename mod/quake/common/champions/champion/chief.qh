@@ -63,3 +63,7 @@ CLASS(Chief, Champions)
 #endif
 ENDCLASS(Chief)
 REGISTER_CHAMPION(Chief, NEW(Chief));
+
+#ifdef SVQC
+float autocvar_sv_quake_chief_range = 750;
+#endif

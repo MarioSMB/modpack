@@ -159,12 +159,6 @@ void Poop_Attack(entity this)
 
 METHOD(Poop, m_playerthink, void(Champions this, entity actor))
 {
-	if(time > actor.poop_particletime)
-	{
-		actor.poop_particletime = time + 0.25;
-		Send_Effect(EFFECT_POOP_STINK, actor.origin, '0 0 0', 1);
-	}
-
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Poop_Attack(actor);
@@ -196,5 +190,13 @@ METHOD(Poop, m_drawface, bool(Champions this, vector pos, vector icon_size))
 	//Sbar_DrawPic('112 0 0', pic);
 	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	return true;
+}
+
+METHOD(Poop, m_drawplayer, void(Champions this, entity actor))
+{
+	//if(actor.csqcmodel_isdead)
+		//return;
+	if(!SpawnParticles_list_full(strcat("cl_particle_", EFFECT_POOP_STINK.eent_eff_name), actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), false, 0))
+		boxparticles(particleeffectnum(EFFECT_POOP_STINK), actor, actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), 0);
 }
 #endif

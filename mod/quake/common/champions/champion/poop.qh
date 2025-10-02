@@ -78,6 +78,4 @@ REGISTER_CHAMPION(Poop, NEW(Poop));
 
 #ifdef SVQC
 .bool poop_cannon;
-
-.float poop_particletime;
 #endif

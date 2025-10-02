@@ -31,7 +31,7 @@ METHOD(Chief, m_playerthink, void(Champions this, entity actor))
 		bool found = false;
 		int targlimit = 0;
 		// TODO: currently designed to only work on monsters
-		FOREACH_ENTITY_RADIUS(actor.origin, 750, it.health > 0 && IS_MONSTER(it) && Damage_ValidTarget(it, actor),
+		FOREACH_ENTITY_RADIUS(actor.origin, autocvar_sv_quake_chief_range, it.health > 0 && IS_MONSTER(it) && Damage_ValidTarget(it, actor),
 		{
 			targlimit += 1;
 			if(targlimit > 20)

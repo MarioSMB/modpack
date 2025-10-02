@@ -157,7 +157,7 @@ void HUD_BossBar_Draw(entity this)
 const float BOSSBAR_RANGE = 2048; // TODO: per monster?
 void HUD_BossBars()
 {
-	if(sb_showscores)
+	if(sb_showscores || STAT(HEALTH) == -666)
 		return;
 
 	entity chosen = NULL;

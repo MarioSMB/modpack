@@ -48,6 +48,7 @@ METHOD(Keyleth, m_drawplayer, void(Champions this, entity actor))
 {
 	if(actor.csqcmodel_isdead)
 		return;
-	boxparticles(particleeffectnum(EFFECT_QCC_HEALING), actor, actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), 0);
+	if(!SpawnParticles_list_full(strcat("cl_particle_", EFFECT_QCC_HEALING.eent_eff_name), actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), false, 0))
+		boxparticles(particleeffectnum(EFFECT_QCC_HEALING), actor, actor.absmin, actor.absmax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), 0);
 }
 #endif

@@ -308,6 +308,6 @@ REGISTER_STAT(INSTAGIB_POGO, BOOL, autocvar_sv_quake_instagib_pogostick)
 REGISTER_STAT(CHALLENGE, INT, challenge)
 
 #ifdef SVQC
-float autocvar_sv_quake_goatstuff = 0.1;
+float autocvar_sv_quake_goatstuff = 0.03;
 #endif
 REGISTER_STAT(GOATSTUFF, FLOAT, autocvar_sv_quake_goatstuff)
