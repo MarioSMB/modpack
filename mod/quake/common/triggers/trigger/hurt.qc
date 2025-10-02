@@ -83,4 +83,11 @@ spawnfunc(trigger_hurt)
 		this.cnt = -1;
 }
 
+// quoth compat
+spawnfunc(trigger_void)
+{
+	this.spawnflags |= 1; // instant death
+	spawnfunc_trigger_hurt(this);
+}
+
 #endif

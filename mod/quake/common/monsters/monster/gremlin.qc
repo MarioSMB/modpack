@@ -885,6 +885,8 @@ void gremlin_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		GremlinDropBackpack(this);
 		this.stoleweapon = false;
+
+		music_reset(this);
 	}
 
 	makevectors(this.angles);
