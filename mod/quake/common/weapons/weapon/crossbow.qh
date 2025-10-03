@@ -12,6 +12,7 @@ CLASS(Crossbow, Weapon)
 /* wepimg    */ ATTRIB(Crossbow, model2, string, "crossbow");
 /* refname   */ ATTRIB(Crossbow, netname, string, "crossbow");
 /* wepname   */ ATTRIB(Crossbow, m_name, string, _("Crossbow"));
+/* Xonotic   */ ATTRIB(Crossbow, m_deprecated_netname, string, "rifle");
 
 ENDCLASS(Crossbow)
 REGISTER_WEAPON(CROSSBOW, NEW(Crossbow));

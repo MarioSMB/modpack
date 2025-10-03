@@ -12,6 +12,7 @@ CLASS(ProximityGun, Weapon)
 /* wepimg    */ ATTRIB(ProximityGun, model2, string, "prox");
 /* refname   */ ATTRIB(ProximityGun, netname, string, "proximitygun");
 /* wepname   */ ATTRIB(ProximityGun, m_name, string, _("Proximity Gun"));
+/* Xonotic   */ ATTRIB(ProximityGun, m_deprecated_netname, string, "minelayer");
 
 ENDCLASS(ProximityGun)
 REGISTER_WEAPON(PROXIMITY_GUN, NEW(ProximityGun));

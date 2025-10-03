@@ -12,6 +12,7 @@ CLASS(GrenadeLauncher, Weapon)
 /* wepimg    */ ATTRIB(GrenadeLauncher, model2, string, "rock");
 /* refname   */ ATTRIB(GrenadeLauncher, netname, string, "grenadelauncher");
 /* wepname   */ ATTRIB(GrenadeLauncher, m_name, string, _("Grenade Launcher"));
+/* Xonotic   */ ATTRIB(GrenadeLauncher, m_deprecated_netname, string, "mortar");
 
 ENDCLASS(GrenadeLauncher)
 REGISTER_WEAPON(GRENADE_LAUNCHER, NEW(GrenadeLauncher));

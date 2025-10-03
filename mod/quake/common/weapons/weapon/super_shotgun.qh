@@ -12,6 +12,7 @@ CLASS(SuperShotgun, Weapon)
 /* wepimg    */ ATTRIB(SuperShotgun, model2, string, "shot2");
 /* refname   */ ATTRIB(SuperShotgun, netname, string, "sshotgun");
 /* wepname   */ ATTRIB(SuperShotgun, m_name, string, _("Double-Barrelled Shotgun"));
+/* Xonotic   */ ATTRIB(SuperShotgun, m_deprecated_netname, string, "crylink");
 
 ENDCLASS(SuperShotgun)
 REGISTER_WEAPON(SUPER_SHOTGUN, NEW(SuperShotgun));

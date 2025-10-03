@@ -16,7 +16,7 @@ noref string autocvar_cl_quake_weaponpriority2 = "lightning portalgun"; // hitsc
 noref string autocvar_cl_quake_weaponpriority3 = "lightning sshotgun shotgun"; // hitscan all
 noref string autocvar_cl_quake_weaponpriority4 = "smg laser_gun shock grenadelauncher multigrenade napalm fish mayo ocarina supernailgun biogun tuba lavasupernailgun crossbow piano doot nailgun lavanailgun bongos kazoo chainsaw"; // spam weapons
 noref string autocvar_cl_quake_weaponpriority5 = "nuke cannon impaler portalgun"; // movement weapons
-noref string autocvar_cl_quake_weaponpriority6 = "tuba mic ocarina otamatone banjo bongos chimes mayo piano kazoo doot"; // musical instruments
+noref string autocvar_cl_quake_weaponpriority6 = "mushroom tuba mic ocarina otamatone banjo bongos chimes mayo piano kazoo doot"; // musical instruments
 noref string autocvar_cl_quake_weaponpriority7 = "";
 noref string autocvar_cl_quake_weaponpriority8 = "";
 noref string autocvar_cl_quake_weaponpriority9 = "";
@@ -75,7 +75,7 @@ WepSet WEPSET_CHAMPIONS;
 #include "all.inc"
 
 // TODO: invert after changes have been made to the hardcoded weapon impulses. Will require moving 'best weapon' impulses
-#define WEP_IMPULSE_BEGIN 230
+#define WEP_IMPULSE_BEGIN 181
 #define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (REGISTRY_COUNT(Weapons) - 1) - 1, 253)
 
 REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
@@ -92,7 +92,12 @@ STATIC_INIT(register_weapons_done)
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
+        {
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+            // hack for xonotic compat!
+            if(it.m_deprecated_netname && it.m_deprecated_netname != "")
+                localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.m_deprecated_netname, imp));
+        }
         else
             inaccessible = strcat(inaccessible, "\n", it.netname);
     });

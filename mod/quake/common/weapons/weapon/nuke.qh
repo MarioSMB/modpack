@@ -25,6 +25,7 @@ CLASS(Nuke, Weapon)
 /* wepimg    */ ATTRIB(Nuke, model2, string, "nuke");
 /* refname   */ ATTRIB(Nuke, netname, string, "nuke");
 /* wepname   */ ATTRIB(Nuke, m_name, string, _("Nuke"));
+/* Xonotic   */ ATTRIB(Nuke, m_deprecated_netname, string, "vaporizer");
 
 ENDCLASS(Nuke)
 REGISTER_WEAPON(NUKE, NEW(Nuke));

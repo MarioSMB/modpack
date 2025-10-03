@@ -13,6 +13,7 @@ CLASS(Railgun, Weapon)
 /* refname   */ ATTRIB(Railgun, netname, string, "railgun");
 /* wepname   */ ATTRIB(Railgun, m_name, string, _("Railgun"));
 /* framerate */ ATTRIB(Railgun, m_delta, float, 0.05);
+/* Xonotic   */ ATTRIB(Railgun, m_deprecated_netname, string, "vortex");
 
 ENDCLASS(Railgun)
 REGISTER_WEAPON(RAILGUN, NEW(Railgun));

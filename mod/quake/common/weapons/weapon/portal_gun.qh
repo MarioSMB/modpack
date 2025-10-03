@@ -12,6 +12,7 @@ CLASS(PortalGun, Weapon)
 /* wepimg    */ ATTRIB(PortalGun, model2, string, "portal");
 /* refname   */ ATTRIB(PortalGun, netname, string, "portalgun");
 /* wepname   */ ATTRIB(PortalGun, m_name, string, _("Portal Gun"));
+/* Xonotic   */ ATTRIB(PortalGun, m_deprecated_netname, string, "porto");
 
 ENDCLASS(PortalGun)
 REGISTER_WEAPON(PORTAL_GUN, NEW(PortalGun));

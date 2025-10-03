@@ -12,6 +12,7 @@ CLASS(Nailgun, Weapon)
 /* wepimg    */ ATTRIB(Nailgun, model2, string, "nail");
 /* refname   */ ATTRIB(Nailgun, netname, string, "nailgun");
 /* wepname   */ ATTRIB(Nailgun, m_name, string, _("Nailgun"));
+/* Xonotic   */ ATTRIB(Nailgun, m_deprecated_netname, string, "machinegun");
 
 ENDCLASS(Nailgun)
 REGISTER_WEAPON(NAILGUN, NEW(Nailgun));

@@ -44,6 +44,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, weaponreplace, string, "");
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+    /** M: deprecated refname : reference name for compatibility with Xonotic weapons */
+    ATTRIB(Weapon, m_deprecated_netname, string, "");
 #ifdef GAMEQC
     /** M: sound SND_id_MUSICNOTE */
     ATTRIB(Weapon, m_musicnote, entity);

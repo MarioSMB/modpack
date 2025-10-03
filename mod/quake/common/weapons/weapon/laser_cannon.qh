@@ -12,6 +12,7 @@ CLASS(LaserCannon, Weapon)
 /* wepimg    */ ATTRIB(LaserCannon, model2, string, "lasergun");
 /* refname   */ ATTRIB(LaserCannon, netname, string, "laser_gun");
 /* wepname   */ ATTRIB(LaserCannon, m_name, string, _("Laser Cannon"));
+/* Xonotic   */ ATTRIB(LaserCannon, m_deprecated_netname, string, "hlac");
 
 ENDCLASS(LaserCannon)
 REGISTER_WEAPON(LASER_CANNON, NEW(LaserCannon));

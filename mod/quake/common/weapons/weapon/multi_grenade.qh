@@ -13,6 +13,7 @@ CLASS(MultiGrenadeLauncher, Weapon)
 /* refname   */ ATTRIB(MultiGrenadeLauncher, netname, string, "multigrenade");
 /* replace   */ ATTRIB(MultiGrenadeLauncher, weaponreplace, string, "grenadelauncher");
 /* wepname   */ ATTRIB(MultiGrenadeLauncher, m_name, string, _("Multi Grenade Launcher"));
+/* Xonotic   */ ATTRIB(MultiGrenadeLauncher, m_deprecated_netname, string, "seeker");
 
 ENDCLASS(MultiGrenadeLauncher)
 REGISTER_WEAPON(MULTI_GRENADE, NEW(MultiGrenadeLauncher));

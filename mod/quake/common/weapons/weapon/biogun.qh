@@ -12,6 +12,7 @@ CLASS(Biogun, Weapon)
 /* wepimg    */ ATTRIB(Biogun, model2, string, "biogun");
 /* refname   */ ATTRIB(Biogun, netname, string, "biogun");
 /* wepname   */ ATTRIB(Biogun, m_name, string, _("Biogun"));
+/* Xonotic   */ ATTRIB(Biogun, m_deprecated_netname, string, "hagar");
 
 ENDCLASS(Biogun)
 REGISTER_WEAPON(BIOGUN, NEW(Biogun));

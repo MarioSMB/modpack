@@ -12,6 +12,7 @@ CLASS(Thunderbolt, Weapon)
 /* wepimg    */ ATTRIB(Thunderbolt, model2, string, "light");
 /* refname   */ ATTRIB(Thunderbolt, netname, string, "lightning");
 /* wepname   */ ATTRIB(Thunderbolt, m_name, string, _("Thunderbolt"));
+/* Xonotic   */ ATTRIB(Thunderbolt, m_deprecated_netname, string, "arc");
 
 ENDCLASS(Thunderbolt)
 REGISTER_WEAPON(LIGHTNING, NEW(Thunderbolt));

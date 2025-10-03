@@ -12,6 +12,7 @@ CLASS(RocketLauncher, Weapon)
 /* wepimg    */ ATTRIB(RocketLauncher, model2, string, "rock2");
 /* refname   */ ATTRIB(RocketLauncher, netname, string, "rocketlauncher");
 /* wepname   */ ATTRIB(RocketLauncher, m_name, string, _("Rocket Launcher"));
+/* Xonotic   */ ATTRIB(RocketLauncher, m_deprecated_netname, string, "devastator");
 
 ENDCLASS(RocketLauncher)
 REGISTER_WEAPON(ROCKET_LAUNCHER, NEW(RocketLauncher));

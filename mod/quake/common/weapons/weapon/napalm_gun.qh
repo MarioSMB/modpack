@@ -12,6 +12,7 @@ CLASS(NapalmGun, Weapon)
 /* wepimg    */ ATTRIB(NapalmGun, model2, string, "srock");
 /* refname   */ ATTRIB(NapalmGun, netname, string, "napalm");
 /* wepname   */ ATTRIB(NapalmGun, m_name, string, _("Napalm Gun"));
+/* Xonotic   */ ATTRIB(NapalmGun, m_deprecated_netname, string, "fireball");
 
 ENDCLASS(NapalmGun)
 REGISTER_WEAPON(NAPALM, NEW(NapalmGun));
