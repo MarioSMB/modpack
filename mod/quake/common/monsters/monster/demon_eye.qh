@@ -1,0 +1,25 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_EYE,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's flailing about was finally stopped by a Demon Eye"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_DEMON_EYE,            1,  NULL,           INFO_DEATH_SELF_MON_DEMON_EYE,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_DEMON_EYE,        DEATH_SELF_MON_DEMON_EYE,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_DEMON_EYE, "progs/demon_eye.mdl");
+#endif
+
+CLASS(DemonEye, Monster)
+    ATTRIB(DemonEye, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(DemonEye, m_mins, vector, '-16 -16 -24');
+    ATTRIB(DemonEye, m_maxs, vector, '16 16 8');
+#ifdef GAMEQC
+    ATTRIB(DemonEye, m_model, Model, MDL_MON_DEMON_EYE);
+    ATTRIB(DemonEye, m_model_head, Model, MDL_Null);
+#endif
+    ATTRIB(DemonEye, netname, string, "demon_eye");
+    ATTRIB(DemonEye, m_name, string, _("Demon Eye"));
+ENDCLASS(DemonEye)
+
+REGISTER_MONSTER(DEMON_EYE, NEW(DemonEye));

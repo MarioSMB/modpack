@@ -6,7 +6,7 @@ CLASS(GravityGun, Weapon)
 /* spawnflags*/ ATTRIB(GravityGun, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOAGGRO);
 /* ammo */      ATTRIB(GravityGun, aflag, int, 0);
 /* modelname */ ATTRIB(GravityGun, mdl, string, "gravgun");
-/* crosshair */ ATTRIB(GravityGun, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(GravityGun, w_crosshair, string, "gfx/crosshairhook");
 /* crosshair */ ATTRIB(GravityGun, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(GravityGun, w_crosshair_color, vector, '1 0.5 0.5');
 /* wepimg    */ ATTRIB(GravityGun, model2, string, "gravgun");

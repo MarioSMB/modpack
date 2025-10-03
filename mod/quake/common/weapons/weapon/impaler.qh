@@ -8,7 +8,7 @@ CLASS(Impaler, Weapon)
 /* modelname */ ATTRIB(Impaler, mdl, string, "implr");
 /* crosshair */ ATTRIB(Impaler, w_crosshair, string, "gfx/crosshair64");
 /* crosshair */ ATTRIB(Impaler, w_crosshair_size, float, 0.6);
-/* crosshair */ ATTRIB(Impaler, w_crosshair_color, vector, '0 0.75 1');
+/* crosshair */ ATTRIB(Impaler, w_crosshair_color, vector, '1 0.75 0');
 /* wepimg    */ ATTRIB(Impaler, model2, string, "impaler");
 /* refname   */ ATTRIB(Impaler, netname, string, "impaler");
 /* wepname   */ ATTRIB(Impaler, m_name, string, _("Rocket Powered Impaler"));

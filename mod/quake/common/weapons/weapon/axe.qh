@@ -8,7 +8,7 @@ CLASS(Axe, Weapon)
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");
 /* crosshair */ ATTRIB(Axe, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Axe, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Axe, w_crosshair_color, vector, '1 0.5 0.5');
+/* crosshair */ ATTRIB(Axe, w_crosshair_color, vector, '1 0.25 0.25');
 /* wepimg    */ ATTRIB(Axe, model2, string, "axe");
 /* refname   */ ATTRIB(Axe, netname, string, "axe");
 /* wepname   */ ATTRIB(Axe, m_name, string, _("Axe"));

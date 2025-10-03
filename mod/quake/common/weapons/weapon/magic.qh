@@ -6,7 +6,7 @@ CLASS(Magic, Weapon)
 /* spawnflags*/ ATTRIB(Magic, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Magic, aflag, int, 0);
 /* modelname */ ATTRIB(Magic, mdl, string, "magic");
-/* crosshair */ ATTRIB(Magic, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Magic, w_crosshair, string, "gfx/crosshairdot");
 /* crosshair */ ATTRIB(Magic, w_crosshair_size, float, 0.5);
 /* crosshair */ ATTRIB(Magic, w_crosshair_color, vector, '1 0.5 0.5');
 /* wepimg    */ ATTRIB(Magic, model2, string, "magic");

@@ -19,7 +19,7 @@ CLASS(Meowmere, Weapon)
 /* modelname */ ATTRIB(Meowmere, mdl, string, "meowmere");
 /* crosshair */ ATTRIB(Meowmere, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Meowmere, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Meowmere, w_crosshair_color, vector, '0.25 1 0.25');
+/* crosshair */ ATTRIB(Meowmere, w_crosshair_color, vector, '1 0.25 0.25');
 /* wepimg    */ ATTRIB(Meowmere, model2, string, "meowmere");
 /* refname   */ ATTRIB(Meowmere, netname, string, "meowmere");
 /* wepname   */ ATTRIB(Meowmere, m_name, string, _("Meowmere"));

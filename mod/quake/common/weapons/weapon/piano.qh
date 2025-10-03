@@ -12,7 +12,7 @@ CLASS(Piano, Weapon)
 /* modelname */ ATTRIB(Piano, mdl, string, "woodpiano");
 /* crosshair */ ATTRIB(Piano, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Piano, w_crosshair_size, float, 0.7);
-/* crosshair */ ATTRIB(Piano, w_crosshair_color, vector, '1 1 0');
+/* crosshair */ ATTRIB(Piano, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Piano, model2, string, "piano");
 /* refname   */ ATTRIB(Piano, netname, string, "piano");
 /* wepname   */ ATTRIB(Piano, m_name, string, _("Piano"));

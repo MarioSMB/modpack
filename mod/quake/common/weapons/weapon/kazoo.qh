@@ -12,7 +12,7 @@ CLASS(Kazoo, Weapon)
 /* modelname */ ATTRIB(Kazoo, mdl, string, "kazoo");
 /* crosshair */ ATTRIB(Kazoo, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Kazoo, w_crosshair_size, float, 0.45);
-/* crosshair */ ATTRIB(Kazoo, w_crosshair_color, vector, '0.5 0.25 0');
+/* crosshair */ ATTRIB(Kazoo, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Kazoo, model2, string, "kazoo");
 /* refname   */ ATTRIB(Kazoo, netname, string, "kazoo");
 /* wepname   */ ATTRIB(Kazoo, m_name, string, _("Kazoo"));

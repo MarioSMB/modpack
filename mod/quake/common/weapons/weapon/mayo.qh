@@ -12,7 +12,7 @@ CLASS(Mayo, Weapon)
 /* modelname */ ATTRIB(Mayo, mdl, string, "mayo");
 /* crosshair */ ATTRIB(Mayo, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Mayo, w_crosshair_size, float, 0.7);
-/* crosshair */ ATTRIB(Mayo, w_crosshair_color, vector, '1 0 0');
+/* crosshair */ ATTRIB(Mayo, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Mayo, model2, string, "mayo");
 /* refname   */ ATTRIB(Mayo, netname, string, "mayo");
 /* wepname   */ ATTRIB(Mayo, m_name, string, _("Jar O' Mayo"));

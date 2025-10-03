@@ -14,7 +14,7 @@ CLASS(Mic, Weapon)
 /* modelname */ ATTRIB(Mic, mdl, string, "mic");
 /* crosshair */ ATTRIB(Mic, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Mic, w_crosshair_size, float, 0.65);
-/* crosshair */ ATTRIB(Mic, w_crosshair_color, vector, '0.5 0.25 0');
+/* crosshair */ ATTRIB(Mic, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Mic, model2, string, "mic");
 /* refname   */ ATTRIB(Mic, netname, string, "mic");
 /* wepname   */ ATTRIB(Mic, m_name, string, _("Mic"));

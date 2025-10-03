@@ -155,7 +155,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 				{
 					float dz = this.origin.z - targ.origin.z;
 					float maxheight = 40;
-					if(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
+					if((this.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && vdist(this.origin - targ.origin, >, 300))
 						maxheight = 250;
 					if(dz > maxheight)
 						neworg.z -= 8;
@@ -1223,7 +1223,7 @@ bool FindTarget(entity this)
 		//this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
 		{
-			if(autocvar_sv_quake_pets_teleport && !horde_ent && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
+			if(autocvar_sv_quake_pets_teleport && !horde_ent && this.health > 0 && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
 				TeleportToCharmer(this);
 
 			UpdateCharmerGoal(this);

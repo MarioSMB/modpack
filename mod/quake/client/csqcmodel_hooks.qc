@@ -44,6 +44,7 @@ void CSQCModel_AfterEffect(entity this)
 	body.modelflags = this.modelflags;
 	body.renderflags = RF_NOSHADOW | RF_ADDITIVE;
 	body.drawmask = MASK_NORMAL;
+	body.scale = this.scale;
 
 	if(this.entnum == player_localentnum)
 		body.renderflags |= RF_EXTERNALMODEL;

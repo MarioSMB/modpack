@@ -12,7 +12,7 @@ CLASS(Otamatone, Weapon)
 /* modelname */ ATTRIB(Otamatone, mdl, string, "otamatone");
 /* crosshair */ ATTRIB(Otamatone, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Otamatone, w_crosshair_size, float, 0.45);
-/* crosshair */ ATTRIB(Otamatone, w_crosshair_color, vector, '0.5 0.25 0');
+/* crosshair */ ATTRIB(Otamatone, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Otamatone, model2, string, "otamatone");
 /* refname   */ ATTRIB(Otamatone, netname, string, "otamatone");
 /* wepname   */ ATTRIB(Otamatone, m_name, string, _("Otamatone"));

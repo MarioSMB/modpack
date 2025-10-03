@@ -6,9 +6,9 @@ CLASS(NapalmGun, Weapon)
 /* spawnflags*/ ATTRIB(NapalmGun, spawnflags, int, WEP_FLAG_IMPEL);
 /* ammo */      ATTRIB(NapalmGun, aflag, int, 9);
 /* modelname */ ATTRIB(NapalmGun, mdl, string, "srock");
-/* crosshair */ ATTRIB(NapalmGun, w_crosshair, string, "gfx/crosshair66");
+/* crosshair */ ATTRIB(NapalmGun, w_crosshair, string, "gfx/crosshairgrenadelauncher");
 /* crosshair */ ATTRIB(NapalmGun, w_crosshair_size, float, 0.7);
-/* crosshair */ ATTRIB(NapalmGun, w_crosshair_color, vector, '1 0.5 0.75');
+/* crosshair */ ATTRIB(NapalmGun, w_crosshair_color, vector, '1 0.4 0.25');
 /* wepimg    */ ATTRIB(NapalmGun, model2, string, "srock");
 /* refname   */ ATTRIB(NapalmGun, netname, string, "napalm");
 /* wepname   */ ATTRIB(NapalmGun, m_name, string, _("Napalm Gun"));

@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_EOC,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's innards were made outward by Eye Of Cthulhu"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_EOC,                1,  NULL,           INFO_DEATH_SELF_MON_EOC,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_EOC,            DEATH_SELF_MON_EOC,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_EOC, "progs/eoc.mdl");
+
+SOUND(MON_EOC_SIGHT, "eoc/sight");
+#endif
+
+CLASS(EyeOfCthulhu, Monster)
+    ATTRIB(EyeOfCthulhu, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY);
+    ATTRIB(EyeOfCthulhu, m_mins, vector, '-32 -32 -24');
+    ATTRIB(EyeOfCthulhu, m_maxs, vector, '32 32 48');
+#ifdef GAMEQC
+    ATTRIB(EyeOfCthulhu, m_model, Model, MDL_MON_EOC);
+    ATTRIB(EyeOfCthulhu, m_model_head, Model, MDL_Null);
+    ATTRIB(EyeOfCthulhu, m_sound, Sound, SND_MON_EOC_SIGHT);
+#endif
+    ATTRIB(EyeOfCthulhu, netname, string, "eoc");
+    ATTRIB(EyeOfCthulhu, m_name, string, _("Eye Of Cthulhu"));
+    ATTRIB(EyeOfCthulhu, m_color, vector, '0.66 0.11 0.11');
+ENDCLASS(EyeOfCthulhu)
+
+REGISTER_MONSTER(EOC, NEW(EyeOfCthulhu));

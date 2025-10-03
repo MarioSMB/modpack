@@ -156,7 +156,7 @@ vector tuba_calc_velocity(entity actor, entity note)
 void W_FireTuba(entity this, .entity weaponentity)
 {
 	this.punchangle_x = -2;
-	W_TakeMana(this, 8);
+	W_TakeMana(this, 7);
 
 	T_RadiusDamage(this, this, 110, WEP_TUBA.m_id, this);
 
@@ -210,7 +210,7 @@ METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 {
 	if(fire & 1)
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
-	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 8)
+	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity) && STAT(MANA, actor) >= 7)
 	{
 		if(IS_PLAYER(actor))
 			player_shot1(actor);

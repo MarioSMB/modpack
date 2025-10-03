@@ -1893,6 +1893,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 dknight");
 		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 justice");
 		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_HARD, HORDE_SQUAD_TYPE_FLYING, "2 grenling");
+		Horde_SpawnSquadEntity(HORDE_ELITE | HORDE_EASY, HORDE_SQUAD_TYPE_FLYING, "2 demon_eye");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 hknight");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 dfury");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "2 knight 1 hknight");
@@ -1901,6 +1902,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 hogremac");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_RANGED, "1 ogre");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "3 wizard");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "2 demon_eye");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "2 gargoyle");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "2 gaunt");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_FLYING, "2 octa");
@@ -1959,6 +1961,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 icegolem");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 zerstorer"); // technically flying, but small enough to use regular spawns
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 eoc");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");

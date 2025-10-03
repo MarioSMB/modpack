@@ -6,9 +6,9 @@ CLASS(Fish, Weapon)
 /* spawnflags*/ ATTRIB(Fish, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Fish, aflag, int, 5);
 /* modelname */ ATTRIB(Fish, mdl, string, "feesh");
-/* crosshair */ ATTRIB(Fish, w_crosshair, string, "gfx/crosshair50");
-/* crosshair */ ATTRIB(Fish, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Fish, w_crosshair_color, vector, '1 0.5 0.5');
+/* crosshair */ ATTRIB(Fish, w_crosshair, string, "gfx/crosshairt");
+/* crosshair */ ATTRIB(Fish, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(Fish, w_crosshair_color, vector, '0.25 0.25 1');
 /* wepimg    */ ATTRIB(Fish, model2, string, "fish");
 /* refname   */ ATTRIB(Fish, netname, string, "fish");
 /* wepname   */ ATTRIB(Fish, m_name, string, _("Mighty Norse Throwing Fish"));

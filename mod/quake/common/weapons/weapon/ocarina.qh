@@ -14,7 +14,7 @@ CLASS(Ocarina, Weapon)
 /* modelname */ ATTRIB(Ocarina, mdl, string, "ocarina");
 /* crosshair */ ATTRIB(Ocarina, w_crosshair, string, "gfx/crosshairtuba");
 /* crosshair */ ATTRIB(Ocarina, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Ocarina, w_crosshair_color, vector, '0.5 0.25 0');
+/* crosshair */ ATTRIB(Ocarina, w_crosshair_color, vector, '0.909 0.816 0.345');
 /* wepimg    */ ATTRIB(Ocarina, model2, string, "ocarina");
 /* refname   */ ATTRIB(Ocarina, netname, string, "ocarina");
 /* wepname   */ ATTRIB(Ocarina, m_name, string, _("Ocarina"));

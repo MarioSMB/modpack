@@ -10,9 +10,9 @@ CLASS(Ripper, Weapon)
 /* spawnflags*/ ATTRIB(Ripper, spawnflags, int, 0);
 /* ammo */      ATTRIB(Ripper, aflag, int, 15);
 /* modelname */ ATTRIB(Ripper, mdl, string, "buzzsaw");
-/* crosshair */ ATTRIB(Ripper, w_crosshair, string, "gfx/crosshairrocketlauncher");
-/* crosshair */ ATTRIB(Ripper, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Ripper, w_crosshair_color, vector, '1 1 0');
+/* crosshair */ ATTRIB(Ripper, w_crosshair, string, "gfx/crosshair14");
+/* crosshair */ ATTRIB(Ripper, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Ripper, w_crosshair_color, vector, '0.5 0.25 0');
 /* wepimg    */ ATTRIB(Ripper, model2, string, "buzzsaw");
 /* refname   */ ATTRIB(Ripper, netname, string, "ripper");
 /* wepname   */ ATTRIB(Ripper, m_name, string, _("Ripper"));

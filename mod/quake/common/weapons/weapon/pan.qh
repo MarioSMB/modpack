@@ -8,7 +8,7 @@ CLASS(Pan, Weapon)
 /* modelname */ ATTRIB(Pan, mdl, string, "fryingpan");
 /* crosshair */ ATTRIB(Pan, w_crosshair, string, "gfx/crosshair8");
 /* crosshair */ ATTRIB(Pan, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Pan, w_crosshair_color, vector, '1 0.5 0.5');
+/* crosshair */ ATTRIB(Pan, w_crosshair_color, vector, '0.8 0.8 0.8');
 /* wepimg    */ ATTRIB(Pan, model2, string, "pan");
 /* refname   */ ATTRIB(Pan, netname, string, "pan");
 /* wepname   */ ATTRIB(Pan, m_name, string, _("Frying Pan"));

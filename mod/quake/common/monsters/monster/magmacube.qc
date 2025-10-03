@@ -56,11 +56,11 @@ void magmacube_run1(entity this) { set_anim(this, 0, magmacube_run2); ai_run(thi
 
 //===========================================================================
 
-void magmacube_pain6(entity this) { set_animofs(this, anim_magmacube_pain, 5, magmacube_run1); this.colormod = (this.charmed) ? '0 1 0' : '1 1 1'; }
+void magmacube_pain6(entity this) { set_animofs(this, anim_magmacube_pain, 5, magmacube_run1); this.colormod = (this.charmed) ? '0 1 0' : '1 1 1'; this.glowmod = this.colormod; }
 void magmacube_pain5(entity this) { set_animofs(this, anim_magmacube_pain, 5, magmacube_pain6); }
-void magmacube_pain4(entity this) { set_animofs(this, anim_magmacube_pain, 4, magmacube_pain5); this.colormod = '1 0.8 0.8'; }
+void magmacube_pain4(entity this) { set_animofs(this, anim_magmacube_pain, 4, magmacube_pain5); this.colormod = '1 0.8 0.8'; this.glowmod = this.colormod; }
 void magmacube_pain3(entity this) { set_animofs(this, anim_magmacube_pain, 3, magmacube_pain4);}
-void magmacube_pain2(entity this) { set_animofs(this, anim_magmacube_pain, 2, magmacube_pain3); ai_pain(this, 6); this.colormod = '1 0.6 0.6'; }
+void magmacube_pain2(entity this) { set_animofs(this, anim_magmacube_pain, 2, magmacube_pain3); ai_pain(this, 6); this.colormod = '1 0.6 0.6'; this.glowmod = this.colormod; }
 void magmacube_pain1(entity this) { set_animofs(this, anim_magmacube_pain, 1, magmacube_pain2); ai_pain(this, 6); }
 
 void magmacube_pain(entity this, entity attacker, float damage, int deathtype)
@@ -75,6 +75,7 @@ void magmacube_pain(entity this, entity attacker, float damage, int deathtype)
 
 	this.pain_finished = time + 0.5;
 	this.colormod = '1 0.9 0.9';
+	this.glowmod = this.colormod;
 
 	magmacube_pain1(this);
 }
@@ -104,6 +105,7 @@ void magmacube_vanish(entity this)
 	if(this.magmacube_size > 0 && this.magmacube_size < 3)
 	{
 		this.colormod = '1 1 1'; // don't break clone's colormod TODO
+		this.glowmod = this.colormod;
 		magmacube_split(this, magmacube_randompos(this));
 		magmacube_split(this, magmacube_randompos(this));
 		if(random() < 0.5)
@@ -145,6 +147,7 @@ void magmacube_die(entity this, entity inflictor, entity attacker, int deathtype
 	}
 
 	this.colormod = '1 0.6 0.6';
+	this.glowmod = this.colormod;
 	this.angles_z = 0;
 	magmacube_die1(this);
 }
@@ -198,6 +201,7 @@ METHOD(MagmaCube, mr_setup, bool(MagmaCube this, entity actor))
 	setsize(actor, this.m_mins * actor.scale, this.m_maxs * actor.scale);
 
 	actor.solid = SOLID_CORPSE; // passes through, can still impact players
+	actor.glowmod = actor.colormod;
 
     actor.health = 70 * actor.scale;
     actor.th_stand = magmacube_stand;

@@ -8,7 +8,7 @@ CLASS(ProximityGun, Weapon)
 /* modelname */ ATTRIB(ProximityGun, mdl, string, "prox");
 /* crosshair */ ATTRIB(ProximityGun, w_crosshair, string, "gfx/crosshairminelayer");
 /* crosshair */ ATTRIB(ProximityGun, w_crosshair_size, float, 0.9);
-/* crosshair */ ATTRIB(ProximityGun, w_crosshair_color, vector, '0.75 1 0');
+/* crosshair */ ATTRIB(ProximityGun, w_crosshair_color, vector, '1 0 0');
 /* wepimg    */ ATTRIB(ProximityGun, model2, string, "prox");
 /* refname   */ ATTRIB(ProximityGun, netname, string, "proximitygun");
 /* wepname   */ ATTRIB(ProximityGun, m_name, string, _("Proximity Gun"));

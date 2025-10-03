@@ -81,11 +81,11 @@ void endermite_melee(entity this)
 
 //===========================================================================
 
-void endermite_pain6(entity this) { set_anim(this, anim_endermite_stand, endermite_run); this.colormod = (this.charmed) ? '0 1 0' : '1 1 1'; }
+void endermite_pain6(entity this) { set_anim(this, anim_endermite_stand, endermite_run); this.colormod = (this.charmed) ? '0 1 0' : '1 1 1'; this.glowmod = this.colormod; }
 void endermite_pain5(entity this) { set_anim(this, anim_endermite_stand, endermite_pain6); }
-void endermite_pain4(entity this) { set_anim(this, anim_endermite_stand, endermite_pain5); this.colormod = '1 0.8 0.8'; }
+void endermite_pain4(entity this) { set_anim(this, anim_endermite_stand, endermite_pain5); this.colormod = '1 0.8 0.8'; this.glowmod = this.colormod; }
 void endermite_pain3(entity this) { set_anim(this, anim_endermite_stand, endermite_pain4);}
-void endermite_pain2(entity this) { set_anim(this, anim_endermite_stand, endermite_pain3); ai_pain(this, 6); this.colormod = '1 0.6 0.6'; }
+void endermite_pain2(entity this) { set_anim(this, anim_endermite_stand, endermite_pain3); ai_pain(this, 6); this.colormod = '1 0.6 0.6'; this.glowmod = this.colormod; }
 void endermite_pain1(entity this) { set_anim(this, anim_endermite_stand, endermite_pain2); ai_pain(this, 6); }
 
 void endermite_pain(entity this, entity attacker, float damage, int deathtype)
@@ -97,6 +97,7 @@ void endermite_pain(entity this, entity attacker, float damage, int deathtype)
 
 	this.pain_finished = time + 1.1;
 	this.colormod = '1 0.9 0.9';
+	this.glowmod = this.colormod;
 
 	endermite_pain1(this);
 }
@@ -122,6 +123,7 @@ void endermite_die(entity this, entity inflictor, entity attacker, int deathtype
 
 	this.angles_z = 0;
 	this.colormod = '1 0.6 0.6';
+	this.glowmod = this.colormod;
 	endermite_die1(this);
 }
 
@@ -138,6 +140,8 @@ METHOD(Endermite, mr_setup, bool(Endermite this, entity actor))
 	precache_sound("silverfish/kill.wav");
 
 	actor.yaw_speed = 180;
+
+	actor.glowmod = actor.colormod;
 
     actor.health = 25;
     actor.th_stand = endermite_stand1;
