@@ -47,3 +47,4 @@ MODEL(PROJECTILE_MAYO,                      "progs/grenade_mayo.mdl");
 MODEL(PROJECTILE_OCARINA,                   "progs/piano_musicnote_white.mdl");
 MODEL(PROJECTILE_SHOCKGUN_PLASMA,           "progs/pbullet.mdl");
 MODEL(PROJECTILE_LASER,                     "progs/lasrspik.mdl");
+MODEL(PROJECTILE_PIANO_MUSIC,               "progs/piano_musicnote_white.mdl");

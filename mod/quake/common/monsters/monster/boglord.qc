@@ -52,12 +52,12 @@ void bogl_walk11(entity this) { set_animofs(this, anim_boglord_walk, 11, bogl_wa
 void bogl_walk10(entity this) { set_animofs(this, anim_boglord_walk, 10, bogl_walk11); ai_walk(this, 9); }
 void bogl_walk9(entity this) { set_animofs(this, anim_boglord_walk, 9, bogl_walk10); ai_walk(this, 13); }
 void bogl_walk8(entity this) { set_animofs(this, anim_boglord_walk, 8, bogl_walk9); ai_walk(this, 3); }
-void bogl_walk7(entity this) { set_animofs(this, anim_boglord_walk, 7, bogl_walk8); ai_walk(this, 8); }
+void bogl_walk7(entity this) { set_animofs(this, anim_boglord_walk, 7, bogl_walk8); ai_walk(this, 8); monster_footstep(this, false); }
 void bogl_walk6(entity this) { set_animofs(this, anim_boglord_walk, 6, bogl_walk7); ai_walk(this, 12); }
 void bogl_walk5(entity this) { set_animofs(this, anim_boglord_walk, 5, bogl_walk6); ai_walk(this, 6); }
 void bogl_walk4(entity this) { set_animofs(this, anim_boglord_walk, 4, bogl_walk5); ai_walk(this, 5); }
 void bogl_walk3(entity this) { set_animofs(this, anim_boglord_walk, 3, bogl_walk4); ai_walk(this, 9); }
-void bogl_walk2(entity this) { set_animofs(this, anim_boglord_walk, 2, bogl_walk3); ai_walk(this, 9); }
+void bogl_walk2(entity this) { set_animofs(this, anim_boglord_walk, 2, bogl_walk3); ai_walk(this, 9); monster_footstep(this, false); }
 void bogl_walk1(entity this)
 {
 	set_animofs(this, anim_boglord_walk, 1, bogl_walk2);
@@ -73,10 +73,10 @@ void bogl_walk1(entity this)
 
 void bogl_run1(entity this);
 void bogl_run6(entity this) { set_animofs(this, anim_boglord_run, 6, bogl_run1); ai_run(this, 20); }
-void bogl_run5(entity this) { set_animofs(this, anim_boglord_run, 5, bogl_run6); ai_run(this, 24); }
+void bogl_run5(entity this) { set_animofs(this, anim_boglord_run, 5, bogl_run6); ai_run(this, 24); monster_footstep(this, false); }
 void bogl_run4(entity this) { set_animofs(this, anim_boglord_run, 4, bogl_run5); ai_run(this, 20); }
 void bogl_run3(entity this) { set_animofs(this, anim_boglord_run, 3, bogl_run4); ai_run(this, 20); }
-void bogl_run2(entity this) { set_animofs(this, anim_boglord_run, 2, bogl_run3); ai_run(this, 24); }
+void bogl_run2(entity this) { set_animofs(this, anim_boglord_run, 2, bogl_run3); ai_run(this, 24); monster_footstep(this, false); }
 void bogl_run1(entity this)
 {
 	set_animofs(this, anim_boglord_run, 1, bogl_run2);
@@ -311,7 +311,7 @@ void bogl_smash6(entity this) { set_animofs(this, anim_boglord_smash, 6, bogl_sm
 void bogl_smash5(entity this) { set_animofs(this, anim_boglord_smash, 5, bogl_smash6); bogl_slimeball(this, '-58 30 114','-60 -30 114',3,4); }
 void bogl_smash4(entity this) { set_animofs(this, anim_boglord_smash, 4, bogl_smash5); bogl_slimeball(this, '-34 48 122','-34 -48 124',2,5); }
 void bogl_smash3(entity this) { set_animofs(this, anim_boglord_smash, 3, bogl_smash4); bogl_slimeball(this, '-5 66 102','2 -58 104',1,6); }
-void bogl_smash2(entity this) { set_animofs(this, anim_boglord_smash, 2, bogl_smash3); bogl_slimeball(this, '21 70 60','32 -53 64',0,6); }
+void bogl_smash2(entity this) { set_animofs(this, anim_boglord_smash, 2, bogl_smash3); bogl_slimeball(this, '21 70 60','32 -53 64',0,6); monster_footstep(this, false); }
 void bogl_smash1(entity this)
 {
 	set_animofs(this, anim_boglord_smash, 1, bogl_smash2);
@@ -449,7 +449,7 @@ void bogl_casting(entity this, vector leftofs, vector rightofs, float sbframe)
 
 void bogl_magic12(entity this) { set_animofs(this, anim_boglord_magic, 12, bogl_run1); }
 void bogl_magic11(entity this) { set_animofs(this, anim_boglord_magic, 11, bogl_magic12); }
-void bogl_magic10(entity this) { set_animofs(this, anim_boglord_magic, 10, bogl_magic11); bogl_lightning(this); }
+void bogl_magic10(entity this) { set_animofs(this, anim_boglord_magic, 10, bogl_magic11); bogl_lightning(this); monster_footstep(this, false); }
 void bogl_magic9(entity this) { set_animofs(this, anim_boglord_magic, 9, bogl_magic10); bogl_lightning(this); }
 void bogl_magic6(entity this)
 {
@@ -461,7 +461,7 @@ void bogl_magic6(entity this)
 	SpawnExplosion(peffect, this.pos3, "boglord/slime_explode.wav");
 }
 void bogl_magic5(entity this) { set_animofs(this, anim_boglord_magic, 5, bogl_magic6); bogl_casting(this, '-3 34 119','19 -15 110', 3); }
-void bogl_magic4(entity this) { set_animofs(this, anim_boglord_magic, 4, bogl_magic5); bogl_casting(this, '-28 48 100','6 3 110', 2); }
+void bogl_magic4(entity this) { set_animofs(this, anim_boglord_magic, 4, bogl_magic5); bogl_casting(this, '-28 48 100','6 3 110', 2); monster_footstep(this, false); }
 void bogl_magic3(entity this) { set_animofs(this, anim_boglord_magic, 3, bogl_magic4); bogl_casting(this, '-16 50 95','11 0 108', 1); }
 void bogl_magic2(entity this) { set_animofs(this, anim_boglord_magic, 2, bogl_magic3); bogl_casting(this, '0 53 86','21 -10 102', 0); }
 void bogl_magic1(entity this)
@@ -730,6 +730,8 @@ METHOD(BogLord, mr_setup, bool(BogLord this, entity actor))
 	actor.th_pain = bogl_pain;
 
 	actor.checkattack = BogLordCheckAttack;
+
+	actor.steptype = FS_TYPELARGE;
 
     return true;
 }

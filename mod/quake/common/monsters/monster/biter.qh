@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BITER,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was chomped by a Biter"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BITER,               1,  NULL,           INFO_DEATH_SELF_MON_BITER,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BITER,           DEATH_SELF_MON_BITER,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BITER, "progs/biter.mdl");
+MODEL(MON_BITER_HEAD, "progs/h_biter.mdl");
+
+SOUND(MON_BITER_SIGHT, "biter/sight");
+#endif
+
+CLASS(Biter, Monster)
+    ATTRIB(Biter, spawnflags, int, 0);
+    ATTRIB(Biter, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Biter, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(Biter, m_model, Model, MDL_MON_BITER);
+    ATTRIB(Biter, m_model_head, Model, MDL_MON_BITER_HEAD);
+    ATTRIB(Biter, m_sound, Sound, SND_MON_BITER_SIGHT);
+#endif
+    ATTRIB(Biter, netname, string, "biter");
+    ATTRIB(Biter, m_name, string, _("Biter"));
+ENDCLASS(Biter)
+
+REGISTER_MONSTER(BITER, NEW(Biter));

@@ -44,12 +44,12 @@ void sham_walk11(entity this) { set_animofs(this, anim_sham_walk, 11, sham_walk1
 void sham_walk10(entity this) { set_animofs(this, anim_sham_walk, 10, sham_walk11); ai_walk(this, 9); }
 void sham_walk9(entity this) { set_animofs(this, anim_sham_walk, 9, sham_walk10); ai_walk(this, 13); }
 void sham_walk8(entity this) { set_animofs(this, anim_sham_walk, 8, sham_walk9); ai_walk(this, 3); }
-void sham_walk7(entity this) { set_animofs(this, anim_sham_walk, 7, sham_walk8); ai_walk(this, 8); }
+void sham_walk7(entity this) { set_animofs(this, anim_sham_walk, 7, sham_walk8); ai_walk(this, 8); monster_footstep(this, false); }
 void sham_walk6(entity this) { set_animofs(this, anim_sham_walk, 6, sham_walk7); ai_walk(this, 12); }
 void sham_walk5(entity this) { set_animofs(this, anim_sham_walk, 5, sham_walk6); ai_walk(this, 6); }
 void sham_walk4(entity this) { set_animofs(this, anim_sham_walk, 4, sham_walk5); ai_walk(this, 5); }
 void sham_walk3(entity this) { set_animofs(this, anim_sham_walk, 3, sham_walk4); ai_walk(this, 9); }
-void sham_walk2(entity this) { set_animofs(this, anim_sham_walk, 2, sham_walk3); ai_walk(this, 9); }
+void sham_walk2(entity this) { set_animofs(this, anim_sham_walk, 2, sham_walk3); ai_walk(this, 9); monster_footstep(this, false); }
 void sham_walk1(entity this) { set_animofs(this, anim_sham_walk, 1, sham_walk2); ai_walk(this, 10); }
 
 void sham_run1(entity this);
@@ -60,10 +60,10 @@ void sham_run6(entity this)
 	if(random() > 0.8)
 		_sound(this, CH_VOICE, "shambler/sidle.wav", 1, ATTN_IDLE);
 }
-void sham_run5(entity this) { set_animofs(this, anim_sham_run, 5, sham_run6); ai_run(this, 24); }
+void sham_run5(entity this) { set_animofs(this, anim_sham_run, 5, sham_run6); ai_run(this, 24); monster_footstep(this, false); }
 void sham_run4(entity this) { set_animofs(this, anim_sham_run, 4, sham_run5); ai_run(this, 20); }
 void sham_run3(entity this) { set_animofs(this, anim_sham_run, 3, sham_run4); ai_run(this, 20); }
-void sham_run2(entity this) { set_animofs(this, anim_sham_run, 2, sham_run3); ai_run(this, 24); }
+void sham_run2(entity this) { set_animofs(this, anim_sham_run, 2, sham_run3); ai_run(this, 24); monster_footstep(this, false); }
 void sham_run1(entity this) { set_animofs(this, anim_sham_run, 1, sham_run2); ai_run(this, 20); }
 
 void sham_smash12(entity this) { set_animofs(this, anim_sham_smash, 12, sham_run1); ai_charge(this, 4); }
@@ -97,7 +97,7 @@ void sham_smash6(entity this) { set_animofs(this, anim_sham_smash, 6, sham_smash
 void sham_smash5(entity this) { set_animofs(this, anim_sham_smash, 5, sham_smash6); ai_charge(this, 4); }
 void sham_smash4(entity this) { set_animofs(this, anim_sham_smash, 4, sham_smash5); ai_charge(this, 5); }
 void sham_smash3(entity this) { set_animofs(this, anim_sham_smash, 3, sham_smash4); ai_charge(this, 6); }
-void sham_smash2(entity this) { set_animofs(this, anim_sham_smash, 2, sham_smash3); ai_charge(this, 6); }
+void sham_smash2(entity this) { set_animofs(this, anim_sham_smash, 2, sham_smash3); ai_charge(this, 6); monster_footstep(this, false); }
 void sham_smash1(entity this)
 {
 	set_animofs(this, anim_sham_smash, 1, sham_smash2);
@@ -148,7 +148,7 @@ void sham_swingl6(entity this) { set_animofs(this, anim_sham_swingl, 6, sham_swi
 void sham_swingl5(entity this) { set_animofs(this, anim_sham_swingl, 5, sham_swingl6); ai_charge(this, 7); }
 void sham_swingl4(entity this) { set_animofs(this, anim_sham_swingl, 4, sham_swingl5); ai_charge(this, 3); }
 void sham_swingl3(entity this) { set_animofs(this, anim_sham_swingl, 3, sham_swingl4); ai_charge(this, 7); }
-void sham_swingl2(entity this) { set_animofs(this, anim_sham_swingl, 2, sham_swingl3); ai_charge(this, 3); }
+void sham_swingl2(entity this) { set_animofs(this, anim_sham_swingl, 2, sham_swingl3); ai_charge(this, 3); monster_footstep(this, false); }
 void sham_swingl1(entity this)
 {
 	set_animofs(this, anim_sham_swingl, 1, sham_swingl2); 
@@ -175,7 +175,7 @@ void sham_swingr6(entity this) { set_animofs(this, anim_sham_swingr, 6, sham_swi
 void sham_swingr5(entity this) { set_animofs(this, anim_sham_swingr, 5, sham_swingr6); ai_charge(this, 3); }
 void sham_swingr4(entity this) { set_animofs(this, anim_sham_swingr, 4, sham_swingr5); ai_charge(this, 7); }
 void sham_swingr3(entity this) { set_animofs(this, anim_sham_swingr, 3, sham_swingr4); ai_charge(this, 14); }
-void sham_swingr2(entity this) { set_animofs(this, anim_sham_swingr, 2, sham_swingr3); ai_charge(this, 8); }
+void sham_swingr2(entity this) { set_animofs(this, anim_sham_swingr, 2, sham_swingr3); ai_charge(this, 8); monster_footstep(this, false); }
 void sham_swingr1(entity this)
 {
 	set_animofs(this, anim_sham_swingr, 1, sham_swingr2); 
@@ -257,12 +257,14 @@ void CastLightning(entity this)
 
 void sham_magic12(entity this) { set_animofs(this, anim_sham_magic, 12, sham_run1); }
 void sham_magic11(entity this) { set_animofs(this, anim_sham_magic, 11, sham_magic12); }
-void sham_magic10(entity this) { set_animofs(this, anim_sham_magic, 10, sham_magic11); CastLightning(this); }
+void sham_magic10(entity this) { set_animofs(this, anim_sham_magic, 10, sham_magic11); CastLightning(this); monster_footstep(this, false); }
 void sham_magic9(entity this) { set_animofs(this, anim_sham_magic, 9, sham_magic10); CastLightning(this); }
 void sham_magic6(entity this)
 {
 	set_animofs(this, anim_sham_magic, 6, sham_magic9);
-	delete(this.owner);
+	if(this.attachment)
+		delete(this.attachment);
+	this.attachment = NULL;
 	CastLightning(this);
 	_sound(this, CH_WEAPON_SINGLE, "shambler/sboom.wav", 1, ATTN_NORM);
 }
@@ -270,13 +272,14 @@ void sham_magic5(entity this)
 {
 	set_animofs(this, anim_sham_magic, 5, sham_magic6);
 	this.effects |= EF_MUZZLEFLASH;
-	this.owner.frame = 2;
+	this.attachment.frame = 2;
 }
 void sham_magic4(entity this)
 {
 	set_animofs(this, anim_sham_magic, 4, sham_magic5);
 	this.effects |= EF_MUZZLEFLASH;
-	this.owner.frame = 1;
+	this.attachment.frame = 1;
+	monster_footstep(this, false);
 }
 void sham_magic3(entity this)
 {
@@ -286,7 +289,7 @@ void sham_magic3(entity this)
 
 	this.effects |= EF_MUZZLEFLASH;
 	entity o = spawn();
-	this.owner = o;
+	this.attachment = o;
 	_setmodel(o, "progs/s_light.mdl");
 	setorigin(o, this.origin);
 	o.angles = this.angles;
@@ -484,6 +487,8 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 	actor.th_pain = sham_pain;
 
 	actor.checkattack = ShamCheckAttack;
+
+	actor.steptype = FS_TYPELARGE;
 
     return true;
 }

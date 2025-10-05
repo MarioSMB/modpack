@@ -44,7 +44,7 @@ void hogremac_stand1(entity this)
 //============================================================================
 void hogremac_walk1(entity this);
 void hogremac_walkB12(entity this) { set_animofs(this, anim_hogremac_walkB, 12, hogremac_walk1); ai_walk(this, 0); }
-void hogremac_walkB11(entity this) { set_animofs(this, anim_hogremac_walkB, 11, hogremac_walkB12); /*monster_footstep(this, false);*/ ai_walk(this, 0); }
+void hogremac_walkB11(entity this) { set_animofs(this, anim_hogremac_walkB, 11, hogremac_walkB12); monster_footstep(this, false); ai_walk(this, 0); }
 void hogremac_walkB10(entity this) { set_animofs(this, anim_hogremac_walkB, 10, hogremac_walkB11); ai_walk(this, 2); }
 void hogremac_walkB9(entity this) { set_animofs(this, anim_hogremac_walkB, 9, hogremac_walkB10); ai_walk(this, 6); }
 void hogremac_walkB8(entity this)
@@ -56,7 +56,7 @@ void hogremac_walkB8(entity this)
 }
 void hogremac_walkB7(entity this) { set_animofs(this, anim_hogremac_walkB, 7, hogremac_walkB8); ai_walk(this, 6); }
 void hogremac_walkB6(entity this) { set_animofs(this, anim_hogremac_walkB, 6, hogremac_walkB7); ai_walk(this, 0); }
-void hogremac_walkB5(entity this) { set_animofs(this, anim_hogremac_walkB, 5, hogremac_walkB6); /*monster_footstep(this, false);*/ ai_walk(this, 0); }
+void hogremac_walkB5(entity this) { set_animofs(this, anim_hogremac_walkB, 5, hogremac_walkB6); monster_footstep(this, false); ai_walk(this, 0); }
 void hogremac_walkB4(entity this) { set_animofs(this, anim_hogremac_walkB, 4, hogremac_walkB5); ai_walk(this, 4); }
 void hogremac_walkB3(entity this)
 {
@@ -72,7 +72,7 @@ void hogremac_walkB1(entity this) { set_animofs(this, anim_hogremac_walkB, 1, ho
 void hogremac_walk12(entity this)
 {
 	set_animofs(this, anim_hogremac_walk, 12, hogremac_walk1);
-	/*monster_footstep(this, false);*/
+	monster_footstep(this, false);
 	if(random() < 0.05)
 		setthink(this, hogremac_walkB1);
 	ai_walk(this, 4);
@@ -88,7 +88,7 @@ void hogremac_walk9(entity this)
 }
 void hogremac_walk8(entity this) { set_animofs(this, anim_hogremac_walk, 8, hogremac_walk9); ai_walk(this, 4); }
 void hogremac_walk7(entity this) { set_animofs(this, anim_hogremac_walk, 7, hogremac_walk8); ai_walk(this, 4); }
-void hogremac_walk6(entity this) { set_animofs(this, anim_hogremac_walk, 6, hogremac_walk7);  /*monster_footstep(this, false);*/  ai_walk(this, 4); }
+void hogremac_walk6(entity this) { set_animofs(this, anim_hogremac_walk, 6, hogremac_walk7); monster_footstep(this, false); ai_walk(this, 4); }
 void hogremac_walk5(entity this) { set_animofs(this, anim_hogremac_walk, 5, hogremac_walk6); ai_walk(this, 4); }
 void hogremac_walk4(entity this) { set_animofs(this, anim_hogremac_walk, 4, hogremac_walk5); ai_walk(this, 4); }
 void hogremac_walk3(entity this)
@@ -105,11 +105,11 @@ void hogremac_walk1(entity this) { set_animofs(this, anim_hogremac_walk, 1, hogr
 void hogremac_run1(entity this);
 void hogremac_run8(entity this) { set_animofs(this, anim_hogremac_run, 8, hogremac_run1); ai_run(this, 13); }
 void hogremac_run7(entity this) { set_animofs(this, anim_hogremac_run, 7, hogremac_run8); ai_run(this, 18); }
-void hogremac_run6(entity this) { set_animofs(this, anim_hogremac_run, 6, hogremac_run7);  /*monster_footstep(this, false);*/  ai_run(this, 16); }
+void hogremac_run6(entity this) { set_animofs(this, anim_hogremac_run, 6, hogremac_run7); monster_footstep(this, false); ai_run(this, 16); }
 void hogremac_run5(entity this) { set_animofs(this, anim_hogremac_run, 5, hogremac_run6); ai_run(this, 8); }
 void hogremac_run4(entity this) { set_animofs(this, anim_hogremac_run, 4, hogremac_run5); ai_run(this, 13); }
 void hogremac_run3(entity this) { set_animofs(this, anim_hogremac_run, 3, hogremac_run4); ai_run(this, 13); }
-void hogremac_run2(entity this) { set_animofs(this, anim_hogremac_run, 2, hogremac_run3);  /*monster_footstep(this, false);*/  ai_run(this, 13); }
+void hogremac_run2(entity this) { set_animofs(this, anim_hogremac_run, 2, hogremac_run3); monster_footstep(this, false); ai_run(this, 13); }
 void hogremac_run1(entity this)
 {
 	set_animofs(this, anim_hogremac_run, 1, hogremac_run2);
@@ -123,12 +123,12 @@ void hogremac_run1(entity this)
 //----------------------------------------------------------------------
 void hogremac_swing14(entity this) { set_animofs(this, anim_hogremac_swing, 14, hogremac_run1); ai_face(this); }
 void hogremac_swing13(entity this) { set_animofs(this, anim_hogremac_swing, 13, hogremac_swing14); ai_face(this); }
-void hogremac_swing12(entity this) { set_animofs(this, anim_hogremac_swing, 12, hogremac_swing13); ai_face(this); /*monster_footstep(this, false);*/ }
+void hogremac_swing12(entity this) { set_animofs(this, anim_hogremac_swing, 12, hogremac_swing13); ai_face(this); monster_footstep(this, false); }
 void hogremac_swing11(entity this) { set_animofs(this, anim_hogremac_swing, 11, hogremac_swing12); ai_forward(this, 4); }
 void hogremac_swing10(entity this) { set_animofs(this, anim_hogremac_swing, 10, hogremac_swing11); ai_forward(this, 4); }
 void hogremac_swing9(entity this) { set_animofs(this, anim_hogremac_swing, 9, hogremac_swing10); ai_forward(this, 4); }
 void hogremac_swing8(entity this) { set_animofs(this, anim_hogremac_swing, 8, hogremac_swing9); ai_forward(this, 4); }
-void hogremac_swing7(entity this) { set_animofs(this, anim_hogremac_swing, 7, hogremac_swing8); ai_forward(this, 4); /*monster_footstep(this, false);*/ }
+void hogremac_swing7(entity this) { set_animofs(this, anim_hogremac_swing, 7, hogremac_swing8); ai_forward(this, 4); monster_footstep(this, false); }
 void hogremac_swing6(entity this)
 {
 	set_animofs(this, anim_hogremac_swing, 6, hogremac_swing7);
@@ -159,7 +159,7 @@ void hogremac_smash10(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "ogre/ham_hit.wav", 1, ATTN_IDLE);
 }
 void hogremac_smash9(entity this) { set_animofs(this, anim_hogremac_smash, 9, hogremac_smash10); ai_face(this); }
-void hogremac_smash8(entity this) { set_animofs(this, anim_hogremac_smash, 8, hogremac_smash9); ai_face(this); /*monster_footstep(this, false);*/  }
+void hogremac_smash8(entity this) { set_animofs(this, anim_hogremac_smash, 8, hogremac_smash9); ai_face(this); monster_footstep(this, false); }
 void hogremac_smash7(entity this) { set_animofs(this, anim_hogremac_smash, 7, hogremac_smash8); ai_charge(this, 5); }
 void hogremac_smash6(entity this) { set_animofs(this, anim_hogremac_smash, 6, hogremac_smash7); ai_charge(this, 5); }
 void hogremac_smash5(entity this) { set_animofs(this, anim_hogremac_smash, 5, hogremac_smash6); ai_charge(this, 12); }
@@ -199,7 +199,7 @@ void hogremac_painA1(entity this) { set_animofs(this, anim_hogremac_painA, 1, ho
 //----------------------------------------------------------------------
 // painB - Stagger backwards
 //----------------------------------------------------------------------
-void hogremac_painB13(entity this) { set_animofs(this, anim_hogremac_painB, 13, hogremac_run1); /*monster_footstep(this, false);*/ ai_forward(this, 2); }
+void hogremac_painB13(entity this) { set_animofs(this, anim_hogremac_painB, 13, hogremac_run1); monster_footstep(this, false); ai_forward(this, 2); }
 void hogremac_painB12(entity this) { set_animofs(this, anim_hogremac_painB, 12, hogremac_painB13); ai_forward(this, 2); }
 void hogremac_painB11(entity this) { set_animofs(this, anim_hogremac_painB, 11, hogremac_painB12); ai_forward(this, 2); }
 void hogremac_painB10(entity this) { set_animofs(this, anim_hogremac_painB, 10, hogremac_painB11); ai_forward(this, 2); }
@@ -208,7 +208,7 @@ void hogremac_painB8(entity this) { set_animofs(this, anim_hogremac_painB, 8, ho
 void hogremac_painB7(entity this) { set_animofs(this, anim_hogremac_painB, 7, hogremac_painB8); ai_forward(this, 2); }
 void hogremac_painB6(entity this) { set_animofs(this, anim_hogremac_painB, 6, hogremac_painB7); ai_forward(this, 2); }
 void hogremac_painB5(entity this) { set_animofs(this, anim_hogremac_painB, 5, hogremac_painB6); }
-void hogremac_painB4(entity this) { set_animofs(this, anim_hogremac_painB, 4, hogremac_painB5); /*monster_footstep(this, false);*/ }
+void hogremac_painB4(entity this) { set_animofs(this, anim_hogremac_painB, 4, hogremac_painB5); monster_footstep(this, false); }
 void hogremac_painB3(entity this) { set_animofs(this, anim_hogremac_painB, 3, hogremac_painB4); }
 void hogremac_painB2(entity this) { set_animofs(this, anim_hogremac_painB, 2, hogremac_painB3); ai_pain(this, 5); }
 void hogremac_painB1(entity this) { set_animofs(this, anim_hogremac_painB, 1, hogremac_painB2); ai_pain(this, 7); }
@@ -220,10 +220,10 @@ void hogremac_painC17(entity this) { set_animofs(this, anim_hogremac_painC, 17, 
 void hogremac_painC16(entity this) { set_animofs(this, anim_hogremac_painC, 16, hogremac_painC17); ai_forward(this, 5); }
 void hogremac_painC15(entity this) { set_animofs(this, anim_hogremac_painC, 15, hogremac_painC16); ai_forward(this, 4); }
 void hogremac_painC14(entity this) { set_animofs(this, anim_hogremac_painC, 14, hogremac_painC15); ai_forward(this, 4); }
-void hogremac_painC13(entity this) { set_animofs(this, anim_hogremac_painC, 13, hogremac_painC14); /*monster_footstep(this, false);*/ ai_forward(this, 3); }
+void hogremac_painC13(entity this) { set_animofs(this, anim_hogremac_painC, 13, hogremac_painC14); monster_footstep(this, false); ai_forward(this, 3); }
 void hogremac_painC12(entity this) { set_animofs(this, anim_hogremac_painC, 12, hogremac_painC13); }
 void hogremac_painC11(entity this) { set_animofs(this, anim_hogremac_painC, 11, hogremac_painC12); }
-void hogremac_painC10(entity this) { set_animofs(this, anim_hogremac_painC, 10, hogremac_painC11); /*monster_footstep(this, false);*/ }
+void hogremac_painC10(entity this) { set_animofs(this, anim_hogremac_painC, 10, hogremac_painC11); monster_footstep(this, false); }
 void hogremac_painC9(entity this) { set_animofs(this, anim_hogremac_painC, 9, hogremac_painC10); }
 void hogremac_painC8(entity this) { set_animofs(this, anim_hogremac_painC, 8, hogremac_painC9); }
 void hogremac_painC7(entity this) { set_animofs(this, anim_hogremac_painC, 7, hogremac_painC8); }
@@ -391,6 +391,8 @@ METHOD(MaceOgre, mr_setup, bool(MaceOgre this, entity actor))
 	actor.th_pain = hogremac_pain;
 
 	actor.checkattack = OgreCheckAttack;
+
+	actor.steptype = FS_TYPEMEDIUM;
 
 	if(actor.ammo_rockets < 0)
 		actor.ammo_rockets = 0;

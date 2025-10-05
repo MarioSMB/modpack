@@ -169,7 +169,7 @@ void ogre_walk13(entity this) { set_animofs(this, anim_ogre_walk, 13, ogre_walk1
 void ogre_walk12(entity this) { set_animofs(this, anim_ogre_walk, 12, ogre_walk13); ai_walk(this, 3); }
 void ogre_walk11(entity this) { set_animofs(this, anim_ogre_walk, 11, ogre_walk12); ai_walk(this, 2); }
 void ogre_walk10(entity this) { set_animofs(this, anim_ogre_walk, 10, ogre_walk11); ai_walk(this, 1); }
-void ogre_walk9(entity this) { set_animofs(this, anim_ogre_walk, 9, ogre_walk10); ai_walk(this, 3); }
+void ogre_walk9(entity this) { set_animofs(this, anim_ogre_walk, 9, ogre_walk10); ai_walk(this, 3); monster_footstep(this, false); }
 void ogre_walk8(entity this) { set_animofs(this, anim_ogre_walk, 8, ogre_walk9); ai_walk(this, 2); }
 void ogre_walk7(entity this) { set_animofs(this, anim_ogre_walk, 7, ogre_walk8); ai_walk(this, 3); }
 void ogre_walk6(entity this)
@@ -189,16 +189,16 @@ void ogre_walk3(entity this)
 		_sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
 }
 void ogre_walk2(entity this) { set_animofs(this, anim_ogre_walk, 2, ogre_walk3); ai_walk(this, 2); }
-void ogre_walk1(entity this) { set_animofs(this, anim_ogre_walk, 1, ogre_walk2); ai_walk(this, 3); }
+void ogre_walk1(entity this) { set_animofs(this, anim_ogre_walk, 1, ogre_walk2); ai_walk(this, 3); monster_footstep(this, false); }
 
 void ogre_run1(entity this);
 void ogre_run8(entity this) { set_animofs(this, anim_ogre_run, 8, ogre_run1); ai_run(this, 9); }
 void ogre_run7(entity this) { set_animofs(this, anim_ogre_run, 7, ogre_run8); ai_run(this, 12); }
-void ogre_run6(entity this) { set_animofs(this, anim_ogre_run, 6, ogre_run7); ai_run(this, 8); }
+void ogre_run6(entity this) { set_animofs(this, anim_ogre_run, 6, ogre_run7); ai_run(this, 8); monster_footstep(this, false); }
 void ogre_run5(entity this) { set_animofs(this, anim_ogre_run, 5, ogre_run6); ai_run(this, 22); }
 void ogre_run4(entity this) { set_animofs(this, anim_ogre_run, 4, ogre_run5); ai_run(this, 16); }
 void ogre_run3(entity this) { set_animofs(this, anim_ogre_run, 3, ogre_run4); ai_run(this, 4); }
-void ogre_run2(entity this) { set_animofs(this, anim_ogre_run, 2, ogre_run3); ai_run(this, 13); }
+void ogre_run2(entity this) { set_animofs(this, anim_ogre_run, 2, ogre_run3); ai_run(this, 13); monster_footstep(this, false); }
 void ogre_run1(entity this)
 {
 	set_animofs(this, anim_ogre_run, 1, ogre_run2);
@@ -216,7 +216,7 @@ void ogre_swing9(entity this) { set_animofs(this, anim_ogre_swing, 9, ogre_swing
 void ogre_swing8(entity this) { set_animofs(this, anim_ogre_swing, 8, ogre_swing9); chainsaw(this, 0); this.angles_y = this.angles_y + random() * 25; }
 void ogre_swing7(entity this) { set_animofs(this, anim_ogre_swing, 7, ogre_swing8); chainsaw(this, 0); this.angles_y = this.angles_y + random() * 25; }
 void ogre_swing6(entity this) { set_animofs(this, anim_ogre_swing, 6, ogre_swing7); chainsaw(this, 200); this.angles_y = this.angles_y + random() * 25; }
-void ogre_swing5(entity this) { set_animofs(this, anim_ogre_swing, 5, ogre_swing6); ai_charge(this, 9); chainsaw(this, 0); this.angles_y = this.angles_y + random() * 25; }
+void ogre_swing5(entity this) { set_animofs(this, anim_ogre_swing, 5, ogre_swing6); ai_charge(this, 9); chainsaw(this, 0); this.angles_y = this.angles_y + random() * 25; monster_footstep(this, false); }
 void ogre_swing4(entity this) { set_animofs(this, anim_ogre_swing, 4, ogre_swing5); ai_charge(this, 13); }
 void ogre_swing3(entity this) { set_animofs(this, anim_ogre_swing, 3, ogre_swing4); ai_charge(this, 4); }
 void ogre_swing2(entity this) { set_animofs(this, anim_ogre_swing, 2, ogre_swing3); ai_charge(this, 1); }
@@ -232,7 +232,7 @@ void ogre_smash13(entity this) { set_animofs(this, anim_ogre_smash, 13, ogre_sma
 void ogre_smash12(entity this) { set_animofs(this, anim_ogre_smash, 12, ogre_smash13); ai_charge(this, 0); }
 void ogre_smash11(entity this) { set_animofs(this, anim_ogre_smash, 11, ogre_smash12); chainsaw(this, 2); this.nextthink = this.nextthink + random() * 0.2; /* slight variation */ }
 void ogre_smash10(entity this) { set_animofs(this, anim_ogre_smash, 10, ogre_smash11); chainsaw(this, 1); }
-void ogre_smash9(entity this) { set_animofs(this, anim_ogre_smash, 9, ogre_smash10); ai_charge(this, 13); chainsaw(this, 0); }
+void ogre_smash9(entity this) { set_animofs(this, anim_ogre_smash, 9, ogre_smash10); ai_charge(this, 13); chainsaw(this, 0); monster_footstep(this, false); }
 void ogre_smash8(entity this) { set_animofs(this, anim_ogre_smash, 8, ogre_smash9); ai_charge(this, 10); chainsaw(this, 0); }
 void ogre_smash7(entity this) { set_animofs(this, anim_ogre_smash, 7, ogre_smash8); ai_charge(this, 4); chainsaw(this, 0); }
 void ogre_smash6(entity this) { set_animofs(this, anim_ogre_smash, 6, ogre_smash7); ai_charge(this, 4); chainsaw(this, 0); }
@@ -276,15 +276,15 @@ void ogre_paind16(entity this) { set_animofs(this, anim_ogre_paind, 16, ogre_run
 void ogre_paind15(entity this) { set_animofs(this, anim_ogre_paind, 15, ogre_paind16); }
 void ogre_paind14(entity this) { set_animofs(this, anim_ogre_paind, 14, ogre_paind15); }
 void ogre_paind13(entity this) { set_animofs(this, anim_ogre_paind, 13, ogre_paind14); }
-void ogre_paind12(entity this) { set_animofs(this, anim_ogre_paind, 12, ogre_paind13); }
+void ogre_paind12(entity this) { set_animofs(this, anim_ogre_paind, 12, ogre_paind13); monster_footstep(this, false); }
 void ogre_paind11(entity this) { set_animofs(this, anim_ogre_paind, 11, ogre_paind12); }
-void ogre_paind10(entity this) { set_animofs(this, anim_ogre_paind, 10, ogre_paind11); }
+void ogre_paind10(entity this) { set_animofs(this, anim_ogre_paind, 10, ogre_paind11); monster_footstep(this, false); }
 void ogre_paind9(entity this) { set_animofs(this, anim_ogre_paind, 9, ogre_paind10); }
 void ogre_paind8(entity this) { set_animofs(this, anim_ogre_paind, 8, ogre_paind9); }
 void ogre_paind7(entity this) { set_animofs(this, anim_ogre_paind, 7, ogre_paind8); }
 void ogre_paind6(entity this) { set_animofs(this, anim_ogre_paind, 6, ogre_paind7); }
 void ogre_paind5(entity this) { set_animofs(this, anim_ogre_paind, 5, ogre_paind6); }
-void ogre_paind4(entity this) { set_animofs(this, anim_ogre_paind, 4, ogre_paind5); ai_pain(this, 4); }
+void ogre_paind4(entity this) { set_animofs(this, anim_ogre_paind, 4, ogre_paind5); ai_pain(this, 4); monster_footstep(this, false); }
 void ogre_paind3(entity this) { set_animofs(this, anim_ogre_paind, 3, ogre_paind4); ai_pain(this, 9); }
 void ogre_paind2(entity this) { set_animofs(this, anim_ogre_paind, 2, ogre_paind3); ai_pain(this, 10); }
 void ogre_paind1(entity this) { set_animofs(this, anim_ogre_paind, 1, ogre_paind2); }
@@ -301,7 +301,7 @@ void ogre_paine7(entity this) { set_animofs(this, anim_ogre_paine, 7, ogre_paine
 void ogre_paine6(entity this) { set_animofs(this, anim_ogre_paine, 6, ogre_paine7); }
 void ogre_paine5(entity this) { set_animofs(this, anim_ogre_paine, 5, ogre_paine6); }
 void ogre_paine4(entity this) { set_animofs(this, anim_ogre_paine, 4, ogre_paine5); ai_pain(this, 4); }
-void ogre_paine3(entity this) { set_animofs(this, anim_ogre_paine, 3, ogre_paine4); ai_pain(this, 9); }
+void ogre_paine3(entity this) { set_animofs(this, anim_ogre_paine, 3, ogre_paine4); ai_pain(this, 9); monster_footstep(this, false); }
 void ogre_paine2(entity this) { set_animofs(this, anim_ogre_paine, 2, ogre_paine3); ai_pain(this, 10); }
 void ogre_paine1(entity this) { set_animofs(this, anim_ogre_paine, 1, ogre_paine2); }
 
@@ -535,6 +535,8 @@ METHOD(Ogre, mr_setup, bool(Ogre this, entity actor))
 	actor.th_pain = ogre_pain;
 
 	actor.checkattack = OgreCheckAttack;
+
+	actor.steptype = FS_TYPESLOW;
 
     return true;
 }

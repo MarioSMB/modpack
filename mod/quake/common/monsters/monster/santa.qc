@@ -129,19 +129,19 @@ void santa_stand1(entity this) { set_animofs(this, anim_santa_stand, 1, santa_st
 
 //======================================================================
 void santa_walk1(entity this);
-void santa_walk6(entity this) { set_animofs(this, anim_santa_run, 6, santa_walk1); ai_walk(this, 15); }
+void santa_walk6(entity this) { set_animofs(this, anim_santa_run, 6, santa_walk1); ai_walk(this, 15); monster_footstep(this, false); }
 void santa_walk5(entity this) { set_animofs(this, anim_santa_run, 5, santa_walk6); ai_walk(this, 17); }
 void santa_walk4(entity this) { set_animofs(this, anim_santa_run, 4, santa_walk5); ai_walk(this, 15); }
-void santa_walk3(entity this) { set_animofs(this, anim_santa_run, 3, santa_walk4); ai_walk(this, 15); }
+void santa_walk3(entity this) { set_animofs(this, anim_santa_run, 3, santa_walk4); ai_walk(this, 15); monster_footstep(this, false); }
 void santa_walk2(entity this) { set_animofs(this, anim_santa_run, 2, santa_walk3); ai_walk(this, 17); }
 void santa_walk1(entity this) { set_animofs(this, anim_santa_run, 1, santa_walk2); santa_idlesound(this); ai_walk(this, 15); }
 
 //======================================================================
 void santa_run1(entity this);
-void santa_run6(entity this) { set_animofs(this, anim_santa_run, 6, santa_run1); ai_run(this, 20); }
+void santa_run6(entity this) { set_animofs(this, anim_santa_run, 6, santa_run1); ai_run(this, 20); monster_footstep(this, false); }
 void santa_run5(entity this) { set_animofs(this, anim_santa_run, 5, santa_run6); ai_run(this, 24); }
 void santa_run4(entity this) { set_animofs(this, anim_santa_run, 4, santa_run5); ai_run(this, 20); }
-void santa_run3(entity this) { set_animofs(this, anim_santa_run, 3, santa_run4); ai_run(this, 20); }
+void santa_run3(entity this) { set_animofs(this, anim_santa_run, 3, santa_run4); ai_run(this, 20); monster_footstep(this, false); }
 void santa_run2(entity this) { set_animofs(this, anim_santa_run, 2, santa_run3); ai_run(this, 24); }
 void santa_run1(entity this)
 {
@@ -461,6 +461,8 @@ METHOD(Santa, mr_setup, bool(Santa this, entity actor))
     actor.health = 600;
 	actor.th_pain = santa_pain;
 	actor.th_die = santa_die;
+
+	actor.steptype = FS_TYPEHEAVY;
 
 	if(actor.spawnflags & MON_SANTA_GOOD)
 	{

@@ -180,6 +180,8 @@ void eidolon_move(entity this, int fstate)
 		else
 			_sound(this, CH_VOICE, "eidolon/idle2.wav", 1, ATTN_IDLE);
 	}
+	if(this.frame == (anim_eidolon_walk + 1) || this.frame == (anim_eidolon_walk + 13)) // $walk2 || $walk14
+		monster_footstep(this, false);
 	
 	// Phase 1 (caged) uses walk to turn around
 	if(this.style == EIDOLON_PHASE1)
@@ -655,6 +657,9 @@ void eidolon_attackE_turning(entity this)
 		this.walkframe = 0;
 	}
 	this.frame = anim_eidolon_walk + this.walkframe;
+
+	if(this.frame == (anim_eidolon_walk + 1) || this.frame == (anim_eidolon_walk + 13)) // $walk2 || $walk14
+		monster_footstep(this, false);
 	
 	// Move slowly closer to crystal or backward!
 	if(vdist(this.attachment2.origin - this.origin, >, 192))
@@ -1141,6 +1146,19 @@ METHOD(Eidolon, mr_setup, bool(Eidolon this, entity actor))
 
 	// Attack E - Lightning at summoning crystal - range attack
 	precache_sound ("eidolon/attacke.wav");
+
+	// Custom feet sounds
+	actor.stepc1 = "eidolon/footstep1.wav";
+	actor.stepc2 = "eidolon/footstep2.wav";
+	actor.stepc3 = "eidolon/footstep3.wav";
+	actor.stepc4 = "eidolon/footstep4.wav";
+	actor.stepc5 = "eidolon/footstep1.wav";
+	precache_sound(actor.stepc1);
+	precache_sound(actor.stepc2);
+	precache_sound(actor.stepc3);
+	precache_sound(actor.stepc4);
+	precache_sound(actor.stepc5);
+	actor.steptype = FS_TYPECUSTOM;
 
 	if(random() > 0.5)
 		actor.skin = 1; // rocky skin

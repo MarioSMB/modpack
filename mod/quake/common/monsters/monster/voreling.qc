@@ -44,7 +44,7 @@ void voreling_walk1(entity this);
 void voreling_walk5(entity this) { set_animofs(this, anim_voreling_walk, 5, voreling_walk1); ai_walk(this, 5); }
 void voreling_walk4(entity this) { set_animofs(this, anim_voreling_walk, 4, voreling_walk5); ai_walk(this, 5); }
 void voreling_walk3(entity this) { set_animofs(this, anim_voreling_walk, 3, voreling_walk4); ai_walk(this, 4); }
-void voreling_walk2(entity this) { set_animofs(this, anim_voreling_walk, 2, voreling_walk3); ai_walk(this, 3); }
+void voreling_walk2(entity this) { set_animofs(this, anim_voreling_walk, 2, voreling_walk3); ai_walk(this, 3); monster_footstep(this, false); }
 void voreling_walk1(entity this) { set_animofs(this, anim_voreling_walk, 1, voreling_walk2); voreling_idle_sound(this); ai_walk(this, 4); }
 
 void voreling_jump1(entity this);
@@ -89,6 +89,7 @@ void Voreling_JumpTouch(entity this, entity toucher)
 	settouch(this, func_null);
 	setthink(this, voreling_run1);
 	this.nextthink = time + 0.1;
+	monster_footstep(this, false);
 }
 
 void voreling_jump6(entity this) { set_animofs(this, anim_voreling_jump, 6, voreling_run1); }
@@ -212,11 +213,11 @@ void voreling_wakeup(entity this)
 
 void voreling_run8(entity this) { set_animofs(this, anim_voreling_run, 4, voreling_run1); ai_run(this, 10); }
 void voreling_run7(entity this) { set_animofs(this, anim_voreling_run, 3, voreling_run8); ai_run(this, 8); }
-void voreling_run6(entity this) { set_animofs(this, anim_voreling_run, 2, voreling_run7); ai_run(this, 6); }
+void voreling_run6(entity this) { set_animofs(this, anim_voreling_run, 2, voreling_run7); ai_run(this, 6); monster_footstep(this, false); }
 void voreling_run5(entity this) { set_animofs(this, anim_voreling_run, 1, voreling_run6); ai_run(this, 8); }
 void voreling_run4(entity this) { set_animofs(this, anim_voreling_run, 4, voreling_run5); ai_run(this, 10); }
 void voreling_run3(entity this) { set_animofs(this, anim_voreling_run, 3, voreling_run4); ai_run(this, 8); }
-void voreling_run2(entity this) { set_animofs(this, anim_voreling_run, 2, voreling_run3); ai_run(this, 6); }
+void voreling_run2(entity this) { set_animofs(this, anim_voreling_run, 2, voreling_run3); ai_run(this, 6); monster_footstep(this, false); }
 void voreling_run1(entity this) { set_animofs(this, anim_voreling_run, 1, voreling_run2); voreling_idle_sound(this); ai_face(this); }
 
 void voreling_slide5(entity this) { set_animofs(this, anim_voreling_walk, 5, voreling_run1); ai_run(this, 4); }
@@ -286,6 +287,8 @@ METHOD(Voreling, mr_setup, bool(Voreling this, entity actor))
 	actor.health = 10;
 	actor.th_pain = voreling_pain;
 	actor.th_die = voreling_die;
+
+	actor.steptype = FS_TYPELIGHT;
 
 	if(actor.spawnflags & MON_VORELING_CEILING)
 	{

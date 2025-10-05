@@ -23,9 +23,9 @@ void raind_idlefeet7(entity this) { set_animofs(this, anim_raindeer_idlefeet, 7,
 void raind_idlefeet6(entity this) { set_animofs(this, anim_raindeer_idlefeet, 6, raind_idlefeet7); ai_stand(this); }
 void raind_idlefeet5(entity this) { set_animofs(this, anim_raindeer_idlefeet, 5, raind_idlefeet6); ai_stand(this); }
 void raind_idlefeet4(entity this) { set_animofs(this, anim_raindeer_idlefeet, 4, raind_idlefeet5); ai_stand(this); }
-void raind_idlefeet3(entity this) { set_animofs(this, anim_raindeer_idlefeet, 3, raind_idlefeet4); ai_stand(this); }
+void raind_idlefeet3(entity this) { set_animofs(this, anim_raindeer_idlefeet, 3, raind_idlefeet4); ai_stand(this); monster_footstep(this, false); }
 void raind_idlefeet2(entity this) { set_animofs(this, anim_raindeer_idlefeet, 2, raind_idlefeet3); ai_stand(this); }
-void raind_idlefeet1(entity this) { set_animofs(this, anim_raindeer_idlefeet, 1, raind_idlefeet2); ai_stand(this); }
+void raind_idlefeet1(entity this) { set_animofs(this, anim_raindeer_idlefeet, 1, raind_idlefeet2); ai_stand(this); monster_footstep(this, false); }
 
 //----------------------------------------------------------------------
 void raind_stand8(entity this)
@@ -44,22 +44,22 @@ void raind_stand1(entity this) { set_animofs(this, anim_raindeer_stand, 1, raind
 
 //======================================================================
 void raind_walk1(entity this);
-void raind_walk8(entity this) { set_animofs(this, anim_raindeer_run, 4, raind_walk1); ai_walk(this, 8); }
+void raind_walk8(entity this) { set_animofs(this, anim_raindeer_run, 4, raind_walk1); ai_walk(this, 8); monster_footstep(this, false); }
 void raind_walk7(entity this) { set_animofs(this, anim_raindeer_run, 3, raind_walk8); ai_walk(this, 5); }
 void raind_walk6(entity this) { set_animofs(this, anim_raindeer_run, 2, raind_walk7); ai_walk(this, 13); }
 void raind_walk5(entity this) { set_animofs(this, anim_raindeer_run, 1, raind_walk6); ai_walk(this, 8); }
-void raind_walk4(entity this) { set_animofs(this, anim_raindeer_run, 8, raind_walk5); ai_walk(this, 5); }
+void raind_walk4(entity this) { set_animofs(this, anim_raindeer_run, 8, raind_walk5); ai_walk(this, 5); monster_footstep(this, false); }
 void raind_walk3(entity this) { set_animofs(this, anim_raindeer_run, 7, raind_walk4); ai_walk(this, 10); }
 void raind_walk2(entity this) { set_animofs(this, anim_raindeer_run, 6, raind_walk3); ai_walk(this, 5); }
 void raind_walk1(entity this) { set_animofs(this, anim_raindeer_run, 5, raind_walk2); raindeer_idlesound(this); ai_walk(this, 8); }
 
 //======================================================================
 void raind_run1(entity this);
-void raind_run8(entity this) { set_animofs(this, anim_raindeer_run, 4, raind_run1); ai_run(this, 15); }
+void raind_run8(entity this) { set_animofs(this, anim_raindeer_run, 4, raind_run1); ai_run(this, 15); monster_footstep(this, false); }
 void raind_run7(entity this) { set_animofs(this, anim_raindeer_run, 3, raind_run8); ai_run(this, 10); }
 void raind_run6(entity this) { set_animofs(this, anim_raindeer_run, 2, raind_run7); ai_run(this, 25); }
 void raind_run5(entity this) { set_animofs(this, anim_raindeer_run, 1, raind_run6); ai_run(this, 15); }
-void raind_run4(entity this) { set_animofs(this, anim_raindeer_run, 8, raind_run5); ai_run(this, 10); }
+void raind_run4(entity this) { set_animofs(this, anim_raindeer_run, 8, raind_run5); ai_run(this, 10); monster_footstep(this, false); }
 void raind_run3(entity this) { set_animofs(this, anim_raindeer_run, 7, raind_run4); ai_run(this, 20); }
 void raind_run2(entity this) { set_animofs(this, anim_raindeer_run, 6, raind_run3); ai_run(this, 10); }
 void raind_run1(entity this) { set_animofs(this, anim_raindeer_run, 5, raind_run2); raindeer_idlesound(this); ai_run(this, 15); }
@@ -323,6 +323,8 @@ METHOD(Raindeer, mr_setup, bool(Raindeer this, entity actor))
 	actor.th_missile = raind_shoot1;
 	actor.th_pain = raind_pain;
 	actor.th_die = raind_die;
+
+	actor.steptype = FS_TYPESLOW;
 
     return true;
 }

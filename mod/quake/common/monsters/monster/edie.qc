@@ -249,7 +249,7 @@ void edie_walk14(entity this) { set_animofs(this, anim_edie_run, 14, edie_walk15
 void edie_walk13(entity this) { set_animofs(this, anim_edie_run, 13, edie_walk14); ai_walk(this, 4); }
 void edie_walk12(entity this) { set_animofs(this, anim_edie_run, 12, edie_walk13); ai_walk(this, 2); }
 void edie_walk11(entity this) { set_animofs(this, anim_edie_run, 11, edie_walk12); ai_walk(this, 1); }
-void edie_walk10(entity this) { set_animofs(this, anim_edie_run, 10, edie_walk11); ai_walk(this, 16); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_walk10(entity this) { set_animofs(this, anim_edie_run, 10, edie_walk11); ai_walk(this, 16); monster_footstep(this, false); }
 void edie_walk9(entity this) { set_animofs(this, anim_edie_run, 9, edie_walk10); ai_walk(this, 20); }
 void edie_walk8(entity this) { set_animofs(this, anim_edie_run, 8, edie_walk9); ai_walk(this, 16); }
 void edie_walk7(entity this) { set_animofs(this, anim_edie_run, 7, edie_walk8); ai_walk(this, 4); }
@@ -257,7 +257,7 @@ void edie_walk6(entity this) { set_animofs(this, anim_edie_run, 6, edie_walk7); 
 void edie_walk5(entity this) { set_animofs(this, anim_edie_run, 5, edie_walk6); ai_walk(this, 4); }
 void edie_walk4(entity this) { set_animofs(this, anim_edie_run, 4, edie_walk5); ai_walk(this, 2); }
 void edie_walk3(entity this) { set_animofs(this, anim_edie_run, 3, edie_walk4); ai_walk(this, 1); }
-void edie_walk2(entity this) { set_animofs(this, anim_edie_run, 2, edie_walk3); ai_walk(this, 16); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_walk2(entity this) { set_animofs(this, anim_edie_run, 2, edie_walk3); ai_walk(this, 16); monster_footstep(this, false); }
 void edie_walk1(entity this) { set_animofs(this, anim_edie_run, 1, edie_walk2); ai_walk(this, 20); }
 
 void ai_edie_run_firing(entity this, float dist, float frm)
@@ -327,7 +327,7 @@ void edie_run14(entity this) { set_animofs(this, anim_edie_run, 14, edie_run15);
 void edie_run13(entity this) { set_animofs(this, anim_edie_run, 13, edie_run14); ai_edie_run(this, this.multiplier * 4, 13); }
 void edie_run12(entity this) { set_animofs(this, anim_edie_run, 12, edie_run13); ai_edie_run(this, this.multiplier * 2, 12); }
 void edie_run11(entity this) { set_animofs(this, anim_edie_run, 11, edie_run12); ai_edie_run(this, this.multiplier * 1, 11); }
-void edie_run10(entity this) { set_animofs(this, anim_edie_run, 10, edie_run11); ai_edie_run(this, this.multiplier * 16, 10); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_run10(entity this) { set_animofs(this, anim_edie_run, 10, edie_run11); ai_edie_run(this, this.multiplier * 16, 10); monster_footstep(this, false); }
 void edie_run9(entity this) { set_animofs(this, anim_edie_run, 9, edie_run10); ai_edie_run(this, this.multiplier * 20, 9); }
 void edie_run8(entity this) { set_animofs(this, anim_edie_run, 8, edie_run9); ai_edie_run(this, this.multiplier * 4, 8); }
 void edie_run7(entity this) { set_animofs(this, anim_edie_run, 7, edie_run8); ai_edie_run(this, this.multiplier * 4, 7); }
@@ -335,13 +335,13 @@ void edie_run6(entity this) { set_animofs(this, anim_edie_run, 6, edie_run7); ai
 void edie_run5(entity this) { set_animofs(this, anim_edie_run, 5, edie_run6); ai_edie_run(this, this.multiplier * 4, 5); }
 void edie_run4(entity this) { set_animofs(this, anim_edie_run, 4, edie_run5); ai_edie_run(this, this.multiplier * 2, 4); }
 void edie_run3(entity this) { set_animofs(this, anim_edie_run, 3, edie_run4); ai_edie_run(this, this.multiplier * 1, 3); }
-void edie_run2(entity this) { set_animofs(this, anim_edie_run, 2, edie_run3); ai_edie_run(this, this.multiplier * 16, 2); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_run2(entity this) { set_animofs(this, anim_edie_run, 2, edie_run3); ai_edie_run(this, this.multiplier * 16, 2); monster_footstep(this, false); }
 void edie_run1(entity this) { set_animofs(this, anim_edie_run, 1, edie_run2); ai_edie_run(this, this.multiplier * 20, 1); }
 
 void edie_firesit_start8(entity this) { set_animofs(this, anim_edie_firesitstart, 8, edie_firesit1); ai_face(this); }
 void edie_firesit_start7(entity this) { set_animofs(this, anim_edie_firesitstart, 7, edie_firesit_start8); ai_face(this); }
 void edie_firesit_start6(entity this) { set_animofs(this, anim_edie_firesitstart, 6, edie_firesit_start7); ai_face(this); }
-void edie_firesit_start5(entity this) { set_animofs(this, anim_edie_firesitstart, 5, edie_firesit_start6); ai_face(this); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_firesit_start5(entity this) { set_animofs(this, anim_edie_firesitstart, 5, edie_firesit_start6); ai_face(this); monster_footstep(this, false); }
 void edie_firesit_start4(entity this) { set_animofs(this, anim_edie_firesitstart, 4, edie_firesit_start5); ai_face(this); }
 void edie_firesit_start3(entity this) { set_animofs(this, anim_edie_firesitstart, 3, edie_firesit_start4); ai_face(this); }
 void edie_firesit_start2(entity this) { set_animofs(this, anim_edie_firesitstart, 2, edie_firesit_start3); ai_face(this); }
@@ -446,12 +446,12 @@ void edie_fswing8(entity this) { set_animofs(this, anim_edie_fswing, 8, edie_fsw
 void edie_fswing7(entity this) { set_animofs(this, anim_edie_fswing, 7, edie_fswing8); this.nextthink = time + 0.06; ai_face(this); ai_forward(this, 1); }
 void edie_fswing6(entity this) { set_animofs(this, anim_edie_fswing, 6, edie_fswing7); this.nextthink = time + 0.07; ai_face(this); ai_forward(this, 1); }
 void edie_fswing5(entity this) { set_animofs(this, anim_edie_fswing, 5, edie_fswing6); this.nextthink = time + 0.07; ai_face(this); ai_forward(this, 2); }
-void edie_fswing4(entity this) { set_animofs(this, anim_edie_fswing, 4, edie_fswing5); this.nextthink = time + 0.08; ai_face(this); ai_forward(this, 4); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_fswing4(entity this) { set_animofs(this, anim_edie_fswing, 4, edie_fswing5); this.nextthink = time + 0.08; ai_face(this); ai_forward(this, 4); monster_footstep(this, false); }
 void edie_fswing3(entity this) { set_animofs(this, anim_edie_fswing, 3, edie_fswing4); this.nextthink = time + 0.09; ai_face(this); ai_forward(this, 10); }
-void edie_fswing2(entity this) { set_animofs(this, anim_edie_fswing, 2, edie_fswing3); this.nextthink = time + 0.1; ai_face(this); ai_forward(this, 16); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_fswing2(entity this) { set_animofs(this, anim_edie_fswing, 2, edie_fswing3); this.nextthink = time + 0.1; ai_face(this); ai_forward(this, 16); monster_footstep(this, false); }
 void edie_fswing1(entity this) { set_animofs(this, anim_edie_fswing, 1, edie_fswing2); this.nextthink = time + 0.1; ai_face(this); ai_forward(this, 8); _sound(this, CH_VOICE, "edie/sawstart.wav", 1, ATTN_IDLE); }
 
-void edie_fswing_end10(entity this) { set_animofs(this, anim_edie_fswingend, 10, edie_run1); ai_face(this); ai_forward(this, 16); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_fswing_end10(entity this) { set_animofs(this, anim_edie_fswingend, 10, edie_run1); ai_face(this); ai_forward(this, 16); monster_footstep(this, false); }
 void edie_fswing_end9(entity this) { set_animofs(this, anim_edie_fswingend, 9, edie_fswing_end10); ai_face(this); ai_forward(this, 16); }
 void edie_fswing_end8(entity this) { set_animofs(this, anim_edie_fswingend, 8, edie_fswing_end9); ai_face(this); ai_forward(this, 12); }
 void edie_fswing_end7(entity this) { set_animofs(this, anim_edie_fswingend, 7, edie_fswing_end8); ai_face(this); ai_forward(this, 16); }
@@ -467,12 +467,12 @@ void edie_bswing13(entity this) { set_animofs(this, anim_edie_bswing, 13, edie_b
 void edie_bswing12(entity this) { set_animofs(this, anim_edie_bswing, 12, edie_bswing13); ai_face(this); ai_forward(this, 12); }
 void edie_bswing11(entity this) { set_animofs(this, anim_edie_bswing, 11, edie_bswing12); ai_face(this); ai_forward(this, 8); }
 void edie_bswing10(entity this) { set_animofs(this, anim_edie_bswing, 10, edie_bswing11); ai_face(this); ai_forward(this, 8); }
-void edie_bswing9(entity this) { set_animofs(this, anim_edie_bswing, 9, edie_bswing10); ai_face(this); ai_forward(this, 8); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_bswing9(entity this) { set_animofs(this, anim_edie_bswing, 9, edie_bswing10); ai_face(this); ai_forward(this, 8); monster_footstep(this, false); }
 void edie_bswing8(entity this) { set_animofs(this, anim_edie_bswing, 8, edie_bswing9); ai_face(this); ai_forward(this, 8); }
 void edie_bswing7(entity this) { set_animofs(this, anim_edie_bswing, 7, edie_bswing8); ai_face(this); ai_forward(this, 4); }
 void edie_bswing6(entity this) { set_animofs(this, anim_edie_bswing, 6, edie_bswing7); ai_face(this); ai_forward(this, 4); }
 void edie_bswing5(entity this) { set_animofs(this, anim_edie_bswing, 5, edie_bswing6); ai_face(this); ai_forward(this, 6); edie_melee_hit(this, 100, 12, 20); }
-void edie_bswing4(entity this) { set_animofs(this, anim_edie_bswing, 4, edie_bswing5); ai_face(this); ai_forward(this, 2); _sound(this, CHAN_BODY, "edie/step.wav", 1, ATTN_IDLE); }
+void edie_bswing4(entity this) { set_animofs(this, anim_edie_bswing, 4, edie_bswing5); ai_face(this); ai_forward(this, 2); monster_footstep(this, false); }
 void edie_bswing3(entity this) { set_animofs(this, anim_edie_bswing, 3, edie_bswing4); ai_face(this); ai_forward(this, 4); }
 void edie_bswing2(entity this) { set_animofs(this, anim_edie_bswing, 2, edie_bswing3); ai_face(this); ai_forward(this, 12); }
 void edie_bswing1(entity this) { set_animofs(this, anim_edie_bswing, 1, edie_bswing2); ai_face(this); ai_forward(this, 20);  _sound(this, CH_VOICE, "edie/sawstart.wav", 1, ATTN_IDLE); }
@@ -693,6 +693,9 @@ spawnfunc(monster_edie) { monster_start(this, true, MON_EDIE); }
 
 // alkaline
 spawnfunc(monster_banshee) { monster_start(this, true, MON_EDIE); }
+
+// ad
+spawnfunc(monster_freddie) { monster_start(this, true, MON_EDIE); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -724,6 +727,17 @@ METHOD(Edie, mr_setup, bool(Edie this, entity actor))
 	actor.yaw_speed = 16;
 	actor.health = 500;
 	actor.multiplier = 1.2;
+
+	// Custom feet sounds (specific order)
+	actor.stepc1 = "edie/step.wav";
+	actor.stepc2 = "edie/step2.wav";
+	actor.stepc3 = "edie/step.wav";
+	actor.stepc4 = "edie/step2.wav";
+	actor.stepc5 = "edie/step3.wav";
+	precache_sound(actor.stepc1);
+	precache_sound(actor.stepc2);
+	precache_sound(actor.stepc5);
+	actor.steptype = FS_TYPECUSTOM;
 
     return true;
 }

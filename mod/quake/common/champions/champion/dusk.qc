@@ -150,6 +150,8 @@ void Dusk_Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 {
 	if(!IS_MONSTER(targ) || targ.monsterdef == MON_Null || (targ.monsterdef.spawnflags & MONSTER_TYPE_DECOY) || targ.charmed)
 		return;
+	if(targ.monsterdef == MON_TENTACLE)
+		return; // TODO: "can't be spawned" flag?
 	Dusk_MakeWisp(targ);
 }
 

@@ -384,6 +384,8 @@ void justice_walkframe(entity this)
 	justice_finish_attachment(this);
 
 	// Beginning of animation block
+	if(this.walkframe == 0 || this.walkframe == 7)
+		monster_footstep(this, false);
 	if(this.walkframe == 3)
 	{
 		if(random() < 0.2)
@@ -419,6 +421,8 @@ void justice_runframe(entity this)
 	justice_finish_attachment(this);
 
 	// Beginning of animation block
+	if(this.walkframe == 0 || this.walkframe == 4)
+		monster_footstep(this, false);
 	if(this.walkframe == 2)
 	{
 		if(random() < 0.2)
@@ -461,6 +465,9 @@ void justice_chargeframe(entity this)
 	// Sword swoosh/whoosh noises
 	if(this.walkframe == 2 || this.walkframe == 8)
 		justice_sword_sound(this);
+	// Stompy feet sounds
+	else if(this.walkframe == 0 || this.walkframe == 3 || this.walkframe == 6 || this.walkframe == 9)
+		monster_footstep(this, false);
 	// Check for charging damage
 	if(this.walkframe == 1 || this.walkframe == 2)
 	{
@@ -942,7 +949,7 @@ void justice_jump7(entity this)
 	this.angles_x = this.angles_z = 0;
 	ai_face(this);
 }
-void justice_jump6(entity this) { set_animofs(this, anim_justice_jump, 6, justice_jump7); }
+void justice_jump6(entity this) { set_animofs(this, anim_justice_jump, 6, justice_jump7); monster_footstep(this, false); }
 void justice_jump5(entity this)
 {
 	set_animofs(this, anim_justice_jump, 5, justice_jump5);
@@ -1525,6 +1532,8 @@ METHOD(Justice, mr_setup, bool(Justice this, entity actor))
 
 	actor.weaponstate = JUSTICE_SWSHOULDER;
 	actor.state = JUSTICE_STAND;
+
+	actor.steptype = FS_TYPELARGE;
 
     return true;
 }

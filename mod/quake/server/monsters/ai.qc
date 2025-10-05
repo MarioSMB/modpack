@@ -1223,7 +1223,7 @@ bool FindTarget(entity this)
 		//this.effects |= EF_DIMLIGHT;
 		if(this.huntingcharmer > 0)
 		{
-			if(autocvar_sv_quake_pets_teleport && !horde_ent && this.health > 0 && IS_PLAYER(this.charmer) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
+			if(autocvar_sv_quake_pets_teleport && !horde_ent && this.health > 0 && IS_PLAYER(this.charmer) && !(this.monsterdef.spawnflags & MON_FLAG_STATIONARY) && !intermission_running && !cutscene_running && vdist(this.origin - this.charmer.origin, >, 1024))
 				TeleportToCharmer(this);
 
 			UpdateCharmerGoal(this);
@@ -1316,7 +1316,7 @@ bool FindTarget(entity this)
 	if(!angry_monsters)
 	{
 		int r = range(this, client);
-		if(r == RANGE_FAR && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS)) // give bosses a further range
+		if(r == RANGE_FAR && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && this.monsterdef != MON_SNOWMAN) // give bosses a further range TODO: allow customisation!
 			return false;
 			
 		if(!visible(this, client))
@@ -1362,6 +1362,119 @@ bool FindTarget(entity this)
 		FoundTarget(this);
 
 	return true;
+}
+
+/*======================================================================
+ monster_footstep
+  This function will play a footstep sound
+  * Types : Slow, Drag, Light, Medium, Heavy, Large
+  * called from animation blocks to sync with sound
+======================================================================*/
+void monster_footstep(entity this, bool altfoot)
+{
+	float footvol;
+	int footstep, footstepnext;
+
+	if(this.health < 1)
+		return;
+	if(this.move_movetype == MOVETYPE_NOCLIP)
+		return;
+	if(this.watertype < CONTENT_EMPTY)
+		return;
+	if(this.steptype == FS_FLYING)
+		return;
+	
+	// Wide volume range for player
+	if(IS_PLAYER(this))
+		footvol = 0.2 + random()*0.6;
+	// feetsteps need to be louder during combat
+	else if(this.enemy)
+		footvol = 1;
+	// Dogs have too many legs making noise, reduce volume	
+	// TODO?
+	else if(this.monsterdef == MON_ROTTWEILER)
+		footvol = 0.2 + random()*0.6;
+	// Slight random volume level out of combat
+	else
+		footvol = 0.7 + random()*0.3;
+	
+	// Decide which foot sound to play, long live clubfoot!
+	if(altfoot)
+	{
+		// Switch to ALTernative foot sound
+		footstep = this.altsteptype;
+		if(this.altsteplast < 1)
+			this.altsteplast = rint(1 + random() * 4);
+
+		// Increase footstep sound index by one 
+		footstepnext = rint(this.altsteplast + 1);
+		// Every loop around, randomly reset
+		if(footstepnext > 5)
+			footstepnext = rint(1 + random() * 4);
+		this.altsteplast = footstepnext;
+	}
+	else
+	{
+		// Setup last footstep sound
+		footstep = this.steptype;
+		if(this.steplast < 1)
+			this.steplast = rint(1 + random() * 4);
+
+		// Player is randomly selected footsteps
+		if(IS_PLAYER(this))
+		{
+			// Quake random function is not really super random
+			// Probably a bad seed starting point for function
+			// Use 3 randoms to create something more random!
+			footstepnext = rint(this.steplast + random() + random() + random());
+			if(footstepnext > 5)
+				footstepnext -= 5;
+		}
+		else
+		{
+			// Increase footstep sound index by one 
+			footstepnext = rint(this.steplast + 1);
+			// Every loop around, randomly reset
+			if(footstepnext > 5)
+				footstepnext = rint(1 + random() * 4);
+		}
+
+		// update last footstep index
+		this.steplast = footstepnext;
+	}
+	
+	// Cycle through all footstep types and work out correct sound file
+	// All footstep types reduced down to 5 possible choices (speed things up)
+	// Could store sound files with entity and cycle round quicker, req more memory
+	// re-checking the sound file every footstep is costly on time
+	// Luckly most footstep sounds are several frames apart (too noisy as well)
+	string stepsound = "misc/null.wav";
+	switch(footstep)
+	{
+		case FS_TYPELIGHT: stepsound = SND(FS_LIGHT(footstepnext)); break;
+		case FS_TYPEMEDIUM: stepsound = SND(FS_MEDIUM(footstepnext)); break;
+		case FS_TYPEHEAVY: stepsound = SND(FS_HEAVY(footstepnext)); break;
+		case FS_TYPELARGE: stepsound = SND(FS_LARGE(footstepnext)); break;
+		case FS_TYPEGIANT: stepsound = SND(FS_GIANT(footstepnext)); break;
+		case FS_TYPECUSTOM:
+		{
+			// Custom feet sounds (usually boss type creatures)
+			if(footstepnext < 2) stepsound = this.stepc1;
+			else if(footstepnext < 3) stepsound = this.stepc2;
+			else if(footstepnext < 4) stepsound = this.stepc3;
+			else if(footstepnext < 5) stepsound = this.stepc4;
+			else stepsound = this.stepc5;
+			break;
+		}
+		case FS_TYPEDRAG: stepsound = SND(FS_DRAG(footstepnext)); break;
+		default: stepsound = SND(FS_SLOW(footstepnext)); break;
+	}
+	
+	// Play the sound (large feet need to be heard further away)
+	if(footstep == FS_TYPELARGE)
+		_sound(this, CH_VOICE, stepsound, footvol, ATTN_FEETL);
+	else
+		_sound(this, CH_VOICE, stepsound, footvol, ATTN_FEET);
 }
 
 

@@ -104,7 +104,7 @@ void hknight_walk15(entity this) { set_animofs(this, anim_hknight_walk, 15, hkni
 void hknight_walk14(entity this) { set_animofs(this, anim_hknight_walk, 14, hknight_walk15); ai_walk(this, 2); }
 void hknight_walk13(entity this) { set_animofs(this, anim_hknight_walk, 13, hknight_walk14); ai_walk(this, 6); }
 void hknight_walk12(entity this) { set_animofs(this, anim_hknight_walk, 12, hknight_walk13); ai_walk(this, 4); }
-void hknight_walk11(entity this) { set_animofs(this, anim_hknight_walk, 11, hknight_walk12); ai_walk(this, 3); }
+void hknight_walk11(entity this) { set_animofs(this, anim_hknight_walk, 11, hknight_walk12); ai_walk(this, 3); monster_footstep(this, false); }
 void hknight_walk10(entity this) { set_animofs(this, anim_hknight_walk, 10, hknight_walk11); ai_walk(this, 4); }
 void hknight_walk9(entity this) { set_animofs(this, anim_hknight_walk, 9, hknight_walk10); ai_walk(this, 3); }
 void hknight_walk8(entity this) { set_animofs(this, anim_hknight_walk, 8, hknight_walk9); ai_walk(this, 3); }
@@ -113,7 +113,7 @@ void hknight_walk6(entity this) { set_animofs(this, anim_hknight_walk, 6, hknigh
 void hknight_walk5(entity this) { set_animofs(this, anim_hknight_walk, 5, hknight_walk6); ai_walk(this, 4); }
 void hknight_walk4(entity this) { set_animofs(this, anim_hknight_walk, 4, hknight_walk5); ai_walk(this, 4); }
 void hknight_walk3(entity this) { set_animofs(this, anim_hknight_walk, 3, hknight_walk4); ai_walk(this, 5); }
-void hknight_walk2(entity this) { set_animofs(this, anim_hknight_walk, 2, hknight_walk3); ai_walk(this, 5); }
+void hknight_walk2(entity this) { set_animofs(this, anim_hknight_walk, 2, hknight_walk3); ai_walk(this, 5); monster_footstep(this, false); }
 void hknight_walk1(entity this) { set_animofs(this, anim_hknight_walk, 1, hknight_walk2); hk_idle_sound(this); ai_walk(this, 2); }
 
 //===========================================================================
@@ -121,11 +121,11 @@ void hknight_walk1(entity this) { set_animofs(this, anim_hknight_walk, 1, hknigh
 void hknight_run1(entity this);
 void hknight_run8(entity this) { set_animofs(this, anim_hknight_run, 8, hknight_run1); ai_run(this, 13); }
 void hknight_run7(entity this) { set_animofs(this, anim_hknight_run, 7, hknight_run8); ai_run(this, 21); }
-void hknight_run6(entity this) { set_animofs(this, anim_hknight_run, 6, hknight_run7); ai_run(this, 25); }
+void hknight_run6(entity this) { set_animofs(this, anim_hknight_run, 6, hknight_run7); ai_run(this, 25); monster_footstep(this, false); }
 void hknight_run5(entity this) { set_animofs(this, anim_hknight_run, 5, hknight_run6); ai_run(this, 14); }
 void hknight_run4(entity this) { set_animofs(this, anim_hknight_run, 4, hknight_run5); ai_run(this, 16); }
 void hknight_run3(entity this) { set_animofs(this, anim_hknight_run, 3, hknight_run4); ai_run(this, 18); }
-void hknight_run2(entity this) { set_animofs(this, anim_hknight_run, 2, hknight_run3); ai_run(this, 25); }
+void hknight_run2(entity this) { set_animofs(this, anim_hknight_run, 2, hknight_run3); ai_run(this, 25); monster_footstep(this, false); }
 void hknight_run1(entity this) { set_animofs(this, anim_hknight_run, 1, hknight_run2); hk_idle_sound(this); ai_run(this, 20); CheckForCharge(this); }
 
 //============================================================================
@@ -292,11 +292,11 @@ void hknight_char_b1(entity this) { set_animofs(this, anim_hknight_char_b, 1, hk
 void hknight_slice10(entity this) { set_animofs(this, anim_hknight_slice, 10, hknight_run1); ai_charge(this, 3); }
 void hknight_slice9(entity this) { set_animofs(this, anim_hknight_slice, 9, hknight_slice10); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_slice8(entity this) { set_animofs(this, anim_hknight_slice, 8, hknight_slice9); ai_charge(this, 2); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
-void hknight_slice7(entity this) { set_animofs(this, anim_hknight_slice, 7, hknight_slice8); ai_charge(this, 8); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
+void hknight_slice7(entity this) { set_animofs(this, anim_hknight_slice, 7, hknight_slice8); ai_charge(this, 8); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); monster_footstep(this, false); }
 void hknight_slice6(entity this) { set_animofs(this, anim_hknight_slice, 6, hknight_slice7); ai_charge(this, 15); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_slice5(entity this) { set_animofs(this, anim_hknight_slice, 5, hknight_slice6); ai_charge(this, 7); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_slice4(entity this) { set_animofs(this, anim_hknight_slice, 4, hknight_slice5); ai_charge(this, 4); W_Parry_Trigger(this, 0); }
-void hknight_slice3(entity this) { set_animofs(this, anim_hknight_slice, 3, hknight_slice4); ai_charge(this, 13); }
+void hknight_slice3(entity this) { set_animofs(this, anim_hknight_slice, 3, hknight_slice4); ai_charge(this, 13); monster_footstep(this, false); }
 void hknight_slice2(entity this) { set_animofs(this, anim_hknight_slice, 2, hknight_slice3); ai_charge(this, 6); }
 void hknight_slice1(entity this) { set_animofs(this, anim_hknight_slice, 1, hknight_slice2); ai_charge(this, 9); }
 
@@ -304,19 +304,19 @@ void hknight_slice1(entity this) { set_animofs(this, anim_hknight_slice, 1, hkni
 
 void hknight_smash11(entity this) { set_animofs(this, anim_hknight_smash, 11, hknight_run1); ai_charge(this, 0); }
 void hknight_smash10(entity this) { set_animofs(this, anim_hknight_smash, 10, hknight_smash11); ai_charge(this, 0); }
-void hknight_smash9(entity this) { set_animofs(this, anim_hknight_smash, 9, hknight_smash10); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
+void hknight_smash9(entity this) { set_animofs(this, anim_hknight_smash, 9, hknight_smash10); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); monster_footstep(this, false); }
 void hknight_smash8(entity this) { set_animofs(this, anim_hknight_smash, 8, hknight_smash9); ai_charge(this, 2); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_smash7(entity this) { set_animofs(this, anim_hknight_smash, 7, hknight_smash8); ai_charge(this, 12); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_smash6(entity this) { set_animofs(this, anim_hknight_smash, 6, hknight_smash7); ai_charge(this, 7); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_smash5(entity this) { set_animofs(this, anim_hknight_smash, 5, hknight_smash6); ai_charge(this, 10); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
-void hknight_smash4(entity this) { set_animofs(this, anim_hknight_smash, 4, hknight_smash5); ai_charge(this, 11); W_Parry_Trigger(this, 0); }
+void hknight_smash4(entity this) { set_animofs(this, anim_hknight_smash, 4, hknight_smash5); ai_charge(this, 11); W_Parry_Trigger(this, 0); monster_footstep(this, false); }
 void hknight_smash3(entity this) { set_animofs(this, anim_hknight_smash, 3, hknight_smash4); ai_charge(this, 9); }
 void hknight_smash2(entity this) { set_animofs(this, anim_hknight_smash, 2, hknight_smash3); ai_charge(this, 13); }
 void hknight_smash1(entity this) { set_animofs(this, anim_hknight_smash, 1, hknight_smash2); ai_charge(this, 1); }
 
 //============================================================================
 
-void hknight_watk22(entity this) { set_animofs(this, anim_hknight_w_attack, 22, hknight_run1); ai_charge(this, 3); }
+void hknight_watk22(entity this) { set_animofs(this, anim_hknight_w_attack, 22, hknight_run1); ai_charge(this, 3); monster_footstep(this, false); }
 void hknight_watk21(entity this) { set_animofs(this, anim_hknight_w_attack, 21, hknight_watk22); ai_charge(this, 7); }
 void hknight_watk20(entity this) { set_animofs(this, anim_hknight_w_attack, 20, hknight_watk21); ai_charge(this, 6); }
 void hknight_watk19(entity this) { set_animofs(this, anim_hknight_w_attack, 19, hknight_watk20); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
@@ -327,7 +327,7 @@ void hknight_watk15(entity this) { set_animofs(this, anim_hknight_w_attack, 15, 
 void hknight_watk14(entity this) { set_animofs(this, anim_hknight_w_attack, 14, hknight_watk15); ai_charge(this, 0); }
 void hknight_watk13(entity this) { set_animofs(this, anim_hknight_w_attack, 13, hknight_watk14); ai_charge(this, 0); }
 void hknight_watk12(entity this) { set_animofs(this, anim_hknight_w_attack, 12, hknight_watk13); ai_charge(this, 2); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
-void hknight_watk11(entity this) { set_animofs(this, anim_hknight_w_attack, 11, hknight_watk12); ai_charge(this, 2); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
+void hknight_watk11(entity this) { set_animofs(this, anim_hknight_w_attack, 11, hknight_watk12); ai_charge(this, 2); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); monster_footstep(this, false); }
 void hknight_watk10(entity this) { set_animofs(this, anim_hknight_w_attack, 10, hknight_watk11); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_HELL_KNIGHT.m_id, 60, true); }
 void hknight_watk9(entity this) { set_animofs(this, anim_hknight_w_attack, 9, hknight_watk10); ai_charge(this, 5); W_Parry_Trigger(this, 0); }
 void hknight_watk8(entity this) { set_animofs(this, anim_hknight_w_attack, 8, hknight_watk9); ai_charge(this, 4); }
@@ -514,6 +514,8 @@ METHOD(HellKnight, mr_setup, bool(HellKnight this, entity actor))
 		actor.th_pain = hknight_pain;
 		actor.th_die = hknight_die;
 	}
+
+	actor.steptype = FS_TYPEHEAVY;
 
     return true;
 }

@@ -42,13 +42,13 @@ void knight_walk12(entity this) { set_animofs(this, anim_knight_walk, 12, knight
 void knight_walk11(entity this) { set_animofs(this, anim_knight_walk, 11, knight_walk12); ai_walk(this, 2); }
 void knight_walk10(entity this) { set_animofs(this, anim_knight_walk, 10, knight_walk11); ai_walk(this, 3); }
 void knight_walk9(entity this) { set_animofs(this, anim_knight_walk, 9, knight_walk10); ai_walk(this, 3); }
-void knight_walk8(entity this) { set_animofs(this, anim_knight_walk, 8, knight_walk9); ai_walk(this, 4); }
+void knight_walk8(entity this) { set_animofs(this, anim_knight_walk, 8, knight_walk9); ai_walk(this, 4); monster_footstep(this, false); }
 void knight_walk7(entity this) { set_animofs(this, anim_knight_walk, 7, knight_walk8); ai_walk(this, 3); }
 void knight_walk6(entity this) { set_animofs(this, anim_knight_walk, 6, knight_walk7); ai_walk(this, 3); }
 void knight_walk5(entity this) { set_animofs(this, anim_knight_walk, 5, knight_walk6); ai_walk(this, 3); }
 void knight_walk4(entity this) { set_animofs(this, anim_knight_walk, 4, knight_walk5); ai_walk(this, 4); }
 void knight_walk3(entity this) { set_animofs(this, anim_knight_walk, 3, knight_walk4); ai_walk(this, 3); }
-void knight_walk1(entity this) { set_animofs(this, anim_knight_walk, 2, knight_walk3); kn_idle_sound(this); ai_walk(this, 2); }
+void knight_walk1(entity this) { set_animofs(this, anim_knight_walk, 2, knight_walk3); kn_idle_sound(this); ai_walk(this, 2); monster_footstep(this, false); }
 #if 0
 void knight_walk1(entity this)
 {
@@ -61,11 +61,11 @@ void knight_walk1(entity this)
 void knight_run1(entity this);
 void knight_run8(entity this) { set_animofs(this, anim_knight_runb, 8, knight_run1); ai_run(this, 6); }
 void knight_run7(entity this) { set_animofs(this, anim_knight_runb, 7, knight_run8); ai_run(this, 14); }
-void knight_run6(entity this) { set_animofs(this, anim_knight_runb, 6, knight_run7); ai_run(this, 20); }
+void knight_run6(entity this) { set_animofs(this, anim_knight_runb, 6, knight_run7); ai_run(this, 20); monster_footstep(this, false); }
 void knight_run5(entity this) { set_animofs(this, anim_knight_runb, 5, knight_run6); ai_run(this, 16); }
 void knight_run4(entity this) { set_animofs(this, anim_knight_runb, 4, knight_run5); ai_run(this, 7); }
 void knight_run3(entity this) { set_animofs(this, anim_knight_runb, 3, knight_run4); ai_run(this, 13); }
-void knight_run2(entity this) { set_animofs(this, anim_knight_runb, 2, knight_run3); ai_run(this, 20); }
+void knight_run2(entity this) { set_animofs(this, anim_knight_runb, 2, knight_run3); ai_run(this, 20); monster_footstep(this, false); }
 void knight_run1(entity this)
 {
 	set_animofs(this, anim_knight_runb, 1, knight_run2);
@@ -74,11 +74,11 @@ void knight_run1(entity this)
 }
 
 void knight_runatk11(entity this) { set_animofs(this, anim_knight_runattack, 11, knight_run1); ai_charge(this, 10); }
-void knight_runatk10(entity this) { set_animofs(this, anim_knight_runattack, 10, knight_runatk11); ai_charge_side(this); }
+void knight_runatk10(entity this) { set_animofs(this, anim_knight_runattack, 10, knight_runatk11); ai_charge_side(this); monster_footstep(this, false); }
 void knight_runatk9(entity this) { set_animofs(this, anim_knight_runattack, 9, knight_runatk10); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_runatk8(entity this) { set_animofs(this, anim_knight_runattack, 8, knight_runatk9); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_runatk7(entity this) { set_animofs(this, anim_knight_runattack, 7, knight_runatk8); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
-void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
+void knight_runatk6(entity this) { set_animofs(this, anim_knight_runattack, 6, knight_runatk7); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); monster_footstep(this, false); }
 void knight_runatk5(entity this) { set_animofs(this, anim_knight_runattack, 5, knight_runatk6); ai_melee_side(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_runatk4(entity this) { set_animofs(this, anim_knight_runattack, 4, knight_runatk5); ai_charge_side(this); W_Parry_Trigger(this, 0); }
 void knight_runatk3(entity this) { set_animofs(this, anim_knight_runattack, 3, knight_runatk4); ai_charge_side(this); }
@@ -98,7 +98,7 @@ void knight_atk9(entity this) { set_animofs(this, anim_knight_attackb, 9, knight
 void knight_atk8(entity this) { set_animofs(this, anim_knight_attackb, 8, knight_atk9); ai_charge(this, 3); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_atk7(entity this) { set_animofs(this, anim_knight_attackb, 7, knight_atk8); ai_charge(this, 1); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
 void knight_atk6(entity this) { set_animofs(this, anim_knight_attackb, 6, knight_atk7); ai_charge(this, 4); ai_melee(this, DEATH_MONSTER_KNIGHT.m_id, 60, true); }
-void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); W_Parry_Trigger(this, 0); }
+void knight_atk5(entity this) { set_animofs(this, anim_knight_attackb, 5, knight_atk6); ai_charge(this, 3); W_Parry_Trigger(this, 0); monster_footstep(this, false); }
 void knight_atk4(entity this) { set_animofs(this, anim_knight_attackb, 4, knight_atk5); ai_charge(this, 0); }
 void knight_atk3(entity this) { set_animofs(this, anim_knight_attackb, 3, knight_atk4); ai_charge(this, 4); }
 void knight_atk2(entity this) { set_animofs(this, anim_knight_attackb, 2, knight_atk3); ai_charge(this, 7); }
@@ -126,11 +126,11 @@ void knight_pain1(entity this) { set_animofs(this, anim_knight_pain, 1, knight_p
 void knight_painb11(entity this) { set_animofs(this, anim_knight_painb, 11, knight_run1); }
 void knight_painb10(entity this) { set_animofs(this, anim_knight_painb, 10, knight_painb11); ai_painforward(this, 0); }
 void knight_painb9(entity this) { set_animofs(this, anim_knight_painb, 9, knight_painb10); ai_painforward(this, 5); }
-void knight_painb8(entity this) { set_animofs(this, anim_knight_painb, 8, knight_painb9); ai_painforward(this, 5); }
+void knight_painb8(entity this) { set_animofs(this, anim_knight_painb, 8, knight_painb9); ai_painforward(this, 5); monster_footstep(this, false); }
 void knight_painb7(entity this) { set_animofs(this, anim_knight_painb, 7, knight_painb8); ai_painforward(this, 2); }
 void knight_painb6(entity this) { set_animofs(this, anim_knight_painb, 6, knight_painb7); ai_painforward(this, 4); }
 void knight_painb5(entity this) { set_animofs(this, anim_knight_painb, 5, knight_painb6); ai_painforward(this, 2); }
-void knight_painb4(entity this) { set_animofs(this, anim_knight_painb, 4, knight_painb5); }
+void knight_painb4(entity this) { set_animofs(this, anim_knight_painb, 4, knight_painb5); monster_footstep(this, false); }
 void knight_painb3(entity this) { set_animofs(this, anim_knight_painb, 3, knight_painb4); }
 void knight_painb2(entity this) { set_animofs(this, anim_knight_painb, 2, knight_painb3); ai_painforward(this, 3); }
 void knight_painb1(entity this) { set_animofs(this, anim_knight_painb, 1, knight_painb2); ai_painforward(this, 0); }
@@ -316,6 +316,8 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 	precache_sound("knight/sword1.wav");
 	precache_sound("knight/sword2.wav");
 
+	actor.steptype = FS_TYPEMEDIUM;
+
     actor.health = 75;
 	if((actor.spawnflags & 2)) // statue
 	{
@@ -328,6 +330,8 @@ METHOD(Knight, mr_setup, bool(Knight this, entity actor))
 		actor.th_walk = knight_pause1;
 		actor.th_run = knight_pause1;
 		actor.use = knight_pause;
+
+		actor.steptype = FS_TYPEHEAVY;
 
 		if(!actor.targetname || actor.targetname == "")
 			LOG_DEBUGF("statue %s not targeted at %v\n", actor.classname, actor.origin);

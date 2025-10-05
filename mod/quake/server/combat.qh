@@ -22,6 +22,8 @@ bool discharged; // hipnotic
 
 .float dmg_time;
 
+.float damage_mod; // progs_dump compat
+
 .bool poisonous;
 
 .bool is_frozen; // defines whether an entity is frozen

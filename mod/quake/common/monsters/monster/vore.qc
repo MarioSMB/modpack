@@ -16,14 +16,14 @@ void shal_stand(entity this) { set_animofs(this, anim_shal_walk, 1, shal_stand);
 void shal_walk1(entity this);
 void shal_walk12(entity this) { set_animofs(this, anim_shal_walk, 1, shal_walk1); ai_walk(this, 5); }
 void shal_walk11(entity this) { set_animofs(this, anim_shal_walk, 12, shal_walk12); ai_walk(this, 4); }
-void shal_walk10(entity this) { set_animofs(this, anim_shal_walk, 11, shal_walk11); ai_walk(this, 0); }
+void shal_walk10(entity this) { set_animofs(this, anim_shal_walk, 11, shal_walk11); ai_walk(this, 0); monster_footstep(this, false); }
 void shal_walk9(entity this) { set_animofs(this, anim_shal_walk, 10, shal_walk10); ai_walk(this, 5); }
 void shal_walk8(entity this) { set_animofs(this, anim_shal_walk, 9, shal_walk9); ai_walk(this, 6); }
 void shal_walk7(entity this) { set_animofs(this, anim_shal_walk, 8, shal_walk8); ai_walk(this, 5); }
-void shal_walk6(entity this) { set_animofs(this, anim_shal_walk, 7, shal_walk7); ai_walk(this, 0); }
+void shal_walk6(entity this) { set_animofs(this, anim_shal_walk, 7, shal_walk7); ai_walk(this, 0); monster_footstep(this, false); }
 void shal_walk5(entity this) { set_animofs(this, anim_shal_walk, 6, shal_walk6); ai_walk(this, 0); }
 void shal_walk4(entity this) { set_animofs(this, anim_shal_walk, 5, shal_walk5); ai_walk(this, 0); }
-void shal_walk3(entity this) { set_animofs(this, anim_shal_walk, 4, shal_walk4); ai_walk(this, 0); }
+void shal_walk3(entity this) { set_animofs(this, anim_shal_walk, 4, shal_walk4); ai_walk(this, 0); monster_footstep(this, false); }
 void shal_walk2(entity this) { set_animofs(this, anim_shal_walk, 3, shal_walk3); ai_walk(this, 4); }
 void shal_walk1(entity this)
 {
@@ -37,13 +37,13 @@ void shal_run1(entity this);
 void shal_run12(entity this) { set_animofs(this, anim_shal_walk, 1, shal_run1); ai_run(this, 5); }
 void shal_run11(entity this) { set_animofs(this, anim_shal_walk, 12, shal_run12); ai_run(this, 4); }
 void shal_run10(entity this) { set_animofs(this, anim_shal_walk, 11, shal_run11); ai_run(this, 0); }
-void shal_run9(entity this) { set_animofs(this, anim_shal_walk, 10, shal_run10); ai_run(this, 5); }
+void shal_run9(entity this) { set_animofs(this, anim_shal_walk, 10, shal_run10); ai_run(this, 5); monster_footstep(this, false); }
 void shal_run8(entity this) { set_animofs(this, anim_shal_walk, 9, shal_run9); ai_run(this, 6); }
 void shal_run7(entity this) { set_animofs(this, anim_shal_walk, 8, shal_run8); ai_run(this, 5); }
-void shal_run6(entity this) { set_animofs(this, anim_shal_walk, 7, shal_run7); ai_run(this, 0); }
+void shal_run6(entity this) { set_animofs(this, anim_shal_walk, 7, shal_run7); ai_run(this, 0); monster_footstep(this, false); }
 void shal_run5(entity this) { set_animofs(this, anim_shal_walk, 6, shal_run6); ai_run(this, 0); }
 void shal_run4(entity this) { set_animofs(this, anim_shal_walk, 5, shal_run5); ai_run(this, 0); }
-void shal_run3(entity this) { set_animofs(this, anim_shal_walk, 4, shal_run4); ai_run(this, 0); }
+void shal_run3(entity this) { set_animofs(this, anim_shal_walk, 4, shal_run4); ai_run(this, 0); monster_footstep(this, false); }
 void shal_run2(entity this) { set_animofs(this, anim_shal_walk, 3, shal_run3); ai_run(this, 4); }
 void shal_run1(entity this)
 {
@@ -238,6 +238,8 @@ METHOD(Vore, mr_setup, bool(Vore this, entity actor))
 	actor.th_die = shalrath_die;
 	actor.th_pain = shalrath_pain;
 	actor.th_missile = shal_attack1;
+
+	actor.steptype = FS_TYPELIGHT;
 
     return true;
 }

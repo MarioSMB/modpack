@@ -197,7 +197,7 @@ PRECACHE(Impel)
 
 bool IsRogueMap()
 {
-	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2" || substring(world.model, 0, 10) == "maps/banjo");
+	return (substring(world.model, 0, 7) == "maps/r1" || substring(world.model, 0, 7) == "maps/r2" || substring(world.model, 0, 10) == "maps/banjo" || world.model == "maps/e2m8.bsp");
 }
 
 bool IsHipnoticMap()

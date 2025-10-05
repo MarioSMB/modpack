@@ -180,23 +180,23 @@ void dfury_walk12(entity this) { set_animofs(this, anim_dfury_walk, 12, dfury_wa
 void dfury_walk11(entity this) { set_animofs(this, anim_dfury_walk, 11, dfury_walk12); ai_walk(this, 3); }
 void dfury_walk10(entity this) { set_animofs(this, anim_dfury_walk, 10, dfury_walk11); ai_walk(this, 4); }
 void dfury_walk9(entity this) { set_animofs(this, anim_dfury_walk, 9, dfury_walk10); ai_walk(this, 3); }
-void dfury_walk8(entity this) { set_animofs(this, anim_dfury_walk, 8, dfury_walk9); ai_walk(this, 3); }
+void dfury_walk8(entity this) { set_animofs(this, anim_dfury_walk, 8, dfury_walk9); ai_walk(this, 3); monster_footstep(this, false); }
 void dfury_walk7(entity this) { set_animofs(this, anim_dfury_walk, 7, dfury_walk8); ai_walk(this, 2); }
 void dfury_walk6(entity this) { set_animofs(this, anim_dfury_walk, 6, dfury_walk7); ai_walk(this, 2); }
 void dfury_walk5(entity this) { set_animofs(this, anim_dfury_walk, 5, dfury_walk6); ai_walk(this, 4); }
 void dfury_walk4(entity this) { set_animofs(this, anim_dfury_walk, 4, dfury_walk5); ai_walk(this, 4); }
 void dfury_walk3(entity this) { set_animofs(this, anim_dfury_walk, 3, dfury_walk4); ai_walk(this, 5); }
-void dfury_walk2(entity this) { set_animofs(this, anim_dfury_walk, 2, dfury_walk3); ai_walk(this, 5); }
+void dfury_walk2(entity this) { set_animofs(this, anim_dfury_walk, 2, dfury_walk3); ai_walk(this, 5); monster_footstep(this, false); }
 void dfury_walk1(entity this) { set_animofs(this, anim_dfury_walk, 1, dfury_walk2); dfury_idle_sound(this); ai_walk(this, 2); }
 
 //===========================================================================
 // 6 frames instead of 8 frames (skipping 3rd/7th timing of original)
 void dfury_run1(entity this);
 void dfury_run6(entity this) { set_animofs(this, anim_dfury_run, 6, dfury_run1); ai_run(this, 15); }
-void dfury_run5(entity this) { set_animofs(this, anim_dfury_run, 5, dfury_run6); ai_run(this, 27); }
+void dfury_run5(entity this) { set_animofs(this, anim_dfury_run, 5, dfury_run6); ai_run(this, 27); monster_footstep(this, false); }
 void dfury_run4(entity this) { set_animofs(this, anim_dfury_run, 4, dfury_run5); ai_run(this, 16); }
 void dfury_run3(entity this) { set_animofs(this, anim_dfury_run, 3, dfury_run4); ai_run(this, 18); }
-void dfury_run2(entity this) { set_animofs(this, anim_dfury_run, 2, dfury_run3); ai_run(this, 27); }
+void dfury_run2(entity this) { set_animofs(this, anim_dfury_run, 2, dfury_run3); ai_run(this, 27); monster_footstep(this, false); }
 void dfury_run1(entity this)
 {
 	set_animofs(this, anim_dfury_run, 1, dfury_run2);
@@ -212,9 +212,9 @@ void dfury_idle_sound(entity this)
 
 //===========================================================================
 // Melee Attack 1 - Slice (bring swords together and pull apart)
-void dfury_slice11(entity this) { set_animofs(this, anim_dfury_slice, 14, dfury_run1); ai_charge(this, 7); }
+void dfury_slice11(entity this) { set_animofs(this, anim_dfury_slice, 14, dfury_run1); ai_charge(this, 7); monster_footstep(this, false); }
 void dfury_slice10(entity this) { set_animofs(this, anim_dfury_slice, 13, dfury_slice11); ai_charge(this, 0); }
-void dfury_slice9(entity this) { set_animofs(this, anim_dfury_slice, 11, dfury_slice10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true); }
+void dfury_slice9(entity this) { set_animofs(this, anim_dfury_slice, 11, dfury_slice10); ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true); monster_footstep(this, false); }
 void dfury_slice8(entity this)
 {
 	set_animofs(this, anim_dfury_slice, 9, dfury_slice9);
@@ -240,7 +240,7 @@ void dfury_slice5(entity this)
 	dfury_sword_sound(this);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
-void dfury_slice4(entity this) { set_animofs(this, anim_dfury_slice, 5, dfury_slice5); ai_charge(this, 4); W_Parry_Trigger(this, 0); }
+void dfury_slice4(entity this) { set_animofs(this, anim_dfury_slice, 5, dfury_slice5); ai_charge(this, 4); W_Parry_Trigger(this, 0); monster_footstep(this, false); }
 void dfury_slice3(entity this) { set_animofs(this, anim_dfury_slice, 4, dfury_slice4); ai_charge(this, 17); }
 void dfury_slice2(entity this) { set_animofs(this, anim_dfury_slice, 3, dfury_slice3); ai_charge(this, 10); dfury_sword_sound(this); }
 void dfury_slice1(entity this)
@@ -277,7 +277,7 @@ void dfury_smash8(entity this)
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 }
-void dfury_smash7(entity this) { set_animofs(this, anim_dfury_smash, 8, dfury_smash8); ai_charge(this, 12);  }
+void dfury_smash7(entity this) { set_animofs(this, anim_dfury_smash, 8, dfury_smash8); ai_charge(this, 12); monster_footstep(this, false);  }
 void dfury_smash6(entity this) { set_animofs(this, anim_dfury_smash, 7, dfury_smash7); ai_charge(this, 7); dfury_sword_sound(this); }
 void dfury_smash5(entity this)
 {
@@ -286,7 +286,7 @@ void dfury_smash5(entity this)
 	ai_charge(this, 10);
 }
 void dfury_smash4(entity this) { set_animofs(this, anim_dfury_smash, 5, dfury_smash5); ai_charge(this, 11); }
-void dfury_smash3(entity this) { set_animofs(this, anim_dfury_smash, 4, dfury_smash4); ai_charge(this, 9);  }
+void dfury_smash3(entity this) { set_animofs(this, anim_dfury_smash, 4, dfury_smash4); ai_charge(this, 9); monster_footstep(this, false); }
 void dfury_smash2(entity this) { set_animofs(this, anim_dfury_smash, 3, dfury_smash3); ai_charge(this, 13); }
 void dfury_smash1(entity this) { set_animofs(this, anim_dfury_smash, 2, dfury_smash2); ai_charge(this, 1); }
 
@@ -297,7 +297,7 @@ void dfury_rswing8(entity this) { set_animofs(this, anim_dfury_rswing, 8, dfury_
 	if(ai_checkmelee(this, 70, false) && this.enemy.health > 0)
 		setthink(this, dfury_lswing3);
 }
-void dfury_rswing7(entity this) { set_animofs(this, anim_dfury_rswing, 7, dfury_rswing8); ai_charge(this, 2); }
+void dfury_rswing7(entity this) { set_animofs(this, anim_dfury_rswing, 7, dfury_rswing8); ai_charge(this, 2); monster_footstep(this, false); }
 void dfury_rswing6(entity this)
 {
 	set_animofs(this, anim_dfury_rswing, 6, dfury_rswing7);
@@ -316,6 +316,7 @@ void dfury_rswing4(entity this)
 	set_animofs(this, anim_dfury_rswing, 4, dfury_rswing5);
 	ai_charge(this, 8);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
+	monster_footstep(this, false);
 }
 void dfury_rswing3(entity this)
 {
@@ -334,7 +335,7 @@ void dfury_lswing8(entity this)
 	if(ai_checkmelee(this, 70, false) && this.enemy.health > 0)
 		setthink(this, dfury_rswing3);
 }
-void dfury_lswing7(entity this) { set_animofs(this, anim_dfury_lswing, 7, dfury_lswing8); ai_charge(this, 2); }
+void dfury_lswing7(entity this) { set_animofs(this, anim_dfury_lswing, 7, dfury_lswing8); ai_charge(this, 2); monster_footstep(this, false); }
 void dfury_lswing6(entity this)
 {
 	set_animofs(this, anim_dfury_lswing, 6, dfury_lswing7);
@@ -353,6 +354,7 @@ void dfury_lswing4(entity this)
 	set_animofs(this, anim_dfury_lswing, 4, dfury_lswing5);
 	ai_charge(this, 8);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
+	monster_footstep(this, false);
 }
 void dfury_lswing3(entity this)
 {
@@ -435,6 +437,7 @@ void dfury_lunge13(entity this)
 	set_animofs(this, anim_dfury_lunge, 13, dfury_lunge14);
 	ai_charge(this, 1);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
+	monster_footstep(this, false);
 }
 void dfury_lunge12(entity this)
 {
@@ -515,6 +518,7 @@ void dfury_watk17(entity this)
 	set_animofs(this, anim_dfury_w_attack, 17, dfury_watk18);
 	ai_charge(this, 19);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
+	monster_footstep(this, false);
 }
 void dfury_watk16(entity this)
 {
@@ -552,7 +556,7 @@ void dfury_watk8(entity this)
 	dfury_sword_sound(this);
 	ai_melee(this, DEATH_MONSTER_FURY_KNIGHT.m_id, 70, true);
 }
-void dfury_watk7(entity this) { set_animofs(this, anim_dfury_w_attack, 7, dfury_watk8); ai_charge(this, 19); }
+void dfury_watk7(entity this) { set_animofs(this, anim_dfury_w_attack, 7, dfury_watk8); ai_charge(this, 19); monster_footstep(this, false); }
 void dfury_watk6(entity this) { set_animofs(this, anim_dfury_w_attack, 6, dfury_watk7); ai_charge(this, 18); }
 void dfury_watk5(entity this)
 {
@@ -562,7 +566,7 @@ void dfury_watk5(entity this)
 }
 void dfury_watk4(entity this) { set_animofs(this, anim_dfury_w_attack, 4, dfury_watk5); ai_charge(this, 18); }
 void dfury_watk3(entity this) { set_animofs(this, anim_dfury_w_attack, 3, dfury_watk4); ai_charge(this, 18); }
-void dfury_watk1(entity this) { set_animofs(this, anim_dfury_w_attack, 2, dfury_watk3); ai_charge(this, 18); }
+void dfury_watk1(entity this) { set_animofs(this, anim_dfury_w_attack, 2, dfury_watk3); ai_charge(this, 18); monster_footstep(this, false); }
 
 //----------------------------------------------------------------------
 void dfury_melee(entity this)
@@ -827,11 +831,11 @@ void dfury_painA1(entity this) { set_animofs(this, anim_dfury_painA, 1, dfury_pa
 void dfury_painD11(entity this) { set_animofs(this, anim_dfury_painD, 11, dfury_run1); }
 void dfury_painD10(entity this) { set_animofs(this, anim_dfury_painD, 10, dfury_painD11); }
 void dfury_painD9(entity this) { set_animofs(this, anim_dfury_painD, 9, dfury_painD10); }
-void dfury_painD8(entity this) { set_animofs(this, anim_dfury_painD, 8, dfury_painD9); }
+void dfury_painD8(entity this) { set_animofs(this, anim_dfury_painD, 8, dfury_painD9); monster_footstep(this, false); }
 void dfury_painD7(entity this) { set_animofs(this, anim_dfury_painD, 7, dfury_painD8); }
 void dfury_painD6(entity this) { set_animofs(this, anim_dfury_painD, 6, dfury_painD7); }
 void dfury_painD5(entity this) { set_animofs(this, anim_dfury_painD, 5, dfury_painD6); }
-void dfury_painD4(entity this) { set_animofs(this, anim_dfury_painD, 4, dfury_painD5); }
+void dfury_painD4(entity this) { set_animofs(this, anim_dfury_painD, 4, dfury_painD5); monster_footstep(this, false); }
 void dfury_painD3(entity this) { set_animofs(this, anim_dfury_painD, 3, dfury_painD4); }
 void dfury_painD2(entity this) { set_animofs(this, anim_dfury_painD, 2, dfury_painD3); }
 void dfury_painD1(entity this) { set_animofs(this, anim_dfury_painD, 1, dfury_painD2); }
@@ -1126,6 +1130,8 @@ METHOD(FuryKnight, mr_setup, bool(FuryKnight this, entity actor))
 	actor.th_die = dfury_die;
 
 	actor.checkattack = DFuryCheckAttack;
+
+	actor.steptype = FS_TYPEMEDIUM;
 
     return true;
 }

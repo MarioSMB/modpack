@@ -27,6 +27,27 @@ const int MONSTER_WAKETRIGGER = 2097152; // alkaline
 
 const float MIN_ANGLE_DELTA = 10;
 
+//----------------------------------------------------------------------
+// Footstep types (slow, drag, light, medium, heavy, large, giant)
+const int FS_TYPESLOW = 1;		// Demon, Dogs, Ogres, Zombies
+const int FS_TYPEDRAG = 2;		// Alt Zombie foot
+const int FS_TYPELIGHT = 3;
+const int FS_TYPEMEDIUM = 4;
+const int FS_TYPEHEAVY = 5;		// Death/Hell Knight, Drole, Player, Enforcer
+const int FS_TYPELARGE = 6;		// Minotaur, Shambler
+const int FS_TYPEGIANT = 7;		// Golem
+const int FS_TYPECUSTOM = 9;	// Defined/precached by monster
+const int FS_FLYING = 10;		// Exclusion, no happy feet!
+
+const float ATTN_FEETL = 1.5;
+const float ATTN_FEET = 2;
+.float steptype; // Primary footstep type
+.float altsteptype; // Secondary footstep type
+.float steplast; // Last footstep sound
+.float altsteplast; // Last club foot sound
+.string stepc1, stepc2, stepc3, stepc4, stepc5; // Custom feet sounds
+void monster_footstep(entity this, bool altfoot);
+
 .float visible_distance; // weird hipnotic feature
 
 .entity oldenemy;

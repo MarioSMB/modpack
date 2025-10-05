@@ -33,7 +33,7 @@ void demon1_walk1(entity this);
 void demon1_walk8(entity this) { set_animofs(this, anim_demon_walk, 8, demon1_walk1); ai_walk(this, 10); }
 void demon1_walk7(entity this) { set_animofs(this, anim_demon_walk, 7, demon1_walk8); ai_walk(this, 10); }
 void demon1_walk6(entity this) { set_animofs(this, anim_demon_walk, 6, demon1_walk7); ai_walk(this, 6); }
-void demon1_walk5(entity this) { set_animofs(this, anim_demon_walk, 5, demon1_walk6); ai_walk(this, 4); }
+void demon1_walk5(entity this) { set_animofs(this, anim_demon_walk, 5, demon1_walk6); ai_walk(this, 4); monster_footstep(this, false); }
 void demon1_walk4(entity this) { set_animofs(this, anim_demon_walk, 4, demon1_walk5); ai_walk(this, 7); }
 void demon1_walk3(entity this) { set_animofs(this, anim_demon_walk, 3, demon1_walk4); ai_walk(this, 6); }
 void demon1_walk2(entity this) { set_animofs(this, anim_demon_walk, 2, demon1_walk3); ai_walk(this, 6); }
@@ -43,14 +43,15 @@ void demon1_walk1(entity this)
 	if(random() < 0.2)
 		_sound(this, CH_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 8);
+	monster_footstep(this, false);
 }
 
 void demon1_run1(entity this);
 void demon1_run6(entity this) { set_animofs(this, anim_demon_run, 6, demon1_run1); ai_run(this, 36); }
-void demon1_run5(entity this) { set_animofs(this, anim_demon_run, 5, demon1_run6); ai_run(this, 15); }
+void demon1_run5(entity this) { set_animofs(this, anim_demon_run, 5, demon1_run6); ai_run(this, 15); monster_footstep(this, false); }
 void demon1_run4(entity this) { set_animofs(this, anim_demon_run, 4, demon1_run5); ai_run(this, 20); }
 void demon1_run3(entity this) { set_animofs(this, anim_demon_run, 3, demon1_run4); ai_run(this, 36); }
-void demon1_run2(entity this) { set_animofs(this, anim_demon_run, 2, demon1_run3); ai_run(this, 15); }
+void demon1_run2(entity this) { set_animofs(this, anim_demon_run, 2, demon1_run3); ai_run(this, 15); monster_footstep(this, false); }
 void demon1_run1(entity this)
 {
 	set_animofs(this, anim_demon_run, 1, demon1_run2);
@@ -62,7 +63,7 @@ void demon1_run1(entity this)
 void demon1_die1(entity this);
 void demon1_jump1(entity this);
 void demon1_jump12(entity this) { set_animofs(this, anim_demon_leap, 12, demon1_run1); }
-void demon1_jump11(entity this) { set_animofs(this, anim_demon_leap, 11, demon1_jump12); }
+void demon1_jump11(entity this) { set_animofs(this, anim_demon_leap, 11, demon1_jump12); monster_footstep(this, false); }
 void demon1_jump10(entity this)
 {
 	set_animofs(this, anim_demon_leap, 10, demon1_jump1);
@@ -115,7 +116,7 @@ void demon1_atta11(entity this)
 	set_animofs(this, anim_demon_attacka, 11, demon1_atta12);
 	Demon_Melee(this, -200);
 }
-void demon1_atta10(entity this) { set_animofs(this, anim_demon_attacka, 10, demon1_atta11); ai_charge(this, 2); }
+void demon1_atta10(entity this) { set_animofs(this, anim_demon_attacka, 10, demon1_atta11); ai_charge(this, 2); monster_footstep(this, false); }
 void demon1_atta9(entity this) { set_animofs(this, anim_demon_attacka, 9, demon1_atta10); ai_charge(this, 4); }
 void demon1_atta8(entity this) { set_animofs(this, anim_demon_attacka, 8, demon1_atta9); ai_charge(this, 8); }
 void demon1_atta7(entity this) { set_animofs(this, anim_demon_attacka, 7, demon1_atta8); ai_charge(this, 6); }
@@ -128,7 +129,7 @@ void demon1_atta5(entity this)
 }
 void demon1_atta4(entity this) { set_animofs(this, anim_demon_attacka, 4, demon1_atta5); ai_charge(this, 1); }
 void demon1_atta3(entity this) { set_animofs(this, anim_demon_attacka, 3, demon1_atta4); ai_charge(this, 0); }
-void demon1_atta2(entity this) { set_animofs(this, anim_demon_attacka, 2, demon1_atta3); ai_charge(this, 0); }
+void demon1_atta2(entity this) { set_animofs(this, anim_demon_attacka, 2, demon1_atta3); ai_charge(this, 0); monster_footstep(this, false); }
 void demon1_atta1(entity this) { set_animofs(this, anim_demon_attacka, 1, demon1_atta2); ai_charge(this, 4); }
 
 void demon1_pain6(entity this) { set_animofs(this, anim_demon_pain, 6, demon1_run1); }
@@ -359,6 +360,8 @@ METHOD(Fiend, mr_setup, bool(Fiend this, entity actor))
 	actor.th_pain = demon1_pain;
 
 	actor.checkattack = DemonCheckAttack;
+
+	actor.steptype = FS_TYPESLOW;
 
 	return true;
 }

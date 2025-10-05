@@ -91,10 +91,15 @@ void snowm_claw1(entity this) { set_animofs(this, anim_snowman_claw, 1, snowm_cl
 void snowman_launch_projectile(entity this, vector org, vector dir)
 {
 	entity newmis = launch_spike(this, org, dir);
-	_setmodel(newmis, "progs/proj_ngred.mdl");
+	_setmodel(newmis, "progs/xmas/proj_elfsnow.mdl");
+	set_movetype(newmis, MOVETYPE_TOSS);
+	newmis.gravity = 0.25;
+	newmis.scale = 1.5;
 	setsize(newmis, '0 0 0', '0 0 0');
 	newmis.dmg = 15;
-	newmis.velocity = dir * 500;
+	newmis.velocity = dir * 800;
+	newmis.velocity_z = 50;
+	newmis.avelocity = randomvec() * 200;
 	newmis.projectiledeathtype = DEATH_MONSTER_SNOWMAN.m_id;
 }
 
@@ -109,7 +114,8 @@ void SnowmFireNails(entity this)
 	fixedmakevectors(this.angles);
 	vector org = this.origin + attack_vector('24 0 20');
 
-	for(int j = 0; j < 5; ++j)
+	int projcount = 1; // we fire multiple times instead
+	for(int j = 0; j < projcount; ++j)
 	{
 		vector vec = (crandom() * 20) * v_right + (crandom() * 20) * v_up;
 		vector dir = normalize((this.enemy.origin + vec) - org);
@@ -118,11 +124,11 @@ void SnowmFireNails(entity this)
 }
 
 //----------------------------------------------------------------------
-void snowm_nail5(entity this) { set_animofs(this, anim_snowman_attack, 1, snowm_run1); ai_face(this); }
-void snowm_nail4(entity this) { set_animofs(this, anim_snowman_attack, 2, snowm_nail5); }
+void snowm_nail5(entity this) { set_animofs(this, anim_snowman_attack, 1, snowm_run1); ai_face(this); SnowmFireNails(this); }
+void snowm_nail4(entity this) { set_animofs(this, anim_snowman_attack, 2, snowm_nail5); SnowmFireNails(this); }
 void snowm_nail3(entity this) { set_animofs(this, anim_snowman_attack, 3, snowm_nail4); ai_face(this); SnowmFireNails(this); }
-void snowm_nail2(entity this) { set_animofs(this, anim_snowman_attack, 2, snowm_nail3); ai_face(this); }
-void snowm_nail1(entity this) { set_animofs(this, anim_snowman_attack, 1, snowm_nail2); ai_face(this); }
+void snowm_nail2(entity this) { set_animofs(this, anim_snowman_attack, 2, snowm_nail3); ai_face(this); SnowmFireNails(this); }
+void snowm_nail1(entity this) { set_animofs(this, anim_snowman_attack, 1, snowm_nail2); ai_face(this); SnowmFireNails(this); }
 
 void snowm_pain4(entity this) { set_animofs(this, anim_snowman_claw, 1, snowm_run1); }
 void snowm_pain3(entity this) { set_animofs(this, anim_snowman_claw, 2, snowm_pain4); }
@@ -203,8 +209,8 @@ bool SnowmanCheckAttack(entity this)
 {
 	entity targ = this.enemy;
 
-	if(this.enemy_range == RANGE_FAR)
-		return false;
+	//if(this.enemy_range == RANGE_FAR)
+		//return false;
 	if(time < this.attack_finished)
 		return false;
 
@@ -263,6 +269,8 @@ METHOD(Snowman, mr_setup, bool(Snowman this, entity actor))
 	precache_model("progs/xmas/gib_snowclaw.mdl");
 	precache_model("progs/xmas/gib_snowgun.mdl");
 	precache_model("progs/xmas/gib_snowball.mdl");
+
+	precache_model("progs/xmas/proj_elfsnow.mdl");
 
 	precache_model("progs/proj_ngred.mdl");
 

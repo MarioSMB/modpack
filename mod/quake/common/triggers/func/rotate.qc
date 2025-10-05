@@ -725,7 +725,10 @@ spawnfunc(func_movewall)
 		return;
 
 	if(this.spawnflags & NONBLOCKING)
+	{
+		this.solid = SOLID_NOT;
 		set_movetype(this, MOVETYPE_FAKEPUSH);
+	}
 	else
 		setblocked(this, movewall_blocked);
 

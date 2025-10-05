@@ -57,6 +57,7 @@ void MusicNoteBounceTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY
 		float damg = (this.dmg) ? this.dmg : 27;
 		T_Damage(toucher, this, this.owner, damg * 0.5, WEP_PIANO.m_id); // DIRECT Damage
 
+		this.angles = vectoangles(this.velocity);
 		BecomeCartoonExplosion(this);
 		
 		return;         
@@ -86,6 +87,7 @@ void MusicNoteTouch(entity this, entity toucher) // MUSIC NOTE TOUCH ENEMY / WOR
 		float damg = (this.dmg) ? this.dmg : 27;
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype); // DIRECT Damage
 
+		this.angles = vectoangles(this.velocity);
 		BecomeCartoonExplosion(this);
 		return;         
 	}

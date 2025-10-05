@@ -41,7 +41,7 @@ void army_walk16(entity this) { set_animofs(this, anim_army_prowl, 16, army_walk
 void army_walk15(entity this) { set_animofs(this, anim_army_prowl, 15, army_walk16); ai_walk(this, 1); }
 void army_walk14(entity this) { set_animofs(this, anim_army_prowl, 14, army_walk15); ai_walk(this, 1); }
 void army_walk13(entity this) { set_animofs(this, anim_army_prowl, 13, army_walk14); ai_walk(this, 0); }
-void army_walk12(entity this) { set_animofs(this, anim_army_prowl, 12, army_walk13); ai_walk(this, 1); }
+void army_walk12(entity this) { set_animofs(this, anim_army_prowl, 12, army_walk13); ai_walk(this, 1); monster_footstep(this, false); }
 void army_walk11(entity this) { set_animofs(this, anim_army_prowl, 11, army_walk12); ai_walk(this, 2); }
 void army_walk10(entity this) { set_animofs(this, anim_army_prowl, 10, army_walk11); ai_walk(this, 2); }
 void army_walk9(entity this) { set_animofs(this, anim_army_prowl, 9, army_walk10); ai_walk(this, 2); }
@@ -58,16 +58,17 @@ void army_walk1(entity this)
 	if(random() < 0.2)
 		_sound(this, CH_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
 	ai_walk(this, 1);
+	monster_footstep(this, false);
 }
 
 void army_run1(entity this);
 void army_run8(entity this) { set_animofs(this, anim_army_run, 8, army_run1); ai_run(this, 8); }
 void army_run7(entity this) { set_animofs(this, anim_army_run, 7, army_run8); ai_run(this, 10); }
-void army_run6(entity this) { set_animofs(this, anim_army_run, 6, army_run7); ai_run(this, 15); }
+void army_run6(entity this) { set_animofs(this, anim_army_run, 6, army_run7); ai_run(this, 15); monster_footstep(this, false); }
 void army_run5(entity this) { set_animofs(this, anim_army_run, 5, army_run6); ai_run(this, 8); }
 void army_run4(entity this) { set_animofs(this, anim_army_run, 4, army_run5); ai_run(this, 10); }
 void army_run3(entity this) { set_animofs(this, anim_army_run, 3, army_run4); ai_run(this, 10); }
-void army_run2(entity this) { set_animofs(this, anim_army_run, 2, army_run3); ai_run(this, 15); }
+void army_run2(entity this) { set_animofs(this, anim_army_run, 2, army_run3); ai_run(this, 15); monster_footstep(this, false); }
 void army_run1(entity this)
 {
 	set_animofs(this, anim_army_run, 1, army_run2);
@@ -109,7 +110,7 @@ void army_pain1(entity this) { set_animofs(this, anim_army_pain, 1, army_pain2);
 void army_painb14(entity this) { set_animofs(this, anim_army_painb, 14, army_run1); }
 void army_painb13(entity this) { set_animofs(this, anim_army_painb, 13, army_painb14); }
 void army_painb12(entity this) { set_animofs(this, anim_army_painb, 12, army_painb13); ai_pain(this, 2); }
-void army_painb11(entity this) { set_animofs(this, anim_army_painb, 11, army_painb12); }
+void army_painb11(entity this) { set_animofs(this, anim_army_painb, 11, army_painb12); monster_footstep(this, false); }
 void army_painb10(entity this) { set_animofs(this, anim_army_painb, 10, army_painb11); }
 void army_painb9(entity this) { set_animofs(this, anim_army_painb, 9, army_painb10); }
 void army_painb8(entity this) { set_animofs(this, anim_army_painb, 8, army_painb9); }
@@ -125,7 +126,7 @@ void army_painc13(entity this) { set_animofs(this, anim_army_painc, 13, army_run
 void army_painc12(entity this) { set_animofs(this, anim_army_painc, 12, army_painc13); ai_painforward(this, 8); }
 void army_painc11(entity this) { set_animofs(this, anim_army_painc, 11, army_painc12); ai_painforward(this, 6); }
 void army_painc10(entity this) { set_animofs(this, anim_army_painc, 10, army_painc11); ai_painforward(this, 3); }
-void army_painc9(entity this) { set_animofs(this, anim_army_painc, 9, army_painc10); ai_painforward(this, 4); }
+void army_painc9(entity this) { set_animofs(this, anim_army_painc, 9, army_painc10); ai_painforward(this, 4); monster_footstep(this, false); }
 void army_painc8(entity this) { set_animofs(this, anim_army_painc, 8, army_painc9); ai_pain(this, 1); }
 void army_painc7(entity this) { set_animofs(this, anim_army_painc, 7, army_painc8); }
 void army_painc6(entity this) { set_animofs(this, anim_army_painc, 6, army_painc7); ai_painforward(this, 1); }
@@ -339,6 +340,8 @@ METHOD(Grunt, mr_setup, bool(Grunt this, entity actor))
 	actor.th_die = army_die;
 
 	actor.checkattack = SoldierCheckAttack;
+
+	actor.steptype = FS_TYPEMEDIUM;
 
     return true;
 }

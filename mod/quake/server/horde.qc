@@ -1915,6 +1915,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 drole");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 skullwiz");
 		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 justice");
+		Horde_SpawnSquadEntity(HORDE_ELITE, HORDE_SQUAD_TYPE_NORMAL, "1 biter");
 	}
 
 	found = false;

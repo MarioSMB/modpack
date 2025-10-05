@@ -65,13 +65,13 @@ void mino_stand1(entity this)
 //============================================================================
 void mino_walk12(entity this) { set_animofs(this, anim_minotaur_walk, 23, mino_walk1); ai_walk(this, 9);}
 void mino_walk11(entity this) { set_animofs(this, anim_minotaur_walk, 21, mino_walk12); ai_walk(this, 4);}
-void mino_walk10(entity this) { set_animofs(this, anim_minotaur_walk, 19, mino_walk11); ai_walk(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_walk10(entity this) { set_animofs(this, anim_minotaur_walk, 19, mino_walk11); ai_walk(this, 10); monster_footstep(this, false); }
 void mino_walk9(entity this) { set_animofs(this, anim_minotaur_walk, 17, mino_walk10); ai_walk(this, 9);}
 void mino_walk8(entity this) { set_animofs(this, anim_minotaur_walk, 15, mino_walk9); ai_walk(this, 12);}
 void mino_walk7(entity this) { set_animofs(this, anim_minotaur_walk, 13, mino_walk8); ai_walk(this, 12);}
 void mino_walk6(entity this) { set_animofs(this, anim_minotaur_walk, 11, mino_walk7); ai_walk(this, 9);}
 void mino_walk5(entity this) { set_animofs(this, anim_minotaur_walk, 9, mino_walk6); ai_walk(this, 4);}
-void mino_walk4(entity this) { set_animofs(this, anim_minotaur_walk, 7, mino_walk5); ai_walk(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_walk4(entity this) { set_animofs(this, anim_minotaur_walk, 7, mino_walk5); ai_walk(this, 10); monster_footstep(this, false); }
 void mino_walk3(entity this) { set_animofs(this, anim_minotaur_walk, 5, mino_walk4); ai_walk(this, 9);}
 void mino_walk2(entity this) { set_animofs(this, anim_minotaur_walk, 3, mino_walk3); ai_walk(this, 12);}
 void mino_walk1(entity this)
@@ -86,10 +86,10 @@ void mino_walk1(entity this)
 // Charge/run/gore!
 //============================================================================
 void mino_rage6(entity this) { set_animofs(this, anim_minotaur_charge, 12, mino_run); ai_run(this, 26); }
-void mino_rage5(entity this) { set_animofs(this, anim_minotaur_charge, 10, mino_rage6); ai_run(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_rage5(entity this) { set_animofs(this, anim_minotaur_charge, 10, mino_rage6); ai_run(this, 28); monster_footstep(this, false); }
 void mino_rage4(entity this) { set_animofs(this, anim_minotaur_charge, 8, mino_rage5); ai_run(this, 34); }
 void mino_rage3(entity this) { set_animofs(this, anim_minotaur_charge, 6, mino_rage4); ai_run(this, 26); }
-void mino_rage2(entity this) { set_animofs(this, anim_minotaur_charge, 4, mino_rage3); ai_run(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_rage2(entity this) { set_animofs(this, anim_minotaur_charge, 4, mino_rage3); ai_run(this, 28); monster_footstep(this, false); }
 void mino_rage1(entity this)
 {
 	set_animofs(this, anim_minotaur_charge, 2, mino_rage2);
@@ -101,13 +101,13 @@ void mino_rage1(entity this)
 //----------------------------------------------------------------------
 void mino_run12(entity this) { set_animofs(this, anim_minotaur_walk, 23, mino_run); ai_run(this, 9); }
 void mino_run11(entity this) { set_animofs(this, anim_minotaur_walk, 21, mino_run12); ai_run(this, 4); }
-void mino_run10(entity this) { set_animofs(this, anim_minotaur_walk, 19, mino_run11); ai_run(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_run10(entity this) { set_animofs(this, anim_minotaur_walk, 19, mino_run11); ai_run(this, 10); monster_footstep(this, false); }
 void mino_run9(entity this) { set_animofs(this, anim_minotaur_walk, 17, mino_run10); ai_run(this, 9); }
 void mino_run8(entity this) { set_animofs(this, anim_minotaur_walk, 15, mino_run9); ai_run(this, 12); }
 void mino_run7(entity this) { set_animofs(this, anim_minotaur_walk, 13, mino_run8); ai_run(this, 12); }
 void mino_run6(entity this) { set_animofs(this, anim_minotaur_walk, 11, mino_run7); ai_run(this, 9); }
 void mino_run5(entity this) { set_animofs(this, anim_minotaur_walk, 9, mino_run6); ai_run(this, 4); }
-void mino_run4(entity this) { set_animofs(this, anim_minotaur_walk, 7, mino_run5); ai_run(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_run4(entity this) { set_animofs(this, anim_minotaur_walk, 7, mino_run5); ai_run(this, 10); monster_footstep(this, false); }
 void mino_run3(entity this) { set_animofs(this, anim_minotaur_walk, 5, mino_run4); ai_run(this, 9); }
 void mino_run2(entity this) { set_animofs(this, anim_minotaur_walk, 3, mino_run3); ai_run(this, 12); }
 void mino_run1(entity this)
@@ -189,7 +189,7 @@ void mino_slapL5(entity this) { set_animofs(this, anim_minotaur_bwalk, 3, mino_s
 void mino_slapL4(entity this) { set_animofs(this, anim_minotaur_bwalk, 1, mino_slapL5); ai_charge(this, 12); mino_claw(this, -250); }
 void mino_slapL3(entity this) { set_animofs(this, anim_minotaur_bwalk, 23, mino_slapL4); ai_charge(this, 9); }
 void mino_slapL2(entity this) { set_animofs(this, anim_minotaur_bwalk, 21, mino_slapL3); ai_charge(this, 4); }
-void mino_slapL1(entity this) { set_animofs(this, anim_minotaur_bwalk, 19, mino_slapL2); ai_charge(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_slapL1(entity this) { set_animofs(this, anim_minotaur_bwalk, 19, mino_slapL2); ai_charge(this, 10); monster_footstep(this, false); }
 
 void mino_slapR6(entity this)
 {
@@ -203,15 +203,15 @@ void mino_slapR5(entity this) { set_animofs(this, anim_minotaur_bwalk, 15, mino_
 void mino_slapR4(entity this) { set_animofs(this, anim_minotaur_bwalk, 13, mino_slapR5); ai_charge(this, 12); mino_claw(this, 250); }
 void mino_slapR3(entity this) { set_animofs(this, anim_minotaur_bwalk, 11, mino_slapR4); ai_charge(this, 9); }
 void mino_slapR2(entity this) { set_animofs(this, anim_minotaur_bwalk, 9, mino_slapR3); ai_charge(this, 4); }
-void mino_slapR1(entity this) { set_animofs(this, anim_minotaur_bwalk, 7, mino_slapR2); ai_charge(this, 10); /*monster_footstep(FALSE);*/ }
+void mino_slapR1(entity this) { set_animofs(this, anim_minotaur_bwalk, 7, mino_slapR2); ai_charge(this, 10); monster_footstep(this, false); }
 
 //----------------------------------------------------------------------
 // Rage melee attack
 void mino_gore6(entity this) { set_animofs(this, anim_minotaur_gore, 12, mino_run); ai_charge(this, 26); }
-void mino_gore5(entity this) { set_animofs(this, anim_minotaur_gore, 10, mino_gore6); ai_charge(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_gore5(entity this) { set_animofs(this, anim_minotaur_gore, 10, mino_gore6); ai_charge(this, 28); monster_footstep(this, false); }
 void mino_gore4(entity this) { set_animofs(this, anim_minotaur_gore, 8, mino_gore5); ai_charge(this, 34); }
 void mino_gore3(entity this) { set_animofs(this, anim_minotaur_gore, 6, mino_gore4); ai_charge(this, 26); mino_claw(this, -250); }
-void mino_gore2(entity this) { set_animofs(this, anim_minotaur_gore, 4, mino_gore3); ai_charge(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_gore2(entity this) { set_animofs(this, anim_minotaur_gore, 4, mino_gore3); ai_charge(this, 28); monster_footstep(this, false); }
 void mino_gore1(entity this) { set_animofs(this, anim_minotaur_gore, 2, mino_gore2); ai_charge(this, 34); }
 
 //----------------------------------------------------------------------
@@ -278,7 +278,7 @@ void mino_jump12(entity this)
 	if(this.enemy.health > 0 && ai_checkmelee(this, 100, 64)) 
 		setthink(this, mino_melee);
 }
-void mino_jump10(entity this) { set_animofs(this, anim_minotaur_jump, 19, mino_jump12); ai_charge(this, 8); /*monster_footstep(FALSE);*/ }
+void mino_jump10(entity this) { set_animofs(this, anim_minotaur_jump, 19, mino_jump12); ai_charge(this, 8); monster_footstep(this, false); }
 void mino_jump8(entity this)
 {
 	set_animofs(this, anim_minotaur_jump, 15, mino_jump8);
@@ -490,7 +490,7 @@ void mino_magic11(entity this)
 {
 	set_animofs(this, anim_minotaur_magic, 21, mino_magic12);
 	ai_forward(this, 4);
-	/*monster_footstep(FALSE);*/
+	monster_footstep(this, false);
 	minotaur_hands(this, '28 0 50','28 2 48',3);
 	minotaur_fire(this, '28 0 49',1);
 }
@@ -677,10 +677,10 @@ void mino_chargecheck(entity this, float dist)
 
 //----------------------------------------------------------------------
 void mino_charge6(entity this) { set_animofs(this, anim_minotaur_charge, 11, mino_charge1); mino_chargecheck(this, 26); }
-void mino_charge5(entity this) { set_animofs(this, anim_minotaur_charge, 9, mino_charge6); mino_chargecheck(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_charge5(entity this) { set_animofs(this, anim_minotaur_charge, 9, mino_charge6); mino_chargecheck(this, 28); monster_footstep(this, false); }
 void mino_charge4(entity this) { set_animofs(this, anim_minotaur_charge, 7, mino_charge5); mino_chargecheck(this, 34); }
 void mino_charge3(entity this) { set_animofs(this, anim_minotaur_charge, 5, mino_charge4); mino_chargecheck(this, 26); }
-void mino_charge2(entity this) { set_animofs(this, anim_minotaur_charge, 3, mino_charge3); mino_chargecheck(this, 28); /*monster_footstep(FALSE);*/ }
+void mino_charge2(entity this) { set_animofs(this, anim_minotaur_charge, 3, mino_charge3); mino_chargecheck(this, 28); monster_footstep(this, false); }
 void mino_charge1(entity this) { set_animofs(this, anim_minotaur_charge, 1, mino_charge2); mino_chargecheck(this, 34); }
 
 //----------------------------------------------------------------------
@@ -988,6 +988,8 @@ METHOD(Minotaur, mr_setup, bool(Minotaur this, entity actor))
 	actor.resist_cells = 0.5;
 	actor.reflectlightning = true;
 	actor.reflectplasma = true;
+
+	actor.steptype = FS_TYPELARGE;
 
 	actor.checkattack = MinotaurCheckAttack;
 

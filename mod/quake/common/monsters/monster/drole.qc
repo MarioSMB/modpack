@@ -160,7 +160,7 @@ void drole_walk1(entity this);
 void drole_walk8(entity this) { set_animofs(this, anim_drole_walk, 8, drole_walk1); ai_walk(this, 3); }
 void drole_walk7(entity this) { set_animofs(this, anim_drole_walk, 7, drole_walk8); ai_walk(this, 8); }
 void drole_walk6(entity this) { set_animofs(this, anim_drole_walk, 6, drole_walk7); ai_walk(this, 12); }
-void drole_walk5(entity this) { set_animofs(this, anim_drole_walk, 5, drole_walk6); ai_walk(this, 6); }
+void drole_walk5(entity this) { set_animofs(this, anim_drole_walk, 5, drole_walk6); ai_walk(this, 6); monster_footstep(this, false); }
 void drole_walk4(entity this) { set_animofs(this, anim_drole_walk, 4, drole_walk5); ai_walk(this, 5); }
 void drole_walk3(entity this) { set_animofs(this, anim_drole_walk, 3, drole_walk4); ai_walk(this, 9); }
 void drole_walk2(entity this) { set_animofs(this, anim_drole_walk, 2, drole_walk3); ai_walk(this, 9); }
@@ -170,6 +170,7 @@ void drole_walk1(entity this)
 	if(random() > 0.8)
 		_sound(this, CH_VOICE, "drole/idle.wav", 1, ATTN_IDLE);
 	ai_walk(this, 10);
+	monster_footstep(this, false);
 }
 
 //============================================================================
@@ -180,11 +181,11 @@ void drole_walk1(entity this)
 //============================================================================
 void drole_run(entity this);
 
-void drole_rage8(entity this) { set_animofs(this, anim_drole_run, 8, drole_run); ai_run(this, 28); }
+void drole_rage8(entity this) { set_animofs(this, anim_drole_run, 8, drole_run); ai_run(this, 28); monster_footstep(this, false); }
 void drole_rage7(entity this) { set_animofs(this, anim_drole_run, 7, drole_rage8); ai_run(this, 30); }
 void drole_rage6(entity this) { set_animofs(this, anim_drole_run, 6, drole_rage7); ai_run(this, 26); }
 void drole_rage5(entity this) { set_animofs(this, anim_drole_run, 5, drole_rage6); ai_run(this, 27); }
-void drole_rage4(entity this) { set_animofs(this, anim_drole_run, 4, drole_rage5); ai_run(this, 28); }
+void drole_rage4(entity this) { set_animofs(this, anim_drole_run, 4, drole_rage5); ai_run(this, 28); monster_footstep(this, false); }
 void drole_rage3(entity this) { set_animofs(this, anim_drole_run, 3, drole_rage4); ai_run(this, 30); }
 void drole_rage2(entity this) { set_animofs(this, anim_drole_run, 2, drole_rage3); ai_run(this, 26); }
 void drole_rage1(entity this)
@@ -193,6 +194,7 @@ void drole_rage1(entity this)
 	if(random() > 0.8)
 		_sound(this, CH_VOICE, "drole/idle.wav", 1, ATTN_IDLE);
 	ai_run(this, 27);
+	monster_footstep(this, false);
 }
 
 //----------------------------------------------------------------------
@@ -200,7 +202,7 @@ void drole_run1(entity this);
 void drole_run8(entity this) { set_animofs(this, anim_drole_walk, 8, drole_run); ai_run(this, 8); }
 void drole_run7(entity this) { set_animofs(this, anim_drole_walk, 7, drole_run8); ai_run(this, 13); }
 void drole_run6(entity this) { set_animofs(this, anim_drole_walk, 6, drole_run7); ai_run(this, 17); }
-void drole_run5(entity this) { set_animofs(this, anim_drole_walk, 5, drole_run6); ai_run(this, 11); }
+void drole_run5(entity this) { set_animofs(this, anim_drole_walk, 5, drole_run6); ai_run(this, 11); monster_footstep(this, false); }
 void drole_run4(entity this) { set_animofs(this, anim_drole_walk, 4, drole_run5); ai_run(this, 10); }
 void drole_run3(entity this) { set_animofs(this, anim_drole_walk, 3, drole_run4); ai_run(this, 14); }
 void drole_run2(entity this)
@@ -210,7 +212,7 @@ void drole_run2(entity this)
 		_sound(this, CH_VOICE, "drole/idle.wav", 1, ATTN_IDLE);
 	ai_run(this, 14);
 }
-void drole_run1(entity this) { set_animofs(this, anim_drole_walk, 1, drole_run2); ai_run(this, 15); }
+void drole_run1(entity this) { set_animofs(this, anim_drole_walk, 1, drole_run2); ai_run(this, 15); monster_footstep(this, false); }
 
 //----------------------------------------------------------------------
 void drole_run(entity this)
@@ -272,7 +274,7 @@ void drole_clawR16(entity this)
 	if(random() < 0.5 && ai_checkmelee(this, 150, 64) && this.enemy.health > 0 && visible(this, this.enemy))
 		drole_clawL1(this);
 }
-void drole_clawR15(entity this) { set_animofs(this, anim_drole_clawR, 15, drole_clawR16); drole_charge(this, 30); }
+void drole_clawR15(entity this) { set_animofs(this, anim_drole_clawR, 15, drole_clawR16); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawR14(entity this)
 {
 	set_animofs(this, anim_drole_clawR, 14, drole_clawR15);
@@ -281,15 +283,15 @@ void drole_clawR14(entity this)
 }
 void drole_clawR13(entity this) { set_animofs(this, anim_drole_clawR, 13, drole_clawR14); drole_charge(this, 27); }
 void drole_clawR12(entity this) { set_animofs(this, anim_drole_clawR, 12, drole_clawR13); drole_charge(this, 28); }
-void drole_clawR11(entity this) { set_animofs(this, anim_drole_clawR, 11, drole_clawR12); drole_charge(this, 30); drole_claw(this, -250); }
+void drole_clawR11(entity this) { set_animofs(this, anim_drole_clawR, 11, drole_clawR12); drole_charge(this, 30); drole_claw(this, -250); monster_footstep(this, false); }
 void drole_clawR10(entity this) { set_animofs(this, anim_drole_clawR, 10, drole_clawR11); drole_charge(this, 26); }
 void drole_clawR9(entity this) { set_animofs(this, anim_drole_clawR, 9, drole_clawR10); drole_charge(this, 27); }
 void drole_clawR8(entity this) { set_animofs(this, anim_drole_clawR, 8, drole_clawR9); drole_charge(this, 28); }
-void drole_clawR7(entity this) { set_animofs(this, anim_drole_clawR, 7, drole_clawR8); drole_charge(this, 30); }
+void drole_clawR7(entity this) { set_animofs(this, anim_drole_clawR, 7, drole_clawR8); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawR6(entity this) { set_animofs(this, anim_drole_clawR, 6, drole_clawR7); drole_charge(this, 26); }
 void drole_clawR5(entity this) { set_animofs(this, anim_drole_clawR, 5, drole_clawR6); drole_charge(this, 27); drole_claw(this, -250); }
 void drole_clawR4(entity this) { set_animofs(this, anim_drole_clawR, 4, drole_clawR5); drole_charge(this, 28); }
-void drole_clawR3(entity this) { set_animofs(this, anim_drole_clawR, 3, drole_clawR4); drole_charge(this, 30); }
+void drole_clawR3(entity this) { set_animofs(this, anim_drole_clawR, 3, drole_clawR4); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawR2(entity this)
 {
 	set_animofs(this, anim_drole_clawR, 2, drole_clawR3);
@@ -306,7 +308,7 @@ void drole_clawL16(entity this)
 	if(random() < 0.5 && ai_checkmelee(this, 150, 64) && this.enemy.health > 0 && visible(this, this.enemy))
 		drole_clawR1(this);
 }
-void drole_clawL15(entity this) { set_animofs(this, anim_drole_clawL, 15, drole_clawL16); drole_charge(this, 30); }
+void drole_clawL15(entity this) { set_animofs(this, anim_drole_clawL, 15, drole_clawL16); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawL14(entity this)
 {
 	set_animofs(this, anim_drole_clawL, 14, drole_clawL15);
@@ -315,15 +317,15 @@ void drole_clawL14(entity this)
 }
 void drole_clawL13(entity this) { set_animofs(this, anim_drole_clawL, 13, drole_clawL14); drole_charge(this, 27); }
 void drole_clawL12(entity this) { set_animofs(this, anim_drole_clawL, 12, drole_clawL13); drole_charge(this, 28); }
-void drole_clawL11(entity this) { set_animofs(this, anim_drole_clawL, 11, drole_clawL12); drole_charge(this, 30); drole_claw(this, 250); }
+void drole_clawL11(entity this) { set_animofs(this, anim_drole_clawL, 11, drole_clawL12); drole_charge(this, 30); drole_claw(this, 250); monster_footstep(this, false); }
 void drole_clawL10(entity this) { set_animofs(this, anim_drole_clawL, 10, drole_clawL11); drole_charge(this, 26); }
 void drole_clawL9(entity this) { set_animofs(this, anim_drole_clawL, 9, drole_clawL10); drole_charge(this, 27); }
 void drole_clawL8(entity this) { set_animofs(this, anim_drole_clawL, 8, drole_clawL9); drole_charge(this, 28); }
-void drole_clawL7(entity this) { set_animofs(this, anim_drole_clawL, 7, drole_clawL8); drole_charge(this, 30); }
+void drole_clawL7(entity this) { set_animofs(this, anim_drole_clawL, 7, drole_clawL8); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawL6(entity this) { set_animofs(this, anim_drole_clawL, 6, drole_clawL7); drole_charge(this, 26); }
 void drole_clawL5(entity this) { set_animofs(this, anim_drole_clawL, 5, drole_clawL6); drole_charge(this, 27); drole_claw(this, 250); }
 void drole_clawL4(entity this) { set_animofs(this, anim_drole_clawL, 4, drole_clawL5); drole_charge(this, 28); }
-void drole_clawL3(entity this) { set_animofs(this, anim_drole_clawL, 3, drole_clawL4); drole_charge(this, 30); }
+void drole_clawL3(entity this) { set_animofs(this, anim_drole_clawL, 3, drole_clawL4); drole_charge(this, 30); monster_footstep(this, false); }
 void drole_clawL2(entity this)
 {
 	set_animofs(this, anim_drole_clawL, 2, drole_clawL3);
@@ -635,6 +637,8 @@ METHOD(Drole, mr_setup, bool(Drole this, entity actor))
 	actor.th_die = drole_die;
 
 	actor.checkattack = DroleCheckAttack;
+
+	actor.steptype = FS_TYPEHEAVY;
 
     return true;
 }

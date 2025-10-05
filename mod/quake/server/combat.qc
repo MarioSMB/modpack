@@ -519,6 +519,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(targ.m_champion && targ.m_champion.m_takedamage)
 		damage *= targ.m_champion.m_takedamage(targ.m_champion, targ, inflictor, attacker, damage, deathtype);
 
+	// damage mod for monsters -- dumptruck_ds
+	if(attacker.damage_mod)
+		damage *= attacker.damage_mod;
+
 // check for quad damage powerup on the attacker
 	if(StatusEffects_active(STATUSEFFECT_Quad, attacker))
 		damage *= 4;

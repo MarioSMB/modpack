@@ -8,6 +8,15 @@
 
 .int csqcprojectile_type;
 
+void music_bounce(entity this, entity toucher)
+{
+	vector col = this.colormod;
+	this.colormod.x = col.z;
+	this.colormod.y = col.y;
+	this.colormod.z = col.z;
+	settouch(this, func_null);
+}
+
 void SUB_Stop(entity this, entity toucher)
 {
 	this.velocity = this.avelocity = '0 0 0';
@@ -339,6 +348,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(OCARINA)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; this.scale = 0.5; break;
 			HANDLE(SHOCKGUN_PLASMA)    this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(LASER)              this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(PIANO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = ((random() > 0.5) ? '0 -90 0' : '0 90 0'); break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -394,6 +404,19 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_LASER:
 				set_movetype(this, MOVETYPE_BOUNCEMISSILE);
 				settouch(this, func_null);
+				break;
+			case PROJECTILE_PIANO_MUSIC:
+				this.effects |= EF_FULLBRIGHT;
+				vector mycolor = '1 1 0';
+				if(random() < 0.5)
+				{
+					mycolor.x = max(0.25, random() * 5);
+					mycolor.y = max(0.25, random() * 5);
+					mycolor.z = max(0.25, random() * 5);
+				}
+				this.colormod = mycolor;
+				set_movetype(this, MOVETYPE_BOUNCE);
+				settouch(this, music_bounce);
 				break;
 			default:
 				break;

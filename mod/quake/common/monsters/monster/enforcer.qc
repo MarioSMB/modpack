@@ -104,7 +104,7 @@ void enf_walk14(entity this) { set_animofs(this, anim_enf_walk, 14, enf_walk15);
 void enf_walk13(entity this) { set_animofs(this, anim_enf_walk, 13, enf_walk14); ai_walk(this, 2); }
 void enf_walk12(entity this) { set_animofs(this, anim_enf_walk, 12, enf_walk13); ai_walk(this, 1); }
 void enf_walk11(entity this) { set_animofs(this, anim_enf_walk, 11, enf_walk12); ai_walk(this, 4); }
-void enf_walk10(entity this) { set_animofs(this, anim_enf_walk, 10, enf_walk11); ai_walk(this, 4); }
+void enf_walk10(entity this) { set_animofs(this, anim_enf_walk, 10, enf_walk11); ai_walk(this, 4); monster_footstep(this, false); }
 void enf_walk9(entity this) { set_animofs(this, anim_enf_walk, 9, enf_walk10); ai_walk(this, 2); }
 void enf_walk8(entity this) { set_animofs(this, anim_enf_walk, 8, enf_walk9); ai_walk(this, 1); }
 void enf_walk7(entity this) { set_animofs(this, anim_enf_walk, 7, enf_walk8); ai_walk(this, 2); }
@@ -112,7 +112,7 @@ void enf_walk6(entity this) { set_animofs(this, anim_enf_walk, 6, enf_walk7); ai
 void enf_walk5(entity this) { set_animofs(this, anim_enf_walk, 5, enf_walk6); ai_walk(this, 1); }
 void enf_walk4(entity this) { set_animofs(this, anim_enf_walk, 4, enf_walk5); ai_walk(this, 3); }
 void enf_walk3(entity this) { set_animofs(this, anim_enf_walk, 3, enf_walk4); ai_walk(this, 4); }
-void enf_walk2(entity this) { set_animofs(this, anim_enf_walk, 2, enf_walk3); ai_walk(this, 4); }
+void enf_walk2(entity this) { set_animofs(this, anim_enf_walk, 2, enf_walk3); ai_walk(this, 4); monster_footstep(this, false); }
 void enf_walk1(entity this)
 {
 	set_animofs(this, anim_enf_walk, 1, enf_walk2);
@@ -123,10 +123,10 @@ void enf_walk1(entity this)
 
 void enf_run1(entity this);
 void enf_run8(entity this) { set_animofs(this, anim_enf_run, 8, enf_run1); ai_run(this, 11); }
-void enf_run7(entity this) { set_animofs(this, anim_enf_run, 7, enf_run8); ai_run(this, 7); }
+void enf_run7(entity this) { set_animofs(this, anim_enf_run, 7, enf_run8); ai_run(this, 7); monster_footstep(this, false); }
 void enf_run6(entity this) { set_animofs(this, anim_enf_run, 6, enf_run7); ai_run(this, 14); }
 void enf_run5(entity this) { set_animofs(this, anim_enf_run, 5, enf_run6); ai_run(this, 14); }
-void enf_run4(entity this) { set_animofs(this, anim_enf_run, 4, enf_run5); ai_run(this, 12); }
+void enf_run4(entity this) { set_animofs(this, anim_enf_run, 4, enf_run5); ai_run(this, 12); monster_footstep(this, false); }
 void enf_run3(entity this) { set_animofs(this, anim_enf_run, 3, enf_run4); ai_run(this, 7); }
 void enf_run2(entity this) { set_animofs(this, anim_enf_run, 2, enf_run3); ai_run(this, 14); }
 void enf_run1(entity this)
@@ -154,7 +154,7 @@ void enf_atk6(entity this) { set_animofs(this, anim_enf_attack, 6, enf_atk7); en
 void enf_atk5(entity this) { set_animofs(this, anim_enf_attack, 5, enf_atk6); ai_face(this); }
 void enf_atk4(entity this) { set_animofs(this, anim_enf_attack, 4, enf_atk5); ai_face(this); }
 void enf_atk3(entity this) { set_animofs(this, anim_enf_attack, 3, enf_atk4); ai_face(this); }
-void enf_atk2(entity this) { set_animofs(this, anim_enf_attack, 2, enf_atk3); ai_face(this); }
+void enf_atk2(entity this) { set_animofs(this, anim_enf_attack, 2, enf_atk3); ai_face(this); monster_footstep(this, false); }
 void enf_atk1(entity this) { set_animofs(this, anim_enf_attack, 1, enf_atk2); ai_face(this); }
 
 void enf_paina4(entity this) { set_animofs(this, anim_enf_paina, 4, enf_run1); }
@@ -174,7 +174,7 @@ void enf_painc6(entity this) { set_animofs(this, anim_enf_painc, 6, enf_painc7);
 void enf_painc5(entity this) { set_animofs(this, anim_enf_painc, 5, enf_painc6); }
 void enf_painc4(entity this) { set_animofs(this, anim_enf_painc, 4, enf_painc5); }
 void enf_painc3(entity this) { set_animofs(this, anim_enf_painc, 3, enf_painc4); }
-void enf_painc2(entity this) { set_animofs(this, anim_enf_painc, 2, enf_painc3); }
+void enf_painc2(entity this) { set_animofs(this, anim_enf_painc, 2, enf_painc3); monster_footstep(this, false); }
 void enf_painc1(entity this) { set_animofs(this, anim_enf_painc, 1, enf_painc2); }
 
 void enf_paind19(entity this) { set_animofs(this, anim_enf_paind, 19, enf_run1); }
@@ -193,7 +193,7 @@ void enf_paind7(entity this) { set_animofs(this, anim_enf_paind, 7, enf_paind8);
 void enf_paind6(entity this) { set_animofs(this, anim_enf_paind, 6, enf_paind7); }
 void enf_paind5(entity this) { set_animofs(this, anim_enf_paind, 5, enf_paind6); ai_painforward(this, 1); }
 void enf_paind4(entity this) { set_animofs(this, anim_enf_paind, 4, enf_paind5); ai_painforward(this, 2); }
-void enf_paind3(entity this) { set_animofs(this, anim_enf_paind, 3, enf_paind4); }
+void enf_paind3(entity this) { set_animofs(this, anim_enf_paind, 3, enf_paind4); monster_footstep(this, false); }
 void enf_paind2(entity this) { set_animofs(this, anim_enf_paind, 2, enf_paind3); }
 void enf_paind1(entity this) { set_animofs(this, anim_enf_paind, 1, enf_paind2); }
 
@@ -353,6 +353,8 @@ METHOD(Enforcer, mr_setup, bool(Enforcer this, entity actor))
 	actor.th_pain = enf_pain;
 	actor.th_die = enf_die;
 	actor.th_missile = enf_atk1;
+
+	actor.steptype = FS_TYPEHEAVY;
 
 	return true;
 }

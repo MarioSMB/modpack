@@ -56,7 +56,7 @@ void boil_walk14(entity this) { set_animofs(this, anim_boil_walk, 14, boil_walk1
 void boil_walk13(entity this) { set_animofs(this, anim_boil_walk, 13, boil_walk14); ai_walk(this, 3); }
 void boil_walk12(entity this) { set_animofs(this, anim_boil_walk, 12, boil_walk13); ai_walk(this, 2); }
 void boil_walk11(entity this) { set_animofs(this, anim_boil_walk, 11, boil_walk12); ai_walk(this, 1); }
-void boil_walk10(entity this) { set_animofs(this, anim_boil_walk, 10, boil_walk11); ai_walk(this, 3); }
+void boil_walk10(entity this) { set_animofs(this, anim_boil_walk, 10, boil_walk11); ai_walk(this, 3); monster_footstep(this, true); }
 void boil_walk9(entity this) { set_animofs(this, anim_boil_walk, 9, boil_walk10); ai_walk(this, 0); }
 void boil_walk8(entity this) { set_animofs(this, anim_boil_walk, 8, boil_walk9); ai_walk(this, 2); }
 void boil_walk7(entity this) { set_animofs(this, anim_boil_walk, 7, boil_walk8); ai_walk(this, 1); }
@@ -64,14 +64,14 @@ void boil_walk6(entity this) { set_animofs(this, anim_boil_walk, 6, boil_walk7);
 void boil_walk5(entity this) { set_animofs(this, anim_boil_walk, 5, boil_walk6); ai_walk(this, 3); }
 void boil_walk4(entity this) { set_animofs(this, anim_boil_walk, 4, boil_walk5); ai_walk(this, 3); }
 void boil_walk3(entity this) { set_animofs(this, anim_boil_walk, 3, boil_walk4); ai_walk(this, 4); }
-void boil_walk2(entity this) { set_animofs(this, anim_boil_walk, 2, boil_walk3); ai_walk(this, 3); }
+void boil_walk2(entity this) { set_animofs(this, anim_boil_walk, 2, boil_walk3); ai_walk(this, 3); monster_footstep(this, true); }
 void boil_walk1(entity this) { set_animofs(this, anim_boil_walk, 1, boil_walk2); boil_idle_sound(this); ai_walk(this, 0); }
 
 void boil_run1(entity this);
 void boil_run8(entity this) { set_animofs(this, anim_boil_run, 8, boil_run1); ai_run(this, 4); }
 void boil_run7(entity this) { set_animofs(this, anim_boil_run, 7, boil_run8); ai_run(this, 8); }
 void boil_run6(entity this) { set_animofs(this, anim_boil_run, 6, boil_run7); ai_run(this, 16); }
-void boil_run5(entity this) { set_animofs(this, anim_boil_run, 5, boil_run6); ai_run(this, 4); }
+void boil_run5(entity this) { set_animofs(this, anim_boil_run, 5, boil_run6); ai_run(this, 4); monster_footstep(this, true); }
 void boil_run4(entity this) { set_animofs(this, anim_boil_run, 4, boil_run5); ai_run(this, 4); }
 void boil_run3(entity this) { set_animofs(this, anim_boil_run, 3, boil_run4); ai_run(this, 8); }
 void boil_run2(entity this)
@@ -80,7 +80,7 @@ void boil_run2(entity this)
 	boil_idle_sound(this);
 	ai_run(this, 16);
 }
-void boil_run1(entity this) { set_animofs(this, anim_boil_run, 1, boil_run2); ai_run(this, 4); }
+void boil_run1(entity this) { set_animofs(this, anim_boil_run, 1, boil_run2); ai_run(this, 4); monster_footstep(this, true); }
 
 // Running Boil Explosive Attack
 void boil_expl9(entity this) { set_animofs(this, anim_boil_explode, 9, boil_expl9); T_Damage(this, this, this, this.health + 1, DEATH_MONSTER_BOIL.m_id); }
@@ -336,6 +336,8 @@ METHOD(Boil, mr_setup, bool(Boil this, entity actor))
 	actor.th_pain = boil_pain;
 	actor.th_die = boil_die;
 	actor.checkattack = BoilCheckAttack;
+
+	actor.steptype = FS_TYPESLOW;
 
 	// Setup random hobble animation
 	if(actor.spawnflags & (MON_BOIL_HOBBLED | MON_BOIL_HANGING))

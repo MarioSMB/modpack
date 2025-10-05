@@ -244,7 +244,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 			if(wfrm == 21 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord6.wav", 1, ATTN_NORM);} 
 		}
 
-		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		//_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = mycolor;
 		musicnote.avelocity = '0 90 0'; // Roll
 		musicnote.velocity = musicnote.velocity*1 + (v_right* 20) + (v_up* 1); // Don't add .Velocity* (it's already defined above!)
@@ -270,7 +270,7 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 			if(wfrm == 45 ) {_sound(this, CH_WEAPON_A, "weapons/piano_chord12.wav", 1, ATTN_NORM);}
 		}
 
-		_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
+		//_setmodel(musicnote, "progs/piano_musicnote_white.mdl");
 		musicnote.colormod = mycolor;
 		musicnote.avelocity = '0 -90 0';
 		musicnote.velocity = musicnote.velocity*1 + (v_right*  -20) + (v_up* 1);
@@ -280,6 +280,8 @@ void W_FireWoodPiano(entity this, .entity weaponentity) // Fire Music Note + Pla
 	}
 
 	IL_PUSH(g_projectiles, musicnote);
+
+	CSQCProjectile(musicnote, true, PROJECTILE_PIANO_MUSIC, true);
 }
 
 METHOD(Piano, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

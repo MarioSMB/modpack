@@ -88,7 +88,7 @@ void zombie_walk16(entity this) { set_animofs(this, anim_zombie_walk, 16, zombie
 void zombie_walk15(entity this) { set_animofs(this, anim_zombie_walk, 15, zombie_walk16); ai_walk(this, 0); }
 void zombie_walk14(entity this) { set_animofs(this, anim_zombie_walk, 14, zombie_walk15); ai_walk(this, 0); }
 void zombie_walk13(entity this) { set_animofs(this, anim_zombie_walk, 13, zombie_walk14); ai_walk(this, 1); }
-void zombie_walk12(entity this) { set_animofs(this, anim_zombie_walk, 12, zombie_walk13); ai_walk(this, 2); }
+void zombie_walk12(entity this) { set_animofs(this, anim_zombie_walk, 12, zombie_walk13); ai_walk(this, 2); monster_footstep(this, false); }
 void zombie_walk11(entity this) { set_animofs(this, anim_zombie_walk, 11, zombie_walk12); ai_walk(this, 2); }
 void zombie_walk10(entity this) { set_animofs(this, anim_zombie_walk, 10, zombie_walk11); ai_walk(this, 0); }
 void zombie_walk9(entity this) { set_animofs(this, anim_zombie_walk, 9, zombie_walk10); ai_walk(this, 0); }
@@ -98,7 +98,7 @@ void zombie_walk6(entity this) { set_animofs(this, anim_zombie_walk, 6, zombie_w
 void zombie_walk5(entity this) { set_animofs(this, anim_zombie_walk, 5, zombie_walk6); ai_walk(this, 1); }
 void zombie_walk4(entity this) { set_animofs(this, anim_zombie_walk, 4, zombie_walk5); ai_walk(this, 2); }
 void zombie_walk3(entity this) { set_animofs(this, anim_zombie_walk, 3, zombie_walk4); ai_walk(this, 3); }
-void zombie_walk2(entity this) { set_animofs(this, anim_zombie_walk, 2, zombie_walk3); ai_walk(this, 2); }
+void zombie_walk2(entity this) { set_animofs(this, anim_zombie_walk, 2, zombie_walk3); ai_walk(this, 2); monster_footstep(this, true); }
 void zombie_walk1(entity this) { set_animofs(this, anim_zombie_walk, 1, zombie_walk2); ai_walk(this, 0); }
 
 void zombie_run1(entity this);
@@ -111,7 +111,7 @@ void zombie_run18(entity this)
 	if(random() > 0.8)
 		_sound(this, CH_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
 }
-void zombie_run17(entity this) { set_animofs(this, anim_zombie_run, 17, zombie_run18); ai_run(this, 3); }
+void zombie_run17(entity this) { set_animofs(this, anim_zombie_run, 17, zombie_run18); ai_run(this, 3); monster_footstep(this, false); }
 void zombie_run16(entity this) { set_animofs(this, anim_zombie_run, 16, zombie_run17); ai_run(this, 7); }
 void zombie_run15(entity this) { set_animofs(this, anim_zombie_run, 15, zombie_run16); ai_run(this, 6); }
 void zombie_run14(entity this) { set_animofs(this, anim_zombie_run, 14, zombie_run15); ai_run(this, 4); }
@@ -119,7 +119,7 @@ void zombie_run13(entity this) { set_animofs(this, anim_zombie_run, 13, zombie_r
 void zombie_run12(entity this) { set_animofs(this, anim_zombie_run, 12, zombie_run13); ai_run(this, 0); }
 void zombie_run11(entity this) { set_animofs(this, anim_zombie_run, 11, zombie_run12); ai_run(this, 0); }
 void zombie_run10(entity this) { set_animofs(this, anim_zombie_run, 10, zombie_run11); ai_run(this, 0); }
-void zombie_run9(entity this) { set_animofs(this, anim_zombie_run, 9, zombie_run10); ai_run(this, 2); }
+void zombie_run9(entity this) { set_animofs(this, anim_zombie_run, 9, zombie_run10); ai_run(this, 2); monster_footstep(this, false); }
 void zombie_run8(entity this) { set_animofs(this, anim_zombie_run, 8, zombie_run9); ai_run(this, 4); }
 void zombie_run7(entity this) { set_animofs(this, anim_zombie_run, 7, zombie_run8); ai_run(this, 4); }
 void zombie_run6(entity this) { set_animofs(this, anim_zombie_run, 6, zombie_run7); ai_run(this, 3); }
@@ -281,7 +281,7 @@ void zombie_paina1(entity this) { set_animofs(this, anim_zombie_paina, 1, zombie
 
 void zombie_painb28(entity this) { set_animofs(this, anim_zombie_painb, 28, zombie_run1); }
 void zombie_painb27(entity this) { set_animofs(this, anim_zombie_painb, 27, zombie_painb28); }
-void zombie_painb26(entity this) { set_animofs(this, anim_zombie_painb, 26, zombie_painb27); }
+void zombie_painb26(entity this) { set_animofs(this, anim_zombie_painb, 26, zombie_painb27); monster_footstep(this, false); }
 void zombie_painb25(entity this) { set_animofs(this, anim_zombie_painb, 25, zombie_painb26); ai_painforward(this, 1); }
 void zombie_painb24(entity this) { set_animofs(this, anim_zombie_painb, 24, zombie_painb25); }
 void zombie_painb23(entity this) { set_animofs(this, anim_zombie_painb, 23, zombie_painb24); }
@@ -348,7 +348,7 @@ void zombie_paine28(entity this) { set_animofs(this, anim_zombie_paine, 28, zomb
 void zombie_paine27(entity this) { set_animofs(this, anim_zombie_paine, 27, zombie_paine28); ai_painforward(this, 1); }
 void zombie_paine26(entity this) { set_animofs(this, anim_zombie_paine, 26, zombie_paine27); ai_painforward(this, 3); }
 void zombie_paine25(entity this) { set_animofs(this, anim_zombie_paine, 25, zombie_paine26); ai_painforward(this, 5); }
-void zombie_paine24(entity this) { set_animofs(this, anim_zombie_paine, 24, zombie_paine25); }
+void zombie_paine24(entity this) { set_animofs(this, anim_zombie_paine, 24, zombie_paine25); monster_footstep(this, false); }
 void zombie_paine23(entity this) { set_animofs(this, anim_zombie_paine, 23, zombie_paine24); }
 void zombie_paine22(entity this) { set_animofs(this, anim_zombie_paine, 22, zombie_paine23); }
 void zombie_paine21(entity this) { set_animofs(this, anim_zombie_paine, 21, zombie_paine22); }
@@ -645,6 +645,8 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	actor.th_pain = zombie_pain;
 	actor.th_die = zombie_die;
 	actor.th_missile = zombie_missile;
+
+	actor.steptype = FS_TYPESLOW;
 
 	if(random() <= 0.1 && fexists("progs/mon_zombieking.mdl"))
 	{

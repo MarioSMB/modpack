@@ -335,7 +335,7 @@ void iceg_walkframe(entity this)
 	if(this.walkframe == 0 || this.walkframe == 16)
 	{
 		walkspeed = 0;
-		//monster_footstep(this, false);
+		monster_footstep(this, false);
 	}		
 	else if(this.walkframe == 1 || this.walkframe == 17)
 		walkspeed = 4;
@@ -390,7 +390,7 @@ void iceg_runframe(entity this)
 	if(this.walkframe == 0 || this.walkframe == 12)
 	{
 		runspeed = 0;
-		//monster_footstep(this, false);
+		monster_footstep(this, false);
 	}		
 	else if(this.walkframe == 1 || this.walkframe == 13)
 		runspeed = 6;
@@ -467,7 +467,7 @@ void iceg_knock12(entity this)
 	iceg_mcharge(this, 5);
 	_sound(this, CH_VOICE, "golem/melee_swipe.wav", 1, ATTN_IDLE);
 }
-void iceg_knock11(entity this) { set_animofs(this, anim_icegolem_knock, 11, iceg_knock12); iceg_mcharge(this, 5); /*monster_footstep(this, false);*/ }
+void iceg_knock11(entity this) { set_animofs(this, anim_icegolem_knock, 11, iceg_knock12); iceg_mcharge(this, 5); monster_footstep(this, false); }
 void iceg_knock10(entity this) { set_animofs(this, anim_icegolem_knock, 10, iceg_knock11); iceg_mcharge(this, 6); }
 void iceg_knock9(entity this) { set_animofs(this, anim_icegolem_knock, 9, iceg_knock10); iceg_mcharge(this, 7); }
 void iceg_knock8(entity this) { set_animofs(this, anim_icegolem_knock, 8, iceg_knock9); iceg_mcharge(this, 8); }
@@ -758,7 +758,7 @@ void iceg_stomp24(entity this)
 {
 	set_animofs(this, anim_icegolem_stomp, 24, iceg_run1);
 	iceg_footstomp(this);
-	//monster_footstep(this, false);
+	monster_footstep(this, false);
 	// Check for combo Stomp+quick range
 	iceg_CheckCombo(this);
 }
@@ -893,8 +893,8 @@ void iceg_turnframe(entity this)
 		return;
 	
 	// Check for any special frame events
-	//if(this.walkframe == 0 || this.walkframe == 16)
-		//monster_footstep(this, false);
+	if(this.walkframe == 0 || this.walkframe == 16)
+		monster_footstep(this, false);
 
 	// Keep moving the animation frame forward
 	this.walkframe = this.walkframe + 1;
@@ -1042,7 +1042,7 @@ void iceg_death11(entity this) { set_animofs(this, anim_icegolem_death, 11, iceg
 void iceg_death10(entity this) { set_animofs(this, anim_icegolem_death, 10, iceg_death11); iceg_brk(this, 0); }
 void iceg_death9(entity this) { set_animofs(this, anim_icegolem_death, 9, iceg_death10); iceg_brk(this, 0); }
 void iceg_death8(entity this) { set_animofs(this, anim_icegolem_death, 8, iceg_death9); iceg_brk(this, 10); }
-void iceg_death7(entity this) { set_animofs(this, anim_icegolem_death, 7, iceg_death8); iceg_brk(this, 12); /*monster_footstep(this, false);*/ }
+void iceg_death7(entity this) { set_animofs(this, anim_icegolem_death, 7, iceg_death8); iceg_brk(this, 12); monster_footstep(this, false); }
 void iceg_death6(entity this) { set_animofs(this, anim_icegolem_death, 6, iceg_death7); iceg_brk(this, 10); }
 void iceg_death5(entity this) { set_animofs(this, anim_icegolem_death, 5, iceg_death6); iceg_brk(this, 5); }
 void iceg_death4(entity this) { set_animofs(this, anim_icegolem_death, 4, iceg_death5); iceg_brk(this, 5); }
@@ -1086,7 +1086,7 @@ void iceg_wake12(entity this) { set_animofs(this, anim_icegolem_birth, 12, iceg_
 void iceg_wake11(entity this) { set_animofs(this, anim_icegolem_birth, 11, iceg_wake12); iceg_birth(this); icegolem_idle_sound(this); }
 void iceg_wake10(entity this) { set_animofs(this, anim_icegolem_birth, 10, iceg_wake11); iceg_birth(this); }
 void iceg_wake9(entity this) { set_animofs(this, anim_icegolem_birth, 9, iceg_wake10); iceg_birth(this); }
-void iceg_wake8(entity this) { set_animofs(this, anim_icegolem_birth, 8, iceg_wake9); iceg_birth(this); /*monster_footstep(this, false);*/ }
+void iceg_wake8(entity this) { set_animofs(this, anim_icegolem_birth, 8, iceg_wake9); iceg_birth(this); monster_footstep(this, false); }
 void iceg_wake7(entity this) { set_animofs(this, anim_icegolem_birth, 7, iceg_wake8); iceg_birth(this); ai_forward(this, 1); }
 void iceg_wake6(entity this) { set_animofs(this, anim_icegolem_birth, 6, iceg_wake7); iceg_birth(this); ai_forward(this, 3); }
 void iceg_wake5(entity this) { set_animofs(this, anim_icegolem_birth, 5, iceg_wake6); iceg_birth(this); ai_forward(this, 3); }
@@ -1133,7 +1133,7 @@ void iceg_wake(entity this, entity actor, entity trigger)
 void iceg_tranB13(entity this)
 {
 	set_animofs(this, anim_icegolem_tranB, 13, iceg_run1);
-	//monster_footstep(this, false);
+	monster_footstep(this, false);
 	this.takedamage = DAMAGE_YES;	// Can take damage
 	this.style = ICEG_PHASE2;		// Time to fight!
 	Resist_ChangeType(this, false);	// restore resistance
@@ -1195,6 +1195,8 @@ void iceg_setup(entity this)
 	this.target = this.target2 = this.deathtarget = "";
 
 	this.yaw_speed = 20;
+
+	this.steptype = FS_TYPEGIANT;
 	
 	// Wait for trigger event to be wakeup
 	if(this.targetname && this.targetname != "")

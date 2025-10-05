@@ -1,0 +1,25 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_TENTACLE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was thrashed by Shub-Niggurath"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_TENTACLE,               1,  NULL,           INFO_DEATH_SELF_MON_TENTACLE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_TENTACLE,           DEATH_SELF_MON_TENTACLE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_TENTACLE, "progs/oldone_tent.mdl");
+#endif
+
+CLASS(Tentacle, Monster)
+    ATTRIB(Tentacle, spawnflags, int, MON_FLAG_STATIONARY | MON_FLAG_HIDDEN);
+    ATTRIB(Tentacle, m_mins, vector, '-12 -12 -24');
+    ATTRIB(Tentacle, m_maxs, vector, '12 12 60');
+#ifdef GAMEQC
+    ATTRIB(Tentacle, m_model, Model, MDL_MON_TENTACLE);
+    ATTRIB(Tentacle, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Tentacle, netname, string, "tentacle");
+    ATTRIB(Tentacle, m_name, string, _("Tentacle"));
+ENDCLASS(Tentacle)
+
+REGISTER_MONSTER(TENTACLE, NEW(Tentacle));

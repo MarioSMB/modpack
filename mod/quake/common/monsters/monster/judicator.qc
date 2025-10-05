@@ -427,6 +427,8 @@ void judge_walkframe(entity this)
 	this.attack_switch = true;
 
 	// Beginning of animation block
+	if(this.walkframe == 0 || this.walkframe == 7)
+		monster_footstep(this, false);
 	if(this.walkframe == 3)
 	{
 		if(random() < 0.2)
@@ -466,6 +468,8 @@ void judge_runframe(entity this)
 	setthink(this, judge_runframe);
 
 	// Beginning of animation block
+	if(this.walkframe == 0 || this.walkframe == 4)
+		monster_footstep(this, false);
 	if(this.walkframe == 2)
 	{
 		if(random() < 0.2)
@@ -1011,7 +1015,7 @@ void judge_jump7(entity this)
 	this.angles_x = this.angles_z = 0;
 	ai_face(this);
 }
-void judge_jump6(entity this) { set_animofs(this, anim_judge_jump, 6, judge_jump7); }
+void judge_jump6(entity this) { set_animofs(this, anim_judge_jump, 6, judge_jump7); monster_footstep(this, false); }
 void judge_jump5(entity this)
 {
 	set_animofs(this, anim_judge_jump, 5, judge_jump5);
@@ -1953,6 +1957,8 @@ METHOD(Judicator, mr_setup, bool(Judicator this, entity actor))
 	actor.resist_rockets = actor.resist_cells = 0.75;
 	actor.reflectlightning = true;
 	actor.reflectplasma = true;
+
+	actor.steptype = FS_TYPELARGE;
 
 	judge_awake(actor, NULL, NULL);
 

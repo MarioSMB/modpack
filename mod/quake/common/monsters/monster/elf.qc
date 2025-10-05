@@ -40,25 +40,25 @@ void elf_walk1(entity this);
 void elf_walk12(entity this) { set_animofs(this, anim_elf_walk, 12, elf_walk1); ai_walk(this, 3); }
 void elf_walk11(entity this) { set_animofs(this, anim_elf_walk, 11, elf_walk12); ai_walk(this, 2); }
 void elf_walk10(entity this) { set_animofs(this, anim_elf_walk, 10, elf_walk11); ai_walk(this, 0); }
-void elf_walk9(entity this) { set_animofs(this, anim_elf_walk, 9, elf_walk10); ai_walk(this, 4); }
+void elf_walk9(entity this) { set_animofs(this, anim_elf_walk, 9, elf_walk10); ai_walk(this, 4); monster_footstep(this, false); }
 void elf_walk8(entity this) { set_animofs(this, anim_elf_walk, 8, elf_walk9); ai_walk(this, 6); }
 void elf_walk7(entity this) { set_animofs(this, anim_elf_walk, 7, elf_walk8); ai_walk(this, 10); }
 void elf_walk6(entity this) { set_animofs(this, anim_elf_walk, 6, elf_walk7); ai_walk(this, 3); }
 void elf_walk5(entity this) { set_animofs(this, anim_elf_walk, 5, elf_walk6); ai_walk(this, 2); }
 void elf_walk4(entity this) { set_animofs(this, anim_elf_walk, 4, elf_walk5); ai_walk(this, 0); }
-void elf_walk3(entity this) { set_animofs(this, anim_elf_walk, 3, elf_walk4); ai_walk(this, 4); }
+void elf_walk3(entity this) { set_animofs(this, anim_elf_walk, 3, elf_walk4); ai_walk(this, 4); monster_footstep(this, false); }
 void elf_walk2(entity this) { set_animofs(this, anim_elf_walk, 2, elf_walk3); ai_walk(this, 6); }
 void elf_walk1(entity this) { set_animofs(this, anim_elf_walk, 1, elf_walk2); elf_idlesound(this); ai_walk(this, 10); }
 
 //======================================================================
 void elf_run1(entity this);
 void elf_run10(entity this) { set_animofs(this, anim_elf_skip, 10, elf_run1); ai_run(this, 8); }
-void elf_run9(entity this) { set_animofs(this, anim_elf_skip, 9, elf_run10); ai_run(this, 12); }
+void elf_run9(entity this) { set_animofs(this, anim_elf_skip, 9, elf_run10); ai_run(this, 12); monster_footstep(this, false); }
 void elf_run8(entity this) { set_animofs(this, anim_elf_skip, 8, elf_run9); ai_run(this, 20); }
 void elf_run7(entity this) { set_animofs(this, anim_elf_skip, 7, elf_run8); ai_run(this, 6); }
 void elf_run6(entity this) { set_animofs(this, anim_elf_skip, 6, elf_run7); ai_run(this, 1); }
 void elf_run5(entity this) { set_animofs(this, anim_elf_skip, 5, elf_run6); ai_run(this, 8); }
-void elf_run4(entity this) { set_animofs(this, anim_elf_skip, 4, elf_run5); ai_run(this, 12); }
+void elf_run4(entity this) { set_animofs(this, anim_elf_skip, 4, elf_run5); ai_run(this, 12); monster_footstep(this, false); }
 void elf_run3(entity this) { set_animofs(this, anim_elf_skip, 3, elf_run4); ai_run(this, 20); }
 void elf_run2(entity this) { set_animofs(this, anim_elf_skip, 2, elf_run3); ai_run(this, 6); }
 void elf_run1(entity this) { set_animofs(this, anim_elf_skip, 1, elf_run2); elf_idlesound(this); ai_run(this, 1); }
@@ -219,7 +219,7 @@ void Elf_JumpTouch(entity this, entity toucher)
 //----------------------------------------------------------------------
 void elf_leap3(entity this);
 void elf_leap8(entity this) { set_animofs(this, anim_elf_jump, 8, elf_run1); this.angles_x = this.angles_z = 0; }
-void elf_leap7(entity this) { set_animofs(this, anim_elf_jump, 7, elf_leap8); }
+void elf_leap7(entity this) { set_animofs(this, anim_elf_jump, 7, elf_leap8); monster_footstep(this, false); }
 void elf_leap6(entity this)
 {
 	set_animofs(this, anim_elf_jump, 6, elf_leap7);
@@ -491,6 +491,8 @@ METHOD(Elf, mr_setup, bool(Elf this, entity actor))
 	actor.th_melee = elf_cane1;
 	actor.th_pain = elf_pain;
 	actor.th_die = elf_die;
+
+	actor.steptype = FS_TYPELIGHT;
 
     return true;
 }

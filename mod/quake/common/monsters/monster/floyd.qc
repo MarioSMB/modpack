@@ -26,7 +26,7 @@ void floyd_walk15(entity this) { set_animofs(this, anim_floyd_walk1, 15, floyd_w
 void floyd_walk14(entity this) { set_animofs(this, anim_floyd_walk1, 14, floyd_walk15); ai_walk(this, 1.875); }
 void floyd_walk13(entity this) { set_animofs(this, anim_floyd_walk1, 13, floyd_walk14); ai_walk(this, 1.875); }
 void floyd_walk12(entity this) { set_animofs(this, anim_floyd_walk1, 12, floyd_walk13); ai_walk(this, 1.875); }
-void floyd_walk11(entity this) { set_animofs(this, anim_floyd_walk1, 11, floyd_walk12); ai_walk(this, 1.875); }
+void floyd_walk11(entity this) { set_animofs(this, anim_floyd_walk1, 11, floyd_walk12); ai_walk(this, 1.875); monster_footstep(this, false); }
 void floyd_walk10(entity this) { set_animofs(this, anim_floyd_walk1, 10, floyd_walk11); ai_walk(this, 1.875); }
 void floyd_walk9(entity this) { set_animofs(this, anim_floyd_walk1, 9, floyd_walk10); ai_walk(this, 1.875); }
 void floyd_walk8(entity this) { set_animofs(this, anim_floyd_walk1, 8, floyd_walk9); ai_walk(this, 1.875); }
@@ -34,7 +34,7 @@ void floyd_walk7(entity this) { set_animofs(this, anim_floyd_walk1, 7, floyd_wal
 void floyd_walk6(entity this) { set_animofs(this, anim_floyd_walk1, 6, floyd_walk7); ai_walk(this, 1.875); }
 void floyd_walk5(entity this) { set_animofs(this, anim_floyd_walk1, 5, floyd_walk6); ai_walk(this, 1.875); }
 void floyd_walk4(entity this) { set_animofs(this, anim_floyd_walk1, 4, floyd_walk5); ai_walk(this, 1.875); }
-void floyd_walk3(entity this) { set_animofs(this, anim_floyd_walk1, 3, floyd_walk4); ai_walk(this, 1.875); }
+void floyd_walk3(entity this) { set_animofs(this, anim_floyd_walk1, 3, floyd_walk4); ai_walk(this, 1.875); monster_footstep(this, false); }
 void floyd_walk2(entity this) { set_animofs(this, anim_floyd_walk1, 2, floyd_walk3); ai_walk(this, 1.875); }
 void floyd_walk1(entity this)
 {
@@ -48,11 +48,11 @@ void floyd_run1(entity this);
 void floyd_run8(entity this) { set_animofs(this, anim_floyd_run1, 8, floyd_run1); ai_run(this, 3.75); }
 void floyd_run7(entity this) { set_animofs(this, anim_floyd_run1, 7, floyd_run8); ai_run(this, 3.75); }
 void floyd_run6(entity this) { set_animofs(this, anim_floyd_run1, 6, floyd_run7); ai_run(this, 3.75); }
-void floyd_run5(entity this) { set_animofs(this, anim_floyd_run1, 5, floyd_run6); ai_run(this, 3.75); }
+void floyd_run5(entity this) { set_animofs(this, anim_floyd_run1, 5, floyd_run6); ai_run(this, 3.75); monster_footstep(this, false); }
 void floyd_run4(entity this) { set_animofs(this, anim_floyd_run1, 4, floyd_run5); ai_run(this, 3.75); }
 void floyd_run3(entity this) { set_animofs(this, anim_floyd_run1, 3, floyd_run4); ai_run(this, 3.75); }
 void floyd_run2(entity this) { set_animofs(this, anim_floyd_run1, 2, floyd_run3); ai_run(this, 3.75); }
-void floyd_run1(entity this) { set_animofs(this, anim_floyd_run1, 1, floyd_run2); ai_run(this, 3.75); }
+void floyd_run1(entity this) { set_animofs(this, anim_floyd_run1, 1, floyd_run2); ai_run(this, 3.75); monster_footstep(this, false); }
 
 /*
 ================
@@ -526,6 +526,8 @@ METHOD(Floyd, mr_setup, bool(Floyd this, entity actor))
 		actor.th_die = floyd_die;
 		actor.th_missile = floyd_ready1;
     }
+
+    actor.steptype = FS_TYPELARGE;
 
     return true;
 }
