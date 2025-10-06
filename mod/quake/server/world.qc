@@ -1488,6 +1488,7 @@ spawnfunc(worldspawn)
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
 	if(world.model == "maps/quake.bsp")
 	{
+		cvar_set("skill", "1");
 		cvar_set("sv_quake_challenge", ""); // returned to hub, clean up challenge mode too!
 		serverflags = 0; // clean up serverflags!
 	}
