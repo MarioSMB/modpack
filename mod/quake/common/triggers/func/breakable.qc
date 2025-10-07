@@ -168,7 +168,7 @@ void func_breakable_alkaline(entity this)
 // no general way to tell unfortunately, just list some packs here that do use it
 bool IsAlkalineMap()
 {
-	if(substring(world.model, 0, 7) == "maps/ee" || substring(world.model, 0, 9) == "maps/ffj_")
+	if(substring(world.model, 0, 7) == "maps/ee" || substring(world.model, 0, 9) == "maps/ffj_" || substring(world.model, 0, 9) == "maps/rub2")
 		return true;
 	return false;
 }
