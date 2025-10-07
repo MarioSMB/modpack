@@ -1836,6 +1836,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 axegrunt");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 kamikaze");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 gremlin");
+		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_NORMAL, "1 cheddar_goblin");
 		Horde_SpawnSquadEntity(HORDE_ARMY | HORDE_FODDER, HORDE_SQUAD_TYPE_FLYING, "1 jim");
 	}
 
@@ -1960,6 +1961,7 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 boglord");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 ithagnal");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 icegolem");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 cthulhu");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 zerstorer"); // technically flying, but small enough to use regular spawns
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 eoc");

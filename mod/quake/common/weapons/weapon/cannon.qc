@@ -158,6 +158,7 @@ void cannon_setup(entity this)
 	this.candrag = true;
 }
 
+const int CANNON_FLOAT = BIT(0);
 spawnfunc(cannon)
 {
 	if(!this.speed)
@@ -165,8 +166,12 @@ spawnfunc(cannon)
 	if(!this.dmg)
 		this.dmg = 2000;
 	this.solid = SOLID_TRIGGER;
-	set_movetype(this, MOVETYPE_TOSS);
-	setmodel(this, MDL_CANNON);
+	if(this.spawnflags & CANNON_FLOAT)
+		set_movetype(this, MOVETYPE_NONE);
+	else
+		set_movetype(this, MOVETYPE_TOSS);
+	if(!this.model || this.model == "")
+		setmodel(this, MDL_CANNON);
 	setsize(this, '-16 -16 -16', '16 16 32');
 	this.pos2 = this.angles;
 	if(!this.noalign)

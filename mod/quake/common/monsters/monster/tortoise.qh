@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_TORTOISE,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was impacted by a Tortoise"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_TORTOISE,               1,  NULL,           INFO_DEATH_SELF_MON_TORTOISE,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_TORTOISE,           DEATH_SELF_MON_TORTOISE,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_TORTOISE, "progs/tortoise.mdl");
+MODEL(MON_TORTOISE_HEAD, "progs/h_tortoise.mdl");
+#endif
+
+CLASS(Tortoise, Monster)
+    ATTRIB(Tortoise, spawnflags, int, 0);
+    ATTRIB(Tortoise, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Tortoise, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Tortoise, m_model, Model, MDL_MON_TORTOISE);
+    ATTRIB(Tortoise, m_model_head, Model, MDL_MON_TORTOISE_HEAD);
+    ATTRIB(Tortoise, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Tortoise, netname, string, "tortoise");
+    ATTRIB(Tortoise, m_name, string, _("Tortoise"));
+ENDCLASS(Tortoise)
+
+REGISTER_MONSTER(TORTOISE, NEW(Tortoise));

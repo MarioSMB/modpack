@@ -3595,7 +3595,16 @@ void SV_ParseClientCommand(entity this, string command)
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
 		string arg = argv(1);
 		Monster mon = MON_Null;
-		if(arg != "")
+		if(arg == "randomboss")
+		{
+			RandomSelection_Init();
+			FOREACH(Monsters, it.spawnflags & MONSTER_TYPE_BOSS,
+			{
+				RandomSelection_AddEnt(it, 1, 1);
+			});
+			mon = RandomSelection_chosen_ent;
+		}
+		else if(arg != "")
 		{
 			FOREACH(Monsters, it.netname == arg,
 			{

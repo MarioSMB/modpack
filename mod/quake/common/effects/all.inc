@@ -1139,3 +1139,24 @@ STATIC_INIT(Effect_MEOWMERE_TRAIL)
 	registercvar("cl_particle_meowmere_trail_purple_velocitymultiplier", "-0.100000");
 }
 #endif
+
+EFFECT(0, CTHULHU_FADE,              "cthulhu_fade")
+#ifdef CSQC
+STATIC_INIT(Effect_CTHULHU_FADE)
+{
+	registercvar("cl_particle_cthulhu_fade", "smoke");
+
+	registercvar("cl_particle_cthulhu_fade_smoke_type", "spark");
+	registercvar("cl_particle_cthulhu_fade_smoke_airfriction", "-0.500000");
+	registercvar("cl_particle_cthulhu_fade_smoke_alpha", "0 256 70");
+	registercvar("cl_particle_cthulhu_fade_smoke_bounce", "1.500000");
+	registercvar("cl_particle_cthulhu_fade_smoke_color", "0x807aff 0x4463d5");
+	registercvar("cl_particle_cthulhu_fade_smoke_count", "75");
+	registercvar("cl_particle_cthulhu_fade_smoke_gravity", "-0.100000");
+	registercvar("cl_particle_cthulhu_fade_smoke_originjitter", "256 256 300");
+	registercvar("cl_particle_cthulhu_fade_smoke_sizeincrease", "-0.050000");
+	registercvar("cl_particle_cthulhu_fade_smoke_size", "1 8");
+	registercvar("cl_particle_cthulhu_fade_smoke_tex", "40 40");
+	registercvar("cl_particle_cthulhu_fade_smoke_velocityjitter", "50 50 0");
+}
+#endif

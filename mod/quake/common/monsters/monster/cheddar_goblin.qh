@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_CHEDDAR_GOBLIN,                   1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 had their macaroni eaten by Cheddar Goblin"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_CHEDDAR_GOBLIN,              1,  NULL,           INFO_DEATH_SELF_MON_CHEDDAR_GOBLIN,             CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_CHEDDAR_GOBLIN,          DEATH_SELF_MON_CHEDDAR_GOBLIN,          DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_CHEDDAR_GOBLIN, "progs/cheddar_goblin.mdl");
+MODEL(MON_CHEDDAR_GOBLIN_HEAD, "progs/h_grem.mdl");
+
+SOUND(MON_CHEDDAR_GOBLIN_SIGHT, "cheddar_goblin/sight");
+#endif
+
+CLASS(CheddarGoblin, Monster)
+    ATTRIB(CheddarGoblin, spawnflags, int, 0);
+    ATTRIB(CheddarGoblin, m_mins, vector, '-16 -16 -24');
+    ATTRIB(CheddarGoblin, m_maxs, vector, '16 16 16');
+#ifdef GAMEQC
+    ATTRIB(CheddarGoblin, m_model, Model, MDL_MON_CHEDDAR_GOBLIN);
+    ATTRIB(CheddarGoblin, m_model_head, Model, MDL_MON_CHEDDAR_GOBLIN_HEAD);
+    ATTRIB(CheddarGoblin, m_sound, Sound, SND_MON_CHEDDAR_GOBLIN_SIGHT);
+#endif
+    ATTRIB(CheddarGoblin, netname, string, "cheddar_goblin");
+    ATTRIB(CheddarGoblin, m_name, string, _("Cheddar Goblin"));
+ENDCLASS(CheddarGoblin)
+
+REGISTER_MONSTER(CHEDDAR_GOBLIN, NEW(CheddarGoblin));

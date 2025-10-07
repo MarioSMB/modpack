@@ -1,0 +1,41 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_VINDICATOR,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was slain by a Vindicator"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_VINDICATOR,               1,  NULL,           INFO_DEATH_SELF_MON_VINDICATOR,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_VINDICATOR,           DEATH_SELF_MON_VINDICATOR,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_VINDICATOR, "progs/vindicator.mdl");
+MODEL(MON_VINDICATOR_HEAD, "progs/h_vindicator.mdl");
+
+SOUND(MON_VINDICATOR_PAIN1, "vindicator/hurt1");
+SOUND(MON_VINDICATOR_PAIN2, "vindicator/hurt2");
+SOUND(MON_VINDICATOR_PAIN3, "vindicator/hurt3");
+Sound SND_MON_VINDICATOR_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_VINDICATOR_PAIN1.m_id + floor(prandom() * 3));
+}
+SOUND(MON_VINDICATOR_IDLE1, "vindicator/idle1");
+SOUND(MON_VINDICATOR_IDLE2, "vindicator/idle2");
+SOUND(MON_VINDICATOR_IDLE3, "vindicator/idle3");
+SOUND(MON_VINDICATOR_IDLE4, "vindicator/idle4");
+Sound SND_MON_VINDICATOR_IDLE_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_VINDICATOR_IDLE1.m_id + floor(prandom() * 4));
+}
+#endif
+
+CLASS(Vindicator, Monster)
+    ATTRIB(Vindicator, spawnflags, int, MON_FLAG_BLOCKY);
+    ATTRIB(Vindicator, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Vindicator, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
+    ATTRIB(Vindicator, m_model, Model, MDL_MON_VINDICATOR);
+    ATTRIB(Vindicator, m_model_head, Model, MDL_MON_VINDICATOR_HEAD);
+    ATTRIB(Vindicator, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Vindicator, netname, string, "vindicator");
+    ATTRIB(Vindicator, m_name, string, _("Vindicator"));
+ENDCLASS(Vindicator)
+
+REGISTER_MONSTER(VINDICATOR, NEW(Vindicator));
