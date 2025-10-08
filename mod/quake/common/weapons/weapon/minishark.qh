@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(Minishark, Weapon)
+/* ammotype  */ ATTRIB(Minishark, ammo_type, int, IT_NAILS);
+/* impulse   */ ATTRIB(Minishark, impulse, int, 5);
+/* spawnflags*/ ATTRIB(Minishark, spawnflags, int, 0);
+/* ammo */      ATTRIB(Minishark, aflag, int, 30);
+/* modelname */ ATTRIB(Minishark, mdl, string, "minishark");
+/* crosshair */ ATTRIB(Minishark, w_crosshair, string, "gfx/crosshairhagar");
+/* crosshair */ ATTRIB(Minishark, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Minishark, w_crosshair_color, vector, '1 1 0.5');
+/* wepimg    */ ATTRIB(Minishark, model2, string, "minishark");
+/* refname   */ ATTRIB(Minishark, netname, string, "minishark");
+/* wepname   */ ATTRIB(Minishark, m_name, string, _("Minishark"));
+
+ENDCLASS(Minishark)
+REGISTER_WEAPON(MINISHARK, NEW(Minishark));
+
+SPAWNFUNC_WEAPON(weapon_minishark, WEP_MINISHARK)
+
+#ifdef SVQC
+void W_FireMinishark(entity this, .entity weaponentity);
+#endif

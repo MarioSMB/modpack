@@ -8,13 +8,13 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "smg breegull plane magic shield gravgun mushroom pogo rocketlauncher multirocketlauncher driller impaler nuke cannon lightning plasma shock lightme railgun otamatone laser_gun mic grenadelauncher multigrenade proximitygun tuba napalm fish chimes mayo spellbook hammer portalgun ocarina supernailgun lavasupernailgun organ crossbow piano sshotgun ripper doot nailgun lavanailgun biogun kazoo shotgun banjo ball katana sword crowbar meowmere wand chainsaw pan axe bongos";
+noref string autocvar_cl_quake_weaponpriority = "smg breegull plane magic shield gravgun mushroom pogo rocketlauncher multirocketlauncher driller impaler nuke cannon lightning plasma shock lightme railgun otamatone laser_gun mic grenadelauncher multigrenade proximitygun tuba napalm fish chimes mayo spellbook hammer portalgun ocarina supernailgun lavasupernailgun minishark crossbow light_disc piano sshotgun ripper doot nailgun lavanailgun biogun speaknspell kazoo shotgun banjo ball katana sword crowbar meowmere wand chainsaw pan axe bongos";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher nuke cannon multirocketlauncher driller impaler grenadelauncher multigrenade biogun proximitygun tuba napalm fish mayo"; // explosives
 noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme railgun"; // energy
 noref string autocvar_cl_quake_weaponpriority2 = "lightning portalgun"; // hitscan exact
 noref string autocvar_cl_quake_weaponpriority3 = "lightning sshotgun shotgun"; // hitscan all
-noref string autocvar_cl_quake_weaponpriority4 = "smg laser_gun shock grenadelauncher multigrenade napalm fish mayo ocarina supernailgun biogun tuba lavasupernailgun crossbow piano doot nailgun lavanailgun bongos kazoo chainsaw"; // spam weapons
+noref string autocvar_cl_quake_weaponpriority4 = "smg laser_gun shock grenadelauncher multigrenade napalm fish mayo ocarina supernailgun minishark biogun light_disc tuba lavasupernailgun crossbow piano doot nailgun lavanailgun bongos speaknspell kazoo chainsaw"; // spam weapons
 noref string autocvar_cl_quake_weaponpriority5 = "nuke cannon impaler portalgun"; // movement weapons
 noref string autocvar_cl_quake_weaponpriority6 = "mushroom tuba mic ocarina otamatone banjo bongos chimes mayo piano kazoo doot"; // musical instruments
 noref string autocvar_cl_quake_weaponpriority7 = "";

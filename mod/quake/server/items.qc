@@ -896,6 +896,8 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 		{
 			case WEP_PIANO:
 			case WEP_KAZOO:
+			case WEP_LIGHT_DISC:
+			case WEP_SPEAKNSPELL:
 			{
 				if(random() > 0.5)
 					mytype = IT_NAILS;

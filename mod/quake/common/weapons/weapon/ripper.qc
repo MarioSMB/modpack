@@ -25,7 +25,7 @@ bool disc_shouldbehead(entity this, entity toucher)
 	return true;
 }
 
-void disc_touch(entity this, entity toucher)
+void ripper_blade_touch(entity this, entity toucher)
 {
 	if(pointcontents(this.origin) == CONTENT_SKY)
 	{
@@ -74,7 +74,7 @@ void disc_touch(entity this, entity toucher)
 	}
 }
 
-void disc_think(entity this)
+void ripper_blade_think(entity this)
 {
 	this.nextthink = time;
 	if(this.cnt < time)
@@ -110,10 +110,10 @@ void W_FireRipper(entity this, .entity weaponentity)
 	disc.velocity = dir * 1000;
 	disc.oldvelocity = disc.velocity;
 	disc.angles = vectoangles(disc.velocity);
-	settouch(disc, disc_touch);
+	settouch(disc, ripper_blade_touch);
 	disc.cnt = time + 5;
 	disc.nextthink = time;
-	setthink(disc, disc_think);
+	setthink(disc, ripper_blade_think);
 
 	//_setmodel(disc, "progs/blade.mdl");
 	setsize(disc, '0 0 0', '0 0 0');

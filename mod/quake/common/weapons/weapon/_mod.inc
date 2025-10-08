@@ -55,3 +55,6 @@
 #include "sword.qc"
 #include "smg.qc"
 #include "meowmere.qc"
+#include "light_disc.qc"
+#include "minishark.qc"
+#include "speaknspell.qc"

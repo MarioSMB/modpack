@@ -268,6 +268,15 @@ void portalgun_frame(entity this, .entity weaponentity)
 	}
 }
 
+int lightdisc_getcount(entity actor);
+void light_disc_frame(entity this, .entity weaponentity)
+{
+	if(lightdisc_getcount(this) >= 5)
+		this.(weaponentity).m_frame = 4;
+	else
+		this.(weaponentity).m_frame = 0;
+}
+
 void player_stand1(entity this)
 {
 	set_anim(this, anim_player_axstnd1, player_stand1);
@@ -276,7 +285,7 @@ void player_stand1(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && w != WEP_LIGHT_DISC && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 
@@ -339,6 +348,8 @@ void player_stand1(entity this)
 			spellbook_frame(this, weaponentity);
 		else if(wep == WEP_PORTAL_GUN)
 			portalgun_frame(this, weaponentity);
+		else if(wep == WEP_LIGHT_DISC)
+			light_disc_frame(this, weaponentity);
 	}
 
 	.entity priwep = weaponentities[0];
@@ -376,7 +387,7 @@ void player_run(entity this)
 	{
 		.entity wepent = weaponentities[slot];
 		Weapon w = this.(wepent).m_weapon;
-		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
+		if(w != WEP_RIPPER && w != WEP_CHAINSAW && w != WEP_MAGIC && w != WEP_SPELLBOOK && w != WEP_PORTAL_GUN && w != WEP_LIGHT_DISC && time > ATTACK_FINISHED(this, wepent) && time > this.(wepent).weapon_nextthink && !this.tank)
 			this.(wepent).m_frame = 0;
 	}
 	if(!this.velocity_x && !this.velocity_y)
@@ -433,6 +444,8 @@ void player_run(entity this)
 			spellbook_frame(this, weaponentity);
 		else if(wep == WEP_PORTAL_GUN)
 			portalgun_frame(this, weaponentity);
+		else if(wep == WEP_LIGHT_DISC)
+			light_disc_frame(this, weaponentity);
 	}
 
 	.entity priwep = weaponentities[0];

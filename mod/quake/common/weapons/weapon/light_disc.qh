@@ -1,0 +1,30 @@
+#pragma once
+
+#ifdef GAMEQC
+EFFECT(0, LIGHT_DISC_BOUNCE,                 "hagar_bounce")
+
+SOUND(LIGHT_DISC_BOUNCE, "weapons/disc_bounce");
+#endif
+
+CLASS(LightDisc, Weapon)
+/* ammotype  */ ATTRIB(LightDisc, ammo_type, int, 0);
+/* impulse   */ ATTRIB(LightDisc, impulse, int, 5);
+/* spawnflags*/ ATTRIB(LightDisc, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(LightDisc, aflag, int, 0);
+/* modelname */ ATTRIB(LightDisc, mdl, string, "light_disc");
+/* crosshair */ ATTRIB(LightDisc, w_crosshair, string, "gfx/crosshair14");
+/* crosshair */ ATTRIB(LightDisc, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(LightDisc, w_crosshair_color, vector, '1 1 0');
+/* wepimg    */ ATTRIB(LightDisc, model2, string, "light_disc");
+/* refname   */ ATTRIB(LightDisc, netname, string, "light_disc");
+/* wepname   */ ATTRIB(LightDisc, m_name, string, _("Light Disc"));
+
+ENDCLASS(LightDisc)
+REGISTER_WEAPON(LIGHT_DISC, NEW(LightDisc));
+
+SPAWNFUNC_WEAPON(weapon_light_disc, WEP_LIGHT_DISC)
+
+#ifdef SVQC
+.int num_bounces;
+.vector oldvelocity;
+#endif

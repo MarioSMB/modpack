@@ -1,0 +1,33 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(SPEAKNSPELL_MUSICNOTE, "weapons/speaknspell_music");
+#endif
+
+CLASS(SpeakNSpell, Weapon)
+/* ammotype  */ ATTRIB(SpeakNSpell, ammo_type, int, 0);
+/* impulse   */ ATTRIB(SpeakNSpell, impulse, int, 4);
+/* spawnflags*/ ATTRIB(SpeakNSpell, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(SpeakNSpell, aflag, int, 30);
+/* modelname */ ATTRIB(SpeakNSpell, mdl, string, "speaknspell");
+/* crosshair */ ATTRIB(SpeakNSpell, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ ATTRIB(SpeakNSpell, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(SpeakNSpell, w_crosshair_color, vector, '0.909 0.816 0.345');
+/* wepimg    */ ATTRIB(SpeakNSpell, model2, string, "speaknspell");
+/* refname   */ ATTRIB(SpeakNSpell, netname, string, "speaknspell");
+/* wepname   */ ATTRIB(SpeakNSpell, m_name, string, _("Speak & Spell"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(SpeakNSpell, m_musicnote, Sound, SND_SPEAKNSPELL_MUSICNOTE);
+#endif
+
+ENDCLASS(SpeakNSpell)
+REGISTER_WEAPON(SPEAKNSPELL, NEW(SpeakNSpell));
+
+SPAWNFUNC_WEAPON(weapon_speaknspell, WEP_SPEAKNSPELL)
+
+#ifdef SVQC
+.entity speaknspell_prevwep; // for starting jingle
+
+void W_FireSpeaknSepll_AllKeys(entity actor, .entity weaponentity);
+void W_FireSpeaknSpell(entity actor, float atime, string asnd, .entity weaponentity);
+#endif

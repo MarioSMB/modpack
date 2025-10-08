@@ -493,10 +493,10 @@ void summon_cyclone(entity rune)
 
 void W_Spell_Frost(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE, SPELL_FROST);
+	entity rune = rune_summon(this, spot, MDL_RUNE_ICE, EFFECT_RUNE_PUFF_BLUE, SPELL_FROST);
 	setthink(rune, summon_cyclone);
 	rune.nextthink = time + 1.5;
-	rune.colormod = '0 0.5 1';
+	//rune.colormod = '0 0.5 1';
 }
 
 void W_Spell_IceCannon(entity this, .entity weaponentity)
@@ -1188,7 +1188,7 @@ void summon_heal(entity this)
 
 void W_Spell_Serpent(entity this, vector spot)
 {
-	entity rune = rune_summon(this, spot, MDL_RUNE_BONE, EFFECT_RUNE_PUFF_BLUE, SPELL_SERPENT);
+	entity rune = rune_summon(this, spot, MDL_RUNE_HEALING, EFFECT_RUNE_PUFF_BLUE, SPELL_SERPENT);
 	setthink(rune, summon_heal);
 	rune.nextthink = time + 1.5;
 	rune.cnt = time + 10 + 1.5; // 2 for the summoning time

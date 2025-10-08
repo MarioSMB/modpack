@@ -55,3 +55,6 @@
 #include "sword.qh"
 #include "smg.qh"
 #include "meowmere.qh"
+#include "light_disc.qh"
+#include "minishark.qh"
+#include "speaknspell.qh"
