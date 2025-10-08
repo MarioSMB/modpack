@@ -231,6 +231,7 @@ void W_FireSpeaknSepll_AllKeys(entity actor, .entity weaponentity) // Shotgun at
 		entity letter = spawn();
 		letter.owner = actor;
 		letter.flags = FL_PROJECTILE;
+		letter.clipgroup = actor.clipgroup;
 		letter.realowner = actor;
 		set_movetype(letter, MOVETYPE_BOUNCE);
 		letter.solid = SOLID_BBOX;
@@ -306,6 +307,7 @@ void W_FireSpeaknSpell(entity actor, float atime, string asnd, .entity weaponent
 
 	entity letter = spawn();
 	letter.flags = FL_PROJECTILE;
+	letter.clipgroup = actor.clipgroup;
 	letter.owner = actor;
 	letter.realowner = actor;
 	set_movetype(letter, MOVETYPE_BOUNCE);
