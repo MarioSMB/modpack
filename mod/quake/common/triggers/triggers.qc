@@ -114,13 +114,19 @@ string process_string(string input)
 }
 
 float autocvar_sv_quake_message_range = 512;
+float autocvar_sv_quake_message_range_retrigger = 512;
 void centerprint_proximity(entity player, string input, entity source)
 {
 	centerprint(player, input); // always send to the player no matter what
+	float mrange = autocvar_sv_quake_message_range;
 	// if the original source will be triggered again, skip proximity messages
 	if(source.wait > 0 && source.wait < 999)
-		return;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != player && vdist(it.origin - player.origin, <=, autocvar_sv_quake_message_range),
+	{
+		mrange = autocvar_sv_quake_message_range_retrigger;
+		if(mrange <= 0)
+			return;
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != player && vdist(it.origin - player.origin, <=, mrange),
 	{
 		centerprint(it, input);
 	});

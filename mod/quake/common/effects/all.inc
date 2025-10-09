@@ -1160,3 +1160,36 @@ STATIC_INIT(Effect_CTHULHU_FADE)
 	registercvar("cl_particle_cthulhu_fade_smoke_velocityjitter", "50 50 0");
 }
 #endif
+
+EFFECT(1, TR_SHADOWBEAM,             "shadowbeam")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_SHADOWBEAM)
+{
+	registercvar("cl_particle_shadowbeam", "smoke trail");
+
+	registercvar("cl_particle_shadowbeam_smoke_type", "static");
+	registercvar("cl_particle_shadowbeam_smoke_alpha", "256 256 384");
+	registercvar("cl_particle_shadowbeam_smoke_color", "0x753a88 0x753a88");
+	registercvar("cl_particle_shadowbeam_smoke_lightcolor", "1.5 3 6");
+	registercvar("cl_particle_shadowbeam_smoke_lightradius", "90");
+	registercvar("cl_particle_shadowbeam_smoke_size", "3 6");
+	registercvar("cl_particle_shadowbeam_smoke_tex", "62 62");
+	registercvar("cl_particle_shadowbeam_smoke_trailspacing", "4");
+	registercvar("cl_particle_shadowbeam_trail_velocityjitter", "10 10 10");
+	registercvar("cl_particle_shadowbeam_smoke_velocitymultiplier", "-0.100000");
+
+	registercvar("cl_particle_shadowbeam_trail_type", "snow");
+	registercvar("cl_particle_shadowbeam_trail_airfriction", "12");
+	registercvar("cl_particle_shadowbeam_trail_alpha", "444 512 1866");
+	registercvar("cl_particle_shadowbeam_trail_bounce", "1");
+	registercvar("cl_particle_shadowbeam_trail_color", "0xba9cc3 0xba9cc3");
+	registercvar("cl_particle_shadowbeam_trail_count", "1.500000");
+	registercvar("cl_particle_shadowbeam_trail_originjitter", "1 1 1");
+	registercvar("cl_particle_shadowbeam_trail_sizeincrease", "-20");
+	registercvar("cl_particle_shadowbeam_trail_size", "2 4");
+	registercvar("cl_particle_shadowbeam_trail_tex", "42 42");
+	registercvar("cl_particle_shadowbeam_trail_trailspacing", "12");
+	registercvar("cl_particle_shadowbeam_trail_velocityjitter", "50 50 50");
+	registercvar("cl_particle_shadowbeam_trail_velocityoffset", "0 0 15");
+}
+#endif

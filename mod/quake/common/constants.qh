@@ -50,6 +50,7 @@ const int FL_PICKUPITEMS 			= BIT(17);
 const int FL_DUCKED 				= BIT(18);
 const int FL_ONSLICK 				= BIT(19);
 const int FL_DOUBLEJUMPED 			= BIT(20);
+//const int FL_OMNIDIRECTIONAL 		= BIT(21); // monster moves in any direction freely
 
 #ifdef GAMEQC
 const int EF_SHOCK = 262144;

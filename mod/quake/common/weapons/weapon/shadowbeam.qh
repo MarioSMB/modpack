@@ -1,0 +1,25 @@
+#pragma once
+
+CLASS(Shadowbeam, Weapon)
+/* ammotype  */ ATTRIB(Shadowbeam, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Shadowbeam, impulse, int, 8);
+/* spawnflags*/ ATTRIB(Shadowbeam, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Shadowbeam, aflag, int, 0);
+/* modelname */ ATTRIB(Shadowbeam, mdl, string, "shadowbeam");
+/* crosshair */ ATTRIB(Shadowbeam, w_crosshair, string, "gfx/crosshairelectro");
+/* crosshair */ ATTRIB(Shadowbeam, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Shadowbeam, w_crosshair_color, vector, '1 0.2 0.5');
+/* wepimg    */ ATTRIB(Shadowbeam, model2, string, "shadowbeam");
+/* refname   */ ATTRIB(Shadowbeam, netname, string, "shadowbeam");
+/* wepname   */ ATTRIB(Shadowbeam, m_name, string, _("Shadowbeam Staff"));
+
+ENDCLASS(Shadowbeam)
+REGISTER_WEAPON(SHADOWBEAM, NEW(Shadowbeam));
+
+SPAWNFUNC_WEAPON(weapon_shadowbeam, WEP_SHADOWBEAM)
+
+#ifdef SVQC
+void SendCSQCShadowbeam(vector v1, vector v2);
+
+void W_FireShadowbeam(entity this, .entity weaponentity);
+#endif

@@ -1,0 +1,24 @@
+#pragma once
+
+CLASS(LooseCannon, Weapon)
+/* ammotype  */ ATTRIB(LooseCannon, ammo_type, int, IT_ROCKETS);
+/* impulse   */ ATTRIB(LooseCannon, impulse, int, 6);
+/* spawnflags*/ ATTRIB(LooseCannon, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(LooseCannon, aflag, int, 10);
+/* modelname */ ATTRIB(LooseCannon, mdl, string, "loosecannon");
+/* crosshair */ ATTRIB(LooseCannon, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(LooseCannon, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(LooseCannon, w_crosshair_color, vector, '1 1 0.5');
+/* wepimg    */ ATTRIB(LooseCannon, model2, string, "loosecannon");
+/* refname   */ ATTRIB(LooseCannon, netname, string, "loosecannon");
+/* wepname   */ ATTRIB(LooseCannon, m_name, string, _("Loose Cannon"));
+/* framerate */ ATTRIB(LooseCannon, m_delta, float, 0.025);
+
+ENDCLASS(LooseCannon)
+REGISTER_WEAPON(LOOSECANNON, NEW(LooseCannon));
+
+SPAWNFUNC_WEAPON(weapon_loosecannon, WEP_LOOSECANNON)
+
+#ifdef SVQC
+void W_FireLooseCannon(entity actor, float fuse_time, .entity weaponentity);
+#endif

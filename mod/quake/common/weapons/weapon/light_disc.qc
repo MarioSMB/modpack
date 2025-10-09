@@ -43,9 +43,13 @@ void disc_touch(entity this, entity toucher)
 		return;
 	}
 
-	spamsound(this, CH_WEAPON_SINGLE, SND_LIGHT_DISC_BOUNCE, 1, ATTN_NORM);
-	//te_gunshot(this.origin);
-	Send_Effect(EFFECT_LIGHT_DISC_BOUNCE, this.origin, normalize(this.velocity) * 16, 1);
+	if(time > this.spamtime)
+	{
+		this.spamtime = time + 0.1;
+		sound(this, CH_WEAPON_SINGLE, SND_LIGHT_DISC_BOUNCE, 1, ATTN_NORM);
+		//te_gunshot(this.origin);
+		Send_Effect(EFFECT_LIGHT_DISC_BOUNCE, this.origin, normalize(this.velocity) * 16, 1);
+	}
 }
 
 void disc_think(entity this)

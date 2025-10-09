@@ -58,3 +58,5 @@
 #include "light_disc.qc"
 #include "minishark.qc"
 #include "speaknspell.qc"
+#include "shadowbeam.qc"
+#include "loosecannon.qc"

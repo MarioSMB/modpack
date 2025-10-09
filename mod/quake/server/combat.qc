@@ -446,6 +446,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	float r = random();
 	bool showpain = true;
 	float force = damage;
+	float forcezscale = 1;
 	if(!targ.takedamage)
 		return;
 
@@ -463,6 +464,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 			return;
 		showpain = false;
 	}
+
+	if(DEATH_ISWEAPON(deathtype, WEP_LOOSECANNON) && inflictor.owner == attacker)
+		forcezscale *= 4;
 
 	// major hack to keep the high push force
 	if(deathtype == DEATH_MONSTER_BREEZE.m_id)
@@ -601,7 +605,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		vector dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
 		targ.velocity += dir * max(damage, force) * 8;
-		targ.velocity_z += 1;
+		targ.velocity_z += 1 * forcezscale;
 		UNSET_ONGROUND(targ);
 	}
 

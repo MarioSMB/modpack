@@ -58,3 +58,5 @@
 #include "light_disc.qh"
 #include "minishark.qh"
 #include "speaknspell.qh"
+#include "shadowbeam.qh"
+#include "loosecannon.qh"
