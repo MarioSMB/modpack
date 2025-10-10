@@ -12,11 +12,11 @@ PRECACHE(Shadowbeam)
 	precache_sound("weapons/shadowbeam_fire.wav");
 }
 
-void SendCSQCShadowbeam(vector v1, vector v2)
+void SendCSQCShadowbeam(vector org, vector dir)
 {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_SHADOWBEAM);
-	WriteVector(MSG_BROADCAST, v1);
-	WriteVector(MSG_BROADCAST, v2);
+	WriteVector(MSG_BROADCAST, org);
+	WriteVector(MSG_BROADCAST, dir);
 }
 
 void W_Shadowbeam_Attack(entity this)
@@ -91,8 +91,10 @@ void W_FireShadowbeam(entity this, .entity weaponentity)
 
 	vector org = W_Shotorg(this, weaponentity);
 	vector dir = qc_aim(this, 4000);
-	float blength = 1225; // max length of the beam, bounces included
+	float blength = SHADOWBEAM_MAXRANGE; // max length of the beam, bounces included
 	float damage = 60;
+
+	SendCSQCShadowbeam(org, dir);
 
 	// limit the max bounces regardless
 	for(int j = 0; j < 64; ++j)
@@ -100,7 +102,7 @@ void W_FireShadowbeam(entity this, .entity weaponentity)
 		vector oldorg = org;
 		damage = ShadowbeamDamage(this, damage, blength, org, dir);
 		org = trace_endpos;
-		SendCSQCShadowbeam(oldorg, org);
+		//SendCSQCShadowbeam(oldorg, org);
 
 		if((trace_dphitcontents & DPCONTENTS_SKY) || pointcontents(org) == CONTENT_SKY)
 			break;
@@ -145,11 +147,8 @@ METHOD(Shadowbeam, wr_killmessage, Notification(entity thiswep))
 #endif
 
 #ifdef CSQC
-NET_HANDLE(TE_CSQC_SHADOWBEAM, bool isNew)
+void DrawShadowbeam(vector shotorg, vector endpos)
 {
-	vector shotorg = ReadVector();
-	vector endpos = ReadVector();
-
 	entity eff = EFFECT_TR_SHADOWBEAM;
 
 	int eff_flags = PARTICLES_DRAWASTRAIL;
@@ -160,6 +159,32 @@ NET_HANDLE(TE_CSQC_SHADOWBEAM, bool isNew)
 
 	if(!SpawnParticles_list_full(strcat("cl_particle_", eff.eent_eff_name), shotorg, endpos, '0 0 0', '0 0 0', 1, true, PARTICLES_DRAWASTRAIL))
 		boxparticles(particleeffectnum(EFFECT_GUARDIAN_BEAM), NULL, shotorg, endpos, '0 0 0', '0 0 0', 1, eff_flags);
+}
+
+NET_HANDLE(TE_CSQC_SHADOWBEAM, bool isNew)
+{
+	vector org = ReadVector();
+	vector dir = ReadVector();
+
+	float blength = SHADOWBEAM_MAXRANGE;
+
+	// limit the max bounces regardless
+	for(int j = 0; j < 64; ++j)
+	{
+		vector oldorg = org;
+		traceline(org, org + dir * blength, MOVE_NOMONSTERS, csqcplayer);
+		org = trace_endpos;
+		DrawShadowbeam(oldorg, org);
+
+		if((trace_dphitcontents & DPCONTENTS_SKY) || pointcontents(org) == CONTENT_SKY)
+			break;
+
+		blength -= vlen(org - oldorg);
+		if(blength <= 0)
+			break;
+		vector vel = normalize(org - oldorg) * 1000;
+		dir = normalize(_Movetype_ClipVelocity(vel, trace_plane_normal, 2));
+	}
 
 	return true;
 }

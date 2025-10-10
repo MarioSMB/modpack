@@ -114,7 +114,7 @@ string process_string(string input)
 }
 
 float autocvar_sv_quake_message_range = 512;
-float autocvar_sv_quake_message_range_retrigger = 512;
+float autocvar_sv_quake_message_range_retrigger = 32;
 void centerprint_proximity(entity player, string input, entity source)
 {
 	centerprint(player, input); // always send to the player no matter what

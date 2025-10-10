@@ -23,3 +23,5 @@ void SendCSQCShadowbeam(vector v1, vector v2);
 
 void W_FireShadowbeam(entity this, .entity weaponentity);
 #endif
+
+const float SHADOWBEAM_MAXRANGE = 1225;
