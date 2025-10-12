@@ -40,7 +40,7 @@ bool key_spawned; // true/false, determine if key has already been spawned, prev
 
 const float SPAWN_RESET_TIME = 5; // amount of time that a spawn point is considered occupied and not valid for use
 
-const float HORDE_START_DELAY = 10; // how long to wait before starting
+const float HORDE_START_DELAY = 15; // how long to wait before starting
 const float HORDE_AMMO_RESPAWN_DELAY = 20; // how long between horde ammo spawns
 //float horde;
 .float hunger_time;

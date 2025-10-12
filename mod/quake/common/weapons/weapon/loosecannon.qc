@@ -258,9 +258,11 @@ void DonkTouchCrit(entity this, entity toucher)
 		return;
 	if(toucher.takedamage == DAMAGE_AIM)
 	{
-		spawn_touchblood(this, 80, toucher);
+		float damage = 80;
+		damage *= 2; // double donkers!
+		spawn_touchblood(this, damage, toucher);
 		this.enemy = toucher;
-		T_Damage(toucher, this, this.realowner, 80, WEP_LOOSECANNON.m_id);
+		T_Damage(toucher, this, this.realowner, damage, WEP_LOOSECANNON.m_id);
 
 		setthink(this, DonkExplodeCrit);
 		this.nextthink = time;

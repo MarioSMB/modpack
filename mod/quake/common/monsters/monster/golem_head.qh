@@ -11,7 +11,7 @@ MODEL(MON_GOLEM_HEAD, "progs/golem_head.mdl");
 #endif
 
 CLASS(GolemHead, Monster)
-    ATTRIB(GolemHead, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(GolemHead, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_HIDDEN);
     ATTRIB(GolemHead, m_mins, vector, '-32 -32 -24');
     ATTRIB(GolemHead, m_maxs, vector, '32 32 72');
 #ifdef GAMEQC
