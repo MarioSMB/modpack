@@ -16,7 +16,9 @@ bool autocvar_bot_sound_monopoly;
 .entity realowner;
 bool sound_allowed(int to, entity e)
 {
-	for ( ; ; )
+	// NOTE: unlike Xonotic, let's limit the number of possible recursions
+	// TODO: may result in worse code! maybe warn if it happens?
+	for (int j = 0 ; j < 64 ; ++j )
 	{
 		if (e.classname == "body") e = e.enemy;
 		else if (e.realowner && e.realowner != e) e = e.realowner;

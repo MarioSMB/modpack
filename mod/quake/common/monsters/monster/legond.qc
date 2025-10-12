@@ -457,7 +457,8 @@ void Legond_Pain(entity this, entity attacker, float damage, int deathtype)
 	else
 		_sound(this, CHAN_VOICE, "monsters/legond/lpain2.wav", 1, ATTN_NORM);
 	this.pain_finished = time + 5;
-	legond_pain1(this);
+	setthink(this, legond_pain1);
+	this.nextthink = time;
 }
 
 void Legond_NextLevel(entity this)

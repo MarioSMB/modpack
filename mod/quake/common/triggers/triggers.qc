@@ -1,5 +1,6 @@
-#ifdef SVQC
+#include "triggers.qh"
 
+#ifdef SVQC
 // shorthand for turning -1 to 0 for keyvalues for which 0 is a valid non-default selection
 float zeroconvert(float in)
 {
@@ -283,5 +284,186 @@ void SUB_SetWorldtype(entity this)
 	else
 		this.worldtype = world.worldtype;
 }
+#endif
 
+#ifdef SVQC
+void generic_setactive(entity this, int act)
+{
+	if(act == ACTIVE_TOGGLE)
+	{
+		if(this.active == ACTIVE_ACTIVE)
+		{
+			this.active = ACTIVE_NOT;
+		}
+		else
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+	}
+	else
+	{
+		this.active = act;
+	}
+}
+
+void generic_netlinked_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	generic_setactive(this, act);
+
+	if (this.active != old_status)
+	{
+		this.SendFlags |= SF_TRIGGER_UPDATE;
+	}
+}
+
+void generic_netlinked_reset(entity this)
+{
+	if(this.targetname && this.targetname != "")
+	{
+		if(this.spawnflags & START_ENABLED)
+		{
+			this.active = ACTIVE_ACTIVE;
+		}
+		else
+		{
+			this.active = ACTIVE_NOT;
+		}
+	}
+	else
+	{
+		this.active = ACTIVE_ACTIVE;
+	}
+
+	this.SendFlags |= SF_TRIGGER_UPDATE;
+}
+
+// Compatibility with old maps
+void generic_netlinked_legacy_use(entity this, entity actor, entity trigger)
+{
+	//LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
+	generic_netlinked_setactive(this, ACTIVE_TOGGLE);
+}
+
+void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
+{
+	setSendEntity(this, sendfunc);
+	this.SendFlags = 0xFFFFFF;
+}
+
+void trigger_common_write(entity this, bool withtarget)
+{
+	int f = 0;
+	//if(this.warpzone_isboxy)
+	//	BITSET_ASSIGN(f, 1);
+	if(this.origin != '0 0 0')
+		BITSET_ASSIGN(f, 4);
+	if(this.movedir != '0 0 0')
+		BITSET_ASSIGN(f, 8);
+	if(this.angles != '0 0 0')
+		BITSET_ASSIGN(f, 16);
+	WriteByte(MSG_ENTITY, f);
+
+	if(withtarget)
+	{
+		// probably some way to clean this up...
+		int targbits = 0;
+		if(this.target && this.target != "") targbits |= BIT(0);
+		if(this.target2 && this.target2 != "") targbits |= BIT(1);
+		if(this.target3 && this.target3 != "") targbits |= BIT(2);
+		if(this.target4 && this.target4 != "") targbits |= BIT(3);
+		if(this.targetname && this.targetname != "") targbits |= BIT(4);
+		if(this.killtarget && this.killtarget != "") targbits |= BIT(5);
+
+		WriteByte(MSG_ENTITY, targbits);
+
+		if(targbits & BIT(0))
+			WriteString(MSG_ENTITY, this.target);
+		if(targbits & BIT(1))
+			WriteString(MSG_ENTITY, this.target2);
+		if(targbits & BIT(2))
+			WriteString(MSG_ENTITY, this.target3);
+		if(targbits & BIT(3))
+			WriteString(MSG_ENTITY, this.target4);
+		if(targbits & BIT(4))
+			WriteString(MSG_ENTITY, this.targetname);
+		if(targbits & BIT(5))
+			WriteString(MSG_ENTITY, this.killtarget);
+	}
+
+	if(f & 4)
+		WriteVector(MSG_ENTITY, this.origin);
+
+	if(f & 8)
+		WriteVector(MSG_ENTITY, this.movedir);
+
+	if(f & 16)
+		WriteVector(MSG_ENTITY, this.angles);
+
+	WriteShort(MSG_ENTITY, this.modelindex);
+	WriteVector(MSG_ENTITY, this.mins);
+	WriteVector(MSG_ENTITY, this.maxs);
+	WriteByte(MSG_ENTITY, bound(1, this.scale * 16, 255));
+}
+
+#elif defined(CSQC)
+
+void trigger_common_read(entity this, bool withtarget)
+{
+	int f = ReadByte();
+	//this.warpzone_isboxy = (f & 1);
+
+	if(withtarget)
+	{
+		strfree(this.target);
+		strfree(this.target2);
+		strfree(this.target3);
+		strfree(this.target4);
+		strfree(this.targetname);
+		strfree(this.killtarget);
+
+		int targbits = ReadByte();
+
+		this.target = ((targbits & BIT(0)) ? strzone(ReadString()) : string_null);
+		this.target2 = ((targbits & BIT(1)) ? strzone(ReadString()) : string_null);
+		this.target3 = ((targbits & BIT(2)) ? strzone(ReadString()) : string_null);
+		this.target4 = ((targbits & BIT(3)) ? strzone(ReadString()) : string_null);
+		this.targetname = ((targbits & BIT(4)) ? strzone(ReadString()) : string_null);
+		this.killtarget = ((targbits & BIT(5)) ? strzone(ReadString()) : string_null);
+	}
+
+	if(f & 4)
+		this.origin = ReadVector();
+	else
+		this.origin = '0 0 0';
+	setorigin(this, this.origin);
+
+	if(f & 8)
+		this.movedir = ReadVector();
+	else
+		this.movedir = '0 0 0';
+
+	if(f & 16)
+		this.angles = ReadVector();
+	else
+		this.angles = '0 0 0';
+
+	this.modelindex = ReadShort();
+	if (this.modelindex)
+		setmodelindex(this, this.modelindex);
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
+	this.scale = ReadByte() / 16;
+	setsize(this, this.mins, this.maxs);
+}
+
+void trigger_remove_generic(entity this)
+{
+	strfree(this.target);
+	strfree(this.target2);
+	strfree(this.target3);
+	strfree(this.target4);
+	strfree(this.targetname);
+	strfree(this.killtarget);
+}
 #endif

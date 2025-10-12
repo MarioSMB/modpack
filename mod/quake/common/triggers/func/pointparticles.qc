@@ -82,33 +82,6 @@ void pointparticles_think(entity this)
 	this.nextthink = time;
 }
 
-void generic_netlinked_reset(entity this)
-{
-	if(this.targetname && this.targetname != "")
-	{
-		if(this.spawnflags & START_ENABLED)
-		{
-			this.active = ACTIVE_ACTIVE;
-		}
-		else
-		{
-			this.active = ACTIVE_NOT;
-		}
-	}
-	else
-	{
-		this.active = ACTIVE_ACTIVE;
-	}
-
-	this.SendFlags |= SF_TRIGGER_UPDATE;
-}
-
-// TODO? maybe we need a full port of the active state system
-void generic_setactive(entity this, int act);
-void generic_netlinked_setactive(entity this, int act);
-
-void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
-
 spawnfunc(func_pointparticles)
 {
 	if(this.model != "") { precache_model(this.model); _setmodel(this, this.model); }

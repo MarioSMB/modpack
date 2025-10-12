@@ -111,7 +111,7 @@ void cheddar_spit_touch(entity this, entity toucher)
 	particle(this.origin, '0 0 0', 57, 50);
 	_sound(this, CH_WEAPON_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
 
-	if(toucher.takedamage || IS_MONSTER(toucher))
+	if(!this.silent && (toucher.takedamage || IS_MONSTER(toucher)))
 	{
 		float damage = 15;
 		T_Damage(toucher, this, this.owner, damage, this.projectiledeathtype);
@@ -133,7 +133,10 @@ void cheddar_spit_touch(entity this, entity toucher)
 		vec = trace_plane_normal;
 		this.angles = vectoangles(vec);
 		this.angles_x -= 90;
-		settouch(this, cheddar_pool_touch);
+		if(!this.silent)
+			settouch(this, cheddar_pool_touch);
+		else
+			settouch(this, func_null);
 		this.frame = 0;
 		this.nextthink = time + 4.1;
 		setthink(this, cheddar_pool_anim);
@@ -153,7 +156,7 @@ void cheddar_spit_anim(entity this)
 		delete(this);
 }
 
-void cheddar_spit(entity this, float offset)
+void cheddar_spit(entity this, float offset, bool gibbing)
 {
 	entity newmis = new(acidspit);
 	newmis.flags = FL_PROJECTILE;
@@ -161,14 +164,27 @@ void cheddar_spit(entity this, float offset)
 	newmis.realowner = this;
 	set_movetype(newmis, MOVETYPE_TOSS);
 	newmis.solid = SOLID_CORPSE;
-	newmis.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
+	if(gibbing)
+		newmis.dphitcontentsmask = DPCONTENTS_SOLID;
+	else
+		newmis.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	fixedmakevectors(this.angles);
 
-	newmis.velocity = v_forward * 300 + v_right * offset;
-	newmis.velocity_z = 20;
+	if(gibbing)
+	{
+		newmis.velocity = randomvec() * 400;
+		newmis.velocity_z = 200;
+	}
+	else
+	{
+		newmis.velocity = v_forward * 300 + v_right * offset;
+		newmis.velocity_z = 20;
+	}
 
 	newmis.poisonous = true;
+	newmis.silent = gibbing;
 	newmis.projectiledeathtype = DEATH_MONSTER_CHEDDAR_GOBLIN.m_id;
 	newmis.clipgroup = this.clipgroup;
 	newmis.avelocity = '300 300 300';
@@ -189,14 +205,14 @@ void cheddar_atk26(entity this) { set_animofs(this, anim_cheddar_attack, 26, che
 void cheddar_atk25(entity this) { set_animofs(this, anim_cheddar_attack, 25, cheddar_atk26); }
 void cheddar_atk24(entity this) { set_animofs(this, anim_cheddar_attack, 24, cheddar_atk25); }
 void cheddar_atk23(entity this) { set_animofs(this, anim_cheddar_attack, 23, cheddar_atk24); }
-void cheddar_atk22(entity this) { set_animofs(this, anim_cheddar_attack, 22, cheddar_atk23); cheddar_spit(this, 80); }
+void cheddar_atk22(entity this) { set_animofs(this, anim_cheddar_attack, 22, cheddar_atk23); cheddar_spit(this, 80, false); }
 void cheddar_atk21(entity this) { set_animofs(this, anim_cheddar_attack, 21, cheddar_atk22); }
 void cheddar_atk20(entity this) { set_animofs(this, anim_cheddar_attack, 20, cheddar_atk21); }
 void cheddar_atk19(entity this) { set_animofs(this, anim_cheddar_attack, 19, cheddar_atk20); }
-void cheddar_atk18(entity this) { set_animofs(this, anim_cheddar_attack, 18, cheddar_atk19); cheddar_spit(this, 0); }
+void cheddar_atk18(entity this) { set_animofs(this, anim_cheddar_attack, 18, cheddar_atk19); cheddar_spit(this, 0, false); }
 void cheddar_atk17(entity this) { set_animofs(this, anim_cheddar_attack, 17, cheddar_atk18); }
 void cheddar_atk16(entity this) { set_animofs(this, anim_cheddar_attack, 16, cheddar_atk17); }
-void cheddar_atk15(entity this) { set_animofs(this, anim_cheddar_attack, 15, cheddar_atk16); cheddar_spit(this, -80); }
+void cheddar_atk15(entity this) { set_animofs(this, anim_cheddar_attack, 15, cheddar_atk16); cheddar_spit(this, -80, false); }
 void cheddar_atk14(entity this) { set_animofs(this, anim_cheddar_attack, 14, cheddar_atk15); }
 void cheddar_atk13(entity this) { set_animofs(this, anim_cheddar_attack, 13, cheddar_atk14); }
 void cheddar_atk12(entity this) { set_animofs(this, anim_cheddar_attack, 12, cheddar_atk13); _sound(this, CH_WEAPON_SINGLE, "cheddar_goblin/spit.wav", 1, ATTN_NORM); }
@@ -282,6 +298,11 @@ void cheddar_die(entity this, entity inflictor, entity attacker, int deathtype)
 		ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 		ThrowGib(this, inflictor, "progs/gib2.mdl", this.health);
 		ThrowGib(this, inflictor, "progs/gib3.mdl", this.health);
+
+		for(int j = 0; j < 12; ++j)
+		{
+			cheddar_spit(this, 0, true);
+		}
 		return;
 	}
 

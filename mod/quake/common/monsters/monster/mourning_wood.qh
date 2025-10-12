@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_MOURNING_WOOD,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was deboned by Mourning Wood"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_MOURNING_WOOD,                1,  NULL,           INFO_DEATH_SELF_MON_MOURNING_WOOD,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_MOURNING_WOOD,            DEATH_SELF_MON_MOURNING_WOOD,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_MOURNING_WOOD, "progs/mourning_wood.mdl");
+
+SOUND(MON_MOURNING_WOOD_SIGHT, "mourning_wood/death");
+#endif
+
+CLASS(MourningWood, Monster)
+    ATTRIB(MourningWood, spawnflags, int, MONSTER_TYPE_BOSS);
+    ATTRIB(MourningWood, m_mins, vector, '-32 -32 -24');
+    ATTRIB(MourningWood, m_maxs, vector, '32 32 48');
+#ifdef GAMEQC
+    ATTRIB(MourningWood, m_model, Model, MDL_MON_MOURNING_WOOD);
+    ATTRIB(MourningWood, m_model_head, Model, MDL_Null);
+    ATTRIB(MourningWood, m_sound, Sound, SND_MON_MOURNING_WOOD_SIGHT);
+#endif
+    ATTRIB(MourningWood, netname, string, "mourning_wood");
+    ATTRIB(MourningWood, m_name, string, _("Mourning Wood"));
+    ATTRIB(MourningWood, m_color, vector, '0.66 0.11 0.11');
+ENDCLASS(MourningWood)
+
+REGISTER_MONSTER(MOURNING_WOOD, NEW(MourningWood));

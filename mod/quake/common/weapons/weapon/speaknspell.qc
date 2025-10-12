@@ -172,7 +172,7 @@ void BecomeSpeaknSpellExplosion(entity this)
 
 void T_SpeaknSpellTouch(entity this, entity toucher)
 {
-	float damg = 10;	
+	float damg = 15;	
 
 	if(toucher == this.owner)
 		return;		
@@ -373,7 +373,7 @@ METHOD(SpeakNSpell, wr_think, void(entity thiswep, entity actor, .entity weapone
 
 	if(oldwep != WEP_SPEAKNSPELL) // only plays once!!
 	{
-		_sound(actor, CH_WEAPON_B, "weapons/speaknspell_startup.wav", 1, ATTN_NORM);
+		_sound(actor, CH_WEAPON_SINGLE, "weapons/speaknspell_startup.wav", 1, ATTN_NORM);
 		return;
 	}
 

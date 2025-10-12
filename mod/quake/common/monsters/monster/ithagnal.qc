@@ -1,5 +1,6 @@
-#include "vore.qh"
+#include "ithagnal.qh"
 
+#include "vore.qh"
 #include "legond.qh"
 #include "zombie.qh"
 
@@ -674,6 +675,7 @@ void ith_spawn_hitboxes(entity this)
 			ent = spawn();
 			ent.classname = "monster_hitbox";
 			ent.owner = this;
+			ent.realowner = this;
 			ent.clipgroup = this.clipgroup;
 			ent.ith_offset = vec2(dx * this.scale, dy * this.scale);
 			ent.takedamage = DAMAGE_AIM;
@@ -694,6 +696,7 @@ void ith_spawn_hitboxes(entity this)
 	ent = spawn();
 	ent.classname = "monster_hitbox";
 	ent.owner = this;
+	ent.realowner = this;
 	ent.clipgroup = this.clipgroup;
 	ent.takedamage = DAMAGE_AIM;
 	ent.solid = SOLID_BBOX;

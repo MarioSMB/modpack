@@ -102,7 +102,7 @@ vector SniperLightningDamage(entity this, vector org, vector dir)
 	entity tgt = trace_ent;
 
 	int hits = 0;
-	while(tgt && tgt.takedamage && tgt.health > 0 && hits < 5)
+	while(tgt && tgt.takedamage && hits < 5)
 	{
 		float dmg = floor(200 * (1 - hits / 6));	//grep_ee_const
 		hits += 1;

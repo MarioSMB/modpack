@@ -1456,13 +1456,21 @@ void Sbar_Draw()
 					// TODO: mana icon / draw bar instead?
 					//Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
 					//sbar = oldsbar;
+					vector col = '0 1 1';
 					float mana = STAT(MANA);
+					float mlimit = 100;
+					if(STAT(PASSIVES) & PASSIVE_ARCANA)
+					{
+						mlimit *= 2;
+						if(mana > 100)
+							col = '1 0 1';
+					}
 					if(mana)
-						mana /= 100;
+						mana /= mlimit;
 
 					// NOTE: not using aspect here - we want it to stretch with the mana bar!
 					drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-					HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, '0 1 1', 0.6, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, col, 0.6, DRAWFLAG_NORMAL);
 				}
 				else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)
 				{

@@ -8,7 +8,7 @@ SOUND(LIGHT_DISC_BOUNCE, "weapons/disc_bounce");
 
 CLASS(LightDisc, Weapon)
 /* ammotype  */ ATTRIB(LightDisc, ammo_type, int, 0);
-/* impulse   */ ATTRIB(LightDisc, impulse, int, 5);
+/* impulse   */ ATTRIB(LightDisc, impulse, int, 4);
 /* spawnflags*/ ATTRIB(LightDisc, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(LightDisc, aflag, int, 0);
 /* modelname */ ATTRIB(LightDisc, mdl, string, "light_disc");

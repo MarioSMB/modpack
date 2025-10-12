@@ -5,3 +5,10 @@ spawnfunc(trigger_multiple);
 
 bool multi_trigger(entity this);
 #endif
+
+#ifdef CSQC
+void draw_message_triggers();
+
+IntrusiveList g_messagetriggers;
+STATIC_INIT(g_messagetriggers) { g_messagetriggers = IL_NEW(); }
+#endif

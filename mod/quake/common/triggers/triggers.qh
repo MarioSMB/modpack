@@ -147,3 +147,20 @@ const int SPAWNFLAG_NOTOUCH = BIT(0);
 
 const int SPAWNFLAG_TRIGGER_FIRST = BIT(2);
 #endif
+
+#ifdef SVQC
+void trigger_common_write(entity this, bool withtarget);
+void generic_setactive(entity this, int act);
+// generic methods for netlinked entities
+void generic_netlinked_setactive(entity this, int act);
+// WARNING: DON'T USE, ONLY TO KEEP COMPATIBILITY BECAUSE OF SWITCH FROM .state TO .alive!!!!
+void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
+#endif
+
+#ifdef CSQC
+void trigger_common_read(entity this, bool withtarget);
+void trigger_remove_generic(entity this);
+
+.string target;
+.string targetname;
+#endif

@@ -71,7 +71,7 @@ void breeze_gust_launch(entity this)
 	newmis.modelflags |= MF_TRACER2;
 	settouch(newmis, breeze_gust_touch);
 	_setmodel(newmis, "progs/v_spike.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');		
+	setsize(newmis, '0 0 0', '0 0 0');
 	newmis.velocity = vec*500;
 	_sound(this, CH_WEAPON_SINGLE, "breeze/shoot.wav", 1, ATTN_NORM);
 }

@@ -63,19 +63,19 @@ void otamatone_zapnearby(entity this)
 		return;
 	}
 
-	bool hitenemy = false;
-	FOREACH_ENTITY_RADIUS(this.origin, 200, true,
+	int hitenemy = 0;
+	FOREACH_ENTITY_RADIUS(this.origin, 200, hitenemy < 3,
 	{
-		if(it.health <= 0 || !it.takedamage || it == this.owner || !Damage_ValidTarget(it, this.owner))
+		if(!it.takedamage || it == this.owner || !Damage_ValidTarget(it, this.owner))
 			continue;
 		SendCSQCLightningBeam(this.origin, it.origin);
 		// may cause heavy lag when fired near water!
 		//LightningDamage(this.origin, it.origin, this, 15, WEP_OTAMATONE.m_id);
 		T_Damage(it, this, this.owner, 15, this.projectiledeathtype);
-		hitenemy = true;
+		hitenemy += 1;
 	});
 
-	if(!hitenemy) //&& random() < 0.8)
+	if(hitenemy > 0) //&& random() < 0.8)
 		SendCSQCLightningBeam(this.origin, this.origin + randomvec() * (random() * 80));
 }
 

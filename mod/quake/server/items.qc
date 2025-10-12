@@ -2145,6 +2145,9 @@ entity horn_spawnmonster(vector spawnpos, entity actor, Monster mon)
 		monster.clipgroup = actor.clipgroup;
 	}
 
+	// will be corrected later, just need this for spawning
+	setorigin(monster, spawnpos);
+
 	setthink(monster, monster_start_go);
 	monster.nextthink = time + 0.1;
 	monster_setup(monster, mon);

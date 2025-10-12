@@ -170,11 +170,12 @@ void multi_touch(entity this, entity toucher)
 	this.checkattack(this);
 }
 
-
+bool message_trigger_send(entity this, entity to, int sf);
 void init_trigger_multiple(entity this)
 {
 	if(!this.wait)
 		this.wait = 0.2;
+
 	this.use = multi_use;
 
 	if(this.health)
@@ -267,7 +268,24 @@ spawnfunc(trigger_multiple)
 		this.spawnflags &= ~MULTI_TRIGGER_FIRST;
 		return;
 	}
-	
+
+#if 0
+	// if we only exist to relay messages, do so using the client side!
+	if(this.wait >= 0 && this.message && this.message != "" && (!this.targetname || this.targetname == "") && 
+		((!this.target || this.target == "") && (!this.target2 || this.target2 == "") && 
+		(!this.target3 || this.target3 == "") && (!this.target4 || this.target4 == "")))
+	{
+		if(this.model != "") { precache_model(this.model); _setmodel(this, this.model); }
+		if(!this.modelindex)
+		{
+			setorigin(this, this.origin + this.mins);
+			setsize(this, '0 0 0', this.maxs - this.mins);
+		}
+		trigger_link(this, message_trigger_send);
+		return;
+	}
+#endif
+
 	init_trigger_multiple(this);
 	InitTrigger(this);
 }
@@ -438,4 +456,93 @@ spawnfunc(target_textstory)
 	this.use = multi_use;
 }
 
+#endif
+
+
+#ifdef SVQC
+bool message_trigger_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MESSAGE_TRIGGER);
+
+	WriteString(MSG_ENTITY, MakeConsoleSafe(strreplace("\n", "\\n", process_string(this.message))));
+
+	trigger_common_write(this, false);
+
+	return true;
+}
+#endif
+#ifdef CSQC
+void DrawMessageTrigger(entity this)
+{
+	float oldfont = drawfont; // since this is a modern panel, it can use modern fonts
+	drawfont = 8; // FONT_USER
+
+	vector panel_pos = vec2(0.45 * vid_conwidth, 0.65 * vid_conheight);
+	vector panel_size = vec2(0.65 * vid_conwidth, 0.22 * vid_conheight);
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	// always force 3:1 aspect
+	vector newSize = '0 0 0';
+	if(mySize.x/mySize.y > 3)
+	{
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
+
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
+	}
+	else
+	{
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
+
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
+	}
+	mySize = newSize;
+
+	drawstring_aspect(pos, this.message, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	drawfont = oldfont;
+}
+
+entity current_messagetrigger;
+float last_messagesound;
+void draw_message_triggers()
+{
+	if((player_localnum + 1) != player_localentnum)
+		return;
+
+	IL_EACH(g_messagetriggers, boxesoverlap(view_origin - '8 8 8', view_origin + '8 8 8', it.absmin, it.absmax),
+	{
+		if(current_messagetrigger != it && time > last_messagesound)
+		{
+			last_messagesound = time + 0.5; // not too spammy anyway!
+			_sound(NULL, CH_INFO, "misc/quake_talk.wav", 1, ATTN_NONE);
+		}
+		current_messagetrigger = it;
+		DrawMessageTrigger(it);
+		break; // only draw one thank you very much
+	});
+}
+
+void message_trigger_remove(entity this)
+{
+	strfree(this.message);
+}
+
+NET_HANDLE(ENT_CLIENT_MESSAGE_TRIGGER, bool isnew)
+{
+	strcpy(this.message, ReadString());
+	//this.solid = SOLID_TRIGGER;
+	this.entremove = message_trigger_remove;
+
+	trigger_common_read(this, false);
+
+	if(isnew)
+		IL_PUSH(g_messagetriggers, this);
+
+	return true;
+}
 #endif

@@ -4,6 +4,14 @@
 void wep_shadowbeam_shot2(entity this) { wep_set_anim(this, 2, w_ready); }
 void wep_shadowbeam_shot1(entity this) { wep_set_anim(this, 1, wep_shadowbeam_shot2); this.owner.effects |= EF_MUZZLEFLASH; }
 
+// for railgun damage (hitting multiple enemies)
+.bool railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
+IntrusiveList g_railgunhit;
+STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+
 PRECACHE(Shadowbeam)
 {
 	precache_model("progs/v_shadowbeam.mdl");
@@ -44,38 +52,25 @@ void W_Shadowbeam_Attack(entity this)
 }
 
 .float shadowbeamhit;
-float ShadowbeamDamage(entity this, float damage, float arange, vector org, vector dir)
+void ShadowbeamTrace(entity this, float arange, vector org, vector dir)
 {
-	traceline(org, org + dir * arange, false, this);
-	vector endpoint = trace_endpos;
-	vector endplane = trace_plane_normal;
-	entity tgt = trace_ent;
-
-	while(tgt && tgt.takedamage && tgt.health > 0 && time > tgt.shadowbeamhit && damage > 0)
+	while(true)
 	{
-		damage = floor(damage * 0.9); // 10% reduction every target hit
+		traceline(org, org + dir * arange, false, this);
 
-		//ImpactSpawn(endpoint, '0 0 100', damage, tgt.bloodtype);
-		SpawnBlood(endpoint, '0 0 100', damage, tgt);
-		T_Damage(tgt, this, this, damage, WEP_SHADOWBEAM.m_id);
-		tgt.shadowbeamhit = time; // prevent multiple hits in the same frame
-
-		if(tgt.solid == SOLID_BSP)
+		if(!trace_ent || trace_fraction == 1)
 			break;
 
-		traceline(endpoint, endpoint + dir*arange, false, tgt);
-		if(trace_ent == this) // workaround in case the new trace hits the player
-			traceline(endpoint + dir * 8, endpoint + dir * arange, false, tgt);
+		IL_PUSH(g_railgunhit, trace_ent);
+		trace_ent.railgunhit = true;
+		trace_ent.railgunhitloc = trace_endpos;
+		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 
-		endpoint = trace_endpos;
-		endplane = trace_plane_normal;
-		tgt = trace_ent;
+		if(trace_ent.solid == SOLID_BSP)
+			break;
+
+		trace_ent.solid = SOLID_NOT;
 	}
-
-	trace_endpos = endpoint;
-	trace_plane_normal = endplane;
-
-	return damage;
 }
 
 void W_FireShadowbeam(entity this, .entity weaponentity)
@@ -100,7 +95,7 @@ void W_FireShadowbeam(entity this, .entity weaponentity)
 	for(int j = 0; j < 64; ++j)
 	{
 		vector oldorg = org;
-		damage = ShadowbeamDamage(this, damage, blength, org, dir);
+		ShadowbeamTrace(this, blength, org, dir);
 		org = trace_endpos;
 		//SendCSQCShadowbeam(oldorg, org);
 
@@ -113,6 +108,34 @@ void W_FireShadowbeam(entity this, .entity weaponentity)
 		vector vel = normalize(org - oldorg) * 1000;
 		dir = normalize(_Movetype_ClipVelocity(vel, trace_plane_normal, 2));
 	}
+
+	// find all the entities the railgun hit and restore their solid state
+	IL_EACH(g_railgunhit, it.railgunhit,
+	{
+		it.solid = it.railgunhitsolidbackup;
+	});
+
+	// find all the entities the railgun hit and hurt them
+	IL_EACH(g_railgunhit, it.railgunhit,
+	{
+		// removal from the list is handled below
+		/* no falloff applied */
+
+		// apply the damage
+		if (it.takedamage && damage > 0)
+		{
+			SpawnBlood(it.railgunhitloc, '0 0 100', damage, it);
+			T_Damage(it, this, this, damage, WEP_SHADOWBEAM.m_id);
+
+			damage = floor(damage * 0.9); // 10% reduction every target hit
+		}
+
+		it.railgunhitloc = '0 0 0';
+		it.railgunhitsolidbackup = SOLID_NOT;
+		it.railgunhit = false;
+	});
+
+	IL_CLEAR(g_railgunhit);
 
 	if(lag)
 		antilag_restore_all(this);

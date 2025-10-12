@@ -157,6 +157,11 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 					float maxheight = 40;
 					if((this.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && vdist(this.origin - targ.origin, >, 300))
 						maxheight = 250;
+
+					if(this.monsterdef == MON_PUMPKING && vdist(this.origin - targ.origin, >, 300))
+						dz = this.origin.z - (targ.origin.z + 64);
+					else if(this.monsterdef == MON_GOLEM_HEAD)
+						dz = this.origin.z - (targ.origin.z + 250);
 					if(dz > maxheight)
 						neworg.z -= 8;
 					if(dz < 30)

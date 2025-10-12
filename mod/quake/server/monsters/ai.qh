@@ -41,6 +41,7 @@ const int FS_FLYING = 10;		// Exclusion, no happy feet!
 
 const float ATTN_FEETL = 1.5;
 const float ATTN_FEET = 2;
+const float ATTN_BOSS = 0.5;
 .float steptype; // Primary footstep type
 .float altsteptype; // Secondary footstep type
 .float steplast; // Last footstep sound

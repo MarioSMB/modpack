@@ -2,6 +2,13 @@
 
 #include "../common/shop.qh"
 
+PRECACHE(Shopkeep)
+{
+	precache_model("progs/grem.mdl");
+	precache_model("progs/gift08.mdl");
+	precache_sound("damion/purchase.wav");
+}
+
 int Shop_Passive_Item(string item)
 {
 	switch(item)
@@ -243,7 +250,8 @@ void shopkeep_spawn(entity this)
 	precache_sound("items/r_item2.wav");
 	precache_sound("items/armor1.wav");
 	precache_sound("weapons/pkup.wav");
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	//setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	setsize(this, '-16 -16 -1', '16 16 24');
 	this.solid = SOLID_NOT;
 	DropToFloor_QC_DelayedInit(this);
 	set_movetype(this, MOVETYPE_NONE);

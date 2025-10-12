@@ -93,7 +93,8 @@ void mic_note_explode(entity this, entity ignore)
 	Weapon mywep = DEATH_WEAPONOF(this.projectiledeathtype);
 
 	bool hitany = true; // might as well?
-	FOREACH_ENTITY_RADIUS(this.origin, 600, it != ignore && !(it.flags & FL_NOTARGET) && it.takedamage && it.health > 0 && it != this.owner && Damage_ValidTarget(it, this.owner) && ((IS_PLAYER(it) || IS_MONSTER(it)) || (hitany && it.classname != "door")),
+	int hitenemies = 0;
+	FOREACH_ENTITY_RADIUS(this.origin, 600, it != ignore && !(it.flags & FL_NOTARGET) && it.takedamage && it != this.owner && Damage_ValidTarget(it, this.owner) && ((IS_PLAYER(it) || IS_MONSTER(it)) || (hitany && it.classname != "door")),
 	{
 		if((!(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) || mywep.spawnflags & WEP_FLAG_HITUNDEAD))
 		{
@@ -103,8 +104,12 @@ void mic_note_explode(entity this, entity ignore)
 				continue;
 			if(trace_fraction != 1.0 && trace_ent != it)
 				continue;
+			hitenemies += 1;
 			mic_fire_note(this, it);
 		}
+
+		if(hitenemies >= 8)
+			break;
 	});
 
 	BecomeCartoonExplosion(this);
@@ -124,7 +129,7 @@ void mic_bignote_touch(entity this, entity toucher)
 	float mydmg = 70;
 	float damg = mydmg + random() * (mydmg * 0.2);
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
 			damg = damg * 0.5;	// mostly immune

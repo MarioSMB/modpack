@@ -1,0 +1,26 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_GOLEM_HEAD,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was zapped by the Golem"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_GOLEM_HEAD,               1,  NULL,           INFO_DEATH_SELF_MON_GOLEM_HEAD,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_GOLEM_HEAD,           DEATH_SELF_MON_GOLEM_HEAD,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_GOLEM_HEAD, "progs/golem_head.mdl");
+#endif
+
+CLASS(GolemHead, Monster)
+    ATTRIB(GolemHead, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(GolemHead, m_mins, vector, '-32 -32 -24');
+    ATTRIB(GolemHead, m_maxs, vector, '32 32 72');
+#ifdef GAMEQC
+    ATTRIB(GolemHead, m_model, Model, MDL_MON_GOLEM_HEAD);
+    ATTRIB(GolemHead, m_model_head, Model, MDL_Null);
+    ATTRIB(GolemHead, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(GolemHead, netname, string, "golem_head");
+    ATTRIB(GolemHead, m_name, string, _("Golem"));
+ENDCLASS(GolemHead)
+
+REGISTER_MONSTER(GOLEM_HEAD, NEW(GolemHead));

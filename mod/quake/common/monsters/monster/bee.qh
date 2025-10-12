@@ -1,0 +1,25 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_BEE,                 1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was stung by a Bee"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_BEE,            1,  NULL,           INFO_DEATH_SELF_MON_BEE,           CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_BEE,        DEATH_SELF_MON_BEE,        DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_BEE, "progs/bee.mdl");
+#endif
+
+CLASS(Bee, Monster)
+    ATTRIB(Bee, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Bee, m_mins, vector, '-8 -8 -8');
+    ATTRIB(Bee, m_maxs, vector, '8 8 8');
+#ifdef GAMEQC
+    ATTRIB(Bee, m_model, Model, MDL_MON_BEE);
+    ATTRIB(Bee, m_model_head, Model, MDL_Null);
+#endif
+    ATTRIB(Bee, netname, string, "bee");
+    ATTRIB(Bee, m_name, string, _("Bee"));
+ENDCLASS(Bee)
+
+REGISTER_MONSTER(BEE, NEW(Bee));

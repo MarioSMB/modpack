@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_KING_SLIME,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was consumed by King Slime"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_KING_SLIME,               1,  NULL,           INFO_DEATH_SELF_MON_KING_SLIME,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_KING_SLIME,           DEATH_SELF_MON_KING_SLIME,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_KING_SLIME, "progs/king_slime.mdl");
+
+SOUND(MON_KING_SLIME_SIGHT, "king_slime/sight");
+#endif
+
+CLASS(KingSlime, Monster)
+    ATTRIB(KingSlime, spawnflags, int, MONSTER_TYPE_BOSS);
+    ATTRIB(KingSlime, m_mins, vector, '-116 -116 -24');
+    ATTRIB(KingSlime, m_maxs, vector, '116 116 48');
+#ifdef GAMEQC
+    ATTRIB(KingSlime, m_model, Model, MDL_MON_KING_SLIME);
+    ATTRIB(KingSlime, m_sound, Sound, SND_MON_KING_SLIME_SIGHT);
+#endif
+    ATTRIB(KingSlime, netname, string, "king_slime");
+    ATTRIB(KingSlime, m_name, string, _("King Slime"));
+ENDCLASS(KingSlime)
+
+REGISTER_MONSTER(KING_SLIME, NEW(KingSlime));

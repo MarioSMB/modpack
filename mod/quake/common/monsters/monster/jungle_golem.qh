@@ -1,0 +1,31 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_JUNGLE_GOLEM,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was stomped by the Golem"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_JUNGLE_GOLEM,               1,  NULL,           INFO_DEATH_SELF_MON_JUNGLE_GOLEM,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_JUNGLE_GOLEM,           DEATH_SELF_MON_JUNGLE_GOLEM,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_JUNGLE_GOLEM, "progs/golem_phase1.mdl");
+#endif
+
+CLASS(JungleGolem, Monster)
+    ATTRIB(JungleGolem, spawnflags, int, MONSTER_TYPE_BOSS);
+    ATTRIB(JungleGolem, m_mins, vector, '-64 -64 -24');
+    ATTRIB(JungleGolem, m_maxs, vector, '64 64 150');
+#ifdef GAMEQC
+    ATTRIB(JungleGolem, m_model, Model, MDL_MON_JUNGLE_GOLEM);
+    ATTRIB(JungleGolem, m_model_head, Model, MDL_Null);
+    ATTRIB(JungleGolem, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(JungleGolem, netname, string, "jungle_golem");
+    ATTRIB(JungleGolem, m_name, string, _("Golem"));
+    ATTRIB(JungleGolem, m_color, vector, '0.81 0.08 0.16');
+ENDCLASS(JungleGolem)
+
+REGISTER_MONSTER(JUNGLE_GOLEM, NEW(JungleGolem));
+
+#ifdef SVQC
+.entity golem_head;
+#endif

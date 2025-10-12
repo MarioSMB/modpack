@@ -47,7 +47,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	if(this.monsterdef == MON_ENFORCER)
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 
-	vector vec2 = normalize(vec);
+	vector dir = normalize(vec);
 	
 	entity newmis = new(enforcer_laser);
 	newmis.flags = FL_PROJECTILE;
@@ -64,7 +64,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 
 	setorigin(newmis, org);
 
-	newmis.velocity = vec2 * 600;
+	newmis.velocity = dir * 600;
 	newmis.angles = vectoangles(newmis.velocity);
 
 	newmis.nextthink = time + 5;

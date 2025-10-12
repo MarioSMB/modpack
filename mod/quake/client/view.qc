@@ -13,6 +13,7 @@
 #include "../common/util.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/triggers/trigger/viewloc.qh"
+#include "../common/triggers/trigger/multi.qh"
 #include "crosshair.qh"
 #include "shownames.qh"
 #include "powerups.qh"
@@ -999,6 +1000,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	HUD_Chat();
 	HUD_BossBars();
 	HUD_Champions();
+	draw_message_triggers();
 	Draw_ShowNames_All();
 
 	sui_begin(vid_conwidth, vid_conheight);

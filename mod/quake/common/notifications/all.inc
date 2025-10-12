@@ -263,7 +263,8 @@
     MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")
 
-    MSG_CENTER_NOTIF(SHOP_OPEN,                         N_ENABLE,     0, 0, "",                         CPID_SHOP, "5.5 0", _("^BGShop is open, speak to the ^F1Gremlin^BG!"), "")
+    //MSG_CENTER_NOTIF(SHOP_OPEN,                         N_ENABLE,     0, 0, "",                         CPID_SHOP, "5.5 0", _("^BGShop is open, speak to the ^F1Gremlin^BG!"), "")
+    MSG_CENTER_NOTIF(SHOP_OPEN,                         N_ENABLE,     0, 0, "",                         CPID_SHOP, "5.5 0", _("^BGShop is open, speak to ^K1Damion^BG!"), "")
 
     MSG_CENTER_NOTIF(SLIDE_ACTIVATE,                    N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGSlider activated"), "")
     MSG_CENTER_NOTIF(SLIDE_BONUS_POINT,                 N_ENABLE,     0, 0, "",                         CPID_SLIDE,"0 0", _("^BGBonus point!"), "")

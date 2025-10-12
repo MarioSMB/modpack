@@ -434,13 +434,21 @@ entity SpawnMonster(entity this, Monster mon, vector org, vector temp_angles)
 		monster.damagedbycontents	= true;
 	}
 
+	setorigin(monster, org);
+
 	// perform enemy-type specific loading
 	setmodel(monster, mon.m_model);
 	setsize(monster, mon.m_mins, mon.m_maxs);
 	monster_setup(monster, mon);
 
 	setup_minionsupport(monster);
-	monster.health = min(monster.health, 1750); // limit health to avoid sponges
+	if(autocvar_skill >= 3)
+	{
+		if(this.wave <= 9)
+			monster.health = min(monster.health, 3000);
+	}
+	else
+		monster.health = min(monster.health, 1750); // limit health to avoid sponges
 
 	// finish the shared settings
 	org.z += -monster.mins.z; // offset based on size
@@ -1963,9 +1971,14 @@ void Horde_SetupSquads()
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 ithagnal");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 icegolem");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 cthulhu");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 king_slime");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 mourning_wood");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_BOSS, "1 zerstorer"); // technically flying, but small enough to use regular spawns
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 volkerh");
 		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 eoc");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 destroyer");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 queen_bee");
+		Horde_SpawnSquadEntity(HORDE_FINALBOSS, HORDE_SQUAD_TYPE_FLYING, "1 pumpking");
 	}
 
 	entity shop = find(NULL, classname, "info_horde_shop");

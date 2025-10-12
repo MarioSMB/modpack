@@ -211,7 +211,10 @@ void Tank_Touch(entity this, entity toucher)
 				T_Damage(toucher, this, this, damg * 0.05, DEATH_CRUSH.m_id);
 				T_Damage(this, toucher, toucher, 2, DEATH_CRUSH.m_id);
 			}
-			float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
+			float tsize = vlen(toucher.maxs - toucher.mins);
+			if(!tsize)
+				tsize = 1;
+			float pushforce = 100 / tsize;
 
 			toucher.velocity = this.velocity * pushforce + '0 0 50';
 		}

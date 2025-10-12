@@ -117,42 +117,6 @@ bool trigger_music_SendEntity(entity this, entity to, int sendflags)
 	return true;
 }
 
-void generic_setactive(entity this, int act)
-{
-	if(act == ACTIVE_TOGGLE)
-	{
-		if(this.active == ACTIVE_ACTIVE)
-		{
-			this.active = ACTIVE_NOT;
-		}
-		else
-		{
-			this.active = ACTIVE_ACTIVE;
-		}
-	}
-	else
-	{
-		this.active = act;
-	}
-}
-
-void generic_netlinked_setactive(entity this, int act)
-{
-	int old_status = this.active;
-	generic_setactive(this, act);
-
-	if (this.active != old_status)
-	{
-		this.SendFlags |= SF_TRIGGER_UPDATE;
-	}
-}
-
-void generic_netlinked_legacy_use(entity this, entity actor, entity trigger)
-{
-	//LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
-	generic_netlinked_setactive(this, ACTIVE_TOGGLE);
-}
-
 void trigger_music_reset(entity this)
 {
 	if(this.spawnflags & START_DISABLED)

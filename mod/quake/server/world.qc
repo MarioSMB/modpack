@@ -1796,6 +1796,30 @@ string PickDMMap(bool gotohub)
 	return mapname;
 }
 
+.float charmed_healthcheck;
+void monsters_StartFrame()
+{
+	IL_EACH(g_moveables, true,
+	{
+		// TODO: better location for this hack
+		if(IS_MONSTER(it) && (it.charmed || it.category == CATEGORY_MONSTER) && it.health > 0 && time > it.charmed_healthcheck && !Challenge_Active(CHALLENGE_ONEHP))
+		{
+			float hitamount = 1;
+			float hitdelay = 0.25;
+			if(it.category == CATEGORY_MONSTER)
+			{
+				hitamount = (it.max_health >= 1000) ? 10 : 2;
+				if(!it.dusk_revived) // NOTE: specific dusk limit
+					hitdelay = 1;
+			}
+			it.charmed_healthcheck = time + hitdelay;
+			it.health -= hitamount;
+			if(it.health <= 0)
+				T_Damage(it, NULL, NULL, 1, DEATH_GENERIC.m_id);
+		}
+	});
+}
+
 /*
 ============
 CheckRules_World
@@ -2071,6 +2095,8 @@ void StartFrame()
 
 	dodgeball_StartFrame();
 
+	monsters_StartFrame();
+
 	FixPhysics();
 
 	CreatureFrame_All();
@@ -2285,7 +2311,6 @@ void Quake_FixStuff(entity this)
 	}
 }
 
-.float charmed_healthcheck;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
@@ -2310,23 +2335,6 @@ void Physics_Frame()
 
 		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
-
-		// TODO: better location for this hack
-		if(IS_MONSTER(it) && (it.charmed || it.category == CATEGORY_MONSTER) && it.health > 0 && time > it.charmed_healthcheck && !Challenge_Active(CHALLENGE_ONEHP))
-		{
-			float hitamount = 1;
-			float hitdelay = 0.25;
-			if(it.category == CATEGORY_MONSTER)
-			{
-				hitamount = (it.max_health >= 1000) ? 10 : 2;
-				if(!it.dusk_revived) // NOTE: specific dusk limit
-					hitdelay = 1;
-			}
-			it.charmed_healthcheck = time + hitdelay;
-			it.health -= hitamount;
-			if(it.health <= 0)
-				T_Damage(it, NULL, NULL, 1, DEATH_GENERIC.m_id);
-		}
 
 		//set_movetype(it, it.move_movetype);
 		// inline the set_movetype function, since this is called a lot

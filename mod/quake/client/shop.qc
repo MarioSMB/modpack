@@ -48,6 +48,25 @@ string Shop_Passive_PrettyName(int itemid)
 	return "";
 }
 
+string Shop_Passive_Description(int itemid)
+{
+	switch(itemid)
+	{
+		case PASSIVE_PULSERIFLE: return "Fire automatic lasers at enemies";
+		case PASSIVE_FIREBALL: return "Shoot automatic fireballs at enemies";
+		case PASSIVE_AMMOPOUCH: return "Double ammo capacity";
+		case PASSIVE_ADRENALIN: return "20% quicker shooting speed";
+		case PASSIVE_BOOMER: return "Enemies explode when killed";
+		case PASSIVE_LOOTER: return "Enemies drop 20% more loot";
+		case PASSIVE_AURA: return "Deal constant damage around you";
+		case PASSIVE_ELECTRIFYING: return "Enemies zap others when killed";
+		case PASSIVE_BUNNYBOOTS: return "Automatic jumps";
+		case PASSIVE_ARCANA: return "Double mana capacity";
+		case PASSIVE_SPONGE: return "Incoming damage capped at 50";
+	}
+	return "";
+}
+
 string Shop_Passive_Name(int itemid)
 {
 	switch(itemid)
@@ -93,6 +112,21 @@ string ShopItem_Name(int index)
 		case SHOP_ITEM_AMMO: return "ammo";
 		case SHOP_ITEM_PASSIVE: return Shop_Passive_Name(sdata);
 		case SHOP_ITEM_WEAPON: return REGISTRY_GET(Weapons, sdata).netname;
+	}
+	return "";
+}
+
+string ShopItem_Description(int index)
+{
+	int sname = shoplist[index];
+	int sdata = shopdata[index];
+	switch(sname)
+	{
+		case SHOP_ITEM_HEAL: return "";
+		case SHOP_ITEM_ARMOR: return "";
+		case SHOP_ITEM_AMMO: return "";
+		case SHOP_ITEM_PASSIVE: return Shop_Passive_Description(sdata);
+		case SHOP_ITEM_WEAPON: return "";
 	}
 	return "";
 }
@@ -161,8 +195,59 @@ void shop_buyselected()
 	LOG_DEBUG("Buying ", ShopItem_Name(shop_hovered_index));
 	localcmd(sprintf("cmd shop %s\n", ShopItem_Name(shop_hovered_index)));
 	if(csqcplayer) // just play it from the player so we don't have to look for the gremlin!
-		_sound(csqcplayer, CH_TRIGGER_SINGLE, "grem/sight1.wav", VOL_BASE, ATTEN_NORM);
+		_sound(csqcplayer, CH_TRIGGER_SINGLE, "damion/purchase.wav", VOL_BASE, ATTEN_NORM);
+		//_sound(csqcplayer, CH_TRIGGER_SINGLE, "grem/sight1.wav", VOL_BASE, ATTEN_NORM);
 	shop_close();
+}
+
+vector shop_info_scroll;
+void shop_info_list(string id, vector pos, vector size)
+{
+	// by this point we know all the data is accurate
+	string msg = ShopItem_Description(shop_hovered_index);
+
+	int linecount = tokenizebyseparator(msg, "\n");
+
+	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
+	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), linecount, '0 6 0');
+	sui_pos = '0 0 0';
+	//shop_hovered_index = -1;
+	for(float index = sui_list_item(); index > -1; index = sui_list_item())
+	{
+		sui_push_frame(sui_pos, vec2(size.x - 6, 16));
+		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
+		//if(selected_shop_index == index)
+			//sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.2, 0);
+		string text = argv(index);
+		//text = strreplace("%ABILITY%", getcommandkey("(Crouch)", "+crouch"), text);
+		sui_drawtext('0 0 0', '8 8 0', text, '1 1 1', 1, 0);
+		sui_pop_frame();
+	}
+	sui_list_view_end();	
+}
+
+void shop_menu_info(int index)
+{
+	string msg = ShopItem_Description(shop_hovered_index);
+	if(!msg || msg == "")
+		return;
+
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_drawtext('300 -120 0', '10 10 0', "Item Information", '1 1 1', 1, 0);
+	
+	sui_fill('300 0 0', '4 4 0', '0 0 0', 0.5, 0);
+	sui_fill('300 0 0', '2 2 0', '1 1 1', 0.75, 0);
+	
+	vector ent_menu_size = '300 200 0';
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_push_frame('300 10 0', ent_menu_size);
+	
+	sui_fill('0 0 0', ent_menu_size, '0 0 0', 0.5, 0);
+	sui_offset = shop_info_scroll;
+	shop_info_list("shop_info_list", '0 0 0', ent_menu_size - '2 2 0');
+	shop_info_scroll = sui_offset;
+	
+	sui_pop_frame();
 }
 
 void entity_list(string id, vector pos, vector size)
@@ -282,6 +367,10 @@ void cl_shop_draw()
 	entity_menu_scroll = sui_offset;
 	
 	sui_pop_frame();
+
+
+	if(shop_hovered_index != -1)
+		shop_menu_info(shop_hovered_index);
 }
 
 void shop_open()
@@ -413,6 +502,11 @@ bool cl_shop_input_event(float evtype, float scanx, float chary, float devid)
 	return false;
 }
 
+//const vector anim_shopkeep_closed = '0 16 0';
+//const vector anim_shopkeep_open = '44 59 0';
+const vector anim_shopkeep_closed = '0 15 0';
+const vector anim_shopkeep_open = '16 51 0';
+
 .float shopkeep_frametick;
 .vector colormod;
 void shopkeep_draw(entity this)
@@ -423,11 +517,11 @@ void shopkeep_draw(entity this)
 		this.frame += 1;
 		if(STAT(SHOP_OPEN) > time)
 		{
-			if(this.frame < 44 || this.frame > 59)
-				this.frame = 44;
+			if(this.frame < anim_shopkeep_open.x || this.frame > anim_shopkeep_open.y)
+				this.frame = anim_shopkeep_open.x;
 		}
-		else if(this.frame > 16)
-			this.frame = 0;
+		else if(this.frame < anim_shopkeep_closed.x || this.frame > anim_shopkeep_closed.y)
+			this.frame = anim_shopkeep_closed.x;
 		CSQCModel_InterpolateAnimation_1To2_Note(this, BIT(23), true);
 		this.shopkeep_frametick = time + 0.1; // roughly match quake animations
 	}
@@ -462,13 +556,15 @@ NET_HANDLE(ENT_CLIENT_SHOPKEEP, bool isnew)
 	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
-	_setmodel(this, "progs/grem.mdl");
+	//_setmodel(this, "progs/grem.mdl");
+	_setmodel(this, "progs/gift08.mdl");
 	this.solid = SOLID_NOT;
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	//setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	setsize(this, '-16 -16 -1', '16 16 24');
 	set_movetype(this, MOVETYPE_NONE);
 	this.shopkeep_frametick = 0;
 	this.frame = 0;
-	this.colormod = '0 1 0'; // make sure people know he's friendly!
+	//this.colormod = '0 1 0'; // make sure people know he's friendly!
 	CSQCModel_InterpolateAnimation_1To2_PreNote(this, BIT(23));
 	CSQCModel_InterpolateAnimation_1To2_Note(this, BIT(23), true);
 	this.lerpfrac = 0; // reset frames

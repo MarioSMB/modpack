@@ -86,3 +86,7 @@ SOUND(FS_GIANT5, "steps/giant5");
 Sound SND_FS_GIANT(int index) {
     return REGISTRY_GET(Sounds, SND_FS_GIANT1.m_id + bound(0, index - 1, 4));
 }
+
+SOUND(MECHBOSS_HIT, "destroyer/hit");
+
+SOUND(LASER_RICOCHET, "hipweap/laserric");

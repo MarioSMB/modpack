@@ -38,6 +38,7 @@ void W_FireGrenade(entity this, .entity weaponentity)
 	entity missile = new(grenade);
 	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 	missile.projectiledeathtype = WEP_GRENADE_LAUNCHER.m_id;

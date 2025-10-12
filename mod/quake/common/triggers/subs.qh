@@ -21,6 +21,11 @@ Fade 'ent' out when time >= 'when'
 .float fade_rate;
 void SUB_SetFade(entity ent, float when, float fading_time);
 
+.string target2;
+.string target3;
+.string target4;
+.string killtarget;
+
 #ifdef SVQC
 
 bool InitMovingBrushTrigger(entity this);

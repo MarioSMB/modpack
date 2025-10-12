@@ -218,6 +218,11 @@ bool CanDamage(entity targ, entity inflictor)
 // NOTE: accepts an attacker rather than an inflictor, check .owner if a projectile!
 bool Damage_ValidTarget(entity targ, entity attacker)
 {
+	if(targ.classname == "monster_hitbox")
+		targ = targ.realowner;
+	if(attacker.classname == "monster_hitbox")
+		attacker = attacker.realowner;
+
 	// may happen if a projectile lacks an owner, just assume it's valid
 	// also never check self-damage here!
 	if(!attacker || targ == attacker)
@@ -379,6 +384,12 @@ void Killed(entity targ, entity inflictor, entity attacker, int deathtype)
 
 		if(STAT(PASSIVES, attacker) & PASSIVE_ELECTRIFYING)
 			electrify_delayed(targ, attacker);
+
+		// workaround for potential crashes due to lingering owner
+		IL_EACH(g_moveables, it.owner == targ && IS_MONSTER(it) && (it.flags & FL_MINION),
+		{
+			it.owner = NULL;
+		});
 	}
 
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
@@ -439,6 +450,7 @@ This should be the only function that ever reduces health.
 */
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype)
 {
+	entity orig = targ;
 	// special hack for ithagnal
 	if(targ.classname == "monster_hitbox")
 		targ = targ.owner;
@@ -808,7 +820,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 	}
 
-	if(targ.th_pain && showpain)
+	// HACK: need access to the one that was hurt!
+	if(targ.monsterdef == MON_DESTROYER && targ != orig && orig.th_pain)
+		orig.th_pain(orig, attacker, take, deathtype);
+	else if(targ.th_pain && showpain)
 	{
 		targ.th_pain(targ, attacker, take, deathtype);
 	// nightmare mode monsters don't go into pain frames often

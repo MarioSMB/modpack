@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_DESTROYER,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's bones were shattered by The Destroyer"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_DESTROYER,                1,  NULL,           INFO_DEATH_SELF_MON_DESTROYER,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_DESTROYER,            DEATH_SELF_MON_DESTROYER,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_DESTROYER, "progs/destroyer_head.mdl");
+//MODEL(MON_DESTROYER, "progs/h_shams.mdl");
+#endif
+
+CLASS(Destroyer, Monster)
+    ATTRIB(Destroyer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_METAL);
+    ATTRIB(Destroyer, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Destroyer, m_maxs, vector, '32 32 32');
+    ATTRIB(Destroyer, view_ofs, vector, '0 0 16');
+#ifdef GAMEQC
+    ATTRIB(Destroyer, m_model, Model, MDL_MON_DESTROYER);
+    ATTRIB(Destroyer, m_model_head, Model, MDL_Null);
+    ATTRIB(Destroyer, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Destroyer, netname, string, "destroyer");
+    ATTRIB(Destroyer, m_name, string, _("The Destroyer"));
+    ATTRIB(Destroyer, m_color, vector, '0.81 0.08 0.16');
+ENDCLASS(Destroyer)
+
+REGISTER_MONSTER(DESTROYER, NEW(Destroyer));

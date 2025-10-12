@@ -179,7 +179,7 @@ HIPNOTIC WEAPONS
 void HIP_LaserTouch(entity this, entity toucher)
 {
 	this.owner = NULL;
-	this.cnt = this.cnt + 1;
+	this.cnt += 1;
 	if(pointcontents(this.origin) == CONTENT_SKY)
 	{
 		delete(this);
@@ -196,12 +196,12 @@ void HIP_LaserTouch(entity this, entity toucher)
 
 	if(toucher.takedamage)
 	{
-		if(this.lastvictim == toucher)
-			this.dmg = this.dmg / 2;
+		if(this.realowner == toucher)
+			this.dmg *= 0.5;
 		spawn_touchblood(this, this.dmg, toucher);
-		T_Damage(toucher, this, this.lastvictim, this.dmg, this.projectiledeathtype);
+		T_Damage(toucher, this, this.realowner, this.dmg, this.projectiledeathtype);
 	}
-	else if((this.cnt == 3) ||(random()<0.15))
+	else if((this.cnt >= 3) ||(random()<0.15))
 	{
 		te_gunshot(org);
 	}
@@ -218,7 +218,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 		UNSET_ONGROUND(this);
 #endif
 		//float r = random();
-		_sound(this, CH_WEAPON_SINGLE, "hipweap/laserric.wav", 1, ATTN_STATIC);
+		spamsound(this, CH_WEAPON_SINGLE, SND_LASER_RICOCHET, 1, ATTN_STATIC);
 /*
 		if(r<0.33)
 		_sound(this, CH_WEAPON_SINGLE, "weapons/ric1.wav", 1, ATTN_STATIC);
@@ -249,14 +249,15 @@ void HIP_LaserThink(entity this)
 entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 {
 //   _sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);
-	_sound(this, CH_WEAPON_SINGLE, "hipweap/laserg.wav", 1, ATTN_NORM);
+	if(this.monsterdef != MON_GOLEM_HEAD)
+		_sound(this, CH_WEAPON_SINGLE, "hipweap/laserg.wav", 1, ATTN_NORM);
 
 	vec = normalize(vec);
 
 	entity missile = new(hiplaser);
 	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
-	missile.lastvictim = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	missile.solid = SOLID_BBOX;
 	if(light)
@@ -1525,6 +1526,8 @@ void W_SetCurrentAmmo(entity this)
 			this.(weaponentity).piano_prevwep = wep; // for piano hax
 		if(wep != WEP_HAMMER)
 			this.(weaponentity).hammer_prevwep = wep; // for hammer hax
+		if(wep != WEP_SPEAKNSPELL)
+			this.(weaponentity).speaknspell_prevwep = wep; // for piano hax
 	}
 }
 
@@ -1657,8 +1660,14 @@ void W_Fireball_Touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;
-	tracebox(this.origin + '0 0 1', this.mins + '0 0 1', this.maxs - '0 0 1', this.origin - '0 0 10', MOVE_NOMONSTERS, this);
-	if(trace_startsolid || !(trace_fraction < 1) || toucher.takedamage)
+	bool force_explode = false;
+	if(IS_PLAYER(this.owner))
+	{
+		tracebox(this.origin + '0 0 1', this.mins + '0 0 1', this.maxs - '0 0 1', this.origin - '0 0 10', MOVE_NOMONSTERS, this);
+		if(trace_startsolid || !(trace_fraction < 1))
+			force_explode = true;
+	}
+	if(force_explode || toucher.takedamage)
 	{
 		T_RadiusDamage(this, this.owner, 70, this.projectiledeathtype, this.owner);
 		te_explosion2(this.origin, 228, 5);
