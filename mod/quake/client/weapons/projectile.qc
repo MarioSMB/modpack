@@ -136,6 +136,7 @@ void Projectile_Draw(entity this)
 		{
 			default: break;
 			case PROJECTILE_ROCKET:
+			case PROJECTILE_JIM_ROCKET:
 				rot = '0 0 720'; // spinning
 				break;
 			case PROJECTILE_CROSSBOW_BOLT:
@@ -347,8 +348,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(MAYO)               this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = randomvec() * 320; this.scale = 0.5; break;
 			HANDLE(OCARINA)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; this.scale = 0.5; break;
 			HANDLE(SHOCKGUN_PLASMA)    this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
-			HANDLE(LASER)              this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(HIP_LASER)          this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(PIANO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = ((random() > 0.5) ? '0 -90 0' : '0 90 0'); break;
+			HANDLE(LASER)              this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(JIM_LASER)          this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(JIM_ROCKET)         this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -401,7 +405,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_SHOCKGUN_PLASMA:
 				this.effects |= EF_DIMLIGHT;
 				break;
-			case PROJECTILE_LASER:
+			case PROJECTILE_HIP_LASER:
 				set_movetype(this, MOVETYPE_BOUNCEMISSILE);
 				settouch(this, func_null);
 				break;
@@ -417,6 +421,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.colormod = mycolor;
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, music_bounce);
+				break;
+			case PROJECTILE_LASER:
+			case PROJECTILE_JIM_LASER:
+				this.effects |= EF_DIMLIGHT;
 				break;
 			default:
 				break;

@@ -314,7 +314,7 @@ void jim_walk1(entity this)
 	set_animofs(this, anim_jim_idle, 1, jim_walk1);
 	// Movement is steps, not velocity
 	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
+	set_movetype(this, MOVETYPE_QCENTITY);
 	this.velocity = '0 0 0';
 	jim_update(this, JS_IDLE);
 	ai_walk(this, 8);
@@ -324,7 +324,7 @@ void jim_run1(entity this)
 	set_animofs(this, anim_jim_idle, 1, jim_run1);
 	// Movement is steps, only velocity when firing weapon
 	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
+	set_movetype(this, MOVETYPE_QCENTITY);
 	this.velocity = '0 0 0';
 	jim_update(this, JS_IDLE);
 	ai_run(this, 16);
@@ -373,7 +373,7 @@ void JLaunchLaser(entity this, vector org, vector vec)
 	newmis.projectiledeathtype = DEATH_MONSTER_JIM.m_id;
 	newmis.clipgroup = this.clipgroup;
 
-	_setmodel(newmis, "progs/proj_laz.mdl");
+	//_setmodel(newmis, "progs/proj_laz.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 
 	setorigin(newmis, org);
@@ -387,6 +387,8 @@ void JLaunchLaser(entity this, vector org, vector vec)
 	settouch(newmis, JLaser_Touch);
 
 	IL_PUSH(g_projectiles, newmis);
+
+	CSQCProjectile(newmis, true, PROJECTILE_JIM_LASER, true);
 }
 
 void jim_laser(entity this)
@@ -440,13 +442,15 @@ void jim_rocket(entity this)
 	
 	// Variable rocket speed, matching laser (very nasty)
 	entity newmis = launch_spike(this, org, vec);
-	_setmodel(newmis, "progs/proj_rocket.mdl");
+	//_setmodel(newmis, "progs/proj_rocket.mdl");
 	newmis.noise = "jim/rocket_hit.wav";
 	newmis.dmg = 25;
 	setsize(newmis, '0 0 0', '0 0 0');
 	newmis.velocity = vec * 575;
 	settouch(newmis, T_MissileTouch); // rocket explosion
 	newmis.projectiledeathtype = DEATH_MONSTER_JIM.m_id;
+
+	CSQCProjectile(newmis, true, PROJECTILE_JIM_ROCKET, true);
 }
 
 //----------------------------------------------------------------------------
@@ -611,7 +615,7 @@ void jim_pain(entity this, entity attacker, float damage, int deathtype)
 	// Stop any ai_run velocity and reset movetype
 	this.velocity = '0 0 0';
 	this.solid = SOLID_SLIDEBOX;
-	set_movetype(this, MOVETYPE_STEP);
+	set_movetype(this, MOVETYPE_QCENTITY);
 	if(random() < 0.5)
 		_sound(this, CH_VOICE, "jim/pain1.wav", 1, ATTN_NORM);
 	else

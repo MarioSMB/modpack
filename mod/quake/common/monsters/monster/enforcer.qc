@@ -59,7 +59,7 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;
 
-	_setmodel(newmis, "progs/laser.mdl");
+	//_setmodel(newmis, "progs/laser.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');
 
 	setorigin(newmis, org);
@@ -72,6 +72,8 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	settouch(newmis, Laser_Touch);
 
 	IL_PUSH(g_projectiles, newmis);
+
+	CSQCProjectile(newmis, true, PROJECTILE_LASER, true);
 
 	return newmis;
 }

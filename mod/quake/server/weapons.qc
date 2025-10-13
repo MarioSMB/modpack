@@ -285,7 +285,7 @@ entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 
 	IL_PUSH(g_projectiles, missile);
 
-	CSQCProjectile(missile, true, PROJECTILE_LASER, true);
+	CSQCProjectile(missile, true, PROJECTILE_HIP_LASER, true);
 
 	return missile;
 }
