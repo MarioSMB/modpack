@@ -3,7 +3,7 @@
 #include "../all.qh"
 
 CLASS(Twins, Monster)
-    ATTRIB(Twins, spawnflags, int, 0);
+    ATTRIB(Twins, spawnflags, int, MON_FLAG_HIDDEN);
     ATTRIB(Twins, m_mins, vector, '0 0 0');
     ATTRIB(Twins, m_maxs, vector, '0 0 0');
 #ifdef GAMEQC
