@@ -487,7 +487,7 @@ void cth_pain(entity this, entity attacker, float damage, int deathtype)
 	if(random()*200 > damage)
 		return;		// didn't flinch
 
-	this.pain_finished = time + 2;
+	this.pain_finished = time + 5 + random() * 2;
 	this.cthtaunt_timer = time + 4;
 
 	if(this.spawnflags & MON_CTHULHU_ZOID)

@@ -258,8 +258,7 @@ void DonkTouchCrit(entity this, entity toucher)
 		return;
 	if(toucher.takedamage == DAMAGE_AIM)
 	{
-		float damage = 80;
-		damage *= 2; // double donkers!
+		float damage = 160;
 		spawn_touchblood(this, damage, toucher);
 		this.enemy = toucher;
 		T_Damage(toucher, this, this.realowner, damage, WEP_LOOSECANNON.m_id);
@@ -309,8 +308,8 @@ void DonkTouchDud(entity this, entity toucher)
 	{
 		this.velocity = '0 0 0';	//'0 0 0' stops bomb dead and falls to enemy feet
 		this.enemy = toucher;
-		spawn_touchblood(this, 20, toucher);
-		T_Damage(toucher, this, this.realowner, 20, WEP_LOOSECANNON.m_id);
+		spawn_touchblood(this, 40, toucher);
+		T_Damage(toucher, this, this.realowner, 90, WEP_LOOSECANNON.m_id);
 		setthink(this, DonkExplodeDud);
 		this.nextthink = time;
 		settouch(this, func_null);

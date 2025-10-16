@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include "all.qh"
 #include "bossbars.qh"
+#include "tether.qh"
 #ifdef SVQC
     #include "../../server/monsters/monsters.qh"
 #endif

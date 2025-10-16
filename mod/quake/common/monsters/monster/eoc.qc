@@ -360,6 +360,7 @@ METHOD(EyeOfCthulhu, mr_setup, bool(EyeOfCthulhu this, entity actor))
 		actor.minion_maxcount = 9;
 
 	actor.bosswave = 0;
+	actor.skin = 0;
 
     actor.health = 3640;
 	actor.th_stand = eoc_stand1;

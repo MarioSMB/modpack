@@ -1,0 +1,11 @@
+#pragma once
+
+const int TETHER_VINE_BIG = 1;
+const int TETHER_VINE_SMALL = 2;
+const int TETHER_FLESH = 3;
+
+#ifdef SVQC
+.vector tether_start, tether_end;
+
+.entity tether_ent;
+#endif

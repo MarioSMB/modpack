@@ -93,6 +93,7 @@ void OgreFireGrenade(entity this)
 		_setmodel(missile, "progs/mervup.mdl");
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.classname = "MultiGrenade";
+		setorigin(missile, this.origin);
 	}
 	else
 	{

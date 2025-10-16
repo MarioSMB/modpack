@@ -1,0 +1,19 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Twins, Monster)
+    ATTRIB(Twins, spawnflags, int, 0);
+    ATTRIB(Twins, m_mins, vector, '0 0 0');
+    ATTRIB(Twins, m_maxs, vector, '0 0 0');
+#ifdef GAMEQC
+    ATTRIB(Twins, m_model, Model, MDL_Null);
+    ATTRIB(Twins, m_model_head, Model, MDL_Null);
+    ATTRIB(Twins, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Twins, netname, string, "twins");
+    ATTRIB(Twins, m_name, string, "The Twins"); // dummy name
+    ATTRIB(Twins, m_color, vector, '0.66 0.11 0.11');
+ENDCLASS(Twins)
+
+REGISTER_MONSTER(TWINS, NEW(Twins));

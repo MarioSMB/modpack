@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_RETINAZER,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was laser-burned by Retinazer"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_RETINAZER,                1,  NULL,           INFO_DEATH_SELF_MON_RETINAZER,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_RETINAZER,            DEATH_SELF_MON_RETINAZER,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_RETINAZER, "progs/eoc.mdl");
+
+SOUND(MON_RETINAZER_SIGHT, "eoc/sight");
+#endif
+
+CLASS(Retinazer, Monster)
+    ATTRIB(Retinazer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_HIDDEN);
+    ATTRIB(Retinazer, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Retinazer, m_maxs, vector, '32 32 48');
+#ifdef GAMEQC
+    ATTRIB(Retinazer, m_model, Model, MDL_MON_RETINAZER);
+    ATTRIB(Retinazer, m_model_head, Model, MDL_Null);
+    ATTRIB(Retinazer, m_sound, Sound, SND_MON_RETINAZER_SIGHT);
+#endif
+    ATTRIB(Retinazer, netname, string, "retinazer");
+    ATTRIB(Retinazer, m_name, string, _("Retinazer"));
+    ATTRIB(Retinazer, m_color, vector, '0.66 0.11 0.11');
+ENDCLASS(Retinazer)
+
+REGISTER_MONSTER(RETINAZER, NEW(Retinazer));

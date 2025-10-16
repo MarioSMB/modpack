@@ -1,0 +1,41 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_PLANTERA,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's head was severed by the Plantera"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_PLANTERA,               1,  NULL,           INFO_DEATH_SELF_MON_PLANTERA,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_PLANTERA,           DEATH_SELF_MON_PLANTERA,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_PLANTERA, "progs/plantera_phase1.mdl");
+
+SOUND(MON_PLANTERA_PAIN, "plantera/pain");
+
+SOUND(MON_PLANTERA_SIGHT1, "plantera/laugh1");
+SOUND(MON_PLANTERA_SIGHT2, "plantera/laugh2");
+SOUND(MON_PLANTERA_SIGHT3, "plantera/laugh3");
+Sound SND_MON_PLANTERA_SIGHT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_MON_PLANTERA_SIGHT1.m_id + floor(prandom() * 3));
+}
+#endif
+
+CLASS(Plantera, Monster)
+    ATTRIB(Plantera, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY);
+    ATTRIB(Plantera, m_mins, vector, '-64 -64 -24');
+    ATTRIB(Plantera, m_maxs, vector, '64 64 150');
+#ifdef GAMEQC
+    ATTRIB(Plantera, m_model, Model, MDL_MON_PLANTERA);
+    ATTRIB(Plantera, m_model_head, Model, MDL_Null);
+    ATTRIB(Plantera, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(Plantera, netname, string, "plantera");
+    ATTRIB(Plantera, m_name, string, _("Plantera"));
+    ATTRIB(Plantera, m_color, vector, '0.81 0.08 0.16');
+ENDCLASS(Plantera)
+
+REGISTER_MONSTER(PLANTERA, NEW(Plantera));
+
+#ifdef SVQC
+IntrusiveList g_planteraparts;
+STATIC_INIT(g_planteraparts) { g_planteraparts = IL_NEW(); }
+#endif

@@ -11,7 +11,7 @@ MODEL(MON_BEE, "progs/bee.mdl");
 #endif
 
 CLASS(Bee, Monster)
-    ATTRIB(Bee, spawnflags, int, MONSTER_TYPE_FLY);
+    ATTRIB(Bee, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_HIDDEN);
     ATTRIB(Bee, m_mins, vector, '-8 -8 -8');
     ATTRIB(Bee, m_maxs, vector, '8 8 8');
 #ifdef GAMEQC

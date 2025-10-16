@@ -1193,3 +1193,75 @@ STATIC_INIT(Effect_TR_SHADOWBEAM)
 	registercvar("cl_particle_shadowbeam_trail_velocityoffset", "0 0 15");
 }
 #endif
+
+EFFECT(0, CURSED_FLAMEJET,              "cursed_flamejet")
+#ifdef CSQC
+STATIC_INIT(Effect_CURSED_FLAMEJET)
+{
+	registercvar("cl_particle_cursed_flamejet", "smoke puff cloud flame sparks");
+
+	registercvar("cl_particle_cursed_flamejet_smoke_type", "smoke");
+	registercvar("cl_particle_cursed_flamejet_smoke_airfriction", "1.200000");
+	registercvar("cl_particle_cursed_flamejet_smoke_alpha", "50 256 250");
+	registercvar("cl_particle_cursed_flamejet_smoke_bounce", "1.500000");
+	registercvar("cl_particle_cursed_flamejet_smoke_color", "0x308f00 0x74ff00");
+	registercvar("cl_particle_cursed_flamejet_smoke_count", "3");
+	registercvar("cl_particle_cursed_flamejet_smoke_gravity", "-0.060000");
+	registercvar("cl_particle_cursed_flamejet_smoke_sizeincrease", "20");
+	registercvar("cl_particle_cursed_flamejet_smoke_size", "5 5");
+	registercvar("cl_particle_cursed_flamejet_smoke_tex", "48 55");
+	registercvar("cl_particle_cursed_flamejet_smoke_velocityjitter", "40 40 11");
+	registercvar("cl_particle_cursed_flamejet_smoke_velocitymultiplier", "30");
+
+	registercvar("cl_particle_cursed_flamejet_puff_type", "smoke");
+	registercvar("cl_particle_cursed_flamejet_puff_airfriction", "1.200000");
+	registercvar("cl_particle_cursed_flamejet_puff_alpha", "50 256 200");
+	registercvar("cl_particle_cursed_flamejet_puff_bounce", "1.500000");
+	registercvar("cl_particle_cursed_flamejet_puff_color", "0x308f00 0x74ff00");
+	registercvar("cl_particle_cursed_flamejet_puff_count", "2.500000");
+	registercvar("cl_particle_cursed_flamejet_puff_gravity", "-0.060000");
+	registercvar("cl_particle_cursed_flamejet_puff_sizeincrease", "20");
+	registercvar("cl_particle_cursed_flamejet_puff_size", "5 5");
+	registercvar("cl_particle_cursed_flamejet_puff_tex", "48 55");
+	registercvar("cl_particle_cursed_flamejet_puff_velocityjitter", "40 40 40");
+	registercvar("cl_particle_cursed_flamejet_puff_velocitymultiplier", "20");
+
+	registercvar("cl_particle_cursed_flamejet_cloud_type", "smoke");
+	registercvar("cl_particle_cursed_flamejet_cloud_airfriction", "0.300000");
+	registercvar("cl_particle_cursed_flamejet_cloud_alpha", "50 256 200");
+	registercvar("cl_particle_cursed_flamejet_cloud_bounce", "1.500000");
+	registercvar("cl_particle_cursed_flamejet_cloud_color", "0x308f00 0x74ff00");
+	registercvar("cl_particle_cursed_flamejet_cloud_count", "1.500000");
+	registercvar("cl_particle_cursed_flamejet_cloud_gravity", "-0.060000");
+	registercvar("cl_particle_cursed_flamejet_cloud_sizeincrease", "10");
+	registercvar("cl_particle_cursed_flamejet_cloud_size", "5 5");
+	registercvar("cl_particle_cursed_flamejet_cloud_tex", "48 55");
+	registercvar("cl_particle_cursed_flamejet_cloud_velocityjitter", "30 30 30");
+	registercvar("cl_particle_cursed_flamejet_cloud_velocitymultiplier", "10");
+
+	registercvar("cl_particle_cursed_flamejet_flame_type", "smoke");
+	registercvar("cl_particle_cursed_flamejet_flame_airfriction", "0.300000");
+	registercvar("cl_particle_cursed_flamejet_flame_alpha", "50 256 200");
+	registercvar("cl_particle_cursed_flamejet_flame_bounce", "1.500000");
+	registercvar("cl_particle_cursed_flamejet_flame_color", "0x308f00 0x74ff00");
+	registercvar("cl_particle_cursed_flamejet_flame_count", "2");
+	registercvar("cl_particle_cursed_flamejet_flame_gravity", "-0.060000");
+	registercvar("cl_particle_cursed_flamejet_flame_sizeincrease", "-10");
+	registercvar("cl_particle_cursed_flamejet_flame_size", "20 30");
+	registercvar("cl_particle_cursed_flamejet_flame_tex", "48 55");
+	registercvar("cl_particle_cursed_flamejet_flame_velocityjitter", "10 10 10");
+	registercvar("cl_particle_cursed_flamejet_flame_velocitymultiplier", "15");
+
+	registercvar("cl_particle_cursed_flamejet_sparks_type", "alphastatic");
+	registercvar("cl_particle_cursed_flamejet_sparks_airfriction", "1");
+	registercvar("cl_particle_cursed_flamejet_sparks_alpha", "256 256 90");
+	registercvar("cl_particle_cursed_flamejet_sparks_color", "0x000000 0x111111");
+	registercvar("cl_particle_cursed_flamejet_sparks_count", "0.500000");
+	registercvar("cl_particle_cursed_flamejet_sparks_originjitter", "10 10 10");
+	registercvar("cl_particle_cursed_flamejet_sparks_sizeincrease", "7");
+	registercvar("cl_particle_cursed_flamejet_sparks_size", "5 15");
+	registercvar("cl_particle_cursed_flamejet_sparks_tex", "0 8");
+	registercvar("cl_particle_cursed_flamejet_sparks_velocitymultiplier", "20");
+	registercvar("cl_particle_cursed_flamejet_sparks_velocityoffset", "0 0 10");
+}
+#endif

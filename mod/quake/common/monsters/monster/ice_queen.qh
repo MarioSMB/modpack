@@ -1,0 +1,26 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_ICE_QUEEN,                    1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was frozen solid by the Ice Queen"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ICE_QUEEN,               1,  NULL,           INFO_DEATH_SELF_MON_ICE_QUEEN,              CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ICE_QUEEN,           DEATH_SELF_MON_ICE_QUEEN,           DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_ICE_QUEEN, "progs/ice_queen.mdl");
+#endif
+
+CLASS(IceQueen, Monster)
+    ATTRIB(IceQueen, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_TYPE_BOSS);
+    ATTRIB(IceQueen, m_mins, vector, '-24 -24 -24');
+    ATTRIB(IceQueen, m_maxs, vector, '24 24 128');
+#ifdef GAMEQC
+    ATTRIB(IceQueen, m_model, Model, MDL_MON_ICE_QUEEN);
+    ATTRIB(IceQueen, m_model_head, Model, MDL_Null);
+    ATTRIB(IceQueen, m_sound, Sound, SND_Null);
+#endif
+    ATTRIB(IceQueen, netname, string, "ice_queen");
+    ATTRIB(IceQueen, m_name, string, _("Ice queen"));
+ENDCLASS(IceQueen)
+
+REGISTER_MONSTER(ICE_QUEEN, NEW(IceQueen));

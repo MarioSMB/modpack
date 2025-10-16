@@ -162,6 +162,11 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 						dz = this.origin.z - (targ.origin.z + 64);
 					else if(this.monsterdef == MON_GOLEM_HEAD)
 						dz = this.origin.z - (targ.origin.z + 250);
+					else if(this.monsterdef == MON_ICE_QUEEN)
+					{
+						dz = this.origin.z - (targ.origin.z + 72);
+						maxheight = 250; // never close in!
+					}
 					if(dz > maxheight)
 						neworg.z -= 8;
 					if(dz < 30)

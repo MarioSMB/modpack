@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_SPAZMATISM,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was fumigated by Spazmatism"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_SPAZMATISM,                1,  NULL,           INFO_DEATH_SELF_MON_SPAZMATISM,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_SPAZMATISM,            DEATH_SELF_MON_SPAZMATISM,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_SPAZMATISM, "progs/eoc.mdl");
+
+SOUND(MON_SPAZMATISM_SIGHT, "eoc/sight");
+#endif
+
+CLASS(Spazmatism, Monster)
+    ATTRIB(Spazmatism, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_HIDDEN);
+    ATTRIB(Spazmatism, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Spazmatism, m_maxs, vector, '32 32 48');
+#ifdef GAMEQC
+    ATTRIB(Spazmatism, m_model, Model, MDL_MON_SPAZMATISM);
+    ATTRIB(Spazmatism, m_model_head, Model, MDL_Null);
+    ATTRIB(Spazmatism, m_sound, Sound, SND_MON_SPAZMATISM_SIGHT);
+#endif
+    ATTRIB(Spazmatism, netname, string, "spazmatism");
+    ATTRIB(Spazmatism, m_name, string, _("Spazmatism"));
+    ATTRIB(Spazmatism, m_color, vector, '0.66 0.11 0.11');
+ENDCLASS(Spazmatism)
+
+REGISTER_MONSTER(SPAZMATISM, NEW(Spazmatism));

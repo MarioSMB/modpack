@@ -3658,7 +3658,7 @@ void SV_ParseClientCommand(entity this, string command)
 			return;
 		makevectors(this.v_angle);
 		traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 150, MOVE_NORMAL, this);
-		__pointparticles(_particleeffectnum(argv(1)), trace_endpos, '0 0 0', 1);
+		__pointparticles(_particleeffectnum(argv(1)), trace_endpos, stov(argv(2)), 1);
 		return;
 	}
 

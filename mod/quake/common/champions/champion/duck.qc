@@ -37,7 +37,8 @@ void Duck_ShootGrapes(entity this)
 {
 	for(int j = 0; j < 5; ++j)
 	{
-		entity grape = new(grape_delayed);
+		entity grape = spawn();
+		grape.classname = "grape_delayed";
 		grape.owner = this;
 		setthink(grape, grape_launch);
 		grape.nextthink = time + (0.25 * j);
