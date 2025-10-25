@@ -190,7 +190,12 @@ void boss_shocka5(entity this) { set_animofs(this, anim_boss_shocka, 5, boss_sho
 void boss_shocka4(entity this) { set_animofs(this, anim_boss_shocka, 4, boss_shocka5); }
 void boss_shocka3(entity this) { set_animofs(this, anim_boss_shocka, 3, boss_shocka4); }
 void boss_shocka2(entity this) { set_animofs(this, anim_boss_shocka, 2, boss_shocka3); }
-void boss_shocka1(entity this) { set_animofs(this, anim_boss_shocka, 1, boss_shocka2); }
+void boss_shocka1(entity this)
+{
+	set_animofs(this, anim_boss_shocka, 1, boss_shocka2);
+	if(this.spawnflags & BOSS_KILLABLE)
+		this.is_frozen = true; // prevent damage while performing animation, avoids skipping phases
+}
 
 void boss_shockb10(entity this)
 {
@@ -209,7 +214,12 @@ void boss_shockb5(entity this) { set_animofs(this, anim_boss_shockb, 5, boss_sho
 void boss_shockb4(entity this) { set_animofs(this, anim_boss_shockb, 4, boss_shockb5); }
 void boss_shockb3(entity this) { set_animofs(this, anim_boss_shockb, 3, boss_shockb4); }
 void boss_shockb2(entity this) { set_animofs(this, anim_boss_shockb, 2, boss_shockb3); }
-void boss_shockb1(entity this) { set_animofs(this, anim_boss_shockb, 1, boss_shockb2); }
+void boss_shockb1(entity this)
+{
+	set_animofs(this, anim_boss_shockb, 1, boss_shockb2);
+	if(this.spawnflags & BOSS_KILLABLE)
+		this.is_frozen = true; // prevent damage while performing animation, avoids skipping phases
+}
 
 void boss_death1(entity this);
 
@@ -555,19 +565,20 @@ void boss_pain(entity this, entity attacker, float damage, int deathtype)
 		return;
 	
 	float priorhealth = this.health + damage;
-	LOG_DEBUGF("prior health: %d\ncurrent health: %d", priorhealth, this.health);
+	//LOG_DEBUGF("prior health: %d\ncurrent health: %d", priorhealth, this.health);
 	
 	// check if first hit
 	if(priorhealth == this.max_health && this.health < this.max_health)
 	{
-		LOG_DEBUG("FIRST HIT!");
+		//LOG_DEBUG("FIRST HIT!");
 		boss_shockz1(this);
 		SUB_UseTargets(this, NULL, NULL);
+		return;
 	}
 	// check if crossed 1/3 threshold
 	if((this.health < (this.max_health/3)) && (priorhealth > (this.max_health/3)))
 	{
-		LOG_DEBUG("CROSSED 1/3 MARK!");
+		//LOG_DEBUG("CROSSED 1/3 MARK!");
 		boss_shockb1(this);
 		SUB_UseTargets(this, NULL, NULL); // Yoder add, Dec 16 2020
 		return;
@@ -576,7 +587,7 @@ void boss_pain(entity this, entity attacker, float damage, int deathtype)
 	// check if crossed 2/3 threshold
 	if((this.health < (this.max_health * 2/3)) && (priorhealth > this.max_health * 2/3))
 	{
-		LOG_DEBUG("CROSSED 2/3 MARK!");
+		//LOG_DEBUG("CROSSED 2/3 MARK!");
 		boss_shocka1(this);
 		SUB_UseTargets(this, NULL, NULL); // Yoder add, Dec 16 2020
 		return;
