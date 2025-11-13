@@ -1770,13 +1770,14 @@ void W_WeaponFrame(entity this, .entity weaponentity)
 		if(wep != WEP_Null)
 		{
 			makevectors(this.v_angle); // calculate forward angle for velocity
-			if(this.button0 && wep.wr_checkammo1(wep, this, weaponentity))
+			if(this.button0 && wep.wr_checkammo1 && wep.wr_checkammo1(wep, this, weaponentity))
 			{
 				SuperDamageSound(this);
 				if(!(wep.spawnflags & WEP_FLAG_NOAGGRO)) // allow stealthy slices!
 					W_Attack(this, false);
 			}
-			wep.wr_think(wep, this, weaponentity, this.button0 | (this.button3 << 1));
+			if(wep.wr_think)
+				wep.wr_think(wep, this, weaponentity, this.button0 | (this.button3 << 1));
 		}
 	}
 
