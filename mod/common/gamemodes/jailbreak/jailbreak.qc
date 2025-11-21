@@ -219,7 +219,6 @@ bool JB_JailIsOpen(int theteam);
 void JB_ActivateCamera(int theteam);
 void JB_TorturePrisonersLater(int theteam, float thedelay);
 
-#define JB_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(jb_teams))
 bool JB_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -299,21 +298,11 @@ bool JB_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	JB_count_alive_players();
-	if(JB_ALIVE_TEAMS_OK())
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
+	missing_teams_mask = 0;
+	if(Team_GetNumberOfAliveTeams() == NumTeams(jb_teams))
 		return true;
-	}
 	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return false;
-	}
-	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		if ((jb_teams & Team_IndexToBit(i)) &&
@@ -323,10 +312,7 @@ bool JB_CheckTeams()
 		}
 	}
 	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
-	}
 	return false;
 }
 

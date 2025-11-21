@@ -181,7 +181,7 @@ bool Arena_CheckPlayers()
 	if(prev_numspawned != numspawned && numspawned == 1)
 	{
 		if(maxspawned - numspawned > 0)
-			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_PLAYERS, maxspawned - numspawned);
+			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, COUNTDOWN_STOP_MINPLAYERS, maxspawned - numspawned);
 		prev_numspawned = numspawned;
 	}
 

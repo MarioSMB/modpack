@@ -58,8 +58,8 @@ enum {
     MSG_CENTER_NOTIF(SNAFU_ROUND_WON,                   1,      0, 4, "f1 f2 f3 f4",    CPID_SNAFU,             "5 0",  _("^K1Congratulations!\n^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"), "")
 
     MULTITEAM_CENTER(VIP_BEGIN,                         1,      0, 0, "",               CPID_VIP,               "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "", NAME)
-	MSG_CENTER_NOTIF(VIP_MISSING,                       1,      0, 0, "",               CPID_MISSING_TEAMS,     "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "")
-	MSG_CENTER_NOTIF(VIP_MISSING_ENEMY,                 1,      0, 0, "",               CPID_MISSING_TEAMS,     "0 0",  _("^BGWaiting for an enemy VIP"), "")
+	MSG_CENTER_NOTIF(VIP_MISSING,                       1,      0, 0, "",               CPID_VIP,               "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "")
+	MSG_CENTER_NOTIF(VIP_MISSING_ENEMY,                 1,      0, 0, "",               CPID_VIP,               "0 0",  _("^BGWaiting for an enemy VIP"), "")
 	MSG_CENTER_NOTIF(VIP_DROP,                          1,      1, 0, "s1",             CPID_VIP,               "0 0",  _("^BG%s^F2 is no longer a VIP!"), "")
 	MSG_CENTER_NOTIF(VIP_DROP_PUNISH,                   1,      0, 1, "f1secs",         CPID_VIP,               "0 0", _("^BGToo many dropped gems! Dropping disabled for %s."), "")
 	MSG_CENTER_NOTIF(VIP_DROP_SELF,                     1,      0, 0, "",               CPID_VIP,               "0 0",  _("^F2You are no longer a VIP!"), "")
