@@ -18,6 +18,7 @@
 #include "radio/module.inc"
 #include "special.qc"
 #include "weapons.qc"
+#include "dadjokes.qc"
 
 #define IMPLEMENTATION
 #include "gamemodes/all.inc"

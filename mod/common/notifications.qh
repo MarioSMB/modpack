@@ -18,6 +18,8 @@ enum {
     MULTITEAM_INFO(CONQUEST_CAPTURE,                        1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was captured by the ^TC^TT^BG team"), "", NAME)
     MULTITEAM_INFO(CONQUEST_LIBERATE,                       1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was liberated from the ^TC^TT^BG team"), "", NAME)
 
+    MSG_INFO_NOTIF(DADJOKE,                                 2,  1, 0, "s1", "",         "",     _("^F2[Dad Joke] ^BG%s"), "")
+
     MSG_INFO_NOTIF(DOTC_CORE_DESTROYED,                     1,  1, 0, "s1", "",         "",     _("^BG%s^BG has been destroyed"), "")
     MSG_INFO_NOTIF(DOTC_CORE_UPGRADE,                       1,  1, 1, "s1 f1", "",      "",     _("^BG%s^BG has been upgraded to level ^F4%s^BG!"), "")
 
