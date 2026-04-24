@@ -4,12 +4,19 @@ TARGET_ALL=0
 CLEAN_BUILD=0
 MAKE_TARGETS=("qc")
 
+if [[ "$CI" == "true" ]]; then
+  INIT_SUBMODULES=0
+else
+  INIT_SUBMODULES=1
+fi
+
 usage() {
   echo "build.sh [-c|--clean] [-a|-all]"
   echo
   echo " -c | --clean    Remove the build artifacts and rebuild."
   echo " -a | --all      Build both qc and pk3 targets."
   echo " -h | --help     Show this message."
+  echo " --no-init       Don't bother initializing submodules. (For CI Only)"
   echo
   echo "NOTE: Default target is 'qc' only."
 }
@@ -37,6 +44,9 @@ for i in "${arguments[@]}"; do
     usage
     exit 0
     ;;
+  --no-init)
+    INIT_SUBMODULES=0
+    ;;
   *)
     echo "Unknown flag: '$i' ... aborting"
     exit 1
@@ -52,11 +62,15 @@ else
 fi
 
 if [[ ! -f "gmqcc/.git" ]]; then
-  echo "=> Submodule gmqcc not initialized..."
-  echo "=> Creating partial clone... (with --filter=blob:none)"
-  if ! git submodule update --init --filter=blob:none gmqcc; then
-    echo " -> Failed to initialize gmqcc submodule... aborting"
-    exit 1
+  if ((INIT_SUBMODULES == 1)); then
+    echo "=> Submodule gmqcc not initialized..."
+    echo "=> Creating partial clone... (with --filter=blob:none)"
+    if ! git submodule update --init --filter=blob:none gmqcc; then
+      echo " -> Failed to initialize gmqcc submodule... aborting"
+      exit 1
+    fi
+  else
+    echo "=> Skipping gmqcc initialization... (running in CI)"
   fi
 else
   echo "=> Submodule gmqcc already initialized."
@@ -81,11 +95,15 @@ if [[ ! -d "build/${CURRENT_BRANCH}" ]]; then
 fi
 
 if [[ ! -f "xonotic/.git" ]]; then
-  echo "=> Submodule xonotic not initialized..."
-  echo "=> Creating partial clone... (with --filter=blob:none)"
-  if ! git submodule update --init --filter=blob:none xonotic; then
-    echo " -> Failed to initialize xonotic submodule... aborting"
-    exit 1
+  if ((INIT_SUBMODULES == 1)); then
+    echo "=> Submodule xonotic not initialized..."
+    echo "=> Creating partial clone... (with --filter=blob:none)"
+    if ! git submodule update --init --filter=blob:none xonotic; then
+      echo " -> Failed to initialize xonotic submodule... aborting"
+      exit 1
+    fi
+  else
+    echo "=> Skipping xonotic submodule initialization... (running in CI)"
   fi
 else
   echo "=> Submodule xonotic already initialized."

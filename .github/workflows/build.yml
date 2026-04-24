@@ -22,13 +22,13 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Initialize Sumbodules
+      - name: Initialize xonotic submodule
         # Create a small clone, with full history to improve workflow speed.
         # For example, original size of xonotic-data.pk3dir is ~4GB
         # with: git submodules update --init --filter=blob:none xonotic
         # The size is reduced to ~700MB
         # https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
-        run: git submodule update --init --filter=blob:none gmqcc xonotic
+        run: git submodule update --init --filter=blob:none xonotic
 
       - name: Get gmqcc Commit ID
         id: get-gmqcc-commit-id
@@ -40,6 +40,10 @@ jobs:
         with:
           path: gmqcc/gmqcc
           key: ${{ runner.os }}-gmqcc-bin-${{ steps.get-gmqcc-commit-id.outputs.GMQCC_SHA }}
+
+      - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
+        name: Initialize gmqcc submodule
+        run: git submodule update --init --filter=blob:none gmqcc
 
       - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
         name: Compile gmqcc Binary
