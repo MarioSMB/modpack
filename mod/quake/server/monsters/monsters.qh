@@ -2,6 +2,7 @@
 
 int autocvar_sv_quake_bossbars = 2; // 1: waypoint 2: fancy bar on screen
 bool autocvar_sv_quake_monsterfix;
+string autocvar_sv_quake_nonightmare = "bored2_fw eod7 zigisp1 markiesm1 r2m1 hip2m4 r1m2 mcj_higo hcmsp1";
 
 .bool charmed;
 .entity charmer;
