@@ -162,8 +162,11 @@ void HUD_Mod_PH_Draw(vector myPos, vector mySize, int layout)
 }
 
 // Prop Hunt HUD modicons
-void HUD_Mod_PH(vector myPos, vector mySize)
+void HUD_Mod_PH(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // required in each mod function that always shows something
 
 	HUD_Mod_PH_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);

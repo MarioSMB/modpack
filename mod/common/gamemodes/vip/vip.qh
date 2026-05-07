@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef CSQC
-void HUD_Mod_VIP(vector pos, vector mySize);
+void HUD_Mod_VIP(vector pos, vector mySize, bool should_draw);
 void HUD_Mod_VIP_Reset();
 #endif
 CLASS(VIP, Gametype)
@@ -36,7 +36,7 @@ CLASS(VIP, Gametype)
         return false;
     }
 #ifdef CSQC
-    ATTRIB(VIP, m_modicons, void(vector pos, vector mySize), HUD_Mod_VIP);
+    ATTRIB(VIP, m_modicons, void(vector pos, vector mySize, bool should_draw), HUD_Mod_VIP);
     ATTRIB(VIP, m_modicons_reset, void(), HUD_Mod_VIP_Reset);
 #endif
 ENDCLASS(VIP)

@@ -722,8 +722,11 @@ void HUD_Mod_VIP_Reset(void)
 {
 	redvip_prevstatus = bluevip_prevstatus = yellowvip_prevstatus = pinkvip_prevstatus = redvip_prevframe = bluevip_prevframe = yellowvip_prevframe = pinkvip_prevframe = redvip_statuschange_time = bluevip_statuschange_time = yellowvip_statuschange_time = pinkvip_statuschange_time = 0;
 }
-void HUD_Mod_VIP(vector pos, vector mySize)
+void HUD_Mod_VIP(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+	
 	vector redvip_pos, bluevip_pos, yellowvip_pos, pinkvip_pos;
 	vector vip_size;
 	vector e1, e2;

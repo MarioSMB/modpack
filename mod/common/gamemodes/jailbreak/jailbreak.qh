@@ -24,7 +24,7 @@ CLASS(Jailbreak, Gametype)
             MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
 #ifdef CSQC
-    ATTRIB(Jailbreak, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+    ATTRIB(Jailbreak, m_modicons, void(vector pos, vector mySize, bool should_draw), HUD_Mod_CA);
 #endif
 ENDCLASS(Jailbreak)
 REGISTER_GAMETYPE(JAILBREAK, NEW(Jailbreak));
