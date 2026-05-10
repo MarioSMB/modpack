@@ -52,7 +52,7 @@ AUTOCVAR_SAVE(cl_polytrails_electro_bolt_tail_color, vector, '0.1 0.1 0.75', "")
 AUTOCVAR_SAVE(cl_polytrails_electro_bolt_tail_thickness, float, 0, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_bolt_lifetime, float, 0.27, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_bolt_segmentsize, float, 10, "");
-AUTOCVAR_SAVE(cl_polytrails_electro_bolt_noise, float, 5, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_bolt_noise, float, 25, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_bolt_noisefunc, string, "chaotic", "");
 CLASS(ElectroBoltTrail, PolyTrail)
     ATTRIB(ElectroBoltTrail, polytrail_tex, string, "particles/lgbeam.tga");
@@ -83,7 +83,7 @@ AUTOCVAR_SAVE(cl_polytrails_electro_orb_tail_color, vector, '0.1 0.1 0.7', "");
 AUTOCVAR_SAVE(cl_polytrails_electro_orb_tail_thickness, float, 0, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_orb_lifetime, float, 0.18, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_orb_segmentsize, float, 10, "");
-AUTOCVAR_SAVE(cl_polytrails_electro_orb_noise, float, 10, "");
+AUTOCVAR_SAVE(cl_polytrails_electro_orb_noise, float, 0, "");
 AUTOCVAR_SAVE(cl_polytrails_electro_orb_noisefunc, string, "chaotic", "");
 CLASS(ElectroOrbTrail, PolyTrail)
     ATTRIB(ElectroOrbTrail, polytrail_tex, string, "particles/lgbeam.tga");
