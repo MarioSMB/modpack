@@ -250,6 +250,18 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 		}
 		return true;
 	}
+
+	if(cmd_name == "tracer")
+	{
+		if(!autocvar_sv_cheats && !player.maycheat)
+			return;
+		makevectors(player.v_angle);
+		traceline(player.origin + player.view_ofs, player.origin + player.view_ofs + v_forward * 300, MOVE_NORMAL, player);
+		sprint(player, strcat("Texture: ", trace_dphittexturename, "\n"));
+		sprint(player, strcat("Texture flag: ", ftos(trace_dphitq3surfaceflags), "\n"));
+		sprint(player, sprintf("Entity: %s (%d)\n", trace_ent.classname, etof(trace_ent)));
+		return;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)

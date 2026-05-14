@@ -3,6 +3,20 @@
 #include "polytrails.qh"
 #include "polytrails_weapons.qh"
 
+vector polytrail_noise_swirl(vector from, vector to, float csize)
+{
+    vector dir = normalize(from - to);
+
+    vector _forward, right, up;
+    VECTOR_VECTORS(dir, _forward, right, up);
+
+    float angle_step = 2 * csize * M_PI * time;
+
+    vector out = right * cos(angle_step) * csize + up * sin(angle_step) * csize;
+
+    return out;
+}
+
 #define POLYTRAIL_SEEK(_p, _rel) ((POLYTRAIL_BUFSIZE + (_p).polytrail_bufidx + (_rel)) % POLYTRAIL_BUFSIZE)
 void Trail_draw(entity this)
 {
@@ -32,6 +46,7 @@ void Trail_draw(entity this)
                 default:
                 case "none": this.polytrail_bufnoise[i] = '0 0 0'; break;
                 case "chaotic": this.polytrail_bufnoise[i] = randompos(f * '-1 -1 -1', f * '1 1 1'); break;
+                case "swirl": this.polytrail_bufnoise[i] = polytrail_noise_swirl(this.polytrail_bufpos[this.polytrail_bufidx], this.polytrail_bufpos[i], f); break;
             }
             this.polytrail_buftime[i] = time;
             this.polytrail_bufidx = i;
