@@ -494,7 +494,7 @@ MUTATOR_HOOKFUNCTION(cl_drones, Ent_Projectile)
 	entity proj = M_ARGV(0, entity);
 
 #define HANDLE(id) case PROJECTILE_##id: setmodel(proj, MDL_PROJECTILE_##id);
-	switch(proj.cnt)
+	switch(proj.csqcprojectile_type)
 	{
 		HANDLE(DOTC_DRONE_SCOUT)   proj.traileffect = EFFECT_Null.m_id; return true;
 		HANDLE(DOTC_DRONE_LTANK)   proj.traileffect = EFFECT_Null.m_id; return true;
@@ -510,7 +510,7 @@ MUTATOR_HOOKFUNCTION(cl_drones, EditProjectile)
 {
 	entity proj = M_ARGV(0, entity);
 
-	switch(proj.cnt)
+	switch(proj.csqcprojectile_type)
 	{
 		case PROJECTILE_DOTC_DRONE_SCOUT:
 			break;

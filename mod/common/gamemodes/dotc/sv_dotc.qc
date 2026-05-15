@@ -101,7 +101,7 @@ void fix_mins_maxs_for_rotating(entity e)
 void dotc_count_cores()
 {
 	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
@@ -126,7 +126,7 @@ int dotc_GetWinnerTeam()
 	{
 		winner_team = NUM_TEAM_1;
 	}
-	for (int i = 2; i <= NUM_TEAMS; ++i)
+	for (int i = 2; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
 		{
