@@ -3,6 +3,7 @@
 TARGET_ALL=0
 CLEAN_BUILD=0
 MAKE_TARGETS=("qc")
+FILTER_FLAGS="--filter=blob:none"
 
 if [[ "$CI" == "true" ]]; then
   INIT_SUBMODULES=0
@@ -16,6 +17,7 @@ usage() {
   echo " -c | --clean    Remove the build artifacts and rebuild."
   echo " -a | --all      Build both qc and pk3 targets."
   echo " -h | --help     Show this message."
+  echo " --no-filter     Don't use --filter flag when initializing submodules"
   echo " --no-init       Don't bother initializing submodules. (For CI Only)"
   echo
   echo "NOTE: Default target is 'qc' only."
@@ -47,6 +49,9 @@ for i in "${arguments[@]}"; do
   --no-init)
     INIT_SUBMODULES=0
     ;;
+  -nf | --no-filter)
+    FILTER_FLAGS=""
+    ;;
   *)
     echo "Unknown flag: '$i' ... aborting"
     exit 1
@@ -64,8 +69,7 @@ fi
 if [[ ! -f "gmqcc/.git" ]]; then
   if ((INIT_SUBMODULES == 1)); then
     echo "=> Submodule gmqcc not initialized..."
-    echo "=> Creating partial clone... (with --filter=blob:none)"
-    if ! git submodule update --init --filter=blob:none gmqcc; then
+    if ! git submodule update --init $FILTER_FLAGS gmqcc; then
       echo " -> Failed to initialize gmqcc submodule... aborting"
       exit 1
     fi
@@ -97,8 +101,7 @@ fi
 if [[ ! -f "xonotic/.git" ]]; then
   if ((INIT_SUBMODULES == 1)); then
     echo "=> Submodule xonotic not initialized..."
-    echo "=> Creating partial clone... (with --filter=blob:none)"
-    if ! git submodule update --init --filter=blob:none xonotic; then
+    if ! git submodule update --init $FILTER_FLAGS xonotic; then
       echo " -> Failed to initialize xonotic submodule... aborting"
       exit 1
     fi
