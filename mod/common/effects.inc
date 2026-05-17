@@ -82,3 +82,47 @@ STATIC_INIT(Effect_TR_ROCKET)
 	registercvar("cl_particle_TR_ROCKET_sparks_velocitymultiplier", "-0.310000");
 }
 #endif
+
+#ifdef CSQC
+STATIC_INIT(Effect_tr_hagar)
+{
+	registercvar("cl_particle_tr_hagar", "smoke puff bubbles");
+
+	registercvar("cl_particle_tr_hagar_smoke_type", "smoke");
+	registercvar("cl_particle_tr_hagar_smoke_alpha", "300 400 780");
+	registercvar("cl_particle_tr_hagar_smoke_bounce", "1");
+	registercvar("cl_particle_tr_hagar_smoke_color", "0x101010 0x000000");
+	registercvar("cl_particle_tr_hagar_smoke_originjitter", "1 1 1");
+	registercvar("cl_particle_tr_hagar_smoke_sizeincrease", "10");
+	registercvar("cl_particle_tr_hagar_smoke_size", "3 2");
+	registercvar("cl_particle_tr_hagar_smoke_teamcolor", "2");
+	registercvar("cl_particle_tr_hagar_smoke_tex", "0 8");
+	registercvar("cl_particle_tr_hagar_smoke_trailspacing", "4");
+	registercvar("cl_particle_tr_hagar_smoke_velocityjitter", "1 1 1");
+	registercvar("cl_particle_tr_hagar_smoke_velocitymultiplier", "-0.020000");
+
+	registercvar("cl_particle_tr_hagar_puff_type", "static");
+	registercvar("cl_particle_tr_hagar_puff_airfriction", "8");
+	registercvar("cl_particle_tr_hagar_puff_alpha", "100 144 988");
+	registercvar("cl_particle_tr_hagar_puff_color", "0xffdf72 0x811200");
+	registercvar("cl_particle_tr_hagar_puff_notunderwater", "1");
+	registercvar("cl_particle_tr_hagar_puff_sizeincrease", "-15");
+	registercvar("cl_particle_tr_hagar_puff_size", "5 2");
+	registercvar("cl_particle_tr_hagar_puff_tex", "48 55");
+	registercvar("cl_particle_tr_hagar_puff_trailspacing", "4");
+	registercvar("cl_particle_tr_hagar_puff_velocityjitter", "32 32 32");
+	registercvar("cl_particle_tr_hagar_puff_velocitymultiplier", "-1");
+
+	registercvar("cl_particle_tr_hagar_bubbles_type", "bubble");
+	registercvar("cl_particle_tr_hagar_bubbles_alpha", "256 256 256");
+	registercvar("cl_particle_tr_hagar_bubbles_bounce", "1.500000");
+	registercvar("cl_particle_tr_hagar_bubbles_color", "0x404040 0x808080");
+	registercvar("cl_particle_tr_hagar_bubbles_gravity", "-0.125000");
+	registercvar("cl_particle_tr_hagar_bubbles_liquidfriction", "4");
+	registercvar("cl_particle_tr_hagar_bubbles_size", "1 1");
+	registercvar("cl_particle_tr_hagar_bubbles_tex", "62 62");
+	registercvar("cl_particle_tr_hagar_bubbles_trailspacing", "16");
+	registercvar("cl_particle_tr_hagar_bubbles_underwater", "1");
+	registercvar("cl_particle_tr_hagar_bubbles_velocityjitter", "16 16 16");
+}
+#endif
