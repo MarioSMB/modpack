@@ -1,0 +1,72 @@
+name: Test Build Against QC Master Daily
+on:
+  schedule:
+    - cron: "19 0 * * *"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for Running"
+        required: false
+        default: "Manual Check"
+
+jobs:
+  test-build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Create partial clone
+          # See: https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
+          filter: blob:none
+          submodules: false
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Initialize xonotic submodule
+        # Create a small clone, with full history to improve workflow speed.
+        # For example, original size of xonotic-data.pk3dir is ~4GB
+        # with: git submodules update --init --filter=blob:none xonotic
+        # The size is reduced to ~700MB
+        # https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
+        run: |
+          git submodule update --init --filter=blob:none xonotic
+          git -C xonotic checkout master
+          git -C xonotic pull origin master
+
+      - name: Get gmqcc Commit ID
+        id: get-gmqcc-commit-id
+        run: echo "GMQCC_SHA=$(git rev-parse :gmqcc)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache gmqcc Binary
+        id: cache-gmqcc
+        uses: actions/cache@v4
+        with:
+          path: gmqcc/gmqcc
+          key: ${{ runner.os }}-gmqcc-bin-${{ steps.get-gmqcc-commit-id.outputs.GMQCC_SHA }}
+
+      - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
+        name: Initialize gmqcc submodule
+        run: git submodule update --init --filter=blob:none gmqcc
+
+      - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
+        name: Compile gmqcc Binary
+        run: make -C gmqcc -j$(nproc)
+
+      - name: Build Progs
+        run: ./build.sh -a
+
+      - name: Generate Artifact Name
+        run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          VERSION_TAG=$(git describe --tags --dirty="~" --always)
+          echo "CURRENT_BRANCH=${CURRENT_BRANCH}" >> "$GITHUB_ENV"
+          echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
+          echo "ARTIFACT_NAME=progs-${CURRENT_BRANCH}-${VERSION_TAG}" >> "$GITHUB_ENV"
+
+      # Upload the files in build folder
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: build/${{ env.CURRENT_BRANCH }}
