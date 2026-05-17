@@ -139,7 +139,6 @@ STATIC_INIT(Effect_TR_GRENADE)
 	registercvar("cl_particle_TR_GRENADE_smoke_originjitter", "1 1 1");
 	registercvar("cl_particle_TR_GRENADE_smoke_sizeincrease", "10");
 	registercvar("cl_particle_TR_GRENADE_smoke_size", "3 2");
-	registercvar("cl_particle_TR_GRENADE_smoke_teamcolor", "2");
 	registercvar("cl_particle_TR_GRENADE_smoke_tex", "0 8");
 	registercvar("cl_particle_TR_GRENADE_smoke_trailspacing", "4");
 	registercvar("cl_particle_TR_GRENADE_smoke_velocityjitter", "1 1 1");
@@ -152,6 +151,7 @@ STATIC_INIT(Effect_TR_GRENADE)
 	registercvar("cl_particle_TR_GRENADE_puff_notunderwater", "1");
 	registercvar("cl_particle_TR_GRENADE_puff_sizeincrease", "-15");
 	registercvar("cl_particle_TR_GRENADE_puff_size", "5 2");
+	registercvar("cl_particle_TR_GRENADE_puff_teamcolor", "2");
 	registercvar("cl_particle_TR_GRENADE_puff_tex", "48 55");
 	registercvar("cl_particle_TR_GRENADE_puff_trailspacing", "4");
 	registercvar("cl_particle_TR_GRENADE_puff_velocityjitter", "32 32 32");
