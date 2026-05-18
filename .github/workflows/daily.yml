@@ -56,17 +56,17 @@ jobs:
       - name: Build Progs
         run: ./build.sh -a
 
-      - name: Generate Artifact Name
-        run: |
-          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-          VERSION_TAG=$(git describe --tags --dirty="~" --always)
-          echo "CURRENT_BRANCH=${CURRENT_BRANCH}" >> "$GITHUB_ENV"
-          echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
-          echo "ARTIFACT_NAME=progs-${CURRENT_BRANCH}-${VERSION_TAG}" >> "$GITHUB_ENV"
-
-      # Upload the files in build folder
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: build/${{ env.CURRENT_BRANCH }}
+      # - name: Generate Artifact Name
+      #   run: |
+      #     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      #     VERSION_TAG=$(git describe --tags --dirty="~" --always)
+      #     echo "CURRENT_BRANCH=${CURRENT_BRANCH}" >> "$GITHUB_ENV"
+      #     echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
+      #     echo "ARTIFACT_NAME=progs-${CURRENT_BRANCH}-${VERSION_TAG}" >> "$GITHUB_ENV"
+      #
+      # # Upload the files in build folder
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: ${{ env.ARTIFACT_NAME }}
+      #     path: build/${{ env.CURRENT_BRANCH }}
