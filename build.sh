@@ -12,13 +12,13 @@ else
 fi
 
 usage() {
-  echo "build.sh [-c|--clean] [-a|-all]"
+  echo "build.sh [-c|--clean] [-a|-all] [-nf|--no-filter] [-ni|--no-init] [-h|--help]"
   echo
-  echo " -c | --clean    Remove the build artifacts and rebuild."
-  echo " -a | --all      Build both qc and pk3 targets."
-  echo " -h | --help     Show this message."
-  echo " --no-filter     Don't use --filter flag when initializing submodules"
-  echo " --no-init       Don't bother initializing submodules. (For CI Only)"
+  echo " -c  | --clean          Remove compiled .dat and .pk3 file before rebuilding."
+  echo " -a  | --all            Build both qc and pk3 targets."
+  echo " -h  | --help           Show this message."
+  echo " -nf | --no-filter      Don't use --filter flag when initializing submodules."
+  echo " -ni | --no-init        Skip initializing submodules, manual initialization."
   echo
   echo "NOTE: Default target is 'qc' only."
 }
@@ -46,7 +46,7 @@ for i in "${arguments[@]}"; do
     usage
     exit 0
     ;;
-  --no-init)
+  -ni | --no-init)
     INIT_SUBMODULES=0
     ;;
   -nf | --no-filter)
@@ -66,18 +66,19 @@ else
   echo "=> Current Branch is ${CURRENT_BRANCH}"
 fi
 
-if [[ ! -f "gmqcc/.git" ]]; then
-  if ((INIT_SUBMODULES == 1)); then
-    echo "=> Submodule gmqcc not initialized..."
+submodule_gmqcc_status=$(git submodule status gmqcc | awk '{ print $1 }')
+if ((INIT_SUBMODULES == 1)); then
+  if [[ "${submodule_gmqcc_status:0:1}" == "+" || "${submodule_gmqcc_status:0:1}" == "-" ]]; then
+    echo "=> Submodule gmqcc not initialized... (commit: ${submodule_gmqcc_status})"
     if ! git submodule update --init $FILTER_FLAGS gmqcc; then
       echo " -> Failed to initialize gmqcc submodule... aborting"
       exit 1
     fi
   else
-    echo "=> Skipping gmqcc initialization... (running in CI)"
+    echo "=> Submodule gmqcc already initialized. (commit: ${submodule_gmqcc_status})"
   fi
 else
-  echo "=> Submodule gmqcc already initialized."
+  echo "=> Skipping gmqcc initialization... (commit: ${submodule_gmqcc_status})"
 fi
 
 if [[ ! -f "gmqcc/gmqcc" ]]; then
@@ -98,18 +99,19 @@ if [[ ! -d "build/${CURRENT_BRANCH}" ]]; then
   fi
 fi
 
-if [[ ! -f "xonotic/.git" ]]; then
-  if ((INIT_SUBMODULES == 1)); then
-    echo "=> Submodule xonotic not initialized..."
+submodule_xonotic_status=$(git submodule status xonotic | awk '{ print $1 }')
+if ((INIT_SUBMODULES == 1)); then
+  if [[ "${submodule_xonotic_status:0:1}" == "+" || "${submodule_xonotic_status:0:1}" == "-" ]]; then
+    echo "=> Submodule xonotic not initialized... (commit: ${submodule_xonotic_status})"
     if ! git submodule update --init $FILTER_FLAGS xonotic; then
       echo " -> Failed to initialize xonotic submodule... aborting"
       exit 1
     fi
   else
-    echo "=> Skipping xonotic submodule initialization... (running in CI)"
+    echo "=> Submodule xonotic already initialized. (commit: ${submodule_xonotic_status})"
   fi
 else
-  echo "=> Submodule xonotic already initialized."
+  echo "=> Skipping xonotic submodule initialization... (commit: ${submodule_xonotic_status})"
 fi
 
 export XONOTIC=${XONOTIC:-1}
