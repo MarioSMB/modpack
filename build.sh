@@ -11,6 +11,8 @@ else
   INIT_SUBMODULES=1
 fi
 
+set -eu
+
 usage() {
   echo "build.sh [-c|--clean] [-a|-all] [-nf|--no-filter] [-ni|--no-init] [-h|--help]"
   echo
@@ -58,6 +60,8 @@ for i in "${arguments[@]}"; do
     ;;
   esac
 done
+
+cd "${0%/*}"
 
 if ! CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"; then
   echo "=> Failed to parse git branch name... aborting"
