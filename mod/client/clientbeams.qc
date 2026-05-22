@@ -157,7 +157,7 @@ void FireClientBeam(entity rlplayer, entity wepent, vector start, vector end, bo
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((e.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), e.vorg1, e.vorg2, 1, PARTICLES_USECOLOR);
+		WarpZone_TrailParticles_WithMultiplier(NULL, ((e.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM), e.vorg1, e.vorg2, 1, PARTICLES_USECOLOR);
 
 		e.draw = func_null;
 		e.drawmask = MASK_NORMAL;
@@ -314,9 +314,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		}
 
 		if(autocvar_cl_particles_oldvortexbeam)
-			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
+			WarpZone_TrailParticles_WithMultiplier(NULL, EFFECT_VORTEX_BEAM_OLD, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
 		else
-			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
+			WarpZone_TrailParticles_WithMultiplier(NULL, EFFECT_VORTEX_BEAM, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), 1, eff_flags);
 	}
 	else if(wep.activeweapon == WEP_VAPORIZER)
 		FireClientBeam(rlplayer, wep, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), hit);
