@@ -526,6 +526,8 @@ void BuildTool_Fire(entity actor)
 						Send_Effect(EFFECT_RUNE_FROST_REGEN, trace_ent.origin, '0 0 0', 1);
 						_sound(trace_ent, CH_TRIGGER_SINGLE, "td/upgrade.wav", 1, ATTEN_NORM);
 						actor.attack_finished = time + 0.5;
+						if(IS_PLAYER(actor))
+							actor.score_upgrades += 1;
 					}
 					else
 					{
