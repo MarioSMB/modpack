@@ -18,7 +18,7 @@ void SniperBeam_Draw(entity this)
 {
 	float fail = this.nextthink - time;
 
-	Draw_CylindricLine(this.vorg1, this.vorg2, 8, "particles/lgbeam", 0.25, 0, '1 1 1', bound(0, fail, 1), DRAWFLAG_NORMAL, view_origin);
+	Draw_CylindricLine(this.vorg1, this.vorg2, 8, "particles/gauntletbeam", 0.25, 0, '1 1 1', bound(0, fail, 1), DRAWFLAG_NORMAL, view_origin);
 }
 
 NET_HANDLE(TE_CSQC_SNIPERBEAM, bool isNew)
