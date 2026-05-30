@@ -59,7 +59,7 @@ void T_ShockTouch(entity this, entity toucher)
 		delete(this);
 		return;
 	}
-	float damg = 10+random()*50;   // Possibility of gibbing small enemies :)
+	float damg = (this.dmg) ? this.dmg : (10+random()*50);   // Possibility of gibbing small enemies :)
 
 	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 		if(random() < 0.5)        // 50% change of gibbing a zombie...

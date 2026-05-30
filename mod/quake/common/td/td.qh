@@ -5,6 +5,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TD_CHEST)
 REGISTER_NET_LINKED(ENT_CLIENT_TD_TOWER)
 REGISTER_NET_LINKED(ENT_CLIENT_TD_SPAWNPOINT)
 REGISTER_NET_LINKED(ENT_CLIENT_TD_FUEL)
+REGISTER_NET_LINKED(ENT_CLIENT_TD_RANKINGS)
 
 #ifdef SVQC
 int td_phase;
@@ -14,11 +15,22 @@ float td_starttime;
 
 #ifdef GAMEQC
 entity td_ent;
+entity td_rankings;
 
 .int wave;
 .float count; // wave limit
 .int tur_units;
 .int currentammo; // unit limit
+
+.float wait; // best match time
+.float lip; // top score
+
+// TODO: network this information in a scoreboard of sorts
+.int score_playerkills;
+.int score_turretkills;
+.float score_repaired;
+.float score_upgrades;
+.int score_bosskilled;
 #endif
 
 const float TD_FUEL_MAX = 2020;
@@ -44,6 +56,11 @@ const int SF_TD_TOWER_MDL = BIT(1);
 const int SF_TD_FUEL_TYPE = BIT(0);
 const int SF_TD_FUEL_ORIGIN = BIT(1);
 const int SF_TD_FUEL_VELOCITY = BIT(2);
+
+const int TD_RANKINGS_KILLED = BIT(0);
+const int TD_RANKINGS_MVP = BIT(1);
+const int TD_RANKINGS_TIME = BIT(2);
+const int TD_RANKINGS_TOPSCORE = BIT(3);
 
 enum {
 	TD_FUEL_TINY,

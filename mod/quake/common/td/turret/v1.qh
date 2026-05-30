@@ -1,0 +1,97 @@
+#pragma once
+
+// ============
+//  LASER WALL
+// ============
+
+CLASS(V1LaserWall, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1LaserWall, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(V1LaserWall, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(V1LaserWall, m_maxs, vector, '32 32 64');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(V1LaserWall, mdl, string, "progs/tur_laserwall.mdl");
+/* head_model */ ATTRIB(V1LaserWall, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(V1LaserWall, netname, string, "laserwall");
+/* fullname   */ ATTRIB(V1LaserWall, m_name, string, _("Laser Wall"));
+/* description*/ ATTRIB(V1LaserWall, m_description, string, "Wall of lasers that electrocute enemies passing through");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1LaserWall, impulse, int, 0);
+/* cost       */ ATTRIB(V1LaserWall, tur_cost, float, 30);
+/* units      */ ATTRIB(V1LaserWall, tur_units, int, 3);
+/* health     */ ATTRIB(V1LaserWall, tur_health, float, 600);
+/* damage     */ ATTRIB(V1LaserWall, tur_dmg, float, 6);
+/* dmg scale  */ ATTRIB(V1LaserWall, tur_dmgscale, float, 0.15);
+/* champion   */ ATTRIB(V1LaserWall, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1LaserWall)
+REGISTER_TURRET(LASER_WALL, NEW(V1LaserWall));
+
+// =======
+//  ROBOT
+// =======
+
+CLASS(V1Robot, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1Robot, spawnflags, int, 0);
+/* mins       */ ATTRIB(V1Robot, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(V1Robot, m_maxs, vector, '24 24 72');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(V1Robot, mdl, string, "progs/tur_robot.mdl");
+/* head_model */ ATTRIB(V1Robot, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(V1Robot, netname, string, "robot");
+/* fullname   */ ATTRIB(V1Robot, m_name, string, _("Robot"));
+/* description*/ ATTRIB(V1Robot, m_description, string, "Rapidly fires powerful bullets at ground-based targets");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1Robot, impulse, int, 1);
+/* cost       */ ATTRIB(V1Robot, tur_cost, float, 50);
+/* units      */ ATTRIB(V1Robot, tur_units, int, 5);
+/* health     */ ATTRIB(V1Robot, tur_health, float, 350);
+/* damage     */ ATTRIB(V1Robot, tur_dmg, float, 14);
+/* dmg scale  */ ATTRIB(V1Robot, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(V1Robot, target_range, float, 550);
+/* max rotate */ ATTRIB(V1Robot, aim_maxrot, float, 60);
+/* max pitch  */ ATTRIB(V1Robot, aim_maxpitch, float, 35);
+/* champion   */ ATTRIB(V1Robot, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1Robot)
+REGISTER_TURRET(ROBOT, NEW(V1Robot));
+
+// ======
+//  RAIL
+// ======
+
+CLASS(V1Rail, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1Rail, spawnflags, int, 0);
+/* mins       */ ATTRIB(V1Rail, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(V1Rail, m_maxs, vector, '24 24 45');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(V1Rail, mdl, string, "progs/tur_rail.mdl");
+/* head_model */ ATTRIB(V1Rail, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(V1Rail, netname, string, "rail");
+/* fullname   */ ATTRIB(V1Rail, m_name, string, _("Rail"));
+/* description*/ ATTRIB(V1Rail, m_description, string, "Vaporizes targets within range with a piercing rail shot");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1Rail, impulse, int, 2);
+/* cost       */ ATTRIB(V1Rail, tur_cost, float, 100);
+/* units      */ ATTRIB(V1Rail, tur_units, int, 7);
+/* health     */ ATTRIB(V1Rail, tur_health, float, 200);
+/* damage     */ ATTRIB(V1Rail, tur_dmg, float, 45);
+/* dmg scale  */ ATTRIB(V1Rail, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(V1Rail, target_range, float, 500);
+/* max rotate */ ATTRIB(V1Rail, aim_maxrot, float, 25);
+/* max pitch  */ ATTRIB(V1Rail, aim_maxpitch, float, 25);
+/* champion   */ ATTRIB(V1Rail, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1Rail)
+REGISTER_TURRET(RAIL, NEW(V1Rail));

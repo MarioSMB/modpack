@@ -1,0 +1,100 @@
+#pragma once
+
+// ==========
+//  DOPEFISH
+// ==========
+
+CLASS(KeenDopefish, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenDopefish, spawnflags, int, 0);
+/* mins       */ ATTRIB(KeenDopefish, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(KeenDopefish, m_maxs, vector, '32 32 40');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(KeenDopefish, mdl, string, "progs/tur_dopefish.mdl");
+/* head_model */ ATTRIB(KeenDopefish, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(KeenDopefish, netname, string, "dopefish");
+/* fullname   */ ATTRIB(KeenDopefish, m_name, string, _("Dopefish"));
+/* description*/ ATTRIB(KeenDopefish, m_description, string, "The Dopefish Lives!");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenDopefish, impulse, int, 0);
+/* cost       */ ATTRIB(KeenDopefish, tur_cost, float, 60);
+/* units      */ ATTRIB(KeenDopefish, tur_units, int, 4);
+/* health     */ ATTRIB(KeenDopefish, tur_health, float, 800);
+/* damage     */ ATTRIB(KeenDopefish, tur_dmg, float, 16);
+/* dmg scale  */ ATTRIB(KeenDopefish, tur_dmgscale, float, 0.25);
+/* range      */ ATTRIB(KeenDopefish, target_range, float, 200);
+/* max rotate */ ATTRIB(KeenDopefish, aim_maxrot, float, 40);
+/* max pitch  */ ATTRIB(KeenDopefish, aim_maxpitch, float, 40);
+/* champion   */ ATTRIB(KeenDopefish, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenDopefish)
+REGISTER_TURRET(DOPEFISH, NEW(KeenDopefish));
+
+// ==============
+//  ALIEN SNIPER
+// ==============
+
+CLASS(KeenAlienSniper, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenAlienSniper, spawnflags, int, 0);
+/* mins       */ ATTRIB(KeenAlienSniper, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(KeenAlienSniper, m_maxs, vector, '24 24 36');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(KeenAlienSniper, mdl, string, "progs/tur_aliensniper.mdl");
+/* head_model */ ATTRIB(KeenAlienSniper, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(KeenAlienSniper, netname, string, "aliensniper");
+/* fullname   */ ATTRIB(KeenAlienSniper, m_name, string, _("Alien Sniper"));
+/* description*/ ATTRIB(KeenAlienSniper, m_description, string, "Fires a long range laser bolt");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenAlienSniper, impulse, int, 1);
+/* cost       */ ATTRIB(KeenAlienSniper, tur_cost, float, 110);
+/* units      */ ATTRIB(KeenAlienSniper, tur_units, int, 6);
+/* health     */ ATTRIB(KeenAlienSniper, tur_health, float, 250);
+/* damage     */ ATTRIB(KeenAlienSniper, tur_dmg, float, 18);
+/* dmg scale  */ ATTRIB(KeenAlienSniper, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(KeenAlienSniper, target_range, float, 2000);
+/* max rotate */ ATTRIB(KeenAlienSniper, aim_maxrot, float, 25);
+/* max pitch  */ ATTRIB(KeenAlienSniper, aim_maxpitch, float, 25);
+/* champion   */ ATTRIB(KeenAlienSniper, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenAlienSniper)
+REGISTER_TURRET(ALIEN_SNIPER, NEW(KeenAlienSniper));
+
+// =====
+//  UFO
+// =====
+
+CLASS(KeenUFO, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenUFO, spawnflags, int, TUR_FLAG_FLOATING);
+/* mins       */ ATTRIB(KeenUFO, m_mins, vector, '-48 -48 -16');
+/* maxs       */ ATTRIB(KeenUFO, m_maxs, vector, '48 48 16');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(KeenUFO, mdl, string, "progs/tur_ufo.mdl");
+/* head_model */ ATTRIB(KeenUFO, head_model, string, "progs/tur_ufo_beam.mdl");
+#endif
+/* netname    */ ATTRIB(KeenUFO, netname, string, "ufo");
+/* fullname   */ ATTRIB(KeenUFO, m_name, string, _("UFO"));
+/* description*/ ATTRIB(KeenUFO, m_description, string, "Laser beams anything below it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenUFO, impulse, int, 2);
+/* cost       */ ATTRIB(KeenUFO, tur_cost, float, 150);
+/* units      */ ATTRIB(KeenUFO, tur_units, int, 9);
+/* health     */ ATTRIB(KeenUFO, tur_health, float, 400);
+/* damage     */ ATTRIB(KeenUFO, tur_dmg, float, 8);
+/* dmg scale  */ ATTRIB(KeenUFO, tur_dmgscale, float, 0.25);
+/* range      */ ATTRIB(KeenUFO, target_range, float, 300);
+/* max rotate */ ATTRIB(KeenUFO, aim_maxrot, float, 15);
+/* max pitch  */ ATTRIB(KeenUFO, aim_maxpitch, float, 15);
+/* champion   */ ATTRIB(KeenUFO, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenUFO)
+REGISTER_TURRET(UFO, NEW(KeenUFO));

@@ -1435,6 +1435,11 @@ void spike_touch(entity this, entity toucher)
 			te_explosion2(this.origin, 100, 10);
 			_sound(this, CH_WEAPON_SINGLE, "weapons/resist_rocket.wav", 0.8, ATTN_NORM);
 		}
+		else if(this.classname == "grape")
+		{
+			te_wizspike(this.origin);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/grape_impact.wav", 1, ATTN_NORM);
+		}
 	}
 	else
 	{

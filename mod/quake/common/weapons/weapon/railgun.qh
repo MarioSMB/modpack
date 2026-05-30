@@ -21,5 +21,5 @@ REGISTER_WEAPON(RAILGUN, NEW(Railgun));
 SPAWNFUNC_WEAPON(weapon_railgun, WEP_RAILGUN)
 
 #ifdef SVQC
-vector SniperLightningDamage(entity this, vector org, vector dir);
+vector SniperLightningDamage(entity this, vector org, vector dir, float arange, float damage, int deathtype);
 #endif

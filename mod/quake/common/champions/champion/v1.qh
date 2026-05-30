@@ -108,6 +108,7 @@ CLASS(V1, Champions)
 #ifdef CSQC
     ATTRIB(V1, message, string, V1_STATS);
 #endif
+    ATTRIB(V1, td_turrets, bool, true);
 ENDCLASS(V1)
 REGISTER_CHAMPION(V1, NEW(V1));
 

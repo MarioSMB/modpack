@@ -22,7 +22,7 @@ METHOD(PepsimanVendingMachine, tr_think, void(PepsimanVendingMachine thistur, en
 		makevectors(actor.angles);
 		vector org = actor.origin + '0 0 8';
 		vector targ_org = actor.enemy.origin;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)

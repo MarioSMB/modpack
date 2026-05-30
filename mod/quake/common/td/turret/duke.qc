@@ -65,7 +65,7 @@ METHOD(DukeFlakCannon, tr_think, void(DukeFlakCannon this, entity actor))
 	{
 		vector org = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -134,7 +134,7 @@ METHOD(DukeTwinGun, tr_think, void(DukeTwinGun this, entity actor))
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -209,7 +209,7 @@ METHOD(DukeRocketLauncher, tr_think, void(DukeRocketLauncher this, entity actor)
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;

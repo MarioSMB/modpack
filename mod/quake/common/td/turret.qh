@@ -85,6 +85,7 @@ const int TANIM_SHOOT = 1;
 // turret capabilities
 const int TUR_FLAG_SUPPORT         = BIT(11); ///< supports other units
 const int TUR_FLAG_NONSOLID        = BIT(12); ///< may overlap with others
+const int TUR_FLAG_FLOATING        = BIT(13); ///< does not drop down
 
 // send flags
 const int TNSF_LEVEL  = BIT(1);

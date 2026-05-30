@@ -2,6 +2,139 @@
 
 #include "td.qh"
 
+bool td_rankings_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TD_RANKINGS);
+
+	if(td_phase != TD_PHASE_WIN)
+		sf &= ~TD_RANKINGS_MVP;
+
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & TD_RANKINGS_KILLED)
+	{
+		// TODO: maybe network as a float?
+		WriteInt24_t(MSG_ENTITY, this.cnt);
+	}
+
+	if(sf & TD_RANKINGS_MVP)
+	{
+		int mvpsf = 0;
+		WriteFloat(MSG_ENTITY, this.scale);
+		WriteString(MSG_ENTITY, this.netname);
+
+		if(this.score_playerkills > 0)
+			mvpsf |= BIT(0);
+		if(this.score_turretkills > 0)
+			mvpsf |= BIT(1);
+		if(this.score_repaired > 0)
+			mvpsf |= BIT(2);
+		if(this.score_upgrades > 0)
+			mvpsf |= BIT(3);
+		if(this.score_bosskilled > 0)
+			mvpsf |= BIT(4); // not networked, we just check it
+		WriteByte(MSG_ENTITY, mvpsf);
+		if(mvpsf & BIT(0))
+			WriteInt24_t(MSG_ENTITY, this.score_playerkills);
+		if(mvpsf & BIT(1))
+			WriteInt24_t(MSG_ENTITY, this.score_turretkills);
+		if(mvpsf & BIT(2))
+			WriteFloat(MSG_ENTITY, this.score_repaired);
+		if(mvpsf & BIT(3))
+			WriteShort(MSG_ENTITY, this.score_upgrades);
+	}
+
+	if(sf & TD_RANKINGS_TIME)
+	{
+		WriteInt24_t(MSG_ENTITY, TIME_ENCODE(this.wait));
+	}
+
+	if(sf & TD_RANKINGS_TOPSCORE)
+	{
+		WriteFloat(MSG_ENTITY, this.lip);
+		WriteString(MSG_ENTITY, this.mdl);
+	}
+
+	return true;
+}
+
+void td_data_write(string data, string value)
+{
+	db_put(ServerProgsDB, strcat(mapname, "/", data, "/", ftos(td_skill)), value);
+}
+
+string td_data_read(string data)
+{
+	return db_get(ServerProgsDB, strcat(mapname, "/", data, "/", ftos(td_skill)));
+}
+
+// called when the match is won, writes stats back into the database
+void td_Rankings_Save(entity this)
+{
+	float temptime = max(0, time - td_ent.td_matchtime);
+	if(temptime < this.wait || this.wait == 0)
+		td_data_write("total_time", ftos(temptime));
+
+	if(this.scale > this.lip)
+	{
+		td_data_write("mvpscore", ftos(this.scale));
+		td_data_write("mvp", this.netname);
+	}
+}
+
+void td_Rankings_Read(entity this)
+{
+	this.wait = stof(td_data_read("total_time"));
+	this.lip = stof(td_data_read("mvpscore"));
+	this.mdl = strzone(td_data_read("mvp"));
+}
+
+void td_Ranking_SetMVP(entity this)
+{
+	entity best = NULL;
+	float best_score = 0;
+
+	FOREACH_CLIENT(true,
+	{
+		float myscore = (it.score_playerkills + it.score_turretkills + rint(it.score_repaired * 0.33) + it.score_upgrades);
+		if(!best || myscore > best_score)
+		{
+			best = it;
+			best_score = myscore;
+		}
+	});
+
+	if(best)
+	{
+		strcpy(this.netname, best.netname);
+		this.scale = best_score;
+		this.score_playerkills = best.score_playerkills;
+		this.score_turretkills = best.score_turretkills;
+		this.score_repaired = best.score_repaired;
+		this.score_upgrades = best.score_upgrades;
+		this.score_bosskilled = best.score_bosskilled;
+	}
+	else
+	{
+		// if we happen to get here, nobody wins, good job
+		strcpy(this.netname, "(Nobody)");
+	}
+	this.SendFlags |= TD_RANKINGS_MVP;
+}
+
+void td_Rankings_Init(entity this)
+{
+	entity rankings = spawn();
+	rankings.classname = "td_rankings";
+
+	td_Rankings_Read(rankings); // pulls current data
+
+	Net_LinkEntity(rankings, false, 0, td_rankings_send);
+
+	// move to a global entity so it can be pinged
+	td_rankings = rankings;
+}
+
 void td_changelevel(entity this)
 {
 	mapname = "td";
@@ -39,6 +172,10 @@ void td_RoundWon_Finish(entity this)
 
 	this.tur_units = 0;
 	this.SendFlags |= SF_TD_ENT_COUNTS;
+
+	// call before saving ranks
+	td_Ranking_SetMVP(td_rankings);
+	td_Rankings_Save(td_rankings);
 
 	setthink(this, td_changelevel);
 	this.nextthink = time + 3;
@@ -862,6 +999,10 @@ void td_Init(entity this)
 		}
 	}
 
+	this.td_matchtime = time;
+
+	td_Rankings_Init(this);
+
 	setthink(this, td_BuildPhase_Init);
 	this.nextthink = time;
 
@@ -1228,7 +1369,10 @@ spawnfunc(td_tower)
 	set_movetype(this, MOVETYPE_NONE);
 
 	if(!this.health)
-		this.health = 1000;
+		this.health = 1500;
+
+	if(autocvar_skill > 0)
+		this.health *= autocvar_skill;
 
 	switch(world.worldtype)
 	{
@@ -1798,6 +1942,27 @@ void td_MonsterDies(entity targ, entity attacker)
 
 	if(random() < 0.15) // TODO: custom chances
 		td_DropItem(targ);
+
+	// TODO: shouldn't this be above the dropping of items?!
+	if(targ.flags & FL_CLONE)
+		return;
+
+	// update rankings
+	if(td_rankings)
+	{
+		td_rankings.cnt += 1;
+		td_rankings.SendFlags |= TD_RANKINGS_KILLED;
+	}
+
+	if(IS_PLAYER(attacker))
+	{
+		attacker.score_playerkills += 1;
+		// TODO: only count final wave boss kills?
+		if(targ.monsterdef.spawnflags & MONSTER_TYPE_BOSS)
+			attacker.score_bosskilled += 1;
+	}
+	else if(attacker.turretdef && IS_PLAYER(attacker.realowner))
+		attacker.realowner.score_turretkills += 1;
 }
 
 float td_GetMonsterSpeed(entity this, float dist)

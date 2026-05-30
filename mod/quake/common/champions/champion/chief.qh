@@ -61,6 +61,7 @@ CLASS(Chief, Champions)
 #ifdef CSQC
     ATTRIB(Chief, message, string, CHIEF_STATS);
 #endif
+    ATTRIB(Chief, td_turrets, bool, true);
 ENDCLASS(Chief)
 REGISTER_CHAMPION(Chief, NEW(Chief));
 

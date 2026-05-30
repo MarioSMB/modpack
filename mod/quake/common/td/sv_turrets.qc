@@ -2,11 +2,11 @@
 
 #ifdef SVQC
 
-bool turret_infront(entity this, entity targ, float maxpitch, float maxrot)
+bool turret_infront(entity this, entity targ, vector sangle, float maxpitch, float maxrot)
 {
 	vector org = this.origin + this.view_ofs;
 	vector targ_org = (targ.absmin + targ.absmax) * 0.5;
-	vector tvt_tadv = shortangle_vxy(angleofs3(org, this.angles, targ_org), this.angles);
+	vector tvt_tadv = shortangle_vxy(angleofs3(org, sangle, targ_org), sangle);
 	if(maxpitch > 0 && fabs(tvt_tadv.x) > maxpitch)
 		return false;
 	if(maxrot > 0 && fabs(tvt_tadv.y) > maxrot)
@@ -19,13 +19,13 @@ entity turret_findtarget_ignore(entity this, float maxpitch, float maxrot, float
 	entity best = NULL;
 	float bestdist = 0;
 	vector org = this.origin + this.view_ofs;
-	FOREACH_ENTITY_RADIUS(org, trange, IS_MONSTER(it) && it.takedamage && !it.charmed && it != ignore,
+	FOREACH_ENTITY_RADIUS(org, trange, it.takedamage && IS_MONSTER(it) && !it.charmed && it != ignore,
 	{
 		if(it.health < 1 || it.exptime != 0)
 			continue;
 		if(time < it.invincible_finished)
 			continue;
-		if(!turret_infront(this, it, maxpitch, maxrot))
+		if(!turret_infront(this, it, this.angles, maxpitch, maxrot))
 			continue;
 		if(!checkpvs(org, it))
 			continue;
@@ -264,7 +264,10 @@ bool turret_initialize(entity this, Turret tur)
 	this.max_health             = this.health;
 	this.solid                  = SOLID_BBOX;
 	this.takedamage             = DAMAGE_AIM;
-	set_movetype(this, MOVETYPE_TOSS); // was noclip
+	if(tur.spawnflags & TUR_FLAG_FLOATING)
+		set_movetype(this, MOVETYPE_FLY);
+	else
+		set_movetype(this, MOVETYPE_TOSS); // was noclip
 	this.view_ofs               = '0 0 0';
 	this.th_pain                = turret_damage;
 	this.th_die                 = turret_die;
@@ -283,7 +286,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.tur_head.solid       = SOLID_NOT;
 	set_movetype(this.tur_head, this.move_movetype);
 
-	DropToFloor_QC_DelayedInit(this);
+	if(!(tur.spawnflags & TUR_FLAG_FLOATING))
+		DropToFloor_QC_DelayedInit(this);
 
 	turret_link(this);
 	turret_respawn(this);

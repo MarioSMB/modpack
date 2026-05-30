@@ -159,37 +159,49 @@ void W_FireSniperLightning(entity this)
 	if(lag)
 		antilag_takeback_all(this, lag);
 
-	vector endpos = SniperLightningDamage(this, org, dir);
+	vector endpos = SniperLightningDamage(this, org, dir, 4000, 200, WEP_RAILGUN.m_id);
 	SendCSQCSniperLightning(org, endpos, 0);
 
 	if(lag)
 		antilag_restore_all(this);
 }
 
-vector SniperLightningDamage(entity this, vector org, vector dir)
+vector SniperLightningDamage(entity this, vector org, vector dir, float arange, float damage, int deathtype)
 {
-	traceline(org, org + dir * 4000, false, this);
+	traceline(org, org + dir * arange, false, this);
 	vector endpoint = trace_endpos;
 	entity tgt = trace_ent;
+
+	arange -= vlen(org - endpoint);
 
 	int hits = 0;
 	while(tgt && tgt.takedamage && hits < 5)
 	{
-		float dmg = floor(200 * (1 - hits / 6));	//grep_ee_const
+		float dmg = floor(damage * (1 - hits / 6));	//grep_ee_const
 		hits += 1;
 
 		//ImpactSpawn(endpoint, '0 0 100', dmg, tgt.bloodtype);
 		SpawnBlood(endpoint, '0 0 100', dmg, tgt);
-		T_Damage(tgt, this, this, dmg, WEP_RAILGUN.m_id);
+		T_Damage(tgt, this, this, dmg, deathtype);
 		if(IS_PLAYER(tgt))
 			tgt.velocity_z += dmg * 2;
 
 		if(tgt.solid == SOLID_BSP)
 			break;
 
-		traceline(endpoint, endpoint + dir*4000, false, tgt);
+		if(arange <= 0)
+			break;
+
+		int oldclipgroup = tgt.clipgroup;
+		tgt.clipgroup = 0;
+
+		traceline(endpoint, endpoint + dir*arange, false, tgt);
 		if(trace_ent == this) // workaround in case the new trace hits the player
-			traceline(endpoint + dir * 8, endpoint + dir * 4000, false, tgt);
+			traceline(endpoint + dir * 8, endpoint + dir * arange, false, tgt);
+
+		tgt.clipgroup = oldclipgroup;
+
+		arange -= vlen(endpoint - trace_endpos);
 
 		endpoint = trace_endpos;
 		tgt = trace_ent;

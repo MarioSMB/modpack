@@ -101,5 +101,6 @@ CLASS(Doom, Champions)
 #ifdef CSQC
     ATTRIB(Doom, message, string, DOOM_STATS);
 #endif
+    ATTRIB(Doom, td_turrets, bool, true);
 ENDCLASS(Doom)
 REGISTER_CHAMPION(Doom, NEW(Doom));

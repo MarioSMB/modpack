@@ -81,6 +81,7 @@ CLASS(Duck, Champions)
 #ifdef CSQC
     ATTRIB(Duck, message, string, "Got any grapes?");
 #endif
+    ATTRIB(Duck, td_turrets, bool, true);
 ENDCLASS(Duck)
 REGISTER_CHAMPION(Duck, NEW(Duck));
 

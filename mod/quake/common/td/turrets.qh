@@ -2,7 +2,7 @@
 
 #include "turret.qh"
 
-REGISTRY(Turrets, 48)
+REGISTRY(Turrets, 64)
 REGISTER_REGISTRY(Turrets)
 REGISTRY_CHECK(Turrets)
 

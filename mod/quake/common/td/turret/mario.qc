@@ -1,8 +1,8 @@
-#include "duke.qh"
+#include "mario.qh"
 
 // ==============
 //  BILL BLASTER
-// =============
+// ==============
 
 #ifdef SVQC
 METHOD(MarioBillBlaster, tr_precache, void(MarioBillBlaster thistur))
@@ -19,7 +19,7 @@ METHOD(MarioBillBlaster, tr_think, void(MarioBillBlaster this, entity actor))
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -111,7 +111,7 @@ METHOD(MarioBullsEyeBlaster, tr_think, void(MarioBullsEyeBlaster this, entity ac
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;

@@ -13,9 +13,9 @@ int td_skill; // storage of skill cvar at load to prevent abuse
 
 .int isloot; // identifier for items dropped as loot
 
-//entity td_ent; // defined by stats
-
 .int td_monsters[REGISTRY_MAX(Monsters)];
+
+.float td_matchtime; // for rankings
 
 const int CLIPGROUP_TD = 67;
 const int CLIPGROUP_TDTURRET = 68;

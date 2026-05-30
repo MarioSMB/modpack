@@ -65,7 +65,7 @@ METHOD(RangerNailer, tr_think, void(RangerNailer this, entity actor))
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -161,7 +161,7 @@ METHOD(RangerMortar, tr_think, void(RangerMortar this, entity actor))
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -234,7 +234,7 @@ METHOD(RangerLaser, tr_think, void(RangerLaser this, entity actor))
 	{
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;

@@ -1,6 +1,7 @@
 #include "cl_td.qh"
 
 #include "td.qh"
+
 void td_UpdateView(entity this)
 {
 	// always reset at the first draw call, so we don't get lingering data
@@ -290,6 +291,57 @@ NET_HANDLE(ENT_CLIENT_TD_FUEL, bool isnew)
 	{
 		this.velocity = ReadVector();
 	}
+
+	return = true;
+}
+
+void td_rankings_remove(entity this)
+{
+	if(td_rankings == this)
+		td_rankings = NULL;
+
+	strfree(this.netname);
+}
+
+NET_HANDLE(ENT_CLIENT_TD_RANKINGS, bool isnew)
+{
+	int sf = ReadByte();
+
+	if(sf & TD_RANKINGS_KILLED)
+	{
+		this.cnt = ReadInt24_t();
+	}
+
+	if(sf & TD_RANKINGS_MVP)
+	{
+		this.scale = ReadFloat();
+		string mvp = ReadString();
+		strcpy(this.netname, mvp);
+
+		// show their scores too!
+		// TODO: clean up this mess...
+		int mvpsf = ReadByte();
+
+		this.score_playerkills = (mvpsf & BIT(0)) ? ReadInt24_t() : 0;
+		this.score_turretkills = (mvpsf & BIT(1)) ? ReadInt24_t() : 0;
+		this.score_repaired = (mvpsf & BIT(2)) ? ReadFloat() : 0;
+		this.score_upgrades = (mvpsf & BIT(3)) ? ReadShort() : 0;
+		this.score_bosskilled = (mvpsf & BIT(4)) ? true : false;
+	}
+
+	if(sf & TD_RANKINGS_TIME)
+	{
+		this.wait = TIME_DECODE(ReadInt24_t());
+	}
+
+	if(sf & TD_RANKINGS_TOPSCORE)
+	{
+		this.lip = ReadFloat();
+		string bestmvp = ReadString();
+		strcpy(this.mdl, bestmvp);
+	}
+
+	td_rankings = this;
 
 	return = true;
 }

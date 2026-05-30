@@ -1,0 +1,100 @@
+#pragma once
+
+// ===============
+//  PLASMA CANNON
+// ===============
+
+CLASS(ChiefPlasmaCannon, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefPlasmaCannon, spawnflags, int, 0);
+/* mins       */ ATTRIB(ChiefPlasmaCannon, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(ChiefPlasmaCannon, m_maxs, vector, '24 24 45');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(ChiefPlasmaCannon, mdl, string, "progs/tur_plasmacannon.mdl");
+/* head_model */ ATTRIB(ChiefPlasmaCannon, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(ChiefPlasmaCannon, netname, string, "plasmacannon");
+/* fullname   */ ATTRIB(ChiefPlasmaCannon, m_name, string, _("Plasma Cannon"));
+/* description*/ ATTRIB(ChiefPlasmaCannon, m_description, string, "Rapidly fires bolts of plasma");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefPlasmaCannon, impulse, int, 0);
+/* cost       */ ATTRIB(ChiefPlasmaCannon, tur_cost, float, 90);
+/* units      */ ATTRIB(ChiefPlasmaCannon, tur_units, int, 6);
+/* health     */ ATTRIB(ChiefPlasmaCannon, tur_health, float, 250);
+/* damage     */ ATTRIB(ChiefPlasmaCannon, tur_dmg, float, 12);
+/* dmg scale  */ ATTRIB(ChiefPlasmaCannon, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(ChiefPlasmaCannon, target_range, float, 700);
+/* max rotate */ ATTRIB(ChiefPlasmaCannon, aim_maxrot, float, 35);
+/* max pitch  */ ATTRIB(ChiefPlasmaCannon, aim_maxpitch, float, 35);
+/* champion   */ ATTRIB(ChiefPlasmaCannon, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefPlasmaCannon)
+REGISTER_TURRET(PLASMA_CANNON, NEW(ChiefPlasmaCannon));
+
+// =======
+//  GAUSS
+// =======
+
+CLASS(ChiefGauss, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefGauss, spawnflags, int, 0);
+/* mins       */ ATTRIB(ChiefGauss, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(ChiefGauss, m_maxs, vector, '24 24 45');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(ChiefGauss, mdl, string, "progs/tur_gauss.mdl");
+/* head_model */ ATTRIB(ChiefGauss, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(ChiefGauss, netname, string, "gauss");
+/* fullname   */ ATTRIB(ChiefGauss, m_name, string, _("Gauss"));
+/* description*/ ATTRIB(ChiefGauss, m_description, string, "Fires a long range bullet at high velocity");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefGauss, impulse, int, 1);
+/* cost       */ ATTRIB(ChiefGauss, tur_cost, float, 60);
+/* units      */ ATTRIB(ChiefGauss, tur_units, int, 4);
+/* health     */ ATTRIB(ChiefGauss, tur_health, float, 200);
+/* damage     */ ATTRIB(ChiefGauss, tur_dmg, float, 22);
+/* dmg scale  */ ATTRIB(ChiefGauss, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(ChiefGauss, target_range, float, 1000);
+/* max rotate */ ATTRIB(ChiefGauss, aim_maxrot, float, 20);
+/* max pitch  */ ATTRIB(ChiefGauss, aim_maxpitch, float, 20);
+/* champion   */ ATTRIB(ChiefGauss, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefGauss)
+REGISTER_TURRET(GAUSS, NEW(ChiefGauss));
+
+// ===========
+//  HELIBLADE
+// ===========
+
+CLASS(ChiefHeliblade, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefHeliblade, spawnflags, int, TUR_FLAG_FLOATING);
+/* mins       */ ATTRIB(ChiefHeliblade, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(ChiefHeliblade, m_maxs, vector, '16 16 64');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(ChiefHeliblade, mdl, string, "progs/tur_heliblade.mdl");
+/* head_model */ ATTRIB(ChiefHeliblade, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(ChiefHeliblade, netname, string, "heliblade");
+/* fullname   */ ATTRIB(ChiefHeliblade, m_name, string, _("Nailer"));
+/* description*/ ATTRIB(ChiefHeliblade, m_description, string, "Flying turret, pelts enemies below it with\nbullets and launches rockets at those above it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefHeliblade, impulse, int, 2);
+/* cost       */ ATTRIB(ChiefHeliblade, tur_cost, float, 140);
+/* units      */ ATTRIB(ChiefHeliblade, tur_units, int, 8);
+/* health     */ ATTRIB(ChiefHeliblade, tur_health, float, 200);
+/* damage     */ ATTRIB(ChiefHeliblade, tur_dmg, float, 8);
+/* dmg scale  */ ATTRIB(ChiefHeliblade, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(ChiefHeliblade, target_range, float, 550);
+/* max rotate */ ATTRIB(ChiefHeliblade, aim_maxrot, float, 55);
+/* max pitch  */ ATTRIB(ChiefHeliblade, aim_maxpitch, float, 55);
+/* champion   */ ATTRIB(ChiefHeliblade, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefHeliblade)
+REGISTER_TURRET(HELIBLADE, NEW(ChiefHeliblade));

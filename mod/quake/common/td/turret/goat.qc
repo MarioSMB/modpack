@@ -86,3 +86,91 @@ METHOD(GoatJumpingCastle, tr_setup, void(GoatJumpingCastle this, entity actor))
 	actor.solid = SOLID_TRIGGER;
 }
 #endif // CSQC
+
+// ========
+//  SWINGS
+// ========
+
+#ifdef SVQC
+.float wheee_time;
+void swings_hitbox_touch(entity this, entity toucher)
+{
+	if(time < toucher.wheee_time)
+		return;
+
+	Turret tur = this.turretdef;
+	float damage = tur.tur_dmg * turret_getpower(this.tur_level, tur.tur_dmgscale);
+	toucher.wheee_time = time + 0.5; // TODO?
+
+	float r = random();
+	if(r < 0.8)
+		_sound(toucher, CH_VOICE, "turrets/swing_launch.wav", 1, ATTN_NORM);
+	else
+		_sound(toucher, CH_VOICE, "turrets/weeee.wav", 1, ATTN_NORM);
+
+	if(IS_MONSTER(toucher) && toucher.health > 0 && gametype == GAMETYPE_TD)
+	{
+		T_Damage(toucher, this, this, damage, DEATH_TRAP.m_id);
+
+		this.enemy = toucher;
+		this.cnt += 1;
+	}
+
+	// also push enemy away
+	if(!(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY))
+	{
+		float jforce = 40 * turret_getpower(this.tur_level, 0.25);
+		float pushforce = jforce / vlen(toucher.maxs - toucher.mins);
+
+		vector dir = normalize(toucher.origin - this.origin);
+		toucher.velocity = dir * (350 * pushforce);
+		toucher.velocity_z = (125 * pushforce);
+	}
+}
+
+METHOD(GoatSwings, tr_precache, void(GoatSwings thistur))
+{
+	precache_sound("turrets/swing_launch.wav");
+	precache_sound("turrets/weeee.wav");
+}
+METHOD(GoatSwings, tr_think, void(GoatSwings thistur, entity actor))
+{
+	vector emin = actor.absmin, emax = actor.absmax;
+	vector extrasize = '16 16 0'; // give it LESS range!
+	emin += extrasize;
+	emax -= extrasize;
+
+	actor.cnt = 0; // number of jumpees this frame
+
+	FOREACH_ENTITY_BOX_ORDERED(emin, emax, it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY && it.move_movetype != MOVETYPE_NOCLIP,
+	{
+		if(!IS_MONSTER(it) && !IS_PLAYER(it))
+			continue;
+		swings_hitbox_touch(actor, it);
+	});
+
+	if(actor.cnt > 0)
+	{
+		float damage = 7 * actor.cnt;
+		T_Damage(actor, actor.enemy, actor.enemy, damage, DEATH_CRUSH.m_id);
+	}
+}
+METHOD(GoatSwings, tr_setup, void(GoatSwings this, entity actor))
+{
+	actor.solid = SOLID_TRIGGER;
+	actor.monster_attack = false;
+}
+
+spawnfunc(turret_swings)
+{
+	if (!turret_initialize(this, TUR_SWINGS))
+		delete(this);
+}
+#endif // SVQC
+#ifdef CSQC
+METHOD(GoatSwings, tr_setup, void(GoatSwings this, entity actor))
+{
+	actor.solid = SOLID_TRIGGER;
+	actor.anim_idle = '0 7 0';
+}
+#endif // CSQC

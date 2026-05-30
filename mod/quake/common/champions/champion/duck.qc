@@ -1,19 +1,11 @@
 #include "duck.qh"
 
 #ifdef SVQC
-void grape_launch(entity this)
+entity grape_launch(entity this, vector org, vector dir)
 {
-	entity player = this.owner;
-	if(!player || player.health <= 0 || player.m_champion != CHAMPION_Duck || !IS_PLAYER(player))
-	{
-		delete(this);
-		return;
-	}
-	makevectors(player.v_angle);
-	vector dir = v_forward;
 	vector spread = '0.1 0.1 0';
 	dir += (crandom() * spread.x) * v_right + (crandom() * spread.y) * v_up;
-	entity newmis = launch_spike(player, player.origin + player.view_ofs, dir);
+	entity newmis = launch_spike(this, org, dir);
 	newmis.classname = "grape";
 	newmis.avelocity = randomvec() * 200;
 	newmis.dmg = 20;
@@ -24,10 +16,26 @@ void grape_launch(entity this)
 	newmis.velocity = dir * 300;
 	settouch(newmis, spike_touch);
 	newmis.projectiledeathtype = DEATH_GRAPE.m_id;
-	newmis.clipgroup = player.clipgroup;
+	newmis.clipgroup = this.clipgroup;
 	newmis.flags = FL_PROJECTILE;
 
 	CSQCProjectile(newmis, true, PROJECTILE_GRAPE, true);
+
+	return newmis;
+}
+
+void grape_delayedlaunch(entity this)
+{
+	entity player = this.owner;
+	if(!player || player.health <= 0 || player.m_champion != CHAMPION_Duck || !IS_PLAYER(player))
+	{
+		delete(this);
+		return;
+	}
+	makevectors(player.v_angle);
+	vector org = player.origin + player.view_ofs;
+
+	grape_launch(player, org, v_forward);
 
 	delete(this);
 }
@@ -39,7 +47,7 @@ void Duck_ShootGrapes(entity this)
 		entity grape = spawn();
 		grape.classname = "grape_delayed";
 		grape.owner = this;
-		setthink(grape, grape_launch);
+		setthink(grape, grape_delayedlaunch);
 		grape.nextthink = time + (0.25 * j);
 	}
 }

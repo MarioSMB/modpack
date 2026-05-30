@@ -167,7 +167,7 @@ METHOD(SquireHarpoon, tr_think, void(SquireHarpoon this, entity actor))
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
 		bool isvisible = visible(actor, actor.enemy);
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
 		if(actor.enemy.health < 1 || actor.enemy.exptime != 0 || time > actor.search_time || vdist(myorg - targ_org, >, myrange * 1.5))
@@ -453,7 +453,7 @@ METHOD(SquireBowlingBall, tr_think, void(SquireBowlingBall thistur, entity actor
 		vector myorg = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
 		bool isvisible = visible(actor, actor.enemy);
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
 		if(actor.enemy.health < 1 || actor.enemy.exptime != 0 || time > actor.search_time || vdist(myorg - targ_org, >, myrange * 1.5))

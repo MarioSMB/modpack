@@ -2,7 +2,7 @@
 
 // =========
 //  SWARMER
-// =======--
+// =========
 
 #ifdef SVQC
 void SwarmHome(entity this)
@@ -182,7 +182,7 @@ METHOD(KeylethFrog, tr_think, void(KeylethFrog this, entity actor))
 	{
 		vector org = actor.origin + actor.view_ofs;
 		vector targ_org = (actor.enemy.absmin + actor.enemy.absmax) * 0.5;
-		bool isinfront = turret_infront(actor, actor.enemy, maxpitch, maxrot);
+		bool isinfront = turret_infront(actor, actor.enemy, actor.angles, maxpitch, maxrot);
 		bool isvisible = visible(actor, actor.enemy);
 		if(isvisible || isinfront)
 			actor.search_time = time + 1;
@@ -260,7 +260,7 @@ METHOD(KeylethFlyTrap, tr_think, void(KeylethFlyTrap this, entity actor))
 	{
 		if(it.clipgroup == actor.clipgroup || it.velocity == '0 0 0')
 			continue;
-		if(!turret_infront(actor, it, maxpitch, maxrot))
+		if(!turret_infront(actor, it, actor.angles, maxpitch, maxrot))
 			continue;
 
 		float mydist = vlen2(it.origin - org);

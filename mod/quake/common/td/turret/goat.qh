@@ -41,7 +41,38 @@ CLASS(GoatJumpingCastle, Turret)
 /* champion   */ ATTRIB(GoatJumpingCastle, m_champion, Champions, CHAMPION_Goat);
 #endif
 
-#undef GOAT
-
 ENDCLASS(GoatJumpingCastle)
 REGISTER_TURRET(JUMPING_CASTLE, NEW(GoatJumpingCastle));
+
+// ========
+//  SWINGS
+// ========
+
+CLASS(GoatSwings, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(GoatSwings, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(GoatSwings, m_mins, vector, '-70 -70 0');
+/* maxs       */ ATTRIB(GoatSwings, m_maxs, vector, '70 70 48');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(GoatSwings, mdl, string, "progs/tur_swings.mdl");
+/* head_model */ ATTRIB(GoatSwings, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(GoatSwings, netname, string, "swings");
+/* fullname   */ ATTRIB(GoatSwings, m_name, string, _("Swing Set"));
+/* description*/ ATTRIB(GoatSwings, m_description, string, GOAT);
+#ifdef GAMEQC
+/* number     */ ATTRIB(GoatSwings, impulse, int, 1);
+/* cost       */ ATTRIB(GoatSwings, tur_cost, float, 60);
+/* units      */ ATTRIB(GoatSwings, tur_units, int, 6);
+/* health     */ ATTRIB(GoatSwings, tur_health, float, 800);
+/* damage     */ ATTRIB(GoatSwings, tur_dmg, float, 10);
+/* dmg scale  */ ATTRIB(GoatSwings, tur_dmgscale, float, 0.2);
+/* champion   */ ATTRIB(GoatSwings, m_champion, Champions, CHAMPION_Goat);
+#endif
+
+ENDCLASS(GoatSwings)
+REGISTER_TURRET(SWINGS, NEW(GoatSwings));
+
+// at the bottom
+#undef GOAT

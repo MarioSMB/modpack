@@ -96,6 +96,7 @@ CLASS(Keen, Champions)
 #ifdef CSQC
     ATTRIB(Keen, message, string, KEEN_STATS);
 #endif
+    ATTRIB(Keen, td_turrets, bool, true);
 ENDCLASS(Keen)
 REGISTER_CHAMPION(Keen, NEW(Keen));
 

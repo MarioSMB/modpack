@@ -32,6 +32,30 @@ int td_UpgradeCost(int thelevel)
 	// unreachable
 	return 0;
 }
+
+void buildtool_trace(vector from, vector to, entity this)
+{
+	int oldclipgroup = this.clipgroup;
+	this.clipgroup = 0;
+	
+	// copy of crosshair_trace_plusvisibletriggers
+	// so that we can target the non-solid turrets
+	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
+	{
+		if(it.model != "" && it.turretdef)
+		{
+			it.solid = SOLID_BSP;
+			IL_PUSH(g_ctrace_changed, it);
+		}
+	});
+
+	tracebox(from, '-16 -16 -16', '16 16 16', to, MOVE_NORMAL, this);
+
+	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
+	IL_CLEAR(g_ctrace_changed);
+
+	this.clipgroup = oldclipgroup;
+}
 #endif
 
 #ifdef CSQC
@@ -57,31 +81,26 @@ void Draw_Circle(vector shotorg, float crange)
 	R_EndPolygon();
 }
 
-void Draw_Cone(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot)
+void Draw_Cone_withline(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot, vector sw_color, float a, bool showline)
 {
-	float a = 0.2;
-	vector sw_color = '1 0 0';
-
 	vector _forward, right, up;
 	VECTOR_VECTORS(shotdir, _forward, right, up);
 
-	float angleradians = maxrot * (M_PI / 180);
-	float rotradius = crange * tan(angleradians);
-
-	angleradians = maxpitch * (M_PI / 180);
-	float pitchradius = crange * tan(angleradians);
+	float rotradius = crange * tan(maxrot * DEG2RAD);
+	float pitchradius = crange * tan(maxpitch * DEG2RAD);
 
 	vector tip = shotorg;
 	vector org = shotorg + shotdir * crange;
 	int segments = 20;
+	float step = (2 * M_PI) / segments;
 	for(int j = 1; j <= segments; ++j)
 	{
-		float base = (j / segments) * 2 * M_PI;
+		float baseangle = j * step;
 		// current base point
-		vector p1 = org + right * cos(base) * rotradius + up * sin(base) * pitchradius;
+		vector p1 = org + (right * cos(baseangle) * rotradius) + (up * sin(baseangle) * pitchradius);
 		// next base point
-		base = ((j + 1) / segments) * 2 * M_PI;
-		vector p2 = org + right * cos(base) * rotradius + up * sin(base) * pitchradius;
+		baseangle = (j + 1) * step;
+		vector p2 = org + (right * cos(baseangle) * rotradius) + (up * sin(baseangle) * pitchradius);
 
 		// draw triangles (tip, p1, p2)
 		R_BeginPolygon("", DRAWFLAG_NORMAL, false);
@@ -91,8 +110,16 @@ void Draw_Cone(vector shotorg, vector shotdir, float crange, float maxpitch, flo
 		R_EndPolygon();
 	}
 
-	// also draw a line for indication of range
-	Draw_CylindricLine(shotorg, shotorg + shotdir * crange, 6, "", 0.25, 0, '1 0.25 0', 1, DRAWFLAG_NORMAL, view_origin);
+	if(showline)
+	{
+		// also draw a line for indication of range
+		Draw_CylindricLine(shotorg, shotorg + shotdir * crange, 6, "", 0.25, 0, '1 0.25 0', 1, DRAWFLAG_NORMAL, view_origin);
+	}
+}
+
+void Draw_Cone(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot)
+{
+	Draw_Cone_withline(shotorg, shotdir, crange, maxpitch, maxrot, '1 0 0', 0.2, true);
 }
 
 entity dropmark;
@@ -235,26 +262,7 @@ void buildtool_selectframe(entity this)
 		dropmark.alpha = 0.5;
 	}
 
-	int oldclipgroup = this.clipgroup;
-	this.clipgroup = 0;
-	
-	// copy of crosshair_trace_plusvisibletriggers
-	// so that we can target the non-solid turrets
-	FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
-	{
-		if(it.model != "" && it.turretdef)
-		{
-			it.solid = SOLID_BSP;
-			IL_PUSH(g_ctrace_changed, it);
-		}
-	});
-
-	tracebox(view_origin, '-16 -16 -16', '16 16 16', view_origin + view_forward * 150, MOVE_NORMAL, this);
-
-	IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
-	IL_CLEAR(g_ctrace_changed);
-
-	this.clipgroup = oldclipgroup;
+	buildtool_trace(view_origin, view_origin + view_forward * 150, this);
 
 	if(trace_startsolid)
 		return;
@@ -387,10 +395,17 @@ void buildtool_frame(entity this)
 	}
 
 	tracebox(view_origin, dropmark.mins, dropmark.maxs, view_origin + view_forward * 150, MOVE_NOMONSTERS, this);
-	tracebox(trace_endpos + '0 0 1', dropmark.mins, dropmark.maxs, trace_endpos - '0 0 150', MOVE_NOMONSTERS, this);
 
 	dropmark.colormod = '1 1 1';
-	if(trace_startsolid || trace_fraction == 1 || STAT(TD_FUEL) < tur.tur_cost || ((tur.tur_units + td_ent.tur_units) > td_ent.currentammo) || td_badplacement(this, tur, trace_endpos))
+	if(!(tur.spawnflags & TUR_FLAG_FLOATING))
+	{
+		tracebox(trace_endpos + '0 0 1', dropmark.mins, dropmark.maxs, trace_endpos - '0 0 150', MOVE_NOMONSTERS, this);
+		// didn't find ground, no good
+		if(trace_fraction == 1.0)
+			dropmark.colormod = '1 0 0';
+	}
+
+	if(trace_startsolid || STAT(TD_FUEL) < tur.tur_cost || ((tur.tur_units + td_ent.tur_units) > td_ent.currentammo) || td_badplacement(this, tur, trace_endpos))
 		dropmark.colormod = '1 0 0';
 
 	if(dropmark.tur_head)
@@ -409,6 +424,9 @@ void buildtool_frame(entity this)
 #ifdef SVQC
 PRECACHE(BuildTool)
 {
+	if(gametype != GAMETYPE_TD)
+		return;
+
 	precache_sound("td/switch.wav");
 	precache_sound("td/nofuel.wav");
 
@@ -432,22 +450,8 @@ void BuildTool_Fire(entity actor)
 	{
 		makevectors(actor.v_angle);
 		vector org = CENTER_OR_VIEWOFS(actor);
-		int oldclipgroup = actor.clipgroup;
-		actor.clipgroup = 0;
-		// copy of crosshair_trace_plusvisibletriggers
-		// so that we can target the non-solid turrets
-		FOREACH_ENTITY_FLOAT(solid, SOLID_TRIGGER,
-		{
-			if(it.model != "" && it.turretdef)
-			{
-				it.solid = SOLID_BSP;
-				IL_PUSH(g_ctrace_changed, it);
-			}
-		});
-		tracebox(org, '-16 -16 -16', '16 16 16', org + v_forward * autocvar_sv_quake_td_buildrange, MOVE_NORMAL, actor);
-		IL_EACH(g_ctrace_changed, true, { it.solid = SOLID_TRIGGER; });
-		IL_CLEAR(g_ctrace_changed);
-		actor.clipgroup = oldclipgroup;
+		buildtool_trace(org, org + v_forward * autocvar_sv_quake_td_buildrange, actor);
+
 		if(IS_TURRET(trace_ent))
 		{
 			int buildmode = STAT(TD_TURRET, actor);
@@ -472,6 +476,7 @@ void BuildTool_Fire(entity actor)
 						if(td_phase == TD_PHASE_BUILD)
 							repairamount = trace_ent.max_health * 0.10;
 
+						float prevhp = trace_ent.health;
 						trace_ent.health = min(trace_ent.health + repairamount, trace_ent.max_health);
 						trace_ent.SendFlags |= TNSF_STATUS;
 						float arate = 0.25;
@@ -492,6 +497,9 @@ void BuildTool_Fire(entity actor)
 							else
 								_sound(actor, CH_WEAPON_SINGLE, "td/repair3.wav", 1, ATTN_NORM);
 						}
+
+						if(IS_PLAYER(actor))
+							actor.score_repaired += (trace_ent.health - prevhp);
 					}
 					else
 					{
@@ -598,9 +606,13 @@ void BuildTool_Fire(entity actor)
 	tracebox(CENTER_OR_VIEWOFS(actor), tur.m_mins, tur.m_maxs, CENTER_OR_VIEWOFS(actor) + v_forward * autocvar_sv_quake_td_buildrange, MOVE_NOMONSTERS, actor);
 	if(trace_startsolid)
 		return;
-	tracebox(trace_endpos + '0 0 1', tur.m_mins, tur.m_maxs, trace_endpos - '0 0 150', MOVE_NOMONSTERS, actor);
-	if(trace_startsolid || trace_fraction == 1)
-		return;
+
+	if(!(tur.spawnflags & TUR_FLAG_FLOATING))
+	{
+		tracebox(trace_endpos + '0 0 1', tur.m_mins, tur.m_maxs, trace_endpos - '0 0 150', MOVE_NOMONSTERS, actor);
+		if(trace_startsolid || trace_fraction == 1)
+			return;
+	}
 
 	// regardless of what happens, add a delay to prevent spam
 	actor.attack_finished = time + 0.25;
