@@ -20,7 +20,7 @@ CLASS(ChiefPlasmaCannon, Turret)
 #ifdef GAMEQC
 /* number     */ ATTRIB(ChiefPlasmaCannon, impulse, int, 0);
 /* cost       */ ATTRIB(ChiefPlasmaCannon, tur_cost, float, 90);
-/* units      */ ATTRIB(ChiefPlasmaCannon, tur_units, int, 6);
+/* units      */ ATTRIB(ChiefPlasmaCannon, tur_units, int, 4);
 /* health     */ ATTRIB(ChiefPlasmaCannon, tur_health, float, 250);
 /* damage     */ ATTRIB(ChiefPlasmaCannon, tur_dmg, float, 12);
 /* dmg scale  */ ATTRIB(ChiefPlasmaCannon, tur_dmgscale, float, 0.15);
@@ -53,7 +53,7 @@ CLASS(ChiefGauss, Turret)
 #ifdef GAMEQC
 /* number     */ ATTRIB(ChiefGauss, impulse, int, 1);
 /* cost       */ ATTRIB(ChiefGauss, tur_cost, float, 60);
-/* units      */ ATTRIB(ChiefGauss, tur_units, int, 4);
+/* units      */ ATTRIB(ChiefGauss, tur_units, int, 5);
 /* health     */ ATTRIB(ChiefGauss, tur_health, float, 200);
 /* damage     */ ATTRIB(ChiefGauss, tur_dmg, float, 22);
 /* dmg scale  */ ATTRIB(ChiefGauss, tur_dmgscale, float, 0.15);
@@ -81,7 +81,7 @@ CLASS(ChiefHeliblade, Turret)
 /* head_model */ ATTRIB(ChiefHeliblade, head_model, string, "");
 #endif
 /* netname    */ ATTRIB(ChiefHeliblade, netname, string, "heliblade");
-/* fullname   */ ATTRIB(ChiefHeliblade, m_name, string, _("Nailer"));
+/* fullname   */ ATTRIB(ChiefHeliblade, m_name, string, _("Heliblade"));
 /* description*/ ATTRIB(ChiefHeliblade, m_description, string, "Flying turret, pelts enemies below it with\nbullets and launches rockets at those above it");
 #ifdef GAMEQC
 /* number     */ ATTRIB(ChiefHeliblade, impulse, int, 2);
