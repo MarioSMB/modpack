@@ -13,70 +13,26 @@ void SendCSQCSniperLightning(vector start, vector end, int hit)
 	//WriteByte(MSG_BROADCAST, hit);
 }
 #elif defined(CSQC)
-PRECACHE(Railgun)
+.vector vorg1, vorg2;
+void SniperBeam_Draw(entity this)
 {
-	precache_model("progs/bolt2.mdl");
-}
+	float fail = this.nextthink - time;
 
-// even more smooth:
-float lerpCosine(float a, float b, float mix)
-{
-	if(mix <= 0) return a;
-	if(mix >= 1) return b;
-
-	float cmx = (1 - cos(mix * 180)) / 2;
-
-	return (b * cmx + a * (1 - cmx));
-}
-
-void SniperLightning_Draw(entity this)
-{
-	this.alpha = bound(0.0001, lerpCosine(1, 0, 1 - (this.count - time) / 0.5), 1);
-
-	if(time > this.count)
-		delete(this);
+	Draw_CylindricLine(this.vorg1, this.vorg2, 8, "particles/lgbeam", 0.25, 0, '1 1 1', bound(0, fail, 1), DRAWFLAG_NORMAL, view_origin);
 }
 
 NET_HANDLE(TE_CSQC_SNIPERBEAM, bool isNew)
 {
-	vector org = ReadVector();
-	vector dest = ReadVector();
-	//bool hit = ReadByte();
+	Net_Accept(sniper_beam);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.8;
+	this.draw = SniperBeam_Draw;
+	if (isNew)
+		IL_PUSH(g_drawables, this);
+	this.drawmask = MASK_NORMAL;
 
-	float len = vlen(dest - org);
-	vector dir = normalize(dest - org);
-	vector ang = vectoangles(dest - org);
-
-	entity sg = NULL;
-	float ct = (len) ? floor(len / 30) : 0;
-	for(int i = 0; i < ct; i++)
-	{
-		sg = spawn();
-
-		sg.solid = SOLID_NOT;
-		_setmodel(sg, "progs/bolt2.mdl");
-		setsize(sg, '0 0 0', '0 0 0');
-		setorigin(sg, org + dir * 30 * i);
-
-		sg.draw = SniperLightning_Draw;
-		if (isNew) IL_PUSH(g_drawables, sg);
-		sg.drawmask = MASK_NORMAL;
-
-		sg.classname = "lgsegment";
-		sg.effects = EF_FULLBRIGHT;
-		sg.angles = ang;
-		sg.angles_z = random()*360;
-		sg.count = time + 0.5 + 0.005 * i;
-		sg.alpha = 0.9;
-		//sg.state = hit;
-		sg.cnt = i;
-	}
-	// add an effect to the impact site
-	if(sg)
-	{
-		pointparticles(EFFECT_RAILGUN_MUZZLEFLASH, sg.origin, dir * -1, 1);
-		//sg.effects |= EF_MUZZLEFLASH;
-	}
+	this.vorg1 = ReadVector();
+	this.vorg2 = ReadVector();
 
 	return true;
 }
@@ -87,8 +43,6 @@ PRECACHE(Railgun)
 {
 	precache_model("progs/v_railgun.mdl");
 	precache_model("progs/g_railgun.mdl");
-
-	precache_model("progs/bolt2.mdl");
 
 	precache_sound("weapons/railwhirl1.wav");
 	precache_sound("weapons/railwhirl2.wav");

@@ -624,7 +624,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(gametype == GAMETYPE_TD)
 	{
 		// players might not have a keybind for it, so let them shoot the tower to start
-		if(targ.classname == "td_tower" && IS_PLAYER(attacker) && td_phase == TD_PHASE_BUILD && !attacker.ready)
+		if(targ.classname == "td_tower" && IS_PLAYER(attacker) && td_phase == TD_PHASE_BUILD && !attacker.ready && !DEATH_IS(deathtype, DEATH_CRUSH))
 		{
 			bprintf("%s ^7is ready!\n", attacker.netname);
 			Send_Notification(NOTIF_ALL_EXCEPT, attacker, MSG_CENTER, CENTER_READY, attacker.netname);

@@ -22,8 +22,15 @@ PRECACHE(Invoker)
 }
 
 // even more smooth:
-// defined elsewhere
-float lerpCosine(float a, float b, float mix);
+float lerpCosine(float a, float b, float mix)
+{
+	if(mix <= 0) return a;
+	if(mix >= 1) return b;
+
+	float cmx = (1 - cos(mix * 180)) / 2;
+
+	return (b * cmx + a * (1 - cmx));
+}
 
 #if 0
 void InvokerTrail_Draw(entity this)
