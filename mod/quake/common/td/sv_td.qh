@@ -17,6 +17,8 @@ int td_skill; // storage of skill cvar at load to prevent abuse
 
 .float td_matchtime; // for rankings
 
+.float spawntime; // map-defined spawn rate of monsters
+
 const int CLIPGROUP_TD = 67;
 const int CLIPGROUP_TDTURRET = 68;
 

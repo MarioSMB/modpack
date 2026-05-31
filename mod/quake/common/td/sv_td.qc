@@ -542,7 +542,7 @@ void td_spawnmonster(entity this, entity sp, Monster mon)
 void td_SpawnMonsters(entity this, entity sp)
 {
 	// delay regardless of whether monster spawning succeeds
-	sp.wait = time + 0.5 + random(); // TODO: customise spawning rate
+	sp.wait = time + 0.25 + (this.spawntime * random());
 
 	RandomSelection_Init();
 	FOREACH(Monsters, it != MON_Null,
@@ -816,8 +816,14 @@ void td_BuildPhase_Init(entity this)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_BUILDPHASE);
 	}
 
+	float mydelay = this.delay;
+	// double the initial delay for easier building
+	if(this.wave == this.lip)
+		mydelay *= 2;
+	float start_delay = (mydelay > 0) ? time + mydelay : 0;
+
 	td_phase = TD_PHASE_BUILD;
-	td_starttime = (this.delay > 0) ? time + this.delay : 0;
+	td_starttime = start_delay;
 	monsters_total = 0; // updated later, but reset regardless
 	monsters_killed = 0;
 
@@ -1037,13 +1043,17 @@ spawnfunc(td_manager)
 	precache_sound("misc/talk.wav");
 
 	// build phase
-	if(!this.noise1 || this.noise1 == "") this.noise1 = "td/buildphase.wav";
+	if(!this.noise1 || this.noise1 == "")
+		this.noise1 = "td/buildphase.wav";
 	// combat phase
-	if(!this.noise2 || this.noise2 == "") this.noise2 = "td/combatphase.wav";
+	if(!this.noise2 || this.noise2 == "")
+		this.noise2 = "td/combatphase.wav";
 	// final wave
-	if(!this.noise3 || this.noise3 == "") this.noise3 = "td/finalwave.wav";
+	if(!this.noise3 || this.noise3 == "")
+		this.noise3 = "td/finalwave.wav";
 	// round complete
-	if(!this.noise4 || this.noise4 == "") this.noise4 = "td/roundcomplete.wav";
+	if(!this.noise4 || this.noise4 == "")
+		this.noise4 = "td/roundcomplete.wav";
 
 	precache_sound(this.noise1);
 	precache_sound(this.noise2);
@@ -1076,6 +1086,10 @@ spawnfunc(td_manager)
 	// so reduce the wave counter by 1 so it starts at the mapper's intended wave
 	if(this.wave > 0)
 		this.wave -= 1;
+
+	// spawn rate of monsters, scaled by randomness
+	if(this.spawntime <= 0)
+		this.spawntime = 1;
 
 	// store the actual starting wave for later checks
 	this.lip = this.wave + 1;
