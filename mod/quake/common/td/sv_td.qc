@@ -39,7 +39,7 @@ bool td_rankings_send(entity this, entity to, int sf)
 		if(mvpsf & BIT(1))
 			WriteInt24_t(MSG_ENTITY, this.score_turretkills);
 		if(mvpsf & BIT(2))
-			WriteFloat(MSG_ENTITY, this.score_repaired);
+			WriteFloat(MSG_ENTITY, rint(this.score_repaired));
 		if(mvpsf & BIT(3))
 			WriteShort(MSG_ENTITY, this.score_upgrades);
 	}
@@ -96,7 +96,7 @@ void td_Ranking_SetMVP(entity this)
 
 	FOREACH_CLIENT(true,
 	{
-		float myscore = (it.score_playerkills + it.score_turretkills + rint(it.score_repaired * 0.33) + it.score_upgrades);
+		float myscore = (it.score_playerkills + it.score_turretkills + rint((td_rankings.score_repaired + 1) / 60) + it.score_upgrades);
 		if(!best || myscore > best_score)
 		{
 			best = it;

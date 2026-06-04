@@ -1121,7 +1121,7 @@ void Sbar_TDScoreboard()
 		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_START));
 		sui_drawcolortext(pos + vec2(0, 24 * columns), '16 16 0', "^3Boss Slayer!", 1, 0);
 
-		float myscore = (td_rankings.score_playerkills + td_rankings.score_turretkills + rint(td_rankings.score_repaired * 0.33) + td_rankings.score_upgrades);
+		float myscore = (td_rankings.score_playerkills + td_rankings.score_turretkills + rint((td_rankings.score_repaired + 1) / 60) + td_rankings.score_upgrades);
 		// draw total at the bottom
 		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_END));
 		sui_drawcolortext('0 0 0', '20 20 0', "^7Total Score", 1, 0);
