@@ -20,7 +20,7 @@ void barricade_hitbox_touch(entity this, entity toucher)
 	// also push enemy away
 	if(!(toucher.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && !(toucher.monsterdef.spawnflags & MON_FLAG_STATIONARY))
 	{
-		float pushforce = 100 / vlen(toucher.maxs - toucher.mins);
+		float pushforce = 100 / (vlen(toucher.maxs - toucher.mins) + 1);
 
 		vector dir = normalize(toucher.origin - this.origin);
 		toucher.velocity = dir * (200 * pushforce);
