@@ -1483,7 +1483,7 @@ void td_chest_touch(entity this, entity toucher)
 
 	// TODO: allow customisation of chest fuel amounts
 	float startwave = (td_ent && td_ent.lip > 0) ? td_ent.lip : 1;
-	float amount = this.count * startwave * (autocvar_skill + 1);
+	float amount = this.count * startwave * (td_skill + 1);
 	td_DropFuel(this, amount, NULL, true);
 
 	int myloot = floor(random() * 4) + 1;
