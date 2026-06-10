@@ -10,6 +10,7 @@ AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
 AUTOCVAR(g_player_crush_bounce, float, 300, "Bounce height in advanced trace mode");
 AUTOCVAR(g_player_crush_bounce_jump, float, 600, "Bounce height while holding jump in advanced trace mode");
 AUTOCVAR(g_player_crush_sound, bool, false, "Play boowip sound");
+AUTOCVAR(g_player_crush_monsters, bool, false, "Always allow stomping monsters");
 #endif
 
 #ifdef GAMEQC
@@ -30,7 +31,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 	if(g_prophunt) // TODO
 		return;
 
-	bool and_monster = IS_MONSTER(toucher) && (this.monsterdef.spawnflags & MON_FLAG_CRUSH);
+	bool and_monster = IS_MONSTER(toucher) && ((this.monsterdef.spawnflags & MON_FLAG_CRUSH) || autocvar_g_player_crush_monsters);
 
 	if(!autocvar_g_player_crush && !and_monster)
 		return;
