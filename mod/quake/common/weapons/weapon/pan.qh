@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(PAN_MUSICNOTE, "cook/ping2");
+#endif
+
 CLASS(Pan, Weapon)
 /* ammotype  */ ATTRIB(Pan, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Pan, impulse, int, 1);
-/* spawnflags*/ ATTRIB(Pan, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Pan, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Pan, aflag, int, 0);
 /* modelname */ ATTRIB(Pan, mdl, string, "fryingpan");
 /* crosshair */ ATTRIB(Pan, w_crosshair, string, "gfx/crosshair8");
@@ -12,6 +16,10 @@ CLASS(Pan, Weapon)
 /* wepimg    */ ATTRIB(Pan, model2, string, "pan");
 /* refname   */ ATTRIB(Pan, netname, string, "pan");
 /* wepname   */ ATTRIB(Pan, m_name, string, _("Frying Pan"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(Pan, m_musicnote, Sound, SND_PAN_MUSICNOTE);
+/* pitch     */ ATTRIB(Pan, m_nopitch, bool, true);
+#endif
 
 ENDCLASS(Pan)
 REGISTER_WEAPON(PAN, NEW(Pan));
