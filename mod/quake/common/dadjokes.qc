@@ -11,14 +11,16 @@ void dadjokes_internal(entity this);
 
 void dadjokes_process_url(entity this, entity fh)
 {
-	RandomSelection_Init();
-
 	int maxlines = 8; // c'mon dad
 	string s;
 	while((s = url_fgets(fh)))
 	{
 		// TODO: verification of receive order?
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_DADJOKE, s);
+		int n = tokenizebyseparator(s, "\n");
+		for(int j = 0; j < n; ++j)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_DADJOKE, argv(j));
+		}
 		maxlines -= 1;
 		if(maxlines <= 0)
 			break;
