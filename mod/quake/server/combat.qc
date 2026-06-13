@@ -634,7 +634,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		}
 		if(targ.classname == "td_tower" && (!IS_MONSTER(attacker) || (attacker.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || (attacker.owner.monsterdef.spawnflags & MONSTER_TYPE_BOSS) || attacker.charmed))
 			return;
-		if(IS_TURRET(targ) && attacker && (!IS_MONSTER(attacker) || attacker.charmed))
+		if(IS_TURRET(targ) && attacker && (IS_PLAYER(attacker) || attacker.charmed))
 			return;
 		if(IS_TURRET(attacker) && (!IS_MONSTER(targ) || targ.charmed))
 			return;
