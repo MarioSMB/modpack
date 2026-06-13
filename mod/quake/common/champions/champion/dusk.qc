@@ -138,7 +138,7 @@ METHOD(Dusk, m_playerthink, void(Dusk this, entity actor))
 
 	if(time >= actor.dusk_cleanup)
 	{
-		actor.dusk_cleanup = time + 0.5;
+		actor.dusk_cleanup = time + 0.1;
 		int moncount = 0;
 		entity chosen = NULL;
 		float chosen_time = 0;

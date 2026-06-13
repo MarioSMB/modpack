@@ -58,6 +58,8 @@ void td_BuildMode_Clear(entity this);
 
 void td_BuildMode_Toggle(entity this);
 
+void td_PlayerPreThink(entity this);
+
 void td_RemovePlayer(entity this);
 
 void td_PlayerDies(entity this);

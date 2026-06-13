@@ -2605,6 +2605,9 @@ void PlayerPreThink(entity this)
 
 	dodgeball_PlayerPreThink(this);
 
+	if(gametype == GAMETYPE_TD)
+		td_PlayerPreThink(this);
+
 // teleporters can force a non-moving pause time	
 	if(this.pausetime != -1 && time < this.pausetime)
 		this.velocity = '0 0 0';

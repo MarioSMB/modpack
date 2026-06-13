@@ -1036,10 +1036,9 @@ entity t_checkclient(entity this)
 
 //MED 10/18/96 added charmed stuff
 //============================================================================
+.float last_teleport; // for charmed monsters, to reduce lag
 void UpdateCharmerGoal(entity this)
 {
-   vector d = normalize(this.origin - this.charmer.origin);
-
 	if (this.huntingcharmer == 1)
 	{
 		entity targ = (this.trigger_field) ? this.trigger_field : spawn();
@@ -1048,21 +1047,26 @@ void UpdateCharmerGoal(entity this)
 		this.huntingcharmer = 2;
 		this.goalentity = targ;
 	}
-	// TODO: shouldn't this be else if?
 	else if (this.huntingcharmer == 2)
 	{
 		entity targ = this.trigger_field;
-		traceline(this.origin,this.charmer.origin,true,this);
-		if (trace_fraction == 1.0)
+		// added a cooldown since traces aren't cheap (false economy, but whatever)
+		if(time >= targ.last_teleport)
 		{
-//         dprint("can see ");
-//         dprint(vtos(this.charmer.origin));
-//         dprint("\n");
-			setorigin(targ,this.charmer.origin);
+			targ.last_teleport = time + 0.25;
+			traceline(this.origin,this.charmer.origin,true,this);
+			if (trace_fraction == 1.0)
+			{
+	//         dprint("can see ");
+	//         dprint(vtos(this.charmer.origin));
+	//         dprint("\n");
+				setorigin(targ,this.charmer.origin);
+			}
 		}
 	}
 	else
 	{
+		vector d = normalize(this.origin - this.charmer.origin);
 		entity targ = this.trigger_field;
 		setorigin(targ, this.charmer.origin + (d*300));
 	}
@@ -1273,7 +1277,6 @@ checked each frame.  This means multi player games will have slightly
 slower noticing monsters.
 ============
 */
-.float last_teleport; // for charmed monsters, to reduce lag
 bool FindTarget(entity this)
 {
 	entity client = NULL;

@@ -1600,21 +1600,6 @@ void td_fuel_think(entity this)
 		this.oldorigin = this.origin;
 		this.SendFlags |= SF_TD_FUEL_ORIGIN;
 	}
-
-	if(time < this.delay)
-		return;
-
-	vector extrasize = '64 64 64';
-	vector emin = this.absmin - extrasize;
-	vector emax = this.absmax + extrasize;
-
-	FOREACH_ENTITY_BOX_ORDERED(emin, emax, it != this && IS_PLAYER(it),
-	{
-		if(gettouch(this))
-			gettouch(this)(this, it);
-		if(wasfreed(this))
-			break;
-	});
 }
 
 void td_DropFuelAmount(vector from, int ftype, float amount, vector dir, entity ignore)
@@ -1726,6 +1711,27 @@ void td_PlayerDropFuel(entity this)
 	_sound(this, CH_TRIGGER_SINGLE, "enviro/physics/glassbit.wav", 1, 0.5);
 	td_DropFuel(this, fuel, this, false);
 	STAT(TD_FUEL, this) = max(STAT(TD_FUEL, this) - fuel, 0);
+}
+
+.float last_fuelcheck;
+void td_PlayerPreThink(entity this)
+{
+	if(td_phase == TD_PHASE_LOSE)
+		return;
+	if(time < this.last_fuelcheck)
+		return;
+
+	this.last_fuelcheck = time + 0.1; // throttle slightly, but not too much
+
+	vector extrasize = '64 64 64';
+	vector emin = this.absmin - extrasize;
+	vector emax = this.absmax + extrasize;
+
+	FOREACH_ENTITY_BOX_ORDERED(emin, emax, it != this && it.classname == "td_fuel" && time >= it.delay,
+	{
+		if(gettouch(it))
+			gettouch(it)(it, this);
+	});
 }
 
 void td_FuelCleanup()
