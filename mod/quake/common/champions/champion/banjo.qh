@@ -5,74 +5,49 @@
 #ifdef GAMEQC
 MODEL(Banjo, "progs/player_banjo.mdl");
 
-string Banjo_Pain_Random()
-{
-	float r = random();
-
-	if(r < 0.16)
-		return "player_banjo/pain1.wav";
-	else if(r < 0.32)
-		return "player_banjo/pain2.wav";
-	else if(r < 0.48)
-		return "player_banjo/pain3.wav";
-	else if(r < 0.64)
-		return "player_banjo/pain4.wav";
-	else if(r < 0.80)
-		return "player_banjo/pain5.wav";
-	else
-		return "player_banjo/pain6.wav";
+SOUND(Banjo_Pain1, "player_banjo/pain1");
+SOUND(Banjo_Pain2, "player_banjo/pain2");
+SOUND(Banjo_Pain3, "player_banjo/pain3");
+SOUND(Banjo_Pain4, "player_banjo/pain4");
+SOUND(Banjo_Pain5, "player_banjo/pain5");
+SOUND(Banjo_Pain6, "player_banjo/pain6");
+Sound SND_Banjo_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Banjo_Pain1.m_id + rint(random() * 5));
 }
 
-string Banjo_Death_Random()
-{
-	float r = random();
-
-	if(r < 0.33)
-		return "player_banjo/death1.wav";
-	else if(r < 0.66)
-		return "player_banjo/death2.wav";
-	else
-		return "player_banjo/death3.wav";
+SOUND(Banjo_Death1, "player_banjo/death1");
+SOUND(Banjo_Death2, "player_banjo/death2");
+SOUND(Banjo_Death3, "player_banjo/death3");
+Sound SND_Banjo_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Banjo_Death1.m_id + rint(random() * 2));
 }
-
-void BanjoKazooie_Precache()
+PRECACHE(BanjoKazooie)
 {
 #ifdef CSQC
-	precache_pic("gfx/quake/banjo_face1");
-	precache_pic("gfx/quake/banjo_face2");
-	precache_pic("gfx/quake/banjo_face3");
-	precache_pic("gfx/quake/banjo_face4");
-	precache_pic("gfx/quake/banjo_face5");
+    precache_pic("gfx/quake/banjo_face1");
+    precache_pic("gfx/quake/banjo_face2");
+    precache_pic("gfx/quake/banjo_face3");
+    precache_pic("gfx/quake/banjo_face4");
+    precache_pic("gfx/quake/banjo_face5");
 #endif
 #ifdef SVQC
-	precache_sound("player_banjo/plyrjmp8.wav");       // player jump
-	precache_sound("player_banjo/land.wav");           // player landing
-	precache_sound("player_banjo/land2.wav");      // player hurt landing
-	precache_sound("player_banjo/drown1.wav");     // drowning pain
-	precache_sound("player_banjo/drown2.wav");     // drowning pain
-	precache_sound("player_banjo/gasp1.wav");      // gasping for air
-	precache_sound("player_banjo/gasp2.wav");      // taking breath
-	precache_sound("player_banjo/h2odeath.wav");       // drowning death
+    precache_sound("player_banjo/plyrjmp8.wav");       // player jump
+    precache_sound("player_banjo/land.wav");           // player landing
+    precache_sound("player_banjo/land2.wav");      // player hurt landing
+    precache_sound("player_banjo/drown1.wav");     // drowning pain
+    precache_sound("player_banjo/drown2.wav");     // drowning pain
+    precache_sound("player_banjo/gasp1.wav");      // gasping for air
+    precache_sound("player_banjo/gasp2.wav");      // taking breath
+    precache_sound("player_banjo/h2odeath.wav");       // drowning death
 
-	precache_sound("player_banjo/death1.wav");
-	precache_sound("player_banjo/death2.wav");
-	precache_sound("player_banjo/death3.wav");
+    precache_sound("player_banjo/axhit1.wav");
 
-	precache_sound("player_banjo/pain1.wav");
-	precache_sound("player_banjo/pain2.wav");
-	precache_sound("player_banjo/pain3.wav");
-	precache_sound("player_banjo/pain4.wav");
-	precache_sound("player_banjo/pain5.wav");
-	precache_sound("player_banjo/pain6.wav");
+    precache_sound("player_banjo/lburn1.wav");     // lava burn
+    precache_sound("player_banjo/lburn2.wav");     // lava burn
 
-	precache_sound("player_banjo/axhit1.wav");
-
-	precache_sound("player_banjo/lburn1.wav");     // lava burn
-	precache_sound("player_banjo/lburn2.wav");     // lava burn
-
-	precache_sound("player_banjo/start.wav");
-	precache_sound("player_banjo/flight.wav");
-	precache_sound("player_banjo/falling.wav");
+    precache_sound("player_banjo/start.wav");
+    precache_sound("player_banjo/flight.wav");
+    precache_sound("player_banjo/falling.wav");
 #endif
 }
 #endif
@@ -84,19 +59,18 @@ void BanjoKazooie_Precache()
 "Right-click to cycle eggs"
 #endif
 CLASS(BanjoKazooie, Champions)
-	ATTRIB(BanjoKazooie, netname, string, "banjo");
-	ATTRIB(BanjoKazooie, m_name, string, "Banjo");
-	ATTRIB(BanjoKazooie, qcc_jumpheight, float, 1.2);
+    ATTRIB(BanjoKazooie, netname, string, "banjo");
+    ATTRIB(BanjoKazooie, m_name, string, "Banjo");
+    ATTRIB(BanjoKazooie, qcc_jumpheight, float, 1.2);
 #ifdef GAMEQC
-	METHOD(BanjoKazooie, m_precache, void()) { BanjoKazooie_Precache(); }
-	ATTRIB(BanjoKazooie, m_model, Model, MDL_Banjo);
-	ATTRIB(BanjoKazooie, m_soundpath, string, "player_banjo/");
-	METHOD(BanjoKazooie, m_sound_pain, string()) { return Banjo_Pain_Random(); }
-	METHOD(BanjoKazooie, m_sound_death, string()) { return Banjo_Death_Random(); }
-	METHOD(BanjoKazooie, m_sound_jump, string(entity actor)) { return "player_banjo/plyrjmp8.wav"; }
+    ATTRIB(BanjoKazooie, m_model, Model, MDL_Banjo);
+    ATTRIB(BanjoKazooie, m_soundpath, string, "player_banjo/");
+    METHOD(BanjoKazooie, m_sound_pain, string()) { return SND(Banjo_Pain_Random()); }
+    METHOD(BanjoKazooie, m_sound_death, string()) { return SND(Banjo_Death_Random()); }
+    METHOD(BanjoKazooie, m_sound_jump, string(entity actor)) { return "player_banjo/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-	ATTRIB(BanjoKazooie, message, string, BANJO_STATS);
+    ATTRIB(BanjoKazooie, message, string, BANJO_STATS);
 #endif
 ENDCLASS(BanjoKazooie)
 REGISTER_CHAMPION(BanjoKazooie, NEW(BanjoKazooie));

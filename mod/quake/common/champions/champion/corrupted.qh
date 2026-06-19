@@ -6,12 +6,13 @@
 MODEL(Corrupted, "progs/player_corrupted.mdl");
 MODEL(Corrupted_Head, "progs/h_player_corrupted.mdl");
 
-string Corrupted_Death_Random()
-{
-    return (random() > 0.5) ? "player_corrupted/death1.wav" : "player_corrupted/death2.wav";
+SOUND(Corrupted_Death1, "player_corrupted/death1");
+SOUND(Corrupted_Death2, "player_corrupted/death2");
+Sound SND_Corrupted_Death_Random() {
+    return (random() > 0.5) ? SND_Corrupted_Death1 : SND_Corrupted_Death2;
 }
 
-void Corrupted_Precache()
+PRECACHE(Corrupted)
 {
 #ifdef CSQC
     precache_pic("gfx/quake/dryad_face_corrupted");
@@ -56,12 +57,11 @@ CLASS(Corrupted, Champions)
     ATTRIB(Corrupted, qcc_damagetaken, float, 0.2);
     ATTRIB(Corrupted, qcc_health_regen_stable, float, 0);
 #ifdef GAMEQC
-    METHOD(Corrupted, m_precache, void()) { Corrupted_Precache(); }
     ATTRIB(Corrupted, m_model, Model, MDL_Corrupted);
     ATTRIB(Corrupted, m_model_head, Model, MDL_Corrupted_Head);
     ATTRIB(Corrupted, m_soundpath, string, "player_corrupted/");
     METHOD(Corrupted, m_sound_pain, string()) { return "player_corrupted/pain.wav"; }
-    METHOD(Corrupted, m_sound_death, string()) { return Corrupted_Death_Random(); }
+    METHOD(Corrupted, m_sound_death, string()) { return SND(Corrupted_Death_Random()); }
     METHOD(Corrupted, m_sound_jump, string(entity actor)) { return "player_corrupted/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC

@@ -84,7 +84,7 @@ METHOD(Goat, m_physics, bool(Champions this, entity actor, float dt))
 		if(autocvar_sv_quake_fixstuff || random() < 0.1)
 			player_sound(actor, CH_WEAPON_SINGLE, "death2.wav", ATTN_NORM);
 		else
-			_sound(actor, CH_WEAPON_SINGLE, Goat_Pain_Random(), 1, ATTN_NORM);
+			_sound(actor, CH_WEAPON_SINGLE, SND(Goat_Pain_Random()), 1, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	#endif
 		vector vang = PHYS_INPUT_ANGLES(actor);

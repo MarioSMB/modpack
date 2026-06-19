@@ -6,11 +6,8 @@
 MODEL(Valkyrie, "progs/player_valkyrie.mdl");
 MODEL(Valkyrie_Head, "progs/h_player_enyo.mdl");
 
-void Valkyrie_Precache()
+PRECACHE(Valkyrie)
 {
-#ifdef CSQC
-    precache_model("progs/v_enyosword.mdl");
-#endif
 #ifdef SVQC
     precache_sound("player_enyo/plyrjmp8.wav");       // player jump
     precache_sound("player_enyo/land.wav");           // player landing
@@ -52,13 +49,12 @@ CLASS(Valkyrie, Champions)
     ATTRIB(Valkyrie, qcc_anim_stand, vector, '155 0 5');
     ATTRIB(Valkyrie, qcc_meleename, string, "enyosword");
 #ifdef GAMEQC
-    METHOD(Valkyrie, m_precache, void()) { Valkyrie_Precache(); }
     ATTRIB(Valkyrie, m_model, Model, MDL_Valkyrie);
     ATTRIB(Valkyrie, m_model_head, Model, MDL_Valkyrie_Head);
     ATTRIB(Valkyrie, m_soundpath, string, "player_enyo/");
-    METHOD(Valkyrie, m_sound_pain, string()) { return Enyo_Pain_Random(); }
-    METHOD(Valkyrie, m_sound_death, string()) { return "player_enyo/death.wav"; }
-    METHOD(Valkyrie, m_sound_jump, string(entity actor)) { return Enyo_Jump_Random(); }
+    METHOD(Valkyrie, m_sound_pain, string()) { return SND(Enyo_Pain_Random()); }
+    METHOD(Valkyrie, m_sound_death, string()) { return SND(Enyo_Death); }
+    METHOD(Valkyrie, m_sound_jump, string(entity actor)) { return SND(Enyo_Jump_Random()); }
 #endif
 #ifdef CSQC
     ATTRIB(Valkyrie, message, string, "You are transformed!");

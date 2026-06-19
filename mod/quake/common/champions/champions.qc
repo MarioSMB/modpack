@@ -1,13 +1,3 @@
-#ifdef CSQC
-PRECACHE(Champions_Precache)
-{
-	FOREACH(Champion, it.m_precache,
-	{
-		it.m_precache();
-	});
-}
-#endif
-
 void QCC_FixClient(entity this)
 {
 #ifdef CSQC
@@ -283,12 +273,9 @@ void QCC_UpdatePlayer(entity this)
 	if(champ.m_getplayermodel)
 		newmdl = champ.m_getplayermodel(champ, this);
 	else
-		newmdl = champ.m_model.model_str(); // unused fallback
+		newmdl = champ.m_model.model_str();; // unused fallback
 	if(newmdl != this.playermodel)
 	{
-		if(champ.m_precache)
-			champ.m_precache();
-
 		vector oldmin = this.mins, oldmax = this.maxs;
 		this.playermodel = newmdl;
 		_setmodel(this, newmdl);

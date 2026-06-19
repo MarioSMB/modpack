@@ -63,7 +63,7 @@ METHOD(Mario, m_touch, void(Champions this, entity actor, entity toucher))
 			if(toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
 				thedamage = 120;
 			T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
-			_sound(actor, CH_TRIGGER_SINGLE, "items/goomba.wav", 1, ATTN_NORM);
+			sound(actor, CH_TRIGGER_SINGLE, SND_Mario_Crush, 1, ATTN_NORM);
 	#endif
 			return;
 		}

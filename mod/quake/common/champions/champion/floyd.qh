@@ -6,7 +6,7 @@
 MODEL(FloydChamp, "progs/floyd.mdl");
 MODEL(FloydChamp_Head, "progs/h_floyd.mdl");
 
-void FloydChamp_Precache()
+PRECACHE(FloydChamp)
 {
 #ifdef SVQC
     //precache_sound("player/plyrjmp8.wav");       // player jump
@@ -56,7 +56,6 @@ CLASS(FloydChamp, Champions)
     ATTRIB(FloydChamp, qcc_anim_axstnd, vector, '0 0 1');
     ATTRIB(FloydChamp, qcc_anim_stand, vector, '0 0 1');
 #ifdef GAMEQC
-    METHOD(FloydChamp, m_precache, void()) { FloydChamp_Precache(); }
     ATTRIB(FloydChamp, m_model, Model, MDL_FloydChamp);
     ATTRIB(FloydChamp, m_model_head, Model, MDL_FloydChamp_Head);
     ATTRIB(FloydChamp, m_soundpath, string, "player/");

@@ -5,91 +5,75 @@
 #ifdef GAMEQC
 MODEL(Poop, "progs/player_poop.mdl");
 
-string Poop_Pain_Random()
-{
-	int r = floor(prandom() * 4);
-	if(r == 0)
-		return "player_poop/pain1.wav";
-	else if(r == 1)
-		return "player_poop/pain2.wav";
-	else if(r == 2)
-		return "player_poop/pain3.wav";
-	else
-		return "player_poop/pain4.wav";
+SOUND(Poop_Pain1, "player_poop/pain1");
+SOUND(Poop_Pain2, "player_poop/pain2");
+SOUND(Poop_Pain3, "player_poop/pain3");
+SOUND(Poop_Pain4, "player_poop/pain4");
+Sound SND_Poop_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Poop_Pain1.m_id + floor(prandom() * 4));
 }
 
-string Poop_Death_Random()
-{
-	int r = floor(prandom() * 3);
-	if(r == 0)
-		return "player_poop/death1.wav";
-	else if(r == 1)
-		return "player_poop/death2.wav";
-	else
-		return "player_poop/death3.wav";
+SOUND(Poop_Death1, "player_poop/death1");
+SOUND(Poop_Death2, "player_poop/death2");
+SOUND(Poop_Death3, "player_poop/death3");
+Sound SND_Poop_Death_Random() {
+    return REGISTRY_GET(Sounds, SND_Poop_Death1.m_id + floor(prandom() * 3));
 }
-
-#ifdef GAMEQC
-void Poop_Precache()
+PRECACHE(Poop)
 {
 #ifdef CSQC
-	precache_pic("gfx/quake/poop_face");
+    precache_pic("gfx/quake/poop_face");
 #endif
 #ifdef SVQC
-	precache_sound("player_poop/plyrjmp8.wav");       // player jump
-	precache_sound("player_poop/land.wav");           // player landing
-	precache_sound("player_poop/land2.wav");      // player hurt landing
-	precache_sound("player_poop/drown1.wav");     // drowning pain
-	precache_sound("player_poop/drown2.wav");     // drowning pain
-	precache_sound("player_poop/gasp1.wav");      // gasping for air
-	precache_sound("player_poop/gasp2.wav");      // taking breath
-	precache_sound("player_poop/h2odeath.wav");       // drowning death
+    precache_sound("player_poop/plyrjmp8.wav");       // player jump
+    precache_sound("player_poop/land.wav");           // player landing
+    precache_sound("player_poop/land2.wav");      // player hurt landing
+    precache_sound("player_poop/drown1.wav");     // drowning pain
+    precache_sound("player_poop/drown2.wav");     // drowning pain
+    precache_sound("player_poop/gasp1.wav");      // gasping for air
+    precache_sound("player_poop/gasp2.wav");      // taking breath
+    precache_sound("player_poop/h2odeath.wav");       // drowning death
 
-	precache_sound("player_poop/pain1.wav");
-	precache_sound("player_poop/pain2.wav");
-	precache_sound("player_poop/pain3.wav");
-	precache_sound("player_poop/pain4.wav");
+    precache_sound("player_poop/pain1.wav");
+    precache_sound("player_poop/pain2.wav");
+    precache_sound("player_poop/pain3.wav");
 
-	precache_sound("player_poop/death1.wav");
-	precache_sound("player_poop/death2.wav");
-	precache_sound("player_poop/death3.wav");
+    precache_sound("player_poop/death1.wav");
+    precache_sound("player_poop/death2.wav");
 
-	precache_sound("player_poop/axhit1.wav");
+    precache_sound("player_poop/axhit1.wav");
 
-	precache_sound("player_poop/lburn1.wav");     // lava burn
-	precache_sound("player_poop/lburn2.wav");     // lava burn
+    precache_sound("player_poop/lburn1.wav");     // lava burn
+    precache_sound("player_poop/lburn2.wav");     // lava burn
 
-	precache_sound("player_poop/start.wav");
-	precache_sound("player_poop/falling.wav");
+    precache_sound("player_poop/start.wav");
+    precache_sound("player_poop/falling.wav");
 
-	precache_model("progs/s_mayo.mdl");
+    precache_model("progs/s_mayo.mdl");
 #endif
 }
-#endif
-
 #endif
 #ifdef CSQC
 #define POOP_STATS \
 "Better hold it in"
 #endif
 CLASS(Poop, Champions)
-	ATTRIB(Poop, netname, string, "poop");
-	ATTRIB(Poop, m_name, string, "Poop Head");
-	ATTRIB(Poop, qcc_pogo, bool, true);
-	ATTRIB(Poop, m_hidden, bool, true);
+    ATTRIB(Poop, netname, string, "poop");
+    ATTRIB(Poop, m_name, string, "Poop Head");
+    ATTRIB(Poop, qcc_pogo, bool, true);
+    ATTRIB(Poop, m_hidden, bool, true);
 #ifdef GAMEQC
-	METHOD(Poop, m_precache, void()) { Poop_Precache(); }
-	ATTRIB(Poop, m_model, Model, MDL_Poop);
-	ATTRIB(Poop, m_model_head, Model, MDL_Null);
-	ATTRIB(Poop, m_soundpath, string, "player_poop/");
-	METHOD(Poop, m_sound_pain, string()) { return Poop_Pain_Random(); }
-	METHOD(Poop, m_sound_death, string()) { return Poop_Death_Random(); }
-	METHOD(Poop, m_sound_jump, string(entity actor)) { return "player_poop/plyrjmp8.wav"; }
+    ATTRIB(Poop, m_model, Model, MDL_Poop);
+    ATTRIB(Poop, m_model_head, Model, MDL_Null);
+    ATTRIB(Poop, m_soundpath, string, "player_poop/");
+    METHOD(Poop, m_sound_pain, string()) { return SND(Poop_Pain_Random()); }
+    METHOD(Poop, m_sound_death, string()) { return SND(Poop_Death_Random()); }
+    METHOD(Poop, m_sound_jump, string(entity actor)) { return "player_poop/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-	ATTRIB(Poop, message, string, POOP_STATS);
+    ATTRIB(Poop, message, string, POOP_STATS);
 #endif
-	ATTRIB(Poop, td_turrets, bool, true);
+    ATTRIB(Poop, td_turrets, bool, true);
 ENDCLASS(Poop)
 REGISTER_CHAMPION(Poop, NEW(Poop));
 

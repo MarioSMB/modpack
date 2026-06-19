@@ -5,7 +5,7 @@
 #ifdef GAMEQC
 MODEL(KiwiChamp, "progs/kiwi.mdl");
 
-void KiwiChamp_Precache()
+PRECACHE(KiwiChamp)
 {
 #ifdef SVQC
     //precache_sound("player/plyrjmp8.wav");       // player jump
@@ -43,7 +43,6 @@ CLASS(KiwiChamp, Champions)
     ATTRIB(KiwiChamp, qcc_anim_axstnd, vector, '0 0 0');
     ATTRIB(KiwiChamp, qcc_anim_stand, vector, '0 0 0');
 #ifdef GAMEQC
-    METHOD(KiwiChamp, m_precache, void()) { KiwiChamp_Precache(); }
     ATTRIB(KiwiChamp, m_model, Model, MDL_KiwiChamp);
     ATTRIB(KiwiChamp, m_soundpath, string, "player/");
     METHOD(KiwiChamp, m_sound_pain, string()) { return "kiwi/kiwi.wav"; }

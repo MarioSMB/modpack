@@ -6,53 +6,40 @@
 MODEL(Gordon, "progs/player_gordon.mdl");
 MODEL(Gordon_Head, "progs/h_player_gordon.mdl");
 
-string Gordon_Pain_Random()
-{
-	float r = random();
-
-	if(r < 0.2)
-		return "player_gordon/pain1.wav";
-	else if(r < 0.4)
-		return "player_gordon/pain2.wav";
-	else if(r < 0.6)
-		return "player_gordon/pain3.wav";
-	else if(r < 0.8)
-		return "player_gordon/pain4.wav";
-	else
-		return "player_gordon/pain5.wav";
+SOUND(Gordon_Pain1, "player_gordon/pain1");
+SOUND(Gordon_Pain2, "player_gordon/pain2");
+SOUND(Gordon_Pain3, "player_gordon/pain3");
+SOUND(Gordon_Pain4, "player_gordon/pain4");
+SOUND(Gordon_Pain5, "player_gordon/pain5");
+Sound SND_Gordon_Pain_Random() {
+    return REGISTRY_GET(Sounds, SND_Gordon_Pain1.m_id + rint(random() * 4));
 }
 
-void Gordon_Precache()
+SOUND(Gordon_Death, "player_gordon/death");
+
+PRECACHE(Gordon)
 {
 #ifdef CSQC
-	precache_pic("gfx/quake/gordon_face");
+    precache_pic("gfx/quake/gordon_face");
 #endif
 #ifdef SVQC
-	precache_sound("player_gordon/plyrjmp8.wav");       // player jump
-	precache_sound("player_gordon/land.wav");           // player landing
-	precache_sound("player_gordon/land2.wav");      // player hurt landing
-	precache_sound("player_gordon/drown1.wav");     // drowning pain
-	precache_sound("player_gordon/drown2.wav");     // drowning pain
-	precache_sound("player_gordon/gasp1.wav");      // gasping for air
-	precache_sound("player_gordon/gasp2.wav");      // taking breath
-	precache_sound("player_gordon/h2odeath.wav");       // drowning death
+    precache_sound("player_gordon/plyrjmp8.wav");       // player jump
+    precache_sound("player_gordon/land.wav");           // player landing
+    precache_sound("player_gordon/land2.wav");      // player hurt landing
+    precache_sound("player_gordon/drown1.wav");     // drowning pain
+    precache_sound("player_gordon/drown2.wav");     // drowning pain
+    precache_sound("player_gordon/gasp1.wav");      // gasping for air
+    precache_sound("player_gordon/gasp2.wav");      // taking breath
+    precache_sound("player_gordon/h2odeath.wav");       // drowning death
 
-	precache_sound("player_gordon/axhit1.wav");
+    precache_sound("player_gordon/axhit1.wav");
 
-	precache_sound("player_gordon/death.wav");
+    precache_sound("player_gordon/lburn1.wav");     // lava burn
+    precache_sound("player_gordon/lburn2.wav");     // lava burn
 
-	precache_sound("player_gordon/pain1.wav");
-	precache_sound("player_gordon/pain2.wav");
-	precache_sound("player_gordon/pain3.wav");
-	precache_sound("player_gordon/pain4.wav");
-	precache_sound("player_gordon/pain5.wav");
-
-	precache_sound("player_gordon/lburn1.wav");     // lava burn
-	precache_sound("player_gordon/lburn2.wav");     // lava burn
-
-	precache_sound("player_gordon/start1.wav");
-	precache_sound("player_gordon/start2.wav");
-	precache_sound("player_gordon/start3.wav");
+    precache_sound("player_gordon/start1.wav");
+    precache_sound("player_gordon/start2.wav");
+    precache_sound("player_gordon/start3.wav");
 #endif
 }
 #endif
@@ -63,19 +50,18 @@ void Gordon_Precache()
 "Also has a Gravity Gun"
 #endif
 CLASS(Gordon, Champions)
-	ATTRIB(Gordon, netname, string, "gordon");
-	ATTRIB(Gordon, m_name, string, "Gordon Freeman");
+    ATTRIB(Gordon, netname, string, "gordon");
+    ATTRIB(Gordon, m_name, string, "Gordon Freeman");
 #ifdef GAMEQC
-	METHOD(Gordon, m_precache, void()) { Gordon_Precache(); }
-	ATTRIB(Gordon, m_model, Model, MDL_Gordon);
-	ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);
-	ATTRIB(Gordon, m_soundpath, string, "player_gordon/");
-	METHOD(Gordon, m_sound_pain, string()) { return Gordon_Pain_Random(); }
-	METHOD(Gordon, m_sound_death, string()) { return "player_gordon/death.wav"; }
-	METHOD(Gordon, m_sound_jump, string(entity actor)) { return "player_gordon/plyrjmp8.wav"; }
+    ATTRIB(Gordon, m_model, Model, MDL_Gordon);
+    ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);
+    ATTRIB(Gordon, m_soundpath, string, "player_gordon/");
+    METHOD(Gordon, m_sound_pain, string()) { return SND(Gordon_Pain_Random()); }
+    METHOD(Gordon, m_sound_death, string()) { return SND(Gordon_Death); }
+    METHOD(Gordon, m_sound_jump, string(entity actor)) { return "player_gordon/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-	ATTRIB(Gordon, message, string, GORDON_STATS);
+    ATTRIB(Gordon, message, string, GORDON_STATS);
 #endif
 ENDCLASS(Gordon)
 REGISTER_CHAMPION(Gordon, NEW(Gordon));

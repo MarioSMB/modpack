@@ -6,11 +6,8 @@
 MODEL(Demon, "progs/demon.mdl");
 MODEL(Demon_Head, "progs/h_demon.mdl");
 
-void Demon_Precache()
+PRECACHE(Demon)
 {
-#ifdef CSQC
-    precache_model("progs/v_sorclaw.mdl");
-#endif
 #ifdef SVQC
     precache_sound("player_keyleth/plyrjmp8.wav");       // player jump
     precache_sound("player_keyleth/land.wav");           // player landing
@@ -51,7 +48,6 @@ CLASS(Demon, Champions)
     ATTRIB(Demon, qcc_anim_axstnd, vector, '0 0 12');
     ATTRIB(Demon, qcc_anim_stand, vector, '0 0 12');
 #ifdef GAMEQC
-    METHOD(Demon, m_precache, void()) { Demon_Precache(); }
     ATTRIB(Demon, m_model, Model, MDL_Demon);
     ATTRIB(Demon, m_model_head, Model, MDL_Demon_Head);
     ATTRIB(Demon, m_soundpath, string, "player_keyleth/");

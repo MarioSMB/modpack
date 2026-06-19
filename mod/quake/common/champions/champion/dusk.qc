@@ -97,7 +97,7 @@ void Dusk_MakeWisp(entity targ)
 {
 	entity wisp = spawn();
 	wisp.classname = "dusk_wisp";
-	setmodel(wisp, MDL_Wisp);
+	_setmodel(wisp, "progs/wisp.mdl");
 	setsize(wisp, '0 0 0', '0 0 0');
 	set_movetype(wisp, MOVETYPE_NONE);
 	setorigin(wisp, targ.origin);
