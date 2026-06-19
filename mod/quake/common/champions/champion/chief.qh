@@ -5,13 +5,11 @@
 #ifdef GAMEQC
 MODEL(Chief, "progs/player_chief.mdl");
 
-SOUND(Chief_Pain, "player_chief/pain");
-
-SOUND(Chief_Death1, "player_chief/death1");
-PRECACHE(Chief)
+void Chief_Precache()
 {
 #ifdef CSQC
     precache_pic("gfx/quake/chief_face");
+    precache_model("progs/v_mcsword.mdl");
 #endif
 #ifdef SVQC
     precache_model("progs/v_mcsword.mdl");
@@ -52,10 +50,11 @@ CLASS(Chief, Champions)
     ATTRIB(Chief, qcc_meleename, string, "mcsword");
     ATTRIB(Chief, qcc_attackrate, float, 0.75);
 #ifdef GAMEQC
+    METHOD(Chief, m_precache, void()) { Chief_Precache(); }
     ATTRIB(Chief, m_model, Model, MDL_Chief);
     ATTRIB(Chief, m_soundpath, string, "player_chief/");
-    METHOD(Chief, m_sound_pain, string()) { return SND(Chief_Pain); }
-    METHOD(Chief, m_sound_death, string()) { return SND(Chief_Death1); }
+    METHOD(Chief, m_sound_pain, string()) { return "player_chief/pain.wav"; }
+    METHOD(Chief, m_sound_death, string()) { return "player_chief/death1.wav"; }
     METHOD(Chief, m_sound_jump, string(entity actor)) { return "player_chief/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC

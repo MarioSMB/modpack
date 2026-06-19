@@ -73,7 +73,7 @@ void ThrowTeddy(entity this)
 	set_movetype(teddy, MOVETYPE_TOSS);
 	teddy.solid = SOLID_TRIGGER;
 	teddy.cnt = time + 0.33;
-	setmodel(teddy, MDL_TEDDY);
+	_setmodel(teddy, "progs/teddy.mdl");
 	//setsize(teddy, '-4 -4 -4', '4 4 4');
 	vector cmin = this.mins, cmax = this.maxs;
 	// some basic sanity, but otherwise use player's hitbox to avoid exploits

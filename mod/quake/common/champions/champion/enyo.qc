@@ -19,7 +19,7 @@ void enyo_WingCharge(entity this, float charge)
 
 METHOD(Enyo, m_footsteps, bool(Champions this, entity actor))
 {
-	sound(actor, CH_VOICE, SND_Enyo_Step_Random(), 0.5, ATTN_NORM);
+	_sound(actor, CH_VOICE, Enyo_Step_Random(), 0.5, ATTN_NORM);
 	return true;
 }
 

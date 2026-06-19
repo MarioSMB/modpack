@@ -5,69 +5,71 @@
 #ifdef GAMEQC
 MODEL(Bean, "progs/player_bean.mdl");
 
-SOUND(Bean_Pain1, "player_bean/pain1");
-SOUND(Bean_Pain2, "player_bean/pain2");
-Sound SND_Bean_Pain_Random() {
-    return (random() > 0.5) ? SND_Bean_Pain1 : SND_Bean_Pain2;
+string Bean_Pain_Random()
+{
+	return (random() > 0.5) ? "player_bean/pain1.wav" : "player_bean/pain2.wav";
 }
 
-SOUND(Bean_Death1, "player_bean/death1");
-SOUND(Bean_Death2, "player_bean/death2");
-SOUND(Bean_Death3, "player_bean/death3");
-Sound SND_Bean_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Bean_Death1.m_id + rint(random() * 2));
+string Bean_Death_Random()
+{
+	int r = floor(prandom() * 3);
+	if(r == 0)
+		return "player_bean/death1.wav";
+	else if(r == 1)
+		return "player_bean/death2.wav";
+	else
+		return "player_bean/death3.wav";
 }
 
-MODEL(TEDDY, "progs/teddy.mdl");
-
-PRECACHE(Bean)
+void Bean_Precache()
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/bean_face_invis");
-    precache_pic("gfx/quake/bean_face_invul2");
-    precache_pic("gfx/quake/bean_face_inv2");
-    precache_pic("gfx/quake/bean_face_quad");
+	precache_pic("gfx/quake/bean_face_invis");
+	precache_pic("gfx/quake/bean_face_invul2");
+	precache_pic("gfx/quake/bean_face_inv2");
+	precache_pic("gfx/quake/bean_face_quad");
 
-    precache_pic("gfx/quake/bean_face1");
-    precache_pic("gfx/quake/bean_face_p1");
-    precache_pic("gfx/quake/bean_face2");
-    precache_pic("gfx/quake/bean_face_p2");
-    precache_pic("gfx/quake/bean_face3");
-    precache_pic("gfx/quake/bean_face_p3");
-    precache_pic("gfx/quake/bean_face4");
-    precache_pic("gfx/quake/bean_face_p4");
-    precache_pic("gfx/quake/bean_face5");
-    precache_pic("gfx/quake/bean_face_p5");
+	precache_pic("gfx/quake/bean_face1");
+	precache_pic("gfx/quake/bean_face_p1");
+	precache_pic("gfx/quake/bean_face2");
+	precache_pic("gfx/quake/bean_face_p2");
+	precache_pic("gfx/quake/bean_face3");
+	precache_pic("gfx/quake/bean_face_p3");
+	precache_pic("gfx/quake/bean_face4");
+	precache_pic("gfx/quake/bean_face_p4");
+	precache_pic("gfx/quake/bean_face5");
+	precache_pic("gfx/quake/bean_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_bean/plyrjmp8.wav");       // player jump
-    precache_sound("player_bean/land.wav");           // player landing
-    precache_sound("player_bean/land2.wav");      // player hurt landing
-    precache_sound("player_bean/drown1.wav");     // drowning pain
-    precache_sound("player_bean/drown2.wav");     // drowning pain
-    precache_sound("player_bean/gasp1.wav");      // gasping for air
-    precache_sound("player_bean/gasp2.wav");      // taking breath
-    precache_sound("player_bean/h2odeath.wav");       // drowning death
+	precache_sound("player_bean/plyrjmp8.wav");       // player jump
+	precache_sound("player_bean/land.wav");           // player landing
+	precache_sound("player_bean/land2.wav");      // player hurt landing
+	precache_sound("player_bean/drown1.wav");     // drowning pain
+	precache_sound("player_bean/drown2.wav");     // drowning pain
+	precache_sound("player_bean/gasp1.wav");      // gasping for air
+	precache_sound("player_bean/gasp2.wav");      // taking breath
+	precache_sound("player_bean/h2odeath.wav");       // drowning death
 
-    precache_sound("player_bean/pain1.wav");
-    precache_sound("player_bean/pain2.wav");
+	precache_sound("player_bean/pain1.wav");
+	precache_sound("player_bean/pain2.wav");
 
-    precache_sound("player_bean/death1.wav");
-    precache_sound("player_bean/death2.wav");
-    precache_sound("player_bean/death3.wav");
+	precache_sound("player_bean/death1.wav");
+	precache_sound("player_bean/death2.wav");
+	precache_sound("player_bean/death3.wav");
 
-    precache_sound("player_bean/axhit1.wav");
-    precache_sound("player_bean/axhit2.wav");
+	precache_sound("player_bean/axhit1.wav");
+	precache_sound("player_bean/axhit2.wav");
 
-    precache_sound("player_bean/lburn1.wav");     // lava burn
-    precache_sound("player_bean/lburn2.wav");     // lava burn
+	precache_sound("player_bean/lburn1.wav");     // lava burn
+	precache_sound("player_bean/lburn2.wav");     // lava burn
 
-    precache_sound("player_bean/start.wav");
-    precache_sound("player_bean/start2.wav");
-    precache_sound("player_bean/start3.wav");
-    precache_sound("player_bean/start4.wav");
+	precache_sound("player_bean/start.wav");
+	precache_sound("player_bean/start2.wav");
+	precache_sound("player_bean/start3.wav");
+	precache_sound("player_bean/start4.wav");
 
-    precache_sound("player_bean/teddy.wav");
+	precache_sound("player_bean/teddy.wav");
+	precache_model("progs/teddy.mdl");
 #endif
 }
 #endif
@@ -77,21 +79,22 @@ PRECACHE(Bean)
 "Teddy boosts confidence while nearby"
 #endif
 CLASS(Bean, Champions)
-    ATTRIB(Bean, netname, string, "bean");
-    ATTRIB(Bean, m_name, string, "Mr. Bean");
+	ATTRIB(Bean, netname, string, "bean");
+	ATTRIB(Bean, m_name, string, "Mr. Bean");
 #ifdef GAMEQC
-    ATTRIB(Bean, m_model, Model, MDL_Bean);
-    ATTRIB(Bean, m_model_head, Model, MDL_Null);
-    ATTRIB(Bean, m_soundpath, string, "player_bean/");
-    METHOD(Bean, m_sound_pain, string()) { return SND(Bean_Pain_Random()); }
-    METHOD(Bean, m_sound_death, string()) { return SND(Bean_Death_Random()); }
-    METHOD(Bean, m_sound_jump, string(entity actor)) { return "player_bean/plyrjmp8.wav"; }
+	METHOD(Bean, m_precache, void()) { Bean_Precache(); }
+	ATTRIB(Bean, m_model, Model, MDL_Bean);
+	ATTRIB(Bean, m_model_head, Model, MDL_Null);
+	ATTRIB(Bean, m_soundpath, string, "player_bean/");
+	METHOD(Bean, m_sound_pain, string()) { return Bean_Pain_Random(); }
+	METHOD(Bean, m_sound_death, string()) { return Bean_Death_Random(); }
+	METHOD(Bean, m_sound_jump, string(entity actor)) { return "player_bean/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-    ATTRIB(Bean, m_faceprefix, string, "gfx/quake/bean_");
+	ATTRIB(Bean, m_faceprefix, string, "gfx/quake/bean_");
 #endif
 #ifdef CSQC
-    ATTRIB(Bean, message, string, BEAN_STATS);
+	ATTRIB(Bean, message, string, BEAN_STATS);
 #endif
 ENDCLASS(Bean)
 REGISTER_CHAMPION(Bean, NEW(Bean));

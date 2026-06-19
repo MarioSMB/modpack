@@ -5,97 +5,114 @@
 #ifdef GAMEQC
 MODEL(Goat, "progs/player_goat.mdl");
 
-SOUND(Goat_Pain1, "player_goat/pain1");
-SOUND(Goat_Pain2, "player_goat/pain2");
-SOUND(Goat_Pain3, "player_goat/pain3");
-SOUND(Goat_Pain4, "player_goat/pain4");
-SOUND(Goat_Pain5, "player_goat/pain5");
-SOUND(Goat_Pain6, "player_goat/pain6");
-Sound SND_Goat_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Goat_Pain1.m_id + rint(random() * 5));
+string Goat_Pain_Random()
+{
+	float r = random();
+
+	if(r < 0.16)
+		return "player_goat/pain1.wav";
+	else if(r < 0.32)
+		return "player_goat/pain2.wav";
+	else if(r < 0.48)
+		return "player_goat/pain3.wav";
+	else if(r < 0.64)
+		return "player_goat/pain4.wav";
+	else if(r < 0.80)
+		return "player_goat/pain5.wav";
+	else
+		return "player_goat/pain6.wav";
 }
 
-SOUND(Goat_Death1, "player_goat/death1");
-SOUND(Goat_Death2, "player_goat/death2");
-SOUND(Goat_Death3, "player_goat/death3");
-SOUND(Goat_Death4, "player_goat/death4");
-SOUND(Goat_Death5, "player_goat/death5");
-Sound SND_Goat_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Goat_Death1.m_id + rint(random() * 4));
+string Goat_Death_Random()
+{
+	float r = random();
+
+	if(r < 0.2)
+		return "player_goat/death1.wav";
+	else if(r < 0.4)
+		return "player_goat/death2.wav";
+	else if(r < 0.6)
+		return "player_goat/death3.wav";
+	else if(r < 0.8)
+		return "player_goat/death4.wav";
+	else
+		return "player_goat/death5.wav";
 }
-PRECACHE(Goat)
+
+void Goat_Precache()
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/goat_face_invis");
-    precache_pic("gfx/quake/goat_face_invul2");
-    precache_pic("gfx/quake/goat_face_inv2");
-    precache_pic("gfx/quake/goat_face_quad");
+	precache_pic("gfx/quake/goat_face_invis");
+	precache_pic("gfx/quake/goat_face_invul2");
+	precache_pic("gfx/quake/goat_face_inv2");
+	precache_pic("gfx/quake/goat_face_quad");
 
-    precache_pic("gfx/quake/goat_face1");
-    precache_pic("gfx/quake/goat_face_p1");
-    precache_pic("gfx/quake/goat_face2");
-    precache_pic("gfx/quake/goat_face_p2");
-    precache_pic("gfx/quake/goat_face3");
-    precache_pic("gfx/quake/goat_face_p3");
-    precache_pic("gfx/quake/goat_face4");
-    precache_pic("gfx/quake/goat_face_p4");
-    precache_pic("gfx/quake/goat_face5");
-    precache_pic("gfx/quake/goat_face_p5");
+	precache_pic("gfx/quake/goat_face1");
+	precache_pic("gfx/quake/goat_face_p1");
+	precache_pic("gfx/quake/goat_face2");
+	precache_pic("gfx/quake/goat_face_p2");
+	precache_pic("gfx/quake/goat_face3");
+	precache_pic("gfx/quake/goat_face_p3");
+	precache_pic("gfx/quake/goat_face4");
+	precache_pic("gfx/quake/goat_face_p4");
+	precache_pic("gfx/quake/goat_face5");
+	precache_pic("gfx/quake/goat_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_goat/plyrjmp8.wav");       // player jump
-    precache_sound("player_goat/land.wav");           // player landing
-    precache_sound("player_goat/land2.wav");      // player hurt landing
-    precache_sound("player_goat/drown1.wav");     // drowning pain
-    precache_sound("player_goat/drown2.wav");     // drowning pain
-    precache_sound("player_goat/gasp1.wav");      // gasping for air
-    precache_sound("player_goat/gasp2.wav");      // taking breath
-    precache_sound("player_goat/h2odeath.wav");       // drowning death
+	precache_sound("player_goat/plyrjmp8.wav");       // player jump
+	precache_sound("player_goat/land.wav");           // player landing
+	precache_sound("player_goat/land2.wav");      // player hurt landing
+	precache_sound("player_goat/drown1.wav");     // drowning pain
+	precache_sound("player_goat/drown2.wav");     // drowning pain
+	precache_sound("player_goat/gasp1.wav");      // gasping for air
+	precache_sound("player_goat/gasp2.wav");      // taking breath
+	precache_sound("player_goat/h2odeath.wav");       // drowning death
 
-    precache_sound("player_goat/pain1.wav");
-    precache_sound("player_goat/pain2.wav");
-    precache_sound("player_goat/pain3.wav");
-    precache_sound("player_goat/pain4.wav");
-    precache_sound("player_goat/pain5.wav");
-    precache_sound("player_goat/pain6.wav");
+	precache_sound("player_goat/pain1.wav");
+	precache_sound("player_goat/pain2.wav");
+	precache_sound("player_goat/pain3.wav");
+	precache_sound("player_goat/pain4.wav");
+	precache_sound("player_goat/pain5.wav");
+	precache_sound("player_goat/pain6.wav");
 
-    precache_sound("player_goat/death1.wav");
-    precache_sound("player_goat/death2.wav");
-    precache_sound("player_goat/death3.wav");
-    precache_sound("player_goat/death4.wav");
-    precache_sound("player_goat/death5.wav");
+	precache_sound("player_goat/death1.wav");
+	precache_sound("player_goat/death2.wav");
+	precache_sound("player_goat/death3.wav");
+	precache_sound("player_goat/death4.wav");
+	precache_sound("player_goat/death5.wav");
 
-    precache_sound("player_goat/axhit1.wav");
+	precache_sound("player_goat/axhit1.wav");
 
-    precache_sound("player_goat/lburn1.wav");     // lava burn
-    precache_sound("player_goat/lburn2.wav");     // lava burn
+	precache_sound("player_goat/lburn1.wav");     // lava burn
+	precache_sound("player_goat/lburn2.wav");     // lava burn
 
-    precache_sound("goatling/death1.wav");
+	precache_sound("goatling/death1.wav");
 
-    precache_sound("player_goat/bonk.wav");
+	precache_sound("player_goat/bonk.wav");
 #endif
 }
 #endif
 CLASS(Goat, Champions)
-    ATTRIB(Goat, netname, string, "goat");
-    ATTRIB(Goat, m_name, string, "Goat");
-    ATTRIB(Goat, qcc_movespeed, float, 0.9);
-    ATTRIB(Goat, m_viewofs, vector, '0 0 24');
-    ATTRIB(Goat, m_hidden, bool, true);
+	ATTRIB(Goat, netname, string, "goat");
+	ATTRIB(Goat, m_name, string, "Goat");
+	ATTRIB(Goat, qcc_movespeed, float, 0.9);
+	ATTRIB(Goat, m_viewofs, vector, '0 0 24');
+	ATTRIB(Goat, m_hidden, bool, true);
 #ifdef GAMEQC
-    ATTRIB(Goat, m_model, Model, MDL_Goat);
-    ATTRIB(Goat, m_soundpath, string, "player_goat/");
-    METHOD(Goat, m_sound_pain, string()) { return SND(Goat_Pain_Random()); }
-    METHOD(Goat, m_sound_death, string()) { return SND(Goat_Death_Random()); }
-    METHOD(Goat, m_sound_jump, string(entity actor)) { return "player_goat/plyrjmp8.wav"; }
+	METHOD(Goat, m_precache, void()) { Goat_Precache(); }
+	ATTRIB(Goat, m_model, Model, MDL_Goat);
+	ATTRIB(Goat, m_soundpath, string, "player_goat/");
+	METHOD(Goat, m_sound_pain, string()) { return Goat_Pain_Random(); }
+	METHOD(Goat, m_sound_death, string()) { return Goat_Death_Random(); }
+	METHOD(Goat, m_sound_jump, string(entity actor)) { return "player_goat/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-    ATTRIB(Goat, m_faceprefix, string, "gfx/quake/goat_");
+	ATTRIB(Goat, m_faceprefix, string, "gfx/quake/goat_");
 #endif
 #ifdef CSQC
-    ATTRIB(Goat, message, string, "BAAAAAAAHHHHH");
+	ATTRIB(Goat, message, string, "BAAAAAAAHHHHH");
 #endif
-    ATTRIB(Goat, td_turrets, bool, true);
+	ATTRIB(Goat, td_turrets, bool, true);
 ENDCLASS(Goat)
 REGISTER_CHAMPION(Goat, NEW(Goat));
 

@@ -6,102 +6,134 @@
 MODEL(CrazyDave, "progs/player_crazydave.mdl");
 MODEL(CrazyDave_Head, "progs/h_player_crazydave.mdl");
 
-SOUND(CrazyDave_Pain1, "player_crazydave/pain1");
-SOUND(CrazyDave_Pain2, "player_crazydave/pain2");
-SOUND(CrazyDave_Pain3, "player_crazydave/pain3");
-Sound SND_CrazyDave_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Pain1.m_id + rint(random() * 2));
+string CrazyDave_Pain_Random()
+{
+	float r = random();
+
+	if(r < 0.33)
+		return "player_crazydave/pain1.wav";
+	else if(r < 0.66)
+		return "player_crazydave/pain2.wav";
+	else
+		return "player_crazydave/pain3.wav";
 }
 
-SOUND(CrazyDave_Death1, "player_crazydave/death1");
-SOUND(CrazyDave_Death2, "player_crazydave/death2");
-SOUND(CrazyDave_Death3, "player_crazydave/death3");
-SOUND(CrazyDave_Death4, "player_crazydave/death4");
-SOUND(CrazyDave_Death5, "player_crazydave/death5");
-SOUND(CrazyDave_Death6, "player_crazydave/death6");
-SOUND(CrazyDave_Death7, "player_crazydave/death7");
-Sound SND_CrazyDave_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Death1.m_id + rint(random() * 6));
+string CrazyDave_Death_Random()
+{
+	float r = random();
+
+	if(r < 0.14)
+		return "player_crazydave/death1.wav";
+	else if(r < 0.28)
+		return "player_crazydave/death2.wav";
+	else if(r < 0.42)
+		return "player_crazydave/death3.wav";
+	else if(r < 0.56)
+		return "player_crazydave/death4.wav";
+	else if(r < 0.70)
+		return "player_crazydave/death5.wav";
+	else if(r < 0.84)
+		return "player_crazydave/death6.wav";
+	else
+		return "player_crazydave/death7.wav";
 }
 
-SOUND(CrazyDave_Jump1, "player_crazydave/jump1");
-SOUND(CrazyDave_Jump2, "player_crazydave/jump2");
-SOUND(CrazyDave_Jump3, "player_crazydave/jump3");
-SOUND(CrazyDave_Jump4, "player_crazydave/jump4");
-Sound SND_CrazyDave_Jump_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Jump1.m_id + rint(random() * 3));
+string CrazyDave_Jump_Random()
+{
+	float r = random();
+
+	if(r < 0.25)
+		return "player_crazydave/jump1.wav";
+	else if(r < 0.50)
+		return "player_crazydave/jump2.wav";
+	else if(r < 0.75)
+		return "player_crazydave/jump3.wav";
+	else
+		return "player_crazydave/jump4.wav";
 }
 
-PRECACHE(CrazyDave)
+void CrazyDave_Precache()
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/crazydave_face_invis");
-    precache_pic("gfx/quake/crazydave_face_invul2");
-    precache_pic("gfx/quake/crazydave_face_inv2");
-    precache_pic("gfx/quake/crazydave_face_quad");
+	precache_pic("gfx/quake/crazydave_face_invis");
+	precache_pic("gfx/quake/crazydave_face_invul2");
+	precache_pic("gfx/quake/crazydave_face_inv2");
+	precache_pic("gfx/quake/crazydave_face_quad");
 
-    precache_pic("gfx/quake/crazydave_face1");
-    precache_pic("gfx/quake/crazydave_face_p1");
-    precache_pic("gfx/quake/crazydave_face2");
-    precache_pic("gfx/quake/crazydave_face_p2");
-    precache_pic("gfx/quake/crazydave_face3");
-    precache_pic("gfx/quake/crazydave_face_p3");
-    precache_pic("gfx/quake/crazydave_face4");
-    precache_pic("gfx/quake/crazydave_face_p4");
-    precache_pic("gfx/quake/crazydave_face5");
-    precache_pic("gfx/quake/crazydave_face_p5");
+	precache_pic("gfx/quake/crazydave_face1");
+	precache_pic("gfx/quake/crazydave_face_p1");
+	precache_pic("gfx/quake/crazydave_face2");
+	precache_pic("gfx/quake/crazydave_face_p2");
+	precache_pic("gfx/quake/crazydave_face3");
+	precache_pic("gfx/quake/crazydave_face_p3");
+	precache_pic("gfx/quake/crazydave_face4");
+	precache_pic("gfx/quake/crazydave_face_p4");
+	precache_pic("gfx/quake/crazydave_face5");
+	precache_pic("gfx/quake/crazydave_face_p5");
+
+	precache_model("progs/v_crazypot.mdl");
 #endif
 #ifdef SVQC
-    precache_sound("player_crazydave/plyrjmp8.wav");       // player jump
-    precache_sound("player_crazydave/land.wav");           // player landing
-    precache_sound("player_crazydave/land2.wav");      // player hurt landing
-    precache_sound("player_crazydave/drown1.wav");     // drowning pain
-    precache_sound("player_crazydave/drown2.wav");     // drowning pain
-    precache_sound("player_crazydave/gasp1.wav");      // gasping for air
-    precache_sound("player_crazydave/gasp2.wav");      // taking breath
-    precache_sound("player_crazydave/h2odeath.wav");       // drowning death
+	precache_sound("player_crazydave/plyrjmp8.wav");       // player jump
+	precache_sound("player_crazydave/land.wav");           // player landing
+	precache_sound("player_crazydave/land2.wav");      // player hurt landing
+	precache_sound("player_crazydave/drown1.wav");     // drowning pain
+	precache_sound("player_crazydave/drown2.wav");     // drowning pain
+	precache_sound("player_crazydave/gasp1.wav");      // gasping for air
+	precache_sound("player_crazydave/gasp2.wav");      // taking breath
+	precache_sound("player_crazydave/h2odeath.wav");       // drowning death
 
-    precache_sound("player_crazydave/pain1.wav");
-    precache_sound("player_crazydave/pain2.wav");
+	precache_sound("player_crazydave/pain1.wav");
+	precache_sound("player_crazydave/pain2.wav");
+	precache_sound("player_crazydave/pain3.wav");
 
-    precache_sound("player_crazydave/death1.wav");
-    precache_sound("player_crazydave/death2.wav");
-    precache_sound("player_crazydave/death3.wav");
+	precache_sound("player_crazydave/death1.wav");
+	precache_sound("player_crazydave/death2.wav");
+	precache_sound("player_crazydave/death3.wav");
+	precache_sound("player_crazydave/death4.wav");
+	precache_sound("player_crazydave/death5.wav");
+	precache_sound("player_crazydave/death6.wav");
+	precache_sound("player_crazydave/death7.wav");
 
-    precache_sound("player_crazydave/axhit1.wav");
-    precache_sound("player_crazydave/axhit2.wav");
+	precache_sound("player_crazydave/jump1.wav");
+	precache_sound("player_crazydave/jump2.wav");
+	precache_sound("player_crazydave/jump3.wav");
+	precache_sound("player_crazydave/jump4.wav");
 
-    precache_sound("player_crazydave/lburn1.wav");     // lava burn
-    precache_sound("player_crazydave/lburn2.wav");     // lava burn
+	precache_sound("player_crazydave/axhit1.wav");
+	precache_sound("player_crazydave/axhit2.wav");
 
-    precache_sound("player_crazydave/start1.wav");
-    precache_sound("player_crazydave/start2.wav");
-    precache_sound("player_crazydave/start3.wav");
-    precache_sound("player_crazydave/start4.wav");
-    precache_sound("player_crazydave/start5.wav");
-    precache_sound("player_crazydave/start6.wav");
-    precache_sound("player_crazydave/start7.wav");
+	precache_sound("player_crazydave/lburn1.wav");     // lava burn
+	precache_sound("player_crazydave/lburn2.wav");     // lava burn
 
-    precache_sound("player_crazydave/talk1.wav");
-    precache_sound("player_crazydave/talk2.wav");
-    precache_sound("player_crazydave/talk3.wav");
-    precache_sound("player_crazydave/talk4.wav");
-    precache_sound("player_crazydave/talk5.wav");
-    precache_sound("player_crazydave/talk6.wav");
-    precache_sound("player_crazydave/talk7.wav");
-    precache_sound("player_crazydave/talk8.wav");
-    precache_sound("player_crazydave/talk9.wav");
-    precache_sound("player_crazydave/talk10.wav");
-    precache_sound("player_crazydave/talk11.wav");
-    precache_sound("player_crazydave/talk12.wav");
-    precache_sound("player_crazydave/talk13.wav");
+	precache_sound("player_crazydave/start1.wav");
+	precache_sound("player_crazydave/start2.wav");
+	precache_sound("player_crazydave/start3.wav");
+	precache_sound("player_crazydave/start4.wav");
+	precache_sound("player_crazydave/start5.wav");
+	precache_sound("player_crazydave/start6.wav");
+	precache_sound("player_crazydave/start7.wav");
 
-    precache_sound("player_crazydave/awooga.wav");
+	precache_sound("player_crazydave/talk1.wav");
+	precache_sound("player_crazydave/talk2.wav");
+	precache_sound("player_crazydave/talk3.wav");
+	precache_sound("player_crazydave/talk4.wav");
+	precache_sound("player_crazydave/talk5.wav");
+	precache_sound("player_crazydave/talk6.wav");
+	precache_sound("player_crazydave/talk7.wav");
+	precache_sound("player_crazydave/talk8.wav");
+	precache_sound("player_crazydave/talk9.wav");
+	precache_sound("player_crazydave/talk10.wav");
+	precache_sound("player_crazydave/talk11.wav");
+	precache_sound("player_crazydave/talk12.wav");
+	precache_sound("player_crazydave/talk13.wav");
 
-    precache_sound("player_crazydave/cannon_launch.wav");
-    precache_sound("player_crazydave/cannon_land.wav");
+	precache_sound("player_crazydave/awooga.wav");
 
-    precache_model("progs/v_crazypot.mdl");
+	precache_sound("player_crazydave/cannon_launch.wav");
+	precache_sound("player_crazydave/cannon_land.wav");
+
+	precache_model("progs/v_crazypot.mdl");
 #endif
 }
 #endif
@@ -112,24 +144,25 @@ PRECACHE(CrazyDave)
 "Press %ABILITY% to distract"
 #endif
 CLASS(CrazyDave, Champions)
-    ATTRIB(CrazyDave, netname, string, "crazydave");
-    ATTRIB(CrazyDave, m_name, string, "Crazy Dave");
-    ATTRIB(CrazyDave, qcc_meleename, string, "crazypot");
+	ATTRIB(CrazyDave, netname, string, "crazydave");
+	ATTRIB(CrazyDave, m_name, string, "Crazy Dave");
+	ATTRIB(CrazyDave, qcc_meleename, string, "crazypot");
 #ifdef GAMEQC
-    ATTRIB(CrazyDave, m_model, Model, MDL_CrazyDave);
-    ATTRIB(CrazyDave, m_model_head, Model, MDL_CrazyDave_Head);
-    ATTRIB(CrazyDave, m_soundpath, string, "player_crazydave/");
-    METHOD(CrazyDave, m_sound_pain, string()) { return SND(CrazyDave_Pain_Random()); }
-    METHOD(CrazyDave, m_sound_death, string()) { return SND(CrazyDave_Death_Random()); }
-    METHOD(CrazyDave, m_sound_jump, string(entity actor)) { return SND(CrazyDave_Jump_Random()); }
+	METHOD(CrazyDave, m_precache, void()) { CrazyDave_Precache(); }
+	ATTRIB(CrazyDave, m_model, Model, MDL_CrazyDave);
+	ATTRIB(CrazyDave, m_model_head, Model, MDL_CrazyDave_Head);
+	ATTRIB(CrazyDave, m_soundpath, string, "player_crazydave/");
+	METHOD(CrazyDave, m_sound_pain, string()) { return CrazyDave_Pain_Random(); }
+	METHOD(CrazyDave, m_sound_death, string()) { return CrazyDave_Death_Random(); }
+	METHOD(CrazyDave, m_sound_jump, string(entity actor)) { return CrazyDave_Jump_Random(); }
 #endif
 #ifdef CSQC
-    ATTRIB(CrazyDave, m_faceprefix, string, "gfx/quake/crazydave_");
+	ATTRIB(CrazyDave, m_faceprefix, string, "gfx/quake/crazydave_");
 #endif
 #ifdef CSQC
-    ATTRIB(CrazyDave, message, string, CRAZYDAVE_STATS);
+	ATTRIB(CrazyDave, message, string, CRAZYDAVE_STATS);
 #endif
-    ATTRIB(CrazyDave, td_turrets, bool, true);
+	ATTRIB(CrazyDave, td_turrets, bool, true);
 ENDCLASS(CrazyDave)
 REGISTER_CHAMPION(CrazyDave, NEW(CrazyDave));
 

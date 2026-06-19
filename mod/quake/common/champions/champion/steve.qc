@@ -41,7 +41,7 @@ METHOD(Steve, m_playerspawn, void(Champions this, entity actor))
 
 void steve_block_break(entity this)
 {
-	sound(this, CH_TRIGGER_SINGLE, SND_Steve_BlockBreak, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "player_steve/blockbreak.wav", 1, ATTN_NORM);
 	particle(this.origin + '0 0 16', '0 0 0', 75, 255);
 	setmodel(this, MDL_Null);
 	setsize(this, '0 0 0', '0 0 0');
@@ -107,7 +107,7 @@ void Steve_PlaceBlock(entity this)
 	traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * 100, MOVE_NORMAL, this);
 	if(trace_startsolid)
 		return;
-	sound(this, CH_WEAPON_B, SND_Steve_BlockPlace, 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_B, "player_steve/blockplace.wav", 1, ATTN_NORM);
 
 	vector org = trace_endpos - '0 0 16';
 	float grid_size = 16;

@@ -6,74 +6,96 @@
 MODEL(Dryad, "progs/player_dryad.mdl");
 MODEL(Dryad_Head, "progs/h_player_dryad.mdl");
 
-SOUND(Dryad_Pain1, "player_dryad/pain1");
-SOUND(Dryad_Pain2, "player_dryad/pain2");
-SOUND(Dryad_Pain3, "player_dryad/pain3");
-SOUND(Dryad_Pain4, "player_dryad/pain4");
-SOUND(Dryad_Pain5, "player_dryad/pain5");
-Sound SND_Dryad_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Dryad_Pain1.m_id + rint(random() * 4));
-}
-
-SOUND(Dryad_Death1, "player_dryad/death1");
-SOUND(Dryad_Death2, "player_dryad/death2");
-Sound SND_Dryad_Death_Random() {
-    return (random() > 0.5) ? SND_Dryad_Death1 : SND_Dryad_Death2;
-}
-
-SOUND(Dryad_Jump1, "player_dryad/jump1");
-SOUND(Dryad_Jump2, "player_dryad/jump2");
-Sound SND_Dryad_Jump_Random() {
-    return (random() > 0.5) ? SND_Dryad_Jump1 : SND_Dryad_Jump2;
-}
-PRECACHE(Dryad)
+string Dryad_Pain_Random()
 {
+	float r = random();
+
+	if(r < 0.2)
+		return "player_dryad/pain1.wav";
+	else if(r < 0.4)
+		return "player_dryad/pain2.wav";
+	else if(r < 0.6)
+		return "player_dryad/pain3.wav";
+	else if(r < 0.8)
+		return "player_dryad/pain4.wav";
+	else
+		return "player_dryad/pain5.wav";
+}
+
+string Dryad_Death_Random()
+{
+	return (random() > 0.5) ? "player_dryad/death1.wav" : "player_dryad/death2.wav";
+}
+
+string Dryad_Jump_Random()
+{
+	return (random() > 0.5) ? "player_dryad/jump1.wav" : "player_dryad/jump2.wav";
+}
+
+void Corrupted_Precache();
+void Dryad_Precache()
+{
+	// transformation
+	Corrupted_Precache();
+
 #ifdef CSQC
-    precache_pic("gfx/quake/dryad_face_invis");
-    precache_pic("gfx/quake/dryad_face_invul2");
-    precache_pic("gfx/quake/dryad_face_inv2");
-    precache_pic("gfx/quake/dryad_face_quad");
+	precache_pic("gfx/quake/dryad_face_invis");
+	precache_pic("gfx/quake/dryad_face_invul2");
+	precache_pic("gfx/quake/dryad_face_inv2");
+	precache_pic("gfx/quake/dryad_face_quad");
 
-    precache_pic("gfx/quake/dryad_face1");
-    precache_pic("gfx/quake/dryad_face_p1");
-    precache_pic("gfx/quake/dryad_face2");
-    precache_pic("gfx/quake/dryad_face_p2");
-    precache_pic("gfx/quake/dryad_face3");
-    precache_pic("gfx/quake/dryad_face_p3");
-    precache_pic("gfx/quake/dryad_face4");
-    precache_pic("gfx/quake/dryad_face_p4");
-    precache_pic("gfx/quake/dryad_face5");
-    precache_pic("gfx/quake/dryad_face_p5");
+	precache_pic("gfx/quake/dryad_face1");
+	precache_pic("gfx/quake/dryad_face_p1");
+	precache_pic("gfx/quake/dryad_face2");
+	precache_pic("gfx/quake/dryad_face_p2");
+	precache_pic("gfx/quake/dryad_face3");
+	precache_pic("gfx/quake/dryad_face_p3");
+	precache_pic("gfx/quake/dryad_face4");
+	precache_pic("gfx/quake/dryad_face_p4");
+	precache_pic("gfx/quake/dryad_face5");
+	precache_pic("gfx/quake/dryad_face_p5");
 
-    precache_pic("gfx/quake/dryad_purebar");
+	precache_pic("gfx/quake/dryad_purebar");
 #endif
 #ifdef SVQC
-    precache_model("progs/leaf.mdl");
+	precache_model("progs/leaf.mdl");
 
-    //precache_sound("player_dryad/plyrjmp8.wav");       // player jump
-    precache_sound("player_dryad/land.wav");           // player landing
-    precache_sound("player_dryad/land2.wav");      // player hurt landing
-    precache_sound("player_dryad/drown1.wav");     // drowning pain
-    precache_sound("player_dryad/drown2.wav");     // drowning pain
-    precache_sound("player_dryad/gasp1.wav");      // gasping for air
-    precache_sound("player_dryad/gasp2.wav");      // taking breath
-    precache_sound("player_dryad/h2odeath.wav");       // drowning death
+	//precache_sound("player_dryad/plyrjmp8.wav");       // player jump
+	precache_sound("player_dryad/land.wav");           // player landing
+	precache_sound("player_dryad/land2.wav");      // player hurt landing
+	precache_sound("player_dryad/drown1.wav");     // drowning pain
+	precache_sound("player_dryad/drown2.wav");     // drowning pain
+	precache_sound("player_dryad/gasp1.wav");      // gasping for air
+	precache_sound("player_dryad/gasp2.wav");      // taking breath
+	precache_sound("player_dryad/h2odeath.wav");       // drowning death
 
-    precache_sound("player_dryad/axhit1.wav");
-    precache_sound("player_dryad/axhit2.wav");
+	precache_sound("player_dryad/axhit1.wav");
+	precache_sound("player_dryad/axhit2.wav");
 
-    precache_sound("player_dryad/lburn1.wav");     // lava burn
-    precache_sound("player_dryad/lburn2.wav");     // lava burn
+	precache_sound("player_dryad/lburn1.wav");     // lava burn
+	precache_sound("player_dryad/lburn2.wav");     // lava burn
 
-    precache_sound("player_dryad/start1.wav");
-    precache_sound("player_dryad/start2.wav");
-    precache_sound("player_dryad/start3.wav");
+	precache_sound("player_dryad/start1.wav");
+	precache_sound("player_dryad/start2.wav");
+	precache_sound("player_dryad/start3.wav");
 
-    // TODO?
-    precache_sound("player_enyo/wings.wav");
-    precache_sound("player_enyo/friesdone.wav");
+	precache_sound("player_dryad/pain1.wav");
+	precache_sound("player_dryad/pain2.wav");
+	precache_sound("player_dryad/pain3.wav");
+	precache_sound("player_dryad/pain4.wav");
+	precache_sound("player_dryad/pain5.wav");
 
-    precache_sound("player_dryad/player_transform.wav");
+	precache_sound("player_dryad/jump1.wav");
+	precache_sound("player_dryad/jump2.wav");
+
+	precache_sound("player_dryad/death1.wav");
+	precache_sound("player_dryad/death2.wav");
+
+	// TODO?
+	precache_sound("player_enyo/wings.wav");
+	precache_sound("player_enyo/friesdone.wav");
+
+	precache_sound("player_dryad/player_transform.wav");
 #endif
 }
 #endif
@@ -93,25 +115,26 @@ PRECACHE(Dryad)
 "- Damage taken reduced by 80%"
 #endif
 CLASS(Dryad, Champions)
-    ATTRIB(Dryad, netname, string, "dryad");
-    ATTRIB(Dryad, m_name, string, "Dryad");
-    ATTRIB(Dryad, qcc_anim_stand, vector, '17 0 12');
-    ATTRIB(Dryad, qcc_health_regen_rate, float, 0.5);
+	ATTRIB(Dryad, netname, string, "dryad");
+	ATTRIB(Dryad, m_name, string, "Dryad");
+	ATTRIB(Dryad, qcc_anim_stand, vector, '17 0 12');
+	ATTRIB(Dryad, qcc_health_regen_rate, float, 0.5);
 #ifdef GAMEQC
-    ATTRIB(Dryad, m_model, Model, MDL_Dryad);
-    ATTRIB(Dryad, m_model_head, Model, MDL_Dryad_Head);
-    ATTRIB(Dryad, m_soundpath, string, "player_dryad/");
-    METHOD(Dryad, m_sound_pain, string()) { return SND(Dryad_Pain_Random()); }
-    METHOD(Dryad, m_sound_death, string()) { return SND(Dryad_Death_Random()); }
-    METHOD(Dryad, m_sound_jump, string(entity actor)) { return SND(Dryad_Jump_Random()); }
+	METHOD(Dryad, m_precache, void()) { Dryad_Precache(); }
+	ATTRIB(Dryad, m_model, Model, MDL_Dryad);
+	ATTRIB(Dryad, m_model_head, Model, MDL_Dryad_Head);
+	ATTRIB(Dryad, m_soundpath, string, "player_dryad/");
+	METHOD(Dryad, m_sound_pain, string()) { return Dryad_Pain_Random(); }
+	METHOD(Dryad, m_sound_death, string()) { return Dryad_Death_Random(); }
+	METHOD(Dryad, m_sound_jump, string(entity actor)) { return Dryad_Jump_Random(); }
 #endif
 #ifdef CSQC
-    ATTRIB(Dryad, m_faceprefix, string, "gfx/quake/dryad_");
+	ATTRIB(Dryad, m_faceprefix, string, "gfx/quake/dryad_");
 #endif
 #ifdef CSQC
-    ATTRIB(Dryad, message, string, DRYAD_STATS);
+	ATTRIB(Dryad, message, string, DRYAD_STATS);
 #endif
-    ATTRIB(Dryad, td_turrets, bool, true);
+	ATTRIB(Dryad, td_turrets, bool, true);
 ENDCLASS(Dryad)
 REGISTER_CHAMPION(Dryad, NEW(Dryad));
 
@@ -126,6 +149,6 @@ REGISTER_CHAMPION(Dryad, NEW(Dryad));
 IntrusiveList g_leaves;
 STATIC_INIT(Dryad_Defs)
 {
-    g_leaves = IL_NEW();
+	g_leaves = IL_NEW();
 }
 #endif

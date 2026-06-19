@@ -5,70 +5,74 @@
 #ifdef GAMEQC
 MODEL(Grinch, "progs/player_grinch.mdl");
 
-SOUND(Grinch_Pain1, "player_grinch/pain1");
-SOUND(Grinch_Pain2, "player_grinch/pain2");
-Sound SND_Grinch_Pain_Random() {
-    return (random() > 0.5) ? SND_Grinch_Pain1 : SND_Grinch_Pain2;
+string Grinch_Pain_Random()
+{
+	return (random() > 0.5) ? "player_grinch/pain1.wav" : "player_grinch/pain2.wav";
 }
 
-SOUND(Grinch_Death1, "player_grinch/death1");
-SOUND(Grinch_Death2, "player_grinch/death2");
-SOUND(Grinch_Death3, "player_grinch/death3");
-Sound SND_Grinch_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Grinch_Death1.m_id + rint(random() * 2));
+string Grinch_Death_Random()
+{
+	float r = random();
+
+	if(r < 0.33)
+		return "player_grinch/death1.wav";
+	else if(r < 0.66)
+		return "player_grinch/death2.wav";
+	else
+		return "player_grinch/death3.wav";
 }
 
-PRECACHE(Grinch)
+void Grinch_Precache()
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/grinch_face_invis");
-    precache_pic("gfx/quake/grinch_face_invul2");
-    precache_pic("gfx/quake/grinch_face_inv2");
-    precache_pic("gfx/quake/grinch_face_quad");
+	precache_pic("gfx/quake/grinch_face_invis");
+	precache_pic("gfx/quake/grinch_face_invul2");
+	precache_pic("gfx/quake/grinch_face_inv2");
+	precache_pic("gfx/quake/grinch_face_quad");
 
-    precache_pic("gfx/quake/grinch_face1");
-    precache_pic("gfx/quake/grinch_face_p1");
-    precache_pic("gfx/quake/grinch_face2");
-    precache_pic("gfx/quake/grinch_face_p2");
-    precache_pic("gfx/quake/grinch_face3");
-    precache_pic("gfx/quake/grinch_face_p3");
-    precache_pic("gfx/quake/grinch_face4");
-    precache_pic("gfx/quake/grinch_face_p4");
-    precache_pic("gfx/quake/grinch_face5");
-    precache_pic("gfx/quake/grinch_face_p5");
+	precache_pic("gfx/quake/grinch_face1");
+	precache_pic("gfx/quake/grinch_face_p1");
+	precache_pic("gfx/quake/grinch_face2");
+	precache_pic("gfx/quake/grinch_face_p2");
+	precache_pic("gfx/quake/grinch_face3");
+	precache_pic("gfx/quake/grinch_face_p3");
+	precache_pic("gfx/quake/grinch_face4");
+	precache_pic("gfx/quake/grinch_face_p4");
+	precache_pic("gfx/quake/grinch_face5");
+	precache_pic("gfx/quake/grinch_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_grinch/plyrjmp8.wav");       // player jump
-    precache_sound("player_grinch/land.wav");           // player landing
-    precache_sound("player_grinch/land2.wav");      // player hurt landing
-    precache_sound("player_grinch/drown1.wav");     // drowning pain
-    precache_sound("player_grinch/drown2.wav");     // drowning pain
-    precache_sound("player_grinch/gasp1.wav");      // gasping for air
-    precache_sound("player_grinch/gasp2.wav");      // taking breath
-    precache_sound("player_grinch/h2odeath.wav");       // drowning death
+	precache_sound("player_grinch/plyrjmp8.wav");       // player jump
+	precache_sound("player_grinch/land.wav");           // player landing
+	precache_sound("player_grinch/land2.wav");      // player hurt landing
+	precache_sound("player_grinch/drown1.wav");     // drowning pain
+	precache_sound("player_grinch/drown2.wav");     // drowning pain
+	precache_sound("player_grinch/gasp1.wav");      // gasping for air
+	precache_sound("player_grinch/gasp2.wav");      // taking breath
+	precache_sound("player_grinch/h2odeath.wav");       // drowning death
 
-    precache_sound("player_grinch/pain1.wav");
-    precache_sound("player_grinch/pain2.wav");
+	precache_sound("player_grinch/pain1.wav");
+	precache_sound("player_grinch/pain2.wav");
 
-    precache_sound("player_grinch/death1.wav");
-    precache_sound("player_grinch/death2.wav");
-    precache_sound("player_grinch/death3.wav");
+	precache_sound("player_grinch/death1.wav");
+	precache_sound("player_grinch/death2.wav");
+	precache_sound("player_grinch/death3.wav");
 
-    precache_sound("player_grinch/axhit1.wav");
-    precache_sound("player_grinch/axhit2.wav");
+	precache_sound("player_grinch/axhit1.wav");
+	precache_sound("player_grinch/axhit2.wav");
 
-    precache_sound("player_grinch/lburn1.wav");     // lava burn
-    precache_sound("player_grinch/lburn2.wav");     // lava burn
+	precache_sound("player_grinch/lburn1.wav");     // lava burn
+	precache_sound("player_grinch/lburn2.wav");     // lava burn
 
-    precache_sound("player_grinch/start.wav");
-    precache_sound("player_grinch/start2.wav");
-    precache_sound("player_grinch/start3.wav");
-    precache_sound("player_grinch/start4.wav");
+	precache_sound("player_grinch/start.wav");
+	precache_sound("player_grinch/start2.wav");
+	precache_sound("player_grinch/start3.wav");
+	precache_sound("player_grinch/start4.wav");
 
-    precache_sound("player_grinch/falling.wav");
+	precache_sound("player_grinch/falling.wav");
 
-    precache_sound("player_grinch/belch1.wav");
-    precache_sound("player_grinch/belch2.wav");
+	precache_sound("player_grinch/belch1.wav");
+	precache_sound("player_grinch/belch2.wav");
 #endif
 }
 #endif
@@ -81,22 +85,23 @@ PRECACHE(Grinch)
 "Has loyal companion Max"
 #endif
 CLASS(Grinch, Champions)
-    ATTRIB(Grinch, netname, string, "grinch");
-    ATTRIB(Grinch, m_name, string, "The Grinch");
-    ATTRIB(Grinch, m_hidden, bool, true);
+	ATTRIB(Grinch, netname, string, "grinch");
+	ATTRIB(Grinch, m_name, string, "The Grinch");
+	ATTRIB(Grinch, m_hidden, bool, true);
 #ifdef GAMEQC
-    ATTRIB(Grinch, m_model, Model, MDL_Grinch);
-    ATTRIB(Grinch, m_model_head, Model, MDL_Null);
-    ATTRIB(Grinch, m_soundpath, string, "player_grinch/");
-    METHOD(Grinch, m_sound_pain, string()) { return SND(Grinch_Pain_Random()); }
-    METHOD(Grinch, m_sound_death, string()) { return SND(Grinch_Death_Random()); }
-    METHOD(Grinch, m_sound_jump, string(entity actor)) { return "player_grinch/plyrjmp8.wav"; }
+	METHOD(Grinch, m_precache, void()) { Grinch_Precache(); }
+	ATTRIB(Grinch, m_model, Model, MDL_Grinch);
+	ATTRIB(Grinch, m_model_head, Model, MDL_Null);
+	ATTRIB(Grinch, m_soundpath, string, "player_grinch/");
+	METHOD(Grinch, m_sound_pain, string()) { return Grinch_Pain_Random(); }
+	METHOD(Grinch, m_sound_death, string()) { return Grinch_Death_Random(); }
+	METHOD(Grinch, m_sound_jump, string(entity actor)) { return "player_grinch/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-    ATTRIB(Grinch, m_faceprefix, string, "gfx/quake/grinch_");
+	ATTRIB(Grinch, m_faceprefix, string, "gfx/quake/grinch_");
 #endif
 #ifdef CSQC
-    ATTRIB(Grinch, message, string, GRINCH_STATS);
+	ATTRIB(Grinch, message, string, GRINCH_STATS);
 #endif
 ENDCLASS(Grinch)
 REGISTER_CHAMPION(Grinch, NEW(Grinch));

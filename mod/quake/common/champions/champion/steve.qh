@@ -6,67 +6,78 @@
 MODEL(Steve, "progs/player_steve.mdl");
 
 MODEL(Steve_Block, "progs/block.mdl");
-SOUND(Steve_BlockBreak, "player_steve/blockbreak");
-SOUND(Steve_BlockPlace, "player_steve/blockplace");
 
-SOUND(Steve_Pain1, "player_steve/pain1");
-SOUND(Steve_Pain2, "player_steve/pain2");
-SOUND(Steve_Pain3, "player_steve/pain3");
-Sound SND_Steve_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Steve_Pain1.m_id + rint(random() * 2));
+string Steve_Pain_Random()
+{
+	float r = random();
+
+	if(r < 0.33)
+		return "player_steve/pain1.wav";
+	else if(r < 0.66)
+		return "player_steve/pain2.wav";
+	else
+		return "player_steve/pain3.wav";
 }
 
-SOUND(Steve_Death1, "player_steve/death1");
-SOUND(Steve_Death2, "player_steve/death2");
-SOUND(Steve_Death3, "player_steve/death3");
-Sound SND_Steve_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Steve_Death1.m_id + rint(random() * 2));
+string Steve_Death_Random()
+{
+	float r = random();
+
+	if(r < 0.33)
+		return "player_steve/death1.wav";
+	else if(r < 0.66)
+		return "player_steve/death2.wav";
+	else
+		return "player_steve/death3.wav";
 }
-PRECACHE(Steve)
+
+void Steve_Precache()
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/steve_face_invis");
-    precache_pic("gfx/quake/steve_face_invul2");
-    precache_pic("gfx/quake/steve_face_inv2");
-    precache_pic("gfx/quake/steve_face_quad");
+	precache_pic("gfx/quake/steve_face_invis");
+	precache_pic("gfx/quake/steve_face_invul2");
+	precache_pic("gfx/quake/steve_face_inv2");
+	precache_pic("gfx/quake/steve_face_quad");
 
-    precache_pic("gfx/quake/steve_face1");
-    precache_pic("gfx/quake/steve_face_p1");
-    precache_pic("gfx/quake/steve_face2");
-    precache_pic("gfx/quake/steve_face_p2");
-    precache_pic("gfx/quake/steve_face3");
-    precache_pic("gfx/quake/steve_face_p3");
-    precache_pic("gfx/quake/steve_face4");
-    precache_pic("gfx/quake/steve_face_p4");
-    precache_pic("gfx/quake/steve_face5");
-    precache_pic("gfx/quake/steve_face_p5");
+	precache_pic("gfx/quake/steve_face1");
+	precache_pic("gfx/quake/steve_face_p1");
+	precache_pic("gfx/quake/steve_face2");
+	precache_pic("gfx/quake/steve_face_p2");
+	precache_pic("gfx/quake/steve_face3");
+	precache_pic("gfx/quake/steve_face_p3");
+	precache_pic("gfx/quake/steve_face4");
+	precache_pic("gfx/quake/steve_face_p4");
+	precache_pic("gfx/quake/steve_face5");
+	precache_pic("gfx/quake/steve_face_p5");
+
+	precache_model("progs/v_mcaxe.mdl");
 #endif
 #ifdef SVQC
-    precache_sound("player_steve/plyrjmp8.wav");       // player jump
-    precache_sound("player_steve/land.wav");           // player landing
-    precache_sound("player_steve/land2.wav");      // player hurt landing
-    precache_sound("player_steve/drown1.wav");     // drowning pain
-    precache_sound("player_steve/drown2.wav");     // drowning pain
-    precache_sound("player_steve/gasp1.wav");      // gasping for air
-    precache_sound("player_steve/gasp2.wav");      // taking breath
-    precache_sound("player_steve/h2odeath.wav");       // drowning death
+	precache_sound("player_steve/plyrjmp8.wav");       // player jump
+	precache_sound("player_steve/land.wav");           // player landing
+	precache_sound("player_steve/land2.wav");      // player hurt landing
+	precache_sound("player_steve/drown1.wav");     // drowning pain
+	precache_sound("player_steve/drown2.wav");     // drowning pain
+	precache_sound("player_steve/gasp1.wav");      // gasping for air
+	precache_sound("player_steve/gasp2.wav");      // taking breath
+	precache_sound("player_steve/h2odeath.wav");       // drowning death
 
-    precache_sound("player_steve/pain1.wav");
-    precache_sound("player_steve/pain2.wav");
-    precache_sound("player_steve/pain3.wav");
+	precache_sound("player_steve/pain1.wav");
+	precache_sound("player_steve/pain2.wav");
+	precache_sound("player_steve/pain3.wav");
 
-    precache_sound("player_steve/death1.wav");
-    precache_sound("player_steve/death2.wav");
-    precache_sound("player_steve/death3.wav");
+	precache_sound("player_steve/death1.wav");
+	precache_sound("player_steve/death2.wav");
+	precache_sound("player_steve/death3.wav");
 
-    precache_sound("player_steve/axhit1.wav");
+	precache_sound("player_steve/axhit1.wav");
 
-    precache_sound("player_steve/lburn1.wav");     // lava burn
-    precache_sound("player_steve/lburn2.wav");     // lava burn
+	precache_sound("player_steve/lburn1.wav");     // lava burn
+	precache_sound("player_steve/lburn2.wav");     // lava burn
 
-    precache_sound("player_steve/start.wav");
+	precache_sound("player_steve/start.wav");
 
-    precache_model("progs/v_mcaxe.mdl");
+	precache_model("progs/v_mcaxe.mdl");
 #endif
 }
 #endif
@@ -79,25 +90,26 @@ PRECACHE(Steve)
 "15% reduced movement speed"
 #endif
 CLASS(Steve, Champions)
-    ATTRIB(Steve, netname, string, "steve");
-    ATTRIB(Steve, m_name, string, "Steve");
-    ATTRIB(Steve, qcc_pogo, bool, true);
-    ATTRIB(Steve, qcc_movespeed, float, 0.85);
-    ATTRIB(Steve, qcc_falldamage, float, 5);
-    ATTRIB(Steve, qcc_meleename, string, "mcaxe");
+	ATTRIB(Steve, netname, string, "steve");
+	ATTRIB(Steve, m_name, string, "Steve");
+	ATTRIB(Steve, qcc_pogo, bool, true);
+	ATTRIB(Steve, qcc_movespeed, float, 0.85);
+	ATTRIB(Steve, qcc_falldamage, float, 5);
+	ATTRIB(Steve, qcc_meleename, string, "mcaxe");
 #ifdef GAMEQC
-    ATTRIB(Steve, m_model, Model, MDL_Steve);
-    ATTRIB(Steve, m_model_head, Model, MDL_Null);
-    ATTRIB(Steve, m_soundpath, string, "player_steve/");
-    METHOD(Steve, m_sound_pain, string()) { return SND(Steve_Pain_Random()); }
-    METHOD(Steve, m_sound_death, string()) { return SND(Steve_Death_Random()); }
-    METHOD(Steve, m_sound_jump, string(entity actor)) { return "player_steve/plyrjmp8.wav"; }
+	METHOD(Steve, m_precache, void()) { Steve_Precache(); }
+	ATTRIB(Steve, m_model, Model, MDL_Steve);
+	ATTRIB(Steve, m_model_head, Model, MDL_Null);
+	ATTRIB(Steve, m_soundpath, string, "player_steve/");
+	METHOD(Steve, m_sound_pain, string()) { return Steve_Pain_Random(); }
+	METHOD(Steve, m_sound_death, string()) { return Steve_Death_Random(); }
+	METHOD(Steve, m_sound_jump, string(entity actor)) { return "player_steve/plyrjmp8.wav"; }
 #endif
 #ifdef CSQC
-    ATTRIB(Steve, m_faceprefix, string, "gfx/quake/steve_");
+	ATTRIB(Steve, m_faceprefix, string, "gfx/quake/steve_");
 #endif
 #ifdef CSQC
-    ATTRIB(Steve, message, string, STEVE_STATS);
+	ATTRIB(Steve, message, string, STEVE_STATS);
 #endif
 ENDCLASS(Steve)
 REGISTER_CHAMPION(Steve, NEW(Steve));
@@ -110,6 +122,6 @@ int autocvar_sv_quake_steve_blocklimit = 8;
 IntrusiveList g_blocks;
 STATIC_INIT(Steve_Defs)
 {
-    g_blocks = IL_NEW();
+	g_blocks = IL_NEW();
 }
 #endif

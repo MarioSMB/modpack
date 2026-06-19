@@ -6,40 +6,64 @@
 MODEL(Enyo, "progs/player_enyo.mdl");
 MODEL(Enyo_Head, "progs/h_player_enyo.mdl");
 
-SOUND(Enyo_Pain1, "player_enyo/pain1");
-SOUND(Enyo_Pain2, "player_enyo/pain2");
-SOUND(Enyo_Pain3, "player_enyo/pain3");
-Sound SND_Enyo_Pain_Random() {
-	return REGISTRY_GET(Sounds, SND_Enyo_Pain1.m_id + rint(random() * 2));
-}
-
-SOUND(Enyo_Death, "player_enyo/death");
-
-SOUND(Enyo_Jump1, "player_enyo/enyojump1");
-SOUND(Enyo_Jump2, "player_enyo/enyojump2");
-SOUND(Enyo_Jump3, "player_enyo/enyojump3");
-SOUND(Enyo_Jump4, "player_enyo/enyojump4");
-Sound SND_Enyo_Jump_Random() {
-	return REGISTRY_GET(Sounds, SND_Enyo_Jump1.m_id + rint(random() * 3));
-}
-
-SOUND(Enyo_Step1, "player_enyo/foot1");
-SOUND(Enyo_Step2, "player_enyo/foot2");
-SOUND(Enyo_Step3, "player_enyo/foot3");
-SOUND(Enyo_Step4, "player_enyo/foot4");
-SOUND(Enyo_Step5, "player_enyo/foot5");
-SOUND(Enyo_Step6, "player_enyo/foot6");
-SOUND(Enyo_Step7, "player_enyo/foot7");
-Sound SND_Enyo_Step_Random() {
-	return REGISTRY_GET(Sounds, SND_Enyo_Step1.m_id + rint(random() * 6));
-}
-
-PRECACHE(Enyo)
+string Enyo_Pain_Random()
 {
+	float r = random();
+
+	if(r < 0.33)
+		return "player_enyo/pain1.wav";
+	else if(r < 0.66)
+		return "player_enyo/pain2.wav";
+	else
+		return "player_enyo/pain3.wav";
+}
+
+string Enyo_Jump_Random()
+{
+	float r = random();
+
+	if(r < 0.25)
+		return "player_enyo/enyojump1.wav";
+	else if(r < 0.50)
+		return "player_enyo/enyojump2.wav";
+	else if(r < 0.75)
+		return "player_enyo/enyojump3.wav";
+	else
+		return "player_enyo/enyojump4.wav";
+}
+
+string Enyo_Step_Random()
+{
+	float r = random();
+
+	if(r < 0.14)
+		return "player_enyo/foot1.wav";
+	else if(r < 0.28)
+		return "player_enyo/foot2.wav";
+	else if(r < 0.42)
+		return "player_enyo/foot3.wav";
+	else if(r < 0.56)
+		return "player_enyo/foot4.wav";
+	else if(r < 0.70)
+		return "player_enyo/foot5.wav";
+	else if(r < 0.84)
+		return "player_enyo/foot6.wav";
+	else
+		return "player_enyo/foot7.wav";
+}
+
+void Valkyrie_Precache();
+void Enyo_Precache()
+{
+	// transformation
+	Valkyrie_Precache();
+
 #ifdef CSQC
 	precache_pic("gfx/quake/enyo_face");
 
 	precache_pic("gfx/quake/enyo_wingcharge");
+
+    precache_model("progs/v_enyosword.mdl");
 #endif
 #ifdef SVQC
 	precache_sound("player_enyo/plyrjmp8.wav");       // player jump
@@ -63,6 +87,15 @@ PRECACHE(Enyo)
 	precache_sound("player_enyo/foot5.wav");
 	precache_sound("player_enyo/foot6.wav");
 	precache_sound("player_enyo/foot7.wav");
+
+	precache_sound("player_enyo/enyojump1.wav");
+	precache_sound("player_enyo/enyojump2.wav");
+	precache_sound("player_enyo/enyojump3.wav");
+	precache_sound("player_enyo/enyojump4.wav");
+
+	precache_sound("player_enyo/pain1.wav");
+	precache_sound("player_enyo/pain2.wav");
+	precache_sound("player_enyo/pain3.wav");
 
 	precache_sound("player_enyo/wings_got.wav");
 	precache_sound("player_enyo/wings.wav");
@@ -105,12 +138,13 @@ CLASS(Enyo, Champions)
 	ATTRIB(Enyo, m_viewofs, vector, '0 0 30');
 	ATTRIB(Enyo, qcc_meleename, string, "enyosword");
 #ifdef GAMEQC
+	METHOD(Enyo, m_precache, void()) { Enyo_Precache(); }
 	ATTRIB(Enyo, m_model, Model, MDL_Enyo);
 	ATTRIB(Enyo, m_model_head, Model, MDL_Enyo_Head);
 	ATTRIB(Enyo, m_soundpath, string, "player_enyo/");
-	METHOD(Enyo, m_sound_pain, string()) { return SND(Enyo_Pain_Random()); }
-	METHOD(Enyo, m_sound_death, string()) { return SND(Enyo_Death); }
-	METHOD(Enyo, m_sound_jump, string(entity actor)) { return SND(Enyo_Jump_Random()); }
+	METHOD(Enyo, m_sound_pain, string()) { return Enyo_Pain_Random(); }
+	METHOD(Enyo, m_sound_death, string()) { return "player_enyo/death.wav"; }
+	METHOD(Enyo, m_sound_jump, string(entity actor)) { return Enyo_Jump_Random(); }
 #endif
 #ifdef CSQC
 	ATTRIB(Enyo, message, string, ENYO_STATS);
