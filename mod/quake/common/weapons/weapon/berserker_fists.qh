@@ -3,7 +3,7 @@
 CLASS(BerserkerFists, Weapon)
 /* ammotype  */ ATTRIB(BerserkerFists, ammo_type, int, 0);
 /* impulse   */ ATTRIB(BerserkerFists, impulse, int, 1);
-/* spawnflags*/ ATTRIB(BerserkerFists, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(BerserkerFists, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOHUD);
 /* ammo */      ATTRIB(BerserkerFists, aflag, int, 0);
 /* modelname */ ATTRIB(BerserkerFists, mdl, string, "berserk");
 /* crosshair */ ATTRIB(BerserkerFists, w_crosshair, string, "gfx/crosshair20");

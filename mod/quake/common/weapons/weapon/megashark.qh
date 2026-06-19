@@ -3,7 +3,7 @@
 CLASS(Megashark, Weapon)
 /* ammotype  */ ATTRIB(Megashark, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Megashark, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Megashark, spawnflags, int, 0);
+/* spawnflags*/ ATTRIB(Megashark, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Megashark, aflag, int, 30);
 /* modelname */ ATTRIB(Megashark, mdl, string, "megashark");
 /* crosshair */ ATTRIB(Megashark, w_crosshair, string, "gfx/crosshairhagar");

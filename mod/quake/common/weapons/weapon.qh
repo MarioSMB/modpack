@@ -105,6 +105,7 @@ const int WEP_FLAG_IMPEL         =  BIT(13); // from the impel mission pack
 const int WEP_FLAG_MUSIC         =  BIT(14); // weapon is a musical instrument
 const int WEP_FLAG_CHAMPION      =  BIT(15); // weapon is a champion's signature weapon
 const int WEP_FLAG_SWAB          =  BIT(16); // from the swab campaign
+const int WEP_FLAG_NOHUD         =  BIT(17); // weapon does not appear in the HUD (for melee/non-weapon attacks)
 
 // variables:
 string weaponorder_byid;

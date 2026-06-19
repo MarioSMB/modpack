@@ -1848,7 +1848,7 @@ string PickDMMap(bool gotohub)
 .float charmed_healthcheck;
 void monsters_StartFrame()
 {
-	IL_EACH(g_moveables, IS_MONSTER(it),
+	IL_EACH(g_monsters, IS_MONSTER(it),
 	{
 		// TODO: better location for this hack
 		bool is_temp = (it.category && gametype == GAMETYPE_HORDE);

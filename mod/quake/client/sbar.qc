@@ -1203,6 +1203,25 @@ Sbar_DrawInventory
 */
 int oldweapons[REGISTRY_MAX(Weapons)];
 float weapon_gettime[REGISTRY_MAX(Weapons)];
+entity weaponorder[REGISTRY_MAX(Weapons)];
+string cl_weaponpriority_old;
+void weaponorder_swap(int i, int j, entity pass)
+{
+	TC(int, i); TC(int, j);
+	entity h = weaponorder[i];
+	weaponorder[i] = weaponorder[j];
+	weaponorder[j] = h;
+}
+
+string weaponorder_cmp_str;
+int weaponorder_cmp(int i, int j, entity pass)
+{
+	TC(int, i); TC(int, j);
+	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
+	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
+	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
+}
+
 void Sbar_DrawInventory(vector pos, vector mySize)
 {
 	// set flash times
@@ -1245,9 +1264,24 @@ void Sbar_DrawInventory(vector pos, vector mySize)
 	// weapons
 	if(!(myitems & IT_TANK) && !hideweapons)
 	{
-		// NOTE: Xonotic uses the impulse order, but we only want to show one weapon anyway...
-		string s = W_NumberWeaponOrder(autocvar_cl_quake_weaponpriority);
-		string weporder = W_NameWeaponOrder(W_FixWeaponOrder(s, 1));
+		if (cl_weaponpriority_old != autocvar_cl_quake_weaponpriority || weaponorder[0] == NULL)
+		{
+			strcpy(cl_weaponpriority_old, autocvar_cl_quake_weaponpriority);
+			// NOTE: Xonotic uses the impulse order, but we only want to show one weapon anyway...
+			string weporder = W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(cl_weaponpriority_old));
+
+			weaponorder_cmp_str = strcat(" ", weporder, " ");
+
+			int weapon_cnt = 0;
+			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
+			for (int i = weapon_cnt; i < REGISTRY_MAX(Weapons); ++i)
+				weaponorder[i] = NULL;
+
+			heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
+
+			weaponorder_cmp_str = string_null;
+		}
+
 		int wep_pos = 0;
 		for(int j = 1; j <= 10; ++j)
 		{
@@ -1255,21 +1289,22 @@ void Sbar_DrawInventory(vector pos, vector mySize)
 			if(j == 10)
 				imp = 0; // we want special 0 weapons to show on slot 10!
 			Weapon wep = WEP_Null;
-			if(thiswep.activeweapon.impulse == imp && thiswep.activeweapon != WEP_BERSERKER_FISTS && thiswep.activeweapon != WEP_CORRUPTED_CLAWS)
+			if(thiswep.activeweapon.impulse == imp && !(thiswep.activeweapon.spawnflags & WEP_FLAG_NOHUD))
 				wep = thiswep.activeweapon;
 			else
 			{
-				FOREACH_WORD(weporder, true,
+				for (int i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 				{
-					Weapon wepent = Weapon_from_name(it);
-					if(wepent == WEP_BERSERKER_FISTS || wepent == WEP_CORRUPTED_CLAWS)
+					Weapon wepent = weaponorder[i];
+					if(wepent.spawnflags & WEP_FLAG_NOHUD)
 						continue;
 					if(wepent == WEP_Null || wepent.impulse != imp || !Inventory_have(wepent, g_inventory, ITEM_OWNED))
 						continue;
 					wep = wepent;
 					// TODO: the hud has no idea if the weapon has ammo
-					break; // stop at first? TODO: champion weapons! (they usually have top priority anyway)
-				});
+					// NOTE: since weapons are sorted by priority, the last is actually the one we want!
+					//break; // stop at first? TODO: champion weapons! (they usually have top priority anyway)
+				}
 			}
 			// draw a background for each weapon slot
 			vector wep_icon_pos = pos + vec2((j - 1) * icon_size.x, icon_size.y);

@@ -73,6 +73,7 @@ METHOD(Grinch, m_playerthink, void(Champions this, entity actor))
 			if(!mon)
 				return; // dunno how but just incase!
 			mon.flags |= FL_CLONE; // clears it on death
+			mon.colormod = '1 1 1'; // we're green, not max!
 			mon.health = max(mon.health, 1000); // slight buffer since their health ticks down fast
 			if(Challenge_Active(CHALLENGE_ONEHP))
 				mon.health = 1;

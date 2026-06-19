@@ -387,6 +387,7 @@ void Monster_Appear(entity this, entity actor, entity trigger)
 		entity newmon = spawn();
 		copyentity_qc(this, newmon);
 		IL_PUSH(g_moveables, newmon);
+		IL_PUSH(g_monsters, newmon);
 	}
 
 	float timer = (this.delay) ? this.delay : 0;
@@ -504,6 +505,9 @@ Monster monster_randomize(entity this, Monster mon)
 
 void monster_setup(entity this, Monster mon)
 {
+	if(!IL_CONTAINS(g_monsters, this))
+		IL_PUSH(g_monsters, this);
+
 	mon.mr_setup(mon, this);
 
 	if(Challenge_Active(CHALLENGE_ONEHP))
