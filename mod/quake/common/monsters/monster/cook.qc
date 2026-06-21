@@ -504,7 +504,10 @@ void cook_die(entity this, entity inflictor, entity attacker, int deathtype)
 		default: Death_SpecialHandle(this, killed_type); return;
 	}
 
-	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
+	if(random() <= 0.2)
+		_sound(this, CH_VOICE, "cook/cannot.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
 	set_anim(this, 71, cook_die2);
 	this.solid = SOLID_NOT;
 }

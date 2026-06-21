@@ -45,7 +45,7 @@ CLASS(GalenaAngelStatue, Turret)
 #endif
 /* netname    */ ATTRIB(GalenaAngelStatue, netname, string, "angelstatue");
 /* fullname   */ ATTRIB(GalenaAngelStatue, m_name, string, _("Angel Statue"));
-/* description*/ ATTRIB(GalenaAngelStatue, m_description, string, "It doesn't do anything");
+/* description*/ ATTRIB(GalenaAngelStatue, m_description, string, "\"It doesn't do anything\"\nRevives nearby turrets below 20% health");
 #ifdef GAMEQC
 /* number     */ ATTRIB(GalenaAngelStatue, impulse, int, 1);
 /* cost       */ ATTRIB(GalenaAngelStatue, tur_cost, float, 90);

@@ -381,6 +381,14 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(s == "hud" && argv(1) == "radar")
+	{
+		// on PRESS
+		if(argv(2) == "1")
+			localcmd("cmd scream\n");
+		return;
+	}
+
 	if(cl_champion_command(s))
 		return;
 

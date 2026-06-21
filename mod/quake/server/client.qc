@@ -25,6 +25,7 @@
 #include "../common/td/sv_td.qh"
 #include "vote.qh"
 #include "../common/weapons/weapon/gravity_gun.qh"
+#include "weapons/music.qh"
 #include "weapons/weaponsystem.qh"
 
 .entity chatbubbleentity;
@@ -3873,6 +3874,7 @@ void GodCheat(entity this);
 void NotargetCheat(entity this);
 void GiveCheat(entity this, string input);
 .entity waypointsprite_attachedforping;
+.float last_scream;
 void SV_ParseClientCommand(entity this, string command)
 {
 	// If invalid UTF-8, don't even parse it
@@ -3970,6 +3972,21 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "vote")
 	{
 		VoteCommand(CMD_REQUEST_COMMAND, this, argc, command);
+		return;
+	}
+
+	if(cmd_name == "scream")
+	{
+		if(time >= this.last_scream)
+		{
+			this.last_scream = time + 2; // for the love of god not too often
+			float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
+			r *= 1; // TODO: per-instrument offsets
+			string snd = get_deathsound(this, rint((random() * 4) + 1));
+			if(random() > 0.5)
+				snd = "player_goat/death2.wav";
+			sound7(this, CH_PLAYER_SINGLE, snd, 1, ATTN_NORM, r, 0);
+		}
 		return;
 	}
 
