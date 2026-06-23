@@ -313,7 +313,7 @@ METHOD(Thomas, mr_setup, bool(Thomas this, entity actor))
 	actor.th_missile = thomas_charge;			// jump attack
 	actor.th_pain = thomas1_pain;
 	settouch(actor, thomas_touch);
-	actor.solid = SOLID_TRIGGER;
+	actor.solid = SOLID_CORPSE;
 
 	actor.checkattack = ThomasCheckAttack;
 

@@ -3977,6 +3977,8 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "scream")
 	{
+		if(!IS_PLAYER(this) || deathmatch)
+			return;
 		if(time >= this.last_scream)
 		{
 			this.last_scream = time + 2; // for the love of god not too often
