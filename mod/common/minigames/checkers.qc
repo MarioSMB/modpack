@@ -1,4 +1,4 @@
-REGISTER_MINIGAME(checkers, "Checkers");
+REGISTER_MINIGAME(checkers, _("Checkers"));
 
 const float CHECKERS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float CHECKERS_TURN_WIN   = 0x0200; // player has won

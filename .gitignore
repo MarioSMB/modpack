@@ -4,3 +4,5 @@ gmqcc/
 *.lno
 .cache/
 .DS_Store
+lang/common.pot.new*
+*~

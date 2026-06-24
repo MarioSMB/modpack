@@ -1,5 +1,5 @@
 #include "snake.qh"
-REGISTER_MINIGAME(snake, "Snake"); // SNAAAAKE
+REGISTER_MINIGAME(snake, _("Snake")); // SNAAAAKE
 
 const float SNAKE_TURN_MOVE  = 0x0100; // the snake is moving, player must control it
 const float SNAKE_TURN_WIN   = 0x0200; // multiplayer victory
