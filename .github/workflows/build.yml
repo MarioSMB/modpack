@@ -24,9 +24,9 @@ jobs:
 
       - name: Initialize xonotic submodule
         # Create a small clone, with full history to improve workflow speed.
-        # For example, original size of xonotic-data.pk3dir is ~4GB
+        # For example, full clone size of xonotic-data.pk3dir is ~1.36 GiB
         # with: git submodules update --init --filter=blob:none xonotic
-        # The size is reduced to ~700MB
+        # The clone size is reduced to ~700 MiB
         # https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
         run: git submodule update --init --filter=blob:none xonotic
 
