@@ -55,8 +55,8 @@ METHOD(CrazyDave, m_takedamage, float(Champions this, entity targ, entity inflic
 	if(targ.m_champion == this)
 	{
 		if(deathmatch)
-			return 0.75;
-		return 0.5;
+			return (StatusEffects_active(STATUSEFFECT_TacoPower, targ)) ? 0.6 : 0.75;
+		return (StatusEffects_active(STATUSEFFECT_TacoPower, targ)) ? 0.3 : 0.5;
 	}
 	return 1;
 }

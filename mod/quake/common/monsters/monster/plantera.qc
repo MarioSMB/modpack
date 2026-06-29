@@ -108,13 +108,14 @@ void plantera_spike_think(entity this)
 		_sound(this, CH_SHOTS, "break/wood_i3.wav", 1, ATTN_NORM);
 }
 
-void plantera_spike_attack(entity this)
+entity plantera_spike_attack(entity this, vector org, vector dir)
 {
 	//_sound(this, CH_WEAPON_SINGLE, "plantera/seed_fire.wav", 1, ATTN_BOSS);
 
 	entity missile = spawn();
 	missile.flags = FL_PROJECTILE;
 	missile.owner = this;
+	missile.realowner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_TRIGGER;
 	missile.projectiledeathtype = DEATH_MONSTER_PLANTERA.m_id;
@@ -127,10 +128,8 @@ void plantera_spike_attack(entity this)
 
 // set missile speed	
 
-	vector dir = normalize(this.enemy.origin - this.origin);
-
 	missile.velocity = dir * 200;
-	missile.velocity_z = 200;
+	missile.velocity_z += 200;
 
 	missile.avelocity = '300 300 300';
 
@@ -141,11 +140,13 @@ void plantera_spike_attack(entity this)
 	missile.nextthink = time;
 	setthink(missile, plantera_spike_think);
 	setsize(missile, '-10 -10 -10', '10 10 10');		
-	setorigin(missile, this.origin + '0 0 70');
+	setorigin(missile, org);
 
 	IL_PUSH(g_projectiles, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_THORNBALL, true);
+
+	return missile;
 }
 
 void plantera_spore_touch(entity this, entity toucher)
@@ -234,7 +235,11 @@ void plantera_secondary(entity this)
 	if(this.bosswave >= 1)
 		plantera_spore_attack(this);
 	else
-		plantera_spike_attack(this);
+	{
+		vector org = this.origin + '0 0 70';
+		vector dir = normalize(this.enemy.origin - this.origin);
+		plantera_spike_attack(this, org, dir);
+	}
 }
 
 void plantera_hook(entity this)

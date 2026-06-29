@@ -1,0 +1,19 @@
+#pragma once
+
+CLASS(BFG, Weapon)
+/* ammotype  */ ATTRIB(BFG, ammo_type, int, IT_CELLS);
+/* impulse   */ ATTRIB(BFG, impulse, int, 8);
+/* spawnflags*/ ATTRIB(BFG, spawnflags, int, WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(BFG, aflag, int, 20);
+/* modelname */ ATTRIB(BFG, mdl, string, "bfg");
+/* crosshair */ ATTRIB(BFG, w_crosshair, string, "gfx/crosshairelectro");
+/* crosshair */ ATTRIB(BFG, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(BFG, w_crosshair_color, vector, '0 1 0');
+/* wepimg    */ ATTRIB(BFG, model2, string, "bfg");
+/* refname   */ ATTRIB(BFG, netname, string, "bfg");
+/* wepname   */ ATTRIB(BFG, m_name, string, _("BFG9000"));
+
+ENDCLASS(BFG)
+REGISTER_WEAPON(BFG, NEW(BFG));
+
+SPAWNFUNC_WEAPON(weapon_bfg, WEP_BFG)

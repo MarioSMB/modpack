@@ -1,0 +1,24 @@
+#pragma once
+
+CLASS(Rifle, Weapon)
+/* ammotype  */ ATTRIB(Rifle, ammo_type, int, IT_NAILS);
+/* impulse   */ ATTRIB(Rifle, impulse, int, 5);
+/* spawnflags*/ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(Rifle, aflag, int, 30);
+/* modelname */ ATTRIB(Rifle, mdl, string, "rifle");
+/* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
+/* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(Rifle, w_crosshair_color, vector, '0.886 0.620 0.353');
+/* wepimg    */ ATTRIB(Rifle, model2, string, "rifle");
+/* refname   */ ATTRIB(Rifle, netname, string, "rifle");
+/* wepname   */ ATTRIB(Rifle, m_name, string, _("Sniper Rifle"));
+/* Xonotic   */ ATTRIB(Rifle, m_deprecated_netname, string, "rifle");
+
+ENDCLASS(Rifle)
+REGISTER_WEAPON(RIFLE, NEW(Rifle));
+
+SPAWNFUNC_WEAPON(weapon_sniperrifle, WEP_RIFLE)
+
+#ifdef SVQC
+void W_FireRifle(entity this, .entity weaponentity);
+#endif

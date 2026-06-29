@@ -139,6 +139,8 @@ MODEL(PROJECTILE_PEA,                       "progs/proj_tur_peashooter.mdl");
 MODEL(PROJECTILE_SNOWPEA,                   "progs/proj_tur_snowpea.mdl");
 MODEL(PROJECTILE_PLASMA_CANNON,             "progs/proj_plasmacannon.mdl");
 MODEL(PROJECTILE_ALIEN_SNIPER,              "progs/proj_aliensniper.mdl");
+MODEL(PROJECTILE_COCONUT,                   "progs/proj_coconut.mdl");
+MODEL(PROJECTILE_BFG,                       "progs/proj_bfg.mdl");
 
 PRECACHE(PROJECTILE_LETTERS)
 {

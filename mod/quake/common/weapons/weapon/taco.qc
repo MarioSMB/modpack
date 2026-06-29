@@ -7,6 +7,7 @@ void player_axeb1(entity this);
 void W_ConsumeTaco(entity this, .entity weaponentity);
 
 float autocvar_sv_quake_taco_healing = 5;
+float autocvar_sv_quake_taco_time = 10;
 
 void wep_taco_taco11(entity this) { wep_set_anim(this, 11, w_ready); }
 void wep_taco_taco10(entity this) { wep_set_anim(this, 10, wep_taco_taco11); }
@@ -37,6 +38,12 @@ void W_ConsumeTaco(entity this, .entity weaponentity)
 
 	if(this.m_champion == CHAMPION_CrazyDave)
 		CrazyDave_reset(this);
+
+	StatusEffects_apply(STATUSEFFECT_TacoPower, this, time + autocvar_sv_quake_taco_time, 0);
+
+	// holy taco cure!
+	if(StatusEffects_active(STATUSEFFECT_Poisoned, this))
+		StatusEffects_remove(STATUSEFFECT_Poisoned, this, STATUSEFFECT_REMOVE_NORMAL);
 }
 
 PRECACHE(Taco)

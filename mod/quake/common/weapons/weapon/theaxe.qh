@@ -1,0 +1,30 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(THEAXE_MUSICNOTE, "weapons/theaxe_music");
+#endif
+
+CLASS(TheAxe, Weapon)
+/* ammotype  */ ATTRIB(TheAxe, ammo_type, int, 0);
+/* impulse   */ ATTRIB(TheAxe, impulse, int, 1);
+/* spawnflags*/ ATTRIB(TheAxe, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_MUSIC);
+/* ammo */      ATTRIB(TheAxe, aflag, int, 0);
+/* modelname */ ATTRIB(TheAxe, mdl, string, "theaxe");
+/* crosshair */ ATTRIB(TheAxe, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(TheAxe, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(TheAxe, w_crosshair_color, vector, '1 0 0');
+/* wepimg    */ ATTRIB(TheAxe, model2, string, "theaxe");
+/* refname   */ ATTRIB(TheAxe, netname, string, "theaxe");
+/* wepname   */ ATTRIB(TheAxe, m_name, string, _("The Axe"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(TheAxe, m_musicnote, Sound, SND_THEAXE_MUSICNOTE);
+#endif
+
+ENDCLASS(TheAxe)
+REGISTER_WEAPON(THEAXE, NEW(TheAxe));
+
+SPAWNFUNC_WEAPON(weapon_theaxe, WEP_THEAXE)
+
+#ifdef SVQC
+void W_FireTheAxe(entity this, .entity weaponentity);
+#endif

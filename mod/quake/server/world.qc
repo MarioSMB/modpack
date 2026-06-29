@@ -1496,11 +1496,13 @@ spawnfunc(worldspawn)
 	CheckEngineExtensions();
 	cvar_set("_endmatch", "0");
 	cvar_set("horde", "0"); // horde will be enabled by the horde manager
+	bool need_parms_clear = false;
 	if(world.model == "maps/quake.bsp")
 	{
 		cvar_set("skill", "1");
 		cvar_set("sv_quake_challenge", ""); // returned to hub, clean up challenge mode too!
 		serverflags = 0; // clean up serverflags!
+		need_parms_clear = true;
 	}
 
 	world_cdtrack = this.sounds;
@@ -1648,6 +1650,10 @@ spawnfunc(worldspawn)
 		cvar_settemp("timelimit", ftos(autocvar_sv_quake_timelimit));
 		cvar_settemp("fraglimit", ftos(autocvar_sv_quake_fraglimit));
 	}
+
+	// done after database is loaded
+	if(need_parms_clear)
+		parms_clear_all();
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.

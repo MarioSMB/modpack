@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(SolarEruption, Weapon)
+/* ammotype  */ ATTRIB(SolarEruption, ammo_type, int, 0);
+/* impulse   */ ATTRIB(SolarEruption, impulse, int, 1);
+/* spawnflags*/ ATTRIB(SolarEruption, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(SolarEruption, aflag, int, 0);
+/* modelname */ ATTRIB(SolarEruption, mdl, string, "solareruption");
+/* crosshair */ ATTRIB(SolarEruption, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(SolarEruption, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(SolarEruption, w_crosshair_color, vector, '0.96 0.78 0');
+/* wepimg    */ ATTRIB(SolarEruption, model2, string, "solareruption");
+/* refname   */ ATTRIB(SolarEruption, netname, string, "solareruption");
+/* wepname   */ ATTRIB(SolarEruption, m_name, string, _("Solar Eruption"));
+
+ENDCLASS(SolarEruption)
+REGISTER_WEAPON(SOLARERUPTION, NEW(SolarEruption));
+
+SPAWNFUNC_WEAPON(weapon_solareruption, WEP_SOLARERUPTION)
+
+#ifdef SVQC
+//void W_FireSolarEruption(entity this, .entity weaponentity);
+#endif

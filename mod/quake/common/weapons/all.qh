@@ -8,15 +8,15 @@
 
 #ifdef GAMEQC
 // TODO: cleaner way to list these?
-noref string autocvar_cl_quake_weaponpriority = "smg corrupted berserk invoker breegull bladeofgrass taco plane snowball magic star shield gravgun mushroom pogo rocketlauncher multirocketlauncher mmml driller impaler nuke cannon lightning plasma shadowbeam shock lightme railgun otamatone laser_gun blizzard squeaker mic grenadelauncher multigrenade proximitygun napalm vortexbeater loosecannon goldy tuba fish chimes mayo tome spellbook hammer portalgun ocarina supernailgun lavasupernailgun rebar megashark crossbow angelicstaff bagpipes piano sshotgun ripper scattercrumb doot violin nailgun lavanailgun minishark biogun light_disc speaknspell kazoo shotgun pistol banjo ball katana sword crowbar meowmere northpole starfury sickle wand chainsaw wrench pan axe bongos pewpew";
+noref string autocvar_cl_quake_weaponpriority = "smg corrupted berserk invoker breegull bladeofgrass taco plane snowball magic star shield gravgun mushroom pogo rocketlauncher multirocketlauncher mmml driller impaler nuke cannon lightning bfg plasma shadowbeam shock lightme railgun otamatone laser_gun blizzard squeaker mic grenadelauncher multigrenade proximitygun napalm vortexbeater loosecannon goldy tuba fish chimes mayo tome spellbook hammer portalgun ocarina supernailgun lavasupernailgun rebar rifle megashark crossbow coconutgun angelicstaff bagpipes piano sshotgun ripper scattercrumb doot violin nailgun lavanailgun minishark biogun light_disc speaknspell kazoo shotgun pistol banjo ball katana sword crowbar meowmere solareruption northpole starfury sickle wand theaxe chainsaw wrench pan axe bongos pewpew";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
 noref string autocvar_cl_quake_weaponpriority0 = "rocketlauncher mmml nuke cannon multirocketlauncher driller impaler grenadelauncher multigrenade proximitygun napalm loosecannon goldy biogun tuba fish mayo"; // explosives
-noref string autocvar_cl_quake_weaponpriority1 = "lightning plasma shock lightme railgun"; // energy
+noref string autocvar_cl_quake_weaponpriority1 = "lightning bfg plasma shock lightme railgun"; // energy
 noref string autocvar_cl_quake_weaponpriority2 = "lightning portalgun"; // hitscan exact
 noref string autocvar_cl_quake_weaponpriority3 = "lightning shadowbeam sshotgun shotgun pistol"; // hitscan all
 noref string autocvar_cl_quake_weaponpriority4 = "smg snowball laser_gun blizzard shock grenadelauncher multigrenade napalm vortexbeater fish mayo ocarina supernailgun biogun tuba lavasupernailgun rebar megashark crossbow bagpipes piano doot nailgun lavanailgun minishark light_disc bongos speaknspell kazoo chainsaw"; // spam weapons
 noref string autocvar_cl_quake_weaponpriority5 = "nuke cannon impaler portalgun"; // movement weapons
-noref string autocvar_cl_quake_weaponpriority6 = "mushroom tuba mic ocarina otamatone banjo bongos chimes mayo bagpipes piano kazoo violin doot"; // musical instruments
+noref string autocvar_cl_quake_weaponpriority6 = "mushroom tuba mic ocarina otamatone banjo theaxe bongos chimes mayo bagpipes piano kazoo violin doot"; // musical instruments
 noref string autocvar_cl_quake_weaponpriority7 = "";
 noref string autocvar_cl_quake_weaponpriority8 = "";
 noref string autocvar_cl_quake_weaponpriority9 = "";

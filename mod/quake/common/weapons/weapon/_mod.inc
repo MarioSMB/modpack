@@ -85,3 +85,8 @@
 #include "northpole.qc"
 #include "megashark.qc"
 #include "taco.qc"
+#include "coconutgun.qc"
+#include "solareruption.qc"
+#include "bfg.qc"
+#include "theaxe.qc"
+#include "rifle.qc"

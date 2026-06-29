@@ -381,10 +381,10 @@ void DrawReticle(entity this)
 	{
 		entity wepe = viewmodels[slot];
 		Weapon wep = wepe.activeweapon;
-		if(wep == WEP_RAILGUN)
+		if (wep != WEP_Null && wep.wr_zoom)
 		{
-			wep_zoomed = true;
-			break;
+			bool do_zoom = wep.wr_zoom(wep, NULL);
+			wep_zoomed += do_zoom;
 		}
 	}
 
@@ -397,7 +397,7 @@ void DrawReticle(entity this)
 		// no zoom reticle while dead
 		reticle_type = 0;
 	}
-	else if(STAT(CANNON))
+	else if(STAT(CANNON) || wep_zoomed)
 	{
 		// weapon reticle
 		reticle_type = 2;
@@ -429,7 +429,7 @@ void DrawReticle(entity this)
 			reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 		}
 
-		float f = (zoomscript_caught || STAT(CANNON)) ? 1 : max(0.25, current_zoomfraction);
+		float f = (zoomscript_caught || STAT(CANNON) || wep_zoomed) ? 1 : max(0.25, current_zoomfraction);
 
 		if(f)
 		{

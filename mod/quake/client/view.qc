@@ -399,6 +399,16 @@ void HUD_Contents()
 bool IsZooming(bool ignore_spectatorbutton_zoom)
 {
 	bool zoomdir = button_zoom;
+
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepent = viewmodels[slot];
+			Weapon wep = wepent.activeweapon;
+			if (wep != WEP_Null && wep.wr_zoomdir)
+			if (wep.wr_zoomdir(wep)) // TODO: merge this with wr_zoom?
+				zoomdir = true;
+		}
+
 	return zoomdir;
 }
 

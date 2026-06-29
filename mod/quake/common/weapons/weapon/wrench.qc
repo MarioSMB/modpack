@@ -134,6 +134,7 @@ void sound_wrench_hit_enemy(entity this, float wrenchhit_volume)
 }
 //=============================================================================================
 
+#if 0
 void sound_melee_hit_player(entity this, float meleehit_volume)
 {
 	int r = floor(random() * 4);
@@ -146,6 +147,7 @@ void sound_melee_hit_player(entity this, float meleehit_volume)
 	else
 		_sound(this, CH_SHOTS, "impact/hit_player4.wav", meleehit_volume, ATTN_NORM);
 }
+#endif
 //=============================================================================================
 void sound_bullet_hit_metal(entity this, float pistolhitmetal_volume)
 {

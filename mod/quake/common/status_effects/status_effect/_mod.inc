@@ -18,6 +18,7 @@
 #include "sharp_shooter.qc"
 #include "shield.qc"
 #include "slowness.qc"
+#include "taco_power.qc"
 #include "vampirism.qc"
 #include "weakness.qc"
 #include "wetsuit.qc"

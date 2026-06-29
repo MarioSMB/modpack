@@ -20,6 +20,8 @@ bool disc_shouldbehead(entity this, entity toucher)
 		if(toucher.monsterdef.spawnflags & MON_FLAG_METAL)
 			return false;
 	}
+	if(IS_PLAYER(toucher))
+		return false;
 	if(toucher.solid == SOLID_BSP || toucher.move_movetype == MOVETYPE_PUSH)
 		return false;
 	return true;

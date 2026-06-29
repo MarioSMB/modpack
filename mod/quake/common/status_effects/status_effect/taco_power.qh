@@ -1,0 +1,11 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(TacoPower, StatusEffects)
+    ATTRIB(TacoPower, netname, string, "taco_power");
+    ATTRIB(TacoPower, m_color, vector, '0.02 0.88 0.70');
+    ATTRIB(TacoPower, m_hidden, bool, true);
+    ATTRIB(TacoPower, m_lifetime, float, 10);
+ENDCLASS(TacoPower)
+REGISTER_STATUSEFFECT(TacoPower, NEW(TacoPower));

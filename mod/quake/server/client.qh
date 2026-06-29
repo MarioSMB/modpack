@@ -145,6 +145,8 @@ void PutObserverInServer(entity this);
 
 bool PlayerInList(entity player, string list);
 
+void parms_clear_all();
+
 float intermission_exittime;
 
 const int NO_INTERMISSION = BIT(0);

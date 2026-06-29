@@ -945,6 +945,8 @@ void weapon_touch(entity this, entity toucher)
 		{
 			if(IsMCJMap())
 				_sound(toucher, CHAN_ITEM, "items/pop.wav", 1, ATTN_NORM);
+			else if(wep == WEP_THEAXE && random() < 0.5)
+				_sound(toucher, CHAN_ITEM, "weapons/theaxe_pickup.wav", 1, ATTN_NORM);
 			else
 				_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 			SUB_UseTargets(this, toucher, NULL);
@@ -981,6 +983,8 @@ void weapon_touch(entity this, entity toucher)
 // weapon touch sound
 	if(IsMCJMap())
 		_sound(toucher, CHAN_ITEM, "items/pop.wav", 1, ATTN_NORM);
+	else if(wep == WEP_THEAXE && random() < 0.5)
+		_sound(toucher, CHAN_ITEM, "weapons/theaxe_pickup.wav", 1, ATTN_NORM);
 	else
 		_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 
@@ -1110,6 +1114,8 @@ Weapon W_RandomizeWeapon(Weapon wpn)
 			case WEP_SICKLE:
 			case WEP_STARFURY:
 			case WEP_TOME:
+			case WEP_SOLARERUPTION:
+			case WEP_THEAXE:
 			{
 				if(random() > 0.5)
 					mytype = IT_CELLS;

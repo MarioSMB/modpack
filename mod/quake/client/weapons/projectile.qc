@@ -161,6 +161,7 @@ void Projectile_Draw(entity this)
 			case PROJECTILE_DEMON_SICKLE:
 				rot = '0 1024 0'; // spinning
 				break;
+			case PROJECTILE_CAT:
 			case PROJECTILE_EGG_NORMAL:
 			case PROJECTILE_EGG_FIRE:
 			case PROJECTILE_EGG_GRENADE:
@@ -593,6 +594,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(SNOWPEA)            this.traileffect = EFFECT_SNOWBALL_TRAIL.m_id; this.avelocity = randomvec() * 200; break;
 			HANDLE(PLASMA_CANNON)      this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(ALIEN_SNIPER)       this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(COCONUT)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 0 0'; break;
+			HANDLE(BFG)                this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -939,6 +942,13 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				setsize(this, '-12 -12 0', '12 12 12');
 				this.solid = SOLID_TRIGGER;
 				settouch(this, func_null);
+				break;
+			case PROJECTILE_COCONUT:
+				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_BFG:
+				this.effects |= EF_FULLBRIGHT;
+				this.effects |= EF_DIMLIGHT;
 				break;
 			default:
 				break;

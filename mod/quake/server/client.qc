@@ -297,6 +297,18 @@ void parms_clear(entity this)
 	parms_putdata(myid, "weapons", "");
 }
 
+void parms_clear_all()
+{
+	for(int j = 1; j <= 255; ++j)
+	{
+		// TRICK: since the read operation checks if weapons are empty
+		// it's the only field we need to to clear to guarantee a reset!
+		string myid = itos(j);
+
+		parms_putdata(myid, "weapons", "");
+	}
+}
+
 void SetSpawnParms(entity this)
 {
 	// storing in a database means we always have access to every player's data
@@ -2730,6 +2742,10 @@ void CheckHealthRot(entity this)
 	if(this.m_champion)
 		hp_rot_max *= this.m_champion.qcc_health_rot_max;
 
+	// double regen for the whole duration!
+	if(StatusEffects_active(STATUSEFFECT_TacoPower, this))
+		hp_rot_max *= 2;
+
 	if(this.health > hp_rot_max)
 	{
 		this.health -= 1;
@@ -2767,6 +2783,13 @@ void Regenerate_Health(entity this)
 		regen_rate *= this.m_champion.qcc_health_regen_rate;
 		regen_stable *= this.m_champion.qcc_health_regen_stable;
 		regen_max *= this.m_champion.qcc_health_regen_max;
+	}
+
+	// double regen for the whole duration!
+	if(StatusEffects_active(STATUSEFFECT_TacoPower, this))
+	{
+		regen_rate *= 0.5;
+		regen_stable *= 2;
 	}
 
 	if(this.health_regen_time < time && this.health < regen_stable)
@@ -3981,12 +4004,19 @@ void SV_ParseClientCommand(entity this, string command)
 			return;
 		if(time >= this.last_scream)
 		{
-			this.last_scream = time + 2; // for the love of god not too often
+			this.last_scream = time + 1; // for the love of god not too often
 			float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 			r *= 1; // TODO: per-instrument offsets
-			string snd = get_deathsound(this, rint((random() * 4) + 1));
-			if(random() > 0.5)
-				snd = "player_goat/death2.wav";
+			string snd;
+			if(this.waterlevel >= WATERLEVEL_SUBMERGED && !this.clockwork)
+			{
+				string soundpath = "player/";
+				if(this.m_champion && !STAT(SKATING, this))
+					soundpath = this.m_champion.m_soundpath;
+				snd = strcat(soundpath, "h2odeath.wav");
+			}
+			else
+				snd = get_deathsound(this, rint((random() * 4) + 1));
 			sound7(this, CH_PLAYER_SINGLE, snd, 1, ATTN_NORM, r, 0);
 		}
 		return;

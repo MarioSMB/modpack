@@ -52,7 +52,21 @@ CLASS(Weapon, Object)
     /** M: pitch     : whether this weapon should have no pitch adjustments as an instrument */
     ATTRIB(Weapon, m_nopitch, bool, false);
 #endif
-
+#ifdef GAMEQC
+    /** (BOTH) weapon specific zoom reticle */
+    METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor))
+    {
+        // no weapon specific image for this weapon
+        return false;
+    }
+#endif
+#ifdef CSQC
+    /** (CLIENT) check whether the weapon should zoom (special handling) */
+    METHOD(Weapon, wr_zoomdir, bool(Weapon this))
+    {
+        return false;
+    }
+#endif
 
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}

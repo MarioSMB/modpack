@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef GAMEQC
-SOUND(PAN_MUSICNOTE, "cook/ping2");
+SOUND(PAN_MUSICNOTE, "weapons/fryingpan_music");
 #endif
 
 CLASS(Pan, Weapon)
@@ -18,7 +18,6 @@ CLASS(Pan, Weapon)
 /* wepname   */ ATTRIB(Pan, m_name, string, _("Frying Pan"));
 #ifdef GAMEQC
 /* music     */ ATTRIB(Pan, m_musicnote, Sound, SND_PAN_MUSICNOTE);
-/* pitch     */ ATTRIB(Pan, m_nopitch, bool, true);
 #endif
 
 ENDCLASS(Pan)

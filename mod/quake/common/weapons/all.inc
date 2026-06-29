@@ -84,9 +84,14 @@
 #include "weapon/northpole.qh"
 #include "weapon/megashark.qh"
 #include "weapon/taco.qh"
+#include "weapon/coconutgun.qh"
+#include "weapon/solareruption.qh"
+#include "weapon/bfg.qh"
+#include "weapon/theaxe.qh"
+#include "weapon/rifle.qh"
 
 // WARNING: also update the weapon priority list in all.qh or your weapon won't work properly!!
 
 // Weapon registry is sorted to allocate the weapons included above first, update the value below to the number of listed weapons
 // TODO: remove eventually in a way that does not cause https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2714
-#define WEP_HARDCODED_IMPULSES 86
+#define WEP_HARDCODED_IMPULSES 91

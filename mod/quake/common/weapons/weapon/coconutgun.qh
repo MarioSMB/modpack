@@ -1,0 +1,23 @@
+#pragma once
+
+CLASS(CoconutGun, Weapon)
+/* ammotype  */ ATTRIB(CoconutGun, ammo_type, int, IT_SHELLS);
+/* impulse   */ ATTRIB(CoconutGun, impulse, int, 5);
+/* spawnflags*/ ATTRIB(CoconutGun, spawnflags, int, WEP_FLAG_NODUAL);
+/* ammo */      ATTRIB(CoconutGun, aflag, int, 15);
+/* modelname */ ATTRIB(CoconutGun, mdl, string, "coconutgun");
+/* crosshair */ ATTRIB(CoconutGun, w_crosshair, string, "gfx/crosshairhagar");
+/* crosshair */ ATTRIB(CoconutGun, w_crosshair_size, float, 0.6);
+/* crosshair */ ATTRIB(CoconutGun, w_crosshair_color, vector, '1 0.75 0');
+/* wepimg    */ ATTRIB(CoconutGun, model2, string, "coconutgun");
+/* refname   */ ATTRIB(CoconutGun, netname, string, "coconutgun");
+/* wepname   */ ATTRIB(CoconutGun, m_name, string, _("Coconut Gun"));
+
+ENDCLASS(CoconutGun)
+REGISTER_WEAPON(COCONUTGUN, NEW(CoconutGun));
+
+SPAWNFUNC_WEAPON(weapon_coconutgun, WEP_COCONUTGUN)
+
+#ifdef SVQC
+void W_FireCoconutGun(entity this, .entity weaponentity);
+#endif
