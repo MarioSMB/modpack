@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache gmqcc Binary
         id: cache-gmqcc
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: gmqcc/gmqcc
           key: ${{ runner.os }}-gmqcc-bin-${{ steps.get-gmqcc-commit-id.outputs.GMQCC_SHA }}
