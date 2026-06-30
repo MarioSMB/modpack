@@ -72,7 +72,7 @@ void plantera_spike_touch(entity this, entity toucher)
 
 	if(time >= this.pain_finished && !toucher.takedamage)
 	{
-		this.pain_finished = time; // no spam
+		this.pain_finished = time + 0.1; // no spam
 		_sound(this, CH_SHOTS, "break/wood_i4.wav", 1, ATTN_NORM);
 	}
 }
