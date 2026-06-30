@@ -2,3 +2,6 @@
 	path = xonotic
 	url = https://gitlab.com/smbxon/xonotic-data.pk3dir.git
 	branch = main
+[submodule "gmqcc"]
+	path = gmqcc
+	url = https://gitlab.com/xonotic/gmqcc.git
