@@ -37,6 +37,8 @@ void coconut_touch(entity this, entity toucher)
 	else if(this.noise && this.noise != "")
 		_sound(this, CH_SHOTS, this.noise, 1, ATTN_NORM);
 
+	T_RadiusDamage(this, this.owner, 100, this.projectiledeathtype, toucher);
+
 	te_explosion2(this.origin, 100, 5);
 
 	delete(this);

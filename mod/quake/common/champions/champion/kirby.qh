@@ -116,9 +116,9 @@ CLASS(Kirby, Champions)
     ATTRIB(Kirby, qcc_noweaponswap, bool, true);
     ATTRIB(Kirby, qcc_falldamage, float, 0);
     ATTRIB(Kirby, qcc_jumpheight, float, 1.15);
-    ATTRIB(Kirby, m_viewofs, vector, '0 0 12');
-    ATTRIB(Kirby, m_mins, vector, '-16 -16 -24');
-    ATTRIB(Kirby, m_maxs, vector, '16 16 14');
+    ATTRIB(Kirby, m_viewofs, vector, '0 0 10');
+    ATTRIB(Kirby, m_mins, vector, '-12 -12 -24');
+    ATTRIB(Kirby, m_maxs, vector, '12 12 11');
 #ifdef GAMEQC
     ATTRIB(Kirby, m_model, Model, MDL_Kirby);
     ATTRIB(Kirby, m_model_head, Model, MDL_Null);
