@@ -259,7 +259,7 @@ void slide_UpdateStats(entity this)
 	{
 		STAT(MOVEVARS_WALLFRICTION, this) = 1;
 
-		STAT(MOVEVARS_FRICTION_EDGE, this) = 1;
+		//STAT(MOVEVARS_FRICTION_EDGE, this) = 1;
 
 		STAT(MOVEVARS_FRICTION, this) = 7;
 		STAT(MOVEVARS_ACCELERATE, this) = 8;
