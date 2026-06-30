@@ -751,7 +751,7 @@ void PM_air(entity this, float maxspd_mod, float dt)
 		CPM_PM_Aircontrol(this, dt, wishdir, wishspeed2);
 }
 
-void PM_AirMove(entity this, float maxspd_mod, float dt)
+void PM_noclip(entity this, float maxspd_mod, float dt)
 {
 	makevectors(this.angles_y * '0 1 0');
 	vector wishvel = v_forward * this.movement_x + v_right * this.movement_y;
@@ -771,23 +771,9 @@ void PM_AirMove(entity this, float maxspd_mod, float dt)
 		wishspeed = maxspeed;
 	}
 
-	//if(time < this.teleport_time)
-	//{
-		// do nothing
-	//}
-	// NOTE: not using else if here as it causes the player to lose control for a second after teleporting (annoying)
-	if(this.move_movetype == MOVETYPE_NOCLIP)
-	{
-		// noclip
-		makevectors(this.v_angle);
-		wishvel = v_forward * this.movement_x + v_right * this.movement_y + '0 0 1' * this.movement_z;
-		this.velocity = wishvel;
-	}
-	else
-	{
-		// not on ground, so little effect on velocity
-		PM_air(this, maxspd_mod, dt);
-	}
+	makevectors(this.v_angle);
+	wishvel = v_forward * this.movement_x + v_right * this.movement_y + '0 0 1' * this.movement_z;
+	this.velocity = wishvel;
 }
 
 void PM_RollView(entity this)
@@ -930,8 +916,8 @@ void PM_Main(entity this, float dt)
 		return;
 	}
 
-	if(this.move_movetype == MOVETYPE_NOCLIP)
-		{ /* do nothing */ }
+	if(this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY)
+		PM_noclip(this, maxspeed_mod, dt);
 	else if(CheckLadder(this))
 	{
 		PM_LadderMove(this, maxspeed_mod, dt);
@@ -945,7 +931,7 @@ void PM_Main(entity this, float dt)
 	else if(IS_ONGROUND(this))
 		PM_walk(this, maxspeed_mod, dt);
 	else
-		PM_AirMove(this, maxspeed_mod, dt);
+		PM_air(this, maxspeed_mod, dt);
 }
 
 void player_touch(entity this, entity toucher) 

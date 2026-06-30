@@ -15,7 +15,7 @@ METHOD(Kirby, m_updatestats, void(Champions this, entity actor))
 	if(STAT(KIRBY_STATE, actor) == KIRBY_FLYING)
 	{
 		STAT(MOVEVARS_GRAVITY, actor) *= 0.5;
-		STAT(MOVEVARS_AIRACCELERATE, actor) = 20;
+		STAT(MOVEVARS_AIRACCELERATE, actor) *= 0.2;
 	}
 }
 

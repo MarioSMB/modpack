@@ -1560,6 +1560,25 @@ void NoclipCheat(entity this)
 	}
 }
 
+void FlyCheat(entity this)
+{
+	if(!autocvar_sv_cheats && !this.maycheat)
+		return;
+	//if(gametype == GAMETYPE_DODGEBALL)
+		//return;
+
+	if(this.move_movetype == MOVETYPE_WALK)
+	{
+		set_movetype(this, MOVETYPE_FLY);
+		sprint(this, "fly ON\n");
+	}
+	else
+	{
+		set_movetype(this, MOVETYPE_WALK);
+		sprint(this, "fly OFF\n");
+	}
+}
+
 void GodCheat(entity this)
 {
 	if(!autocvar_sv_cheats && !this.maycheat)

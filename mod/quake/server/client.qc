@@ -3893,6 +3893,7 @@ bool ping_waypointsprite_visible_for_player(entity this, entity player, entity v
 .int monsters_cycle;
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void NoclipCheat(entity this);
+void FlyCheat(entity this);
 void GodCheat(entity this);
 void NotargetCheat(entity this);
 void GiveCheat(entity this, string input);
@@ -3959,6 +3960,12 @@ void SV_ParseClientCommand(entity this, string command)
 	if(cmd_name == "noclip")
 	{
 		NoclipCheat(this);
+		return;
+	}
+
+	if(cmd_name == "fly")
+	{
+		FlyCheat(this);
 		return;
 	}
 
