@@ -601,6 +601,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(time < e_target.invincible_finished)
 		return -6;
 
+	if (e_target.charmed)
+		return -7; // never target pets?
+
 	// monster
 	if (!IS_MONSTER(e_target)
 	&& (validate_flags & TFL_TARGETSELECT_MONSTERS))
