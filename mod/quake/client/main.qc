@@ -289,7 +289,7 @@ void GameCommand(string command)
 
 			if (thiscvar == "cl_quake_weaponpriority")
 				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-			else if (substring(thiscvar, 0, 17) == "cl_quake_weaponpriority" && strlen(thiscvar) == 18)
+			else if (substring(thiscvar, 0, 23) == "cl_quake_weaponpriority" && strlen(thiscvar) == 24)
 				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
 
 			localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
