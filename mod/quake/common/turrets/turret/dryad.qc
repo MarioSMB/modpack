@@ -495,8 +495,6 @@ METHOD(DryadAngryNimbus, tr_attack, void(DryadAngryNimbus this, entity actor))
 }
 METHOD(DryadAngryNimbus, tr_setup, void(DryadAngryNimbus this, entity actor))
 {
-	actor.track_flags = TFL_TRACK_ROTATE; // no pitching!
-
 	turrets_setframe(actor, NANIM_SPAWN, false);
 	actor.attack_finished = time + 1;
 }
