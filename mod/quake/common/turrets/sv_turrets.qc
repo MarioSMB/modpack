@@ -595,6 +595,9 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if (e_target.flags & FL_NOTARGET) // If only this was used more..
 		return -5;
 
+	if (e_turret.clipgroup && e_target.clipgroup == e_turret.clipgroup)
+		return -5;
+
 	if (e_target.health <= 0 || e_target.exptime != 0) // Cant touch this
 		return -6;
 
