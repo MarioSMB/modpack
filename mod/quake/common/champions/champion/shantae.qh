@@ -92,17 +92,16 @@ PRECACHE(Shantae)
 "- Climbs walls, jumps high\n" \
 "- Become Mermaid in water\n" \
 "- Shoots bubbles while in water\n" \
+"Magic proficiency (-20% cost, +50% damage)\n" \
 "Jumps 15% higher\n" \
 "Melee hair whip has double range\n" \
-"Has Magic as a weapon\n" \
-"Right click cycle between spells:\n" \
-"- Fire Charge burns enemies\n" \
-"- Storm Puff zaps neaby foes\n" \
-"- Bubble deflects 10 projectiles\n"
+"Has Genie Magic as a weapon\n" \
+"Right click cycles between spells"
 #endif
 CLASS(Shantae, Champions)
     ATTRIB(Shantae, netname, string, "shantae");
     ATTRIB(Shantae, m_name, string, "Shantae");
+    ATTRIB(Shantae, m_color, vector, '0.51 0.22 0.54');
     ATTRIB(Shantae, qcc_meleename, string, "hair");
     ATTRIB(Shantae, qcc_meleerange, float, 2);
     ATTRIB(Shantae, qcc_jumpheight, float, 1.15);

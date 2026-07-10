@@ -33,6 +33,8 @@ bool CanTouchItem(entity this, entity toucher)
 		return false;
 	if(toucher.clockwork && !this.weapon)
 		return false;
+	if(toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher))
+		return false;
 	//if(toucher.m_transform && !this.weapon)
 		//return false;
 
@@ -1875,6 +1877,8 @@ void key_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	if(!autocvar_sv_quake_globalkeys && (toucher.items & this.items))
+		return;
+	if(toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher))
 		return;
 
 	string keyname = (this.netname != "") ? this.netname : "key";

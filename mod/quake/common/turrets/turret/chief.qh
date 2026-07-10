@@ -1,0 +1,175 @@
+#pragma once
+
+// ===============
+//  PLASMA CANNON
+// ===============
+
+CLASS(ChiefPlasmaCannon, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefPlasmaCannon, spawnflags, int, 0);
+/* mins       */ ATTRIB(ChiefPlasmaCannon, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(ChiefPlasmaCannon, m_maxs, vector, '24 24 45');
+/* modelname  */ ATTRIB(ChiefPlasmaCannon, mdl, string, "progs/tur_plasmacannon_base.mdl");
+/* head_model */ ATTRIB(ChiefPlasmaCannon, head_model, string, "progs/tur_plasmacannon.mdl");
+#endif
+/* netname    */ ATTRIB(ChiefPlasmaCannon, netname, string, "plasmacannon");
+/* fullname   */ ATTRIB(ChiefPlasmaCannon, m_name, string, _("Plasma Cannon"));
+/* description*/ ATTRIB(ChiefPlasmaCannon, m_description, string, "Rapidly fires bolts of plasma");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefPlasmaCannon, impulse, int, 0);
+/* cost       */ ATTRIB(ChiefPlasmaCannon, tur_cost, float, 90);
+/* units      */ ATTRIB(ChiefPlasmaCannon, tur_units, int, 4);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, health, float, 250);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_dmg, float, 12);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_refire, float, 0.5);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_spread, float, 0);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_force, float, 10);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_radius, float, 0);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_speed, float, 600);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_volly, float, 0);
+/* property   */ ATTRIB(ChiefPlasmaCannon, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_range, float, 700);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_range_min, float, 1);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_range_optimal, float, 600);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_select_rangebias, float, 0.5);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_select_samebias, float, 0.01);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_select_anglebias, float, 0.25);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(ChiefPlasmaCannon, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(ChiefPlasmaCannon, aim_speed, float, 100);
+/* property   */ ATTRIB(ChiefPlasmaCannon, aim_maxrot, float, 35);
+/* property   */ ATTRIB(ChiefPlasmaCannon, aim_maxpitch, float, 35);
+
+/* property   */ ATTRIB(ChiefPlasmaCannon, track_type, float, 3);
+/* property   */ ATTRIB(ChiefPlasmaCannon, track_accel_pitch, float, 0.5);
+/* property   */ ATTRIB(ChiefPlasmaCannon, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(ChiefPlasmaCannon, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(ChiefPlasmaCannon, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefPlasmaCannon)
+REGISTER_TURRET(PLASMA_CANNON, NEW(ChiefPlasmaCannon));
+
+// =======
+//  GAUSS
+// =======
+
+CLASS(ChiefGauss, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefGauss, spawnflags, int, 0);
+/* mins       */ ATTRIB(ChiefGauss, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(ChiefGauss, m_maxs, vector, '24 24 45');
+/* modelname  */ ATTRIB(ChiefGauss, mdl, string, "progs/tur_gauss_base.mdl");
+/* head_model */ ATTRIB(ChiefGauss, head_model, string, "progs/tur_gauss.mdl");
+#endif
+/* netname    */ ATTRIB(ChiefGauss, netname, string, "gauss");
+/* fullname   */ ATTRIB(ChiefGauss, m_name, string, _("Gauss"));
+/* description*/ ATTRIB(ChiefGauss, m_description, string, "Fires a long range bullet at high velocity");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefGauss, impulse, int, 1);
+/* cost       */ ATTRIB(ChiefGauss, tur_cost, float, 60);
+/* units      */ ATTRIB(ChiefGauss, tur_units, int, 5);
+
+/* property   */ ATTRIB(ChiefGauss, health, float, 200);
+
+/* property   */ ATTRIB(ChiefGauss, shot_dmg, float, 22);
+/* property   */ ATTRIB(ChiefGauss, shot_refire, float, 3);
+/* property   */ ATTRIB(ChiefGauss, shot_spread, float, 0);
+/* property   */ ATTRIB(ChiefGauss, shot_force, float, 15);
+/* property   */ ATTRIB(ChiefGauss, shot_radius, float, 0);
+/* property   */ ATTRIB(ChiefGauss, shot_speed, float, 4000);
+
+/* property   */ ATTRIB(ChiefGauss, shot_volly, float, 0);
+/* property   */ ATTRIB(ChiefGauss, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(ChiefGauss, target_range, float, 1000);
+/* property   */ ATTRIB(ChiefGauss, target_range_min, float, 1);
+/* property   */ ATTRIB(ChiefGauss, target_range_optimal, float, 700);
+
+/* property   */ ATTRIB(ChiefGauss, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(ChiefGauss, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(ChiefGauss, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(ChiefGauss, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(ChiefGauss, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(ChiefGauss, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(ChiefGauss, aim_speed, float, 120);
+/* property   */ ATTRIB(ChiefGauss, aim_maxrot, float, 20);
+/* property   */ ATTRIB(ChiefGauss, aim_maxpitch, float, 20);
+
+/* property   */ ATTRIB(ChiefGauss, track_type, float, 3);
+/* property   */ ATTRIB(ChiefGauss, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(ChiefGauss, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(ChiefGauss, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(ChiefGauss, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefGauss)
+REGISTER_TURRET(GAUSS, NEW(ChiefGauss));
+
+// ===========
+//  HELIBLADE
+// ===========
+
+CLASS(ChiefHeliblade, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ChiefHeliblade, spawnflags, int, TUR_FLAG_FLOATING);
+/* mins       */ ATTRIB(ChiefHeliblade, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(ChiefHeliblade, m_maxs, vector, '16 16 64');
+/* modelname  */ ATTRIB(ChiefHeliblade, mdl, string, "progs/tur_heliblade_body.iqm");
+/* head_model */ ATTRIB(ChiefHeliblade, head_model, string, "progs/tur_heliblade_gun.iqm");
+#endif
+/* netname    */ ATTRIB(ChiefHeliblade, netname, string, "heliblade");
+/* fullname   */ ATTRIB(ChiefHeliblade, m_name, string, _("Heliblade"));
+/* description*/ ATTRIB(ChiefHeliblade, m_description, string, "Flying turret, pelts enemies below it with\nbullets and launches rockets at those above it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ChiefHeliblade, impulse, int, 2);
+/* cost       */ ATTRIB(ChiefHeliblade, tur_cost, float, 140);
+/* units      */ ATTRIB(ChiefHeliblade, tur_units, int, 8);
+
+/* property   */ ATTRIB(ChiefHeliblade, health, float, 250);
+
+/* property   */ ATTRIB(ChiefHeliblade, shot_dmg, float, 8);
+/* property   */ ATTRIB(ChiefHeliblade, shot_refire, float, 0.4);
+/* property   */ ATTRIB(ChiefHeliblade, shot_spread, float, 0);
+/* property   */ ATTRIB(ChiefHeliblade, shot_force, float, 20);
+/* property   */ ATTRIB(ChiefHeliblade, shot_radius, float, 0);
+/* property   */ ATTRIB(ChiefHeliblade, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(ChiefHeliblade, shot_volly, float, 0);
+/* property   */ ATTRIB(ChiefHeliblade, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(ChiefHeliblade, target_range, float, 550);
+/* property   */ ATTRIB(ChiefHeliblade, target_range_min, float, 1);
+/* property   */ ATTRIB(ChiefHeliblade, target_range_optimal, float, 400);
+
+/* property   */ ATTRIB(ChiefHeliblade, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(ChiefHeliblade, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(ChiefHeliblade, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(ChiefHeliblade, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(ChiefHeliblade, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(ChiefHeliblade, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(ChiefHeliblade, aim_speed, float, 120);
+/* property   */ ATTRIB(ChiefHeliblade, aim_maxrot, float, 55);
+/* property   */ ATTRIB(ChiefHeliblade, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(ChiefHeliblade, track_type, float, 3);
+/* property   */ ATTRIB(ChiefHeliblade, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(ChiefHeliblade, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(ChiefHeliblade, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(ChiefHeliblade, m_champion, Champions, CHAMPION_Chief);
+#endif
+
+ENDCLASS(ChiefHeliblade)
+REGISTER_TURRET(HELIBLADE, NEW(ChiefHeliblade));

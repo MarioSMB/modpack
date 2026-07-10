@@ -1,0 +1,51 @@
+#pragma once
+
+// begin engine fields
+
+/** primary framegroup animation (strength = 1 - lerpfrac - lerpfrac3 - lerpfrac4) */
+.float frame;
+/** secondary framegroup animation (strength = lerpfrac) */
+.float frame2;
+/** tertiary framegroup animation (strength = lerpfrac3) */
+.float frame3;
+/** quaternary framegroup animation (strength = lerpfrac4) */
+.float frame4;
+
+/** strength of framegroup blend */
+.float lerpfrac;
+/** strength of framegroup blend */
+.float lerpfrac3;
+/** strength of framegroup blend */
+.float lerpfrac4;
+
+/** start time of framegroup animation */
+.float frame1time;
+/** start time of framegroup animation */
+.float frame2time;
+/** start time of framegroup animation */
+.float frame3time;
+/** start time of framegroup animation */
+.float frame4time;
+
+// end engine fields
+
+// player animation state
+
+.int animstate_startframe;
+.int animstate_numframes;
+.float animstate_framerate;
+.float animstate_starttime;
+.float animstate_endtime;
+/** whether to repeat */
+.bool animstate_looping;
+/** true for one cycle, then changed to false */
+.bool animstate_override;
+
+void anim_set(entity e, vector anim, bool looping, bool override, bool restart);
+#define setanim(...) anim_set(__VA_ARGS__)
+void anim_update(entity e);
+#define updateanim(...) anim_update(__VA_ARGS__)
+
+// not copying the animation registry (yet?), these are for Quake:
+.vector anim_idle;
+.vector anim_shoot;

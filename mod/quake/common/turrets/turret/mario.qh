@@ -1,0 +1,117 @@
+#pragma once
+
+// ==============
+//  BILL BLASTER
+// ==============
+
+CLASS(MarioBillBlaster, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(MarioBillBlaster, spawnflags, int, 0);
+/* mins       */ ATTRIB(MarioBillBlaster, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(MarioBillBlaster, m_maxs, vector, '16 16 64');
+/* modelname  */ ATTRIB(MarioBillBlaster, mdl, string, "progs/tur_billblaster_base.mdl");
+/* head_model */ ATTRIB(MarioBillBlaster, head_model, string, "progs/tur_billblaster.mdl");
+#endif
+/* netname    */ ATTRIB(MarioBillBlaster, netname, string, "billblaster");
+/* fullname   */ ATTRIB(MarioBillBlaster, m_name, string, _("Bill Blaster"));
+/* description*/ ATTRIB(MarioBillBlaster, m_description, string, "Launches a Bullet Bill");
+#ifdef GAMEQC
+/* number     */ ATTRIB(MarioBillBlaster, impulse, int, 0);
+/* cost       */ ATTRIB(MarioBillBlaster, tur_cost, float, 80);
+/* units      */ ATTRIB(MarioBillBlaster, tur_units, int, 5);
+
+/* property   */ ATTRIB(MarioBillBlaster, health, float, 200);
+
+/* property   */ ATTRIB(MarioBillBlaster, shot_dmg, float, 30);
+/* property   */ ATTRIB(MarioBillBlaster, shot_refire, float, 2);
+/* property   */ ATTRIB(MarioBillBlaster, shot_spread, float, 0);
+/* property   */ ATTRIB(MarioBillBlaster, shot_force, float, 40);
+/* property   */ ATTRIB(MarioBillBlaster, shot_radius, float, 60);
+/* property   */ ATTRIB(MarioBillBlaster, shot_speed, float, 700);
+
+/* property   */ ATTRIB(MarioBillBlaster, shot_volly, float, 0);
+/* property   */ ATTRIB(MarioBillBlaster, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(MarioBillBlaster, target_range, float, 420);
+/* property   */ ATTRIB(MarioBillBlaster, target_range_min, float, 1);
+/* property   */ ATTRIB(MarioBillBlaster, target_range_optimal, float, 320);
+
+/* property   */ ATTRIB(MarioBillBlaster, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(MarioBillBlaster, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(MarioBillBlaster, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(MarioBillBlaster, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(MarioBillBlaster, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(MarioBillBlaster, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(MarioBillBlaster, aim_speed, float, 100);
+/* property   */ ATTRIB(MarioBillBlaster, aim_maxrot, float, 40);
+/* property   */ ATTRIB(MarioBillBlaster, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(MarioBillBlaster, track_type, float, 1);
+/* property   */ ATTRIB(MarioBillBlaster, track_accel_pitch, float, 0.7);
+/* property   */ ATTRIB(MarioBillBlaster, track_accel_rot, float, 0.4);
+/* property   */ ATTRIB(MarioBillBlaster, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(MarioBillBlaster, m_champion, Champions, CHAMPION_Mario);
+#endif
+
+ENDCLASS(MarioBillBlaster)
+REGISTER_TURRET(BILL_BLASTER, NEW(MarioBillBlaster));
+
+// ==================
+//  BULLSEYE BLASTER
+// ==================
+
+CLASS(MarioBullsEyeBlaster, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(MarioBullsEyeBlaster, spawnflags, int, 0);
+/* mins       */ ATTRIB(MarioBullsEyeBlaster, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(MarioBullsEyeBlaster, m_maxs, vector, '16 16 64');
+/* modelname  */ ATTRIB(MarioBullsEyeBlaster, mdl, string, "progs/tur_bullseyeblaster_base.mdl");
+/* head_model */ ATTRIB(MarioBullsEyeBlaster, head_model, string, "progs/tur_bullseyeblaster.mdl");
+#endif
+/* netname    */ ATTRIB(MarioBullsEyeBlaster, netname, string, "bullseyeblaster");
+/* fullname   */ ATTRIB(MarioBullsEyeBlaster, m_name, string, _("Bull's-Eye Blaster"));
+/* description*/ ATTRIB(MarioBullsEyeBlaster, m_description, string, "Launches a Bull's-Eye Bill");
+#ifdef GAMEQC
+/* number     */ ATTRIB(MarioBullsEyeBlaster, impulse, int, 1);
+/* cost       */ ATTRIB(MarioBullsEyeBlaster, tur_cost, float, 110);
+/* units      */ ATTRIB(MarioBullsEyeBlaster, tur_units, int, 7);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, health, float, 200);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_dmg, float, 40);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_refire, float, 2.5);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_spread, float, 0);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_force, float, 40);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_radius, float, 60);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_speed, float, 700);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_volly, float, 0);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_range, float, 500);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_range_min, float, 1);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_range_optimal, float, 420);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, aim_speed, float, 100);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, aim_maxrot, float, 60);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, aim_maxpitch, float, 60);
+
+/* property   */ ATTRIB(MarioBullsEyeBlaster, track_type, float, 1);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, track_accel_pitch, float, 0.7);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, track_accel_rot, float, 0.4);
+/* property   */ ATTRIB(MarioBullsEyeBlaster, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(MarioBullsEyeBlaster, m_champion, Champions, CHAMPION_Mario);
+#endif
+
+ENDCLASS(MarioBullsEyeBlaster)
+REGISTER_TURRET(BULLSEYE_BLASTER, NEW(MarioBullsEyeBlaster));

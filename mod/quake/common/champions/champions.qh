@@ -62,4 +62,6 @@ void cl_champion_draw();
 // HUD elements
 #ifdef CSQC
 void HUD_Champions();
+
+void champions_DrawWorld();
 #endif

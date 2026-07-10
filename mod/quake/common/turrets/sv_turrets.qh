@@ -1,0 +1,62 @@
+#pragma once
+
+float turret_validate_target(entity e_turret, entity e_target, float validate_flags);
+bool turret_firecheck(entity this);
+entity turret_select_target(entity this);
+
+// turret fields
+
+#define X(class, prefix, fld, type) .type fld;
+TR_PROPS_COMMON(X, , )
+#undef X
+
+.entity tur_head; // top part of the turret
+//.entity tur_defend; // defend this entity
+.vector tur_shotorg; // shot origin
+.vector tur_aimpos; // aiming location
+.float tur_impacttime; // predicted projectile impact time
+.entity tur_impactent; // entity the projectile hit
+.float tur_dist_enemy; // distance to enemy
+.float tur_dist_aimpos; // distance to aim location
+.float tur_dist_impact_to_aimpos; // distance impact<->aim
+.float volly_counter; // decrement counter from .shot_volly to 0
+
+.float target_select_time; // last time turret had a valid target
+.float target_validate_time; // throttle re-validation of current target
+
+//.float ammo; // current ammo
+.vector idle_aim;
+
+/// updates aim org, shot org, shot dir and enemy org for selected turret
+void turret_do_updates(entity e_turret);
+.vector tur_shotdir_updated;
+
+.float(entity this) turret_firecheckfunc; // TODO: deprecate!
+
+bool turret_initialize(entity this, Turret tur);
+
+// returns true when box overlaps with a given location
+bool turret_closetotarget(entity this, vector targ, float range);
+
+void turret_levelup(entity this);
+
+/// Function to use for target evaluation. usualy turret_targetscore_generic
+.float(entity _turret, entity _target) turret_score_target;
+
+.bool(entity this, entity e_target, entity e_sender) turret_addtarget;
+
+.entity pathcurrent;
+
+.entity pathgoal;
+
+// aiming
+vector tvt_thadv; // turret head angle diff vector, updated by a successful call to turret_validate_target
+vector tvt_tadv; // turret angle diff vector, updated by a successful call to turret_validate_target
+float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
+float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets)
+{
+	g_turrets = IL_NEW();
+}

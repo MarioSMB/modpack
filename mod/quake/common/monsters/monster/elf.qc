@@ -472,6 +472,11 @@ METHOD(Elf, mr_setup, bool(Elf this, entity actor))
 	precache_sound("xmas/elf/death1.wav");
 	precache_sound("xmas/elf/death2.wav");
 
+	precache_sound("xmas/elf/sight1.wav");
+	precache_sound("xmas/elf/sight2.wav");
+	precache_sound("xmas/elf/sight3.wav");
+	precache_sound("xmas/elf/sight4.wav");
+
 	if(random() <= 0.33)
 		actor.spawnflags |= MON_ELF_MAGIC;
 

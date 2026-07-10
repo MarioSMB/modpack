@@ -6,10 +6,19 @@ PRECACHE(AmmoResist)
 	precache_sound("weapons/plasma_hit.wav");
 }
 
+bool Resist_Explosions(entity targ)
+{
+	if(StatusEffects_active(STATUSEFFECT_Corrosion, targ))
+		return false;
+	return (targ.monsterdef && (targ.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT));
+}
+
 float Resist_Damage(entity targ, int resist_type, float damage)
 {
 	float ret_damage = damage;
-	
+	if(StatusEffects_active(STATUSEFFECT_Corrosion, targ))
+		return ret_damage;
+
 	if(resist_type == IT_SHELLS) ret_damage = damage * (1 - targ.resist_shells);
 	else if(resist_type == IT_NAILS) ret_damage = damage * (1 - targ.resist_nails);
 	else if(resist_type == IT_ROCKETS) ret_damage = damage * (1 - targ.resist_rockets);

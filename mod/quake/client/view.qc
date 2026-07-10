@@ -470,7 +470,7 @@ vector GetCurrentFov(float fov)
 	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
 		zoomfactor = 2.5;
 
-	if ((player_localnum + 1) != player_localentnum || STAT(CANNON))
+	if ((player_localnum + 1) != player_localentnum || STAT(CANNON) || STAT(TD_BUILDMODE))
 		current_viewzoom = 1;
 	else if (camera_active)
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
@@ -570,6 +570,7 @@ void View_UpdateFov()
 void draw_drawMousePointer(vector where)
 {
 	string cursor = strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor");
+	where = vec2(where.x * SIZE_CURSOR.x, where.y * SIZE_CURSOR.y);
 	drawpic(where - '0.25 0.125 0', cursor, '32 32 0', '1 1 1', 1, 0);
 }
 
@@ -915,6 +916,7 @@ void HUD_Chat()
 bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
+void draw_cursor_normal(vector pos, vector col, float a);
 void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	++framecount;
@@ -1016,6 +1018,13 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	if(gametype == GAMETYPE_TD)
 		td_UpdateView(local_player);
 
+	saturation_override = 1;
+
+	champions_DrawWorld();
+
+	if(autocvar_r_glsl_saturation != saturation_override)
+		cvar_settemp("r_glsl_saturation", ftos(saturation_override));
+
 	// Draw the Crosshair
 	setproperty(VF_DRAWCROSSHAIR, 0);
 
@@ -1060,7 +1069,10 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	sui_end();
 
 	if(cursor_active)
-		draw_drawMousePointer(_cursor_position);
+	{
+		float cursor_alpha = 1 - autocvar__menu_alpha;
+		draw_cursor_normal(_cursor_position, '1 1 1', cursor_alpha);
+	}
 
 	HUD_Mouse(local_player);
 

@@ -1,0 +1,198 @@
+#pragma once
+
+// ===========
+//  SUNFLOWER
+// ===========
+
+CLASS(CrazyDaveSunflower, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(CrazyDaveSunflower, spawnflags, int, TUR_FLAG_SUPPORT);
+/* mins       */ ATTRIB(CrazyDaveSunflower, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(CrazyDaveSunflower, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(CrazyDaveSunflower, mdl, string, "progs/tur_sunflower.mdl");
+/* head_model */ ATTRIB(CrazyDaveSunflower, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(CrazyDaveSunflower, netname, string, "sunflower");
+/* fullname   */ ATTRIB(CrazyDaveSunflower, m_name, string, _("Sunflower"));
+/* description*/ ATTRIB(CrazyDaveSunflower, m_description, string, "Produces fuel occasionally");
+#ifdef GAMEQC
+/* number     */ ATTRIB(CrazyDaveSunflower, impulse, int, 0);
+/* cost       */ ATTRIB(CrazyDaveSunflower, tur_cost, float, 30);
+/* units      */ ATTRIB(CrazyDaveSunflower, tur_units, int, 3);
+/* health     */ ATTRIB(CrazyDaveSunflower, health, float, 150);
+/* champion   */ ATTRIB(CrazyDaveSunflower, m_champion, Champions, CHAMPION_CrazyDave);
+#endif
+
+ENDCLASS(CrazyDaveSunflower)
+REGISTER_TURRET(SUNFLOWER, NEW(CrazyDaveSunflower));
+
+// ============
+//  PEASHOOTER
+// ===========
+
+CLASS(CrazyDavePeashooter, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(CrazyDavePeashooter, spawnflags, int, 0);
+/* mins       */ ATTRIB(CrazyDavePeashooter, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(CrazyDavePeashooter, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(CrazyDavePeashooter, mdl, string, "progs/tur_peashooter.mdl");
+/* head_model */ ATTRIB(CrazyDavePeashooter, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(CrazyDavePeashooter, netname, string, "peashooter");
+/* fullname   */ ATTRIB(CrazyDavePeashooter, m_name, string, _("Peashooter"));
+/* description*/ ATTRIB(CrazyDavePeashooter, m_description, string, "Spits out peas");
+#ifdef GAMEQC
+/* number     */ ATTRIB(CrazyDavePeashooter, impulse, int, 1);
+/* cost       */ ATTRIB(CrazyDavePeashooter, tur_cost, float, 40);
+/* units      */ ATTRIB(CrazyDavePeashooter, tur_units, int, 4);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, health, float, 250);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_dmg, float, 12);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_refire, float, 2);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_spread, float, 0.015);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_force, float, 10);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_radius, float, 0);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_volly, float, 0);
+/* property   */ ATTRIB(CrazyDavePeashooter, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, target_range, float, 600);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_range_min, float, 1);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(CrazyDavePeashooter, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(CrazyDavePeashooter, aim_speed, float, 120);
+/* property   */ ATTRIB(CrazyDavePeashooter, aim_maxrot, float, 45);
+/* property   */ ATTRIB(CrazyDavePeashooter, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(CrazyDavePeashooter, track_type, float, 3);
+/* property   */ ATTRIB(CrazyDavePeashooter, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(CrazyDavePeashooter, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(CrazyDavePeashooter, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(CrazyDavePeashooter, m_champion, Champions, CHAMPION_CrazyDave);
+#endif
+
+ENDCLASS(CrazyDavePeashooter)
+REGISTER_TURRET(PEASHOOTER, NEW(CrazyDavePeashooter));
+
+// ========
+//  WALNUT
+// ========
+
+CLASS(CrazyDaveWalnut, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(CrazyDaveWalnut, spawnflags, int, 0);
+/* mins       */ ATTRIB(CrazyDaveWalnut, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(CrazyDaveWalnut, m_maxs, vector, '24 24 48');
+/* modelname  */ ATTRIB(CrazyDaveWalnut, mdl, string, "progs/tur_walnut.mdl");
+/* head_model */ ATTRIB(CrazyDaveWalnut, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(CrazyDaveWalnut, netname, string, "walnut");
+/* fullname   */ ATTRIB(CrazyDaveWalnut, m_name, string, _("Walnut"));
+/* description*/ ATTRIB(CrazyDaveWalnut, m_description, string, "Nutty barricade");
+#ifdef GAMEQC
+/* number     */ ATTRIB(CrazyDaveWalnut, impulse, int, 2);
+/* cost       */ ATTRIB(CrazyDaveWalnut, tur_cost, float, 50);
+/* units      */ ATTRIB(CrazyDaveWalnut, tur_units, int, 3);
+/* health     */ ATTRIB(CrazyDaveWalnut, health, float, 1250);
+/* champion   */ ATTRIB(CrazyDaveWalnut, m_champion, Champions, CHAMPION_CrazyDave);
+#endif
+
+ENDCLASS(CrazyDaveWalnut)
+REGISTER_TURRET(WALNUT, NEW(CrazyDaveWalnut));
+
+// ==========
+//  SNOW PEA
+// ==========
+
+CLASS(CrazyDaveSnowPea, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(CrazyDaveSnowPea, spawnflags, int, 0);
+/* mins       */ ATTRIB(CrazyDaveSnowPea, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(CrazyDaveSnowPea, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(CrazyDaveSnowPea, mdl, string, "progs/tur_snowpea.mdl");
+/* head_model */ ATTRIB(CrazyDaveSnowPea, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(CrazyDaveSnowPea, netname, string, "snowpea");
+/* fullname   */ ATTRIB(CrazyDaveSnowPea, m_name, string, _("Snow Pea"));
+/* description*/ ATTRIB(CrazyDaveSnowPea, m_description, string, "Spits out frozen pees that slow enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(CrazyDaveSnowPea, impulse, int, 3);
+/* cost       */ ATTRIB(CrazyDaveSnowPea, tur_cost, float, 50);
+/* units      */ ATTRIB(CrazyDaveSnowPea, tur_units, int, 5);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, health, float, 250);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_dmg, float, 10);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_refire, float, 2);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_spread, float, 0.015);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_force, float, 5);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_radius, float, 20);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_volly, float, 0);
+/* property   */ ATTRIB(CrazyDaveSnowPea, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_range, float, 600);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_range_min, float, 1);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(CrazyDaveSnowPea, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(CrazyDaveSnowPea, aim_speed, float, 120);
+/* property   */ ATTRIB(CrazyDaveSnowPea, aim_maxrot, float, 45);
+/* property   */ ATTRIB(CrazyDaveSnowPea, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(CrazyDaveSnowPea, track_type, float, 3);
+/* property   */ ATTRIB(CrazyDaveSnowPea, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(CrazyDaveSnowPea, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(CrazyDaveSnowPea, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(CrazyDaveSnowPea, m_champion, Champions, CHAMPION_CrazyDave);
+#endif
+
+ENDCLASS(CrazyDaveSnowPea)
+REGISTER_TURRET(SNOW_PEA, NEW(CrazyDaveSnowPea));
+
+// =============
+//  POTATO MINE
+// =============
+
+CLASS(CrazyDavePotatoMine, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(CrazyDavePotatoMine, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(CrazyDavePotatoMine, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(CrazyDavePotatoMine, m_maxs, vector, '16 16 8');
+/* modelname  */ ATTRIB(CrazyDavePotatoMine, mdl, string, "progs/tur_potatomine.mdl");
+/* head_model */ ATTRIB(CrazyDavePotatoMine, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(CrazyDavePotatoMine, netname, string, "potatomine");
+/* fullname   */ ATTRIB(CrazyDavePotatoMine, m_name, string, _("Potato Mine"));
+/* description*/ ATTRIB(CrazyDavePotatoMine, m_description, string, "Explodes when an enemy comes too close");
+#ifdef GAMEQC
+/* number     */ ATTRIB(CrazyDavePotatoMine, impulse, int, 4);
+/* cost       */ ATTRIB(CrazyDavePotatoMine, tur_cost, float, 60);
+/* units      */ ATTRIB(CrazyDavePotatoMine, tur_units, int, 5);
+/* health     */ ATTRIB(CrazyDavePotatoMine, health, float, 200);
+/* damage     */ ATTRIB(CrazyDavePotatoMine, shot_dmg, float, 25);
+/* damage     */ ATTRIB(CrazyDavePotatoMine, shot_refire, float, 3);
+/* range      */ ATTRIB(CrazyDavePotatoMine, target_range, float, 90);
+/* champion   */ ATTRIB(CrazyDavePotatoMine, m_champion, Champions, CHAMPION_CrazyDave);
+#endif
+
+ENDCLASS(CrazyDavePotatoMine)
+REGISTER_TURRET(POTATO_MINE, NEW(CrazyDavePotatoMine));

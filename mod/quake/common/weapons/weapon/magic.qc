@@ -45,7 +45,7 @@ float W_Magic_AttackRate(entity actor, .entity weaponentity)
 	switch(magictype)
 	{
 		default:
-		case 0: attack_delay = 0.75; break;
+		case 0: attack_delay = 0.5; break;
 		case 1: attack_delay = 1; break;
 		case 2: attack_delay = 1.25; break;
 	}
@@ -68,8 +68,8 @@ void magic_fire_touch(entity this, entity toucher)
 	
 	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;	// mostly immune
 		if(toucher.resist_rockets != 0)
 		{
 			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
@@ -104,8 +104,8 @@ void magic_fire_touch(entity this, entity toucher)
 
 void magic_fire_launch(entity this, .entity weaponentity)
 {
-	vector org = W_Shotorg(this, weaponentity) - '0 0 12';
-	vector dir = qc_aim(this, 800);
+	vector org = W_Shotorg(this, weaponentity) - '0 0 12' + v_right * -6;
+	vector dir = qc_aim_fromorg(this, org, 800);
 
 	entity newmis = launch_spike(this, org, dir);
 	newmis.scale = 2;
@@ -113,7 +113,7 @@ void magic_fire_launch(entity this, .entity weaponentity)
 	newmis.dmg = 25;
 	newmis.nextthink = time + 5;
 	setthink(newmis, SUB_Remove);
-	newmis.velocity = dir * 800;
+	newmis.velocity = dir * 1000;
 	newmis.weaponentity_fld = weaponentity;
 	newmis.projectiledeathtype = WEP_MAGIC.m_id | HITTYPE_MAGIC;
 
@@ -205,7 +205,7 @@ void magic_stormcloud_touch(entity this, entity toucher)
 void magic_stormcloud_launch(entity this, .entity weaponentity)
 {
 	vector org = W_Shotorg(this, weaponentity);
-	vector dir = qc_aim(this, 50);
+	vector dir = qc_aim_fromorg(this, org, 50);
 
 	entity newmis = launch_spike(this, org, dir);
 

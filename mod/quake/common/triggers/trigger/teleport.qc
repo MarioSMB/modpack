@@ -19,7 +19,8 @@ void teleport_touch(entity this, entity toucher)
 		return;
 
 // only teleport living creatures
-	if(toucher.health <= 0 || (toucher.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, toucher)))
+	bool nyx_invis = (toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher));
+	if(toucher.health <= 0 || (toucher.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, toucher) && !nyx_invis))
 		return;
 
 	entity targ = findunlockedtarget(this, NULL);
@@ -325,7 +326,8 @@ bool teleport_target_check(entity this, entity e)
 	if(e.movetype == MOVETYPE_NOCLIP)
 		return false;
 	// only teleport living creatures
-	if(e.health <= 0 || (e.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, e))) // TODO: not a great way to check for "living"
+	bool nyx_invis = (e.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, e));
+	if(e.health <= 0 || (e.solid != SOLID_SLIDEBOX && !STAT(SLIDE_ON, e) && !nyx_invis)) // TODO: not a great way to check for "living"
 		return false;
 	return true;
 }

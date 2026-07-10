@@ -5,6 +5,8 @@
 
 .float lightning_timer;	// Cool down for LG resist effect
 
+bool Resist_Explosions(entity targ);
+
 float Resist_Damage(entity targ, int resist_type, float damage);
 
 void Resist_CheckRange(entity targ);

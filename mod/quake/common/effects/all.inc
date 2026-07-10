@@ -1379,6 +1379,7 @@ STATIC_INIT(Effect_ANGELICSTAFF_HEAL)
 
 EFFECT(0, RAILGUN_MUZZLEFLASH,       "nex_muzzleflash")
 EFFECT(0, INVOKER_MUZZLEFLASH,       "laser_muzzleflash")
+EFFECT(0, SUNBEAM_MUZZLEFLASH,       "grenadelauncher_muzzleflash")
 
 EFFECT(1, TR_SICKLE,             "TR_SICKLE")
 #ifdef CSQC

@@ -123,12 +123,14 @@ void Legond_MissileTouch(entity this, entity toucher)
 		return;
 	}
 	float damg = (70 + (random() * 20));
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-		this.health = this.health + damg;
+		this.health += damg;
+		if(this.sprite)
+			WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
 	T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, toucher);
 	this.origin = this.origin - (8 * normalize(this.velocity));

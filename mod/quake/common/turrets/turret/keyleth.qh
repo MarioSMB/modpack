@@ -1,0 +1,146 @@
+#pragma once
+
+// =========
+//  SWARMER
+// =========
+
+CLASS(KeylethSwarmer, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeylethSwarmer, spawnflags, int, 0);
+/* mins       */ ATTRIB(KeylethSwarmer, m_mins, vector, '-30 -30 -4');
+/* maxs       */ ATTRIB(KeylethSwarmer, m_maxs, vector, '30 30 32');
+/* modelname  */ ATTRIB(KeylethSwarmer, mdl, string, "progs/tur_swarmer.mdl");
+/* head_model */ ATTRIB(KeylethSwarmer, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeylethSwarmer, netname, string, "swarmer");
+/* fullname   */ ATTRIB(KeylethSwarmer, m_name, string, _("Swarmer"));
+/* description*/ ATTRIB(KeylethSwarmer, m_description, string, "Unleashes a swarm of bees that\nchase targets and deal area damage");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeylethSwarmer, impulse, int, 0);
+/* cost       */ ATTRIB(KeylethSwarmer, tur_cost, float, 70);
+/* units      */ ATTRIB(KeylethSwarmer, tur_units, int, 5);
+
+/* property   */ ATTRIB(KeylethSwarmer, health, float, 350);
+
+/* property   */ ATTRIB(KeylethSwarmer, shot_dmg, float, 4);
+/* property   */ ATTRIB(KeylethSwarmer, shot_refire, float, 1.5);
+/* property   */ ATTRIB(KeylethSwarmer, shot_spread, float, 0);
+/* property   */ ATTRIB(KeylethSwarmer, shot_force, float, 0);
+/* property   */ ATTRIB(KeylethSwarmer, shot_radius, float, 16);
+/* property   */ ATTRIB(KeylethSwarmer, shot_speed, float, 400);
+
+/* property   */ ATTRIB(KeylethSwarmer, shot_volly, float, 0);
+/* property   */ ATTRIB(KeylethSwarmer, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(KeylethSwarmer, target_range, float, 320);
+/* property   */ ATTRIB(KeylethSwarmer, target_range_min, float, 1);
+/* property   */ ATTRIB(KeylethSwarmer, target_range_optimal, float, 250);
+
+/* property   */ ATTRIB(KeylethSwarmer, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(KeylethSwarmer, target_select_samebias, float, 0.01);
+/* property   */ ATTRIB(KeylethSwarmer, target_select_anglebias, float, 0);
+/* property   */ ATTRIB(KeylethSwarmer, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(KeylethSwarmer, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(KeylethSwarmer, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(KeylethSwarmer, aim_speed, float, 120);
+/* property   */ ATTRIB(KeylethSwarmer, aim_maxrot, float, 75);
+/* property   */ ATTRIB(KeylethSwarmer, aim_maxpitch, float, 75);
+
+/* property   */ ATTRIB(KeylethSwarmer, track_type, float, 3);
+/* property   */ ATTRIB(KeylethSwarmer, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(KeylethSwarmer, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(KeylethSwarmer, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(KeylethSwarmer, m_champion, Champions, CHAMPION_Keyleth);
+#endif
+
+ENDCLASS(KeylethSwarmer)
+REGISTER_TURRET(SWARMER, NEW(KeylethSwarmer));
+
+// ======
+//  FROG
+// ======
+
+CLASS(KeylethFrog, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeylethFrog, spawnflags, int, TUR_FLAG_SUPPORT);
+/* mins       */ ATTRIB(KeylethFrog, m_mins, vector, '-16 -16 -24');
+/* maxs       */ ATTRIB(KeylethFrog, m_maxs, vector, '16 16 8');
+/* modelname  */ ATTRIB(KeylethFrog, mdl, string, "progs/tur_frog.mdl");
+/* head_model */ ATTRIB(KeylethFrog, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeylethFrog, netname, string, "frog");
+/* fullname   */ ATTRIB(KeylethFrog, m_name, string, _("Frog"));
+/* description*/ ATTRIB(KeylethFrog, m_description, string, "Spits on targets, slowing them briefly");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeylethFrog, impulse, int, 1);
+/* cost       */ ATTRIB(KeylethFrog, tur_cost, float, 40);
+/* units      */ ATTRIB(KeylethFrog, tur_units, int, 4);
+
+/* property   */ ATTRIB(KeylethFrog, health, float, 200);
+
+/* property   */ ATTRIB(KeylethFrog, shot_dmg, float, 0);
+/* property   */ ATTRIB(KeylethFrog, shot_refire, float, 3);
+/* property   */ ATTRIB(KeylethFrog, shot_spread, float, 0.015);
+/* property   */ ATTRIB(KeylethFrog, shot_force, float, 0);
+/* property   */ ATTRIB(KeylethFrog, shot_radius, float, 0);
+/* property   */ ATTRIB(KeylethFrog, shot_speed, float, 600);
+
+/* property   */ ATTRIB(KeylethFrog, shot_volly, float, 0);
+/* property   */ ATTRIB(KeylethFrog, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(KeylethFrog, target_range, float, 600);
+/* property   */ ATTRIB(KeylethFrog, target_range_min, float, 1);
+/* property   */ ATTRIB(KeylethFrog, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(KeylethFrog, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(KeylethFrog, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(KeylethFrog, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(KeylethFrog, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(KeylethFrog, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(KeylethFrog, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(KeylethFrog, aim_speed, float, 120);
+/* property   */ ATTRIB(KeylethFrog, aim_maxrot, float, 55);
+/* property   */ ATTRIB(KeylethFrog, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(KeylethFrog, track_type, float, 3);
+/* property   */ ATTRIB(KeylethFrog, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(KeylethFrog, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(KeylethFrog, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(KeylethFrog, m_champion, Champions, CHAMPION_Keyleth);
+#endif
+
+ENDCLASS(KeylethFrog)
+REGISTER_TURRET(FROG, NEW(KeylethFrog));
+
+// ==========
+//  FLY TRAP
+// ==========
+
+CLASS(KeylethFlyTrap, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeylethFlyTrap, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(KeylethFlyTrap, m_mins, vector, '-16 -16 -18');
+/* maxs       */ ATTRIB(KeylethFlyTrap, m_maxs, vector, '16 16 36');
+/* modelname  */ ATTRIB(KeylethFlyTrap, mdl, string, "progs/tur_flytrap.mdl");
+/* head_model */ ATTRIB(KeylethFlyTrap, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeylethFlyTrap, netname, string, "flytrap");
+/* fullname   */ ATTRIB(KeylethFlyTrap, m_name, string, _("Fly Trap"));
+/* description*/ ATTRIB(KeylethFlyTrap, m_description, string, "Catches nearby projectiles and spits them back");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeylethFlyTrap, impulse, int, 2);
+/* cost       */ ATTRIB(KeylethFlyTrap, tur_cost, float, 40);
+/* units      */ ATTRIB(KeylethFlyTrap, tur_units, int, 2);
+/* health     */ ATTRIB(KeylethFlyTrap, health, float, 280);
+/* range      */ ATTRIB(KeylethFlyTrap, target_range, float, 150);
+/* max rotate */ ATTRIB(KeylethFlyTrap, aim_maxrot, float, 55);
+/* max pitch  */ ATTRIB(KeylethFlyTrap, aim_maxpitch, float, 55);
+/* champion   */ ATTRIB(KeylethFlyTrap, m_champion, Champions, CHAMPION_Keyleth);
+#endif
+
+ENDCLASS(KeylethFlyTrap)
+REGISTER_TURRET(FLYTRAP, NEW(KeylethFlyTrap));

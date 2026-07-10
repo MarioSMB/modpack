@@ -97,6 +97,7 @@ void Dusk_MakeWisp(entity targ)
 {
 	entity wisp = spawn();
 	wisp.classname = "dusk_wisp";
+	wisp.solid = SOLID_TRIGGER;
 	_setmodel(wisp, "progs/wisp.mdl");
 	setsize(wisp, '0 0 0', '0 0 0');
 	set_movetype(wisp, MOVETYPE_NONE);
@@ -217,7 +218,7 @@ void Dusk_PlayerSpawn(entity player)
 		RandomSelection_Init();
 		for(int i = 0; i < 6; ++i)
 		{
-			tracebox(it.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), it.origin + snt_ofs[i], MOVE_NOMONSTERS, it);
+			tracebox(it.origin, VEC_HULL_MIN, VEC_HULL_MAX, it.origin + snt_ofs[i], MOVE_NOMONSTERS, it);
 
 			vector horizontal_trace_endpos = trace_endpos;
 			//te_lightning1(NULL, it.origin, horizontal_trace_endpos);
@@ -225,7 +226,7 @@ void Dusk_PlayerSpawn(entity player)
 
 			// 400 is about the height of a typical laser jump (in overkill)
 			// not traceline because we need space for the whole player, not just their origin
-			tracebox(horizontal_trace_endpos, STAT(PL_MIN, player), STAT(PL_MAX, player), horizontal_trace_endpos - 400 * up, MOVE_NORMAL, it);
+			tracebox(horizontal_trace_endpos, VEC_HULL_MIN, VEC_HULL_MAX, horizontal_trace_endpos - 400 * up, MOVE_NORMAL, it);
 			vector vectical_trace_endpos = trace_endpos;
 			//te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
 			if (trace_startsolid) goto skip; // inside another player
@@ -235,7 +236,7 @@ void Dusk_PlayerSpawn(entity player)
 
 			// make sure the spawned player will have floor ahead (or at least a wall - they shouldn't fall as soon as they start moving)
 			// top front of player's bbox - highest point we know is not inside solid
-			vector floor_test_start = vectical_trace_endpos + up * STAT(PL_MAX, player).z + forward * STAT(PL_MAX, player).x; 
+			vector floor_test_start = vectical_trace_endpos + up * VEC_HULL_MAX.z + forward * VEC_HULL_MAX.x; 
 			traceline(floor_test_start, floor_test_start + forward * 100 - up * 128, MOVE_NOMONSTERS, it);
 			//te_beam(NULL, floor_test_start, trace_endpos);
 			if (trace_fraction == 1.0) goto skip;

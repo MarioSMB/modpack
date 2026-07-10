@@ -2,6 +2,7 @@
 
 #include "horde.qh"
 #include "monsters/ai.qh"
+#include "monsters/ai_ammoresist.qh"
 #include "monsters/ai_minions.qh"
 #include "monsters/ai_subs.qh"
 #include "monsters/monsters.qh"
@@ -800,6 +801,8 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	// in Quake, armor piercing rounds just cut armor strength in half rather than negating it
 	if(deathtype & HITTYPE_ARMORPIERCE)
 		armor *= 0.5;
+	if(StatusEffects_active(STATUSEFFECT_Corrosion, attacker))
+		armor *= 0.7; // not QUITE as evil as armor pierce but let's not make PvP impossible!
 	float save = ceil(armor * damage);
 	// TODO: status effect deathtype flag?
 	if(DEATH_IS(deathtype, DEATH_DROWN) || DEATH_IS(deathtype, DEATH_POISONED) || DEATH_IS(deathtype, DEATH_BURNING) || DEATH_IS(deathtype, DEATH_GENERIC))
@@ -1150,7 +1153,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 			vector org = (head.absmin + head.absmax) * 0.5;
 			float points = max(0, 0.5 * vlen(inflictor_org - org));
 			points = damage - points;
-			if(head == attacker || (!DEATH_ISWEAPON(deathtype, WEP_BFG) && head.monsterdef && (head.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)))
+			if(head == attacker || (!DEATH_ISWEAPON(deathtype, WEP_BFG) && Resist_Explosions(head)))
 				points *= 0.5;
 			if(head.monsterdef && (head.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD) && points > (head.health * 0.25))
 				points = 120; // always gib zombies

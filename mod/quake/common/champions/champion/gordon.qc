@@ -19,6 +19,18 @@ METHOD(Gordon, m_activate, void(Champions this, entity actor))
 		W_SwitchWeapon(actor, WEP_GRAVITY_GUN, weaponentity);
 }
 
+METHOD(Gordon, m_dealdamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+{
+	if(attacker.m_champion != this)
+		return 1;
+	if(targ != attacker && IS_PLAYER(targ) && targ.armorvalue > 0)
+		return 1.5;
+	if(targ.monsterdef == MON_JUGGERNAUT || (targ.monsterdef && (targ.monsterdef.spawnflags & MON_FLAG_METAL)))
+		return 2;
+
+	return 1;
+}
+
 METHOD(Gordon, m_playerspawn, void(Champions this, entity actor))
 {
 	Inventory_add(WEP_CROWBAR, actor, ITEM_OWNED);

@@ -176,6 +176,7 @@ PRECACHE(Caleb)
 CLASS(Caleb, Champions)
     ATTRIB(Caleb, netname, string, "caleb");
     ATTRIB(Caleb, m_name, string, "Caleb");
+    ATTRIB(Caleb, m_color, vector, '1 0 0');
     ATTRIB(Caleb, qcc_meleename, string, "ptchfrk");
     ATTRIB(Caleb, qcc_meleerange, float, 2.5);
 #ifdef GAMEQC

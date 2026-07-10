@@ -90,6 +90,9 @@ void button_touch(entity this, entity toucher)
 		toucher = toucher.draggedby; // hehe
 	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
+	bool nyx_invis = (toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher));
+	if(nyx_invis)
+		return;
 	if(this.items)
 	{
 		if(time < this.attack_finished)

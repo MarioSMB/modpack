@@ -1,0 +1,175 @@
+#pragma once
+
+// ==========
+//  DOPEFISH
+// ==========
+
+CLASS(KeenDopefish, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenDopefish, spawnflags, int, 0);
+/* mins       */ ATTRIB(KeenDopefish, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(KeenDopefish, m_maxs, vector, '32 32 40');
+/* modelname  */ ATTRIB(KeenDopefish, mdl, string, "progs/tur_dopefish.mdl");
+/* head_model */ ATTRIB(KeenDopefish, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeenDopefish, netname, string, "dopefish");
+/* fullname   */ ATTRIB(KeenDopefish, m_name, string, _("Dopefish"));
+/* description*/ ATTRIB(KeenDopefish, m_description, string, "The Dopefish Lives!");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenDopefish, impulse, int, 0);
+/* cost       */ ATTRIB(KeenDopefish, tur_cost, float, 60);
+/* units      */ ATTRIB(KeenDopefish, tur_units, int, 4);
+
+/* property   */ ATTRIB(KeenDopefish, health, float, 800);
+
+/* property   */ ATTRIB(KeenDopefish, shot_dmg, float, 16);
+/* property   */ ATTRIB(KeenDopefish, shot_refire, float, 1.5);
+/* property   */ ATTRIB(KeenDopefish, shot_spread, float, 0.8);
+/* property   */ ATTRIB(KeenDopefish, shot_force, float, 0);
+/* property   */ ATTRIB(KeenDopefish, shot_radius, float, 0);
+/* property   */ ATTRIB(KeenDopefish, shot_speed, float, 300);
+
+/* property   */ ATTRIB(KeenDopefish, shot_volly, float, 0);
+/* property   */ ATTRIB(KeenDopefish, shot_volly_refire, float, 0.25);
+
+/* property   */ ATTRIB(KeenDopefish, target_range, float, 200);
+/* property   */ ATTRIB(KeenDopefish, target_range_min, float, 1);
+/* property   */ ATTRIB(KeenDopefish, target_range_optimal, float, 150);
+
+/* property   */ ATTRIB(KeenDopefish, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(KeenDopefish, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(KeenDopefish, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(KeenDopefish, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(KeenDopefish, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(KeenDopefish, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(KeenDopefish, aim_speed, float, 120);
+/* property   */ ATTRIB(KeenDopefish, aim_maxrot, float, 40);
+/* property   */ ATTRIB(KeenDopefish, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(KeenDopefish, track_type, float, 3);
+/* property   */ ATTRIB(KeenDopefish, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(KeenDopefish, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(KeenDopefish, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(KeenDopefish, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenDopefish)
+REGISTER_TURRET(DOPEFISH, NEW(KeenDopefish));
+
+// ==============
+//  ALIEN SNIPER
+// ==============
+
+CLASS(KeenAlienSniper, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenAlienSniper, spawnflags, int, 0);
+/* mins       */ ATTRIB(KeenAlienSniper, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(KeenAlienSniper, m_maxs, vector, '24 24 36');
+/* modelname  */ ATTRIB(KeenAlienSniper, mdl, string, "progs/tur_aliensniper.mdl");
+/* head_model */ ATTRIB(KeenAlienSniper, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeenAlienSniper, netname, string, "aliensniper");
+/* fullname   */ ATTRIB(KeenAlienSniper, m_name, string, _("Alien Sniper"));
+/* description*/ ATTRIB(KeenAlienSniper, m_description, string, "Fires a long range laser bolt");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenAlienSniper, impulse, int, 1);
+/* cost       */ ATTRIB(KeenAlienSniper, tur_cost, float, 110);
+/* units      */ ATTRIB(KeenAlienSniper, tur_units, int, 6);
+
+/* property   */ ATTRIB(KeenAlienSniper, health, float, 250);
+
+/* property   */ ATTRIB(KeenAlienSniper, shot_dmg, float, 18);
+/* property   */ ATTRIB(KeenAlienSniper, shot_refire, float, 1);
+/* property   */ ATTRIB(KeenAlienSniper, shot_spread, float, 0.015);
+/* property   */ ATTRIB(KeenAlienSniper, shot_force, float, 0);
+/* property   */ ATTRIB(KeenAlienSniper, shot_radius, float, 0);
+/* property   */ ATTRIB(KeenAlienSniper, shot_speed, float, 1800);
+
+/* property   */ ATTRIB(KeenAlienSniper, shot_volly, float, 0);
+/* property   */ ATTRIB(KeenAlienSniper, shot_volly_refire, float, 0.25);
+
+/* property   */ ATTRIB(KeenAlienSniper, target_range, float, 2000);
+/* property   */ ATTRIB(KeenAlienSniper, target_range_min, float, 1);
+/* property   */ ATTRIB(KeenAlienSniper, target_range_optimal, float, 1500);
+
+/* property   */ ATTRIB(KeenAlienSniper, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(KeenAlienSniper, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(KeenAlienSniper, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(KeenAlienSniper, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(KeenAlienSniper, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(KeenAlienSniper, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(KeenAlienSniper, aim_speed, float, 120);
+/* property   */ ATTRIB(KeenAlienSniper, aim_maxrot, float, 25);
+/* property   */ ATTRIB(KeenAlienSniper, aim_maxpitch, float, 25);
+
+/* property   */ ATTRIB(KeenAlienSniper, track_type, float, 3);
+/* property   */ ATTRIB(KeenAlienSniper, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(KeenAlienSniper, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(KeenAlienSniper, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(KeenAlienSniper, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenAlienSniper)
+REGISTER_TURRET(ALIEN_SNIPER, NEW(KeenAlienSniper));
+
+// =====
+//  UFO
+// =====
+
+CLASS(KeenUFO, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(KeenUFO, spawnflags, int, TUR_FLAG_FLOATING);
+/* mins       */ ATTRIB(KeenUFO, m_mins, vector, '-48 -48 -16');
+/* maxs       */ ATTRIB(KeenUFO, m_maxs, vector, '48 48 16');
+/* modelname  */ ATTRIB(KeenUFO, mdl, string, "progs/tur_ufo.mdl");
+/* head_model */ ATTRIB(KeenUFO, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(KeenUFO, netname, string, "ufo");
+/* fullname   */ ATTRIB(KeenUFO, m_name, string, _("UFO"));
+/* description*/ ATTRIB(KeenUFO, m_description, string, "Laser beams anything below it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(KeenUFO, impulse, int, 2);
+/* cost       */ ATTRIB(KeenUFO, tur_cost, float, 150);
+/* units      */ ATTRIB(KeenUFO, tur_units, int, 9);
+
+/* property   */ ATTRIB(KeenUFO, health, float, 400);
+
+/* property   */ ATTRIB(KeenUFO, shot_dmg, float, 8);
+/* property   */ ATTRIB(KeenUFO, shot_refire, float, 0.25);
+/* property   */ ATTRIB(KeenUFO, shot_spread, float, 0);
+/* property   */ ATTRIB(KeenUFO, shot_force, float, 0);
+/* property   */ ATTRIB(KeenUFO, shot_radius, float, 0);
+/* property   */ ATTRIB(KeenUFO, shot_speed, float, 0);
+
+/* property   */ ATTRIB(KeenUFO, shot_volly, float, 0);
+/* property   */ ATTRIB(KeenUFO, shot_volly_refire, float, 0.25);
+
+/* property   */ ATTRIB(KeenUFO, target_range, float, 300);
+/* property   */ ATTRIB(KeenUFO, target_range_min, float, 1);
+/* property   */ ATTRIB(KeenUFO, target_range_optimal, float, 200);
+
+/* property   */ ATTRIB(KeenUFO, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(KeenUFO, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(KeenUFO, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(KeenUFO, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(KeenUFO, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(KeenUFO, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(KeenUFO, aim_speed, float, 120);
+/* property   */ ATTRIB(KeenUFO, aim_maxrot, float, 15);
+/* property   */ ATTRIB(KeenUFO, aim_maxpitch, float, 15);
+
+/* property   */ ATTRIB(KeenUFO, track_type, float, 0);
+/* property   */ ATTRIB(KeenUFO, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(KeenUFO, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(KeenUFO, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(KeenUFO, m_champion, Champions, CHAMPION_Keen);
+#endif
+
+ENDCLASS(KeenUFO)
+REGISTER_TURRET(UFO, NEW(KeenUFO));

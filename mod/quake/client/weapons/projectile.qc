@@ -829,6 +829,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.gravity = 1;
 				break;
 			case PROJECTILE_SWARM:
+				loopsound(this, CH_SHOTS_SINGLE, SND_SWARM_FLIGHT, VOL_BASE, ATTEN_NORM);
 				set_movetype(this, MOVETYPE_FLYMISSILE);
 				this.effects |= EF_FULLBRIGHT;
 				this.solid = SOLID_TRIGGER;

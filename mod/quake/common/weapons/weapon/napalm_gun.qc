@@ -58,7 +58,7 @@ void napalmrebound(entity this)
 
 void NapalmTouch(entity this, entity toucher)
 {
-	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && !(toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
+	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && !(toucher.monsterdef.spawnflags & MON_FLAG_METAL) && !Resist_Explosions(toucher))
 	{
 		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD))
 			T_Damage(toucher, this, this.owner, 110, this.projectiledeathtype);

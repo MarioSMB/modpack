@@ -81,6 +81,7 @@ PRECACHE(Steve)
 CLASS(Steve, Champions)
     ATTRIB(Steve, netname, string, "steve");
     ATTRIB(Steve, m_name, string, "Steve");
+    ATTRIB(Steve, m_color, vector, '0.57 0.74 0.35');
     ATTRIB(Steve, qcc_pogo, bool, true);
     ATTRIB(Steve, qcc_movespeed, float, 0.85);
     ATTRIB(Steve, qcc_falldamage, float, 5);

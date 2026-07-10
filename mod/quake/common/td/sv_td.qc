@@ -194,7 +194,7 @@ void td_RoundWon(entity this)
 
 	IL_EACH(g_turrets, it.turretdef == TUR_ANGRY_NIMBUS,
 	{
-		it.clientframe = NANIM_WIN;
+		turrets_setframe_force(it, NANIM_WIN, false, true);
 		it.attack_finished = time + 2;
 	});
 
@@ -227,7 +227,7 @@ void td_RoundLost(entity this)
 
 	IL_EACH(g_turrets, it.turretdef == TUR_ANGRY_NIMBUS,
 	{
-		it.clientframe = NANIM_LOSE;
+		turrets_setframe_force(it, NANIM_LOSE, false, true);
 		it.attack_finished = time + 2;
 	});
 

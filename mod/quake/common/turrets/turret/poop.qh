@@ -1,0 +1,65 @@
+#pragma once
+
+// =======
+//  POTTY
+// =======
+
+CLASS(PoopPotty, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(PoopPotty, spawnflags, int, 0);
+/* mins       */ ATTRIB(PoopPotty, m_mins, vector, '-32 -32 -24');
+/* maxs       */ ATTRIB(PoopPotty, m_maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(PoopPotty, mdl, string, "progs/tur_potty.mdl");
+/* head_model */ ATTRIB(PoopPotty, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(PoopPotty, netname, string, "potty");
+/* fullname   */ ATTRIB(PoopPotty, m_name, string, _("Potty"));
+/* description*/ ATTRIB(PoopPotty, m_description, string, "Hurls dookie at any who dare approach");
+#ifdef GAMEQC
+/* number     */ ATTRIB(PoopPotty, impulse, int, 0);
+/* cost       */ ATTRIB(PoopPotty, tur_cost, float, 60);
+/* units      */ ATTRIB(PoopPotty, tur_units, int, 4);
+/* health     */ ATTRIB(PoopPotty, tur_health, float, 666);
+/* damage     */ ATTRIB(PoopPotty, tur_dmg, float, 12);
+/* dmg scale  */ ATTRIB(PoopPotty, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(PoopPotty, target_range, float, 250);
+/* max rotate */ ATTRIB(PoopPotty, aim_maxrot, float, 60);
+/* max pitch  */ ATTRIB(PoopPotty, aim_maxpitch, float, 20);
+
+/* property   */ ATTRIB(PoopPotty, health, float, 666);
+
+/* property   */ ATTRIB(PoopPotty, shot_dmg, float, 12);
+/* property   */ ATTRIB(PoopPotty, shot_refire, float, 0.7);
+/* property   */ ATTRIB(PoopPotty, shot_spread, float, 0.35);
+/* property   */ ATTRIB(PoopPotty, shot_force, float, 15);
+/* property   */ ATTRIB(PoopPotty, shot_radius, float, 20);
+/* property   */ ATTRIB(PoopPotty, shot_speed, float, 400);
+
+/* property   */ ATTRIB(PoopPotty, shot_volly, float, 0);
+/* property   */ ATTRIB(PoopPotty, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(PoopPotty, target_range, float, 250);
+/* property   */ ATTRIB(PoopPotty, target_range_min, float, 0);
+/* property   */ ATTRIB(PoopPotty, target_range_optimal, float, 200);
+
+/* property   */ ATTRIB(PoopPotty, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(PoopPotty, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(PoopPotty, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(PoopPotty, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(PoopPotty, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(PoopPotty, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(PoopPotty, aim_speed, float, 120);
+/* property   */ ATTRIB(PoopPotty, aim_maxrot, float, 55);
+/* property   */ ATTRIB(PoopPotty, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(PoopPotty, track_type, float, 3);
+/* property   */ ATTRIB(PoopPotty, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(PoopPotty, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(PoopPotty, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(PoopPotty, m_champion, Champions, CHAMPION_Poop);
+#endif
+
+ENDCLASS(PoopPotty)
+REGISTER_TURRET(POTTY, NEW(PoopPotty));

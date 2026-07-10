@@ -18,6 +18,10 @@ entity launch_fireball(entity this, vector org, vector dir);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
+	bool nyx_invis = (actor.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, actor));
+	if(nyx_invis)
+		return;
+
 	if((this.spawnflags & SPAWNFLAG_SUPERSPIKE) || !this.spawnflags)
 	{
 		if(!(this.spawnflags & SPAWNFLAG_SILENT))

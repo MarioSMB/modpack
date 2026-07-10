@@ -100,7 +100,8 @@ Using a monster makes it angry at the current activator
 */
 void monster_use(entity this, entity actor, entity trigger)
 {
-	if(this.enemy || this.health <= 0 || StatusEffects_active(STATUSEFFECT_Invisibility, actor) || (actor.flags & FL_NOTARGET) || (!IS_PLAYER(actor) && !IS_MONSTER(actor)))
+	bool nyx_invis = (actor.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, actor));
+	if(this.enemy || this.health <= 0 || StatusEffects_active(STATUSEFFECT_Invisibility, actor) || nyx_invis || (actor.flags & FL_NOTARGET) || (!IS_PLAYER(actor) && !IS_MONSTER(actor)))
 		return;
 	if(this.monsterdef.spawnflags & MONSTER_TYPE_CONTROLLER)
 		return; // TODO: tell our pets to target this enemy!
@@ -299,7 +300,7 @@ bool monster_checkspawnedflag(entity this)
 // .movetype is reset by physics
 bool monster_customize(entity this, entity client)
 {
-	if(time < this.enemy_reveal_time)
+	if(this.health > 0 && client.m_champion == CHAMPION_Chief && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && vdist(this.origin - client.origin, <=, autocvar_sv_quake_chief_range) && !checkpvs(this.origin, client))
 		this.effects |= (EF_ADDITIVE | EF_NODEPTHTEST);
 	else
 		this.effects &= ~(EF_ADDITIVE | EF_NODEPTHTEST);

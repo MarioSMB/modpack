@@ -96,3 +96,5 @@ SOUND(CHEER, "misc/cheer");
 SOUND(BOMB_FUSE, "kirby/bomb_fuse");
 
 SOUND(PLASMA_FLIGHT, "plasma/flight");
+
+SOUND(SWARM_FLIGHT, "turrets/swarmer_swarm");

@@ -176,25 +176,28 @@ void buildtool_DrawInfo(entity this)
 
 	pos.y += 16;
 	if(this.health < this.max_health)
-		sui_drawcolortext(pos, '16 16 0', sprintf("^7Health: ^1%d ^7/ ^1%d", this.health, this.max_health), 1, 0);
-	else
-		sui_drawcolortext(pos, '16 16 0', sprintf("^7Health: ^1%d", this.health), 1, 0);
-
-	if(tur.tur_dmg)
 	{
-		pos.y += 16;
-		float damage = tur.tur_dmg;
-		if(tur.tur_dmgscale)
-			damage *= turret_getpower(this.tur_level, tur.tur_dmgscale);
-		sui_drawcolortext(pos, '16 16 0', sprintf("^7Damage: ^3%d", damage), 1, 0);
+		float maxhp = tur.health * turret_getpower(this.tur_level, 0.2);
+		float myhealth = maxhp * (this.health / this.max_health); // real health value
+		sui_drawcolortext(pos, '16 16 0', sprintf("^7Health: ^1%d ^7/ ^1%d", myhealth, maxhp), 1, 0);
+	}
+	else
+	{
+		float maxhp = tur.health * turret_getpower(this.tur_level, 0.2);
+		sui_drawcolortext(pos, '16 16 0', sprintf("^7Health: ^1%d", maxhp), 1, 0);
 	}
 
-	if(tur.healamount)
+	// damages or heals?
+	if(tur.shot_dmg)
 	{
 		pos.y += 16;
-		// NOTE: hardcoded the 20%
-		float healing = tur.healamount * turret_getpower(this.tur_level, 0.2);
-		sui_drawcolortext(pos, '16 16 0', sprintf("^7Healing: ^2%d", healing), 1, 0);
+		float damage = tur.shot_dmg * turret_getpower(this.tur_level, 0.2);
+		string dmgtext;
+		if(tur.spawnflags & TUR_FLAG_SUPPORT)
+			dmgtext = sprintf("^7Healing: ^2%d", damage);
+		else
+			dmgtext = sprintf("^7Damage: ^3%d", damage);
+		sui_drawcolortext(pos, '16 16 0', dmgtext, 1, 0);
 	}
 
 	if(tur.tr_getinfo)
@@ -289,7 +292,8 @@ void buildtool_selectframe(entity this)
 	entity targ = NULL;
 	if(trace_ent.turretdef)
 	{
-		float mhealth = (trace_ent.max_health > 0) ? trace_ent.max_health : 255;
+		//float mhealth = (trace_ent.max_health > 0) ? trace_ent.max_health : 255;
+		float mhealth = 255;
 		switch(buildmode)
 		{
 			default:
@@ -360,7 +364,7 @@ void buildtool_frame(entity this)
 	dropmark.owner = this;
 	dropmark.cnt = time + 0.2;
 	dropmark.turretdef = tur;
-	dropmark.health = tur.tur_health;
+	dropmark.health = tur.health;
 	dropmark.max_health = dropmark.health;
 
 	if(dropmark.model != tur.mdl)
@@ -369,15 +373,21 @@ void buildtool_frame(entity this)
 		_setmodel(dropmark, tur.mdl);
 		setsize(dropmark, tur.m_mins, tur.m_maxs);
 
-		if(tur.head_model != "" && !dropmark.tur_head)
+		if(tur.head_model && tur.head_model != "")
 		{
-			dropmark.tur_head = spawn();
-			dropmark.tur_head.classname = "buildtool_dropmark_head";
-			dropmark.tur_head.drawmask = MASK_NORMAL;
-			dropmark.tur_head.effects = EF_ADDITIVE;
-			dropmark.tur_head.alpha = 0.5;
-			dropmark.tur_head.owner = dropmark;
-			setattachment(dropmark.tur_head, dropmark, "");
+			if(!dropmark.tur_head)
+			{
+				dropmark.tur_head = spawn();
+				dropmark.tur_head.classname = "buildtool_dropmark_head";
+				dropmark.tur_head.drawmask = MASK_NORMAL;
+				dropmark.tur_head.effects = EF_ADDITIVE;
+				dropmark.tur_head.alpha = 0.5;
+				dropmark.tur_head.owner = dropmark;
+				if(gettagindex(dropmark, "tag_head"))
+					setattachment(dropmark.tur_head, dropmark, "tag_head");
+				else
+					setattachment(dropmark.tur_head, dropmark, "");
+			}
 		}
 		else if(dropmark.tur_head)
 		{

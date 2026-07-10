@@ -73,7 +73,7 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 		actor.effects |= EF_MUZZLEFLASH;
 		W_FireRifle(actor, weaponentity);
 		wep_generic_shot1(actor.(weaponentity));
-		weapon_prepareattack(thiswep, actor, weaponentity, 1);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);
 	}
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

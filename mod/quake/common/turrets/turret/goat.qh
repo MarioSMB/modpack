@@ -1,0 +1,73 @@
+#pragma once
+
+// ================
+//  JUMPING CASTLE
+// ================
+
+#define GOAT \
+"⠀⠀⠀⠀⠀⠀⠀⠠⠴⠶⠾⠿⠿⠿⢶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⣿⣆⠐⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" \
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⠿⠆⠹⠦⠀⠀⠀⠀⠀⠀⠀⠀\n" \
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⣤⣤⣀⠐⣶⣶⣶⣶⣶⣶⡀⢀⣀⣀⠀⠀⠀\n" \
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⢿⣿⡆⢹⡿⠻⢿⣿⣿⣷⠈⠿⠛⠁⠀⠀\n" \
+"⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣴⣾⣷⣤⣉⣠⣾⣷⣦⣼⣿⣿⣿⣧⠀⠀⠀⠀⠀\n" \
+"⠀⣶⣶⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣛⠻⢧⣘⡷⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⣉⠛⠿⣷⣦⣌⠁⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⣠⠘⠀⠀⢹⣿⣶⣶⠀⠀⠀⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⢺⣿⠀⠀⠀⠘⣿⣿⡟⠀⠀⠀⠀⠀⠀\n" \
+"⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠁⠀⠀⠀⠀⠻⡟⠃⠀⠀⠀⠀⠀⠀\n" \
+"⠀⠛⠛⠛⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+
+CLASS(GoatJumpingCastle, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(GoatJumpingCastle, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(GoatJumpingCastle, m_mins, vector, '-82 -82 0');
+/* maxs       */ ATTRIB(GoatJumpingCastle, m_maxs, vector, '82 82 16');
+/* modelname  */ ATTRIB(GoatJumpingCastle, mdl, string, "progs/tur_jumpingcastle.mdl");
+/* head_model */ ATTRIB(GoatJumpingCastle, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(GoatJumpingCastle, netname, string, "jumpingcastle");
+/* fullname   */ ATTRIB(GoatJumpingCastle, m_name, string, _("Jumping Castle"));
+/* description*/ ATTRIB(GoatJumpingCastle, m_description, string, GOAT);
+#ifdef GAMEQC
+/* number     */ ATTRIB(GoatJumpingCastle, impulse, int, 0);
+/* cost       */ ATTRIB(GoatJumpingCastle, tur_cost, float, 100);
+/* units      */ ATTRIB(GoatJumpingCastle, tur_units, int, 10);
+/* health     */ ATTRIB(GoatJumpingCastle, health, float, 1000);
+/* champion   */ ATTRIB(GoatJumpingCastle, m_champion, Champions, CHAMPION_Goat);
+#endif
+
+ENDCLASS(GoatJumpingCastle)
+REGISTER_TURRET(JUMPING_CASTLE, NEW(GoatJumpingCastle));
+
+// ========
+//  SWINGS
+// ========
+
+CLASS(GoatSwings, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(GoatSwings, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(GoatSwings, m_mins, vector, '-70 -70 0');
+/* maxs       */ ATTRIB(GoatSwings, m_maxs, vector, '70 70 48');
+/* modelname  */ ATTRIB(GoatSwings, mdl, string, "progs/tur_swings.mdl");
+/* head_model */ ATTRIB(GoatSwings, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(GoatSwings, netname, string, "swings");
+/* fullname   */ ATTRIB(GoatSwings, m_name, string, _("Swing Set"));
+/* description*/ ATTRIB(GoatSwings, m_description, string, GOAT);
+#ifdef GAMEQC
+/* number     */ ATTRIB(GoatSwings, impulse, int, 1);
+/* cost       */ ATTRIB(GoatSwings, tur_cost, float, 60);
+/* units      */ ATTRIB(GoatSwings, tur_units, int, 6);
+/* health     */ ATTRIB(GoatSwings, health, float, 800);
+/* damage     */ ATTRIB(GoatSwings, shot_dmg, float, 10);
+/* champion   */ ATTRIB(GoatSwings, m_champion, Champions, CHAMPION_Goat);
+#endif
+
+ENDCLASS(GoatSwings)
+REGISTER_TURRET(SWINGS, NEW(GoatSwings));
+
+// at the bottom
+#undef GOAT

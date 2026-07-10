@@ -90,3 +90,4 @@
 #include "bfg.qc"
 #include "theaxe.qc"
 #include "rifle.qc"
+#include "staff.qc"

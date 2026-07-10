@@ -101,7 +101,7 @@ void PlasmaTouch(entity this, entity toucher)
 		float damg = 80 + random()*20;
 		if(IS_MONSTER(this.realowner))
 			damg = 30;
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
+		if(Resist_Explosions(toucher))
 			damg *= 0.5;	// mostly immune
 		if(toucher.resist_cells != 0)
 		{

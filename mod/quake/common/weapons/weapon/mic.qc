@@ -27,10 +27,10 @@ void mic_note_touch(entity this, entity toucher)
 	float mydmg = 50;
 	float damg = mydmg + random() * (mydmg * 0.2);
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;	// mostly immune
 		if(toucher.resist_cells != 0)
 		{
 			damg = Resist_Damage(toucher, IT_CELLS, damg);
@@ -133,8 +133,8 @@ void mic_bignote_touch(entity this, entity toucher)
 	
 	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;	// mostly immune
 		if(toucher.resist_cells != 0)
 		{
 			damg = Resist_Damage(toucher, IT_CELLS, damg);

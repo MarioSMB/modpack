@@ -16,40 +16,18 @@ METHOD(Chief, m_pickup_armor, void(Champions this, entity actor, entity item))
 		StatusEffects_apply(STATUSEFFECT_FieldGen, actor, time + ftime, 0);
 }
 
-bool chief_visible(entity this, entity targ)
+METHOD(Chief, m_dealdamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
-	traceline(this.origin + this.view_ofs, targ.origin + targ.view_ofs, MOVE_NOMONSTERS, this);
-	if(trace_fraction != 1)
-		return false;
-	return true;
-}
-
-METHOD(Chief, m_playerthink, void(Champions this, entity actor))
-{
-	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
+	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
+	if(attacker.m_champion == this)
 	{
-		bool found = false;
-		int targlimit = 0;
-		// TODO: currently designed to only work on monsters
-		FOREACH_ENTITY_RADIUS(actor.origin, autocvar_sv_quake_chief_range, it.health > 0 && IS_MONSTER(it) && Damage_ValidTarget(it, actor),
-		{
-			targlimit += 1;
-			if(targlimit > 20)
-				break;
-			if(!chief_visible(actor, it))
-			{
-				found = true;
-				it.enemy_reveal_time = time + 2;
-			}
-		});
-		if(found)
-		{
-			STAT(QCC_ABILITYTIME, actor) = time + 6;
-			player_sound(actor, CH_VOICE, "radar.wav", ATTN_NORM);
-		}
-		else // otherwise just an internal cooldown to stop spam
-			STAT(QCC_ABILITYTIME, actor) = time + 1;
+		if(death_weapon.ammo_type == IT_CELLS || death_weapon.ammo_type == IT_PLASMA_AMMO)
+			return 1.5;
+		else
+			return 1;
 	}
+	else
+		return 1;
 }
 #endif
 

@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+
+bool turret_tag_fire_update(entity this);
+
+#endif // SVQC

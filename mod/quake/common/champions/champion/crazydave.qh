@@ -107,18 +107,19 @@ PRECACHE(CrazyDave)
 #endif
 #ifdef CSQC
 #define CRAZYDAVE_STATS \
-"Is very crazy\n" \
+"Very crazy\n" \
 "Damage taken reduced by 50%\n" \
 "Press %ABILITY% to distract\n" \
 "Has Taco\n" \
 "- Heals by 5 instantly\n" \
 "- Doubles regen for 10 seconds\n" \
 "- Cures poison on consumption\n" \
-"- Boosts resistance to 70%"
+"- Boosts resistance to 70%. Taco Power"
 #endif
 CLASS(CrazyDave, Champions)
     ATTRIB(CrazyDave, netname, string, "crazydave");
     ATTRIB(CrazyDave, m_name, string, "Crazy Dave");
+    ATTRIB(CrazyDave, m_color, vector, '1 0.65 0');
     ATTRIB(CrazyDave, qcc_meleename, string, "crazypot");
 #ifdef GAMEQC
     ATTRIB(CrazyDave, m_model, Model, MDL_CrazyDave);

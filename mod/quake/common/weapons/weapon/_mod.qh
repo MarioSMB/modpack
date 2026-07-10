@@ -90,3 +90,4 @@
 #include "bfg.qh"
 #include "theaxe.qh"
 #include "rifle.qh"
+#include "staff.qh"

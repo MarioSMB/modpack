@@ -1202,7 +1202,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, int skiptarget
 void FoundTarget(entity this)
 {
 	// prevent getting stuck without an enemy (some triggers set the think frame to this)
-	if(!this.enemy || this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET))
+	bool nyx_invis = (this.enemy.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this.enemy));
+	if(!this.enemy || this.enemy.health <= 0 || (this.enemy.flags & FL_NOTARGET) || nyx_invis)
 	{
 		this.enemy = NULL;
 		if(this.th_stand)
@@ -1432,6 +1433,8 @@ bool FindTarget(entity this)
 
 	if(client.m_champion == CHAMPION_FloydChamp)
 		return false; // TODO: champion hook here?
+	if(client.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, client))
+		return false;
 
 	if(!this.charmed && (client.flags & FL_NOTARGET))
 		return false;
@@ -1911,7 +1914,8 @@ void ai_run(entity this, float dist)
 	if(!IS_MONSTER(this))
 		return;
 // see if the enemy is dead
-	if(wasfreed(this.enemy) || this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET))
+	bool nyx_invis = (this.enemy.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this.enemy));
+	if(wasfreed(this.enemy) || this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)) || (this.enemy.flags & FL_NOTARGET) || nyx_invis)
 	{
 		this.enemy = NULL;
 		if(this.charmed)
@@ -1920,7 +1924,8 @@ void ai_run(entity this, float dist)
 			return;
 		}
 	// FIXME: look all around for other targets
-		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !StatusEffects_active(STATUSEFFECT_Invisibility, this.oldenemy))
+		nyx_invis = (this.oldenemy.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this.oldenemy));
+		if(this.oldenemy.health > 0 && !(this.oldenemy.flags & FL_NOTARGET) && !StatusEffects_active(STATUSEFFECT_Invisibility, this.oldenemy) && !nyx_invis)
 		{
 			this.enemy = this.oldenemy;
 			HuntTarget(this);

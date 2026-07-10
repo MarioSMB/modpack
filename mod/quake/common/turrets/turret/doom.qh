@@ -1,0 +1,207 @@
+#pragma once
+
+// ==================
+//  CONCRETE BARRIER
+// ==================
+
+CLASS(DoomConcreteBarrier, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DoomConcreteBarrier, spawnflags, int, 0);
+/* mins       */ ATTRIB(DoomConcreteBarrier, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(DoomConcreteBarrier, m_maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(DoomConcreteBarrier, mdl, string, "progs/tur_concretebarrier.mdl");
+/* head_model */ ATTRIB(DoomConcreteBarrier, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(DoomConcreteBarrier, netname, string, "concretebarrier");
+/* fullname   */ ATTRIB(DoomConcreteBarrier, m_name, string, _("Concrete Barrier"));
+/* description*/ ATTRIB(DoomConcreteBarrier, m_description, string, "Armored wall that blocks monsters paths");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DoomConcreteBarrier, impulse, int, 0);
+/* cost       */ ATTRIB(DoomConcreteBarrier, tur_cost, float, 30);
+/* units      */ ATTRIB(DoomConcreteBarrier, tur_units, int, 3);
+/* health     */ ATTRIB(DoomConcreteBarrier, health, float, 1400);
+/* champion   */ ATTRIB(DoomConcreteBarrier, m_champion, Champions, CHAMPION_Doom);
+#endif
+
+ENDCLASS(DoomConcreteBarrier)
+REGISTER_TURRET(CONCRETE_BARRIER, NEW(DoomConcreteBarrier));
+
+// =================
+//  AUTO MACHINEGUN
+// =================
+
+CLASS(DoomAutoMachineGun, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DoomAutoMachineGun, spawnflags, int, 0);
+/* mins       */ ATTRIB(DoomAutoMachineGun, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DoomAutoMachineGun, m_maxs, vector, '16 16 36');
+/* modelname  */ ATTRIB(DoomAutoMachineGun, mdl, string, "progs/tur_automg_base.mdl");
+/* head_model */ ATTRIB(DoomAutoMachineGun, head_model, string, "progs/tur_automg.mdl");
+#endif
+/* netname    */ ATTRIB(DoomAutoMachineGun, netname, string, "automg");
+/* fullname   */ ATTRIB(DoomAutoMachineGun, m_name, string, _("Auto MachineGun"));
+/* description*/ ATTRIB(DoomAutoMachineGun, m_description, string, "Blasts multiple high velocity rounds at enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DoomAutoMachineGun, impulse, int, 1);
+/* cost       */ ATTRIB(DoomAutoMachineGun, tur_cost, float, 40);
+/* units      */ ATTRIB(DoomAutoMachineGun, tur_units, int, 5);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, health, float, 250);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_dmg, float, 16);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_refire, float, 0.66);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_spread, float, 0.18);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_force, float, 5);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_radius, float, 0);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_speed, float, 800);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_volly, float, 0);
+/* property   */ ATTRIB(DoomAutoMachineGun, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, target_range, float, 500);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_range_min, float, 0);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_range_optimal, float, 400);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DoomAutoMachineGun, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(DoomAutoMachineGun, aim_speed, float, 120);
+/* property   */ ATTRIB(DoomAutoMachineGun, aim_maxrot, float, 55);
+/* property   */ ATTRIB(DoomAutoMachineGun, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(DoomAutoMachineGun, track_type, float, 3);
+/* property   */ ATTRIB(DoomAutoMachineGun, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DoomAutoMachineGun, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DoomAutoMachineGun, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DoomAutoMachineGun, m_champion, Champions, CHAMPION_Doom);
+#endif
+
+ENDCLASS(DoomAutoMachineGun)
+REGISTER_TURRET(AUTO_MACHINEGUN, NEW(DoomAutoMachineGun));
+
+// ========
+//  PHASER
+// ========
+
+CLASS(DoomPhaser, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DoomPhaser, spawnflags, int, 0);
+/* mins       */ ATTRIB(DoomPhaser, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DoomPhaser, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(DoomPhaser, mdl, string, "progs/tur_phaser_base.mdl");
+/* head_model */ ATTRIB(DoomPhaser, head_model, string, "progs/tur_phaser.mdl");
+#endif
+/* netname    */ ATTRIB(DoomPhaser, netname, string, "phaser");
+/* fullname   */ ATTRIB(DoomPhaser, m_name, string, _("Phaser"));
+/* description*/ ATTRIB(DoomPhaser, m_description, string, "Fires a wide-range laser at enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DoomPhaser, impulse, int, 2);
+/* cost       */ ATTRIB(DoomPhaser, tur_cost, float, 60);
+/* units      */ ATTRIB(DoomPhaser, tur_units, int, 6);
+/* health     */ ATTRIB(DoomPhaser, tur_health, float, 250);
+/* damage     */ ATTRIB(DoomPhaser, tur_dmg, float, 18);
+/* dmg scale  */ ATTRIB(DoomPhaser, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(DoomPhaser, target_range, float, 550);
+/* max rotate */ ATTRIB(DoomPhaser, aim_maxrot, float, 45);
+/* max pitch  */ ATTRIB(DoomPhaser, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(DoomPhaser, health, float, 250);
+
+/* property   */ ATTRIB(DoomPhaser, shot_dmg, float, 18);
+/* property   */ ATTRIB(DoomPhaser, shot_refire, float, 1);
+/* property   */ ATTRIB(DoomPhaser, shot_spread, float, 0);
+/* property   */ ATTRIB(DoomPhaser, shot_force, float, 5);
+/* property   */ ATTRIB(DoomPhaser, shot_radius, float, 0);
+/* property   */ ATTRIB(DoomPhaser, shot_speed, float, 600);
+
+/* property   */ ATTRIB(DoomPhaser, shot_volly, float, 0);
+/* property   */ ATTRIB(DoomPhaser, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DoomPhaser, target_range, float, 550);
+/* property   */ ATTRIB(DoomPhaser, target_range_min, float, 0);
+/* property   */ ATTRIB(DoomPhaser, target_range_optimal, float, 420);
+
+/* property   */ ATTRIB(DoomPhaser, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DoomPhaser, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DoomPhaser, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DoomPhaser, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DoomPhaser, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DoomPhaser, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(DoomPhaser, aim_speed, float, 120);
+/* property   */ ATTRIB(DoomPhaser, aim_maxrot, float, 45);
+/* property   */ ATTRIB(DoomPhaser, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(DoomPhaser, track_type, float, 3);
+/* property   */ ATTRIB(DoomPhaser, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DoomPhaser, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DoomPhaser, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DoomPhaser, m_champion, Champions, CHAMPION_Doom);
+#endif
+
+ENDCLASS(DoomPhaser)
+REGISTER_TURRET(PHASER, NEW(DoomPhaser));
+
+// ======
+//  COIL
+// ======
+
+CLASS(DoomCoil, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DoomCoil, spawnflags, int, 0);
+/* mins       */ ATTRIB(DoomCoil, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DoomCoil, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(DoomCoil, mdl, string, "progs/tur_coil_base.mdl");
+/* head_model */ ATTRIB(DoomCoil, head_model, string, "progs/tur_coil.mdl");
+#endif
+/* netname    */ ATTRIB(DoomCoil, netname, string, "coil");
+/* fullname   */ ATTRIB(DoomCoil, m_name, string, _("Coil"));
+/* description*/ ATTRIB(DoomCoil, m_description, string, "Zaps nearby enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DoomCoil, impulse, int, 3);
+/* cost       */ ATTRIB(DoomCoil, tur_cost, float, 100);
+/* units      */ ATTRIB(DoomCoil, tur_units, int, 6);
+
+/* property   */ ATTRIB(DoomCoil, health, float, 250);
+
+/* property   */ ATTRIB(DoomCoil, shot_dmg, float, 9);
+/* property   */ ATTRIB(DoomCoil, shot_refire, float, 0.2);
+/* property   */ ATTRIB(DoomCoil, shot_spread, float, 0);
+/* property   */ ATTRIB(DoomCoil, shot_force, float, 2);
+/* property   */ ATTRIB(DoomCoil, shot_radius, float, 0);
+/* property   */ ATTRIB(DoomCoil, shot_speed, float, 0);
+
+/* property   */ ATTRIB(DoomCoil, shot_volly, float, 0);
+/* property   */ ATTRIB(DoomCoil, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DoomCoil, target_range, float, 400);
+/* property   */ ATTRIB(DoomCoil, target_range_min, float, 0);
+/* property   */ ATTRIB(DoomCoil, target_range_optimal, float, 300);
+
+/* property   */ ATTRIB(DoomCoil, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DoomCoil, target_select_samebias, float, 0.95);
+/* property   */ ATTRIB(DoomCoil, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DoomCoil, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DoomCoil, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DoomCoil, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(DoomCoil, aim_speed, float, 200);
+/* property   */ ATTRIB(DoomCoil, aim_maxrot, float, 40);
+/* property   */ ATTRIB(DoomCoil, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(DoomCoil, track_type, float, 3);
+/* property   */ ATTRIB(DoomCoil, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DoomCoil, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DoomCoil, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DoomCoil, m_champion, Champions, CHAMPION_Doom);
+#endif
+
+ENDCLASS(DoomCoil)
+REGISTER_TURRET(COIL, NEW(DoomCoil));

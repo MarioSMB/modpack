@@ -12,8 +12,8 @@ void MultiRocketExplode(entity this, entity directhitentity)
 
 	if(directhitentity.health)
 	{
-		if(directhitentity.monsterdef && (directhitentity.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
+		if(Resist_Explosions(directhitentity))
+			damg *= 0.5;	// mostly immune
 		if(directhitentity.monsterdef == MON_DRAGON)
 			damg = damg * 0.5;	// mostly immune (special case)
 		T_Damage(directhitentity, this, this.owner, damg, this.projectiledeathtype);

@@ -327,10 +327,10 @@ void lavaman_touch(entity this, entity toucher)
 	}
 
 	float damg = 40;
-	if(toucher.health)
+	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;	// mostly immune
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;	// mostly immune
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 

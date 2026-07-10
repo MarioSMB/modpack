@@ -1,0 +1,204 @@
+#pragma once
+
+// ===========
+//  BARRICADE
+// ===========
+
+CLASS(RangerBarricade, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(RangerBarricade, spawnflags, int, TUR_FLAG_NONE);
+/* mins       */ ATTRIB(RangerBarricade, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(RangerBarricade, m_maxs, vector, '32 32 32');
+#endif
+#ifdef CSQC
+/* modelname  */ ATTRIB(RangerBarricade, mdl, string, "progs/tur_barricade.mdl");
+/* head_model */ ATTRIB(RangerBarricade, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(RangerBarricade, netname, string, "barricade");
+/* fullname   */ ATTRIB(RangerBarricade, m_name, string, _("Barricade"));
+/* description*/ ATTRIB(RangerBarricade, m_description, string, "Damages and pushes back approaching enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(RangerBarricade, impulse, int, 0);
+/* cost       */ ATTRIB(RangerBarricade, tur_cost, float, 30);
+/* units      */ ATTRIB(RangerBarricade, tur_units, int, 3);
+/* health     */ ATTRIB(RangerBarricade, health, float, 700);
+/* damage     */ ATTRIB(RangerBarricade, shot_dmg, float, 3);
+/* champion   */ ATTRIB(RangerBarricade, m_champion, Champions, CHAMPION_Ranger);
+#endif
+
+ENDCLASS(RangerBarricade)
+REGISTER_TURRET(BARRICADE, NEW(RangerBarricade));
+
+// ========
+//  NAILER
+// ========
+
+CLASS(RangerNailer, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(RangerNailer, spawnflags, int, 0);
+/* mins       */ ATTRIB(RangerNailer, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(RangerNailer, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(RangerNailer, mdl, string, "progs/tur_nailer_base.mdl");
+/* head_model */ ATTRIB(RangerNailer, head_model, string, "progs/tur_nailer.iqm");
+#endif
+/* netname    */ ATTRIB(RangerNailer, netname, string, "nailer");
+/* fullname   */ ATTRIB(RangerNailer, m_name, string, _("Nailer"));
+/* description*/ ATTRIB(RangerNailer, m_description, string, "Rapidly shoots nearby enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(RangerNailer, impulse, int, 1);
+/* cost       */ ATTRIB(RangerNailer, tur_cost, float, 40);
+/* units      */ ATTRIB(RangerNailer, tur_units, int, 4);
+
+/* property   */ ATTRIB(RangerNailer, health, float, 200);
+
+/* property   */ ATTRIB(RangerNailer, shot_dmg, float, 6);
+/* property   */ ATTRIB(RangerNailer, shot_refire, float, 0.33);
+/* property   */ ATTRIB(RangerNailer, shot_spread, float, 0.015);
+/* property   */ ATTRIB(RangerNailer, shot_force, float, 20);
+/* property   */ ATTRIB(RangerNailer, shot_radius, float, 0);
+/* property   */ ATTRIB(RangerNailer, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(RangerNailer, shot_volly, float, 0);
+/* property   */ ATTRIB(RangerNailer, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(RangerNailer, target_range, float, 600);
+/* property   */ ATTRIB(RangerNailer, target_range_min, float, 5);
+/* property   */ ATTRIB(RangerNailer, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(RangerNailer, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(RangerNailer, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(RangerNailer, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(RangerNailer, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(RangerNailer, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(RangerNailer, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(RangerNailer, aim_speed, float, 120);
+/* property   */ ATTRIB(RangerNailer, aim_maxrot, float, 55);
+/* property   */ ATTRIB(RangerNailer, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(RangerNailer, track_type, float, 3);
+/* property   */ ATTRIB(RangerNailer, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(RangerNailer, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(RangerNailer, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(RangerNailer, m_champion, Champions, CHAMPION_Ranger);
+#endif
+
+ENDCLASS(RangerNailer)
+REGISTER_TURRET(NAILER, NEW(RangerNailer));
+
+// ========
+//  MORTAR
+// ========
+
+CLASS(RangerMortar, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(RangerMortar, spawnflags, int, TUR_FLAG_SPLASH);
+/* mins       */ ATTRIB(RangerMortar, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(RangerMortar, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(RangerMortar, mdl, string, "progs/debris.mdl");
+/* head_model */ ATTRIB(RangerMortar, head_model, string, "progs/tur_mortar.iqm");
+#endif
+/* netname    */ ATTRIB(RangerMortar, netname, string, "mortar");
+/* fullname   */ ATTRIB(RangerMortar, m_name, string, _("Mortar"));
+/* description*/ ATTRIB(RangerMortar, m_description, string, "Lobs bombs that explode in an area");
+#ifdef GAMEQC
+/* number     */ ATTRIB(RangerMortar, impulse, int, 2);
+/* cost       */ ATTRIB(RangerMortar, tur_cost, float, 60);
+/* units      */ ATTRIB(RangerMortar, tur_units, int, 5);
+
+/* property   */ ATTRIB(RangerMortar, health, float, 300);
+
+/* property   */ ATTRIB(RangerMortar, shot_dmg, float, 20);
+/* property   */ ATTRIB(RangerMortar, shot_refire, float, 1.7);
+/* property   */ ATTRIB(RangerMortar, shot_spread, float, 0.05);
+/* property   */ ATTRIB(RangerMortar, shot_force, float, 25);
+/* property   */ ATTRIB(RangerMortar, shot_radius, float, 125);
+/* property   */ ATTRIB(RangerMortar, shot_speed, float, 500);
+
+/* property   */ ATTRIB(RangerMortar, shot_volly, float, 0);
+/* property   */ ATTRIB(RangerMortar, shot_volly_refire, float, 5);
+
+/* property   */ ATTRIB(RangerMortar, target_range, float, 420);
+/* property   */ ATTRIB(RangerMortar, target_range_min, float, 10);
+/* property   */ ATTRIB(RangerMortar, target_range_optimal, float, 300);
+
+/* property   */ ATTRIB(RangerMortar, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(RangerMortar, target_select_samebias, float, 0.5);
+/* property   */ ATTRIB(RangerMortar, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(RangerMortar, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(RangerMortar, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(RangerMortar, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(RangerMortar, aim_speed, float, 100);
+/* property   */ ATTRIB(RangerMortar, aim_maxrot, float, 40);
+/* property   */ ATTRIB(RangerMortar, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(RangerMortar, track_type, float, 1);
+/* property   */ ATTRIB(RangerMortar, track_accel_pitch, float, 0.5);
+/* property   */ ATTRIB(RangerMortar, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(RangerMortar, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(RangerMortar, m_champion, Champions, CHAMPION_Ranger);
+#endif
+
+ENDCLASS(RangerMortar)
+REGISTER_TURRET(MORTAR, NEW(RangerMortar));
+
+// =======
+//  LASER
+// =======
+
+CLASS(RangerLaser, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(RangerLaser, spawnflags, int, 0);
+/* mins       */ ATTRIB(RangerLaser, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(RangerLaser, m_maxs, vector, '24 24 36');
+/* modelname  */ ATTRIB(RangerLaser, mdl, string, "progs/tur_laser_base.mdl");
+/* head_model */ ATTRIB(RangerLaser, head_model, string, "progs/tur_laser.iqm");
+#endif
+/* netname    */ ATTRIB(RangerLaser, netname, string, "laser");
+/* fullname   */ ATTRIB(RangerLaser, m_name, string, _("Laser"));
+/* description*/ ATTRIB(RangerLaser, m_description, string, "Fires a pair of long range lasers");
+#ifdef GAMEQC
+/* number     */ ATTRIB(RangerLaser, impulse, int, 3);
+/* cost       */ ATTRIB(RangerLaser, tur_cost, float, 110);
+/* units      */ ATTRIB(RangerLaser, tur_units, int, 6);
+
+/* property   */ ATTRIB(RangerLaser, health, float, 250);
+
+/* property   */ ATTRIB(RangerLaser, shot_dmg, float, 10);
+/* property   */ ATTRIB(RangerLaser, shot_refire, float, 1);
+/* property   */ ATTRIB(RangerLaser, shot_spread, float, 0);
+/* property   */ ATTRIB(RangerLaser, shot_force, float, 15);
+/* property   */ ATTRIB(RangerLaser, shot_radius, float, 0);
+/* property   */ ATTRIB(RangerLaser, shot_speed, float, 600);
+
+/* property   */ ATTRIB(RangerLaser, shot_volly, float, 0);
+/* property   */ ATTRIB(RangerLaser, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(RangerLaser, target_range, float, 900);
+/* property   */ ATTRIB(RangerLaser, target_range_min, float, 10);
+/* property   */ ATTRIB(RangerLaser, target_range_optimal, float, 800);
+
+/* property   */ ATTRIB(RangerLaser, target_select_rangebias, float, 0.5);
+/* property   */ ATTRIB(RangerLaser, target_select_samebias, float, 0.01);
+/* property   */ ATTRIB(RangerLaser, target_select_anglebias, float, 0.25);
+/* property   */ ATTRIB(RangerLaser, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(RangerLaser, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(RangerLaser, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(RangerLaser, aim_speed, float, 100);
+/* property   */ ATTRIB(RangerLaser, aim_maxrot, float, 25);
+/* property   */ ATTRIB(RangerLaser, aim_maxpitch, float, 25);
+
+/* property   */ ATTRIB(RangerLaser, track_type, float, 3);
+/* property   */ ATTRIB(RangerLaser, track_accel_pitch, float, 0.5);
+/* property   */ ATTRIB(RangerLaser, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(RangerLaser, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(RangerLaser, m_champion, Champions, CHAMPION_Ranger);
+#endif
+
+ENDCLASS(RangerLaser)
+REGISTER_TURRET(LASER, NEW(RangerLaser));

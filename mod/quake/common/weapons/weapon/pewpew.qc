@@ -50,7 +50,7 @@ METHOD(PewPew, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 			player_shot1(actor);
 		wep_pewpew_shot1(actor.(weaponentity));
 		W_FirePewPew(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);
 	}
 
 	if(fire & 2)

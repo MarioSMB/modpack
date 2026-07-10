@@ -1,0 +1,144 @@
+#pragma once
+
+// ============
+//  LASER WALL
+// ============
+
+CLASS(V1LaserWall, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1LaserWall, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(V1LaserWall, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(V1LaserWall, m_maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(V1LaserWall, mdl, string, "progs/tur_laserwall.mdl");
+/* head_model */ ATTRIB(V1LaserWall, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(V1LaserWall, netname, string, "laserwall");
+/* fullname   */ ATTRIB(V1LaserWall, m_name, string, _("Laser Wall"));
+/* description*/ ATTRIB(V1LaserWall, m_description, string, "Wall of lasers that electrocute enemies passing through");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1LaserWall, impulse, int, 0);
+/* cost       */ ATTRIB(V1LaserWall, tur_cost, float, 30);
+/* units      */ ATTRIB(V1LaserWall, tur_units, int, 3);
+/* health     */ ATTRIB(V1LaserWall, health, float, 600);
+/* damage     */ ATTRIB(V1LaserWall, shot_dmg, float, 6);
+/* champion   */ ATTRIB(V1LaserWall, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1LaserWall)
+REGISTER_TURRET(LASER_WALL, NEW(V1LaserWall));
+
+// =======
+//  ROBOT
+// =======
+
+CLASS(V1Robot, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1Robot, spawnflags, int, 0);
+/* mins       */ ATTRIB(V1Robot, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(V1Robot, m_maxs, vector, '24 24 72');
+/* modelname  */ ATTRIB(V1Robot, mdl, string, "progs/tur_robot.mdl");
+/* head_model */ ATTRIB(V1Robot, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(V1Robot, netname, string, "robot");
+/* fullname   */ ATTRIB(V1Robot, m_name, string, _("Robot"));
+/* description*/ ATTRIB(V1Robot, m_description, string, "Rapidly fires powerful bullets at ground-based targets");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1Robot, impulse, int, 1);
+/* cost       */ ATTRIB(V1Robot, tur_cost, float, 50);
+/* units      */ ATTRIB(V1Robot, tur_units, int, 5);
+
+/* property   */ ATTRIB(V1Robot, health, float, 350);
+
+/* property   */ ATTRIB(V1Robot, shot_dmg, float, 14);
+/* property   */ ATTRIB(V1Robot, shot_refire, float, 0.5);
+/* property   */ ATTRIB(V1Robot, shot_spread, float, 0.015);
+/* property   */ ATTRIB(V1Robot, shot_force, float, 5);
+/* property   */ ATTRIB(V1Robot, shot_radius, float, 0);
+/* property   */ ATTRIB(V1Robot, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(V1Robot, shot_volly, float, 0);
+/* property   */ ATTRIB(V1Robot, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(V1Robot, target_range, float, 550);
+/* property   */ ATTRIB(V1Robot, target_range_min, float, 0);
+/* property   */ ATTRIB(V1Robot, target_range_optimal, float, 450);
+
+/* property   */ ATTRIB(V1Robot, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(V1Robot, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(V1Robot, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(V1Robot, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(V1Robot, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(V1Robot, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(V1Robot, aim_speed, float, 120);
+/* property   */ ATTRIB(V1Robot, aim_maxrot, float, 60);
+/* property   */ ATTRIB(V1Robot, aim_maxpitch, float, 35);
+
+/* property   */ ATTRIB(V1Robot, track_type, float, 3);
+/* property   */ ATTRIB(V1Robot, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(V1Robot, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(V1Robot, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(V1Robot, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1Robot)
+REGISTER_TURRET(ROBOT, NEW(V1Robot));
+
+// ======
+//  RAIL
+// ======
+
+CLASS(V1Rail, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(V1Rail, spawnflags, int, 0);
+/* mins       */ ATTRIB(V1Rail, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(V1Rail, m_maxs, vector, '24 24 45');
+/* modelname  */ ATTRIB(V1Rail, mdl, string, "progs/tur_rail_base.mdl");
+/* head_model */ ATTRIB(V1Rail, head_model, string, "progs/tur_rail.mdl");
+#endif
+/* netname    */ ATTRIB(V1Rail, netname, string, "rail");
+/* fullname   */ ATTRIB(V1Rail, m_name, string, _("Rail"));
+/* description*/ ATTRIB(V1Rail, m_description, string, "Vaporizes targets within range with a piercing rail shot");
+#ifdef GAMEQC
+/* number     */ ATTRIB(V1Rail, impulse, int, 2);
+/* cost       */ ATTRIB(V1Rail, tur_cost, float, 100);
+/* units      */ ATTRIB(V1Rail, tur_units, int, 7);
+
+/* property   */ ATTRIB(V1Rail, health, float, 200);
+
+/* property   */ ATTRIB(V1Rail, shot_dmg, float, 45);
+/* property   */ ATTRIB(V1Rail, shot_refire, float, 5);
+/* property   */ ATTRIB(V1Rail, shot_spread, float, 0);
+/* property   */ ATTRIB(V1Rail, shot_force, float, 40);
+/* property   */ ATTRIB(V1Rail, shot_radius, float, 0);
+/* property   */ ATTRIB(V1Rail, shot_speed, float, 0);
+
+/* property   */ ATTRIB(V1Rail, shot_volly, float, 0);
+/* property   */ ATTRIB(V1Rail, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(V1Rail, target_range, float, 500);
+/* property   */ ATTRIB(V1Rail, target_range_min, float, 0);
+/* property   */ ATTRIB(V1Rail, target_range_optimal, float, 450);
+
+/* property   */ ATTRIB(V1Rail, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(V1Rail, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(V1Rail, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(V1Rail, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(V1Rail, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(V1Rail, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(V1Rail, aim_speed, float, 120);
+/* property   */ ATTRIB(V1Rail, aim_maxrot, float, 25);
+/* property   */ ATTRIB(V1Rail, aim_maxpitch, float, 25);
+
+/* property   */ ATTRIB(V1Rail, track_type, float, 3);
+/* property   */ ATTRIB(V1Rail, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(V1Rail, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(V1Rail, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(V1Rail, m_champion, Champions, CHAMPION_V1);
+#endif
+
+ENDCLASS(V1Rail)
+REGISTER_TURRET(RAIL, NEW(V1Rail));

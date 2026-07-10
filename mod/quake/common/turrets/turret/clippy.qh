@@ -1,0 +1,59 @@
+#pragma once
+
+// =============
+//  RECYCLE BIN
+// =============
+
+CLASS(ClippyRecycleBin, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(ClippyRecycleBin, spawnflags, int, 0);
+/* mins       */ ATTRIB(ClippyRecycleBin, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(ClippyRecycleBin, m_maxs, vector, '16 16 48');
+/* modelname  */ ATTRIB(ClippyRecycleBin, mdl, string, "progs/tur_recyclebin.mdl");
+/* head_model */ ATTRIB(ClippyRecycleBin, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(ClippyRecycleBin, netname, string, "recyclebin");
+/* fullname   */ ATTRIB(ClippyRecycleBin, m_name, string, _("Recycle Bin"));
+/* description*/ ATTRIB(ClippyRecycleBin, m_description, string, "Lobs recycled balls of paper");
+#ifdef GAMEQC
+/* number     */ ATTRIB(ClippyRecycleBin, impulse, int, 0);
+/* cost       */ ATTRIB(ClippyRecycleBin, tur_cost, float, 40);
+/* units      */ ATTRIB(ClippyRecycleBin, tur_units, int, 3);
+
+/* property   */ ATTRIB(ClippyRecycleBin, health, float, 250);
+
+/* property   */ ATTRIB(ClippyRecycleBin, shot_dmg, float, 12);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_refire, float, 1);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_spread, float, 0.0125);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_force, float, 20);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_radius, float, 20);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(ClippyRecycleBin, shot_volly, float, 0);
+/* property   */ ATTRIB(ClippyRecycleBin, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(ClippyRecycleBin, target_range, float, 460);
+/* property   */ ATTRIB(ClippyRecycleBin, target_range_min, float, 1);
+/* property   */ ATTRIB(ClippyRecycleBin, target_range_optimal, float, 240);
+
+/* property   */ ATTRIB(ClippyRecycleBin, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(ClippyRecycleBin, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(ClippyRecycleBin, target_select_anglebias, float, 0);
+/* property   */ ATTRIB(ClippyRecycleBin, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(ClippyRecycleBin, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(ClippyRecycleBin, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(ClippyRecycleBin, aim_speed, float, 200);
+/* property   */ ATTRIB(ClippyRecycleBin, aim_maxrot, float, 50);
+/* property   */ ATTRIB(ClippyRecycleBin, aim_maxpitch, float, 50);
+
+/* property   */ ATTRIB(ClippyRecycleBin, track_type, float, 1);
+/* property   */ ATTRIB(ClippyRecycleBin, track_accel_pitch, float, 0.5);
+/* property   */ ATTRIB(ClippyRecycleBin, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(ClippyRecycleBin, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(ClippyRecycleBin, m_champion, Champions, CHAMPION_Clippy);
+#endif
+
+ENDCLASS(ClippyRecycleBin)
+REGISTER_TURRET(RECYCLE_BIN, NEW(ClippyRecycleBin));

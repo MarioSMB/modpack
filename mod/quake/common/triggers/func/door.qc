@@ -170,6 +170,9 @@ void door_trigger_touch(entity this, entity toucher)
 		toucher = toucher.draggedby; // hehe
 	if(toucher.health <= 0)
 		return;
+	bool nyx_invis = (toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher));
+	if(nyx_invis)
+		return;
 	if(toucher.move_movetype == MOVETYPE_NOCLIP)
 		return;
 
@@ -281,6 +284,9 @@ void door_touch(entity this, entity toucher)
 	if(toucher.draggedby)
 		toucher = toucher.draggedby; // hehe
 	if(!IS_PLAYER(toucher))
+		return;
+	bool nyx_invis = (toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher));
+	if(nyx_invis)
 		return;
 	if(this.owner.attack_finished > time)
 		return;

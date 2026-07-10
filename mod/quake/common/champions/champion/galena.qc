@@ -251,3 +251,13 @@ METHOD(Galena, m_playerspawn, void(Champions this, entity actor))
 	Inventory_add(WEP_SWORD, actor, ITEM_OWNED);
 }
 #endif
+
+#ifdef CSQC
+METHOD(Galena, m_drawface, bool(Champions this, vector pos, vector icon_size))
+{
+	string pic = "gfx/quake/galena_face";
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	return true;
+}
+#endif

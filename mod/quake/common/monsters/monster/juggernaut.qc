@@ -321,8 +321,8 @@ void juggernaut_rocket_touch(entity this, entity toucher)
 	float damg = (50 + (random() * 10));
 	if(toucher.health)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg = damg * 0.5;
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 	}
 	T_RadiusDamage(this, this.owner, 60, this.projectiledeathtype, toucher);

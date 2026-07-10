@@ -1,0 +1,181 @@
+#pragma once
+
+// =============
+//  FLAK CANNON
+// =============
+
+CLASS(DukeFlakCannon, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DukeFlakCannon, spawnflags, int, TUR_FLAG_SPLASH);
+/* mins       */ ATTRIB(DukeFlakCannon, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(DukeFlakCannon, m_maxs, vector, '24 24 40');
+/* modelname  */ ATTRIB(DukeFlakCannon, mdl, string, "progs/tur_duke_base.mdl");
+/* head_model */ ATTRIB(DukeFlakCannon, head_model, string, "progs/tur_flakcannon.iqm");
+#endif
+/* netname    */ ATTRIB(DukeFlakCannon, netname, string, "flakcannon");
+/* fullname   */ ATTRIB(DukeFlakCannon, m_name, string, _("Flak Cannon"));
+/* description*/ ATTRIB(DukeFlakCannon, m_description, string, "Fires a long range missile that explodes");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DukeFlakCannon, impulse, int, 0);
+/* cost       */ ATTRIB(DukeFlakCannon, tur_cost, float, 60);
+/* units      */ ATTRIB(DukeFlakCannon, tur_units, int, 5);
+
+/* property   */ ATTRIB(DukeFlakCannon, health, float, 180);
+
+/* property   */ ATTRIB(DukeFlakCannon, shot_dmg, float, 21);
+/* property   */ ATTRIB(DukeFlakCannon, shot_refire, float, 2);
+/* property   */ ATTRIB(DukeFlakCannon, shot_spread, float, 0.015);
+/* property   */ ATTRIB(DukeFlakCannon, shot_force, float, 20);
+/* property   */ ATTRIB(DukeFlakCannon, shot_radius, float, 30);
+/* property   */ ATTRIB(DukeFlakCannon, shot_speed, float, 1200);
+
+/* property   */ ATTRIB(DukeFlakCannon, shot_volly, float, 0);
+/* property   */ ATTRIB(DukeFlakCannon, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DukeFlakCannon, target_range, float, 700);
+/* property   */ ATTRIB(DukeFlakCannon, target_range_min, float, 1);
+/* property   */ ATTRIB(DukeFlakCannon, target_range_optimal, float, 600);
+
+/* property   */ ATTRIB(DukeFlakCannon, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DukeFlakCannon, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DukeFlakCannon, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DukeFlakCannon, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DukeFlakCannon, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DukeFlakCannon, aim_firetolerance_dist, float, 75);
+/* property   */ ATTRIB(DukeFlakCannon, aim_speed, float, 120);
+/* property   */ ATTRIB(DukeFlakCannon, aim_maxrot, float, 30);
+/* property   */ ATTRIB(DukeFlakCannon, aim_maxpitch, float, 30);
+
+/* property   */ ATTRIB(DukeFlakCannon, track_type, float, 3);
+/* property   */ ATTRIB(DukeFlakCannon, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DukeFlakCannon, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DukeFlakCannon, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DukeFlakCannon, m_champion, Champions, CHAMPION_Duke);
+#endif
+
+ENDCLASS(DukeFlakCannon)
+REGISTER_TURRET(FLAK_CANNON, NEW(DukeFlakCannon));
+
+// ==========
+//  TWIN GUN
+// ==========
+
+CLASS(DukeTwinGun, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DukeTwinGun, spawnflags, int, 0);
+/* mins       */ ATTRIB(DukeTwinGun, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(DukeTwinGun, m_maxs, vector, '24 24 36');
+/* modelname  */ ATTRIB(DukeTwinGun, mdl, string, "progs/tur_duke_base.mdl");
+/* head_model */ ATTRIB(DukeTwinGun, head_model, string, "progs/tur_twingun.iqm");
+#endif
+/* netname    */ ATTRIB(DukeTwinGun, netname, string, "twingun");
+/* fullname   */ ATTRIB(DukeTwinGun, m_name, string, _("Twin Gun"));
+/* description*/ ATTRIB(DukeTwinGun, m_description, string, "Rapidly shoots nearby enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DukeTwinGun, impulse, int, 1);
+/* cost       */ ATTRIB(DukeTwinGun, tur_cost, float, 60);
+/* units      */ ATTRIB(DukeTwinGun, tur_units, int, 4);
+
+/* property   */ ATTRIB(DukeTwinGun, health, float, 200);
+
+/* property   */ ATTRIB(DukeTwinGun, shot_dmg, float, 7);
+/* property   */ ATTRIB(DukeTwinGun, shot_refire, float, 0.33);
+/* property   */ ATTRIB(DukeTwinGun, shot_spread, float, 0.015);
+/* property   */ ATTRIB(DukeTwinGun, shot_force, float, 10);
+/* property   */ ATTRIB(DukeTwinGun, shot_radius, float, 0);
+/* property   */ ATTRIB(DukeTwinGun, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(DukeTwinGun, shot_volly, float, 2);
+/* property   */ ATTRIB(DukeTwinGun, shot_volly_refire, float, 0.12);
+
+/* property   */ ATTRIB(DukeTwinGun, target_range, float, 600);
+/* property   */ ATTRIB(DukeTwinGun, target_range_min, float, 1);
+/* property   */ ATTRIB(DukeTwinGun, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(DukeTwinGun, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DukeTwinGun, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DukeTwinGun, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DukeTwinGun, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DukeTwinGun, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DukeTwinGun, aim_firetolerance_dist, float, 35);
+/* property   */ ATTRIB(DukeTwinGun, aim_speed, float, 120);
+/* property   */ ATTRIB(DukeTwinGun, aim_maxrot, float, 55);
+/* property   */ ATTRIB(DukeTwinGun, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(DukeTwinGun, track_type, float, 3);
+/* property   */ ATTRIB(DukeTwinGun, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DukeTwinGun, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DukeTwinGun, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DukeTwinGun, m_champion, Champions, CHAMPION_Duke);
+#endif
+
+ENDCLASS(DukeTwinGun)
+REGISTER_TURRET(TWIN_GUN, NEW(DukeTwinGun));
+
+// =================
+//  ROCKET LAUNCHER
+// =================
+
+CLASS(DukeRocketLauncher, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DukeRocketLauncher, spawnflags, int, TUR_FLAG_SPLASH);
+/* mins       */ ATTRIB(DukeRocketLauncher, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(DukeRocketLauncher, m_maxs, vector, '24 24 40');
+/* modelname  */ ATTRIB(DukeRocketLauncher, mdl, string, "progs/tur_duke_base.mdl");
+/* head_model */ ATTRIB(DukeRocketLauncher, head_model, string, "progs/tur_rocketlauncher.iqm");
+#endif
+/* netname    */ ATTRIB(DukeRocketLauncher, netname, string, "rocketlauncher");
+/* fullname   */ ATTRIB(DukeRocketLauncher, m_name, string, _("Rocket Launcher"));
+/* description*/ ATTRIB(DukeRocketLauncher, m_description, string, "Launches a powerful rocket");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DukeRocketLauncher, impulse, int, 2);
+/* cost       */ ATTRIB(DukeRocketLauncher, tur_cost, float, 110);
+/* units      */ ATTRIB(DukeRocketLauncher, tur_units, int, 7);
+/* health     */ ATTRIB(DukeRocketLauncher, tur_health, float, 200);
+/* damage     */ ATTRIB(DukeRocketLauncher, tur_dmg, float, 12);
+/* dmg scale  */ ATTRIB(DukeRocketLauncher, tur_dmgscale, float, 0.15);
+/* range      */ ATTRIB(DukeRocketLauncher, target_range, float, 420);
+/* max rotate */ ATTRIB(DukeRocketLauncher, aim_maxrot, float, 40);
+/* max pitch  */ ATTRIB(DukeRocketLauncher, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(DukeRocketLauncher, health, float, 200);
+
+/* property   */ ATTRIB(DukeRocketLauncher, shot_dmg, float, 30);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_refire, float, 0.2);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_spread, float, 0.15);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_force, float, 40);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_radius, float, 50);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(DukeRocketLauncher, shot_volly, float, 8);
+/* property   */ ATTRIB(DukeRocketLauncher, shot_volly_refire, float, 4);
+
+/* property   */ ATTRIB(DukeRocketLauncher, target_range, float, 600);
+/* property   */ ATTRIB(DukeRocketLauncher, target_range_min, float, 1);
+/* property   */ ATTRIB(DukeRocketLauncher, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(DukeRocketLauncher, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DukeRocketLauncher, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DukeRocketLauncher, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DukeRocketLauncher, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DukeRocketLauncher, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DukeRocketLauncher, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(DukeRocketLauncher, aim_speed, float, 120);
+/* property   */ ATTRIB(DukeRocketLauncher, aim_maxrot, float, 55);
+/* property   */ ATTRIB(DukeRocketLauncher, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(DukeRocketLauncher, track_type, float, 3);
+/* property   */ ATTRIB(DukeRocketLauncher, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DukeRocketLauncher, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DukeRocketLauncher, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DukeRocketLauncher, m_champion, Champions, CHAMPION_Duke);
+#endif
+
+ENDCLASS(DukeRocketLauncher)
+REGISTER_TURRET(ROCKET_LAUNCHER, NEW(DukeRocketLauncher));

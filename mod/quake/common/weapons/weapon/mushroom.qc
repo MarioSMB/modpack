@@ -3,8 +3,6 @@
 #include "../../monsters/_mod.qh"
 
 #ifdef SVQC
-.entity mushroom_targ;
-
 PRECACHE(Mushroom)
 {
 	precache_model("progs/v_mushroom.mdl");
@@ -20,7 +18,7 @@ void mushroom_think(entity this)
 	setthink(this, mushroom_think);
 	this.nextthink = time + 0.1;
 
-	if(time > this.wait || this.realowner.mushroom_targ != this)
+	if(time > this.wait)
 	{
 		delete(this);
 		return;
@@ -141,6 +139,8 @@ void mushroom_projectile_think(entity this)
 
 void W_ThrowMushroom(entity this, .entity weaponentity)
 {
+	W_TakeMana(this, 50);
+
 	sound(this, CH_WEAPON_B, SND_MUSHROOM_THROW, 1, ATTN_NORM);
 
 	entity mushroom = spawn();
@@ -149,7 +149,7 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 	mushroom.dphitcontentsmask = DPCONTENTS_SOLID;
 	set_movetype(mushroom, MOVETYPE_TOSS);
 	mushroom.solid = SOLID_TRIGGER;
-	mushroom.healamount = 10;
+	mushroom.healamount = 5;
 	mushroom.healtype = 0;
 	mushroom.noise = "items/r_item1.wav";
 	mushroom.cnt = time + 1;
@@ -171,8 +171,6 @@ void W_ThrowMushroom(entity this, .entity weaponentity)
 	mushroom.pos2 = mushroom.angles;
 	makevectors(this.v_angle);
 	mushroom.velocity = v_forward * 400 + v_up * 64;
-
-	this.mushroom_targ = mushroom;
 }
 
 METHOD(Mushroom, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -180,12 +178,13 @@ METHOD(Mushroom, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 	if(fire & 1)
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
+	if(STAT(MANA, actor) >= 50)
 	{
 		if(IS_PLAYER(actor))
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
 		W_ThrowMushroom(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 1);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.7);
 	}
 }
 METHOD(Mushroom, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

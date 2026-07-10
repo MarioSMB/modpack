@@ -19,6 +19,8 @@ Ripped from DPMod
 ==================
 */
 vector findbetterlocation (vector org, float mindist);
+
+vector real_origin(entity ent);
 #endif
 
 string fixPriorityList(string pl, float from, float to, float subtract, float complete);
@@ -74,6 +76,10 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
+
+#ifdef GAMEQC
+vector animfixfps(entity e, vector a, vector b);
+#endif
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.5)
 

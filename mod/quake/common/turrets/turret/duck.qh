@@ -1,0 +1,59 @@
+#pragma once
+
+// =======
+//  DUCKY
+// =======
+
+CLASS(DuckDucky, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DuckDucky, spawnflags, int, 0);
+/* mins       */ ATTRIB(DuckDucky, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DuckDucky, m_maxs, vector, '16 16 48');
+/* modelname  */ ATTRIB(DuckDucky, mdl, string, "progs/tur_ducky_body.iqm");
+/* head_model */ ATTRIB(DuckDucky, head_model, string, "progs/tur_ducky.iqm");
+#endif
+/* netname    */ ATTRIB(DuckDucky, netname, string, "ducky");
+/* fullname   */ ATTRIB(DuckDucky, m_name, string, _("Ducky"));
+/* description*/ ATTRIB(DuckDucky, m_description, string, "Spits out that which all ducks seek");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DuckDucky, impulse, int, 0);
+/* cost       */ ATTRIB(DuckDucky, tur_cost, float, 60);
+/* units      */ ATTRIB(DuckDucky, tur_units, int, 4);
+
+/* property   */ ATTRIB(DuckDucky, health, float, 300);
+
+/* property   */ ATTRIB(DuckDucky, shot_dmg, float, 24);
+/* property   */ ATTRIB(DuckDucky, shot_refire, float, 1.5);
+/* property   */ ATTRIB(DuckDucky, shot_spread, float, 0.215);
+/* property   */ ATTRIB(DuckDucky, shot_force, float, 0);
+/* property   */ ATTRIB(DuckDucky, shot_radius, float, 0);
+/* property   */ ATTRIB(DuckDucky, shot_speed, float, 500);
+
+/* property   */ ATTRIB(DuckDucky, shot_volly, float, 0);
+/* property   */ ATTRIB(DuckDucky, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DuckDucky, target_range, float, 420);
+/* property   */ ATTRIB(DuckDucky, target_range_min, float, 5);
+/* property   */ ATTRIB(DuckDucky, target_range_optimal, float, 360);
+
+/* property   */ ATTRIB(DuckDucky, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DuckDucky, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DuckDucky, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DuckDucky, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DuckDucky, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DuckDucky, aim_firetolerance_dist, float, 50);
+/* property   */ ATTRIB(DuckDucky, aim_speed, float, 120);
+/* property   */ ATTRIB(DuckDucky, aim_maxrot, float, 40);
+/* property   */ ATTRIB(DuckDucky, aim_maxpitch, float, 40);
+
+/* property   */ ATTRIB(DuckDucky, track_type, float, 3);
+/* property   */ ATTRIB(DuckDucky, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DuckDucky, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DuckDucky, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DuckDucky, m_champion, Champions, CHAMPION_Duck);
+#endif
+
+ENDCLASS(DuckDucky)
+REGISTER_TURRET(DUCKY, NEW(DuckDucky));

@@ -194,6 +194,8 @@ void W_TakeMana(entity ent, float amount)
 		return; // non-players do not consume mana
 	if(StatusEffects_active(STATUSEFFECT_SharpShooter, ent))
 		return;
+	if(ent.m_champion == CHAMPION_Keyleth)
+		amount *= 0.8; // TODO: hook for this
 	if(ent.armortype == ARMOR_MAGE && ent.armorvalue > 0)
 		amount *= 0.5;
 	STAT(MANA, ent) -= amount;

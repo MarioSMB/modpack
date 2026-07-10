@@ -1,0 +1,260 @@
+#pragma once
+
+// ================
+//  SPIKE BLOCKADE
+// ================
+
+CLASS(SquireSpikeBlockade, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(SquireSpikeBlockade, spawnflags, int, 0);
+/* mins       */ ATTRIB(SquireSpikeBlockade, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(SquireSpikeBlockade, m_maxs, vector, '32 32 36');
+/* modelname  */ ATTRIB(SquireSpikeBlockade, mdl, string, "progs/tur_spikeblockade.mdl");
+/* head_model */ ATTRIB(SquireSpikeBlockade, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(SquireSpikeBlockade, netname, string, "spikeblockade");
+/* fullname   */ ATTRIB(SquireSpikeBlockade, m_name, string, _("Spike Blockade"));
+/* description*/ ATTRIB(SquireSpikeBlockade, m_description, string, "Damages and pushes back enemies in front of it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(SquireSpikeBlockade, impulse, int, 0);
+/* cost       */ ATTRIB(SquireSpikeBlockade, tur_cost, float, 30);
+/* units      */ ATTRIB(SquireSpikeBlockade, tur_units, int, 3);
+/* health     */ ATTRIB(SquireSpikeBlockade, health, float, 1000);
+/* damage     */ ATTRIB(SquireSpikeBlockade, shot_dmg, float, 3);
+/* champion   */ ATTRIB(SquireSpikeBlockade, m_champion, Champions, CHAMPION_Squire);
+#endif
+
+ENDCLASS(SquireSpikeBlockade)
+REGISTER_TURRET(SPIKE_BLOCKADE, NEW(SquireSpikeBlockade));
+
+// ================
+//  BOUNCER
+// ================
+
+CLASS(SquireBouncer, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(SquireBouncer, spawnflags, int, TUR_FLAG_CONSTANTRANGE);
+/* mins       */ ATTRIB(SquireBouncer, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(SquireBouncer, m_maxs, vector, '32 32 32');
+/* modelname  */ ATTRIB(SquireBouncer, mdl, string, "progs/tur_bouncer.mdl");
+/* head_model */ ATTRIB(SquireBouncer, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(SquireBouncer, netname, string, "bouncer");
+/* fullname   */ ATTRIB(SquireBouncer, m_name, string, _("Bouncer Blockade"));
+/* description*/ ATTRIB(SquireBouncer, m_description, string, "Periodically lashes out sending all nearby\nenemies flying in pain");
+#ifdef GAMEQC
+/* number     */ ATTRIB(SquireBouncer, impulse, int, 1);
+/* cost       */ ATTRIB(SquireBouncer, tur_cost, float, 40);
+/* units      */ ATTRIB(SquireBouncer, tur_units, int, 4);
+
+/* property   */ ATTRIB(SquireBouncer, health, float, 666);
+
+/* property   */ ATTRIB(SquireBouncer, shot_dmg, float, 15);
+/* property   */ ATTRIB(SquireBouncer, shot_refire, float, 1.5);
+/* property   */ ATTRIB(SquireBouncer, shot_spread, float, 0);
+/* property   */ ATTRIB(SquireBouncer, shot_force, float, 350);
+/* property   */ ATTRIB(SquireBouncer, shot_radius, float, 0);
+/* property   */ ATTRIB(SquireBouncer, shot_speed, float, 0);
+
+/* property   */ ATTRIB(SquireBouncer, shot_volly, float, 0);
+/* property   */ ATTRIB(SquireBouncer, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(SquireBouncer, target_range, float, 96);
+/* property   */ ATTRIB(SquireBouncer, target_range_min, float, 1);
+/* property   */ ATTRIB(SquireBouncer, target_range_optimal, float, 64);
+
+/* property   */ ATTRIB(SquireBouncer, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(SquireBouncer, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(SquireBouncer, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(SquireBouncer, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(SquireBouncer, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(SquireBouncer, aim_firetolerance_dist, float, 360);
+/* property   */ ATTRIB(SquireBouncer, aim_speed, float, 120);
+/* property   */ ATTRIB(SquireBouncer, aim_maxrot, float, 360);
+/* property   */ ATTRIB(SquireBouncer, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(SquireBouncer, track_type, float, 0);
+/* property   */ ATTRIB(SquireBouncer, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(SquireBouncer, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(SquireBouncer, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(SquireBouncer, m_champion, Champions, CHAMPION_Squire);
+#endif
+
+ENDCLASS(SquireBouncer)
+REGISTER_TURRET(BOUNCER, NEW(SquireBouncer));
+
+// =========
+//  HARPOON
+// =========
+
+CLASS(SquireHarpoon, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(SquireHarpoon, spawnflags, int, 0);
+/* mins       */ ATTRIB(SquireHarpoon, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(SquireHarpoon, m_maxs, vector, '24 24 36');
+/* modelname  */ ATTRIB(SquireHarpoon, mdl, string, "progs/tur_harpoon_base.mdl");
+/* head_model */ ATTRIB(SquireHarpoon, head_model, string, "progs/tur_harpoon.mdl");
+#endif
+/* netname    */ ATTRIB(SquireHarpoon, netname, string, "harpoon");
+/* fullname   */ ATTRIB(SquireHarpoon, m_name, string, _("Harpoon Turret"));
+/* description*/ ATTRIB(SquireHarpoon, m_description, string, "Fires piercing bolts");
+#ifdef GAMEQC
+/* number     */ ATTRIB(SquireHarpoon, impulse, int, 2);
+/* cost       */ ATTRIB(SquireHarpoon, tur_cost, float, 80);
+/* units      */ ATTRIB(SquireHarpoon, tur_units, int, 4);
+
+/* property   */ ATTRIB(SquireHarpoon, health, float, 250);
+
+/* property   */ ATTRIB(SquireHarpoon, shot_dmg, float, 8);
+/* property   */ ATTRIB(SquireHarpoon, shot_refire, float, 1.5);
+/* property   */ ATTRIB(SquireHarpoon, shot_spread, float, 0);
+/* property   */ ATTRIB(SquireHarpoon, shot_force, float, 35);
+/* property   */ ATTRIB(SquireHarpoon, shot_radius, float, 0);
+/* property   */ ATTRIB(SquireHarpoon, shot_speed, float, 800);
+
+/* property   */ ATTRIB(SquireHarpoon, shot_volly, float, 0);
+/* property   */ ATTRIB(SquireHarpoon, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(SquireHarpoon, target_range, float, 800);
+/* property   */ ATTRIB(SquireHarpoon, target_range_min, float, 1);
+/* property   */ ATTRIB(SquireHarpoon, target_range_optimal, float, 600);
+
+/* property   */ ATTRIB(SquireHarpoon, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(SquireHarpoon, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(SquireHarpoon, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(SquireHarpoon, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(SquireHarpoon, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(SquireHarpoon, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(SquireHarpoon, aim_speed, float, 120);
+/* property   */ ATTRIB(SquireHarpoon, aim_maxrot, float, 45);
+/* property   */ ATTRIB(SquireHarpoon, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(SquireHarpoon, track_type, float, 3);
+/* property   */ ATTRIB(SquireHarpoon, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(SquireHarpoon, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(SquireHarpoon, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(SquireHarpoon, m_champion, Champions, CHAMPION_Squire);
+#endif
+
+ENDCLASS(SquireHarpoon)
+REGISTER_TURRET(HARPOON, NEW(SquireHarpoon));
+
+// ==============
+//  SLICE N DICE
+// ==============
+
+CLASS(SquireSliceNDice, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(SquireSliceNDice, spawnflags, int, TUR_FLAG_CONSTANTRANGE);
+/* mins       */ ATTRIB(SquireSliceNDice, m_mins, vector, '-20 -20 0');
+/* maxs       */ ATTRIB(SquireSliceNDice, m_maxs, vector, '20 20 50');
+/* modelname  */ ATTRIB(SquireSliceNDice, mdl, string, "progs/tur_slicendice_base.mdl");
+/* head_model */ ATTRIB(SquireSliceNDice, head_model, string, "progs/tur_slicendice_blades.mdl");
+#endif
+/* netname    */ ATTRIB(SquireSliceNDice, netname, string, "slicendice");
+/* fullname   */ ATTRIB(SquireSliceNDice, m_name, string, _("Slice N Dice Blockade"));
+/* description*/ ATTRIB(SquireSliceNDice, m_description, string, "Spins up when enemies are nearby\nrapidly slicing everything around it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(SquireSliceNDice, impulse, int, 3);
+/* cost       */ ATTRIB(SquireSliceNDice, tur_cost, float, 140);
+/* units      */ ATTRIB(SquireSliceNDice, tur_units, int, 8);
+
+/* property   */ ATTRIB(SquireSliceNDice, health, float, 600);
+
+/* property   */ ATTRIB(SquireSliceNDice, shot_dmg, float, 6);
+/* property   */ ATTRIB(SquireSliceNDice, shot_refire, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, shot_spread, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, shot_force, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, shot_radius, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, shot_speed, float, 0);
+
+/* property   */ ATTRIB(SquireSliceNDice, shot_volly, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(SquireSliceNDice, target_range, float, 170);
+/* property   */ ATTRIB(SquireSliceNDice, target_range_min, float, 1);
+/* property   */ ATTRIB(SquireSliceNDice, target_range_optimal, float, 120);
+
+/* property   */ ATTRIB(SquireSliceNDice, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(SquireSliceNDice, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(SquireSliceNDice, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(SquireSliceNDice, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(SquireSliceNDice, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(SquireSliceNDice, aim_firetolerance_dist, float, 360);
+/* property   */ ATTRIB(SquireSliceNDice, aim_speed, float, 120);
+/* property   */ ATTRIB(SquireSliceNDice, aim_maxrot, float, 360);
+/* property   */ ATTRIB(SquireSliceNDice, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(SquireSliceNDice, track_type, float, 0);
+/* property   */ ATTRIB(SquireSliceNDice, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(SquireSliceNDice, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(SquireSliceNDice, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(SquireSliceNDice, m_champion, Champions, CHAMPION_Squire);
+#endif
+
+ENDCLASS(SquireSliceNDice)
+REGISTER_TURRET(SLICENDICE, NEW(SquireSliceNDice));
+
+// ==============
+//  BOWLING BALL
+// ==============
+
+CLASS(SquireBowlingBall, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(SquireBowlingBall, spawnflags, int, 0);
+/* mins       */ ATTRIB(SquireBowlingBall, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(SquireBowlingBall, m_maxs, vector, '16 16 48');
+/* modelname  */ ATTRIB(SquireBowlingBall, mdl, string, "progs/tur_bowlingball.mdl");
+/* head_model */ ATTRIB(SquireBowlingBall, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(SquireBowlingBall, netname, string, "bowlingball");
+/* fullname   */ ATTRIB(SquireBowlingBall, m_name, string, _("Bowling Ball Turret"));
+/* description*/ ATTRIB(SquireBowlingBall, m_description, string, "Spits out stone balls that\nbounce around and hurt enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(SquireBowlingBall, impulse, int, 4);
+/* cost       */ ATTRIB(SquireBowlingBall, tur_cost, float, 110);
+/* units      */ ATTRIB(SquireBowlingBall, tur_units, int, 7);
+
+/* property   */ ATTRIB(SquireBowlingBall, health, float, 400);
+
+/* property   */ ATTRIB(SquireBowlingBall, shot_dmg, float, 9);
+/* property   */ ATTRIB(SquireBowlingBall, shot_refire, float, 2);
+/* property   */ ATTRIB(SquireBowlingBall, shot_spread, float, 0.215);
+/* property   */ ATTRIB(SquireBowlingBall, shot_force, float, 20);
+/* property   */ ATTRIB(SquireBowlingBall, shot_radius, float, 0);
+/* property   */ ATTRIB(SquireBowlingBall, shot_speed, float, 200);
+
+/* property   */ ATTRIB(SquireBowlingBall, shot_volly, float, 0);
+/* property   */ ATTRIB(SquireBowlingBall, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(SquireBowlingBall, target_range, float, 900);
+/* property   */ ATTRIB(SquireBowlingBall, target_range_min, float, 1);
+/* property   */ ATTRIB(SquireBowlingBall, target_range_optimal, float, 800);
+
+/* property   */ ATTRIB(SquireBowlingBall, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(SquireBowlingBall, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(SquireBowlingBall, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(SquireBowlingBall, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(SquireBowlingBall, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(SquireBowlingBall, aim_firetolerance_dist, float, 45);
+/* property   */ ATTRIB(SquireBowlingBall, aim_speed, float, 120);
+/* property   */ ATTRIB(SquireBowlingBall, aim_maxrot, float, 15);
+/* property   */ ATTRIB(SquireBowlingBall, aim_maxpitch, float, 15);
+
+/* property   */ ATTRIB(SquireBowlingBall, track_type, float, 3);
+/* property   */ ATTRIB(SquireBowlingBall, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(SquireBowlingBall, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(SquireBowlingBall, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(SquireBowlingBall, m_champion, Champions, CHAMPION_Squire);
+#endif
+
+ENDCLASS(SquireBowlingBall)
+REGISTER_TURRET(BOWLING_BALL, NEW(SquireBowlingBall));

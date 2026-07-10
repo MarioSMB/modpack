@@ -112,6 +112,8 @@ void cannon_touch(entity this, entity toucher)
 		//return;
 	if(STAT(SLIDE_ON, toucher) || STAT(SKATING, toucher) || toucher.tank)
 		return;
+	if(toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher))
+		return;
 
 	sound(this, CH_TRIGGER_SINGLE, SND_CANNON_ENTER, 1, ATTN_NORM);
 	cannon_enter(toucher, this);

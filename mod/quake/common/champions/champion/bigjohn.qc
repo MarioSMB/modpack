@@ -19,6 +19,20 @@ METHOD(BigJohn, m_takedamage, float(Champions this, entity targ, entity inflicto
 	return 1;
 }
 
+METHOD(BigJohn, m_dealdamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
+{
+	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
+	if(attacker.m_champion == this)
+	{
+		if(death_weapon.ammo_type == IT_ROCKETS || death_weapon.ammo_type == IT_MULTI_ROCKETS)
+			return 1.5;
+		else
+			return 1;
+	}
+	else
+		return 1;
+}
+
 METHOD(BigJohn, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, ((random() < 0.5) ? "bigjabl1.wav" : "bigjabl2.wav"), ATTN_NORM);

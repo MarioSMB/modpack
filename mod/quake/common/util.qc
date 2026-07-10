@@ -78,6 +78,23 @@ vector findbetterlocation (vector org, float mindist)
 
 	return org;
 }
+
+/*
+* Get "real" origin, in worldspace, even if ent is attached to something else.
+*/
+vector real_origin(entity ent)
+{
+	vector v = ((ent.absmin + ent.absmax) * 0.5);
+	entity e = ent.tag_entity;
+
+	while(e)
+	{
+		v += (e.absmin + e.absmax) * 0.5;
+		e = e.tag_entity;
+	}
+
+	return v;
+}
 #endif
 
 USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
@@ -741,6 +758,25 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
 }
+
+#ifdef GAMEQC
+vector animfixfps(entity e, vector a, vector b)
+{
+	// multi-frame anim: keep as-is
+	if(a.y == 1)
+	{
+		float dur = frameduration(e.modelindex, a.x);
+		if (dur <= 0 && b.y)
+		{
+			a = b;
+			dur = frameduration(e.modelindex, a.x);
+		}
+		if (dur > 0)
+			a.z = 1.0 / dur;
+	}
+	return a;
+}
+#endif
 
 #ifdef GAMEQC
 float trace_hits_box_a0, trace_hits_box_a1;

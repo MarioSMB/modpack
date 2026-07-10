@@ -28,6 +28,7 @@ Sound SND_Ranger_Death_Random() {
 CLASS(Ranger, Champions)
     ATTRIB(Ranger, netname, string, "ranger");
     ATTRIB(Ranger, m_name, string, "Ranger");
+    ATTRIB(Ranger, m_color, vector, '0.6 0.2 0');
 #ifdef GAMEQC
     ATTRIB(Ranger, m_model, Model, MDL_Ranger);
     ATTRIB(Ranger, m_model_head, Model, MDL_Ranger_Head);

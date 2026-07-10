@@ -51,8 +51,8 @@ METHOD(V1, m_killed, void(Champions this, entity targ, entity inflictor, entity 
 {
 	if(attacker.m_champion == this && IS_MONSTER(targ))
 	{
-		float healamount = bound(20, ((targ.max_health > 0) ? targ.max_health * 0.5 : 50), 100);
-		T_Heal(attacker, healamount, false);
+		float toheal = bound(20, ((targ.max_health > 0) ? targ.max_health * 0.5 : 50), 100);
+		T_Heal(attacker, toheal, false);
 	}
 }
 

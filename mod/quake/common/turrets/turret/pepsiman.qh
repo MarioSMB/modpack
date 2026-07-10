@@ -1,0 +1,59 @@
+#pragma once
+
+// =================
+//  VENDING MACHINE
+// =================
+
+CLASS(PepsimanVendingMachine, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(PepsimanVendingMachine, spawnflags, int, 0);
+/* mins       */ ATTRIB(PepsimanVendingMachine, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(PepsimanVendingMachine, m_maxs, vector, '24 24 96');
+/* modelname  */ ATTRIB(PepsimanVendingMachine, mdl, string, "progs/tur_vendingmachine.mdl");
+/* head_model */ ATTRIB(PepsimanVendingMachine, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(PepsimanVendingMachine, netname, string, "vendingmachine");
+/* fullname   */ ATTRIB(PepsimanVendingMachine, m_name, string, _("Vending Machine"));
+/* description*/ ATTRIB(PepsimanVendingMachine, m_description, string, "Dispenses soda cans that roll through enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(PepsimanVendingMachine, impulse, int, 0);
+/* cost       */ ATTRIB(PepsimanVendingMachine, tur_cost, float, 80);
+/* units      */ ATTRIB(PepsimanVendingMachine, tur_units, int, 4);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, health, float, 850);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_dmg, float, 10);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_refire, float, 1);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_spread, float, 0.015);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_force, float, 25);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_radius, float, 24);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_speed, float, 500);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_volly, float, 0);
+/* property   */ ATTRIB(PepsimanVendingMachine, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, target_range, float, 400);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_range_min, float, 1);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_range_optimal, float, 250);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(PepsimanVendingMachine, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, aim_firetolerance_dist, float, 45);
+/* property   */ ATTRIB(PepsimanVendingMachine, aim_speed, float, 120);
+/* property   */ ATTRIB(PepsimanVendingMachine, aim_maxrot, float, 35);
+/* property   */ ATTRIB(PepsimanVendingMachine, aim_maxpitch, float, 35);
+
+/* property   */ ATTRIB(PepsimanVendingMachine, track_type, float, 3);
+/* property   */ ATTRIB(PepsimanVendingMachine, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(PepsimanVendingMachine, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(PepsimanVendingMachine, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(PepsimanVendingMachine, m_champion, Champions, CHAMPION_Pepsiman);
+#endif
+
+ENDCLASS(PepsimanVendingMachine)
+REGISTER_TURRET(VENDING_MACHINE, NEW(PepsimanVendingMachine));

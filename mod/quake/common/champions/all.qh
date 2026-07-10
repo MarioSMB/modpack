@@ -46,6 +46,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, m_id, int, 0);
     ATTRIB(Champions, netname, string);
     ATTRIB(Champions, m_name, string);
+    ATTRIB(Champions, m_color, vector);
     ATTRIB(Champions, qcc_movespeed, float, 1);
     ATTRIB(Champions, qcc_swimspeed, float, 1);
     ATTRIB(Champions, qcc_pogo, bool, false);
@@ -143,6 +144,7 @@ CLASS(Champions, Object)
     METHOD(Champions, m_overlay, void(Champions this)) { };
     METHOD(Champions, m_drawface, bool(Champions this, vector pos, vector icon_size)) { return false; };
     METHOD(Champions, m_drawplayer, void(Champions this, entity actor)) { };
+    METHOD(Champions, m_drawworld, void(Champions this)) { };
 #endif
 ENDCLASS(Champions)
 

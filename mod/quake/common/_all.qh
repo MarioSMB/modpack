@@ -59,6 +59,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "shop.qh"
 #include "viewloc.qh"
 #include "ent_cs.qh"
+#include "anim.qh"
 
 #include "physics/_mod.qh"
 #include "challenges.qh"
@@ -83,6 +84,7 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 #include "slide/_mod.qh"
 #include "tank/_mod.qh"
 #include "dodgeball/_mod.qh"
+#include "turrets/_mod.qh"
 #include "td/_mod.qh"
 #include "jumpsdonewell/_mod.qh"
 

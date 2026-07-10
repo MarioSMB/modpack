@@ -11,6 +11,7 @@
 #include "sui_sys.qc"
 #include "viewloc.qc"
 #include "ent_cs.qc"
+#include "anim.qc"
 #include "dadjokes.qc"
 
 #include "deathtypes/all.qc"
@@ -29,6 +30,7 @@
 #include "slide/_mod.inc"
 #include "tank/_mod.inc"
 #include "dodgeball/_mod.inc"
+#include "turrets/_mod.inc"
 #include "td/_mod.inc"
 //#include "jumpsdonewell/_mod.inc"
 

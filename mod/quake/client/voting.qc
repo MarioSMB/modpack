@@ -40,7 +40,7 @@ void vote_menu_list(string id, vector pos, vector size)
 		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
 		//if(selected_vote_index == index)
 			//sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.2, 0);
-		sui_drawtext('0 0 0', '8 8 0', argv(index), '1 1 1', 1, 0);
+		sui_drawtext('0 0 0', '16 16 0', argv(index), '1 1 1', 1, 0);
 		sui_pop_frame();
 	}
 	sui_list_view_end();	
@@ -53,10 +53,15 @@ void cl_vote_draw()
 	if(!(cursor_active & GUI_OPEN_CHAMPIONS))
 		return;
 
+	float oldfont = drawfont;
+	drawfont = 8 + 2;
+
 	vector menu_pos = '50 50 0';
 	
 	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
-	sui_drawtext(vec2(menu_pos.x * 2, menu_pos.y * -0.5), '12 12 0', "Call a vote", '0.34 0.72 1', 1, 0);
+	sui_drawtext(vec2(menu_pos.x * 2, menu_pos.y * -0.5), '18 18 0', "Call a vote", '0.34 0.72 1', 1, 0);
+
+	drawfont = 8 + 1;
 	
 	vector ent_menu_size = '230 200 0';
 	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
@@ -68,6 +73,8 @@ void cl_vote_draw()
 	vote_menu_scroll = sui_offset;
 	
 	sui_pop_frame();
+
+	drawfont = oldfont;
 }
 
 void vote_menu_reset()

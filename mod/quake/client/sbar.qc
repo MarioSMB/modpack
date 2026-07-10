@@ -100,6 +100,10 @@ PRECACHE(Sbar)
 	precache_pic("gfx/quake/magic1");
 	precache_pic("gfx/quake/magic2");
 
+	precache_pic("gfx/quake/staff0");
+	precache_pic("gfx/quake/staff1");
+	precache_pic("gfx/quake/staff2");
+
 	precache_pic("gfx/quake/bullit");
 }
 
@@ -1768,6 +1772,19 @@ void Sbar_Draw()
 				Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
 				sbar = oldsbar;
 			}
+			else if(STAT(TRANSFORM_LIMITED))
+			{
+				float charge = STAT(TRANSFORM_LIMITED) - time;
+				vector col = '0.69 0.75 0.10';
+
+				// TODO: obtain the duration as well?
+				if(charge)
+					charge /= 15;
+
+				// NOTE: not using aspect here - we want it to stretch with the mana bar!
+				drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+			}
 			else if(gametype == GAMETYPE_TD && STAT(TD_BUILDMODE))
 			{
 				int ammo = STAT(TD_FUEL);
@@ -1795,9 +1812,28 @@ void Sbar_Draw()
 				if(mana)
 					mana /= mlimit;
 
+				// TODO
+				float manabar_size = 4; // this many icons length
+				if(thiswep.activeweapon == WEP_STAFF)
+				{
+					string pic = "";
+					switch(STAT(STAFF_TYPE))
+					{
+						default:
+						case 0: pic = "staff0"; break;
+						case 1: pic = "staff1"; break;
+						case 2: pic = "staff2"; break;
+					}
+					drawpic_aspect(ammo_pos, "gfx/quake/backtile", icon_size, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+					drawpic_aspect(ammo_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+					manabar_size -= 1;
+					ammo_pos.x += icon_size.x;
+				}
+
 				// NOTE: not using aspect here - we want it to stretch with the mana bar!
-				drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-				HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+				drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * manabar_size * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * manabar_size * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, col, 0.6, DRAWFLAG_NORMAL);
 			}
 			else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)
 			{

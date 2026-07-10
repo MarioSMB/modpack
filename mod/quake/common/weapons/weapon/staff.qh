@@ -1,0 +1,27 @@
+#pragma once
+
+#ifdef GAMEQC
+MODEL(SUNBEAM_MUZZLEFLASH, "models/flash.md3");
+#endif
+
+CLASS(Staff, Weapon)
+/* ammotype  */ ATTRIB(Staff, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Staff, impulse, int, 2);
+/* spawnflags*/ ATTRIB(Staff, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_MANA | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(Staff, aflag, int, 0);
+/* modelname */ ATTRIB(Staff, mdl, string, "staff");
+/* crosshair */ ATTRIB(Staff, w_crosshair, string, "gfx/crosshairdot");
+/* crosshair */ ATTRIB(Staff, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(Staff, w_crosshair_color, vector, '0.25 1 0.25');
+/* wepimg    */ ATTRIB(Staff, model2, string, "staff");
+/* refname   */ ATTRIB(Staff, netname, string, "staff");
+/* wepname   */ ATTRIB(Staff, m_name, string, _("Spire of Conflux"));
+
+ENDCLASS(Staff)
+REGISTER_WEAPON(STAFF, NEW(Staff));
+
+//SPAWNFUNC_WEAPON(weapon_staff, WEP_STAFF)
+
+#ifdef SVQC
+.entity sunbeam;
+#endif

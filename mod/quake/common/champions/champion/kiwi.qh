@@ -3,10 +3,13 @@
 #include "../all.qh"
 
 #ifdef GAMEQC
-MODEL(KiwiChamp, "progs/kiwi.mdl");
+MODEL(KiwiChamp, "progs/player_kiwi.mdl");
 
 PRECACHE(KiwiChamp)
 {
+#ifdef CSQC
+    precache_pic("gfx/quake/kiwi_face");
+#endif
 #ifdef SVQC
     //precache_sound("player/plyrjmp8.wav");       // player jump
     precache_sound("player/land.wav");           // player landing
@@ -32,6 +35,7 @@ CLASS(KiwiChamp, Champions)
     ATTRIB(KiwiChamp, m_name, string, "Kiwi");
     ATTRIB(KiwiChamp, m_hidden, bool, true);
     ATTRIB(KiwiChamp, qcc_noselect, bool, true);
+    ATTRIB(KiwiChamp, qcc_pogo, bool, true);
     ATTRIB(KiwiChamp, qcc_movespeed, float, 0.8);
     ATTRIB(KiwiChamp, qcc_health_regen_rate, float, 2);
     ATTRIB(KiwiChamp, qcc_health_rot_max, float, 3);

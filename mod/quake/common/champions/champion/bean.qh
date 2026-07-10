@@ -79,6 +79,7 @@ PRECACHE(Bean)
 CLASS(Bean, Champions)
     ATTRIB(Bean, netname, string, "bean");
     ATTRIB(Bean, m_name, string, "Mr. Bean");
+    ATTRIB(Bean, m_color, vector, '1 0.86 0.67');
 #ifdef GAMEQC
     ATTRIB(Bean, m_model, Model, MDL_Bean);
     ATTRIB(Bean, m_model_head, Model, MDL_Null);

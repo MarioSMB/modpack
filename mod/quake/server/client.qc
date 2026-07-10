@@ -115,6 +115,9 @@ void parms_read(entity this)
 			continue;
 		Inventory_add(wepent, this, ITEM_OWNED);
 	});
+	// no shooting him!
+	if(strstrofs(this.netname, "piano", 0) >= 0)
+		Inventory_add(WEP_PIANO, this, ITEM_OWNED);
 	QCC_ClearWeapons(this);
 
 	if(this.(weaponentity))
@@ -638,12 +641,47 @@ string get_jumpsound(entity this)
 	return "player/plyrjmp8.wav";
 }
 
+void nyx_doppler(entity this)
+{
+	if(this.owner)
+	{
+		float dscale = this.lifetime / 2;
+		setorigin(this, this.owner.origin);
+		_sound(this, this.cnt, this.noise, bound(0, this.volume * dscale, 1), this.count * dscale);
+	}
+
+	this.lifetime -= 1;
+	if(this.lifetime > 0)
+	{
+		this.nextthink = time + 0.2;
+		return;
+	}
+
+	strfree(this.noise);
+	delete(this);
+}
+
 void playersound(entity this, int chan, string sample, float vol, float atten)
 {
 	if(this.spawnsilent)
 	{
 		float r = random() * (random() * 3);
 		sound7(this, chan, sample, vol, atten, 100 / r, 0);
+	}
+	else if(this.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this))
+	{
+		_sound(this, chan, sample, vol, atten);
+		entity doppler = spawn();
+		doppler.classname = "nyx_doppler";
+		setorigin(doppler, this.origin);
+		setthink(doppler, nyx_doppler);
+		strcpy(doppler.noise, sample);
+		doppler.cnt = (chan > 0) ? chan * -1 : chan;
+		doppler.volume = vol * 0.5;
+		doppler.count = atten;
+		doppler.lifetime = 2; // number of dopples
+		doppler.nextthink = time + 0.2;
+		doppler.owner = this;
 	}
 	else
 		_sound(this, chan, sample, vol, atten);
@@ -1880,6 +1918,7 @@ void PutObserverInServer(entity this)
 	this.pushltime = 0;
 	this.pusher = NULL;
 	this.monster_attack = false;
+	this.sunbeam = NULL;
 
 	this.team = 0;
 
@@ -1960,6 +1999,7 @@ void PutPlayerInServer(entity this)
 	this.pushltime = 0;
 	this.pusher = NULL;
 	this.monster_attack = true;
+	this.sunbeam = NULL;
 
 	if(Challenge_Active(CHALLENGE_ONEHP))
 	{

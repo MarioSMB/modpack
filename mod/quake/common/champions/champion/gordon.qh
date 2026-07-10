@@ -46,12 +46,13 @@ PRECACHE(Gordon)
 #ifdef CSQC
 #define GORDON_STATS \
 "Has Crowbar as a weapon\n" \
-"- increased damage to armored enemies\n" \
+"Double damage to armored enemies\n" \
 "Also has a Gravity Gun"
 #endif
 CLASS(Gordon, Champions)
     ATTRIB(Gordon, netname, string, "gordon");
     ATTRIB(Gordon, m_name, string, "Gordon Freeman");
+    ATTRIB(Gordon, m_color, vector, '0.98 0.49 0.08');
 #ifdef GAMEQC
     ATTRIB(Gordon, m_model, Model, MDL_Gordon);
     ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);

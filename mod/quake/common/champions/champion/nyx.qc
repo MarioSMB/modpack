@@ -4,33 +4,102 @@
 METHOD(Nyx, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, "invis2.wav", ATTN_NORM);
+
+	STAT(NYX_INVIS, actor) = false;
 }
 
-void Nyx_Invis(entity this)
+void Nyx_Invis_Exit(entity this)
 {
-	StatusEffects_apply(STATUSEFFECT_Invisibility, this, time + 5, 0);
+	if(this.solid == SOLID_TRIGGER)
+		this.solid = SOLID_SLIDEBOX;
 
-	_sound(this, CH_WEAPON_SINGLE, "player_nyx/invisenter.wav", 1, ATTN_NORM);
-	string s;
-	float r = random();
-	if(r < 0.333)
-		s = "invis1.wav";
-	else if(r < 0.666)
-		s = "invis3.wav";
-	else
-		s = "invis4.wav";
-	player_sound(this, CH_VOICE, s, ATTN_NORM);
+	this.effects &= ~EF_ADDITIVE;
+	this.effects &= ~EF_AFTEREFFECT;
+
+	te_teleport(this.origin);
+
+	if(autocvar_sv_quake_nyx_telefrag)
+		spawn_tdeath_fast(this.origin, this);
+
+	_sound(this, CH_PLAYER_SINGLE, "player_nyx/invisexit.wav", 1, ATTN_NORM);
+
+	STAT(NYX_INVIS, this) = false;
+	//this.skin = 0;
+}
+
+void Nyx_Invis_Enter(entity this)
+{
+	_sound(this, CH_PLAYER_SINGLE, "player_nyx/invisenter.wav", 1, ATTN_NORM);
+
+	STAT(NYX_INVIS, this) = true;
+	//this.skin = 1;
+
+	te_teleport(this.origin);
+
+	this.effects |= EF_ADDITIVE;
+	this.effects |= EF_AFTEREFFECT;
+
+	this.solid = SOLID_TRIGGER;
+
+	if(random() < 0.5)
+	{
+		string s;
+		float r = random();
+		if(r < 0.333)
+			s = "invis1.wav";
+		else if(r < 0.666)
+			s = "invis3.wav";
+		else
+			s = "invis4.wav";
+		player_sound(this, CH_VOICE, s, ATTN_NORM);
+	}
 }
 
 METHOD(Nyx, m_playerthink, void(Champions this, entity actor))
 {
-	if(StatusEffects_active(STATUSEFFECT_Invisibility, actor))
-		return;
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		Nyx_Invis(actor);
-		STAT(QCC_ABILITYTIME, actor) = time + 10;
+		if(STAT(NYX_INVIS, actor))
+			Nyx_Invis_Exit(actor);
+		else
+			Nyx_Invis_Enter(actor);
+		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	}
+}
+
+METHOD(Nyx, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))
+{
+	// no regular weapon use in the shadow realm!
+	return STAT(NYX_INVIS, actor);
+}
+
+METHOD(Nyx, m_clear, void(Champions this, entity actor))
+{
+	// TODO: relink? shouldn't matter!
+	if(actor.solid == SOLID_TRIGGER)
+		actor.solid = SOLID_SLIDEBOX;
+
+	actor.effects &= ~EF_ADDITIVE;
+
+	STAT(NYX_INVIS, actor) = false;
+}
+
+METHOD(Nyx, m_footsteps, bool(Champions this, entity actor))
+{
+	if(!STAT(NYX_INVIS, actor))
+		return false;
+	float r = random();
+	if(r < 0.2)
+		_sound(actor, CH_VOICE, "player/walk1.wav", 1, ATTN_NORM);
+	else if(r < 0.4)
+		_sound(actor, CH_VOICE, "player/walk2.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(actor, CH_VOICE, "player/walk3.wav", 1, ATTN_NORM);
+	else if(r < 0.8)
+		_sound(actor, CH_VOICE, "player/walk4.wav", 1, ATTN_NORM);
+	else
+		_sound(actor, CH_VOICE, "player/walk5.wav", 1, ATTN_NORM);
+	return true;
 }
 #endif
 
@@ -58,7 +127,7 @@ METHOD(Nyx, m_doublejump, bool(Champions this, entity actor))
 {
 	if(actor.waterlevel > 0)
 		return false;
-	if(time - STAT(QCC_LASTWJ, actor) > 0.95) // can't do this on client, as it's too stupid to obey counters
+	if(time - STAT(QCC_LASTWJ, actor) > 0.5) // can't do this on client, as it's too stupid to obey counters
 	if(!IS_ONGROUND(actor))
 	if(actor.move_movetype != MOVETYPE_NONE && actor.move_movetype != MOVETYPE_FOLLOW && actor.move_movetype != MOVETYPE_FLY && actor.move_movetype != MOVETYPE_NOCLIP)
 	if(!IS_JUMP_HELD(actor))
@@ -88,3 +157,24 @@ METHOD(Nyx, m_doublejump, bool(Champions this, entity actor))
 	}
 	return false;
 }
+
+#ifdef CSQC
+METHOD(Nyx, m_drawface, bool(Champions this, vector pos, vector icon_size))
+{
+	string pic = "gfx/quake/nyx_face";
+	if(STAT(NYX_INVIS) && STAT(HEALTH) > 0 && !intermission)
+		pic = "gfx/quake/nyx_face_ghost";
+
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	return true;
+}
+
+METHOD(Nyx, m_drawworld, void(Champions this))
+{
+	if(intermission || STAT(HEALTH) <= 0 || !STAT(NYX_INVIS))
+		return;
+
+	saturation_override = 0;
+}
+#endif

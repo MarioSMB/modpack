@@ -7,6 +7,10 @@ void buildtool_frame(entity this);
 #endif
 
 #ifdef CSQC
+void Draw_Circle(vector shotorg, float crange);
+
+void Draw_Cone_withline(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot, vector sw_color, float a, bool showline);
+
 void Draw_Cone(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot);
 
 void buildtool_draw2d(entity this);

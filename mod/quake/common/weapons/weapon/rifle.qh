@@ -3,7 +3,7 @@
 CLASS(Rifle, Weapon)
 /* ammotype  */ ATTRIB(Rifle, ammo_type, int, IT_NAILS);
 /* impulse   */ ATTRIB(Rifle, impulse, int, 5);
-/* spawnflags*/ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_NODUAL);
+/* spawnflags*/ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(Rifle, aflag, int, 30);
 /* modelname */ ATTRIB(Rifle, mdl, string, "rifle");
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");

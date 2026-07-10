@@ -1,0 +1,275 @@
+#pragma once
+
+// ============
+//  WORLD TREE
+// ============
+
+CLASS(DryadWorldTree, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DryadWorldTree, spawnflags, int, TUR_FLAG_SUPPORT);
+/* mins       */ ATTRIB(DryadWorldTree, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DryadWorldTree, m_maxs, vector, '16 16 32');
+/* modelname  */ ATTRIB(DryadWorldTree, mdl, string, "progs/tur_worldtree.mdl");
+/* head_model */ ATTRIB(DryadWorldTree, head_model, string, "");
+#endif
+/* netname    */ ATTRIB(DryadWorldTree, netname, string, "worldtree");
+/* fullname   */ ATTRIB(DryadWorldTree, m_name, string, _("World Tree"));
+/* description*/ ATTRIB(DryadWorldTree, m_description, string, "Slowly heals nearby defenses and players");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DryadWorldTree, impulse, int, 0);
+/* cost       */ ATTRIB(DryadWorldTree, tur_cost, float, 20);
+/* units      */ ATTRIB(DryadWorldTree, tur_units, int, 3);
+/* health     */ ATTRIB(DryadWorldTree, health, float, 420);
+/* damage     */ ATTRIB(DryadWorldTree, shot_dmg, float, 2);
+/* range      */ ATTRIB(DryadWorldTree, target_range, float, 256);
+/* champion   */ ATTRIB(DryadWorldTree, m_champion, Champions, CHAMPION_Dryad);
+#endif
+
+ENDCLASS(DryadWorldTree)
+REGISTER_TURRET(WORLD_TREE, NEW(DryadWorldTree));
+
+// ==============
+//  HORNETS NEST
+// ==============
+
+CLASS(DryadHornetsNest, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DryadHornetsNest, spawnflags, int, 0);
+/* mins       */ ATTRIB(DryadHornetsNest, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(DryadHornetsNest, m_maxs, vector, '24 24 64');
+/* modelname  */ ATTRIB(DryadHornetsNest, mdl, string, "progs/tur_hornetsnest_base.mdl");
+/* head_model */ ATTRIB(DryadHornetsNest, head_model, string, "progs/tur_hornetsnest.iqm");
+#endif
+/* netname    */ ATTRIB(DryadHornetsNest, netname, string, "hornetsnest");
+/* fullname   */ ATTRIB(DryadHornetsNest, m_name, string, _("Moss Hornet's Nest"));
+/* description*/ ATTRIB(DryadHornetsNest, m_description, string, "Releases a Moss Hornet that poisons enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DryadHornetsNest, impulse, int, 1);
+/* cost       */ ATTRIB(DryadHornetsNest, tur_cost, float, 30);
+/* units      */ ATTRIB(DryadHornetsNest, tur_units, int, 3);
+
+/* property   */ ATTRIB(DryadHornetsNest, health, float, 300);
+
+/* property   */ ATTRIB(DryadHornetsNest, shot_dmg, float, 5);
+/* property   */ ATTRIB(DryadHornetsNest, shot_refire, float, 1.2);
+/* property   */ ATTRIB(DryadHornetsNest, shot_spread, float, 0);
+/* property   */ ATTRIB(DryadHornetsNest, shot_force, float, 0);
+/* property   */ ATTRIB(DryadHornetsNest, shot_radius, float, 0);
+/* property   */ ATTRIB(DryadHornetsNest, shot_speed, float, 400);
+
+/* property   */ ATTRIB(DryadHornetsNest, shot_volly, float, 0);
+/* property   */ ATTRIB(DryadHornetsNest, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DryadHornetsNest, target_range, float, 320);
+/* property   */ ATTRIB(DryadHornetsNest, target_range_min, float, 1);
+/* property   */ ATTRIB(DryadHornetsNest, target_range_optimal, float, 250);
+
+/* property   */ ATTRIB(DryadHornetsNest, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DryadHornetsNest, target_select_samebias, float, 0.01);
+/* property   */ ATTRIB(DryadHornetsNest, target_select_anglebias, float, 0);
+/* property   */ ATTRIB(DryadHornetsNest, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DryadHornetsNest, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DryadHornetsNest, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(DryadHornetsNest, aim_speed, float, 120);
+/* property   */ ATTRIB(DryadHornetsNest, aim_maxrot, float, 360);
+/* property   */ ATTRIB(DryadHornetsNest, aim_maxpitch, float, 30);
+
+/* property   */ ATTRIB(DryadHornetsNest, track_type, float, 3);
+/* property   */ ATTRIB(DryadHornetsNest, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DryadHornetsNest, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DryadHornetsNest, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DryadHornetsNest, m_champion, Champions, CHAMPION_Dryad);
+#endif
+
+ENDCLASS(DryadHornetsNest)
+REGISTER_TURRET(HORNETS_NEST, NEW(DryadHornetsNest));
+
+// =============
+//  HARPY PERCH
+// =============
+
+CLASS(DryadHarpyPerch, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DryadHarpyPerch, spawnflags, int, 0);
+/* mins       */ ATTRIB(DryadHarpyPerch, m_mins, vector, '-24 -24 0');
+/* maxs       */ ATTRIB(DryadHarpyPerch, m_maxs, vector, '24 24 64');
+/* modelname  */ ATTRIB(DryadHarpyPerch, mdl, string, "progs/tur_harpyperch.mdl");
+/* head_model */ ATTRIB(DryadHarpyPerch, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(DryadHarpyPerch, netname, string, "harpyperch");
+/* fullname   */ ATTRIB(DryadHarpyPerch, m_name, string, _("Harpy's Perch"));
+/* description*/ ATTRIB(DryadHarpyPerch, m_description, string, "Rapidly launches feathers");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DryadHarpyPerch, impulse, int, 2);
+/* cost       */ ATTRIB(DryadHarpyPerch, tur_cost, float, 40);
+/* units      */ ATTRIB(DryadHarpyPerch, tur_units, int, 4);
+
+/* property   */ ATTRIB(DryadHarpyPerch, health, float, 250);
+
+/* property   */ ATTRIB(DryadHarpyPerch, shot_dmg, float, 9);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_refire, float, 0.33);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_spread, float, 0.35);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_force, float, 0);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_radius, float, 0);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_speed, float, 1000);
+
+/* property   */ ATTRIB(DryadHarpyPerch, shot_volly, float, 0);
+/* property   */ ATTRIB(DryadHarpyPerch, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DryadHarpyPerch, target_range, float, 600);
+/* property   */ ATTRIB(DryadHarpyPerch, target_range_min, float, 5);
+/* property   */ ATTRIB(DryadHarpyPerch, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(DryadHarpyPerch, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DryadHarpyPerch, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DryadHarpyPerch, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DryadHarpyPerch, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DryadHarpyPerch, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DryadHarpyPerch, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(DryadHarpyPerch, aim_speed, float, 120);
+/* property   */ ATTRIB(DryadHarpyPerch, aim_maxrot, float, 55);
+/* property   */ ATTRIB(DryadHarpyPerch, aim_maxpitch, float, 55);
+
+/* property   */ ATTRIB(DryadHarpyPerch, track_type, float, 3);
+/* property   */ ATTRIB(DryadHarpyPerch, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DryadHarpyPerch, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DryadHarpyPerch, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DryadHarpyPerch, m_champion, Champions, CHAMPION_Dryad);
+#endif
+
+ENDCLASS(DryadHarpyPerch)
+REGISTER_TURRET(HARPY_PERCH, NEW(DryadHarpyPerch));
+
+// ===========
+//  SLIME PIT
+// ===========
+
+CLASS(DryadSlimePit, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DryadSlimePit, spawnflags, int, TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(DryadSlimePit, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(DryadSlimePit, m_maxs, vector, '16 16 12');
+/* modelname  */ ATTRIB(DryadSlimePit, mdl, string, "progs/tur_slimepit.mdl");
+/* head_model */ ATTRIB(DryadSlimePit, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(DryadSlimePit, netname, string, "slimepit");
+/* fullname   */ ATTRIB(DryadSlimePit, m_name, string, _("Slime Pit"));
+/* description*/ ATTRIB(DryadSlimePit, m_description, string, "Lobs Slimes that slow enemies briefly");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DryadSlimePit, impulse, int, 3);
+/* cost       */ ATTRIB(DryadSlimePit, tur_cost, float, 40);
+/* units      */ ATTRIB(DryadSlimePit, tur_units, int, 4);
+
+/* property   */ ATTRIB(DryadSlimePit, health, float, 300);
+
+/* property   */ ATTRIB(DryadSlimePit, shot_dmg, float, 9);
+/* property   */ ATTRIB(DryadSlimePit, shot_refire, float, 3);
+/* property   */ ATTRIB(DryadSlimePit, shot_spread, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, shot_force, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, shot_radius, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, shot_speed, float, 100);
+
+/* property   */ ATTRIB(DryadSlimePit, shot_volly, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DryadSlimePit, target_range, float, 420);
+/* property   */ ATTRIB(DryadSlimePit, target_range_min, float, 1);
+/* property   */ ATTRIB(DryadSlimePit, target_range_optimal, float, 350);
+
+/* property   */ ATTRIB(DryadSlimePit, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DryadSlimePit, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(DryadSlimePit, target_select_anglebias, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DryadSlimePit, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DryadSlimePit, aim_firetolerance_dist, float, 75);
+/* property   */ ATTRIB(DryadSlimePit, aim_speed, float, 200);
+/* property   */ ATTRIB(DryadSlimePit, aim_maxrot, float, 360);
+/* property   */ ATTRIB(DryadSlimePit, aim_maxpitch, float, 20);
+
+/* property   */ ATTRIB(DryadSlimePit, track_type, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, track_accel_pitch, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, track_accel_rot, float, 0);
+/* property   */ ATTRIB(DryadSlimePit, track_blendrate, float, 0);
+
+/* champion   */ ATTRIB(DryadSlimePit, m_champion, Champions, CHAMPION_Dryad);
+#endif
+
+ENDCLASS(DryadSlimePit)
+REGISTER_TURRET(SLIME_PIT, NEW(DryadSlimePit));
+
+// ==============
+//  ANGRY NIMBUS
+// ==============
+
+CLASS(DryadAngryNimbus, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(DryadAngryNimbus, spawnflags, int, 0);
+/* mins       */ ATTRIB(DryadAngryNimbus, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(DryadAngryNimbus, m_maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(DryadAngryNimbus, mdl, string, "progs/tur_angrynimbus.iqm");
+/* head_model */ ATTRIB(DryadAngryNimbus, head_model, string, "progs/nimbus.mdl");
+#endif
+/* netname    */ ATTRIB(DryadAngryNimbus, netname, string, "angrynimbus");
+/* fullname   */ ATTRIB(DryadAngryNimbus, m_name, string, _("Angry Nimbus"));
+/* description*/ ATTRIB(DryadAngryNimbus, m_description, string, "Sends out an Angry Nimbus that\nchases targets and rains pain on all below it");
+#ifdef GAMEQC
+/* number     */ ATTRIB(DryadAngryNimbus, impulse, int, 4);
+/* cost       */ ATTRIB(DryadAngryNimbus, tur_cost, float, 60);
+/* units      */ ATTRIB(DryadAngryNimbus, tur_units, int, 6);
+
+/* property   */ ATTRIB(DryadAngryNimbus, health, float, 320);
+
+/* property   */ ATTRIB(DryadAngryNimbus, shot_dmg, float, 4);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_refire, float, 2);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_spread, float, 0);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_force, float, 0);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_radius, float, 0);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_speed, float, 200);
+
+/* property   */ ATTRIB(DryadAngryNimbus, shot_volly, float, 0);
+/* property   */ ATTRIB(DryadAngryNimbus, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(DryadAngryNimbus, target_range, float, 500);
+/* property   */ ATTRIB(DryadAngryNimbus, target_range_min, float, 5);
+/* property   */ ATTRIB(DryadAngryNimbus, target_range_optimal, float, 300);
+
+/* property   */ ATTRIB(DryadAngryNimbus, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(DryadAngryNimbus, target_select_samebias, float, 0.01);
+/* property   */ ATTRIB(DryadAngryNimbus, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(DryadAngryNimbus, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(DryadAngryNimbus, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(DryadAngryNimbus, aim_firetolerance_dist, float, 50);
+/* property   */ ATTRIB(DryadAngryNimbus, aim_speed, float, 120);
+/* property   */ ATTRIB(DryadAngryNimbus, aim_maxrot, float, 75);
+/* property   */ ATTRIB(DryadAngryNimbus, aim_maxpitch, float, 75);
+
+/* property   */ ATTRIB(DryadAngryNimbus, track_type, float, 3);
+/* property   */ ATTRIB(DryadAngryNimbus, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(DryadAngryNimbus, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(DryadAngryNimbus, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(DryadAngryNimbus, m_champion, Champions, CHAMPION_Dryad);
+#endif
+
+ENDCLASS(DryadAngryNimbus)
+REGISTER_TURRET(ANGRY_NIMBUS, NEW(DryadAngryNimbus));
+
+const int NANIM_IDLE = 0;
+const int NANIM_SHOOT = 1;
+const int NANIM_SPAWN = 2;
+const int NANIM_WIN = 3;
+const int NANIM_LOSE = 4;
+
+#ifdef CSQC
+.vector anim_idle;
+.vector anim_shoot;
+.float anim_finished;
+
+.int clientframe;
+#endif

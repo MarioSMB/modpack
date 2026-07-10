@@ -238,7 +238,6 @@
     MSG_CENTER_NOTIF(DEATH_SELF_BURNING,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You burned to death!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CHECKPOINT,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Hit the checkpoints first")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_CRUSH,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were crushed!")), "")
-    MSG_CENTER_NOTIF(DEATH_SELF_CHEAT,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You unfairly eliminated yourself!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_DROWN,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You couldn't catch your breath!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_DISCHARGE,              N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You submerged your electrical weapon!")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_EXPLODE,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You exploded!")), "")

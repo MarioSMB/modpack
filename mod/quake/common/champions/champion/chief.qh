@@ -42,13 +42,15 @@ PRECACHE(Chief)
 #endif
 #ifdef CSQC
 #define CHIEF_STATS \
-"Press %ABILITY% for X-RAY vision\n" \
+"Has a short range X-RAY\n" \
 "Picked up armor grants force field\n" \
+"50% boost to energy weapons\n" \
 "25% faster weapon fire rate"
 #endif
 CLASS(Chief, Champions)
     ATTRIB(Chief, netname, string, "chief");
     ATTRIB(Chief, m_name, string, "Chief");
+    ATTRIB(Chief, m_color, vector, '0.21 0.24 0.26');
     ATTRIB(Chief, qcc_meleename, string, "mcsword");
     ATTRIB(Chief, qcc_attackrate, float, 0.75);
 #ifdef GAMEQC

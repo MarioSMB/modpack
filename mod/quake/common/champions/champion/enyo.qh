@@ -102,6 +102,7 @@ PRECACHE(Enyo)
 CLASS(Enyo, Champions)
 	ATTRIB(Enyo, netname, string, "enyo");
 	ATTRIB(Enyo, m_name, string, "Enyo");
+	ATTRIB(Enyo, m_color, vector, '1 0.99 0.82');
 	ATTRIB(Enyo, m_viewofs, vector, '0 0 30');
 	ATTRIB(Enyo, qcc_meleename, string, "enyosword");
 #ifdef GAMEQC

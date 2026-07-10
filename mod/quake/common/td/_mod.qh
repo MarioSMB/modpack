@@ -1,14 +1,9 @@
 // generated file; do not modify
 #include "buildtool.qh"
 #include "td.qh"
-#include "turrets.qh"
 #ifdef CSQC
     #include "cl_td.qh"
-    #include "cl_turrets.qh"
 #endif
 #ifdef SVQC
     #include "sv_td.qh"
-    #include "sv_turrets.qh"
 #endif
-
-#include "turret/_mod.qh"

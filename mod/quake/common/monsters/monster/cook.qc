@@ -63,6 +63,7 @@ void Cook_FindTarget(entity this)
 	if(!client || client == this.cook_target)
 		return;
 
+	//bool nyx_invis = (client.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, client));
 	if((client.flags & FL_NOTARGET) || StatusEffects_active(STATUSEFFECT_Invisibility, client))
 		return;
 	int r = range(this, client);
@@ -85,6 +86,7 @@ void cook_nowalk(entity this)
 void cook_think(entity this)
 {
 	//FindTarget(this);
+	//bool nyx_invis = (this.cook_target.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this.cook_target));
 	if(this.cook_target.health <= 0 || (this.charmed && (this.charmer == this.cook_target)) || (this.cook_target.flags & FL_NOTARGET))
 		this.cook_target = NULL;
 	if(this.cook_target)

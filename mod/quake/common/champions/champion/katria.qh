@@ -76,6 +76,7 @@ PRECACHE(Katria)
 CLASS(Katria, Champions)
     ATTRIB(Katria, netname, string, "katria");
     ATTRIB(Katria, m_name, string, "Katria");
+    ATTRIB(Katria, m_color, vector, '0.6 0.2 0');
 #ifdef GAMEQC
     ATTRIB(Katria, m_model, Model, MDL_Katria);
     ATTRIB(Katria, m_model_head, Model, MDL_Katria_Head);

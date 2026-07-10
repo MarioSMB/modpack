@@ -379,6 +379,8 @@ void champion_menu_close();
 float selected_champion_index;
 int champion_hovered_index = -1;
 
+entity champion_model;
+
 Champions champdata[REGISTRY_MAX(Champion)];
 
 vector champion_menu_scroll;
@@ -393,6 +395,89 @@ string Champion_Name(int index)
 {
 	Champions champ = champdata[index];
 	return champ.netname;
+}
+
+vector Champion_Color(int index)
+{
+	Champions champ = champdata[index];
+	return (champ.m_color != '0 0 0') ? champ.m_color : '1 1 1';
+}
+
+void champion_model_draw(entity this)
+{
+	int dmask = MASK_NORMAL;
+	if(intermission || STAT(HEALTH) <= 0 || !QCC_Allowed(csqcplayer))
+		dmask = 0;
+	this.drawmask = dmask;
+
+	if(!dmask)
+		return;
+
+	Champions champ;
+	if(champion_hovered_index != -1)
+		champ = champdata[champion_hovered_index];
+	else
+		champ = (csqcplayer) ? csqcplayer.m_champion : Champion_FromString(autocvar_cl_quake_model);
+	if(champ != this.m_champion)
+	{
+		this.m_champion = champ;
+		setmodel(this, champ.m_model);
+		setsize(this, '0 0 0', '0 0 0');
+	}
+
+	int fx = EF_FULLBRIGHT | EF_NODEPTHTEST;
+	this.csqcmodel_effects = fx;
+	CSQCModel_Effects_Apply(this);
+
+	// do this without MF_ROTATE to avoid overlapping
+	this.angles += this.avelocity * frametime;
+
+#if 1
+	vector ent_menu_size = '200 200 0';
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
+	sui_push_frame('-128 64 0', ent_menu_size);
+	vector pos = sui_transform_box('0 64 0', ent_menu_size);
+	sui_pop_frame();
+
+	vector near = cs_unproject(vec3(pos.x, pos.y, 0));
+	vector far = cs_unproject(vec3(pos.x, pos.y, 1));
+
+	vector dir = normalize(far - near);
+
+	float depth = 128;
+	vector mpos = near + (dir * depth);
+#else
+	vector mpos = view_origin + view_forward * 128 + view_right * 64 + view_up * -16;
+#endif
+
+	setorigin(this, mpos);
+	//this.angles = view_angles;
+}
+
+void champion_model_create()
+{
+	if(champion_model)
+		return; // ???
+
+	entity ent = spawn();
+	ent.classname = "champion_model";
+	ent.drawmask = MASK_NORMAL;
+	ent.draw = champion_model_draw;
+	ent.alpha = 1;
+	ent.colormap = 255;
+	ent.colormap |= BIT(10); // RENDER_COLORMAPPED
+	IL_PUSH(g_drawables, ent);
+	set_movetype(ent, MOVETYPE_NONE);
+	ent.avelocity = '0 100 0';
+
+	champion_model = ent;
+}
+
+void champion_model_clear()
+{
+	if(champion_model)
+		delete(champion_model);
+	champion_model = NULL;
 }
 
 void champion_menu_select()
@@ -422,7 +507,7 @@ void champion_info_list(string id, vector pos, vector size)
 			//sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.2, 0);
 		string text = argv(index);
 		text = strreplace("%ABILITY%", getcommandkey("(Crouch)", "+crouch"), text);
-		sui_drawtext('0 0 0', '8 8 0', text, '1 1 1', 1, 0);
+		sui_drawtext('0 0 0', '16 16 0', text, '1 1 1', 1, 0);
 		sui_pop_frame();
 	}
 	sui_list_view_end();	
@@ -433,17 +518,17 @@ void champion_menu_info(int index)
 	Champions champ = champdata[index];
 	if(!champ.message || champ.message == "")
 		return;
-
-	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_drawtext('300 -120 0', '10 10 0', "Champion Stats", '1 1 1', 1, 0);
-	
-	sui_fill('300 0 0', '4 4 0', '0 0 0', 0.5, 0);
-	sui_fill('300 0 0', '2 2 0', '1 1 1', 0.75, 0);
 	
 	vector ent_menu_size = '300 200 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('300 10 0', ent_menu_size);
+
+	drawfont = 8 + 2;
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
+	sui_drawtext('0 -32 0', '18 18 0', "Champion Stats", '1 1 1', 1, 0);
+	drawfont = 8 + 1;
 	
+	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_START));
 	sui_fill('0 0 0', ent_menu_size, '0 0 0', 0.5, 0);
 	sui_offset = champion_info_scroll;
 	champion_info_list("champion_info_list", '0 0 0', ent_menu_size - '2 2 0');
@@ -454,16 +539,23 @@ void champion_menu_info(int index)
 
 void champion_menu_list(string id, vector pos, vector size)
 {
+	// we don't need to build this dynamically...
 	for(int j = 0; j < REGISTRY_MAX(Champion); ++j)
 	{
 		champdata[j] = NULL;
 	}
 	int champcount = 0;
+	int current_champ = -1;
 	FOREACH(Champion, !it.m_hidden,
 	{
 		champdata[champcount] = it;
+		if(it.netname == autocvar_cl_quake_model)
+			current_champ = champcount;
 		champcount += 1;
 	});
+
+	if(champion_hovered_index == -1)
+		champion_hovered_index = current_champ;
 
 	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
 	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), champcount, '0 6 0');
@@ -488,7 +580,7 @@ void champion_menu_list(string id, vector pos, vector size)
 		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
 		//if(selected_champion_index == index)
 			//sui_fill('0 0 0', vec2(size.x - 6, 16), '1 1 1', 0.2, 0);
-		sui_drawtext('0 0 0', '8 8 0', Champion_PrettyName(index), '1 1 1', 1, 0);
+		sui_drawtext('0 0 0', '16 16 0', Champion_PrettyName(index), Champion_Color(index), 1, 0);
 		sui_pop_frame();
 	}
 	sui_list_view_end();	
@@ -500,17 +592,18 @@ void cl_champion_draw()
 		return;
 	if(intermission || STAT(HEALTH) <= 0 || !QCC_Allowed(csqcplayer))
 		return;
-	
-	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_drawtext('0 -220 0', '16 16 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
-	
-	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_fill('0 0 0', '4 4 0', '0 0 0', 0.5, 0);
-	sui_fill('0 0 0', '2 2 0', '1 1 1', 0.75, 0);
-	
-	vector ent_menu_size = '230 420 0'; // NOTE: update y value by at least 10 when adding new champions!
+
+	float oldfont = drawfont;
+
+	vector ent_menu_size = '200 300 0';
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
+
+	drawfont = 8 + 2;
+	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
+	sui_drawtext('0 -32 0', '20 20 0', "CHOOSE A CHAMPION", '0.3 1 0.3', 1, 0);
+	drawfont = 8 + 1;
+	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_START));
 	
 	sui_fill('0 0 0', ent_menu_size, '0 0 0', 0.5, 0);
 	sui_offset = champion_menu_scroll;
@@ -521,6 +614,8 @@ void cl_champion_draw()
 
 	if(champion_hovered_index != -1)
 		champion_menu_info(champion_hovered_index);
+
+	drawfont = oldfont;
 }
 
 void champion_menu_open()
@@ -529,6 +624,8 @@ void champion_menu_open()
 	champion_hovered_index = -1;
 	cursor_active |= GUI_OPEN_CHAMPIONS;
 	setcursormode(cursor_active);
+
+	champion_model_create();
 
 	vote_menu_reset();
 }
@@ -539,6 +636,8 @@ void champion_menu_close()
 	champion_hovered_index = -1;
 	cursor_active &= ~GUI_OPEN_CHAMPIONS;
 	setcursormode(cursor_active);
+
+	champion_model_clear();
 
 	vote_menu_reset();
 }
@@ -695,5 +794,11 @@ void HUD_Champions()
 	{
 		DrawChampionNotice();
 	}
+}
+
+void champions_DrawWorld()
+{
+	if(csqcplayer && csqcplayer.m_champion && csqcplayer.m_champion.m_drawworld)
+		csqcplayer.m_champion.m_drawworld(csqcplayer.m_champion);
 }
 #endif

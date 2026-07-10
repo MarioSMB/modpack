@@ -111,7 +111,7 @@ void spiralrocket_touch(entity this, entity toucher)
 
 	_sound(this, CH_SHOTS, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
-	if(toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT)
+	if(Resist_Explosions(toucher))
 		BecomeMiniBlast(this, 2); // weak, no TE_effects
 	else
 		BecomeMiniBlast(this, 0); // normal, no TE_effects

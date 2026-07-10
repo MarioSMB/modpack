@@ -1,0 +1,225 @@
+#pragma once
+
+CLASS(Turret, Object)
+	ATTRIB(Turret, m_id, int, 0);
+
+	/** icon */
+	ATTRIB(Turret, m_icon, string);
+	/** short name */
+	ATTRIB(Turret, netname, string);
+	/** human readable name */
+	ATTRIB(Turret, m_name, string, _("Turret"));
+	/** brief description of the turret's capabilities, may contain new lines */
+	ATTRIB(Turret, m_description, string);
+	/** color */
+	ATTRIB(Turret, m_color, vector, '1 1 1');
+#ifdef GAMEQC
+	/** currently a copy of the model */
+	ATTRIB(Turret, mdl, string);
+	/** full name of tur_head model */
+	ATTRIB(Turret, head_model, string);
+#endif
+
+#ifdef GAMEQC
+	ATTRIB(Turret, spawnflags, int, 0);
+	/** turret hitbox size */
+	ATTRIB(Turret, m_mins, vector, '-0 -0 -0');
+	/** turret hitbox size */
+	ATTRIB(Turret, m_maxs, vector, '0 0 0');
+
+	/** associated champion */
+	ATTRIB(Turret, m_champion, Champions);
+	/** turret's number for cycling */
+	ATTRIB(Turret, impulse, int, 0);
+	/** turret's fuel cost */
+	ATTRIB(Turret, tur_cost, float, 0);
+	/** number of defence units the turret uses */
+	ATTRIB(Turret, tur_units, int, 0);
+#if 0
+	/** base health of the turret */
+	ATTRIB(Turret, tur_health, float, 0);
+	/** base damage of the turret */
+	ATTRIB(Turret, tur_dmg, float, 0);
+	/** scale of damage per level */
+	ATTRIB(Turret, tur_dmgscale, float, 0);
+	/** maximum aiming rotation */
+	ATTRIB(Turret, aim_maxrot, float, 90);
+	/** maximum aiming pitch */
+	ATTRIB(Turret, aim_maxpitch, float, 20);
+	/** max range of the turret */
+	ATTRIB(Turret, target_range, float, 0);
+#endif
+
+	/** turret properties */
+	/** documentation pending */
+	ATTRIB(Turret, aim_firetolerance_dist, float, 0);
+	ATTRIB(Turret, aim_maxpitch, float, 0);
+	ATTRIB(Turret, aim_maxrot, float, 0);
+	ATTRIB(Turret, aim_speed, float, 0);
+	//ATTRIB(Turret, ammo_max, float, 0);
+	//ATTRIB(Turret, ammo_recharge, float, 0);
+	ATTRIB(Turret, health, float, 0);
+	ATTRIB(Turret, shot_dmg, float, 0);
+	ATTRIB(Turret, shot_force, float, 0);
+	ATTRIB(Turret, shot_radius, float, 0);
+	ATTRIB(Turret, shot_refire, float, 0);
+	ATTRIB(Turret, shot_speed, float, 0);
+	ATTRIB(Turret, shot_spread, float, 0);
+	ATTRIB(Turret, shot_volly, float, 0);
+	ATTRIB(Turret, shot_volly_refire, float, 0);
+	ATTRIB(Turret, target_range, float, 0);
+	ATTRIB(Turret, target_range_min, float, 0);
+	ATTRIB(Turret, target_range_optimal, float, 0);
+	ATTRIB(Turret, target_select_anglebias, float, 0);
+	ATTRIB(Turret, target_select_missilebias, float, 0);
+	ATTRIB(Turret, target_select_playerbias, float, 0);
+	ATTRIB(Turret, target_select_rangebias, float, 0);
+	ATTRIB(Turret, target_select_samebias, float, 0);
+	ATTRIB(Turret, track_accel_pitch, float, 0);
+	ATTRIB(Turret, track_accel_rot, float, 0);
+	ATTRIB(Turret, track_blendrate, float, 0);
+	ATTRIB(Turret, track_type, float, 0);
+#endif
+
+#ifdef GAMEQC
+	/** (BOTH) setup turret data */
+	METHOD(Turret, tr_setup, void(Turret this, entity actor)) { }
+	/** (BOTH) logic to run every frame */
+	METHOD(Turret, tr_think, void(Turret this, entity actor)) { }
+#endif
+#ifdef SVQC
+	/** (SERVER) called when turret dies */
+	METHOD(Turret, tr_death, void(Turret this, entity actor)) { }
+#endif
+#ifdef CSQC
+	/** (CLIENT) draw function called when the turret is selected */
+	METHOD(Turret, tr_drawselected, void(Turret this, entity actor)) { }
+
+	/** (CLIENT) pulls info about the turret, increase pos.y before each entry */
+	METHOD(Turret, tr_getinfo, vector(Turret this, entity actor, vector pos)) { return pos; }
+#endif
+#ifdef GAMEQC
+	/** (BOTH) precaches models/sounds used by this turret */
+	METHOD(Turret, tr_precache, void(Turret this)) { }
+#endif
+#ifdef SVQC
+	ATTRIB(Turret, m_weapon, Weapon);
+	/** (SERVER) called when turret attacks */
+	METHOD(Turret, tr_attack, void(Turret this, entity it)) { }
+	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
+	METHOD(Turret, tr_config, void(Turret this)) { }
+#endif
+ENDCLASS(Turret)
+
+// fields:
+.entity tur_head;
+
+// target selection flags
+.int target_select_flags;
+.int target_validate_flags;
+const int TFL_TARGETSELECT_NO             = BIT(1);  ///< don't automatically find targets
+const int TFL_TARGETSELECT_LOS            = BIT(2);  ///< require line of sight to find targets
+const int TFL_TARGETSELECT_PLAYERS        = BIT(3);  ///< target players
+const int TFL_TARGETSELECT_MISSILES       = BIT(4);  ///< target projectiles
+const int TFL_TARGETSELECT_TRIGGERTARGET  = BIT(5);  ///< respond to turret_trigger_target events
+const int TFL_TARGETSELECT_ANGLELIMITS    = BIT(6);  ///< apply extra angular limits to target selection
+const int TFL_TARGETSELECT_RANGELIMITS    = BIT(7);  ///< limit target selection range
+const int TFL_TARGETSELECT_TEAMCHECK      = BIT(8);  ///< don't attack teammates
+const int TFL_TARGETSELECT_NOBUILTIN      = BIT(9);  ///< only attack targets when triggered
+const int TFL_TARGETSELECT_OWNTEAM        = BIT(10); ///< only attack teammates
+const int TFL_TARGETSELECT_NOTURRETS      = BIT(11); ///< don't attack other turrets
+const int TFL_TARGETSELECT_FOV            = BIT(12); ///< extra limits to attack range
+const int TFL_TARGETSELECT_MISSILESONLY   = BIT(13); ///< only attack missiles
+const int TFL_TARGETSELECT_MONSTERS       = BIT(14); ///< target monsters
+
+// aim flags
+.int aim_flags;
+const int TFL_AIM_NO                  = BIT(0); ///< no aiming
+const int TFL_AIM_SPLASH              = BIT(1); ///< aim for ground around the target's feet
+const int TFL_AIM_LEAD                = BIT(2); ///< try to predict target movement
+const int TFL_AIM_SHOTTIMECOMPENSATE  = BIT(3); ///< compensate for shot traveltime when leading
+const int TFL_AIM_ZPREDICT            = BIT(4); ///< predict target's z position at impact
+const int TFL_AIM_SIMPLE              = BIT(5); ///< aim at player's current location
+
+// tracking flags
+.int track_flags;
+const int TFL_TRACK_NO      = BIT(1); ///< don't move head
+const int TFL_TRACK_PITCH   = BIT(2); ///< pitch head
+const int TFL_TRACK_ROTATE  = BIT(3); ///< rotate head
+
+// prefire checks
+.int firecheck_flags;
+const int TFL_FIRECHECK_DEAD        = BIT(2);  ///< don't attack dead targets (zombies?)
+const int TFL_FIRECHECK_DISTANCES   = BIT(3);  ///< another range check
+const int TFL_FIRECHECK_LOS         = BIT(4);  ///< line of sight
+const int TFL_FIRECHECK_AIMDIST     = BIT(5);  ///< consider distance impactpoint<->aimspot
+const int TFL_FIRECHECK_REALDIST    = BIT(6);  ///< consider enemy origin<->impactpoint
+const int TFL_FIRECHECK_ANGLEDIST   = BIT(7);  ///< consider angular diff head<->aimspot
+const int TFL_FIRECHECK_TEAMCHECK   = BIT(8);  ///< don't attack teammates
+const int TFL_FIRECHECK_AFF         = BIT(9);  ///< try to avoid any friendly fire
+const int TFL_FIRECHECK_AMMO_OWN    = BIT(10); ///< own ammo needs to be larger than damage dealt
+const int TFL_FIRECHECK_AMMO_OTHER  = BIT(11); ///< target's ammo needs to be less than max
+const int TFL_FIRECHECK_REFIRE      = BIT(12); ///< check single attack finished delays
+const int TFL_FIRECHECK_NO          = BIT(14); ///< no prefire checks
+
+// attack flags
+.int shoot_flags;
+const int TFL_SHOOT_NO           = BIT(6); ///< no attacking
+const int TFL_SHOOT_VOLLY        = BIT(1); ///< fire in vollies
+const int TFL_SHOOT_VOLLYALWAYS  = BIT(2); ///< always do a full volly, even if target is lost
+const int TFL_SHOOT_HITALLVALID  = BIT(3); ///< loop through all valid targets
+const int TFL_SHOOT_CLEARTARGET  = BIT(4); ///< lose target after attack (after volly is done if in volly mode)
+const int TFL_SHOOT_CUSTOM       = BIT(5); ///< custom attacking
+
+// turret capabilities
+.int turret_flags;
+const int TUR_FLAG_NONE            = 0;       ///< no abilities
+const int TUR_FLAG_SNIPER          = BIT(1);  ///< sniping turret
+const int TUR_FLAG_SPLASH          = BIT(2);  ///< can deal splash damage
+const int TUR_FLAG_HITSCAN         = BIT(3);  ///< hit scan
+const int TUR_FLAG_MULTIGUN        = BIT(4);  ///< multiple guns
+const int TUR_FLAG_GUIDED          = BIT(5);  ///< laser guided projectiles
+const int TUR_FLAG_SLOWPROJ        = BIT(6);  ///< turret fires slow projectiles
+const int TUR_FLAG_MEDPROJ         = BIT(7);  ///< turret fires medium projectiles
+const int TUR_FLAG_FASTPROJ        = BIT(8);  ///< turret fires fast projectiles
+const int TUR_FLAG_PLAYER          = BIT(9);  ///< can damage players
+const int TUR_FLAG_MISSILE         = BIT(10); ///< can damage missiles
+const int TUR_FLAG_SUPPORT         = BIT(11); ///< supports other units
+const int TUR_FLAG_AMMOSOURCE      = BIT(12); ///< can provide ammunition
+const int TUR_FLAG_RECIEVETARGETS  = BIT(13); ///< can recieve targets from external sources
+const int TUR_FLAG_MOVE            = BIT(14); ///< can move
+const int TUR_FLAG_ROAM            = BIT(15); ///< roams around if not attacking
+const int TUR_FLAG_ISTURRET        = BIT(16); ///< identifies this unit as a turret
+const int TUR_FLAG_NONSOLID        = BIT(17); ///< Quake exclusive: may overlap with others
+const int TUR_FLAG_FLOATING        = BIT(18); ///< Quake exclusive: does not drop down
+const int TUR_FLAG_CONSTANTRANGE   = BIT(19); ///< Quake exclusive: target range does not level up // TODO
+
+// damage flags
+.int damage_flags;
+const int TFL_DMG_NO               = BIT(8); ///< doesn't take damage
+const int TFL_DMG_YES              = BIT(1); ///< can be damaged
+const int TFL_DMG_TEAM             = BIT(2); ///< can be damaged by teammates
+const int TFL_DMG_RETALIATE        = BIT(3); ///< target attackers
+const int TFL_DMG_RETALIATE_TEAM   = BIT(4); ///< target attackers, even if on same team
+const int TFL_DMG_TARGETLOSS       = BIT(5); ///< loses target when damaged
+const int TFL_DMG_AIMSHAKE         = BIT(6); ///< damage throws off aim
+const int TFL_DMG_HEADSHAKE        = BIT(7); ///< damage shakes head
+const int TFL_DMG_DEATH_NORESPAWN  = BIT(8); ///< no re-spawning
+
+// tracking type
+const int TFL_TRACKTYPE_STEPMOTOR = 1; // hard angle increments, ugly for fast turning with best accuracy
+const int TFL_TRACKTYPE_FLUIDPRECISE = 2; // smooth absolute movement, looks OK with fair accuracy
+const int TFL_TRACKTYPE_FLUIDINERTIA = 3; // simulated inertia ("wobbly" mode), worst accuracy, depends on below flags
+
+// send flags
+const int TNSF_HEADANIM= BIT(0);
+const int TNSF_LEVEL   = BIT(1);
+const int TNSF_STATUS  = BIT(2);
+const int TNSF_SETUP   = BIT(3);
+const int TNSF_ANG     = BIT(4);
+const int TNSF_AVEL    = BIT(5);
+const int TNSF_MOVE    = BIT(6);
+.float anim_start_time;
+const int TNSF_ANIM    = BIT(7);
+
+const int TNSF_FULL_UPDATE = 0xFFFFFF;

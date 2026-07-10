@@ -597,9 +597,10 @@ void zombie_pain(entity this, entity attacker, float take, int deathtype)
 		return; // if killed by trigger or world, don't reset health
 
 	bool is_parried = (DEATH_IS(deathtype, DEATH_MONSTER_ZOMBIE) && IS_PLAYER(attacker));
+	bool is_transform = (DEATH_IS(deathtype, DEATH_MONSTER_FIEND) && IS_PLAYER(attacker));
 
 	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
-	if(!(death_weapon.spawnflags & WEP_FLAG_HITUNDEAD) && !DEATH_IS(deathtype, DEATH_MIMEBALL) && !is_parried)
+	if(!(death_weapon.spawnflags & WEP_FLAG_HITUNDEAD) && !DEATH_IS(deathtype, DEATH_MIMEBALL) && !is_transform && !is_parried)
 		this.health = 60; // always reset health
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)

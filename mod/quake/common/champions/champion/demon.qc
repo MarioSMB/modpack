@@ -25,26 +25,147 @@ void demon_jump6(entity this) { set_animofs(this, anim_demon_leap, 6, demon_jump
 void demon_jump5(entity this) { set_animofs(this, anim_demon_leap, 5, demon_jump6); }
 void demon_jump4(entity this) { set_animofs(this, anim_demon_leap, 4, demon_jump5); }
 
+void hitdemon(entity this, entity hitent, vector org, vector dir)
+{
+	if(hitent.takedamage) 
+	{
+		float damage = 60 + (5 * random()) + (5 * random()) + (5 * random());
+		if(IS_PLAYER(hitent))
+			damage *= 0.5;
+
+		SpawnMeatSpray(this, org, dir);
+
+		hitent.axhitme = true;
+		T_Damage(hitent, this, this, damage, DEATH_MONSTER_FIEND.m_id);
+		
+		//johnfitz -- make clank sound when hitting brushmodels
+		if(hitent.solid == SOLID_BSP || hitent.movetype == MOVETYPE_PUSH || hitent.movetype == MOVETYPE_NONE)
+			 _sound(hitent, CH_SHOTS, "demon/dhit2.wav", 0.5, ATTN_NORM);
+		else
+			 _sound(hitent, CH_SHOTS, "demon/dhit2.wav", 1, ATTN_NORM);	
+	}
+	else
+	{	// hit wall
+		FX_Wrench(org, dir, true);
+	}
+}
+
 void demon_melee(entity this, float side)
 {
-	makevectors(this.v_angle);
-	.entity weaponentity = weaponentities[0]; // TODO?
-	vector source = W_Shotorg(this, weaponentity);
+	float lag = (IS_PLAYER(this)) ? antilag_getlag(this) : 0;
+	if(lag)
+		antilag_takeback_all(this, lag);
+
+	entity hitent1 = NULL, hitent2 = NULL;
+	vector hitpos1 = '0 0 0', hitpos2 = '0 0 0';
+	float shortest_hit1 = 1000;
+	float shortest_hit2 = 1000;
 	int oldsolid = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	traceline(source, source + v_forward * 100, false, this);
-	this.dphitcontentsmask = oldsolid;
-	if(trace_fraction == 1.0)
-		return;
-	if(!trace_ent.takedamage)
-		return;
-		
-    _sound(this, CH_WEAPON_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
-	float ldmg = 30 + 5*random();
-	trace_ent.axhitme = true;
-	T_Damage(trace_ent, this, this, ldmg, DEATH_MONSTER_FIEND.m_id);
 
-	SpawnMeatSpray(this, this.origin + v_forward*16, side * v_right);
+	float rscale = 1;
+	if(this.m_champion && this.m_champion.qcc_meleerange)
+		rscale *= this.m_champion.qcc_meleerange;
+
+	makevectors(this.v_angle);
+	vector source = this.origin + this.view_ofs - v_up*0;
+
+	traceline(source, source + v_forward * (75 * rscale) - v_right * (40 * rscale), false, this);
+	if(trace_fraction < 1)
+	{
+		shortest_hit1 = vlen(trace_endpos - source);
+		hitent1 = trace_ent;
+		hitpos1 = trace_endpos;
+ 	}
+
+	traceline(source, source + v_forward * (85 * rscale) - v_right * (20 * rscale), false, this);
+	if(trace_fraction < 1)
+	{
+		if(trace_ent == hitent1 && vdist(trace_endpos - source, <, shortest_hit1))
+		{
+			shortest_hit1 = vlen(trace_endpos - source);
+			hitent1 = trace_ent;
+			hitpos1 = trace_endpos;
+		}
+		if(trace_ent != hitent1 && vdist(trace_endpos - source, <, shortest_hit2))
+		{
+			shortest_hit2 = vlen(trace_endpos - source);
+			hitent2 = trace_ent;
+			hitpos2 = trace_endpos;
+		}
+	}
+
+	traceline(source, source + v_forward * (102 * rscale), false, this);
+	if(trace_fraction < 1)
+	{
+		if(trace_ent == hitent1 && vdist(trace_endpos - source, <, shortest_hit1))
+		{
+			shortest_hit1 = vlen(trace_endpos - source);
+			hitent1 = trace_ent;
+			hitpos1 = trace_endpos;
+		}
+		if(trace_ent != hitent1 && vdist(trace_endpos - source, <, shortest_hit2))
+		{
+			shortest_hit2 = vlen(trace_endpos - source);
+			hitent2 = trace_ent;
+			hitpos2 = trace_endpos;
+		}
+	}
+
+	traceline(source, source + v_forward * (86 * rscale) + v_right * (20 * rscale), false, this);
+	if(trace_fraction < 1)
+	{
+		if(trace_ent == hitent1 && vdist(trace_endpos - source, <, shortest_hit1))
+		{
+			shortest_hit1 = vlen(trace_endpos - source);
+			hitent1 = trace_ent;
+			hitpos1 = trace_endpos;
+		}
+		if(trace_ent != hitent1 && vdist(trace_endpos - source, <, shortest_hit2))
+		{
+			shortest_hit2 = vlen(trace_endpos - source);
+			hitent2 = trace_ent;
+			hitpos2 = trace_endpos;
+		}
+	}
+
+	traceline(source, source + v_forward * (75 * rscale) + v_right * (40 * rscale), false, this);
+	if(trace_fraction < 1)
+	{
+		if(trace_ent == hitent1 && vdist(trace_endpos - source, <, shortest_hit1))
+		{
+			shortest_hit1 = vlen(trace_endpos - source);
+			hitent1 = trace_ent;
+			hitpos1 = trace_endpos;
+		}
+		if(trace_ent != hitent1 && vdist(trace_endpos - source, <, shortest_hit2))
+		{
+			shortest_hit2 = vlen(trace_endpos - source);
+			hitent2 = trace_ent;
+			hitpos2 = trace_endpos;
+		}
+	}
+
+	this.dphitcontentsmask = oldsolid;
+
+	if(shortest_hit1 == 1000 && shortest_hit2 == 1000)
+	{
+		if(lag)
+			antilag_restore_all(this);
+		return;
+	}
+
+	this.show_hostile = time + 1; // hit something, so alert monsters
+	
+	vector dir = v_right * side - v_up*5; // direction for blood particles
+
+	if(shortest_hit1 < 1000)
+		hitdemon(this, hitent1, hitpos1 - v_forward*4, dir);
+	if(shortest_hit2 < 1000 && hitent1 != hitent2)
+		hitdemon(this, hitent2, hitpos2 - v_forward*4, dir);
+
+	if(lag)
+		antilag_restore_all(this);
 }
 
 void demon_melee15(entity this) { set_animofs(this, anim_demon_attacka, 15, player_run); }
@@ -165,3 +286,13 @@ METHOD(Demon, m_playerjump, float(Champions this, entity actor))
 	}
 	return 0;
 }
+
+#ifdef CSQC
+METHOD(Demon, m_drawface, bool(Champions this, vector pos, vector icon_size))
+{
+	string pic = "gfx/quake/demon_face";
+	//Sbar_DrawPic('112 0 0', pic);
+	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	return true;
+}
+#endif

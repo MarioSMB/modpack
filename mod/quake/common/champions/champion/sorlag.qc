@@ -8,17 +8,16 @@ METHOD(Sorlag, m_activate, void(Champions this, entity actor))
 
 void Sorlag_AcidPoolTouch(entity this, entity toucher)
 {
-	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO || !Damage_ValidTarget(toucher, this.owner))
+	if(toucher == this.owner || toucher.solid == SOLID_TRIGGER || toucher.health < 1 || toucher.takedamage == DAMAGE_NO)
 		return;
 	if(toucher.m_champion == CHAMPION_Sorlag)
 		return;
 	if(!Damage_ValidTarget(toucher, this.owner))
 		return;
 
-	float poisontime = 7;
-	float curtime = StatusEffects_gettime(STATUSEFFECT_Poisoned, toucher);
-	if((time + poisontime) > curtime)
-		StatusEffects_apply(STATUSEFFECT_Poisoned, toucher, time + poisontime, 0);
+	float efftime = 20;
+	float curtime = StatusEffects_gettime(STATUSEFFECT_Corrosion, toucher);
+	StatusEffects_apply(STATUSEFFECT_Corrosion, toucher, max(time + efftime, curtime), 0);
 }
 
 void Sorlag_AcidPoolAnim(entity this)
@@ -48,6 +47,10 @@ void Sorlag_AcidSpitTouch(entity this, entity toucher)
 
 	if(toucher.takedamage || IS_MONSTER(toucher))
 	{
+		float efftime = 20;
+		float curtime = StatusEffects_gettime(STATUSEFFECT_Corrosion, toucher);
+		StatusEffects_apply(STATUSEFFECT_Corrosion, toucher, max(time + efftime, curtime), 0);
+
 		float damage = 15;
 		T_Damage(toucher, this, this.owner, damage, this.projectiledeathtype);
 		if(toucher.move_movetype != MOVETYPE_PUSH)
@@ -108,8 +111,7 @@ void Sorlag_AcidSpit(entity this)
 		newmis.velocity_z = 200;
 	}
 
-	newmis.poisonous = true;
-	newmis.projectiledeathtype = WEP_NAPALM.m_id;
+	newmis.projectiledeathtype = DEATH_SLIME.m_id;
 	newmis.clipgroup = this.clipgroup;
 	newmis.avelocity = '300 300 300';
 	newmis.angles = vectoangles(newmis.avelocity);
@@ -126,6 +128,12 @@ void Sorlag_AcidSpit(entity this)
 void Sorlag_AcidSpitProc(entity this)
 {
 	entity actor = this.owner;
+	if(intermission_running || actor.health < 1 || actor.is_frozen || actor.exptime != 0 || actor.m_champion != CHAMPION_Sorlag)
+	{
+		delete(this);
+		return;
+	}
+
 	Sorlag_AcidSpit(actor);
 	this.nextthink = time + 0.16;
 	setthink(this, Sorlag_AcidSpitProc);

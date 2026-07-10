@@ -1,0 +1,53 @@
+#pragma once
+
+#include "turret.qh"
+
+REGISTRY(Turrets, 64)
+REGISTER_REGISTRY(Turrets)
+REGISTRY_CHECK(Turrets)
+
+#define TR_PROPS_COMMON(P, class, prefix) \
+	P(class, prefix, aim_firetolerance_dist, float) \
+	P(class, prefix, aim_maxpitch, float) \
+	P(class, prefix, aim_maxrot, float) \
+	P(class, prefix, aim_speed, float) \
+	P(class, prefix, health, float) \
+	P(class, prefix, shot_dmg, float) \
+	P(class, prefix, shot_force, float) \
+	P(class, prefix, shot_radius, float) \
+	P(class, prefix, shot_refire, float) \
+	P(class, prefix, shot_speed, float) \
+	P(class, prefix, shot_spread, float) \
+	P(class, prefix, shot_volly, float) \
+	P(class, prefix, shot_volly_refire, float) \
+	P(class, prefix, target_range, float) \
+	P(class, prefix, target_range_min, float) \
+	P(class, prefix, target_range_optimal, float) \
+	P(class, prefix, target_select_anglebias, float) \
+	P(class, prefix, target_select_missilebias, float) \
+	P(class, prefix, target_select_playerbias, float) \
+	P(class, prefix, target_select_rangebias, float) \
+	P(class, prefix, target_select_samebias, float) \
+	P(class, prefix, track_accel_pitch, float) \
+	P(class, prefix, track_accel_rot, float) \
+	P(class, prefix, track_blendrate, float) \
+	P(class, prefix, track_type, float) \
+	/**/
+
+#define REGISTER_TURRET(id, inst) REGISTER(Turrets, TUR, id, m_id, inst)
+
+CLASS(NullTurret, Turret)
+	ATTRIB(NullTurret, m_hidden, bool, true);
+ENDCLASS(NullTurret)
+REGISTER_TURRET(Null, NEW(NullTurret));
+REGISTRY_DEFINE_GET(Turrets, TUR_Null)
+
+#ifdef GAMEQC
+.entity turretdef;
+
+.int tur_level;
+
+float turret_getpower(int tlevel, float pscale);
+#endif
+
+#include "turret/_mod.qh"

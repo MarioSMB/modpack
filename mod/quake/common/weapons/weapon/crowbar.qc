@@ -67,13 +67,10 @@ void W_FireCrowbar(entity this, .entity weaponentity)
 			float r = random();
 			if(trace_ent.monsterdef == MON_JUGGERNAUT) // special case: axe attacks produce unique sound against juggernauts TODO: handle melee attacks in monster pain code
 			{
-				damage *= 2;
 				_sound(this, CH_WEAPON_SINGLE, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
 			}
 			else if(trace_ent.monsterdef && (trace_ent.monsterdef.spawnflags & MON_FLAG_METAL))
 			{
-				damage *= 2;
-
 				if(r < 0.3)
 					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
 				else if(r < 0.6)
@@ -83,8 +80,6 @@ void W_FireCrowbar(entity this, .entity weaponentity)
 			}
 			else if(IS_PLAYER(trace_ent) && trace_ent.armorvalue > 0)
 			{
-				damage *= 1.5;
-
 				if(r < 0.3)
 					_sound(trace_ent, CH_SHOTS, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
 				else if(r < 0.6)

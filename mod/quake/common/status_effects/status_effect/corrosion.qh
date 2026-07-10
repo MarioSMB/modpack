@@ -1,0 +1,21 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(Corrosion, Debuffs)
+    ATTRIB(Corrosion, netname, string, "corrosion");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Corrosion, m_name, string, _("Corrosion"));
+    ATTRIB(Corrosion, m_icon, string, "buff_inferno");
+#endif
+    ATTRIB(Corrosion, m_color, vector, '0.56 1 0.04');
+    ATTRIB(Corrosion, m_hidden, bool, true);
+    ATTRIB(Corrosion, m_lifetime, float, 10);
+ENDCLASS(Corrosion)
+REGISTER_STATUSEFFECT(Corrosion, NEW(Corrosion));
+
+#ifdef SVQC
+.float corrosion_time;
+#endif

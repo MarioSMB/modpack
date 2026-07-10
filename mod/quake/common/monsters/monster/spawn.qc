@@ -241,6 +241,7 @@ void tbaby_mitosis(entity targ, entity attacker, float damage, int deathtype)
 		entity newSpawn = spawn();
 		newSpawn.flags = FL_CLONE;
 		newSpawn.classname = targ.classname;
+		newSpawn.monsterdef = targ.monsterdef;
 		set_movetype(newSpawn, MOVETYPE_STEP);
 		newSpawn.health = 80;
 		if(targ.skin == 1)

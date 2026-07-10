@@ -137,7 +137,8 @@ PRECACHE(Duke)
 #endif
 CLASS(Duke, Champions)
     ATTRIB(Duke, netname, string, "duke");
-    ATTRIB(Duke, m_name, string, "Duke");
+    ATTRIB(Duke, m_name, string, ((random() < 0.25) ? "Duke Noobem" : "Duke Nukem"));
+    ATTRIB(Duke, m_color, vector, '1 0.75 0.1');
     ATTRIB(Duke, qcc_meleename, string, "mfoot");
 #ifdef GAMEQC
     ATTRIB(Duke, m_model, Model, MDL_Duke);

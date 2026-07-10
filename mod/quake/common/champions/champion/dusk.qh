@@ -69,6 +69,7 @@ PRECACHE(Dusk)
 CLASS(Dusk, Champions)
     ATTRIB(Dusk, netname, string, "dusk");
     ATTRIB(Dusk, m_name, string, "Dusk");
+    ATTRIB(Dusk, m_color, vector, '0.86 0.08 0.24');
     ATTRIB(Dusk, qcc_meleename, string, "sickles");
 #ifdef GAMEQC
     ATTRIB(Dusk, m_model, Model, MDL_Dusk);

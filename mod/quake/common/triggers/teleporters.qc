@@ -93,7 +93,7 @@ entity spawn_tdeath(vector org, entity death_owner)
 void spawn_tdeath_fast(vector org, entity death_owner)
 {
 	entity death = spawn_tdeath(org, death_owner);
-	death.nextthink = time + 0.01;
+	death.nextthink = time;
 }
 
 #endif

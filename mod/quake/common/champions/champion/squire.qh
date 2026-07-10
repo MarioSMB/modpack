@@ -79,14 +79,15 @@ PRECACHE(Squire)
 "Damage taken reduced by 25%\n" \
 "Jumps 15% higher\n" \
 "Press %ABILITY% to Rage\n" \
-"Double speed while Raging\n" \
-"50% damage boost while Raging\n" \
-"Killing replenishes Rage\n" \
-"20 second cooldown when Rage ends"
+"- Double speed while Raging\n" \
+"- 50% damage boost while Raging\n" \
+"- Killing replenishes Rage\n" \
+"- 20 second cooldown when Rage ends"
 #endif
 CLASS(Squire, Champions)
     ATTRIB(Squire, netname, string, "squire");
     ATTRIB(Squire, m_name, string, "Squire");
+    ATTRIB(Squire, m_color, vector, '0.5 0.5 0.5');
     ATTRIB(Squire, qcc_jumpheight, float, 1.15);
     ATTRIB(Squire, qcc_meleename, string, "squireaxe");
 #ifdef GAMEQC

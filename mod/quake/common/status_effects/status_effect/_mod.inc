@@ -4,6 +4,7 @@
 #include "biosuit.qc"
 #include "burning.qc"
 #include "confused.qc"
+#include "corrosion.qc"
 #include "darkness.qc"
 #include "double_jump_boots.qc"
 #include "empathy_shields.qc"

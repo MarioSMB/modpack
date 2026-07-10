@@ -1,0 +1,59 @@
+#pragma once
+
+// =========
+//  MIME JR
+// =========
+
+CLASS(MimeMimeJr, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(MimeMimeJr, spawnflags, int, 0);
+/* mins       */ ATTRIB(MimeMimeJr, m_mins, vector, '-8 -8 0');
+/* maxs       */ ATTRIB(MimeMimeJr, m_maxs, vector, '8 8 48');
+/* modelname  */ ATTRIB(MimeMimeJr, mdl, string, "progs/tur_mimejr.mdl");
+/* head_model */ ATTRIB(MimeMimeJr, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(MimeMimeJr, netname, string, "mimejr");
+/* fullname   */ ATTRIB(MimeMimeJr, m_name, string, _("Mime Jr."));
+/* description*/ ATTRIB(MimeMimeJr, m_description, string, "Miiiiiime!");
+#ifdef GAMEQC
+/* number     */ ATTRIB(MimeMimeJr, impulse, int, 0);
+/* cost       */ ATTRIB(MimeMimeJr, tur_cost, float, 70);
+/* units      */ ATTRIB(MimeMimeJr, tur_units, int, 3);
+
+/* property   */ ATTRIB(MimeMimeJr, health, float, 260);
+
+/* property   */ ATTRIB(MimeMimeJr, shot_dmg, float, 8);
+/* property   */ ATTRIB(MimeMimeJr, shot_refire, float, 2);
+/* property   */ ATTRIB(MimeMimeJr, shot_spread, float, 0.125);
+/* property   */ ATTRIB(MimeMimeJr, shot_force, float, 5);
+/* property   */ ATTRIB(MimeMimeJr, shot_radius, float, 0);
+/* property   */ ATTRIB(MimeMimeJr, shot_speed, float, 400);
+
+/* property   */ ATTRIB(MimeMimeJr, shot_volly, float, 0);
+/* property   */ ATTRIB(MimeMimeJr, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(MimeMimeJr, target_range, float, 600);
+/* property   */ ATTRIB(MimeMimeJr, target_range_min, float, 5);
+/* property   */ ATTRIB(MimeMimeJr, target_range_optimal, float, 500);
+
+/* property   */ ATTRIB(MimeMimeJr, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(MimeMimeJr, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(MimeMimeJr, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(MimeMimeJr, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(MimeMimeJr, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(MimeMimeJr, aim_firetolerance_dist, float, 75);
+/* property   */ ATTRIB(MimeMimeJr, aim_speed, float, 120);
+/* property   */ ATTRIB(MimeMimeJr, aim_maxrot, float, 45);
+/* property   */ ATTRIB(MimeMimeJr, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(MimeMimeJr, track_type, float, 3);
+/* property   */ ATTRIB(MimeMimeJr, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(MimeMimeJr, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(MimeMimeJr, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(MimeMimeJr, m_champion, Champions, CHAMPION_Mime);
+#endif
+
+ENDCLASS(MimeMimeJr)
+REGISTER_TURRET(MIME_JR, NEW(MimeMimeJr));

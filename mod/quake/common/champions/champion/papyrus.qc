@@ -151,6 +151,12 @@ METHOD(Papyrus, m_playerthink, void(Champions this, entity actor))
 	}
 }
 
+METHOD(Papyrus, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
+{
+	if(attacker.m_champion == this && DEATH_IS(deathtype, DEATH_LASER_SKULL) && random() < 0.25)
+		SendPapyrusLine(attacker, 6);
+}
+
 // TODO: generic list of deathtypes that should never be blocked
 bool Papyrus_forcedamage(int deathtype)
 {
@@ -199,6 +205,7 @@ string Sbar_PapyrusLine(int liner)
 		case 3: return "sb_pap_line3";
 		case 4: return "sb_pap_line4";
 		case 5: return "sb_pap_line5";
+		case 6: return "sb_pap_line6";
 	}
 
 	return string_null;
@@ -303,7 +310,10 @@ NET_HANDLE(TE_CSQC_PAPYRUS_LINE, bool isNew)
 	int liner = ReadByte();
 	Sbar_Papyrus_Push(liner);
 
-	_sound(NULL, CH_INFO, "player_papyrus/talk.wav", VOL_BASE, ATTEN_NONE);
+	if(liner == 6)
+		_sound(NULL, CH_INFO, "player_papyrus/talk_sans.wav", VOL_BASE, ATTEN_NONE);
+	else
+		_sound(NULL, CH_INFO, "player_papyrus/talk.wav", VOL_BASE, ATTEN_NONE);
 	return true;
 }
 

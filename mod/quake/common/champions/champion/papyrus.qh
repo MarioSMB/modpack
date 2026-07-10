@@ -62,6 +62,7 @@ PRECACHE(Papyrus)
 
     precache_sound("player_papyrus/start.wav");
     precache_sound("player_papyrus/talk.wav");
+    precache_sound("player_papyrus/talk_sans.wav");
     precache_sound("player_papyrus/falling.wav");
     precache_sound("player_papyrus/throw.wav");
 
@@ -81,6 +82,7 @@ PRECACHE(Papyrus)
 CLASS(Papyrus, Champions)
     ATTRIB(Papyrus, netname, string, "papyrus");
     ATTRIB(Papyrus, m_name, string, "Papyrus");
+    ATTRIB(Papyrus, m_color, vector, '0.96 0.93 0.84');
     ATTRIB(Papyrus, m_viewofs, vector, '0 0 30');
 #ifdef GAMEQC
     ATTRIB(Papyrus, m_model, Model, MDL_Papyrus);

@@ -1,0 +1,89 @@
+#pragma once
+
+// =======
+//  TOTEM
+// =======
+
+CLASS(GalenaTotem, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(GalenaTotem, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_NONSOLID);
+/* mins       */ ATTRIB(GalenaTotem, m_mins, vector, '-16 -16 -18');
+/* maxs       */ ATTRIB(GalenaTotem, m_maxs, vector, '16 16 36');
+/* modelname  */ ATTRIB(GalenaTotem, mdl, string, "progs/tur_totem.mdl");
+/* head_model */ ATTRIB(GalenaTotem, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(GalenaTotem, netname, string, "totem");
+/* fullname   */ ATTRIB(GalenaTotem, m_name, string, _("Totem"));
+/* description*/ ATTRIB(GalenaTotem, m_description, string, "Weakens nearby enemies");
+#ifdef GAMEQC
+/* number     */ ATTRIB(GalenaTotem, impulse, int, 0);
+/* cost       */ ATTRIB(GalenaTotem, tur_cost, float, 60);
+/* units      */ ATTRIB(GalenaTotem, tur_units, int, 4);
+
+/* property   */ ATTRIB(GalenaTotem, health, float, 200);
+
+/* property   */ ATTRIB(GalenaTotem, shot_dmg, float, 0);
+/* property   */ ATTRIB(GalenaTotem, shot_refire, float, 0.2);
+/* property   */ ATTRIB(GalenaTotem, shot_spread, float, 0);
+/* property   */ ATTRIB(GalenaTotem, shot_force, float, 0);
+/* property   */ ATTRIB(GalenaTotem, shot_radius, float, 0);
+/* property   */ ATTRIB(GalenaTotem, shot_speed, float, 0);
+
+/* property   */ ATTRIB(GalenaTotem, shot_volly, float, 0);
+/* property   */ ATTRIB(GalenaTotem, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(GalenaTotem, target_range, float, 150);
+/* property   */ ATTRIB(GalenaTotem, target_range_min, float, 0.1);
+/* property   */ ATTRIB(GalenaTotem, target_range_optimal, float, 150);
+
+/* property   */ ATTRIB(GalenaTotem, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(GalenaTotem, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(GalenaTotem, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(GalenaTotem, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(GalenaTotem, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(GalenaTotem, aim_firetolerance_dist, float, 120);
+/* property   */ ATTRIB(GalenaTotem, aim_speed, float, 120);
+/* property   */ ATTRIB(GalenaTotem, aim_maxrot, float, 360);
+/* property   */ ATTRIB(GalenaTotem, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(GalenaTotem, track_type, float, 0);
+/* property   */ ATTRIB(GalenaTotem, track_accel_pitch, float, 0);
+/* property   */ ATTRIB(GalenaTotem, track_accel_rot, float, 0);
+/* property   */ ATTRIB(GalenaTotem, track_blendrate, float, 0);
+
+/* champion   */ ATTRIB(GalenaTotem, m_champion, Champions, CHAMPION_Galena);
+#endif
+
+ENDCLASS(GalenaTotem)
+REGISTER_TURRET(TOTEM, NEW(GalenaTotem));
+
+// ==============
+//  ANGEL STATUE
+// ==============
+
+CLASS(GalenaAngelStatue, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(GalenaAngelStatue, spawnflags, int, TUR_FLAG_SUPPORT);
+/* mins       */ ATTRIB(GalenaAngelStatue, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(GalenaAngelStatue, m_maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(GalenaAngelStatue, mdl, string, "progs/anglstat.mdl");
+/* head_model */ ATTRIB(GalenaAngelStatue, head_model, string, "progs/angel_guardian.mdl");
+#endif
+/* netname    */ ATTRIB(GalenaAngelStatue, netname, string, "angelstatue");
+/* fullname   */ ATTRIB(GalenaAngelStatue, m_name, string, _("Angel Statue"));
+/* description*/ ATTRIB(GalenaAngelStatue, m_description, string, "\"It doesn't do anything\"\nRevives nearby turrets below 20% health");
+#ifdef GAMEQC
+/* number     */ ATTRIB(GalenaAngelStatue, impulse, int, 1);
+/* cost       */ ATTRIB(GalenaAngelStatue, tur_cost, float, 90);
+/* units      */ ATTRIB(GalenaAngelStatue, tur_units, int, 7);
+/* health     */ ATTRIB(GalenaAngelStatue, health, float, 900);
+/* range      */ ATTRIB(GalenaAngelStatue, target_range, float, 384);
+/* champion   */ ATTRIB(GalenaAngelStatue, m_champion, Champions, CHAMPION_Galena);
+#endif
+
+ENDCLASS(GalenaAngelStatue)
+REGISTER_TURRET(ANGEL_STATUE, NEW(GalenaAngelStatue));
+
+const int AANIM_IDLE = 0;
+const int AANIM_APPEAR = 1;
