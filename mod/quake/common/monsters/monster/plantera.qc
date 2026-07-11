@@ -72,7 +72,7 @@ void plantera_spike_touch(entity this, entity toucher)
 
 	if(time >= this.pain_finished && !toucher.takedamage)
 	{
-		this.pain_finished = time + 0.1; // no spam
+		this.pain_finished = time + 0.2; // no spam
 		_sound(this, CH_SHOTS, "break/wood_i4.wav", 1, ATTN_NORM);
 	}
 }
@@ -104,8 +104,11 @@ void plantera_spike_think(entity this)
 		it.plantera_spike_dmgtime = time + 1; // prevent instant death
 	});
 
-	if(didhit)
+	if(didhit && time >= this.delay)
+	{
+		this.delay = time + 0.2;
 		_sound(this, CH_SHOTS, "break/wood_i3.wav", 1, ATTN_NORM);
+	}
 }
 
 entity plantera_spike_attack(entity this, vector org, vector dir)
