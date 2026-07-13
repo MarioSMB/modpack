@@ -6,8 +6,8 @@ CLASS(CorruptedClaws, Weapon)
 /* spawnflags*/ ATTRIB(CorruptedClaws, spawnflags, int, WEP_FLAG_MELEE | WEP_FLAG_CHAMPION | WEP_FLAG_TWOHANDED | WEP_FLAG_NOAGGRO | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_NOHUD);
 /* ammo */      ATTRIB(CorruptedClaws, aflag, int, 0);
 /* modelname */ ATTRIB(CorruptedClaws, mdl, string, "corrupted");
-/* crosshair */ ATTRIB(CorruptedClaws, w_crosshair, string, "gfx/crosshair20");
-/* crosshair */ ATTRIB(CorruptedClaws, w_crosshair_size, float, 0.5);
+/* crosshair */ ATTRIB(CorruptedClaws, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(CorruptedClaws, w_crosshair_size, float, 1);
 /* crosshair */ ATTRIB(CorruptedClaws, w_crosshair_color, vector, '0.5 0 0.5');
 /* wepimg    */ ATTRIB(CorruptedClaws, model2, string, "corrupted");
 /* refname   */ ATTRIB(CorruptedClaws, netname, string, "corrupted");

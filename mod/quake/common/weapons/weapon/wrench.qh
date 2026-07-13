@@ -8,7 +8,7 @@ CLASS(Wrench, Weapon)
 /* modelname */ ATTRIB(Wrench, mdl, string, "wrench");
 /* crosshair */ ATTRIB(Wrench, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Wrench, w_crosshair_size, float, 0.5);
-/* crosshair */ ATTRIB(Wrench, w_crosshair_color, vector, '0.75 0.75 0.75');
+/* crosshair */ ATTRIB(Wrench, w_crosshair_color, vector, '0.72 0.25 0.05');
 /* wepimg    */ ATTRIB(Wrench, model2, string, "wrench");
 /* refname   */ ATTRIB(Wrench, netname, string, "wrench");
 /* wepname   */ ATTRIB(Wrench, m_name, string, _("Wrench"));

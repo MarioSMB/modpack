@@ -6,9 +6,9 @@ CLASS(MultiMissileLauncher, Weapon)
 /* spawnflags*/ ATTRIB(MultiMissileLauncher, spawnflags, int, WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED | WEP_FLAG_NOSTEAL);
 /* ammo */      ATTRIB(MultiMissileLauncher, aflag, int, 5);
 /* modelname */ ATTRIB(MultiMissileLauncher, mdl, string, "mmml");
-/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair, string, "gfx/crosshairfireball");
-/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair_size, float, 0.6);
-/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair_color, vector, '0.21 0.33 0.04');
+/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair, string, "gfx/crosshair59");
+/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair_size, float, 0.9);
+/* crosshair */ ATTRIB(MultiMissileLauncher, w_crosshair_color, vector, '0.26 0.38 0.06');
 /* wepimg    */ ATTRIB(MultiMissileLauncher, model2, string, "mmml");
 /* refname   */ ATTRIB(MultiMissileLauncher, netname, string, "mmml");
 /* wepname   */ ATTRIB(MultiMissileLauncher, m_name, string, _("Multi Mini-Missile Launcher"));

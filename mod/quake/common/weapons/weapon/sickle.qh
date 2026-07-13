@@ -12,7 +12,7 @@ CLASS(Sickle, Weapon)
 /* modelname */ ATTRIB(Sickle, mdl, string, "sickle");
 /* crosshair */ ATTRIB(Sickle, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Sickle, w_crosshair_size, float, 0.45);
-/* crosshair */ ATTRIB(Sickle, w_crosshair_color, vector, '0.1 0.1 0.1');
+/* crosshair */ ATTRIB(Sickle, w_crosshair_color, vector, '0.56 0 1');
 /* wepimg    */ ATTRIB(Sickle, model2, string, "sickle");
 /* refname   */ ATTRIB(Sickle, netname, string, "sickle");
 /* wepname   */ ATTRIB(Sickle, m_name, string, _("Sickle"));

@@ -6,8 +6,8 @@ CLASS(VortexBeater, Weapon)
 /* spawnflags*/ ATTRIB(VortexBeater, spawnflags, int, WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(VortexBeater, aflag, int, 30);
 /* modelname */ ATTRIB(VortexBeater, mdl, string, "vortexbeater");
-/* crosshair */ ATTRIB(VortexBeater, w_crosshair, string, "gfx/crosshairuzi");
-/* crosshair */ ATTRIB(VortexBeater, w_crosshair_size, float, 0.8);
+/* crosshair */ ATTRIB(VortexBeater, w_crosshair, string, "gfx/crosshair55");
+/* crosshair */ ATTRIB(VortexBeater, w_crosshair_size, float, 1);
 /* crosshair */ ATTRIB(VortexBeater, w_crosshair_color, vector, '0 1 1');
 /* wepimg    */ ATTRIB(VortexBeater, model2, string, "vortexbeater");
 /* refname   */ ATTRIB(VortexBeater, netname, string, "vortexbeater");

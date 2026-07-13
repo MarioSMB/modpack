@@ -6,8 +6,8 @@ CLASS(Tome, Weapon)
 /* spawnflags*/ ATTRIB(Tome, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Tome, aflag, int, 0);
 /* modelname */ ATTRIB(Tome, mdl, string, "tome");
-/* crosshair */ ATTRIB(Tome, w_crosshair, string, "gfx/crosshairelectro");
-/* crosshair */ ATTRIB(Tome, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Tome, w_crosshair, string, "gfx/crosshair58");
+/* crosshair */ ATTRIB(Tome, w_crosshair_size, float, 0.7);
 /* crosshair */ ATTRIB(Tome, w_crosshair_color, vector, '0.7 0 0.7');
 /* wepimg    */ ATTRIB(Tome, model2, string, "tome");
 /* refname   */ ATTRIB(Tome, netname, string, "tome");

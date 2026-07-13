@@ -6,9 +6,9 @@ CLASS(AngelicStaff, Weapon)
 /* spawnflags*/ ATTRIB(AngelicStaff, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(AngelicStaff, aflag, int, 0);
 /* modelname */ ATTRIB(AngelicStaff, mdl, string, "angelicstaff");
-/* crosshair */ ATTRIB(AngelicStaff, w_crosshair, string, "gfx/crosshair20");
-/* crosshair */ ATTRIB(AngelicStaff, w_crosshair_size, float, 0.4);
-/* crosshair */ ATTRIB(AngelicStaff, w_crosshair_color, vector, '1 0.2 0.5');
+/* crosshair */ ATTRIB(AngelicStaff, w_crosshair, string, "gfx/vehicles/crosshair_heal");
+/* crosshair */ ATTRIB(AngelicStaff, w_crosshair_size, float, 1);
+/* crosshair */ ATTRIB(AngelicStaff, w_crosshair_color, vector, '0.95 0.89 0.47');
 /* wepimg    */ ATTRIB(AngelicStaff, model2, string, "angelicstaff");
 /* refname   */ ATTRIB(AngelicStaff, netname, string, "angelicstaff");
 /* wepname   */ ATTRIB(AngelicStaff, m_name, string, _("Angelic Staff"));

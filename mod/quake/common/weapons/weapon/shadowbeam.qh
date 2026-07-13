@@ -6,8 +6,8 @@ CLASS(Shadowbeam, Weapon)
 /* spawnflags*/ ATTRIB(Shadowbeam, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Shadowbeam, aflag, int, 0);
 /* modelname */ ATTRIB(Shadowbeam, mdl, string, "shadowbeam");
-/* crosshair */ ATTRIB(Shadowbeam, w_crosshair, string, "gfx/crosshairelectro");
-/* crosshair */ ATTRIB(Shadowbeam, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Shadowbeam, w_crosshair, string, "gfx/crosshair62");
+/* crosshair */ ATTRIB(Shadowbeam, w_crosshair_size, float, 0.65);
 /* crosshair */ ATTRIB(Shadowbeam, w_crosshair_color, vector, '1 0.2 0.5');
 /* wepimg    */ ATTRIB(Shadowbeam, model2, string, "shadowbeam");
 /* refname   */ ATTRIB(Shadowbeam, netname, string, "shadowbeam");

@@ -6,8 +6,8 @@ CLASS(Blizzard, Weapon)
 /* spawnflags*/ ATTRIB(Blizzard, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Blizzard, aflag, int, 0);
 /* modelname */ ATTRIB(Blizzard, mdl, string, "blizzard");
-/* crosshair */ ATTRIB(Blizzard, w_crosshair, string, "gfx/crosshairhagar");
-/* crosshair */ ATTRIB(Blizzard, w_crosshair_size, float, 0.4);
+/* crosshair */ ATTRIB(Blizzard, w_crosshair, string, "gfx/vehicles/crosshair_rain");
+/* crosshair */ ATTRIB(Blizzard, w_crosshair_size, float, 1);
 /* crosshair */ ATTRIB(Blizzard, w_crosshair_color, vector, '0.70 0.85 0.96');
 /* wepimg    */ ATTRIB(Blizzard, model2, string, "blizzard");
 /* refname   */ ATTRIB(Blizzard, netname, string, "blizzard");

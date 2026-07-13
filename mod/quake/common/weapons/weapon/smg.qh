@@ -6,8 +6,8 @@ CLASS(SubMachineGun, Weapon)
 /* spawnflags*/ ATTRIB(SubMachineGun, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
 /* ammo */      ATTRIB(SubMachineGun, aflag, int, 0);
 /* modelname */ ATTRIB(SubMachineGun, mdl, string, "smg");
-/* crosshair */ ATTRIB(SubMachineGun, w_crosshair, string, "gfx/crosshairuzi");
-/* crosshair */ ATTRIB(SubMachineGun, w_crosshair_size, float, 0.7);
+/* crosshair */ ATTRIB(SubMachineGun, w_crosshair, string, "gfx/crosshair56");
+/* crosshair */ ATTRIB(SubMachineGun, w_crosshair_size, float, 0.8);
 /* crosshair */ ATTRIB(SubMachineGun, w_crosshair_color, vector, '1 1 0');
 /* wepimg    */ ATTRIB(SubMachineGun, model2, string, "smg");
 /* refname   */ ATTRIB(SubMachineGun, netname, string, "smg");
