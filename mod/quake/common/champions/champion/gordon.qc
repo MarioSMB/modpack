@@ -3,13 +3,7 @@
 #ifdef SVQC
 METHOD(Gordon, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.33)
-		player_sound(actor, CH_VOICE, "start1.wav", ATTN_NORM);
-	else if(r < 0.66)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Gordon_Start_Random(), ATTN_NORM);
 
 	Inventory_add(WEP_CROWBAR, actor, ITEM_OWNED);
 	Inventory_add(WEP_GRAVITY_GUN, actor, ITEM_OWNED);

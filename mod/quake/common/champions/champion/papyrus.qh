@@ -9,7 +9,7 @@ MODEL(Papyrus_Head, "progs/h_player_papyrus.mdl");
 SOUND(Papyrus_Pain1, "player_papyrus/pain1");
 SOUND(Papyrus_Pain2, "player_papyrus/pain2");
 Sound SND_Papyrus_Pain_Random() {
-    return (random() > 0.5) ? SND_Papyrus_Pain1 : SND_Papyrus_Pain2;
+	return (random() > 0.5) ? SND_Papyrus_Pain1 : SND_Papyrus_Pain2;
 }
 
 SOUND(Papyrus_Death1, "player_papyrus/death1");
@@ -17,59 +17,67 @@ SOUND(Papyrus_Death2, "player_papyrus/death2");
 SOUND(Papyrus_Death3, "player_papyrus/death3");
 SOUND(Papyrus_Death4, "player_papyrus/death4");
 Sound SND_Papyrus_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Papyrus_Death1.m_id + rint(random() * 3));
+	return REGISTRY_GET(Sounds, SND_Papyrus_Death1.m_id + rint(random() * 3));
 }
+
+SOUND(Papyrus_Jump, "player_papyrus/plyrjmp8");
+SOUND(Papyrus_Gasp1, "player_papyrus/gasp1");
+SOUND(Papyrus_Gasp2, "player_papyrus/gasp2");
+SOUND(Papyrus_WaterDeath, "player_papyrus/h2odeath");
+SOUND(Papyrus_AxeHit, "player_papyrus/axhit1");
+SOUND(Papyrus_Land, "player_papyrus/land");
+SOUND(Papyrus_Fall, "player_papyrus/land2");
+
+SOUND(Papyrus_Burn1, "player_papyrus/lburn1");
+SOUND(Papyrus_Burn2, "player_papyrus/lburn2");
+Sound SND_Papyrus_Burn_Random() {
+	return (random() > 0.5) ? SND_Papyrus_Burn1 : SND_Papyrus_Burn2;
+}
+
+SOUND(Papyrus_Drown1, "player_papyrus/drown1");
+SOUND(Papyrus_Drown2, "player_papyrus/drown2");
+Sound SND_Papyrus_Drown_Random() {
+	return (random() > 0.5) ? SND_Papyrus_Drown1 : SND_Papyrus_Drown2;
+}
+
+SOUND(Papyrus_Start, "player_papyrus/start");
+SOUND(Papyrus_Cannon_Launch, "player_papyrus/falling");
+SOUND(Papyrus_Blaster_Charge, "player_papyrus/laser_charge");
+SOUND(Papyrus_Blaster_Fire, "player_papyrus/laser_fire");
+SOUND(Papyrus_Bone_Fire, "player_papyrus/throw");
+
 PRECACHE(Papyrus)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/papyrus_face_invis");
-    precache_pic("gfx/quake/papyrus_face_invul2");
-    precache_pic("gfx/quake/papyrus_face_inv2");
-    precache_pic("gfx/quake/papyrus_face_quad");
+	precache_pic("gfx/quake/papyrus_face_invis");
+	precache_pic("gfx/quake/papyrus_face_invul2");
+	precache_pic("gfx/quake/papyrus_face_inv2");
+	precache_pic("gfx/quake/papyrus_face_quad");
 
-    precache_pic("gfx/quake/papyrus_face1");
-    precache_pic("gfx/quake/papyrus_face_p1");
-    precache_pic("gfx/quake/papyrus_face2");
-    precache_pic("gfx/quake/papyrus_face_p2");
-    precache_pic("gfx/quake/papyrus_face3");
-    precache_pic("gfx/quake/papyrus_face_p3");
-    precache_pic("gfx/quake/papyrus_face4");
-    precache_pic("gfx/quake/papyrus_face_p4");
-    precache_pic("gfx/quake/papyrus_face5");
-    precache_pic("gfx/quake/papyrus_face_p5");
+	precache_pic("gfx/quake/papyrus_face1");
+	precache_pic("gfx/quake/papyrus_face_p1");
+	precache_pic("gfx/quake/papyrus_face2");
+	precache_pic("gfx/quake/papyrus_face_p2");
+	precache_pic("gfx/quake/papyrus_face3");
+	precache_pic("gfx/quake/papyrus_face_p3");
+	precache_pic("gfx/quake/papyrus_face4");
+	precache_pic("gfx/quake/papyrus_face_p4");
+	precache_pic("gfx/quake/papyrus_face5");
+	precache_pic("gfx/quake/papyrus_face_p5");
 
-    precache_pic("gfx/quake/sb_pap_line1");
-    precache_pic("gfx/quake/sb_pap_line2");
-    precache_pic("gfx/quake/sb_pap_line3");
-    precache_pic("gfx/quake/sb_pap_line4");
-    precache_pic("gfx/quake/sb_pap_line5");
+	precache_pic("gfx/quake/sb_pap_line1");
+	precache_pic("gfx/quake/sb_pap_line2");
+	precache_pic("gfx/quake/sb_pap_line3");
+	precache_pic("gfx/quake/sb_pap_line4");
+	precache_pic("gfx/quake/sb_pap_line5");
+
+	precache_sound("player_papyrus/talk.wav");
+	precache_sound("player_papyrus/talk_sans.wav");
 #endif
 #ifdef SVQC
-    precache_sound("player_papyrus/plyrjmp8.wav");       // player jump
-    precache_sound("player_papyrus/land.wav");           // player landing
-    precache_sound("player_papyrus/land2.wav");      // player hurt landing
-    precache_sound("player_papyrus/drown1.wav");     // drowning pain
-    precache_sound("player_papyrus/drown2.wav");     // drowning pain
-    precache_sound("player_papyrus/gasp1.wav");      // gasping for air
-    precache_sound("player_papyrus/gasp2.wav");      // taking breath
-    precache_sound("player_papyrus/h2odeath.wav");       // drowning death
+	precache_sound("player_papyrus/lburn2.wav"); // TODO
 
-    precache_sound("player_papyrus/axhit1.wav");
-    precache_sound("player_papyrus/axhit2.wav");
-
-    precache_sound("player_papyrus/lburn1.wav");     // lava burn
-    precache_sound("player_papyrus/lburn2.wav");     // lava burn
-
-    precache_sound("player_papyrus/start.wav");
-    precache_sound("player_papyrus/talk.wav");
-    precache_sound("player_papyrus/talk_sans.wav");
-    precache_sound("player_papyrus/falling.wav");
-    precache_sound("player_papyrus/throw.wav");
-
-    precache_sound("player_papyrus/laser_charge.wav");
-    precache_sound("player_papyrus/laser_fire.wav");
-
-    precache_model("progs/bone.mdl");
+	precache_model("progs/bone.mdl");
 #endif
 }
 #endif
@@ -80,23 +88,30 @@ PRECACHE(Papyrus)
 "Sometimes fires 50 damage laser skull"
 #endif
 CLASS(Papyrus, Champions)
-    ATTRIB(Papyrus, netname, string, "papyrus");
-    ATTRIB(Papyrus, m_name, string, "Papyrus");
-    ATTRIB(Papyrus, m_color, vector, '0.96 0.93 0.84');
-    ATTRIB(Papyrus, m_viewofs, vector, '0 0 30');
+	ATTRIB(Papyrus, netname, string, "papyrus");
+	ATTRIB(Papyrus, m_name, string, "Papyrus");
+	ATTRIB(Papyrus, m_color, vector, '0.96 0.93 0.84');
+	ATTRIB(Papyrus, m_viewofs, vector, '0 0 30');
 #ifdef GAMEQC
-    ATTRIB(Papyrus, m_model, Model, MDL_Papyrus);
-    ATTRIB(Papyrus, m_model_head, Model, MDL_Papyrus_Head);
-    ATTRIB(Papyrus, m_soundpath, string, "player_papyrus/");
-    METHOD(Papyrus, m_sound_pain, string()) { return SND(Papyrus_Pain_Random()); }
-    METHOD(Papyrus, m_sound_death, string()) { return SND(Papyrus_Death_Random()); }
-    METHOD(Papyrus, m_sound_jump, string(entity actor)) { return "player_papyrus/plyrjmp8.wav"; }
+	ATTRIB(Papyrus, m_model, Model, MDL_Papyrus);
+	ATTRIB(Papyrus, m_model_head, Model, MDL_Papyrus_Head);
+	METHOD(Papyrus, m_sound_pain, Sound()) { return SND_Papyrus_Pain_Random(); }
+	METHOD(Papyrus, m_sound_death, Sound()) { return SND_Papyrus_Death_Random(); }
+	METHOD(Papyrus, m_sound_jump, Sound(entity actor)) { return SND_Papyrus_Jump; }
+	METHOD(Papyrus, m_sound_waterdeath, Sound(entity actor)) { return SND_Papyrus_WaterDeath; }
+	METHOD(Papyrus, m_sound_gasp1, Sound(entity actor)) { return SND_Papyrus_Gasp1; }
+	METHOD(Papyrus, m_sound_gasp2, Sound(entity actor)) { return SND_Papyrus_Gasp2; }
+	METHOD(Papyrus, m_sound_axehit, Sound(entity actor)) { return SND_Papyrus_AxeHit; }
+	METHOD(Papyrus, m_sound_burn, Sound(entity actor)) { return SND_Papyrus_Burn_Random(); }
+	METHOD(Papyrus, m_sound_drown, Sound(entity actor)) { return SND_Papyrus_Drown_Random(); }
+	METHOD(Papyrus, m_sound_land, Sound(entity actor)) { return SND_Papyrus_Land; }
+	METHOD(Papyrus, m_sound_fall, Sound(entity actor)) { return SND_Papyrus_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Papyrus, m_faceprefix, string, "gfx/quake/papyrus_");
+	ATTRIB(Papyrus, m_faceprefix, string, "gfx/quake/papyrus_");
 #endif
 #ifdef CSQC
-    ATTRIB(Papyrus, message, string, PAPYRUS_STATS);
+	ATTRIB(Papyrus, message, string, PAPYRUS_STATS);
 #endif
 ENDCLASS(Papyrus)
 REGISTER_CHAMPION(Papyrus, NEW(Papyrus));

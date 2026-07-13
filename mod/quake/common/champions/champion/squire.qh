@@ -11,65 +11,115 @@ SOUND(Squire_Pain2, "player_squire/pain2");
 SOUND(Squire_Pain3, "player_squire/pain3");
 SOUND(Squire_Pain4, "player_squire/pain4");
 Sound SND_Squire_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Squire_Pain1.m_id + rint(random() * 3));
+	return REGISTRY_GET(Sounds, SND_Squire_Pain1.m_id + rint(random() * 3));
 }
 
 SOUND(Squire_Death1, "player_squire/death1");
 SOUND(Squire_Death2, "player_squire/death2");
 SOUND(Squire_Death3, "player_squire/death3");
 Sound SND_Squire_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Squire_Death1.m_id + rint(random() * 2));
+	return REGISTRY_GET(Sounds, SND_Squire_Death1.m_id + rint(random() * 2));
 }
 
 SOUND(Squire_Jump1, "player_squire/jump1");
 SOUND(Squire_Jump2, "player_squire/jump2");
 SOUND(Squire_Jump3, "player_squire/jump3");
 Sound SND_Squire_Jump_Random() {
-    return REGISTRY_GET(Sounds, SND_Squire_Jump1.m_id + rint(random() * 2));
+	return REGISTRY_GET(Sounds, SND_Squire_Jump1.m_id + rint(random() * 2));
 }
+
+SOUND(Squire_Gasp1, "player_squire/gasp1");
+SOUND(Squire_Gasp2, "player_squire/gasp2");
+SOUND(Squire_WaterDeath, "player_squire/h2odeath");
+SOUND(Squire_AxeHit, "player_squire/axhit1");
+SOUND(Squire_Land, "player_squire/land");
+SOUND(Squire_Fall, "player_squire/land2");
+
+SOUND(Squire_Burn1, "player_squire/lburn1");
+SOUND(Squire_Burn2, "player_squire/lburn2");
+Sound SND_Squire_Burn_Random() {
+	return (random() > 0.5) ? SND_Squire_Burn1 : SND_Squire_Burn2;
+}
+
+SOUND(Squire_Drown1, "player_squire/drown1");
+SOUND(Squire_Drown2, "player_squire/drown2");
+Sound SND_Squire_Drown_Random() {
+	return (random() > 0.5) ? SND_Squire_Drown1 : SND_Squire_Drown2;
+}
+
+SOUND(Squire_Start1, "player_squire/start1");
+SOUND(Squire_Start2, "player_squire/start2");
+SOUND(Squire_Start3, "player_squire/start3");
+SOUND(Squire_Start4, "player_squire/start4");
+Sound SND_Squire_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Squire_Start1.m_id + rint(random() * 3));
+}
+
+SOUND(Squire_Step1, "player_squire/foot1");
+SOUND(Squire_Step2, "player_squire/foot2");
+SOUND(Squire_Step3, "player_squire/foot3");
+SOUND(Squire_Step4, "player_squire/foot4");
+SOUND(Squire_Step5, "player_squire/foot5");
+Sound SND_Squire_Step_Random() {
+	return REGISTRY_GET(Sounds, SND_Squire_Step1.m_id + rint(random() * 4));
+}
+
+SOUND(Squire_Rage_Start, "player_squire/rage_activate");
+SOUND(Squire_Rage_Loop, "player_squire/rage_loop");
+SOUND(Squire_Rage_End, "player_squire/rage_deactivate");
+SOUND(Squire_Rage_Reee, "player_squire/reee");
 
 PRECACHE(Squire)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/squire_face");
+	precache_pic("gfx/quake/squire_face");
 
-    precache_pic("gfx/quake/squire_ragecharge");
+	precache_pic("gfx/quake/squire_ragecharge");
 #endif
 #ifdef SVQC
-    //precache_sound("player_squire/plyrjmp8.wav");       // player jump
-    precache_sound("player_squire/land.wav");           // player landing
-    precache_sound("player_squire/land2.wav");      // player hurt landing
-    precache_sound("player_squire/drown1.wav");     // drowning pain
-    precache_sound("player_squire/drown2.wav");     // drowning pain
-    precache_sound("player_squire/gasp1.wav");      // gasping for air
-    precache_sound("player_squire/gasp2.wav");      // taking breath
-    precache_sound("player_squire/h2odeath.wav");       // drowning death
+	//precache_sound("player_squire/plyrjmp8.wav");       // player jump
+	precache_sound("player_squire/land.wav");           // player landing
+	precache_sound("player_squire/land2.wav");      // player hurt landing
+	precache_sound("player_squire/drown1.wav");     // drowning pain
+	precache_sound("player_squire/drown2.wav");     // drowning pain
+	precache_sound("player_squire/gasp1.wav");      // gasping for air
+	precache_sound("player_squire/gasp2.wav");      // taking breath
+	precache_sound("player_squire/h2odeath.wav");       // drowning death
 
-    precache_sound("player_squire/axhit1.wav");
-    precache_sound("player_squire/axhit2.wav");
+	precache_sound("player_squire/axhit1.wav");
+	precache_sound("player_squire/axhit2.wav");
 
-    precache_sound("player_squire/lburn1.wav");     // lava burn
-    precache_sound("player_squire/lburn2.wav");     // lava burn
+	precache_sound("player_squire/lburn1.wav");     // lava burn
+	precache_sound("player_squire/lburn2.wav");     // lava burn
 
-    precache_sound("player_squire/start1.wav");
-    precache_sound("player_squire/start2.wav");
-    precache_sound("player_squire/start3.wav");
-    precache_sound("player_squire/start4.wav");
+	precache_sound("player_squire/start1.wav");
+	precache_sound("player_squire/start2.wav");
+	precache_sound("player_squire/start3.wav");
+	precache_sound("player_squire/start4.wav");
 
-    precache_sound("player_squire/foot1.wav");
-    precache_sound("player_squire/foot2.wav");
-    precache_sound("player_squire/foot3.wav");
-    precache_sound("player_squire/foot4.wav");
-    precache_sound("player_squire/foot5.wav");
+	precache_sound("player_squire/pain1.wav");
+	precache_sound("player_squire/pain2.wav");
+	precache_sound("player_squire/pain3.wav");
+	precache_sound("player_squire/pain4.wav");
 
-    //precache_sound("player_squire/falling.wav");
+	precache_sound("player_squire/jump1.wav");
+	precache_sound("player_squire/jump2.wav");
+	precache_sound("player_squire/jump3.wav");
 
-    precache_sound("player_squire/reee.wav");
-    precache_sound("player_squire/rage_activate.wav");
-    precache_sound("player_squire/rage_deactivate.wav");
-    precache_sound("player_squire/rage_loop.wav");
+	precache_sound("player_squire/foot1.wav");
+	precache_sound("player_squire/foot2.wav");
+	precache_sound("player_squire/foot3.wav");
+	precache_sound("player_squire/foot4.wav");
+	precache_sound("player_squire/foot5.wav");
 
-    precache_model("progs/v_squireaxe.mdl");
+	//precache_sound("player_squire/falling.wav");
+
+	precache_sound("player_squire/reee.wav");
+	precache_sound("player_squire/rage_activate.wav");
+	precache_sound("player_squire/rage_deactivate.wav");
+	precache_sound("player_squire/rage_loop.wav");
+
+	precache_model("progs/v_squireaxe.mdl");
 #endif
 }
 #endif
@@ -85,25 +135,36 @@ PRECACHE(Squire)
 "- 20 second cooldown when Rage ends"
 #endif
 CLASS(Squire, Champions)
-    ATTRIB(Squire, netname, string, "squire");
-    ATTRIB(Squire, m_name, string, "Squire");
-    ATTRIB(Squire, m_color, vector, '0.5 0.5 0.5');
-    ATTRIB(Squire, qcc_jumpheight, float, 1.15);
-    ATTRIB(Squire, qcc_meleename, string, "squireaxe");
+	ATTRIB(Squire, netname, string, "squire");
+	ATTRIB(Squire, m_name, string, "Squire");
+	ATTRIB(Squire, m_color, vector, '0.5 0.5 0.5');
+	ATTRIB(Squire, qcc_jumpheight, float, 1.15);
+	ATTRIB(Squire, qcc_meleename, string, "squireaxe");
 #ifdef GAMEQC
-    ATTRIB(Squire, m_model, Model, MDL_Squire);
-    ATTRIB(Squire, m_model_head, Model, MDL_Squire_Head);
-    ATTRIB(Squire, m_soundpath, string, "player_squire/");
-    METHOD(Squire, m_sound_pain, string()) { return SND(Squire_Pain_Random()); }
-    METHOD(Squire, m_sound_death, string()) { return SND(Squire_Death_Random()); }
-    METHOD(Squire, m_sound_jump, string(entity actor)) { return SND(Squire_Pain_Random());; }
+	ATTRIB(Squire, m_model, Model, MDL_Squire);
+	ATTRIB(Squire, m_model_head, Model, MDL_Squire_Head);
+	METHOD(Squire, m_sound_pain, Sound()) { return SND_Squire_Pain_Random(); }
+	METHOD(Squire, m_sound_death, Sound()) { return SND_Squire_Death_Random(); }
+	METHOD(Squire, m_sound_jump, Sound(entity actor)) { return SND_Squire_Pain_Random(); }
+	METHOD(Squire, m_sound_waterdeath, Sound(entity actor)) { return SND_Squire_WaterDeath; }
+	METHOD(Squire, m_sound_gasp1, Sound(entity actor)) { return SND_Squire_Gasp1; }
+	METHOD(Squire, m_sound_gasp2, Sound(entity actor)) { return SND_Squire_Gasp2; }
+	METHOD(Squire, m_sound_axehit, Sound(entity actor)) { return SND_Squire_AxeHit; }
+	METHOD(Squire, m_sound_burn, Sound(entity actor)) { return SND_Squire_Burn_Random(); }
+	METHOD(Squire, m_sound_drown, Sound(entity actor)) { return SND_Squire_Drown_Random(); }
+	METHOD(Squire, m_sound_land, Sound(entity actor)) { return SND_Squire_Land; }
+	METHOD(Squire, m_sound_fall, Sound(entity actor)) { return SND_Squire_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Squire, message, string, SQUIRE_STATS);
+	ATTRIB(Squire, message, string, SQUIRE_STATS);
 #endif
-    ATTRIB(Squire, td_turrets, bool, true);
+	ATTRIB(Squire, td_turrets, bool, true);
 ENDCLASS(Squire)
 REGISTER_CHAMPION(Squire, NEW(Squire));
+
+#ifdef CSQC
+#undef SQUIRE_STATS
+#endif
 
 #ifdef SVQC
 .bool squire_cannon;

@@ -67,24 +67,18 @@ void Pepsiman_ThrowCan(entity this)
 
 	CSQCProjectile(can, true, PROJECTILE_CAN, true);
 
-	_sound(can, CH_TRIGGER_SINGLE, "player_pepsiman/can_roll.wav", 1, 0.5);
+	_sound(can, CH_TRIGGER_SINGLE, "player_pepsiman/can_roll.wav", 1, 0.5); // TODO: client side?!
 }
 
 METHOD(Pepsiman, m_footsteps, bool(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.33)
-		_sound(actor, CH_VOICE, "player_pepsiman/foot1.wav", 0.5, ATTN_NORM);
-	else if(r < 0.66)
-		_sound(actor, CH_VOICE, "player_pepsiman/foot2.wav", 0.5, ATTN_NORM);
-	else
-		_sound(actor, CH_VOICE, "player_pepsiman/foot3.wav", 0.5, ATTN_NORM);
+	sound(actor, CH_PLAYER, SND_Pepsiman_Step_Random(), 0.5, ATTN_NORM);
 	return true;
 }
 
 METHOD(Pepsiman, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Pepsiman_Start, ATTN_NORM);
 }
 
 METHOD(Pepsiman, m_playerthink, void(Champions this, entity actor))
@@ -98,7 +92,7 @@ METHOD(Pepsiman, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Pepsiman, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Pepsiman_Death2, ATTN_NORM);
 	actor.pepsiman_cannon = true;
 }
 
@@ -106,7 +100,7 @@ METHOD(Pepsiman, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.pepsiman_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.pepsiman_cannon = false;
 	return false;
 }

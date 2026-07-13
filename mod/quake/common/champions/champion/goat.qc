@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Goat, m_activate, void(Champions this, entity actor))
 {
-	_sound(actor, CH_WEAPON_SINGLE, "goatling/death1.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_WEAPON_SINGLE, SND_Goat_Start, ATTN_NORM);
 }
 
 METHOD(Goat, m_condition, bool(Champions this, entity actor))
@@ -15,7 +15,7 @@ METHOD(Goat, m_condition, bool(Champions this, entity actor))
 
 METHOD(Goat, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Goat_Death2, ATTN_NORM);
 	actor.goat_cannon = true;
 }
 
@@ -23,7 +23,7 @@ METHOD(Goat, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.goat_cannon)
 		return false;
-	_sound(actor, CH_TRIGGER_SINGLE, "goatling/idle6.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Goat_Cannon_Land, ATTN_NORM);
 	actor.goat_cannon = false;
 	actor.jump_flag = 0;
 	return true;
@@ -69,7 +69,7 @@ METHOD(Goat, m_touch, void(Champions this, entity actor, entity toucher))
 
 		// if they died, we'll hear another sound!
 		if(toucher.health > 0)
-			player_sound(actor, CH_VOICE, "bonk.wav", ATTN_NORM);
+			sound(actor, CH_PLAYER, SND_Goat_Bonk, 1, ATTN_NORM);
 
 		actor.goat_bash_time = time + 0.5;
 	}
@@ -82,9 +82,9 @@ METHOD(Goat, m_physics, bool(Champions this, entity actor, float dt))
 	{
 	#ifdef SVQC
 		if(autocvar_sv_quake_fixstuff || random() < 0.1)
-			player_sound(actor, CH_WEAPON_SINGLE, "death2.wav", ATTN_NORM);
+			player_sound(actor, CH_PLAYER_SINGLE, SND_Goat_Death2, ATTN_NORM);
 		else
-			_sound(actor, CH_WEAPON_SINGLE, SND(Goat_Pain_Random()), 1, ATTN_NORM);
+			player_sound(actor, CH_PLAYER_SINGLE, SND_Goat_Pain_Random(), ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	#endif
 		vector vang = PHYS_INPUT_ANGLES(actor);

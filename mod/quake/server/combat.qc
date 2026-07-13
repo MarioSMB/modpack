@@ -313,6 +313,7 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 
 void HappyDeath(entity this)
 {
+	// NOTE: using soundat so it doesn't follow the respawning player
 	soundat(NULL, this.origin, CH_VOICE, SND(CHEER), 1, ATTEN_NORM);
 	Send_Effect(EFFECT_CHEER, this.origin, '0 0 0', 1);
 }

@@ -1495,6 +1495,12 @@ bool FindTarget(entity this)
 	return true;
 }
 
+string footstep_sound(string input, int index)
+{
+	index = bound(1, index, 5); // only 5 sounds
+	return strcat("steps/", input, ftos(index), ".wav");
+}
+
 /*======================================================================
  monster_footstep
   This function will play a footstep sound
@@ -1582,11 +1588,11 @@ void monster_footstep(entity this, bool altfoot)
 	string stepsound = "misc/null.wav";
 	switch(footstep)
 	{
-		case FS_TYPELIGHT: stepsound = SND(FS_LIGHT(footstepnext)); break;
-		case FS_TYPEMEDIUM: stepsound = SND(FS_MEDIUM(footstepnext)); break;
-		case FS_TYPEHEAVY: stepsound = SND(FS_HEAVY(footstepnext)); break;
-		case FS_TYPELARGE: stepsound = SND(FS_LARGE(footstepnext)); break;
-		case FS_TYPEGIANT: stepsound = SND(FS_GIANT(footstepnext)); break;
+		case FS_TYPELIGHT: stepsound = footstep_sound("light", footstepnext); break;
+		case FS_TYPEMEDIUM: stepsound = footstep_sound("medium", footstepnext); break;
+		case FS_TYPEHEAVY: stepsound = footstep_sound("heavy", footstepnext); break;
+		case FS_TYPELARGE: stepsound = footstep_sound("large", footstepnext); break;
+		case FS_TYPEGIANT: stepsound = footstep_sound("giant", footstepnext); break;
 		case FS_TYPECUSTOM:
 		{
 			// Custom feet sounds (usually boss type creatures)
@@ -1597,8 +1603,8 @@ void monster_footstep(entity this, bool altfoot)
 			else stepsound = this.stepc5;
 			break;
 		}
-		case FS_TYPEDRAG: stepsound = SND(FS_DRAG(footstepnext)); break;
-		default: stepsound = SND(FS_SLOW(footstepnext)); break;
+		case FS_TYPEDRAG: stepsound = footstep_sound("drag", footstepnext); break;
+		default: stepsound = footstep_sound("slow", footstepnext); break;
 	}
 	
 	// Play the sound (large feet need to be heard further away)
@@ -1606,6 +1612,52 @@ void monster_footstep(entity this, bool altfoot)
 		_sound(this, CH_VOICE, stepsound, footvol, ATTN_FEETL);
 	else
 		_sound(this, CH_VOICE, stepsound, footvol, ATTN_FEET);
+}
+
+// we abuse the sound system but these are server-sent sounds
+PRECACHE(MonsterFootsteps)
+{
+	precache_sound("steps/slow1.wav");
+	precache_sound("steps/slow2.wav");
+	precache_sound("steps/slow3.wav");
+	precache_sound("steps/slow4.wav");
+	precache_sound("steps/slow5.wav");
+
+	precache_sound("steps/drag1.wav");
+	precache_sound("steps/drag2.wav");
+	precache_sound("steps/drag3.wav");
+	precache_sound("steps/drag4.wav");
+	precache_sound("steps/drag5.wav");
+
+	precache_sound("steps/light1.wav");
+	precache_sound("steps/light2.wav");
+	precache_sound("steps/light3.wav");
+	precache_sound("steps/light4.wav");
+	precache_sound("steps/light5.wav");
+
+	precache_sound("steps/medium1.wav");
+	precache_sound("steps/medium2.wav");
+	precache_sound("steps/medium3.wav");
+	precache_sound("steps/medium4.wav");
+	precache_sound("steps/medium5.wav");
+
+	precache_sound("steps/heavy1.wav");
+	precache_sound("steps/heavy2.wav");
+	precache_sound("steps/heavy3.wav");
+	precache_sound("steps/heavy4.wav");
+	precache_sound("steps/heavy5.wav");
+
+	precache_sound("steps/large1.wav");
+	precache_sound("steps/large2.wav");
+	precache_sound("steps/large3.wav");
+	precache_sound("steps/large4.wav");
+	precache_sound("steps/large5.wav");
+
+	precache_sound("steps/giant1.wav");
+	precache_sound("steps/giant2.wav");
+	precache_sound("steps/giant3.wav");
+	precache_sound("steps/giant4.wav");
+	precache_sound("steps/giant5.wav");
 }
 
 

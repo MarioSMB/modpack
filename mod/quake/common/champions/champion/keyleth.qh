@@ -26,7 +26,39 @@ Sound SND_Keyleth_Jump_Random() {
 	return REGISTRY_GET(Sounds, SND_Keyleth_Jump1.m_id + rint(random() * 2));
 }
 
+SOUND(Keyleth_Gasp1, "player_keyleth/gasp1");
+SOUND(Keyleth_Gasp2, "player_keyleth/gasp2");
+SOUND(Keyleth_WaterDeath, "player_keyleth/h2odeath");
+SOUND(Keyleth_AxeHit, "player_keyleth/axhit1");
+SOUND(Keyleth_Land, "player_keyleth/land");
+SOUND(Keyleth_Fall, "player_keyleth/land2");
+
+SOUND(Keyleth_Burn1, "player_keyleth/lburn1");
+SOUND(Keyleth_Burn2, "player_keyleth/lburn2");
+Sound SND_Keyleth_Burn_Random() {
+	return (random() > 0.5) ? SND_Keyleth_Burn1 : SND_Keyleth_Burn2;
+}
+
+SOUND(Keyleth_Drown1, "player_keyleth/drown1");
+SOUND(Keyleth_Drown2, "player_keyleth/drown2");
+Sound SND_Keyleth_Drown_Random() {
+	return (random() > 0.5) ? SND_Keyleth_Drown1 : SND_Keyleth_Drown2;
+}
+
+SOUND(Keyleth_Start1, "player_keyleth/start");
+SOUND(Keyleth_Start2, "player_keyleth/start2");
+SOUND(Keyleth_Start3, "player_keyleth/start3");
+SOUND(Keyleth_Start4, "player_keyleth/start4");
+SOUND(Keyleth_Start5, "player_keyleth/start5");
+Sound SND_Keyleth_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Keyleth_Start1.m_id + rint(random() * 4));
+}
+
+SOUND(Keyleth_Transform, "demon/dhit2");
 SOUND(Keyleth_Healing, "ambience/pixels");
+
+SOUND(Keyleth_Cannon_Launch, "player_keyleth/falling");
+SOUND(Keyleth_Cannon_Land, "player_keyleth/cannon_land");
 
 PRECACHE(Keyleth)
 {
@@ -50,42 +82,6 @@ PRECACHE(Keyleth)
 	precache_pic("gfx/quake/katria_face_p5");
 #endif
 #ifdef SVQC
-	precache_sound("player_keyleth/plyrjmp8.wav");       // player jump
-	precache_sound("player_keyleth/land.wav");           // player landing
-	precache_sound("player_keyleth/land2.wav");      // player hurt landing
-	precache_sound("player_keyleth/drown1.wav");     // drowning pain
-	precache_sound("player_keyleth/drown2.wav");     // drowning pain
-	precache_sound("player_keyleth/gasp1.wav");      // gasping for air
-	precache_sound("player_keyleth/gasp2.wav");      // taking breath
-	precache_sound("player_keyleth/h2odeath.wav");       // drowning death
-
-	precache_sound("player_keyleth/pain1.wav");
-	precache_sound("player_keyleth/pain2.wav");
-	precache_sound("player_keyleth/pain3.wav");
-
-	precache_sound("player_keyleth/death1.wav");
-	precache_sound("player_keyleth/death2.wav");
-
-	precache_sound("player_keyleth/axhit1.wav");
-	precache_sound("player_keyleth/axhit2.wav");
-
-	precache_sound("player_keyleth/lburn1.wav");     // lava burn
-	precache_sound("player_keyleth/lburn2.wav");     // lava burn
-
-	precache_sound("player_keyleth/start.wav");
-	precache_sound("player_keyleth/start2.wav");
-	precache_sound("player_keyleth/start3.wav");
-	precache_sound("player_keyleth/start4.wav");
-	precache_sound("player_keyleth/start5.wav");
-
-	precache_sound("player_keyleth/jump1.wav");
-	precache_sound("player_keyleth/jump2.wav");
-
-	precache_sound("player_keyleth/falling.wav");
-	precache_sound("player_keyleth/cannon_land.wav");
-
-	precache_sound("demon/dhit2.wav");
-
 	precache_model("progs/v_keypunch.mdl");
 #endif
 }
@@ -113,10 +109,17 @@ CLASS(Keyleth, Champions)
 #ifdef GAMEQC
 	ATTRIB(Keyleth, m_model, Model, MDL_Keyleth);
 	ATTRIB(Keyleth, m_model_head, Model, MDL_Keyleth_Head);
-	ATTRIB(Keyleth, m_soundpath, string, "player_keyleth/");
-	METHOD(Keyleth, m_sound_pain, string()) { return SND(Keyleth_Pain_Random()); }
-	METHOD(Keyleth, m_sound_death, string()) { return SND(Keyleth_Death_Random()); }
-	METHOD(Keyleth, m_sound_jump, string(entity actor)) { return SND(Keyleth_Jump_Random()); }
+	METHOD(Keyleth, m_sound_pain, Sound()) { return SND_Keyleth_Pain_Random(); }
+	METHOD(Keyleth, m_sound_death, Sound()) { return SND_Keyleth_Death_Random(); }
+	METHOD(Keyleth, m_sound_jump, Sound(entity actor)) { return SND_Keyleth_Jump_Random(); }
+	METHOD(Keyleth, m_sound_waterdeath, Sound(entity actor)) { return SND_Keyleth_WaterDeath; }
+	METHOD(Keyleth, m_sound_gasp1, Sound(entity actor)) { return SND_Keyleth_Gasp1; }
+	METHOD(Keyleth, m_sound_gasp2, Sound(entity actor)) { return SND_Keyleth_Gasp2; }
+	METHOD(Keyleth, m_sound_axehit, Sound(entity actor)) { return SND_Keyleth_AxeHit; }
+	METHOD(Keyleth, m_sound_burn, Sound(entity actor)) { return SND_Keyleth_Burn_Random(); }
+	METHOD(Keyleth, m_sound_drown, Sound(entity actor)) { return SND_Keyleth_Drown_Random(); }
+	METHOD(Keyleth, m_sound_land, Sound(entity actor)) { return SND_Keyleth_Land; }
+	METHOD(Keyleth, m_sound_fall, Sound(entity actor)) { return SND_Keyleth_Fall; }
 #endif
 #ifdef CSQC
 	ATTRIB(Keyleth, m_faceprefix, string, "gfx/quake/katria_");

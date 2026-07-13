@@ -8,7 +8,7 @@ MODEL(Kirby, "progs/player_kirby.mdl");
 SOUND(Kirby_Pain1, "player_kirby/pain1");
 SOUND(Kirby_Pain2, "player_kirby/pain2");
 Sound SND_Kirby_Pain_Random() {
-    return (random() > 0.5) ? SND_Kirby_Pain1 : SND_Kirby_Pain2;
+	return (random() > 0.5) ? SND_Kirby_Pain1 : SND_Kirby_Pain2;
 }
 
 SOUND(Kirby_Death1, "player_kirby/death1");
@@ -16,82 +16,104 @@ SOUND(Kirby_Death2, "player_kirby/death2");
 SOUND(Kirby_Death3, "player_kirby/death3");
 SOUND(Kirby_Death4, "player_kirby/death4");
 Sound SND_Kirby_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Kirby_Death1.m_id + rint(random() * 3));
+	return REGISTRY_GET(Sounds, SND_Kirby_Death1.m_id + rint(random() * 3));
 }
+
+SOUND(Kirby_Jump, "player_kirby/plyrjmp8");
+SOUND(Kirby_Gasp1, "player_kirby/gasp1");
+SOUND(Kirby_Gasp2, "player_kirby/gasp2");
+SOUND(Kirby_WaterDeath, "player_kirby/h2odeath");
+SOUND(Kirby_AxeHit, "player_kirby/axhit1");
+SOUND(Kirby_Land, "player_kirby/land");
+SOUND(Kirby_Fall, "player_kirby/land2");
+
+SOUND(Kirby_Burn1, "player_kirby/lburn1");
+SOUND(Kirby_Burn2, "player_kirby/lburn2");
+Sound SND_Kirby_Burn_Random() {
+	return (random() > 0.5) ? SND_Kirby_Burn1 : SND_Kirby_Burn2;
+}
+
+SOUND(Kirby_Drown1, "player_kirby/drown1");
+SOUND(Kirby_Drown2, "player_kirby/drown2");
+Sound SND_Kirby_Drown_Random() {
+	return (random() > 0.5) ? SND_Kirby_Drown1 : SND_Kirby_Drown2;
+}
+
+SOUND(Kirby_Start1, "player_kirby/start");
+SOUND(Kirby_Start2, "player_kirby/start2");
+SOUND(Kirby_Start3, "player_kirby/start3");
+SOUND(Kirby_Start4, "player_kirby/start4");
+Sound SND_Kirby_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Kirby_Start1.m_id + rint(random() * 3));
+}
+
+SOUND(Kirby_Fly1, "player_kirby/fly1");
+SOUND(Kirby_Fly2, "player_kirby/fly2");
+SOUND(Kirby_Fly3, "player_kirby/fly3");
+SOUND(Kirby_Fly4, "player_kirby/fly4");
+Sound SND_Kirby_Fly_Random() {
+	return REGISTRY_GET(Sounds, SND_Kirby_Fly1.m_id + rint(random() * 3));
+}
+SOUND(Kirby_Jump_Full, "player_kirby/jump_full");
+
+SOUND(Kirby_Falling, "player_kirby/falling");
+SOUND(Kirby_Cannon_Land, "player_kirby/cannon_land");
+SOUND(Kirby_Bonk, "player_kirby/bonk");
+SOUND(Kirby_Slide, "player_kirby/slide");
+
+SOUND(Kirby_Inhale, "player_kirby/inhale");
+SOUND(Kirby_Exhale, "player_kirby/exhale");
+SOUND(Kirby_Spit_Large, "player_kirby/spit_large");
+SOUND(Kirby_Spit_Medium, "player_kirby/spit_medium");
+SOUND(Kirby_Spit, "player_kirby/spit");
+SOUND(Kirby_Eat, "player_kirby/eat");
+SOUND(Kirby_Swallow, "player_kirby/swallow");
+SOUND(Kirby_Ability, "player_kirby/ability");
+SOUND(Kirby_Ability_Lost, "player_kirby/ability_lost");
+SOUND(Kirby_Goated, "kirby/wawa");
 
 PRECACHE(Kirby)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/kirby_face_invis");
-    precache_pic("gfx/quake/kirby_face_invul2");
-    precache_pic("gfx/quake/kirby_face_inv2");
-    precache_pic("gfx/quake/kirby_face_quad");
+	precache_pic("gfx/quake/kirby_face_invis");
+	precache_pic("gfx/quake/kirby_face_invul2");
+	precache_pic("gfx/quake/kirby_face_inv2");
+	precache_pic("gfx/quake/kirby_face_quad");
 
-    precache_pic("gfx/quake/kirby_face1");
-    precache_pic("gfx/quake/kirby_face_p1");
-    precache_pic("gfx/quake/kirby_face2");
-    precache_pic("gfx/quake/kirby_face_p2");
-    precache_pic("gfx/quake/kirby_face3");
-    precache_pic("gfx/quake/kirby_face_p3");
-    precache_pic("gfx/quake/kirby_face4");
-    precache_pic("gfx/quake/kirby_face_p4");
-    precache_pic("gfx/quake/kirby_face5");
-    precache_pic("gfx/quake/kirby_face_p5");
+	precache_pic("gfx/quake/kirby_face1");
+	precache_pic("gfx/quake/kirby_face_p1");
+	precache_pic("gfx/quake/kirby_face2");
+	precache_pic("gfx/quake/kirby_face_p2");
+	precache_pic("gfx/quake/kirby_face3");
+	precache_pic("gfx/quake/kirby_face_p3");
+	precache_pic("gfx/quake/kirby_face4");
+	precache_pic("gfx/quake/kirby_face_p4");
+	precache_pic("gfx/quake/kirby_face5");
+	precache_pic("gfx/quake/kirby_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_kirby/plyrjmp8.wav");       // player jump
-    precache_sound("player_kirby/land.wav");           // player landing
-    precache_sound("player_kirby/land2.wav");      // player hurt landing
-    precache_sound("player_kirby/drown1.wav");     // drowning pain
-    precache_sound("player_kirby/drown2.wav");     // drowning pain
-    precache_sound("player_kirby/gasp1.wav");      // gasping for air
-    precache_sound("player_kirby/gasp2.wav");      // taking breath
-    precache_sound("player_kirby/h2odeath.wav");       // drowning death
+	precache_sound("player_kirby/ability.wav");
+	precache_sound("player_kirby/ability_lost.wav");
+	precache_sound("player_kirby/inhale.wav");
+	precache_sound("player_kirby/exhale.wav");
+	precache_sound("player_kirby/eat.wav");
+	precache_sound("player_kirby/spit.wav");
+	precache_sound("player_kirby/spit_medium.wav");
+	precache_sound("player_kirby/spit_large.wav");
+	precache_sound("player_kirby/swallow.wav");
+	precache_sound("player_kirby/jump_full.wav");
+	precache_sound("player_kirby/star_impact.wav");
+	precache_sound("player_kirby/star_hit.wav");
 
-    precache_sound("player_kirby/pain1.wav");
-    precache_sound("player_kirby/pain2.wav");
+	precache_sound("player_kirby/ability_super1.wav");
+	precache_sound("player_kirby/ability_super2.wav");
 
-    precache_sound("player_kirby/death1.wav");
-    precache_sound("player_kirby/death2.wav");
-    precache_sound("player_kirby/death3.wav");
-    precache_sound("player_kirby/death4.wav");
+	precache_sound("player_kirby/fly1.wav");
+	precache_sound("player_kirby/fly2.wav");
+	precache_sound("player_kirby/fly3.wav");
+	precache_sound("player_kirby/fly4.wav");
 
-    precache_sound("player_kirby/axhit1.wav");
-    precache_sound("player_kirby/axhit2.wav");
-
-    precache_sound("player_kirby/lburn1.wav");     // lava burn
-    precache_sound("player_kirby/lburn2.wav");     // lava burn
-
-    precache_sound("player_kirby/start.wav");
-    precache_sound("player_kirby/start2.wav");
-    precache_sound("player_kirby/start3.wav");
-    precache_sound("player_kirby/start4.wav");
-
-    precache_sound("player_kirby/falling.wav");
-    precache_sound("player_kirby/cannon_land.wav");
-
-    precache_sound("player_kirby/ability.wav");
-    precache_sound("player_kirby/ability_lost.wav");
-    precache_sound("player_kirby/inhale.wav");
-    precache_sound("player_kirby/exhale.wav");
-    precache_sound("player_kirby/slide.wav");
-    precache_sound("player_kirby/bonk.wav");
-    precache_sound("player_kirby/eat.wav");
-    precache_sound("player_kirby/spit.wav");
-    precache_sound("player_kirby/spit_medium.wav");
-    precache_sound("player_kirby/spit_large.wav");
-    precache_sound("player_kirby/swallow.wav");
-    precache_sound("player_kirby/jump_full.wav");
-    precache_sound("player_kirby/star_impact.wav");
-    precache_sound("player_kirby/star_hit.wav");
-
-    precache_sound("player_kirby/ability_super1.wav");
-    precache_sound("player_kirby/ability_super2.wav");
-
-    precache_sound("player_kirby/fly1.wav");
-    precache_sound("player_kirby/fly2.wav");
-    precache_sound("player_kirby/fly3.wav");
-    precache_sound("player_kirby/fly4.wav");
+	precache_sound("player_kirby/star_hit.wav");
 #endif
 }
 #endif
@@ -111,27 +133,34 @@ PRECACHE(Kirby)
 "Ability overrides primary attack"
 #endif
 CLASS(Kirby, Champions)
-    ATTRIB(Kirby, netname, string, "kirby");
-    ATTRIB(Kirby, m_name, string, "Kirby");
-    ATTRIB(Kirby, m_color, vector, '0.84 0.28 0.58');
-    ATTRIB(Kirby, qcc_noweaponswap, bool, true);
-    ATTRIB(Kirby, qcc_falldamage, float, 0);
-    ATTRIB(Kirby, qcc_jumpheight, float, 1.15);
-    ATTRIB(Kirby, m_viewofs, vector, '0 0 10');
-    ATTRIB(Kirby, m_mins, vector, '-10 -10 -24');
-    ATTRIB(Kirby, m_maxs, vector, '10 10 11');
+	ATTRIB(Kirby, netname, string, "kirby");
+	ATTRIB(Kirby, m_name, string, "Kirby");
+	ATTRIB(Kirby, m_color, vector, '0.84 0.28 0.58');
+	ATTRIB(Kirby, qcc_noweaponswap, bool, true);
+	ATTRIB(Kirby, qcc_falldamage, float, 0);
+	ATTRIB(Kirby, qcc_jumpheight, float, 1.15);
+	ATTRIB(Kirby, m_viewofs, vector, '0 0 10');
+	ATTRIB(Kirby, m_mins, vector, '-10 -10 -24');
+	ATTRIB(Kirby, m_maxs, vector, '10 10 11');
 #ifdef GAMEQC
-    ATTRIB(Kirby, m_model, Model, MDL_Kirby);
-    ATTRIB(Kirby, m_model_head, Model, MDL_Null);
-    ATTRIB(Kirby, m_soundpath, string, "player_kirby/");
-    METHOD(Kirby, m_sound_pain, string()) { return SND(Kirby_Pain_Random()); }
-    METHOD(Kirby, m_sound_death, string()) { return SND(Kirby_Death_Random()); }
+	ATTRIB(Kirby, m_model, Model, MDL_Kirby);
+	ATTRIB(Kirby, m_model_head, Model, MDL_Null);
+	METHOD(Kirby, m_sound_pain, Sound()) { return SND_Kirby_Pain_Random(); }
+	METHOD(Kirby, m_sound_death, Sound()) { return SND_Kirby_Death_Random(); }
+	METHOD(Kirby, m_sound_waterdeath, Sound(entity actor)) { return SND_Kirby_WaterDeath; }
+	METHOD(Kirby, m_sound_gasp1, Sound(entity actor)) { return SND_Kirby_Gasp1; }
+	METHOD(Kirby, m_sound_gasp2, Sound(entity actor)) { return SND_Kirby_Gasp2; }
+	METHOD(Kirby, m_sound_axehit, Sound(entity actor)) { return SND_Kirby_AxeHit; }
+	METHOD(Kirby, m_sound_burn, Sound(entity actor)) { return SND_Kirby_Burn_Random(); }
+	METHOD(Kirby, m_sound_drown, Sound(entity actor)) { return SND_Kirby_Drown_Random(); }
+	METHOD(Kirby, m_sound_land, Sound(entity actor)) { return SND_Kirby_Land; }
+	METHOD(Kirby, m_sound_fall, Sound(entity actor)) { return SND_Kirby_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Kirby, m_faceprefix, string, "gfx/quake/kirby_");
+	ATTRIB(Kirby, m_faceprefix, string, "gfx/quake/kirby_");
 #endif
 #ifdef CSQC
-    ATTRIB(Kirby, message, string, KIRBY_STATS);
+	ATTRIB(Kirby, message, string, KIRBY_STATS);
 #endif
 ENDCLASS(Kirby)
 REGISTER_CHAMPION(Kirby, NEW(Kirby));

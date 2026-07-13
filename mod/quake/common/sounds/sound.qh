@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+bool autocvar_sv_quake_newsounds;
+#endif
+
 // negative = SVQC autochannels
 // positive = one per entity
 
@@ -40,6 +44,10 @@ const float VOL_MUFFLED = 0.35;
 string Sound_randomize();
 #endif
 
+#ifdef SVQC
+void qc_sound(entity e, int chan, entity samp, float vol, float atten);
+#endif
+
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC
@@ -56,7 +64,7 @@ string Sound_randomize();
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
-#define sound(e, c, s, v, a) _sound(e, c, Sound_fixpath(s), v, a)
+#define sound(e, c, s, v, a) qc_sound(e, c, s, v, a)
 
 /**
  * because sound7 didn't have origin

@@ -13,7 +13,7 @@ SOUND(Doom_Pain4, "player_doom/pain4");
 SOUND(Doom_Pain5, "player_doom/pain5");
 SOUND(Doom_Pain6, "player_doom/pain6");
 Sound SND_Doom_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Doom_Pain1.m_id + rint(random() * 5));
+	return REGISTRY_GET(Sounds, SND_Doom_Pain1.m_id + rint(random() * 5));
 }
 
 SOUND(Doom_Death1, "player_doom/death1");
@@ -21,58 +21,53 @@ SOUND(Doom_Death2, "player_doom/death2");
 SOUND(Doom_Death3, "player_doom/death3");
 SOUND(Doom_Death4, "player_doom/death4");
 Sound SND_Doom_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Doom_Death1.m_id + rint(random() * 3));
+	return REGISTRY_GET(Sounds, SND_Doom_Death1.m_id + rint(random() * 3));
 }
+
+SOUND(Doom_Jump, "player_doom/plyrjmp8");
+SOUND(Doom_Gasp1, "player_doom/gasp1");
+SOUND(Doom_Gasp2, "player_doom/gasp2");
+SOUND(Doom_WaterDeath, "player_doom/h2odeath");
+SOUND(Doom_AxeHit, "player_doom/axhit1");
+SOUND(Doom_Land, "player_doom/land");
+SOUND(Doom_Fall, "player_doom/land2");
+
+SOUND(Doom_Burn1, "player_doom/lburn1");
+SOUND(Doom_Burn2, "player_doom/lburn2");
+Sound SND_Doom_Burn_Random() {
+	return (random() > 0.5) ? SND_Doom_Burn1 : SND_Doom_Burn2;
+}
+
+SOUND(Doom_Drown1, "player_doom/drown1");
+SOUND(Doom_Drown2, "player_doom/drown2");
+Sound SND_Doom_Drown_Random() {
+	return (random() > 0.5) ? SND_Doom_Drown1 : SND_Doom_Drown2;
+}
+
+SOUND(Doom_Start, "player_doom/start");
+
 PRECACHE(Doom)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/doom_face_invis");
-    precache_pic("gfx/quake/doom_face_invul2");
-    precache_pic("gfx/quake/doom_face_inv2");
-    precache_pic("gfx/quake/doom_face_quad");
+	precache_pic("gfx/quake/doom_face_invis");
+	precache_pic("gfx/quake/doom_face_invul2");
+	precache_pic("gfx/quake/doom_face_inv2");
+	precache_pic("gfx/quake/doom_face_quad");
 
-    // no looking around yet sorry
-    precache_pic("gfx/quake/doom_face1");
-    precache_pic("gfx/quake/doom_face_p1");
-    precache_pic("gfx/quake/doom_face2");
-    precache_pic("gfx/quake/doom_face_p2");
-    precache_pic("gfx/quake/doom_face3");
-    precache_pic("gfx/quake/doom_face_p3");
-    precache_pic("gfx/quake/doom_face4");
-    precache_pic("gfx/quake/doom_face_p4");
-    precache_pic("gfx/quake/doom_face5");
-    precache_pic("gfx/quake/doom_face_p5");
+	// no looking around yet sorry
+	precache_pic("gfx/quake/doom_face1");
+	precache_pic("gfx/quake/doom_face_p1");
+	precache_pic("gfx/quake/doom_face2");
+	precache_pic("gfx/quake/doom_face_p2");
+	precache_pic("gfx/quake/doom_face3");
+	precache_pic("gfx/quake/doom_face_p3");
+	precache_pic("gfx/quake/doom_face4");
+	precache_pic("gfx/quake/doom_face_p4");
+	precache_pic("gfx/quake/doom_face5");
+	precache_pic("gfx/quake/doom_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_doom/plyrjmp8.wav");       // player jump
-    precache_sound("player_doom/land.wav");           // player landing
-    precache_sound("player_doom/land2.wav");      // player hurt landing
-    precache_sound("player_doom/drown1.wav");     // drowning pain
-    precache_sound("player_doom/drown2.wav");     // drowning pain
-    precache_sound("player_doom/gasp1.wav");      // gasping for air
-    precache_sound("player_doom/gasp2.wav");      // taking breath
-    precache_sound("player_doom/h2odeath.wav");       // drowning death
-
-    precache_sound("player_doom/pain1.wav");
-    precache_sound("player_doom/pain2.wav");
-    precache_sound("player_doom/pain3.wav");
-    precache_sound("player_doom/pain4.wav");
-    precache_sound("player_doom/pain5.wav");
-    precache_sound("player_doom/pain6.wav");
-
-    precache_sound("player_doom/death1.wav");
-    precache_sound("player_doom/death2.wav");
-    precache_sound("player_doom/death3.wav");
-    precache_sound("player_doom/death4.wav");
-
-    precache_sound("player_doom/axhit1.wav");
-
-    precache_sound("player_doom/lburn1.wav");     // lava burn
-    precache_sound("player_doom/lburn2.wav");     // lava burn
-
-    precache_sound("player_doom/start.wav");
-
-    precache_model("progs/v_punch.mdl");
+	precache_model("progs/v_punch.mdl");
 #endif
 }
 #endif
@@ -84,24 +79,31 @@ PRECACHE(Doom)
 "Always gibs slain monsters"
 #endif
 CLASS(Doom, Champions)
-    ATTRIB(Doom, netname, string, "doom");
-    ATTRIB(Doom, m_name, string, "Doom");
-    ATTRIB(Doom, m_color, vector, '0.73 0.72 0.42');
-    ATTRIB(Doom, qcc_meleename, string, "punch");
+	ATTRIB(Doom, netname, string, "doom");
+	ATTRIB(Doom, m_name, string, "Doom");
+	ATTRIB(Doom, m_color, vector, '0.73 0.72 0.42');
+	ATTRIB(Doom, qcc_meleename, string, "punch");
 #ifdef GAMEQC
-    ATTRIB(Doom, m_model, Model, MDL_Doom);
-    ATTRIB(Doom, m_model_head, Model, MDL_Doom_Head);
-    ATTRIB(Doom, m_soundpath, string, "player_doom/");
-    METHOD(Doom, m_sound_pain, string()) { return SND(Doom_Pain_Random()); }
-    METHOD(Doom, m_sound_death, string()) { return SND(Doom_Death_Random()); }
-    METHOD(Doom, m_sound_jump, string(entity actor)) { return "player_doom/plyrjmp8.wav"; }
+	ATTRIB(Doom, m_model, Model, MDL_Doom);
+	ATTRIB(Doom, m_model_head, Model, MDL_Doom_Head);
+	METHOD(Doom, m_sound_pain, Sound()) { return SND_Doom_Pain_Random(); }
+	METHOD(Doom, m_sound_death, Sound()) { return SND_Doom_Death_Random(); }
+	METHOD(Doom, m_sound_jump, Sound(entity actor)) { return SND_Doom_Jump; }
+	METHOD(Doom, m_sound_waterdeath, Sound(entity actor)) { return SND_Doom_WaterDeath; }
+	METHOD(Doom, m_sound_gasp1, Sound(entity actor)) { return SND_Doom_Gasp1; }
+	METHOD(Doom, m_sound_gasp2, Sound(entity actor)) { return SND_Doom_Gasp2; }
+	METHOD(Doom, m_sound_axehit, Sound(entity actor)) { return SND_Doom_AxeHit; }
+	METHOD(Doom, m_sound_burn, Sound(entity actor)) { return SND_Doom_Burn_Random(); }
+	METHOD(Doom, m_sound_drown, Sound(entity actor)) { return SND_Doom_Drown_Random(); }
+	METHOD(Doom, m_sound_land, Sound(entity actor)) { return SND_Doom_Land; }
+	METHOD(Doom, m_sound_fall, Sound(entity actor)) { return SND_Doom_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Doom, m_faceprefix, string, "gfx/quake/doom_");
+	ATTRIB(Doom, m_faceprefix, string, "gfx/quake/doom_");
 #endif
 #ifdef CSQC
-    ATTRIB(Doom, message, string, DOOM_STATS);
+	ATTRIB(Doom, message, string, DOOM_STATS);
 #endif
-    ATTRIB(Doom, td_turrets, bool, true);
+	ATTRIB(Doom, td_turrets, bool, true);
 ENDCLASS(Doom)
 REGISTER_CHAMPION(Doom, NEW(Doom));

@@ -215,10 +215,10 @@ void W_FireMic(entity this, .entity weaponentity)
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	r *= 0.9; // TODO: per-instrument offsets
-	string snd = get_deathsound(this, rint((random() * 4) + 1));
+	Sound snd = get_deathsound(this, rint((random() * 4) + 1));
 	if(dobrown)
-		snd = "player_goat/death2.wav";
-	sound7(this, CH_WEAPON_SINGLE, snd, 1, ATTN_NORM, r, 0);
+		snd = SND_Goat_Death2;
+	qc_sound7(this, CH_WEAPON_SINGLE, snd, 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Mic, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

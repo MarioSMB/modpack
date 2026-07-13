@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Monkey, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "monkey_start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Monkey_Start, ATTN_NORM);
 
 	Inventory_add(WEP_MAGIC, actor, ITEM_OWNED);
 }
@@ -19,27 +19,16 @@ METHOD(Monkey, m_playerthink, void(Champions this, entity actor))
 	if(actor.m_transform == this && PHYS_INPUT_BUTTON_CROUCH(actor) && time >= STAT(QCC_ABILITYTIME, actor)) //&& QCC_CanCastAbility(actor))
 	{
 		actor.shantae_transformtime = time + 0.5; // prevent player voices on transform
-		_sound(actor, CH_VOICE, "player_shantae/player_transform.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_PLAYER, SND_Shantae_Transform, ATTN_NORM);
 		QCC_ClearTransform(actor);
 		te_explosion2(actor.origin, 40, 7);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 	}
 }
 
-METHOD(Monkey, m_sound_jump, string(entity actor))
-{
-	float r = random();
-	if(r < 0.33)
-		return "shantae/monkey_jump1.wav";
-	else if(r < 0.66)
-		return "shantae/monkey_jump2.wav";
-	else
-		return "shantae/monkey_jump3.wav";
-}
-
 METHOD(Monkey, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	_sound(actor, CH_TRIGGER_SINGLE, "shantae/h2odeath.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Monkey_WaterDeath, ATTN_NORM);
 	actor.monkey_cannon = true;
 }
 
@@ -47,7 +36,7 @@ METHOD(Monkey, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.monkey_cannon)
 		return false;
-	_sound(actor, CH_TRIGGER_SINGLE, "shantae/land2.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Monkey_Fall, ATTN_NORM);
 	actor.monkey_cannon = false;
 	return false;
 }

@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Nyx, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "invis2.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Nyx_Start, ATTN_NORM);
 
 	STAT(NYX_INVIS, actor) = false;
 }
@@ -21,7 +21,7 @@ void Nyx_Invis_Exit(entity this)
 	if(autocvar_sv_quake_nyx_telefrag)
 		spawn_tdeath_fast(this.origin, this);
 
-	_sound(this, CH_PLAYER_SINGLE, "player_nyx/invisexit.wav", 1, ATTN_NORM);
+	sound(this, CH_PLAYER_SINGLE, SND_Nyx_GhostWalk_Exit, 1, ATTN_NORM);
 
 	STAT(NYX_INVIS, this) = false;
 	//this.skin = 0;
@@ -29,7 +29,7 @@ void Nyx_Invis_Exit(entity this)
 
 void Nyx_Invis_Enter(entity this)
 {
-	_sound(this, CH_PLAYER_SINGLE, "player_nyx/invisenter.wav", 1, ATTN_NORM);
+	sound(this, CH_PLAYER_SINGLE, SND_Nyx_GhostWalk_Enter, 1, ATTN_NORM);
 
 	STAT(NYX_INVIS, this) = true;
 	//this.skin = 1;
@@ -42,17 +42,7 @@ void Nyx_Invis_Enter(entity this)
 	this.solid = SOLID_TRIGGER;
 
 	if(random() < 0.5)
-	{
-		string s;
-		float r = random();
-		if(r < 0.333)
-			s = "invis1.wav";
-		else if(r < 0.666)
-			s = "invis3.wav";
-		else
-			s = "invis4.wav";
-		player_sound(this, CH_VOICE, s, ATTN_NORM);
-	}
+		player_sound(this, CH_VOICE, SND_Nyx_Invisible_Random(), ATTN_NORM);
 }
 
 METHOD(Nyx, m_playerthink, void(Champions this, entity actor))
@@ -87,18 +77,8 @@ METHOD(Nyx, m_clear, void(Champions this, entity actor))
 METHOD(Nyx, m_footsteps, bool(Champions this, entity actor))
 {
 	if(!STAT(NYX_INVIS, actor))
-		return false;
-	float r = random();
-	if(r < 0.2)
-		_sound(actor, CH_VOICE, "player/walk1.wav", 1, ATTN_NORM);
-	else if(r < 0.4)
-		_sound(actor, CH_VOICE, "player/walk2.wav", 1, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(actor, CH_VOICE, "player/walk3.wav", 1, ATTN_NORM);
-	else if(r < 0.8)
-		_sound(actor, CH_VOICE, "player/walk4.wav", 1, ATTN_NORM);
-	else
-		_sound(actor, CH_VOICE, "player/walk5.wav", 1, ATTN_NORM);
+		return false; // uses a fallback sound TODO bring that here!
+	sound(actor, CH_PLAYER, SND_Nyx_Step_Random(), 1, ATTN_NORM);
 	return true;
 }
 #endif

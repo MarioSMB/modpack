@@ -21,6 +21,33 @@ Sound SND_Galena_Death_Random() {
 	return REGISTRY_GET(Sounds, SND_Galena_Death1.m_id + rint(random() * 2));
 }
 
+SOUND(Galena_Jump, "player_galena/plyrjmp8");
+SOUND(Galena_Gasp1, "player_galena/gasp1");
+SOUND(Galena_Gasp2, "player_galena/gasp2");
+SOUND(Galena_WaterDeath, "player_galena/h2odeath");
+SOUND(Galena_AxeHit, "player_galena/axhit1");
+SOUND(Galena_Land, "player_galena/land");
+SOUND(Galena_Fall, "player_galena/land2");
+
+SOUND(Galena_Burn1, "player_galena/lburn1");
+SOUND(Galena_Burn2, "player_galena/lburn2");
+Sound SND_Galena_Burn_Random() {
+	return (random() > 0.5) ? SND_Galena_Burn1 : SND_Galena_Burn2;
+}
+
+SOUND(Galena_Drown1, "player_galena/drown1");
+SOUND(Galena_Drown2, "player_galena/drown2");
+Sound SND_Galena_Drown_Random() {
+	return (random() > 0.5) ? SND_Galena_Drown1 : SND_Galena_Drown2;
+}
+
+SOUND(Galena_Start1, "player_galena/abl1");
+SOUND(Galena_Start2, "player_galena/abl2");
+SOUND(Galena_Start3, "player_galena/abl3");
+Sound SND_Galena_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Galena_Start1.m_id + rint(random() * 2));
+}
+
 PRECACHE(Galena)
 {
 #ifdef CSQC
@@ -42,26 +69,6 @@ PRECACHE(Galena)
 	precache_pic("gfx/quake/katria_face5");
 	precache_pic("gfx/quake/katria_face_p5");
 #endif
-#ifdef SVQC
-	precache_sound("player_galena/plyrjmp8.wav");       // player jump
-	precache_sound("player_galena/land.wav");           // player landing
-	precache_sound("player_galena/land2.wav");      // player hurt landing
-	precache_sound("player_galena/drown1.wav");     // drowning pain
-	precache_sound("player_galena/drown2.wav");     // drowning pain
-	precache_sound("player_galena/gasp1.wav");      // gasping for air
-	precache_sound("player_galena/gasp2.wav");      // taking breath
-	precache_sound("player_galena/h2odeath.wav");       // drowning death
-
-	precache_sound("player_galena/axhit1.wav");
-
-	precache_sound("player_galena/lburn1.wav");     // lava burn
-	precache_sound("player_galena/lburn2.wav");     // lava burn
-
-	precache_sound("player_galena/abl1.wav");
-	precache_sound("player_galena/abl2.wav");
-	precache_sound("player_galena/abl3.wav");
-	precache_sound("player_galena/abl4.wav");
-#endif
 }
 #endif
 #ifdef CSQC
@@ -82,10 +89,17 @@ CLASS(Galena, Champions)
 #ifdef GAMEQC
 	ATTRIB(Galena, m_model, Model, MDL_Galena);
 	ATTRIB(Galena, m_model_head, Model, MDL_Galena_Head);
-	ATTRIB(Galena, m_soundpath, string, "player_galena/");
-	METHOD(Galena, m_sound_pain, string()) { return SND(Galena_Pain_Random()); }
-	METHOD(Galena, m_sound_death, string()) { return SND(Galena_Death_Random()); }
-	METHOD(Galena, m_sound_jump, string(entity actor)) { return "player_galena/plyrjmp8.wav"; }
+	METHOD(Galena, m_sound_pain, Sound()) { return SND_Galena_Pain_Random(); }
+	METHOD(Galena, m_sound_death, Sound()) { return SND_Galena_Death_Random(); }
+	METHOD(Galena, m_sound_jump, Sound(entity actor)) { return SND_Galena_Jump; }
+	METHOD(Galena, m_sound_waterdeath, Sound(entity actor)) { return SND_Galena_WaterDeath; }
+	METHOD(Galena, m_sound_gasp1, Sound(entity actor)) { return SND_Galena_Gasp1; }
+	METHOD(Galena, m_sound_gasp2, Sound(entity actor)) { return SND_Galena_Gasp2; }
+	METHOD(Galena, m_sound_axehit, Sound(entity actor)) { return SND_Galena_AxeHit; }
+	METHOD(Galena, m_sound_burn, Sound(entity actor)) { return SND_Galena_Burn_Random(); }
+	METHOD(Galena, m_sound_drown, Sound(entity actor)) { return SND_Galena_Drown_Random(); }
+	METHOD(Galena, m_sound_land, Sound(entity actor)) { return SND_Galena_Land; }
+	METHOD(Galena, m_sound_fall, Sound(entity actor)) { return SND_Galena_Fall; }
 	ATTRIB(Galena, m_offhand, Weapon, WEP_SHIELD);
 #endif
 #ifdef CSQC

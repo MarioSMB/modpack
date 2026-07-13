@@ -3,12 +3,12 @@
 #ifdef SVQC
 METHOD(Dingus, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Dingus_Start, ATTN_NORM);
 }
 
 METHOD(Dingus, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Dingus_Death2, ATTN_NORM);
 	actor.dingus_cannon = true;
 }
 
@@ -16,7 +16,7 @@ METHOD(Dingus, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.dingus_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.dingus_cannon = false;
 	return false;
 }
@@ -57,7 +57,7 @@ METHOD(Dingus, m_touch, void(Champions this, entity actor, entity toucher))
 			//thedamage = 120;
 
 		T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
-		player_sound(actor, CH_VOICE, "oops.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Dingus_Oops, ATTN_NORM);
 
 		actor.dingus_bash_delay = time + autocvar_sv_quake_dingus_time;
 	}

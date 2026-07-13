@@ -225,7 +225,7 @@ void W_FireDoot(entity this, .entity weaponentity)
 		r = 35;
 	else
 		r *= 0.75; // TODO: per-instrument offsets
-	sound7(this, CH_WEAPON_SINGLE, SND(DOOT_FIRE), 1, ATTN_NORM, r, 0);
+	qc_sound7(this, CH_WEAPON_SINGLE, SND_DOOT_FIRE, 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Doot, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

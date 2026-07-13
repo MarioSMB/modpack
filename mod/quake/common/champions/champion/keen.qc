@@ -8,7 +8,7 @@ METHOD(Keen, m_footsteps, bool(Champions this, entity actor))
 
 METHOD(Keen, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Keen_Start, ATTN_NORM);
 	Inventory_add(WEP_POGO, actor, ITEM_OWNED);
 
 	actor.skin = bound(0, (etof(actor) % 10) - 1, 9);
@@ -77,7 +77,7 @@ METHOD(Keen, m_touch, void(Champions this, entity actor, entity toucher))
 
 			float thedamage = 70;
 			T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
-			player_sound(actor, CH_VOICE, "jumpatk.wav", ATTN_NORM);
+			player_sound(actor, CH_PLAYER, SND_Keen_Crush, ATTN_NORM);
 	#endif
 			return;
 		}
@@ -105,7 +105,7 @@ METHOD(Keen, m_physics, bool(Champions this, entity actor, float dt))
 		else
 			actor.velocity_z += 270;
 	#ifdef SVQC
-		player_sound(actor, CH_VOICE, "pogo.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_Keen_Pogo, ATTN_NORM);
 	#endif
 		UNSET_ONGROUND(actor);
 	}

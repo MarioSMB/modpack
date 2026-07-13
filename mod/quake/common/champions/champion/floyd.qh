@@ -6,36 +6,23 @@
 MODEL(FloydChamp, "progs/floyd.mdl");
 MODEL(FloydChamp_Head, "progs/h_floyd.mdl");
 
+SOUND(FloydChamp_Pain, "floyd/pain");
+SOUND(FloydChamp_Death, "floyd/death");
+SOUND(FloydChamp_Jump, "hammer/hammer_clang_floyd");
+SOUND(FloydChamp_Land, "hammer/charge_full_floyd");
+
+SOUND(FloydChamp_Start, "floyd/sight");
+SOUND(FloydChamp_Shoot, "floyd/fire");
+SOUND(FloydChamp_Cannon_Launch, "hammer/hammer_clang2_floyd");
+
 PRECACHE(FloydChamp)
 {
 #ifdef CSQC
 	precache_pic("gfx/quake/floyd_face");
 #endif
 #ifdef SVQC
-	//precache_sound("player/plyrjmp8.wav");       // player jump
-	precache_sound("player/land.wav");           // player landing
-	precache_sound("player/land2.wav");      // player hurt landing
-	precache_sound("player/drown1.wav");     // drowning pain
-	precache_sound("player/drown2.wav");     // drowning pain
-	precache_sound("player/gasp1.wav");      // gasping for air
-	precache_sound("player/gasp2.wav");      // taking breath
-	precache_sound("player/h2odeath.wav");       // drowning death
-
-	precache_sound("player/axhit1.wav");
-
-	precache_sound("player/lburn1.wav");     // lava burn
-	precache_sound("player/lburn2.wav");     // lava burn
-
-	precache_sound("floyd/sight.wav");
-	precache_sound("floyd/pain.wav");
-	precache_sound("floyd/death.wav");
-
 	precache_sound("floyd/fire.wav");
 	precache_sound("enforcer/enfstop.wav");
-
-	precache_sound("hammer/hammer_clang_floyd.wav");
-	precache_sound("hammer/charge_full_floyd.wav");
-	precache_sound("hammer/hammer_clang2_floyd.wav");
 
 	precache_model("progs/v_laserg.mdl");
 
@@ -61,10 +48,17 @@ CLASS(FloydChamp, Champions)
 #ifdef GAMEQC
 	ATTRIB(FloydChamp, m_model, Model, MDL_FloydChamp);
 	ATTRIB(FloydChamp, m_model_head, Model, MDL_FloydChamp_Head);
-	ATTRIB(FloydChamp, m_soundpath, string, "player/");
-	METHOD(FloydChamp, m_sound_pain, string()) { return "floyd/pain.wav"; }
-	METHOD(FloydChamp, m_sound_death, string()) { return "floyd/death.wav"; }
-	METHOD(FloydChamp, m_sound_jump, string(entity actor)) { return "hammer/hammer_clang_floyd.wav"; }
+	METHOD(FloydChamp, m_sound_pain, Sound()) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_death, Sound()) { return SND_FloydChamp_Death; }
+	METHOD(FloydChamp, m_sound_jump, Sound(entity actor)) { return SND_FloydChamp_Jump; }
+	METHOD(FloydChamp, m_sound_waterdeath, Sound(entity actor)) { return SND_FloydChamp_Death; }
+	METHOD(FloydChamp, m_sound_gasp1, Sound(entity actor)) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_gasp2, Sound(entity actor)) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_axehit, Sound(entity actor)) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_burn, Sound(entity actor)) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_drown, Sound(entity actor)) { return SND_FloydChamp_Pain; }
+	METHOD(FloydChamp, m_sound_land, Sound(entity actor)) { return SND_FloydChamp_Land; }
+	METHOD(FloydChamp, m_sound_fall, Sound(entity actor)) { return SND_FloydChamp_Land; }
 #endif
 #ifdef CSQC
 	ATTRIB(FloydChamp, message, string, "You are transformed!");

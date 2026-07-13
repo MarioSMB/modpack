@@ -82,14 +82,14 @@ void Mime_ThrowBall(entity this)
 
 METHOD(Mime, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Mime_Start, ATTN_NORM);
 }
 
 METHOD(Mime, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		_sound(actor, CH_WEAPON_B, "weapons/sword_swing.wav", 1, ATTN_NORM);
+		sound(actor, CH_WEAPON_B, SND_Mime_Shoot, 1, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 0.7;
 		Mime_ThrowBall(actor);
 	}
@@ -97,7 +97,7 @@ METHOD(Mime, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Mime, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Mime_Death2, ATTN_NORM);
 	actor.mime_cannon = true;
 }
 
@@ -105,7 +105,7 @@ METHOD(Mime, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.mime_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.mime_cannon = false;
 	return false;
 }

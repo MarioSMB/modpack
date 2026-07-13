@@ -23,7 +23,7 @@ METHOD(Steve, m_friction, float(Champions this, entity actor))
 #ifdef SVQC
 METHOD(Steve, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Steve_Start, ATTN_NORM);
 
 	if(!CHAMPION_Mario.m_condition(CHAMPION_Mario, actor))
 		actor.skin = 2;

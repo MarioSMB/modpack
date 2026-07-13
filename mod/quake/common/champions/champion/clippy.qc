@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Clippy, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Clippy_Start, ATTN_NORM);
 
 	actor.clippy_annoytime = time + 30 + (random() * 120);
 
@@ -95,7 +95,7 @@ METHOD(Clippy, m_killed, void(Champions this, entity targ, entity inflictor, ent
 
 METHOD(Clippy, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Clippy_Falling, ATTN_NORM);
 	actor.clippy_cannon = true;
 }
 
@@ -103,7 +103,7 @@ METHOD(Clippy, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.clippy_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_land.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Clippy_Cannon_Land, ATTN_NORM);
 	actor.clippy_cannon = false;
 	return false;
 }

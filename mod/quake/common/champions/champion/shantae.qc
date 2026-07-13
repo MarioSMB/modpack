@@ -5,10 +5,7 @@ METHOD(Shantae, m_activate, void(Champions this, entity actor))
 {
 	// don't play sound if we're swapping from an attack
 	if(time >= actor.shantae_transformtime)
-	{
-		int chosen = bound(1, floor(random() * 8), 7);
-		player_sound(actor, CH_VOICE, strcat("start", ftos(chosen), ".wav"), ATTN_NORM);
-	}
+		player_sound(actor, CH_VOICE, SND_Shantae_Start_Random(), ATTN_NORM);
 
 	Inventory_add(WEP_MAGIC, actor, ITEM_OWNED);
 
@@ -39,11 +36,8 @@ METHOD(Shantae, m_playerthink, void(Champions this, entity actor))
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		if(random() < 0.33)
-		{
-			int chosen = bound(1, floor(random() * 8), 7);
-			player_sound(actor, CH_VOICE, strcat("transform", ftos(chosen), ".wav"), ATTN_NORM);
-		}
-		_sound(actor, CH_VOICE, "player_shantae/player_transform.wav", 1, ATTN_NORM);
+			player_sound(actor, CH_VOICE, SND_Shantae_Transform_Random(), ATTN_NORM);
+		sound(actor, CH_PLAYER, SND_Shantae_Transform, 1, ATTN_NORM);
 		te_explosion2(actor.origin, 40, 7);
 		actor.transform_health = 70;
 		actor.m_transform = CHAMPION_Monkey;
@@ -83,7 +77,7 @@ METHOD(Shantae, m_clear, void(Champions this, entity actor))
 
 METHOD(Shantae, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Shantae_Cannon_Launch, ATTN_NORM);
 	actor.shantae_cannon = true;
 }
 
@@ -91,7 +85,7 @@ METHOD(Shantae, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.shantae_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_land.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Shantae_Cannon_Land, ATTN_NORM);
 	actor.shantae_cannon = false;
 	actor.jump_flag = 0;
 	return true;

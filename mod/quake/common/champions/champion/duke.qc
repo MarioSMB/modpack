@@ -1,7 +1,7 @@
 #include "duke.qh"
 
 #ifdef SVQC
-void duke_playersound(entity this, int chan, string sample, float atten)
+void duke_playersound(entity this, int chan, Sound sample, float atten)
 {
 	if(this.duke_taunt_timer > time)
 		return;
@@ -13,27 +13,7 @@ void duke_playersound(entity this, int chan, string sample, float atten)
 
 METHOD(Duke, m_activate, void(Champions this, entity actor))
 {
-	string s = "";
-	float r = random() * 9;
-	if(r < 1)
-		s = "letsrk.wav";
-	else if(r < 2)
-		s = "wherami.wav";
-	else if(r < 3)
-		s = "hell90s.wav";
-	else if(r < 4)
-		s = "romero.wav";
-	else if(r < 5)
-		s = "betduke.wav";
-	else if(r < 6)
-		s = "chew.wav";
-	else if(r < 7)
-		s = "blowshitup.wav";
-	else if(r < 8)
-		s = "cokrok.wav";
-	else
-		s = "wansom.wav";
-	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+	duke_playersound(actor, CH_VOICE, SND_Duke_Start_Random(), ATTN_NORM);
 
 	actor.skin = bound(0, (etof(actor) % 8) - 1, 7);
 }
@@ -51,25 +31,7 @@ METHOD(Duke, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Duke, m_playerspawn, void(Champions this, entity actor))
 {
-	string s = "";
-	float r = random() * 8;
-	if(r < 1)
-		s = "cry.wav";
-	else if(r < 2)
-		s = "kicka.wav";
-	else if(r < 3)
-		s = "pissin.wav";
-	else if(r < 4)
-		s = "rip.wav";
-	else if(r < 5)
-		s = "smackdb.wav";
-	else if(r < 6)
-		s = "yohoho2.wav";
-	else if(r < 7)
-		s = "nothink.wav";
-	else
-		s = "mthrfkr.wav";
-	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+	duke_playersound(actor, CH_VOICE, SND_Duke_Spawn_Random(), ATTN_NORM);
 
 	actor.jetpack_status = false;
 	STAT(QCC_JETPACKFUEL, actor) = 100;
@@ -84,7 +46,7 @@ METHOD(Duke, m_clear, void(Champions this, entity actor))
 
 METHOD(Duke, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Duke_Death2, ATTN_NORM);
 	actor.duke_cannon = true;
 }
 
@@ -92,168 +54,48 @@ METHOD(Duke, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.duke_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.duke_cannon = false;
 	return false;
 }
 
 METHOD(Duke, m_killed, void(Champions this, entity targ, entity inflictor, entity attacker, int deathtype))
 {
-	string s = "";
-	float r = random();
-
 	if(targ == attacker)
 	{
-		if(r < 0.333)
-			s = "myself.wav";
-		else if(r < 0.666)
-			s = "realthing.wav";
-		else
-			s = "kickmyass.wav";
-		duke_playersound(attacker, CH_VOICE, s, ATTN_NORM);
+		duke_playersound(attacker, CH_VOICE, SND_Duke_Suicide_Random(), ATTN_NORM);
 		return;
 	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_AXE))
-	{
-		if(r < 0.25)
-			s = "footface.wav";
-		else if(r < 0.5)
-			s = "stomped.wav";
-		else if(r < 0.75)
-			s = "bug.wav";
-		else
-			s = "bloodboot.wav";
-		duke_playersound(attacker, CH_VOICE, s, ATTN_NORM);
-	}
+		duke_playersound(attacker, CH_VOICE, SND_Duke_Kill_Axe_Random(), ATTN_NORM);
 	else
-	{
-		r = random() * 30;
-		if(r < 1)
-			s = "aisle.wav";
-		else if(r < 2)
-			s = "amess.wav";
-		else if(r < 3)
-			s = "bitchn.wav";
-		else if(r < 4)
-			s = "blowit.wav";
-		else if(r < 5)
-			s = "bookem.wav";
-		else if(r < 6)
-			s = "cool.wav";
-		else if(r < 7)
-			s = "damn.wav";
-		else if(r < 8)
-			s = "getsom.wav";
-		else if(r < 9)
-			s = "gmeovr.wav";
-		else if(r < 10)
-			s = "gothrt.wav";
-		else if(r < 11)
-			s = "groovy.wav";
-		else if(r < 12)
-			s = "hail.wav";
-		else if(r < 13)
-			s = "holysh.wav";
-		else if(r < 14)
-			s = "imgood.wav";
-		else if(r < 15)
-			s = "inhell.wav";
-		else if(r < 16)
-			s = "letsrk.wav";
-		else if(r < 17)
-			s = "lookin.wav";
-		else if(r < 18)
-			s = "meat.wav";
-		else if(r < 19)
-			s = "name.wav";
-		else if(r < 20)
-			s = "nobody.wav";
-		else if(r < 21)
-			s = "piece.wav";
-		else if(r < 22)
-			s = "slacker.wav";
-		else if(r < 23)
-			s = "sukitdn.wav";
-		else if(r < 24)
-			s = "rokrol.wav";
-		else if(r < 25)
-			s = "betduke2.wav";
-		else if(r < 26)
-			s = "huckleberry.wav";
-		else if(r < 27)
-			s = "itsgood.wav";
-		else if(r < 28)
-			s = "ripieces.wav";
-		else if(r < 29)
-			s = "oneking.wav";
-		else
-			s = "fragged.wav";
-		duke_playersound(attacker, CH_VOICE, s, ATTN_NORM);
-	}
+		duke_playersound(attacker, CH_VOICE, SND_Duke_Kill_Random(), ATTN_NORM);
 }
 
 METHOD(Duke, m_pickup_weapon, void(Champions this, entity actor, entity item))
 {
 	Weapon wep = REGISTRY_GET(Weapons, item.weapon);
-	string s = "";
-	float r = random();
 
 	if(wep.ammo_type == IT_SHELLS || wep.ammo_type == IT_NAILS)
-	{
-		if(r < 0.25)
-			s = "wansom.wav";
-		else if(r < 0.5)
-			s = "cool.wav";
-		else if(r < 0.75)
-			s = "groovy.wav";
-		else
-			s = "getsom.wav";
-		duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
-	}
+		duke_playersound(actor, CH_VOICE, SND_Duke_Pickup_Weapon_Nail_Random(), ATTN_NORM);
 	else
-	{
-		if(r < 0.333)
-			s = "hehehe.wav";
-		else if(r < 0.666)
-			s = "letsrk.wav";
-		else
-			s = "timetokill.wav";
-		duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
-	}
+		duke_playersound(actor, CH_VOICE, SND_Duke_Pickup_Weapon_Rocket_Random(), ATTN_NORM);
 }
 
 METHOD(Duke, m_pickup_powerup, void(Champions this, entity actor, entity item))
 {
-	string s = "";
-	float r = random();
-
-	if(r < 0.333)
-		s = "timetokill.wav";
-	else if(r < 0.666)
-		s = "bos.wav";
-	else
-		s = "groovy.wav";
-	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+	duke_playersound(actor, CH_VOICE, SND_Duke_Pickup_Powerup_Random(), ATTN_NORM);
 }
 
 METHOD(Duke, m_pickup_key, void(Champions this, entity actor, entity item))
 {
-	string s = "";
-	float r = random();
-
-	if(r < 0.333)
-		s = "stormgates.wav";
-	else if(r < 0.666)
-		s = "lookin.wav";
-	else
-		s = "groovy.wav";
-	duke_playersound(actor, CH_VOICE, s, ATTN_NORM);
+	duke_playersound(actor, CH_VOICE, SND_Duke_Pickup_Key_Random(), ATTN_NORM);
 }
 
 METHOD(Duke, m_pickup_sigil, void(Champions this, entity actor, entity item))
 {
-	duke_playersound(actor, CH_VOICE, "imgood.wav", ATTN_NORM);
+	duke_playersound(actor, CH_VOICE, SND_Duke_Pickup_Sigil, ATTN_NORM);
 }
 #endif
 

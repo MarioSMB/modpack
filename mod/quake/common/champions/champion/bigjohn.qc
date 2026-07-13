@@ -35,7 +35,7 @@ METHOD(BigJohn, m_dealdamage, float(Champions this, entity targ, entity inflicto
 
 METHOD(BigJohn, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, ((random() < 0.5) ? "bigjabl1.wav" : "bigjabl2.wav"), ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_BigJohn_Start_Random(), ATTN_NORM);
 
 	actor.skin = bound(0, (etof(actor) % 5) - 1, 4);
 }
@@ -49,14 +49,14 @@ METHOD(BigJohn, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_VOICE, "ability.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_BigJohn_Ability, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 3.25;
 	}
 }
 
 METHOD(BigJohn, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "ability.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_BigJohn_Ability, ATTN_NORM);
 	actor.bigjohn_cannon = true;
 }
 
@@ -64,7 +64,7 @@ METHOD(BigJohn, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.bigjohn_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.bigjohn_cannon = false;
 	return false;
 }

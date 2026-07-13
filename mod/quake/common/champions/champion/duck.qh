@@ -24,42 +24,35 @@ Sound SND_Duck_Death_Random() {
 	return REGISTRY_GET(Sounds, SND_Duck_Death1.m_id + rint(random() * 4));
 }
 
+SOUND(Duck_Jump, "player_duck/plyrjmp8");
+SOUND(Duck_Gasp1, "player_duck/gasp1");
+SOUND(Duck_Gasp2, "player_duck/gasp2");
+SOUND(Duck_WaterDeath, "player_duck/h2odeath");
+SOUND(Duck_AxeHit, "player_duck/axhit1");
+SOUND(Duck_Land, "player_duck/land");
+SOUND(Duck_Fall, "player_duck/land2");
+
+SOUND(Duck_Burn1, "player_duck/lburn1");
+SOUND(Duck_Burn2, "player_duck/lburn2");
+Sound SND_Duck_Burn_Random() {
+	return (random() > 0.5) ? SND_Duck_Burn1 : SND_Duck_Burn2;
+}
+
+SOUND(Duck_Drown1, "player_duck/drown1");
+SOUND(Duck_Drown2, "player_duck/drown2");
+Sound SND_Duck_Drown_Random() {
+	return (random() > 0.5) ? SND_Duck_Drown1 : SND_Duck_Drown2;
+}
+
+SOUND(Duck_Start, "player_duck/start");
+SOUND(Duck_Ability, "player_duck/attack");
+
 PRECACHE(Duck)
 {
 #ifdef CSQC
 	precache_pic("gfx/quake/duck_face");
 #endif
 #ifdef SVQC
-	precache_sound("player_duck/plyrjmp8.wav");       // player jump
-	precache_sound("player_duck/land.wav");           // player landing
-	precache_sound("player_duck/land2.wav");      // player hurt landing
-	precache_sound("player_duck/drown1.wav");     // drowning pain
-	precache_sound("player_duck/drown2.wav");     // drowning pain
-	precache_sound("player_duck/gasp1.wav");      // gasping for air
-	precache_sound("player_duck/gasp2.wav");      // taking breath
-	precache_sound("player_duck/h2odeath.wav");       // drowning death
-
-	precache_sound("player_duck/pain1.wav");
-	precache_sound("player_duck/pain2.wav");
-	precache_sound("player_duck/pain3.wav");
-	precache_sound("player_duck/pain4.wav");
-	precache_sound("player_duck/pain5.wav");
-	precache_sound("player_duck/pain6.wav");
-
-	precache_sound("player_duck/death1.wav");
-	precache_sound("player_duck/death2.wav");
-	precache_sound("player_duck/death3.wav");
-	precache_sound("player_duck/death4.wav");
-	precache_sound("player_duck/death5.wav");
-
-	precache_sound("player_duck/axhit1.wav");
-
-	precache_sound("player_duck/lburn1.wav");     // lava burn
-	precache_sound("player_duck/lburn2.wav");     // lava burn
-
-	precache_sound("player_duck/start.wav");
-	precache_sound("player_duck/attack.wav");
-
 	precache_sound("weapons/grape_impact.wav");
 #endif
 }
@@ -73,10 +66,17 @@ CLASS(Duck, Champions)
 #ifdef GAMEQC
 	ATTRIB(Duck, m_model, Model, MDL_Duck);
 	ATTRIB(Duck, m_model_head, Model, MDL_Null);
-	ATTRIB(Duck, m_soundpath, string, "player_duck/");
-	METHOD(Duck, m_sound_pain, string()) { return SND(Duck_Pain_Random()); }
-	METHOD(Duck, m_sound_death, string()) { return SND(Duck_Death_Random()); }
-	METHOD(Duck, m_sound_jump, string(entity actor)) { return "player_duck/plyrjmp8.wav"; }
+	METHOD(Duck, m_sound_pain, Sound()) { return SND_Duck_Pain_Random(); }
+	METHOD(Duck, m_sound_death, Sound()) { return SND_Duck_Death_Random(); }
+	METHOD(Duck, m_sound_jump, Sound(entity actor)) { return SND_Duck_Jump; }
+	METHOD(Duck, m_sound_waterdeath, Sound(entity actor)) { return SND_Duck_WaterDeath; }
+	METHOD(Duck, m_sound_gasp1, Sound(entity actor)) { return SND_Duck_Gasp1; }
+	METHOD(Duck, m_sound_gasp2, Sound(entity actor)) { return SND_Duck_Gasp2; }
+	METHOD(Duck, m_sound_axehit, Sound(entity actor)) { return SND_Duck_AxeHit; }
+	METHOD(Duck, m_sound_burn, Sound(entity actor)) { return SND_Duck_Burn_Random(); }
+	METHOD(Duck, m_sound_drown, Sound(entity actor)) { return SND_Duck_Drown_Random(); }
+	METHOD(Duck, m_sound_land, Sound(entity actor)) { return SND_Duck_Land; }
+	METHOD(Duck, m_sound_fall, Sound(entity actor)) { return SND_Duck_Fall; }
 #endif
 #ifdef CSQC
 	ATTRIB(Duck, message, string, "Got any grapes?");

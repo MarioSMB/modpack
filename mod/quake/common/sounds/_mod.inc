@@ -1,2 +1,3 @@
 // generated file; do not modify
-#include <common/sounds/all.qc>
+#include "all.qc"
+#include "qcsound.qc"

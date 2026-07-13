@@ -1784,6 +1784,12 @@ void Sbar_Draw()
 				// NOTE: not using aspect here - we want it to stretch with the mana bar!
 				drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 				HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * 4 * 0.85, icon_size.y * 0.85), "progressbar", charge, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+
+				int oldfont = drawfont;
+				drawfont = 9;
+				string s = sprintf("%3d", max(0, rint(STAT(TRANSFORM_LIMITED) - time)));
+				drawstring_aspect(ammo_pos + vec2(icon_size.x * 0.5, 0), s, vec2(icon_size.x * 2, icon_size.y), '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawfont = oldfont;
 			}
 			else if(gametype == GAMETYPE_TD && STAT(TD_BUILDMODE))
 			{

@@ -203,7 +203,7 @@ void W_FireTuba(entity this, .entity weaponentity)
 	IL_PUSH(g_projectiles, musicnote);
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, max(0.5, random() * 3));
-	sound7(this, CH_WEAPON_SINGLE, SND(TUBA_FIRE), 1, ATTN_NORM, r, 0);
+	qc_sound7(this, CH_WEAPON_SINGLE, SND_TUBA_FIRE, 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Mario, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Mario_Start, ATTN_NORM);
 }
 
 METHOD(Mario, m_condition, bool(Champions this, entity actor))
@@ -15,7 +15,7 @@ METHOD(Mario, m_condition, bool(Champions this, entity actor))
 
 METHOD(Mario, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Mario_Death2, ATTN_NORM);
 	actor.mario_cannon = true;
 }
 
@@ -23,7 +23,7 @@ METHOD(Mario, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.mario_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "pain3.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Mario_Pain3, ATTN_NORM);
 	actor.mario_cannon = false;
 	actor.jump_flag = 0;
 	return true;

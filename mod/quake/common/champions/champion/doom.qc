@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Doom, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Doom_Start, ATTN_NORM);
 }
 
 METHOD(Doom, m_takeammo, bool(Champions this, entity actor))

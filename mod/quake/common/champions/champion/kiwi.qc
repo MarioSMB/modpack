@@ -4,7 +4,7 @@
 
 METHOD(KiwiChamp, m_activate, void(Champions this, entity actor))
 {
-	_sound(actor, CH_VOICE, "kiwi/kiwi.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_KiwiChamp_Kiwi, ATTN_NORM);
 }
 
 METHOD(KiwiChamp, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))
@@ -21,10 +21,10 @@ METHOD(KiwiChamp, m_playerthink, void(Champions this, entity actor))
 		if(actor.spawnsilent)
 		{
 			float r = random() * (random() * 3);
-			sound7(actor, CH_PLAYER_SINGLE, "kiwi/kiwi.wav", 1, ATTN_NORM, 100 / r, 0);
+			qc_sound7(actor, CH_PLAYER_SINGLE, SND_KiwiChamp_Kiwi, 1, ATTN_NORM, 100 / r, 0);
 		}
 		else
-			_sound(actor, CH_PLAYER_SINGLE, "kiwi/kiwi.wav", 1, ATTN_NORM);
+			player_sound(actor, CH_PLAYER_SINGLE, SND_KiwiChamp_Kiwi, ATTN_NORM);
 	}
 }
 #endif

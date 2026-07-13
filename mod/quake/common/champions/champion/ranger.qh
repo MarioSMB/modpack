@@ -13,7 +13,7 @@ SOUND(Ranger_Pain4, "player/pain4");
 SOUND(Ranger_Pain5, "player/pain5");
 SOUND(Ranger_Pain6, "player/pain6");
 Sound SND_Ranger_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Ranger_Pain1.m_id + rint(random() * 5));
+	return REGISTRY_GET(Sounds, SND_Ranger_Pain1.m_id + rint(random() * 5));
 }
 
 SOUND(Ranger_Death1, "player/death1");
@@ -22,24 +22,52 @@ SOUND(Ranger_Death3, "player/death3");
 SOUND(Ranger_Death4, "player/death4");
 SOUND(Ranger_Death5, "player/death5");
 Sound SND_Ranger_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Ranger_Death1.m_id + rint(random() * 4));
+	return REGISTRY_GET(Sounds, SND_Ranger_Death1.m_id + rint(random() * 4));
+}
+
+SOUND(Ranger_Jump, "player/plyrjmp8");
+SOUND(Ranger_Gasp1, "player/gasp1");
+SOUND(Ranger_Gasp2, "player/gasp2");
+SOUND(Ranger_WaterDeath, "player/h2odeath");
+SOUND(Ranger_AxeHit, "player/axhit1");
+SOUND(Ranger_Land, "player/land");
+SOUND(Ranger_Fall, "player/land2");
+
+SOUND(Ranger_Burn1, "player/lburn1");
+SOUND(Ranger_Burn2, "player/lburn2");
+Sound SND_Ranger_Burn_Random() {
+	return (random() > 0.5) ? SND_Ranger_Burn1 : SND_Ranger_Burn2;
+}
+
+SOUND(Ranger_Drown1, "player/drown1");
+SOUND(Ranger_Drown2, "player/drown2");
+Sound SND_Ranger_Drown_Random() {
+	return (random() > 0.5) ? SND_Ranger_Drown1 : SND_Ranger_Drown2;
 }
 #endif
+
 CLASS(Ranger, Champions)
-    ATTRIB(Ranger, netname, string, "ranger");
-    ATTRIB(Ranger, m_name, string, "Ranger");
-    ATTRIB(Ranger, m_color, vector, '0.6 0.2 0');
+	ATTRIB(Ranger, netname, string, "ranger");
+	ATTRIB(Ranger, m_name, string, "Ranger");
+	ATTRIB(Ranger, m_color, vector, '0.6 0.2 0');
 #ifdef GAMEQC
-    ATTRIB(Ranger, m_model, Model, MDL_Ranger);
-    ATTRIB(Ranger, m_model_head, Model, MDL_Ranger_Head);
-    ATTRIB(Ranger, m_soundpath, string, "player/");
-    METHOD(Ranger, m_sound_pain, string()) { return SND(Ranger_Pain_Random()); }
-    METHOD(Ranger, m_sound_death, string()) { return SND(Ranger_Death_Random()); }
-    METHOD(Ranger, m_sound_jump, string(entity actor)) { return "player/plyrjmp8.wav"; }
+	ATTRIB(Ranger, m_model, Model, MDL_Ranger);
+	ATTRIB(Ranger, m_model_head, Model, MDL_Ranger_Head);
+	METHOD(Ranger, m_sound_pain, Sound()) { return SND_Ranger_Pain_Random(); }
+	METHOD(Ranger, m_sound_death, Sound()) { return SND_Ranger_Death_Random(); }
+	METHOD(Ranger, m_sound_jump, Sound(entity actor)) { return SND_Ranger_Jump; }
+	METHOD(Ranger, m_sound_waterdeath, Sound(entity actor)) { return SND_Ranger_WaterDeath; }
+	METHOD(Ranger, m_sound_gasp1, Sound(entity actor)) { return SND_Ranger_Gasp1; }
+	METHOD(Ranger, m_sound_gasp2, Sound(entity actor)) { return SND_Ranger_Gasp2; }
+	METHOD(Ranger, m_sound_axehit, Sound(entity actor)) { return SND_Ranger_AxeHit; }
+	METHOD(Ranger, m_sound_burn, Sound(entity actor)) { return SND_Ranger_Burn_Random(); }
+	METHOD(Ranger, m_sound_drown, Sound(entity actor)) { return SND_Ranger_Drown_Random(); }
+	METHOD(Ranger, m_sound_land, Sound(entity actor)) { return SND_Ranger_Land; }
+	METHOD(Ranger, m_sound_fall, Sound(entity actor)) { return SND_Ranger_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Ranger, message, string, "No additional bonus stats");
+	ATTRIB(Ranger, message, string, "No additional bonus stats");
 #endif
-    ATTRIB(Ranger, td_turrets, bool, true);
+	ATTRIB(Ranger, td_turrets, bool, true);
 ENDCLASS(Ranger)
 REGISTER_CHAMPION(Ranger, NEW(Ranger));

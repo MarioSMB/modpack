@@ -11,7 +11,7 @@ void floydchamp_fire(entity this, float muzzle)
 	vector org = this.origin + v_forward * 30 + '0 0 28' + v_right * muzzle;
 	vector dir = v_forward;
 
-	_sound(this, CH_WEAPON_SINGLE, "floyd/fire.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_FloydChamp_Shoot, 1, ATTN_NORM);
 	FLaunchLaser(this, org, dir);
 }
 
@@ -27,7 +27,7 @@ void floydchamp_attack1(entity this) { set_animofs(this, anim_floyd_attack1, 1, 
 
 METHOD(FloydChamp, m_activate, void(Champions this, entity actor))
 {
-	_sound(actor, CH_VOICE, "floyd/sight.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_FloydChamp_Start, ATTN_NORM);
 }
 
 METHOD(FloydChamp, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))
@@ -66,7 +66,7 @@ METHOD(FloydChamp, m_clear, void(Champions this, entity actor))
 
 METHOD(FloydChamp, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	_sound(actor, CH_TRIGGER_SINGLE, "hammer/hammer_clang2_floyd.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_FloydChamp_Cannon_Launch, ATTN_NORM);
 	actor.floyd_cannon = true;
 }
 
@@ -74,7 +74,7 @@ METHOD(FloydChamp, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.floyd_cannon)
 		return false;
-	_sound(actor, CH_TRIGGER_SINGLE, "hammer/charge_full_floyd.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_FloydChamp_Land, ATTN_NORM);
 	actor.floyd_cannon = false;
 	return false;
 }

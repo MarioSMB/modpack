@@ -5,56 +5,48 @@
 #ifdef GAMEQC
 MODEL(KiwiChamp, "progs/player_kiwi.mdl");
 
+SOUND(KiwiChamp_Kiwi, "kiwi/kiwi");
+SOUND(KiwiChamp_Jump, "jump");
+
 PRECACHE(KiwiChamp)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/kiwi_face");
-#endif
-#ifdef SVQC
-    //precache_sound("player/plyrjmp8.wav");       // player jump
-    precache_sound("player/land.wav");           // player landing
-    precache_sound("player/land2.wav");      // player hurt landing
-    precache_sound("player/drown1.wav");     // drowning pain
-    precache_sound("player/drown2.wav");     // drowning pain
-    precache_sound("player/gasp1.wav");      // gasping for air
-    precache_sound("player/gasp2.wav");      // taking breath
-    precache_sound("player/h2odeath.wav");       // drowning death
-
-    precache_sound("player/axhit1.wav");
-
-    precache_sound("player/lburn1.wav");     // lava burn
-    precache_sound("player/lburn2.wav");     // lava burn
-
-    precache_sound("kiwi/kiwi.wav");
-    precache_sound("jump.wav");
+	precache_pic("gfx/quake/kiwi_face");
 #endif
 }
 #endif
 CLASS(KiwiChamp, Champions)
-    ATTRIB(KiwiChamp, netname, string, "kiwi");
-    ATTRIB(KiwiChamp, m_name, string, "Kiwi");
-    ATTRIB(KiwiChamp, m_hidden, bool, true);
-    ATTRIB(KiwiChamp, qcc_noselect, bool, true);
-    ATTRIB(KiwiChamp, qcc_pogo, bool, true);
-    ATTRIB(KiwiChamp, qcc_movespeed, float, 0.8);
-    ATTRIB(KiwiChamp, qcc_health_regen_rate, float, 2);
-    ATTRIB(KiwiChamp, qcc_health_rot_max, float, 3);
-    ATTRIB(KiwiChamp, qcc_meleename, string, "laserg");
-    ATTRIB(KiwiChamp, qcc_thirdperson, bool, true);
-    ATTRIB(KiwiChamp, qcc_thirdperson_offset, float, 64);
-    ATTRIB(KiwiChamp, qcc_anim_axrun, vector, '0 0 2');
-    ATTRIB(KiwiChamp, qcc_anim_rockrun, vector, '0 0 2');
-    ATTRIB(KiwiChamp, qcc_anim_axstnd, vector, '0 0 0');
-    ATTRIB(KiwiChamp, qcc_anim_stand, vector, '0 0 0');
+	ATTRIB(KiwiChamp, netname, string, "kiwi");
+	ATTRIB(KiwiChamp, m_name, string, "Kiwi");
+	ATTRIB(KiwiChamp, m_hidden, bool, true);
+	ATTRIB(KiwiChamp, qcc_noselect, bool, true);
+	ATTRIB(KiwiChamp, qcc_pogo, bool, true);
+	ATTRIB(KiwiChamp, qcc_movespeed, float, 0.8);
+	ATTRIB(KiwiChamp, qcc_health_regen_rate, float, 2);
+	ATTRIB(KiwiChamp, qcc_health_rot_max, float, 3);
+	ATTRIB(KiwiChamp, qcc_meleename, string, "laserg");
+	ATTRIB(KiwiChamp, qcc_thirdperson, bool, true);
+	ATTRIB(KiwiChamp, qcc_thirdperson_offset, float, 64);
+	ATTRIB(KiwiChamp, qcc_anim_axrun, vector, '0 0 2');
+	ATTRIB(KiwiChamp, qcc_anim_rockrun, vector, '0 0 2');
+	ATTRIB(KiwiChamp, qcc_anim_axstnd, vector, '0 0 0');
+	ATTRIB(KiwiChamp, qcc_anim_stand, vector, '0 0 0');
 #ifdef GAMEQC
-    ATTRIB(KiwiChamp, m_model, Model, MDL_KiwiChamp);
-    ATTRIB(KiwiChamp, m_soundpath, string, "player/");
-    METHOD(KiwiChamp, m_sound_pain, string()) { return "kiwi/kiwi.wav"; }
-    METHOD(KiwiChamp, m_sound_death, string()) { return "kiwi/kiwi.wav"; }
-    METHOD(KiwiChamp, m_sound_jump, string(entity actor)) { return "jump.wav"; }
+	ATTRIB(KiwiChamp, m_model, Model, MDL_KiwiChamp);
+	METHOD(KiwiChamp, m_sound_pain, Sound()) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_death, Sound()) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_jump, Sound(entity actor)) { return SND_KiwiChamp_Jump; }
+	METHOD(KiwiChamp, m_sound_waterdeath, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_gasp1, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_gasp2, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_axehit, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_burn, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_drown, Sound(entity actor)) { return SND_KiwiChamp_Kiwi; }
+	METHOD(KiwiChamp, m_sound_land, Sound(entity actor)) { return SND_Null; }
+	METHOD(KiwiChamp, m_sound_fall, Sound(entity actor)) { return SND_Null; }
 #endif
 #ifdef CSQC
-    ATTRIB(KiwiChamp, message, string, "You are transformed!");
+	ATTRIB(KiwiChamp, message, string, "You are transformed!");
 #endif
 ENDCLASS(KiwiChamp)
 REGISTER_CHAMPION(KiwiChamp, NEW(KiwiChamp));

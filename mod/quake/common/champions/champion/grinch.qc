@@ -12,10 +12,7 @@ void belch_unfreeze(entity this)
 
 void Grinch_Belch(entity this)
 {
-	if(random() < 0.5)
-		player_sound(this, CH_VOICE, "belch1.wav", ATTN_NORM);
-	else
-		player_sound(this, CH_VOICE, "belch2.wav", ATTN_NORM);
+	player_sound(this, CH_VOICE, SND_Grinch_Ability_Random(), ATTN_NORM);
 
 	makevectors(this.angles);
 	Send_Effect(EFFECT_BELCH, this.origin + this.view_ofs, v_forward * 96, 1);
@@ -87,15 +84,7 @@ METHOD(Grinch, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Grinch, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Grinch_Start_Random(), ATTN_NORM);
 
 	Inventory_add(WEP_SNOWBALL, actor, ITEM_OWNED);
 
@@ -128,7 +117,7 @@ METHOD(Grinch, m_clear, void(Champions this, entity actor))
 
 METHOD(Grinch, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Grinch_Cannon_Launch, ATTN_NORM);
 	actor.grinch_cannon = true;
 }
 
@@ -137,7 +126,7 @@ METHOD(Grinch, m_cannon_land, bool(Champions this, entity actor))
 	if(!actor.grinch_cannon)
 		return false;
 	// NOTE: disabled as his voice clip is short!
-	//stopsound(actor, CH_TRIGGER_SINGLE);
+	//stopsound(actor, CH_PLAYER_SINGLE);
 	actor.grinch_cannon = false;
 	return false;
 }

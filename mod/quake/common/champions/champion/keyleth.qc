@@ -7,7 +7,7 @@ METHOD(Keyleth, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		_sound(actor, CH_PLAYER_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
+		sound(actor, CH_PLAYER_SINGLE, SND_Keyleth_Transform, 1, ATTN_NORM);
 		Send_Effect(EFFECT_QCC_GIB, actor.origin, '0 0 0', 4);
 		actor.transform_limited = time + 20;
 		actor.transform_health = 300;
@@ -21,20 +21,7 @@ METHOD(Keyleth, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Keyleth, m_activate, void(Champions this, entity actor))
 {
-	string greet;
-	float r = random();
-	if(r < 0.2)
-		greet = "start.wav";
-	else if(r < 0.4)
-		greet = "start2.wav";
-	else if(r < 0.6)
-		greet = "start3.wav";
-	else if(r < 0.8)
-		greet = "start4.wav";
-	else
-		greet = "start5.wav";
-
-	player_sound(actor, CH_VOICE, greet, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Keyleth_Start_Random(), ATTN_NORM);
 	Inventory_add(WEP_MUSHROOM, actor, ITEM_OWNED);
 	Inventory_add(WEP_STAFF, actor, ITEM_OWNED);
 
@@ -83,7 +70,7 @@ METHOD(Keyleth, m_dealdamage, float(Champions this, entity targ, entity inflicto
 
 METHOD(Keyleth, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Keyleth_Cannon_Launch, ATTN_NORM);
 	actor.keyleth_cannon = true;
 }
 
@@ -91,7 +78,7 @@ METHOD(Keyleth, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.keyleth_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_land.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Keyleth_Cannon_Land, ATTN_NORM);
 	actor.keyleth_cannon = false;
 	return false;
 }

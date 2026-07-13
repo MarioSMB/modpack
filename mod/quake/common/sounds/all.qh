@@ -2,8 +2,20 @@
 
 #include "sound.qh"
 
-REGISTRY(Sounds, BITS(10))
+#ifdef GAMEQC
+const int SND_VOLUME = BIT(0);
+const int SND_ATTENUATION = BIT(1);
+const int SND_LARGEENTITY = BIT(3);
+const int SND_LARGESOUND = BIT(4);
+const int SND_SPEEDUSHORT4000 = BIT(5);
+#endif
+
+REGISTRY(Sounds, BITS(11))
 REGISTER_REGISTRY(Sounds)
+REGISTRY_SORT(Sounds)
+REGISTRY_CHECK(Sounds)
+
+STATIC_INIT(Sounds_renumber) { FOREACH(Sounds, true, it.m_id = i); }
 
 #define SOUND(name, thepath) \
     string SND_##name##_get() { return thepath; } \
@@ -13,6 +25,10 @@ REGISTER_REGISTRY(Sounds)
 #define SND(id) Sound_fixpath(SND_##id)
 
 PRECACHE(Sounds) {
+#ifdef SVQC
+    if(autocvar_sv_quake_newsounds)
+        return;
+#endif
     FOREACH(Sounds, true, it.sound_precache(it));
 }
 
@@ -20,3 +36,4 @@ SOUND(Null, "misc/null");
 REGISTRY_DEFINE_GET(Sounds, SND_Null)
 #include "all.inc"
 #include "all.qc"
+#include "qcsound.qc"

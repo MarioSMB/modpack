@@ -590,64 +590,95 @@ string get_playerhead(entity this)
 	return "progs/h_player.mdl";
 }
 
-string get_deathsound(entity this, int chance)
+Sound get_deathsound(entity this, int chance)
 {
-	if(STAT(SKATING, this))
-		return "player/death1.wav"; // not actually used
-	if(this.m_champion && !STAT(SLIDE_ON, this))
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
 		return this.m_champion.m_sound_death();
-	switch(chance)
-	{
-		default:
-		case 1: return "player/death1.wav";
-		case 2: return "player/death2.wav";
-		case 3: return "player/death3.wav";
-		case 4: return "player/death4.wav";
-		case 5: return "player/death5.wav";
-	}
 
-	// never actually reached, thanks gmqcc
-	return "player/death1.wav";
+	return SND_PLAYER_DEATH_RANDOM();
 }
 
-string get_painsound(entity this, int chance)
+Sound get_painsound(entity this, int chance)
 {
-	if(STAT(SKATING, this))
-		return "player/pain6.wav";
-	if(this.m_champion && !STAT(SLIDE_ON, this))
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
 		return this.m_champion.m_sound_pain();
-	switch(chance)
-	{
-		case 1: return "player/pain1.wav";
-		case 2: return "player/pain2.wav";
-		case 3: return "player/pain3.wav";
-		case 4: return "player/pain4.wav";
-		case 5: return "player/pain5.wav";
-		default: return "player/pain6.wav";
-	}
 
-	// never actually reached, thanks gmqcc
-	return "player/pain6.wav";
+	return SND_PLAYER_PAIN_RANDOM();
 }
 
-string get_jumpsound(entity this)
+Sound get_jumpsound(entity this)
 {
 	if(gametype == GAMETYPE_JUMPSDONEWELL)
-		return "jump.wav";
+		return SND_JDW_JUMP;
 	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
 		return this.m_champion.m_sound_jump(this);
 
-	// never actually reached, thanks gmqcc
-	return "player/plyrjmp8.wav";
+	return SND_PLAYER_JUMP;
+}
+
+Sound get_gasp1sound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_gasp1(this);
+	return SND_PLAYER_GASP1;
+}
+
+Sound get_gasp2sound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_gasp2(this);
+	return SND_PLAYER_GASP2;
+}
+
+Sound get_waterdeathsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_waterdeath(this);
+	return SND_PLAYER_WATERDEATH;
+}
+
+Sound get_burnsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_burn(this);
+	return SND_PLAYER_BURN_RANDOM();
+}
+
+Sound get_drownsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_drown(this);
+	return SND_PLAYER_DROWN_RANDOM();
+}
+
+Sound get_axehitsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_axehit(this);
+	return SND_PLAYER_AXEHIT;
+}
+
+Sound get_landsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_land(this);
+	return SND_PLAYER_LAND;
+}
+
+Sound get_fallsound(entity this)
+{
+	if(this.m_champion && !STAT(SLIDE_ON, this) && !STAT(SKATING, this))
+		return this.m_champion.m_sound_fall(this);
+	return SND_PLAYER_FALL;
 }
 
 void nyx_doppler(entity this)
 {
 	if(this.owner)
 	{
-		float dscale = this.lifetime / 2;
+		float dscale = this.lifetime * 0.5;
 		setorigin(this, this.owner.origin);
-		_sound(this, this.cnt, this.noise, bound(0, this.volume * dscale, 1), this.count * dscale);
+		sound(this, this.cnt, this.m_sound, bound(0, this.volume * dscale, 1), this.count * dscale);
 	}
 
 	this.lifetime -= 1;
@@ -657,25 +688,24 @@ void nyx_doppler(entity this)
 		return;
 	}
 
-	strfree(this.noise);
 	delete(this);
 }
 
-void playersound(entity this, int chan, string sample, float vol, float atten)
+void playersound(entity this, int chan, Sound sample, float vol, float atten)
 {
 	if(this.spawnsilent)
 	{
 		float r = random() * (random() * 3);
-		sound7(this, chan, sample, vol, atten, 100 / r, 0);
+		qc_sound7(this, chan, sample, vol, atten, 100 / r, 0);
 	}
 	else if(this.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, this))
 	{
-		_sound(this, chan, sample, vol, atten);
+		sound(this, chan, sample, vol, atten);
 		entity doppler = spawn();
 		doppler.classname = "nyx_doppler";
 		setorigin(doppler, this.origin);
 		setthink(doppler, nyx_doppler);
-		strcpy(doppler.noise, sample);
+		doppler.m_sound = sample;
 		doppler.cnt = (chan > 0) ? chan * -1 : chan;
 		doppler.volume = vol * 0.5;
 		doppler.count = atten;
@@ -684,19 +714,15 @@ void playersound(entity this, int chan, string sample, float vol, float atten)
 		doppler.owner = this;
 	}
 	else
-		_sound(this, chan, sample, vol, atten);
+		sound(this, chan, sample, vol, atten);
 }
 
-void player_sound(entity this, int chan, string sample, float atten)
+// assumes the correct champion-specific sound has been chosen
+void player_sound(entity this, int chan, Sound sample, float atten)
 {
 	if(this.clockwork)
 		return; // no player sounds thank you very much
-	string soundpath;
-	if(this.m_champion && !STAT(SKATING, this))
-		soundpath = this.m_champion.m_soundpath;
-	else
-		soundpath = "player/";
-	playersound(this, chan, strcat(soundpath, sample), 1, atten);
+	playersound(this, chan, sample, 1, atten);
 }
 
 void ChatBubbleThink(entity this)
@@ -2712,9 +2738,9 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(this.air_finished < time)
-			player_sound(this, CH_VOICE, "gasp2.wav", ATTN_NORM);
+			player_sound(this, CH_VOICE, get_gasp2sound(this), ATTN_NORM);
 		else if(this.air_finished < time + 9)
-			player_sound(this, CH_VOICE, "gasp1.wav", ATTN_NORM);
+			player_sound(this, CH_VOICE, get_gasp1sound(this), ATTN_NORM);
 		float airtime = 12;
 		if(this.m_champion && this.m_champion.qcc_breathtime)
 			airtime *= this.m_champion.qcc_breathtime;
@@ -4054,17 +4080,12 @@ void SV_ParseClientCommand(entity this, string command)
 			this.last_scream = time + 1; // for the love of god not too often
 			float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 			r *= 1; // TODO: per-instrument offsets
-			string snd;
+			Sound snd;
 			if(this.waterlevel >= WATERLEVEL_SUBMERGED && !this.clockwork)
-			{
-				string soundpath = "player/";
-				if(this.m_champion && !STAT(SKATING, this))
-					soundpath = this.m_champion.m_soundpath;
-				snd = strcat(soundpath, "h2odeath.wav");
-			}
+				snd = get_waterdeathsound(this);
 			else
 				snd = get_deathsound(this, rint((random() * 4) + 1));
-			sound7(this, CH_PLAYER_SINGLE, snd, 1, ATTN_NORM, r, 0);
+			qc_sound7(this, CH_PLAYER_SINGLE, snd, 1, ATTN_NORM, r, 0);
 		}
 		return;
 	}

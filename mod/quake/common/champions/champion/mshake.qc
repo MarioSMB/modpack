@@ -3,15 +3,12 @@
 #ifdef SVQC
 METHOD(MasterShake, m_activate, void(MasterShake this, entity actor))
 {
-	int sndnum = bound(1, floor(random() * 7) + 1, 7);
-	string thesnd = strcat("start", ftos(sndnum), ".wav");
-
-	player_sound(actor, CH_VOICE, thesnd, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_MasterShake_Start_Random(), ATTN_NORM);
 }
 
 METHOD(MasterShake, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_MasterShake_Cannon_Launch, ATTN_NORM);
 	actor.mshake_cannon = true;
 }
 
@@ -19,7 +16,7 @@ METHOD(MasterShake, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.mshake_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "pain3.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_MasterShake_Pain3, ATTN_NORM);
 	actor.mshake_cannon = false;
 	actor.jump_flag = 0;
 	return true;
@@ -45,7 +42,7 @@ void mshake_milk_touch(entity this, entity toucher)
 	if(!T_Heal(toucher, this.healamount, true))
 		return;
 
-	_sound(toucher, CH_TRIGGER_SINGLE, "player_mshake/slurp.wav", 1, ATTN_NORM);
+	sound(toucher, CH_PLAYER_SINGLE, SND_MasterShake_Slurp, 1, ATTN_NORM);
 
 	this.solid = SOLID_NOT;
 	delete(this);
@@ -69,7 +66,7 @@ void mshake_milk_pool(entity this)
 	traceline(vec, vec + vel_norm * 16, false, this);
 	if(trace_fraction < 1)
 	{
-		_sound(this, CH_TRIGGER_SINGLE, "weapons/grape_impact.wav", 0.5, ATTN_NORM);
+		_sound(this, CH_PLAYER_SINGLE, "weapons/grape_impact.wav", 0.5, ATTN_NORM);
 		//te_explosion2(this.origin, 10, 10);
 		set_movetype(this, MOVETYPE_NONE);
 		this.solid = SOLID_TRIGGER;
@@ -102,7 +99,7 @@ void mshake_milk_proj_touch(entity this, entity toucher)
 
 void mshake_DropMilk(entity this, float amount)
 {
-	_sound(this, CH_WEAPON_B, "weapons/jarsmash.wav", 1, ATTN_NORM);
+	player_sound(this, CH_PLAYER, SND_MasterShake_Smash, ATTN_NORM);
 
 	entity proj = new(milk);
 	//proj.flags = FL_PROJECTILE;
@@ -165,7 +162,7 @@ METHOD(MasterShake, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_VOICE, "forbidden.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_MasterShake_Ability, ATTN_NORM);
 
 		if(mshake_FreezeEnemies(actor))
 			STAT(QCC_ABILITYTIME, actor) = time + 10;

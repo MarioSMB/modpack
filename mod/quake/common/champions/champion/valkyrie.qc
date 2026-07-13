@@ -94,13 +94,7 @@ METHOD(Valkyrie, m_activate, void(Champions this, entity actor))
 	.entity weaponentity = weaponentities[0]; // WEAPONTODO
 	W_SwitchWeapon_Force(actor, WEP_SMG, weaponentity);
 
-	float r = random();
-	if(r < 0.33)
-		_sound(actor, CH_VOICE, "player_enyo/taunts/deathfromabove.wav", 1, ATTN_NORM);
-	else if(r < 0.66)
-		_sound(actor, CH_VOICE, "player_enyo/taunts/flymydarlings.wav", 1, ATTN_NORM);
-	else
-		_sound(actor, CH_VOICE, "player_enyo/taunts/looksosmall.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Valkyrie_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Valkyrie, m_playerspawn, void(Champions this, entity actor))

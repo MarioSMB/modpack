@@ -12,34 +12,42 @@ SOUND(Gordon_Pain3, "player_gordon/pain3");
 SOUND(Gordon_Pain4, "player_gordon/pain4");
 SOUND(Gordon_Pain5, "player_gordon/pain5");
 Sound SND_Gordon_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Gordon_Pain1.m_id + rint(random() * 4));
+	return REGISTRY_GET(Sounds, SND_Gordon_Pain1.m_id + rint(random() * 4));
 }
 
 SOUND(Gordon_Death, "player_gordon/death");
 
+SOUND(Gordon_Jump, "player_gordon/plyrjmp8");
+SOUND(Gordon_Gasp1, "player_gordon/gasp1");
+SOUND(Gordon_Gasp2, "player_gordon/gasp2");
+SOUND(Gordon_WaterDeath, "player_gordon/h2odeath");
+SOUND(Gordon_AxeHit, "player_gordon/axhit1");
+SOUND(Gordon_Land, "player_gordon/land");
+SOUND(Gordon_Fall, "player_gordon/land2");
+
+SOUND(Gordon_Burn1, "player_gordon/lburn1");
+SOUND(Gordon_Burn2, "player_gordon/lburn2");
+Sound SND_Gordon_Burn_Random() {
+	return (random() > 0.5) ? SND_Gordon_Burn1 : SND_Gordon_Burn2;
+}
+
+SOUND(Gordon_Drown1, "player_gordon/drown1");
+SOUND(Gordon_Drown2, "player_gordon/drown2");
+Sound SND_Gordon_Drown_Random() {
+	return (random() > 0.5) ? SND_Gordon_Drown1 : SND_Gordon_Drown2;
+}
+
+SOUND(Gordon_Start1, "player_gordon/start1");
+SOUND(Gordon_Start2, "player_gordon/start2");
+SOUND(Gordon_Start3, "player_gordon/start3");
+Sound SND_Gordon_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Gordon_Start1.m_id + rint(random() * 2));
+}
+
 PRECACHE(Gordon)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/gordon_face");
-#endif
-#ifdef SVQC
-    precache_sound("player_gordon/plyrjmp8.wav");       // player jump
-    precache_sound("player_gordon/land.wav");           // player landing
-    precache_sound("player_gordon/land2.wav");      // player hurt landing
-    precache_sound("player_gordon/drown1.wav");     // drowning pain
-    precache_sound("player_gordon/drown2.wav");     // drowning pain
-    precache_sound("player_gordon/gasp1.wav");      // gasping for air
-    precache_sound("player_gordon/gasp2.wav");      // taking breath
-    precache_sound("player_gordon/h2odeath.wav");       // drowning death
-
-    precache_sound("player_gordon/axhit1.wav");
-
-    precache_sound("player_gordon/lburn1.wav");     // lava burn
-    precache_sound("player_gordon/lburn2.wav");     // lava burn
-
-    precache_sound("player_gordon/start1.wav");
-    precache_sound("player_gordon/start2.wav");
-    precache_sound("player_gordon/start3.wav");
+	precache_pic("gfx/quake/gordon_face");
 #endif
 }
 #endif
@@ -50,19 +58,26 @@ PRECACHE(Gordon)
 "Also has a Gravity Gun"
 #endif
 CLASS(Gordon, Champions)
-    ATTRIB(Gordon, netname, string, "gordon");
-    ATTRIB(Gordon, m_name, string, "Gordon Freeman");
-    ATTRIB(Gordon, m_color, vector, '0.98 0.49 0.08');
+	ATTRIB(Gordon, netname, string, "gordon");
+	ATTRIB(Gordon, m_name, string, "Gordon Freeman");
+	ATTRIB(Gordon, m_color, vector, '0.98 0.49 0.08');
 #ifdef GAMEQC
-    ATTRIB(Gordon, m_model, Model, MDL_Gordon);
-    ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);
-    ATTRIB(Gordon, m_soundpath, string, "player_gordon/");
-    METHOD(Gordon, m_sound_pain, string()) { return SND(Gordon_Pain_Random()); }
-    METHOD(Gordon, m_sound_death, string()) { return SND(Gordon_Death); }
-    METHOD(Gordon, m_sound_jump, string(entity actor)) { return "player_gordon/plyrjmp8.wav"; }
+	ATTRIB(Gordon, m_model, Model, MDL_Gordon);
+	ATTRIB(Gordon, m_model_head, Model, MDL_Gordon_Head);
+	METHOD(Gordon, m_sound_pain, Sound()) { return SND_Gordon_Pain_Random(); }
+	METHOD(Gordon, m_sound_death, Sound()) { return SND_Gordon_Death; }
+	METHOD(Gordon, m_sound_jump, Sound(entity actor)) { return SND_Gordon_Jump; }
+	METHOD(Gordon, m_sound_waterdeath, Sound(entity actor)) { return SND_Gordon_WaterDeath; }
+	METHOD(Gordon, m_sound_gasp1, Sound(entity actor)) { return SND_Gordon_Gasp1; }
+	METHOD(Gordon, m_sound_gasp2, Sound(entity actor)) { return SND_Gordon_Gasp2; }
+	METHOD(Gordon, m_sound_axehit, Sound(entity actor)) { return SND_Gordon_AxeHit; }
+	METHOD(Gordon, m_sound_burn, Sound(entity actor)) { return SND_Gordon_Burn_Random(); }
+	METHOD(Gordon, m_sound_drown, Sound(entity actor)) { return SND_Gordon_Drown_Random(); }
+	METHOD(Gordon, m_sound_land, Sound(entity actor)) { return SND_Gordon_Land; }
+	METHOD(Gordon, m_sound_fall, Sound(entity actor)) { return SND_Gordon_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Gordon, message, string, GORDON_STATS);
+	ATTRIB(Gordon, message, string, GORDON_STATS);
 #endif
 ENDCLASS(Gordon)
 REGISTER_CHAMPION(Gordon, NEW(Gordon));

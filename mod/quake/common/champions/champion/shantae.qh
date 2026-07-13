@@ -12,7 +12,7 @@ SOUND(Shantae_Pain3, "player_shantae/pain3");
 SOUND(Shantae_Pain4, "player_shantae/pain4");
 SOUND(Shantae_Pain5, "player_shantae/pain5");
 Sound SND_Shantae_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Shantae_Pain1.m_id + floor(prandom() * 5));
+	return REGISTRY_GET(Sounds, SND_Shantae_Pain1.m_id + floor(prandom() * 5));
 }
 
 SOUND(Shantae_Death1, "player_shantae/death1");
@@ -20,68 +20,82 @@ SOUND(Shantae_Death2, "player_shantae/death2");
 SOUND(Shantae_Death3, "player_shantae/death3");
 SOUND(Shantae_Death4, "player_shantae/death4");
 Sound SND_Shantae_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Shantae_Death1.m_id + floor(prandom() * 4));
+	return REGISTRY_GET(Sounds, SND_Shantae_Death1.m_id + floor(prandom() * 4));
+}
+
+SOUND(Shantae_Jump, "player_shantae/plyrjmp8");
+SOUND(Shantae_Gasp1, "player_shantae/gasp1");
+SOUND(Shantae_Gasp2, "player_shantae/gasp2");
+SOUND(Shantae_WaterDeath, "player_shantae/h2odeath");
+SOUND(Shantae_AxeHit, "player_shantae/axhit1");
+SOUND(Shantae_Land, "player_shantae/land");
+SOUND(Shantae_Fall, "player_shantae/land2");
+
+SOUND(Shantae_Burn1, "player_shantae/lburn1");
+SOUND(Shantae_Burn2, "player_shantae/lburn2");
+Sound SND_Shantae_Burn_Random() {
+	return (random() > 0.5) ? SND_Shantae_Burn1 : SND_Shantae_Burn2;
+}
+
+SOUND(Shantae_Drown1, "player_shantae/drown1");
+SOUND(Shantae_Drown2, "player_shantae/drown2");
+Sound SND_Shantae_Drown_Random() {
+	return (random() > 0.5) ? SND_Shantae_Drown1 : SND_Shantae_Drown2;
+}
+
+SOUND(Shantae_Start1, "player_shantae/start1");
+SOUND(Shantae_Start2, "player_shantae/start2");
+SOUND(Shantae_Start3, "player_shantae/start3");
+SOUND(Shantae_Start4, "player_shantae/start4");
+SOUND(Shantae_Start5, "player_shantae/start5");
+SOUND(Shantae_Start6, "player_shantae/start6");
+SOUND(Shantae_Start7, "player_shantae/start7");
+Sound SND_Shantae_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Shantae_Start1.m_id + rint(random() * 6));
+}
+
+SOUND(Shantae_Transform1, "player_shantae/transform1");
+SOUND(Shantae_Transform2, "player_shantae/transform2");
+SOUND(Shantae_Transform3, "player_shantae/transform3");
+SOUND(Shantae_Transform4, "player_shantae/transform4");
+SOUND(Shantae_Transform5, "player_shantae/transform5");
+SOUND(Shantae_Transform6, "player_shantae/transform6");
+SOUND(Shantae_Transform7, "player_shantae/transform7");
+Sound SND_Shantae_Transform_Random() {
+	return REGISTRY_GET(Sounds, SND_Shantae_Transform1.m_id + rint(random() * 6));
+}
+
+SOUND(Shantae_Transform, "player_shantae/player_transform");
+SOUND(Shantae_Cannon_Launch, "player_shantae/falling");
+SOUND(Shantae_Cannon_Land, "player_shantae/cannon_land");
+
+SOUND(Shantae_Attack1, "player_shantae/attack1");
+SOUND(Shantae_Attack2, "player_shantae/attack2");
+Sound SND_Shantae_Attack_Random() {
+	return (random() > 0.5) ? SND_Shantae_Attack1 : SND_Shantae_Attack2;
 }
 
 PRECACHE(Shantae)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/shantae_face_invis");
-    precache_pic("gfx/quake/shantae_face_invul2");
-    precache_pic("gfx/quake/shantae_face_inv2");
-    precache_pic("gfx/quake/shantae_face_quad");
+	precache_pic("gfx/quake/shantae_face_invis");
+	precache_pic("gfx/quake/shantae_face_invul2");
+	precache_pic("gfx/quake/shantae_face_inv2");
+	precache_pic("gfx/quake/shantae_face_quad");
 
-    precache_pic("gfx/quake/shantae_face1");
-    precache_pic("gfx/quake/shantae_face_p1");
-    precache_pic("gfx/quake/shantae_face2");
-    precache_pic("gfx/quake/shantae_face_p2");
-    precache_pic("gfx/quake/shantae_face3");
-    precache_pic("gfx/quake/shantae_face_p3");
-    precache_pic("gfx/quake/shantae_face4");
-    precache_pic("gfx/quake/shantae_face_p4");
-    precache_pic("gfx/quake/shantae_face5");
-    precache_pic("gfx/quake/shantae_face_p5");
+	precache_pic("gfx/quake/shantae_face1");
+	precache_pic("gfx/quake/shantae_face_p1");
+	precache_pic("gfx/quake/shantae_face2");
+	precache_pic("gfx/quake/shantae_face_p2");
+	precache_pic("gfx/quake/shantae_face3");
+	precache_pic("gfx/quake/shantae_face_p3");
+	precache_pic("gfx/quake/shantae_face4");
+	precache_pic("gfx/quake/shantae_face_p4");
+	precache_pic("gfx/quake/shantae_face5");
+	precache_pic("gfx/quake/shantae_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_shantae/plyrjmp8.wav");       // player jump
-    precache_sound("player_shantae/land.wav");           // player landing
-    precache_sound("player_shantae/land2.wav");      // player hurt landing
-    precache_sound("player_shantae/drown1.wav");     // drowning pain
-    precache_sound("player_shantae/drown2.wav");     // drowning pain
-    precache_sound("player_shantae/gasp1.wav");      // gasping for air
-    precache_sound("player_shantae/gasp2.wav");      // taking breath
-    precache_sound("player_shantae/h2odeath.wav");       // drowning death
-
-    precache_sound("player_shantae/axhit1.wav");
-
-    precache_sound("player_shantae/lburn1.wav");     // lava burn
-    precache_sound("player_shantae/lburn2.wav");     // lava burn
-
-    precache_sound("player_shantae/falling.wav");
-    precache_sound("player_shantae/cannon_land.wav");
-
-    precache_sound("player_shantae/start1.wav");
-    precache_sound("player_shantae/start2.wav");
-    precache_sound("player_shantae/start3.wav");
-    precache_sound("player_shantae/start4.wav");
-    precache_sound("player_shantae/start5.wav");
-    precache_sound("player_shantae/start6.wav");
-    precache_sound("player_shantae/start7.wav");
-
-    precache_sound("player_shantae/transform1.wav");
-    precache_sound("player_shantae/transform2.wav");
-    precache_sound("player_shantae/transform3.wav");
-    precache_sound("player_shantae/transform4.wav");
-    precache_sound("player_shantae/transform5.wav");
-    precache_sound("player_shantae/transform6.wav");
-    precache_sound("player_shantae/transform7.wav");
-
-    precache_sound("player_shantae/attack1.wav");
-    precache_sound("player_shantae/attack2.wav");
-
-    precache_sound("player_shantae/player_transform.wav");
-
-    precache_model("progs/v_hair.mdl");
+	precache_model("progs/v_hair.mdl");
 #endif
 }
 #endif
@@ -99,25 +113,32 @@ PRECACHE(Shantae)
 "Right click cycles between spells"
 #endif
 CLASS(Shantae, Champions)
-    ATTRIB(Shantae, netname, string, "shantae");
-    ATTRIB(Shantae, m_name, string, "Shantae");
-    ATTRIB(Shantae, m_color, vector, '0.51 0.22 0.54');
-    ATTRIB(Shantae, qcc_meleename, string, "hair");
-    ATTRIB(Shantae, qcc_meleerange, float, 2);
-    ATTRIB(Shantae, qcc_jumpheight, float, 1.15);
+	ATTRIB(Shantae, netname, string, "shantae");
+	ATTRIB(Shantae, m_name, string, "Shantae");
+	ATTRIB(Shantae, m_color, vector, '0.51 0.22 0.54');
+	ATTRIB(Shantae, qcc_meleename, string, "hair");
+	ATTRIB(Shantae, qcc_meleerange, float, 2);
+	ATTRIB(Shantae, qcc_jumpheight, float, 1.15);
 #ifdef GAMEQC
-    ATTRIB(Shantae, m_model, Model, MDL_Shantae);
-    ATTRIB(Shantae, m_model_head, Model, MDL_Shantae_Head);
-    ATTRIB(Shantae, m_soundpath, string, "player_shantae/");
-    METHOD(Shantae, m_sound_pain, string()) { return SND(Shantae_Pain_Random()); }
-    METHOD(Shantae, m_sound_death, string()) { return SND(Shantae_Death_Random()); }
-    METHOD(Shantae, m_sound_jump, string(entity actor)) { return "player_shantae/plyrjmp8.wav"; }
+	ATTRIB(Shantae, m_model, Model, MDL_Shantae);
+	ATTRIB(Shantae, m_model_head, Model, MDL_Shantae_Head);
+	METHOD(Shantae, m_sound_pain, Sound()) { return SND_Shantae_Pain_Random(); }
+	METHOD(Shantae, m_sound_death, Sound()) { return SND_Shantae_Death_Random(); }
+	METHOD(Shantae, m_sound_jump, Sound(entity actor)) { return SND_Shantae_Jump; }
+	METHOD(Shantae, m_sound_waterdeath, Sound(entity actor)) { return SND_Shantae_WaterDeath; }
+	METHOD(Shantae, m_sound_gasp1, Sound(entity actor)) { return SND_Shantae_Gasp1; }
+	METHOD(Shantae, m_sound_gasp2, Sound(entity actor)) { return SND_Shantae_Gasp2; }
+	METHOD(Shantae, m_sound_axehit, Sound(entity actor)) { return SND_Shantae_AxeHit; }
+	METHOD(Shantae, m_sound_burn, Sound(entity actor)) { return SND_Shantae_Burn_Random(); }
+	METHOD(Shantae, m_sound_drown, Sound(entity actor)) { return SND_Shantae_Drown_Random(); }
+	METHOD(Shantae, m_sound_land, Sound(entity actor)) { return SND_Shantae_Land; }
+	METHOD(Shantae, m_sound_fall, Sound(entity actor)) { return SND_Shantae_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Shantae, m_faceprefix, string, "gfx/quake/shantae_");
+	ATTRIB(Shantae, m_faceprefix, string, "gfx/quake/shantae_");
 #endif
 #ifdef CSQC
-    ATTRIB(Shantae, message, string, SHANTAE_STATS);
+	ATTRIB(Shantae, message, string, SHANTAE_STATS);
 #endif
 ENDCLASS(Shantae)
 REGISTER_CHAMPION(Shantae, NEW(Shantae));

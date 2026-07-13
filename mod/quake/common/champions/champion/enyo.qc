@@ -11,15 +11,15 @@ void enyo_WingCharge(entity this, float charge)
 	if(STAT(WINGCHARGE, this) >= 100)
 	{
 		if(random() <= 0.1)
-			_sound(this, CH_VOICE, "player_enyo/friesdone.wav", 1, ATTN_NORM);
+			sound(this, CH_INFO, SND_Enyo_Wings_Charged2, 1, ATTN_NORM);
 		else
-			_sound(this, CH_VOICE, "player_enyo/wings.wav", 1, ATTN_NORM);
+			sound(this, CH_INFO, SND_Enyo_Wings_Charged, 1, ATTN_NORM);
 	}
 }
 
 METHOD(Enyo, m_footsteps, bool(Champions this, entity actor))
 {
-	sound(actor, CH_VOICE, SND_Enyo_Step_Random(), 0.5, ATTN_NORM);
+	sound(actor, CH_PLAYER, SND_Enyo_Step_Random(), 0.5, ATTN_NORM);
 	return true;
 }
 
@@ -27,7 +27,7 @@ METHOD(Enyo, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && STAT(WINGCHARGE, actor) >= 100 && QCC_CanCastAbility(actor))
 	{
-		_sound(actor, CH_VOICE, "player_enyo/wings_got.wav", 1, ATTN_NORM);
+		sound(actor, CH_INFO, SND_Enyo_Wings_Activate, 1, ATTN_NORM);
 		//te_explosion2(actor.origin, 56, 10);
 		te_teleport(actor.origin);
 		actor.transform_limited = time + 15;
@@ -56,17 +56,7 @@ METHOD(Enyo, m_killed, void(Champions this, entity targ, entity inflictor, entit
 			points = 15;
 		enyo_WingCharge(attacker, points);
 		if(random() < 0.15)
-		{
-			float r = random();
-			if(r < 0.25)
-				player_sound(attacker, CH_VOICE, "taunts/downboy.wav", ATTN_NORM);
-			else if(r < 0.50)
-				player_sound(attacker, CH_VOICE, "taunts/didthathurt.wav", ATTN_NORM);
-			else if(r < 0.75)
-				player_sound(attacker, CH_VOICE, "taunts/dogethis.wav", ATTN_NORM);
-			else
-				player_sound(attacker, CH_VOICE, "taunts/maniaclaugh.wav", ATTN_NORM);
-		}
+			player_sound(attacker, CH_VOICE, SND_Enyo_Kill_Random(), ATTN_NORM);
 	}
 }
 
@@ -74,14 +64,7 @@ METHOD(Enyo, m_activate, void(Champions this, entity actor))
 {
 	STAT(WINGCHARGE, actor) = 0;
 
-	RandomSelection_Init();
-	RandomSelection_AddString("taunts/beloved.wav", 1, 1);
-	RandomSelection_AddString("taunts/justgettingstarted.wav", 1, 1);
-	RandomSelection_AddString("taunts/maniaclaugh.wav", 1, 1);
-	//RandomSelection_AddString("taunts/pinkmist.wav", 1, 1);
-	RandomSelection_AddString("taunts/scrapeoffthefloor.wav", 1, 1);
-	RandomSelection_AddString("taunts/targetlocked.wav", 1, 1);
-	player_sound(actor, CH_VOICE, RandomSelection_chosen_string, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Enyo_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Enyo, m_playerspawn, void(Champions this, entity actor))

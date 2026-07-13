@@ -24,32 +24,14 @@ METHOD(Squire, m_dealdamage, float(Champions this, entity targ, entity inflictor
 
 METHOD(Squire, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start1.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Squire_Start_Random(), ATTN_NORM);
 
 	STAT(RAGECHARGE, actor) = 0;
 }
 
 METHOD(Squire, m_footsteps, bool(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.2)
-		_sound(actor, CH_VOICE, "player_squire/foot1.wav", 0.5, ATTN_NORM);
-	else if(r < 0.4)
-		_sound(actor, CH_VOICE, "player_squire/foot2.wav", 0.5, ATTN_NORM);
-	else if(r < 0.6)
-		_sound(actor, CH_VOICE, "player_squire/foot3.wav", 0.5, ATTN_NORM);
-	else if(r < 0.8)
-		_sound(actor, CH_VOICE, "player_squire/foot4.wav", 0.5, ATTN_NORM);
-	else
-		_sound(actor, CH_VOICE, "player_squire/foot5.wav", 0.5, ATTN_NORM);
+	sound(actor, CH_PLAYER, SND_Squire_Step_Random(), 0.5, ATTN_NORM);
 	return true;
 }
 
@@ -58,9 +40,9 @@ METHOD(Squire, m_playerthink, void(Champions this, entity actor))
 	if(actor.skin == 0 && PHYS_INPUT_BUTTON_CROUCH(actor) && STAT(RAGECHARGE, actor) <= 0 && QCC_CanCastAbility(actor))
 	{
 		if(random() < 0.15)
-			_sound(actor, CH_VOICE, "player_squire/reee.wav", 1, ATTN_NORM);
+			sound(actor, CH_PLAYER, SND_Squire_Rage_Reee, 1, ATTN_NORM);
 		else
-			_sound(actor, CH_VOICE, "player_squire/rage_activate.wav", 1, ATTN_NORM);
+			sound(actor, CH_PLAYER, SND_Squire_Rage_Start, 1, ATTN_NORM);
 		actor.skin = 1;
 		STAT(QCC_ABILITYTIME, actor) = time + 20; // incase the player tries to cheese swap
 		STAT(RAGECHARGE, actor) = 100;
@@ -70,7 +52,7 @@ METHOD(Squire, m_playerthink, void(Champions this, entity actor))
 	if(actor.skin == 1 && time > actor.last_ragesound)
 	{
 		actor.last_ragesound = time + 2.5;
-		_sound(actor, CH_PLAYER_SINGLE, "player_squire/rage_loop.wav", 1, ATTN_NORM);
+		sound(actor, CH_PLAYER_SINGLE, SND_Squire_Rage_Loop, 1, ATTN_NORM);
 	}
 
 	if(actor.skin == 1 && time > actor.last_rageloss && STAT(RAGECHARGE, actor) > 0)
@@ -83,7 +65,7 @@ METHOD(Squire, m_playerthink, void(Champions this, entity actor))
 		STAT(RAGECHARGE, actor) -= points;
 		if(STAT(RAGECHARGE, actor) <= 0)
 		{
-			_sound(actor, CH_VOICE, "player_squire/rage_deactivate.wav", 1, ATTN_NORM);
+			sound(actor, CH_PLAYER, SND_Squire_Rage_End, 1, ATTN_NORM);
 			STAT(RAGECHARGE, actor) = 0;
 			STAT(QCC_ABILITYTIME, actor) = time + 20;
 			actor.skin = 0;
@@ -105,7 +87,7 @@ METHOD(Squire, m_killed, void(Champions this, entity targ, entity inflictor, ent
 
 METHOD(Squire, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Squire_Start4, ATTN_NORM);
 	actor.squire_cannon = true;
 }
 
@@ -113,7 +95,7 @@ METHOD(Squire, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.squire_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.squire_cannon = false;
 	actor.jump_flag = 0;
 	return false;

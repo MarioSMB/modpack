@@ -35,15 +35,7 @@ METHOD(Erebus, m_updatestats, void(Champions this, entity actor))
 
 METHOD(Erebus, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Erebus_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Erebus, m_playerspawn, void(Champions this, entity actor))
@@ -58,7 +50,7 @@ METHOD(Erebus, m_clear, void(Champions this, entity actor))
 
 METHOD(Erebus, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Erebus_Falling, ATTN_NORM);
 	actor.erebus_cannon = true;
 }
 
@@ -67,7 +59,7 @@ METHOD(Erebus, m_cannon_land, bool(Champions this, entity actor))
 	if(!actor.erebus_cannon)
 		return false;
 	// NOTE: disabled as his voice clip is short!
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.erebus_cannon = false;
 	return false;
 }

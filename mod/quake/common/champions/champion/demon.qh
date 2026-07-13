@@ -6,60 +6,57 @@
 MODEL(Demon, "progs/demon.mdl");
 MODEL(Demon_Head, "progs/h_demon.mdl");
 
+SOUND(Demon_Pain, "demon/dpain1");
+SOUND(Demon_Death, "demon/ddeath");
+SOUND(Demon_Jump, "demon/djump");
+SOUND(Demon_Land, "demon/dland2");
+
+SOUND(Demon_Start, "demon/sight2");
+
+SOUND(Demon_Hit, "demon/dhit2");
+SOUND(Demon_Hit_Wall, "shambler/smack");
+
 PRECACHE(Demon)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/demon_face");
+	precache_pic("gfx/quake/demon_face");
 #endif
 #ifdef SVQC
-    precache_sound("player_keyleth/plyrjmp8.wav");       // player jump
-    precache_sound("player_keyleth/land.wav");           // player landing
-    precache_sound("player_keyleth/land2.wav");      // player hurt landing
-    precache_sound("player_keyleth/drown1.wav");     // drowning pain
-    precache_sound("player_keyleth/drown2.wav");     // drowning pain
-    precache_sound("player_keyleth/gasp1.wav");      // gasping for air
-    precache_sound("player_keyleth/gasp2.wav");      // taking breath
-    precache_sound("player_keyleth/h2odeath.wav");       // drowning death
-
-    precache_sound("player_keyleth/axhit1.wav");
-
-    precache_sound("player_keyleth/lburn1.wav");     // lava burn
-    precache_sound("player_keyleth/lburn2.wav");     // lava burn
-
-    precache_sound("demon/sight2.wav");
-    precache_sound("demon/djump.wav");
-    precache_sound("demon/dpain1.wav");
-    precache_sound("demon/ddeath.wav");
-    precache_sound("shambler/smack.wav");
-
-    precache_model("progs/v_sorclaw.mdl");
+	precache_model("progs/v_sorclaw.mdl");
 #endif
 }
 #endif
 CLASS(Demon, Champions)
-    ATTRIB(Demon, netname, string, "demon");
-    ATTRIB(Demon, m_name, string, "Demon");
-    ATTRIB(Demon, m_hidden, bool, true);
-    ATTRIB(Demon, qcc_noselect, bool, true);
-    ATTRIB(Demon, qcc_movespeed, float, 0.5);
-    ATTRIB(Demon, qcc_health_regen_rate, float, 2);
-    ATTRIB(Demon, qcc_health_rot_max, float, 3);
-    ATTRIB(Demon, qcc_meleename, string, "sorclaw");
-    ATTRIB(Demon, qcc_thirdperson, bool, true);
-    ATTRIB(Demon, qcc_anim_axrun, vector, '21 0 5');
-    ATTRIB(Demon, qcc_anim_rockrun, vector, '21 0 5');
-    ATTRIB(Demon, qcc_anim_axstnd, vector, '0 0 12');
-    ATTRIB(Demon, qcc_anim_stand, vector, '0 0 12');
+	ATTRIB(Demon, netname, string, "demon");
+	ATTRIB(Demon, m_name, string, "Demon");
+	ATTRIB(Demon, m_hidden, bool, true);
+	ATTRIB(Demon, qcc_noselect, bool, true);
+	ATTRIB(Demon, qcc_movespeed, float, 0.5);
+	ATTRIB(Demon, qcc_health_regen_rate, float, 2);
+	ATTRIB(Demon, qcc_health_rot_max, float, 3);
+	ATTRIB(Demon, qcc_meleename, string, "sorclaw");
+	ATTRIB(Demon, qcc_thirdperson, bool, true);
+	ATTRIB(Demon, qcc_anim_axrun, vector, '21 0 5');
+	ATTRIB(Demon, qcc_anim_rockrun, vector, '21 0 5');
+	ATTRIB(Demon, qcc_anim_axstnd, vector, '0 0 12');
+	ATTRIB(Demon, qcc_anim_stand, vector, '0 0 12');
 #ifdef GAMEQC
-    ATTRIB(Demon, m_model, Model, MDL_Demon);
-    ATTRIB(Demon, m_model_head, Model, MDL_Demon_Head);
-    ATTRIB(Demon, m_soundpath, string, "player_keyleth/");
-    METHOD(Demon, m_sound_pain, string()) { return "demon/dpain1.wav"; }
-    METHOD(Demon, m_sound_death, string()) { return "demon/ddeath.wav"; }
-    METHOD(Demon, m_sound_jump, string(entity actor)) { return "demon/djump.wav"; }
+	ATTRIB(Demon, m_model, Model, MDL_Demon);
+	ATTRIB(Demon, m_model_head, Model, MDL_Demon_Head);
+	METHOD(Demon, m_sound_pain, Sound()) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_death, Sound()) { return SND_Demon_Death; }
+	METHOD(Demon, m_sound_jump, Sound(entity actor)) { return SND_Demon_Jump; }
+	METHOD(Demon, m_sound_waterdeath, Sound(entity actor)) { return SND_Demon_Death; }
+	METHOD(Demon, m_sound_gasp1, Sound(entity actor)) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_gasp2, Sound(entity actor)) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_axehit, Sound(entity actor)) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_burn, Sound(entity actor)) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_drown, Sound(entity actor)) { return SND_Demon_Pain; }
+	METHOD(Demon, m_sound_land, Sound(entity actor)) { return SND_Demon_Land; }
+	METHOD(Demon, m_sound_fall, Sound(entity actor)) { return SND_Demon_Land; }
 #endif
 #ifdef CSQC
-    ATTRIB(Demon, message, string, "You are transformed!");
+	ATTRIB(Demon, message, string, "You are transformed!");
 #endif
 ENDCLASS(Demon)
 REGISTER_CHAMPION(Demon, NEW(Demon));

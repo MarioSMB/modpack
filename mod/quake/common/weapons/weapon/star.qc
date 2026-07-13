@@ -12,8 +12,6 @@ PRECACHE(Star)
 	precache_model("progs/v_star.mdl");
 
 	precache_model("progs/twister.mdl");
-
-	precache_sound("kirby/wawa.wav");
 }
 
 void W_Star_Shambler_Clear(entity actor);
@@ -98,7 +96,7 @@ void W_Star_Inhale(entity this, .entity weaponentity)
 	if(!this.star_twister)
 		star_twister_summon(this);
 
-	_sound(this, CH_WEAPON_SINGLE, "player_kirby/inhale.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_Kirby_Inhale, 1, ATTN_NORM);
 
 	makevectors(this.v_angle);
 
@@ -183,7 +181,7 @@ void W_Star_Inhale(entity this, .entity weaponentity)
 			else
 				this.star_consumed += 1;
 			float sndpitch = 100 * bound(0.5, 0.5 + (0.1 * this.star_consumed), 1.5);
-			sound7(this, CH_WEAPON_B, "player_kirby/eat.wav", 1, ATTN_NORM, sndpitch, 0);
+			qc_sound7(this, CH_WEAPON_B, SND_Kirby_Eat, 1, ATTN_NORM, sndpitch, 0);
 			STAT(KIRBY_STATE, this) = KIRBY_FULL;
 			if(it.flags & FL_PROJECTILE)
 			{
@@ -313,7 +311,7 @@ void star_think(entity this)
 		spawn_touchblood(this, damg, it);
 		T_Damage(it, this, this.owner, damg, this.projectiledeathtype);
 
-		_sound(this, CH_WEAPON_SINGLE, "player_kirby/star_hit.wav", 1, ATTN_NORM);
+		_sound(this, CH_SHOTS_SINGLE, "player_kirby/star_hit.wav", 1, ATTN_NORM);
 
 		it.star_dmgtime = time + 0.5; // prevent instant death
 	});
@@ -346,7 +344,7 @@ void W_Star_Spit(entity this, .entity weaponentity)
 
 	if(this.star_consumed >= 30)
 	{
-		sound7(this, CH_WEAPON_SINGLE, "player_kirby/spit_large.wav", 1, 0.1, 50, 0); // TODO: custom sound
+		qc_sound7(this, CH_PLAYER_SINGLE, SND_Kirby_Spit_Large, 1, 0.1, 50, 0); // TODO: custom sound
 		newmis.velocity = dir * 300;
 		newmis.state = 2; // mega star!
 		newmis.cnt = 768;
@@ -358,7 +356,7 @@ void W_Star_Spit(entity this, .entity weaponentity)
 	}
 	else if(this.star_consumed >= 6)
 	{
-		_sound(this, CH_WEAPON_SINGLE, "player_kirby/spit_large.wav", 1, ATTN_NORM);
+		sound(this, CH_PLAYER_SINGLE, SND_Kirby_Spit_Large, 1, ATTN_NORM);
 		newmis.velocity = dir * 600;
 		newmis.state = 1; // big star!
 		newmis.cnt = 64;
@@ -370,13 +368,13 @@ void W_Star_Spit(entity this, .entity weaponentity)
 	else if(this.star_consumed >= 3)
 	{
 		setsize(newmis, '16 16 16', '16 16 16');
-		_sound(this, CH_WEAPON_SINGLE, "player_kirby/spit_medium.wav", 1, ATTN_NORM);
+		sound(this, CH_PLAYER_SINGLE, SND_Kirby_Spit_Medium, 1, ATTN_NORM);
 		newmis.velocity = dir * 800;
 		CSQCProjectile(newmis, true, PROJECTILE_STAR_MEDIUM, true);
 	}
 	else
 	{
-		_sound(this, CH_WEAPON_SINGLE, "player_kirby/spit.wav", 1, ATTN_NORM);
+		sound(this, CH_PLAYER_SINGLE, SND_Kirby_Spit, 1, ATTN_NORM);
 		newmis.velocity = dir * 1500;
 		CSQCProjectile(newmis, true, PROJECTILE_STAR_SMALL, true);
 	}
@@ -389,7 +387,7 @@ void W_Star_Exhale(entity this, .entity weaponentity)
 	makevectors(this.angles);
 	Send_Effect(EFFECT_SMOKE_RING, this.origin + v_forward * 32, v_forward * 256, 1);
 
-	player_sound(this, CH_VOICE, "exhale.wav", ATTN_NORM);
+	player_sound(this, CH_PLAYER, SND_Kirby_Exhale, ATTN_NORM);
 
 	FOREACH_ENTITY_RADIUS(this.origin, 120, it.takedamage && it.health > 0,
 	{
@@ -449,7 +447,7 @@ void W_Star_Fire(entity actor, .entity weaponentity)
 
 void W_Star_Swallow(entity actor, .entity weaponentity)
 {
-	_sound(actor, CH_WEAPON_SINGLE, "player_kirby/swallow.wav", 1, ATTN_NORM);
+	sound(actor, CH_PLAYER_SINGLE, SND_Kirby_Swallow, 1, ATTN_NORM);
 
 	if(actor.star_power == MON_FLOYD)
 	{
@@ -473,7 +471,7 @@ void W_Star_Swallow(entity actor, .entity weaponentity)
 	{
 		actor.star_consumed -= 1; // don't give health too
 		// goats are also special
-		_sound(actor, CH_WEAPON_B, "kirby/wawa.wav", 1, ATTN_NORM);
+		sound(actor, CH_PLAYER, SND_Kirby_Goated, 1, ATTN_NORM);
 		T_Damage(actor, actor, NULL, 20, DEATH_GENERIC.m_id);
 		if(IS_REAL_CLIENT(actor))
 			centerprint(actor, "THOU SHALL NOT EAT THE HOLY ONE\n");
@@ -485,7 +483,7 @@ void W_Star_Swallow(entity actor, .entity weaponentity)
 		actor.star_consumed -= 1; // don't give health too
 		te_explosion2(actor.origin, 110, 1);
 		STAT(KIRBY_TYPE, actor) = actor.star_power.monsterid;
-		_sound(actor, CH_WEAPON_B, "player_kirby/ability.wav", 1, ATTN_NORM);
+		sound(actor, CH_PLAYER, SND_Kirby_Ability, 1, ATTN_NORM);
 	}
 
 	float healamount = 5 * actor.star_consumed;
@@ -504,7 +502,7 @@ void W_Star_Swallow(entity actor, .entity weaponentity)
 void W_Star_Discard(entity actor, .entity weaponentity)
 {
 	te_explosion2(actor.origin, 111, 5);
-	_sound(actor, CH_WEAPON_B, "player_kirby/ability_lost.wav", 1, ATTN_NORM);
+	sound(actor, CH_PLAYER, SND_Kirby_Ability_Lost, 1, ATTN_NORM);
 
 	// return the ability to kirby's mouth
 	Monster mon = REGISTRY_GET(Monsters, STAT(KIRBY_TYPE, actor));

@@ -40,13 +40,14 @@ void hitdemon(entity this, entity hitent, vector org, vector dir)
 		
 		//johnfitz -- make clank sound when hitting brushmodels
 		if(hitent.solid == SOLID_BSP || hitent.movetype == MOVETYPE_PUSH || hitent.movetype == MOVETYPE_NONE)
-			 _sound(hitent, CH_SHOTS, "demon/dhit2.wav", 0.5, ATTN_NORM);
+			sound(hitent, CH_SHOTS, SND_Demon_Hit, 0.5, ATTN_NORM);
 		else
-			 _sound(hitent, CH_SHOTS, "demon/dhit2.wav", 1, ATTN_NORM);	
+			sound(hitent, CH_SHOTS, SND_Demon_Hit, 1, ATTN_NORM);	
 	}
 	else
 	{	// hit wall
 		FX_Wrench(org, dir, true);
+		sound(hitent, CH_SHOTS, SND_Demon_Hit_Wall, 1, ATTN_NORM);	
 	}
 }
 
@@ -194,7 +195,7 @@ void demon_melee1(entity this) { set_animofs(this, anim_demon_attacka, 1, demon_
 
 METHOD(Demon, m_activate, void(Champions this, entity actor))
 {
-	_sound(actor, CH_VOICE, "demon/sight2.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Demon_Start, ATTN_NORM);
 }
 
 METHOD(Demon, m_weaponframe, bool(Champions this, entity actor, .entity weaponentity))
@@ -207,7 +208,7 @@ METHOD(Demon, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_ATCK(actor) && IS_ONGROUND(actor) && time > actor.demon_melee_time && !actor.tank && !STAT(CANNON, actor))
 	{
-		_sound(actor, CH_VOICE, "demon/sight2.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Demon_Start, ATTN_NORM);
 		actor.demon_melee_time = time + 1.5;
 		demon_melee1(actor);
 	}
@@ -255,7 +256,7 @@ METHOD(Demon, m_touch, void(Champions this, entity actor, entity toucher))
 
 METHOD(Demon, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	_sound(actor, CH_TRIGGER_SINGLE, "demon/ddeath.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Demon_Death, ATTN_NORM);
 	actor.demon_cannon = true;
 }
 
@@ -263,7 +264,7 @@ METHOD(Demon, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.demon_cannon)
 		return false;
-	_sound(actor, CH_TRIGGER_SINGLE, "demon/dland2.wav", 1, ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Demon_Land, ATTN_NORM);
 	actor.demon_cannon = false;
 	return false;
 }
@@ -274,7 +275,7 @@ METHOD(Demon, m_playerjump, float(Champions this, entity actor))
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.8))
 	{
 	#ifdef SVQC
-		_sound(actor, CH_WEAPON_SINGLE, "demon/djump.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_Demon_Jump, ATTN_NORM);
 		actor.demon_bash_time = time + 1;
 		demon_jump4(actor);
 	#endif

@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Chief, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Chief_Start, ATTN_NORM);
 }
 
 METHOD(Chief, m_pickup_armor, void(Champions this, entity actor, entity item))

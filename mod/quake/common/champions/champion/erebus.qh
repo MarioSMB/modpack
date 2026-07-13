@@ -19,40 +19,40 @@ Sound SND_Erebus_Death_Random() {
 	return REGISTRY_GET(Sounds, SND_Erebus_Death1.m_id + rint(random() * 2));
 }
 
+SOUND(Erebus_Jump, "player_erebus/plyrjmp8");
+SOUND(Erebus_Gasp1, "player_erebus/gasp1");
+SOUND(Erebus_Gasp2, "player_erebus/gasp2");
+SOUND(Erebus_WaterDeath, "player_erebus/h2odeath");
+SOUND(Erebus_AxeHit, "player_erebus/axhit1");
+SOUND(Erebus_Land, "player_erebus/land");
+SOUND(Erebus_Fall, "player_erebus/land2");
+
+SOUND(Erebus_Burn1, "player_erebus/lburn1");
+SOUND(Erebus_Burn2, "player_erebus/lburn2");
+Sound SND_Erebus_Burn_Random() {
+	return (random() > 0.5) ? SND_Erebus_Burn1 : SND_Erebus_Burn2;
+}
+
+SOUND(Erebus_Drown1, "player_erebus/drown1");
+SOUND(Erebus_Drown2, "player_erebus/drown2");
+Sound SND_Erebus_Drown_Random() {
+	return (random() > 0.5) ? SND_Erebus_Drown1 : SND_Erebus_Drown2;
+}
+
+SOUND(Erebus_Start1, "player_erebus/start");
+SOUND(Erebus_Start2, "player_erebus/start2");
+SOUND(Erebus_Start3, "player_erebus/start3");
+SOUND(Erebus_Start4, "player_erebus/start4");
+Sound SND_Erebus_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Erebus_Start1.m_id + rint(random() * 3));
+}
+
+SOUND(Erebus_Falling, "player_erebus/falling");
+
 PRECACHE(Erebus)
 {
 #ifdef CSQC
 	precache_pic("gfx/quake/erebus_face");
-#endif
-#ifdef SVQC
-	precache_sound("player_erebus/plyrjmp8.wav");       // player jump
-	precache_sound("player_erebus/land.wav");           // player landing
-	precache_sound("player_erebus/land2.wav");      // player hurt landing
-	precache_sound("player_erebus/drown1.wav");     // drowning pain
-	precache_sound("player_erebus/drown2.wav");     // drowning pain
-	precache_sound("player_erebus/gasp1.wav");      // gasping for air
-	precache_sound("player_erebus/gasp2.wav");      // taking breath
-	precache_sound("player_erebus/h2odeath.wav");       // drowning death
-
-	precache_sound("player_erebus/pain1.wav");
-	precache_sound("player_erebus/pain2.wav");
-
-	precache_sound("player_erebus/death1.wav");
-	precache_sound("player_erebus/death2.wav");
-	precache_sound("player_erebus/death3.wav");
-
-	precache_sound("player_erebus/axhit1.wav");
-	precache_sound("player_erebus/axhit2.wav");
-
-	precache_sound("player_erebus/lburn1.wav");     // lava burn
-	precache_sound("player_erebus/lburn2.wav");     // lava burn
-
-	precache_sound("player_erebus/start.wav");
-	precache_sound("player_erebus/start2.wav");
-	precache_sound("player_erebus/start3.wav");
-	precache_sound("player_erebus/start4.wav");
-
-	precache_sound("player_erebus/falling.wav");
 #endif
 }
 #endif
@@ -69,10 +69,17 @@ CLASS(Erebus, Champions)
 #ifdef GAMEQC
 	ATTRIB(Erebus, m_model, Model, MDL_Erebus);
 	ATTRIB(Erebus, m_model_head, Model, MDL_Erebus_Head);
-	ATTRIB(Erebus, m_soundpath, string, "player_erebus/");
-	METHOD(Erebus, m_sound_pain, string()) { return SND(Erebus_Pain_Random()); }
-	METHOD(Erebus, m_sound_death, string()) { return SND(Erebus_Death_Random()); }
-	METHOD(Erebus, m_sound_jump, string(entity actor)) { return "player_erebus/plyrjmp8.wav"; }
+	METHOD(Erebus, m_sound_pain, Sound()) { return SND_Erebus_Pain_Random(); }
+	METHOD(Erebus, m_sound_death, Sound()) { return SND_Erebus_Death_Random(); }
+	METHOD(Erebus, m_sound_jump, Sound(entity actor)) { return SND_Erebus_Jump; }
+	METHOD(Erebus, m_sound_waterdeath, Sound(entity actor)) { return SND_Erebus_WaterDeath; }
+	METHOD(Erebus, m_sound_gasp1, Sound(entity actor)) { return SND_Erebus_Gasp1; }
+	METHOD(Erebus, m_sound_gasp2, Sound(entity actor)) { return SND_Erebus_Gasp2; }
+	METHOD(Erebus, m_sound_axehit, Sound(entity actor)) { return SND_Erebus_AxeHit; }
+	METHOD(Erebus, m_sound_burn, Sound(entity actor)) { return SND_Erebus_Burn_Random(); }
+	METHOD(Erebus, m_sound_drown, Sound(entity actor)) { return SND_Erebus_Drown_Random(); }
+	METHOD(Erebus, m_sound_land, Sound(entity actor)) { return SND_Erebus_Land; }
+	METHOD(Erebus, m_sound_fall, Sound(entity actor)) { return SND_Erebus_Fall; }
 #endif
 #ifdef CSQC
 	ATTRIB(Erebus, message, string, EREBUS_STATS);

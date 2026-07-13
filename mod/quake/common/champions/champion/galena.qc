@@ -72,7 +72,7 @@ METHOD(Galena, m_physics, bool(Champions this, entity actor, float dt))
 		tap_direction_y = tap_direction_y / length;
 
 	#ifdef SVQC
-		player_sound(actor, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER, SND_Galena_Jump, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 		actor.galena_dodge_time = time + 0.33;
 	#endif
@@ -233,13 +233,7 @@ METHOD(Galena, m_updatestats, void(Champions this, entity actor))
 
 METHOD(Galena, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.33)
-		player_sound(actor, CH_VOICE, "abl1.wav", ATTN_NORM);
-	else if(r < 0.66)
-		player_sound(actor, CH_VOICE, "abl2.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "abl3.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Galena_Start_Random(), ATTN_NORM);
 
 	actor.skin = bound(0, (etof(actor) % 5) - 1, 4);
 

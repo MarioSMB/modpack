@@ -148,7 +148,7 @@ void W_FireKazoo(entity this, .entity weaponentity)
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	r *= 1.2; // TODO: per-instrument offsets
-	sound7(this, CH_WEAPON_SINGLE, SND(KAZOO_FIRE), 1, ATTN_NORM, r, 0);
+	qc_sound7(this, CH_WEAPON_SINGLE, SND_KAZOO_FIRE, 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Kazoo, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

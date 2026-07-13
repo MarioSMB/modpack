@@ -62,13 +62,13 @@ void Dusk_Reap(entity this)
 	if(found)
 	{
 		STAT(QCC_ABILITYTIME, this) = time + 5;
-		player_sound(this, CH_WEAPON_B, "fastfire.wav", ATTN_NORM);
+		player_sound(this, CH_PLAYER, SND_Dusk_Ability, ATTN_NORM);
 		T_Damage(this, this, NULL, 25, DEATH_GENERIC.m_id);
 	}
 	else
 	{
 		STAT(QCC_ABILITYTIME, this) = time + 1;
-		player_sound(this, CH_WEAPON_B, "fastfirestart.wav", ATTN_NORM);
+		player_sound(this, CH_PLAYER, SND_Dusk_Ability_Fail, ATTN_NORM);
 	}
 }
 
@@ -118,7 +118,7 @@ void Dusk_MakeWisp(entity targ)
 
 METHOD(Dusk, m_activate, void(Dusk this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "sicklestart.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Dusk_Start, ATTN_NORM);
 
 	actor.skin = bound(0, (etof(actor) % 6) - 1, 5);
 }

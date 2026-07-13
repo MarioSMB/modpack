@@ -38,12 +38,6 @@ int precache_sound_index(string s) = #19;
 
 const int SVC_SOUND = 6;
 const int SVC_STOPSOUND = 16;
-
-const int SND_VOLUME = BIT(0);
-const int SND_ATTENUATION = BIT(1);
-const int SND_LARGEENTITY = BIT(3);
-const int SND_LARGESOUND = BIT(4);
-
 void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, float attenu)
 {
 	if (!sound_allowed(to, e)) return;

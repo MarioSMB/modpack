@@ -13,7 +13,7 @@ SOUND(Duke_Pain4, "player_duke/pain4");
 SOUND(Duke_Pain5, "player_duke/pain5");
 SOUND(Duke_Pain6, "player_duke/pain6");
 Sound SND_Duke_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Duke_Pain1.m_id + rint(random() * 5));
+	return REGISTRY_GET(Sounds, SND_Duke_Pain1.m_id + rint(random() * 5));
 }
 
 SOUND(Duke_Death1, "player_duke/death1");
@@ -24,109 +24,141 @@ SOUND(Duke_Death5, "player_duke/death5");
 SOUND(Duke_Death6, "player_duke/death6");
 SOUND(Duke_Death7, "player_duke/death7");
 Sound SND_Duke_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Duke_Death1.m_id + rint(random() * 6));
+	return REGISTRY_GET(Sounds, SND_Duke_Death1.m_id + rint(random() * 6));
 }
+
+SOUND(Duke_Jump, "player_duke/plyrjmp8");
+SOUND(Duke_Gasp1, "player_duke/gasp1");
+SOUND(Duke_Gasp2, "player_duke/gasp2");
+SOUND(Duke_WaterDeath, "player_duke/h2odeath");
+SOUND(Duke_AxeHit, "player_duke/axhit1");
+SOUND(Duke_Land, "player_duke/land");
+SOUND(Duke_Fall, "player_duke/land2");
+
+SOUND(Duke_Burn1, "player_duke/lburn1");
+SOUND(Duke_Burn2, "player_duke/lburn2");
+Sound SND_Duke_Burn_Random() {
+	return (random() > 0.5) ? SND_Duke_Burn1 : SND_Duke_Burn2;
+}
+
+SOUND(Duke_Drown1, "player_duke/drown1");
+SOUND(Duke_Drown2, "player_duke/drown2");
+Sound SND_Duke_Drown_Random() {
+	return (random() > 0.5) ? SND_Duke_Drown1 : SND_Duke_Drown2;
+}
+
+SOUND(Duke_Start1, "player_duke/letsrk");
+SOUND(Duke_Start2, "player_duke/wherami");
+SOUND(Duke_Start3, "player_duke/hell90s");
+SOUND(Duke_Start4, "player_duke/romero");
+SOUND(Duke_Start5, "player_duke/betduke");
+SOUND(Duke_Start6, "player_duke/chew");
+SOUND(Duke_Start7, "player_duke/blowshitup");
+SOUND(Duke_Start8, "player_duke/cokrok");
+SOUND(Duke_Start9, "player_duke/wansom");
+Sound SND_Duke_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Start1.m_id + rint(random() * 8));
+}
+
+SOUND(Duke_Spawn1, "player_duke/cry");
+SOUND(Duke_Spawn2, "player_duke/kicka");
+SOUND(Duke_Spawn3, "player_duke/pissin");
+SOUND(Duke_Spawn4, "player_duke/rip");
+SOUND(Duke_Spawn5, "player_duke/smackdb");
+SOUND(Duke_Spawn6, "player_duke/yohoho2");
+SOUND(Duke_Spawn7, "player_duke/nothink");
+SOUND(Duke_Spawn8, "player_duke/mthrfkr");
+Sound SND_Duke_Spawn_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Spawn1.m_id + rint(random() * 7));
+}
+
+SOUND(Duke_Suicide1, "player_duke/myself");
+SOUND(Duke_Suicide2, "player_duke/realthing");
+SOUND(Duke_Suicide3, "player_duke/kickmyass");
+Sound SND_Duke_Suicide_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Suicide1.m_id + rint(random() * 2));
+}
+
+SOUND(Duke_Kill_Axe1, "player_duke/footface");
+SOUND(Duke_Kill_Axe2, "player_duke/stomped");
+SOUND(Duke_Kill_Axe3, "player_duke/bug");
+SOUND(Duke_Kill_Axe4, "player_duke/bloodboot");
+Sound SND_Duke_Kill_Axe_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Kill_Axe1.m_id + rint(random() * 3));
+}
+
+SOUND(Duke_Kill1, "player_duke/aisle");
+SOUND(Duke_Kill2, "player_duke/amess");
+SOUND(Duke_Kill3, "player_duke/bitchn");
+SOUND(Duke_Kill4, "player_duke/blowit");
+SOUND(Duke_Kill5, "player_duke/bookem");
+SOUND(Duke_Kill6, "player_duke/cool");
+SOUND(Duke_Kill7, "player_duke/damn");
+SOUND(Duke_Kill8, "player_duke/getsom");
+SOUND(Duke_Kill9, "player_duke/gmeovr");
+SOUND(Duke_Kill10, "player_duke/gothrt");
+SOUND(Duke_Kill11, "player_duke/groovy");
+SOUND(Duke_Kill12, "player_duke/hail");
+SOUND(Duke_Kill13, "player_duke/holysh");
+SOUND(Duke_Kill14, "player_duke/imgood");
+SOUND(Duke_Kill15, "player_duke/inhell");
+SOUND(Duke_Kill16, "player_duke/letsrk");
+SOUND(Duke_Kill17, "player_duke/lookin");
+SOUND(Duke_Kill18, "player_duke/meat");
+SOUND(Duke_Kill19, "player_duke/name");
+SOUND(Duke_Kill20, "player_duke/nobody");
+SOUND(Duke_Kill21, "player_duke/piece");
+SOUND(Duke_Kill22, "player_duke/slacker");
+SOUND(Duke_Kill23, "player_duke/sukitdn");
+SOUND(Duke_Kill24, "player_duke/rokrol");
+SOUND(Duke_Kill25, "player_duke/betduke2");
+SOUND(Duke_Kill26, "player_duke/huckleberry");
+SOUND(Duke_Kill27, "player_duke/itsgood");
+SOUND(Duke_Kill28, "player_duke/ripieces");
+SOUND(Duke_Kill29, "player_duke/oneking");
+SOUND(Duke_Kill30, "player_duke/fragged");
+Sound SND_Duke_Kill_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Kill1.m_id + rint(random() * 29));
+}
+
+SOUND(Duke_Pickup_Weapon_Nail1, "player_duke/wansom");
+SOUND(Duke_Pickup_Weapon_Nail2, "player_duke/cool");
+SOUND(Duke_Pickup_Weapon_Nail3, "player_duke/groovy");
+SOUND(Duke_Pickup_Weapon_Nail4, "player_duke/getsom");
+Sound SND_Duke_Pickup_Weapon_Nail_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Pickup_Weapon_Nail1.m_id + rint(random() * 3));
+}
+
+SOUND(Duke_Pickup_Weapon_Rocket1, "player_duke/hehehe");
+SOUND(Duke_Pickup_Weapon_Rocket2, "player_duke/letsrk");
+SOUND(Duke_Pickup_Weapon_Rocket3, "player_duke/timetokill");
+Sound SND_Duke_Pickup_Weapon_Rocket_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Pickup_Weapon_Rocket1.m_id + rint(random() * 2));
+}
+
+SOUND(Duke_Pickup_Powerup1, "player_duke/timetokill");
+SOUND(Duke_Pickup_Powerup2, "player_duke/bos");
+SOUND(Duke_Pickup_Powerup3, "player_duke/groovy");
+Sound SND_Duke_Pickup_Powerup_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Pickup_Powerup1.m_id + rint(random() * 2));
+}
+
+SOUND(Duke_Pickup_Key1, "player_duke/stormgates");
+SOUND(Duke_Pickup_Key2, "player_duke/lookin");
+SOUND(Duke_Pickup_Key3, "player_duke/groovy");
+Sound SND_Duke_Pickup_Key_Random() {
+	return REGISTRY_GET(Sounds, SND_Duke_Pickup_Key1.m_id + rint(random() * 2));
+}
+
+SOUND(Duke_Pickup_Sigil, "player_duke/imgood");
+
 PRECACHE(Duke)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/duke_face");
+	precache_pic("gfx/quake/duke_face");
 #endif
 #ifdef SVQC
-    precache_sound("player_duke/plyrjmp8.wav");       // player jump
-    precache_sound("player_duke/land.wav");           // player landing
-    precache_sound("player_duke/land2.wav");      // player hurt landing
-    precache_sound("player_duke/drown1.wav");     // drowning pain
-    precache_sound("player_duke/drown2.wav");     // drowning pain
-    precache_sound("player_duke/gasp1.wav");      // gasping for air
-    precache_sound("player_duke/gasp2.wav");      // taking breath
-    precache_sound("player_duke/h2odeath.wav");       // drowning death
-
-    precache_sound("player_duke/pain1.wav");
-    precache_sound("player_duke/pain2.wav");
-    precache_sound("player_duke/pain3.wav");
-    precache_sound("player_duke/pain4.wav");
-    precache_sound("player_duke/pain5.wav");
-    precache_sound("player_duke/pain6.wav");
-
-    precache_sound("player_duke/death1.wav");
-    precache_sound("player_duke/death2.wav");
-    precache_sound("player_duke/death3.wav");
-    precache_sound("player_duke/death4.wav");
-    precache_sound("player_duke/death5.wav");
-    precache_sound("player_duke/death6.wav");
-    precache_sound("player_duke/death7.wav");
-
-    precache_sound("player_duke/axhit1.wav");
-
-    precache_sound("player_duke/lburn1.wav");     // lava burn
-    precache_sound("player_duke/lburn2.wav");     // lava burn
-
-    // quip time!
-    precache_sound("player_duke/footface.wav");
-    precache_sound("player_duke/stomped.wav");
-    precache_sound("player_duke/bug.wav");
-    precache_sound("player_duke/bloodboot.wav");
-    precache_sound("player_duke/aisle.wav");
-    precache_sound("player_duke/amess.wav");
-    precache_sound("player_duke/bitchn.wav");
-    precache_sound("player_duke/blowit.wav");
-    precache_sound("player_duke/bookem.wav");
-    precache_sound("player_duke/cool.wav");
-    precache_sound("player_duke/damn.wav");
-    precache_sound("player_duke/getsom.wav");
-    precache_sound("player_duke/gmeovr.wav");
-    precache_sound("player_duke/gothrt.wav");
-    precache_sound("player_duke/groovy.wav");
-    precache_sound("player_duke/hail.wav");
-    precache_sound("player_duke/holysh.wav");
-    precache_sound("player_duke/imgood.wav");
-    precache_sound("player_duke/inhell.wav");
-    precache_sound("player_duke/letsrk.wav");
-    precache_sound("player_duke/lookin.wav");
-    precache_sound("player_duke/meat.wav");
-    precache_sound("player_duke/name.wav");
-    precache_sound("player_duke/nobody.wav");
-    precache_sound("player_duke/piece.wav");
-    precache_sound("player_duke/slacker.wav");
-    precache_sound("player_duke/sukitdn.wav");
-    precache_sound("player_duke/rokrol.wav");
-    precache_sound("player_duke/betduke2.wav");
-    precache_sound("player_duke/huckleberry.wav");
-    precache_sound("player_duke/itsgood.wav");
-    precache_sound("player_duke/ripieces.wav");
-    precache_sound("player_duke/oneking.wav");
-    precache_sound("player_duke/fragged.wav");
-    precache_sound("player_duke/letsrk.wav");
-    precache_sound("player_duke/wherami.wav");
-    precache_sound("player_duke/hell90s.wav");
-    precache_sound("player_duke/romero.wav");
-    precache_sound("player_duke/betduke.wav");
-    precache_sound("player_duke/chew.wav");
-    precache_sound("player_duke/blowshitup.wav");
-    precache_sound("player_duke/cokrok.wav");
-    precache_sound("player_duke/wansom.wav");
-    precache_sound("player_duke/cry.wav");
-    precache_sound("player_duke/kicka.wav");
-    precache_sound("player_duke/pissin.wav");
-    precache_sound("player_duke/rip.wav");
-    precache_sound("player_duke/smackdb.wav");
-    precache_sound("player_duke/yohoho2.wav");
-    precache_sound("player_duke/nothink.wav");
-    precache_sound("player_duke/mthrfkr.wav");
-    precache_sound("player_duke/myself.wav");
-    precache_sound("player_duke/realthing.wav");
-    precache_sound("player_duke/kickmyass.wav");
-    precache_sound("player_duke/wansom.wav");
-    precache_sound("player_duke/cool.wav");
-    precache_sound("player_duke/groovy.wav");
-    precache_sound("player_duke/getsom.wav");
-    precache_sound("player_duke/hehehe.wav");
-    precache_sound("player_duke/letsrk.wav");
-    precache_sound("player_duke/timetokill.wav");
-    precache_sound("player_duke/stormgates.wav");
-    precache_sound("player_duke/bos.wav");
-
-    precache_model("progs/v_mfoot.mdl");
+	precache_model("progs/v_mfoot.mdl");
 #endif
 }
 #endif
@@ -136,22 +168,29 @@ PRECACHE(Duke)
 "Hold %ABILITY% to use jet pack"
 #endif
 CLASS(Duke, Champions)
-    ATTRIB(Duke, netname, string, "duke");
-    ATTRIB(Duke, m_name, string, ((random() < 0.25) ? "Duke Noobem" : "Duke Nukem"));
-    ATTRIB(Duke, m_color, vector, '1 0.75 0.1');
-    ATTRIB(Duke, qcc_meleename, string, "mfoot");
+	ATTRIB(Duke, netname, string, "duke");
+	ATTRIB(Duke, m_name, string, ((random() < 0.25) ? "Duke Noobem" : "Duke Nukem"));
+	ATTRIB(Duke, m_color, vector, '1 0.75 0.1');
+	ATTRIB(Duke, qcc_meleename, string, "mfoot");
 #ifdef GAMEQC
-    ATTRIB(Duke, m_model, Model, MDL_Duke);
-    ATTRIB(Duke, m_model_head, Model, MDL_Duke_Head);
-    ATTRIB(Duke, m_soundpath, string, "player_duke/");
-    METHOD(Duke, m_sound_pain, string()) { return SND(Duke_Pain_Random()); }
-    METHOD(Duke, m_sound_death, string()) { return SND(Duke_Death_Random()); }
-    METHOD(Duke, m_sound_jump, string(entity actor)) { return "player_duke/plyrjmp8.wav"; }
+	ATTRIB(Duke, m_model, Model, MDL_Duke);
+	ATTRIB(Duke, m_model_head, Model, MDL_Duke_Head);
+	METHOD(Duke, m_sound_pain, Sound()) { return SND_Duke_Pain_Random(); }
+	METHOD(Duke, m_sound_death, Sound()) { return SND_Duke_Death_Random(); }
+	METHOD(Duke, m_sound_jump, Sound(entity actor)) { return SND_Duke_Jump; }
+	METHOD(Duke, m_sound_waterdeath, Sound(entity actor)) { return SND_Duke_WaterDeath; }
+	METHOD(Duke, m_sound_gasp1, Sound(entity actor)) { return SND_Duke_Gasp1; }
+	METHOD(Duke, m_sound_gasp2, Sound(entity actor)) { return SND_Duke_Gasp2; }
+	METHOD(Duke, m_sound_axehit, Sound(entity actor)) { return SND_Duke_AxeHit; }
+	METHOD(Duke, m_sound_burn, Sound(entity actor)) { return SND_Duke_Burn_Random(); }
+	METHOD(Duke, m_sound_drown, Sound(entity actor)) { return SND_Duke_Drown_Random(); }
+	METHOD(Duke, m_sound_land, Sound(entity actor)) { return SND_Duke_Land; }
+	METHOD(Duke, m_sound_fall, Sound(entity actor)) { return SND_Duke_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Duke, message, string, DUKE_STATS);
+	ATTRIB(Duke, message, string, DUKE_STATS);
 #endif
-    ATTRIB(Duke, td_turrets, bool, true);
+	ATTRIB(Duke, td_turrets, bool, true);
 ENDCLASS(Duke)
 REGISTER_CHAMPION(Duke, NEW(Duke));
 

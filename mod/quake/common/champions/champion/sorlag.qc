@@ -3,7 +3,7 @@
 #ifdef SVQC
 METHOD(Sorlag, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Sorlag_Start, ATTN_NORM);
 }
 
 void Sorlag_AcidPoolTouch(entity this, entity toucher)
@@ -43,7 +43,7 @@ void Sorlag_AcidSpitTouch(entity this, entity toucher)
 	}
 
 	particle(this.origin, '0 0 0', 57, 50);
-	_sound(this, CH_WEAPON_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
+	_sound(this, CH_SHOTS_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
 
 	if(toucher.takedamage || IS_MONSTER(toucher))
 	{
@@ -145,7 +145,7 @@ void Sorlag_AcidSpitProc(entity this)
 
 void Sorlag_Attack(entity this)
 {
-	player_sound(this, CH_WEAPON_B, "acidspit.wav", ATTN_NORM);
+	player_sound(this, CH_PLAYER, SND_Sorlag_Ability, ATTN_NORM);
 	Sorlag_AcidSpit(this);
 	entity ent = spawn();
 	setthink(ent, Sorlag_AcidSpitProc);

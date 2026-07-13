@@ -5,7 +5,7 @@ int autocvar_sv_quake_poop_count = 4;
 
 METHOD(Poop, m_activate, void(Poop this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Poop_Start, ATTN_NORM);
 }
 
 void Poop_AcidPoolTouch(entity this, entity toucher)
@@ -160,9 +160,9 @@ void Poop_PooSpitProc(entity this)
 void Poop_Attack(entity this)
 {
 	if(random() < 0.2)
-		player_sound(this, CH_WEAPON_B, "death1.wav", ATTN_NORM);
+		player_sound(this, CH_WEAPON_B, SND_Poop_Death1, ATTN_NORM);
 	else
-		player_sound(this, CH_WEAPON_B, "pain1.wav", ATTN_NORM);
+		player_sound(this, CH_WEAPON_B, SND_Poop_Pain1, ATTN_NORM);
 	Poop_PooSpit(this);
 	entity ent = spawn();
 	setthink(ent, Poop_PooSpitProc);
@@ -174,9 +174,9 @@ void Poop_Attack(entity this)
 METHOD(Poop, m_footsteps, bool(Champions this, entity actor))
 {
 	if(random() < 0.5)
-		player_sound(actor, CH_VOICE, "gasp1.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Poop_Gasp1, ATTN_NORM);
 	else
-		player_sound(actor, CH_VOICE, "gasp2.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Poop_Gasp2, ATTN_NORM);
 	return true;
 }
 
@@ -191,7 +191,7 @@ METHOD(Poop, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Poop, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Poop_Cannon_Launch, ATTN_NORM);
 	actor.poop_cannon = true;
 }
 
@@ -199,7 +199,7 @@ METHOD(Poop, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.poop_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "land2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Poop_Fall, ATTN_NORM);
 	actor.poop_cannon = false;
 	actor.jump_flag = 0;
 	return true;

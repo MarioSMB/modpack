@@ -2064,27 +2064,27 @@ void CreatureFrame_FallDamage(entity this)
 			if(this.watertype == CONTENT_WATER)
 			{
 				if(IS_PLAYER(this))
-					_sound(this, CH_PLAYER, "player/h2ojump.wav", 1, ATTN_NORM);
+					sound(this, CH_PLAYER, SND_PLAYER_WATERJUMP, 1, ATTN_NORM);
 			}
 			else if(this.jump_flag < -650 * jumpheight_mod && falldamage > 0)
 			{
 				if(this.exptime != 0)
 				{
 					if(IS_PLAYER(this))
-						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
+						player_sound(this, CH_VOICE, get_fallsound(this), ATTN_NORM);
 				}
 				else
 				{
 					if(IS_PLAYER(this) && this.health > 0)
 					{
-						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
+						player_sound(this, CH_VOICE, get_fallsound(this), ATTN_NORM);
 						this.pain_finished = time + 0.5; // so the regular pain sound doesn't play
 					}
 					T_Damage(this, NULL, NULL, falldamage, DEATH_FALL.m_id);
 				}
 			}
 			else if(IS_PLAYER(this))
-				player_sound(this, CH_VOICE, "land.wav", ATTN_NORM);
+				player_sound(this, CH_VOICE, get_landsound(this), ATTN_NORM);
 		}
 
 		this.jump_flag = 0;

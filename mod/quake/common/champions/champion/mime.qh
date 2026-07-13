@@ -8,65 +8,74 @@ MODEL(Mime, "progs/player_mime.mdl");
 SOUND(Mime_Pain1, "player_mime/pain1");
 SOUND(Mime_Pain2, "player_mime/pain2");
 Sound SND_Mime_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Mime_Pain1.m_id + rint(random() * 1));
+	return REGISTRY_GET(Sounds, SND_Mime_Pain1.m_id + rint(random() * 1));
 }
 
 SOUND(Mime_Death1, "player_mime/death1");
 SOUND(Mime_Death2, "player_mime/death2");
 Sound SND_Mime_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Mime_Death1.m_id + rint(random() * 1));
+	return REGISTRY_GET(Sounds, SND_Mime_Death1.m_id + rint(random() * 1));
 }
+
+SOUND(Mime_Jump, "player_mime/plyrjmp8");
+SOUND(Mime_Gasp1, "player_mime/gasp1");
+SOUND(Mime_Gasp2, "player_mime/gasp2");
+SOUND(Mime_WaterDeath, "player_mime/h2odeath");
+SOUND(Mime_AxeHit, "player_mime/axhit1");
+SOUND(Mime_Land, "player_mime/land");
+SOUND(Mime_Fall, "player_mime/land2");
+
+SOUND(Mime_Burn1, "player_mime/lburn1");
+SOUND(Mime_Burn2, "player_mime/lburn2");
+Sound SND_Mime_Burn_Random() {
+	return (random() > 0.5) ? SND_Mime_Burn1 : SND_Mime_Burn2;
+}
+
+SOUND(Mime_Drown1, "player_mime/drown1");
+SOUND(Mime_Drown2, "player_mime/drown2");
+Sound SND_Mime_Drown_Random() {
+	return (random() > 0.5) ? SND_Mime_Drown1 : SND_Mime_Drown2;
+}
+
+SOUND(Mime_Start, "player_mime/start");
+
+SOUND(Mime_Shoot, "weapons/sword_swing");
 
 PRECACHE(Mime)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/mime_face");
+	precache_pic("gfx/quake/mime_face");
 #endif
 #ifdef SVQC
-    precache_sound("player_mime/plyrjmp8.wav");       // player jump
-    precache_sound("player_mime/land.wav");           // player landing
-    precache_sound("player_mime/land2.wav");      // player hurt landing
-    precache_sound("player_mime/drown1.wav");     // drowning pain
-    precache_sound("player_mime/drown2.wav");     // drowning pain
-    precache_sound("player_mime/gasp1.wav");      // gasping for air
-    precache_sound("player_mime/gasp2.wav");      // taking breath
-    precache_sound("player_mime/h2odeath.wav");       // drowning death
-
-    precache_sound("player_mime/pain1.wav");
-    precache_sound("player_mime/pain2.wav");
-
-    precache_sound("player_mime/death1.wav");
-    precache_sound("player_mime/death2.wav");
-
-    precache_sound("player_mime/axhit1.wav");
-
-    precache_sound("player_mime/lburn1.wav");     // lava burn
-    precache_sound("player_mime/lburn2.wav");     // lava burn
-
-    precache_sound("player_mime/start.wav");
-
-    precache_sound("weapons/sword_swing.wav");
-    precache_sound("player_mime/bounce.wav");
+	precache_sound("weapons/sword_swing.wav");
+	precache_sound("player_mime/bounce.wav");
 #endif
 }
 #endif
 CLASS(Mime, Champions)
-    ATTRIB(Mime, netname, string, "mime");
-    ATTRIB(Mime, m_name, string, "Mime");
-    ATTRIB(Mime, m_viewofs, vector, '0 0 20');
-    ATTRIB(Mime, m_hidden, bool, true);
+	ATTRIB(Mime, netname, string, "mime");
+	ATTRIB(Mime, m_name, string, "Mime");
+	ATTRIB(Mime, m_viewofs, vector, '0 0 20');
+	ATTRIB(Mime, m_hidden, bool, true);
 #ifdef GAMEQC
-    ATTRIB(Mime, m_model, Model, MDL_Mime);
-    ATTRIB(Mime, m_model_head, Model, MDL_Null);
-    ATTRIB(Mime, m_soundpath, string, "player_mime/");
-    METHOD(Mime, m_sound_pain, string()) { return SND(Mime_Pain_Random()); }
-    METHOD(Mime, m_sound_death, string()) { return SND(Mime_Death_Random()); }
-    METHOD(Mime, m_sound_jump, string(entity actor)) { return "player_mime/plyrjmp8.wav"; }
+	ATTRIB(Mime, m_model, Model, MDL_Mime);
+	ATTRIB(Mime, m_model_head, Model, MDL_Null);
+	METHOD(Mime, m_sound_pain, Sound()) { return SND_Mime_Pain_Random(); }
+	METHOD(Mime, m_sound_death, Sound()) { return SND_Mime_Death_Random(); }
+	METHOD(Mime, m_sound_jump, Sound(entity actor)) { return SND_Mime_Jump; }
+	METHOD(Mime, m_sound_waterdeath, Sound(entity actor)) { return SND_Mime_WaterDeath; }
+	METHOD(Mime, m_sound_gasp1, Sound(entity actor)) { return SND_Mime_Gasp1; }
+	METHOD(Mime, m_sound_gasp2, Sound(entity actor)) { return SND_Mime_Gasp2; }
+	METHOD(Mime, m_sound_axehit, Sound(entity actor)) { return SND_Mime_AxeHit; }
+	METHOD(Mime, m_sound_burn, Sound(entity actor)) { return SND_Mime_Burn_Random(); }
+	METHOD(Mime, m_sound_drown, Sound(entity actor)) { return SND_Mime_Drown_Random(); }
+	METHOD(Mime, m_sound_land, Sound(entity actor)) { return SND_Mime_Land; }
+	METHOD(Mime, m_sound_fall, Sound(entity actor)) { return SND_Mime_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Mime, message, string, "Mr. Mime!");
+	ATTRIB(Mime, message, string, "Mr. Mime!");
 #endif
-    ATTRIB(Mime, td_turrets, bool, true);
+	ATTRIB(Mime, td_turrets, bool, true);
 ENDCLASS(Mime)
 REGISTER_CHAMPION(Mime, NEW(Mime));
 

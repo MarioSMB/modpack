@@ -73,15 +73,7 @@ void dryad_leaf_spawn(entity this)
 METHOD(Dryad, m_activate, void(Champions this, entity actor))
 {
 	if(time >= actor.dryad_transformtime && actor.health > 0)
-	{
-		float r = random();
-		if(r < 0.33)
-			player_sound(actor, CH_VOICE, "start1.wav", ATTN_NORM);
-		if(r < 0.66)
-			player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-		else
-			player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	}
+		player_sound(actor, CH_VOICE, SND_Dryad_Start_Random(), ATTN_NORM);
 
 	Inventory_add(WEP_BLADEOFGRASS, actor, ITEM_OWNED);
 
@@ -123,7 +115,7 @@ METHOD(Dryad, m_playerthink, void(Champions this, entity actor))
 
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && STAT(CORRUPTION, actor) < 10 && QCC_CanCastAbility(actor))
 	{
-		_sound(actor, CH_VOICE, "player_dryad/player_transform.wav", 1, ATTN_NORM);
+		sound(actor, CH_PLAYER, SND_Dryad_Transform, 1, ATTN_NORM);
 		te_explosion2(actor.origin, 85, 5);
 		actor.m_transform = CHAMPION_Corrupted;
 		//actor.transform_health = max(actor.health, 150);

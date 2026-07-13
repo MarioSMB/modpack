@@ -20,6 +20,48 @@ SOUND(Nyx_Death3, "player_nyx/death3");
 Sound SND_Nyx_Death_Random() {
 	return REGISTRY_GET(Sounds, SND_Nyx_Death1.m_id + rint(random() * 2));
 }
+
+SOUND(Nyx_Jump, "player_nyx/plyrjmp8");
+SOUND(Nyx_Gasp1, "player_nyx/gasp1");
+SOUND(Nyx_Gasp2, "player_nyx/gasp2");
+SOUND(Nyx_WaterDeath, "player_nyx/h2odeath");
+SOUND(Nyx_AxeHit, "player_nyx/axhit1");
+SOUND(Nyx_Land, "player_nyx/land");
+SOUND(Nyx_Fall, "player_nyx/land2");
+
+SOUND(Nyx_Burn1, "player_nyx/lburn1");
+SOUND(Nyx_Burn2, "player_nyx/lburn2");
+Sound SND_Nyx_Burn_Random() {
+	return (random() > 0.5) ? SND_Nyx_Burn1 : SND_Nyx_Burn2;
+}
+
+SOUND(Nyx_Drown1, "player_nyx/drown1");
+SOUND(Nyx_Drown2, "player_nyx/drown2");
+Sound SND_Nyx_Drown_Random() {
+	return (random() > 0.5) ? SND_Nyx_Drown1 : SND_Nyx_Drown2;
+}
+
+SOUND(Nyx_Start, "player_nyx/invis2");
+
+SOUND(Nyx_Invisible1, "player_nyx/invis1");
+SOUND(Nyx_Invisible2, "player_nyx/invis3");
+SOUND(Nyx_Invisible3, "player_nyx/invis4");
+Sound SND_Nyx_Invisible_Random() {
+	return REGISTRY_GET(Sounds, SND_Nyx_Invisible1.m_id + rint(random() * 2));
+}
+
+SOUND(Nyx_Step1, "player/walk1");
+SOUND(Nyx_Step2, "player/walk2");
+SOUND(Nyx_Step3, "player/walk3");
+SOUND(Nyx_Step4, "player/walk4");
+SOUND(Nyx_Step5, "player/walk5");
+Sound SND_Nyx_Step_Random() {
+	return REGISTRY_GET(Sounds, SND_Nyx_Step1.m_id + rint(random() * 4));
+}
+
+SOUND(Nyx_GhostWalk_Enter, "player_nyx/invisenter");
+SOUND(Nyx_GhostWalk_Exit, "player_nyx/invisexit");
+
 PRECACHE(Nyx)
 {
 #ifdef CSQC
@@ -43,42 +85,6 @@ PRECACHE(Nyx)
 	precache_pic("gfx/quake/katria_face_p5");
 #endif
 #ifdef SVQC
-	precache_sound("player_nyx/plyrjmp8.wav");       // player jump
-	precache_sound("player_nyx/land.wav");           // player landing
-	precache_sound("player_nyx/land2.wav");      // player hurt landing
-	precache_sound("player_nyx/drown1.wav");     // drowning pain
-	precache_sound("player_nyx/drown2.wav");     // drowning pain
-	precache_sound("player_nyx/gasp1.wav");      // gasping for air
-	precache_sound("player_nyx/gasp2.wav");      // taking breath
-	precache_sound("player_nyx/h2odeath.wav");       // drowning death
-
-	precache_sound("player_nyx/pain1.wav");
-	precache_sound("player_nyx/pain2.wav");
-	precache_sound("player_nyx/pain3.wav");
-	precache_sound("player_nyx/pain4.wav");
-
-	precache_sound("player_nyx/death1.wav");
-	precache_sound("player_nyx/death2.wav");
-	precache_sound("player_nyx/death3.wav");
-
-	precache_sound("player_nyx/axhit1.wav");
-
-	precache_sound("player_nyx/lburn1.wav");     // lava burn
-	precache_sound("player_nyx/lburn2.wav");     // lava burn
-
-	precache_sound("player_nyx/invisenter.wav");
-	precache_sound("player_nyx/invisexit.wav");
-	precache_sound("player_nyx/invis1.wav");
-	precache_sound("player_nyx/invis2.wav");
-	precache_sound("player_nyx/invis3.wav");
-	precache_sound("player_nyx/invis4.wav");
-
-	precache_sound("player/walk1.wav");
-	precache_sound("player/walk2.wav");
-	precache_sound("player/walk3.wav");
-	precache_sound("player/walk4.wav");
-	precache_sound("player/walk5.wav");
-
 	precache_model("progs/v_nxsword.mdl");
 #endif
 }
@@ -98,10 +104,17 @@ CLASS(Nyx, Champions)
 #ifdef GAMEQC
 	ATTRIB(Nyx, m_model, Model, MDL_Nyx);
 	ATTRIB(Nyx, m_model_head, Model, MDL_Nyx_Head);
-	ATTRIB(Nyx, m_soundpath, string, "player_nyx/");
-	METHOD(Nyx, m_sound_pain, string()) { return SND(Nyx_Pain_Random()); }
-	METHOD(Nyx, m_sound_death, string()) { return SND(Nyx_Death_Random()); }
-	METHOD(Nyx, m_sound_jump, string(entity actor)) { return "player_nyx/plyrjmp8.wav"; }
+	METHOD(Nyx, m_sound_pain, Sound()) { return SND_Nyx_Pain_Random(); }
+	METHOD(Nyx, m_sound_death, Sound()) { return SND_Nyx_Death_Random(); }
+	METHOD(Nyx, m_sound_jump, Sound(entity actor)) { return SND_Nyx_Jump; }
+	METHOD(Nyx, m_sound_waterdeath, Sound(entity actor)) { return SND_Nyx_WaterDeath; }
+	METHOD(Nyx, m_sound_gasp1, Sound(entity actor)) { return SND_Nyx_Gasp1; }
+	METHOD(Nyx, m_sound_gasp2, Sound(entity actor)) { return SND_Nyx_Gasp2; }
+	METHOD(Nyx, m_sound_axehit, Sound(entity actor)) { return SND_Nyx_AxeHit; }
+	METHOD(Nyx, m_sound_burn, Sound(entity actor)) { return SND_Nyx_Burn_Random(); }
+	METHOD(Nyx, m_sound_drown, Sound(entity actor)) { return SND_Nyx_Drown_Random(); }
+	METHOD(Nyx, m_sound_land, Sound(entity actor)) { return SND_Nyx_Land; }
+	METHOD(Nyx, m_sound_fall, Sound(entity actor)) { return SND_Nyx_Fall; }
 #endif
 #ifdef CSQC
 	ATTRIB(Nyx, m_faceprefix, string, "gfx/quake/katria_");

@@ -54,14 +54,14 @@ void Duck_ShootGrapes(entity this)
 
 METHOD(Duck, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Duck_Start, ATTN_NORM);
 }
 
 METHOD(Duck, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_VOICE, "attack.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Duck_Ability, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 2.5;
 		Duck_ShootGrapes(actor);
 	}
@@ -69,7 +69,7 @@ METHOD(Duck, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Duck, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death2.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Duck_Death2, ATTN_NORM);
 	actor.duck_cannon = true;
 }
 
@@ -77,7 +77,7 @@ METHOD(Duck, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.duck_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.duck_cannon = false;
 	return false;
 }

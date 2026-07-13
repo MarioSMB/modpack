@@ -8,7 +8,6 @@ PRECACHE(Violin)
 
 	precache_model("progs/piano_musicnote_white.mdl");
 	precache_model("progs/x9_burst_6sided_brightyellow.mdl");
-	precache_sound("weapons/violin_misfire.wav");
 }
 
 .float violin_smoketime;
@@ -113,13 +112,13 @@ void W_FireViolin(entity this, .entity weaponentity)
 
 	if(random() < 0.2)
 	{
-		_sound(this, CH_WEAPON_SINGLE, "weapons/violin_misfire.wav", 1, ATTN_NORM);
+		sound(this, CH_WEAPON_SINGLE, SND_VIOLIN_MISFIRE, 1, ATTN_NORM);
 		return;
 	}
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.85, random() * 2, 1.15));
 	r *= 1; // TODO: per-instrument offsets
-	sound7(this, CH_WEAPON_SINGLE, SND(VIOLIN_FIRE), 1, ATTN_NORM, r, 0);
+	qc_sound7(this, CH_WEAPON_SINGLE, SND_VIOLIN_FIRE, 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Violin, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

@@ -349,13 +349,8 @@ void W_Magic_Fire(entity this, .entity weaponentity)
 		case 2: magic_bubble_launch(this, weaponentity); break;
 	}
 
-	if(random() < 0.33)
-	{
-		if(random() < 0.5)
-			_sound(this, CH_VOICE, "player_shantae/attack1.wav", 1, ATTN_NORM);
-		else
-			_sound(this, CH_VOICE, "player_shantae/attack2.wav", 1, ATTN_NORM);
-	}
+	if(this.m_champion == CHAMPION_Shantae && random() < 0.33)
+		player_sound(this, CH_VOICE, SND_Shantae_Attack_Random(), ATTN_NORM);
 }
 
 METHOD(Magic, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

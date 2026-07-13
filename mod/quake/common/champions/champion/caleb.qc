@@ -156,15 +156,7 @@ METHOD(Caleb, m_activate, void(Champions this, entity actor))
 	// make sure there isn't a sound as soon as he starts, gotta build up the crazy!
 	Caleb_crazy_reset(actor);
 
-	RandomSelection_Init();
-	RandomSelection_AddString("mutter/3004b.wav", 1, 1);
-	RandomSelection_AddString("mutter/3010.wav", 1, 1);
-	RandomSelection_AddString("mutter/3018b.wav", 1, 1);
-	RandomSelection_AddString("mutter/3023a.wav", 1, 1);
-	RandomSelection_AddString("mutter/3027.wav", 1, 1);
-	RandomSelection_AddString("mutter/3031.wav", 1, 1);
-	RandomSelection_AddString("mutter/3038.wav", 1, 1);
-	player_sound(actor, CH_VOICE, RandomSelection_chosen_string, ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Caleb_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
@@ -187,7 +179,7 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 
 		if(time > actor.bloodrage_heartbeat)
 		{
-			player_sound(actor, CH_VOICE, "heartbeat.wav", ATTN_NORM);
+			player_sound(actor, CH_VOICE, SND_Caleb_Heartbeat, ATTN_NORM);
 			actor.bloodrage_heartbeat = time + 1.8;
 		}
 	}
@@ -195,16 +187,8 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
 		Caleb_crazy_reset(actor);
-		string mutter = "";
-		float mutter_rand = random();
-		if(mutter_rand < 0.333)
-			mutter = "mutter/3001b.wav";
-		else if(mutter_rand < 0.666)
-			mutter = "mutter/3004b.wav";
-		else
-			mutter = "mutter/3012.wav";
-		player_sound(actor, CH_VOICE, mutter, ATTN_NORM);
-		_sound(actor, CH_PLAYER_SINGLE, "player_caleb/bats.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Caleb_Ability_Random(), ATTN_NORM);
+		sound(actor, CH_PLAYER_SINGLE, SND_Caleb_Bats, 1, ATTN_NORM);
 		Send_Effect(EFFECT_SMOKE_LARGE, actor.origin, '0 0 0', 1);
 		STAT(QCC_ABILITYTIME, actor) = time + 10;
 		Caleb_bats_summon(actor);
@@ -214,19 +198,15 @@ METHOD(Caleb, m_playerthink, void(Champions this, entity actor))
 	{
 		Caleb_crazy_reset(actor);
 		if(random() > 0.5)
-		{
-			float rsound = 1109 + rint(random() * 7);
-			string s = strcat("play", ftos(rsound), ".wav");
-			player_sound(actor, CH_VOICE, s, ATTN_NORM);
-		}
+			player_sound(actor, CH_VOICE,  SND_Caleb_Play_Random(), ATTN_NORM);
 		else
-			player_sound(actor, CH_VOICE, Caleb_crazy_randomquip(), ATTN_NORM);
+			player_sound(actor, CH_VOICE, SND_Caleb_Quip_Random(), ATTN_NORM);
 	}
 }
 
 METHOD(Caleb, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "play1115.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Caleb_Play7, ATTN_NORM);
 	actor.caleb_cannon = true;
 }
 
@@ -234,7 +214,7 @@ METHOD(Caleb, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.caleb_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.caleb_cannon = false;
 	return false;
 }
@@ -248,7 +228,7 @@ METHOD(Caleb, m_killed, void(Champions this, entity targ, entity inflictor, enti
 		if(STAT(QCC_BLOODRAGE_COUNT, attacker) >= Caleb_bloodrage_max())
 		{
 			attacker.health = max(100, attacker.health);
-			player_sound(attacker, CH_VOICE, "quips/1024.wav", ATTN_NORM);
+			player_sound(attacker, CH_VOICE, SND_Caleb_Quip11, ATTN_NORM);
 			Caleb_bloodrage_clear(attacker);
 		}
 	}
@@ -294,16 +274,7 @@ METHOD(Caleb, m_saveplayer, void(Champions this, entity targ, entity inflictor, 
 	if(targ.m_champion != this || targ.tank || targ.clockwork || Caleb_forcedamage(deathtype))
 		return;
 
-	string quip = "";
-	float r =  random();
-	if(r < 0.33)
-		quip = "quips/1034.wav";
-	else if(r < 0.66)
-		quip = "quips/1045.wav";
-	else
-		quip = "quips/1052.wav";
-
-	player_sound(targ, CH_VOICE, quip, ATTN_NORM);
+	player_sound(targ, CH_VOICE, SND_Caleb_Save_Random(), ATTN_NORM);
 	STAT(QCC_BLOODRAGE, targ) = true;
 	STAT(QCC_BLOODRAGE_COUNT, targ) = 0;
 	targ.bloodrage_time = time + 5;

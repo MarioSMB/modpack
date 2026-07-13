@@ -10,56 +10,60 @@ MODEL(Pepsiman, "progs/player_pepsiman.mdl");
 SOUND(Pepsiman_Pain1, "player_pepsiman/pain1");
 SOUND(Pepsiman_Pain2, "player_pepsiman/pain2");
 Sound SND_Pepsiman_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Pepsiman_Pain1.m_id + rint(random() * 1));
+	return REGISTRY_GET(Sounds, SND_Pepsiman_Pain1.m_id + rint(random() * 1));
 }
 
 SOUND(Pepsiman_Death1, "player_pepsiman/death1");
 SOUND(Pepsiman_Death2, "player_pepsiman/death2");
 Sound SND_Pepsiman_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Pepsiman_Death1.m_id + rint(random() * 1));
+	return REGISTRY_GET(Sounds, SND_Pepsiman_Death1.m_id + rint(random() * 1));
+}
+
+SOUND(Pepsiman_Jump, "player_pepsiman/plyrjmp8");
+SOUND(Pepsiman_Gasp1, "player_pepsiman/gasp1");
+SOUND(Pepsiman_Gasp2, "player_pepsiman/gasp2");
+SOUND(Pepsiman_WaterDeath, "player_pepsiman/h2odeath");
+SOUND(Pepsiman_AxeHit, "player_pepsiman/axhit1");
+SOUND(Pepsiman_Land, "player_pepsiman/land");
+SOUND(Pepsiman_Fall, "player_pepsiman/land2");
+
+SOUND(Pepsiman_Burn1, "player_pepsiman/lburn1");
+SOUND(Pepsiman_Burn2, "player_pepsiman/lburn2");
+Sound SND_Pepsiman_Burn_Random() {
+	return (random() > 0.5) ? SND_Pepsiman_Burn1 : SND_Pepsiman_Burn2;
+}
+
+SOUND(Pepsiman_Drown1, "player_pepsiman/drown1");
+SOUND(Pepsiman_Drown2, "player_pepsiman/drown2");
+Sound SND_Pepsiman_Drown_Random() {
+	return (random() > 0.5) ? SND_Pepsiman_Drown1 : SND_Pepsiman_Drown2;
+}
+
+SOUND(Pepsiman_Start, "player_pepsiman/start");
+
+SOUND(Pepsiman_Step1, "player_pepsiman/foot1");
+SOUND(Pepsiman_Step2, "player_pepsiman/foot2");
+SOUND(Pepsiman_Step3, "player_pepsiman/foot3");
+Sound SND_Pepsiman_Step_Random() {
+	return REGISTRY_GET(Sounds, SND_Pepsiman_Step1.m_id + rint(random() * 2));
 }
 
 PRECACHE(Pepsiman)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/pepsiman_face_0");
-    precache_pic("gfx/quake/pepsiman_face_1");
-    precache_pic("gfx/quake/pepsiman_face_2");
-    precache_pic("gfx/quake/pepsiman_face_3");
-    precache_pic("gfx/quake/pepsiman_face_4");
-    precache_pic("gfx/quake/pepsiman_face_5");
-    precache_pic("gfx/quake/pepsiman_face_6");
-    precache_pic("gfx/quake/pepsiman_face_7");
-    precache_pic("gfx/quake/pepsiman_face_8");
-    precache_pic("gfx/quake/pepsiman_face_9");
+	precache_pic("gfx/quake/pepsiman_face_0");
+	precache_pic("gfx/quake/pepsiman_face_1");
+	precache_pic("gfx/quake/pepsiman_face_2");
+	precache_pic("gfx/quake/pepsiman_face_3");
+	precache_pic("gfx/quake/pepsiman_face_4");
+	precache_pic("gfx/quake/pepsiman_face_5");
+	precache_pic("gfx/quake/pepsiman_face_6");
+	precache_pic("gfx/quake/pepsiman_face_7");
+	precache_pic("gfx/quake/pepsiman_face_8");
+	precache_pic("gfx/quake/pepsiman_face_9");
 #endif
 #ifdef SVQC
-    precache_sound("player_pepsiman/plyrjmp8.wav");       // player jump
-    precache_sound("player_pepsiman/land.wav");           // player landing
-    precache_sound("player_pepsiman/land2.wav");      // player hurt landing
-    precache_sound("player_pepsiman/drown1.wav");     // drowning pain
-    precache_sound("player_pepsiman/drown2.wav");     // drowning pain
-    precache_sound("player_pepsiman/gasp1.wav");      // gasping for air
-    precache_sound("player_pepsiman/gasp2.wav");      // taking breath
-    precache_sound("player_pepsiman/h2odeath.wav");       // drowning death
-
-    precache_sound("player_pepsiman/pain1.wav");
-    precache_sound("player_pepsiman/pain2.wav");
-
-    precache_sound("player_pepsiman/death1.wav");
-    precache_sound("player_pepsiman/death2.wav");
-
-    precache_sound("player_pepsiman/axhit1.wav");
-
-    precache_sound("player_pepsiman/lburn1.wav");     // lava burn
-    precache_sound("player_pepsiman/lburn2.wav");     // lava burn
-
-    precache_sound("player_pepsiman/start.wav");
-
-    precache_sound("player_pepsiman/can_roll.wav");
-    precache_sound("player_pepsiman/foot1.wav");
-    precache_sound("player_pepsiman/foot2.wav");
-    precache_sound("player_pepsiman/foot3.wav");
+	precache_sound("player_pepsiman/can_roll.wav");
 #endif
 }
 #endif
@@ -70,24 +74,35 @@ PRECACHE(Pepsiman)
 "Moves 33% faster"
 #endif
 CLASS(Pepsiman, Champions)
-    ATTRIB(Pepsiman, netname, string, "pepsiman");
-    ATTRIB(Pepsiman, m_name, string, "Pepsiman");
-    ATTRIB(Pepsiman, m_color, vector, '0 0.28 1');
-    ATTRIB(Pepsiman, qcc_movespeed, float, 1.33);
+	ATTRIB(Pepsiman, netname, string, "pepsiman");
+	ATTRIB(Pepsiman, m_name, string, "Pepsiman");
+	ATTRIB(Pepsiman, m_color, vector, '0 0.28 1');
+	ATTRIB(Pepsiman, qcc_movespeed, float, 1.33);
 #ifdef GAMEQC
-    ATTRIB(Pepsiman, m_model, Model, MDL_Pepsiman);
-    ATTRIB(Pepsiman, m_model_head, Model, MDL_Null);
-    ATTRIB(Pepsiman, m_soundpath, string, "player_pepsiman/");
-    METHOD(Pepsiman, m_sound_pain, string()) { return SND(Pepsiman_Pain_Random()); }
-    METHOD(Pepsiman, m_sound_death, string()) { return SND(Pepsiman_Death_Random()); }
-    METHOD(Pepsiman, m_sound_jump, string(entity actor)) { return "player_pepsiman/plyrjmp8.wav"; }
+	ATTRIB(Pepsiman, m_model, Model, MDL_Pepsiman);
+	ATTRIB(Pepsiman, m_model_head, Model, MDL_Null);
+	METHOD(Pepsiman, m_sound_pain, Sound()) { return SND_Pepsiman_Pain_Random(); }
+	METHOD(Pepsiman, m_sound_death, Sound()) { return SND_Pepsiman_Death_Random(); }
+	METHOD(Pepsiman, m_sound_jump, Sound(entity actor)) { return SND_Pepsiman_Jump; }
+	METHOD(Pepsiman, m_sound_waterdeath, Sound(entity actor)) { return SND_Pepsiman_WaterDeath; }
+	METHOD(Pepsiman, m_sound_gasp1, Sound(entity actor)) { return SND_Pepsiman_Gasp1; }
+	METHOD(Pepsiman, m_sound_gasp2, Sound(entity actor)) { return SND_Pepsiman_Gasp2; }
+	METHOD(Pepsiman, m_sound_axehit, Sound(entity actor)) { return SND_Pepsiman_AxeHit; }
+	METHOD(Pepsiman, m_sound_burn, Sound(entity actor)) { return SND_Pepsiman_Burn_Random(); }
+	METHOD(Pepsiman, m_sound_drown, Sound(entity actor)) { return SND_Pepsiman_Drown_Random(); }
+	METHOD(Pepsiman, m_sound_land, Sound(entity actor)) { return SND_Pepsiman_Land; }
+	METHOD(Pepsiman, m_sound_fall, Sound(entity actor)) { return SND_Pepsiman_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Pepsiman, message, string, PEPSIMAN_STATS);
+	ATTRIB(Pepsiman, message, string, PEPSIMAN_STATS);
 #endif
-    ATTRIB(Pepsiman, td_turrets, bool, true);
+	ATTRIB(Pepsiman, td_turrets, bool, true);
 ENDCLASS(Pepsiman)
 REGISTER_CHAMPION(Pepsiman, NEW(Pepsiman));
+
+#ifdef CSQC
+#undef PEPSIMAN_STATS
+#endif
 
 #ifdef SVQC
 .bool pepsiman_cannon;

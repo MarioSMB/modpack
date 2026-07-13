@@ -29,15 +29,7 @@ bool V1_Sliding(entity actor)
 #ifdef SVQC
 METHOD(V1, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_V1_Start_Random(), ATTN_NORM);
 
 	Inventory_add(WEP_KATANA, actor, ITEM_OWNED);
 }
@@ -58,7 +50,7 @@ METHOD(V1, m_killed, void(Champions this, entity targ, entity inflictor, entity 
 
 METHOD(V1, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_V1_Cannon_Launch, ATTN_NORM);
 	actor.v1_cannon = true;
 }
 
@@ -68,7 +60,8 @@ METHOD(V1, m_cannon_land, bool(Champions this, entity actor))
 	{
 		if(V1_Sliding(actor) && actor.jump_flag < -300)
 		{
-			player_sound(actor, CH_TRIGGER_SINGLE, "slide_impact.wav", ATTN_NORM);
+			// easiest place to cancel out fall damage and add our sound
+			player_sound(actor, CH_PLAYER_SINGLE, SND_V1_Slide_Impact, ATTN_NORM);
 			Send_Effect(EFFECT_SMOKE_RING, actor.origin, '0 0 10', 1);
 			if(!deathmatch)
 				T_RadiusDamage(actor, actor, 100, DEATH_CRUSH.m_id, actor);
@@ -78,7 +71,7 @@ METHOD(V1, m_cannon_land, bool(Champions this, entity actor))
 		}
 		return false;
 	}
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.v1_cannon = false;
 	return false;
 }
@@ -119,7 +112,7 @@ METHOD(V1, m_touch, void(Champions this, entity actor, entity toucher))
 
 		T_Damage(toucher, actor, actor, thedamage, DEATH_SHIELD.m_id);
 
-		player_sound(actor, CH_VOICE, "slide_slam.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_V1_Slide_Slam, ATTN_NORM);
 
 		actor.v1_bash_time = time + 0.5;
 	}
@@ -136,7 +129,7 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 			vector vangle = PHYS_INPUT_ANGLES(actor);
 			makevectors('0 1 0' * vangle.y);
 			Send_Effect(EFFECT_V1_SLIDE, actor.origin + v_up * -10 + v_forward * 40, v_forward * -100 + v_up * 50, 10);
-			_sound(actor, CH_SHOTS, "player/axhit2.wav", 0.1, ATTN_NORM);
+			_sound(actor, CH_SHOTS, "player/axhit2.wav", 0.1, ATTN_NORM); // TODO: better channel and stuff
 			actor.v1_antispam = time + 0.05;
 		}
 #endif
@@ -147,7 +140,7 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 	if(!IS_ONGROUND(actor) && V1_Sliding(actor) && actor.velocity_z > -300 && actor.velocity_z < 200 && !IS_JUMP_HELD(actor))
 	{
 #ifdef SVQC
-		player_sound(actor, CH_TRIGGER_SINGLE, "slide_slam.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_V1_Slide_Slam, ATTN_NORM);
 #endif
 		vector vang = PHYS_INPUT_ANGLES(actor);
 		makevectors('0 1 0' * vang.y);
@@ -163,7 +156,7 @@ METHOD(V1, m_playerjump, float(Champions this, entity actor))
 	if(V1_Sliding(actor) && vdist(actor.velocity, >, PHYS_MAXSPEED(actor) * 0.6))
 	{
 	#ifdef SVQC
-		player_sound(actor, CH_TRIGGER_SINGLE, "slide_jump.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_V1_Slide_Jump, ATTN_NORM);
 	#endif
 		return 2;
 	}

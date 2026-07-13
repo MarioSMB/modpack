@@ -35,7 +35,7 @@ METHOD(CrazyDave, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_PLAYER_SINGLE, "awooga.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_CrazyDave_Ability, ATTN_NORM);
 		CrazyDave_Aggro(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 5;
 		CrazyDave_reset(actor);
@@ -44,9 +44,7 @@ METHOD(CrazyDave, m_playerthink, void(Champions this, entity actor))
 	if(time > actor.crazydave_crazy_time)
 	{
 		CrazyDave_reset(actor);
-		float rsound = bound(1, rint(random() * 12), 11);
-		string s = strcat("talk", ftos(rsound), ".wav");
-		player_sound(actor, CH_VOICE, s, ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_CrazyDave_Talk_Random(), ATTN_NORM);
 	}
 }
 
@@ -63,8 +61,7 @@ METHOD(CrazyDave, m_takedamage, float(Champions this, entity targ, entity inflic
 
 METHOD(CrazyDave, m_activate, void(Champions this, entity actor))
 {
-	int r = bound(1, rint(random() * 7), 7);
-	player_sound(actor, CH_VOICE, strcat("start", itos(r), ".wav"), ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_CrazyDave_Start_Random(), ATTN_NORM);
 	CrazyDave_reset(actor);
 
 	Inventory_add(WEP_TACO, actor, ITEM_OWNED);
@@ -77,7 +74,7 @@ METHOD(CrazyDave, m_playerspawn, void(Champions this, entity actor))
 
 METHOD(CrazyDave, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_launch.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_CrazyDave_Cannon_Launch, ATTN_NORM);
 	actor.crazydave_cannon = true;
 	CrazyDave_reset(actor);
 }
@@ -86,7 +83,7 @@ METHOD(CrazyDave, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.crazydave_cannon)
 		return false;
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_land.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_CrazyDave_Cannon_Land, ATTN_NORM);
 	actor.crazydave_cannon = false;
 	CrazyDave_reset(actor);
 	return false;

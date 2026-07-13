@@ -62,7 +62,8 @@ void cannon_launch(entity this, entity cannon)
 	// maybe not? too fast for monsters to see you coming!
 	//this.show_hostile = time + 1;
 
-	soundat(NULL, cannon.origin, CH_TRIGGER, SND(ROCKET_EXPLOSION), 1, ATTEN_NORM);
+	//soundat(NULL, cannon.origin, CH_TRIGGER, SND(ROCKET_EXPLOSION), 1, ATTEN_NORM);
+	sound(cannon, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	Send_Effect(EFFECT_EXPLOSION, cannon.origin + v_forward * 64 + v_up * 24, '0 0 0', 1);
 
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -135,6 +136,7 @@ void cannon_think(entity this)
 		.entity weaponentity = weaponentities[0];
 		if(PHYS_INPUT_BUTTON_ATCK(player) && time > ATTACK_FINISHED(player, weaponentity) && time > this.attack_finished)
 			cannon_launch(player, this);
+		CSQCMODEL_AUTOUPDATE(this);
 		return;
 	}
 	else
@@ -146,6 +148,8 @@ void cannon_think(entity this)
 		delete(this);
 		return;
 	}
+
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void cannon_setup(entity this)
@@ -158,6 +162,8 @@ void cannon_setup(entity this)
 	this.solid = SOLID_TRIGGER;
 	settouch(this, cannon_touch);
 	this.candrag = true;
+
+	CSQCMODEL_AUTOINIT(this);
 }
 
 const int CANNON_FLOAT = BIT(0);

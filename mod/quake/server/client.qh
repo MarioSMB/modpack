@@ -104,13 +104,21 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype);
 int modelindex_bolt; // aop
 .int modelindex_player;
 
-void player_sound(entity this, int chan, string sample, float atten);
+void player_sound(entity this, int chan, Sound sample, float atten);
 string get_playermodel(entity this);
 string get_playerhead(entity this);
-string get_jumpsound(entity this);
+Sound get_jumpsound(entity this);
+Sound get_gasp1sound(entity this);
+Sound get_gasp2sound(entity this);
+Sound get_waterdeathsound(entity this);
+Sound get_burnsound(entity this);
+Sound get_drownsound(entity this);
+Sound get_axehitsound(entity this);
+Sound get_landsound(entity this);
+Sound get_fallsound(entity this);
 
 .float spawnsilent; // silent but deadly
-void playersound(entity this, int chan, string sample, float vol, float atten);
+void playersound(entity this, int chan, Sound sample, float vol, float atten);
 
 // prototypes
 void W_WeaponFrame(entity this, .entity weaponentity);

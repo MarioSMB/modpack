@@ -10,7 +10,7 @@ SOUND(CrazyDave_Pain1, "player_crazydave/pain1");
 SOUND(CrazyDave_Pain2, "player_crazydave/pain2");
 SOUND(CrazyDave_Pain3, "player_crazydave/pain3");
 Sound SND_CrazyDave_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Pain1.m_id + rint(random() * 2));
+	return REGISTRY_GET(Sounds, SND_CrazyDave_Pain1.m_id + rint(random() * 2));
 }
 
 SOUND(CrazyDave_Death1, "player_crazydave/death1");
@@ -21,7 +21,7 @@ SOUND(CrazyDave_Death5, "player_crazydave/death5");
 SOUND(CrazyDave_Death6, "player_crazydave/death6");
 SOUND(CrazyDave_Death7, "player_crazydave/death7");
 Sound SND_CrazyDave_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Death1.m_id + rint(random() * 6));
+	return REGISTRY_GET(Sounds, SND_CrazyDave_Death1.m_id + rint(random() * 6));
 }
 
 SOUND(CrazyDave_Jump1, "player_crazydave/jump1");
@@ -29,79 +29,130 @@ SOUND(CrazyDave_Jump2, "player_crazydave/jump2");
 SOUND(CrazyDave_Jump3, "player_crazydave/jump3");
 SOUND(CrazyDave_Jump4, "player_crazydave/jump4");
 Sound SND_CrazyDave_Jump_Random() {
-    return REGISTRY_GET(Sounds, SND_CrazyDave_Jump1.m_id + rint(random() * 3));
+	return REGISTRY_GET(Sounds, SND_CrazyDave_Jump1.m_id + rint(random() * 3));
 }
+
+SOUND(CrazyDave_Gasp1, "player_crazydave/gasp1");
+SOUND(CrazyDave_Gasp2, "player_crazydave/gasp2");
+SOUND(CrazyDave_WaterDeath, "player_crazydave/h2odeath");
+SOUND(CrazyDave_AxeHit, "player_crazydave/axhit1");
+SOUND(CrazyDave_Land, "player_crazydave/land");
+SOUND(CrazyDave_Fall, "player_crazydave/land2");
+
+SOUND(CrazyDave_Burn1, "player_crazydave/lburn1");
+SOUND(CrazyDave_Burn2, "player_crazydave/lburn2");
+Sound SND_CrazyDave_Burn_Random() {
+	return (random() > 0.5) ? SND_CrazyDave_Burn1 : SND_CrazyDave_Burn2;
+}
+
+SOUND(CrazyDave_Drown1, "player_crazydave/drown1");
+SOUND(CrazyDave_Drown2, "player_crazydave/drown2");
+Sound SND_CrazyDave_Drown_Random() {
+	return (random() > 0.5) ? SND_CrazyDave_Drown1 : SND_CrazyDave_Drown2;
+}
+
+SOUND(CrazyDave_Start1, "player_crazydave/start1");
+SOUND(CrazyDave_Start2, "player_crazydave/start2");
+SOUND(CrazyDave_Start3, "player_crazydave/start3");
+SOUND(CrazyDave_Start4, "player_crazydave/start4");
+SOUND(CrazyDave_Start5, "player_crazydave/start5");
+SOUND(CrazyDave_Start6, "player_crazydave/start6");
+SOUND(CrazyDave_Start7, "player_crazydave/start7");
+Sound SND_CrazyDave_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_CrazyDave_Start1.m_id + rint(random() * 6));
+}
+
+SOUND(CrazyDave_Talk1, "player_crazydave/talk1");
+SOUND(CrazyDave_Talk2, "player_crazydave/talk2");
+SOUND(CrazyDave_Talk3, "player_crazydave/talk3");
+SOUND(CrazyDave_Talk4, "player_crazydave/talk4");
+SOUND(CrazyDave_Talk5, "player_crazydave/talk5");
+SOUND(CrazyDave_Talk6, "player_crazydave/talk6");
+SOUND(CrazyDave_Talk7, "player_crazydave/talk7");
+SOUND(CrazyDave_Talk8, "player_crazydave/talk8");
+SOUND(CrazyDave_Talk9, "player_crazydave/talk9");
+SOUND(CrazyDave_Talk10, "player_crazydave/talk10");
+SOUND(CrazyDave_Talk11, "player_crazydave/talk11");
+SOUND(CrazyDave_Talk12, "player_crazydave/talk12");
+SOUND(CrazyDave_Talk13, "player_crazydave/talk13");
+Sound SND_CrazyDave_Talk_Random() {
+	return REGISTRY_GET(Sounds, SND_CrazyDave_Talk1.m_id + rint(random() * 12));
+}
+
+SOUND(CrazyDave_Ability, "player_crazydave/awooga");
+SOUND(CrazyDave_Cannon_Launch, "player_crazydave/cannon_launch");
+SOUND(CrazyDave_Cannon_Land, "player_crazydave/cannon_land");
 
 PRECACHE(CrazyDave)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/crazydave_face_invis");
-    precache_pic("gfx/quake/crazydave_face_invul2");
-    precache_pic("gfx/quake/crazydave_face_inv2");
-    precache_pic("gfx/quake/crazydave_face_quad");
+	precache_pic("gfx/quake/crazydave_face_invis");
+	precache_pic("gfx/quake/crazydave_face_invul2");
+	precache_pic("gfx/quake/crazydave_face_inv2");
+	precache_pic("gfx/quake/crazydave_face_quad");
 
-    precache_pic("gfx/quake/crazydave_face1");
-    precache_pic("gfx/quake/crazydave_face_p1");
-    precache_pic("gfx/quake/crazydave_face2");
-    precache_pic("gfx/quake/crazydave_face_p2");
-    precache_pic("gfx/quake/crazydave_face3");
-    precache_pic("gfx/quake/crazydave_face_p3");
-    precache_pic("gfx/quake/crazydave_face4");
-    precache_pic("gfx/quake/crazydave_face_p4");
-    precache_pic("gfx/quake/crazydave_face5");
-    precache_pic("gfx/quake/crazydave_face_p5");
+	precache_pic("gfx/quake/crazydave_face1");
+	precache_pic("gfx/quake/crazydave_face_p1");
+	precache_pic("gfx/quake/crazydave_face2");
+	precache_pic("gfx/quake/crazydave_face_p2");
+	precache_pic("gfx/quake/crazydave_face3");
+	precache_pic("gfx/quake/crazydave_face_p3");
+	precache_pic("gfx/quake/crazydave_face4");
+	precache_pic("gfx/quake/crazydave_face_p4");
+	precache_pic("gfx/quake/crazydave_face5");
+	precache_pic("gfx/quake/crazydave_face_p5");
 #endif
 #ifdef SVQC
-    precache_sound("player_crazydave/plyrjmp8.wav");       // player jump
-    precache_sound("player_crazydave/land.wav");           // player landing
-    precache_sound("player_crazydave/land2.wav");      // player hurt landing
-    precache_sound("player_crazydave/drown1.wav");     // drowning pain
-    precache_sound("player_crazydave/drown2.wav");     // drowning pain
-    precache_sound("player_crazydave/gasp1.wav");      // gasping for air
-    precache_sound("player_crazydave/gasp2.wav");      // taking breath
-    precache_sound("player_crazydave/h2odeath.wav");       // drowning death
+	precache_sound("player_crazydave/plyrjmp8.wav");       // player jump
+	precache_sound("player_crazydave/land.wav");           // player landing
+	precache_sound("player_crazydave/land2.wav");      // player hurt landing
+	precache_sound("player_crazydave/drown1.wav");     // drowning pain
+	precache_sound("player_crazydave/drown2.wav");     // drowning pain
+	precache_sound("player_crazydave/gasp1.wav");      // gasping for air
+	precache_sound("player_crazydave/gasp2.wav");      // taking breath
+	precache_sound("player_crazydave/h2odeath.wav");       // drowning death
 
-    precache_sound("player_crazydave/pain1.wav");
-    precache_sound("player_crazydave/pain2.wav");
+	precache_sound("player_crazydave/pain1.wav");
+	precache_sound("player_crazydave/pain2.wav");
 
-    precache_sound("player_crazydave/death1.wav");
-    precache_sound("player_crazydave/death2.wav");
-    precache_sound("player_crazydave/death3.wav");
+	precache_sound("player_crazydave/death1.wav");
+	precache_sound("player_crazydave/death2.wav");
+	precache_sound("player_crazydave/death3.wav");
 
-    precache_sound("player_crazydave/axhit1.wav");
-    precache_sound("player_crazydave/axhit2.wav");
+	precache_sound("player_crazydave/axhit1.wav");
+	precache_sound("player_crazydave/axhit2.wav");
 
-    precache_sound("player_crazydave/lburn1.wav");     // lava burn
-    precache_sound("player_crazydave/lburn2.wav");     // lava burn
+	precache_sound("player_crazydave/lburn1.wav");     // lava burn
+	precache_sound("player_crazydave/lburn2.wav");     // lava burn
 
-    precache_sound("player_crazydave/start1.wav");
-    precache_sound("player_crazydave/start2.wav");
-    precache_sound("player_crazydave/start3.wav");
-    precache_sound("player_crazydave/start4.wav");
-    precache_sound("player_crazydave/start5.wav");
-    precache_sound("player_crazydave/start6.wav");
-    precache_sound("player_crazydave/start7.wav");
+	precache_sound("player_crazydave/start1.wav");
+	precache_sound("player_crazydave/start2.wav");
+	precache_sound("player_crazydave/start3.wav");
+	precache_sound("player_crazydave/start4.wav");
+	precache_sound("player_crazydave/start5.wav");
+	precache_sound("player_crazydave/start6.wav");
+	precache_sound("player_crazydave/start7.wav");
 
-    precache_sound("player_crazydave/talk1.wav");
-    precache_sound("player_crazydave/talk2.wav");
-    precache_sound("player_crazydave/talk3.wav");
-    precache_sound("player_crazydave/talk4.wav");
-    precache_sound("player_crazydave/talk5.wav");
-    precache_sound("player_crazydave/talk6.wav");
-    precache_sound("player_crazydave/talk7.wav");
-    precache_sound("player_crazydave/talk8.wav");
-    precache_sound("player_crazydave/talk9.wav");
-    precache_sound("player_crazydave/talk10.wav");
-    precache_sound("player_crazydave/talk11.wav");
-    precache_sound("player_crazydave/talk12.wav");
-    precache_sound("player_crazydave/talk13.wav");
+	precache_sound("player_crazydave/talk1.wav");
+	precache_sound("player_crazydave/talk2.wav");
+	precache_sound("player_crazydave/talk3.wav");
+	precache_sound("player_crazydave/talk4.wav");
+	precache_sound("player_crazydave/talk5.wav");
+	precache_sound("player_crazydave/talk6.wav");
+	precache_sound("player_crazydave/talk7.wav");
+	precache_sound("player_crazydave/talk8.wav");
+	precache_sound("player_crazydave/talk9.wav");
+	precache_sound("player_crazydave/talk10.wav");
+	precache_sound("player_crazydave/talk11.wav");
+	precache_sound("player_crazydave/talk12.wav");
+	precache_sound("player_crazydave/talk13.wav");
 
-    precache_sound("player_crazydave/awooga.wav");
+	precache_sound("player_crazydave/awooga.wav");
 
-    precache_sound("player_crazydave/cannon_launch.wav");
-    precache_sound("player_crazydave/cannon_land.wav");
+	precache_sound("player_crazydave/cannon_launch.wav");
+	precache_sound("player_crazydave/cannon_land.wav");
 
-    precache_model("progs/v_crazypot.mdl");
+	precache_model("progs/v_crazypot.mdl");
 #endif
 }
 #endif
@@ -117,25 +168,32 @@ PRECACHE(CrazyDave)
 "- Boosts resistance to 70%. Taco Power"
 #endif
 CLASS(CrazyDave, Champions)
-    ATTRIB(CrazyDave, netname, string, "crazydave");
-    ATTRIB(CrazyDave, m_name, string, "Crazy Dave");
-    ATTRIB(CrazyDave, m_color, vector, '1 0.65 0');
-    ATTRIB(CrazyDave, qcc_meleename, string, "crazypot");
+	ATTRIB(CrazyDave, netname, string, "crazydave");
+	ATTRIB(CrazyDave, m_name, string, "Crazy Dave");
+	ATTRIB(CrazyDave, m_color, vector, '1 0.65 0');
+	ATTRIB(CrazyDave, qcc_meleename, string, "crazypot");
 #ifdef GAMEQC
-    ATTRIB(CrazyDave, m_model, Model, MDL_CrazyDave);
-    ATTRIB(CrazyDave, m_model_head, Model, MDL_CrazyDave_Head);
-    ATTRIB(CrazyDave, m_soundpath, string, "player_crazydave/");
-    METHOD(CrazyDave, m_sound_pain, string()) { return SND(CrazyDave_Pain_Random()); }
-    METHOD(CrazyDave, m_sound_death, string()) { return SND(CrazyDave_Death_Random()); }
-    METHOD(CrazyDave, m_sound_jump, string(entity actor)) { return SND(CrazyDave_Jump_Random()); }
+	ATTRIB(CrazyDave, m_model, Model, MDL_CrazyDave);
+	ATTRIB(CrazyDave, m_model_head, Model, MDL_CrazyDave_Head);
+	METHOD(CrazyDave, m_sound_pain, Sound()) { return SND_CrazyDave_Pain_Random(); }
+	METHOD(CrazyDave, m_sound_death, Sound()) { return SND_CrazyDave_Death_Random(); }
+	METHOD(CrazyDave, m_sound_jump, Sound(entity actor)) { return SND_CrazyDave_Jump_Random(); }
+	METHOD(CrazyDave, m_sound_waterdeath, Sound(entity actor)) { return SND_CrazyDave_WaterDeath; }
+	METHOD(CrazyDave, m_sound_gasp1, Sound(entity actor)) { return SND_CrazyDave_Gasp1; }
+	METHOD(CrazyDave, m_sound_gasp2, Sound(entity actor)) { return SND_CrazyDave_Gasp2; }
+	METHOD(CrazyDave, m_sound_axehit, Sound(entity actor)) { return SND_CrazyDave_AxeHit; }
+	METHOD(CrazyDave, m_sound_burn, Sound(entity actor)) { return SND_CrazyDave_Burn_Random(); }
+	METHOD(CrazyDave, m_sound_drown, Sound(entity actor)) { return SND_CrazyDave_Drown_Random(); }
+	METHOD(CrazyDave, m_sound_land, Sound(entity actor)) { return SND_CrazyDave_Land; }
+	METHOD(CrazyDave, m_sound_fall, Sound(entity actor)) { return SND_CrazyDave_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(CrazyDave, m_faceprefix, string, "gfx/quake/crazydave_");
+	ATTRIB(CrazyDave, m_faceprefix, string, "gfx/quake/crazydave_");
 #endif
 #ifdef CSQC
-    ATTRIB(CrazyDave, message, string, CRAZYDAVE_STATS);
+	ATTRIB(CrazyDave, message, string, CRAZYDAVE_STATS);
 #endif
-    ATTRIB(CrazyDave, td_turrets, bool, true);
+	ATTRIB(CrazyDave, td_turrets, bool, true);
 ENDCLASS(CrazyDave)
 REGISTER_CHAMPION(CrazyDave, NEW(CrazyDave));
 

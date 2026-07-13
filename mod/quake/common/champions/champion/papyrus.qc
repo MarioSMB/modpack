@@ -17,7 +17,7 @@ void Papyrus_BoneTouch(entity this, entity toucher)
 
 void Papyrus_ThrowBone(entity this)
 {
-	player_sound(this, CH_TRIGGER_SINGLE, "throw.wav", ATTN_NORM);
+	player_sound(this, CH_WEAPON_B, SND_Papyrus_Bone_Fire, ATTN_NORM);
 
 	.entity weaponentity = weaponentities[0]; // TODO?
 	entity missile = new(bone);
@@ -62,7 +62,7 @@ void Papyrus_ThrowBone(entity this)
 
 void skull_fire(entity this)
 {
-	_sound(this, CH_WEAPON_B, "player_papyrus/laser_fire.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_B, SND_Papyrus_Blaster_Fire, 1, ATTN_NORM);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -87,7 +87,7 @@ void skull_fire(entity this)
 
 void Papyrus_ChargeLaser(entity this, entity targ)
 {
-	_sound(this, CH_WEAPON_B, "player_papyrus/laser_charge.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_B, SND_Papyrus_Blaster_Charge, 1, ATTN_NORM);
 
 	vector forward, right, up;
 	MAKE_VECTORS(this.angles, forward, right, up);
@@ -116,14 +116,14 @@ void Papyrus_ChargeLaser(entity this, entity targ)
 
 METHOD(Papyrus, m_activate, void(Champions this, entity actor))
 {
-	player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Papyrus_Start, ATTN_NORM);
 
 	SendPapyrusLine(actor, bound(1, ceil(random() * 5), 5));
 }
 
 METHOD(Papyrus, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Papyrus_Cannon_Launch, ATTN_NORM);
 	actor.papyrus_cannon = true;
 }
 
@@ -131,7 +131,7 @@ METHOD(Papyrus, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.papyrus_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.papyrus_cannon = false;
 	return false;
 }

@@ -26,6 +26,35 @@ SOUND(Dryad_Jump2, "player_dryad/jump2");
 Sound SND_Dryad_Jump_Random() {
 	return (random() > 0.5) ? SND_Dryad_Jump1 : SND_Dryad_Jump2;
 }
+
+SOUND(Dryad_Gasp1, "player_dryad/gasp1");
+SOUND(Dryad_Gasp2, "player_dryad/gasp2");
+SOUND(Dryad_WaterDeath, "player_dryad/h2odeath");
+SOUND(Dryad_AxeHit, "player_dryad/axhit1");
+SOUND(Dryad_Land, "player_dryad/land");
+SOUND(Dryad_Fall, "player_dryad/land2");
+
+SOUND(Dryad_Burn1, "player_dryad/lburn1");
+SOUND(Dryad_Burn2, "player_dryad/lburn2");
+Sound SND_Dryad_Burn_Random() {
+	return (random() > 0.5) ? SND_Dryad_Burn1 : SND_Dryad_Burn2;
+}
+
+SOUND(Dryad_Drown1, "player_dryad/drown1");
+SOUND(Dryad_Drown2, "player_dryad/drown2");
+Sound SND_Dryad_Drown_Random() {
+	return (random() > 0.5) ? SND_Dryad_Drown1 : SND_Dryad_Drown2;
+}
+
+SOUND(Dryad_Start1, "player_dryad/start1");
+SOUND(Dryad_Start2, "player_dryad/start2");
+SOUND(Dryad_Start3, "player_dryad/start3");
+Sound SND_Dryad_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Dryad_Start1.m_id + rint(random() * 2));
+}
+
+SOUND(Dryad_Transform, "player_dryad/player_transform");
+
 PRECACHE(Dryad)
 {
 #ifdef CSQC
@@ -49,31 +78,6 @@ PRECACHE(Dryad)
 #endif
 #ifdef SVQC
 	precache_model("progs/leaf.mdl");
-
-	//precache_sound("player_dryad/plyrjmp8.wav");       // player jump
-	precache_sound("player_dryad/land.wav");           // player landing
-	precache_sound("player_dryad/land2.wav");      // player hurt landing
-	precache_sound("player_dryad/drown1.wav");     // drowning pain
-	precache_sound("player_dryad/drown2.wav");     // drowning pain
-	precache_sound("player_dryad/gasp1.wav");      // gasping for air
-	precache_sound("player_dryad/gasp2.wav");      // taking breath
-	precache_sound("player_dryad/h2odeath.wav");       // drowning death
-
-	precache_sound("player_dryad/axhit1.wav");
-	precache_sound("player_dryad/axhit2.wav");
-
-	precache_sound("player_dryad/lburn1.wav");     // lava burn
-	precache_sound("player_dryad/lburn2.wav");     // lava burn
-
-	precache_sound("player_dryad/start1.wav");
-	precache_sound("player_dryad/start2.wav");
-	precache_sound("player_dryad/start3.wav");
-
-	// TODO?
-	precache_sound("player_enyo/wings.wav");
-	precache_sound("player_enyo/friesdone.wav");
-
-	precache_sound("player_dryad/player_transform.wav");
 #endif
 }
 #endif
@@ -101,10 +105,17 @@ CLASS(Dryad, Champions)
 #ifdef GAMEQC
 	ATTRIB(Dryad, m_model, Model, MDL_Dryad);
 	ATTRIB(Dryad, m_model_head, Model, MDL_Dryad_Head);
-	ATTRIB(Dryad, m_soundpath, string, "player_dryad/");
-	METHOD(Dryad, m_sound_pain, string()) { return SND(Dryad_Pain_Random()); }
-	METHOD(Dryad, m_sound_death, string()) { return SND(Dryad_Death_Random()); }
-	METHOD(Dryad, m_sound_jump, string(entity actor)) { return SND(Dryad_Jump_Random()); }
+	METHOD(Dryad, m_sound_pain, Sound()) { return SND_Dryad_Pain_Random(); }
+	METHOD(Dryad, m_sound_death, Sound()) { return SND_Dryad_Death_Random(); }
+	METHOD(Dryad, m_sound_jump, Sound(entity actor)) { return SND_Dryad_Jump_Random(); }
+	METHOD(Dryad, m_sound_waterdeath, Sound(entity actor)) { return SND_Dryad_WaterDeath; }
+	METHOD(Dryad, m_sound_gasp1, Sound(entity actor)) { return SND_Dryad_Gasp1; }
+	METHOD(Dryad, m_sound_gasp2, Sound(entity actor)) { return SND_Dryad_Gasp2; }
+	METHOD(Dryad, m_sound_axehit, Sound(entity actor)) { return SND_Dryad_AxeHit; }
+	METHOD(Dryad, m_sound_burn, Sound(entity actor)) { return SND_Dryad_Burn_Random(); }
+	METHOD(Dryad, m_sound_drown, Sound(entity actor)) { return SND_Dryad_Drown_Random(); }
+	METHOD(Dryad, m_sound_land, Sound(entity actor)) { return SND_Dryad_Land; }
+	METHOD(Dryad, m_sound_fall, Sound(entity actor)) { return SND_Dryad_Fall; }
 #endif
 #ifdef CSQC
 	ATTRIB(Dryad, m_faceprefix, string, "gfx/quake/dryad_");

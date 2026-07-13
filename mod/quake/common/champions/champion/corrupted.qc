@@ -24,13 +24,7 @@ void corrupted_wepanim(entity this)
 
 METHOD(Corrupted, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.33)
-		player_sound(actor, CH_VOICE, "start1.wav", ATTN_NORM);
-	if(r < 0.66)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Corrupted_Start_Random(), ATTN_NORM);
 
 	// original weapon added to prevent loss (TODO?)
 	Inventory_add(WEP_BLADEOFGRASS, actor, ITEM_OWNED);
@@ -49,7 +43,7 @@ METHOD(Corrupted, m_playerthink, void(Champions this, entity actor))
 	if(actor.m_transform == this && PHYS_INPUT_BUTTON_CROUCH(actor) && time >= STAT(QCC_ABILITYTIME, actor)) //&& QCC_CanCastAbility(actor))
 	{
 		actor.dryad_transformtime = time + 0.5; // prevent player voices on transform
-		_sound(actor, CH_VOICE, "player_dryad/player_transform.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Dryad_Transform, ATTN_NORM);
 		te_explosion2(actor.origin, 85, 5);
 		QCC_ClearTransform(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
@@ -58,10 +52,7 @@ METHOD(Corrupted, m_playerthink, void(Champions this, entity actor))
 
 	if(time >= actor.corrupted_dmgtime && STAT(CORRUPTION, actor) >= 10)
 	{
-		if(random() > 0.5)
-			_sound(actor, CH_VOICE, "player_corrupted/corrupt_damage1.wav", 1, ATTN_NORM);
-		else
-			_sound(actor, CH_VOICE, "player_corrupted/corrupt_damage2.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Corrupted_Damage_Random(), ATTN_NORM);
 		actor.corrupted_dmgtime = time + 0.5;
 		T_Damage(actor, NULL, NULL, 5, DEATH_GENERIC.m_id);
 	}
@@ -123,7 +114,7 @@ METHOD(Corrupted, m_touch, void(Champions this, entity actor, entity toucher))
 
 		T_Damage(toucher, actor, actor, thedamage, WEP_CORRUPTED_CLAWS.m_id);
 
-		_sound(toucher, CH_SHOTS, "impact/hit_player4.wav", 1, ATTN_NORM);
+		sound(toucher, CH_SHOTS, SND_Corrupted_Hit, 1, ATTN_NORM);
 
 		actor.corrupted_bash_time = time + 0.5;
 	}
@@ -135,7 +126,7 @@ METHOD(Corrupted, m_physics, bool(Champions this, entity actor, float dt))
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.6) && PHYS_INPUT_BUTTON_ATCK2(actor) && IS_ONGROUND(actor) && !(STAT(ITEMS, actor) & IT_TANK) && !QCC_HasSpellbook(actor))
 	{
 	#ifdef SVQC
-		_sound(actor, CH_WEAPON_SINGLE, "player_corrupted/pain.wav", 1, ATTN_NORM);
+		player_sound(actor, CH_WEAPON_SINGLE, SND_Corrupted_Pain, ATTN_NORM);
 		actor.corrupted_bash = time + 0.7;
 		.entity weaponentity = weaponentities[0];
 		ATTACK_FINISHED(actor, weaponentity) = time + 0.5;

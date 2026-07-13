@@ -2,6 +2,7 @@
 
 #ifdef GAMEQC
 SOUND(VIOLIN_FIRE, "weapons/violin_fire");
+SOUND(VIOLIN_MISFIRE, "weapons/violin_misfire");
 
 SOUND(VIOLIN_MUSICNOTE, "weapons/violin_music");
 #endif

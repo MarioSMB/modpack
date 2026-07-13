@@ -98,7 +98,7 @@ METHOD(Bean, m_playerthink, void(Champions this, entity actor))
 {
 	if(PHYS_INPUT_BUTTON_CROUCH(actor) && QCC_CanCastAbility(actor))
 	{
-		player_sound(actor, CH_PLAYER_SINGLE, "teddy.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_Bean_Teddy, ATTN_NORM);
 		ThrowTeddy(actor);
 		STAT(QCC_ABILITYTIME, actor) = time + 10;
 	}
@@ -106,20 +106,12 @@ METHOD(Bean, m_playerthink, void(Champions this, entity actor))
 
 METHOD(Bean, m_activate, void(Champions this, entity actor))
 {
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Bean_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Bean, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "death1.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Bean_Death1, ATTN_NORM);
 	actor.bean_cannon = true;
 }
 
@@ -127,7 +119,7 @@ METHOD(Bean, m_cannon_land, bool(Champions this, entity actor))
 {
 	if(!actor.bean_cannon)
 		return false;
-	stopsound(actor, CH_TRIGGER_SINGLE);
+	stopsound(actor, CH_PLAYER_SINGLE);
 	actor.bean_cannon = false;
 	return false;
 }

@@ -9,6 +9,7 @@ REGISTER_NET_TEMP(TE_CSQC_END2)
 REGISTER_NET_LINKED(ENT_CLIENT_BAMBOO)
 
 #include "stats.qh"
+#include "sounds.qh"
 
 #include "physics.qh"
 

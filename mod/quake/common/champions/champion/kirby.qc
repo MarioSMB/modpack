@@ -106,15 +106,7 @@ METHOD(Kirby, m_activate, void(Champions this, entity actor))
 	.entity weaponentity = weaponentities[0]; // TODO?
 	W_SwitchWeapon_Force(actor, WEP_STAR, weaponentity);
 
-	float r = random();
-	if(r < 0.25)
-		player_sound(actor, CH_VOICE, "start.wav", ATTN_NORM);
-	else if(r < 0.50)
-		player_sound(actor, CH_VOICE, "start2.wav", ATTN_NORM);
-	else if(r < 0.75)
-		player_sound(actor, CH_VOICE, "start3.wav", ATTN_NORM);
-	else
-		player_sound(actor, CH_VOICE, "start4.wav", ATTN_NORM);
+	player_sound(actor, CH_VOICE, SND_Kirby_Start_Random(), ATTN_NORM);
 }
 
 METHOD(Kirby, m_playerspawn, void(Champions this, entity actor))
@@ -135,7 +127,7 @@ METHOD(Kirby, m_clear, void(Champions this, entity actor))
 
 METHOD(Kirby, m_cannon_launch, void(Champions this, entity actor, entity cannon))
 {
-	player_sound(actor, CH_TRIGGER_SINGLE, "falling.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Kirby_Falling, ATTN_NORM);
 	actor.kirby_cannon = true;
 }
 
@@ -147,29 +139,19 @@ METHOD(Kirby, m_cannon_land, bool(Champions this, entity actor))
 			actor.jump_flag = 0; // HACK: reset landing here so there's no land sound
 		return false;
 	}
-	player_sound(actor, CH_TRIGGER_SINGLE, "cannon_land.wav", ATTN_NORM);
+	player_sound(actor, CH_PLAYER_SINGLE, SND_Kirby_Cannon_Land, ATTN_NORM);
 	actor.kirby_cannon = false;
 	actor.jump_flag = 0;
 	return true; // prevent land sound
 }
 
-METHOD(Kirby, m_sound_jump, string(entity actor))
+METHOD(Kirby, m_sound_jump, Sound(entity actor))
 {
 	if(STAT(KIRBY_STATE, actor) == KIRBY_FLYING)
-	{
-		float r = random();
-		if(r < 0.25)
-			return "player_kirby/fly1.wav";
-		else if(r < 0.50)
-			return "player_kirby/fly2.wav";
-		else if(r < 0.75)
-			return "player_kirby/fly3.wav";
-		else
-			return "player_kirby/fly4.wav";
-	}
+		return SND_Kirby_Fly_Random();
 	else if(STAT(KIRBY_STATE, actor) == KIRBY_FULL)
-		return "player_kirby/jump_full.wav";
-	return "player_kirby/plyrjmp8.wav";
+		return SND_Kirby_Jump_Full;
+	return SND_Kirby_Jump;;
 }
 
 METHOD(Kirby, m_playerjump, float(Champions this, entity actor))
@@ -217,7 +199,7 @@ METHOD(Kirby, m_touch, void(Champions this, entity actor, entity toucher))
 
 		T_Damage(toucher, actor, actor, thedamage, DEATH_CRUSH.m_id);
 
-		player_sound(actor, CH_VOICE, "bonk.wav", ATTN_NORM);
+		player_sound(actor, CH_VOICE, SND_Kirby_Bonk, ATTN_NORM);
 
 		actor.kirby_bash_time = time + 0.5;
 	}
@@ -241,7 +223,7 @@ METHOD(Kirby, m_physics, bool(Champions this, entity actor, float dt))
 	if(vdist(actor.velocity, <, PHYS_MAXSPEED(actor) * 0.3) && PHYS_INPUT_BUTTON_CROUCH(actor) && IS_ONGROUND(actor) && !(STAT(ITEMS, actor) & IT_TANK) && STAT(KIRBY_STATE, actor) == KIRBY_NORMAL)
 	{
 	#ifdef SVQC
-		player_sound(actor, CH_PLAYER_SINGLE, "slide.wav", ATTN_NORM);
+		player_sound(actor, CH_PLAYER_SINGLE, SND_Kirby_Slide, ATTN_NORM);
 		STAT(QCC_ABILITYTIME, actor) = time + 1;
 		player_axed1(actor);
 	#endif

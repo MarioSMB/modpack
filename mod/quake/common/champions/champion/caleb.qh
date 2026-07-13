@@ -12,156 +12,173 @@ SOUND(Caleb_Pain4, "player_caleb/pain4");
 SOUND(Caleb_Pain5, "player_caleb/pain5");
 SOUND(Caleb_Pain6, "player_caleb/pain6");
 Sound SND_Caleb_Pain_Random() {
-    return REGISTRY_GET(Sounds, SND_Caleb_Pain1.m_id + rint(random() * 5));
+	return REGISTRY_GET(Sounds, SND_Caleb_Pain1.m_id + rint(random() * 5));
 }
 
 SOUND(Caleb_Death1, "player_caleb/death1");
 SOUND(Caleb_Death2, "player_caleb/death2");
 SOUND(Caleb_Death3, "player_caleb/death3");
 Sound SND_Caleb_Death_Random() {
-    return REGISTRY_GET(Sounds, SND_Caleb_Death1.m_id + rint(random() * 2));
+	return REGISTRY_GET(Sounds, SND_Caleb_Death1.m_id + rint(random() * 2));
 }
+
+SOUND(Caleb_Jump, "player_caleb/plyrjmp8");
+SOUND(Caleb_Gasp1, "player_caleb/gasp1");
+SOUND(Caleb_Gasp2, "player_caleb/gasp2");
+SOUND(Caleb_WaterDeath, "player_caleb/h2odeath");
+SOUND(Caleb_AxeHit, "player_caleb/axhit1");
+SOUND(Caleb_Land, "player_caleb/land");
+SOUND(Caleb_Fall, "player_caleb/land2");
+
+SOUND(Caleb_Burn1, "player_caleb/lburn1");
+SOUND(Caleb_Burn2, "player_caleb/lburn2");
+Sound SND_Caleb_Burn_Random() {
+	return (random() > 0.5) ? SND_Caleb_Burn1 : SND_Caleb_Burn2;
+}
+
+SOUND(Caleb_Drown1, "player_caleb/drown1");
+SOUND(Caleb_Drown2, "player_caleb/drown2");
+Sound SND_Caleb_Drown_Random() {
+	return (random() > 0.5) ? SND_Caleb_Drown1 : SND_Caleb_Drown2;
+}
+
+SOUND(Caleb_Quip1, "player_caleb/quips/1001");
+SOUND(Caleb_Quip2, "player_caleb/quips/1008");
+SOUND(Caleb_Quip3, "player_caleb/quips/1012");
+SOUND(Caleb_Quip4, "player_caleb/quips/1014");
+SOUND(Caleb_Quip5, "player_caleb/quips/1017");
+SOUND(Caleb_Quip6, "player_caleb/quips/1018");
+SOUND(Caleb_Quip7, "player_caleb/quips/1019");
+SOUND(Caleb_Quip8, "player_caleb/quips/1021");
+SOUND(Caleb_Quip9, "player_caleb/quips/1022");
+SOUND(Caleb_Quip10, "player_caleb/quips/1023");
+SOUND(Caleb_Quip11, "player_caleb/quips/1024");
+SOUND(Caleb_Quip12, "player_caleb/quips/1025");
+SOUND(Caleb_Quip13, "player_caleb/quips/1027");
+SOUND(Caleb_Quip14, "player_caleb/quips/1028");
+SOUND(Caleb_Quip15, "player_caleb/quips/1029");
+SOUND(Caleb_Quip16, "player_caleb/quips/1030");
+SOUND(Caleb_Quip17, "player_caleb/quips/1031");
+SOUND(Caleb_Quip18, "player_caleb/quips/1032");
+SOUND(Caleb_Quip19, "player_caleb/quips/1033");
+SOUND(Caleb_Quip20, "player_caleb/quips/1034");
+SOUND(Caleb_Quip21, "player_caleb/quips/1035");
+SOUND(Caleb_Quip22, "player_caleb/quips/1036");
+SOUND(Caleb_Quip23, "player_caleb/quips/1037");
+SOUND(Caleb_Quip24, "player_caleb/quips/1038");
+SOUND(Caleb_Quip25, "player_caleb/quips/1039");
+SOUND(Caleb_Quip26, "player_caleb/quips/1040");
+SOUND(Caleb_Quip27, "player_caleb/quips/1041");
+SOUND(Caleb_Quip28, "player_caleb/quips/1042");
+SOUND(Caleb_Quip29, "player_caleb/quips/1043");
+SOUND(Caleb_Quip30, "player_caleb/quips/1044");
+SOUND(Caleb_Quip31, "player_caleb/quips/1045");
+SOUND(Caleb_Quip32, "player_caleb/quips/1046");
+SOUND(Caleb_Quip33, "player_caleb/quips/1048");
+SOUND(Caleb_Quip34, "player_caleb/quips/1049");
+SOUND(Caleb_Quip35, "player_caleb/quips/1050");
+SOUND(Caleb_Quip36, "player_caleb/quips/1051");
+SOUND(Caleb_Quip37, "player_caleb/quips/1052");
+SOUND(Caleb_Quip38, "player_caleb/quips/1053");
+SOUND(Caleb_Quip39, "player_caleb/quips/1054");
+SOUND(Caleb_Quip40, "player_caleb/quips/1055");
+SOUND(Caleb_Quip41, "player_caleb/quips/1056");
+SOUND(Caleb_Quip42, "player_caleb/quips/1057");
+SOUND(Caleb_Quip43, "player_caleb/quips/1059");
+SOUND(Caleb_Quip44, "player_caleb/quips/1060");
+SOUND(Caleb_Quip45, "player_caleb/quips/1061");
+SOUND(Caleb_Quip46, "player_caleb/quips/1062");
+SOUND(Caleb_Quip47, "player_caleb/quips/1063");
+SOUND(Caleb_Quip48, "player_caleb/quips/1064");
+SOUND(Caleb_Quip49, "player_caleb/quips/1065");
+SOUND(Caleb_Quip50, "player_caleb/quips/1066");
+SOUND(Caleb_Quip51, "player_caleb/quips/1068");
+SOUND(Caleb_Quip52, "player_caleb/quips/1069");
+SOUND(Caleb_Quip53, "player_caleb/quips/1070");
+SOUND(Caleb_Quip54, "player_caleb/quips/1071");
+SOUND(Caleb_Quip55, "player_caleb/quips/1072");
+SOUND(Caleb_Quip56, "player_caleb/quips/1073");
+SOUND(Caleb_Quip57, "player_caleb/quips/1074");
+SOUND(Caleb_Quip58, "player_caleb/quips/1075");
+SOUND(Caleb_Quip59, "player_caleb/quips/1076");
+SOUND(Caleb_Quip60, "player_caleb/quips/1077");
+SOUND(Caleb_Quip61, "player_caleb/quips/1078");
+SOUND(Caleb_Quip62, "player_caleb/quips/1079");
+SOUND(Caleb_Quip63, "player_caleb/quips/1080");
+SOUND(Caleb_Quip64, "player_caleb/quips/1081");
+SOUND(Caleb_Quip65, "player_caleb/quips/1082");
+SOUND(Caleb_Quip66, "player_caleb/quips/1083");
+SOUND(Caleb_Quip67, "player_caleb/quips/1084");
+SOUND(Caleb_Quip68, "player_caleb/quips/2112");
+Sound SND_Caleb_Quip_Random() {
+	return REGISTRY_GET(Sounds, SND_Caleb_Quip1.m_id + rint(random() * 67));
+}
+
+SOUND(Caleb_Start1, "player_caleb/mutter/3004b");
+SOUND(Caleb_Start2, "player_caleb/mutter/3010");
+SOUND(Caleb_Start3, "player_caleb/mutter/3018b");
+SOUND(Caleb_Start4, "player_caleb/mutter/3023a");
+SOUND(Caleb_Start5, "player_caleb/mutter/3027");
+SOUND(Caleb_Start6, "player_caleb/mutter/3031");
+SOUND(Caleb_Start7, "player_caleb/mutter/3038");
+Sound SND_Caleb_Start_Random() {
+	return REGISTRY_GET(Sounds, SND_Caleb_Start1.m_id + rint(random() * 6));
+}
+
+SOUND(Caleb_Play1, "player_caleb/play1109");
+SOUND(Caleb_Play2, "player_caleb/play1110");
+SOUND(Caleb_Play3, "player_caleb/play1111");
+SOUND(Caleb_Play4, "player_caleb/play1112");
+SOUND(Caleb_Play5, "player_caleb/play1113");
+SOUND(Caleb_Play6, "player_caleb/play1114");
+SOUND(Caleb_Play7, "player_caleb/play1115");
+SOUND(Caleb_Play8, "player_caleb/play1116");
+Sound SND_Caleb_Play_Random() {
+	return REGISTRY_GET(Sounds, SND_Caleb_Play1.m_id + rint(random() * 7));
+}
+
+SOUND(Caleb_Bats, "player_caleb/bats");
+SOUND(Caleb_Heartbeat, "player_caleb/heartbeat");
+
+SOUND(Caleb_Ability1, "player_caleb/mutter/3001b");
+SOUND(Caleb_Ability2, "player_caleb/mutter/3004b");
+SOUND(Caleb_Ability3, "player_caleb/mutter/3012");
+Sound SND_Caleb_Ability_Random() {
+	return REGISTRY_GET(Sounds, SND_Caleb_Ability1.m_id + rint(random() * 2));
+}
+
+SOUND(Caleb_Save1, "player_caleb/quips/1034");
+SOUND(Caleb_Save2, "player_caleb/quips/1045");
+SOUND(Caleb_Save3, "player_caleb/quips/1052");
+Sound SND_Caleb_Save_Random() {
+	return REGISTRY_GET(Sounds, SND_Caleb_Save1.m_id + rint(random() * 2));
+}
+
 PRECACHE(Caleb)
 {
 #ifdef CSQC
-    precache_pic("gfx/quake/caleb_face_invis");
-    precache_pic("gfx/quake/caleb_face_invul2");
-    precache_pic("gfx/quake/caleb_face_inv2");
-    precache_pic("gfx/quake/caleb_face_quad");
+	precache_pic("gfx/quake/caleb_face_invis");
+	precache_pic("gfx/quake/caleb_face_invul2");
+	precache_pic("gfx/quake/caleb_face_inv2");
+	precache_pic("gfx/quake/caleb_face_quad");
 
-    precache_pic("gfx/quake/caleb_face1");
-    precache_pic("gfx/quake/caleb_face_p1");
-    precache_pic("gfx/quake/caleb_face2");
-    precache_pic("gfx/quake/caleb_face_p2");
-    precache_pic("gfx/quake/caleb_face3");
-    precache_pic("gfx/quake/caleb_face_p3");
-    precache_pic("gfx/quake/caleb_face4");
-    precache_pic("gfx/quake/caleb_face_p4");
-    precache_pic("gfx/quake/caleb_face5");
-    precache_pic("gfx/quake/caleb_face_p5");
+	precache_pic("gfx/quake/caleb_face1");
+	precache_pic("gfx/quake/caleb_face_p1");
+	precache_pic("gfx/quake/caleb_face2");
+	precache_pic("gfx/quake/caleb_face_p2");
+	precache_pic("gfx/quake/caleb_face3");
+	precache_pic("gfx/quake/caleb_face_p3");
+	precache_pic("gfx/quake/caleb_face4");
+	precache_pic("gfx/quake/caleb_face_p4");
+	precache_pic("gfx/quake/caleb_face5");
+	precache_pic("gfx/quake/caleb_face_p5");
+
+	precache_pic("gfx/quake/bloodstrike");
 #endif
 #ifdef SVQC
-    precache_sound("player_caleb/plyrjmp8.wav");       // player jump
-    precache_sound("player_caleb/land.wav");           // player landing
-    precache_sound("player_caleb/land2.wav");      // player hurt landing
-    precache_sound("player_caleb/drown1.wav");     // drowning pain
-    precache_sound("player_caleb/drown2.wav");     // drowning pain
-    precache_sound("player_caleb/gasp1.wav");      // gasping for air
-    precache_sound("player_caleb/gasp2.wav");      // taking breath
-    precache_sound("player_caleb/h2odeath.wav");       // drowning death
+	precache_model("progs/v_ptchfrk.mdl");
 
-    precache_sound("player_caleb/pain1.wav");
-    precache_sound("player_caleb/pain2.wav");
-    precache_sound("player_caleb/pain3.wav");
-    precache_sound("player_caleb/pain4.wav");
-
-    precache_sound("player_caleb/death1.wav");
-    precache_sound("player_caleb/death2.wav");
-    precache_sound("player_caleb/death3.wav");
-
-    precache_sound("player_caleb/axhit1.wav");
-
-    precache_sound("player_caleb/lburn1.wav");     // lava burn
-    precache_sound("player_caleb/lburn2.wav");     // lava burn
-
-    precache_model("progs/v_ptchfrk.mdl");
-
-    precache_model("progs/bats.mdl");
-
-    precache_sound("player_caleb/play1109.wav");
-    precache_sound("player_caleb/play1110.wav");
-    precache_sound("player_caleb/play1111.wav");
-    precache_sound("player_caleb/play1112.wav");
-    precache_sound("player_caleb/play1113.wav");
-    precache_sound("player_caleb/play1114.wav");
-    precache_sound("player_caleb/play1115.wav");
-    precache_sound("player_caleb/play1116.wav");
-
-    precache_sound("player_caleb/quips/1001.wav");
-    precache_sound("player_caleb/quips/1008.wav");
-    precache_sound("player_caleb/quips/1012.wav");
-    precache_sound("player_caleb/quips/1014.wav");
-    precache_sound("player_caleb/quips/1017.wav");
-    precache_sound("player_caleb/quips/1018.wav");
-    precache_sound("player_caleb/quips/1019.wav");
-    precache_sound("player_caleb/quips/1021.wav");
-    precache_sound("player_caleb/quips/1022.wav");
-    precache_sound("player_caleb/quips/1023.wav");
-    precache_sound("player_caleb/quips/1024.wav");
-    precache_sound("player_caleb/quips/1025.wav");
-    precache_sound("player_caleb/quips/1027.wav");
-    precache_sound("player_caleb/quips/1028.wav");
-    precache_sound("player_caleb/quips/1029.wav");
-    precache_sound("player_caleb/quips/1030.wav");
-    precache_sound("player_caleb/quips/1031.wav");
-    precache_sound("player_caleb/quips/1032.wav");
-    precache_sound("player_caleb/quips/1033.wav");
-    precache_sound("player_caleb/quips/1034.wav");
-    precache_sound("player_caleb/quips/1035.wav");
-    precache_sound("player_caleb/quips/1036.wav");
-    precache_sound("player_caleb/quips/1037.wav");
-    precache_sound("player_caleb/quips/1038.wav");
-    precache_sound("player_caleb/quips/1039.wav");
-    precache_sound("player_caleb/quips/1040.wav");
-    precache_sound("player_caleb/quips/1041.wav");
-    precache_sound("player_caleb/quips/1042.wav");
-    precache_sound("player_caleb/quips/1043.wav");
-    precache_sound("player_caleb/quips/1044.wav");
-    precache_sound("player_caleb/quips/1045.wav");
-    precache_sound("player_caleb/quips/1046.wav");
-    precache_sound("player_caleb/quips/1048.wav");
-    precache_sound("player_caleb/quips/1049.wav");
-    precache_sound("player_caleb/quips/1050.wav");
-    precache_sound("player_caleb/quips/1051.wav");
-    precache_sound("player_caleb/quips/1052.wav");
-    precache_sound("player_caleb/quips/1053.wav");
-    precache_sound("player_caleb/quips/1054.wav");
-    precache_sound("player_caleb/quips/1055.wav");
-    precache_sound("player_caleb/quips/1056.wav");
-    precache_sound("player_caleb/quips/1057.wav");
-    precache_sound("player_caleb/quips/1059.wav");
-    precache_sound("player_caleb/quips/1060.wav");
-    precache_sound("player_caleb/quips/1061.wav");
-    precache_sound("player_caleb/quips/1062.wav");
-    precache_sound("player_caleb/quips/1063.wav");
-    precache_sound("player_caleb/quips/1064.wav");
-    precache_sound("player_caleb/quips/1065.wav");
-    precache_sound("player_caleb/quips/1066.wav");
-    precache_sound("player_caleb/quips/1068.wav");
-    precache_sound("player_caleb/quips/1069.wav");
-    precache_sound("player_caleb/quips/1070.wav");
-    precache_sound("player_caleb/quips/1071.wav");
-    precache_sound("player_caleb/quips/1072.wav");
-    precache_sound("player_caleb/quips/1073.wav");
-    precache_sound("player_caleb/quips/1074.wav");
-    precache_sound("player_caleb/quips/1075.wav");
-    precache_sound("player_caleb/quips/1076.wav");
-    precache_sound("player_caleb/quips/1077.wav");
-    precache_sound("player_caleb/quips/1078.wav");
-    precache_sound("player_caleb/quips/1079.wav");
-    precache_sound("player_caleb/quips/1080.wav");
-    precache_sound("player_caleb/quips/1081.wav");
-    precache_sound("player_caleb/quips/1082.wav");
-    precache_sound("player_caleb/quips/1083.wav");
-    precache_sound("player_caleb/quips/1084.wav");
-    precache_sound("player_caleb/quips/2112.wav");
-
-    precache_sound("player_caleb/mutter/3001b.wav");
-    precache_sound("player_caleb/mutter/3004b.wav");
-    precache_sound("player_caleb/mutter/3010.wav");
-    precache_sound("player_caleb/mutter/3012.wav");
-    precache_sound("player_caleb/mutter/3018b.wav");
-    precache_sound("player_caleb/mutter/3020.wav");
-    precache_sound("player_caleb/mutter/3023a.wav");
-    precache_sound("player_caleb/mutter/3027.wav");
-    precache_sound("player_caleb/mutter/3031.wav");
-    precache_sound("player_caleb/mutter/3038.wav");
-
-    precache_sound("player_caleb/heartbeat.wav");
-    precache_sound("player_caleb/bats.wav");
-#endif
-#ifdef CSQC
-    precache_pic("gfx/quake/bloodstrike");
+	precache_model("progs/bats.mdl");
 #endif
 }
 #endif
@@ -174,23 +191,30 @@ PRECACHE(Caleb)
 "Press %ABILITY% for vampire bats"
 #endif
 CLASS(Caleb, Champions)
-    ATTRIB(Caleb, netname, string, "caleb");
-    ATTRIB(Caleb, m_name, string, "Caleb");
-    ATTRIB(Caleb, m_color, vector, '1 0 0');
-    ATTRIB(Caleb, qcc_meleename, string, "ptchfrk");
-    ATTRIB(Caleb, qcc_meleerange, float, 2.5);
+	ATTRIB(Caleb, netname, string, "caleb");
+	ATTRIB(Caleb, m_name, string, "Caleb");
+	ATTRIB(Caleb, m_color, vector, '1 0 0');
+	ATTRIB(Caleb, qcc_meleename, string, "ptchfrk");
+	ATTRIB(Caleb, qcc_meleerange, float, 2.5);
 #ifdef GAMEQC
-    ATTRIB(Caleb, m_model, Model, MDL_Caleb);
-    ATTRIB(Caleb, m_soundpath, string, "player_caleb/");
-    METHOD(Caleb, m_sound_pain, string()) { return SND(Caleb_Pain_Random()); }
-    METHOD(Caleb, m_sound_death, string()) { return SND(Caleb_Death_Random()); }
-    METHOD(Caleb, m_sound_jump, string(entity actor)) { return "player_caleb/plyrjmp8.wav"; }
+	ATTRIB(Caleb, m_model, Model, MDL_Caleb);
+	METHOD(Caleb, m_sound_pain, Sound()) { return SND_Caleb_Pain_Random(); }
+	METHOD(Caleb, m_sound_death, Sound()) { return SND_Caleb_Death_Random(); }
+	METHOD(Caleb, m_sound_jump, Sound(entity actor)) { return SND_Caleb_Jump; }
+	METHOD(Caleb, m_sound_waterdeath, Sound(entity actor)) { return SND_Caleb_WaterDeath; }
+	METHOD(Caleb, m_sound_gasp1, Sound(entity actor)) { return SND_Caleb_Gasp1; }
+	METHOD(Caleb, m_sound_gasp2, Sound(entity actor)) { return SND_Caleb_Gasp2; }
+	METHOD(Caleb, m_sound_axehit, Sound(entity actor)) { return SND_Caleb_AxeHit; }
+	METHOD(Caleb, m_sound_burn, Sound(entity actor)) { return SND_Caleb_Burn_Random(); }
+	METHOD(Caleb, m_sound_drown, Sound(entity actor)) { return SND_Caleb_Drown_Random(); }
+	METHOD(Caleb, m_sound_land, Sound(entity actor)) { return SND_Caleb_Land; }
+	METHOD(Caleb, m_sound_fall, Sound(entity actor)) { return SND_Caleb_Fall; }
 #endif
 #ifdef CSQC
-    ATTRIB(Caleb, m_faceprefix, string, "gfx/quake/caleb_");
+	ATTRIB(Caleb, m_faceprefix, string, "gfx/quake/caleb_");
 #endif
 #ifdef CSQC
-    ATTRIB(Caleb, message, string, CALEB_STATS);
+	ATTRIB(Caleb, message, string, CALEB_STATS);
 #endif
 ENDCLASS(Caleb)
 REGISTER_CHAMPION(Caleb, NEW(Caleb));

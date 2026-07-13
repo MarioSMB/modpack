@@ -11,10 +11,26 @@ SOUND(TELE5, "misc/r_tele5");
 Sound SND_TELE_RANDOM() {
     return REGISTRY_GET(Sounds, SND_TELE1.m_id + floor(prandom() * 5));
 }
+#ifdef SVQC
+PRECACHE(TELE)
+{
+    precache_sound("misc/r_tele1.wav");
+    precache_sound("misc/r_tele2.wav");
+    precache_sound("misc/r_tele3.wav");
+    precache_sound("misc/r_tele4.wav");
+    precache_sound("misc/r_tele5.wav");
+}
+#endif
 
 SOUND(ROCKET_EXPLOSION, "weapons/r_exp3");
 
 SOUND(TALK2, "misc/talk2");
+#ifdef SVQC
+PRECACHE(TALK2)
+{
+    precache_sound("misc/talk2.wav");
+}
+#endif
 
 SOUND(RUNE_CAST, "weapons/rune_cast");
 
@@ -22,79 +38,68 @@ SOUND(TUBA_FIRE, "weapons/tuba_fire");
 
 SOUND(DOOT_FIRE, "weapons/fastdoot");
 
-//----------------------------------------------------------------------
-// Footstep sounds
-SOUND(FS_SLOW1, "steps/slow1");
-SOUND(FS_SLOW2, "steps/slow2");
-SOUND(FS_SLOW3, "steps/slow3");
-SOUND(FS_SLOW4, "steps/slow4");
-SOUND(FS_SLOW5, "steps/slow5");
-Sound SND_FS_SLOW(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_SLOW1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_DRAG1, "steps/drag1");
-SOUND(FS_DRAG2, "steps/drag2");
-SOUND(FS_DRAG3, "steps/drag3");
-SOUND(FS_DRAG4, "steps/drag4");
-SOUND(FS_DRAG5, "steps/drag5");
-Sound SND_FS_DRAG(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_DRAG1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_LIGHT1, "steps/light1");
-SOUND(FS_LIGHT2, "steps/light2");
-SOUND(FS_LIGHT3, "steps/light3");
-SOUND(FS_LIGHT4, "steps/light4");
-SOUND(FS_LIGHT5, "steps/light5");
-Sound SND_FS_LIGHT(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_LIGHT1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_MEDIUM1, "steps/medium1");
-SOUND(FS_MEDIUM2, "steps/medium2");
-SOUND(FS_MEDIUM3, "steps/medium3");
-SOUND(FS_MEDIUM4, "steps/medium4");
-SOUND(FS_MEDIUM5, "steps/medium5");
-Sound SND_FS_MEDIUM(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_MEDIUM1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_HEAVY1, "steps/heavy1");
-SOUND(FS_HEAVY2, "steps/heavy2");
-SOUND(FS_HEAVY3, "steps/heavy3");
-SOUND(FS_HEAVY4, "steps/heavy4");
-SOUND(FS_HEAVY5, "steps/heavy5");
-Sound SND_FS_HEAVY(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_HEAVY1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_LARGE1, "steps/large1");
-SOUND(FS_LARGE2, "steps/large2");
-SOUND(FS_LARGE3, "steps/large3");
-SOUND(FS_LARGE4, "steps/large4");
-SOUND(FS_LARGE5, "steps/large5");
-Sound SND_FS_LARGE(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_LARGE1.m_id + bound(0, index - 1, 4));
-}
-
-SOUND(FS_GIANT1, "steps/giant1");
-SOUND(FS_GIANT2, "steps/giant2");
-SOUND(FS_GIANT3, "steps/giant3");
-SOUND(FS_GIANT4, "steps/giant4");
-SOUND(FS_GIANT5, "steps/giant5");
-Sound SND_FS_GIANT(int index) {
-    return REGISTRY_GET(Sounds, SND_FS_GIANT1.m_id + bound(0, index - 1, 4));
-}
-
 SOUND(MECHBOSS_HIT, "destroyer/hit");
 
 SOUND(LASER_RICOCHET, "hipweap/laserric");
 
 SOUND(CHEER, "misc/cheer");
+#ifdef SVQC
+PRECACHE(CHEER)
+{
+    precache_sound("misc/cheer.wav");
+}
+#endif
 
 SOUND(BOMB_FUSE, "kirby/bomb_fuse");
 
 SOUND(PLASMA_FLIGHT, "plasma/flight");
 
 SOUND(SWARM_FLIGHT, "turrets/swarmer_swarm");
+
+SOUND(PLAYER_UDEATH, "player/udeath");
+SOUND(PLAYER_GIB, "player/gib");
+SOUND(PLAYER_TELEDEATH, "player/teledth1");
+
+SOUND(PLAYER_LAND, "player/land");
+SOUND(PLAYER_FALL, "player/land2");
+SOUND(PLAYER_WATERJUMP, "player/h2ojump");
+SOUND(PLAYER_GASP1, "player/gasp1");
+SOUND(PLAYER_GASP2, "player/gasp2");
+SOUND(PLAYER_JUMP, "player/plyrjmp8");
+SOUND(PLAYER_WATERDEATH, "player/h2odeath");
+SOUND(PLAYER_AXEHIT, "player/axhit1");
+
+SOUND(PLAYER_PAIN1, "player/pain1");
+SOUND(PLAYER_PAIN2, "player/pain2");
+SOUND(PLAYER_PAIN3, "player/pain3");
+SOUND(PLAYER_PAIN4, "player/pain4");
+SOUND(PLAYER_PAIN5, "player/pain5");
+SOUND(PLAYER_PAIN6, "player/pain6");
+Sound SND_PLAYER_PAIN_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_PLAYER_PAIN1.m_id + rint(random() * 5));
+}
+
+SOUND(PLAYER_DEATH1, "player/death1");
+SOUND(PLAYER_DEATH2, "player/death2");
+SOUND(PLAYER_DEATH3, "player/death3");
+SOUND(PLAYER_DEATH4, "player/death4");
+SOUND(PLAYER_DEATH5, "player/death5");
+Sound SND_PLAYER_DEATH_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_PLAYER_DEATH1.m_id + rint(random() * 4));
+}
+
+SOUND(PLAYER_DROWN1, "player/drown1");
+SOUND(PLAYER_DROWN2, "player/drown2");
+Sound SND_PLAYER_DROWN_RANDOM() {
+    return (random() > 0.5) ? SND_PLAYER_DROWN1 : SND_PLAYER_DROWN2;
+}
+
+SOUND(PLAYER_BURN1, "player/lburn1");
+SOUND(PLAYER_BURN2, "player/lburn2");
+Sound SND_PLAYER_BURN_RANDOM() {
+    return (random() > 0.5) ? SND_PLAYER_BURN1 : SND_PLAYER_BURN2;
+}
+
+SOUND(SKATE_LAND, "player/skatelnd");
+SOUND(SKATE_JUMP, "player/plyrjmp8");
+SOUND(SKATE_WATERJUMP, "player/h2ojump");

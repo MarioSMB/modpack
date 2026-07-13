@@ -641,7 +641,7 @@ void player_nail1(entity this) { set_animofs(this, anim_player_nailatt1, 1, play
 void player_light2(entity this) { set_animofs(this, anim_player_light1, 2, player_run); }
 void player_light1(entity this) { set_animofs(this, anim_player_light1, 1, player_light2); }
 
-string get_painsound(entity this, int chance);
+Sound get_painsound(entity this, int chance);
 void PainSound(entity this, entity attacker)
 {
 	if(this.health < 0)
@@ -649,7 +649,7 @@ void PainSound(entity this, entity attacker)
 
 	if(attacker.classname == "teledeath")
 	{
-		playersound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		playersound(this, CH_VOICE, SND_PLAYER_TELEDEATH, 1, ATTN_NONE);
 		return;
 	}
 
@@ -657,10 +657,7 @@ void PainSound(entity this, entity attacker)
 	if(this.watertype == CONTENT_WATER && this.waterlevel == 3)
 	{
 		DeathBubbles(this, 1);
-		if(random() > 0.5)
-			player_sound(this, CH_VOICE, "drown1.wav", ATTN_NORM);
-		else
-			player_sound(this, CH_VOICE, "drown2.wav", ATTN_NORM);
+		player_sound(this, CH_VOICE, get_drownsound(this), ATTN_NORM);
 		return;
 	}
 
@@ -668,19 +665,13 @@ void PainSound(entity this, entity attacker)
 	if(this.watertype == CONTENT_SLIME)
 	{
 // FIX ME	put in some steam here
-		if(random() > 0.5)
-			player_sound(this, CH_VOICE, "lburn1.wav", ATTN_NORM);
-		else
-			player_sound(this, CH_VOICE, "lburn2.wav", ATTN_NORM);
+		player_sound(this, CH_VOICE, get_burnsound(this), ATTN_NORM);
 		return;
 	}
 
 	if(this.watertype == CONTENT_LAVA)
 	{
-		if(random() > 0.5)
-			player_sound(this, CH_VOICE, "lburn1.wav", ATTN_NORM);
-		else
-			player_sound(this, CH_VOICE, "lburn2.wav", ATTN_NORM);
+		player_sound(this, CH_VOICE, get_burnsound(this), ATTN_NORM);
 		return;
 	}
 
@@ -696,19 +687,17 @@ void PainSound(entity this, entity attacker)
 	if(this.axhitme)
 	{
 		this.axhitme = false;
-		player_sound(this, CH_VOICE, "axhit1.wav", ATTN_NORM);
+		player_sound(this, CH_VOICE, get_axehitsound(this), ATTN_NORM);
 		return;
 	}
 	
 
 	int rs = rint((random() * 5) + 1);
 
-	this.noise = "";
+	Sound dsound = get_painsound(this, rs);
 
-	this.noise = get_painsound(this, rs);
-
-	if(this.noise && this.noise != "")
-		playersound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
+	if(dsound != SND_Null)
+		playersound(this, CH_VOICE, dsound, 1, ATTN_NORM);
 }
 
 void player_pain6(entity this) { set_animofs(this, anim_player_pain1, 6, player_run); }
@@ -904,7 +893,7 @@ void DeathBubbles(entity this, int num_bubbles)
 	bubble_spawner.bubble_count = num_bubbles;
 }
 
-string get_deathsound(entity this, int chance);
+Sound get_deathsound(entity this, int chance);
 void DeathSound(entity this)
 {
 	int atten = ATTN_NONE;
@@ -914,14 +903,14 @@ void DeathSound(entity this)
 	if(this.waterlevel == 3)
 	{
 		DeathBubbles(this, 20);
-		player_sound(this, CH_VOICE, "h2odeath.wav", atten);
+		player_sound(this, CH_VOICE, get_waterdeathsound(this), atten);
 		return;
 	}
 	
 	int rs = rint((random() * 4) + 1);
-	this.noise = get_deathsound(this, rs);
+	Sound dsound = get_deathsound(this, rs);
 
-	playersound(this, CH_VOICE, this.noise, 1, atten);
+	playersound(this, CH_VOICE, dsound, 1, atten);
 }
 
 void PlayerDead(entity this)
@@ -1076,25 +1065,16 @@ void GibPlayer(entity this, entity inflictor, entity attacker)
 	this.deadflag = DEAD_DEAD;
 	dodgeball_GibPlayer(this, inflictor, attacker);
 
-	if(attacker.classname == "teledeath")
+	if(attacker.classname == "teledeath" || attacker.classname == "teledeath2")
 	{
-		playersound(this, CH_VOICE, "player/teledth1.wav", 1, atten);
-		return;
-	}
-
-	if(attacker.classname == "teledeath2")
-	{
-		playersound(this, CH_VOICE, "player/teledth1.wav", 1, atten);
+		playersound(this, CH_VOICE, SND_PLAYER_TELEDEATH, 1, atten);
 		return;
 	}
 		
 	if(random() < 0.25)
-	{
-		playersound(this, CHAN_BODY, "player/gib.wav", 1, atten);
-		playersound(this, CH_VOICE, "player/udeath.wav", 1, atten);
-	}
-	else
-		playersound(this, CH_VOICE, "player/udeath.wav", 1, atten);
+		playersound(this, CHAN_BODY, SND_PLAYER_GIB, 1, atten);
+
+	playersound(this, CH_VOICE, SND_PLAYER_UDEATH, 1, atten);
 }
 
 void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
