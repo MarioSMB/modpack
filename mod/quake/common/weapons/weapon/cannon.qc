@@ -63,7 +63,7 @@ void cannon_launch(entity this, entity cannon)
 	//this.show_hostile = time + 1;
 
 	//soundat(NULL, cannon.origin, CH_TRIGGER, SND(ROCKET_EXPLOSION), 1, ATTEN_NORM);
-	sound(cannon, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
+	sound(cannon, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, 0.25);
 	Send_Effect(EFFECT_EXPLOSION, cannon.origin + v_forward * 64 + v_up * 24, '0 0 0', 1);
 
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
