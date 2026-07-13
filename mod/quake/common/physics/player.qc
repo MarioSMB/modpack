@@ -60,7 +60,10 @@ void Physics_UpdateStats(entity this)
 	QCC_UpdateStats(this);
 
 	if(this.sunbeam)
+	{
 		STAT(MOVEVARS_MAXSPEED, this) *= 0.33;
+		STAT(MOVEVARS_MAXAIRSPEED, this) *= 0.33;
+	}
 
 	if(gametype == GAMETYPE_JUMPSDONEWELL)
 		JDW_Physics_UpdateStats(this);
