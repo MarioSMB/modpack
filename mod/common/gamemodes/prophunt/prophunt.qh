@@ -5,7 +5,7 @@ AUTOCVAR_NOREF(g_prophunt, bool, false, "");
 #endif
 
 #ifdef CSQC
-void HUD_Mod_PH(vector pos, vector mySize);
+void HUD_Mod_PH(vector pos, vector mySize, bool should_draw);
 #endif
 CLASS(PropHunt, Gametype)
     INIT(PropHunt)
@@ -40,7 +40,7 @@ CLASS(PropHunt, Gametype)
         returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "",          _("The amount of rounds won needed before the match will end"));
     }
 #ifdef CSQC
-    ATTRIB(PropHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_PH);
+    ATTRIB(PropHunt, m_modicons, void(vector pos, vector mySize, bool should_draw), HUD_Mod_PH);
 #endif
 ENDCLASS(PropHunt)
 REGISTER_GAMETYPE(PROPHUNT, NEW(PropHunt));

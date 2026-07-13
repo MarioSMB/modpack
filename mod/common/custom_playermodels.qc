@@ -53,9 +53,6 @@ AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
-AUTOCVAR(sv_smokeball_time, float, 2, "");
-AUTOCVAR(sv_smokeball_refire, float, 10, "");
-AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
 // done BEFORE precache so that they guaranteed get added to the list
 STATIC_INIT_LATE(cpmodels_precache)
@@ -100,12 +97,11 @@ bool newrecord_override(entity this)
 	return true;
 }
 
-.bool cow;
-.bool cow2;
-
-.float ninja_sneak;
-.float ninja_cooldown;
-.float ninja_prevalpha;
+.int isspecial;
+const int SPECIAL_NORMAL = BIT(0);
+const int SPECIAL_SUPER = BIT(1);
+const int SPECIAL_FUNNY = BIT(2);
+const int SPECIAL_COW = BIT(3);
 
 void cpmodels_UpdateWeaponSkin(entity actor, int newskin)
 {
@@ -122,10 +118,17 @@ void cpmodels_UpdateWeaponSkin(entity actor, int newskin)
 MUTATOR_HOOKFUNCTION(cpmodels, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
-#define HASCODE(thecolor) (strstrofs(player.netname, (thecolor), 0) >= 0)
-	if(HASCODE("^x664") || HASCODE("^x665") || HASCODE("^x666") || HASCODE("^x667") || HASCODE("^x668") || HASCODE("^x669"))
-		player.cow2 = true;
-#undef HASCODE
+//#define HASCODE(thecolor) (strstrofs(player.netname, (thecolor), 0) >= 0)
+	//if(HASCODE("^x664") || HASCODE("^x665") || HASCODE("^x666") || HASCODE("^x667") || HASCODE("^x668") || HASCODE("^x669"))
+	// cheaper to just check any of them!
+	if(strstrofs(player.netname, "^x66", 0) >= 0)
+		player.isspecial |= SPECIAL_FUNNY;
+//#undef HASCODE
+
+	if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
+		player.isspecial |= SPECIAL_NORMAL;
+	if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist) || crc16(false, player.crypto_idfp) == 17107)
+		player.isspecial |= SPECIAL_SUPER;
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
@@ -134,7 +137,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 	string format_message = M_ARGV(3, string);
 
 	if(format_message == "moo")
-		CS(player).cow = true;
+		player.isspecial |= SPECIAL_COW;
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
@@ -178,7 +181,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		if(CS_CVAR(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			M_ARGV(0, string) = "models/player/nexus.zym";
 
-		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
+		if(autocvar_sv_allow_customplayermodels_bots && ALLOWED(BOT) && IS_BOT_CLIENT(player))
 			M_ARGV(0, string) = "models/player/ubot.iqm";
 
 		if(CS_CVAR(player).cvar_cl_model == "mime" && ALLOWED(MIME))
@@ -188,7 +191,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 
 		// special hax
-		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
+		if(player.isspecial & SPECIAL_NORMAL)
 		{
 			if(CS_CVAR(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 			{
@@ -214,7 +217,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/iggy.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
-		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+		if(player.isspecial & SPECIAL_SUPER)
 		{
 			cpmodels_UpdateWeaponSkin(player, 1);
 			if(CS_CVAR(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
@@ -231,7 +234,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
-		if(CS(player).cow && ALLOWED(COW))
+		if((player.isspecial & SPECIAL_COW) && ALLOWED(COW))
 			M_ARGV(0, string) = "models/player/cow.md3";
 
 #undef ALLOWED
@@ -243,12 +246,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && !g_prophunt && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && !g_prophunt && (player.isspecial & SPECIAL_SUPER))
 		player.effects |= EF_STARDUST;
 	else
 		player.effects &= ~EF_STARDUST;
 
-	if(CS_CVAR(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS_CVAR(player).cvar_cl_sparkle == 2 && (player.isspecial & SPECIAL_SUPER))
 		player.colormap = 4351;
 }
 
@@ -256,39 +259,8 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(time < player.ninja_sneak)
-		player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
-	else if(player.ninja_sneak)
-	{
-		player.alpha = player.ninja_prevalpha;
-		player.ninja_sneak = 0;
-	}
-
-	if(player.cow2)
+	if(player.isspecial & SPECIAL_FUNNY)
 		cpmodels_UpdateWeaponSkin(player, 8);
-}
-
-MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
-{
-	// NOTE: this doesn't stop if something else called use key, since it's supposed to always work!
-	//if(MUTATOR_RETURNVALUE) return;
-	if(game_stopped) return;
-
-	entity player = M_ARGV(0, entity);
-
-	if(time < player.ninja_cooldown || !PHYS_INPUT_BUTTON_CROUCH(player))
-		return;
-
-	if(player.model != "models/player/monk2.dpm" || !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
-		return;
-
-	Send_Effect(EFFECT_SMOKE_RING, player.origin, '0 0 50', 2);
-	sound(player, CH_TRIGGER, SND_VORTEX_IMPACT, VOL_BASE, ATTN_NORM);
-	player.ninja_sneak = time + autocvar_sv_smokeball_time;
-	player.ninja_cooldown = time + autocvar_sv_smokeball_refire;
-	player.ninja_prevalpha = player.alpha;
-	player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
-	return true;
 }
 
 #endif

@@ -63,7 +63,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 		LOG_INFO("Buffs:");
 		FOREACH(StatusEffects, it.instanceOfBuff,
 		{
-			LOG_INFO("    ", it.netname, " (", BUFF_NAME(it.m_id), "^7)");
+			LOG_INFO("    ", it.netname, " (", it.m_name, "^7)");
 		});
 		return true;
 	}

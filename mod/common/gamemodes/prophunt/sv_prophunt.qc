@@ -6,7 +6,7 @@
 void PH_count_alive_players()
 {
 	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
@@ -121,13 +121,13 @@ bool PH_CheckTeams()
 	allowed_to_spawn = true;
 	PH_count_alive_players();
 	missing_teams_mask = 0;
-	if (Team_GetNumberOfAliveTeams() == 2)
+	if (Team_GetNumberOfAliveTeams() == AVAILABLE_TEAMS)
 		return true;
 	if(total_players == 0)
 		return false;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
-		if (IsTeamAvailable(Team_IndexToTeam(i)) &&
+		if ((teamplay_bitmask & Team_IndexToBit(i)) &&
 			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
 		{
 			missing_teams_mask |= Team_IndexToBit(i);

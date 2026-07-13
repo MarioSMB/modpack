@@ -15,6 +15,7 @@ void HUD_HunterEyes()
 	draw_endBoldFont();
 }
 
+float autocvar_r_showbboxes_client;
 MUTATOR_HOOKFUNCTION(cl_ph, HUD_Draw_overlay)
 {
 	if(!ISGAMETYPE(PROPHUNT))
@@ -133,6 +134,16 @@ MUTATOR_HOOKFUNCTION(cl_ph, WantEventchase)
 	return (player.team == STAT(PROPHUNT_PROPTEAM));
 }
 
+MUTATOR_HOOKFUNCTION(cl_ph, DrawWorld)
+{
+	if(!ISGAMETYPE(PROPHUNT))
+		return false;
+
+	// TODO: attach clients to non-player objects so no client logic is run on them
+	if(autocvar_r_showbboxes_client != 0)
+		cvar_set("r_showbboxes_client", "0");
+}
+
 void HUD_Mod_PH_Draw(vector myPos, vector mySize, int layout)
 {
 	int rows, columns;
@@ -162,8 +173,11 @@ void HUD_Mod_PH_Draw(vector myPos, vector mySize, int layout)
 }
 
 // Prop Hunt HUD modicons
-void HUD_Mod_PH(vector myPos, vector mySize)
+void HUD_Mod_PH(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // required in each mod function that always shows something
 
 	HUD_Mod_PH_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);

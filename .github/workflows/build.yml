@@ -1,47 +1,68 @@
-name: Build
+name: Build Progs Artifacts
 on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for running"
+        required: false
+        default: "Manual check"
   push:
 
 jobs:
-  build:
-
+  build-artifacts:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          # Create partial clone
+          # See: https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
+          filter: blob:none
+          submodules: false
+          fetch-depth: 0
+          fetch-tags: true
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Initialize xonotic submodule
+        # Create a small clone, with full history to improve workflow speed.
+        # For example, full clone size of xonotic-data.pk3dir is ~1.36 GiB
+        # with: git submodules update --init --filter=blob:none xonotic
+        # The clone size is reduced to ~700 MiB
+        # https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---filterfilter-spec
+        run: git submodule update --init --filter=blob:none xonotic
 
-      - name: Prepare
-        run: ./update.sh
-        env:
-          CI: true
-          ARCHIVE: 1
+      - name: Get gmqcc Commit ID
+        id: get-gmqcc-commit-id
+        run: echo "GMQCC_SHA=$(git rev-parse :gmqcc)" >> "$GITHUB_OUTPUT"
 
-      - name: Build
-        run: ./build.sh
-        env:
-          TERM: xterm
-          ARCHIVE: 1
-      
-      - name: Set artifact name
+      - name: Cache gmqcc Binary
+        id: cache-gmqcc
+        uses: actions/cache@v6
+        with:
+          path: gmqcc/gmqcc
+          key: ${{ runner.os }}-gmqcc-bin-${{ steps.get-gmqcc-commit-id.outputs.GMQCC_SHA }}
+
+      - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
+        name: Initialize gmqcc submodule
+        run: git submodule update --init --filter=blob:none gmqcc
+
+      - if: steps.cache-gmqcc.outputs.cache-hit != 'true'
+        name: Compile gmqcc Binary
+        run: make -C gmqcc -j$(nproc)
+
+      - name: Build Progs
+        run: ./build.sh -a
+
+      - name: Generate Artifact Name
         run: |
-          git fetch --tags
-          echo "ARTIFACT_NAME=progs-$(git describe --tags --dirty='~' --always)" >> $GITHUB_ENV
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          VERSION_TAG=$(git describe --tags --dirty="~" --always)
+          echo "CURRENT_BRANCH=${CURRENT_BRANCH}" >> "$GITHUB_ENV"
+          echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
+          echo "ARTIFACT_NAME=progs-${CURRENT_BRANCH}-${VERSION_TAG}" >> "$GITHUB_ENV"
 
-      - name: Store artifacts
-        uses: actions/upload-artifact@v4
+      # Upload the files in build folder
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: |
-            compiled/*
-          if-no-files-found: error
-          # retention-days: 14
-
-      - name: Publish a release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          files: |
-            compiled/*
+          path: build/${{ env.CURRENT_BRANCH }}

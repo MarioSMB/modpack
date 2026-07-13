@@ -132,7 +132,7 @@ void print_maplist(entity player, string nmaplist, float nargc)
 			bool isnewmap = false;
 			if((g_race || g_cts) && !race_readTime(it, 1))
 				isnewmap = true;
-			else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time"))))
+			else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, record_profile, "/captimerecord/time"))))
 				isnewmap = true;
 			if(!isnewmap)
 				continue;
@@ -145,7 +145,7 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		param = strtolower(argv(2));
 		FOREACH_WORD(nmaplist, strstrofs(strtolower(it), param, 0) >= 0,
 		{
-			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time")))))
+			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, record_profile, "/captimerecord/time")))))
 				col = ((i % 2) ? "^4*" : "^5*");
 			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts || ctf_withrecords) && !race_HasRecord(player, it))
 				col = ((i % 2) ? "^6**" : "^1**");
@@ -158,7 +158,7 @@ void print_maplist(entity player, string nmaplist, float nargc)
 	{
 		FOREACH_WORD(nmaplist, startsWithNocase(strdecolorize(it), param),
 		{
-			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time")))))
+			if(((g_race || g_cts) && !race_readTime(it, 1)) || (g_ctf && !stof(db_get(ServerProgsDB, strcat(it, record_profile, "/captimerecord/time")))))
 				col = ((i % 2) ? "^4*" : "^5*");
 			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts || ctf_withrecords) && !race_HasRecord(player, it))
 				col = ((i % 2) ? "^6**" : "^1**");
@@ -250,6 +250,18 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 		}
 		return true;
 	}
+
+	if(cmd_name == "tracer")
+	{
+		if(!autocvar_sv_cheats && !player.maycheat)
+			return;
+		makevectors(player.v_angle);
+		traceline(player.origin + player.view_ofs, player.origin + player.view_ofs + v_forward * 300, MOVE_NORMAL, player);
+		sprint(player, strcat("Texture: ", trace_dphittexturename, "\n"));
+		sprint(player, strcat("Texture flag: ", ftos(trace_dphitq3surfaceflags), "\n"));
+		sprint(player, sprintf("Entity: %s (%d)\n", trace_ent.classname, etof(trace_ent)));
+		return;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
@@ -287,7 +299,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			{
 				if((g_race || g_cts) && !race_readTime(it, 1))
 					prio = 2;
-				else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, "/captimerecord/time"))))
+				else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(it, record_profile, "/captimerecord/time"))))
 					prio = 2;
 			}
 			RandomSelection_AddString(it, 1, prio);

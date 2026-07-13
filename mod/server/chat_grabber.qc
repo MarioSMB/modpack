@@ -29,7 +29,7 @@ MUTATOR_HOOKFUNCTION(chat_grabber, ChatMessage)
 	entity privatesay = M_ARGV(3, entity);
 	if(autocvar_chat_dest_udp == "")
 		return;
-	if(this.muted)
+	if(this.muted || !IS_REAL_CLIENT(this))
 		return;
 	if(msg == "" || privatesay)
 		return;
