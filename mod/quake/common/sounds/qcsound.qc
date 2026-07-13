@@ -52,7 +52,7 @@ void qc_sound7(entity e, int chan, Sound samp, float vol, float atten, float pit
 {
 #ifdef SVQC
 	//int dest = (sndflags & CHANNELFLAG_RELIABLE) ? MSG_ALL : MSG_BROADCAST;
-	int dest = MSG_ALL; // TODO?
+	int dest = MSG_BROADCAST; // TODO?
 	vector o = e.origin + 0.5 * (e.mins + e.maxs);
 
 	qc_startsound(dest, e, o, chan, samp, vol, atten, pitchchange);
