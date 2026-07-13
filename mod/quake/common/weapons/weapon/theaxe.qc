@@ -56,6 +56,7 @@ void W_FireTheAxe(entity this, .entity weaponentity)
 	missile.projectiledeathtype = WEP_THEAXE.m_id;
 	missile.velocity = dir * 400;
 	missile.velocity_z += 200;
+	missile.silent = true; // no spam thank you very much
 
 	int oldsolid = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
