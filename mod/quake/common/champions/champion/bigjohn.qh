@@ -23,22 +23,22 @@ Sound SND_BigJohn_Death_Random() {
 	return REGISTRY_GET(Sounds, SND_BigJohn_Death1.m_id + rint(random() * 2));
 }
 
-SOUND(BigJohn_Jump, "player_bean/plyrjmp8");
-SOUND(BigJohn_Gasp1, "player_bean/gasp1");
-SOUND(BigJohn_Gasp2, "player_bean/gasp2");
-SOUND(BigJohn_WaterDeath, "player_bean/h2odeath");
-SOUND(BigJohn_AxeHit, "player_bean/axhit1");
-SOUND(BigJohn_Land, "player_bean/land");
-SOUND(BigJohn_Fall, "player_bean/land2");
+SOUND(BigJohn_Jump, "player_bigjohn/plyrjmp8");
+SOUND(BigJohn_Gasp1, "player_bigjohn/gasp1");
+SOUND(BigJohn_Gasp2, "player_bigjohn/gasp2");
+SOUND(BigJohn_WaterDeath, "player_bigjohn/h2odeath");
+SOUND(BigJohn_AxeHit, "player_bigjohn/axhit1");
+SOUND(BigJohn_Land, "player_bigjohn/land");
+SOUND(BigJohn_Fall, "player_bigjohn/land2");
 
-SOUND(BigJohn_Burn1, "player_bean/lburn1");
-SOUND(BigJohn_Burn2, "player_bean/lburn2");
+SOUND(BigJohn_Burn1, "player_bigjohn/lburn1");
+SOUND(BigJohn_Burn2, "player_bigjohn/lburn2");
 Sound SND_BigJohn_Burn_Random() {
 	return (random() > 0.5) ? SND_BigJohn_Burn1 : SND_BigJohn_Burn2;
 }
 
-SOUND(BigJohn_Drown1, "player_bean/drown1");
-SOUND(BigJohn_Drown2, "player_bean/drown2");
+SOUND(BigJohn_Drown1, "player_bigjohn/drown1");
+SOUND(BigJohn_Drown2, "player_bigjohn/drown2");
 Sound SND_BigJohn_Drown_Random() {
 	return (random() > 0.5) ? SND_BigJohn_Drown1 : SND_BigJohn_Drown2;
 }

@@ -355,3 +355,8 @@ REGISTER_STAT(TD_BUILDMODE, INT)
 REGISTER_STAT(TD_TURRET, INT)
 
 REGISTER_STAT(NYX_INVIS, BOOL)
+
+#ifdef SVQC
+bool autocvar_sv_quake_v1_slam_directional;
+#endif
+REGISTER_STAT(V1_SLAM_DIRECTIONAL, BOOL, autocvar_sv_quake_v1_slam_directional)

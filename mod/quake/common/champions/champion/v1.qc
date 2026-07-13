@@ -119,6 +119,30 @@ METHOD(V1, m_touch, void(Champions this, entity actor, entity toucher))
 }
 #endif
 
+vector V1_SlamDirection(entity actor)
+{
+	float tap_direction_x = 0;
+	float tap_direction_y = 0;
+	bool dodge_detected = false;
+	vector mymovement = actor.movement;
+
+#define X(COND,RESULT)				\
+	if (mymovement_##COND) {		\
+		tap_direction_##RESULT;		\
+		dodge_detected = true;		\
+	}
+	X(x < 0,	x--);
+	X(x > 0,	x++);
+	X(y < 0,	y--);
+	X(y > 0,	y++);
+#undef X
+
+	if(!dodge_detected)
+		return '1 0 0'; // fallback to forward
+
+	return vec2(tap_direction_x, tap_direction_y);
+}
+
 METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 {
 	if(V1_Sliding(actor) && IS_ONGROUND(actor))
@@ -145,7 +169,16 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 		vector vang = PHYS_INPUT_ANGLES(actor);
 		makevectors('0 1 0' * vang.y);
 		if(vdist(vec2(actor.velocity), <, 600))
-			actor.velocity += v_forward * 400;
+		{
+			float forwardspeed = 400;
+			if(STAT(V1_SLAM_DIRECTIONAL))
+			{
+				vector tap_direction = V1_SlamDirection(actor);
+				actor.velocity += tap_direction.x * forwardspeed * v_forward + tap_direction.y * forwardspeed * v_right;
+			}
+			else
+				actor.velocity += v_forward * forwardspeed;
+		}
 		actor.velocity_z -= 800;
 	}
 	return false;
