@@ -174,7 +174,8 @@ METHOD(V1, m_physics, bool(Champions this, entity actor, float dt))
 			if(STAT(V1_SLAM_DIRECTIONAL))
 			{
 				vector tap_direction = V1_SlamDirection(actor);
-				actor.velocity += tap_direction.x * forwardspeed * v_forward + tap_direction.y * forwardspeed * v_right;
+				float sidespeed = forwardspeed * STAT(V1_SLAM_DIRECTIONAL_SIDESCALE);
+				actor.velocity += tap_direction.x * forwardspeed * v_forward + tap_direction.y * sidespeed * v_right;
 			}
 			else
 				actor.velocity += v_forward * forwardspeed;

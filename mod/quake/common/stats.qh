@@ -358,5 +358,7 @@ REGISTER_STAT(NYX_INVIS, BOOL)
 
 #ifdef SVQC
 bool autocvar_sv_quake_v1_slam_directional = true;
+float autocvar_sv_quake_v1_slam_directional_sidescale = 1;
 #endif
 REGISTER_STAT(V1_SLAM_DIRECTIONAL, BOOL, autocvar_sv_quake_v1_slam_directional)
+REGISTER_STAT(V1_SLAM_DIRECTIONAL_SIDESCALE, FLOAT, autocvar_sv_quake_v1_slam_directional_sidescale)
