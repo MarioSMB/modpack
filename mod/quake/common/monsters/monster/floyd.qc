@@ -334,7 +334,7 @@ void floyd_die(entity this, entity inflictor, entity attacker, int deathtype)
 			this.nextthink = time; // add a delay so there isn't a recursive explosion
 			return; // handled
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	// regular death

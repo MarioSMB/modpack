@@ -314,7 +314,7 @@ bool Damage_ValidTarget(entity targ, entity attacker)
 void HappyDeath(entity this)
 {
 	// NOTE: using soundat so it doesn't follow the respawning player
-	soundat(NULL, this.origin, CH_VOICE, SND(CHEER), 1, ATTEN_NORM);
+	soundat(NULL, this.origin, CH_PAIN, SND(CHEER), 1, ATTEN_NORM);
 	Send_Effect(EFFECT_CHEER, this.origin, '0 0 0', 1);
 }
 
@@ -352,6 +352,13 @@ void SimpleGib(entity this)
 	Send_Effect(EFFECT_GIB, this.origin, '0 0 0', 1);
 }
 
+void SpecialKill(entity this, entity attacker)
+{
+	soundat(NULL, this.origin, CH_PAIN, SND(CHEER), 1, ATTEN_NORM);
+	Send_Effect(EFFECT_CHEER, this.origin, normalize(this.origin - attacker.origin) * 1000, 1);
+}
+
+float autocvar_sv_quake_killeffect_chance = 0.1;
 int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deathtype)
 {
 	int killed_type = KILLED_NORMAL;
@@ -374,6 +381,8 @@ int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deatht
 		killed_type = KILLED_GIBBED; // force it!!
 	else if(DEATH_IS(deathtype, DEATH_GOAT_BONK))
 		killed_type = KILLED_HAPPY;
+	else if(IS_PLAYER(attacker) && attacker != targ && attacker.cvar_cl_quake_killeffect && random() < autocvar_sv_quake_killeffect_chance)
+		killed_type = KILLED_SPECIALKILL;
 
 	// override all else
 	if(DEATH_IS(deathtype, DEATH_SWALLOW))
@@ -387,9 +396,9 @@ int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deatht
 	return killed_type;
 }
 
-void Death_SpecialHandle(entity targ, int killed_type)
+void Death_SpecialHandle(entity targ, entity attacker, int killed_type)
 {
-	if(killed_type == KILLED_NORMAL)
+	if(killed_type == KILLED_NORMAL || (killed_type == KILLED_SPECIALKILL && !attacker))
 		return; // not special TODO: warn about this? means the monster will linger!
 
 	// set these first incase the other effects want to override them
@@ -409,6 +418,7 @@ void Death_SpecialHandle(entity targ, int killed_type)
 		case KILLED_ZAPPED: ZappyDeath(targ); break;
 		case KILLED_SWALLOWED: Swallow(targ); break;
 		case KILLED_SIMPLEGIB: SimpleGib(targ); break;
+		case KILLED_SPECIALKILL: SpecialKill(targ, attacker); break;
 	}
 }
 

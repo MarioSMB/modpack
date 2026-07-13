@@ -335,7 +335,7 @@ void ret_die(entity this, entity inflictor, entity attacker, int deathtype)
 			gib_ret(this);
 			// fall back to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	gib_ret(this);

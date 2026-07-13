@@ -144,7 +144,7 @@ void kslime_die1(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		case KILLED_NORMAL: break; // normal death
 		case KILLED_GIBBED: break; // let the thing explode!
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 	
 	set_anim(this, anim_kslime_exp, kslime_die2);

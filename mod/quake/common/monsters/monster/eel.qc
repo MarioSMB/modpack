@@ -181,7 +181,7 @@ void eel_death(entity this, entity inflictor, entity attacker, int deathtype)
 			ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	eel_death1(this);

@@ -112,7 +112,7 @@ void pvz_balloon_die(entity this, entity inflictor, entity attacker, int deathty
 			ThrowGib(this, inflictor, "progs/h_pvz_worker.mdl", this.health);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 // regular death

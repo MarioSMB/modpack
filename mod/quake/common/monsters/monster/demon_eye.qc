@@ -208,7 +208,7 @@ void demon_eye_die(entity this, entity inflictor, entity attacker, int deathtype
 			demon_eye_gib(this, inflictor);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	demon_eye_gib(this, inflictor);

@@ -232,13 +232,13 @@ void blaze_die(entity this, entity inflictor, entity attacker, int deathtype)
 		{
 			entity body = this.blaze_body;
 			this.blaze_body = NULL;
-			Death_SpecialHandle(this, killed_type);
+			Death_SpecialHandle(this, attacker, killed_type);
 			if(body)
 			{
 				// unattach the body so we have an actual location for effects
 				setattachment(body, NULL, "");
 				setorigin(body, this.origin);
-				Death_SpecialHandle(body, killed_type);
+				Death_SpecialHandle(body, attacker, killed_type);
 			}
 			return;
 		}

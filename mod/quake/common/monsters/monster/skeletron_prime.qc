@@ -284,7 +284,7 @@ void skeletron_prime_die(entity this, entity inflictor, entity attacker, int dea
 			skeletron_prime_gib(this);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	skeletron_prime_gib(this);

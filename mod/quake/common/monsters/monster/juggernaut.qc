@@ -107,7 +107,7 @@ void juggernaut_die(entity this, entity inflictor, entity attacker, int deathtyp
 			this.nextthink = time;
 			return; // handled
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	juggernaut_death1(this);

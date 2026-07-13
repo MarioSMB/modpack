@@ -165,7 +165,7 @@ void tortoise_die(entity this, entity inflictor, entity attacker, int deathtype)
 			tortoise_gib(this, inflictor);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	tortoise_gib(this, inflictor);

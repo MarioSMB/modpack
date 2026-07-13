@@ -125,7 +125,7 @@ void roo_die(entity this, entity inflictor, entity attacker, int deathtype)
 			roo_gib(this, inflictor);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	roo_gib(this, inflictor);

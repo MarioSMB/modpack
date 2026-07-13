@@ -386,7 +386,7 @@ void morph_die(entity this, entity inflictor, entity attacker, int deathtype)
 			Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	_sound(this, CH_VOICE, "guard/death.wav", 1, ATTN_NORM);

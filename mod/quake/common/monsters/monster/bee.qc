@@ -207,7 +207,7 @@ void bee_die(entity this, entity inflictor, entity attacker, int deathtype)
 			bee_gib(this);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	bee_gib(this);

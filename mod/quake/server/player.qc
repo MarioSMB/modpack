@@ -1175,7 +1175,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker, int deathtype)
 		default:
 		{
 			this.deadflag = DEAD_DEAD;
-			Death_SpecialHandle(this, killed_type);
+			Death_SpecialHandle(this, attacker, killed_type);
 			return;
 		}
 	}

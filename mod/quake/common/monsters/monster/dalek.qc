@@ -158,7 +158,7 @@ void dalek_die(entity this, entity inflictor, entity attacker, int deathtype)
 			dalek_explode(this, inflictor);
 			// fall back to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	if(random() < 0.5)

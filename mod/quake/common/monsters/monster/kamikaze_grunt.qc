@@ -207,7 +207,7 @@ void kami_die(entity this, entity inflictor, entity attacker, int deathtype)
 		}
 		default:
 		{
-			Death_SpecialHandle(this, killed_type);
+			Death_SpecialHandle(this, attacker, killed_type);
 			// no matter what happens to us, always blow up the box?
 			if(this.kamikaze_box && !wasfreed(this.kamikaze_box))
 			{

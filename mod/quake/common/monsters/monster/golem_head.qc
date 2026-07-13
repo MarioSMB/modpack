@@ -176,7 +176,7 @@ void golem_head_die(entity this, entity inflictor, entity attacker, int deathtyp
 			golem_head_explode(this);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	golem_head_explode(this);

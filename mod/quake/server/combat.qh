@@ -26,7 +26,8 @@ enum {
 	KILLED_HAPPY,
 	KILLED_ZAPPED,
 	KILLED_SWALLOWED,
-	KILLED_SIMPLEGIB
+	KILLED_SIMPLEGIB,
+	KILLED_SPECIALKILL
 };
 
 bool empathyused; // hipnotic
@@ -58,7 +59,7 @@ const float KILLSPREE_GAP = 3; // amount of time that can lapse for a kill to no
 
 int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deathtype);
 
-void Death_SpecialHandle(entity targ, int killed_type);
+void Death_SpecialHandle(entity targ, entity attacker, int killed_type);
 
 bool CanDamage(entity targ, entity inflictor);
 

@@ -151,7 +151,7 @@ void mcguardian_die(entity this, entity inflictor, entity attacker, int deathtyp
 			Send_Effect(EFFECT_SMOKE_RING, this.origin, '0 0 80', 1);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	// regular death

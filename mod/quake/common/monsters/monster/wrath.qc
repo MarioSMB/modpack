@@ -180,7 +180,7 @@ void wrath_die(entity this, entity inflictor, entity attacker, int deathtype)
 			this.nextthink = time;
 			return; // handled
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	_sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM);

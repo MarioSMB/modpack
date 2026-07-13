@@ -901,7 +901,7 @@ void gremlin_die(entity this, entity inflictor, entity attacker, int deathtype)
 			ThrowGib(this, inflictor, "progs/gib1.mdl", this.health);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	if(dot > 0.7 && (random() < 0.5) && IS_ONGROUND(this))

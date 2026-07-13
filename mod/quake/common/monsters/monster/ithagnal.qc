@@ -802,7 +802,7 @@ void ith_death(entity this, entity inflictor, entity attacker, int deathtype)
 			this.nextthink = time + 0.1;
 			return; // handled
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	this.walkframe = anim_ithagnal_death;

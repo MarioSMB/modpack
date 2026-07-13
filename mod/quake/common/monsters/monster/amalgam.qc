@@ -545,7 +545,7 @@ void amalgam_die(entity this, entity inflictor, entity attacker, int deathtype)
 			GoopBlood(this, 1);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	amalgam_die1(this);

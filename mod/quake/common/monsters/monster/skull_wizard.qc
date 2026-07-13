@@ -808,7 +808,7 @@ void skullw_die(entity this, entity inflictor, entity attacker, int deathtype)
 			gib.skin = this.skin;
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	// Regular death, collapse and fade away

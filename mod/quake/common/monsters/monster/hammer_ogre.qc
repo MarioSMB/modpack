@@ -348,7 +348,7 @@ void hogreham_die(entity this, entity inflictor, entity attacker, int deathtype)
 				ThrowGib(this, inflictor, "progs/w_ogreham.mdl", this.health);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);

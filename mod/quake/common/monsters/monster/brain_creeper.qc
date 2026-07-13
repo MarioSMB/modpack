@@ -166,7 +166,7 @@ void brain_creeper_die(entity this, entity inflictor, entity attacker, int death
 	{
 		case KILLED_NORMAL: break; // normal death
 		case KILLED_GIBBED: break; // always gibs anyway
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	_sound(this, CH_VOICE, "brain/death.wav", 1, ATTN_NORM);

@@ -117,7 +117,7 @@ void slime_die(entity this, entity inflictor, entity attacker, int deathtype)
 	{
 		case KILLED_NORMAL: break; // normal death
 		case KILLED_GIBBED: break; // fall through to regular death
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	if(this.variant == SLIME_MOTHER)

@@ -720,9 +720,9 @@ void armagon_die(entity this, entity inflictor, entity attacker, int deathtype)
 		}
 		default:
 		{
-			Death_SpecialHandle(this, killed_type);
+			Death_SpecialHandle(this, attacker, killed_type);
 			// also apply any effects to our lower half
-			Death_SpecialHandle(this.attachment, killed_type);
+			Death_SpecialHandle(this.attachment, attacker, killed_type);
 			return;
 		}
 	}

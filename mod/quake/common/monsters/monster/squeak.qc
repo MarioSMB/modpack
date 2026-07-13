@@ -91,7 +91,7 @@ void squeak_die(entity this, entity inflictor, entity attacker, int deathtype)
 			te_wizspike(this.origin);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 	_sound(this, CH_VOICE, "squeak/die.wav", 1, ATTN_NORM);

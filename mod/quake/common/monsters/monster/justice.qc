@@ -1379,7 +1379,7 @@ void justice_die(entity this, entity inflictor, entity attacker, int deathtype)
 			ThrowGib(this, inflictor, "progs/gib_justiceshould.mdl", this.health);
 			// fall through to special handling
 		}
-		default: Death_SpecialHandle(this, killed_type); return;
+		default: Death_SpecialHandle(this, attacker, killed_type); return;
 	}
 
 // regular death
