@@ -352,13 +352,53 @@ void SimpleGib(entity this)
 	Send_Effect(EFFECT_GIB, this.origin, '0 0 0', 1);
 }
 
-void SpecialKill(entity this, entity attacker)
+PRECACHE(SpecialKills)
 {
-	soundat(NULL, this.origin, CH_PAIN, SND(CHEER), 1, ATTEN_NORM);
-	Send_Effect(EFFECT_CHEER, this.origin, normalize(this.origin - attacker.origin) * 1000, 1);
+	precache_sound("weapons/bubble_impact.wav");
 }
 
-float autocvar_sv_quake_killeffect_chance = 0.1;
+bool SpecialKill_ValidType(entity attacker)
+{
+	if(!attacker.cvar_cl_quake_killeffect || attacker.cvar_cl_quake_killeffect == "")
+		return false;
+
+	switch(attacker.cvar_cl_quake_killeffect)
+	{
+		case "bubbles":
+			return true;
+	}
+	return false;
+}
+
+void SpecialKill(entity this, entity attacker)
+{
+	switch(attacker.cvar_cl_quake_killeffect)
+	{
+		case "bubbles":
+		{
+			vector org = (this.absmin + this.absmax) * 0.5;
+			int numbubbles = 16 * bound(1, vlen(this.mins + this.maxs), 128);
+			soundat(NULL, org, CH_PAIN, "weapons/bubble_impact.wav", 1, ATTEN_NORM);
+			for(int j = 0; j < numbubbles; ++j)
+			{
+				entity bubble = new(bubble);
+				_setmodel(bubble, "progs/s_bubble.spr");
+				setorigin(bubble, org);
+				set_movetype(bubble, MOVETYPE_NOCLIP);
+				bubble.solid = SOLID_NOT;
+				bubble.velocity = '0 0 15';
+				bubble.nextthink = time + (random() * 0.5);
+				setthink(bubble, bubble_bob);
+				bubble.frame = 0;
+				bubble.cnt = 0;
+				setsize(bubble, '-8 -8 -8', '8 8 8');
+			}
+			break; // handled
+		}
+	}
+}
+
+float autocvar_sv_quake_killeffect_chance = 0.15;
 int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deathtype)
 {
 	int killed_type = KILLED_NORMAL;
@@ -381,7 +421,7 @@ int Death_SpecialType(entity targ, entity inflictor, entity attacker, int deatht
 		killed_type = KILLED_GIBBED; // force it!!
 	else if(DEATH_IS(deathtype, DEATH_GOAT_BONK))
 		killed_type = KILLED_HAPPY;
-	else if(IS_PLAYER(attacker) && attacker != targ && attacker.cvar_cl_quake_killeffect && random() < autocvar_sv_quake_killeffect_chance)
+	else if(IS_PLAYER(attacker) && attacker != targ && SpecialKill_ValidType(attacker) && random() < autocvar_sv_quake_killeffect_chance)
 		killed_type = KILLED_SPECIALKILL;
 
 	// override all else

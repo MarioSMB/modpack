@@ -474,7 +474,7 @@ void Draw_Sunbeam(entity this)
 
 	vector vs = '24 0 -12';
 
-	if (this.owner.sv_entnum == (player_localentnum - 1))
+	if (this.owner.sv_entnum == (player_localentnum - 1) && ((player_localnum + 1) == player_localentnum))
 	{
 		if (autocvar_chase_active)
 			a = csqcplayer.origin + csqcplayer.view_ofs;
@@ -499,7 +499,7 @@ void Draw_Sunbeam(entity this)
 
 	pointparticles(EFFECT_SUNBEAM_MUZZLEFLASH, a, normalize(b - a) * 50, bound(0, frametime, 0.1));
 
-	if(autocvar_r_drawviewmodel && !autocvar_chase_active && this.owner.sv_entnum == (player_localentnum - 1))
+	if(autocvar_r_drawviewmodel && !autocvar_chase_active && this.owner.sv_entnum == (player_localentnum - 1) && ((player_localnum + 1) == player_localentnum))
 	{
 		this.angles = vectoangles(b - a);
 		this.angles.z = random() * 360;
