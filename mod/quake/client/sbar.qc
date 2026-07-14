@@ -1032,6 +1032,7 @@ int td_drawstat(vector pos, int column, string stat_text, string value_text)
 }
 
 // only called when td_rankings entity exists
+vector sui_transform_size(vector size);
 void Sbar_TDScoreboard()
 {
 	int td_phase = STAT(TD_PHASE);
@@ -1041,7 +1042,7 @@ void Sbar_TDScoreboard()
 
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 
-	vector ent_menu_size = '350 128 0';
+	vector ent_menu_size = sui_transform_size('350 128 0');
 	vector myPos = '0 0 0';
 
 	// done before frame is set?
@@ -1110,7 +1111,7 @@ void Sbar_TDScoreboard()
 
 		columns = 0;
 		myPos = '200 64 0';
-		ent_menu_size = '200 256 0';
+		ent_menu_size = sui_transform_size('200 256 0');
 		sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
 
 		sui_fill(myPos, ent_menu_size, '0 0.25 0', 0.2, 0);

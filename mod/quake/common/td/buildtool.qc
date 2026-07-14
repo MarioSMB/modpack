@@ -143,8 +143,8 @@ void buildtool_DrawInfo(entity this)
 	drawfont = 8 + 1; // FONT_USER
 
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	vector ent_menu_size = '280 180 0';
-	vector myPos = '256 0 0';
+	vector ent_menu_size = sui_transform_size('280 180 0');
+	vector myPos = sui_transform_size('256 0 0');
 
 	sui_fill(myPos, ent_menu_size, '0 0 0', 0.25, 0);
 

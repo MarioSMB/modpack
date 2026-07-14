@@ -17,7 +17,7 @@ void vote_menu_list(string id, vector pos, vector size)
 {
 	int votecount = tokenize(vote_list);
 
-	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
+	sui_fill(pos, size, '0.2 0.2 0.2', 0.35, 0);
 	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), votecount, '0 6 0');
 	sui_pos = '0 0 0';
 	//vote_hovered_index = -1;
@@ -46,6 +46,7 @@ void vote_menu_list(string id, vector pos, vector size)
 	sui_list_view_end();	
 }
 
+vector sui_transform_size(vector size);
 void cl_vote_draw()
 {
 	if(!vote_list || vote_list == "")
@@ -54,20 +55,18 @@ void cl_vote_draw()
 		return;
 
 	float oldfont = drawfont;
-	drawfont = 8 + 2;
 
 	vector menu_pos = '50 50 0';
-	
-	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
-	sui_drawtext(vec2(menu_pos.x * 2, menu_pos.y * -0.5), '18 18 0', "Call a vote", '0.34 0.72 1', 1, 0);
 
-	drawfont = 8 + 1;
-	
-	vector ent_menu_size = '230 200 0';
+	vector ent_menu_size = sui_transform_size('230 200 0');
 	sui_set_align(vec2(SUI_ALIGN_START, SUI_ALIGN_CENTER));
 	sui_push_frame(menu_pos, ent_menu_size);
+
+	drawfont = 8 + 2;
+	sui_drawtext(menu_pos - '0 32 0', '18 18 0', "Call a vote", '0.34 0.72 1', 1, 0);
+	drawfont = 8 + 1;
 	
-	sui_fill(menu_pos, ent_menu_size, '0 0 0', 0.5, 0);
+	sui_fill(menu_pos, ent_menu_size, '0 0 0', 0.2, 0);
 	sui_offset = vote_menu_scroll;
 	vote_menu_list("vote_menu_list", menu_pos, ent_menu_size - '2 2 0');
 	vote_menu_scroll = sui_offset;

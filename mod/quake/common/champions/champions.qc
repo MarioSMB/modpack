@@ -519,9 +519,9 @@ void champion_menu_info(int index)
 	if(!champ.message || champ.message == "")
 		return;
 	
-	vector ent_menu_size = '300 200 0';
+	vector ent_menu_size = sui_transform_size('400 300 0');
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_push_frame('300 10 0', ent_menu_size);
+	sui_push_frame(sui_transform_size('400 0 0'), ent_menu_size);
 
 	drawfont = 8 + 2;
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
@@ -595,7 +595,7 @@ void cl_champion_draw()
 
 	float oldfont = drawfont;
 
-	vector ent_menu_size = '200 300 0';
+	vector ent_menu_size = sui_transform_size('200 300 0');
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
 	sui_push_frame('0 0 0', ent_menu_size);
 

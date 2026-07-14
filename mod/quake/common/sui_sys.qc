@@ -26,6 +26,16 @@ void sui_set_align(vector align)
 	_frames_align[_frame_index] = align;
 }
 
+vector sui_transform_size(vector size)
+{
+	size.x /= 1280;
+	size.y /= 720;
+
+	size.x *= vid_conwidth;
+	size.y *= vid_conheight;
+	return size;
+}
+
 vector sui_transform_point(vector point)
 {
 	int idx = _frame_index;

@@ -1065,7 +1065,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 
 	cl_champion_draw();
 	// FIXME: our menu system doesn't scale by aspects, leaving this broken!
-	//cl_vote_draw();
+	cl_vote_draw();
 
 	sui_end();
 
