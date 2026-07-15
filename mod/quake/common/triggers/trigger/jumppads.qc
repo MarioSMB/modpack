@@ -354,9 +354,12 @@ void fakemonster_start(entity this)
 	monsters_total += 1;
 }
 
+spawnfunc(trigger_once);
+
 void func_illusionary(entity this) {}
 void trigger_changelevel(entity this) {}
 void flymonster_start(entity this) { fakemonster_start(this); }
+void trigger_once(entity this, entity actor, entity trigger) { spawnfunc_trigger_once(this); }
 void notnull_hack(entity this)
 {
 	string thinkfunc = GetField_fullspawndata(this, "think", false);
@@ -389,7 +392,7 @@ void notnull_hack(entity this)
 	            // safeguard against various stuff ;)
 	            putentityfieldstring(i, this, touchfunc);
 	        }
-	        else if (k == "use" && have_use) {
+	        else if (k == "use1" && have_use) {
 	        	// safeguard against various stuff ;)
 	        	putentityfieldstring(i, this, usefunc);
 	        }

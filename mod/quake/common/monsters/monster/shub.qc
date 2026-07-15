@@ -259,7 +259,8 @@ void finale_4(entity this)
 	}
 	if(!this.charmed && this.target && this.target != "")
 	{
-		if(this.health > 0 && !intermission_running)
+		// NOTE: was checking if health > 0, but that breaks instakills!
+		if(!intermission_running)
 			finale_intermission(this);
 
 		// start the end text
