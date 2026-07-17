@@ -228,7 +228,7 @@ void CreatureFrame_Music(entity this)
 			r = 100 / bound(0.8, random() * 2, 1.3);
 		Sound msound = this.(weaponentity).m_weapon.m_musicnote;
 		if(msound && msound != SND_Null)
-			sound7(this, CH_AMBIENT_SINGLE, Sound_fixpath(msound), 1, ATTN_NORM, r, 0);
+			qc_sound7(this, CH_AMBIENT_SINGLE, msound, 1, ATTN_NORM, r, 0);
 
 		//if(random() <= 0.7)
 		//{
@@ -546,7 +546,7 @@ void midi_track_frame(entity this, int track)
 					int midivolume = bound(0, this.midi_volume[track], 127);
 					// default to volume 1 otherwise
 					float vol = (midivolume > 0) ? (midivolume / 127) : 1;
-					sound7(this, CH_AMBIENT, Sound_fixpath(msound), vol, ATTN_NORM, Note, 0);
+					qc_sound7(this, CH_AMBIENT, msound, vol, ATTN_NORM, Note, 0);
 					shownote = true; // we played a note, show it!
 				}
 				if(time >= this.midi_lastnote)
