@@ -119,18 +119,15 @@ PRECACHE(Kirby)
 #endif
 #ifdef CSQC
 #define KIRBY_STATS \
-"Can fly briefly by double jumping\n" \
-"Press %ABILITY% to dash\n" \
-"Has Star as only weapon\n" \
-"Primary attack varies:\n" \
-"- While empty, sucks in enemies\n" \
-"- When full, spits out a star\n" \
-"  Stronger with more enemies\n" \
-"While full, secondary swallows\n" \
-"- Heals for 5 per enemy eaten\n" \
-"- Gains enemy ability if available\n" \
-"Secondary then discards ability\n" \
-"Ability overrides primary attack"
+"^F1The Star Warrior and protector of Dream Land, ^C1Kirby^F1 is a cheerful, food-loving ball of innocence and potential\n\n\n" \
+"Double jump to fly briefly\n" \
+"Press %ABILITY% while on the ground to dash forward, hurting enemies\n" \
+"^1Cannot wield weapons\n" \
+"Hold %PRI% to inhale enemies, press again to spit them out\n" \
+"Press %SEC% to swallow inhaled enemies:\n" \
+"%SUB% Heals for ^25^7 per enemy eaten\n" \
+"%SUB% Copies the last enemy's ability, replacing %PRI% with a unique attack\n\n" \
+"Hold %SEC% to discard current ability"
 #endif
 CLASS(Kirby, Champions)
 	ATTRIB(Kirby, netname, string, "kirby");
@@ -164,6 +161,10 @@ CLASS(Kirby, Champions)
 #endif
 ENDCLASS(Kirby)
 REGISTER_CHAMPION(Kirby, NEW(Kirby));
+
+#ifdef CSQC
+#undef KIRBY_STATS
+#endif
 
 #ifdef SVQC
 .float kirby_bash_time;

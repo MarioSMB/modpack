@@ -83,18 +83,17 @@ PRECACHE(Dryad)
 #endif
 #ifdef CSQC
 #define DRYAD_STATS \
-"Aura of leaves that deal damage\n" \
-"Has Blade of Grass melee weapon\n" \
-"Hit enemies are barraged with leaves\n" \
-"10% damage resistance\n" \
-"Double health regeneration\n" \
-"Press %ABILITY% to become corrupted\n" \
-"Staying corrupted too long is lethal\n" \
-"Press %ABILITY% again to turn back\n" \
-"In corrupted form:\n" \
-"- Can only use claws\n" \
-"- Speed and Jump increased by 50%\n" \
-"- Damage taken reduced by 80%"
+"^F1The ^C1Dryad^F1 is a physical manifestation of the will of Terraria itself\n\n\n" \
+"Possesses an aura of leaves that deal damage to nearby enemies\n" \
+"Wields weapon: %WEP(bladeofgrass)\n" \
+"%SUB% Hit enemies are barraged with leaves\n" \
+"^2+10% damage resistance\n" \
+"^2+200% health regeneration\n" \
+"Press %ABILITY% to become ^x90FCorrupted^7:\n" \
+"%SUB% Can only use claws to attack\n" \
+"%SUB% ^2+50% jump height and movement speed\n" \
+"%SUB% ^2+80% damage resistance\n" \
+"^1Caution: ^7Staying ^x90FCorrupted^7 too long is lethal, press %ABILITY% again to purify"
 #endif
 CLASS(Dryad, Champions)
 	ATTRIB(Dryad, netname, string, "dryad");
@@ -126,6 +125,10 @@ CLASS(Dryad, Champions)
 	ATTRIB(Dryad, td_turrets, bool, true);
 ENDCLASS(Dryad)
 REGISTER_CHAMPION(Dryad, NEW(Dryad));
+
+#ifdef CSQC
+#undef DRYAD_STATS
+#endif
 
 #ifdef SVQC
 .float dryad_transformtime;

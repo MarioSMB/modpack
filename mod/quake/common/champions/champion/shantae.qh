@@ -101,16 +101,15 @@ PRECACHE(Shantae)
 #endif
 #ifdef CSQC
 #define SHANTAE_STATS \
+"^F1Protector of Sequin Land, ^C1Shantae^F1 is the half-genie hero with a knack for hair whipping and transformative dances!\n\n\n" \
 "Press %ABILITY% to transform:\n" \
-"- Become Monkey normally\n" \
-"- Climbs walls, jumps high\n" \
-"- Become Mermaid in water\n" \
-"- Shoots bubbles while in water\n" \
-"Magic proficiency (-20% cost, +50% damage)\n" \
-"Jumps 15% higher\n" \
+"%SUB% ^xDB8Monkey^7 normally (climbs walls, jumps high)\n" \
+"%SUB% ^x0BBMermaid^7 while in water (shoots bubbles, swims fast)\n" \
+"^x0FFMagic proficiency (^2-20% cost^x0FF, ^2+50% damage^x0FF)\n" \
 "Melee hair whip has double range\n" \
-"Has Genie Magic as a weapon\n" \
-"Right click cycles between spells"
+"^2+15% jump height\n" \
+"Wields weapon: %WEP(magic)\n" \
+"%SUB% %SEC% cycles between spells"
 #endif
 CLASS(Shantae, Champions)
 	ATTRIB(Shantae, netname, string, "shantae");
@@ -142,6 +141,10 @@ CLASS(Shantae, Champions)
 #endif
 ENDCLASS(Shantae)
 REGISTER_CHAMPION(Shantae, NEW(Shantae));
+
+#ifdef CSQC
+#undef SHANTAE_STATS
+#endif
 
 #ifdef SVQC
 .bool shantae_cannon;

@@ -7,7 +7,7 @@ SOUND(STAR_MUSICNOTE, "kirby/star_music");
 CLASS(Star, Weapon)
 /* ammotype  */ ATTRIB(Star, ammo_type, int, 0);
 /* impulse   */ ATTRIB(Star, impulse, int, 2);
-/* spawnflags*/ ATTRIB(Star, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
+/* spawnflags*/ ATTRIB(Star, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_NOSTEAL | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED | WEP_FLAG_NOHUD);
 /* ammo */      ATTRIB(Star, aflag, int, 0);
 /* modelname */ ATTRIB(Star, mdl, string, "star");
 /* crosshair */ ATTRIB(Star, w_crosshair, string, "gfx/crosshairdot");

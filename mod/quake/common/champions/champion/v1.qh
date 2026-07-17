@@ -114,13 +114,14 @@ PRECACHE(V1)
 #endif
 #ifdef CSQC
 #define V1_STATS \
-"Press %ABILITY% to slide\n" \
-"Press again midair to ground slam\n" \
-"Can jump high while sliding\n" \
-"Takes no fall damage\n" \
-"Has a katana that slices enemies\n" \
-"Cannot regenerate health normally\n" \
-"Health refills by killing enemies"
+"^C1V1^F1 is a Supreme Machine left to roam the Earth after the extinction of mankind. It fights in Hell for its own desperate survival after blood ran out on the surface\n\n\n" \
+"Hold %ABILITY% while moving on the ground to slide\n" \
+"%SUB% Timing jumps while sliding will provide great height\n" \
+"Press %ABILITY% in the air to ground slam\n" \
+"^2+100% fall damage resistance\n" \
+"Wields weapon: %WEP(katana)\n" \
+"^1Cannot regenerate health normally\n" \
+"%SUB% Health refills by killing enemies"
 #endif
 CLASS(V1, Champions)
 	ATTRIB(V1, netname, string, "v1");

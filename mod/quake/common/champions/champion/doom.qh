@@ -73,10 +73,11 @@ PRECACHE(Doom)
 #endif
 #ifdef CSQC
 #define DOOM_STATS \
-"300% increased melee damage\n" \
-"50% increased shotgun damage\n" \
-"20% chance to not consume ammo\n" \
-"Always gibs slain monsters"
+"^F1The ^C1Doom Slayer^F1 is a name feared by all of Hell's denizens\n\n\n" \
+"^2+300% melee damage\n" \
+"^2+50% shotgun damage\n" \
+"^2+20% chance to not consume ammo\n" \
+"Always gibs slain monsters. Rip & Tear"
 #endif
 CLASS(Doom, Champions)
 	ATTRIB(Doom, netname, string, "doom");
@@ -107,3 +108,7 @@ CLASS(Doom, Champions)
 	ATTRIB(Doom, td_turrets, bool, true);
 ENDCLASS(Doom)
 REGISTER_CHAMPION(Doom, NEW(Doom));
+
+#ifdef CSQC
+#undef DOOM_STATS
+#endif

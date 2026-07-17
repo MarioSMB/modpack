@@ -58,11 +58,11 @@ PRECACHE(Dusk)
 #endif
 #ifdef CSQC
 #define DUSK_STATS \
-"Special ability: Reap\n" \
-"Press %ABILITY%, costs 25 health\n" \
-"Players revive near Dusk\n" \
-"Sets spawn point of dead players\n" \
-"Respawns nearby non-health items"
+"^F1Also known as ^C1The Intruder^F1, he is a man who collects treasures while exploring facilities and barns in the town of Dusk\n\n\n" \
+"Press %ABILITY% to Reap nearby fallen, ^1costs 25 health^7:\n" \
+"%SUB% Revives recently deceased monsters as servants, fresh enough souls have a ghost lingering above their corpse\n" \
+"%SUB% Respawns nearby non-health items\n" \
+"Players revive near Dusk"
 
 #endif
 CLASS(Dusk, Champions)
@@ -90,6 +90,10 @@ CLASS(Dusk, Champions)
 #endif
 ENDCLASS(Dusk)
 REGISTER_CHAMPION(Dusk, NEW(Dusk));
+
+#ifdef CSQC
+#undef DUSK_STATS
+#endif
 
 #ifdef SVQC
 .bool dusk_revived;

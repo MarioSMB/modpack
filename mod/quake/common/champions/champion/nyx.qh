@@ -91,9 +91,10 @@ PRECACHE(Nyx)
 #endif
 #ifdef CSQC
 #define NYX_STATS \
-"Press %ABILITY% to Ghost Walk\n" \
-"- Pass through monsters in this state\n" \
-"- Cannot attack or interact with objects\n" \
+"^F1One of the Melem's most skilled assassins, ^C1Nyx^F1 is an incredibly adept Ghost Walker, able to slip in and out of the Dreamlands to surprise attack her foes\n\n\n" \
+"Press %ABILITY% to Ghost Walk:\n" \
+"%SUB% Pass through monsters in this state\n" \
+"%SUB% Cannot attack or interact with objects\n" \
 "Able to wall jump"
 #endif
 CLASS(Nyx, Champions)
@@ -125,10 +126,10 @@ CLASS(Nyx, Champions)
 ENDCLASS(Nyx)
 REGISTER_CHAMPION(Nyx, NEW(Nyx));
 
-#ifdef SVQC
-bool autocvar_sv_quake_nyx_telefrag;
-#endif
-
 #ifdef CSQC
 #undef NYX_STATS
+#endif
+
+#ifdef SVQC
+bool autocvar_sv_quake_nyx_telefrag;
 #endif

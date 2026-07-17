@@ -184,11 +184,11 @@ PRECACHE(Caleb)
 #endif
 #ifdef CSQC
 #define CALEB_STATS \
-"Crazy\n" \
+"^C1Caleb^F1... has no sense of morality... You're not a hero, you're not a 'good guy'. ^C1Caleb^F1 is a monster... ^C1Caleb^F1 is Blood\n\n" \
 "Increased melee range with pitchfork\n" \
-"Dying sends Caleb into a Blood Rage\n" \
-"In Blood Rage kill enemies to live\n" \
-"Press %ABILITY% for vampire bats"
+"Dying sends Caleb into a ^1Blood Rage\n" \
+"%SUB% Kill enemies to live again before hearts run out\n" \
+"Press %ABILITY% to summon a swarm of vampire bats"
 #endif
 CLASS(Caleb, Champions)
 	ATTRIB(Caleb, netname, string, "caleb");
@@ -218,6 +218,10 @@ CLASS(Caleb, Champions)
 #endif
 ENDCLASS(Caleb)
 REGISTER_CHAMPION(Caleb, NEW(Caleb));
+
+#ifdef CSQC
+#undef CALEB_STATS
+#endif
 
 #ifdef SVQC
 .float caleb_crazy_time;

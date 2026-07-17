@@ -66,6 +66,11 @@ PRECACHE(Katria)
 #endif
 }
 #endif
+#ifdef CSQC
+#define KATRIA_STATS \
+"^F1Part of the special forces sent on Operation Counterstrike and presumed dead, ^C1Katria^F1 continues the interdimensional hunt for an elusive enemy, code-named \"Quake\"\n\n\n" \
+"The standard experience, no additional abilities"
+#endif
 CLASS(Katria, Champions)
 	ATTRIB(Katria, netname, string, "katria");
 	ATTRIB(Katria, m_name, string, "Katria");
@@ -89,7 +94,11 @@ CLASS(Katria, Champions)
 	ATTRIB(Katria, m_faceprefix, string, "gfx/quake/katria_");
 #endif
 #ifdef CSQC
-	ATTRIB(Katria, message, string, "No additional bonus stats");
+	ATTRIB(Katria, message, string, KATRIA_STATS);
 #endif
 ENDCLASS(Katria)
 REGISTER_CHAMPION(Katria, NEW(Katria));
+
+#ifdef CSQC
+#undef KATRIA_STATS
+#endif

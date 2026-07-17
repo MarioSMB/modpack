@@ -1,6 +1,6 @@
 #include "steve.qh"
 
-// enable to mimic edgefriction for steve
+// enable to mimic edgefriction for steve, needs fixing
 #if 0
 METHOD(Steve, m_friction, float(Champions this, entity actor))
 {
@@ -19,6 +19,13 @@ METHOD(Steve, m_friction, float(Champions this, entity actor))
 		return 1;
 }
 #endif
+
+METHOD(Steve, m_getmovespeed, float(Champions this, entity actor))
+{
+	if(!IS_ONGROUND(actor))
+		return 1;
+	return 0.85;
+}
 
 #ifdef SVQC
 METHOD(Steve, m_activate, void(Champions this, entity actor))

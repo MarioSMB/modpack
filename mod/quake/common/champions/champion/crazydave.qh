@@ -158,14 +158,14 @@ PRECACHE(CrazyDave)
 #endif
 #ifdef CSQC
 #define CRAZYDAVE_STATS \
-"Very crazy\n" \
-"Damage taken reduced by 50%\n" \
-"Press %ABILITY% to distract\n" \
-"Has Taco\n" \
-"- Heals by 5 instantly\n" \
-"- Doubles regen for 10 seconds\n" \
-"- Cures poison on consumption\n" \
-"- Boosts resistance to 70%. Taco Power"
+"^F1Greetings, neighbor! The name's ^C1Crazy Dave^F1. But you can just call me ^C1Crazy Dave^F1. TAKE THIS WALL-NUT!! Why'd I put a wall-nut in your hand? Because I'm CRAAAZY!!!!!\n\n\n" \
+"^2+50% damage resistance\n" \
+"Press %ABILITY% to draw attention to yourself\n" \
+"Wields weapon: %WEP(taco)\n" \
+"%SUB% Heals by ^25^7 instantly\n" \
+"%SUB% Doubles health regeneration for ^410 seconds\n" \
+"%SUB% Cures ^x5F5poison^7 on consumption\n" \
+"%SUB% Boosts damage resistance to ^2+70%^7. Taco Power"
 #endif
 CLASS(CrazyDave, Champions)
 	ATTRIB(CrazyDave, netname, string, "crazydave");
@@ -196,6 +196,10 @@ CLASS(CrazyDave, Champions)
 	ATTRIB(CrazyDave, td_turrets, bool, true);
 ENDCLASS(CrazyDave)
 REGISTER_CHAMPION(CrazyDave, NEW(CrazyDave));
+
+#ifdef CSQC
+#undef CRAZYDAVE_STATS
+#endif
 
 #ifdef SVQC
 float autocvar_sv_quake_crazydave_range = 768;

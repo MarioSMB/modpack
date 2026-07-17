@@ -46,8 +46,8 @@ void mancubus_LaserTouch(entity this, entity toucher)
 
 	if(toucher.takedamage)
 	{
-		if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
-			damg *= 0.5;	// mostly immune
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;
 		if(toucher.resist_rockets != 0)
 		{
 			damg = Resist_Damage(toucher, IT_ROCKETS, damg);

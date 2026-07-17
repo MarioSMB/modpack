@@ -59,10 +59,11 @@ PRECACHE(BanjoKazooie)
 #endif
 #ifdef CSQC
 #define BANJO_STATS \
+"^F1A simple adventurous bear from Spiral Mountain, ^C1Banjo^F1 (alongside his fiendly feathered companion ^xF11Kazooie^F1) protects his friends from the evil witch ^x2A3Gruntilda\n\n\n" \
 "Hold %ABILITY% to glide\n" \
-"Jumps 20% higher\n" \
-"Has Kazooie as a weapon\n" \
-"Right-click to cycle eggs"
+"^2+20% jump height\n" \
+"Wields weapon: %WEP(breegull)\n" \
+"%SUB% %SEC% cycles between eggs"
 #endif
 CLASS(BanjoKazooie, Champions)
 	ATTRIB(BanjoKazooie, netname, string, "banjo");

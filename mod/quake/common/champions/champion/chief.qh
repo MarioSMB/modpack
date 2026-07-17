@@ -44,10 +44,11 @@ PRECACHE(Chief)
 #endif
 #ifdef CSQC
 #define CHIEF_STATS \
-"Has a short range X-RAY\n" \
-"Picked up armor grants force field\n" \
-"50% boost to energy weapons\n" \
-"25% faster weapon fire rate"
+"^F1Commando of the UNSC Halo forces, ^C1Master Chief^F1 is a \"Spartan\" supersoldier, utilizing advanced technology to fight against genocidal alien empires\n\n\n" \
+"Has a short range X-RAY that reveals enemies behind walls\n" \
+"Picked up armor grants a temporary force field\n" \
+"^x8DFEnergy weapons expert (^2+50% damage^x8DF)\n" \
+"^2+25% weapon fire rate"
 #endif
 CLASS(Chief, Champions)
 	ATTRIB(Chief, netname, string, "chief");
@@ -75,6 +76,10 @@ CLASS(Chief, Champions)
 	ATTRIB(Chief, td_turrets, bool, true);
 ENDCLASS(Chief)
 REGISTER_CHAMPION(Chief, NEW(Chief));
+
+#ifdef CSQC
+#undef CHIEF_STATS
+#endif
 
 #ifdef SVQC
 float autocvar_sv_quake_chief_range = 750;

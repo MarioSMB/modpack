@@ -88,15 +88,16 @@ PRECACHE(Keyleth)
 #endif
 #ifdef CSQC
 #define KEYLETH_STATS \
-"Press %ABILITY% to transform\n" \
-"Magic proficiency (-20% cost, +50% damage)\n" \
-"Moves 10% faster\n" \
-"Jumps 15% higher\n" \
-"Has Mushroom as a weapon\n" \
-"- Attracts nearby enemies\n" \
-"- Heals a little while nearby\n" \
-"Has Spire of Conflux as a weapon\n" \
-"- Secondary fire cycles spells"
+"^F1An unassuming half-elf druid and member of Vox Machina, ^C1Keyleth^F1 wields nature and wild shapes with frightening ferocity\n\n\n" \
+"Press %ABILITY% to transform into a terrifying Demon for ^420 seconds\n" \
+"^x0FFMagic proficiency (^2-20% cost^x0FF, ^2+50% damage^x0FF)\n" \
+"^2+10% movement speed\n" \
+"^2+15% jump height\n" \
+"Wields weapon: %WEP(mushroom)\n" \
+"%SUB% May distract nearby enemies\n" \
+"%SUB% Heals allies close by\n" \
+"Wields weapon: %WEP(staff)\n" \
+"%SUB% %SEC% cycles between spells"
 #endif
 CLASS(Keyleth, Champions)
 	ATTRIB(Keyleth, netname, string, "keyleth");
@@ -130,6 +131,10 @@ CLASS(Keyleth, Champions)
 	ATTRIB(Keyleth, td_turrets, bool, true);
 ENDCLASS(Keyleth)
 REGISTER_CHAMPION(Keyleth, NEW(Keyleth));
+
+#ifdef CSQC
+#undef KEYLETH_STATS
+#endif
 
 #ifdef SVQC
 .bool keyleth_cannon;

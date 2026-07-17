@@ -59,11 +59,13 @@ PRECACHE(Sorlag)
 #endif
 #ifdef CSQC
 #define SORLAG_STATS \
-"200% increased swimming speed\n" \
+"^F1A Sorg warrior from Tau Ceti F, ^C1Sorlag^F1 earned the title \"Sorg Flesh-Trader\" for her prowess at hunting warmbloods\n\n\n" \
+"^2+200% swimming speed\n" \
 "Immune to slime damage\n" \
-"Holds breath 33% longer\n" \
-"Press %ABILITY% to spit corrosive acid\n" \
-"Corrodes enemy resistances for 20 seconds"
+"^2+33% underwater breath time\n" \
+"Press %ABILITY% to spit acid, applying ^x8F1Corrosion^7 to enemies for ^430 seconds^7:\n" \
+"%SUB% Strips any unique resistances (Shamblers will take full damage from explosions)\n" \
+"%SUB% Reduces armor protection by 30%"
 #endif
 CLASS(Sorlag, Champions)
 	ATTRIB(Sorlag, netname, string, "sorlag");

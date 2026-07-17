@@ -15,7 +15,7 @@ void Sorlag_AcidPoolTouch(entity this, entity toucher)
 	if(!Damage_ValidTarget(toucher, this.owner))
 		return;
 
-	float efftime = 20;
+	float efftime = 30;
 	float curtime = StatusEffects_gettime(STATUSEFFECT_Corrosion, toucher);
 	StatusEffects_apply(STATUSEFFECT_Corrosion, toucher, max(time + efftime, curtime), 0);
 }
@@ -47,7 +47,7 @@ void Sorlag_AcidSpitTouch(entity this, entity toucher)
 
 	if(toucher.takedamage || IS_MONSTER(toucher))
 	{
-		float efftime = 20;
+		float efftime = 30;
 		float curtime = StatusEffects_gettime(STATUSEFFECT_Corrosion, toucher);
 		StatusEffects_apply(STATUSEFFECT_Corrosion, toucher, max(time + efftime, curtime), 0);
 

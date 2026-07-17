@@ -46,6 +46,11 @@ Sound SND_Ranger_Drown_Random() {
 }
 #endif
 
+#ifdef CSQC
+#define RANGER_STATS \
+"^C1Ranger^F1 is a marine in the special forces and leader of Operation Counterstrike, a mission to locate and destroy an interdimensional enemy, code-named \"Quake\"\n\n\n" \
+"The standard experience, no additional abilities"
+#endif
 CLASS(Ranger, Champions)
 	ATTRIB(Ranger, netname, string, "ranger");
 	ATTRIB(Ranger, m_name, string, "Ranger");
@@ -66,8 +71,12 @@ CLASS(Ranger, Champions)
 	METHOD(Ranger, m_sound_fall, Sound(entity actor)) { return SND_Ranger_Fall; }
 #endif
 #ifdef CSQC
-	ATTRIB(Ranger, message, string, "No additional bonus stats");
+	ATTRIB(Ranger, message, string, RANGER_STATS);
 #endif
 	ATTRIB(Ranger, td_turrets, bool, true);
 ENDCLASS(Ranger)
 REGISTER_CHAMPION(Ranger, NEW(Ranger));
+
+#ifdef CSQC
+#undef RANGER_STATS
+#endif

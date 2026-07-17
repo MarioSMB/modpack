@@ -94,11 +94,20 @@ void spiralrocket_touch(entity this, entity toucher)
 		return;
 	}
 
-	float damg = 50 + random() * 10;
 	float rdamg = 60;
 
 	if(toucher.takedamage)
+	{
+		float damg = 50 + random() * 10;
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;
+		if(toucher.resist_rockets != 0)
+		{
+			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
+			Resist_Rockets(toucher, this.origin);
+		}
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+	}
 			
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact.

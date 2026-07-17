@@ -73,8 +73,9 @@ PRECACHE(Bean)
 #endif
 #ifdef CSQC
 #define BEAN_STATS \
+"^F1A child in a grown man's body, ^C1Mr. Bean^F1 is a goofy self-centered troublemaker. His only real friend is a teddy bear, whom he relies on during emergencies\n\n\n" \
 "Press %ABILITY% to throw Teddy\n" \
-"Teddy boosts confidence while nearby"
+"%SUB% Teddy shields all damage while standing nearby"
 #endif
 CLASS(Bean, Champions)
 	ATTRIB(Bean, netname, string, "bean");
@@ -103,6 +104,10 @@ CLASS(Bean, Champions)
 #endif
 ENDCLASS(Bean)
 REGISTER_CHAMPION(Bean, NEW(Bean));
+
+#ifdef CSQC
+#undef BEAN_STATS
+#endif
 
 #ifdef SVQC
 .bool bean_cannon;

@@ -69,10 +69,13 @@ PRECACHE(Keen)
 #endif
 #ifdef CSQC
 #define KEEN_STATS \
+"^F1Billy Blaze, better known as ^C1Commander Keen^F1, is an 8 year old genius defending Earth and the galaxy from alien threats with his homemade spaceship, rayguns, and a pogo stick\n\n\n" \
 "Small, fits through tight spaces\n" \
-"Short hops, big jump when stationary\n" \
-"Takes no fall damage\n" \
-"Has a pogo stick"
+"^1-25% jump height while moving\n" \
+"^2+250% jump height while stationary\n" \
+"^2+100% fall damage resistance\n" \
+"Wields weapon: %WEP(pogo)\n" \
+"%SUB% Automatically jumps, able to bounce on enemies"
 #endif
 CLASS(Keen, Champions)
 	ATTRIB(Keen, netname, string, "keen");
@@ -107,6 +110,10 @@ CLASS(Keen, Champions)
 	ATTRIB(Keen, td_turrets, bool, true);
 ENDCLASS(Keen)
 REGISTER_CHAMPION(Keen, NEW(Keen));
+
+#ifdef CSQC
+#undef KEEN_STATS
+#endif
 
 #ifdef GAMEQC
 bool Keen_PogoActive(entity actor);

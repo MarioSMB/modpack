@@ -71,18 +71,19 @@ PRECACHE(Steve)
 #endif
 #ifdef CSQC
 #define STEVE_STATS \
-"Press %ABILITY% to place blocks\n" \
+"^F1I AM ^C1STEVE\n\n\n" \
+"Press %ABILITY% to place blocks:\n" \
+"%SUB% Question blocks contain a friendly surprise\n" \
 "Hold Jump to bunnyhop\n" \
-"Takes 500% more fall damage\n" \
-"Armor grants more resistance\n" \
-"15% reduced movement speed"
+"^1+500% fall damage\n" \
+"^2+33% damage resistance while armored\n" \
+"^1-15% movement speed while walking"
 #endif
 CLASS(Steve, Champions)
 	ATTRIB(Steve, netname, string, "steve");
 	ATTRIB(Steve, m_name, string, "Steve");
 	ATTRIB(Steve, m_color, vector, '0.57 0.74 0.35');
 	ATTRIB(Steve, qcc_pogo, bool, true);
-	ATTRIB(Steve, qcc_movespeed, float, 0.85);
 	ATTRIB(Steve, qcc_falldamage, float, 5);
 	ATTRIB(Steve, qcc_meleename, string, "mcaxe");
 #ifdef GAMEQC
@@ -108,6 +109,10 @@ CLASS(Steve, Champions)
 #endif
 ENDCLASS(Steve)
 REGISTER_CHAMPION(Steve, NEW(Steve));
+
+#ifdef CSQC
+#undef STEVE_STATS
+#endif
 
 #ifdef SVQC
 int autocvar_sv_quake_steve_blocklimit = 8;

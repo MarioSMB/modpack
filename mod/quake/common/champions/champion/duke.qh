@@ -156,6 +156,7 @@ PRECACHE(Duke)
 {
 #ifdef CSQC
 	precache_pic("gfx/quake/duke_face");
+	precache_pic("gfx/quake/duke_face_powerup");
 #endif
 #ifdef SVQC
 	precache_model("progs/v_mfoot.mdl");
@@ -164,7 +165,7 @@ PRECACHE(Duke)
 #endif
 #ifdef CSQC
 #define DUKE_STATS \
-"Kicks ass, chews bubble gum\n" \
+"^F1Kicks ass, chews bubble gum\n\n\n" \
 "Hold %ABILITY% to use jet pack"
 #endif
 CLASS(Duke, Champions)
@@ -193,6 +194,10 @@ CLASS(Duke, Champions)
 	ATTRIB(Duke, td_turrets, bool, true);
 ENDCLASS(Duke)
 REGISTER_CHAMPION(Duke, NEW(Duke));
+
+#ifdef CSQC
+#undef DUKE_STATS
+#endif
 
 #ifdef SVQC
 .float duke_taunt_timer;

@@ -73,14 +73,16 @@ PRECACHE(Galena)
 #endif
 #ifdef CSQC
 #define GALENA_STATS \
-"Movement speed 10% slower\n" \
-"Press %ABILITY% to dodge\n" \
-"Has a sword, right click charges\n" \
-"Has a shield, right click blocks\n" \
-"While blocking:\n" \
-"- Damage reduced by 75%\n" \
-"- Movement reduced by 75%\n" \
-"- Can be timed to parry attacks"
+"^C1Galena^F1 is an Unholy Paladin of Volkerh, skilled in both giving and taking life\n\n\n" \
+"^1-10% movement speed\n" \
+"Press %ABILITY% to dodge attacks, providing brief immunity\n" \
+"Wields weapon: %WEP(sword)\n" \
+"%SUB% %SEC% charges at foes with devastating damage\n" \
+"Always carries %WEP(shield)\n" \
+"While blocking with %SEC%:\n" \
+"%SUB% ^2+75% damage resistance\n" \
+"%SUB% ^1-75% movement speed\n" \
+"%SUB% Can be timed to parry attacks"
 #endif
 CLASS(Galena, Champions)
 	ATTRIB(Galena, netname, string, "galena");
@@ -111,6 +113,10 @@ CLASS(Galena, Champions)
 	ATTRIB(Galena, td_turrets, bool, true);
 ENDCLASS(Galena)
 REGISTER_CHAMPION(Galena, NEW(Galena));
+
+#ifdef CSQC
+#undef GALENA_STATS
+#endif
 
 #ifdef SVQC
 .float galena_dodge_time;

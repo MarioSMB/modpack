@@ -252,7 +252,7 @@ void potatomine_hitbox_touch(entity this, entity toucher)
 		toucher.velocity_z = (85 * pushforce);
 	}
 
-	if(toucher.monsterdef && (toucher.monsterdef.spawnflags & MON_FLAG_EXPLOSIONRESISTANT))
+	if(Resist_Explosions(toucher))
 		damage *= 0.5;
 
 	T_Damage(toucher, this, this, damage, DEATH_TRAP.m_id);

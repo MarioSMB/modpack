@@ -83,9 +83,10 @@ PRECACHE(Papyrus)
 #endif
 #ifdef CSQC
 #define PAPYRUS_STATS \
-"Half a second invincibility frames\n" \
+"^C1Papyrus^F1 is Sans's younger brother, an egotistical skeleton with aspirations to join the Royal Guard, a nobility protecting all monsters living in the Underground\n\n\n" \
+"^2+0.5 seconds invincibility time after taking damage\n" \
 "Press %ABILITY% to throw a bone\n" \
-"Sometimes fires 50 damage laser skull"
+"%SUB% Sometimes Sans helps out and fires a 50 damage Gaster Blaster instead"
 #endif
 CLASS(Papyrus, Champions)
 	ATTRIB(Papyrus, netname, string, "papyrus");
@@ -115,6 +116,10 @@ CLASS(Papyrus, Champions)
 #endif
 ENDCLASS(Papyrus)
 REGISTER_CHAMPION(Papyrus, NEW(Papyrus));
+
+#ifdef CSQC
+#undef PAPYRUS_STATS
+#endif
 
 #ifdef SVQC
 .bool papyrus_cannon;

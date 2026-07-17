@@ -339,6 +339,7 @@ void champions_PlayerDies(entity this)
 	this.m_transform = NULL;
 	this.transform_prevhealth = 0;
 	this.transform_health = 0;
+	this.transform_limited = 0;
 	this.transform_armortype = ARMOR_NONE;
 	this.transform_armorvalue = 0;
 
@@ -433,9 +434,9 @@ void champion_model_draw(entity this)
 	this.angles += this.avelocity * frametime;
 
 #if 1
-	vector ent_menu_size = '200 200 0';
+	vector ent_menu_size = sui_transform_size('200 200 0');
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_CENTER));
-	sui_push_frame('-128 64 0', ent_menu_size);
+	sui_push_frame(sui_transform_size('-128 64 0'), ent_menu_size);
 	vector pos = sui_transform_box('0 64 0', ent_menu_size);
 	sui_pop_frame();
 
@@ -487,15 +488,77 @@ void champion_menu_select()
 	champion_menu_close();
 }
 
+string str_replacewep(string beforestr, string afterstr, string input)
+{
+	int blen = strlen(beforestr);
+	//int alen = strlen(afterstr);
+	while(true)
+	{
+		int pos = strstrofs(input, beforestr, 0);
+		if(pos == -1)
+			return input; // we've done our job!
+
+		string before = substring(input, 0, pos);
+		int after_pos = strstrofs(input, afterstr, pos);
+		string after = substring(input, after_pos + 1, -1);
+
+		string wepname = substring(input, pos + blen, after_pos - (pos + blen));
+		Weapon wep = Weapon_from_name(wepname);
+
+		string replacement = strcat(rgb_to_hexcolor(wep.w_crosshair_color), wep.m_name, "^7");
+
+		input = strcat(before, replacement, after);
+	}
+
+	return input;
+}
+
 vector champion_info_scroll;
-void champion_info_list(string id, vector pos, vector size)
+void champion_info_list(string id, vector panel_pos, vector panel_size)
 {
 	// by this point we know all the data is accurate
 	Champions champ = champdata[champion_hovered_index];
+	vector fontsize = '1 1 0' * 16;
+	float align = bound(0, 0, 1); // 0.5 for middle
+	vector pos = sui_transform_box(panel_pos, panel_size);
+	//vector size = panel_size;
+	float padding = 1;
 
-	int linecount = tokenizebyseparator(champ.message, "\n");
+	string info = champ.message;
+	info = strreplace("%ABILITY%", strcat("^3", getcommandkey("^7(^2Crouch^7)", "+crouch"), "^7"), info);
+	info = strreplace("%PRI%", strcat("^3", getcommandkey("primary fire", "+fire"), "^7"), info);
+	info = strreplace("%SEC%", strcat("^3", getcommandkey("secondary fire", "+fire2"), "^7"), info);
+	info = strreplace("^C1", rgb_to_hexcolor(Champion_Color(champion_hovered_index)), info);
+	info = strreplace("^F1", "^x930", info); // quake color
+	info = strreplace("%SUB%", "^3-^7", info);
+	info = str_replacewep("%WEP(", ")", info);
 
-	sui_fill(pos, size, '0.2 0.2 0.2', 0.75, 0);
+	int linecount = tokenizebyseparator(info, "\n");
+
+	sui_fill(panel_pos, panel_size, '0.2 0.2 0.2', 0.75, 0);
+
+	panel_pos = pos; // copy over the transformation!
+
+	for(int k = 0; k < linecount; ++k)
+	{
+		getWrappedLine_remaining = argv(k);
+
+		while(getWrappedLine_remaining)
+		{
+			string ts = getWrappedLine(panel_size.x, fontsize, stringwidth_colors);
+			if(ts != "")
+			{
+				if(align)
+					pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
+				drawcolorcodedstring(pos + eY * 0.5 * fontsize.y, ts, fontsize, 1, DRAWFLAG_NORMAL);
+				pos.y += fontsize.y;
+			}
+			else
+				pos.y += fontsize.y * 0.3 * padding;
+		}
+	}
+
+#if 0
 	sui_list_view_begin(strcat(id, "scrl"), pos, size, vec2(size.x - 6, 16), linecount, '0 6 0');
 	sui_pos = '0 0 0';
 	//champion_hovered_index = -1;
@@ -510,7 +573,8 @@ void champion_info_list(string id, vector pos, vector size)
 		sui_drawtext('0 0 0', '16 16 0', text, '1 1 1', 1, 0);
 		sui_pop_frame();
 	}
-	sui_list_view_end();	
+	sui_list_view_end();
+#endif
 }
 
 void champion_menu_info(int index)

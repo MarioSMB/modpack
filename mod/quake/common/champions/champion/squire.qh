@@ -125,14 +125,15 @@ PRECACHE(Squire)
 #endif
 #ifdef CSQC
 #define SQUIRE_STATS \
-"Movement speed 20% slower\n" \
-"Damage taken reduced by 25%\n" \
-"Jumps 15% higher\n" \
-"Press %ABILITY% to Rage\n" \
-"- Double speed while Raging\n" \
-"- 50% damage boost while Raging\n" \
-"- Killing replenishes Rage\n" \
-"- 20 second cooldown when Rage ends"
+"^F1A brave knight‐in‐training and Dungeon Defender, the ^C1Squire^F1 upholds the honor and nobility of his kingdom with every slice of his blade\n\n\n" \
+"^1-20% movement speed\n" \
+"^2+25% damage resistance\n" \
+"^2+15% jump height\n" \
+"Press %ABILITY% to ^1Rage^7:\n" \
+"%SUB% ^2+200% movement speed\n" \
+"%SUB% ^2+50% damage\n" \
+"%SUB% Killing replenishes ^1Rage\n" \
+"%SUB% ^420 second cooldown^7 when the effect ends"
 #endif
 CLASS(Squire, Champions)
 	ATTRIB(Squire, netname, string, "squire");

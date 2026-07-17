@@ -99,10 +99,10 @@ PRECACHE(Enyo)
 #endif
 #ifdef CSQC
 #define ENYO_STATS \
-"Flight meter charges with kills\n" \
-"When charged press %ABILITY% to fly\n" \
-"Carries two SMGs while flying\n" \
-"Damage reduced by 66% in flight\n"
+"^F1The elite assassin ^C1Enyo^F1 is armed to the teeth and on a warpath to take down the most formidable Slaves Sovereign Khan has to offer\n\n\n" \
+"Flight meter charges with kills, when charged press %ABILITY% to fly:\n" \
+"%SUB% Wields a pair of ^3SMGs\n" \
+"%SUB% ^2+66% damage resistance\n"
 #endif
 CLASS(Enyo, Champions)
 	ATTRIB(Enyo, netname, string, "enyo");
@@ -130,6 +130,10 @@ CLASS(Enyo, Champions)
 #endif
 ENDCLASS(Enyo)
 REGISTER_CHAMPION(Enyo, NEW(Enyo));
+
+#ifdef CSQC
+#undef ENYO_STATS
+#endif
 
 #ifdef SVQC
 .float enyo_dodge_time;

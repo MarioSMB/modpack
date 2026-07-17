@@ -53,9 +53,11 @@ PRECACHE(Gordon)
 #endif
 #ifdef CSQC
 #define GORDON_STATS \
-"Has Crowbar as a weapon\n" \
-"Double damage to armored enemies\n" \
-"Also has a Gravity Gun"
+"^C1Dr. Gordon Freeman^F1 is a theoretical physicist, forced to defend himself and the human race in conflicts against hostile aliens and other enemies\n\n\n" \
+"^2+200% damage to armored and metal enemies\n" \
+"Wields weapon: %WEP(crowbar)\n" \
+"Wields weapon: %WEP(gravgun)\n" \
+"%SUB% Able to move some items and enemies"
 #endif
 CLASS(Gordon, Champions)
 	ATTRIB(Gordon, netname, string, "gordon");
@@ -81,3 +83,7 @@ CLASS(Gordon, Champions)
 #endif
 ENDCLASS(Gordon)
 REGISTER_CHAMPION(Gordon, NEW(Gordon));
+
+#ifdef CSQC
+#undef GORDON_STATS
+#endif
