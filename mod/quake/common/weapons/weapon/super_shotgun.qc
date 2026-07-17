@@ -10,6 +10,8 @@ PRECACHE(SuperShotgun)
 		precache_sound("flak/volley_fire2.wav");
 		precache_sound("flak/volley_fire3.wav");
 		precache_sound("flak/pump_reload.wav");
+
+		WEP_SUPER_SHOTGUN.spawnflags |= WEP_FLAG_TWOHANDED; // sorry galena
 	}
 }
 

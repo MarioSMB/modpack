@@ -11,6 +11,8 @@ PRECACHE(Nailgun)
 		precache_sound("nail/nailgun3.wav");
 		precache_sound("nail/nailgun4.wav");
 		precache_sound("nail/nailgun5.wav");
+
+		WEP_NAILGUN.spawnflags |= WEP_FLAG_TWOHANDED; // sorry galena
 	}
 }
 

@@ -9,6 +9,8 @@ PRECACHE(GrenadeLauncher)
 		precache_sound("grenade/grenade_fire1.wav");
 		precache_sound("grenade/grenade_fire2.wav");
 		precache_sound("grenade/grenade_fire3.wav");
+
+		WEP_GRENADE_LAUNCHER.spawnflags |= WEP_FLAG_TWOHANDED; // sorry galena
 	}
 }
 
