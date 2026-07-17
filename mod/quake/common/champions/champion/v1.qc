@@ -27,6 +27,12 @@ bool V1_Sliding(entity actor)
 }
 
 #ifdef SVQC
+METHOD(V1, m_updatestats, void(Champions this, entity actor))
+{
+	// doesn't play nicely
+	STAT(MOVEVARS_AIRCONTROL, actor) = 0;
+}
+
 METHOD(V1, m_activate, void(Champions this, entity actor))
 {
 	player_sound(actor, CH_VOICE, SND_V1_Start_Random(), ATTN_NORM);
