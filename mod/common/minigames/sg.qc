@@ -69,9 +69,9 @@ vector sg_box_nearest(vector box_min, vector box_max, vector p)
 }
 
 // checks if the bullet hit the shooter for the given team
-bool sg_shooter_hit(entity bullet, int pteam)
+bool sg_shooter_hit(entity minigame, entity bullet, int pteam)
 {
-	entity shooter = bullet.owner.sg_shooters[pteam-1];
+	entity shooter = minigame.sg_shooters[pteam-1];
 	if (!shooter || shooter.sg_invincible)
 		return false;
 
@@ -84,9 +84,9 @@ bool sg_shooter_hit(entity bullet, int pteam)
 #endif
 }
 
-bool sg_winner_team(entity bullet, int pteam)
+bool sg_winner_team(entity minigame, entity bullet, int pteam)
 {
-	entity shooter = bullet.owner.sg_shooters[pteam-1];
+	entity shooter = minigame.sg_shooters[pteam-1];
 	if(!shooter)
 		return false;
 	return ( shooter.realowner.minigame_players && shooter.realowner.minigame_players.pong_score >= autocvar_sv_minigames_sg_maxscore );
@@ -102,16 +102,15 @@ void sg_shooter_reset(entity shooter)
 }
 
 // Checks for a goal, when that happes adds scores and resets the shooter
-void sg_shooter_die(entity bullet, int pteam)
+void sg_shooter_die(entity minigame, entity bullet, int pteam)
 {
-	entity shooter = bullet.owner.sg_shooters[pteam-1];
+	entity shooter = minigame.sg_shooters[pteam-1];
 	if (!shooter)
 		return; // TODO?
 
-	sg_add_score(bullet.owner, bullet.team);
-	if(sg_winner_team(bullet, bullet.team))
+	sg_add_score(minigame, bullet.team);
+	if(sg_winner_team(minigame, bullet, bullet.team))
 	{
-		entity minigame = shooter.owner;
 		minigame.minigame_flags = SG_STATUS_WIN | bullet.team;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		return;
@@ -128,10 +127,11 @@ void sg_bullet_destroy(entity this)
 // Moves the bullet around
 void sg_bullet_think(entity this)
 {
+	entity minigame = this.owner;
 	float think_speed = autocvar_sys_ticrate;
 	this.nextthink = time + think_speed;
 
-	if(!(this.owner.minigame_flags & SG_STATUS_PLAY))
+	if(!(minigame.minigame_flags & SG_STATUS_PLAY))
 	{
 		sg_bullet_destroy(this);
 		return;
@@ -143,9 +143,9 @@ void sg_bullet_think(entity this)
 
 	int i;
 	for ( i = 1; i <= SG_MAX_PLAYERS; i++ )
-		if ( i != this.team && sg_shooter_hit(this, i) )
+		if ( i != this.team && sg_shooter_hit(minigame, this, i) )
 		{
-			sg_shooter_die(this,i);
+			sg_shooter_die(minigame, this,i);
 			sg_bullet_destroy(this);
 			return;
 		}
@@ -156,9 +156,9 @@ void sg_bullet_think(entity this)
 }
 
 // Spawn a bullet above the player
-void sg_bullet_spawn(entity shooter)
+void sg_bullet_spawn(entity minigame, entity shooter)
 {
-	entity bullet = msle_spawn(shooter.owner,new(pong_ball));
+	entity bullet = msle_spawn(minigame,new(pong_ball));
 	bullet.pong_length = autocvar_sv_minigames_sg_bullet_radius;
 	bullet.m_mins = vec2(-bullet.pong_length, -bullet.pong_length);
 	bullet.m_maxs = vec2(bullet.pong_length, bullet.pong_length);
@@ -175,11 +175,12 @@ void sg_bullet_spawn(entity shooter)
 // AI action
 void sg_ai_think(entity this)
 {
+	entity minigame = this.owner;
 	float think_speed = autocvar_sv_minigames_sg_ai_thinkspeed;
 	this.nextthink = time + think_speed;
 
 	this.sg_keys = 0;
-	if(!(this.owner.minigame_flags & SG_STATUS_PLAY))
+	if(!(minigame.minigame_flags & SG_STATUS_PLAY))
 		return;
 
 	entity targ = NULL;
@@ -187,7 +188,7 @@ void sg_ai_think(entity this)
 	for ( i = 1; i <= SG_MAX_PLAYERS; i++ )
 		if ( i != this.team )
 		{
-			targ = this.owner.sg_shooters[i-1];
+			targ = minigame.sg_shooters[i-1];
 			break;
 		}
 
@@ -233,10 +234,11 @@ entity sg_ai_spawn(entity shooter)
 // Moves the shooter
 void sg_shooter_think(entity this)
 {
+	entity minigame = this.owner;
 	float think_speed = autocvar_sys_ticrate;
 	this.nextthink = time + think_speed;
 
-	if(!(this.owner.minigame_flags & SG_STATUS_PLAY))
+	if(!(minigame.minigame_flags & SG_STATUS_PLAY))
 		return;
 
 	if ( this.realowner.minigame_players.sg_keys & SG_KEY_INCREASE ||
@@ -257,7 +259,7 @@ void sg_shooter_think(entity this)
 	if((this.realowner.minigame_players.sg_keys & SG_KEY_SHOOT) && (time >= this.sg_delay))
 	{
 		this.sg_invincible = false;
-		sg_bullet_spawn(this);
+		sg_bullet_spawn(minigame, this);
 		this.sg_delay = time + autocvar_sv_minigames_sg_bullet_refire;
 	}
 }
@@ -550,7 +552,7 @@ void sg_hud_board(vector pos, vector mySize)
 	{
 		vector winfs = hud_fontsize*2;
 		string player_name = "AI"; // assume AI if player has no name
-		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 		{
 			if ( it.classname == "minigame_player" && 
 					it.team == (active_minigame.minigame_flags & SG_TURN_TEAM) )

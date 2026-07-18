@@ -30,7 +30,7 @@ const int ART_SF_UPDATE_ALL = MINIG_SF_CUSTOM<<2;
 entity art_find_controller(entity minig, int letter)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "art_controller" && e.art_tilelet == letter )
 			return e;
 	return NULL;
@@ -96,7 +96,8 @@ bool art_controller_send(entity this, entity to, int sf)
 
 	WriteByte(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, this.art_tilelet);
-	WriteString(MSG_ENTITY,this.owner.netname);
+	WriteShort(MSG_ENTITY,this.minigame_id);
+	WriteRegistered(Minigames,MSG_ENTITY,this.descriptor);
 
 	if(sf & ART_SF_UPDATE_SINGLE)
 	{
@@ -124,8 +125,6 @@ bool art_controller_send(entity this, entity to, int sf)
 	return true;
 }
 #elif defined(CSQC)
-void minigame_read_owner(entity this);
-
 NET_HANDLE(ENT_CLIENT_ART_CONTROLLER, bool isNew)
 {
 	this.classname = "art_controller";
@@ -133,7 +132,8 @@ NET_HANDLE(ENT_CLIENT_ART_CONTROLLER, bool isNew)
 
 	int sf = ReadByte();
 	this.art_tilelet = ReadByte();
-	minigame_read_owner(this);
+	this.minigame_id = ReadShort();
+	this.descriptor = ReadRegistered(Minigames);
 
 	if(sf & ART_SF_UPDATE_SINGLE)
 	{
@@ -154,7 +154,7 @@ NET_HANDLE(ENT_CLIENT_ART_CONTROLLER, bool isNew)
 void art_setup_pieces(entity minigame)
 {
 	entity e = NULL;
-	while( (e = findentity(e, owner, minigame)) )
+	while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 		if(e.classname == "art_controller")
 		{
 			delete(e);
@@ -164,6 +164,8 @@ void art_setup_pieces(entity minigame)
 	{
 		entity controller = new_pure(art_controller);
 		controller.owner = minigame;
+		controller.minigame_id = minigame.minigame_id;
+		controller.descriptor = minigame.descriptor;
 		controller.art_tilelet = letter;
 	#ifdef SVQC
 		Net_LinkEntity(controller, false, 0, art_controller_send);
@@ -189,7 +191,7 @@ int art_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "art_controller")
 			{
 				delete(e);

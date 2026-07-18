@@ -27,7 +27,7 @@ const vector VR_DIR_RT = '1 0 0';
 entity vr_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -203,7 +203,7 @@ int vr_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);

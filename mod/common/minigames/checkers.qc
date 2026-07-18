@@ -67,7 +67,7 @@ enum {
 entity checkers_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -168,7 +168,7 @@ string checkers_tryallmoves(entity minigame, entity piece, bool force_jump)
 bool checkers_nomoves(entity minigame, int pteam)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
 			if(e.team != pteam) continue;
@@ -224,7 +224,7 @@ bool checkers_move_piece(entity minigame, entity piece, string pos, int promote)
 		delete(thepiece);
 	}
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+	FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, minigame.minigame_id,
 	{
 		if(it.classname != "minigame_board_piece") continue;
 		if(it.checkers_id != checkers_piece__Pawn && it.checkers_id != checkers_piece__King) continue;
@@ -287,7 +287,7 @@ void checkers_move(entity minigame, entity player, string thepiece, string pos, 
 		}
 
 		int mypcount = 0, theirpcount = 0;
-		FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, minigame.minigame_id,
 		{
 			if(it.classname != "minigame_board_piece") continue;
 			if(it.team == player.team)
@@ -363,7 +363,7 @@ int checkers_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -534,7 +534,7 @@ void checkers_hud_board(vector pos, vector mySize)
 					tile_size, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+	FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 	{
 		if ( it.classname == "minigame_board_piece" )
 		{
@@ -591,7 +591,7 @@ void checkers_hud_board(vector pos, vector mySize)
 	{
 		vector winfs = hud_fontsize*2;
 		string player_name = "";
-		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 		{
 			if ( it.classname == "minigame_player" && 
 					it.team == (active_minigame.minigame_flags & CHECKERS_TURN_TEAM) )

@@ -27,7 +27,7 @@ const int NIM_SPECTATOR_TEAM = 255; // must be above max teams and equal to or b
 entity nim_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -37,7 +37,7 @@ entity nim_find_piece(entity minig, string tile)
 bool nim_winning_piece(entity minig)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" )
 			return false;
 
@@ -130,7 +130,7 @@ void nim_next_match(entity minigame, entity player)
 		minigame.minigame_flags = NIM_TURN_PLACE | minigame.nim_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -158,7 +158,7 @@ int nim_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -269,7 +269,7 @@ void nim_hud_board(vector pos, vector mySize)
 		++per_row;
 	}
 
-	FOREACH_ENTITY_ENT(owner, active_minigame,
+	FOREACH_ENTITY_FLOAT(minigame_id, active_minigame.minigame_id,
 	{
 		if(it.classname != "minigame_board_piece") continue;
 		tile_pos = minigame_tile_pos(it.netname,NIM_NUM_CNT,NIM_LET_CNT);
@@ -307,7 +307,7 @@ void nim_hud_board(vector pos, vector mySize)
 	{
 		vector winfs = hud_fontsize*2;
 		string player_name = "";
-		FOREACH_ENTITY_ENT(owner, active_minigame,
+		FOREACH_ENTITY_FLOAT(minigame_id, active_minigame.minigame_id,
 		{
 			if(it.classname != "minigame_player") continue;
 			if(it.team == (active_minigame.minigame_flags & NIM_TURN_TEAM))

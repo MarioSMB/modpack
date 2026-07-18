@@ -73,7 +73,7 @@ enum {
 entity chess_find_piece(entity minig, string tile, entity ignore)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile && e != ignore )
 			return e;
 	return NULL;
@@ -247,7 +247,7 @@ bool chess_check_king_in_spot(entity minigame, string piece, string topos)
 	thepiece.netname = topos;
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.team == thepiece.team && e.chess_id == piece__King && e != ignore )
 		{
 			if(chess_check(minigame, e))
@@ -275,7 +275,7 @@ bool chess_king_checkspot(entity minig, entity king, string topos)
 	entity ignore = oldpiece;
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.team != kteam )
 		{
 			int try = chess_move_try(minig, e.netname, topos, false, ignore);
@@ -296,7 +296,7 @@ bool chess_check(entity minig, entity king)
 	int kteam = king.team;
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.team != kteam && e.chess_id != piece__King )
 		{
 			int try = chess_move_try(minig, e.netname, king.netname, false, NULL);
@@ -354,7 +354,7 @@ bool chess_tryallmoves(entity minigame, entity piece)
 bool chess_king_canbesaved(entity minigame, entity king)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 	{
 		if(e.classname != "minigame_board_piece") continue;
 		if(e.team != king.team || e == king) continue;
@@ -371,7 +371,7 @@ int chess_kingstatus(entity minigame, int pteam)
 	return = CHESS_FINE;
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
 			if(e.team != pteam || e.chess_id != piece__King) continue;
@@ -428,7 +428,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 		delete(thepiece);
 	}
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+	FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, minigame.minigame_id,
 	{
 		if(it.classname != "minigame_board_piece") continue;
 		if(it.chess_id != piece__Pawn) continue;
@@ -525,7 +525,7 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 		minigame.chess_nexteam = minigame_next_team(player.team,CHESS_TEAMS);
 
 		int mypcount = 0, theirpcount = 0;
-		FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, minigame.minigame_id,
 		{
 			if(it.classname != "minigame_board_piece") continue;
 			if(it.team == player.team)
@@ -605,7 +605,7 @@ int chess_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -802,7 +802,7 @@ void chess_hud_board(vector pos, vector mySize)
 					tile_size, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+	FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 	{
 		if ( it.classname == "minigame_board_piece" )
 		{
@@ -859,7 +859,7 @@ void chess_hud_board(vector pos, vector mySize)
 	{
 		vector winfs = hud_fontsize*2;
 		string player_name = "";
-		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 		{
 			if ( it.classname == "minigame_player" && 
 					it.team == (active_minigame.minigame_flags & CHESS_TURN_TEAM) )

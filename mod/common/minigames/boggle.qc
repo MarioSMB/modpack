@@ -73,7 +73,7 @@ bool boggle_word_in_list(entity player, string word)
 entity boggle_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while( ( e = findentity(e,owner,minig) ) )
+	while( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
 			if(e.netname == tile)
@@ -86,7 +86,7 @@ bool boggle_draw(entity minigame)
 {
 	int valid = 0;
 	entity e = NULL;
-	while( ( e = findentity(e,owner,minigame) ) )
+	while( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
 			++valid;
@@ -187,7 +187,7 @@ entity boggle_get_player(entity minigame, int pteam)
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
 	e = NULL;
-	while( (e = findentity(e,owner,minigame)) )
+	while( (e = findfloat(e,minigame_id,minigame.minigame_id)) )
 		if ( e.classname == "minigame_player" )
 #endif
 	if(e.team == pteam)
@@ -264,7 +264,7 @@ int boggle_get_winner(entity minigame)
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
 	e = NULL;
-	while( (e = findentity(e,owner,minigame)) )
+	while( (e = findfloat(e,minigame_id,minigame.minigame_id)) )
 		if ( e.classname == "minigame_player" )
 #endif
 	if(!winner || e.boggle_score >= winner.boggle_score) // TODO: handle ties?
@@ -314,7 +314,7 @@ int boggle_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_flags)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -441,7 +441,7 @@ void boggle_hud_board(vector pos, vector mySize)
 	{
 		vector winfs = hud_fontsize*2;
 		string player_name = "";
-		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+		FOREACH_ENTITY_FLOAT_ORDERED(minigame_id, active_minigame.minigame_id,
 		{
 			if ( it.classname == "minigame_player" && 
 					it.team == (active_minigame.minigame_flags & BOGGLE_TURN_TEAM) )

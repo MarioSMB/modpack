@@ -44,7 +44,7 @@ bool snake_alone(entity minig)
 {
 	int headcount = 0;
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == 1 )
 			++headcount;
 
@@ -55,7 +55,7 @@ bool snake_alone(entity minig)
 entity snake_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -65,7 +65,7 @@ entity snake_find_piece(entity minig, string tile)
 entity snake_find_cnt(entity minig, int steam, int tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == tile && e.team == steam )
 			return e;
 	return NULL;
@@ -84,7 +84,7 @@ bool snake_valid_tile(string tile)
 entity snake_find_head(entity minig, int steam)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == 1 && e.team == steam )
 			return e;
 	return NULL;
@@ -209,7 +209,7 @@ entity snake_get_player(entity minigame, int pteam)
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
 	e = NULL;
-	while( (e = findentity(e,owner,minigame)) )
+	while( (e = findfloat(e,minigame_id,minigame.minigame_id)) )
 		if ( e.classname == "minigame_player" )
 #endif
 	if(e.team == pteam)
@@ -287,7 +287,7 @@ void snake_eat_team(entity minigame, int pteam)
 	head.nextthink = time + 1; // make sure they don't to eat us somehow
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt && e.team == pteam )
 		{
 			strfree(e.netname);
@@ -441,7 +441,7 @@ int snake_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
