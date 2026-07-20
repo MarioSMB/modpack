@@ -23,7 +23,7 @@ const int anim_ogre_pull = 136; //'136 146 0'
 const int OGRE_BOSS = BIT(1);
 const int OGRE_NORMAL = BIT(2);
 
-void OgreGrenadeExplode(entity this)
+void OgreGrenadeExplode_do(entity this)
 {
 	float damg = (this.dmg) ? this.dmg : 40;
 	T_RadiusDamage(this, this.owner, damg, this.projectiledeathtype, NULL);
@@ -31,6 +31,14 @@ void OgreGrenadeExplode(entity this)
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
+}
+
+void OgreGrenadeExplode(entity this)
+{
+	// can be called recursively (yay notnulls), delay by a frame
+	settouch(this, func_null);
+	setthink(this, OgreGrenadeExplode_do);
+	this.nextthink = time;
 }
 
 void OgreGrenadeTouch(entity this, entity toucher)
