@@ -356,6 +356,11 @@ void fakemonster_start(entity this)
 
 spawnfunc(trigger_once);
 
+.void(entity this) use_hack; // these functions almost always are just single param functions...
+void notnull_use(entity this, entity actor, entity trigger) { if(this.use_hack) this.use_hack(this); }
+
+.void(entity this, entity toucher) notnull_touch;
+
 void func_illusionary(entity this) {}
 void trigger_changelevel(entity this) {}
 void flymonster_start(entity this) { fakemonster_start(this); }
@@ -391,16 +396,18 @@ void notnull_hack(entity this)
 		for (int i = 0, n = numentityfields(); i < n; ++i) {
 	        string k = entityfieldname(i);
 	        if (k == "selfthink" && have_think) {
-	            // safeguard against various stuff ;)
 	            putentityfieldstring(i, this, thinkfunc);
 	        }
 	        else if (k == "selftouch" && have_touch) {
-	            // safeguard against various stuff ;)
 	            putentityfieldstring(i, this, touchfunc);
 	        }
-	        else if (k == "use1" && have_use) {
+	        else if (k == "use_hack" && have_use) {
 	        	// safeguard against various stuff ;)
 	        	putentityfieldstring(i, this, usefunc);
+	        }
+	        else if (k == "use") {
+	        	// clean up a loose end
+	        	putentityfieldstring(i, this, "");
 	        }
 	    }
 
@@ -423,7 +430,9 @@ void notnull_hack(entity this)
 	    else
 	    	settouch(this, func_null);
 
-	    if(!have_use)
+	    if(have_use)
+	    	this.use = notnull_use;
+	    else
 	    	this.use = func_null;
 	}
 	else
@@ -434,6 +443,9 @@ void notnull_hack(entity this)
 		this.nextthink = 0;
 		this.use = func_null;
 	}
+
+	if(this.notnull_touch)
+		settouch(this, this.notnull_touch);
 }
 
 /*QUAKED info_notnull(0 0.5 0)(-4 -4 -4)(4 4 4)
