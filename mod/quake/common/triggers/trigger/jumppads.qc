@@ -360,6 +360,7 @@ void func_illusionary(entity this) {}
 void trigger_changelevel(entity this) {}
 void flymonster_start(entity this) { fakemonster_start(this); }
 void trigger_once(entity this, entity actor, entity trigger) { spawnfunc_trigger_once(this); }
+void SUB_UseTargets_think(entity this) { SUB_UseTargets(this, NULL, NULL); }
 void notnull_hack(entity this)
 {
 	string thinkfunc = GetField_fullspawndata(this, "think", false);
@@ -371,6 +372,11 @@ void notnull_hack(entity this)
 	if(thinkfunc && isfunction(strcat("spawnfunc_", thinkfunc)))
 	{
 		thinkfunc = strcat("spawnfunc_", thinkfunc);
+		have_think = true;
+	}
+	else if(thinkfunc == "SUB_UseTargets")
+	{
+		thinkfunc = "SUB_UseTargets_think";
 		have_think = true;
 	}
 	if(usefunc && isfunction(strcat("spawnfunc_", usefunc)))
