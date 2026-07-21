@@ -32,9 +32,9 @@ CLASS(GalenaTotem, Turret)
 /* property   */ ATTRIB(GalenaTotem, shot_volly, float, 0);
 /* property   */ ATTRIB(GalenaTotem, shot_volly_refire, float, 0);
 
-/* property   */ ATTRIB(GalenaTotem, target_range, float, 150);
+/* property   */ ATTRIB(GalenaTotem, target_range, float, 250);
 /* property   */ ATTRIB(GalenaTotem, target_range_min, float, 0.1);
-/* property   */ ATTRIB(GalenaTotem, target_range_optimal, float, 150);
+/* property   */ ATTRIB(GalenaTotem, target_range_optimal, float, 250);
 
 /* property   */ ATTRIB(GalenaTotem, target_select_rangebias, float, 0.25);
 /* property   */ ATTRIB(GalenaTotem, target_select_samebias, float, 0.25);
