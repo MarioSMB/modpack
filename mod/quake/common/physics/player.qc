@@ -306,7 +306,7 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 	//this.button2 = 0;
 // player jumping sound
 	if(this.clockwork)
-		sound7(this, CH_PLAYER, "player_banjo/flight.wav", 1, ATTN_NORM, 175, 0);
+		qc_sound7(this, CH_PLAYER, SND_Banjo_Flight, 1, ATTN_NORM, 175, 0);
 	else
 		playersound(this, CH_PLAYER, get_jumpsound(this), 1, ATTN_NORM);
 #endif

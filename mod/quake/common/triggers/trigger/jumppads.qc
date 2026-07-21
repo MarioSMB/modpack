@@ -453,7 +453,8 @@ Used as a positional target for lightning.
 */
 spawnfunc(info_notnull)
 {
-	notnull_hack(this);
+	setthink(this, notnull_hack);
+	this.nextthink = random(); // give it a very slight delay so not all are going off at once
 }
 
 #endif
