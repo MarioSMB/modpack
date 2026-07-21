@@ -787,7 +787,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 		damage = Tank_Damage(targ, inflictor, attacker, damage, deathtype);
 
 	if(StatusEffects_active(STATUSEFFECT_Weakness, attacker))
-		damage *= 0.7;
+		damage *= ((attacker.weakness_strength) ? bound(0.01, (1 - (attacker.weakness_strength / 100)), 0.99) : 0.7);
 
 	if(STAT(CANNON, targ))
 		damage *= 0.5;

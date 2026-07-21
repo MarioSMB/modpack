@@ -81,7 +81,7 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		musicnote.solid = SOLID_CORPSE;
 		musicnote.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		musicnote.classname = "tubanote";
-		musicnote.projectiledeathtype = WEP_BANJO.m_id;
+		musicnote.projectiledeathtype = WEP_BANJO.m_id | HITTYPE_SOUND;
 		musicnote.clipgroup = this.clipgroup;
 		musicnote.effects = EF_FULLBRIGHT;
 

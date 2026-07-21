@@ -3,6 +3,7 @@
 #ifdef SVQC
 METHOD(Weakness, m_remove, void(StatusEffects this, entity actor, int removal_type))
 {
+    actor.weakness_strength = 0;
     actor.effects &= ~EF_SHOCK;
     SUPER(Weakness).m_remove(this, actor, removal_type);
 }

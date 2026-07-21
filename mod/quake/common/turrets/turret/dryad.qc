@@ -86,6 +86,14 @@ METHOD(DryadWorldTree, tr_drawselected, void(DryadWorldTree this, entity actor))
 
 	Draw_Circle(org, myrange);
 }
+METHOD(DryadWorldTree, tr_think, void(DryadWorldTree this, entity actor))
+{
+	float myrange = this.target_range;
+
+	// repair range for nearby turrets
+	if(STAT(TD_BUILDMODE) == 1)
+		Draw_Circle_full(actor.origin + '0 0 2', myrange, '0 1 0', 0.15);
+}
 METHOD(DryadWorldTree, tr_setup, void(DryadWorldTree this, entity actor))
 {
 	actor.anim_idle = '0 32 0';

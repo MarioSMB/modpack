@@ -14,7 +14,7 @@ CLASS(GalenaTotem, Turret)
 #endif
 /* netname    */ ATTRIB(GalenaTotem, netname, string, "totem");
 /* fullname   */ ATTRIB(GalenaTotem, m_name, string, _("Totem"));
-/* description*/ ATTRIB(GalenaTotem, m_description, string, "Weakens nearby enemies");
+/* description*/ ATTRIB(GalenaTotem, m_description, string, "Reduces the damage of enemies\nwithin the totem's ring of power");
 #ifdef GAMEQC
 /* number     */ ATTRIB(GalenaTotem, impulse, int, 0);
 /* cost       */ ATTRIB(GalenaTotem, tur_cost, float, 60);
@@ -51,6 +51,8 @@ CLASS(GalenaTotem, Turret)
 /* property   */ ATTRIB(GalenaTotem, track_accel_pitch, float, 0);
 /* property   */ ATTRIB(GalenaTotem, track_accel_rot, float, 0);
 /* property   */ ATTRIB(GalenaTotem, track_blendrate, float, 0);
+
+/* custom prop*/ ATTRIB(GalenaTotem, weakness_strength, float, 30);
 
 /* champion   */ ATTRIB(GalenaTotem, m_champion, Champions, CHAMPION_Galena);
 #endif

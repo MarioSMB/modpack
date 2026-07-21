@@ -10,12 +10,14 @@ METHOD(GalenaTotem, tr_attack, void(GalenaTotem this, entity actor))
 	entity targ = actor.enemy;
 
 	bool didweak = false;
-	float efftime = 3;
-	float curtime = StatusEffects_gettime(STATUSEFFECT_Weakness, targ);
-	if((time + efftime) > curtime)
+	float mypower = this.weakness_strength * turret_getpower(actor.tur_level, 0.2);
+	float efftime = 1;
+	// override if we have a higher base time or if the effect
+	if(mypower > targ.weakness_strength || !StatusEffects_active(STATUSEFFECT_Weakness, targ))
 	{
 		didweak = true;
 		StatusEffects_apply(STATUSEFFECT_Weakness, targ, time + efftime, 0);
+		targ.weakness_strength = mypower;
 	}
 
 	if(didweak)
@@ -55,6 +57,21 @@ METHOD(GalenaTotem, tr_think, void(GalenaTotem this, entity actor))
 
 	if(!SpawnParticles_list_full(strcat("cl_particle_", EFFECT_TOTEM_GLOW.eent_eff_name), mymin, mymax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), false, 0))
 		boxparticles(particleeffectnum(EFFECT_TOTEM_GLOW), actor, mymin, mymax, actor.velocity, actor.velocity, bound(0, frametime, 0.1), 0);
+
+	Draw_Ring(actor.origin - '0 0 12', myrange, '0.94 0.88 0.47', 4);
+}
+METHOD(GalenaTotem, tr_getinfo, vector(GalenaTotem this, entity actor, vector pos))
+{
+	if(this.weakness_strength)
+	{
+		pos.y += 16;
+		float mypower = this.weakness_strength * turret_getpower(actor.tur_level, 0.2);
+		string dmgtext;
+		dmgtext = sprintf("^7Damage Reduction: ^6%d%%", mypower);
+		sui_drawcolortext(pos, '16 16 0', dmgtext, 1, 0);
+	}
+
+	return pos;
 }
 METHOD(GalenaTotem, tr_drawselected, void(GalenaTotem this, entity actor))
 {
@@ -207,9 +224,14 @@ METHOD(GalenaAngelStatue, tr_setup, void(GalenaAngelStatue this, entity actor))
 }
 METHOD(GalenaAngelStatue, tr_think, void(GalenaAngelStatue this, entity actor))
 {
+	float myrange = this.target_range * turret_getpower(actor.tur_level, 0.2);
 	entity head = actor.tur_head;
 	head.origin_z = 70 + sin(2 * M_PI * time);
 
 	head.drawmask = (actor.frame == 0) ? 0 : MASK_NORMAL;
+
+	// repair range for nearby turrets
+	if(STAT(TD_BUILDMODE) == 1)
+		Draw_Circle_full(actor.origin + '0 0 4', myrange, '0 1 0', 0.15);
 }
 #endif // CSQC

@@ -59,11 +59,8 @@ void buildtool_trace(vector from, vector to, entity this)
 #endif
 
 #ifdef CSQC
-void Draw_Circle(vector shotorg, float crange)
+void Draw_Circle_full(vector shotorg, float crange, vector sw_color, float a)
 {
-	float a = 0.2;
-	vector sw_color = '1 0 0';
-
 	int subdivisions = 20;
 	float angle_step = 2 * M_PI / subdivisions;
 
@@ -79,6 +76,43 @@ void Draw_Circle(vector shotorg, float crange)
 	}
 
 	R_EndPolygon();
+}
+
+void Draw_Circle(vector shotorg, float crange)
+{
+	Draw_Circle_full(shotorg, crange, '1 0 0', 0.2);
+}
+
+void Draw_Ring(vector org, float crange, vector col, float thickness)
+{
+	float a = 0.1;
+
+	int segments = 32;
+	float radius_in = crange;
+	float radius_out = crange;
+
+	for(int j = 1; j <= segments; ++j)
+	{
+		float ang = (j / segments) * 360;
+		float next_ang = ((j + 1) / segments) * 360;
+
+		vector dir1 = vec2(cos(ang * DEG2RAD), sin(ang * DEG2RAD));
+		vector dir2 = vec2(cos(next_ang * DEG2RAD), sin(next_ang * DEG2RAD));
+
+		vector p1 = org + dir1 * radius_out + ('0 0 1' * thickness);
+		vector p2 = org + dir1 * radius_in - ('0 0 1' * thickness);
+		vector p3 = org + dir2 * radius_in - ('0 0 1' * thickness);
+		vector p4 = org + dir2 * radius_out + ('0 0 1' * thickness);
+
+		R_BeginPolygon("", DRAWFLAG_NORMAL, false);
+
+		R_PolygonVertex(p4, '1 0 0', col, a);
+		R_PolygonVertex(p3, '1 1 0', col, a);
+		R_PolygonVertex(p2, '0 1 0', col, a);
+		R_PolygonVertex(p1, '0 0 0', col, a);
+
+		R_EndPolygon();
+	}
 }
 
 void Draw_Cone_withline(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot, vector sw_color, float a, bool showline)
@@ -155,12 +189,12 @@ void buildtool_DrawInfo(entity this)
 	sui_set_align(vec2(SUI_ALIGN_CENTER, SUI_ALIGN_START));
 	sui_drawtext(pos, '16 16 0', ((tur.m_name != "") ? tur.m_name : "Turret"), '0.3 1 0.3', 1, 0);
 
-	if(this.classname != "buildtool_dropmark" && tur != TUR_JUMPING_CASTLE)
+	if(/*this.classname != "buildtool_dropmark" &&*/ tur != TUR_JUMPING_CASTLE)
 	{
 		pos.y += 16;
-		sui_drawtext(pos, '12 12 0', sprintf("Summoned by %s", tur.m_champion.m_name), '1 1 1', 1, 0);
+		sui_drawcolortext(pos, '12 12 0', sprintf("^3Summoned by ^7%s%s", rgb_to_hexcolor(tur.m_champion.m_color), tur.m_champion.m_name), 1, 0);
 	}
-	else if(tur.m_description && tur.m_description != "")
+	if(tur.m_description && tur.m_description != "")
 	{
 		pos.y += 4;
 		int linecount = tokenizebyseparator(tur.m_description, "\n");

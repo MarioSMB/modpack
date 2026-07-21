@@ -7,7 +7,11 @@ void buildtool_frame(entity this);
 #endif
 
 #ifdef CSQC
+void Draw_Circle_full(vector shotorg, float crange, vector sw_color, float a);
+
 void Draw_Circle(vector shotorg, float crange);
+
+void Draw_Ring(vector org, float crange, vector col, float thickness);
 
 void Draw_Cone_withline(vector shotorg, vector shotdir, float crange, float maxpitch, float maxrot, vector sw_color, float a, bool showline);
 

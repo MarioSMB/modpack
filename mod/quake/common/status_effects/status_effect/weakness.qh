@@ -15,3 +15,7 @@ CLASS(Weakness, Debuffs)
     ATTRIB(Weakness, m_lifetime, float, 10);
 ENDCLASS(Weakness)
 REGISTER_STATUSEFFECT(Weakness, NEW(Weakness));
+
+#ifdef SVQC
+.float weakness_strength; // percentage scale from 1 to 99, must be set manually to apply
+#endif
