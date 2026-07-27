@@ -28,7 +28,7 @@ void wep_grenade_anim(entity this)
 	this.weapon_nextthink = time + 0.05;
 }
 
-void GrenadeExplode(entity this)
+void GrenadeExplode_do(entity this)
 {
 	T_RadiusDamage(this, this.owner, 120, this.projectiledeathtype, NULL);
 
@@ -36,6 +36,14 @@ void GrenadeExplode(entity this)
 	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	BecomeExplosion(this);
+}
+
+void GrenadeExplode(entity this)
+{
+	// needs to be delayed as notnulls may trigger it
+	setthink(this, GrenadeExplode_do);
+	this.nextthink = time;
+	settouch(this, func_null);
 }
 
 void GrenadeTouch(entity this, entity toucher)
