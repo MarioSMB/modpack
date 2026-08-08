@@ -18,13 +18,14 @@ void hurt_use(entity this, entity actor, entity trigger)
 	this.state = 1 - this.state;
 }
 
+.float triggerhurttime;
 void hurt_touch(entity this, entity toucher)
 {
 	if(this.state)
 		return;
 	if(this.dmg <= 0)
 		return;
-	if(time < this.attack_finished)
+	if(time < (toucher.triggerhurttime + this.wait))
 		return;
 	if(toucher.takedamage)
 	{
@@ -40,7 +41,8 @@ void hurt_touch(entity this, entity toucher)
 		//this.solid = SOLID_NOT;
 		//setthink(this, hurt_on);
 		//this.nextthink = time + this.wait;
-		this.attack_finished = time + this.wait;
+		//this.attack_finished = time + this.wait;
+		toucher.triggerhurttime = time;
 
 		//MED 12/01/96 added count stuff
 		if(this.cnt > 0)
