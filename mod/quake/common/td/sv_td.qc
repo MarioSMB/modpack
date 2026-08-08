@@ -525,7 +525,9 @@ void td_spawnmonster(entity this, entity sp, Monster mon)
 	monster.target = sp.target;
 	monster.clipgroup = CLIPGROUP_TD;
 	// so they don't get spawncamped
-	monster.invincible_finished = time + 2.2;
+	// flying monsters are excluded as they don't have fixed ground spawns
+	if(!(mon.spawnflags & MONSTER_TYPE_FLY))
+		monster.invincible_finished = time + 2.2;
 
 	monster = spawnmonster(monster, sp.origin, '0 1 0' * sp.angles_y, mon);
 	if(!monster)

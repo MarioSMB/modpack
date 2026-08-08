@@ -18,7 +18,7 @@ bool Galena_charging(entity actor)
 	if(!PHYS_INPUT_BUTTON_ATCK2(actor))
 		return false;
 
-	if(STAT(ITEMS, actor) & IT_TANK)
+	if((STAT(ITEMS, actor) & IT_TANK) || STAT(TD_BUILDMODE, actor))
 		return false;
 
 #if 0
