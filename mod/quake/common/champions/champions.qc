@@ -281,7 +281,7 @@ void QCC_UpdatePlayer(entity this)
 		_setmodel(this, newmdl);
 		setsize(this, oldmin, oldmax);
 		this.modelindex_player = this.modelindex;
-		if(autocvar_sv_quake_champions_custombbox)
+		if(autocvar_sv_quake_champions_custombbox && autocvar_sv_mapformat_is_quake3)
 		{
 			tracebox(this.origin, champ.m_mins, champ.m_maxs, this.origin, MOVE_NORMAL, this);
 			if (!trace_startsolid)
