@@ -347,37 +347,12 @@ ROCKETS
 ==============================================================================
 */
 
-
-
-void T_MissileTouch(entity this, entity toucher)
+void T_MissileExplode(entity this)
 {
-	if(toucher == this.owner)
-		return;		// don't explode on owner
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-
 	float mydmg = (this.dmg) ? this.dmg : 100;
-	float damg = mydmg + random() * (mydmg * 0.2);
-	
-	if(toucher.takedamage)
-	{
-		if(Resist_Explosions(toucher))
-			damg *= 0.5;	// mostly immune
-		if(toucher.resist_rockets != 0)
-		{
-			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
-			Resist_Rockets(toucher, this.origin);
-		}
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-	}
-
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, toucher);
+	T_RadiusDamage(this, this.owner, mydmg * 1.2, this.projectiledeathtype, this.enemy);
 
 	if(this.classname == "tubanote") // TODO: why is this not used by rockets?
 		sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
@@ -390,6 +365,38 @@ void T_MissileTouch(entity this, entity toucher)
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
+}
+
+void T_MissileTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+
+	if(toucher.takedamage)
+	{
+		float mydmg = (this.dmg) ? this.dmg : 100;
+		float damg = mydmg + random() * (mydmg * 0.2);
+
+		if(Resist_Explosions(toucher))
+			damg *= 0.5;	// mostly immune
+		if(toucher.resist_rockets != 0)
+		{
+			damg = Resist_Damage(toucher, IT_ROCKETS, damg);
+			Resist_Rockets(toucher, this.origin);
+		}
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+	}
+
+	this.enemy = toucher;
+	setthink(this, T_MissileExplode);
+	this.nextthink = time;
+	settouch(this, func_null);
 }
 
 

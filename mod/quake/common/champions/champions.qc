@@ -161,7 +161,7 @@ void QCC_UpdateStats(entity this)
 
 	if(this.m_champion)
 	{
-		if(autocvar_sv_quake_champions_custombbox)
+		if(autocvar_sv_quake_champions_custombbox && autocvar_sv_mapformat_is_quake3)
 		{
 			STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = this.m_champion.m_viewofs;
 			STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = this.m_champion.m_mins;
