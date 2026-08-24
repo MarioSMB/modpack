@@ -16,11 +16,10 @@ void dadjokes_process_url(entity this, entity fh)
 	while((s = url_fgets(fh)))
 	{
 		// TODO: verification of receive order?
-		int n = tokenizebyseparator(s, "\n");
-		for(int j = 0; j < n; ++j)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_DADJOKE, argv(j));
-		}
+		string joke = s;
+		joke = strreplace("\r", "", joke); // strip return chars
+		// TODO: other unsafe characters?
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_DADJOKE, joke);
 		maxlines -= 1;
 		if(maxlines <= 0)
 			break;
