@@ -155,7 +155,8 @@ void enderman_pain(entity this, entity attacker, float damage, int deathtype)
 	// always tries, doesn't often succeed
 	enderman_teleport(this);
 
-	enderman_pain1(this);
+	setthink(this, enderman_pain1);
+	this.nextthink = time;
 }
 
 //===========================================================================

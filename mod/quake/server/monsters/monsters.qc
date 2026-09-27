@@ -545,7 +545,8 @@ void monster_setup(entity this, Monster mon)
 
 bool monster_start(entity this, bool check_appear, Monster mon)
 {
-	if(gametype != GAMETYPE_HORDE && gametype != GAMETYPE_TD && autocvar_skill == 3 && !this.nightmare_checked && !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD) && !(mon.spawnflags & MON_FLAG_STATIONARY))
+	if(gametype != GAMETYPE_HORDE && gametype != GAMETYPE_TD && autocvar_skill == 3 && !this.nightmare_checked
+		&& !(mon.spawnflags & MONSTER_TYPE_BOSS) && !(mon.spawnflags & MONSTER_TYPE_SWIM) && !(mon.spawnflags & MONSTER_TYPE_UNDEAD) && !(mon.spawnflags & MON_FLAG_STATIONARY))
 		mon = monster_randomize(this, mon);
 
 	if(check_appear && qonquer_monstercompat(this, mon))

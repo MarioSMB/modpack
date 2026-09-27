@@ -181,12 +181,11 @@ void probe_die(entity this, entity inflictor, entity attacker, int deathtype)
 }
 
 // TODO: timer applies to all 20 creepers!
-.float probe_hurttime;
 void probe_touch(entity this, entity toucher)
 {
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.probe_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, this))
@@ -195,7 +194,7 @@ void probe_touch(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == this)
 		return;
 
-	toucher.probe_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = 10 + (random() * 4) + (random() * 2);
 	

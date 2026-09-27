@@ -141,6 +141,10 @@ MODEL(PROJECTILE_PLASMA_CANNON,             "progs/proj_plasmacannon.mdl");
 MODEL(PROJECTILE_ALIEN_SNIPER,              "progs/proj_aliensniper.mdl");
 MODEL(PROJECTILE_COCONUT,                   "progs/proj_coconut.mdl");
 MODEL(PROJECTILE_BFG,                       "progs/proj_bfg.mdl");
+MODEL(PROJECTILE_FAITH_FIREBALL,            "progs/faith_fireball.mdl");
+MODEL(PROJECTILE_EMPRESS_STREAK,            "models/elaser.mdl");
+MODEL(PROJECTILE_EMPRESS_LANCE,             "progs/proj_terraprisma.mdl");
+MODEL(PROJECTILE_EMPRESS_EVERLASTING,       "progs/v_spike.mdl");
 
 PRECACHE(PROJECTILE_LETTERS)
 {

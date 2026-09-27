@@ -8,14 +8,13 @@ METHOD(BigJohn, m_getmovespeed, float(Champions this, entity actor))
 }
 
 #ifdef SVQC
+bool Caleb_forcedamage(int deathtype);
 METHOD(BigJohn, m_takedamage, float(Champions this, entity targ, entity inflictor, entity attacker, float damage, int deathtype))
 {
+	if(targ == attacker && !Caleb_forcedamage(deathtype))
+		return 0.2;
 	if(targ.m_champion == this)
-	{
-		if(deathmatch)
-			return 0.75;
-		return 0.5;
-	}
+		return 0.7;
 	return 1;
 }
 

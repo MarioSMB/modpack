@@ -204,13 +204,38 @@ void GameCommand(string command)
 
 	if(cmdname == "gotorandom")
 	{
-		if(autocvar_sv_quake_maplist != "")
+		if(deathmatch && autocvar_sv_quake_maplist != "")
 		{
 			mapname = PickDMMap(false);
 			if(deathmatch)
 				NextLevel();
 			else
 				changelevel(mapname);
+		}
+		else if(autocvar_sv_worldbasename != "quake")
+			PrintToChatAll("^3This command only works from QuakeHub!");
+		else // we're at hub, let's pick a random valid map
+		{
+			RandomSelection_Init();
+
+			FOREACH_ENTITY_CLASS("trigger_changelevel", true,
+			{
+				string themap = it.map;
+				if(!themap || themap == "" || changelevel_checkinlist(themap, autocvar_sv_quake_maplist_exclude))
+					continue;
+
+				if(!fexists(strcat("maps/", themap, ".bsp")))
+					continue;
+
+				RandomSelection_AddString(themap, 1, 1);
+			});
+
+			string chosen = RandomSelection_chosen_string;
+			if(chosen)
+			{
+				LOG_INFO("Moving everyone 'randomly' to ", chosen);
+				changelevel(chosen);
+			}
 		}
 		return;
 	}

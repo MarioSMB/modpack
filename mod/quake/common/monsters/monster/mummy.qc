@@ -396,13 +396,25 @@ void mummy_pain(entity this, entity attacker, float damage, int deathtype)
 	this.pain_finished = time + 2.5;
 	
 	if(r < 0.06)
-		mummy_paina1(this);
+	{
+		setthink(this, mummy_paina1);
+		this.nextthink = time;
+	}
 	else if(r <  0.12)
-		mummy_painb1(this);
+	{
+		setthink(this, mummy_painb1);
+		this.nextthink = time;
+	}
 	else if(r <  0.18)
-		mummy_painc1(this);
+	{
+		setthink(this, mummy_painc1);
+		this.nextthink = time;
+	}
 	else
-		mummy_paind1(this);
+	{
+		setthink(this, mummy_paind1);
+		this.nextthink = time;
+	}
 }
 
 void mummy_sleep(entity this) { set_animofs(this, anim_mummy_paine, 11, mummy_sleep); ai_stand(this); }

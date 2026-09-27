@@ -165,12 +165,11 @@ void eow_pain(entity this, entity attacker, float damage, int deathtype)
 	this.pain_finished = time + 0.2;
 }
 
-.float eow_hurttime;
 void eow_hitbox_touch(entity this, entity toucher)
 {
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.eow_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, this))
@@ -179,7 +178,7 @@ void eow_hitbox_touch(entity this, entity toucher)
 	if(toucher == this || toucher.owner == this)
 		return;
 
-	toucher.eow_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = 15;
 	// must be the head!

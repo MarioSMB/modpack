@@ -61,6 +61,14 @@ const int EF_SHOCK = 262144;
 const int EF_AFTEREFFECT = 524288;
 #endif
 
+// engine spawnflags that affect quake entities
+#ifdef SVQC
+const int SPAWNFLAG_NOT_EASY        = 256;
+const int SPAWNFLAG_NOT_MEDIUM      = 512;
+const int SPAWNFLAG_NOT_HARD        = 1024;
+const int SPAWNFLAG_NOT_DEATHMATCH  = 2048;
+#endif
+
 const int WORLDTYPE_MEDIEVAL = 0;
 const int WORLDTYPE_METAL = 1;
 const int WORLDTYPE_BASE = 2;

@@ -1,0 +1,47 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_DEVOURER,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was torn in half by The Devourer of Gods"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_DEVOURER,                1,  NULL,           INFO_DEATH_SELF_MON_DEVOURER,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_DEVOURER,            DEATH_SELF_MON_DEVOURER,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_DEVOURER, "progs/devourer_head.mdl");
+#endif
+
+CLASS(Devourer, Monster)
+    ATTRIB(Devourer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_METAL | MON_FLAG_MULTIPART);
+    ATTRIB(Devourer, m_mins, vector, '-36 -36 -24');
+    ATTRIB(Devourer, m_maxs, vector, '36 36 24');
+    ATTRIB(Devourer, view_ofs, vector, '0 0 8');
+#ifdef GAMEQC
+    ATTRIB(Devourer, m_model, Model, MDL_MON_DEVOURER);
+#endif
+    ATTRIB(Devourer, netname, string, "devourer");
+    ATTRIB(Devourer, m_name, string, _("The Devourer of Gods"));
+    ATTRIB(Devourer, m_color, vector, '0.25 0 1');
+    ATTRIB(Devourer, m_waypoint_distance, float, 4096);
+    ATTRIB(Devourer, m_forcefog, string, "0.04 0.26 0.16 0.6");
+ENDCLASS(Devourer)
+
+REGISTER_MONSTER(DEVOURER, NEW(Devourer));
+
+// final form is effectively a new monster (own theme, different size)
+// rather than trying to hack the monster system to support that, I did this...
+CLASS(TrueDevourer, Monster)
+    ATTRIB(TrueDevourer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_METAL | MON_FLAG_MULTIPART | MON_FLAG_HIDDEN);
+    ATTRIB(TrueDevourer, m_mins, vector, '-36 -36 -24');
+    ATTRIB(TrueDevourer, m_maxs, vector, '36 36 24');
+    ATTRIB(TrueDevourer, view_ofs, vector, '0 0 8');
+#ifdef GAMEQC
+    ATTRIB(TrueDevourer, m_model, Model, MDL_MON_DEVOURER);
+#endif
+    ATTRIB(TrueDevourer, netname, string, "truedevourer");
+    ATTRIB(TrueDevourer, m_name, string, _("The Devourer of Gods"));
+    ATTRIB(TrueDevourer, m_color, vector, '0.25 0 1');
+    ATTRIB(TrueDevourer, m_waypoint_distance, float, 4096);
+    ATTRIB(TrueDevourer, m_forcefog, string, "0.04 0.6 0 0.4");
+ENDCLASS(TrueDevourer)
+
+REGISTER_MONSTER(TRUE_DEVOURER, NEW(TrueDevourer));

@@ -88,6 +88,10 @@ bool t_checkbottom(entity this);
 
 entity t_checkclient(entity this);
 
+vector ai_steerto(entity this, vector targ_org, float turnrate);
+
+void ai_accelerate(entity this, float dt, vector wishdir, float vel, float wishspeed, float accel_rate);
+
 void ChooseTurn(entity this, vector dest);
 
 void changeyaw(entity this);

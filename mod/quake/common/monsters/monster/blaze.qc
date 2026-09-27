@@ -128,7 +128,8 @@ void blaze_pain(entity this, entity attacker, float damage, int deathtype)
 	this.pain_finished = time + 0.5;
 	this.colormod = '1 0.9 0.9';
 
-	blaze_pain1(this);
+	setthink(this, blaze_pain1);
+	this.nextthink = time;
 }
 
 /*

@@ -972,6 +972,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 
 	TargetMusic_Advance();
 
+	Fog_Set(string_null, false);
+
 	if(drawtime == 0)
 		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
 	else

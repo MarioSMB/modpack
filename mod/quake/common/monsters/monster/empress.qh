@@ -1,0 +1,40 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_EMPRESS,                     1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1's parts were misplaced by Empress of Light"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_EMPRESS,                1,  NULL,           INFO_DEATH_SELF_MON_EMPRESS,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_EMPRESS,            DEATH_SELF_MON_EMPRESS,            DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_EMPRESS, "progs/empress.mdl");
+#endif
+
+CLASS(Empress, Monster)
+    ATTRIB(Empress, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY);
+    ATTRIB(Empress, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Empress, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
+    ATTRIB(Empress, m_model, Model, MDL_MON_EMPRESS);
+#endif
+    ATTRIB(Empress, netname, string, "empress");
+    ATTRIB(Empress, m_name, string, _("Empress of Light"));
+    ATTRIB(Empress, m_color, vector, '0.71 0.20 0.86');
+ENDCLASS(Empress)
+
+REGISTER_MONSTER(EMPRESS, NEW(Empress));
+
+#ifdef SVQC
+const float PHYS_SCALE = 20; // relative QU/s conversion
+const float PHYS_TICKRATE = (1 / 60); // game runs at 60 tps
+
+vector rotated_by(vector point, float radians, vector center);
+#endif
+
+#ifdef GAMEQC
+float empress_lerpf(float start, float end, float t);
+
+vector empress_lerpv(vector from, vector to, float amount);
+
+float empress_lerp_clamped(float from, float to, float t, bool clamped);
+#endif

@@ -562,14 +562,13 @@ void plantera_seed(entity this)
 		this.attack_finished = time + 2 + (random() * 2);
 }
 
-.float plantera_hurttime;
 void plantera_part_hit(entity this, entity toucher)
 {
 	entity own = (IS_MONSTER(this)) ? this : this.realowner;
 
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.plantera_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, own))
@@ -578,7 +577,7 @@ void plantera_part_hit(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == own)
 		return;
 
-	toucher.plantera_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = (this.dmg) ? this.dmg : 40;
 	

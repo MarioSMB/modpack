@@ -2,8 +2,11 @@
 
 #ifdef GAMEQC
 // boss states synced with the client
+.int state;
 const int BOSS_FROZEN = BIT(0); // boss is stunned (.is_frozen)
 const int BOSS_AGGRO = BIT(1); // boss has been aggro'd (had .enemy set at some point)
+
+const float BOSSBAR_RANGE = 2048; // hardcoded fallback incase something goes wrong
 
 .bool had_enemy; // stored state to tell if the boss had an enemy
 

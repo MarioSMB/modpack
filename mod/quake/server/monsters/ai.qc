@@ -1788,6 +1788,30 @@ void ai_turn_in_place(entity this)
 
 //=============================================================================
 
+vector ai_steerto(entity this, vector targ_org, float turnrate)
+{
+	vector desireddir = normalize(targ_org - this.origin);
+	vector olddir = normalize(this.velocity);
+	vector newdir = normalize(olddir + desireddir * turnrate);
+
+	return newdir;
+}
+
+void ai_accelerate(entity this, float dt, vector wishdir, float vel, float wishspeed, float accel_rate)
+{
+	// copied from PM_Accelerate
+	float currentspeed = (this.velocity * wishdir);
+	float addspeed = wishspeed - currentspeed;
+	if(addspeed > 0)
+	{
+		float accelspeed = accel_rate * dt * wishspeed;
+		if(accelspeed > addspeed)
+			accelspeed = addspeed;
+
+		this.velocity += accelspeed * wishdir;
+	}
+}
+
 /*
 =============
 ChooseTurn

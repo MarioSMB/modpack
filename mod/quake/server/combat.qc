@@ -447,6 +447,7 @@ void Death_SpecialHandle(entity targ, entity attacker, int killed_type)
 	targ.solid = SOLID_NOT;
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
+	targ.velocity = '0 0 0';
 
 	switch(killed_type)
 	{
@@ -1153,7 +1154,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	}
 
 	// HACK: need access to the one that was hurt!
-	if(targ.monsterdef == MON_DESTROYER && targ != orig && orig.th_pain)
+	if((targ.monsterdef.spawnflags & MON_FLAG_MULTIPART) && targ != orig && orig.th_pain)
 		orig.th_pain(orig, attacker, take, deathtype);
 	else if(targ.th_pain && showpain)
 	{

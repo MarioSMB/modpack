@@ -12,7 +12,7 @@ MODEL(MON_DESTROYER, "progs/destroyer_head.mdl");
 #endif
 
 CLASS(Destroyer, Monster)
-    ATTRIB(Destroyer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_METAL);
+    ATTRIB(Destroyer, spawnflags, int, MONSTER_TYPE_BOSS | MONSTER_TYPE_FLY | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_METAL | MON_FLAG_MULTIPART);
     ATTRIB(Destroyer, m_mins, vector, '-32 -32 -24');
     ATTRIB(Destroyer, m_maxs, vector, '32 32 32');
     ATTRIB(Destroyer, view_ofs, vector, '0 0 16');

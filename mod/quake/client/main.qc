@@ -7,6 +7,8 @@
 #include "view.qh"
 #include "../common/champions/_mod.qh"
 #include "../common/gametypes.qh"
+#include "../common/monsters/all.qh"
+#include "../common/monsters/bossbars.qh"
 #include "../common/music.qh"
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"
@@ -513,6 +515,65 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+bool was_overridden;
+string fog_override(string thefog)
+{
+	entity chosen = NULL;
+	float chosen_dist = 0;
+	IL_EACH(g_bossbars, it.monsterdef && it.monsterdef != MON_Null && it.monsterdef.m_forcefog != "",
+	{
+		float cur_range = (it.monsterdef.m_waypoint_distance > 0) ? it.monsterdef.m_waypoint_distance : BOSSBAR_RANGE;
+		if(vdist(view_origin - it.origin, >, cur_range))
+			continue;
+		float mydist = vlen2(view_origin - it.origin);
+		if(!chosen || mydist <= chosen_dist)
+		{
+			chosen = it;
+			chosen_dist = mydist;
+		}
+	});
+
+	if(chosen)
+	{
+		was_overridden = true;
+		return chosen.monsterdef.m_forcefog;
+	}
+
+	return thefog;
+}
+
+bool autocvar_r_drawfog;
+bool autocvar_r_fog_exp2;
+void Fog_Set(string fog, bool force)
+{
+	static string saved = string_null;
+	if (force) // else just set the fog once
+		strcpy(saved, fog);
+	else if (saved)
+		fog = saved;
+
+	fog = fog_override(fog);
+
+	// restore fog, even if it wasn't on before
+	if(!fog && was_overridden)
+	{
+		was_overridden = false;
+		fog = "0";
+	}
+
+	if (fog)
+	{
+		// "fog none" in the mapinfo just disables r_drawfog, client's worldspawn fog values aren't changed
+		bool drawfog = boolean(fog != "");
+		if (autocvar_r_drawfog != drawfog)
+			cvar_set("r_drawfog", ftos(drawfog));
+		if (autocvar_r_fog_exp2)
+			cvar_set("r_fog_exp2", "0");
+		if (fog != "")
+			localcmd(strcat("\nfog ", fog, " \n"));
+	}
+}
+
 void JumpsDoneWell_Init();
 void PostInit()
 {
@@ -530,6 +591,8 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	gametype = ReadByte();
 	strfree(vote_list);
 	vote_list = strzone(ReadString());
+
+	Fog_Set(ReadString(), ReadByte());
 
 	return = true;
 

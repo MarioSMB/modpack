@@ -1945,6 +1945,7 @@ void PutObserverInServer(entity this)
 	this.pusher = NULL;
 	this.monster_attack = false;
 	this.sunbeam = NULL;
+	this.jetpack_status = false;
 
 	this.team = 0;
 
@@ -2026,6 +2027,7 @@ void PutPlayerInServer(entity this)
 	this.pusher = NULL;
 	this.monster_attack = true;
 	this.sunbeam = NULL;
+	this.jetpack_status = false;
 
 	if(Challenge_Active(CHALLENGE_ONEHP))
 	{

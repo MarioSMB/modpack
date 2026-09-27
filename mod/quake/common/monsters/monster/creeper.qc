@@ -142,7 +142,8 @@ void creeper_pain(entity this, entity attacker, float damage, int deathtype)
 	this.colormod = '1 0.9 0.9';
 	this.scale = 1;
 
-	creeper_pain1(this);
+	setthink(this, creeper_pain1);
+	this.nextthink = time;
 }
 
 //===========================================================================

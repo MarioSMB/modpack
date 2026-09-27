@@ -134,7 +134,7 @@ METHOD(Shadowbeam, wr_think, void(entity thiswep, entity actor, .entity weaponen
 			player_shot1(actor);
 		wep_shadowbeam_shot1(actor.(weaponentity));
 		W_FireShadowbeam(actor, weaponentity);
-		weapon_prepareattack(thiswep, actor, weaponentity, 0.5);
+		weapon_prepareattack(thiswep, actor, weaponentity, 0.25);
 	}
 }
 METHOD(Shadowbeam, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

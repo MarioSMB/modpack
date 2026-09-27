@@ -13,6 +13,8 @@ bool autocvar_sv_quake_playerscaling = true;
 .float pushltime;
 .entity pusher;
 
+.float hurt_antispam;
+
 float autocvar_g_maxpushtime = 8.0;
 
 float player_scale = 1;

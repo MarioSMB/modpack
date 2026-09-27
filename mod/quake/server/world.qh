@@ -8,6 +8,7 @@ string autocvar_sessionid;
 
 float autocvar_sv_quake_matchlimit = 2880;
 string autocvar_sv_quake_maplist = "";
+string autocvar_sv_quake_maplist_exclude = "dm td dodgestart horde";
 float autocvar_sv_quake_timelimit = 15;
 float autocvar_sv_quake_fraglimit = 20;
 
@@ -29,6 +30,8 @@ const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
 int intermission_running;
 
 bool gameover;
+
+.string fog;
 
 int world_cdtrack; // a hack to work around the engine sending world.sounds to clients on join which plays Xonotic music
 

@@ -145,7 +145,6 @@ void des_pain(entity this, entity attacker, float damage, int deathtype)
 	}
 }
 
-.float destroyer_hurttime;
 void des_hitbox_touch(entity this, entity toucher)
 {
 	entity own = (this.classname == "monster_hitbox") ? this.realowner : this;
@@ -156,7 +155,7 @@ void des_hitbox_touch(entity this, entity toucher)
 		return;
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.destroyer_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, own))
@@ -165,7 +164,7 @@ void des_hitbox_touch(entity this, entity toucher)
 	if(toucher == own || toucher.owner == own)
 		return;
 
-	toucher.destroyer_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = 30;
 	// must be the head!

@@ -311,8 +311,6 @@ void skeletron_prime_hand_die(entity this, entity inflictor, entity attacker, in
 
 	skeletron_prime_cleararm(this.owner, this.prime_arm);
 }
-
-.float skeletron_prime_hurttime;
 void skeletron_prime_weapon_touch(entity this, entity toucher)
 {
 	entity own = this.realowner;
@@ -321,7 +319,7 @@ void skeletron_prime_weapon_touch(entity this, entity toucher)
 
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.skeletron_prime_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, own))
@@ -330,7 +328,7 @@ void skeletron_prime_weapon_touch(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == own || toucher.owner == this)
 		return; // try to not kill our own hands
 
-	toucher.skeletron_prime_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = (this.dmg) ? this.dmg : 40;
 	

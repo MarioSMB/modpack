@@ -70,6 +70,8 @@ CLASS(BanjoKazooie, Champions)
 	ATTRIB(BanjoKazooie, m_name, string, "Banjo");
 	ATTRIB(BanjoKazooie, m_color, vector, '0.58 0.27 0.21');
 	ATTRIB(BanjoKazooie, qcc_jumpheight, float, 1.2);
+	ATTRIB(BanjoKazooie, qcc_jetpack, bool, true);
+	ATTRIB(BanjoKazooie, qcc_jetpack_checkfuel, bool, true);
 #ifdef GAMEQC
 	ATTRIB(BanjoKazooie, m_model, Model, MDL_Banjo);
 	METHOD(BanjoKazooie, m_sound_pain, Sound()) { return SND_Banjo_Pain_Random(); }
@@ -101,5 +103,3 @@ REGISTER_CHAMPION(BanjoKazooie, NEW(BanjoKazooie));
 #endif
 .bool jetpack_stopped;
 .bool jetpack_status; // reusing stat
-
-void Banjo_PreJump(entity actor);

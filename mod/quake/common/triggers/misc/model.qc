@@ -361,4 +361,8 @@ spawnfunc(misc_model)
 	misc_model_alkaline(this);
 }
 
+// TODO: Xonotic support
+spawnfunc(misc_clientmodel) { spawnfunc_misc_model(this); }
+spawnfunc(misc_gamemodel) { spawnfunc_misc_model(this); }
+
 #endif

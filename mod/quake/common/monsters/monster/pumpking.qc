@@ -304,14 +304,13 @@ vector pumpking_randomangle(entity this)
 	return ang;
 }
 
-.float pumpking_hurttime;
 void pumpking_sword_touch(entity this, entity toucher)
 {
 	entity own = this.realowner;
 
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.pumpking_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, own))
@@ -320,7 +319,7 @@ void pumpking_sword_touch(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == own)
 		return;
 
-	toucher.pumpking_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = (this.dmg) ? this.dmg : 40;
 	

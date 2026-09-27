@@ -1621,3 +1621,95 @@ STATIC_INIT(Effect_TE_FUEL)
 	registercvar("cl_particle_TE_FUEL_smoke_rotate", "0 360 5 15");
 }
 #endif
+
+EFFECT(1, TR_FAITHBALL,           "TR_FAITHBALL")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_FAITHBALL)
+{
+	registercvar("cl_particle_TR_FAITHBALL", "sparks trail flame bubbles");
+
+	registercvar("cl_particle_TR_FAITHBALL_sparks_trailspacing", "14");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_count", "1");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_type", "snow");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_color", "0xffbace 0xffbace");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_size", "1 1");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_sizeincrease", "-1");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_gravity", "0");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_time", "0.5 1");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_velocityjitter", "16 16 16");
+	registercvar("cl_particle_TR_FAITHBALL_sparks_originjitter", "4 4 4");
+
+	registercvar("cl_particle_TR_FAITHBALL_trail_trailspacing", "16");
+	registercvar("cl_particle_TR_FAITHBALL_trail_count", "1");
+	registercvar("cl_particle_TR_FAITHBALL_trail_type", "spark");
+	registercvar("cl_particle_TR_FAITHBALL_trail_color", "0xfc6dca 0xfc6dca");
+	registercvar("cl_particle_TR_FAITHBALL_trail_stretchfactor", "0");
+	registercvar("cl_particle_TR_FAITHBALL_trail_size", "1 2");
+	registercvar("cl_particle_TR_FAITHBALL_trail_alpha", "64 256 160");
+	registercvar("cl_particle_TR_FAITHBALL_trail_gravity", "0.3");
+	registercvar("cl_particle_TR_FAITHBALL_trail_bounce", "1");
+	registercvar("cl_particle_TR_FAITHBALL_trail_airfriction", "0.5");
+	registercvar("cl_particle_TR_FAITHBALL_trail_gravity", "0.05");
+	registercvar("cl_particle_TR_FAITHBALL_trail_liquidfriction", "5");
+	registercvar("cl_particle_TR_FAITHBALL_trail_originjitter", "0 0 0");
+	registercvar("cl_particle_TR_FAITHBALL_trail_velocityjitter", "50 50 50");
+	registercvar("cl_particle_TR_FAITHBALL_trail_rotate", "0 360 1000 1000");
+
+	registercvar("cl_particle_TR_FAITHBALL_flame_trailspacing", "12");
+	registercvar("cl_particle_TR_FAITHBALL_flame_type", "static");
+	registercvar("cl_particle_TR_FAITHBALL_flame_color", "0xfc6dca 0xfc6dca");
+	registercvar("cl_particle_TR_FAITHBALL_flame_size", "5 1");
+	registercvar("cl_particle_TR_FAITHBALL_flame_alpha", "10 20 15");
+	registercvar("cl_particle_TR_FAITHBALL_flame_velocityjitter", "25 25 25");
+	registercvar("cl_particle_TR_FAITHBALL_flame_airfriction", "3");
+	registercvar("cl_particle_TR_FAITHBALL_flame_liquidfriction", "3");
+
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_trailspacing", "9");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_type", "bubble");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_tex", "62 62");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_color", "0x404040 0x808080");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_size", "2 2");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_alpha", "64 256 128");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_gravity", "-0.125");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_bounce", "1.5");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_liquidfriction", "0.25");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_originjitter", "16 16 16");
+	registercvar("cl_particle_TR_FAITHBALL_bubbles_velocityjitter", "96 96 96");
+}
+#endif
+
+EFFECT(1, TR_SUPERSPIKE,           "spiderbot_minigun_trail")
+
+EFFECT(1, TR_EMPRESS_STREAK,              "TR_EMPRESS_STREAK")
+#ifdef CSQC
+STATIC_INIT(Effect_TR_EMPRESS_STREAK)
+{
+	registercvar("cl_particle_TR_EMPRESS_STREAK", "smoke trail");
+
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_type", "static");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_alpha", "256 256 200");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_color", "0xffffff 0xffffff");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_lightcolor", "1.5 3 6");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_lightradius", "90");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_size", "4 4");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_tex", "38 38");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_trailspacing", "2");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_velocitymultiplier", "-0.100000");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_smoke_teamcolor", "2");
+
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_type", "snow");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_airfriction", "12");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_alpha", "444 512 1866");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_bounce", "1");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_color", "0xffffff 0xffffff");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_count", "1.500000");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_originjitter", "1 1 1");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_sizeincrease", "-20");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_size", "2 6");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_tex", "42 42");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_trailspacing", "12");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_velocityjitter", "50 50 50");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_velocityoffset", "0 0 15");
+	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_teamcolor", "2");
+}
+#endif

@@ -45,6 +45,7 @@ CLASS(FloydChamp, Champions)
 	ATTRIB(FloydChamp, qcc_anim_rockrun, vector, '17 0 8');
 	ATTRIB(FloydChamp, qcc_anim_axstnd, vector, '0 0 1');
 	ATTRIB(FloydChamp, qcc_anim_stand, vector, '0 0 1');
+	ATTRIB(FloydChamp, qcc_jetpack, bool, true);
 #ifdef GAMEQC
 	ATTRIB(FloydChamp, m_model, Model, MDL_FloydChamp);
 	ATTRIB(FloydChamp, m_model_head, Model, MDL_FloydChamp_Head);

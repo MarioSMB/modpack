@@ -710,6 +710,9 @@ void ClientInit_misc(entity this)
 	WriteByte(channel, this.count);
 	WriteByte(channel, this.cnt);
 	WriteString(channel, this.message);
+
+	WriteString(channel, world.fog);
+	WriteByte(channel, autocvar_sv_foginterval && world.fog != ""); // only forced if necessary
 }
 
 void ClientInit_CheckUpdate(entity this)

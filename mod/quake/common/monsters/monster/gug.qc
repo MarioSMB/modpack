@@ -668,7 +668,8 @@ void gug_pain(entity this, entity attacker, float damage, int deathtype)
 	// only roars when really hurt?
 	_sound(this, CH_VOICE, "gug/pain.wav", 1, ATTN_NORM);
 		
-	gug_pain1(this);
+	setthink(this, gug_pain1);
+	this.nextthink = time;
 }
 
 

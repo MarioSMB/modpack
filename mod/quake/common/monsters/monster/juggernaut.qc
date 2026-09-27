@@ -28,7 +28,8 @@ void juggernaut_pain(entity this, entity attacker, float damage, int deathtype)
 	if(damage < ((this.health + damage) * 0.2))
 		return;
 	this.pain_finished = time + 1;
-	juggernaut_pain1(this);
+	setthink(this, juggernaut_pain1);
+	this.nextthink = time;
 }
 
 void JuggerCheckWater(entity this)

@@ -18,7 +18,7 @@ enum {
 
 void slime_hop(entity this)
 {
-	float dist = max(300, random() * 700);
+	float dist = bound(100, random() * 700, 500);
 
 	fixedmakevectors(this.angles);
 	vector dir = v_forward * dist + v_up * (dist * 0.6);
@@ -31,12 +31,35 @@ void slime_frame(entity this)
 {
 	this.nextthink = time + 0.1;
 
+	int cont = pointcontents(this.origin);
+	if (cont == CONTENT_WATER
+	||  cont == CONTENT_LAVA
+	||  cont == CONTENT_SLIME)
+	{
+		float uforce = 15;
+
+		this.velocity_z += 100;
+
+		if (this.velocity_z > 0)
+			this.velocity_z *= 1 - uforce * PHYS_INPUT_FRAMETIME;
+
+		if(random() < 0.1)
+		{
+			UNSET_ONGROUND(this);
+			float oldz = this.velocity_z;
+			this.velocity = randomvec() * 75;
+			this.velocity_z = oldz + (random() * 300);
+		}
+	}
+
 	if(this.state == 2)
 	{
 		this.frame = 76;
 		if(!IS_ONGROUND(this))
 			return;
 		this.state = 1; // go back to landing and let animation finish
+		if(this.variant == SLIME_RAINBOW)
+			this.frame = 100; // go back to jumping sooner
 	}
 
 	vector anim;
@@ -65,7 +88,7 @@ void slime_frame(entity this)
 	{
 		this.frame = anim.x;
 		if(this.state == 1)
-			this.state = (this.variant == SLIME_RAINBOW || random() < 0.3) ? 3 : 0;
+			this.state = 3;
 		else
 			this.state = 1;
 	}

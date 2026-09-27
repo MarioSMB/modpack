@@ -118,7 +118,24 @@ METHOD(Pepsiman, m_drawface, bool(Champions this, vector pos, vector icon_size))
 			pepsiman_face = 0;
 		pepsiman_facetime = time + 0.1;
 	}
-	string pic = strcat("gfx/quake/pepsiman_face_", ftos(pepsiman_face));
+	// NOTE: using tempstrings messes up caching
+	// notable FPS drop from using this...
+	//string pic = strcat("gfx/quake/pepsiman_face_", ftos(pepsiman_face));
+	string pic;
+	switch(pepsiman_face)
+	{
+		default:
+		case 0: pic = "gfx/quake/pepsiman_face_0"; break;
+		case 1: pic = "gfx/quake/pepsiman_face_1"; break;
+		case 2: pic = "gfx/quake/pepsiman_face_2"; break;
+		case 3: pic = "gfx/quake/pepsiman_face_3"; break;
+		case 4: pic = "gfx/quake/pepsiman_face_4"; break;
+		case 5: pic = "gfx/quake/pepsiman_face_5"; break;
+		case 6: pic = "gfx/quake/pepsiman_face_6"; break;
+		case 7: pic = "gfx/quake/pepsiman_face_7"; break;
+		case 8: pic = "gfx/quake/pepsiman_face_8"; break;
+		case 9: pic = "gfx/quake/pepsiman_face_9"; break;
+	}
 	//Sbar_DrawPic('112 0 0', pic);
 	drawpic_aspect(pos, "gfx/quake/backtile", icon_size, '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);

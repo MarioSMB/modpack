@@ -23,6 +23,8 @@ bool champions_PlayerPhysics(entity this, float dt);
 
 bool QCC_HasSpellbook(entity this);
 
+bool QCC_PlayerOccupied(entity this);
+
 bool QCC_CanCastAbility(entity this);
 
 #ifdef SVQC

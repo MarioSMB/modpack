@@ -283,12 +283,14 @@ void hogreham_pain(entity this, entity attacker, float damage, int deathtype)
 	else if(r < 0.66)
 	{
 		this.pain_finished = time + 2;
-		hogreham_painB1(this);
+		setthink(this, hogreham_painB1);
+		this.nextthink = time;
 	}
 	else
 	{
 		this.pain_finished = time + 1.7;
-		hogreham_painC1(this);
+		setthink(this, hogreham_painC1);
+		this.nextthink = time;
 	}
 }
 

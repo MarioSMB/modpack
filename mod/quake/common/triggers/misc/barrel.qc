@@ -1,5 +1,18 @@
 #ifdef SVQC
 
+void barrel_explode_finish(entity this)
+{
+	// yoder add, 27/09/2020 to make barrels fire targets on explode
+	SUB_UseTargets(this, this.enemy, NULL);
+
+	setmodel(this, MDL_Null);
+	setsize(this, '0 0 0', '0 0 0');
+	setthink(this, BecomeExplosion);
+	this.nextthink = time;
+
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
 void barrel_explode(entity this)
 {
 	// did say this.owner
@@ -12,14 +25,14 @@ void barrel_explode(entity this)
 	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	particle(org, '0 0 0', 75, 255);
 
-	// yoder add, 27/09/2020 to make barrels fire targets on explode
-	SUB_UseTargets(this, this.enemy, NULL);
-
-	setmodel(this, MDL_Null);
-	setsize(this, '0 0 0', '0 0 0');
-	setorigin(this, org + '0 0 32');
-	setthink(this, BecomeExplosion);
+	// delay the activation and actual explosion by a single frame
+	// this prevents potential recursion crashes
+	setthink(this, barrel_explode_finish);
 	this.nextthink = time;
+	settouch(this, func_null);
+	this.takedamage = DAMAGE_NO;
+	this.solid = SOLID_NOT;
+	setorigin(this, org + '0 0 32');
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

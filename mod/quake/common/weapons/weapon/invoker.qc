@@ -167,6 +167,7 @@ bool invoked_SendEntity(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, this.modelindex);
 	WriteByte(MSG_ENTITY, this.skin);
 	WriteByte(MSG_ENTITY, this.frame);
+	WriteFloat(MSG_ENTITY, this.scale);
 	WriteVector(MSG_ENTITY, this.origin);
 	if(f & BIT(0))
 	{
@@ -212,6 +213,7 @@ NET_HANDLE(ENT_CLIENT_INVOKED, bool isnew)
 	e.skin = ReadByte();
 	e.frame = ReadByte();
 	e.frame1time = time;
+	e.scale = ReadFloat();
 	e.origin = ReadVector();
 	setorigin(e, e.origin);
 	if(f & BIT(0))
@@ -266,6 +268,7 @@ void FX_Invoked(entity targ)
 	setorigin(e, targ.origin);
 	e.angles = targ.angles;
 	e.skin = targ.skin;
+	e.scale = targ.scale;
 	setsize(e, targ.mins, targ.maxs);
 	Net_LinkEntity(e, false, 0.1, invoked_SendEntity);
 }

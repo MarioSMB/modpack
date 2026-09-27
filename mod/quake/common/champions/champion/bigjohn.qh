@@ -78,11 +78,11 @@ PRECACHE(BigJohn)
 #ifdef CSQC
 #define BIGJOHN_STATS \
 "^F1Defacto leader of Dusk's possessed military forces, ^C1Big John^F1 is a lumbering action antihero with explosive tendencies\n\n\n" \
-"^2+50% damage resistance\n" \
+"^2+30% damage resistance\n" \
 "^1-15% movement speed\n" \
 "^1-20% health regeneration\n" \
 "Press %ABILITY% to run faster briefly\n" \
-"^xF65Explosives expert (^2+50% damage^xF65)"
+"^xF65Explosives expert (^2+50% damage, -80% self damage^xF65)"
 #endif
 CLASS(BigJohn, Champions)
 	ATTRIB(BigJohn, netname, string, "bigjohn");

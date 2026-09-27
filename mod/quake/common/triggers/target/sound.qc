@@ -53,7 +53,13 @@ void sound_setup(entity this, float vol)
 void target_sound_use(entity this, entity actor, entity trigger);
 void target_sound_use_think(entity this)
 {
+	// NOTE: maps may crash since this potentially infinitely loops!
+#if 0
 	target_sound_use(this, NULL, NULL);
+#else
+	_sound(this, this.style, this.noise, this.volume, this.distance);
+	delete(this);
+#endif
 }
 
 void sound_delayed(entity on, float _chan, string _noise, float _volume, float _distance, float _delay)

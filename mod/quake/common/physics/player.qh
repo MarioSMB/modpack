@@ -38,6 +38,11 @@ bool autocvar_sv_airstopaccelerate_full;
 	.int items;
 #endif
 
+// TODO
+.bool jetpack_stopped;
+.bool jetpack_status;
+void jetpack_physics(entity this, float maxspd_mod, float dt, float fuel_cost, float maxspeed_up, float maxspeed_side, float accel_side, float accel_up, float antigrav, float fuel_scale, bool do_vertical_scale);
+
 #ifdef SVQC
 	.bool move_qcphysics;
 

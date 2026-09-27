@@ -97,7 +97,8 @@ void mcslime_pain(entity this, entity attacker, float damage, int deathtype)
 	this.pain_finished = time + 0.5;
 	this.colormod = '1 0.9 0.9';
 
-	slime_pain1(this);
+	setthink(this, slime_pain1);
+	this.nextthink = time;
 }
 
 //===========================================================================

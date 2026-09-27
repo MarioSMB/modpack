@@ -446,8 +446,26 @@ NET_HANDLE(TE_CSQC_TEMPSOUND, bool isNew)
 
 // NOTE: relies on boss bars!
 bool autocvar_cl_quake_bossmusic = true;
+float autocvar_cl_quake_bossmusic_timeout = 8;
 .entity musicdef;
 .bool music_checkfailed;
+
+void bossmusic_delete(entity this)
+{
+	strfree(this.noise);
+	delete(this);
+}
+
+void bossmusic_think(entity this)
+{
+	this.nextthink = time;
+
+	if(this.monsterdef && autocvar_cl_quake_bossmusic_timeout > 0 && time >= this.cnt)
+	{
+		this.monsterdef.musicdef = NULL;
+		bossmusic_delete(this);
+	}
+}
 
 // bit hacky but means we can spawn the boss music when needed
 // don't need to cache all the songs that way!
@@ -464,11 +482,16 @@ bool bossmusic_spawn(Monster mon)
 	precache_sound(s);
 	strcpy(bmusic.noise, s);
 	bmusic.volume = 1;
-	bmusic.fade_time = 3;
+	bmusic.fade_time = 1;
 	bmusic.fade_rate = 2;
 	bmusic.active = ACTIVE_ACTIVE;
+
+	setthink(bmusic, bossmusic_think);
+	bmusic.nextthink = time;
+	bmusic.cnt = time + autocvar_cl_quake_bossmusic_timeout; // we just spawned it, but just be safe
 		
 	mon.musicdef = bmusic;
+	bmusic.monsterdef = mon;
 
 	IL_PUSH(TargetMusic_list, bmusic);
 
@@ -482,13 +505,26 @@ void BossMusic_Advance()
 
 	entity chosen = NULL;
 	float chosen_dist = 0;
-	IL_EACH(g_bossbars, it.monsterdef && it.monsterdef != MON_Null && (it.state & BOSS_AGGRO) && vdist(view_origin - it.origin, <=, 2048),
+	IL_EACH(g_bossbars, it.monsterdef && it.monsterdef != MON_Null && (it.state & BOSS_AGGRO),
 	{
+		float cur_range = (it.monsterdef.m_waypoint_distance) ? it.monsterdef.m_waypoint_distance : 2048;
+		if(vdist(view_origin - it.origin, >, cur_range))
+		{
+			if(it.monsterdef.musicdef && time >= it.monsterdef.musicdef.cnt)
+			{
+				bossmusic_delete(it.monsterdef.musicdef);
+				it.monsterdef.musicdef = NULL;
+			}
+			continue;
+		}
 		if(!it.monsterdef.musicdef)
 		{
 			if(it.monsterdef.music_checkfailed || !bossmusic_spawn(it.monsterdef))
 				continue;
 		}
+
+		// the boss exists, so keep its music alive
+		it.monsterdef.musicdef.cnt = time + autocvar_cl_quake_bossmusic_timeout;
 
 		float mydist = vlen2(view_origin - it.origin);
 		if(!chosen || mydist <= chosen_dist)

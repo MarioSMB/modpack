@@ -121,7 +121,8 @@ void endermite_pain(entity this, entity attacker, float damage, int deathtype)
 	this.colormod = '1 0.9 0.9';
 	this.glowmod = this.colormod;
 
-	endermite_pain1(this);
+	setthink(this, endermite_pain1);
+	this.nextthink = time;
 }
 
 //===========================================================================

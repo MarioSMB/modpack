@@ -7,22 +7,16 @@ bool bossbar_send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & BIT(0))
-	{
 		WriteByte(MSG_ENTITY, this.monsterdef.monsterid);
-	}
 
 	if(sf & BIT(1))
 		WriteByte(MSG_ENTITY, (this.health / this.max_health) * 191.0);
 
 	if(sf & BIT(2))
-	{
 		WriteVector(MSG_ENTITY, this.origin);
-	}
 
 	if(sf & BIT(3))
-	{
 		WriteByte(MSG_ENTITY, this.state);
-	}
 
 	return true;
 }
@@ -163,7 +157,6 @@ void HUD_BossBar_Draw(entity this)
 	drawfont = oldfont;
 }
 
-const float BOSSBAR_RANGE = 2048; // TODO: per monster?
 void HUD_BossBars()
 {
 	if(sb_showscores || STAT(HEALTH) == -666)
@@ -173,7 +166,7 @@ void HUD_BossBars()
 	float chosen_dist = 0;
 	IL_EACH(g_bossbars, it.monsterdef && it.monsterdef != MON_Null,
 	{
-		float cur_range = BOSSBAR_RANGE;
+		float cur_range = (it.monsterdef.m_waypoint_distance > 0) ? it.monsterdef.m_waypoint_distance : BOSSBAR_RANGE;
 		if(!(it.state & BOSS_AGGRO))
 			cur_range *= 0.5; // TODO: customise range?
 		if(vdist(view_origin - it.origin, >, cur_range))

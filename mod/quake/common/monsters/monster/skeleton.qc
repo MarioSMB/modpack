@@ -306,7 +306,8 @@ void skeleton_pain(entity this, entity attacker, float damage, int deathtype)
 	this.pain_finished = time + 1;
 	this.colormod = '1 0.9 0.9';
 
-	skeleton_pain1(this);
+	setthink(this, skeleton_pain1);
+	this.nextthink = time;
 }
 
 //===========================================================================

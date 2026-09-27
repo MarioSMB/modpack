@@ -15,3 +15,19 @@ CLASS(Twins, Monster)
 ENDCLASS(Twins)
 
 REGISTER_MONSTER(TWINS, NEW(Twins));
+
+#ifdef SVQC
+.int twins_attackcount;
+
+vector twins_repel(entity this, vector point, float maximal_distance);
+
+void twins_anim(entity this);
+
+void twins_move(entity this, vector goal, float velmax, float turnrate);
+
+void twins_brake(entity this, float brakespeed);
+
+void twins_setangle(entity this, vector goal);
+
+entity twins_pickmovegoal(entity this);
+#endif

@@ -173,6 +173,7 @@ CLASS(Duke, Champions)
 	ATTRIB(Duke, m_name, string, ((random() < 0.25) ? "Duke Noobem" : "Duke Nukem"));
 	ATTRIB(Duke, m_color, vector, '1 0.75 0.1');
 	ATTRIB(Duke, qcc_meleename, string, "mfoot");
+	ATTRIB(Duke, qcc_jetpack, bool, true);
 #ifdef GAMEQC
 	ATTRIB(Duke, m_model, Model, MDL_Duke);
 	ATTRIB(Duke, m_model_head, Model, MDL_Duke_Head);
@@ -204,7 +205,3 @@ REGISTER_CHAMPION(Duke, NEW(Duke));
 
 .bool duke_cannon;
 #endif
-.bool jetpack_stopped;
-.bool jetpack_status;
-
-void Duke_PreJump(entity actor);

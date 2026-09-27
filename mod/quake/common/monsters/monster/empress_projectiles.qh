@@ -1,0 +1,23 @@
+#pragma once
+
+#ifdef GAMEQC
+REGISTER_NET_TEMP(TE_CSQC_EMPRESS_LANCE_TELEGRAPH)
+
+REGISTER_NET_LINKED(ENT_CLIENT_EMPRESS_AURORA)
+
+REGISTER_NET_LINKED(ENT_CLIENT_EMPRESS_SUNDANCE)
+#endif
+
+#ifdef SVQC
+bool empress_shouldenrage(entity this);
+
+void empress_rainbowstreak_create(entity this, vector org, vector vel, entity targ, float damage);
+
+void empress_lance_create(entity this, vector org, bool enraged, vector dir, float damage, float timer);
+
+void empress_aurora_create(entity this, vector org);
+
+void empress_everlasting_create(entity this, vector org, vector vel, entity targ, float damage, float timer);
+
+void empress_sundance_create(entity this, vector org, vector dir, float damage, float timer, bool enraged);
+#endif

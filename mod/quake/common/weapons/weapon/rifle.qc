@@ -48,10 +48,11 @@ void W_FireRifle(entity this, .entity weaponentity)
 
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rifle_fire.wav", 1, ATTN_NORM);
 	W_TakeAmmo(this, IT_NAILS, 2);
+	float pspeed = 6000;
 	vector org = W_Shotorg(this, weaponentity) + v_right * 6 + v_up * 6;
-	vector dir = qc_aim_fromorg(this, org, 5000);
+	vector dir = qc_aim_fromorg(this, org, pspeed);
 	entity newmis = launch_spike(this, org, dir);
-	newmis.velocity = dir * 5000;
+	newmis.velocity = dir * pspeed;
 	newmis.projectiledeathtype = WEP_RIFLE.m_id;
 	newmis.classname = "rifle_bullet";
 	settouch(newmis, rifle_bullet_touch);

@@ -107,6 +107,9 @@ void iceg_WaveSetupHP(entity this)
 		// The wave trigger is always one wave lower
 		this.bosswavetrig = this.health - this.bosswaveqty;
 	}
+
+	if(this.sprite)
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
 }
 
 //----------------------------------------------------------------------

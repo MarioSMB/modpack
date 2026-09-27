@@ -5,6 +5,8 @@ const int CMD_REQUEST_USAGE = 2;
 
 .string weaponorder_byimpulse;
 
+bool autocvar_sv_foginterval = true;
+
 float autocvar_sv_quake_recoil = 1;
 
 float autocvar_sv_quake_kill_delay = 5;

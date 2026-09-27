@@ -35,6 +35,7 @@ CLASS(EaterOfWorlds, Monster)
     ATTRIB(EaterOfWorlds, netname, string, "eow");
     ATTRIB(EaterOfWorlds, m_name, string, "Eater of Worlds");
     ATTRIB(EaterOfWorlds, m_color, vector, '0.51 0.08 0.51');
+    ATTRIB(EaterOfWorlds, m_waypoint_distance, float, 4096);
 ENDCLASS(EaterOfWorlds)
 
 REGISTER_MONSTER(EOW, NEW(EaterOfWorlds));

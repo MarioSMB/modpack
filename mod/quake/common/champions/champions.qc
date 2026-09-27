@@ -51,17 +51,25 @@ bool QCC_HasSpellbook(entity this)
 	return false;
 }
 
+// TODO: make generic
+bool QCC_PlayerOccupied(entity this)
+{
+	if(STAT(CANNON, this))
+		return true;
+	if(STAT(ITEMS, this) & IT_TANK)
+		return true;
+	if(STAT(CLOCKWORK, this))
+		return true;
+	return false;
+}
+
 bool QCC_CanCastAbility(entity this)
 {
 	if(time < STAT(QCC_ABILITYTIME, this))
 		return false;
-	if(STAT(CANNON, this))
-		return false;
-	if(STAT(ITEMS, this) & IT_TANK)
-		return false;
-	if(STAT(CLOCKWORK, this))
-		return false;
 	if(this.m_transform)
+		return false;
+	if(QCC_PlayerOccupied(this))
 		return false;
 	if(QCC_HasSpellbook(this))
 		return false;

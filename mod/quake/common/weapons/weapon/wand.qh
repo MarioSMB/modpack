@@ -2,7 +2,7 @@
 
 CLASS(Wand, Weapon)
 /* ammotype  */ ATTRIB(Wand, ammo_type, int, 0);
-/* impulse   */ ATTRIB(Wand, impulse, int, 1);
+/* impulse   */ ATTRIB(Wand, impulse, int, 9);
 /* spawnflags*/ ATTRIB(Wand, spawnflags, int, WEP_FLAG_MANA | WEP_FLAG_MUSIC | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL);
 /* ammo */      ATTRIB(Wand, aflag, int, 0);
 /* modelname */ ATTRIB(Wand, mdl, string, "wand");

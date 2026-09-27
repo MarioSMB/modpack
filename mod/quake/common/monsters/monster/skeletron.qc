@@ -335,7 +335,6 @@ void skeletron_hand_die(entity this, entity inflictor, entity attacker, int deat
 		skeletron_cleararm(this.owner, false);
 }
 
-.float skeletron_hurttime;
 void skeletron_hand_touch(entity this, entity toucher)
 {
 	entity own = this.realowner;
@@ -344,7 +343,7 @@ void skeletron_hand_touch(entity this, entity toucher)
 
 	if(toucher.flags & FL_PROJECTILE)
 		return;
-	if(time < toucher.skeletron_hurttime)
+	if(time < toucher.hurt_antispam)
 		return;
 
 	if(!toucher.takedamage || !Damage_ValidTarget(toucher, own))
@@ -353,7 +352,7 @@ void skeletron_hand_touch(entity this, entity toucher)
 	if(toucher == this.owner || toucher.owner == own || toucher.owner == this)
 		return; // try to not kill our own hands
 
-	toucher.skeletron_hurttime = time + 0.2; // no spam please
+	toucher.hurt_antispam = time + 0.2; // no spam please
 
 	float damage = (this.dmg) ? this.dmg : 40;
 	
@@ -405,32 +404,14 @@ void skeletron_skull_think(entity this)
 	entity targ = this.owner.enemy;
 	if(targ && time < this.cnt)
 	{
-		vector targ_org = CENTER_OR_VIEWOFS(targ);
-		vector desireddir = normalize(targ_org - this.origin);
-		vector olddir = normalize(this.velocity);
-		float turnrate = 0.2;
-		vector newdir = normalize(olddir + desireddir * turnrate);
+		vector newdir = ai_steerto(this, CENTER_OR_VIEWOFS(targ), 0.2);
 		this.velocity = newdir * vel;
 	}
 
-	if(vel < velmax)
-	{
-		// copied from PM_Accelerate
-		float wishspeed = velmax;
-		vector wishdir = normalize(this.velocity);
-		float currentspeed = (this.velocity * wishdir);
-		float addspeed = wishspeed - currentspeed;
-		if(addspeed > 0)
-		{
-			float accelspeed = 0.25 * PHYS_INPUT_TIMELENGTH * wishspeed;
-			if(accelspeed > addspeed)
-				accelspeed = addspeed;
+	ai_accelerate(this, PHYS_INPUT_TIMELENGTH, normalize(this.velocity), vel, velmax, 0.25);
 
-			this.velocity += accelspeed * wishdir;
-		}
-	}
-
-	this.angles = vectoangles(this.velocity);
+	if(vdist(this.velocity, >, 0))
+		this.angles = vectoangles(this.velocity);
 	//UpdateCSQCProjectile(this);
 }
 

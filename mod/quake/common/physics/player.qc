@@ -116,6 +116,8 @@ void PM_FixClient(entity this)
 	Physics_UpdateStats(this);
 #endif
 
+	this.jetpack_status = STAT(QCC_JETPACK, this);
+
 	QCC_FixClient(this);
 }
 
@@ -140,6 +142,163 @@ void SV_check_punch(entity this, float dt)
 			this.punchvector = '0 0 0';
 	}
 #endif
+}
+
+void jetpack_physics(entity this, float maxspd_mod, float dt, float fuel_cost, float maxspeed_up, float maxspeed_side, float accel_side, float accel_up, float antigrav, float fuel_scale, bool do_vertical_scale)
+{
+	//makevectors(this.v_angle.y * '0 1 0');
+	makevectors(this.v_angle);
+	vector wishvel = v_forward * this.movement_x
+					+ v_right * this.movement_y;
+	// add remaining speed as Z component
+	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
+	// fix speedhacks :P
+	if(wishvel != '0 0 0')
+		wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
+	// add the unused velocity as up component
+	wishvel.z = 0;
+
+	// if (PHYS_INPUT_BUTTON_JUMP(this))
+	if(STAT(QCC_JETPACKFUEL, this) > 0)
+		wishvel.z = (do_vertical_scale) ? sqrt(max(0, 1 - wishvel * wishvel)) : 1;
+	// otherwise no verticality
+
+	// it is now normalized, so...
+	float a_side = accel_side;
+	float a_up = accel_up;
+	float a_add = antigrav * PHYS_GRAVITY(this);
+
+	// NOTE: no reverse thrust in Quake
+
+	wishvel_x *= a_side;
+	wishvel_y *= a_side;
+	wishvel_z *= a_up;
+	wishvel_z += a_add;
+
+	float best = 0;
+	//////////////////////////////////////////////////////////////////////////////////////
+	// finding the maximum over all vectors of above form
+	// with wishvel having an absolute value of 1
+	//////////////////////////////////////////////////////////////////////////////////////
+	// we're finding the maximum over
+	//   f(a_side, a_up, a_add, z) := a_side * (1 - z^2) + (a_add + a_up * z)^2;
+	// for z in the range from -1 to 1
+	//////////////////////////////////////////////////////////////////////////////////////
+	// maximum is EITHER attained at the single extreme point:
+	float a_diff = a_side * a_side - a_up * a_up;
+	float f;
+	if (a_diff != 0)
+	{
+		f = a_add * a_up / a_diff; // this is the zero of diff(f(a_side, a_up, a_add, z), z)
+		if (f > -1 && f < 1) // can it be attained?
+		{
+			best = (a_diff + a_add * a_add) * (a_diff + a_up * a_up) / a_diff;
+			//print("middle\n");
+		}
+	}
+	// OR attained at z = 1:
+	f = (a_up + a_add) * (a_up + a_add);
+	if (f > best)
+	{
+		best = f;
+		//print("top\n");
+	}
+	// OR attained at z = -1:
+	f = (a_up - a_add) * (a_up - a_add);
+	if (f > best)
+	{
+		best = f;
+		//print("bottom\n");
+	}
+	best = sqrt(best);
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//print("best possible acceleration: ", ftos(best), "\n");
+
+	float fxy, fz;
+	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / maxspeed_side, 1);
+	if (wishvel_z - PHYS_GRAVITY(this) > 0)
+		fz = bound(0, 1 - this.velocity_z / maxspeed_up, 1);
+	else
+		fz = bound(0, 1 + this.velocity_z / maxspeed_up, 1);
+
+	float fvel = vlen(wishvel);
+	wishvel_x *= fxy;
+	wishvel_y *= fxy;
+	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
+
+	if(fvel)
+	{
+		if(best)
+			fvel = min(1, vlen(wishvel) / best);
+		float fvelscale = (fuel_scale * dt * fvel);
+		if(fvelscale)
+			f = min(1, fuel_scale / fvelscale);
+		else
+			f = 1;
+	}
+	//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
+
+	if (f > 0 && wishvel != '0 0 0')
+	{
+		this.velocity = this.velocity + wishvel * f * dt;
+		UNSET_ONGROUND(this);
+
+#ifdef SVQC
+		STAT(QCC_JETPACKFUEL, this) -= fuel_cost * dt * fvel * f;
+		if(STAT(QCC_JETPACKFUEL, this) <= 0)
+			STAT(QCC_JETPACKFUEL, this) = 0;
+
+		this.jetpack_status = true;
+#endif
+	}
+}
+
+bool PM_jetpack(entity this, float maxspd_mod, float dt)
+{
+	if(this.m_champion && this.m_champion.m_jetpack && this.m_champion.m_jetpack(this.m_champion, this, maxspd_mod, dt))
+		return true;
+
+#if 0
+	// TODO? we don't actually need a fallback
+	float fuel_cost = 50;
+	float maxspeed_up = 200;
+	float maxspeed_side = 150;
+	float accel_side = 200;
+	float accel_up = 500;
+	float antigrav = 0.5;
+	float fuel_scale = 100;
+	jetpack_physics(this, maxspd_mod, dt, fuel_cost, maxspeed_up, maxspeed_side, accel_side, accel_up, antigrav, fuel_scale);
+#endif
+	return false; // TODO: if we want to jetpack but have no jetpack...
+}
+
+void jetpack_prejump(entity this)
+{
+	this.jetpack_status = false;
+
+	if((PHYS_INPUT_BUTTON_CROUCH(this) && this.m_champion.qcc_jetpack))
+	{
+		bool activate = (PHYS_INPUT_BUTTON_CROUCH(this) && this.m_champion.qcc_jetpack);
+		bool has_fuel = (STAT(QCC_JETPACKFUEL, this) > 0 || !this.m_champion.qcc_jetpack_checkfuel);
+
+		//if(PHYS_INPUT_BUTTON_JUMP(this) && !IS_JUMP_HELD(this) && !IS_ONGROUND(this) && (STAT(PASSIVES, this) & PASSIVE_HERMESBOOTS))
+			//activate = true;
+
+		if(this.jetpack_stopped) { }
+		else if(!has_fuel)
+		{
+			this.jetpack_stopped = true;
+			this.jetpack_status = false;
+		}
+		else if(activate)
+			this.jetpack_status = true;
+	}
+	else
+	{
+		this.jetpack_stopped = false;
+		this.jetpack_status = false;
+	}
 }
 
 #ifdef SVQC
@@ -809,6 +968,7 @@ bool CheckWallClimb(entity this)
 	return (plane_normal != '0 0 0');
 }
 
+.float jetpack_stopped;
 void PM_Main(entity this, float dt)
 {
 	PM_FixClient(this);
@@ -887,12 +1047,10 @@ void PM_Main(entity this, float dt)
 #endif
 
 	// TODO clean up this mess of a setup
-	if(this.m_champion == CHAMPION_Duke || this.m_champion == CHAMPION_FloydChamp)
-		Duke_PreJump(this);
-	if(this.m_champion == CHAMPION_BanjoKazooie)
-		Banjo_PreJump(this);
 	if(this.m_champion == CHAMPION_Kirby)
 		Kirby_PreJump(this);
+
+	jetpack_prejump(this);
 
 	if(IS_ONGROUND(this))
 		UNSET_DOUBLEJUMPED(this);
@@ -934,6 +1092,8 @@ void PM_Main(entity this, float dt)
 		PM_WaterMove(this, maxspeed_mod, dt);
 		return;
 	}
+	else if(this.jetpack_status && PM_jetpack(this, maxspeed_mod, dt))
+	{ /* do nothing */ }
 	else if(IS_ONGROUND(this))
 		PM_walk(this, maxspeed_mod, dt);
 	else

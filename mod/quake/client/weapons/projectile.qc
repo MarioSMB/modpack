@@ -89,6 +89,7 @@ void Projectile_DrawTrail(entity this, vector to)
 // kirby stars TODO
 .float idle_finished;
 void Star_Spawn(vector org, vector ang);
+void CSQCModel_AfterEffect(entity this);
 
 void Nimbus_Rain(vector org)
 {
@@ -220,6 +221,20 @@ void Projectile_Draw(entity this)
 		case PROJECTILE_EGG_ICE:
 			makevectors(ang);
 			trailorigin += v_up * 16;
+			break;
+		case PROJECTILE_EMPRESS_STREAK:
+		case PROJECTILE_EMPRESS_EVERLASTING:
+			float slow_time = time / 60;
+			float time_fraction = slow_time - floor(slow_time);
+			float base_hue = this.spawntime - floor(this.spawntime);
+			float final_hue = base_hue + time_fraction;
+			if(final_hue >= 1)
+				final_hue -= 1;
+			this.colormod = hsl_to_rgb(vec3(final_hue * 360, 1, 0.5));
+			this.glowmod = this.colormod;
+			break;
+		case PROJECTILE_EMPRESS_LANCE:
+			CSQCModel_AfterEffect(this);
 			break;
 	}
 
@@ -497,7 +512,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(BANJO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; break;
 			HANDLE(BULLET)             this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(SAWBLADE)           this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(SUPER_SPIKE)        this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(SUPER_SPIKE)        this.traileffect = EFFECT_TR_SUPERSPIKE.m_id; break;
 			HANDLE(LAVA_NAIL)          this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(BIOGUN_BONESHARD)   this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(GRENADE)            this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = '300 300 300'; break;
@@ -596,6 +611,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(ALIEN_SNIPER)       this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(COCONUT)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 0 0'; break;
 			HANDLE(BFG)                this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(FAITH_FIREBALL)     this.traileffect = EFFECT_TR_FAITHBALL.m_id; this.avelocity = '200 100 300'; break;
+			HANDLE(EMPRESS_STREAK)     this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
+			HANDLE(EMPRESS_LANCE)      this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(EMPRESS_EVERLASTING)this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -950,6 +969,20 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_BFG:
 				this.effects |= EF_FULLBRIGHT;
 				this.effects |= EF_DIMLIGHT;
+				break;
+			case PROJECTILE_EMPRESS_STREAK:
+			case PROJECTILE_EMPRESS_EVERLASTING:
+				this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+				this.effects |= EF_FULLBRIGHT;
+				settouch(this, func_null);
+				break;
+			case PROJECTILE_EMPRESS_LANCE:
+				set_movetype(this, MOVETYPE_NOCLIP);
+				this.effects |= EF_FULLBRIGHT;
+				//this.effects |= EF_ADDITIVE;
+				this.effects |= EF_DIMLIGHT;
+				//this.effects |= EF_NODEPTHTEST;
+				settouch(this, func_null);
 				break;
 			default:
 				break;

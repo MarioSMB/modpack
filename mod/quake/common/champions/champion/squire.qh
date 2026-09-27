@@ -146,7 +146,7 @@ CLASS(Squire, Champions)
 	ATTRIB(Squire, m_model_head, Model, MDL_Squire_Head);
 	METHOD(Squire, m_sound_pain, Sound()) { return SND_Squire_Pain_Random(); }
 	METHOD(Squire, m_sound_death, Sound()) { return SND_Squire_Death_Random(); }
-	METHOD(Squire, m_sound_jump, Sound(entity actor)) { return SND_Squire_Pain_Random(); }
+	METHOD(Squire, m_sound_jump, Sound(entity actor)) { return SND_Squire_Jump_Random(); }
 	METHOD(Squire, m_sound_waterdeath, Sound(entity actor)) { return SND_Squire_WaterDeath; }
 	METHOD(Squire, m_sound_gasp1, Sound(entity actor)) { return SND_Squire_Gasp1; }
 	METHOD(Squire, m_sound_gasp2, Sound(entity actor)) { return SND_Squire_Gasp2; }

@@ -55,13 +55,7 @@ METHOD(FloydChamp, m_playerthink, void(Champions this, entity actor))
 
 METHOD(FloydChamp, m_playerspawn, void(Champions this, entity actor))
 {
-	actor.jetpack_status = false;
 	STAT(QCC_JETPACKFUEL, actor) = 100;
-}
-
-METHOD(FloydChamp, m_clear, void(Champions this, entity actor))
-{
-	actor.jetpack_status = false;
 }
 
 METHOD(FloydChamp, m_cannon_launch, void(Champions this, entity actor, entity cannon))
@@ -80,168 +74,26 @@ METHOD(FloydChamp, m_cannon_land, bool(Champions this, entity actor))
 }
 #endif
 
-// TODO: so much code dupe...
-void PM_floydjetpack(entity this, float maxspd_mod, float dt)
-{
-	//makevectors(this.v_angle.y * '0 1 0');
-	makevectors(this.v_angle);
-	vector wishvel = v_forward * this.movement_x
-					+ v_right * this.movement_y;
-	// add remaining speed as Z component
-	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
-	// fix speedhacks :P
-	if(wishvel != '0 0 0')
-		wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
-	// add the unused velocity as up component
-	wishvel.z = 0;
-
-	// if (PHYS_INPUT_BUTTON_JUMP(this))
-		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
-
-	// it is now normalized, so...
-	float a_side = 200;
-	float a_up = 500;
-	float a_add = 0.5 * PHYS_GRAVITY(this);
-
-	wishvel_x *= a_side;
-	wishvel_y *= a_side;
-	wishvel_z *= a_up;
-	wishvel_z += a_add;
-
-	float best = 0;
-	//////////////////////////////////////////////////////////////////////////////////////
-	// finding the maximum over all vectors of above form
-	// with wishvel having an absolute value of 1
-	//////////////////////////////////////////////////////////////////////////////////////
-	// we're finding the maximum over
-	//   f(a_side, a_up, a_add, z) := a_side * (1 - z^2) + (a_add + a_up * z)^2;
-	// for z in the range from -1 to 1
-	//////////////////////////////////////////////////////////////////////////////////////
-	// maximum is EITHER attained at the single extreme point:
-	float a_diff = a_side * a_side - a_up * a_up;
-	float f;
-	if (a_diff != 0)
-	{
-		f = a_add * a_up / a_diff; // this is the zero of diff(f(a_side, a_up, a_add, z), z)
-		if (f > -1 && f < 1) // can it be attained?
-		{
-			best = (a_diff + a_add * a_add) * (a_diff + a_up * a_up) / a_diff;
-			//print("middle\n");
-		}
-	}
-	// OR attained at z = 1:
-	f = (a_up + a_add) * (a_up + a_add);
-	if (f > best)
-	{
-		best = f;
-		//print("top\n");
-	}
-	// OR attained at z = -1:
-	f = (a_up - a_add) * (a_up - a_add);
-	if (f > best)
-	{
-		best = f;
-		//print("bottom\n");
-	}
-	best = sqrt(best);
-	//////////////////////////////////////////////////////////////////////////////////////
-
-	//print("best possible acceleration: ", ftos(best), "\n");
-
-	float fxy, fz;
-	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / 150, 1);
-	if (wishvel_z - PHYS_GRAVITY(this) > 0)
-		fz = bound(0, 1 - this.velocity_z / 200, 1);
-	else
-		fz = bound(0, 1 + this.velocity_z / 200, 1);
-
-	float fvel;
-	fvel = vlen(wishvel);
-	wishvel_x *= fxy;
-	wishvel_y *= fxy;
-	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
-
-	if(fvel)
-	{
-		if(best)
-			fvel = min(1, fvel / best);
-		float fvelscale = (100 * dt * fvel);
-		if(fvelscale)
-			f = min(1, 100 / fvelscale);
-		else
-			f = 0;
-	}
-	//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
-
-	if (f > 0 && wishvel != '0 0 0')
-	{
-		this.velocity = this.velocity + wishvel * f * dt;
-		UNSET_ONGROUND(this);
-
-#ifdef SVQC
-		STAT(QCC_JETPACKFUEL, this) -= 15 * dt * fvel * f;
-		if(STAT(QCC_JETPACKFUEL, this) <= 0)
-			STAT(QCC_JETPACKFUEL, this) = 0;
-
-		this.jetpack_status = true;
-#endif
-	}
-}
-
-#ifdef SVQC
-METHOD(FloydChamp, m_fixclient, void(Champions this, entity actor))
-{
-	actor.jetpack_status = STAT(QCC_JETPACK, actor);
-}
-#endif
-
-// same functionality as duke's
-void Duke_PreJump(entity actor);
-
 METHOD(FloydChamp, m_playerjump, float(Champions this, entity actor))
 {
 	return 0.5;
 }
 
-METHOD(FloydChamp, m_physics, bool(Champions this, entity actor, float dt))
+METHOD(FloydChamp, m_jetpack, bool(Champions this, entity actor, float maxspd_mod, float dt))
 {
-	// inlined check of some of QCC_CanCastAbility
-	// separated as we are a transformation and normally can't cast abilities
-	bool cancast = true;
-	if(STAT(CANNON, actor))
-		cancast = false;
-	if(STAT(ITEMS, actor) & IT_TANK)
-		cancast = false;
-	if(STAT(CLOCKWORK, actor))
-		cancast = false;
+	if(!PHYS_INPUT_BUTTON_CROUCH(actor) || QCC_PlayerOccupied(actor))
+		return false;
 
-	if(PHYS_INPUT_BUTTON_CROUCH(actor) && cancast)
-	{
-		bool has_fuel = STAT(QCC_JETPACKFUEL, actor) > 0;
-
-		if(actor.jetpack_stopped) { }
-		else if(!has_fuel)
-		{
-			actor.jetpack_stopped = true;
-			actor.jetpack_status = false;	
-		}
-		else
-		{
-			actor.jetpack_status = true;
-		}
-	}
-	else
-	{
-		actor.jetpack_stopped = false;
-		actor.jetpack_status = false;
-	}
-
-	if(actor.jetpack_status)
-	{
-		PM_floydjetpack(actor, 1, dt);
-		return true;
-	}
-	return false;
+	float fuel_cost = 15;
+	float maxspeed_up = 200;
+	float maxspeed_side = 150;
+	float accel_side = 200;
+	float accel_up = 500;
+	float antigrav = 0.5;
+	float fuel_scale = 100;
+	bool do_vertical_scale = true;
+	jetpack_physics(actor, maxspd_mod, dt, fuel_cost, maxspeed_up, maxspeed_side, accel_side, accel_up, antigrav, fuel_scale, do_vertical_scale);
+	return true;
 }
 
 #ifdef CSQC
