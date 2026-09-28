@@ -8,6 +8,9 @@ PRECACHE(Otamatone)
 
 	precache_model("progs/piano_musicnote_white.mdl");
 	precache_model("progs/x9_burst_6sided_brightyellow.mdl");
+
+	// referenced on the server, use standard caching!
+	precache_sound("weapons/otamatone_fire.wav");
 }
 
 const float OTAMATONE_WEPANIMTIME = 0.015;
@@ -164,7 +167,8 @@ void W_FireOtamatone(entity this, .entity weaponentity)
 
 	float r = W_Music_PitchFromAngles(this.v_angle_x, bound(0.8, random() * 2, 1.3));
 	r *= 1.2; // TODO: per-instrument offsets
-	sound7(this, CH_WEAPON_SINGLE, SND(OTAMATONE_FIRE), 1, ATTN_NORM, r, 0);
+	// FIXME: server side sound reference...
+	sound7(this, CH_WEAPON_SINGLE, "weapons/otamatone_fire.wav", 1, ATTN_NORM, r, 0);
 }
 
 METHOD(Otamatone, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

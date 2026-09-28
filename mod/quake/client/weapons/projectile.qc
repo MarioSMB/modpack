@@ -615,6 +615,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(EMPRESS_STREAK)     this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
 			HANDLE(EMPRESS_LANCE)      this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(EMPRESS_EVERLASTING)this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
+			HANDLE(ENRAGED_STREAK)     this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
+			HANDLE(ENRAGED_EVERLASTING)this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -975,6 +977,14 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 				this.effects |= EF_FULLBRIGHT;
 				settouch(this, func_null);
+				break;
+			case PROJECTILE_ENRAGED_STREAK:
+			case PROJECTILE_ENRAGED_EVERLASTING:
+				this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+				this.effects |= EF_FULLBRIGHT;
+				settouch(this, func_null);
+				this.colormod = '0.85 0.52 0.05';
+				this.glowmod = this.colormod;
 				break;
 			case PROJECTILE_EMPRESS_LANCE:
 				set_movetype(this, MOVETYPE_NOCLIP);

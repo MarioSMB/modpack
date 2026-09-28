@@ -11,13 +11,13 @@ REGISTER_NET_LINKED(ENT_CLIENT_EMPRESS_SUNDANCE)
 #ifdef SVQC
 bool empress_shouldenrage(entity this);
 
-void empress_rainbowstreak_create(entity this, vector org, vector vel, entity targ, float damage);
+void empress_rainbowstreak_create(entity this, vector org, vector vel, entity targ, float damage, bool enraged);
 
 void empress_lance_create(entity this, vector org, bool enraged, vector dir, float damage, float timer);
 
 void empress_aurora_create(entity this, vector org);
 
-void empress_everlasting_create(entity this, vector org, vector vel, entity targ, float damage, float timer);
+void empress_everlasting_create(entity this, vector org, vector vel, entity targ, float damage, float timer, bool enraged);
 
 void empress_sundance_create(entity this, vector org, vector dir, float damage, float timer, bool enraged);
 #endif

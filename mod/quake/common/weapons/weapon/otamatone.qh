@@ -26,5 +26,5 @@ REGISTER_WEAPON(OTAMATONE, NEW(Otamatone));
 SPAWNFUNC_WEAPON(weapon_otamatone, WEP_OTAMATONE)
 
 #ifdef GAMEQC
-SOUND(OTAMATONE_FIRE, "weapons/otamatone_fire");
+//SOUND(OTAMATONE_FIRE, "weapons/otamatone_fire");
 #endif

@@ -652,6 +652,7 @@ void empress_ai_think(entity this)
 	float pstreak_damage = 45;
 	float pstrike_damage = 50;
 	float psundance_damage = 50;
+	float peverlasting_damage = 40;
 
 	float maxrange = 6400;
 
@@ -669,6 +670,7 @@ void empress_ai_think(entity this)
 		skillscale += 15;
 		pstreak_damage = 50;
 		psundance_damage = 60;
+		peverlasting_damage = 50;
 	}
 	if(is_expert)
 		skillscale += 5;
@@ -678,6 +680,7 @@ void empress_ai_think(entity this)
 		pstreak_damage = 9999;
 		pstrike_damage = 9999;
 		psundance_damage = 9999;
+		peverlasting_damage = 9999;
 	}
 
 	//if(this.empress_ai[1] == 0)
@@ -843,7 +846,7 @@ void empress_ai_think(entity this)
 				if(is_expert_phase2)
 					shotvel = rotated_by(vec2_3d('0 -10 0'), M_PI * 2 * prandom(), '0 0 0') * PHYS_SCALE;
 
-				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage);
+				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage, should_enrage);
 			}
 			this.empress_ai[1] += 1;
 			if(this.empress_ai[1] >= 60 + sscale)
@@ -1030,7 +1033,7 @@ void empress_ai_think(entity this)
 
 					vector vel = launch_dir * (15 * PHYS_SCALE);
 
-					empress_everlasting_create(this, org, vel, this.enemy, pstreak_damage, j);
+					empress_everlasting_create(this, org, vel, this.enemy, peverlasting_damage, j, should_enrage);
 				}
 			}
 
@@ -1379,7 +1382,7 @@ void empress_ai_think(entity this)
 			if((this.empress_ai[1] % fireframe) == 0 && do_fire)
 			{
 				vector shotvel = rotated_by(vec2_3d('0 -20 0'), M_PI * 2 * pspeed, '0 0 0');
-				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage);
+				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage, should_enrage);
 			}
 
 			this.empress_ai[1] += 1;

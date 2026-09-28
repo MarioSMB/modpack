@@ -143,7 +143,7 @@ void empress_rainbowstreak_think(entity this)
 	UpdateCSQCProjectile(this);
 }
 
-void empress_rainbowstreak_create(entity this, vector org, vector vel, entity targ, float damage)
+void empress_rainbowstreak_create(entity this, vector org, vector vel, entity targ, float damage, bool enraged)
 {
 	entity newmis = launch_spike(this, org, vel);
 	newmis.projectiledeathtype = DEATH_MONSTER_EMPRESS.m_id;
@@ -160,7 +160,10 @@ void empress_rainbowstreak_create(entity this, vector org, vector vel, entity ta
 	newmis.enemy = targ;
 	newmis.size = '30 30 30';
 
-	CSQCProjectile(newmis, false, PROJECTILE_EMPRESS_STREAK, true);
+	if(enraged)
+		CSQCProjectile(newmis, false, PROJECTILE_ENRAGED_STREAK, true);
+	else
+		CSQCProjectile(newmis, false, PROJECTILE_EMPRESS_STREAK, true);
 }
 
 void empress_lance_think(entity this)
@@ -279,7 +282,7 @@ void empress_everlasting_think(entity this)
 	UpdateCSQCProjectile(this);
 }
 
-void empress_everlasting_create(entity this, vector org, vector vel, entity targ, float damage, float timer)
+void empress_everlasting_create(entity this, vector org, vector vel, entity targ, float damage, float timer, bool enraged)
 {
 	entity newmis = launch_spike(this, org, vel);
 	newmis.projectiledeathtype = DEATH_MONSTER_EMPRESS.m_id;
@@ -299,7 +302,10 @@ void empress_everlasting_create(entity this, vector org, vector vel, entity targ
 	newmis.speed = vlen(vel); // forward speed
 	newmis.size = '30 30 30';
 
-	CSQCProjectile(newmis, false, PROJECTILE_EMPRESS_EVERLASTING, true);
+	if(enraged)
+		CSQCProjectile(newmis, false, PROJECTILE_ENRAGED_EVERLASTING, true);
+	else
+		CSQCProjectile(newmis, false, PROJECTILE_EMPRESS_EVERLASTING, true);
 }
 
 bool sundance_send(entity this, entity to, int sf)
