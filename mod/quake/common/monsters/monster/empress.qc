@@ -846,7 +846,13 @@ void empress_ai_think(entity this)
 				if(is_expert_phase2)
 					shotvel = rotated_by(vec2_3d('0 -10 0'), M_PI * 2 * prandom(), '0 0 0') * PHYS_SCALE;
 
-				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage, should_enrage);
+				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
+				{
+					if(vdist(this.origin - it.origin, >, 48000))
+						continue;
+
+					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
+				});
 			}
 			this.empress_ai[1] += 1;
 			if(this.empress_ai[1] >= 60 + sscale)
@@ -942,29 +948,35 @@ void empress_ai_think(entity this)
 					if(is_expert)
 						rad = 450;
 
-					vector targ_vel = this.enemy.velocity;
-
-					vector norm_vel = normalize(targ_vel);
-					if((norm_vel * dir_vector) > 0)
-						dir_vector *= -1;
-
-					float lead = 1.5;
-					vector dir_lead = targ_org + (targ_vel * lead);
-					vector stagger = targ_org + (dir_vector * rad) - (targ_vel * 0.5);
-
-					if(vdist(stagger - targ_org, <, rad))
+					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
-						vector newdir = targ_org - stagger;
-						if(newdir == '0 0 0')
-							newdir = dir_vector;
+						if(vdist(this.origin - it.origin, >, 48000))
+							continue;
 
-						stagger = targ_org - (normalize(newdir) * rad);
-					}
+						vector torg = CENTER_OR_VIEWOFS(it);
+						vector dirvec = dir_vector;
+						vector targ_vel = it.velocity;
+						vector norm_vel = normalize(targ_vel);
+						if((norm_vel * dirvec) > 0)
+							dirvec *= -1;
 
-					vector v4 = normalize(dir_lead - stagger);
+						float lead = 1.5;
+						vector dir_lead = torg + (targ_vel * lead);
+						vector stagger = torg + (dirvec * rad) - (targ_vel * 0.5);
 
-					empress_lance_create(this, stagger, should_enrage, v4, pstrike_damage, this.empress_ai[1] / 100);
-					// TODO: also shoots multiple players!
+						if(vdist(stagger - torg, <, rad))
+						{
+							vector newdir = torg - stagger;
+							if(newdir == '0 0 0')
+								newdir = dirvec;
+
+							stagger = torg - (normalize(newdir) * rad);
+						}
+
+						vector v4 = normalize(dir_lead - stagger);
+
+						empress_lance_create(this, stagger, should_enrage, v4, pstrike_damage, this.empress_ai[1] / 100);
+					});
 				}
 			}
 
@@ -1312,39 +1324,43 @@ void empress_ai_think(entity this)
 			{
 				for(int j = 0; j < 1; ++j)
 				{
-					if(vdist(this.origin - targ_org, >, 2400 * PHYS_SCALE))
-						continue;
-
-					vector vdir = this.enemy.velocity * -1;
-
-					vector vert_bias = '0 0 1';
-					vector v;
-					if(vdist(vdir, <=, 0))
-						v = vert_bias;
-					else
-						v = normalize(vdir);
-
-					float rad = 800; // 100
-
-					float lead = 1.5;
-					vector dir_lead = targ_org + (this.enemy.velocity * lead);
-
-					vector stagger = targ_org + (v * rad);
-
-					if(vdist(stagger - targ_org, <, rad))
+					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
-						vector newdir = targ_org - stagger;
-						if(newdir == '0 0 0')
-							newdir = v;
-						vector norm_dir = v;
-						if(vdist(newdir, >, 0))
-							norm_dir = normalize(newdir);
-						stagger = targ_org - (norm_dir * rad);
-					}
+						if(vdist(this.origin - it.origin, >, 48000))
+							continue;
 
-					vector v2 = normalize(dir_lead - stagger);
+						vector vdir = it.velocity * -1;
+						vector torg = CENTER_OR_VIEWOFS(it);
 
-					empress_lance_create(this, stagger, should_enrage, v2, pstrike_damage, this.empress_ai[1] / 100);
+						vector vert_bias = '0 0 1';
+						vector v;
+						if(vdist(vdir, <=, 0))
+							v = vert_bias;
+						else
+							v = normalize(vdir);
+
+						float rad = 800; // 100
+
+						float lead = 1.5;
+						vector dir_lead = torg + (it.velocity * lead);
+
+						vector stagger = torg + (v * rad);
+
+						if(vdist(stagger - torg, <, rad))
+						{
+							vector newdir = torg - stagger;
+							if(newdir == '0 0 0')
+								newdir = v;
+							vector norm_dir = v;
+							if(vdist(newdir, >, 0))
+								norm_dir = normalize(newdir);
+							stagger = torg - (norm_dir * rad);
+						}
+
+						vector v2 = normalize(dir_lead - stagger);
+
+						empress_lance_create(this, stagger, should_enrage, v2, pstrike_damage, this.empress_ai[1] / 100);
+					});
 				}
 			}
 
@@ -1382,7 +1398,14 @@ void empress_ai_think(entity this)
 			if((this.empress_ai[1] % fireframe) == 0 && do_fire)
 			{
 				vector shotvel = rotated_by(vec2_3d('0 -20 0'), M_PI * 2 * pspeed, '0 0 0');
-				empress_rainbowstreak_create(this, my_center + offset, shotvel, this.enemy, pstreak_damage, should_enrage);
+
+				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
+				{
+					if(vdist(this.origin - it.origin, >, 48000))
+						continue;
+
+					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
+				});
 			}
 
 			this.empress_ai[1] += 1;
