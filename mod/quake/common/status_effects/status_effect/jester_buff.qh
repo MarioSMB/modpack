@@ -1,0 +1,10 @@
+#pragma once
+
+CLASS(JesterBuff, Powerups)
+    ATTRIB(JesterBuff, netname, string, "jester_buff");
+    ATTRIB(JesterBuff, m_name, string, _("Buffed!"));
+    ATTRIB(JesterBuff, m_color, vector, '1 0.75 0.75');
+    //ATTRIB(JesterBuff, m_icon, string, "r_agrav1");
+    ATTRIB(JesterBuff, m_hidden, bool, true); // TODO
+ENDCLASS(JesterBuff)
+REGISTER_STATUSEFFECT(JesterBuff, NEW(JesterBuff));

@@ -1563,6 +1563,56 @@ void Sbar_DrawHealth(vector pos, vector icon_size)
 	sbar = oldsbar;
 }
 
+void HUD_Panel_DrawManaBar(vector pos, vector manabar_size, float val, float maxval, float threshold, float alph, int dflag)
+{
+	if(maxval <= 0 || val <= 0)
+		return;
+
+	vector col = '0 1 1';
+	vector start_col = '0 1 1';
+	vector end_col = '1 0 1';
+
+	// prevent leaking beyond the screen (TODO?)
+	val = bound(0, val, maxval);
+
+	float fill_ratio = val / maxval;
+	float thresh_ratio = threshold / maxval;
+
+	float startx = pos.x;
+	float midx = pos.x + (manabar_size.x * thresh_ratio);
+	float endx = pos.x + (manabar_size.x * fill_ratio);
+
+	float base_end = min(endx, midx);
+	if(base_end > pos.x)
+	{
+		R_BeginPolygon("", dflag, true);
+		R_PolygonVertex(vec2(startx, pos.y), '0 0 0', col, alph);
+		R_PolygonVertex(vec2(base_end, pos.y), '0 0 0', col, alph);
+		R_PolygonVertex(vec2(base_end, pos.y + manabar_size.y), '0 0 0', col, alph);
+		R_PolygonVertex(vec2(startx, pos.y + manabar_size.y), '0 0 0', col, alph);
+		R_EndPolygon();
+	}
+
+	if(endx > midx)
+	{
+		float gradient_range = 1 - thresh_ratio;
+		float side_factor = (gradient_range) ? (fill_ratio - thresh_ratio) / gradient_range : 0;
+		side_factor = bound(0, side_factor, 1);
+
+		vector final_col;
+		final_col.x = start_col.x + side_factor * (end_col.x - start_col.x);
+		final_col.y = start_col.y + side_factor * (end_col.y - start_col.y);
+		final_col.z = start_col.z + side_factor * (end_col.z - start_col.z);
+
+		R_BeginPolygon("", dflag, true);
+		R_PolygonVertex(vec2(midx, pos.y), '0 0 0', start_col, alph);
+		R_PolygonVertex(vec2(endx, pos.y), '0 0 0', final_col, alph);
+		R_PolygonVertex(vec2(endx, pos.y + manabar_size.y), '0 0 0', final_col, alph);
+		R_PolygonVertex(vec2(midx, pos.y + manabar_size.y), '0 0 0', start_col, alph);
+		R_EndPolygon();
+	}
+}
+
 STATIC_INIT(Sbar)
 {
 	//registercvar("sbar_pos", "0.378 0.9398");
@@ -1807,20 +1857,13 @@ void Sbar_Draw()
 				//sbar = '0 0 0';
 				//Sbar_DrawNum_lettersize(pos + vec2(icon_size.x, 0), itos(ceil(STAT(STAMINA))), 3, ((STAT(STAMINA) <= 10) ? '1 0 0' : '1 1 1'), icon_size.x, icon_size);
 				//sbar = oldsbar;
-				vector col = '0 1 1';
 				float mana = STAT(MANA);
 				float mlimit = 100;
 				if(STAT(PASSIVES) & PASSIVE_ARCANA)
-				{
 					mlimit *= 2;
-					if(mana > 100)
-						col = '1 0 1';
-				}
-				if(mana)
-					mana /= mlimit;
 
 				// TODO
-				float manabar_size = 4; // this many icons length
+				float manabar_rows = 4; // this many icons length
 				if(thiswep.activeweapon == WEP_STAFF)
 				{
 					string pic = "";
@@ -1834,13 +1877,16 @@ void Sbar_Draw()
 					drawpic_aspect(ammo_pos, "gfx/quake/backtile", icon_size, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 					drawpic_aspect(ammo_pos, strcat("gfx/quake/", pic), icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-					manabar_size -= 1;
+					manabar_rows -= 1;
 					ammo_pos.x += icon_size.x;
 				}
 
+				vector manabar_pos = ammo_pos + (icon_size * 0.15 * 0.5);
+				vector manabar_size = vec2(icon_size.x * manabar_rows * 0.85, icon_size.y * 0.85);
+
 				// NOTE: not using aspect here - we want it to stretch with the mana bar!
-				drawpic(ammo_pos + (icon_size * 0.15 * 0.5), "gfx/quake/backtile", vec2(icon_size.x * manabar_size * 0.85, icon_size.y * 0.85), bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
-				HUD_Panel_DrawProgressBar(ammo_pos + (icon_size * 0.15 * 0.5), vec2(icon_size.x * manabar_size * 0.85, icon_size.y * 0.85), "progressbar", mana, false, 0, col, 0.6, DRAWFLAG_NORMAL);
+				drawpic(manabar_pos, "gfx/quake/backtile", manabar_size, bgcolor, autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawManaBar(manabar_pos + vec2(0, manabar_size.y * 0.3 * 0.5), vec2(manabar_size.x, manabar_size.y * 0.7), mana, mlimit, 100, autocvar_sbar_alpha_fg * 0.6, DRAWFLAG_NORMAL);
 			}
 			else if(thiswep.activeweapon == WEP_BREEGULLBLASTER)
 			{

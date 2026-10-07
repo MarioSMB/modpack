@@ -357,46 +357,21 @@ void AmalgamIdleNoise(entity this)
 		_sound(this, CH_VOICE, "amalg/amalgidle.wav", 1, ATTN_IDLE);
 }
 
-void amalgam_stand1(entity this);
-void amalgam_stand39(entity this) { set_animofs(this, anim_amalgam_idle, 39, amalgam_stand1); amalgam_ai_stand(this); }
-void amalgam_stand38(entity this) { set_animofs(this, anim_amalgam_idle, 38, amalgam_stand39); amalgam_ai_stand(this); }
-void amalgam_stand37(entity this) { set_animofs(this, anim_amalgam_idle, 37, amalgam_stand38); amalgam_ai_stand(this); }
-void amalgam_stand36(entity this) { set_animofs(this, anim_amalgam_idle, 36, amalgam_stand37); amalgam_ai_stand(this); }
-void amalgam_stand35(entity this) { set_animofs(this, anim_amalgam_idle, 35, amalgam_stand36); amalgam_ai_stand(this); }
-void amalgam_stand34(entity this) { set_animofs(this, anim_amalgam_idle, 34, amalgam_stand35); amalgam_ai_stand(this); }
-void amalgam_stand33(entity this) { set_animofs(this, anim_amalgam_idle, 33, amalgam_stand34); amalgam_ai_stand(this); }
-void amalgam_stand32(entity this) { set_animofs(this, anim_amalgam_idle, 32, amalgam_stand33); amalgam_ai_stand(this); }
-void amalgam_stand31(entity this) { set_animofs(this, anim_amalgam_idle, 31, amalgam_stand32); amalgam_ai_stand(this); }
-void amalgam_stand30(entity this) { set_animofs(this, anim_amalgam_idle, 30, amalgam_stand31); amalgam_ai_stand(this); }
-void amalgam_stand29(entity this) { set_animofs(this, anim_amalgam_idle, 29, amalgam_stand30); amalgam_ai_stand(this); }
-void amalgam_stand28(entity this) { set_animofs(this, anim_amalgam_idle, 28, amalgam_stand29); amalgam_ai_stand(this); }
-void amalgam_stand27(entity this) { set_animofs(this, anim_amalgam_idle, 27, amalgam_stand28); amalgam_ai_stand(this); }
-void amalgam_stand26(entity this) { set_animofs(this, anim_amalgam_idle, 26, amalgam_stand27); amalgam_ai_stand(this); }
-void amalgam_stand25(entity this) { set_animofs(this, anim_amalgam_idle, 25, amalgam_stand26); amalgam_ai_stand(this); }
-void amalgam_stand24(entity this) { set_animofs(this, anim_amalgam_idle, 24, amalgam_stand25); amalgam_ai_stand(this); }
-void amalgam_stand23(entity this) { set_animofs(this, anim_amalgam_idle, 23, amalgam_stand24); amalgam_ai_stand(this); }
-void amalgam_stand22(entity this) { set_animofs(this, anim_amalgam_idle, 22, amalgam_stand23); amalgam_ai_stand(this); }
-void amalgam_stand21(entity this) { set_animofs(this, anim_amalgam_idle, 21, amalgam_stand22); amalgam_ai_stand(this); }
-void amalgam_stand20(entity this) { set_animofs(this, anim_amalgam_idle, 20, amalgam_stand21); amalgam_ai_stand(this); }
-void amalgam_stand19(entity this) { set_animofs(this, anim_amalgam_idle, 19, amalgam_stand20); amalgam_ai_stand(this); }
-void amalgam_stand18(entity this) { set_animofs(this, anim_amalgam_idle, 18, amalgam_stand19); amalgam_ai_stand(this); }
-void amalgam_stand17(entity this) { set_animofs(this, anim_amalgam_idle, 17, amalgam_stand18); amalgam_ai_stand(this); AmalgamIdleNoise(this); }
-void amalgam_stand16(entity this) { set_animofs(this, anim_amalgam_idle, 16, amalgam_stand17); amalgam_ai_stand(this); }
-void amalgam_stand15(entity this) { set_animofs(this, anim_amalgam_idle, 15, amalgam_stand16); amalgam_ai_stand(this); }
-void amalgam_stand14(entity this) { set_animofs(this, anim_amalgam_idle, 14, amalgam_stand15); amalgam_ai_stand(this); }
-void amalgam_stand13(entity this) { set_animofs(this, anim_amalgam_idle, 13, amalgam_stand14); amalgam_ai_stand(this); }
-void amalgam_stand12(entity this) { set_animofs(this, anim_amalgam_idle, 12, amalgam_stand13); amalgam_ai_stand(this); }
-void amalgam_stand11(entity this) { set_animofs(this, anim_amalgam_idle, 11, amalgam_stand12); amalgam_ai_stand(this); }
-void amalgam_stand10(entity this) { set_animofs(this, anim_amalgam_idle, 10, amalgam_stand11); amalgam_ai_stand(this); }
-void amalgam_stand9(entity this) { set_animofs(this, anim_amalgam_idle, 9, amalgam_stand10); amalgam_ai_stand(this); }
-void amalgam_stand8(entity this) { set_animofs(this, anim_amalgam_idle, 8, amalgam_stand9); amalgam_ai_stand(this); }
-void amalgam_stand7(entity this) { set_animofs(this, anim_amalgam_idle, 7, amalgam_stand8); amalgam_ai_stand(this); }
-void amalgam_stand6(entity this) { set_animofs(this, anim_amalgam_idle, 6, amalgam_stand7); amalgam_ai_stand(this); }
-void amalgam_stand5(entity this) { set_animofs(this, anim_amalgam_idle, 5, amalgam_stand6); amalgam_ai_stand(this); }
-void amalgam_stand4(entity this) { set_animofs(this, anim_amalgam_idle, 4, amalgam_stand5); amalgam_ai_stand(this); }
-void amalgam_stand3(entity this) { set_animofs(this, anim_amalgam_idle, 3, amalgam_stand4); amalgam_ai_stand(this); }
-void amalgam_stand2(entity this) { set_animofs(this, anim_amalgam_idle, 2, amalgam_stand3); amalgam_ai_stand(this); }
-void amalgam_stand1(entity this) { set_animofs(this, anim_amalgam_idle, 1, amalgam_stand2); amalgam_ai_stand(this); AmalgamIdleNoise(this); }
+void amalgam_stand1(entity this)
+{
+	setthink(this, amalgam_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 39)
+		this.walkframe = 0;
+	this.frame = anim_amalgam_idle + this.walkframe;
+
+	amalgam_ai_stand(this);
+	int myframe = this.walkframe + 1;
+	if(myframe == 1 || myframe == 17)
+		AmalgamIdleNoise(this);
+}
 
 void amalgam_walk1(entity this);
 void amalgam_walk39(entity this) { set_animofs(this, anim_amalgam_idle, 24, amalgam_walk1); ai_walk(this, 1); }

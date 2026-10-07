@@ -8,6 +8,7 @@
 #include "duke.qh"
 #include "galena.qh"
 #include "goat.qh"
+#include "jester.qh"
 #include "keen.qh"
 #include "keyleth.qh"
 #include "mario.qh"

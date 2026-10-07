@@ -22,6 +22,7 @@ CLASS(Destroyer, Monster)
     ATTRIB(Destroyer, netname, string, "destroyer");
     ATTRIB(Destroyer, m_name, string, _("The Destroyer"));
     ATTRIB(Destroyer, m_color, vector, '0.81 0.08 0.16');
+    ATTRIB(Destroyer, m_waypoint_distance, float, 4096);
 ENDCLASS(Destroyer)
 
 REGISTER_MONSTER(DESTROYER, NEW(Destroyer));

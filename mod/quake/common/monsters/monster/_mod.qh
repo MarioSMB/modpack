@@ -102,6 +102,8 @@
 #include "pvzombie_balloon.qh"
 #include "pvzombie_yeti.qh"
 #include "raindeer.qh"
+#include "redstone_cube.qh"
+#include "redstone_monstrosity.qh"
 #include "retinazer.qh"
 #include "rotfish.qh"
 #include "rottweiler.qh"

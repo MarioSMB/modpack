@@ -288,11 +288,13 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 
 bool t_walkmove(entity this, float yaw, float dist)
 {
-	if(gametype == GAMETYPE_TD && !this.charmed)
+	if(gametype == GAMETYPE_TD && this.category == CATEGORY_MONSTER && !this.charmed)
 		dist *= td_GetMonsterSpeed(this, dist);
 
 	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 		dist *= 0.15;
+	if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+		dist *= 1.5;
 
 #if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
@@ -408,11 +410,13 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
-	if(gametype == GAMETYPE_TD && !this.charmed)
+	if(gametype == GAMETYPE_TD && this.category == CATEGORY_MONSTER && !this.charmed)
 		dist *= td_GetMonsterSpeed(this, dist);
 
 	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 		dist *= 0.15;
+	if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+		dist *= 1.5;
 
 	if(random() < 0.75 && StatusEffects_active(STATUSEFFECT_Confused, this))
 		this.ideal_yaw = crandom() * 180;
@@ -1364,7 +1368,7 @@ bool FindTarget(entity this)
 	// really seeing the player, not another monster getting angry
 
 	// in tower defence, bosses always fight players
-	if(gametype == GAMETYPE_TD && !this.charmed && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
+	if(gametype == GAMETYPE_TD && !this.charmed && this.category == CATEGORY_MONSTER && !(this.monsterdef.spawnflags & MONSTER_TYPE_BOSS))
 	{
 		entity selected = NULL;
 		float dist = 256;

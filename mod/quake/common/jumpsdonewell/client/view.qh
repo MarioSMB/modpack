@@ -2,6 +2,8 @@
 
 void View_JumpsDoneWell();
 
+void JDW_DrawWorld();
+
 void JDW_SetCamera();
 
 void HUD_JumpsDoneWell();

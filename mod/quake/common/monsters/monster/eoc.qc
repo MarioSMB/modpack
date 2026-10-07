@@ -353,6 +353,8 @@ void eoc_think(entity this)
 			myspeed *= 1.5;
 		if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 			myspeed *= 0.5;
+		if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+			myspeed *= 1.5;
 
 		if(vdist(this.velocity, <=, myspeed))
 			eoc_move(this, goal, myspeed, 0.05);

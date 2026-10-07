@@ -52,18 +52,32 @@ PRECACHE(Doom)
 	precache_pic("gfx/quake/doom_face_invis");
 	precache_pic("gfx/quake/doom_face_invul2");
 	precache_pic("gfx/quake/doom_face_inv2");
-	precache_pic("gfx/quake/doom_face_quad");
+	precache_pic("gfx/quake/doom_face_quad1");
+	precache_pic("gfx/quake/doom_face_quad2");
+	precache_pic("gfx/quake/doom_face_quad3");
+	precache_pic("gfx/quake/doom_face_quad4");
+	precache_pic("gfx/quake/doom_face_quad5");
 
-	// no looking around yet sorry
-	precache_pic("gfx/quake/doom_face1");
+	precache_pic("gfx/quake/doom_face1_0");
+	precache_pic("gfx/quake/doom_face1_1");
+	precache_pic("gfx/quake/doom_face1_2");
+	precache_pic("gfx/quake/doom_face2_0");
+	precache_pic("gfx/quake/doom_face2_1");
+	precache_pic("gfx/quake/doom_face2_2");
+	precache_pic("gfx/quake/doom_face3_0");
+	precache_pic("gfx/quake/doom_face3_1");
+	precache_pic("gfx/quake/doom_face3_2");
+	precache_pic("gfx/quake/doom_face4_0");
+	precache_pic("gfx/quake/doom_face4_1");
+	precache_pic("gfx/quake/doom_face4_2");
+	precache_pic("gfx/quake/doom_face5_0");
+	precache_pic("gfx/quake/doom_face5_1");
+	precache_pic("gfx/quake/doom_face5_2");
+
 	precache_pic("gfx/quake/doom_face_p1");
-	precache_pic("gfx/quake/doom_face2");
 	precache_pic("gfx/quake/doom_face_p2");
-	precache_pic("gfx/quake/doom_face3");
 	precache_pic("gfx/quake/doom_face_p3");
-	precache_pic("gfx/quake/doom_face4");
 	precache_pic("gfx/quake/doom_face_p4");
-	precache_pic("gfx/quake/doom_face5");
 	precache_pic("gfx/quake/doom_face_p5");
 #endif
 #ifdef SVQC

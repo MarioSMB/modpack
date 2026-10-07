@@ -12,18 +12,23 @@ void dadjokes_internal(entity this);
 void dadjokes_process_url(entity this, entity fh)
 {
 	int maxlines = 8; // c'mon dad
+	// TODO: send jokes to the client side for translation
+	string dadtext = "\{3}^3[Dad Joke] ^7";
+	string fulljoke = "";
 	string s;
 	while((s = url_fgets(fh)))
 	{
-		// TODO: verification of receive order?
 		string joke = s;
 		joke = strreplace("\r", "", joke); // strip return chars
 		// TODO: other unsafe characters?
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_DADJOKE, joke);
+		fulljoke = cons_mid(fulljoke, "\n", ((joke != "") ? strcat(dadtext, joke) : joke));
 		maxlines -= 1;
 		if(maxlines <= 0)
 			break;
 	}
+
+	if(fulljoke != "" && IS_REAL_CLIENT(this))
+		sprint(this, strcat(fulljoke, "\n"));
 
 	url_fclose(fh);
 }

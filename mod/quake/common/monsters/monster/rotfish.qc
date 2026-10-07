@@ -6,45 +6,31 @@ const int anim_fish_death = 18; //'18 38 0'
 const int anim_fish_swim = 39; //'39 56 0'
 const int anim_fish_pain = 57; //'57 65 0'
 
-void f_stand1(entity this);
-void f_stand18(entity this) { set_animofs(this, anim_fish_swim, 18, f_stand1); ai_stand(this); }
-void f_stand17(entity this) { set_animofs(this, anim_fish_swim, 17, f_stand18); ai_stand(this); }
-void f_stand16(entity this) { set_animofs(this, anim_fish_swim, 16, f_stand17); ai_stand(this); }
-void f_stand15(entity this) { set_animofs(this, anim_fish_swim, 15, f_stand16); ai_stand(this); }
-void f_stand14(entity this) { set_animofs(this, anim_fish_swim, 14, f_stand15); ai_stand(this); }
-void f_stand13(entity this) { set_animofs(this, anim_fish_swim, 13, f_stand14); ai_stand(this); }
-void f_stand12(entity this) { set_animofs(this, anim_fish_swim, 12, f_stand13); ai_stand(this); }
-void f_stand11(entity this) { set_animofs(this, anim_fish_swim, 11, f_stand12); ai_stand(this); }
-void f_stand10(entity this) { set_animofs(this, anim_fish_swim, 10, f_stand11); ai_stand(this); }
-void f_stand9(entity this) { set_animofs(this, anim_fish_swim, 9, f_stand10); ai_stand(this); }
-void f_stand8(entity this) { set_animofs(this, anim_fish_swim, 8, f_stand9); ai_stand(this); }
-void f_stand7(entity this) { set_animofs(this, anim_fish_swim, 7, f_stand8); ai_stand(this); }
-void f_stand6(entity this) { set_animofs(this, anim_fish_swim, 6, f_stand7); ai_stand(this); }
-void f_stand5(entity this) { set_animofs(this, anim_fish_swim, 5, f_stand6); ai_stand(this); }
-void f_stand4(entity this) { set_animofs(this, anim_fish_swim, 4, f_stand5); ai_stand(this); }
-void f_stand3(entity this) { set_animofs(this, anim_fish_swim, 3, f_stand4); ai_stand(this); }
-void f_stand2(entity this) { set_animofs(this, anim_fish_swim, 2, f_stand3); ai_stand(this); }
-void f_stand1(entity this) { set_animofs(this, anim_fish_swim, 1, f_stand2); ai_stand(this); }
+void f_stand1(entity this)
+{
+	setthink(this, f_stand1);
+	this.nextthink = time + FRAME_TIME;
 
-void f_walk1(entity this);
-void f_walk18(entity this) { set_animofs(this, anim_fish_swim, 18, f_walk1); ai_walk(this, 8); }
-void f_walk17(entity this) { set_animofs(this, anim_fish_swim, 17, f_walk18); ai_walk(this, 8); }
-void f_walk16(entity this) { set_animofs(this, anim_fish_swim, 16, f_walk17); ai_walk(this, 8); }
-void f_walk15(entity this) { set_animofs(this, anim_fish_swim, 15, f_walk16); ai_walk(this, 8); }
-void f_walk14(entity this) { set_animofs(this, anim_fish_swim, 14, f_walk15); ai_walk(this, 8); }
-void f_walk13(entity this) { set_animofs(this, anim_fish_swim, 13, f_walk14); ai_walk(this, 8); }
-void f_walk12(entity this) { set_animofs(this, anim_fish_swim, 12, f_walk13); ai_walk(this, 8); }
-void f_walk11(entity this) { set_animofs(this, anim_fish_swim, 11, f_walk12); ai_walk(this, 8); }
-void f_walk10(entity this) { set_animofs(this, anim_fish_swim, 10, f_walk11); ai_walk(this, 8); }
-void f_walk9(entity this) { set_animofs(this, anim_fish_swim, 9, f_walk10); ai_walk(this, 8); }
-void f_walk8(entity this) { set_animofs(this, anim_fish_swim, 8, f_walk9); ai_walk(this, 8); }
-void f_walk7(entity this) { set_animofs(this, anim_fish_swim, 7, f_walk8); ai_walk(this, 8); }
-void f_walk6(entity this) { set_animofs(this, anim_fish_swim, 6, f_walk7); ai_walk(this, 8); }
-void f_walk5(entity this) { set_animofs(this, anim_fish_swim, 5, f_walk6); ai_walk(this, 8); }
-void f_walk4(entity this) { set_animofs(this, anim_fish_swim, 4, f_walk5); ai_walk(this, 8); }
-void f_walk3(entity this) { set_animofs(this, anim_fish_swim, 3, f_walk4); ai_walk(this, 8); }
-void f_walk2(entity this) { set_animofs(this, anim_fish_swim, 2, f_walk3); ai_walk(this, 8); }
-void f_walk1(entity this) { set_animofs(this, anim_fish_swim, 1, f_walk2); ai_walk(this, 8); }
+	this.walkframe += 1;
+	if(this.walkframe >= 18)
+		this.walkframe = 0;
+	this.frame = anim_fish_swim + this.walkframe;
+
+	ai_stand(this);
+}
+
+void f_walk1(entity this)
+{
+	setthink(this, f_walk1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 18)
+		this.walkframe = 0;
+	this.frame = anim_fish_swim + this.walkframe;
+
+	ai_walk(this, 8);
+}
 
 void f_run1(entity this);
 void f_run9(entity this) { set_animofs(this, anim_fish_swim, 17, f_run1); ai_run(this, 12); }

@@ -1,5 +1,6 @@
 #include "axe.qh"
 #include "biogun.qh"
+#include "bishop.qh"
 #include "doot.qh"
 #include "shotgun.qh"
 #include "super_shotgun.qh"

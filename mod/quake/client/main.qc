@@ -74,6 +74,8 @@ void Shutdown()
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
+
+	localcmd("\n-button12\n");
 }
 
 string draw_currentSkin;
@@ -160,6 +162,9 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 	}
 
 	if(HUD_Panel_Chat_InputEvent(inputType, nPrimary, nSecondary))
+		return true;
+
+	if(wheel_input_event(inputType, nPrimary, nSecondary))
 		return true;
 
 	if(cl_shop_input_event(evtype, nPrimary, nSecondary, 0))

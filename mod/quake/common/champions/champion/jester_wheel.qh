@@ -1,0 +1,66 @@
+#pragma once
+
+#ifdef GAMEQC
+const int WHEEL_SLOTS = 3;
+const int WHEEL_ICONS = 5;
+
+enum {
+	SLOT_CRYSTAL,
+	SLOT_GOBLIN,
+	SLOT_SWORD,
+	SLOT_POTION,
+	SLOT_MANA
+};
+
+enum {
+	COMBO_NONE,
+	COMBO_GOLDEN_ENEMIES,
+	COMBO_BUFF_ENEMIES,
+	COMBO_DOWNGRADE_TOWER,
+	COMBO_UNABLE_REPAIR,
+	COMBO_SPEED_ENEMIES,
+	COMBO_RANDOM_TELEPORT,
+	COMBO_DAMAGE_CORE,
+	COMBO_DEBUFF_ENEMIES,
+	COMBO_BUFF_PLAYERS,
+	COMBO_DAMAGE_ENEMIES,
+	COMBO_KILL_ENEMIES,
+	COMBO_STUN_ENEMIES,
+	COMBO_SLOW_MOTION,
+	COMBO_UPGRADE_TOWER,
+	COMBO_HEAL_ALLIES,
+	COMBO_SLOW_ENEMIES,
+	COMBO_JUMP_BOOST,
+	COMBO_HEAL_CORE
+};
+#endif
+
+#ifdef CSQC
+const float WHEEL_FRACTION = 0.2; // saves some maths
+const float WHEEL_SPEED = 0.65; // TODO: network this, sometimes plays faster!
+
+bool wheel_active;
+float wheel_inputblock; // just a small delay to prevent jumping into the wheel triggering it
+float wheel_closetime; // shows the wheel a little longer so you know what you got
+bool wheel_wasactive;
+
+int wheel_slots[WHEEL_SLOTS]; // selected entry, to be cleared on exit
+float wheel_offset[WHEEL_SLOTS]; // scrolling position
+
+entity wheel_sounds;
+
+const int WHEEL_STOPPED = 0;
+const int WHEEL_SPINNING = 1;
+const int WHEEL_STOPPING = 2;
+int wheel_state[WHEEL_SLOTS]; // spinning, stopped
+
+int wheel_currentslot;
+
+bool wheel_input_event(int bInputType, float nPrimary, float nSecondary);
+
+void HUD_Wheel();
+#endif
+
+#ifdef SVQC
+void wheel_start(entity this);
+#endif

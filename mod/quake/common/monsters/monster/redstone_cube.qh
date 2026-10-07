@@ -1,0 +1,24 @@
+#pragma once
+
+#include "../all.qh"
+
+MSG_INFO_NOTIF(DEATH_SELF_MON_REDSTONE_CUBE,                   1,  2, 0, "s1 s2", "",        "",                     _("^BG%s%s^K1 was pummeled by a Redstone Cube"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_REDSTONE_CUBE,              1,  NULL,           INFO_DEATH_SELF_MON_REDSTONE_CUBE,             CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_REDSTONE_CUBE,          DEATH_SELF_MON_REDSTONE_CUBE,          DEATH_MURDER_MONSTER,           "monster")
+
+#ifdef GAMEQC
+MODEL(MON_REDSTONE_CUBE, "progs/redstone_cube.mdl");
+#endif
+
+CLASS(RedstoneCube, Monster)
+    ATTRIB(RedstoneCube, spawnflags, int, 0);
+    ATTRIB(RedstoneCube, m_mins, vector, '-13 -13 -13');
+    ATTRIB(RedstoneCube, m_maxs, vector, '13 13 13');
+#ifdef GAMEQC
+    ATTRIB(RedstoneCube, m_model, Model, MDL_MON_REDSTONE_CUBE);
+#endif
+    ATTRIB(RedstoneCube, netname, string, "redstone_cube");
+    ATTRIB(RedstoneCube, m_name, string, _("Redstone Cube"));
+ENDCLASS(RedstoneCube)
+
+REGISTER_MONSTER(REDSTONE_CUBE, NEW(RedstoneCube));

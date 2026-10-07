@@ -83,32 +83,15 @@ void orb_fire(entity this)
 
 //============================================================================
 
-void orb_stand1(entity this);
-void orb_stand21(entity this) { set_animofs(this, anim_norb_stand, 21, orb_stand1); ai_stand(this);}
-void orb_stand20(entity this) { set_animofs(this, anim_norb_stand, 20, orb_stand21); ai_stand(this);}
-void orb_stand19(entity this) { set_animofs(this, anim_norb_stand, 19, orb_stand20); ai_stand(this);}
-void orb_stand18(entity this) { set_animofs(this, anim_norb_stand, 18, orb_stand19); ai_stand(this);}
-void orb_stand17(entity this) { set_animofs(this, anim_norb_stand, 17, orb_stand18); ai_stand(this);}
-void orb_stand16(entity this) { set_animofs(this, anim_norb_stand, 16, orb_stand17); ai_stand(this);}
-void orb_stand15(entity this) { set_animofs(this, anim_norb_stand, 15, orb_stand16); ai_stand(this);}
-void orb_stand14(entity this) { set_animofs(this, anim_norb_stand, 14, orb_stand15); ai_stand(this);}
-void orb_stand13(entity this) { set_animofs(this, anim_norb_stand, 13, orb_stand14); ai_stand(this);}
-void orb_stand12(entity this) { set_animofs(this, anim_norb_stand, 12, orb_stand13); ai_stand(this);}
-void orb_stand11(entity this) { set_animofs(this, anim_norb_stand, 11, orb_stand12); ai_stand(this);}
-void orb_stand10(entity this) { set_animofs(this, anim_norb_stand, 10, orb_stand11); ai_stand(this);}
-void orb_stand9(entity this) { set_animofs(this, anim_norb_stand, 9, orb_stand10); ai_stand(this);}
-void orb_stand8(entity this) { set_animofs(this, anim_norb_stand, 8, orb_stand9); ai_stand(this);}
-void orb_stand7(entity this) { set_animofs(this, anim_norb_stand, 7, orb_stand8); ai_stand(this);}
-void orb_stand6(entity this) { set_animofs(this, anim_norb_stand, 6, orb_stand7); ai_stand(this);}
-void orb_stand5(entity this) { set_animofs(this, anim_norb_stand, 5, orb_stand6); ai_stand(this);}
-void orb_stand4(entity this) { set_animofs(this, anim_norb_stand, 4, orb_stand5); ai_stand(this);}
-void orb_stand3(entity this) { set_animofs(this, anim_norb_stand, 3, orb_stand4); ai_stand(this);}
-void orb_stand2(entity this) { set_animofs(this, anim_norb_stand, 2, orb_stand3); ai_stand(this);}
 void orb_stand1(entity this)
 {
-	set_animofs(this, anim_norb_stand, 1, orb_stand2);
-	if(random() < 0.2)
+	if(this.walkframe == 0 && random() < 0.2)
 		_sound(this, CH_VOICE, "orb/sight2.wav", 1, ATTN_IDLE);
+
+	this.walkframe += 1;
+	if(this.walkframe >= 21)
+		this.walkframe = 0;
+	set_animofs(this, anim_norb_stand, this.walkframe + 1, orb_stand1);
 	ai_stand(this);
 }
 

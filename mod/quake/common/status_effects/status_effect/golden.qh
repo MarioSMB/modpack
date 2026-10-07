@@ -1,0 +1,16 @@
+#pragma once
+
+CLASS(Golden, StatusEffects)
+    ATTRIB(Golden, netname, string, "golden");
+    ATTRIB(Golden, m_name, string, _("Golden"));
+    ATTRIB(Golden, m_color, vector, '1 0.86 0.84');
+    //ATTRIB(Golden, m_icon, string, "r_agrav1");
+    ATTRIB(Golden, m_hidden, bool, true); // TODO
+ENDCLASS(Golden)
+REGISTER_STATUSEFFECT(Golden, NEW(Golden));
+
+#ifdef SVQC
+.bool is_golden;
+
+.float golden_time; // prevent effect spam
+#endif

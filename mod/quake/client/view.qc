@@ -744,6 +744,20 @@ void View_CheckButtonStatus()
 		}
 	}
 
+	if(wheel_active || time < wheel_closetime)
+	{
+		if(!wheel_wasactive)
+		{
+			localcmd("+button12\n");
+			wheel_wasactive = true;
+		}
+	}
+	else if(wheel_wasactive)
+	{
+		localcmd("-button12\n");
+		wheel_wasactive = false;
+	}
+
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		entity wepent = viewmodels[slot];
@@ -1022,6 +1036,9 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 
 	saturation_override = 1;
 
+	if(gametype == GAMETYPE_JUMPSDONEWELL)
+		JDW_DrawWorld();
+
 	champions_DrawWorld();
 
 	if(autocvar_r_glsl_saturation != saturation_override)
@@ -1053,6 +1070,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	HUD_Chat();
 	HUD_BossBars();
 	HUD_Champions();
+	HUD_Wheel();
 	draw_message_triggers();
 	Draw_ShowNames_All();
 

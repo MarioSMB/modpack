@@ -1,0 +1,209 @@
+#pragma once
+
+// since all presents are basically the same, we can share a lot of information!
+
+CLASS(JesterPresents, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(JesterPresents, spawnflags, int, TUR_FLAG_NOJESTER);
+/* mins       */ ATTRIB(JesterPresents, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(JesterPresents, m_maxs, vector, '16 16 42');
+/* head_model */ ATTRIB(JesterPresents, head_model, string, "null");
+#endif
+#ifdef GAMEQC
+/* health     */ ATTRIB(JesterPresents, health, float, 200);
+/* champion   */ ATTRIB(JesterPresents, m_champion, Champions, CHAMPION_Jester);
+#endif
+ENDCLASS(JesterPresents)
+
+#ifdef SVQC
+enum {
+	PRESENT_TURRET,
+	PRESENT_FUEL,
+	PRESENT_EQUIPMENT,
+	PRESENT_SHAMBLER
+};
+#endif
+
+// ===============
+//  SMALL PRESENT
+// ===============
+
+CLASS(JesterSmallPresent, JesterPresents)
+#ifdef GAMEQC
+/* modelname  */ ATTRIB(JesterSmallPresent, mdl, string, "progs/tur_present1.mdl");
+#endif
+/* netname    */ ATTRIB(JesterSmallPresent, netname, string, "smallpresent");
+/* fullname   */ ATTRIB(JesterSmallPresent, m_name, string, _("Small Present"));
+#ifdef GAMEQC
+/* number     */ ATTRIB(JesterSmallPresent, impulse, int, 0);
+/* cost       */ ATTRIB(JesterSmallPresent, tur_cost, float, 40);
+/* units      */ ATTRIB(JesterSmallPresent, tur_units, int, 2);
+#endif
+
+ENDCLASS(JesterSmallPresent)
+REGISTER_TURRET(SMALL_PRESENT, NEW(JesterSmallPresent));
+
+// ================
+//  DELUXE PRESENT
+// ================
+
+CLASS(JesterDeluxePresent, JesterPresents)
+#ifdef GAMEQC
+/* modelname  */ ATTRIB(JesterDeluxePresent, mdl, string, "progs/tur_present2.mdl");
+#endif
+/* netname    */ ATTRIB(JesterDeluxePresent, netname, string, "deluxepresent");
+/* fullname   */ ATTRIB(JesterDeluxePresent, m_name, string, _("Deluxe Present"));
+#ifdef GAMEQC
+/* number     */ ATTRIB(JesterDeluxePresent, impulse, int, 1);
+/* cost       */ ATTRIB(JesterDeluxePresent, tur_cost, float, 80);
+/* units      */ ATTRIB(JesterDeluxePresent, tur_units, int, 3);
+#endif
+
+ENDCLASS(JesterDeluxePresent)
+REGISTER_TURRET(DELUXE_PRESENT, NEW(JesterDeluxePresent));
+
+// =====================
+//  EXTRAVAGANT PRESENT
+// =====================
+
+CLASS(JesterExtravagantPresent, JesterPresents)
+#ifdef GAMEQC
+/* modelname  */ ATTRIB(JesterExtravagantPresent, mdl, string, "progs/tur_present3.mdl");
+#endif
+/* netname    */ ATTRIB(JesterExtravagantPresent, netname, string, "extravagantpresent");
+/* fullname   */ ATTRIB(JesterExtravagantPresent, m_name, string, _("Extravagant Present"));
+#ifdef GAMEQC
+/* number     */ ATTRIB(JesterExtravagantPresent, impulse, int, 2);
+/* cost       */ ATTRIB(JesterExtravagantPresent, tur_cost, float, 120);
+/* units      */ ATTRIB(JesterExtravagantPresent, tur_units, int, 4);
+#endif
+
+ENDCLASS(JesterExtravagantPresent)
+REGISTER_TURRET(EXTRAVAGANT_PRESENT, NEW(JesterExtravagantPresent));
+
+// =================
+//  JACK IN THE BOX
+// =================
+
+CLASS(JesterJackBox, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(JesterJackBox, spawnflags, int, TUR_FLAG_CONSTANTRANGE);
+/* mins       */ ATTRIB(JesterJackBox, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(JesterJackBox, m_maxs, vector, '16 16 40');
+/* modelname  */ ATTRIB(JesterJackBox, mdl, string, "progs/tur_jackbox.mdl");
+/* head_model */ ATTRIB(JesterJackBox, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(JesterJackBox, netname, string, "jackbox");
+/* fullname   */ ATTRIB(JesterJackBox, m_name, string, _("Jack in the Box"));
+/* description*/ ATTRIB(JesterJackBox, m_description, string, "A present box containing a boxing glove\nwhich springs loose to send nearby foes flying!");
+#ifdef GAMEQC
+/* number     */ ATTRIB(JesterJackBox, impulse, int, 3);
+/* cost       */ ATTRIB(JesterJackBox, tur_cost, float, 40);
+/* units      */ ATTRIB(JesterJackBox, tur_units, int, 3);
+
+/* property   */ ATTRIB(JesterJackBox, health, float, 415);
+
+/* property   */ ATTRIB(JesterJackBox, shot_dmg, float, 24);
+/* property   */ ATTRIB(JesterJackBox, shot_refire, float, 2);
+/* property   */ ATTRIB(JesterJackBox, shot_spread, float, 0);
+/* property   */ ATTRIB(JesterJackBox, shot_force, float, 400);
+/* property   */ ATTRIB(JesterJackBox, shot_radius, float, 0);
+/* property   */ ATTRIB(JesterJackBox, shot_speed, float, 0);
+
+/* property   */ ATTRIB(JesterJackBox, shot_volly, float, 0);
+/* property   */ ATTRIB(JesterJackBox, shot_volly_refire, float, 0);
+
+/* property   */ ATTRIB(JesterJackBox, target_range, float, 175);
+/* property   */ ATTRIB(JesterJackBox, target_range_min, float, 1);
+/* property   */ ATTRIB(JesterJackBox, target_range_optimal, float, 128);
+
+/* property   */ ATTRIB(JesterJackBox, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(JesterJackBox, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(JesterJackBox, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(JesterJackBox, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(JesterJackBox, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(JesterJackBox, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(JesterJackBox, aim_speed, float, 120);
+/* property   */ ATTRIB(JesterJackBox, aim_maxrot, float, 20);
+/* property   */ ATTRIB(JesterJackBox, aim_maxpitch, float, 20);
+
+/* property   */ ATTRIB(JesterJackBox, track_type, float, 3);
+/* property   */ ATTRIB(JesterJackBox, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(JesterJackBox, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(JesterJackBox, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(JesterJackBox, m_champion, Champions, CHAMPION_Jester);
+#endif
+
+ENDCLASS(JesterJackBox)
+REGISTER_TURRET(JACK_BOX, NEW(JesterJackBox));
+
+// ==============
+//  PARTY POPPER
+// ==============
+
+CLASS(JesterPartyPopper, Turret)
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(JesterPartyPopper, spawnflags, int, 0);
+/* mins       */ ATTRIB(JesterPartyPopper, m_mins, vector, '-16 -16 0');
+/* maxs       */ ATTRIB(JesterPartyPopper, m_maxs, vector, '16 16 40');
+/* modelname  */ ATTRIB(JesterPartyPopper, mdl, string, "progs/tur_popper.mdl");
+/* head_model */ ATTRIB(JesterPartyPopper, head_model, string, "null");
+#endif
+/* netname    */ ATTRIB(JesterPartyPopper, netname, string, "partypopper");
+/* fullname   */ ATTRIB(JesterPartyPopper, m_name, string, _("Party Popper"));
+/* description*/ ATTRIB(JesterPartyPopper, m_description, string, "Fires various projectiles in a randomized order");
+#ifdef GAMEQC
+/* number     */ ATTRIB(JesterPartyPopper, impulse, int, 4);
+/* cost       */ ATTRIB(JesterPartyPopper, tur_cost, float, 50);
+/* units      */ ATTRIB(JesterPartyPopper, tur_units, int, 4);
+
+/* property   */ ATTRIB(JesterPartyPopper, health, float, 250);
+
+/* property   */ ATTRIB(JesterPartyPopper, shot_dmg, float, 0);
+/* property   */ ATTRIB(JesterPartyPopper, shot_refire, float, 1);
+/* property   */ ATTRIB(JesterPartyPopper, shot_spread, float, 0);
+/* property   */ ATTRIB(JesterPartyPopper, shot_force, float, 0);
+/* property   */ ATTRIB(JesterPartyPopper, shot_radius, float, 0);
+/* property   */ ATTRIB(JesterPartyPopper, shot_speed, float, 0);
+
+/* property   */ ATTRIB(JesterPartyPopper, shot_volly, float, 0);
+/* property   */ ATTRIB(JesterPartyPopper, shot_volly_refire, float, 0.5);
+
+/* property   */ ATTRIB(JesterPartyPopper, target_range, float, 450);
+/* property   */ ATTRIB(JesterPartyPopper, target_range_min, float, 1);
+/* property   */ ATTRIB(JesterPartyPopper, target_range_optimal, float, 200);
+
+/* property   */ ATTRIB(JesterPartyPopper, target_select_rangebias, float, 0.25);
+/* property   */ ATTRIB(JesterPartyPopper, target_select_samebias, float, 0.25);
+/* property   */ ATTRIB(JesterPartyPopper, target_select_anglebias, float, 0.5);
+/* property   */ ATTRIB(JesterPartyPopper, target_select_playerbias, float, 1);
+/* property   */ ATTRIB(JesterPartyPopper, target_select_missilebias, float, 0);
+
+/* property   */ ATTRIB(JesterPartyPopper, aim_firetolerance_dist, float, 25);
+/* property   */ ATTRIB(JesterPartyPopper, aim_speed, float, 120);
+/* property   */ ATTRIB(JesterPartyPopper, aim_maxrot, float, 45);
+/* property   */ ATTRIB(JesterPartyPopper, aim_maxpitch, float, 45);
+
+/* property   */ ATTRIB(JesterPartyPopper, track_type, float, 3);
+/* property   */ ATTRIB(JesterPartyPopper, track_accel_pitch, float, 0.4);
+/* property   */ ATTRIB(JesterPartyPopper, track_accel_rot, float, 0.7);
+/* property   */ ATTRIB(JesterPartyPopper, track_blendrate, float, 0.2);
+
+/* champion   */ ATTRIB(JesterPartyPopper, m_champion, Champions, CHAMPION_Jester);
+#endif
+
+ENDCLASS(JesterPartyPopper)
+REGISTER_TURRET(PARTY_POPPER, NEW(JesterPartyPopper));
+
+#ifdef SVQC
+const int POPPER_ANIM_IDLE = 0;
+const int POPPER_ANIM_ATTACKA = 1;
+const int POPPER_ANIM_ATTACKB = 2;
+const int POPPER_ANIM_ATTACKC = 3;
+const int POPPER_ANIM_WIN = 4;
+const int POPPER_ANIM_LOSE = 5;
+
+void popper_setnoanim(entity this);
+#endif

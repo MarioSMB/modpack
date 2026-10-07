@@ -1,5 +1,6 @@
 #include "axe.qc"
 #include "biogun.qc"
+#include "bishop.qc"
 #include "doot.qc"
 #include "shotgun.qc"
 #include "super_shotgun.qc"

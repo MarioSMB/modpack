@@ -151,13 +151,13 @@ void ai_shockwave_think(entity this)
 }
 
 //----------------------------------------------------------------------
-void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radius, float imp_forward, float imp_up, int deathtype, string meleehitsound)
+entity ai_shockwave_fromsource(entity this, entity attacker, vector imp_vec, float imp_damage, float imp_radius, float imp_forward, float imp_up, int deathtype, string meleehitsound)
 {
 	// Big impact, flash effect
 	this.effects |= EF_MUZZLEFLASH;
 
 	// Play impact sound and work out where the impact is going to happen
-	_sound(this, CH_WEAPON_SINGLE, meleehitsound, 1, ATTN_IDLE);
+	_sound(this, CH_SHOTS_SINGLE, meleehitsound, 1, ATTN_IDLE);
 	makevectors(this.angles);
 	// Replaced this crazy mess with function attack_vector
 	//impact = this.origin + v_forward*imp_vec_x + v_right*imp_vec_y + v_up*imp_vec_z;
@@ -170,13 +170,16 @@ void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radiu
 	while(sjump)
 	{
 		// Ignore monster (this)
-		if(sjump != this)
+		if(sjump != this && sjump != attacker)
 		{
 			// Check for player + blast belt? - play active sound
 			/*if (IS_PLAYER(sjump) && sjump.moditems & IT_ARTBLASTBELT)
 				PlayBlastBeltSound(sjump);
 			// Only affect players and other monsters AND breakables (BSP+model)
-			else*/ if(IS_PLAYER(sjump) || IS_MONSTER(sjump) || sjump.classname == "misc_breakablemodel")
+			else*/
+			if(!Damage_ValidTarget(sjump, attacker))
+				{ /* do nothing */ }
+			if(IS_PLAYER(sjump) || IS_MONSTER(sjump) || sjump.classname == "misc_breakablemodel" || sjump.classname == "monster_hitbox")
 			{
 				// Exclude breakable/pushable immune to monster damage
 				// This does not catch breakables excluded from player damage
@@ -185,7 +188,7 @@ void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radiu
 					// unbreakable thing, do nothing
 				}
 				// Exclude statues, stone/heavy monsters and bosses!
-				else if(!(sjump.monsterdef.spawnflags & MONSTER_TYPE_BOSS)) // TODO: CG_STONE check was here
+				else if(!(sjump.monsterdef.spawnflags & MONSTER_TYPE_BOSS) && sjump.classname != "monster_hitbox") // TODO: CG_STONE check was here
 				{
 					// Is the entity on the ground or a breakable?
 					// The test for breakables exceptions is done earlier
@@ -217,13 +220,13 @@ void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radiu
 							// Breakable's need source (this) for impact direction
 							// to spawn breakable pieces away from impact location
 							if(vdamage > 0)
-								T_Damage(sjump, this, this, imp_damage*vpercent, deathtype);
+								T_Damage(sjump, this, attacker, imp_damage*vpercent, deathtype);
 							
 							// Monsters have less impact
 							if(IS_MONSTER(sjump))
 								vpercent *= 0.75;
 							// Attacker facing angle
-							makevectors(this.angles);									
+							makevectors(this.angles); // FIXME: what...								
 							// Combine forward/up force with existing velocity
 							vector fvel = (v_forward * (imp_forward * vpercent)) + (v_up * (imp_up * vpercent));
 							sjump.velocity = sjump.velocity + fvel;
@@ -238,6 +241,7 @@ void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radiu
 
 	// Spawn impact model ring on the ground
 	entity swave = spawn();
+	swave.classname = "ai_shockwave";
 	swave.mdl = "progs/proj_ringshock.mdl";	
 	_setmodel(swave,swave.mdl);
 	setsize(swave, '0 0 0', '0 0 0');
@@ -250,5 +254,12 @@ void ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radiu
 	
 	// Spawn particle explosion where impact is located
 	int vpart = 64 + rint(random()*64);
-	particle_explode(impact, vpart, 0.5, PARTICLE_BURST_FIRE, PARTICLE_BURST_SHOCKWAVE); 
+	particle_explode(impact, vpart, 0.5, PARTICLE_BURST_FIRE, PARTICLE_BURST_SHOCKWAVE);
+
+	return swave;
+}
+
+entity ai_shockwave(entity this, vector imp_vec, float imp_damage, float imp_radius, float imp_forward, float imp_up, int deathtype, string meleehitsound)
+{
+	return ai_shockwave_fromsource(this, this, imp_vec, imp_damage, imp_radius, imp_forward, imp_up, deathtype, meleehitsound);
 }

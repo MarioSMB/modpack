@@ -8,6 +8,7 @@
 #include "duke.qc"
 #include "galena.qc"
 #include "goat.qc"
+#include "jester.qc"
 #include "keen.qc"
 #include "keyleth.qc"
 #include "mario.qc"

@@ -6,6 +6,7 @@
 // some default fallbacks that are known to be broken without it
 string autocvar_sv_quake_clippedmaps = "cchorde1 eod4 eod7 targstart targ1m1 targ1m2 targ1m3 rj7_ish";
 bool autocvar_sv_quake_clipfix = false;
+bool autocvar_sv_quake_noexit_boss;
 
 int autocvar_noexit;
 
@@ -73,6 +74,27 @@ void changelevel_touch(entity this, entity toucher)
 		return;
 	if(this.customflags & CFL_LOCKED)
 		return;
+
+	if(autocvar_sv_quake_noexit_boss)
+	{
+		bool have_boss = false;
+		IL_EACH(g_monsters, it.health > 0 && (it.monsterdef.spawnflags & MONSTER_TYPE_BOSS),
+		{
+			have_boss = true;
+			break;
+		});
+
+		if(have_boss)
+		{
+			if(time >= toucher.chlevel_delay)
+			{
+				toucher.chlevel_delay = time + 2;
+				Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXIT_BOSS);
+				_sound(toucher, CH_TRIGGER_SINGLE, QUAKE_TALKSOUND, 1, ATTN_NORM);
+			}
+			return;
+		}
+	}
 
 	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart" && mapname != "mgstart" && mapname != "quake")))
 	{

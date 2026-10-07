@@ -1,0 +1,42 @@
+#pragma once
+
+#ifdef GAMEQC
+SOUND(Bishop_Fire1, "weapons/bishop_fire1");
+SOUND(Bishop_Fire2, "weapons/bishop_fire2");
+Sound SND_Bishop_Fire_Random() {
+	return (random() > 0.5) ? SND_Bishop_Fire1 : SND_Bishop_Fire2;
+}
+
+SOUND(Bishop_Blast1, "weapons/bishop_blast1");
+SOUND(Bishop_Blast2, "weapons/bishop_blast2");
+Sound SND_Bishop_Blast_Random() {
+	return (random() > 0.5) ? SND_Bishop_Blast1 : SND_Bishop_Blast2;
+}
+
+SOUND(Bishop_Impact1, "weapons/bishop_impact1");
+SOUND(Bishop_Impact2, "weapons/bishop_impact2");
+SOUND(Bishop_Impact3, "weapons/bishop_impact3");
+Sound SND_Bishop_Impact_Random() {
+	return REGISTRY_GET(Sounds, SND_Bishop_Impact1.m_id + rint(random() * 2));
+}
+
+MODEL(KING, "progs/king.mdl");
+#endif
+
+CLASS(Bishop, Weapon)
+/* ammotype  */ ATTRIB(Bishop, ammo_type, int, 0);
+/* impulse   */ ATTRIB(Bishop, impulse, int, 2);
+/* spawnflags*/ ATTRIB(Bishop, spawnflags, int, WEP_FLAG_CHAMPION | WEP_FLAG_HUDFALLBACK | WEP_FLAG_MANA | WEP_FLAG_NOSTEAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_NODUAL | WEP_FLAG_TWOHANDED);
+/* ammo */      ATTRIB(Bishop, aflag, int, 0);
+/* modelname */ ATTRIB(Bishop, mdl, string, "bishop");
+/* crosshair */ ATTRIB(Bishop, w_crosshair, string, "gfx/crosshair16");
+/* crosshair */ ATTRIB(Bishop, w_crosshair_size, float, 0.3);
+/* crosshair */ ATTRIB(Bishop, w_crosshair_color, vector, '0.49 0.97 1');
+/* wepimg    */ ATTRIB(Bishop, model2, string, "bishop");
+/* refname   */ ATTRIB(Bishop, netname, string, "bishop");
+/* wepname   */ ATTRIB(Bishop, m_name, string, _("Enchanted Bishop"));
+
+ENDCLASS(Bishop)
+REGISTER_WEAPON(BISHOP, NEW(Bishop));
+
+//SPAWNFUNC_WEAPON(weapon_bishop, WEP_BISHOP)

@@ -1,0 +1,17 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(NoPickups, Debuffs)
+    ATTRIB(NoPickups, netname, string, "no_pickups");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(NoPickups, m_name, string, _("Unable To Repair"));
+    ATTRIB(NoPickups, m_icon, string, "buff_disability");
+#endif
+    ATTRIB(NoPickups, m_color, vector, '0.1 0.25 0.75');
+    ATTRIB(NoPickups, m_hidden, bool, true);
+    ATTRIB(NoPickups, m_lifetime, float, 10);
+ENDCLASS(NoPickups)
+REGISTER_STATUSEFFECT(NoPickups, NEW(NoPickups));

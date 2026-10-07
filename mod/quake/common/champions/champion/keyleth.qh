@@ -107,6 +107,7 @@ CLASS(Keyleth, Champions)
 	ATTRIB(Keyleth, qcc_movespeed, float, 1.1);
 	ATTRIB(Keyleth, qcc_jumpheight, float, 1.15);
 	ATTRIB(Keyleth, qcc_meleename, string, "keypunch");
+	ATTRIB(Keyleth, qcc_manacost, float, 0.8);
 #ifdef GAMEQC
 	ATTRIB(Keyleth, m_model, Model, MDL_Keyleth);
 	ATTRIB(Keyleth, m_model_head, Model, MDL_Keyleth_Head);

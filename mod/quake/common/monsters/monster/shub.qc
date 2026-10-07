@@ -17,53 +17,16 @@ void shub_lightstyle(entity this, int lightnum, string lightid)
 
 //void old_stand(entity this) { set_animofs(this, anim_old_old, 1, old_stand); }
 
-void old_idle1(entity this);
-void old_idle46(entity this) { set_animofs(this, anim_old_old, 46, old_idle1); }
-void old_idle45(entity this) { set_animofs(this, anim_old_old, 45, old_idle46); }
-void old_idle44(entity this) { set_animofs(this, anim_old_old, 44, old_idle45); }
-void old_idle43(entity this) { set_animofs(this, anim_old_old, 43, old_idle44); }
-void old_idle42(entity this) { set_animofs(this, anim_old_old, 42, old_idle43); }
-void old_idle41(entity this) { set_animofs(this, anim_old_old, 41, old_idle42); }
-void old_idle40(entity this) { set_animofs(this, anim_old_old, 40, old_idle41); }
-void old_idle39(entity this) { set_animofs(this, anim_old_old, 39, old_idle40); }
-void old_idle38(entity this) { set_animofs(this, anim_old_old, 38, old_idle39); }
-void old_idle37(entity this) { set_animofs(this, anim_old_old, 37, old_idle38); }
-void old_idle36(entity this) { set_animofs(this, anim_old_old, 36, old_idle37); }
-void old_idle35(entity this) { set_animofs(this, anim_old_old, 35, old_idle36); }
-void old_idle34(entity this) { set_animofs(this, anim_old_old, 34, old_idle35); }
-void old_idle33(entity this) { set_animofs(this, anim_old_old, 33, old_idle34); }
-void old_idle32(entity this) { set_animofs(this, anim_old_old, 32, old_idle33); }
-void old_idle31(entity this) { set_animofs(this, anim_old_old, 31, old_idle32); }
-void old_idle30(entity this) { set_animofs(this, anim_old_old, 30, old_idle31); }
-void old_idle29(entity this) { set_animofs(this, anim_old_old, 29, old_idle30); }
-void old_idle28(entity this) { set_animofs(this, anim_old_old, 28, old_idle29); }
-void old_idle27(entity this) { set_animofs(this, anim_old_old, 27, old_idle28); }
-void old_idle26(entity this) { set_animofs(this, anim_old_old, 26, old_idle27); }
-void old_idle25(entity this) { set_animofs(this, anim_old_old, 25, old_idle26); }
-void old_idle24(entity this) { set_animofs(this, anim_old_old, 24, old_idle25); }
-void old_idle23(entity this) { set_animofs(this, anim_old_old, 23, old_idle24); }
-void old_idle22(entity this) { set_animofs(this, anim_old_old, 22, old_idle23); }
-void old_idle21(entity this) { set_animofs(this, anim_old_old, 21, old_idle22); }
-void old_idle20(entity this) { set_animofs(this, anim_old_old, 20, old_idle21); }
-void old_idle19(entity this) { set_animofs(this, anim_old_old, 19, old_idle20); }
-void old_idle18(entity this) { set_animofs(this, anim_old_old, 18, old_idle19); }
-void old_idle17(entity this) { set_animofs(this, anim_old_old, 17, old_idle18); }
-void old_idle16(entity this) { set_animofs(this, anim_old_old, 16, old_idle17); }
-void old_idle15(entity this) { set_animofs(this, anim_old_old, 15, old_idle16); }
-void old_idle14(entity this) { set_animofs(this, anim_old_old, 14, old_idle15); }
-void old_idle13(entity this) { set_animofs(this, anim_old_old, 13, old_idle14); }
-void old_idle12(entity this) { set_animofs(this, anim_old_old, 12, old_idle13); }
-void old_idle11(entity this) { set_animofs(this, anim_old_old, 11, old_idle12); }
-void old_idle10(entity this) { set_animofs(this, anim_old_old, 10, old_idle11); }
-void old_idle9(entity this) { set_animofs(this, anim_old_old, 9, old_idle10); }
-void old_idle8(entity this) { set_animofs(this, anim_old_old, 8, old_idle9); }
-void old_idle7(entity this) { set_animofs(this, anim_old_old, 7, old_idle8); }
-void old_idle6(entity this) { set_animofs(this, anim_old_old, 6, old_idle7); }
-void old_idle5(entity this) { set_animofs(this, anim_old_old, 5, old_idle6); }
-void old_idle4(entity this) { set_animofs(this, anim_old_old, 4, old_idle5); }
-void old_idle3(entity this) { set_animofs(this, anim_old_old, 3, old_idle4); }
-void old_idle2(entity this) { set_animofs(this, anim_old_old, 2, old_idle3); }
-void old_idle1(entity this) { set_animofs(this, anim_old_old, 1, old_idle2); }
+void old_idle1(entity this)
+{
+	setthink(this, old_idle1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 46)
+		this.walkframe = 0;
+	this.frame = anim_old_old + this.walkframe;
+}
 
 void old_thrash1(entity this);
 void old_thrash20(entity this)
@@ -366,6 +329,7 @@ METHOD(Shub, mr_setup, bool(Shub this, entity actor))
 	if(!actor.strength)
 		actor.strength = 3;
 
+	//actor.gibhealth = -200;
 	actor.health = 4000;
 	actor.th_stand = old_idle1;
 	actor.th_walk = old_idle1;

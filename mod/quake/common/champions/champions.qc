@@ -692,6 +692,9 @@ void cl_champion_draw()
 
 void champion_menu_open()
 {
+	if(wheel_active)
+		return;
+
 	selected_champion_index = 0;
 	champion_hovered_index = -1;
 	cursor_active |= GUI_OPEN_CHAMPIONS;

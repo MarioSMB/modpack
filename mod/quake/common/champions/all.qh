@@ -77,6 +77,7 @@ CLASS(Champions, Object)
     ATTRIB(Champions, qcc_thirdperson_offset, float, 0);
     ATTRIB(Champions, qcc_meleerange, float, 1);
     ATTRIB(Champions, qcc_meleespeed, float, 1);
+    ATTRIB(Champions, qcc_manacost, float, 1);
     ATTRIB(Champions, qcc_anim_axrun, vector, '0 0 0');
     ATTRIB(Champions, qcc_anim_rockrun, vector, '0 0 0');
     ATTRIB(Champions, qcc_anim_axstnd, vector, '0 0 0');

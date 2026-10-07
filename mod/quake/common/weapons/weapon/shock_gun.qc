@@ -65,7 +65,7 @@ void T_ShockTouch(entity this, entity toucher)
 		if(random() < 0.5)        // 50% change of gibbing a zombie...
 			damg = 1000;             // Otherwise you could never kill them.
 	
-	if(toucher.health)
+	if(toucher.takedamage)
 		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
 
 	// Moves the plasma bullet backwards after hitting.. Otherwise the 

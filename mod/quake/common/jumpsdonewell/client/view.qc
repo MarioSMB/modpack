@@ -30,6 +30,7 @@ PRECACHE(JumpsDoneWell_Init)
 #endif
 }
 
+void Draw_Circle_full(vector shotorg, float crange, vector sw_color, float a);
 void draw_blob()
 {
 	entity this = csqcplayer;
@@ -39,8 +40,8 @@ void draw_blob()
 	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 4096', MOVE_NOMONSTERS, this);
 	float shadowdist = vlen(this.origin - trace_endpos);
 	float shadowval = bound(0, (400 - shadowdist) * 0.001, 0.5);
-	particles_alphamin = particles_alphamax = shadowval;
-	boxparticles(particleeffectnum(EFFECT_BLOBSHADOW), this, trace_endpos, trace_endpos, '0 0 0', '0 0 0', 1, PARTICLES_USEALPHA);
+	float myscale = (this.scale) ? this.scale : 1;
+	Draw_Circle_full(trace_endpos + '0 0 1', 16 * myscale, '0.01 0.01 0.01', shadowval);
 }
 
 float attack_time;
@@ -251,8 +252,14 @@ void View_JumpsDoneWell()
 		view_origin += view_up * 150;
 	}
 
-	draw_blob();
 	player_listen();
+}
+
+void JDW_DrawWorld()
+{
+	// can't do this pre-clearscene!
+	// TODO: maybe the rest doesn't need to be done then either...
+	draw_blob();
 }
 
 void HUD_JumpsDoneWell()

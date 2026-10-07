@@ -516,6 +516,7 @@ void iceg_shardtrail(entity this)
 
 	// Spawn a temporary entity
 	entity oring = spawn();
+	oring.classname = "icegolem_ringblast";
 	oring.owner = this;
 	oring.solid = SOLID_NOT;			// No interaction with world
 	set_movetype(oring, MOVETYPE_NONE);		// Static item, no movement

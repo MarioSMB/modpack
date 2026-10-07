@@ -54,6 +54,11 @@ void qc_sound7(entity e, int chan, Sound samp, float vol, float atten, float pit
 	//int dest = (sndflags & CHANNELFLAG_RELIABLE) ? MSG_ALL : MSG_BROADCAST;
 	int dest = MSG_BROADCAST; // TODO?
 	vector o = e.origin + 0.5 * (e.mins + e.maxs);
+	// hack so we don't network it when not necessary
+	if(pitchchange == 0 && autocvar_slowmo != 1)
+		pitchchange = 100 * autocvar_slowmo;
+	else
+		pitchchange *= autocvar_slowmo;
 
 	qc_startsound(dest, e, o, chan, samp, vol, atten, pitchchange);
 #else

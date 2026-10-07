@@ -796,6 +796,34 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage, int 
 	if(StatusEffects_active(STATUSEFFECT_Berserk, targ))
 		damage *= 0.5;
 
+	if(StatusEffects_active(STATUSEFFECT_JesterBuff, attacker))
+	{
+		if(IS_PLAYER(attacker))
+			damage *= 1.1; // only 10% boost!
+		else
+			damage *= 2.5; // 250%!!
+	}
+
+	if(StatusEffects_active(STATUSEFFECT_JesterBuff, targ))
+	{
+		if(IS_PLAYER(targ))
+			damage *= 0.5;
+		else
+			damage *= 0.66;
+	}
+
+	if(StatusEffects_active(STATUSEFFECT_Golden, targ))
+		damage *= 0.33;
+
+	if(StatusEffects_active(STATUSEFFECT_Golden, attacker))
+		damage *= 1.5;
+
+	if(StatusEffects_active(STATUSEFFECT_JesterDebuff, targ))
+		damage *= 1.42;
+
+	if(StatusEffects_active(STATUSEFFECT_JesterDebuff, attacker))
+		damage *= 0.5;
+
 	if(targ.m_champion && !DEATH_IS(deathtype, DEATH_GENERIC))
 		damage *= targ.m_champion.qcc_damagetaken;
 

@@ -1,0 +1,10 @@
+#pragma once
+
+CLASS(JesterJumpBoost, Powerups)
+    ATTRIB(JesterJumpBoost, netname, string, "jester_jumpboost");
+    ATTRIB(JesterJumpBoost, m_name, string, _("Jump Boost"));
+    ATTRIB(JesterJumpBoost, m_color, vector, '0.75 0.2 1');
+    //ATTRIB(JesterJumpBoost, m_icon, string, "r_agrav1");
+    ATTRIB(JesterJumpBoost, m_hidden, bool, true); // TODO
+ENDCLASS(JesterJumpBoost)
+REGISTER_STATUSEFFECT(JesterJumpBoost, NEW(JesterJumpBoost));

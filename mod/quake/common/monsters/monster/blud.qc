@@ -83,6 +83,8 @@ void blud_movetogoal(entity this, float dist)
 {
 	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 		dist *= 0.5;
+	if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+		dist *= 1.5;
 
 	this.enemy_range = range(this, this.enemy);
 

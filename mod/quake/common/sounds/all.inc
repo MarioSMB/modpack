@@ -103,3 +103,5 @@ Sound SND_PLAYER_BURN_RANDOM() {
 SOUND(SKATE_LAND, "player/skatelnd");
 SOUND(SKATE_JUMP, "player/plyrjmp8");
 SOUND(SKATE_WATERJUMP, "player/h2ojump");
+
+SOUND(POPPER_POISON_FLY, "turrets/popper_poison_fly");

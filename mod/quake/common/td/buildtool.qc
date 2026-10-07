@@ -504,6 +504,13 @@ void BuildTool_Fire(entity actor)
 				default:
 				case 0:
 				{
+					if(StatusEffects_active(STATUSEFFECT_NoRepairs, actor))
+					{
+						_sound(actor, CH_WEAPON_SINGLE, "td/nofuel.wav", 1, ATTN_NORM);
+						Send_Notification(NOTIF_ONE_ONLY, actor, MSG_CENTER, CENTER_NO_REPAIRS);
+						actor.attack_finished = time + 0.25;
+						break;
+					}
 					if(trace_ent.health < trace_ent.max_health && trace_ent.max_health > 0)
 					{
 						int cost = autocvar_sv_quake_td_repaircost;

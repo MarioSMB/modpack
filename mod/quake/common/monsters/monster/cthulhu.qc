@@ -16,6 +16,8 @@ const float ATTN_CTHULHU = 0.1; // minimum attenuation, big roars!
 
 const int MON_CTHULHU_ZOID = BIT(1);
 
+bool autocvar_sv_quake_cthulhu_zoidberg; // why not zoidberg
+
 .float cthtaunt_timer;
 void cth_run1(entity this);
 
@@ -183,13 +185,13 @@ void cth_smash13(entity this)
 {
 	set_animofs(this, anim_cthulhu_smash, 13, cth_smash14);
 	this.enemy.punchangle_x = -2;
-	T_RadiusDamage(this, this, 80 * this.scale, DEATH_MONSTER_CTHULHU.m_id, this);
+	float myscale = (this.scale) ? this.scale : 1;
+	T_RadiusDamage(this, this, 80 * myscale, DEATH_MONSTER_CTHULHU.m_id, this);
 
 	cthulhu_screen_shake(this, 0.4, 550);
 
 	_sound(this, CH_VOICE, "cthulhu/stomp.wav", 1, ATTN_CTHULHU);
 
-	float myscale = (this.scale) ? this.scale : 1;
 	ai_shockwave(this, '200 0 -34' * myscale, 150, 512, 300, 100, DEATH_MONSTER_CTHULHU.m_id, SND(Null));
 }
 void cth_smash12(entity this) { set_animofs(this, anim_cthulhu_smash, 12, cth_smash13); ai_charge(this, 2); }
@@ -757,7 +759,7 @@ METHOD(Cthulhu, mr_setup, bool(Cthulhu this, entity actor))
 	precache_sound("cthulhu/die2.wav");
 	precache_sound("cthulhu/die3.wav");
 
-	if(random() < 0.15)
+	if(autocvar_sv_quake_cthulhu_zoidberg || random() < 0.15)
 		actor.spawnflags |= MON_CTHULHU_ZOID;
 	actor.skin = 0;
 
@@ -809,7 +811,7 @@ METHOD(Cthulhu, mr_setup, bool(Cthulhu this, entity actor))
 	precache_sound(actor.stepc2);
 	actor.steptype = FS_TYPECUSTOM;
 
-	if(!actor.target || actor.targetname == "")
+	if(!actor.targetname || actor.targetname == "")
 	if(gametype != GAMETYPE_HORDE && !actor.charmed)
 		cth_wake(actor, actor.enemy, NULL);
 

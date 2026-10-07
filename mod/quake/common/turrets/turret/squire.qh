@@ -27,9 +27,9 @@ CLASS(SquireSpikeBlockade, Turret)
 ENDCLASS(SquireSpikeBlockade)
 REGISTER_TURRET(SPIKE_BLOCKADE, NEW(SquireSpikeBlockade));
 
-// ================
-//  BOUNCER
-// ================
+// ==================
+//  BOUNCER BLOCKADE
+// ==================
 
 CLASS(SquireBouncer, Turret)
 #ifdef GAMEQC

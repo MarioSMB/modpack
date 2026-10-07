@@ -35,6 +35,8 @@ bool CanTouchItem(entity this, entity toucher)
 		return false;
 	if(toucher.m_champion == CHAMPION_Nyx && STAT(NYX_INVIS, toucher))
 		return false;
+	if(StatusEffects_active(STATUSEFFECT_NoPickups, toucher))
+		return false;
 	//if(toucher.m_transform && !this.weapon)
 		//return false;
 

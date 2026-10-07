@@ -122,7 +122,7 @@ REGISTER_TURRET(ALIEN_SNIPER, NEW(KeenAlienSniper));
 
 CLASS(KeenUFO, Turret)
 #ifdef GAMEQC
-/* spawnflags */ ATTRIB(KeenUFO, spawnflags, int, TUR_FLAG_FLOATING);
+/* spawnflags */ ATTRIB(KeenUFO, spawnflags, int, TUR_FLAG_FLOATING | TUR_FLAG_NOJESTER);
 /* mins       */ ATTRIB(KeenUFO, m_mins, vector, '-48 -48 -16');
 /* maxs       */ ATTRIB(KeenUFO, m_maxs, vector, '48 48 16');
 /* modelname  */ ATTRIB(KeenUFO, mdl, string, "progs/tur_ufo.mdl");

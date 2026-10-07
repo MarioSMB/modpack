@@ -431,6 +431,8 @@ void PlayerJump(entity this, float maxspd_mod, float dt)
 		if(this.m_champion.m_playerjump)
 			mjumpheight *= this.m_champion.m_playerjump(this.m_champion, this);
 	}
+	if(StatusEffects_active(STATUSEFFECT_JesterJumpBoost, actor))
+		mjumpheight *= 2;
 	if(StatusEffects_active(STATUSEFFECT_JumpBoots, actor))
 		mjumpheight *= 1.5;
 	if(this.viewloc && !forcedheight)
@@ -997,6 +999,9 @@ void PM_Main(entity this, float dt)
 		this.movement_y *= -1;
 	}
 
+	if(PHYS_INPUT_BUTTON_CHAT(this) || PHYS_INPUT_BUTTON_MINIGAME(this))
+		this.movement = '0 0 0';
+
 	if(STAT(QCC_STUNNED, this) > time)
 		this.movement = '0 0 0';
 
@@ -1032,6 +1037,8 @@ void PM_Main(entity this, float dt)
 		maxspeed_mod *= 1.5;
 	if(StatusEffects_active(STATUSEFFECT_Slowness, actor))
 		maxspeed_mod *= 0.25;
+	if(StatusEffects_active(STATUSEFFECT_JesterSpeed, actor))
+		maxspeed_mod *= 1.5;
 	if(this.m_champion)
 	{
 		maxspeed_mod *= this.m_champion.qcc_movespeed;

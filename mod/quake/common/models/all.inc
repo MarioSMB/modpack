@@ -147,6 +147,13 @@ MODEL(PROJECTILE_EMPRESS_LANCE,             "progs/proj_terraprisma.mdl");
 MODEL(PROJECTILE_EMPRESS_EVERLASTING,       "progs/v_spike.mdl");
 MODEL(PROJECTILE_ENRAGED_STREAK,            "models/elaser.mdl");
 MODEL(PROJECTILE_ENRAGED_EVERLASTING,       "progs/v_spike.mdl");
+MODEL(PROJECTILE_RM_LAVABALL,               "progs/lavaball.mdl");
+MODEL(PROJECTILE_POPPER_POISON,             "progs/popper_poison.mdl");
+MODEL(PROJECTILE_POPPER_STRIKER,            "models/elaser.mdl");
+MODEL(PROJECTILE_POPPER_DJINN,              "progs/v_spike.mdl");
+MODEL(PROJECTILE_POPPER_ARROW,              "progs/popper_arrow.mdl");
+MODEL(PROJECTILE_POPPER_MAGIC,              "progs/pbullet.mdl");
+MODEL(PROJECTILE_BISHOP_BOLT,               "progs/pbullet.mdl");
 
 PRECACHE(PROJECTILE_LETTERS)
 {

@@ -1,0 +1,10 @@
+#pragma once
+
+CLASS(JesterSpeed, StatusEffects)
+    ATTRIB(JesterSpeed, netname, string, "jester_speed");
+    ATTRIB(JesterSpeed, m_name, string, _("Sped up!"));
+    ATTRIB(JesterSpeed, m_color, vector, '0 0.75 0.75');
+    //ATTRIB(JesterSpeed, m_icon, string, "r_agrav1");
+    ATTRIB(JesterSpeed, m_hidden, bool, true); // TODO
+ENDCLASS(JesterSpeed)
+REGISTER_STATUSEFFECT(JesterSpeed, NEW(JesterSpeed));

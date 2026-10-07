@@ -1,8 +1,6 @@
 #include "spellbook.qh"
 
 #ifdef SVQC
-entity tracetossent;
-
 vector rune_getspot(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);

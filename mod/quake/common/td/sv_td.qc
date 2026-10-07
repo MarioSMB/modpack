@@ -198,6 +198,14 @@ void td_RoundWon(entity this)
 		it.attack_finished = time + 2;
 	});
 
+	IL_EACH(g_turrets, it.turretdef == TUR_PARTY_POPPER,
+	{
+		turrets_setframe(it, POPPER_ANIM_WIN, false);
+		it.animflag = it.frame;
+		it.attack_finished = time + 3;
+		defer(it, 3, popper_setnoanim);
+	});
+
 	// final wave was beaten, end the match!
 	if(this.count > 0 && this.wave >= this.count)
 	{
@@ -229,6 +237,14 @@ void td_RoundLost(entity this)
 	{
 		turrets_setframe_force(it, NANIM_LOSE, false, true);
 		it.attack_finished = time + 2;
+	});
+
+	IL_EACH(g_turrets, it.turretdef == TUR_PARTY_POPPER,
+	{
+		turrets_setframe(it, POPPER_ANIM_LOSE, false);
+		it.animflag = it.frame;
+		it.attack_finished = time + 3;
+		defer(it, 3, popper_setnoanim);
 	});
 
 	// reset server after some time
@@ -1962,6 +1978,9 @@ void td_MonsterDies(entity targ, entity attacker)
 
 	td_DropFuel(targ, fuel, NULL, false);
 
+	float dropchance = 0.15;
+	if(StatusEffects_active(STATUSEFFECT_Golden, targ))
+		dropchance = 0.5; // high chance for loot
 	if(random() < 0.15) // TODO: custom chances
 		td_DropItem(targ);
 

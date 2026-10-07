@@ -42,12 +42,16 @@ REGISTER_NET_LINKED(ENT_CLIENT_INVOKED)
 
 REGISTER_NET_TEMP(TE_CSQC_BFGZAP)
 
+REGISTER_NET_TEMP(TE_CSQC_WHEEL)
+
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC
 NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { make_pure(this); return true; }
 #endif
 /** Sent as a temp entity from a persistent linked entity */
 REGISTER_NET_TEMP(ENT_CLIENT_INIT)
+
+REGISTER_NET_C2S(wheel)
 
 #include <lib/warpzone/anglestransform.qh>
 

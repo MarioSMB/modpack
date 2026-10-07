@@ -1,0 +1,17 @@
+#pragma once
+
+#include "../all.qh"
+
+CLASS(NoRepairs, Debuffs)
+    ATTRIB(NoRepairs, netname, string, "no_repairs");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(NoRepairs, m_name, string, _("Unable To Repair"));
+    ATTRIB(NoRepairs, m_icon, string, "buff_disability");
+#endif
+    ATTRIB(NoRepairs, m_color, vector, '0.75 0.25 0.1');
+    ATTRIB(NoRepairs, m_hidden, bool, true);
+    ATTRIB(NoRepairs, m_lifetime, float, 10);
+ENDCLASS(NoRepairs)
+REGISTER_STATUSEFFECT(NoRepairs, NEW(NoRepairs));

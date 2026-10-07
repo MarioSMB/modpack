@@ -19,6 +19,8 @@ void qb_movetogoal(entity this, float dist)
 {
 	if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 		dist *= 0.5;
+	if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+		dist *= 1.5;
 
 	this.enemy_range = range(this, this.enemy);
 
@@ -32,13 +34,7 @@ void qb_movetogoal(entity this, float dist)
 	}
 }
 
-void qb_stand1(entity this);
-void qb_stand6(entity this) { qb_anim(this, qb_stand1); ai_stand(this); }
-void qb_stand5(entity this) { qb_anim(this, qb_stand6); ai_stand(this); }
-void qb_stand4(entity this) { qb_anim(this, qb_stand5); ai_stand(this); }
-void qb_stand3(entity this) { qb_anim(this, qb_stand4); ai_stand(this); }
-void qb_stand2(entity this) { qb_anim(this, qb_stand3); ai_stand(this); }
-void qb_stand1(entity this) { qb_anim(this, qb_stand2); ai_stand(this); }
+void qb_stand1(entity this) { qb_anim(this, qb_stand1); ai_stand(this); }
 
 void qb_walk1(entity this);
 void qb_walk6(entity this) { qb_anim(this, qb_walk1); ai_walk(this, 3); }

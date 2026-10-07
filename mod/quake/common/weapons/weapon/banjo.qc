@@ -67,10 +67,10 @@ void W_FireBanjo(entity this, .entity weaponentity)
 	tracebox(this.origin, '0 0 0', '0 0 0', offset, MOVE_NORMAL, this);
 	vector neworg = trace_endpos;
 
-	vector dir = qc_aim(this, 500);
-	float banjo_count = 6;
+	vector dir = qc_aim(this, 600);
+	int scount = 6;
 	bool doleft = (random() > 0.5);
-	for(int j = 0; j < banjo_count; ++j)
+	for(int j = 0; j < scount; ++j)
 	{
 		// copied from piano
 		entity musicnote = spawn();
@@ -103,7 +103,7 @@ void W_FireBanjo(entity this, .entity weaponentity)
 		float spread_side = (j * spread.x);
 		float spread_up = (j * spread.y);
 		vector right = (doleft) ? v_right * -1 : v_right;
-		vector spread_dir = dir + (spread_side - ((banjo_count * spread.x) * 0.5)) * right + (spread_up - ((banjo_count * spread.y) * 0.5)) * v_up;
+		vector spread_dir = dir + (spread_side - ((scount * spread.x) * 0.5)) * right + (spread_up - ((scount * spread.y) * 0.5)) * v_up;
 		musicnote.velocity = spread_dir * 600;
 
 		IL_PUSH(g_projectiles, musicnote);

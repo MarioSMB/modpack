@@ -617,6 +617,13 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(EMPRESS_EVERLASTING)this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
 			HANDLE(ENRAGED_STREAK)     this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
 			HANDLE(ENRAGED_EVERLASTING)this.traileffect = EFFECT_TR_EMPRESS_STREAK.m_id; break;
+			HANDLE(RM_LAVABALL)        this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '200 100 300'; break;
+			HANDLE(POPPER_POISON)      this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.avelocity = '200 100 300'; break;
+			HANDLE(POPPER_STRIKER)     this.traileffect = EFFECT_TR_POPPER_STRIKER.m_id; break;
+			HANDLE(POPPER_DJINN)       this.traileffect = EFFECT_TR_VORESPIKE.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(POPPER_ARROW)       this.traileffect = EFFECT_TR_SICKLE.m_id; this.avelocity = '0 0 180'; break;
+			HANDLE(POPPER_MAGIC)       this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; this.avelocity = '300 300 300'; break;
+			HANDLE(BISHOP_BOLT)        this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; this.avelocity = '300 300 300'; this.scale = 0.5; break;
 #undef HANDLE
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -993,6 +1000,26 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.effects |= EF_DIMLIGHT;
 				//this.effects |= EF_NODEPTHTEST;
 				settouch(this, func_null);
+				break;
+			case PROJECTILE_RM_LAVABALL:
+				this.gravity = 1;
+				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_POPPER_POISON:
+				loopsound(this, CH_SHOTS_SINGLE, SND_POPPER_POISON_FLY, VOL_BASE, ATTEN_NORM);
+				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_POPPER_STRIKER:
+				this.effects |= EF_FULLBRIGHT;
+				//this.effects |= EF_DIMLIGHT;
+				this.colormod = '0.85 0.52 0.05';
+				this.glowmod = this.colormod;
+				break;
+			case PROJECTILE_POPPER_ARROW:
+				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_BISHOP_BOLT:
+				this.effects |= EF_FULLBRIGHT;
 				break;
 			default:
 				break;

@@ -4205,6 +4205,28 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "wheel")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		wheel_start(this);
+		return;
+	}
+
+	if(cmd_name == "fuel")
+	{
+		if(!autocvar_sv_cheats && !this.maycheat)
+			return;
+		if(gametype != GAMETYPE_TD)
+		{
+			sprint(this, "Fuel has no use outside of Tower Defence!\n");
+			return;
+		}
+
+		STAT(TD_FUEL, this) = 9999;
+		return;
+	}
+
 	if(cmd_name == "addmob" || cmd_name == "addmob2")
 	{
 		if(!autocvar_sv_cheats && !this.maycheat)

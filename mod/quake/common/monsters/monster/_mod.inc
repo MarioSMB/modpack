@@ -103,6 +103,8 @@
 #include "pvzombie_yeti.qc"
 #include "queen_bee.qc"
 #include "raindeer.qc"
+#include "redstone_cube.qc"
+#include "redstone_monstrosity.qc"
 #include "retinazer.qc"
 #include "rotfish.qc"
 #include "rottweiler.qc"

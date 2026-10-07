@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(PEWPEW_MUSICNOTE, "weapons/whistle_music");
+#endif
+
 CLASS(PewPew, Weapon)
 /* ammotype  */ ATTRIB(PewPew, ammo_type, int, 0);
 /* impulse   */ ATTRIB(PewPew, impulse, int, 2);
-/* spawnflags*/ ATTRIB(PewPew, spawnflags, int, WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD);
+/* spawnflags*/ ATTRIB(PewPew, spawnflags, int, WEP_FLAG_NOSTEAL | WEP_FLAG_NODUAL | WEP_FLAG_HITUNDEAD | WEP_FLAG_MUSIC);
 /* ammo */      ATTRIB(PewPew, aflag, int, 0);
 /* modelname */ ATTRIB(PewPew, mdl, string, "pewpew");
 /* crosshair */ ATTRIB(PewPew, w_crosshair, string, "gfx/crosshairelectro");
@@ -12,6 +16,9 @@ CLASS(PewPew, Weapon)
 /* wepimg    */ ATTRIB(PewPew, model2, string, "pewpew");
 /* refname   */ ATTRIB(PewPew, netname, string, "pewpew");
 /* wepname   */ ATTRIB(PewPew, m_name, string, _("Pew Pew"));
+#ifdef GAMEQC
+/* music     */ ATTRIB(PewPew, m_musicnote, Sound, SND_PEWPEW_MUSICNOTE);
+#endif
 
 ENDCLASS(PewPew)
 REGISTER_WEAPON(PEWPEW, NEW(PewPew));

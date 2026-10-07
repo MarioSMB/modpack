@@ -85,7 +85,7 @@ void W_FireMinishark(entity this, .entity weaponentity)
 	settouch(newmis, minishark_bullet_touch);
 	//_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');
-	CSQCProjectile(newmis, true, PROJECTILE_SUPER_SPIKE, true);
+	CSQCProjectile(newmis, true, PROJECTILE_BULLET, true);
 
 	this.punchangle_x = -2 * autocvar_sv_quake_recoil;
 }

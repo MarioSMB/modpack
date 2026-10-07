@@ -82,12 +82,6 @@ void dragon_stop_attack(entity this)
 	this.attack_finished = this.attack_finished - autocvar_skill;
 	
 	this.dragonAttacking = false;
-	traceline(this.origin, this.movetarget.origin, true, NULL);
-
-	if(trace_fraction == 1)
-		return;
-	else
-		bprint("Error: Dragon cannot get to next target!\n");
 }
 
 // ===================================
@@ -106,7 +100,7 @@ void dragon_check_attack(entity this)
 	if(this.enemy.flags & FL_NOTARGET)
 		return;
 	
-	if(this.enemy == NULL)
+	if(!this.enemy)
 		FindTarget(this);
 	else
 	{
@@ -153,8 +147,11 @@ void dragon_move(entity this, float dist)
 
 	entity oldEnemy = this.enemy;
 	vector moveDir, moveAngles;
-	if(this.dragonAttacking == false)
+	if(!this.dragonAttacking)
 	{
+		if(!this.movetarget || IS_PLAYER(this.movetarget))
+			this.movetarget = (this.enemy) ? this.enemy : NULL;
+
 		moveDir = this.movetarget.origin - this.origin;
 		moveAngles = vectoangles ( moveDir);
 		this.enemy = this.movetarget;
@@ -553,9 +550,10 @@ void dragon_boom1(entity this)
 	ThrowGib(this, this, "progs/drggib01.mdl", -100);
 	ThrowGib(this, this, "progs/drggib02.mdl", -100);
 	ThrowGib(this, this, "progs/drggib03.mdl", -100);
-	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
+	_sound(this, CH_PLAYER, "player/udeath.wav", 1, ATTN_BOSS);
 	setthink(this, dragon_boom2);
 	this.nextthink = time + 0.1;
+	this.solid = SOLID_NOT;
 }
 
 void dragon_explode(entity this)
@@ -581,7 +579,7 @@ void dragon_squish(entity this, entity toucher)
 {
 	if(IS_PLAYER(toucher))
 	{
-		this.classname = "monster_dragon_dead"; // TODO: deathtype support would give us a unique death message here!
+		this.classname = "monster_dragon_dead";
 		T_Damage(toucher, this, this, 200, DEATH_MONSTER_DRAGON_CRUSH.m_id);
 	}
 	if(!toucher)
@@ -619,7 +617,7 @@ void dragon_death5(entity this) { set_animofs(this, anim_dragon_drgdth01, 5, dra
 void dragon_death4(entity this) { set_animofs(this, anim_dragon_drgdth01, 4, dragon_death5); dragon_explode(this); }
 void dragon_death3(entity this) { set_animofs(this, anim_dragon_drgdth01, 3, dragon_death4); dragon_explode(this); }
 void dragon_death2(entity this) { set_animofs(this, anim_dragon_drgdth01, 2, dragon_death3); dragon_explode(this); }
-void dragon_death1(entity this, entity inflictor, entity attacker, int deathtype)
+void dragon_death1(entity this)
 {
 	set_anim(this, anim_dragon_drgdth01, dragon_death2);
 
@@ -637,8 +635,31 @@ void dragon_death1(entity this, entity inflictor, entity attacker, int deathtype
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	settouch(this, dragon_squish);
 
-	_sound(this, CH_TRIGGER_SINGLE, "dragon/death.wav", 1, ATTN_NONE);
+	_sound(this, CH_TRIGGER_SINGLE, "dragon/death.wav", 1, ATTN_BOSS);
 	this.dragonAttacking = false;
+}
+
+void dragon_die(entity this, entity inflictor, entity attacker, int deathtype)
+{
+	int killed_type = Death_SpecialType(this, inflictor, attacker, deathtype);
+	switch(killed_type)
+	{
+		case KILLED_NORMAL: break; // normal death
+		case KILLED_GIBBED:
+		{
+			dragon_boom1(this);
+			// fall through to special handling
+		}
+		default:
+		{
+			// ensure map triggers still work!
+			this.target = "dragondoor";
+			SUB_UseTargets(this, NULL, NULL);	
+			Death_SpecialHandle(this, attacker, killed_type);
+			return;
+		}
+	}
+	dragon_death1(this);
 }
 
 // ===================================
@@ -709,11 +730,12 @@ METHOD(Dragon, mr_setup, bool(Dragon this, entity actor))
 	actor.playerInRoom = DT_ROOM_A;
 	actor.playerInTransit = 0;
 
+	actor.gibhealth = -200;
 	actor.th_stand = dragon_activate;
 	actor.th_walk = dragon_activate;
 	actor.th_run = dragon_walk1;
 	actor.th_pain = dragon_pain;
-	actor.th_die = dragon_death1;
+	actor.th_die = dragon_die;
 	actor.dragonPainSequence = 1;
 
 	actor.health = 2000 + (500 * autocvar_skill);

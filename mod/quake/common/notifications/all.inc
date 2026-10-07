@@ -269,6 +269,7 @@
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGDisconnecting in ^COUNT...")), "")
 
+    MSG_CENTER_NOTIF(EXIT_BOSS,                         N_ENABLE,    0, 0, "",               CPID_Null,              "0 0", _("^BGCannot exit while a boss is alive!"), "")
     MSG_CENTER_NOTIF(EXIT_FOUND,                        N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0", _("^BG%s^BG found an exit!"), "")
 
     MSG_CENTER_NOTIF(ITEM_BACKPACK_GOT,                 N_ENABLE,    1, 0, "s1",                       CPID_ITEM, "2 0", _("^BGYou got %s"), "")
@@ -287,6 +288,7 @@
     MSG_CENTER_NOTIF(NO_AMMO,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGOut of ammo"), "")
     MSG_CENTER_NOTIF(NO_FUEL,                           N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNot enough fuel"), "")
     MSG_CENTER_NOTIF(NO_PLACE,                          N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGInvalid placement"), "")
+    MSG_CENTER_NOTIF(NO_REPAIRS,                        N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGTemporarily unable to repair"), "")
     MSG_CENTER_NOTIF(NO_TARGET,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGAim at a turret"), "")
     MSG_CENTER_NOTIF(NO_UNITS,                          N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGDefence Unit limit reached"), "")
     MSG_CENTER_NOTIF(NO_WEAPON,                         N_ENABLE,     0, 0, "",                         CPID_AMMO, "0 0", _("^BGNo weapon"), "")

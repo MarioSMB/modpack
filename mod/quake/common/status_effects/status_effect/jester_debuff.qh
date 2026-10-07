@@ -1,0 +1,10 @@
+#pragma once
+
+CLASS(JesterDebuff, Powerups)
+    ATTRIB(JesterDebuff, netname, string, "jester_debuff");
+    ATTRIB(JesterDebuff, m_name, string, _("Debuffed!"));
+    ATTRIB(JesterDebuff, m_color, vector, '1 0.33 0.1');
+    //ATTRIB(JesterDebuff, m_icon, string, "r_agrav1");
+    ATTRIB(JesterDebuff, m_hidden, bool, true); // TODO
+ENDCLASS(JesterDebuff)
+REGISTER_STATUSEFFECT(JesterDebuff, NEW(JesterDebuff));

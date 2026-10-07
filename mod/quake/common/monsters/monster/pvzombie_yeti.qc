@@ -43,16 +43,18 @@ void pvz_yeti_bite(entity this)
 	T_Damage(this.enemy, this, this, ldmg, DEATH_MONSTER_PVZOMBIE_YETI.m_id);
 }
 
-void pvz_yeti_stand1(entity this);
-void pvz_yeti_stand9(entity this) { set_animofs(this, anim_pvz_yeti_idle, 9, pvz_yeti_stand1); ai_stand(this); }
-void pvz_yeti_stand8(entity this) { set_animofs(this, anim_pvz_yeti_idle, 8, pvz_yeti_stand9); ai_stand(this); }
-void pvz_yeti_stand7(entity this) { set_animofs(this, anim_pvz_yeti_idle, 7, pvz_yeti_stand8); ai_stand(this); }
-void pvz_yeti_stand6(entity this) { set_animofs(this, anim_pvz_yeti_idle, 6, pvz_yeti_stand7); ai_stand(this); }
-void pvz_yeti_stand5(entity this) { set_animofs(this, anim_pvz_yeti_idle, 5, pvz_yeti_stand6); ai_stand(this); }
-void pvz_yeti_stand4(entity this) { set_animofs(this, anim_pvz_yeti_idle, 4, pvz_yeti_stand5); ai_stand(this); }
-void pvz_yeti_stand3(entity this) { set_animofs(this, anim_pvz_yeti_idle, 3, pvz_yeti_stand4); ai_stand(this); }
-void pvz_yeti_stand2(entity this) { set_animofs(this, anim_pvz_yeti_idle, 2, pvz_yeti_stand3); ai_stand(this); }
-void pvz_yeti_stand1(entity this) { set_animofs(this, anim_pvz_yeti_idle, 1, pvz_yeti_stand2); ai_stand(this); }
+void pvz_yeti_stand1(entity this)
+{
+	setthink(this, pvz_yeti_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 9)
+		this.walkframe = 0;
+
+	this.frame = anim_pvz_yeti_idle + this.walkframe;
+	ai_stand(this);
+}
 
 void pvz_yeti_walk1(entity this);
 void pvz_yeti_walk17(entity this) { set_animofs(this, anim_pvz_yeti_walk, 17, pvz_yeti_walk1); ai_walk(this, 5); }

@@ -6,7 +6,6 @@ void JumpsDoneWell_Init()
 	cvar_settemp("chase_active", "1");
 	cvar_settemp("chase_back", "0");
 	cvar_settemp("chase_up", "0");
-	cvar_settemp("cl_decals_max", "4"); // hack for the shadow under players
 }
 
 NET_HANDLE(TE_CSQC_TELEFADE, bool isNew)

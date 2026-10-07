@@ -392,6 +392,8 @@ void spaz_think(entity this)
 		float myspeed = (this.enemy) ? 500 : 200;
 		if(StatusEffects_active(STATUSEFFECT_Slowness, this))
 			myspeed *= 0.5;
+		if(StatusEffects_active(STATUSEFFECT_JesterSpeed, this))
+			myspeed *= 1.5;
 
 		if(vdist(this.velocity, <=, myspeed))
 			twins_move(this, goal, myspeed, 0.1);

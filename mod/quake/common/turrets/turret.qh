@@ -193,6 +193,7 @@ const int TUR_FLAG_ISTURRET        = BIT(16); ///< identifies this unit as a tur
 const int TUR_FLAG_NONSOLID        = BIT(17); ///< Quake exclusive: may overlap with others
 const int TUR_FLAG_FLOATING        = BIT(18); ///< Quake exclusive: does not drop down
 const int TUR_FLAG_CONSTANTRANGE   = BIT(19); ///< Quake exclusive: target range does not level up // TODO
+const int TUR_FLAG_NOJESTER        = BIT(20); ///< Quake exclusive: turret can't be chosen randomly
 
 // damage flags
 .int damage_flags;

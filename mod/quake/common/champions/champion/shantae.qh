@@ -118,6 +118,7 @@ CLASS(Shantae, Champions)
 	ATTRIB(Shantae, qcc_meleename, string, "hair");
 	ATTRIB(Shantae, qcc_meleerange, float, 2);
 	ATTRIB(Shantae, qcc_jumpheight, float, 1.15);
+	ATTRIB(Shantae, qcc_manacost, float, 0.8);
 #ifdef GAMEQC
 	ATTRIB(Shantae, m_model, Model, MDL_Shantae);
 	ATTRIB(Shantae, m_model_head, Model, MDL_Shantae_Head);

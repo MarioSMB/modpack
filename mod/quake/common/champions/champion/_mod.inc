@@ -21,6 +21,8 @@
 #include "goat.qc"
 #include "gordon.qc"
 #include "grinch.qc"
+#include "jester.qc"
+#include "jester_wheel.qc"
 #include "katria.qc"
 #include "keen.qc"
 #include "keyleth.qc"

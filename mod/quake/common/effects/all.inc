@@ -1713,3 +1713,63 @@ STATIC_INIT(Effect_TR_EMPRESS_STREAK)
 	registercvar("cl_particle_TR_EMPRESS_STREAK_trail_teamcolor", "2");
 }
 #endif
+
+EFFECT(0, TURRET_LEVELDOWN,       "rage")
+
+EFFECT(0, GOLDEN,              "golden")
+#ifdef CSQC
+STATIC_INIT(Effect_GOLDEN)
+{
+	registercvar("cl_particle_golden", "dust");
+
+	registercvar("cl_particle_golden_dust_type", "snow");
+	registercvar("cl_particle_golden_dust_alpha", "256 256 256");
+	registercvar("cl_particle_golden_dust_bounce", "1.500000");
+	registercvar("cl_particle_golden_dust_color", "0xff9600 0xffefb8");
+	registercvar("cl_particle_golden_dust_count", "25");
+	registercvar("cl_particle_golden_dust_originjitter", "32 32 32");
+	registercvar("cl_particle_golden_dust_sizeincrease", "-0.300000");
+	registercvar("cl_particle_golden_dust_size", "2 3");
+	registercvar("cl_particle_golden_dust_tex", "38 38");
+	registercvar("cl_particle_golden_dust_velocityjitter", "0.1 0.1 0.1");
+}
+#endif
+
+EFFECT(0, PRESENT_OPEN,         "electro_ballexplode")
+EFFECT(1, TR_POPPER_STRIKER,    "nade_yellow")
+
+EFFECT(0, BISHOP_BOLT_EXPLODE,  "bishop_boltexplode")
+#ifdef CSQC
+STATIC_INIT(Effect_BISHOP_BOLT_EXPLODE)
+{
+	registercvar("cl_particle_bishop_boltexplode", "sprite smoke");
+
+#if 0
+	registercvar("cl_particle_bishop_boltexplode_decal_type", "decal");
+	registercvar("cl_particle_bishop_boltexplode_decal_alpha", "256 256 0");
+	registercvar("cl_particle_bishop_boltexplode_decal_countabsolute", "1");
+	registercvar("cl_particle_bishop_boltexplode_decal_lightcolor", "3.1 4.4 10");
+	registercvar("cl_particle_bishop_boltexplode_decal_lightradiusfade", "250");
+	registercvar("cl_particle_bishop_boltexplode_decal_lightradius", "250");
+	registercvar("cl_particle_bishop_boltexplode_decal_originjitter", "17 17 17");
+	registercvar("cl_particle_bishop_boltexplode_decal_size", "16 16");
+	registercvar("cl_particle_bishop_boltexplode_decal_tex", "59 59");
+#endif
+
+	registercvar("cl_particle_bishop_boltexplode_sprite_type", "static");
+	registercvar("cl_particle_bishop_boltexplode_sprite_alpha", "256 256 512");
+	registercvar("cl_particle_bishop_boltexplode_sprite_color", "0x80C0FF 0x80C0FF");
+	registercvar("cl_particle_bishop_boltexplode_sprite_countabsolute", "1");
+	registercvar("cl_particle_bishop_boltexplode_sprite_size", "16 16");
+	registercvar("cl_particle_bishop_boltexplode_sprite_tex", "38 38");
+
+	registercvar("cl_particle_bishop_boltexplode_smoke_type", "smoke");
+	registercvar("cl_particle_bishop_boltexplode_smoke_alpha", "256 256 512");
+	registercvar("cl_particle_bishop_boltexplode_smoke_color", "0x202020 0x404040");
+	registercvar("cl_particle_bishop_boltexplode_smoke_count", "8");
+	registercvar("cl_particle_bishop_boltexplode_smoke_originjitter", "20 20 20");
+	registercvar("cl_particle_bishop_boltexplode_smoke_size", "24 24");
+	registercvar("cl_particle_bishop_boltexplode_smoke_tex", "0 8");
+	registercvar("cl_particle_bishop_boltexplode_smoke_velocityjitter", "32 32 32");
+}
+#endif
