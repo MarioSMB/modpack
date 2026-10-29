@@ -97,6 +97,7 @@ void eoc_setangle(entity this, vector goal)
 
 .int eoc_attackcount;
 .vector moveto;
+.float eoc_dashtime;
 
 entity eoc_pickmovegoal(entity this)
 {
@@ -181,6 +182,8 @@ void eoc_attackframe(entity this)
 			this.attack_finished = time + (2 * chargerate);
 
 			_sound(this, CH_VOICE, "eoc/charge.wav", 1, ATTN_BOSS);
+
+			this.eoc_dashtime = this.attack_finished;
 
 			if(this.eoc_attackcount <= 0)
 			{
@@ -281,6 +284,7 @@ void eoc_spin(entity this)
 			this.avelocity = '0 0 0';
 			this.angles_x = anglemods(this.angles_x); // ???
 			setthink(this, eoc_think);
+			CSQCMODEL_AUTOUPDATE(this);
 			return;
 		}
 	}
@@ -292,6 +296,8 @@ void eoc_spin(entity this)
 		this.avelocity_x = min(this.avelocity_x + 360 * PHYS_INPUT_TIMELENGTH, 540);
 	else
 		this.avelocity_x = max(0, this.avelocity_x - 420 * PHYS_INPUT_TIMELENGTH);
+
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void eoc_think(entity this)
@@ -307,6 +313,7 @@ void eoc_think(entity this)
 		this.attack_finished = time + 3; // time it takes to transform
 		setthink(this, eoc_spin);
 		this.nextthink = time;
+		CSQCMODEL_AUTOUPDATE(this);
 		return;
 	}
 
@@ -326,6 +333,11 @@ void eoc_think(entity this)
 
 	if(this.enemy && time >= this.attack_finished)
 		eoc_attackframe(this);
+
+	if(time > this.eoc_dashtime)
+		this.effects &= ~EF_AFTEREFFECT;
+	else
+		this.effects |= EF_AFTEREFFECT;
 
 	vector goal = '0 0 0';
 	if(this.moveto != '0 0 0')
@@ -372,6 +384,8 @@ void eoc_think(entity this)
 	}
 	else
 		eoc_brake(this, 1.5);
+
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void eoc_pain(entity this, entity attacker, float damage, int deathtype)
@@ -453,6 +467,8 @@ METHOD(EyeOfCthulhu, mr_setup, bool(EyeOfCthulhu this, entity actor))
 	actor.th_run = eoc_think;
 	actor.th_pain = eoc_pain;
 	actor.th_die = eoc_die;
+
+	CSQCMODEL_AUTOINIT(actor);
 
     return true;
 }

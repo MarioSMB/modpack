@@ -140,7 +140,8 @@ void CSQCModel_AfterEffect(entity this)
 	if(vdist(this.velocity, <=, 100))
 		return;
 
-	this.aftereffect_time = time + PHYS_INPUT_TIMELENGTH;
+	float effrate = (this.isplayermodel) ? 1 : 3;
+	this.aftereffect_time = time + effrate * PHYS_INPUT_TIMELENGTH;
 
 	entity body = new(aftereffect);
 	body.solid = SOLID_NOT;
@@ -166,7 +167,8 @@ void CSQCModel_AfterEffect(entity this)
 	else
 		body.renderflags &= ~RF_EXTERNALMODEL;
 
-	SUB_SetFade(body, time, 0.25);
+	float efftime = (this.isplayermodel) ? 0.25 : 0.5;
+	SUB_SetFade(body, time, efftime);
 }
 
 void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
