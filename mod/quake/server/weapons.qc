@@ -347,7 +347,7 @@ ROCKETS
 ==============================================================================
 */
 
-void T_MissileExplode(entity this)
+void T_MissileExplode_do(entity this)
 {
 	float mydmg = (this.dmg) ? this.dmg : 100;
 	// don't do radius damage to the toucher, because all the damage
@@ -365,6 +365,14 @@ void T_MissileExplode(entity this)
 	Send_Effect(EFFECT_EXPLOSION, this.origin, '0 0 0', 1);
 
 	BecomeExplosion(this);
+}
+
+void T_MissileExplode(entity this)
+{
+	setthink(this, T_MissileExplode_do);
+	this.nextthink = time;
+	this.solid = SOLID_NOT;
+	settouch(this, func_null);
 }
 
 void T_MissileTouch(entity this, entity toucher)
