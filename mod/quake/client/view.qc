@@ -8,6 +8,7 @@
 #include "../common/jumpsdonewell/_mod.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/bossbars.qh"
+#include "../common/radial_menu.qh"
 #include "../common/status_effects/cl_status_effects.qh"
 #include "../common/weapons/all.qh"
 #include "../common/viewloc.qh"
@@ -698,6 +699,8 @@ void HUD_Mouse(entity player)
 	{
 		if(player.viewloc && (player.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			ViewLocation_Mouse(); // NOTE: doesn't use cursormode
+
+		cl_radial_mouse();
 	}
 }
 
@@ -774,6 +777,7 @@ void View_CheckButtonStatus()
 			{
 				localcmd("-fire\n");
 				localcmd("-fire2\n");
+				button_attack2 = false;
 			}
 		}
 	}
@@ -955,6 +959,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	else
 		view_quality = 1;
 
+	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
+
 	vector vf_size = getpropertyvec(VF_SIZE);
 	vector vf_min = getpropertyvec(VF_MIN);
 	vid_width = vf_size.x;
@@ -1080,6 +1086,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 		HUD_TD(local_player);
 
 	sui_begin(vid_conwidth, vid_conheight);
+
+	cl_radial_draw();
 
 	cl_shop_draw();
 

@@ -360,6 +360,27 @@ void W_BreegullBlaster_Fire(entity this, .entity weaponentity)
 	_sound(this, CH_WEAPON_SINGLE, snd, 1, ATTN_NORM);
 }
 
+void W_BreegullBlaster_Select(entity actor, int index)
+{
+	if(STAT(BREEGULL_EGGTYPE, actor) == index)
+		return;
+
+	STAT(BREEGULL_EGGTYPE, actor) = index;
+
+	string snd = "";
+	switch(index)
+	{
+		default:
+		case 0: snd = "weapons/egg0.wav"; break;
+		case 1: snd = "weapons/egg1.wav"; break;
+		case 2: snd = "weapons/egg2.wav"; break;
+		case 3: snd = "weapons/egg3.wav"; break;
+		case 4: snd = "weapons/egg4.wav"; break;
+		case 5: snd = "weapons/egg5.wav"; break;
+	}
+	_sound(actor, CH_WEAPON_B, snd, 1, ATTN_NORM);
+}
+
 METHOD(BreegullBlaster, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(!(fire & 1))
@@ -369,21 +390,12 @@ METHOD(BreegullBlaster, wr_think, void(entity thiswep, entity actor, .entity wea
 	if(fire & 2)
 	if(!(time < actor.attack2_finished))
 	{
-		STAT(BREEGULL_EGGTYPE, actor) += 1;
-		if(STAT(BREEGULL_EGGTYPE, actor) > 5)
-			STAT(BREEGULL_EGGTYPE, actor) = 0;
-		string snd = "";
-		switch(STAT(BREEGULL_EGGTYPE, actor))
-		{
-			default:
-			case 0: snd = "weapons/egg0.wav"; break;
-			case 1: snd = "weapons/egg1.wav"; break;
-			case 2: snd = "weapons/egg2.wav"; break;
-			case 3: snd = "weapons/egg3.wav"; break;
-			case 4: snd = "weapons/egg4.wav"; break;
-			case 5: snd = "weapons/egg5.wav"; break;
-		}
-		_sound(actor, CH_WEAPON_B, snd, 1, ATTN_NORM);
+		int index = STAT(BREEGULL_EGGTYPE, actor) + 1;
+		if(index > 5)
+			index = 0;
+
+		W_BreegullBlaster_Select(actor, index);
+		
 		ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.5); // also prevent primary fire during this time
 		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
@@ -412,5 +424,38 @@ METHOD(BreegullBlaster, wr_suicidemessage, Notification(entity thiswep))
 METHOD(BreegullBlaster, wr_killmessage, Notification(entity thiswep))
 {
 	return WEAPON_FRAG;
+}
+#endif
+
+#ifdef SVQC
+METHOD(EggSelection, m_select, void(entity actor, int index))
+{
+	if(index > 5)
+		index = 0; // TODO: ignore?
+
+	W_BreegullBlaster_Select(actor, index);
+}
+#endif
+#ifdef CSQC
+METHOD(EggSelection, m_condition, bool(RadialMenu this))
+{
+	entity thiswep = viewmodels[0]; // WEAPONTODO
+	Weapon wep = thiswep.activeweapon;
+
+	return (wep == WEP_BREEGULLBLASTER);
+}
+
+METHOD(EggSelection, m_getentry, string(int index))
+{
+	switch(index)
+	{
+		case 0: return "gfx/quake/egg0";
+		case 1: return "gfx/quake/egg1";
+		case 2: return "gfx/quake/egg2";
+		case 3: return "gfx/quake/egg3";
+		case 4: return "gfx/quake/egg4";
+		case 5: return "gfx/quake/egg5";
+	}
+	return string_null;
 }
 #endif

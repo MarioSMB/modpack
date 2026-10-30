@@ -4,6 +4,7 @@
 
 const int GUI_OPEN_SHOP = BIT(0);
 const int GUI_OPEN_CHAMPIONS = BIT(1);
+const int GUI_OPEN_RADIAL = BIT(2);
 
 bool _holding_click;
 vector _cursor_click;

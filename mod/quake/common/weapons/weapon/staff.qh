@@ -25,3 +25,12 @@ REGISTER_WEAPON(STAFF, NEW(Staff));
 #ifdef SVQC
 .entity sunbeam;
 #endif
+
+#ifdef GAMEQC
+CLASS(StaffSelection, RadialMenu)
+	ATTRIB(StaffSelection, netname, string, "staff");
+	ATTRIB(StaffSelection, count, int, 3);
+ENDCLASS(StaffSelection)
+
+REGISTER_RADIALMENU(STAFF_SELECTION, NEW(StaffSelection));
+#endif

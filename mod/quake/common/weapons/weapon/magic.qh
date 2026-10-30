@@ -21,3 +21,12 @@ REGISTER_WEAPON(MAGIC, NEW(Magic));
 #ifdef SVQC
 .entity magic_bubble;
 #endif
+
+#ifdef GAMEQC
+CLASS(MagicSelection, RadialMenu)
+	ATTRIB(MagicSelection, netname, string, "magic");
+	ATTRIB(MagicSelection, count, int, 3);
+ENDCLASS(MagicSelection)
+
+REGISTER_RADIALMENU(MAGIC_SELECTION, NEW(MagicSelection));
+#endif

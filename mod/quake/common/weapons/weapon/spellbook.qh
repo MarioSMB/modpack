@@ -61,3 +61,11 @@ const int SPELL_SERPENT = 7;
 const float SPELL_COST_SERPENT = 25;
 const int SPELL_LAST = 7;
 
+#ifdef GAMEQC
+CLASS(SpellSelection, RadialMenu)
+	ATTRIB(SpellSelection, netname, string, "spellbook");
+	ATTRIB(SpellSelection, count, int, 8);
+ENDCLASS(SpellSelection)
+
+REGISTER_RADIALMENU(SPELL_SELECTION, NEW(SpellSelection));
+#endif

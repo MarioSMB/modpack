@@ -160,4 +160,5 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 #ifdef GAMEQC
 #include "../items/item.qh"
 #include "../models/all.qh"
+#include "../radial_menu.qh"
 #endif

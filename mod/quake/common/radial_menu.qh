@@ -1,0 +1,40 @@
+#pragma once
+
+#ifdef GAMEQC
+CLASS(RadialMenu, Object)
+    ATTRIB(RadialMenu, m_id, int, 0);
+    /** internal menu name */
+    ATTRIB(RadialMenu, netname, string, string_null);
+    /** number of entries in the menu */
+    ATTRIB(RadialMenu, count, int, 0);
+#ifdef SVQC
+    METHOD(RadialMenu, m_select, void(entity actor, int index)) {}
+#endif
+#ifdef CSQC
+    /** return the icon for the selected entry */
+    METHOD(RadialMenu, m_getentry, string(int index)) { return string_null; }
+    /** condition for displaying the menu */
+    METHOD(RadialMenu, m_condition, bool(RadialMenu this)) { return false; }
+#endif
+ENDCLASS(RadialMenu)
+
+REGISTRY(RadialMenus, 16)
+REGISTER_REGISTRY(RadialMenus)
+REGISTRY_SORT(RadialMenus);
+
+REGISTRY_DEFINE_GET(RadialMenus, NULL)
+STATIC_INIT(RadialMenus) { FOREACH(RadialMenus, true, it.m_id = i); }
+REGISTRY_CHECK(RadialMenus)
+
+#define REGISTER_RADIALMENU(NAME, inst) REGISTER(RadialMenus, RADIALMENU, NAME, m_id, inst)
+#endif
+
+#ifdef CSQC
+void cl_radial_draw();
+
+void cl_radial_mouse();
+
+bool cl_radial_input_event(float bInputType, float nPrimary, float nSecondary);
+
+RadialMenu radial_menu;
+#endif

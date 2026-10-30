@@ -353,6 +353,22 @@ void W_Magic_Fire(entity this, .entity weaponentity)
 		player_sound(this, CH_VOICE, SND_Shantae_Attack_Random(), ATTN_NORM);
 }
 
+void W_Magic_Select(entity actor, int index)
+{
+	if(STAT(MAGIC_TYPE, actor) == index)
+		return;
+
+	STAT(MAGIC_TYPE, actor) = bound(0, index, 2);
+
+	if(random() < 0.05)
+	{
+		float r = random() * (random() * 3);
+		sound7(actor, CH_WEAPON_B, "weapons/boobies.wav", 1, ATTN_NORM, 100 / r, 0);
+	}
+	else
+		_sound(actor, CH_WEAPON_B, "weapons/magic_switch.wav", 1, ATTN_NORM);
+}
+
 METHOD(Magic, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(!(fire & 1))
@@ -362,16 +378,12 @@ METHOD(Magic, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 	if(fire & 2)
 	if(!(time < actor.attack2_finished))
 	{
-		STAT(MAGIC_TYPE, actor) += 1;
-		if(STAT(MAGIC_TYPE, actor) > 2)
-			STAT(MAGIC_TYPE, actor) = 0;
-		if(random() < 0.05)
-		{
-			float r = random() * (random() * 3);
-			sound7(actor, CH_WEAPON_B, "weapons/boobies.wav", 1, ATTN_NORM, 100 / r, 0);
-		}
-		else
-			_sound(actor, CH_WEAPON_B, "weapons/magic_switch.wav", 1, ATTN_NORM);
+		int index = STAT(MAGIC_TYPE, actor) + 1;
+		if(index > 2)
+			index = 0;
+
+		W_Magic_Select(actor, index);
+		
 		ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.25); // also prevent primary fire during this time
 		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
@@ -465,5 +477,35 @@ METHOD(Magic, wr_viewmodel, string(entity this, entity wep))
 		case 2: return "magic_bubble";
 	}
 	return "magic";
+}
+#endif
+
+#ifdef SVQC
+METHOD(MagicSelection, m_select, void(entity actor, int index))
+{
+	if(index > 2)
+		index = 0; // TODO: ignore?
+
+	W_Magic_Select(actor, index);
+}
+#endif
+#ifdef CSQC
+METHOD(MagicSelection, m_condition, bool(RadialMenu this))
+{
+	entity thiswep = viewmodels[0]; // WEAPONTODO
+	Weapon wep = thiswep.activeweapon;
+
+	return (wep == WEP_MAGIC);
+}
+
+METHOD(MagicSelection, m_getentry, string(int index))
+{
+	switch(index)
+	{
+		case 0: return "gfx/quake/magic0";
+		case 1: return "gfx/quake/magic1";
+		case 2: return "gfx/quake/magic2";
+	}
+	return string_null;
 }
 #endif

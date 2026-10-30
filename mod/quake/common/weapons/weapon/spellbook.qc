@@ -1372,3 +1372,73 @@ METHOD(Spellbook, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_FRAG;
 }
 #endif
+
+#ifdef SVQC
+METHOD(SpellSelection, m_select, void(entity actor, int index))
+{
+	if(index > 7)
+		index = 0; // TODO: ignore?
+
+	// since spells are handled by the book itself, we gotta do some trickery
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(actor.(weaponentity).m_weapon == WEP_SPELLBOOK && actor.(weaponentity).skin != index)
+		{
+			_sound(actor, CH_WEAPON_B, "weapons/page_flip.wav", 1, ATTN_NORM);
+
+			// actually the previous one, gets added onto afterwards!
+			int nextspell = index - 1;
+			if(nextspell > SPELL_LAST)
+				nextspell = SPELL_FIRST;
+			if(nextspell < SPELL_FIRST)
+				nextspell = SPELL_LAST;
+			actor.currentspell = nextspell;
+
+			actor.(weaponentity).swappingspell = 1;
+			actor.(weaponentity).m_frame = 0;
+			actor.(weaponentity).skin = nextspell;
+			ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.5); // also prevent primary fire during this time
+			actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
+			break;
+		}
+	}
+}
+#endif
+#ifdef CSQC
+PRECACHE(Spellbook)
+{
+	precache_pic("gfx/quake/book0");
+	precache_pic("gfx/quake/book1");
+	precache_pic("gfx/quake/book2");
+	precache_pic("gfx/quake/book3");
+	precache_pic("gfx/quake/book4");
+	precache_pic("gfx/quake/book5");
+	precache_pic("gfx/quake/book6");
+	precache_pic("gfx/quake/book7");
+}
+
+METHOD(SpellSelection, m_condition, bool(RadialMenu this))
+{
+	entity thiswep = viewmodels[0]; // WEAPONTODO
+	Weapon wep = thiswep.activeweapon;
+
+	return (wep == WEP_SPELLBOOK);
+}
+
+METHOD(SpellSelection, m_getentry, string(int index))
+{
+	switch(index)
+	{
+		case 0: return "gfx/quake/book0";
+		case 1: return "gfx/quake/book1";
+		case 2: return "gfx/quake/book2";
+		case 3: return "gfx/quake/book3";
+		case 4: return "gfx/quake/book4";
+		case 5: return "gfx/quake/book5";
+		case 6: return "gfx/quake/book6";
+		case 7: return "gfx/quake/book7";
+	}
+	return string_null;
+}
+#endif

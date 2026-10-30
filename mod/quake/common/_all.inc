@@ -38,6 +38,7 @@
 #include "music.qc"
 #include "editor.qc"
 #include "challenges.qc"
+#include "radial_menu.qc"
 #include "shop.qc"
 #include "gametypes.qc"
 #endif

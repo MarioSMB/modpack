@@ -4,6 +4,8 @@
 
 //#include <lib/csqcmodel/cl_player.qc>
 
+#include "../common/_all.qh"
+
 #include "main.qc"
 #include "draw.qc"
 #include "view.qc"

@@ -403,6 +403,24 @@ int W_Staff_GetCost(entity actor)
 	return 12; // gmqcc
 }
 
+void W_Staff_Select(entity actor, int index)
+{
+	if(STAT(STAFF_TYPE, actor) == index)
+		return;
+
+	STAT(STAFF_TYPE, actor) = index;
+
+	string swsound = "";
+	switch(index)
+	{
+		default:
+		case 0: swsound = "weapons/staff_spell0.wav"; break;
+		case 1: swsound = "weapons/staff_spell1.wav"; break;
+		case 2: swsound = "weapons/staff_spell2.wav"; break;
+	}
+	_sound(actor, CH_WEAPON_B, swsound, 1, ATTN_NORM);
+}
+
 METHOD(Staff, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	if(!(fire & 1))
@@ -412,18 +430,10 @@ METHOD(Staff, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 	if(fire & 2)
 	if(!(time < actor.attack2_finished))
 	{
-		STAT(STAFF_TYPE, actor) += 1;
-		if(STAT(STAFF_TYPE, actor) > 2)
-			STAT(STAFF_TYPE, actor) = 0;
-		string swsound = "";
-		switch(STAT(STAFF_TYPE, actor))
-		{
-			default:
-			case 0: swsound = "weapons/staff_spell0.wav"; break;
-			case 1: swsound = "weapons/staff_spell1.wav"; break;
-			case 2: swsound = "weapons/staff_spell2.wav"; break;
-		}
-		_sound(actor, CH_WEAPON_B, swsound, 1, ATTN_NORM);
+		int index = STAT(STAFF_TYPE, actor) + 1;
+		if(index > 2)
+			index = 0;
+		W_Staff_Select(actor, index);
 		ATTACK_FINISHED(actor, weaponentity) = max(ATTACK_FINISHED(actor, weaponentity), time + 0.25); // also prevent primary fire during this time
 		actor.attack2_finished = time + 0.5; // slight delay between swapping, also prevents fireballs!
 	}
@@ -566,5 +576,35 @@ NET_HANDLE(ENT_CLIENT_SUNBEAM, bool isNew)
 
 	this.teleport_time = time + 10;
 	return true;
+}
+#endif
+
+#ifdef SVQC
+METHOD(StaffSelection, m_select, void(entity actor, int index))
+{
+	if(index > 2)
+		index = 0; // TODO: ignore?
+
+	W_Staff_Select(actor, index);
+}
+#endif
+#ifdef CSQC
+METHOD(StaffSelection, m_condition, bool(RadialMenu this))
+{
+	entity thiswep = viewmodels[0]; // WEAPONTODO
+	Weapon wep = thiswep.activeweapon;
+
+	return (wep == WEP_STAFF);
+}
+
+METHOD(StaffSelection, m_getentry, string(int index))
+{
+	switch(index)
+	{
+		case 0: return "gfx/quake/staff0";
+		case 1: return "gfx/quake/staff1";
+		case 2: return "gfx/quake/staff2";
+	}
+	return string_null;
 }
 #endif

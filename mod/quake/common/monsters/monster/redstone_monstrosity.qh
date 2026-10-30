@@ -11,7 +11,7 @@ MODEL(MON_REDSTONE_MONSTROSITY, "progs/redstone_monstrosity.mdl");
 #endif
 
 CLASS(RedstoneMonstrosity, Monster)
-    ATTRIB(RedstoneMonstrosity, spawnflags, int, MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_APPEAR);
+    ATTRIB(RedstoneMonstrosity, spawnflags, int, MON_FLAG_BLOCKY | MONSTER_TYPE_BOSS | MON_FLAG_EXPLOSIONRESISTANT | MON_FLAG_APPEAR);
     ATTRIB(RedstoneMonstrosity, m_mins, vector, '-48 -48 -24');
     ATTRIB(RedstoneMonstrosity, m_maxs, vector, '48 48 128');
 #ifdef GAMEQC

@@ -11,7 +11,7 @@ MODEL(MON_REDSTONE_CUBE, "progs/redstone_cube.mdl");
 #endif
 
 CLASS(RedstoneCube, Monster)
-    ATTRIB(RedstoneCube, spawnflags, int, 0);
+    ATTRIB(RedstoneCube, spawnflags, int, MON_FLAG_BLOCKY);
     ATTRIB(RedstoneCube, m_mins, vector, '-13 -13 -13');
     ATTRIB(RedstoneCube, m_maxs, vector, '13 13 13');
 #ifdef GAMEQC

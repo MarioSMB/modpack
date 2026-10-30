@@ -10,6 +10,7 @@
 #include "../common/monsters/all.qh"
 #include "../common/monsters/bossbars.qh"
 #include "../common/music.qh"
+#include "../common/radial_menu.qh"
 #include "../common/stats.qh"
 #include "../common/sui_sys.qh"
 #include "../common/util.qh"
@@ -165,6 +166,9 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 		return true;
 
 	if(wheel_input_event(inputType, nPrimary, nSecondary))
+		return true;
+
+	if(cl_radial_input_event(inputType, nPrimary, nSecondary))
 		return true;
 
 	if(cl_shop_input_event(evtype, nPrimary, nSecondary, 0))

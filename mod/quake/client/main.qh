@@ -26,6 +26,8 @@ bool autocvar_cl_unpress_attack_on_weapon_switch = false;
 bool autocvar_cl_unpress_zoom_on_death = true;
 bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
 
+bool button_attack2;
+
 float current_zoomfraction;
 float current_viewzoom = 1;
 

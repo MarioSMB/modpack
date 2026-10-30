@@ -25,3 +25,12 @@ void Clockwork_Explode(entity this);
 
 void Clockwork_Clear(entity this);
 #endif
+
+#ifdef GAMEQC
+CLASS(EggSelection, RadialMenu)
+	ATTRIB(EggSelection, netname, string, "egg");
+	ATTRIB(EggSelection, count, int, 6);
+ENDCLASS(EggSelection)
+
+REGISTER_RADIALMENU(EGG_SELECTION, NEW(EggSelection));
+#endif

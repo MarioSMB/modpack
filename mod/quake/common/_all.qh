@@ -53,6 +53,8 @@ REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
 REGISTER_NET_C2S(wheel)
 
+REGISTER_NET_C2S(radial)
+
 #include <lib/warpzone/anglestransform.qh>
 
 #include <common/checkextension.qh>
@@ -60,6 +62,7 @@ REGISTER_NET_C2S(wheel)
 #include "stats.qh"
 
 #include "constants.qh"
+#include "radial_menu.qh"
 #include "shop.qh"
 #include "viewloc.qh"
 #include "ent_cs.qh"
