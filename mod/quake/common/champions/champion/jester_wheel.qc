@@ -80,7 +80,7 @@ bool wheel_heal(entity toucher)
 	if(toucher.m_transform)
 		return false;
 	
-	float healing = (IS_PLAYER(toucher) ? 50 : toucher.max_health * 0.45);
+	float healing = (IS_PLAYER(toucher) ? 100 : toucher.max_health * 0.45);
 	if(!T_Heal(toucher, max(1, floor(healing)), IS_PLAYER(toucher)))
 		return false;
 
