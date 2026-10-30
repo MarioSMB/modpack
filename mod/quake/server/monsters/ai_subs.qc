@@ -179,7 +179,7 @@ entity ai_shockwave_fromsource(entity this, entity attacker, vector imp_vec, flo
 			else*/
 			if(!Damage_ValidTarget(sjump, attacker))
 				{ /* do nothing */ }
-			if(IS_PLAYER(sjump) || IS_MONSTER(sjump) || sjump.classname == "misc_breakablemodel" || sjump.classname == "monster_hitbox")
+			else if(IS_PLAYER(sjump) || IS_MONSTER(sjump) || sjump.classname == "misc_breakablemodel" || sjump.classname == "monster_hitbox")
 			{
 				// Exclude breakable/pushable immune to monster damage
 				// This does not catch breakables excluded from player damage
