@@ -104,6 +104,7 @@ METHOD(BanjoKazooie, m_drawface, bool(Champions this, vector pos, vector icon_si
 	int f = bound(0, rint(STAT(HEALTH) / 20), 4);
 	string pic = Banjo_PickFace(f);
 	//Sbar_DrawPic('112 0 0', pic);
+	drawpic_aspect(pos, "gfx/quake/backtile", icon_size, '1 1 1', autocvar_sbar_alpha_bg, DRAWFLAG_NORMAL);
 	drawpic_aspect(pos, pic, icon_size, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	return true;
 }

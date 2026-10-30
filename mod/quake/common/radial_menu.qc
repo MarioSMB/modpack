@@ -137,7 +137,7 @@ void radial_drawseparator(vector center, float r_start, float r_end, float ang, 
 
 bool radial_allowed()
 {
-	if(!autocvar_cl_quake_radialmenu || STAT(CANNON)
+	if(!autocvar_cl_quake_radialmenu || STAT(CANNON) || cursor_active
 		|| (player_localnum + 1) != player_localentnum || (STAT(ITEMS) & IT_TANK))
 		return false;
 	return true;

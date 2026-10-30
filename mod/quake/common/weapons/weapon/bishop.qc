@@ -114,7 +114,7 @@ void king_think(entity this)
 	{
 		this.walkframe = 4;
 		
-		entity shockwave = ai_shockwave_fromsource(this, this.realowner, '0 0 0', 110, 140, 240, 75, this.projectiledeathtype, SND(Null));
+		entity shockwave = ai_shockwave_fromsource(this, this.realowner, '0 0 0', 110, 210, 240, 75, this.projectiledeathtype, SND(Null));
 		shockwave.mdl = "progs/bishop_ring.mdl";
 		_setmodel(shockwave, shockwave.mdl);
 		setsize(shockwave, '0 0 0', '0 0 0');

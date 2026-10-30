@@ -1199,7 +1199,7 @@ T_RadiusDamage
 ============
 */
 bool inside_radius = false;
-void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore)
+void T_RadiusDamageForSource(entity inflictor, vector inflictororigin, entity attacker, float damage, float rad, int deathtype, entity ignore)
 {
 	if(inside_radius)
 	{
@@ -1210,9 +1210,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 
 	IsExplosionDamage = true;
 
-	vector inflictor_org = (inflictor.absmin + inflictor.absmax) * 0.5;
-
-	entity head = findradius(inflictor_org, damage + 40);
+	entity head = findradius(inflictororigin, rad);
 	while(head)
 	{
 		entity next = head.chain;
@@ -1231,7 +1229,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 		if(head.takedamage && ((attacker == head || !head.clipgroup) || (head.clipgroup != inflictor.clipgroup && head.clipgroup != attacker.clipgroup)))
 		{
 			vector org = (head.absmin + head.absmax) * 0.5;
-			float points = max(0, 0.5 * vlen(inflictor_org - org));
+			float points = max(0, 0.5 * vlen(inflictororigin - org));
 			points = damage - points;
 			if(head == attacker || (!DEATH_ISWEAPON(deathtype, WEP_BFG) && Resist_Explosions(head)))
 				points *= 0.5;
@@ -1263,4 +1261,10 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 	}
 	inside_radius = false;
 	IsExplosionDamage = false;
+}
+
+void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathtype, entity ignore)
+{
+	T_RadiusDamageForSource(inflictor, (inflictor.absmin + inflictor.absmax) * 0.5,
+							attacker, damage, damage + 40, deathtype, ignore);
 }

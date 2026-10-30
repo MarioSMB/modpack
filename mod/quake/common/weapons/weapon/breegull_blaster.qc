@@ -437,6 +437,16 @@ METHOD(EggSelection, m_select, void(entity actor, int index))
 }
 #endif
 #ifdef CSQC
+PRECACHE(BreegullBlaster)
+{
+	precache_pic("gfx/quake/egg0");
+	precache_pic("gfx/quake/egg1");
+	precache_pic("gfx/quake/egg2");
+	precache_pic("gfx/quake/egg3");
+	precache_pic("gfx/quake/egg4");
+	precache_pic("gfx/quake/egg5");
+}
+
 METHOD(EggSelection, m_condition, bool(RadialMenu this))
 {
 	entity thiswep = viewmodels[0]; // WEAPONTODO
