@@ -492,20 +492,25 @@ METHOD(MagicSelection, m_select, void(entity actor, int index))
 #ifdef CSQC
 METHOD(MagicSelection, m_condition, bool(RadialMenu this))
 {
+	// TODO: generic checks?
+	if(STAT(TD_BUILDMODE))
+		return false;
 	entity thiswep = viewmodels[0]; // WEAPONTODO
 	Weapon wep = thiswep.activeweapon;
 
 	return (wep == WEP_MAGIC);
 }
 
-METHOD(MagicSelection, m_getentry, string(int index))
+METHOD(MagicSelection, m_drawentry, void(int index, vector pos, vector sz))
 {
+	string pic = string_null;
 	switch(index)
 	{
-		case 0: return "gfx/quake/magic0";
-		case 1: return "gfx/quake/magic1";
-		case 2: return "gfx/quake/magic2";
+		case 0: pic = "gfx/quake/magic0"; break;
+		case 1: pic = "gfx/quake/magic1"; break;
+		case 2: pic = "gfx/quake/magic2"; break;
 	}
-	return string_null;
+	if(pic)
+		drawpic_aspect(pos, pic, sz, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 #endif

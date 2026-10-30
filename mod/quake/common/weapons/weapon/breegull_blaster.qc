@@ -445,17 +445,19 @@ METHOD(EggSelection, m_condition, bool(RadialMenu this))
 	return (wep == WEP_BREEGULLBLASTER);
 }
 
-METHOD(EggSelection, m_getentry, string(int index))
+METHOD(EggSelection, m_drawentry, void(int index, vector pos, vector sz))
 {
+	string pic = string_null;
 	switch(index)
 	{
-		case 0: return "gfx/quake/egg0";
-		case 1: return "gfx/quake/egg1";
-		case 2: return "gfx/quake/egg2";
-		case 3: return "gfx/quake/egg3";
-		case 4: return "gfx/quake/egg4";
-		case 5: return "gfx/quake/egg5";
+		case 0: pic = "gfx/quake/egg0"; break;
+		case 1: pic = "gfx/quake/egg1"; break;
+		case 2: pic = "gfx/quake/egg2"; break;
+		case 3: pic = "gfx/quake/egg3"; break;
+		case 4: pic = "gfx/quake/egg4"; break;
+		case 5: pic = "gfx/quake/egg5"; break;
 	}
-	return string_null;
+	if(pic)
+		drawpic_aspect(pos, pic, sz, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 #endif

@@ -1203,7 +1203,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, int deathty
 {
 	if(inside_radius)
 	{
-		LOG_FATAL("T_RadiusDamage: recursive");
+		backtrace("T_RadiusDamage called recursively! Expect stuff to go HORRIBLY wrong.");
 		return;
 	}
 	inside_radius = true;

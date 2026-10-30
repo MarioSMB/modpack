@@ -19,3 +19,12 @@ void Draw_Cone(vector shotorg, vector shotdir, float crange, float maxpitch, flo
 
 void buildtool_draw2d(entity this);
 #endif
+
+#ifdef GAMEQC
+CLASS(ToolSelection, RadialMenu)
+	ATTRIB(ToolSelection, netname, string, "tools");
+	ATTRIB(ToolSelection, count, int, 3);
+ENDCLASS(ToolSelection)
+
+REGISTER_RADIALMENU(TOOL_SELECTION, NEW(ToolSelection));
+#endif

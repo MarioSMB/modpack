@@ -11,8 +11,8 @@ CLASS(RadialMenu, Object)
     METHOD(RadialMenu, m_select, void(entity actor, int index)) {}
 #endif
 #ifdef CSQC
-    /** return the icon for the selected entry */
-    METHOD(RadialMenu, m_getentry, string(int index)) { return string_null; }
+    /** handles drawing of radial menu entries */
+    METHOD(RadialMenu, m_drawentry, void(int index, vector pos, vector sz)) {}
     /** condition for displaying the menu */
     METHOD(RadialMenu, m_condition, bool(RadialMenu this)) { return false; }
 #endif

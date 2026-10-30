@@ -138,7 +138,7 @@ void radial_drawseparator(vector center, float r_start, float r_end, float ang, 
 bool radial_allowed()
 {
 	if(!autocvar_cl_quake_radialmenu || STAT(CANNON)
-		|| (player_localnum + 1) != player_localentnum || (STAT(ITEMS) & IT_TANK) || STAT(TD_BUILDMODE))
+		|| (player_localnum + 1) != player_localentnum || (STAT(ITEMS) & IT_TANK))
 		return false;
 	return true;
 }
@@ -207,12 +207,12 @@ void cl_radial_draw()
 		picpos.x -= (icon_size.x * 0.5);
 		picpos.y -= (icon_size.y * 0.5);
 
-		vector text_color = '1 1 1';
-		string icon = string_null;
-		if(radial_menu.m_getentry)
-			icon = radial_menu.m_getentry(j);
-		if(icon)
-			drawpic_aspect(picpos, icon, icon_size, text_color, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//vector text_color = '1 1 1';
+		//string icon = string_null;
+		if(radial_menu.m_drawentry)
+			radial_menu.m_drawentry(j, picpos, icon_size);
+		//if(icon)
+			//drawpic_aspect(picpos, icon, icon_size, text_color, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 		//drawstring(textpos, radial_text(j), '12 12 0', text_color, 1, 0);
 	}
 

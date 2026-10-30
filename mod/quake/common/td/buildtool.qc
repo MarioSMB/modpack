@@ -164,6 +164,10 @@ PRECACHE(BuildTool)
 	precache_model("progs/s_td_repair.spr");
 	precache_model("progs/s_td_upgrade.spr");
 	precache_model("progs/s_td_destroy.spr");
+
+	precache_pic("gfx/quake/td_repair");
+	precache_pic("gfx/quake/td_upgrade");
+	precache_pic("gfx/quake/td_destroy");
 }
 
 void buildtool_DrawInfo(entity this)
@@ -745,5 +749,51 @@ void buildtool_frame(entity this)
 
 	if(PHYS_INPUT_BUTTON_ATCK(this) && !(time < this.attack_finished))
 		BuildTool_Fire(this);
+}
+#endif
+
+#ifdef SVQC
+METHOD(ToolSelection, m_select, void(entity actor, int index))
+{
+	if(index > 2)
+		index = 0; // TODO: ignore?
+
+	if(STAT(TD_TURRET, actor) == index)
+		return;
+
+	STAT(TD_TURRET, actor) = index;
+
+	_sound(actor, CH_WEAPON_B, "td/switch.wav", 1, ATTN_NORM);
+}
+#endif
+#ifdef CSQC
+METHOD(ToolSelection, m_condition, bool(RadialMenu this))
+{
+	return (STAT(TD_BUILDMODE) == 2);
+}
+
+METHOD(ToolSelection, m_drawentry, void(int index, vector pos, vector sz))
+{
+	string pic = string_null;
+	string text = string_null;
+	switch(index)
+	{
+		case 0: pic = "gfx/quake/td_repair"; text = "Repair"; break;
+		case 1: pic = "gfx/quake/td_upgrade"; text = "Upgrade"; break;
+		case 2: pic = "gfx/quake/td_destroy"; text = "Destroy"; break;
+	}
+	if(pic)
+	{
+		vector icon_pos = pos;
+		icon_pos.y -= sz.y * 0.2;
+		drawpic_aspect(icon_pos, pic, sz, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+		float oldfont = drawfont;
+		drawfont = 8;
+		vector textpos = pos;
+		textpos.y += sz.y * 0.6;
+		drawstring_aspect(textpos, text, sz, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawfont = oldfont;
+	}
 }
 #endif

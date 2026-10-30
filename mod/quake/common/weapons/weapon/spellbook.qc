@@ -1420,25 +1420,30 @@ PRECACHE(Spellbook)
 
 METHOD(SpellSelection, m_condition, bool(RadialMenu this))
 {
+	// TODO: generic checks?
+	if(STAT(TD_BUILDMODE))
+		return false;
 	entity thiswep = viewmodels[0]; // WEAPONTODO
 	Weapon wep = thiswep.activeweapon;
 
 	return (wep == WEP_SPELLBOOK);
 }
 
-METHOD(SpellSelection, m_getentry, string(int index))
+METHOD(SpellSelection, m_drawentry, void(int index, vector pos, vector sz))
 {
+	string pic = string_null;
 	switch(index)
 	{
-		case 0: return "gfx/quake/book0";
-		case 1: return "gfx/quake/book1";
-		case 2: return "gfx/quake/book2";
-		case 3: return "gfx/quake/book3";
-		case 4: return "gfx/quake/book4";
-		case 5: return "gfx/quake/book5";
-		case 6: return "gfx/quake/book6";
-		case 7: return "gfx/quake/book7";
+		case 0: pic = "gfx/quake/book0"; break;
+		case 1: pic = "gfx/quake/book1"; break;
+		case 2: pic = "gfx/quake/book2"; break;
+		case 3: pic = "gfx/quake/book3"; break;
+		case 4: pic = "gfx/quake/book4"; break;
+		case 5: pic = "gfx/quake/book5"; break;
+		case 6: pic = "gfx/quake/book6"; break;
+		case 7: pic = "gfx/quake/book7"; break;
 	}
-	return string_null;
+	if(pic)
+		drawpic_aspect(pos, pic, sz, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 #endif
