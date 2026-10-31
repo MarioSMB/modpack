@@ -186,23 +186,9 @@ void PumpkingStopSide(entity this)
 	setthink(this, pumpking_run1);
 }
 
-void pumpking_stand1(entity this);
-void pumpking_stand6(entity this) { set_anim(this, anim_pumpking, pumpking_stand1); ai_stand(this); }
-void pumpking_stand5(entity this) { set_anim(this, anim_pumpking, pumpking_stand6); ai_stand(this); }
-void pumpking_stand4(entity this) { set_anim(this, anim_pumpking, pumpking_stand5); ai_stand(this); }
-void pumpking_stand3(entity this) { set_anim(this, anim_pumpking, pumpking_stand4); ai_stand(this); }
-void pumpking_stand2(entity this) { set_anim(this, anim_pumpking, pumpking_stand3); ai_stand(this); }
-void pumpking_stand1(entity this) { set_anim(this, anim_pumpking, pumpking_stand2); ai_stand(this); pumpking_idlesound(this); }
+void pumpking_stand1(entity this) { set_anim(this, anim_pumpking, pumpking_stand1); ai_stand(this); pumpking_idlesound(this); }
 
-void pumpking_walk1(entity this);
-void pumpking_walk8(entity this) { set_anim(this, anim_pumpking, pumpking_walk1); ai_walk(this, 8); }
-void pumpking_walk7(entity this) { set_anim(this, anim_pumpking, pumpking_walk8); ai_walk(this, 8); }
-void pumpking_walk6(entity this) { set_anim(this, anim_pumpking, pumpking_walk7); ai_walk(this, 8); }
-void pumpking_walk5(entity this) { set_anim(this, anim_pumpking, pumpking_walk6); ai_walk(this, 8); }
-void pumpking_walk4(entity this) { set_anim(this, anim_pumpking, pumpking_walk5); ai_walk(this, 8); }
-void pumpking_walk3(entity this) { set_anim(this, anim_pumpking, pumpking_walk4); ai_walk(this, 8); }
-void pumpking_walk2(entity this) { set_anim(this, anim_pumpking, pumpking_walk3); ai_walk(this, 8); }
-void pumpking_walk1(entity this) { set_anim(this, anim_pumpking, pumpking_walk2); ai_walk(this, 8); pumpking_idlesound(this); }
+void pumpking_walk1(entity this) { set_anim(this, anim_pumpking, pumpking_walk1); ai_walk(this, 8); pumpking_idlesound(this); }
 
 void pumpking_side8(entity this) { set_anim(this, anim_pumpking, pumpking_run1); ai_run(this, 12); PumpkingStopSide(this); }
 void pumpking_side7(entity this) { set_anim(this, anim_pumpking, pumpking_side8); ai_run(this, 12); }
@@ -213,12 +199,7 @@ void pumpking_side3(entity this) { set_anim(this, anim_pumpking, pumpking_side4)
 void pumpking_side2(entity this) { set_anim(this, anim_pumpking, pumpking_side3); ai_run(this, 12); }
 void pumpking_side1(entity this) { set_anim(this, anim_pumpking, pumpking_side2); ai_run(this, 12); pumpking_idlesound(this); }
 
-void pumpking_run6(entity this) { set_anim(this, anim_pumpking, pumpking_run1); ai_run(this, 12); }
-void pumpking_run5(entity this) { set_anim(this, anim_pumpking, pumpking_run6); ai_run(this, 12); }
-void pumpking_run4(entity this) { set_anim(this, anim_pumpking, pumpking_run5); ai_run(this, 12); }
-void pumpking_run3(entity this) { set_anim(this, anim_pumpking, pumpking_run4); ai_run(this, 12); }
-void pumpking_run2(entity this) { set_anim(this, anim_pumpking, pumpking_run3); ai_run(this, 12); }
-void pumpking_run1(entity this) { set_anim(this, anim_pumpking, pumpking_run2); ai_run(this, 12); pumpking_idlesound(this); }
+void pumpking_run1(entity this) { set_anim(this, anim_pumpking, pumpking_run1); ai_run(this, 12); pumpking_idlesound(this); }
 
 //===========================================================================
 

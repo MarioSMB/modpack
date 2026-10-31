@@ -32,37 +32,18 @@ void check_onground(entity this)
 
 //-----------------------------------------------------------------------------
 
-void arf_stand1(entity this);
-void arf_stand27(entity this) { set_animofs(this, anim_arachnofloyd_idle, 27, arf_stand1); ai_stand(this); }
-void arf_stand26(entity this) { set_animofs(this, anim_arachnofloyd_idle, 26, arf_stand27); ai_stand(this); }
-void arf_stand25(entity this) { set_animofs(this, anim_arachnofloyd_idle, 25, arf_stand26); ai_stand(this); }
-void arf_stand24(entity this) { set_animofs(this, anim_arachnofloyd_idle, 24, arf_stand25); ai_stand(this); }
-void arf_stand23(entity this) { set_animofs(this, anim_arachnofloyd_idle, 23, arf_stand24); ai_stand(this); }
-void arf_stand22(entity this) { set_animofs(this, anim_arachnofloyd_idle, 22, arf_stand23); ai_stand(this); }
-void arf_stand21(entity this) { set_animofs(this, anim_arachnofloyd_idle, 21, arf_stand22); ai_stand(this); }
-void arf_stand20(entity this) { set_animofs(this, anim_arachnofloyd_idle, 20, arf_stand21); ai_stand(this); }
-void arf_stand19(entity this) { set_animofs(this, anim_arachnofloyd_idle, 19, arf_stand20); ai_stand(this); }
-void arf_stand18(entity this) { set_animofs(this, anim_arachnofloyd_idle, 18, arf_stand19); ai_stand(this); }
-void arf_stand17(entity this) { set_animofs(this, anim_arachnofloyd_idle, 17, arf_stand18); ai_stand(this); }
-void arf_stand16(entity this) { set_animofs(this, anim_arachnofloyd_idle, 16, arf_stand17); ai_stand(this); }
-void arf_stand15(entity this) { set_animofs(this, anim_arachnofloyd_idle, 15, arf_stand16); ai_stand(this); }
-void arf_stand14(entity this) { set_animofs(this, anim_arachnofloyd_idle, 14, arf_stand15); ai_stand(this); }
-void arf_stand13(entity this) { set_animofs(this, anim_arachnofloyd_idle, 13, arf_stand14); ai_stand(this); }
-void arf_stand12(entity this) { set_animofs(this, anim_arachnofloyd_idle, 12, arf_stand13); ai_stand(this); }
-void arf_stand11(entity this) { set_animofs(this, anim_arachnofloyd_idle, 11, arf_stand12); ai_stand(this); }
-void arf_stand10(entity this) { set_animofs(this, anim_arachnofloyd_idle, 10, arf_stand11); ai_stand(this); }
-void arf_stand9(entity this) { set_animofs(this, anim_arachnofloyd_idle, 9, arf_stand10); ai_stand(this); }
-void arf_stand8(entity this) { set_animofs(this, anim_arachnofloyd_idle, 8, arf_stand9); ai_stand(this); }
-void arf_stand7(entity this) { set_animofs(this, anim_arachnofloyd_idle, 7, arf_stand8); ai_stand(this); }
-void arf_stand6(entity this) { set_animofs(this, anim_arachnofloyd_idle, 6, arf_stand7); ai_stand(this); }
-void arf_stand5(entity this) { set_animofs(this, anim_arachnofloyd_idle, 5, arf_stand6); ai_stand(this); }
-void arf_stand4(entity this) { set_animofs(this, anim_arachnofloyd_idle, 4, arf_stand5); ai_stand(this); }
-void arf_stand3(entity this) { set_animofs(this, anim_arachnofloyd_idle, 3, arf_stand4); ai_stand(this); }
-void arf_stand2(entity this) { set_animofs(this, anim_arachnofloyd_idle, 2, arf_stand3); ai_stand(this); }
 void arf_stand1(entity this)
 {
-	set_animofs(this, anim_arachnofloyd_idle, 1, arf_stand2);
-	if(random() < 0.2)
+	setthink(this, arf_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 27)
+		this.walkframe = 0;
+
+	this.frame = anim_arachnofloyd_idle + this.walkframe;
+
+	if(this.walkframe == 0 && random() < 0.2)
 	{
 		if(random() < 0.1) 	
 			_sound(this, CH_VOICE, "arachnofloyd/idle1.wav", 1, ATTN_IDLE);

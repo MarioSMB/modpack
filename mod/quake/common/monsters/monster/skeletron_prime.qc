@@ -158,23 +158,9 @@ void prime_anim(entity this)
 	this.frame = this.walkframe;
 }
 
-void skeletron_prime_stand1(entity this);
-void skeletron_prime_stand6(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand1); ai_stand(this); }
-void skeletron_prime_stand5(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand6); ai_stand(this); }
-void skeletron_prime_stand4(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand5); ai_stand(this); }
-void skeletron_prime_stand3(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand4); ai_stand(this); }
-void skeletron_prime_stand2(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand3); ai_stand(this); }
-void skeletron_prime_stand1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand2); ai_stand(this); }
+void skeletron_prime_stand1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_stand1); ai_stand(this); }
 
-void skeletron_prime_walk1(entity this);
-void skeletron_prime_walk8(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk1); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk7(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk8); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk6(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk7); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk5(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk6); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk4(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk5); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk3(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk4); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk2(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk3); prime_anim(this); ai_walk(this, 8); }
-void skeletron_prime_walk1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk2); prime_anim(this); ai_walk(this, 8); }
+void skeletron_prime_walk1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_walk1); prime_anim(this); ai_walk(this, 8); }
 
 void skeletron_prime_side8(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run1); prime_anim(this); ai_run(this, 12); SkeletronPrimeStopSide(this); }
 void skeletron_prime_side7(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_side8); prime_anim(this); ai_run(this, 12); }
@@ -201,21 +187,9 @@ float prime_spinspeed(entity this)
 	return 32;
 }
 
-void skeletron_prime_spin8(entity this) { set_animofs(this, anim_skeletron_prime_spin, 8, skeletron_prime_spin1); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin7(entity this) { set_animofs(this, anim_skeletron_prime_spin, 7, skeletron_prime_spin8); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin6(entity this) { set_animofs(this, anim_skeletron_prime_spin, 6, skeletron_prime_spin7); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin5(entity this) { set_animofs(this, anim_skeletron_prime_spin, 5, skeletron_prime_spin6); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin4(entity this) { set_animofs(this, anim_skeletron_prime_spin, 4, skeletron_prime_spin5); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin3(entity this) { set_animofs(this, anim_skeletron_prime_spin, 3, skeletron_prime_spin4); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin2(entity this) { set_animofs(this, anim_skeletron_prime_spin, 2, skeletron_prime_spin3); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
-void skeletron_prime_spin1(entity this) { set_animofs(this, anim_skeletron_prime_spin, 1, skeletron_prime_spin2); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
+void skeletron_prime_spin1(entity this) { set_animofs(this, anim_skeletron_prime_spin, 1, skeletron_prime_spin1); ai_charge(this, prime_spinspeed(this)); skeletron_prime_checkspin(this); }
 
-void skeletron_prime_run6(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run1); prime_anim(this); ai_run(this, 12); }
-void skeletron_prime_run5(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run6); prime_anim(this); ai_run(this, 12); }
-void skeletron_prime_run4(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run5); prime_anim(this); ai_run(this, 12); }
-void skeletron_prime_run3(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run4); prime_anim(this); ai_run(this, 12); }
-void skeletron_prime_run2(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run3); prime_anim(this); ai_run(this, 12); }
-void skeletron_prime_run1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run2); prime_anim(this); ai_run(this, 12); }
+void skeletron_prime_run1(entity this) { set_anim(this, anim_skeletron_prime, skeletron_prime_run1); prime_anim(this); ai_run(this, 12); }
 
 //===========================================================================
 

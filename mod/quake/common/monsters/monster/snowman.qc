@@ -9,43 +9,23 @@ const int anim_snowman_attack = 6;
 XMAS Snowman - From Twisted Christmas Mod by Twisted Matrix
 ==============================================================================*/
 
+.float idle_finished;
 void snowman_idlesound(entity this)
 {
-	if(random() < 0.2)
+	if(time >= this.idle_finished && random() < 0.2)
+	{
+		this.idle_finished = time + 1;
 		_sound(this, CH_VOICE, "xmas/snowman/idle.wav", 1,  ATTN_IDLE);
+	}
 }
 
-void snowm_stand1(entity this);
-void snowm_stand8(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand1); ai_stand(this); }
-void snowm_stand7(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand8); ai_stand(this); }
-void snowm_stand6(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand7); ai_stand(this); }
-void snowm_stand5(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand6); ai_stand(this); }
-void snowm_stand4(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand5); ai_stand(this); }
-void snowm_stand3(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand4); ai_stand(this); }
-void snowm_stand2(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand3); ai_stand(this); }
-void snowm_stand1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand2); snowman_idlesound(this); ai_stand(this); }
+void snowm_stand1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_stand1); snowman_idlesound(this); ai_stand(this); }
 
 //======================================================================
-void snowm_walk1(entity this);
-void snowm_walk8(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk1); ai_walk(this, 0); }
-void snowm_walk7(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk8); ai_walk(this, 0); }
-void snowm_walk6(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk7); ai_walk(this, 0); }
-void snowm_walk5(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk6); ai_walk(this, 0); }
-void snowm_walk4(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk5); ai_walk(this, 0); }
-void snowm_walk3(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk4); ai_walk(this, 0); }
-void snowm_walk2(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk3); ai_walk(this, 0); }
-void snowm_walk1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk2); snowman_idlesound(this); ai_walk(this, 0); }
+void snowm_walk1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_walk1); snowman_idlesound(this); ai_walk(this, 0); }
 
 //======================================================================
-void snowm_run1(entity this);
-void snowm_run8(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run1); ai_run(this, 0); }
-void snowm_run7(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run8); ai_run(this, 0); }
-void snowm_run6(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run7); ai_run(this, 0); }
-void snowm_run5(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run6); ai_run(this, 0); }
-void snowm_run4(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run5); ai_run(this, 0); }
-void snowm_run3(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run4); ai_run(this, 0); }
-void snowm_run2(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run3); ai_run(this, 0); }
-void snowm_run1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run2); snowman_idlesound(this); ai_run(this, 0); }
+void snowm_run1(entity this) { set_animofs(this, anim_snowman_stand, 1, snowm_run1); snowman_idlesound(this); ai_run(this, 0); }
 
 void SnowmMelee(entity this)
 {

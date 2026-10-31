@@ -3,10 +3,6 @@
 #include "weapon.qh"
 
 #ifdef GAMEQC
-#include "projectiles.qh"
-#endif
-
-#ifdef GAMEQC
 // TODO: cleaner way to list these?
 noref string autocvar_cl_quake_weaponpriority = "smg corrupted berserk invoker staff bishop breegull bladeofgrass taco plane snowball magic star shield gravgun mushroom pogo rocketlauncher multirocketlauncher mmml driller impaler nuke cannon lightning bfg plasma shadowbeam shock lightme railgun otamatone laser_gun blizzard squeaker mic grenadelauncher multigrenade proximitygun napalm vortexbeater loosecannon goldy tuba fish chimes mayo tome spellbook hammer portalgun ocarina supernailgun lavasupernailgun rebar rifle megashark crossbow coconutgun angelicstaff bagpipes piano sshotgun ripper scattercrumb doot violin nailgun lavanailgun minishark biogun light_disc speaknspell kazoo shotgun pistol banjo ball katana sword crowbar meowmere solareruption northpole starfury sickle wand theaxe chainsaw wrench pan axe bongos pewpew";
 noref bool autocvar_cl_quake_weaponpriority_useforcycling = false;
@@ -32,8 +28,6 @@ void wep_generic_rocket1(entity this);
 void player_nail1(entity this);
 void player_light1(entity this);
 #endif
-
-int W_GunAlign(entity this, int preferred_align);
 
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
@@ -136,4 +130,8 @@ void CL_WeaponEntity_SetModel(entity this, string name);
 #ifdef SVQC
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
+#endif
+
+#ifdef GAMEQC
+#include "projectiles.qh"
 #endif

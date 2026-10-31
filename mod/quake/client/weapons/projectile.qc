@@ -6,7 +6,7 @@
 .float scale;
 .vector colormod;
 
-.int csqcprojectile_type;
+.Projectile csqcprojectile_type;
 
 void music_bounce(entity this, entity toucher)
 {
@@ -142,6 +142,11 @@ void Projectile_Draw(entity this)
 		t = time;
 	}
 
+	Projectile ptype = this.csqcprojectile_type;
+
+	if(ptype.m_tick)
+		ptype.m_tick(ptype, this);
+
 	if (!(f & FL_ONGROUND))
 	{
 		rot = this.avelocity;
@@ -150,7 +155,7 @@ void Projectile_Draw(entity this)
 			default: break;
 			case PROJECTILE_ROCKET:
 			case PROJECTILE_JIM_ROCKET:
-			case PROJECTILE_DRILL:
+			//case PROJECTILE_DRILL:
 				rot = '0 0 720'; // spinning
 				break;
 			case PROJECTILE_CROSSBOW_BOLT:
@@ -238,6 +243,9 @@ void Projectile_Draw(entity this)
 			break;
 	}
 
+	if(ptype.pr_drawtrail)
+		trailorigin = ptype.pr_drawtrail(ptype, this, trailorigin);
+
 	if (drawn)
 		Projectile_DrawTrail(this, trailorigin);
 	else
@@ -247,6 +255,9 @@ void Projectile_Draw(entity this)
 
 	if (!drawn)
 		return;
+
+	if(ptype.pr_draw)
+		ptype.pr_draw(ptype, this);
 
 	switch (this.csqcprojectile_type)
 	{
@@ -458,81 +469,47 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	if (f & 2)
 	{
-		this.csqcprojectile_type = ReadByte();
+		this.csqcprojectile_type = ReadRegistered(Projectiles);
 
 		this.scale = 1;
 		this.traileffect = 0;
-		if (this.csqcprojectile_type >= PROJECTILE_LETTER_START && this.csqcprojectile_type <= PROJECTILE_LETTER_END)
-		{
-			int letter = (this.csqcprojectile_type - PROJECTILE_LETTER_START) + 1;
-			switch(letter)
-			{
-				case 1:  _setmodel(this, "progs/s_sns_a.spr"); break;
-				case 2:  _setmodel(this, "progs/s_sns_b.spr"); break;
-				case 3:  _setmodel(this, "progs/s_sns_c.spr"); break;
-				case 4:  _setmodel(this, "progs/s_sns_d.spr"); break;
-				case 5:  _setmodel(this, "progs/s_sns_e.spr"); break;
-				case 6:  _setmodel(this, "progs/s_sns_f.spr"); break;
-				case 7:  _setmodel(this, "progs/s_sns_g.spr"); break;
-				case 8:  _setmodel(this, "progs/s_sns_h.spr"); break;
-				case 9:  _setmodel(this, "progs/s_sns_i.spr"); break;
-				case 10: _setmodel(this, "progs/s_sns_j.spr"); break;
-				case 11: _setmodel(this, "progs/s_sns_k.spr"); break;
-				case 12: _setmodel(this, "progs/s_sns_l.spr"); break;
-				case 13: _setmodel(this, "progs/s_sns_m.spr"); break;
-				case 14: _setmodel(this, "progs/s_sns_n.spr"); break;
-				case 15: _setmodel(this, "progs/s_sns_o.spr"); break;
-				case 16: _setmodel(this, "progs/s_sns_p.spr"); break;
-				case 17: _setmodel(this, "progs/s_sns_q.spr"); break;
-				case 18: _setmodel(this, "progs/s_sns_r.spr"); break;
-				case 19: _setmodel(this, "progs/s_sns_s.spr"); break;
-				case 20: _setmodel(this, "progs/s_sns_t.spr"); break;
-				case 21: _setmodel(this, "progs/s_sns_u.spr"); break;
-				case 22: _setmodel(this, "progs/s_sns_v.spr"); break;
-				case 23: _setmodel(this, "progs/s_sns_w.spr"); break;
-				case 24: _setmodel(this, "progs/s_sns_x.spr"); break;
-				case 25: _setmodel(this, "progs/s_sns_y.spr"); break;
-				default:
-				case 26: _setmodel(this, "progs/s_sns_z.spr"); break;
-			}
-			this.traileffect = EFFECT_Null.m_id;
-		}
-		else switch (this.csqcprojectile_type)
+		switch (this.csqcprojectile_type)
 		{
 #define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
-			HANDLE(ROCKET)             this.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			//HANDLE(ROCKET)             this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(MERMAID_BUBBLE)     this.traileffect = EFFECT_TR_BUBBLES.m_id; break;
 			HANDLE(MAGIC_FIREBALL)     this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(CROSSBOW_BOLT)      this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(VORE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(SCRAG_SPIKE)        this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
-			HANDLE(KNIGHT_SPIKE)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '0 0 1' * ((random() * 500) + 150); break;
+			HANDLE(KNIGHT_SPIKE)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '0 0 500'; break;
 			HANDLE(SPELLBOOK_METEOR)   this.traileffect = EFFECT_TR_METEOR.m_id; this.avelocity = '300 300 300'; break;
-			HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
+			//HANDLE(CAT)                this.traileffect = EFFECT_MEOWMERE_TRAIL.m_id; break;
 			HANDLE(BANJO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; break;
-			HANDLE(BULLET)             this.traileffect = EFFECT_Null.m_id; break;
+			//HANDLE(BULLET)             this.traileffect = EFFECT_Null.m_id; break;
+			//HANDLE(MINISHARK_BULLET)   this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(SAWBLADE)           this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(SUPER_SPIKE)        this.traileffect = EFFECT_TR_SUPERSPIKE.m_id; break;
 			HANDLE(LAVA_NAIL)          this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(BIOGUN_BONESHARD)   this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(GRENADE)            this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = '300 300 300'; break;
-			HANDLE(MAYO)               this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = randomvec() * 320; this.scale = 0.5; break;
+			HANDLE(MAYO)               this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = '300 300 300'; this.scale = 0.5; break;
 			HANDLE(OCARINA)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 90'; this.scale = 0.5; break;
 			HANDLE(SHOCKGUN_PLASMA)    this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(HIP_LASER)          this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(PIANO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = ((random() > 0.5) ? '0 -90 0' : '0 90 0'); break;
+			HANDLE(PIANO_MUSIC)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 90 0'; break;
 			HANDLE(LASER)              this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(JIM_LASER)          this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(JIM_ROCKET)         this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(SNOWBALL)           this.traileffect = EFFECT_SNOWBALL_TRAIL.m_id; this.avelocity = '300 300 300'; break;
-			HANDLE(GOLDY)              this.traileffect = EFFECT_Null.m_id; this.avelocity = ((random() > 0.5) ? '0 -256 0' : '0 256 0'); break;
+			HANDLE(GOLDY)              this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 256 0'; break;
 			HANDLE(CRUMB)              this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(SKAARJ_BULLET)      this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(GUG_BILEBOMB)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(GUG_BILEFRAG)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.avelocity = '300 300 300'; break;
-			HANDLE(DROLE)              this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = randomvec() * 100; break;
-			HANDLE(DROLE_POISON)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.avelocity = randomvec() * 100; break;
-			HANDLE(MULTI_ROCKET)       this.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			HANDLE(DROLE)              this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '100 100 100'; break;
+			HANDLE(DROLE_POISON)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.avelocity = '100 100 100'; break;
+			//HANDLE(MULTI_ROCKET)       this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(LAVABALL)           this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '200 100 300'; break;
 			HANDLE(EE_P_SPHERE)        this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '200 100 300'; break;
 			HANDLE(BLAZE_FIREBALL)     this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '200 100 300'; this.scale = 0.7; break;
@@ -545,7 +522,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(MISSILE)            this.traileffect = EFFECT_TR_ROCKET.m_id; this.avelocity = '0 0 -540'; break;
 			HANDLE(MANCUBUS_BOLT)      this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 0 -540'; break;
 			HANDLE(BULLETKIN_SHOT)     this.traileffect = EFFECT_Null.m_id; this.avelocity = '200 100 300'; break;
-			HANDLE(HELLKNIGHT_BIGSHOT) this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '0 0 1' * ((random() * 500) + 150); break;
+			HANDLE(HELLKNIGHT_BIGSHOT) this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '0 0 500'; break;
 			HANDLE(HELLKNIGHT_SPINNER) this.traileffect = EFFECT_Null.m_id; this.avelocity = '720 0 0'; this.scale = 2; break;
 			HANDLE(STAR_SMALL)         this.traileffect = EFFECT_TR_STAR.m_id; this.avelocity = '256 0 0'; this.scale = 1; break;
 			HANDLE(STAR_MEDIUM)        this.traileffect = EFFECT_TR_STAR.m_id; this.avelocity = '184 0 0'; this.scale = 2.5; break;
@@ -573,15 +550,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(FLAK_CANNON)        this.traileffect = EFFECT_TR_GRENADE.m_id; this.scale = 0.5; break;
 			HANDLE(RECYCLEBIN)         this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(MIME_BALL)          this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; this.scale = 0.75; break;
-			HANDLE(GRAPE)              this.traileffect = EFFECT_Null.m_id; this.avelocity = randomvec() * 200; break;
+			HANDLE(GRAPE)              this.traileffect = EFFECT_Null.m_id; this.avelocity = '200 200 200'; break;
 			HANDLE(BOGLORD)            this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.frame = 7; break;
 			HANDLE(BOGLORD_STRONG)     this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.frame = 7; break;
 			HANDLE(DFURY_MAGICA)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
-			HANDLE(DFURY_MAGICB)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = randomvec() * 200; break;
+			HANDLE(DFURY_MAGICB)       this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; this.avelocity = '200 200 200'; break;
 			HANDLE(GARGOYLE)           this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
 			HANDLE(GARGOYLE_POISON)    this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
 			HANDLE(GREEK_FIRE)         this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(FLAME_WOOD)         this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity_z = random() * 90; break;
+			HANDLE(FLAME_WOOD)         this.traileffect = EFFECT_TR_GRENADE.m_id; this.avelocity = '0 0 90'; break;
 			HANDLE(PLASMA)             this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(MINOTAUR_PLASMA)    this.traileffect = EFFECT_SNOWBALL_TRAIL.m_id; break;
 			HANDLE(MINOTAUR_BLOOD)     this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
@@ -589,14 +566,14 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(GAUNT_PLASMA)       this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(GAUNT_POISON)       this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
 			HANDLE(SMG)                this.traileffect = EFFECT_Null.m_id; break;
-			HANDLE(DRILL)              this.traileffect = EFFECT_TR_DRILL.m_id; break;
+			//HANDLE(DRILL)              this.traileffect = EFFECT_TR_DRILL.m_id; break;
 			HANDLE(EGG_NORMAL)         this.traileffect = EFFECT_Null.m_id; this.scale = 0.6; break;
 			HANDLE(EGG_FIRE)           this.traileffect = EFFECT_TR_GRENADE.m_id; this.scale = 0.6; break;
 			HANDLE(EGG_GRENADE)        this.traileffect = EFFECT_Null.m_id; this.scale = 0.6; break;
 			HANDLE(EGG_ICE)            this.traileffect = EFFECT_TR_DRILL.m_id; this.scale = 0.6; break;
 			HANDLE(EGG_CLOCKWORK)      this.traileffect = EFFECT_Null.m_id; this.scale = 0.6; break;
 			HANDLE(EGG_GOLD)           this.traileffect = EFFECT_Null.m_id; this.scale = 0.6; break;
-			HANDLE(FEATHER)            this.traileffect = EFFECT_Null.m_id; this.angles_z =  random() * 360; break;
+			HANDLE(FEATHER)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '0 0 100'; break;
 			HANDLE(MOSS_HORNET)        this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(SLIME)              this.traileffect = EFFECT_Null.m_id; this.scale = 0.7; break;
 			HANDLE(NIMBUS)             this.traileffect = EFFECT_Null.m_id; break;
@@ -605,8 +582,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(BULLET_BILL)        this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(BULLSEYE_BILL)      this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 			HANDLE(MIMEJR_BALL)        this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 300 300'; this.scale = 0.35; break;
-			HANDLE(PEA)                this.traileffect = EFFECT_Null.m_id; this.avelocity = randomvec() * 200; break;
-			HANDLE(SNOWPEA)            this.traileffect = EFFECT_SNOWBALL_TRAIL.m_id; this.avelocity = randomvec() * 200; break;
+			HANDLE(PEA)                this.traileffect = EFFECT_Null.m_id; this.avelocity = '200 200 200'; break;
+			HANDLE(SNOWPEA)            this.traileffect = EFFECT_SNOWBALL_TRAIL.m_id; this.avelocity = '200 200 200'; break;
 			HANDLE(PLASMA_CANNON)      this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(ALIEN_SNIPER)       this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(COCONUT)            this.traileffect = EFFECT_Null.m_id; this.avelocity = '300 0 0'; break;
@@ -624,10 +601,36 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(POPPER_ARROW)       this.traileffect = EFFECT_TR_SICKLE.m_id; this.avelocity = '0 0 180'; break;
 			HANDLE(POPPER_MAGIC)       this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; this.avelocity = '300 300 300'; break;
 			HANDLE(BISHOP_BOLT)        this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; this.avelocity = '300 300 300'; this.scale = 0.5; break;
+			HANDLE(LETTER_A)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_B)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_C)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_D)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_E)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_F)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_G)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_H)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_I)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_J)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_K)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_L)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_M)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_N)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_O)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_P)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_Q)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_R)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_S)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_T)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_U)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_V)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_W)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_X)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_Y)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(LETTER_Z)           this.traileffect = EFFECT_Null.m_id; break;
 #undef HANDLE
-			default:
-				error("Received invalid CSQC projectile, can't work with this!");
-				break;
+			//default:
+				//error("Received invalid CSQC projectile, can't work with this!");
+				//break;
 		}
 
 		this.mins = '0 0 0';
@@ -637,13 +640,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		set_movetype(this, MOVETYPE_TOSS);
 		this.alphamod = 1;
 
-		if (this.csqcprojectile_type >= PROJECTILE_LETTER_START && this.csqcprojectile_type <= PROJECTILE_LETTER_END)
-		{
-			set_movetype(this, MOVETYPE_BOUNCE);
-			this.effects |= EF_FULLBRIGHT;
-			settouch(this, func_null);
-		}
-		else switch (this.csqcprojectile_type)
+		Projectile ptype = this.csqcprojectile_type;
+		if(ptype.pr_setup)
+			ptype.pr_setup(ptype, this);
+
+		switch (this.csqcprojectile_type)
 		{
 			// TODO?
 			//case PROJECTILE_ROCKET:
@@ -918,13 +919,13 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_SMG:
 				this.effects |= EF_FULLBRIGHT;
 				break;
-			case PROJECTILE_DRILL:
-				this.dphitcontentsmask = DPCONTENTS_SOLID;
-				this.solid = SOLID_TRIGGER;
-				set_movetype(this, MOVETYPE_FLYMISSILE);
-				settouch(this, func_null);
-				this.effects |= EF_FULLBRIGHT;
-				break;
+			//case PROJECTILE_DRILL:
+				//this.dphitcontentsmask = DPCONTENTS_SOLID;
+				//this.solid = SOLID_TRIGGER;
+				//set_movetype(this, MOVETYPE_FLYMISSILE);
+				//settouch(this, func_null);
+				//this.effects |= EF_FULLBRIGHT;
+				//break;
 			case PROJECTILE_EGG_NORMAL:
 				this.skin = 0;
 				break;
@@ -1020,6 +1021,36 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_BISHOP_BOLT:
 				this.effects |= EF_FULLBRIGHT;
+				break;
+			case PROJECTILE_LETTER_A:
+			case PROJECTILE_LETTER_B:
+			case PROJECTILE_LETTER_C:
+			case PROJECTILE_LETTER_D:
+			case PROJECTILE_LETTER_E:
+			case PROJECTILE_LETTER_F:
+			case PROJECTILE_LETTER_G:
+			case PROJECTILE_LETTER_H:
+			case PROJECTILE_LETTER_I:
+			case PROJECTILE_LETTER_J:
+			case PROJECTILE_LETTER_K:
+			case PROJECTILE_LETTER_L:
+			case PROJECTILE_LETTER_M:
+			case PROJECTILE_LETTER_N:
+			case PROJECTILE_LETTER_O:
+			case PROJECTILE_LETTER_P:
+			case PROJECTILE_LETTER_Q:
+			case PROJECTILE_LETTER_R:
+			case PROJECTILE_LETTER_S:
+			case PROJECTILE_LETTER_T:
+			case PROJECTILE_LETTER_U:
+			case PROJECTILE_LETTER_V:
+			case PROJECTILE_LETTER_W:
+			case PROJECTILE_LETTER_X:
+			case PROJECTILE_LETTER_Y:
+			case PROJECTILE_LETTER_Z:
+				set_movetype(this, MOVETYPE_BOUNCE);
+				this.effects |= EF_FULLBRIGHT;
+				settouch(this, func_null);
 				break;
 			default:
 				break;

@@ -25,20 +25,22 @@ const int MON_HOGRE_METAL = 4; // Metal Skin version +HP
 void hogreham_sound(entity this, int soundtype);
 
 //============================================================================
-void hogreham_stand1(entity this);
-void hogreham_stand8(entity this) { set_animofs(this, anim_hogreham_stand, 8, hogreham_stand1); ai_stand(this); }
-void hogreham_stand7(entity this) { set_animofs(this, anim_hogreham_stand, 7, hogreham_stand8); ai_stand(this); }
-void hogreham_stand6(entity this) { set_animofs(this, anim_hogreham_stand, 6, hogreham_stand7); ai_stand(this); }
-void hogreham_stand5(entity this) { set_animofs(this, anim_hogreham_stand, 5, hogreham_stand6); ai_stand(this); }
-void hogreham_stand4(entity this) { set_animofs(this, anim_hogreham_stand, 4, hogreham_stand5); ai_stand(this); }
-void hogreham_stand3(entity this) { set_animofs(this, anim_hogreham_stand, 3, hogreham_stand4); ai_stand(this); }
-void hogreham_stand2(entity this) { set_animofs(this, anim_hogreham_stand, 2, hogreham_stand3); ai_stand(this); }
+
 void hogreham_stand1(entity this)
 {
-	set_animofs(this, anim_hogreham_stand, 1, hogreham_stand2);
-	if(random() < 0.2)
-		_sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
+	setthink(this, hogreham_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_hogreham_stand + this.walkframe;
+
 	ai_stand(this);
+
+	if(this.walkframe == 0 && random() < 0.2)
+		_sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
 }
 
 //============================================================================

@@ -61,27 +61,19 @@ void GorothTaunt(entity this)
 	}
 }
 
-void gor_stand1(entity this);
-void gor_stand20(entity this) { set_animofs(this, anim_goroth_stand, 20, gor_stand1); ai_stand(this); }
-void gor_stand19(entity this) { set_animofs(this, anim_goroth_stand, 19, gor_stand20); ai_stand(this); }
-void gor_stand18(entity this) { set_animofs(this, anim_goroth_stand, 18, gor_stand19); ai_stand(this); }
-void gor_stand17(entity this) { set_animofs(this, anim_goroth_stand, 17, gor_stand18); ai_stand(this); }
-void gor_stand16(entity this) { set_animofs(this, anim_goroth_stand, 16, gor_stand17); ai_stand(this); }
-void gor_stand15(entity this) { set_animofs(this, anim_goroth_stand, 15, gor_stand16); ai_stand(this); }
-void gor_stand14(entity this) { set_animofs(this, anim_goroth_stand, 14, gor_stand15); ai_stand(this); }
-void gor_stand13(entity this) { set_animofs(this, anim_goroth_stand, 13, gor_stand14); ai_stand(this); }
-void gor_stand12(entity this) { set_animofs(this, anim_goroth_stand, 12, gor_stand13); ai_stand(this); }
-void gor_stand11(entity this) { set_animofs(this, anim_goroth_stand, 11, gor_stand12); ai_stand(this); }
-void gor_stand10(entity this) { set_animofs(this, anim_goroth_stand, 10, gor_stand11); ai_stand(this); }
-void gor_stand9(entity this) { set_animofs(this, anim_goroth_stand, 9, gor_stand10); ai_stand(this); }
-void gor_stand8(entity this) { set_animofs(this, anim_goroth_stand, 8, gor_stand9); ai_stand(this); }
-void gor_stand7(entity this) { set_animofs(this, anim_goroth_stand, 7, gor_stand8); ai_stand(this); }
-void gor_stand6(entity this) { set_animofs(this, anim_goroth_stand, 6, gor_stand7); ai_stand(this); }
-void gor_stand5(entity this) { set_animofs(this, anim_goroth_stand, 5, gor_stand6); ai_stand(this); }
-void gor_stand4(entity this) { set_animofs(this, anim_goroth_stand, 4, gor_stand5); ai_stand(this); }
-void gor_stand3(entity this) { set_animofs(this, anim_goroth_stand, 3, gor_stand4); ai_stand(this); }
-void gor_stand2(entity this) { set_animofs(this, anim_goroth_stand, 2, gor_stand3); ai_stand(this); }
-void gor_stand1(entity this) { set_animofs(this, anim_goroth_stand, 1, gor_stand2); ai_stand(this); }
+void gor_stand1(entity this)
+{
+	setthink(this, gor_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 20)
+		this.walkframe = 0;
+
+	this.frame = anim_goroth_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void gor_walk1(entity this);
 void gor_walk12(entity this) { set_animofs(this, anim_goroth_walk, 12, gor_walk1); ai_walk(this, 16); }

@@ -16,28 +16,19 @@ const int MON_BOGL_STRONG = BIT(1);
 .entity attachment, attachment2, attachment3;
 .vector pos3;
 
-void bogl_stand1(entity this);
-void bogl_stand17(entity this) { set_animofs(this, anim_boglord_stand, 17, bogl_stand1); ai_stand(this); }
-void bogl_stand16(entity this) { set_animofs(this, anim_boglord_stand, 16, bogl_stand17); ai_stand(this); }
-void bogl_stand15(entity this) { set_animofs(this, anim_boglord_stand, 15, bogl_stand16); ai_stand(this); }
-void bogl_stand14(entity this) { set_animofs(this, anim_boglord_stand, 14, bogl_stand15); ai_stand(this); }
-void bogl_stand13(entity this) { set_animofs(this, anim_boglord_stand, 13, bogl_stand14); ai_stand(this); }
-void bogl_stand12(entity this) { set_animofs(this, anim_boglord_stand, 12, bogl_stand13); ai_stand(this); }
-void bogl_stand11(entity this) { set_animofs(this, anim_boglord_stand, 11, bogl_stand12); ai_stand(this); }
-void bogl_stand10(entity this) { set_animofs(this, anim_boglord_stand, 10, bogl_stand11); ai_stand(this); }
-void bogl_stand9(entity this) { set_animofs(this, anim_boglord_stand, 9, bogl_stand10); ai_stand(this); }
-void bogl_stand8(entity this) { set_animofs(this, anim_boglord_stand, 8, bogl_stand9); ai_stand(this); }
-void bogl_stand7(entity this) { set_animofs(this, anim_boglord_stand, 7, bogl_stand8); ai_stand(this); }
-void bogl_stand6(entity this) { set_animofs(this, anim_boglord_stand, 6, bogl_stand7); ai_stand(this); }
-void bogl_stand5(entity this) { set_animofs(this, anim_boglord_stand, 5, bogl_stand6); ai_stand(this); }
-void bogl_stand4(entity this) { set_animofs(this, anim_boglord_stand, 4, bogl_stand5); ai_stand(this); }
-void bogl_stand3(entity this) { set_animofs(this, anim_boglord_stand, 3, bogl_stand4); ai_stand(this); }
-void bogl_stand2(entity this) { set_animofs(this, anim_boglord_stand, 2, bogl_stand3); ai_stand(this); }
 void bogl_stand1(entity this)
 {
-	set_animofs(this, anim_boglord_stand, 1, bogl_stand2);
+	setthink(this, bogl_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 17)
+		this.walkframe = 0;
+
+	this.frame = anim_boglord_stand + this.walkframe;
+
 	ai_stand(this);
-	if(random() < 0.7)
+	if(this.walkframe == 0 && random() < 0.7)
 	{
 		if(random() > 0.5)
 			_sound(this, CH_VOICE, "boglord/idle1.wav", 1, ATTN_IDLE);

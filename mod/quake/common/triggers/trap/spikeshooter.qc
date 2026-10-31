@@ -13,7 +13,6 @@ const int SPAWNFLAG_ROCKET = BIT(3);
 entity LaunchLaser(entity this, vector org, vector vec);
 void superlavaspike_touch(entity this, entity toucher);
 void superspike_touch(entity this, entity toucher);
-entity W_FireRocket(entity this);
 entity launch_fireball(entity this, vector org, vector dir);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
@@ -87,12 +86,9 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	{
 		if(!(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
-		entity rocket = W_FireRocket(this);
-		rocket.velocity = this.movedir*1000;
-		rocket.angles = vectoangles(rocket.velocity);
-		setorigin(rocket, this.origin + this.movedir*8);
-
-		UpdateCSQCProjectile(rocket);
+		vector org = this.origin + this.movedir * 8;
+		vector dir = this.movedir;
+		Projectile_Create(PROJECTILE_ROCKET, this, org, dir, DEATH_TRAP.m_id);
 	}
 	else
 	{

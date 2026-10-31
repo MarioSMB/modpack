@@ -210,7 +210,7 @@ void cl_radial_draw()
 		//vector text_color = '1 1 1';
 		//string icon = string_null;
 		if(radial_menu.m_drawentry)
-			radial_menu.m_drawentry(j, picpos, icon_size);
+			radial_menu.m_drawentry(j, picpos, icon_size, is_selected);
 		//if(icon)
 			//drawpic_aspect(picpos, icon, icon_size, text_color, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 		//drawstring(textpos, radial_text(j), '12 12 0', text_color, 1, 0);

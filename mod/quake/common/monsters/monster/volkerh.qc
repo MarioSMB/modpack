@@ -137,37 +137,19 @@ void VolkerhBloodFist(entity this, vector bloodpos, float bloodsz)
 
 // Animations
 
-void vol_stand1(entity this);
-void vol_stand30(entity this) { set_animofs(this, anim_volkerh_hover, 30, vol_stand1); ai_stand(this); }
-void vol_stand29(entity this) { set_animofs(this, anim_volkerh_hover, 29, vol_stand30); ai_stand(this); }
-void vol_stand28(entity this) { set_animofs(this, anim_volkerh_hover, 28, vol_stand29); ai_stand(this); }
-void vol_stand27(entity this) { set_animofs(this, anim_volkerh_hover, 27, vol_stand28); ai_stand(this); }
-void vol_stand26(entity this) { set_animofs(this, anim_volkerh_hover, 26, vol_stand27); ai_stand(this); }
-void vol_stand25(entity this) { set_animofs(this, anim_volkerh_hover, 25, vol_stand26); ai_stand(this); }
-void vol_stand24(entity this) { set_animofs(this, anim_volkerh_hover, 24, vol_stand25); ai_stand(this); }
-void vol_stand23(entity this) { set_animofs(this, anim_volkerh_hover, 23, vol_stand24); ai_stand(this); }
-void vol_stand22(entity this) { set_animofs(this, anim_volkerh_hover, 22, vol_stand23); ai_stand(this); }
-void vol_stand21(entity this) { set_animofs(this, anim_volkerh_hover, 21, vol_stand22); ai_stand(this); }
-void vol_stand20(entity this) { set_animofs(this, anim_volkerh_hover, 20, vol_stand21); ai_stand(this); }
-void vol_stand19(entity this) { set_animofs(this, anim_volkerh_hover, 19, vol_stand20); ai_stand(this); }
-void vol_stand18(entity this) { set_animofs(this, anim_volkerh_hover, 18, vol_stand19); ai_stand(this); }
-void vol_stand17(entity this) { set_animofs(this, anim_volkerh_hover, 17, vol_stand18); ai_stand(this); }
-void vol_stand16(entity this) { set_animofs(this, anim_volkerh_hover, 16, vol_stand17); ai_stand(this); }
-void vol_stand15(entity this) { set_animofs(this, anim_volkerh_hover, 15, vol_stand16); ai_stand(this); }
-void vol_stand14(entity this) { set_animofs(this, anim_volkerh_hover, 14, vol_stand15); ai_stand(this); }
-void vol_stand13(entity this) { set_animofs(this, anim_volkerh_hover, 13, vol_stand14); ai_stand(this); }
-void vol_stand12(entity this) { set_animofs(this, anim_volkerh_hover, 12, vol_stand13); ai_stand(this); }
-void vol_stand11(entity this) { set_animofs(this, anim_volkerh_hover, 11, vol_stand12); ai_stand(this); }
-void vol_stand10(entity this) { set_animofs(this, anim_volkerh_hover, 10, vol_stand11); ai_stand(this); }
-void vol_stand9(entity this) { set_animofs(this, anim_volkerh_hover, 9,	 vol_stand10); ai_stand(this); }
-void vol_stand8(entity this) { set_animofs(this, anim_volkerh_hover, 8,	 vol_stand9); ai_stand(this); }
-void vol_stand7(entity this) { set_animofs(this, anim_volkerh_hover, 7,	 vol_stand8); ai_stand(this); }
-void vol_stand6(entity this) { set_animofs(this, anim_volkerh_hover, 6,	 vol_stand7); ai_stand(this); }
-void vol_stand5(entity this) { set_animofs(this, anim_volkerh_hover, 5,	 vol_stand6); ai_stand(this); }
-void vol_stand4(entity this) { set_animofs(this, anim_volkerh_hover, 4,	 vol_stand5); ai_stand(this); }
-void vol_stand3(entity this) { set_animofs(this, anim_volkerh_hover, 3,	 vol_stand4); ai_stand(this); }
-void vol_stand2(entity this) { set_animofs(this, anim_volkerh_hover, 2,	 vol_stand3); ai_stand(this); }
-void vol_stand1(entity this) { set_animofs(this, anim_volkerh_hover, 1,	 vol_stand2); ai_stand(this); }
+void vol_stand1(entity this)
+{
+	setthink(this, vol_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 30)
+		this.walkframe = 0;
+
+	this.frame = anim_volkerh_hover + this.walkframe;
+
+	ai_stand(this);
+}
 
 void vol_walk1(entity this);
 void vol_walk20(entity this) { set_animofs(this, anim_volkerh_fly, 20, vol_walk1); ai_walk(this, 3); }

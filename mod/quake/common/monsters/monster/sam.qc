@@ -14,20 +14,19 @@ const int anim_sam_attacka = 54; //'54 68 0'
 
 void Sam_JumpTouch(entity this, entity toucher);
 
-void sam1_stand1(entity this);
-void sam1_stand13(entity this) { set_animofs(this, anim_sam_stand, 1, sam1_stand1); ai_stand(this); }
-void sam1_stand12(entity this) { set_animofs(this, anim_sam_stand, 12, sam1_stand13); ai_stand(this); }
-void sam1_stand11(entity this) { set_animofs(this, anim_sam_stand, 11, sam1_stand12); ai_stand(this); }
-void sam1_stand10(entity this) { set_animofs(this, anim_sam_stand, 10, sam1_stand11); ai_stand(this); }
-void sam1_stand9(entity this) { set_animofs(this, anim_sam_stand, 9, sam1_stand10); ai_stand(this); }
-void sam1_stand8(entity this) { set_animofs(this, anim_sam_stand, 8, sam1_stand9); ai_stand(this); }
-void sam1_stand7(entity this) { set_animofs(this, anim_sam_stand, 7, sam1_stand8); ai_stand(this); }
-void sam1_stand6(entity this) { set_animofs(this, anim_sam_stand, 6, sam1_stand7); ai_stand(this); }
-void sam1_stand5(entity this) { set_animofs(this, anim_sam_stand, 5, sam1_stand6); ai_stand(this); }
-void sam1_stand4(entity this) { set_animofs(this, anim_sam_stand, 4, sam1_stand5); ai_stand(this); }
-void sam1_stand3(entity this) { set_animofs(this, anim_sam_stand, 3, sam1_stand4); ai_stand(this); }
-void sam1_stand2(entity this) { set_animofs(this, anim_sam_stand, 2, sam1_stand3); ai_stand(this); }
-void sam1_stand1(entity this) { set_animofs(this, anim_sam_stand, 1, sam1_stand2); ai_stand(this); }
+void sam1_stand1(entity this)
+{
+	setthink(this, sam1_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_sam_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void sam1_walk1(entity this);
 void sam1_walk8(entity this) { set_animofs(this, anim_sam_walk, 8, sam1_walk1); ai_walk(this, 10); }

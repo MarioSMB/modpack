@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef GAMEQC
+SOUND(DRILL_LOOP, "weapons/drill_loop");
+#endif
+
 CLASS(Driller, Weapon)
 /* ammotype  */ ATTRIB(Driller, ammo_type, int, IT_DRILLS);
 /* impulse   */ ATTRIB(Driller, impulse, int, 7);

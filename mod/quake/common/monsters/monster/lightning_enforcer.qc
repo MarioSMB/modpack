@@ -21,14 +21,19 @@ void lenforcer_fire(entity this)
 	LightningDamage(this.origin, trace_endpos + (v_forward * 4), this, 3, DEATH_MONSTER_LENFORCER.m_id);
 }
 
-void lenf_stand1(entity this);
-void lenf_stand7(entity this) { set_anim(this, 6, lenf_stand1); ai_stand(this); }
-void lenf_stand6(entity this) { set_anim(this, 5, lenf_stand7); ai_stand(this); }
-void lenf_stand5(entity this) { set_anim(this, 4, lenf_stand6); ai_stand(this); }
-void lenf_stand4(entity this) { set_anim(this, 3, lenf_stand5); ai_stand(this); }
-void lenf_stand3(entity this) { set_anim(this, 2, lenf_stand4); ai_stand(this); }
-void lenf_stand2(entity this) { set_anim(this, 1, lenf_stand3); ai_stand(this); }
-void lenf_stand1(entity this) { set_anim(this, 0, lenf_stand2); ai_stand(this); }
+void lenf_stand1(entity this)
+{
+	setthink(this, lenf_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe > 6)
+		this.walkframe = 0;
+
+	this.frame = 0 + this.walkframe;
+
+	ai_stand(this);
+}
 
 void lenf_walk1(entity this);
 void lenf_walk16(entity this) { set_anim(this, 22, lenf_walk1); ai_walk(this, 2); }

@@ -13,13 +13,7 @@ void mw_anim(entity this, void(entity) tnk)
 	setthink(this, tnk);
 }
 
-void mw_stand1(entity this);
-void mw_stand6(entity this) { mw_anim(this, mw_stand1); ai_stand(this); }
-void mw_stand5(entity this) { mw_anim(this, mw_stand6); ai_stand(this); }
-void mw_stand4(entity this) { mw_anim(this, mw_stand5); ai_stand(this); }
-void mw_stand3(entity this) { mw_anim(this, mw_stand4); ai_stand(this); }
-void mw_stand2(entity this) { mw_anim(this, mw_stand3); ai_stand(this); }
-void mw_stand1(entity this) { mw_anim(this, mw_stand2); ai_stand(this); }
+void mw_stand1(entity this) { mw_anim(this, mw_stand1); ai_stand(this); }
 
 void mw_walk1(entity this);
 void mw_walk6(entity this) { mw_anim(this, mw_walk1); ai_walk(this, 3); }

@@ -59,17 +59,20 @@ float LegondCheckAttack(entity this)
 	}
 	return false;
 }
-void legond_stand1(entity this);
-void legond_stand10(entity this) { set_anim(this, 10, legond_stand1); ai_stand(this); }
-void legond_stand9(entity this) { set_anim(this, 9, legond_stand10); ai_stand(this); }
-void legond_stand8(entity this) { set_anim(this, 8, legond_stand9); ai_stand(this); }
-void legond_stand7(entity this) { set_anim(this, 7, legond_stand8); ai_stand(this); }
-void legond_stand6(entity this) { set_anim(this, 6, legond_stand7); ai_stand(this); }
-void legond_stand5(entity this) { set_anim(this, 5, legond_stand6); ai_stand(this); }
-void legond_stand4(entity this) { set_anim(this, 4, legond_stand5); ai_stand(this); }
-void legond_stand3(entity this) { set_anim(this, 3, legond_stand4); ai_stand(this); }
-void legond_stand2(entity this) { set_anim(this, 2, legond_stand3); ai_stand(this); }
-void legond_stand1(entity this) { set_anim(this, 1, legond_stand2); ai_stand(this); }
+
+void legond_stand1(entity this)
+{
+	setthink(this, legond_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 10)
+		this.walkframe = 0;
+
+	this.frame = 1 + this.walkframe;
+
+	ai_stand(this);
+}
 
 void legond_walk1(entity this);
 void legond_walk12(entity this) { set_anim(this, 22, legond_walk1); ai_walk(this, 15); }

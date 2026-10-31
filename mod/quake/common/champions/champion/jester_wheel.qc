@@ -578,23 +578,26 @@ void wheel_finish()
 	}
 }
 
-void drawpic_scrolling(vector pos, vector icon_size, string pic, float scroll, vector col, float alph, int dflag)
+void drawpic_scrolling(vector pos, vector icon_size, string pic, float scroll, int icon_count, vector col, float alph, int dflag)
 {
-	vector pz = drawgetimagesize(pic);
-	if(pz == '0 0 0')
-		return;
+#if 1
+	//vector pz = drawgetimagesize(pic);
+	//if(pz == '0 0 0')
+		//return;
 
-	vector aspect = '0 0 0';
-	aspect.x = icon_size.x;
-	aspect.y = icon_size.y / pz.y;
-
-	float yaspect = (icon_size.y / icon_size.x) * (pz.x / pz.y);
+	float yaspect = 1 / icon_count;
 
 	float left = 0;
 	float right = 1;
 
 	float top = scroll;
 	float bottom = top + yaspect;
+#else
+	float left = 0;
+	float right = 1;
+	float top = scroll;
+	float bottom = top + 1;
+#endif
 
 	R_BeginPolygon(pic, dflag, true);
 	R_PolygonVertex(pos, vec2(left, top), col, alph);
@@ -632,9 +635,10 @@ void HUD_Wheel()
 
 	int rows = WHEEL_SLOTS;
 	int columns = 1;
-	vector icon_size = mySize;
+	vector icon_size;
 	icon_size.x = mySize.x / rows;
 	icon_size.y = mySize.y / columns;
+	icon_size.z = 0;
 
 	float aspect = 0.42;
 
@@ -678,7 +682,7 @@ void HUD_Wheel()
 		slot_pos.x += icon_size.x * j;
 
 		string pic = (gametype == GAMETYPE_TD) ? "gfx/quake/wheel_slots_classic" : "gfx/quake/wheel_slots";
-		drawpic_scrolling(slot_pos, icon_size, pic, wheel_offset[j], '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic_scrolling(slot_pos, icon_size, pic, wheel_offset[j], WHEEL_ICONS, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 
 	// draw the combo text!

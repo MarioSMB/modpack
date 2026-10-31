@@ -3,16 +3,19 @@
 #include "knight.qh"
 
 #ifdef SVQC
-void dknight_stand1(entity this);
-void dknight_stand9(entity this) { set_anim(this, 8, dknight_stand1); ai_stand(this); }
-void dknight_stand8(entity this) { set_anim(this, 7, dknight_stand9); ai_stand(this); }
-void dknight_stand7(entity this) { set_anim(this, 6, dknight_stand8); ai_stand(this); }
-void dknight_stand6(entity this) { set_anim(this, 5, dknight_stand7); ai_stand(this); }
-void dknight_stand5(entity this) { set_anim(this, 4, dknight_stand6); ai_stand(this); }
-void dknight_stand4(entity this) { set_anim(this, 3, dknight_stand5); ai_stand(this); }
-void dknight_stand3(entity this) { set_anim(this, 2, dknight_stand4); ai_stand(this); }
-void dknight_stand2(entity this) { set_anim(this, 1, dknight_stand3); ai_stand(this); }
-void dknight_stand1(entity this) { set_anim(this, 0, dknight_stand2); ai_stand(this); }
+void dknight_stand1(entity this)
+{
+	setthink(this, dknight_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe > 8)
+		this.walkframe = 0;
+
+	this.frame = 0 + this.walkframe;
+
+	ai_stand(this);
+}
 
 void dknight_walk1(entity this);
 void dknight_walk14(entity this)

@@ -456,7 +456,10 @@ void midi_track_frame(entity this, int track)
 		string Type = argv(2);
 
 		if(Time)
+		{
+			Time /= autocvar_slowmo;
 			Time = floor(Time * PHYS_INPUT_FRAMETIME * 16 * (120 / this.midi_division));
+		}
 
 		if(this.midi_time < Time)
 		{

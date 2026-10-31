@@ -17,22 +17,19 @@ const int anim_mummy_paine = 162; //'162 191 0';
 
 .int inpain;
 
-void mummy_stand1(entity this);
-void mummy_stand15(entity this) { set_animofs(this, anim_mummy_stand, 15, mummy_stand1); ai_stand(this); }
-void mummy_stand14(entity this) { set_animofs(this, anim_mummy_stand, 14, mummy_stand15); ai_stand(this); }
-void mummy_stand13(entity this) { set_animofs(this, anim_mummy_stand, 13, mummy_stand14); ai_stand(this); }
-void mummy_stand12(entity this) { set_animofs(this, anim_mummy_stand, 12, mummy_stand13); ai_stand(this); }
-void mummy_stand11(entity this) { set_animofs(this, anim_mummy_stand, 11, mummy_stand12); ai_stand(this); }
-void mummy_stand10(entity this) { set_animofs(this, anim_mummy_stand, 10, mummy_stand11); ai_stand(this); }
-void mummy_stand9(entity this) { set_animofs(this, anim_mummy_stand, 9, mummy_stand10); ai_stand(this); }
-void mummy_stand8(entity this) { set_animofs(this, anim_mummy_stand, 8, mummy_stand9); ai_stand(this); }
-void mummy_stand7(entity this) { set_animofs(this, anim_mummy_stand, 7, mummy_stand8); ai_stand(this); }
-void mummy_stand6(entity this) { set_animofs(this, anim_mummy_stand, 6, mummy_stand7); ai_stand(this); }
-void mummy_stand5(entity this) { set_animofs(this, anim_mummy_stand, 5, mummy_stand6); ai_stand(this); }
-void mummy_stand4(entity this) { set_animofs(this, anim_mummy_stand, 4, mummy_stand5); ai_stand(this); }
-void mummy_stand3(entity this) { set_animofs(this, anim_mummy_stand, 3, mummy_stand4); ai_stand(this); }
-void mummy_stand2(entity this) { set_animofs(this, anim_mummy_stand, 2, mummy_stand3); ai_stand(this); }
-void mummy_stand1(entity this) { set_animofs(this, anim_mummy_stand, 1, mummy_stand2); ai_stand(this); }
+void mummy_stand1(entity this)
+{
+	setthink(this, mummy_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 15)
+		this.walkframe = 0;
+
+	this.frame = anim_mummy_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void mummy_walk1(entity this);
 void mummy_walk19(entity this)

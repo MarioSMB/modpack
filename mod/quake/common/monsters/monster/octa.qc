@@ -123,34 +123,23 @@ void octa_fire(entity this)
 
 void octa_atk6(entity this);
 void octa_atka6(entity this);
-void octa_stand1(entity this);
 void octa_walk1(entity this);
 void octa_run1(entity this);
 
-void octa_stand20(entity this) { set_animofs(this, anim_octa_stand, 20, octa_stand1); ai_stand(this); }
-void octa_stand19(entity this) { set_animofs(this, anim_octa_stand, 19, octa_stand20); ai_stand(this); }
-void octa_stand18(entity this) { set_animofs(this, anim_octa_stand, 18, octa_stand19); ai_stand(this); }
-void octa_stand17(entity this) { set_animofs(this, anim_octa_stand, 17, octa_stand18); ai_stand(this); }
-void octa_stand16(entity this) { set_animofs(this, anim_octa_stand, 16, octa_stand17); ai_stand(this); }
-void octa_stand15(entity this) { set_animofs(this, anim_octa_stand, 15, octa_stand16); ai_stand(this); }
-void octa_stand14(entity this) { set_animofs(this, anim_octa_stand, 14, octa_stand15); ai_stand(this); }
-void octa_stand13(entity this) { set_animofs(this, anim_octa_stand, 13, octa_stand14); ai_stand(this); }
-void octa_stand12(entity this) { set_animofs(this, anim_octa_stand, 12, octa_stand13); ai_stand(this); }
-void octa_stand11(entity this) { set_animofs(this, anim_octa_stand, 11, octa_stand12); ai_stand(this); }
-void octa_stand10(entity this) { set_animofs(this, anim_octa_stand, 10, octa_stand11); ai_stand(this); }
-void octa_stand9(entity this) { set_animofs(this, anim_octa_stand, 9, octa_stand10); ai_stand(this); }
-void octa_stand8(entity this) { set_animofs(this, anim_octa_stand, 8, octa_stand9); ai_stand(this); }
-void octa_stand7(entity this) { set_animofs(this, anim_octa_stand, 7, octa_stand8); ai_stand(this); }
-void octa_stand6(entity this) { set_animofs(this, anim_octa_stand, 6, octa_stand7); ai_stand(this); }
-void octa_stand5(entity this) { set_animofs(this, anim_octa_stand, 5, octa_stand6); ai_stand(this); }
-void octa_stand4(entity this) { set_animofs(this, anim_octa_stand, 4, octa_stand5); ai_stand(this); }
-void octa_stand3(entity this) { set_animofs(this, anim_octa_stand, 3, octa_stand4); ai_stand(this); }
-void octa_stand2(entity this) { set_animofs(this, anim_octa_stand, 2, octa_stand3); ai_stand(this); }
 void octa_stand1(entity this)
 {
-	set_animofs(this, anim_octa_stand, 1, octa_stand2);
+	setthink(this, octa_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 20)
+		this.walkframe = 0;
+
+	this.frame = anim_octa_stand + this.walkframe;
+
 	ai_stand(this);
-	if(random() < 0.2)
+
+	if(this.walkframe == 0 && random() < 0.2)
 	{
 		if(random() < 0.5)
 			_sound(this, CH_VOICE, "tronyn/mon_seahorse_swim1.wav", 1, ATTN_IDLE);

@@ -16,15 +16,20 @@ const float kamispd = 0.08;
 
 .entity kamikaze_box;
 
-void kami_stand1(entity this);
-void kami_stand8(entity this) { set_animofs(this, anim_kamikaze_stand, 8, kami_stand1); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand7(entity this) { set_animofs(this, anim_kamikaze_stand, 7, kami_stand8); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand6(entity this) { set_animofs(this, anim_kamikaze_stand, 6, kami_stand7); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand5(entity this) { set_animofs(this, anim_kamikaze_stand, 5, kami_stand6); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand4(entity this) { set_animofs(this, anim_kamikaze_stand, 4, kami_stand5); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand3(entity this) { set_animofs(this, anim_kamikaze_stand, 3, kami_stand4); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand2(entity this) { set_animofs(this, anim_kamikaze_stand, 2, kami_stand3); this.pos1 = '8 2 32'; ai_stand(this); }
-void kami_stand1(entity this) { set_animofs(this, anim_kamikaze_stand, 1, kami_stand2); this.pos1 = '8 2 32'; ai_stand(this); }
+void kami_stand1(entity this)
+{
+	setthink(this, kami_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_kamikaze_stand + this.walkframe;
+
+	this.pos1 = '8 2 32';
+	ai_stand(this);
+}
 
 void kami_walk1(entity this);
 void kami_walk24(entity this) { set_animofs(this, anim_kamikaze_prowl, 24, kami_walk1); this.pos1 = '4 -2 36'; ai_walk(this, 1); }

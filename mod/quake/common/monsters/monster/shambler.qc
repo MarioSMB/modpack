@@ -13,24 +13,19 @@ const int anim_sham_death = 83; //'83 93 0'
 
 const int MON_SHAMBLER_COOKIE = BIT(1);
 
-void sham_stand1(entity this);
-void sham_stand17(entity this) { set_animofs(this, anim_sham_stand, 17, sham_stand1); ai_stand(this); }
-void sham_stand16(entity this) { set_animofs(this, anim_sham_stand, 16, sham_stand17); ai_stand(this); }
-void sham_stand15(entity this) { set_animofs(this, anim_sham_stand, 15, sham_stand16); ai_stand(this); }
-void sham_stand14(entity this) { set_animofs(this, anim_sham_stand, 14, sham_stand15); ai_stand(this); }
-void sham_stand13(entity this) { set_animofs(this, anim_sham_stand, 13, sham_stand14); ai_stand(this); }
-void sham_stand12(entity this) { set_animofs(this, anim_sham_stand, 12, sham_stand13); ai_stand(this); }
-void sham_stand11(entity this) { set_animofs(this, anim_sham_stand, 11, sham_stand12); ai_stand(this); }
-void sham_stand10(entity this) { set_animofs(this, anim_sham_stand, 10, sham_stand11); ai_stand(this); }
-void sham_stand9(entity this) { set_animofs(this, anim_sham_stand, 9, sham_stand10); ai_stand(this); }
-void sham_stand8(entity this) { set_animofs(this, anim_sham_stand, 8, sham_stand9); ai_stand(this); }
-void sham_stand7(entity this) { set_animofs(this, anim_sham_stand, 7, sham_stand8); ai_stand(this); }
-void sham_stand6(entity this) { set_animofs(this, anim_sham_stand, 6, sham_stand7); ai_stand(this); }
-void sham_stand5(entity this) { set_animofs(this, anim_sham_stand, 5, sham_stand6); ai_stand(this); }
-void sham_stand4(entity this) { set_animofs(this, anim_sham_stand, 4, sham_stand5); ai_stand(this); }
-void sham_stand3(entity this) { set_animofs(this, anim_sham_stand, 3, sham_stand4); ai_stand(this); }
-void sham_stand2(entity this) { set_animofs(this, anim_sham_stand, 2, sham_stand3); ai_stand(this); }
-void sham_stand1(entity this) { set_animofs(this, anim_sham_stand, 1, sham_stand2); ai_stand(this); }
+void sham_stand1(entity this)
+{
+	setthink(this, sham_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 17)
+		this.walkframe = 0;
+
+	this.frame = anim_sham_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void sham_walk1(entity this);
 void sham_walk12(entity this)

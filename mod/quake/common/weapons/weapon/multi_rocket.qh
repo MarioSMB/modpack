@@ -18,7 +18,3 @@ ENDCLASS(MultiRocketLauncher)
 REGISTER_WEAPON(MULTI_ROCKET, NEW(MultiRocketLauncher));
 
 //SPAWNFUNC_WEAPON(weapon_multi_rocket, WEP_MULTI_ROCKET)
-
-#ifdef SVQC
-void MultiRocketExplode(entity this, entity directhitentity);
-#endif

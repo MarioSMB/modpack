@@ -9,5 +9,7 @@
 
 bool W_DualWielding(entity player);
 
+float W_SeekOutEnemy(entity this, float speed_decel, float speed_accel, float speed_max, float turn_rate, bool smart, float smart_mindist, float smart_trace_min, float smart_trace_max);
+
 IntrusiveList g_projectiles;
 STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }

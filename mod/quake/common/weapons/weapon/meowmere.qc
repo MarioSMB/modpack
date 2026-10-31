@@ -2,6 +2,14 @@
 
 #include "../../monsters/_mod.qh"
 
+#ifdef CSQC
+METHOD(Cat, m_tick, void(Cat this, entity actor))
+{
+	// big and spammy, fade in!
+	actor.alphamod = (time - actor.spawntime) * 5;
+}
+#endif
+
 #ifdef SVQC
 void W_FireMeowmere(entity this, .entity weaponentity);
 
@@ -25,136 +33,22 @@ void wep_meowmere_swordb3(entity this) { wep_set_anim(this, 7, wep_meowmere_swor
 void wep_meowmere_swordb2(entity this) { wep_set_anim(this, 6, wep_meowmere_swordb3); }
 void wep_meowmere_swordb1(entity this) { wep_set_anim(this, 5, wep_meowmere_swordb2); W_Parry_Trigger(this.owner, 0); }
 
-.int cat_bouncecnt;
-
-void W_Cat_Touch(entity this, entity toucher)
+METHOD(Cat, pr_bounce, void(Cat this, entity actor, entity toucher, bool is_touch))
 {
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return;	// trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	
-// hit something that bleeds
-	if(toucher && toucher.solid != SOLID_BSP) // yoder mod, jan 05 2021
-	{
-		// handled by hack
-	}
-	else
-	{
-		this.cat_bouncecnt += 1;
-		Send_Effect(EFFECT_MEOWMERE_IMPACT, this.origin, '0 0 0', 1);
-		spamsound(this, CH_SHOTS, SND_MEOWMERE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
-
-		if(!deathmatch)
-			T_RadiusDamage(this, this.owner, 50, this.projectiledeathtype, this.owner);
-
-		if(this.cat_bouncecnt >= 5)
-		{
-			setthink(this, SUB_Remove);
-			this.nextthink = time;
-			settouch(this, func_null);
-		}
-		return;
-	}
-
-	//delete(this);
-}
-
-.float cat_dmgtime;
-void W_Cat_Think(entity this)
-{
-	if(time > this.count)
-	{
-		delete(this);
-		return;
-	}
-
-	// hack to ensure the projectile keeps going even if it hits a target
-	this.nextthink = time;
-
-	if(time <= this.cat_dmgtime)
-		return; // cooldown to prevent damage spam
-
-	bool hitenemy = false;
-	FOREACH_ENTITY_RADIUS(this.origin, this.cnt, it.takedamage && it != this.owner,
-	{
-		if(it.clipgroup && it.clipgroup == this.clipgroup)
-			continue;
-		float damg = ((this.dmg) ? this.dmg : 30);
-		if(it.monsterdef.spawnflags & MONSTER_TYPE_UNDEAD)
-			damg = 120;
-		spawn_touchblood(this, damg, it);
-		T_Damage(it, this, this.owner, damg, this.projectiledeathtype);
-
-		this.cat_dmgtime = time + 0.2; // prevent instant death
-
-		Send_Effect(EFFECT_MEOWMERE_GLIMMER, this.origin, '0 0 -20', 1);
-		spamsound(this, CH_SHOTS, SND_MEOWMERE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
-
-		hitenemy = true;
-	});
-
-	if(hitenemy)
-	{
-		this.cat_bouncecnt += 1;
-
-		if(this.cat_bouncecnt >= 5)
-		{
-			setthink(this, SUB_Remove);
-			this.nextthink = time;
-			settouch(this, func_null);
-		}
-	}
+	if(!deathmatch)
+		T_RadiusDamage(actor, actor.owner, 50, actor.projectiledeathtype, actor.owner);
 }
 
 void W_Cat_Fire(entity this, vector org, .entity weaponentity)
 {
 	// assumes v_ angles are setup
 
+	Projectile ptype = PROJECTILE_CAT;
+	//vector org = W_Shotorg(this, weaponentity) + v_right * 8;
 	org += v_right * 8;
+	vector dir = qc_aim_fromorg(this, org, ptype.m_speed);
 
-	entity missile = spawn();
-	missile.classname = "cat";
-	missile.flags = FL_PROJECTILE;
-	missile.owner = this;
-	missile.realowner = this;
-	missile.clipgroup = this.clipgroup;
-	set_movetype(missile, MOVETYPE_BOUNCE);
-	missile.solid = SOLID_TRIGGER;
-	missile.dphitcontentsmask = DPCONTENTS_SOLID;
-	missile.gravity = 0.25;
-	missile.projectiledeathtype = WEP_MEOWMERE.m_id;
-	missile.cnt = 32; // rough area of effect during travel
-	missile.cat_bouncecnt = 0;
-	missile.dmg = 30;
-	missile.bouncefactor = 1;
-	missile.bouncestop = 0.1;
-
-	vector dir = qc_aim_fromorg(this, org, 1000);
-	missile.velocity = dir * 1000;
-	//missile.velocity_z = 200;
-
-	missile.angles = vectoangles(missile.velocity);
-
-	settouch(missile, W_Cat_Touch);
-
-	missile.count = time + 20;
-	missile.nextthink = time;
-	setthink(missile, W_Cat_Think);
-
-	setsize(missile, '0 0 0', '0 0 0');
-	setorigin(missile, org);
-
-	IL_PUSH(g_projectiles, missile);
-
-	CSQCProjectile(missile, true, PROJECTILE_CAT, true);
+	Projectile_Create(ptype, this, org, dir, WEP_MEOWMERE.m_id);
 }
 
 void W_FireMeowmere(entity this, .entity weaponentity)

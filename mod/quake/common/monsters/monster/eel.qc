@@ -56,13 +56,17 @@ void eel_pitch_change(entity this)
 	this.weapon = this.weapon + 1;
 }
 
-void eel_stand1(entity this);
-void eel_stand6(entity this) { set_animofs(this, anim_eel_eelswim1, 6, eel_stand1); ai_stand(this); eel_pitch_change(this); }
-void eel_stand5(entity this) { set_animofs(this, anim_eel_eelswim1, 5, eel_stand6); ai_stand(this); eel_pitch_change(this); }
-void eel_stand4(entity this) { set_animofs(this, anim_eel_eelswim1, 4, eel_stand5); ai_stand(this); eel_pitch_change(this); }
-void eel_stand3(entity this) { set_animofs(this, anim_eel_eelswim1, 3, eel_stand4); ai_stand(this); eel_pitch_change(this); }
-void eel_stand2(entity this) { set_animofs(this, anim_eel_eelswim1, 2, eel_stand3); ai_stand(this); eel_pitch_change(this); }
-void eel_stand1(entity this) { set_animofs(this, anim_eel_eelswim1, 1, eel_stand2); ai_stand(this); eel_pitch_change(this); }
+void eel_stand1(entity this)
+{
+	this.walkframe += 1;
+	if(this.walkframe >= 6)
+		this.walkframe = 0;
+
+	set_anim(this, anim_eel_eelswim1 + this.walkframe, eel_stand1);
+
+	ai_stand(this);
+	eel_pitch_change(this);
+}
 
 void eel_walk1(entity this);
 void eel_walk6(entity this) { set_animofs(this, anim_eel_eelswim1, 6, eel_walk1); ai_walk(this, 6); eel_pitch_change(this); }

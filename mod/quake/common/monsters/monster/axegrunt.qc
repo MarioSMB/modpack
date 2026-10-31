@@ -22,19 +22,19 @@ const int anim_axegrunt_axattb = 125; //'125 130 0'
 const int anim_axegrunt_axattc = 131; //'131 136 0'
 const int anim_axegrunt_axattd = 137; //'137 142 0'
 
-void axe_stand1(entity this);
-void axe_stand12(entity this) { set_animofs(this, anim_axegrunt_axstnd, 12, axe_stand1); ai_stand(this); }
-void axe_stand11(entity this) { set_animofs(this, anim_axegrunt_axstnd, 11, axe_stand12); ai_stand(this); }
-void axe_stand10(entity this) { set_animofs(this, anim_axegrunt_axstnd, 10, axe_stand11); ai_stand(this); }
-void axe_stand9(entity this) { set_animofs(this, anim_axegrunt_axstnd, 9, axe_stand10); ai_stand(this); }
-void axe_stand8(entity this) { set_animofs(this, anim_axegrunt_axstnd, 8, axe_stand9); ai_stand(this); }
-void axe_stand7(entity this) { set_animofs(this, anim_axegrunt_axstnd, 7, axe_stand8); ai_stand(this); }
-void axe_stand6(entity this) { set_animofs(this, anim_axegrunt_axstnd, 6, axe_stand7); ai_stand(this); }
-void axe_stand5(entity this) { set_animofs(this, anim_axegrunt_axstnd, 5, axe_stand6); ai_stand(this); }
-void axe_stand4(entity this) { set_animofs(this, anim_axegrunt_axstnd, 4, axe_stand5); ai_stand(this); }
-void axe_stand3(entity this) { set_animofs(this, anim_axegrunt_axstnd, 3, axe_stand4); ai_stand(this); }
-void axe_stand2(entity this) { set_animofs(this, anim_axegrunt_axstnd, 2, axe_stand3); ai_stand(this); }
-void axe_stand1(entity this) { set_animofs(this, anim_axegrunt_axstnd, 1, axe_stand2); ai_stand(this); }
+void axe_stand1(entity this)
+{
+	setthink(this, axe_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_axegrunt_axstnd + this.walkframe;
+
+	ai_stand(this);	
+}
 
 void axe_run1(entity this);
 void axe_run6(entity this) { set_animofs(this, anim_axegrunt_axrun, 6, axe_run1); ai_run(this, 12); }

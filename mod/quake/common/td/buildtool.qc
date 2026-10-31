@@ -772,7 +772,7 @@ METHOD(ToolSelection, m_condition, bool(RadialMenu this))
 	return (STAT(TD_BUILDMODE) == 2);
 }
 
-METHOD(ToolSelection, m_drawentry, void(int index, vector pos, vector sz))
+METHOD(ToolSelection, m_drawentry, void(int index, vector pos, vector sz, bool is_selected))
 {
 	string pic = string_null;
 	string text = string_null;

@@ -33,36 +33,6 @@ void W_Minishark_Attack(entity this)
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 }
 
-void minishark_bullet_touch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return;	// trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	
-// hit something that bleeds
-	if(toucher.takedamage) // yoder mod, jan 05 2021
-	{
-		spawn_touchblood(this, 18, toucher);
-		float damg = 18;
-		if(toucher.resist_nails != 0)
-			damg = Resist_Damage(toucher, IT_NAILS, damg);
-		Resist_Nails(toucher, this.origin);
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-	}
-	else
-		te_superspike(this.origin);
-
-	delete(this);
-}
-
 void W_FireMinishark(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
@@ -77,15 +47,12 @@ void W_FireMinishark(entity this, .entity weaponentity)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/minishark_fire.wav", 1, ATTN_NORM);
 	ATTACK_FINISHED(this, weaponentity) = time + 0.2;
 	W_TakeAmmo(this, IT_NAILS, 1);
+
+	Projectile ptype = PROJECTILE_MINISHARK_BULLET;
 	vector org = W_Shotorg(this, weaponentity) + v_right * 4;
-	vector dir = qc_aim_fromorg(this, org, 1000);
-	entity newmis = launch_spike(this, org, dir);
-	newmis.projectiledeathtype = WEP_MINISHARK.m_id;
-	newmis.classname = "minishark_bullet";
-	settouch(newmis, minishark_bullet_touch);
-	//_setmodel(newmis, "progs/s_spike.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');
-	CSQCProjectile(newmis, true, PROJECTILE_BULLET, true);
+	vector dir = qc_aim_fromorg(this, org, ptype.m_speed);
+
+	Projectile_Create(ptype, this, org, dir, WEP_MINISHARK.m_id);
 
 	this.punchangle_x = -2 * autocvar_sv_quake_recoil;
 }

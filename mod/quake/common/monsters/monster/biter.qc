@@ -14,20 +14,19 @@ const int anim_biter_attacka = 54; //'54 68 0'
 
 void Biter_JumpTouch(entity this, entity toucher);
 
-void biter_stand1(entity this);
-void biter_stand13(entity this) { set_animofs(this, anim_biter_stand, 1, biter_stand1); ai_stand(this); }
-void biter_stand12(entity this) { set_animofs(this, anim_biter_stand, 12, biter_stand13); ai_stand(this); }
-void biter_stand11(entity this) { set_animofs(this, anim_biter_stand, 11, biter_stand12); ai_stand(this); }
-void biter_stand10(entity this) { set_animofs(this, anim_biter_stand, 10, biter_stand11); ai_stand(this); }
-void biter_stand9(entity this) { set_animofs(this, anim_biter_stand, 9, biter_stand10); ai_stand(this); }
-void biter_stand8(entity this) { set_animofs(this, anim_biter_stand, 8, biter_stand9); ai_stand(this); }
-void biter_stand7(entity this) { set_animofs(this, anim_biter_stand, 7, biter_stand8); ai_stand(this); }
-void biter_stand6(entity this) { set_animofs(this, anim_biter_stand, 6, biter_stand7); ai_stand(this); }
-void biter_stand5(entity this) { set_animofs(this, anim_biter_stand, 5, biter_stand6); ai_stand(this); }
-void biter_stand4(entity this) { set_animofs(this, anim_biter_stand, 4, biter_stand5); ai_stand(this); }
-void biter_stand3(entity this) { set_animofs(this, anim_biter_stand, 3, biter_stand4); ai_stand(this); }
-void biter_stand2(entity this) { set_animofs(this, anim_biter_stand, 2, biter_stand3); ai_stand(this); }
-void biter_stand1(entity this) { set_animofs(this, anim_biter_stand, 1, biter_stand2); ai_stand(this); }
+void biter_stand1(entity this)
+{
+	setthink(this, biter_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_biter_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void biter_walk1(entity this);
 void biter_walk8(entity this) { set_animofs(this, anim_biter_walk, 8, biter_walk1); ai_walk(this, 10); }

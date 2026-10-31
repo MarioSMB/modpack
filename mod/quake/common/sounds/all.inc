@@ -105,3 +105,12 @@ SOUND(SKATE_JUMP, "player/plyrjmp8");
 SOUND(SKATE_WATERJUMP, "player/h2ojump");
 
 SOUND(POPPER_POISON_FLY, "turrets/popper_poison_fly");
+
+SOUND(TINK1, "weapons/tink1");
+
+SOUND(RIC1, "weapons/ric1");
+SOUND(RIC2, "weapons/ric2");
+SOUND(RIC3, "weapons/ric3");
+Sound SND_RIC_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_RIC1.m_id + floor(prandom() * 3));
+}

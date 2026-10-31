@@ -104,6 +104,8 @@ bool sunbeam_send(entity this, entity to, int sf)
 void sunbeam_think(entity this)
 {
 	entity actor = this.owner;
+	.entity weaponentity = this.weaponentity_fld;
+	entity wepent = actor.(weaponentity);
 
 	if(this != actor.sunbeam)
 	{
@@ -111,7 +113,9 @@ void sunbeam_think(entity this)
 		return;
 	}
 
-	if (STAT(MANA, actor) < 3 || actor.health < 1 || actor.exptime != 0 || !PHYS_INPUT_BUTTON_ATCK(actor) || actor.is_frozen || actor.tank || STAT(CLOCKWORK, actor) || actor.m_transform || STAT(CANNON, actor))
+	if (STAT(MANA, actor) < 3 || actor.health < 1 || actor.exptime != 0 || !PHYS_INPUT_BUTTON_ATCK(actor)
+		|| wepent.m_weapon != WEP_STAFF || actor.is_frozen || actor.tank
+		|| STAT(CLOCKWORK, actor) || actor.m_transform || STAT(CANNON, actor))
 	{
 		if(this == actor.sunbeam)
 			actor.sunbeam = NULL;
@@ -120,8 +124,6 @@ void sunbeam_think(entity this)
 	}
 
 	// just keep it up to date until we stop firing!
-	.entity weaponentity = this.weaponentity_fld;
-	entity wepent = actor.(weaponentity);
 	if(wepent)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + 0.25; // prevent attacking again
@@ -499,7 +501,7 @@ void Draw_Sunbeam(entity this)
 	}
 
 	float intensity = 1;
-	float offset = Noise_Brown(self, frametime) * 10;
+	float offset = Noise_Brown(this, frametime) * 10;
 	vector rgb = '1 1 1';
 	string tex = "particles/sunbeam";
 
@@ -600,7 +602,7 @@ METHOD(StaffSelection, m_condition, bool(RadialMenu this))
 	return (wep == WEP_STAFF);
 }
 
-METHOD(StaffSelection, m_drawentry, void(int index, vector pos, vector sz))
+METHOD(StaffSelection, m_drawentry, void(int index, vector pos, vector sz, bool is_selected))
 {
 	string pic = string_null;
 	switch(index)

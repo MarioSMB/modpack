@@ -13,24 +13,19 @@ const int anim_bam_death = 83; //'83 93 0'
 
 const int MON_BAMBLER_ELMO = BIT(1);
 
-void bam_stand1(entity this);
-void bam_stand17(entity this) { set_animofs(this, anim_bam_stand, 17, bam_stand1); ai_stand(this); }
-void bam_stand16(entity this) { set_animofs(this, anim_bam_stand, 16, bam_stand17); ai_stand(this); }
-void bam_stand15(entity this) { set_animofs(this, anim_bam_stand, 15, bam_stand16); ai_stand(this); }
-void bam_stand14(entity this) { set_animofs(this, anim_bam_stand, 14, bam_stand15); ai_stand(this); }
-void bam_stand13(entity this) { set_animofs(this, anim_bam_stand, 13, bam_stand14); ai_stand(this); }
-void bam_stand12(entity this) { set_animofs(this, anim_bam_stand, 12, bam_stand13); ai_stand(this); }
-void bam_stand11(entity this) { set_animofs(this, anim_bam_stand, 11, bam_stand12); ai_stand(this); }
-void bam_stand10(entity this) { set_animofs(this, anim_bam_stand, 10, bam_stand11); ai_stand(this); }
-void bam_stand9(entity this) { set_animofs(this, anim_bam_stand, 9, bam_stand10); ai_stand(this); }
-void bam_stand8(entity this) { set_animofs(this, anim_bam_stand, 8, bam_stand9); ai_stand(this); }
-void bam_stand7(entity this) { set_animofs(this, anim_bam_stand, 7, bam_stand8); ai_stand(this); }
-void bam_stand6(entity this) { set_animofs(this, anim_bam_stand, 6, bam_stand7); ai_stand(this); }
-void bam_stand5(entity this) { set_animofs(this, anim_bam_stand, 5, bam_stand6); ai_stand(this); }
-void bam_stand4(entity this) { set_animofs(this, anim_bam_stand, 4, bam_stand5); ai_stand(this); }
-void bam_stand3(entity this) { set_animofs(this, anim_bam_stand, 3, bam_stand4); ai_stand(this); }
-void bam_stand2(entity this) { set_animofs(this, anim_bam_stand, 2, bam_stand3); ai_stand(this); }
-void bam_stand1(entity this) { set_animofs(this, anim_bam_stand, 1, bam_stand2); ai_stand(this); }
+void bam_stand1(entity this)
+{
+	setthink(this, bam_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_bam_stand + this.walkframe;
+
+	ai_stand(this);	
+}
 
 void bam_walk1(entity this);
 void bam_walk12(entity this)

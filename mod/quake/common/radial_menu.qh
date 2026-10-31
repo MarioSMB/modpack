@@ -12,7 +12,7 @@ CLASS(RadialMenu, Object)
 #endif
 #ifdef CSQC
     /** handles drawing of radial menu entries */
-    METHOD(RadialMenu, m_drawentry, void(int index, vector pos, vector sz)) {}
+    METHOD(RadialMenu, m_drawentry, void(int index, vector pos, vector sz, bool is_selected)) {}
     /** condition for displaying the menu */
     METHOD(RadialMenu, m_condition, bool(RadialMenu this)) { return false; }
 #endif

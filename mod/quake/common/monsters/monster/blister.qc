@@ -103,32 +103,23 @@ void Sploder_Forget(entity this)
 	}
 }
 
-void sploder_stand1(entity this);
-void sploder_stand25(entity this) { set_animofs(this, anim_blister_stand, 25, sploder_stand1); ai_stand(this); }
-void sploder_stand24(entity this) { set_animofs(this, anim_blister_stand, 24, sploder_stand25); ai_stand(this); }
-void sploder_stand23(entity this) { set_animofs(this, anim_blister_stand, 23, sploder_stand24); ai_stand(this); }
-void sploder_stand22(entity this) { set_animofs(this, anim_blister_stand, 22, sploder_stand23); ai_stand(this); }
-void sploder_stand21(entity this) { set_animofs(this, anim_blister_stand, 21, sploder_stand22); ai_stand(this); }
-void sploder_stand20(entity this) { set_animofs(this, anim_blister_stand, 20, sploder_stand21); ai_stand(this); }
-void sploder_stand19(entity this) { set_animofs(this, anim_blister_stand, 19, sploder_stand20); ai_stand(this); }
-void sploder_stand18(entity this) { set_animofs(this, anim_blister_stand, 18, sploder_stand19); ai_stand(this); }
-void sploder_stand17(entity this) { set_animofs(this, anim_blister_stand, 17, sploder_stand18); ai_stand(this); }
-void sploder_stand16(entity this) { set_animofs(this, anim_blister_stand, 16, sploder_stand17); ai_stand(this); }
-void sploder_stand15(entity this) { set_animofs(this, anim_blister_stand, 15, sploder_stand16); ai_stand(this); }
-void sploder_stand14(entity this) { set_animofs(this, anim_blister_stand, 14, sploder_stand15); ai_stand(this); SploderIdleNoise(this); }
-void sploder_stand13(entity this) { set_animofs(this, anim_blister_stand, 13, sploder_stand14); ai_stand(this); }
-void sploder_stand12(entity this) { set_animofs(this, anim_blister_stand, 12, sploder_stand13); ai_stand(this); }
-void sploder_stand11(entity this) { set_animofs(this, anim_blister_stand, 11, sploder_stand12); ai_stand(this); }
-void sploder_stand10(entity this) { set_animofs(this, anim_blister_stand, 10, sploder_stand11); ai_stand(this); }
-void sploder_stand9(entity this) { set_animofs(this, anim_blister_stand, 9, sploder_stand10); ai_stand(this); }
-void sploder_stand8(entity this) { set_animofs(this, anim_blister_stand, 8, sploder_stand9); ai_stand(this); }
-void sploder_stand7(entity this) { set_animofs(this, anim_blister_stand, 7, sploder_stand8); ai_stand(this); }
-void sploder_stand6(entity this) { set_animofs(this, anim_blister_stand, 6, sploder_stand7); ai_stand(this); }
-void sploder_stand5(entity this) { set_animofs(this, anim_blister_stand, 5, sploder_stand6); ai_stand(this); }
-void sploder_stand4(entity this) { set_animofs(this, anim_blister_stand, 4, sploder_stand5); ai_stand(this); }
-void sploder_stand3(entity this) { set_animofs(this, anim_blister_stand, 3, sploder_stand4); ai_stand(this); }
-void sploder_stand2(entity this) { set_animofs(this, anim_blister_stand, 2, sploder_stand3); ai_stand(this); }
-void sploder_stand1(entity this) { set_animofs(this, anim_blister_stand, 1, sploder_stand2); ai_stand(this); }
+void sploder_stand1(entity this)
+{
+	setthink(this, sploder_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 25)
+		this.walkframe = 0;
+
+	this.frame = anim_blister_stand + this.walkframe;
+
+	ai_stand(this);	
+
+	int myframe = this.walkframe + 1;
+	if(myframe == 14)
+		SploderIdleNoise(this);
+}
 
 void sploder_run1(entity this);
 void sploder_stunned_a9(entity this) { set_animofs(this, anim_blister_stunned_a, 9, sploder_run1); }

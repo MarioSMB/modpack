@@ -128,14 +128,16 @@ void enf_idle_sound(entity this)
 
 //============================================================================
 
-void enf_stand1(entity this);
-void enf_stand7(entity this) { set_animofs(this, anim_enf_stand, 7, enf_stand1); ai_stand(this); }
-void enf_stand6(entity this) { set_animofs(this, anim_enf_stand, 6, enf_stand7); ai_stand(this); }
-void enf_stand5(entity this) { set_animofs(this, anim_enf_stand, 5, enf_stand6); ai_stand(this); }
-void enf_stand4(entity this) { set_animofs(this, anim_enf_stand, 4, enf_stand5); ai_stand(this); }
-void enf_stand3(entity this) { set_animofs(this, anim_enf_stand, 3, enf_stand4); ai_stand(this); }
-void enf_stand2(entity this) { set_animofs(this, anim_enf_stand, 2, enf_stand3); ai_stand(this); }
-void enf_stand1(entity this) { set_animofs(this, anim_enf_stand, 1, enf_stand2); ai_stand(this); }
+void enf_stand1(entity this)
+{
+	this.walkframe += 1;
+	if(this.walkframe >= 7)
+		this.walkframe = 0;
+
+	set_anim(this, anim_enf_stand + this.walkframe, enf_stand1);
+
+	ai_stand(this);
+}
 
 void enf_walk1(entity this);
 void enf_walk16(entity this) { set_animofs(this, anim_enf_walk, 16, enf_walk1); ai_walk(this, 2); }

@@ -241,7 +241,7 @@ void OnlineBanList_Think(entity this)
 	this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 }
 
-const float BAN_MAX = 256;
+const float BAN_MAX = 128;
 float ban_loaded;
 string ban_ip[BAN_MAX];
 float ban_expire[BAN_MAX];

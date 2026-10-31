@@ -8,7 +8,7 @@ void W_FireShotgun(entity this, .entity weaponentity)
 	this.punchangle_x = -2 * autocvar_sv_quake_recoil;
 
 	W_TakeAmmo(this, IT_SHELLS, 1);
-	vector dir = qc_aim(this, 100000);
+	vector dir = qc_aim(this, 2000);
 	FireBullets(this, 6, 4, W_Shotorg(this, weaponentity), dir, '0.04 0.04 0', WEP_SHOTGUN.m_id);
 }
 

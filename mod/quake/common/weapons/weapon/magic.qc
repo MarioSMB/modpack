@@ -501,7 +501,7 @@ METHOD(MagicSelection, m_condition, bool(RadialMenu this))
 	return (wep == WEP_MAGIC);
 }
 
-METHOD(MagicSelection, m_drawentry, void(int index, vector pos, vector sz))
+METHOD(MagicSelection, m_drawentry, void(int index, vector pos, vector sz, bool is_selected))
 {
 	string pic = string_null;
 	switch(index)

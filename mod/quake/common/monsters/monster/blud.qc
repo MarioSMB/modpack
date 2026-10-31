@@ -1,18 +1,21 @@
 #include "blud.qh"
 
 #ifdef SVQC
-void blud_stand1(entity this);
-void blud_stand6(entity this) { set_anim(this, 6, blud_stand1); ai_stand(this); }
-void blud_stand5(entity this) { set_anim(this, 5, blud_stand6); ai_stand(this); }
-void blud_stand4(entity this) { set_anim(this, 4, blud_stand5); ai_stand(this); }
-void blud_stand3(entity this) { set_anim(this, 3, blud_stand4); ai_stand(this); }
-void blud_stand2(entity this) { set_anim(this, 2, blud_stand3); ai_stand(this); }
 void blud_stand1(entity this)
 {
-	set_anim(this, 1, blud_stand2);
-	if(random() < 0.2)
-		_sound(this, CHAN_AUTO, "monsters/blud/blidle3.wav", 1, ATTN_NORM);
+	setthink(this, blud_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 6)
+		this.walkframe = 0;
+
+	this.frame = 1 + this.walkframe;
+
 	ai_stand(this);
+
+	if(this.walkframe == 0 && random() < 0.2)
+		_sound(this, CH_VOICE, "monsters/blud/blidle3.wav", 1, ATTN_NORM);
 }
 
 void blud_walk1(entity this);

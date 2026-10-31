@@ -145,19 +145,22 @@ void ai_left(entity this, float dist)
 //============================================================================
 
 //void() scourge_wake1;
-void scourge_stand1(entity this);
-void scourge_stand12(entity this) { set_animofs(this, anim_scourge_stand, 12, scourge_stand1); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand11(entity this) { set_animofs(this, anim_scourge_stand, 11, scourge_stand12); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand10(entity this) { set_animofs(this, anim_scourge_stand, 10, scourge_stand11); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand9(entity this) { set_animofs(this, anim_scourge_stand, 9, scourge_stand10); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand8(entity this) { set_animofs(this, anim_scourge_stand, 8, scourge_stand9); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand7(entity this) { set_animofs(this, anim_scourge_stand, 7, scourge_stand8); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand6(entity this) { set_animofs(this, anim_scourge_stand, 6, scourge_stand7); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand5(entity this) { set_animofs(this, anim_scourge_stand, 5, scourge_stand6); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand4(entity this) { set_animofs(this, anim_scourge_stand, 4, scourge_stand5); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand3(entity this) { set_animofs(this, anim_scourge_stand, 3, scourge_stand4); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand2(entity this) { set_animofs(this, anim_scourge_stand, 2, scourge_stand3); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand1(entity this) { set_animofs(this, anim_scourge_stand, 1, scourge_stand2); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+
+void scourge_stand1(entity this)
+{
+	setthink(this, scourge_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_scourge_stand + this.walkframe;
+
+	this.spawnsilent = 0;
+	ai_stand(this);
+	scourge_think(this);
+}
 
 void scourge_walk1(entity this);
 void scourge_walk6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_walk1); ai_walk(this, 8); }

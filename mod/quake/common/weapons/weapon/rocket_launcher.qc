@@ -1,7 +1,7 @@
 #include "rocket_launcher.qh"
 
 #ifdef SVQC
-entity W_FireRocket(entity this)
+void W_FireRocket(entity this, .entity weaponentity)
 {
 	W_TakeAmmo(this, IT_ROCKETS, 1);
 	
@@ -9,40 +9,11 @@ entity W_FireRocket(entity this)
 
 	this.punchangle_x = -2 * autocvar_sv_quake_recoil;
 
-	entity missile = spawn();
-	missile.flags = FL_PROJECTILE;
-	missile.owner = this;
-	missile.realowner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "missile";
-	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER.m_id;
-	missile.clipgroup = this.clipgroup;
-	missile.noise = "weapons/r_exp3.wav";
-		
-// set missile speed	
+	Projectile ptype = PROJECTILE_ROCKET;
+	vector org = W_Shotorg(this, weaponentity);
+	vector dir = qc_aim_fromorg(this, org, ptype.m_speed);
 
-	makevectors(this.v_angle);
-	missile.velocity = qc_aim(this, 1000);
-	missile.velocity = missile.velocity * 1000;
-	missile.angles = vectoangles(missile.velocity);
-	
-	settouch(missile, T_MissileTouch);
-	
-// set missile duration
-	missile.nextthink = time + 5;
-	setthink(missile, SUB_Remove);
-
-	//_setmodel(missile, "progs/missile.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
-	vector org = this.origin + '0 0 16'; // v_forward * 8, not used because it goes through mobs!
-	setorigin(missile, org);
-
-	IL_PUSH(g_projectiles, missile);
-
-	CSQCProjectile(missile, true, PROJECTILE_ROCKET, true);
-
-	return missile;
+	Projectile_Create(ptype, this, org, dir, WEP_ROCKET_LAUNCHER.m_id);
 }
 
 METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -54,8 +25,7 @@ METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weap
 		if(IS_PLAYER(actor))
 			player_rocket1(actor);
 		wep_generic_rocket1(actor.(weaponentity));
-		entity rocket = W_FireRocket(actor);
-		setorigin(rocket, W_Shotorg(actor, weaponentity));
+		W_FireRocket(actor, weaponentity);
 		weapon_prepareattack(thiswep, actor, weaponentity, 0.8);
 	}
 }

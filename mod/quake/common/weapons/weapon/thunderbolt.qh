@@ -25,4 +25,6 @@ void player_light1(entity this);
 void player_light2(entity this);
 
 void W_FireLightning(entity this, .entity weaponentity);
+
+.entity thunderbolt;
 #endif

@@ -119,13 +119,22 @@ void santa_idlesound(entity this)
 	}
 }
 
-void santa_stand1(entity this);
-void santa_stand6(entity this) { set_animofs(this, anim_santa_stand, 6, santa_stand1); ai_stand(this); }
-void santa_stand5(entity this) { set_animofs(this, anim_santa_stand, 5, santa_stand6); ai_stand(this); }
-void santa_stand4(entity this) { set_animofs(this, anim_santa_stand, 4, santa_stand5); ai_stand(this); }
-void santa_stand3(entity this) { set_animofs(this, anim_santa_stand, 3, santa_stand4); ai_stand(this); }
-void santa_stand2(entity this) { set_animofs(this, anim_santa_stand, 2, santa_stand3); ai_stand(this); }
-void santa_stand1(entity this) { set_animofs(this, anim_santa_stand, 1, santa_stand2); santa_idlesound(this); ai_stand(this); }
+void santa_stand1(entity this)
+{
+	setthink(this, santa_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 6)
+		this.walkframe = 0;
+
+	this.frame = anim_santa_stand + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		santa_idlesound(this);
+}
 
 //======================================================================
 void santa_walk1(entity this);
