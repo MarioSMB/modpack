@@ -105,8 +105,7 @@ void plat_center_touch(entity this, entity toucher)
 	if(this.enemy.state == STATE_BOTTOM)
 	{
 		this.enemy.state = STATE_UP;
-		setthink(this.enemy, plat_go_up);
-		this.enemy.nextthink = time + autocvar_sv_quake_platform_delay;
+		defer(this.enemy, autocvar_sv_quake_platform_delay, plat_go_up);
 		//plat_go_up(this.enemy);
 	}
 	else if(this.enemy.state == STATE_TOP)
