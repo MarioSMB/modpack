@@ -31,23 +31,22 @@ void boil_idle_sound(entity this)
 	}
 }
 
-void boil_stand1(entity this);
-void boil_stand16(entity this) { set_animofs(this, anim_boil_stand, 16, boil_stand1); ai_stand(this); }
-void boil_stand15(entity this) { set_animofs(this, anim_boil_stand, 15, boil_stand16); ai_stand(this); }
-void boil_stand14(entity this) { set_animofs(this, anim_boil_stand, 14, boil_stand15); ai_stand(this); }
-void boil_stand13(entity this) { set_animofs(this, anim_boil_stand, 13, boil_stand14); ai_stand(this); }
-void boil_stand12(entity this) { set_animofs(this, anim_boil_stand, 12, boil_stand13); ai_stand(this); }
-void boil_stand11(entity this) { set_animofs(this, anim_boil_stand, 11, boil_stand12); ai_stand(this); }
-void boil_stand10(entity this) { set_animofs(this, anim_boil_stand, 10, boil_stand11); ai_stand(this); }
-void boil_stand9(entity this) { set_animofs(this, anim_boil_stand, 9, boil_stand10); ai_stand(this); }
-void boil_stand8(entity this) { set_animofs(this, anim_boil_stand, 8, boil_stand9); ai_stand(this); }
-void boil_stand7(entity this) { set_animofs(this, anim_boil_stand, 7, boil_stand8); ai_stand(this); }
-void boil_stand6(entity this) { set_animofs(this, anim_boil_stand, 6, boil_stand7); ai_stand(this); }
-void boil_stand5(entity this) { set_animofs(this, anim_boil_stand, 5, boil_stand6); ai_stand(this); }
-void boil_stand4(entity this) { set_animofs(this, anim_boil_stand, 4, boil_stand5); ai_stand(this); }
-void boil_stand3(entity this) { set_animofs(this, anim_boil_stand, 3, boil_stand4); ai_stand(this); }
-void boil_stand2(entity this) { set_animofs(this, anim_boil_stand, 2, boil_stand3); ai_stand(this); }
-void boil_stand1(entity this) { set_animofs(this, anim_boil_stand, 1, boil_stand2); boil_idle_sound(this); ai_stand(this); }
+void boil_stand1(entity this)
+{
+	setthink(this, boil_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 16)
+		this.walkframe = 0;
+
+	this.frame = anim_boil_stand + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		boil_idle_sound(this);
+}
 
 void boil_walk1(entity this);
 void boil_walk16(entity this) { set_animofs(this, anim_boil_walk, 16, boil_walk1); ai_walk(this, 2); }

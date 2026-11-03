@@ -39,14 +39,19 @@ void bulletkin_fire(entity this)
 
 //============================================================================
 
-void bulletkin_stand1(entity this);
-void bulletkin_stand7(entity this) { set_animofs(this, anim_bulletkin_stand, 7, bulletkin_stand1); ai_stand(this); }
-void bulletkin_stand6(entity this) { set_animofs(this, anim_bulletkin_stand, 6, bulletkin_stand7); ai_stand(this); }
-void bulletkin_stand5(entity this) { set_animofs(this, anim_bulletkin_stand, 5, bulletkin_stand6); ai_stand(this); }
-void bulletkin_stand4(entity this) { set_animofs(this, anim_bulletkin_stand, 4, bulletkin_stand5); ai_stand(this); }
-void bulletkin_stand3(entity this) { set_animofs(this, anim_bulletkin_stand, 3, bulletkin_stand4); ai_stand(this); }
-void bulletkin_stand2(entity this) { set_animofs(this, anim_bulletkin_stand, 2, bulletkin_stand3); ai_stand(this); }
-void bulletkin_stand1(entity this) { set_animofs(this, anim_bulletkin_stand, 1, bulletkin_stand2); ai_stand(this); }
+void bulletkin_stand1(entity this)
+{
+	setthink(this, bulletkin_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 7)
+		this.walkframe = 0;
+
+	this.frame = anim_bulletkin_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void bulletkin_walk1(entity this);
 void bulletkin_walk16(entity this) { set_animofs(this, anim_bulletkin_walk, 16, bulletkin_walk1); ai_walk(this, 2); }

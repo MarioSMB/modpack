@@ -31,70 +31,40 @@ void snt(entity this, float float_think);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void p_loose_41(entity this);
+void p_loose(entity this);
 void interrupt_loose_charge(entity this, float fuse_time)
 {
 	entity actor = this.owner;
 	if(!actor.button0 || actor.impulse)
 	{
 		saf(this, 0.5);
-		p_loose_41(this);
+		this.walkframe = 41 - 1;
+		p_loose(this);
 		W_FireLooseCannon(actor, fuse_time, this.weaponentity_fld);
 		actor.effects |= EF_MUZZLEFLASH;
 	} 
 }
 
-void p_loose_50(entity this) { wep_set_anim(this, 50, w_ready); snt(this, 0.05); }
-void p_loose_49(entity this) { wep_set_anim(this, 49, p_loose_50); snt(this, 0.05); }
-void p_loose_48(entity this) { wep_set_anim(this, 48, p_loose_49); snt(this, 0.05); }
-void p_loose_47(entity this) { wep_set_anim(this, 47, p_loose_48); snt(this, 0.05); }
-void p_loose_46(entity this) { wep_set_anim(this, 46, p_loose_47); snt(this, 0.05); }
-void p_loose_45(entity this) { wep_set_anim(this, 45, p_loose_46); snt(this, 0.05); }
-void p_loose_44(entity this) { wep_set_anim(this, 44, p_loose_45); snt(this, 0.05); }
-void p_loose_43(entity this) { wep_set_anim(this, 43, p_loose_44); snt(this, 0.05); }
-void p_loose_42(entity this) { wep_set_anim(this, 42, p_loose_43); snt(this, 0.05); }
-void p_loose_41(entity this) { wep_set_anim(this, 41, p_loose_42); snt(this, 0.05); }
+void p_loose(entity this)
+{
+	this.walkframe += 1;
+	wep_set_anim(this, this.walkframe, p_loose);
+	snt(this, 0.025);
 
-void p_loose_40(entity this) { wep_set_anim(this, 40, p_loose_41); snt(this, 0.025); saf(this, 0.5); W_FireLooseCannon(this.owner, 40, this.weaponentity_fld); this.owner.effects |= EF_MUZZLEFLASH; }
-void p_loose_39(entity this) { wep_set_anim(this, 39, p_loose_40); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 39); }
-void p_loose_38(entity this) { wep_set_anim(this, 38, p_loose_39); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 38); }
-void p_loose_37(entity this) { wep_set_anim(this, 37, p_loose_38); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 37); }
-void p_loose_36(entity this) { wep_set_anim(this, 36, p_loose_37); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 36); }
-void p_loose_35(entity this) { wep_set_anim(this, 35, p_loose_36); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 35); }
-void p_loose_34(entity this) { wep_set_anim(this, 34, p_loose_35); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 34); }
-void p_loose_33(entity this) { wep_set_anim(this, 33, p_loose_34); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 33); }
-void p_loose_32(entity this) { wep_set_anim(this, 32, p_loose_33); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 32); }
-void p_loose_31(entity this) { wep_set_anim(this, 31, p_loose_32); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 31); }
-void p_loose_30(entity this) { wep_set_anim(this, 30, p_loose_31); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 30); }
-void p_loose_29(entity this) { wep_set_anim(this, 29, p_loose_30); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 29); }
-void p_loose_28(entity this) { wep_set_anim(this, 28, p_loose_29); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 28); }
-void p_loose_27(entity this) { wep_set_anim(this, 27, p_loose_28); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 27); }
-void p_loose_26(entity this) { wep_set_anim(this, 26, p_loose_27); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 26); }
-void p_loose_25(entity this) { wep_set_anim(this, 25, p_loose_26); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 25); }
-void p_loose_24(entity this) { wep_set_anim(this, 24, p_loose_25); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 24); }
-void p_loose_23(entity this) { wep_set_anim(this, 23, p_loose_24); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 23); }
-void p_loose_22(entity this) { wep_set_anim(this, 22, p_loose_23); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 22); }
-void p_loose_21(entity this) { wep_set_anim(this, 21, p_loose_22); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 21); }
-void p_loose_20(entity this) { wep_set_anim(this, 20, p_loose_21); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 20); }
-void p_loose_19(entity this) { wep_set_anim(this, 19, p_loose_20); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 19); }
-void p_loose_18(entity this) { wep_set_anim(this, 18, p_loose_19); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 18); }
-void p_loose_17(entity this) { wep_set_anim(this, 17, p_loose_18); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 17); }
-void p_loose_16(entity this) { wep_set_anim(this, 16, p_loose_17); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 16); }
-void p_loose_15(entity this) { wep_set_anim(this, 15, p_loose_16); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 15); }
-void p_loose_14(entity this) { wep_set_anim(this, 14, p_loose_15); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 14); }
-void p_loose_13(entity this) { wep_set_anim(this, 13, p_loose_14); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 13); }
-void p_loose_12(entity this) { wep_set_anim(this, 12, p_loose_13); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 12); }
-void p_loose_11(entity this) { wep_set_anim(this, 11, p_loose_12); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 11); }
-void p_loose_10(entity this) { wep_set_anim(this, 10, p_loose_11); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 10); }
-void p_loose__9(entity this) { wep_set_anim(this, 9, p_loose_10); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 9); }
-void p_loose__8(entity this) { wep_set_anim(this, 8, p_loose__9); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 8); }
-void p_loose__7(entity this) { wep_set_anim(this, 7, p_loose__8); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 7); }
-void p_loose__6(entity this) { wep_set_anim(this, 6, p_loose__7); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 6); }
-void p_loose__5(entity this) { wep_set_anim(this, 5, p_loose__6); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 5); }
-void p_loose__4(entity this) { wep_set_anim(this, 4, p_loose__5); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 4); }
-void p_loose__3(entity this) { wep_set_anim(this, 3, p_loose__4); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 3); }
-void p_loose__2(entity this) { wep_set_anim(this, 2, p_loose__3); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 2); }
-void p_loose__1(entity this) { wep_set_anim(this, 1, p_loose__2); snt(this, 0.025); saf(this, 0.05); interrupt_loose_charge(this, 1); }
+	if(this.walkframe < 40)
+	{
+		saf(this, 0.05);
+		interrupt_loose_charge(this, this.walkframe);
+	}
+	else if(this.walkframe == 40)
+	{
+		saf(this, 0.5);
+		W_FireLooseCannon(this.owner, this.walkframe, this.weaponentity_fld);
+		this.owner.effects |= EF_MUZZLEFLASH;
+	}
+	else if(this.walkframe >= 50)
+		this.weapon_think = w_ready;
+}
 
 //=============================================================================================
 
@@ -163,6 +133,7 @@ void p_donk__1(entity this) { set_anim(this, 1, p_donk__2); touch_donk(this); }
 // p_donk 25-40 check if hit enemy
 // if NO  --> WEAK 1-40                                          
 
+#if 0
 void p_donkdud_40(entity this) { set_anim(this, 20, DonkExplodeDud); snt(this, 0.025); }
 void p_donkdud_39(entity this) { set_anim(this, 19, p_donkdud_40); snt(this, 0.025); }
 void p_donkdud_38(entity this) { set_anim(this, 18, p_donkdud_39); snt(this, 0.025); }
@@ -204,6 +175,7 @@ void p_donkdud__4(entity this) { set_anim(this, 4, p_donkdud__5); snt(this, 0.02
 void p_donkdud__3(entity this) { set_anim(this, 3, p_donkdud__4); snt(this, 0.025); }
 void p_donkdud__2(entity this) { set_anim(this, 2, p_donkdud__3); snt(this, 0.025); }
 void p_donkdud__1(entity this) { set_anim(this, 1, p_donkdud__2); snt(this, 0.025); }
+#endif
 
 
 //=============================================================================================
@@ -236,11 +208,11 @@ void p_donkcrit_25(entity this) { set_anim(this, 25, p_donkcrit_26); snt(this, 0
 void DonkExplodeCrit(entity this)
 {
 	_sound(this, CH_WEAPON_SINGLE, "pirate/double_donk.wav", 1, ATTN_NORM);
-	
+
 	T_RadiusDamage(this, this.realowner, 140, WEP_LOOSECANNON.m_id, this.enemy);
 
 	te_explosion(this.origin);
-	
+
 	_setmodel(this, "progs/s_donk.spr");
 	setsize(this, '0 0 0', '0 0 0');
 	set_movetype(this, MOVETYPE_NONE);
@@ -476,7 +448,8 @@ METHOD(LooseCannon, wr_think, void(entity thiswep, entity actor, .entity weapone
 	if(!(time < ATTACK_FINISHED(actor, weaponentity)))
 	if(thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	{
-		p_loose__1(actor.(weaponentity));
+		actor.(weaponentity).walkframe = 0;
+		p_loose(actor.(weaponentity));
 		_sound(actor, CH_WEAPON_SINGLE, "pirate/loose_cannon_charge.wav", 1, ATTN_NORM);
 	}
 }

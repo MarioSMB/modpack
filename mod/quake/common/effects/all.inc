@@ -22,6 +22,8 @@ EFFECT(0, MEATSPRAY,                "particlegibs_damage_hit")
 EFFECT(0, EF_FLAME,                 "EF_FLAME")
 EFFECT(0, EF_STARDUST,              "EF_STARDUST")
 EFFECT(0, TE_EXPLOSION,             "TE_EXPLOSION")
+EFFECT(0, TE_SPIKE,                 "TE_SPIKE")
+EFFECT(0, TE_SUPERSPIKE,            "TE_SUPERSPIKE")
 EFFECT(1, TR_NEXUIZPLASMA,          "TR_NEXUIZPLASMA")
 EFFECT(1, TR_CRYLINKPLASMA,         "TR_CRYLINKPLASMA")
 EFFECT(1, TR_ROCKET,                "TR_ROCKET")
@@ -1379,7 +1381,10 @@ STATIC_INIT(Effect_ANGELICSTAFF_HEAL)
 
 EFFECT(0, RAILGUN_MUZZLEFLASH,       "nex_muzzleflash")
 EFFECT(0, INVOKER_MUZZLEFLASH,       "laser_muzzleflash")
+//EFFECT(0, THUNDERBOLT_MUZZLEFLASH,   "electro_muzzleflash")
 EFFECT(0, SUNBEAM_MUZZLEFLASH,       "grenadelauncher_muzzleflash")
+
+//EFFECT(0, THUNDERBOLT_IMPACT,         "arc_lightning")
 
 EFFECT(1, TR_SICKLE,             "TR_SICKLE")
 #ifdef CSQC

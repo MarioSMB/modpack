@@ -256,16 +256,19 @@ void CheckContinueCharge(entity this)
 
 //===========================================================================
 
-void hknight_stand1(entity this);
-void hknight_stand9(entity this) { set_animofs(this, anim_hknight_stand, 9, hknight_stand1); ai_stand(this); }
-void hknight_stand8(entity this) { set_animofs(this, anim_hknight_stand, 8, hknight_stand9); ai_stand(this); }
-void hknight_stand7(entity this) { set_animofs(this, anim_hknight_stand, 7, hknight_stand8); ai_stand(this); }
-void hknight_stand6(entity this) { set_animofs(this, anim_hknight_stand, 6, hknight_stand7); ai_stand(this); }
-void hknight_stand5(entity this) { set_animofs(this, anim_hknight_stand, 5, hknight_stand6); ai_stand(this); }
-void hknight_stand4(entity this) { set_animofs(this, anim_hknight_stand, 4, hknight_stand5); ai_stand(this); }
-void hknight_stand3(entity this) { set_animofs(this, anim_hknight_stand, 3, hknight_stand4); ai_stand(this); }
-void hknight_stand2(entity this) { set_animofs(this, anim_hknight_stand, 2, hknight_stand3); ai_stand(this); }
-void hknight_stand1(entity this) { set_animofs(this, anim_hknight_stand, 1, hknight_stand2); ai_stand(this); }
+void hknight_stand1(entity this)
+{
+	setthink(this, hknight_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 9)
+		this.walkframe = 0;
+
+	this.frame = anim_hknight_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 //===========================================================================
 

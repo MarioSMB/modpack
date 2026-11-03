@@ -116,21 +116,19 @@ void CthulhuTaunt(entity this)
 	}
 }
 
-void cth_stand1(entity this);
-void cth_stand14(entity this) { set_animofs(this, anim_cthulhu_stand, 14, cth_stand1); ai_stand(this); }
-void cth_stand13(entity this) { set_animofs(this, anim_cthulhu_stand, 13, cth_stand14); ai_stand(this); }
-void cth_stand12(entity this) { set_animofs(this, anim_cthulhu_stand, 12, cth_stand13); ai_stand(this); }
-void cth_stand11(entity this) { set_animofs(this, anim_cthulhu_stand, 11, cth_stand12); ai_stand(this); }
-void cth_stand10(entity this) { set_animofs(this, anim_cthulhu_stand, 10, cth_stand11); ai_stand(this); }
-void cth_stand9(entity this) { set_animofs(this, anim_cthulhu_stand, 9, cth_stand10); ai_stand(this); }
-void cth_stand8(entity this) { set_animofs(this, anim_cthulhu_stand, 8, cth_stand9); ai_stand(this); }
-void cth_stand7(entity this) { set_animofs(this, anim_cthulhu_stand, 7, cth_stand8); ai_stand(this); }
-void cth_stand6(entity this) { set_animofs(this, anim_cthulhu_stand, 6, cth_stand7); ai_stand(this); }
-void cth_stand5(entity this) { set_animofs(this, anim_cthulhu_stand, 5, cth_stand6); ai_stand(this); }
-void cth_stand4(entity this) { set_animofs(this, anim_cthulhu_stand, 4, cth_stand5); ai_stand(this); }
-void cth_stand3(entity this) { set_animofs(this, anim_cthulhu_stand, 3, cth_stand4); ai_stand(this); }
-void cth_stand2(entity this) { set_animofs(this, anim_cthulhu_stand, 2, cth_stand3); ai_stand(this); }
-void cth_stand1(entity this) { set_animofs(this, anim_cthulhu_stand, 1, cth_stand2); ai_stand(this); }
+void cth_stand1(entity this)
+{
+	setthink(this, cth_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 14)
+		this.walkframe = 0;
+
+	this.frame = anim_cthulhu_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void cth_walk1(entity this);
 void cth_walk13(entity this) { set_animofs(this, anim_cthulhu_walk, 13, cth_walk1); ai_walk(this, 16); }

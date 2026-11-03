@@ -19,22 +19,19 @@ const int anim_zombie_cruc = 192; //'192 207 0'
 .int inpain;
 void zombie_escape1(entity this);
 
-void zombie_stand1(entity this);
-void zombie_stand15(entity this) { set_animofs(this, anim_zombie_stand, 15, zombie_stand1); ai_stand(this); }
-void zombie_stand14(entity this) { set_animofs(this, anim_zombie_stand, 14, zombie_stand15); ai_stand(this); }
-void zombie_stand13(entity this) { set_animofs(this, anim_zombie_stand, 13, zombie_stand14); ai_stand(this); }
-void zombie_stand12(entity this) { set_animofs(this, anim_zombie_stand, 12, zombie_stand13); ai_stand(this); }
-void zombie_stand11(entity this) { set_animofs(this, anim_zombie_stand, 11, zombie_stand12); ai_stand(this); }
-void zombie_stand10(entity this) { set_animofs(this, anim_zombie_stand, 10, zombie_stand11); ai_stand(this); }
-void zombie_stand9(entity this) { set_animofs(this, anim_zombie_stand, 9, zombie_stand10); ai_stand(this); }
-void zombie_stand8(entity this) { set_animofs(this, anim_zombie_stand, 8, zombie_stand9); ai_stand(this); }
-void zombie_stand7(entity this) { set_animofs(this, anim_zombie_stand, 7, zombie_stand8); ai_stand(this); }
-void zombie_stand6(entity this) { set_animofs(this, anim_zombie_stand, 6, zombie_stand7); ai_stand(this); }
-void zombie_stand5(entity this) { set_animofs(this, anim_zombie_stand, 5, zombie_stand6); ai_stand(this); }
-void zombie_stand4(entity this) { set_animofs(this, anim_zombie_stand, 4, zombie_stand5); ai_stand(this); }
-void zombie_stand3(entity this) { set_animofs(this, anim_zombie_stand, 3, zombie_stand4); ai_stand(this); }
-void zombie_stand2(entity this) { set_animofs(this, anim_zombie_stand, 2, zombie_stand3); ai_stand(this); }
-void zombie_stand1(entity this) { set_animofs(this, anim_zombie_stand, 1, zombie_stand2); ai_stand(this); }
+void zombie_stand1(entity this)
+{
+	setthink(this, zombie_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 15)
+		this.walkframe = 0;
+
+	this.frame = anim_zombie_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void zombie_lurk(entity this)
 {

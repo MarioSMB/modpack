@@ -71,23 +71,9 @@ void BeeStartSide(entity this)
 	setthink(this, bee_side1);
 }
 
-void bee_stand1(entity this);
-void bee_stand6(entity this) { bee_anim(this, bee_stand1); ai_stand(this); }
-void bee_stand5(entity this) { bee_anim(this, bee_stand6); ai_stand(this); }
-void bee_stand4(entity this) { bee_anim(this, bee_stand5); ai_stand(this); }
-void bee_stand3(entity this) { bee_anim(this, bee_stand4); ai_stand(this); }
-void bee_stand2(entity this) { bee_anim(this, bee_stand3); ai_stand(this); }
-void bee_stand1(entity this) { bee_anim(this, bee_stand2); ai_stand(this); }
+void bee_stand1(entity this) { bee_anim(this, bee_stand1); ai_stand(this); }
 
-void bee_walk1(entity this);
-void bee_walk8(entity this) { bee_anim(this, bee_walk1); ai_walk(this, 8); }
-void bee_walk7(entity this) { bee_anim(this, bee_walk8); ai_walk(this, 8); }
-void bee_walk6(entity this) { bee_anim(this, bee_walk7); ai_walk(this, 8); }
-void bee_walk5(entity this) { bee_anim(this, bee_walk6); ai_walk(this, 8); }
-void bee_walk4(entity this) { bee_anim(this, bee_walk5); ai_walk(this, 8); }
-void bee_walk3(entity this) { bee_anim(this, bee_walk4); ai_walk(this, 8); }
-void bee_walk2(entity this) { bee_anim(this, bee_walk3); ai_walk(this, 8); }
-void bee_walk1(entity this) { bee_anim(this, bee_walk2); ai_walk(this, 8); }
+void bee_walk1(entity this) { bee_anim(this, bee_walk1); ai_walk(this, 8); }
 
 void bee_side8(entity this) { bee_anim(this, bee_run1); ai_run(this, 16); BeeStopSide(this); }
 void bee_side7(entity this) { bee_anim(this, bee_side8); ai_run(this, 16); }
@@ -98,12 +84,7 @@ void bee_side3(entity this) { bee_anim(this, bee_side4); ai_run(this, 16); }
 void bee_side2(entity this) { bee_anim(this, bee_side3); ai_run(this, 16); }
 void bee_side1(entity this) { bee_anim(this, bee_side2); ai_run(this, 16); }
 
-void bee_run6(entity this) { bee_anim(this, bee_run1); ai_run(this, 24); }
-void bee_run5(entity this) { bee_anim(this, bee_run6); ai_run(this, 24); }
-void bee_run4(entity this) { bee_anim(this, bee_run5); ai_run(this, 24); }
-void bee_run3(entity this) { bee_anim(this, bee_run4); ai_run(this, 24); }
-void bee_run2(entity this) { bee_anim(this, bee_run3); ai_run(this, 24); }
-void bee_run1(entity this) { bee_anim(this, bee_run2); ai_run(this, 24); }
+void bee_run1(entity this) { bee_anim(this, bee_run1); ai_run(this, 24); }
 
 void bee_swipe(entity this)
 {

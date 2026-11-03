@@ -7,6 +7,8 @@ void barrel_explode_finish(entity this)
 
 	setmodel(this, MDL_Null);
 	setsize(this, '0 0 0', '0 0 0');
+	vector org = (this.absmin + this.absmax) * 0.5;
+	setorigin(this, org + '0 0 32');
 	setthink(this, BecomeExplosion);
 	this.nextthink = time;
 
@@ -32,7 +34,6 @@ void barrel_explode(entity this)
 	settouch(this, func_null);
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
-	setorigin(this, org + '0 0 32');
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

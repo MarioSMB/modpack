@@ -22,6 +22,33 @@
 //		<code>
 // }
 
+.int animflag;
+void monster_animate(entity this, int startframe, int framecount, void(entity) thinkfunc, void(entity) loopfunc)
+{
+	int endframe = framecount - 1; // frames are zero indexed
+
+	// if the animation frame doesn't line up with current walkframe, reset!
+	// also check if we're already at the end frame (looping animations)
+	// NOTE: not doing this as it may cause monster softlocks if animations mismatch:
+	// this.frame != (startframe + this.walkframe)
+	if(this.animflag != startframe || this.walkframe >= endframe)
+	{
+		this.animflag = startframe;
+		this.walkframe = 0;
+	}
+	else
+		this.walkframe += 1;
+
+	this.frame = startframe + this.walkframe;
+
+	if(this.walkframe >= endframe)
+		setthink(this, loopfunc);
+	else
+		setthink(this, thinkfunc);
+
+	this.nextthink = time + FRAME_TIME;
+}
+
 entity spawnmonster(entity monster, vector spawnpos, vector ang, Monster mon)
 {
 	if(!mon || mon == MON_Null)

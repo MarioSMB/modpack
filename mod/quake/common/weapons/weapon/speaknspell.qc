@@ -184,6 +184,42 @@ void T_SpeaknSpellTouch(entity this, entity toucher)
 	
 }
 
+Projectile Projectile_FromLetter(int letter)
+{
+	switch(letter)
+	{
+		default:
+		case 0: return PROJECTILE_LETTER_A;
+		case 1: return PROJECTILE_LETTER_B;
+		case 2: return PROJECTILE_LETTER_C;
+		case 3: return PROJECTILE_LETTER_D;
+		case 4: return PROJECTILE_LETTER_E;
+		case 5: return PROJECTILE_LETTER_F;
+		case 6: return PROJECTILE_LETTER_G;
+		case 7: return PROJECTILE_LETTER_H;
+		case 8: return PROJECTILE_LETTER_I;
+		case 9: return PROJECTILE_LETTER_J;
+		case 10: return PROJECTILE_LETTER_K;
+		case 11: return PROJECTILE_LETTER_L;
+		case 12: return PROJECTILE_LETTER_M;
+		case 13: return PROJECTILE_LETTER_N;
+		case 14: return PROJECTILE_LETTER_O;
+		case 15: return PROJECTILE_LETTER_P;
+		case 16: return PROJECTILE_LETTER_Q;
+		case 17: return PROJECTILE_LETTER_R;
+		case 18: return PROJECTILE_LETTER_S;
+		case 19: return PROJECTILE_LETTER_T;
+		case 20: return PROJECTILE_LETTER_U;
+		case 21: return PROJECTILE_LETTER_V;
+		case 22: return PROJECTILE_LETTER_W;
+		case 23: return PROJECTILE_LETTER_X;
+		case 24: return PROJECTILE_LETTER_Y;
+		case 25: return PROJECTILE_LETTER_Z;
+	}
+
+	return PROJECTILE_Null; // ???
+}
+
 void W_FireSpeaknSepll_AllKeys(entity actor, .entity weaponentity) // Shotgun at End of Z --------------------------------------------
 {
 	//entity this = actor.(weaponentity);
@@ -234,7 +270,8 @@ void W_FireSpeaknSepll_AllKeys(entity actor, .entity weaponentity) // Shotgun at
 
 		IL_PUSH(g_projectiles, letter);
 
-		int letterproj = bound(PROJECTILE_LETTER_START, PROJECTILE_LETTER_START + floor(random() * 26), PROJECTILE_LETTER_END);
+		int letternum = floor(random() * 26);
+		Projectile letterproj = Projectile_FromLetter(letternum);
 
 		CSQCProjectile(letter, true, letterproj, true);
 	}
@@ -289,7 +326,8 @@ void W_FireSpeaknSpell(entity actor, float atime, string asnd, .entity weaponent
 
 	IL_PUSH(g_projectiles, letter);
 
-	int letterproj = bound(PROJECTILE_LETTER_START, PROJECTILE_LETTER_START + actor.(weaponentity).m_frame - 1, PROJECTILE_LETTER_END);
+	int letternum = actor.(weaponentity).m_frame - 1;
+	Projectile letterproj = Projectile_FromLetter(letternum);
 
 	CSQCProjectile(letter, true, letterproj, true);
 }

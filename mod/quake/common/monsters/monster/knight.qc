@@ -55,16 +55,19 @@ void kn_aggro_sound(entity this)
 	_sound(this, CH_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
 }
 
-void knight_stand1(entity this);
-void knight_stand9(entity this) { set_animofs(this, anim_knight_stand, 9, knight_stand1); ai_stand(this); }
-void knight_stand8(entity this) { set_animofs(this, anim_knight_stand, 8, knight_stand9); ai_stand(this); }
-void knight_stand7(entity this) { set_animofs(this, anim_knight_stand, 7, knight_stand8); ai_stand(this); }
-void knight_stand6(entity this) { set_animofs(this, anim_knight_stand, 6, knight_stand7); ai_stand(this); }
-void knight_stand5(entity this) { set_animofs(this, anim_knight_stand, 5, knight_stand6); ai_stand(this); }
-void knight_stand4(entity this) { set_animofs(this, anim_knight_stand, 4, knight_stand5); ai_stand(this); }
-void knight_stand3(entity this) { set_animofs(this, anim_knight_stand, 3, knight_stand4); ai_stand(this); }
-void knight_stand2(entity this) { set_animofs(this, anim_knight_stand, 2, knight_stand3); ai_stand(this); }
-void knight_stand1(entity this) { set_animofs(this, anim_knight_stand, 1, knight_stand2); ai_stand(this); }
+void knight_stand1(entity this)
+{
+	setthink(this, knight_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 9)
+		this.walkframe = 0;
+
+	this.frame = anim_knight_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void knight_walk1(entity this);
 void knight_walk14(entity this) { set_animofs(this, anim_knight_walk, 14, knight_walk1); ai_walk(this, 3); }

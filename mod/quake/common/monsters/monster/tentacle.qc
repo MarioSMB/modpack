@@ -5,13 +5,19 @@ const int anim_tentacle_idle = 0; //'0 5 0'
 const int anim_tentacle_attack = 6; //'6 26 0'
 const int anim_tentacle_death = 27; //'27 43 0'
 
-void tentacle_stand1(entity this);
-void tentacle_stand6(entity this) { set_animofs(this, anim_tentacle_idle, 6, tentacle_stand1); ai_stand(this); }
-void tentacle_stand5(entity this) { set_animofs(this, anim_tentacle_idle, 5, tentacle_stand6); ai_stand(this); }
-void tentacle_stand4(entity this) { set_animofs(this, anim_tentacle_idle, 4, tentacle_stand5); ai_stand(this); }
-void tentacle_stand3(entity this) { set_animofs(this, anim_tentacle_idle, 3, tentacle_stand4); ai_stand(this); }
-void tentacle_stand2(entity this) { set_animofs(this, anim_tentacle_idle, 2, tentacle_stand3); ai_stand(this); }
-void tentacle_stand1(entity this) { set_animofs(this, anim_tentacle_idle, 1, tentacle_stand2); ai_stand(this); }
+void tentacle_stand1(entity this)
+{
+	setthink(this, tentacle_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 6)
+		this.walkframe = 0;
+
+	this.frame = anim_tentacle_idle + this.walkframe;
+
+	ai_stand(this);
+}
 
 void tentacle_atta1(entity this);
 void tentacle_aim1(entity this);

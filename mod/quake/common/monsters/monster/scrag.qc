@@ -230,51 +230,70 @@ void Wiz_idle_sound(entity this)
 	return;
 }
 
-void wiz_stand1(entity this);
-void wiz_stand8(entity this) { set_animofs(this, anim_wiz_hover, 8, wiz_stand1); ai_stand(this); }
-void wiz_stand7(entity this) { set_animofs(this, anim_wiz_hover, 7, wiz_stand8); ai_stand(this); }
-void wiz_stand6(entity this) { set_animofs(this, anim_wiz_hover, 6, wiz_stand7); ai_stand(this); }
-void wiz_stand5(entity this) { set_animofs(this, anim_wiz_hover, 5, wiz_stand6); ai_stand(this); }
-void wiz_stand4(entity this) { set_animofs(this, anim_wiz_hover, 4, wiz_stand5); ai_stand(this); }
-void wiz_stand3(entity this) { set_animofs(this, anim_wiz_hover, 3, wiz_stand4); ai_stand(this); }
-void wiz_stand2(entity this) { set_animofs(this, anim_wiz_hover, 2, wiz_stand3); ai_stand(this); }
-void wiz_stand1(entity this) { set_animofs(this, anim_wiz_hover, 1, wiz_stand2); ai_stand(this); }
+void wiz_stand1(entity this)
+{
+	setthink(this, wiz_stand1);
+	this.nextthink = time + FRAME_TIME;
 
-void wiz_walk1(entity this);
-void wiz_walk8(entity this) { set_animofs(this, anim_wiz_hover, 8, wiz_walk1); ai_walk(this, 8); }
-void wiz_walk7(entity this) { set_animofs(this, anim_wiz_hover, 7, wiz_walk8); ai_walk(this, 8); }
-void wiz_walk6(entity this) { set_animofs(this, anim_wiz_hover, 6, wiz_walk7); ai_walk(this, 8); }
-void wiz_walk5(entity this) { set_animofs(this, anim_wiz_hover, 5, wiz_walk6); ai_walk(this, 8); }
-void wiz_walk4(entity this) { set_animofs(this, anim_wiz_hover, 4, wiz_walk5); ai_walk(this, 8); }
-void wiz_walk3(entity this) { set_animofs(this, anim_wiz_hover, 3, wiz_walk4); ai_walk(this, 8); }
-void wiz_walk2(entity this) { set_animofs(this, anim_wiz_hover, 2, wiz_walk3); ai_walk(this, 8); }
-void wiz_walk1(entity this) { set_animofs(this, anim_wiz_hover, 1, wiz_walk2); ai_walk(this, 8); Wiz_idle_sound(this); }
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
 
-void wiz_side1(entity this);
-void wiz_side8(entity this) { set_animofs(this, anim_wiz_hover, 8, wiz_side1); ai_run(this, 8); }
-void wiz_side7(entity this) { set_animofs(this, anim_wiz_hover, 7, wiz_side8); ai_run(this, 8); }
-void wiz_side6(entity this) { set_animofs(this, anim_wiz_hover, 6, wiz_side7); ai_run(this, 8); }
-void wiz_side5(entity this) { set_animofs(this, anim_wiz_hover, 5, wiz_side6); ai_run(this, 8); }
-void wiz_side4(entity this) { set_animofs(this, anim_wiz_hover, 4, wiz_side5); ai_run(this, 8); }
-void wiz_side3(entity this) { set_animofs(this, anim_wiz_hover, 3, wiz_side4); ai_run(this, 8); }
-void wiz_side2(entity this) { set_animofs(this, anim_wiz_hover, 2, wiz_side3); ai_run(this, 8); }
-void wiz_side1(entity this) { set_animofs(this, anim_wiz_hover, 1, wiz_side2); ai_run(this, 8); Wiz_idle_sound(this); }
+	this.frame = anim_wiz_hover + this.walkframe;
 
-void wiz_run1(entity this);
-void wiz_run14(entity this) { set_animofs(this, anim_wiz_fly, 14, wiz_run1); ai_run(this, 16); }
-void wiz_run13(entity this) { set_animofs(this, anim_wiz_fly, 13, wiz_run14); ai_run(this, 16); }
-void wiz_run12(entity this) { set_animofs(this, anim_wiz_fly, 12, wiz_run13); ai_run(this, 16); }
-void wiz_run11(entity this) { set_animofs(this, anim_wiz_fly, 11, wiz_run12); ai_run(this, 16); }
-void wiz_run10(entity this) { set_animofs(this, anim_wiz_fly, 10, wiz_run11); ai_run(this, 16); }
-void wiz_run9(entity this) { set_animofs(this, anim_wiz_fly, 9, wiz_run10); ai_run(this, 16); }
-void wiz_run8(entity this) { set_animofs(this, anim_wiz_fly, 8, wiz_run9); ai_run(this, 16); }
-void wiz_run7(entity this) { set_animofs(this, anim_wiz_fly, 7, wiz_run8); ai_run(this, 16); }
-void wiz_run6(entity this) { set_animofs(this, anim_wiz_fly, 6, wiz_run7); ai_run(this, 16); }
-void wiz_run5(entity this) { set_animofs(this, anim_wiz_fly, 5, wiz_run6); ai_run(this, 16); }
-void wiz_run4(entity this) { set_animofs(this, anim_wiz_fly, 4, wiz_run5); ai_run(this, 16); }
-void wiz_run3(entity this) { set_animofs(this, anim_wiz_fly, 3, wiz_run4); ai_run(this, 16); }
-void wiz_run2(entity this) { set_animofs(this, anim_wiz_fly, 2, wiz_run3); ai_run(this, 16); }
-void wiz_run1(entity this) { set_animofs(this, anim_wiz_fly, 1, wiz_run2); ai_run(this, 16); Wiz_idle_sound(this); }
+	ai_stand(this);
+}
+
+void wiz_walk1(entity this)
+{
+	setthink(this, wiz_walk1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_wiz_hover + this.walkframe;
+
+	ai_walk(this, 8);
+
+	if(this.walkframe == 0)
+		Wiz_idle_sound(this);
+}
+
+void wiz_side1(entity this)
+{
+	setthink(this, wiz_side1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_wiz_hover + this.walkframe;
+
+	ai_run(this, 8);
+
+	if(this.walkframe == 0)
+		Wiz_idle_sound(this);
+}
+
+void wiz_run1(entity this)
+{
+	setthink(this, wiz_run1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 14)
+		this.walkframe = 0;
+
+	this.frame = anim_wiz_fly + this.walkframe;
+
+	ai_run(this, 16);
+
+	if(this.walkframe == 0)
+		Wiz_idle_sound(this);
+}
 
 void wiz_fast10(entity this) { set_animofs(this, anim_wiz_magatt, 10, wiz_run1); ai_face(this); this.attack_finished = time + 2; WizardAttackFinished(this); }
 void wiz_fast9(entity this) { set_animofs(this, anim_wiz_magatt, 9, wiz_fast10); ai_face(this); }

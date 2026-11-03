@@ -89,16 +89,19 @@ void Dog_JumpTouch(entity this, entity toucher)
 	this.nextthink = time + 0.1;
 }
 
-void dog_stand1(entity this);
-void dog_stand9(entity this) { set_animofs(this, anim_dog_stand, 9, dog_stand1); ai_stand(this); }
-void dog_stand8(entity this) { set_animofs(this, anim_dog_stand, 8, dog_stand9); ai_stand(this); }
-void dog_stand7(entity this) { set_animofs(this, anim_dog_stand, 7, dog_stand8); ai_stand(this); }
-void dog_stand6(entity this) { set_animofs(this, anim_dog_stand, 6, dog_stand7); ai_stand(this); }
-void dog_stand5(entity this) { set_animofs(this, anim_dog_stand, 5, dog_stand6); ai_stand(this); }
-void dog_stand4(entity this) { set_animofs(this, anim_dog_stand, 4, dog_stand5); ai_stand(this); }
-void dog_stand3(entity this) { set_animofs(this, anim_dog_stand, 3, dog_stand4); ai_stand(this); }
-void dog_stand2(entity this) { set_animofs(this, anim_dog_stand, 2, dog_stand3); ai_stand(this); }
-void dog_stand1(entity this) { set_animofs(this, anim_dog_stand, 1, dog_stand2); ai_stand(this); }
+void dog_stand1(entity this)
+{
+	setthink(this, dog_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 9)
+		this.walkframe = 0;
+
+	this.frame = anim_dog_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void dog_walk1(entity this);
 void dog_walk8(entity this) { set_animofs(this, anim_dog_walk, 8, dog_walk1); ai_walk(this, 8); monster_footstep(this, false); }

@@ -186,7 +186,6 @@ void door_trigger_touch(entity this, entity toucher)
 	door_use(this.owner, toucher, this);
 }
 
-
 void door_killed(entity this, entity inflictor, entity attacker, int deathtype)
 {
 	this.owner.health = this.owner.max_health;

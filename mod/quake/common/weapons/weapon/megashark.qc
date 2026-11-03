@@ -33,36 +33,6 @@ void W_Megashark_Attack(entity this)
 	ATTACK_FINISHED(actor, weaponentity) = time + 0.2;
 }
 
-void megashark_bullet_touch(entity this, entity toucher)
-{
-	if(toucher == this.owner)
-		return;
-
-	if(toucher.solid == SOLID_TRIGGER)
-		return;	// trigger field, do nothing
-
-	if(pointcontents(this.origin) == CONTENT_SKY)
-	{
-		delete(this);
-		return;
-	}
-	
-// hit something that bleeds
-	if(toucher.takedamage) // yoder mod, jan 05 2021
-	{
-		float damg = 36;
-		spawn_touchblood(this, damg, toucher);
-		if(toucher.resist_nails != 0)
-			damg = Resist_Damage(toucher, IT_NAILS, damg);
-		Resist_Nails(toucher, this.origin);
-		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
-	}
-	else
-		te_superspike(this.origin);
-
-	delete(this);
-}
-
 void W_FireMegashark(entity this, .entity weaponentity)
 {
 	makevectors(this.v_angle);
@@ -77,15 +47,12 @@ void W_FireMegashark(entity this, .entity weaponentity)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/megashark_fire.wav", 1, ATTN_NORM);
 	ATTACK_FINISHED(this, weaponentity) = time + 0.2;
 	W_TakeAmmo(this, IT_NAILS, 2);
+
+	Projectile ptype = PROJECTILE_MEGASHARK_BULLET;
 	vector org = W_Shotorg(this, weaponentity) + v_right * 4 + v_up * 2;
-	vector dir = qc_aim_fromorg(this, org, 1000);
-	entity newmis = launch_spike(this, org, dir);
-	newmis.projectiledeathtype = WEP_MEGASHARK.m_id;
-	newmis.classname = "megashark_bullet";
-	settouch(newmis, megashark_bullet_touch);
-	//_setmodel(newmis, "progs/s_spike.mdl");
-	setsize(newmis, '0 0 0', '0 0 0');
-	CSQCProjectile(newmis, true, PROJECTILE_SUPER_SPIKE, true);
+	vector dir = qc_aim_fromorg(this, org, ptype.m_speed);
+
+	Projectile_Create(ptype, this, org, dir, WEP_MEGASHARK.m_id);
 
 	this.punchangle_x = -2 * autocvar_sv_quake_recoil;
 }

@@ -1,128 +1,349 @@
 #pragma once
 
-const int PROJECTILE_ROCKET = 1;
-const int PROJECTILE_MERMAID_BUBBLE = 2;
-const int PROJECTILE_MAGIC_FIREBALL = 3;
-const int PROJECTILE_CROSSBOW_BOLT = 4;
-const int PROJECTILE_VORE_SPIKE = 5;
-const int PROJECTILE_SCRAG_SPIKE = 6;
-const int PROJECTILE_KNIGHT_SPIKE = 7;
-const int PROJECTILE_SPELLBOOK_METEOR = 8;
-const int PROJECTILE_CAT = 9;
-const int PROJECTILE_BANJO_MUSIC = 10;
-const int PROJECTILE_BULLET = 11;
-const int PROJECTILE_SAWBLADE = 12;
-const int PROJECTILE_SUPER_SPIKE = 13;
-const int PROJECTILE_LAVA_NAIL = 14;
-const int PROJECTILE_BIOGUN_BONESHARD = 15;
-const int PROJECTILE_GRENADE = 16;
-const int PROJECTILE_MAYO = 17;
-const int PROJECTILE_OCARINA = 18;
-const int PROJECTILE_SHOCKGUN_PLASMA = 19;
-const int PROJECTILE_HIP_LASER = 20;
-const int PROJECTILE_PIANO_MUSIC = 21;
-const int PROJECTILE_LASER = 22;
-const int PROJECTILE_JIM_LASER = 23;
-const int PROJECTILE_JIM_ROCKET = 24;
-const int PROJECTILE_SNOWBALL = 25;
-const int PROJECTILE_GOLDY = 26;
-const int PROJECTILE_CRUMB = 27;
-const int PROJECTILE_LETTER_START = 28;
-const int PROJECTILE_LETTER_END = 54;
-const int PROJECTILE_SKAARJ_BULLET = 55;
-const int PROJECTILE_GUG_BILEBOMB = 56;
-const int PROJECTILE_GUG_BILEFRAG = 57;
-const int PROJECTILE_DROLE = 58;
-const int PROJECTILE_DROLE_POISON = 59;
-const int PROJECTILE_MULTI_ROCKET = 60;
-const int PROJECTILE_LAVABALL = 61;
-const int PROJECTILE_EE_P_SPHERE = 62;
-const int PROJECTILE_BLAZE_FIREBALL = 63;
-const int PROJECTILE_LAVAMAN_FIREBALL = 64;
-const int PROJECTILE_PASSIVE_FIREBALL = 65;
-const int PROJECTILE_PASSIVE_PULSERIFLE = 66;
-const int PROJECTILE_TANK_BIGROCKET = 67;
-const int PROJECTILE_GHOST_SICKLE = 68;
-const int PROJECTILE_CACODEMON_FIREBALL = 69;
-const int PROJECTILE_MISSILE = 70;
-const int PROJECTILE_MANCUBUS_BOLT = 71;
-const int PROJECTILE_BULLETKIN_SHOT = 72;
-const int PROJECTILE_HELLKNIGHT_BIGSHOT = 73;
-const int PROJECTILE_HELLKNIGHT_SPINNER = 74;
-const int PROJECTILE_STAR_SMALL = 75;
-const int PROJECTILE_STAR_MEDIUM = 76;
-const int PROJECTILE_STAR_LARGE = 77;
-const int PROJECTILE_STAR_MEGA = 78;
-const int PROJECTILE_SPARK_UPZAP = 79;
-const int PROJECTILE_SEED = 80;
-const int PROJECTILE_SEED_POISON = 81;
-const int PROJECTILE_THORNBALL = 82;
-const int PROJECTILE_STAR_BOMB = 83;
-const int PROJECTILE_VORTEX_ROCKET = 84;
-const int PROJECTILE_FROSTSHARD = 85;
-const int PROJECTILE_EOW_SPIT = 86;
-const int PROJECTILE_VIOLIN_MUSIC = 87;
-const int PROJECTILE_STARFURY = 88;
-const int PROJECTILE_BLIZZARD_SHARD = 89;
-const int PROJECTILE_DEMON_SICKLE = 90;
-const int PROJECTILE_ICE_SPEAR = 91;
-const int PROJECTILE_ICICLE = 92;
-const int PROJECTILE_MORTAR = 93;
-const int PROJECTILE_SWARM = 94;
-const int PROJECTILE_FROG_SPIT = 95;
-const int PROJECTILE_BOWLING_BALL = 96;
-const int PROJECTILE_COOKIE = 97;
-const int PROJECTILE_FLAK_CANNON = 98;
-const int PROJECTILE_RECYCLEBIN = 99;
-const int PROJECTILE_MIME_BALL = 100;
-const int PROJECTILE_GRAPE = 101;
-const int PROJECTILE_BOGLORD = 102;
-const int PROJECTILE_BOGLORD_STRONG = 103;
-const int PROJECTILE_DFURY_MAGICA = 104;
-const int PROJECTILE_DFURY_MAGICB = 105;
-const int PROJECTILE_GARGOYLE = 106;
-const int PROJECTILE_GARGOYLE_POISON = 107;
-const int PROJECTILE_GREEK_FIRE = 108;
-const int PROJECTILE_FLAME_WOOD = 109;
-const int PROJECTILE_PLASMA = 110;
-const int PROJECTILE_MINOTAUR_PLASMA = 111;
-const int PROJECTILE_MINOTAUR_BLOOD = 112;
-const int PROJECTILE_MINOTAUR_POISON = 113;
-const int PROJECTILE_GAUNT_PLASMA = 114;
-const int PROJECTILE_GAUNT_POISON = 115;
-const int PROJECTILE_SMG = 116;
-const int PROJECTILE_DRILL = 117;
-const int PROJECTILE_EGG_NORMAL = 118;
-const int PROJECTILE_EGG_FIRE = 119;
-const int PROJECTILE_EGG_GRENADE = 120;
-const int PROJECTILE_EGG_ICE = 121;
-const int PROJECTILE_EGG_CLOCKWORK = 122;
-const int PROJECTILE_EGG_GOLD = 123;
-const int PROJECTILE_FEATHER = 124;
-const int PROJECTILE_MOSS_HORNET = 125;
-const int PROJECTILE_SLIME = 126;
-const int PROJECTILE_NIMBUS = 127;
-const int PROJECTILE_CAN = 128;
-const int PROJECTILE_CAN_SMALL = 129;
-const int PROJECTILE_BULLET_BILL = 130;
-const int PROJECTILE_BULLSEYE_BILL = 131;
-const int PROJECTILE_MIMEJR_BALL = 132;
-const int PROJECTILE_PEA = 133;
-const int PROJECTILE_SNOWPEA = 134;
-const int PROJECTILE_PLASMA_CANNON = 135;
-const int PROJECTILE_ALIEN_SNIPER = 136;
-const int PROJECTILE_COCONUT = 137;
-const int PROJECTILE_BFG = 138;
-const int PROJECTILE_FAITH_FIREBALL = 139;
-const int PROJECTILE_EMPRESS_STREAK = 140;
-const int PROJECTILE_EMPRESS_LANCE = 141;
-const int PROJECTILE_EMPRESS_EVERLASTING = 142;
-const int PROJECTILE_ENRAGED_STREAK = 143;
-const int PROJECTILE_ENRAGED_EVERLASTING = 144;
-const int PROJECTILE_RM_LAVABALL = 145;
-const int PROJECTILE_POPPER_POISON = 146;
-const int PROJECTILE_POPPER_STRIKER = 147;
-const int PROJECTILE_POPPER_DJINN = 148;
-const int PROJECTILE_POPPER_ARROW = 149;
-const int PROJECTILE_POPPER_MAGIC = 150;
-const int PROJECTILE_BISHOP_BOLT = 151;
+#ifdef GAMEQC
+#include "../effects/all.qh"
+#include "../physics/movetypes/movetypes.qh"
+#endif
+
+#ifdef GAMEQC
+
+const int PROJ_FLAG_NOCULL = BIT(0);
+const int PROJ_FLAG_NOANIMATE = BIT(1);
+const int PROJ_FLAG_NOCOLLISIONS = BIT(2);
+const int PROJ_FLAG_HOMING = BIT(3);
+
+/** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
+CLASS(Projectile, Object)
+	ATTRIB(Projectile, m_id, int, 0);
+	ATTRIB(Projectile, spawnflags, int, 0);
+	/** M: hitbox mins maxs */
+	ATTRIB(Projectile, m_mins, vector, '0 0 0');
+	ATTRIB(Projectile, m_maxs, vector, '0 0 0');
+	ATTRIB(Projectile, m_spread, float, 0);
+	ATTRIB(Projectile, m_spread_style, int, 0);
+	ATTRIB(Projectile, m_spread_pattern, int, 0);
+	ATTRIB(Projectile, m_spread_pattern_scale, float, 0);
+	ATTRIB(Projectile, m_spread_pattern_bias, float, 0);
+	ATTRIB(Projectile, m_avelocity, vector, '0 0 0');
+	ATTRIB(Projectile, m_scale, float, 0);
+	ATTRIB(Projectile, m_lifetime, float, 10);
+	ATTRIB(Projectile, m_bouncecnt, int, 0);
+	ATTRIB(Projectile, m_piercecnt, int, 0);
+	ATTRIB(Projectile, m_speed, float, 0);
+	ATTRIB(Projectile, m_count, int, 0);
+	ATTRIB(Projectile, dmg, float, 0);
+	ATTRIB(Projectile, dmg_radius, float, 0);
+	ATTRIB(Projectile, m_gravity, float, 0);
+	ATTRIB(Projectile, m_bouncefactor, float, 0);
+	ATTRIB(Projectile, m_bouncestop, float, 0);
+	METHOD(Projectile, pr_setup, void(Projectile this, entity actor));
+	METHOD(Projectile, m_tick, void(Projectile this, entity actor));
+	ATTRIB(Projectile, home_range, float, 0);
+	ATTRIB(Projectile, home_range_max, float, 0);
+	ATTRIB(Projectile, home_speed_decel, float, 0);
+	ATTRIB(Projectile, home_speed_accel, float, 0);
+	ATTRIB(Projectile, home_speed_max, float, 0);
+	ATTRIB(Projectile, home_turn_rate, float, 0);
+	ATTRIB(Projectile, home_smart, bool, false);
+	ATTRIB(Projectile, home_smart_mindist, float, 0);
+	ATTRIB(Projectile, home_smart_trace_min, float, 0);
+	ATTRIB(Projectile, home_smart_trace_max, float, 0);
+#ifdef SVQC
+	METHOD(Projectile, pr_collide, void(Projectile this, entity actor, entity toucher, bool is_touch)) { };
+	METHOD(Projectile, pr_bounce, void(Projectile this, entity actor, entity toucher, bool is_touch)) { };
+	METHOD(Projectile, pr_explode, void(Projectile this, entity actor, entity directhitentity, bool is_touch));
+
+	/** explode takes priority, impact is otherwise called when hitting something */
+	METHOD(Projectile, m_sound_explode, Sound(entity actor)) { return SND_Null; }
+	METHOD(Projectile, m_sound_impact, Sound(entity actor)) { return SND_Null; }
+	METHOD(Projectile, m_sound_pierce, Sound(entity actor)) { return SND_Null; }
+	METHOD(Projectile, m_sound_bounce, Sound(entity actor)) { return SND_Null; }
+	ATTRIB(Projectile, m_effect_explode, entity, EFFECT_Null);
+	ATTRIB(Projectile, m_effect_impact, entity, EFFECT_Null);
+	ATTRIB(Projectile, m_effect_pierce, entity, EFFECT_Null);
+	ATTRIB(Projectile, m_effect_bounce, entity, EFFECT_Null);
+#endif
+#ifdef CSQC
+	/** M: model MDL_PROJECTILE_id */
+	ATTRIB(Projectile, m_model, entity, MDL_Null);
+	/** M: trail effect */
+	ATTRIB(Projectile, m_traileffect, entity, EFFECT_Null);
+	METHOD(Projectile, pr_drawtrail, vector(Projectile this, entity actor, vector trailorigin)) { return trailorigin; }
+	METHOD(Projectile, pr_draw, void(Projectile this, entity actor)) { };
+#endif
+ENDCLASS(Projectile)
+
+REGISTRY(Projectiles, 255)
+REGISTER_REGISTRY(Projectiles)
+
+#define REGISTER_PROJECTILE(id, inst) REGISTER(Projectiles, PROJECTILE, id, m_id, inst)
+
+REGISTER_PROJECTILE(Null, NEW(Projectile));
+REGISTRY_DEFINE_GET(Projectiles, PROJECTILE_Null)
+
+REGISTRY_SORT(Projectiles)
+REGISTRY_CHECK(Projectiles)
+
+STATIC_INIT(Projectiles) { FOREACH(Projectiles, true, it.m_id = i); }
+
+// standard rocket projectile
+CLASS(Rocket, Projectile)
+	ATTRIB(Rocket, m_mins, vector, '-3 -3 -3');
+	ATTRIB(Rocket, m_maxs, vector, '3 3 3');
+	ATTRIB(Rocket, m_speed, float, 1000);
+	ATTRIB(Rocket, dmg, float, 100);
+	ATTRIB(Rocket, dmg_radius, float, 100);
+#ifdef SVQC
+	METHOD(Rocket, m_sound_explode, Sound(entity actor)) { return SND_ROCKET_EXPLOSION; }
+	ATTRIB(Rocket, m_effect_explode, entity, EFFECT_EXPLOSION);
+#endif
+#ifdef CSQC
+/* model     */ ATTRIB(Rocket, m_model, Model, MDL_PROJECTILE_ROCKET);
+/* trail eff */ ATTRIB(Rocket, m_traileffect, entity, EFFECT_TR_ROCKET);
+#endif
+ENDCLASS(Rocket)
+REGISTER_PROJECTILE(ROCKET, NEW(Rocket));
+
+// "spike"
+CLASS(Bullet, Projectile)
+	ATTRIB(Bullet, m_mins, vector, '-1 -1 -1');
+	ATTRIB(Bullet, m_maxs, vector, '1 1 1');
+	ATTRIB(Bullet, m_speed, float, 1000);
+	ATTRIB(Bullet, dmg, float, 9);
+#ifdef SVQC
+	METHOD(Bullet, m_sound_impact, Sound(entity actor)) { return (prandom() > 0.6) ? SND_TINK1 : SND_RIC_RANDOM(); }
+	ATTRIB(Bullet, m_effect_impact, entity, EFFECT_TE_SPIKE);
+#endif
+#ifdef CSQC
+/* model     */ ATTRIB(Bullet, m_model, Model, MDL_PROJECTILE_BULLET);
+#endif
+ENDCLASS(Bullet)
+REGISTER_PROJECTILE(BULLET, NEW(Bullet));
+
+REGISTER_PROJECTILE(MERMAID_BUBBLE, NEW(Projectile));
+REGISTER_PROJECTILE(MAGIC_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(CROSSBOW_BOLT, NEW(Projectile));
+REGISTER_PROJECTILE(VORE_SPIKE, NEW(Projectile));
+REGISTER_PROJECTILE(SCRAG_SPIKE, NEW(Projectile));
+REGISTER_PROJECTILE(KNIGHT_SPIKE, NEW(Projectile));
+REGISTER_PROJECTILE(SPELLBOOK_METEOR, NEW(Projectile));
+
+CLASS(Cat, Projectile)
+	ATTRIB(Cat, m_mins, vector, '-4 -4 -4');
+	ATTRIB(Cat, m_maxs, vector, '4 4 4');
+	ATTRIB(Cat, m_speed, float, 1000);
+	ATTRIB(Cat, dmg, float, 30);
+	ATTRIB(Cat, m_bouncecnt, float, 5);
+	ATTRIB(Cat, m_piercecnt, float, 5);
+	ATTRIB(Cat, m_bouncefactor, float, 1);
+	ATTRIB(Cat, m_bouncestop, float, 0.1);
+	ATTRIB(Cat, m_gravity, float, 0.25);
+#ifdef SVQC
+	METHOD(Cat, m_sound_bounce, Sound(entity actor)) { return SND_MEOWMERE_BOUNCE_RANDOM(); }
+	METHOD(Cat, m_sound_pierce, Sound(entity actor)) { return SND_MEOWMERE_BOUNCE_RANDOM(); }
+	ATTRIB(Cat, m_effect_pierce, entity, EFFECT_MEOWMERE_GLIMMER);
+	ATTRIB(Cat, m_effect_bounce, entity, EFFECT_MEOWMERE_GLIMMER);
+#endif
+#ifdef CSQC
+/* model     */ ATTRIB(Cat, m_model, Model, MDL_PROJECTILE_CAT);
+/* trail eff */ ATTRIB(Cat, m_traileffect, entity, EFFECT_MEOWMERE_TRAIL);
+#endif
+ENDCLASS(Cat)
+REGISTER_PROJECTILE(CAT, NEW(Cat));
+
+REGISTER_PROJECTILE(BANJO_MUSIC, NEW(Projectile));
+REGISTER_PROJECTILE(SAWBLADE, NEW(Projectile));
+REGISTER_PROJECTILE(SUPER_SPIKE, NEW(Projectile));
+REGISTER_PROJECTILE(LAVA_NAIL, NEW(Projectile));
+REGISTER_PROJECTILE(BIOGUN_BONESHARD, NEW(Projectile));
+REGISTER_PROJECTILE(GRENADE, NEW(Projectile));
+REGISTER_PROJECTILE(MAYO, NEW(Projectile));
+REGISTER_PROJECTILE(OCARINA, NEW(Projectile));
+REGISTER_PROJECTILE(SHOCKGUN_PLASMA, NEW(Projectile));
+REGISTER_PROJECTILE(HIP_LASER, NEW(Projectile));
+REGISTER_PROJECTILE(PIANO_MUSIC, NEW(Projectile));
+REGISTER_PROJECTILE(LASER, NEW(Projectile));
+REGISTER_PROJECTILE(JIM_LASER, NEW(Projectile));
+REGISTER_PROJECTILE(JIM_ROCKET, NEW(Projectile));
+REGISTER_PROJECTILE(SNOWBALL, NEW(Projectile));
+REGISTER_PROJECTILE(GOLDY, NEW(Projectile));
+REGISTER_PROJECTILE(CRUMB, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_A, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_B, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_C, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_D, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_E, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_F, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_G, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_H, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_I, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_J, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_K, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_L, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_M, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_N, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_O, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_P, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_Q, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_R, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_S, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_T, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_U, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_V, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_W, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_X, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_Y, NEW(Projectile));
+REGISTER_PROJECTILE(LETTER_Z, NEW(Projectile));
+REGISTER_PROJECTILE(SKAARJ_BULLET, NEW(Projectile));
+REGISTER_PROJECTILE(GUG_BILEBOMB, NEW(Projectile));
+REGISTER_PROJECTILE(GUG_BILEFRAG, NEW(Projectile));
+REGISTER_PROJECTILE(DROLE, NEW(Projectile));
+REGISTER_PROJECTILE(DROLE_POISON, NEW(Projectile));
+
+CLASS(MultiRocket, Rocket)
+	ATTRIB(MultiRocket, m_lifetime, float, 4);
+	ATTRIB(MultiRocket, dmg, float, 60);
+	ATTRIB(MultiRocket, dmg_radius, float, 75);
+#ifdef CSQC
+/* model     */ ATTRIB(MultiRocket, m_model, Model, MDL_PROJECTILE_MULTI_ROCKET);
+#endif
+ENDCLASS(MultiRocket)
+REGISTER_PROJECTILE(MULTI_ROCKET, NEW(MultiRocket));
+
+REGISTER_PROJECTILE(LAVABALL, NEW(Projectile));
+REGISTER_PROJECTILE(EE_P_SPHERE, NEW(Projectile));
+REGISTER_PROJECTILE(BLAZE_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(LAVAMAN_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(PASSIVE_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(PASSIVE_PULSERIFLE, NEW(Projectile));
+REGISTER_PROJECTILE(TANK_BIGROCKET, NEW(Projectile));
+REGISTER_PROJECTILE(GHOST_SICKLE, NEW(Projectile));
+REGISTER_PROJECTILE(CACODEMON_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(MISSILE, NEW(Projectile));
+REGISTER_PROJECTILE(MANCUBUS_BOLT, NEW(Projectile));
+REGISTER_PROJECTILE(BULLETKIN_SHOT, NEW(Projectile));
+REGISTER_PROJECTILE(HELLKNIGHT_BIGSHOT, NEW(Projectile));
+REGISTER_PROJECTILE(HELLKNIGHT_SPINNER, NEW(Projectile));
+REGISTER_PROJECTILE(STAR_SMALL, NEW(Projectile));
+REGISTER_PROJECTILE(STAR_MEDIUM, NEW(Projectile));
+REGISTER_PROJECTILE(STAR_LARGE, NEW(Projectile));
+REGISTER_PROJECTILE(STAR_MEGA, NEW(Projectile));
+REGISTER_PROJECTILE(SPARK_UPZAP, NEW(Projectile));
+REGISTER_PROJECTILE(SEED, NEW(Projectile));
+REGISTER_PROJECTILE(SEED_POISON, NEW(Projectile));
+REGISTER_PROJECTILE(THORNBALL, NEW(Projectile));
+REGISTER_PROJECTILE(STAR_BOMB, NEW(Projectile));
+REGISTER_PROJECTILE(VORTEX_ROCKET, NEW(Projectile));
+REGISTER_PROJECTILE(FROSTSHARD, NEW(Projectile));
+REGISTER_PROJECTILE(EOW_SPIT, NEW(Projectile));
+REGISTER_PROJECTILE(VIOLIN_MUSIC, NEW(Projectile));
+REGISTER_PROJECTILE(STARFURY, NEW(Projectile));
+REGISTER_PROJECTILE(BLIZZARD_SHARD, NEW(Projectile));
+REGISTER_PROJECTILE(DEMON_SICKLE, NEW(Projectile));
+REGISTER_PROJECTILE(ICE_SPEAR, NEW(Projectile));
+REGISTER_PROJECTILE(ICICLE, NEW(Projectile));
+REGISTER_PROJECTILE(MORTAR, NEW(Projectile));
+REGISTER_PROJECTILE(SWARM, NEW(Projectile));
+REGISTER_PROJECTILE(FROG_SPIT, NEW(Projectile));
+REGISTER_PROJECTILE(BOWLING_BALL, NEW(Projectile));
+REGISTER_PROJECTILE(COOKIE, NEW(Projectile));
+REGISTER_PROJECTILE(FLAK_CANNON, NEW(Projectile));
+REGISTER_PROJECTILE(RECYCLEBIN, NEW(Projectile));
+REGISTER_PROJECTILE(MIME_BALL, NEW(Projectile));
+REGISTER_PROJECTILE(GRAPE, NEW(Projectile));
+REGISTER_PROJECTILE(BOGLORD, NEW(Projectile));
+REGISTER_PROJECTILE(BOGLORD_STRONG, NEW(Projectile));
+REGISTER_PROJECTILE(DFURY_MAGICA, NEW(Projectile));
+REGISTER_PROJECTILE(DFURY_MAGICB, NEW(Projectile));
+REGISTER_PROJECTILE(GARGOYLE, NEW(Projectile));
+REGISTER_PROJECTILE(GARGOYLE_POISON, NEW(Projectile));
+REGISTER_PROJECTILE(GREEK_FIRE, NEW(Projectile));
+REGISTER_PROJECTILE(FLAME_WOOD, NEW(Projectile));
+REGISTER_PROJECTILE(PLASMA, NEW(Projectile));
+REGISTER_PROJECTILE(MINOTAUR_PLASMA, NEW(Projectile));
+REGISTER_PROJECTILE(MINOTAUR_BLOOD, NEW(Projectile));
+REGISTER_PROJECTILE(MINOTAUR_POISON, NEW(Projectile));
+REGISTER_PROJECTILE(GAUNT_PLASMA, NEW(Projectile));
+REGISTER_PROJECTILE(GAUNT_POISON, NEW(Projectile));
+REGISTER_PROJECTILE(SMG, NEW(Projectile));
+
+CLASS(Drill, Projectile)
+	ATTRIB(Drill, spawnflags, int, PROJ_FLAG_NOANIMATE);
+	ATTRIB(Drill, m_mins, vector, '-3 -3 -3');
+	ATTRIB(Drill, m_maxs, vector, '3 3 3');
+	ATTRIB(Drill, m_speed, float, 1000);
+	ATTRIB(Drill, dmg, float, 25);
+	ATTRIB(Drill, dmg_radius, float, 30);
+	ATTRIB(Drill, m_piercecnt, int, -1);
+	ATTRIB(Drill, m_lifetime, float, 6);
+	ATTRIB(Drill, m_avelocity, vector, '0 0 720');
+#ifdef SVQC
+	METHOD(Drill, m_sound_explode, Sound(entity actor)) { return SND_ROCKET_EXPLOSION; }
+	METHOD(Drill, m_sound_pierce, Sound(entity actor)) { return SND_DRILL_LOOP; }
+	ATTRIB(Drill, m_effect_explode, entity, EFFECT_TE_PLASMABIG);
+	ATTRIB(Drill, m_effect_pierce, entity, EFFECT_DRILL_TOUCH);
+#endif
+#ifdef CSQC
+/* model     */ ATTRIB(Drill, m_model, Model, MDL_PROJECTILE_DRILL);
+/* trail eff */ ATTRIB(Drill, m_traileffect, entity, EFFECT_TR_DRILL);
+#endif
+ENDCLASS(Drill)
+REGISTER_PROJECTILE(DRILL, NEW(Drill));
+
+REGISTER_PROJECTILE(EGG_NORMAL, NEW(Projectile));
+REGISTER_PROJECTILE(EGG_FIRE, NEW(Projectile));
+REGISTER_PROJECTILE(EGG_GRENADE, NEW(Projectile));
+REGISTER_PROJECTILE(EGG_ICE, NEW(Projectile));
+REGISTER_PROJECTILE(EGG_CLOCKWORK, NEW(Projectile));
+REGISTER_PROJECTILE(EGG_GOLD, NEW(Projectile));
+REGISTER_PROJECTILE(FEATHER, NEW(Projectile));
+REGISTER_PROJECTILE(MOSS_HORNET, NEW(Projectile));
+REGISTER_PROJECTILE(SLIME, NEW(Projectile));
+REGISTER_PROJECTILE(NIMBUS, NEW(Projectile));
+REGISTER_PROJECTILE(CAN, NEW(Projectile));
+REGISTER_PROJECTILE(CAN_SMALL, NEW(Projectile));
+REGISTER_PROJECTILE(BULLET_BILL, NEW(Projectile));
+REGISTER_PROJECTILE(BULLSEYE_BILL, NEW(Projectile));
+REGISTER_PROJECTILE(MIMEJR_BALL, NEW(Projectile));
+REGISTER_PROJECTILE(PEA, NEW(Projectile));
+REGISTER_PROJECTILE(SNOWPEA, NEW(Projectile));
+REGISTER_PROJECTILE(PLASMA_CANNON, NEW(Projectile));
+REGISTER_PROJECTILE(ALIEN_SNIPER, NEW(Projectile));
+REGISTER_PROJECTILE(COCONUT, NEW(Projectile));
+REGISTER_PROJECTILE(BFG, NEW(Projectile));
+REGISTER_PROJECTILE(FAITH_FIREBALL, NEW(Projectile));
+REGISTER_PROJECTILE(EMPRESS_STREAK, NEW(Projectile));
+REGISTER_PROJECTILE(EMPRESS_LANCE, NEW(Projectile));
+REGISTER_PROJECTILE(EMPRESS_EVERLASTING, NEW(Projectile));
+REGISTER_PROJECTILE(ENRAGED_STREAK, NEW(Projectile));
+REGISTER_PROJECTILE(ENRAGED_EVERLASTING, NEW(Projectile));
+REGISTER_PROJECTILE(RM_LAVABALL, NEW(Projectile));
+REGISTER_PROJECTILE(POPPER_POISON, NEW(Projectile));
+REGISTER_PROJECTILE(POPPER_STRIKER, NEW(Projectile));
+REGISTER_PROJECTILE(POPPER_DJINN, NEW(Projectile));
+REGISTER_PROJECTILE(POPPER_ARROW, NEW(Projectile));
+REGISTER_PROJECTILE(POPPER_MAGIC, NEW(Projectile));
+REGISTER_PROJECTILE(BISHOP_BOLT, NEW(Projectile));
+
+CLASS(MinisharkBullet, Bullet)
+	ATTRIB(MinisharkBullet, m_spread, float, 0.01);
+	ATTRIB(MinisharkBullet, dmg, float, 18);
+ENDCLASS(MinisharkBullet)
+REGISTER_PROJECTILE(MINISHARK_BULLET, NEW(MinisharkBullet));
+
+CLASS(MegasharkBullet, Bullet)
+	ATTRIB(MegasharkBullet, m_spread, float, 0.015);
+	ATTRIB(MegasharkBullet, dmg, float, 36);
+#ifdef SVQC
+	ATTRIB(MegasharkBullet, m_effect_impact, entity, EFFECT_TE_SUPERSPIKE);
+#endif
+#ifdef CSQC
+/* trail eff */ ATTRIB(MegasharkBullet, m_traileffect, entity, EFFECT_TR_SUPERSPIKE);
+#endif
+ENDCLASS(MegasharkBullet)
+REGISTER_PROJECTILE(MEGASHARK_BULLET, NEW(MegasharkBullet));
+#endif
+
+#ifdef SVQC
+entity Projectile_Create(Projectile this, entity actor, vector org, vector dir, int deathtype);
+#endif

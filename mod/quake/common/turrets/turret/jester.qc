@@ -51,10 +51,13 @@ void present_explode(entity actor, int ptype)
 			if(tur == TUR_Null)
 				break; // wtf
 
+			vector org = actor.origin;
+			org.z += -tur.m_mins.z; // offset incase it's bigger
+
 			// TODO: decouple buildtool version and use it here!
 			entity turret = spawn();
 			turret.classname = "turret";
-			setorigin(turret, actor.origin); // TODO: safe location?
+			setorigin(turret, org);
 			turret.angles = '0 1 0' * actor.angles_y;
 			turret.realowner = actor.realowner;
 			turret.clipgroup = (actor.clipgroup) ? actor.clipgroup : CLIPGROUP_TDTURRET;

@@ -1,6 +1,6 @@
 #include "csqcprojectile.qh"
 
-.int csqcprojectile_type;
+.Projectile csqcprojectile_type;
 .bool silent;
 
 bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
@@ -57,7 +57,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 	}
 
 	if(sf & 2)
-		WriteByte(MSG_ENTITY, this.csqcprojectile_type); // TODO maybe put this into sf?
+		WriteRegistered(Projectiles, MSG_ENTITY, this.csqcprojectile_type); // TODO maybe put this into sf?
 
 	return true;
 }
@@ -72,7 +72,7 @@ void CSQCProjectile_Check(entity e)
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void CSQCProjectile(entity e, float clientanimate, int type, float docull)
+void CSQCProjectile(entity e, float clientanimate, Projectile type, float docull)
 {
 	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
 

@@ -24,6 +24,8 @@ const int MONSTER_SPAWNTRIGGERED = 64; // alkaline junk
 
 .float enemy_reveal_time;
 
+void monster_animate(entity this, int startframe, int framecount, void(entity) thinkfunc, void(entity) loopfunc);
+
 // places the monster in the world, be sure to do any setup on the entity before calling it
 entity spawnmonster(entity monster, vector spawnpos, vector ang, Monster mon);
 

@@ -14,20 +14,16 @@ const int anim_demon_attacka = 54; //'54 68 0'
 
 void Demon_JumpTouch(entity this, entity toucher);
 
-void demon1_stand1(entity this);
-void demon1_stand13(entity this) { set_animofs(this, anim_demon_stand, 1, demon1_stand1); ai_stand(this); }
-void demon1_stand12(entity this) { set_animofs(this, anim_demon_stand, 12, demon1_stand13); ai_stand(this); }
-void demon1_stand11(entity this) { set_animofs(this, anim_demon_stand, 11, demon1_stand12); ai_stand(this); }
-void demon1_stand10(entity this) { set_animofs(this, anim_demon_stand, 10, demon1_stand11); ai_stand(this); }
-void demon1_stand9(entity this) { set_animofs(this, anim_demon_stand, 9, demon1_stand10); ai_stand(this); }
-void demon1_stand8(entity this) { set_animofs(this, anim_demon_stand, 8, demon1_stand9); ai_stand(this); }
-void demon1_stand7(entity this) { set_animofs(this, anim_demon_stand, 7, demon1_stand8); ai_stand(this); }
-void demon1_stand6(entity this) { set_animofs(this, anim_demon_stand, 6, demon1_stand7); ai_stand(this); }
-void demon1_stand5(entity this) { set_animofs(this, anim_demon_stand, 5, demon1_stand6); ai_stand(this); }
-void demon1_stand4(entity this) { set_animofs(this, anim_demon_stand, 4, demon1_stand5); ai_stand(this); }
-void demon1_stand3(entity this) { set_animofs(this, anim_demon_stand, 3, demon1_stand4); ai_stand(this); }
-void demon1_stand2(entity this) { set_animofs(this, anim_demon_stand, 2, demon1_stand3); ai_stand(this); }
-void demon1_stand1(entity this) { set_animofs(this, anim_demon_stand, 1, demon1_stand2); ai_stand(this); }
+void demon1_stand1(entity this)
+{
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	set_anim(this, anim_demon_stand + this.walkframe, demon1_stand1);
+
+	ai_stand(this);
+}
 
 void demon1_walk1(entity this);
 void demon1_walk8(entity this) { set_animofs(this, anim_demon_walk, 8, demon1_walk1); ai_walk(this, 10); }

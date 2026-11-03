@@ -207,7 +207,6 @@ void actor_fire5(entity this)
 		theMachine.nextthink = time + 0.1;
 	}
 }
-entity W_FireRocket(entity this);
 void actor_fire4(entity this) { set_animofs(this, anim_actor_rockatt, 4, actor_fire5); this.nextthink = time + 0.15; }
 void actor_fire3(entity this) { set_animofs(this, anim_actor_rockatt, 3, actor_fire4); this.nextthink = time + 0.15; }
 void actor_fire2(entity this) { set_animofs(this, anim_actor_rockatt, 2, actor_fire3); this.v_angle_x = 0; this.angles_x = 0; this.nextthink = time + 0.15; }
@@ -220,11 +219,15 @@ void actor_fire1(entity this)
 	theMachine.th_die = time_crash_die;
 	theMachine.health = 1;
 		
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 	this.angles = vectoangles(this.goalentity.origin - this.origin);
 	this.v_angle = this.angles;
 	this.v_angle_x = 0 - this.angles_x;
 	this.effects = EF_MUZZLEFLASH; 
-	W_FireRocket(this);
+	makevectors(this.v_angle);
+	vector org = this.origin + '0 0 16';
+	vector dir = v_forward;
+	Projectile_Create(PROJECTILE_ROCKET, this, org, dir, WEP_ROCKET_LAUNCHER.m_id);
 	
 	// start the end text
 	WriteByte(MSG_ALL, SVC_FINALE);

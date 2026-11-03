@@ -70,18 +70,21 @@ void bend_walk1(entity this);
 void bend_stand1(entity this);
 void bend_run1(entity this);
 
-void bend_stand7(entity this) { set_animofs(this, anim_bender_stand, 7, bend_stand1); ai_stand(this); }
-void bend_stand6(entity this) { set_animofs(this, anim_bender_stand, 6, bend_stand7); ai_stand(this); }
-void bend_stand5(entity this) { set_animofs(this, anim_bender_stand, 5, bend_stand6); ai_stand(this); }
-void bend_stand4(entity this) { set_animofs(this, anim_bender_stand, 4, bend_stand5); ai_stand(this); }
-void bend_stand3(entity this) { set_animofs(this, anim_bender_stand, 3, bend_stand4); ai_stand(this); }
-void bend_stand2(entity this) { set_animofs(this, anim_bender_stand, 2, bend_stand3); ai_stand(this); }
 void bend_stand1(entity this)
 {
-	set_animofs(this, anim_bender_stand, 1, bend_stand2);
-	if(random() < 0.2)
-		_sound(this, CH_VOICE, "bend/idle.wav", 1,  ATTN_NORM);
+	setthink(this, bend_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 7)
+		this.walkframe = 0;
+
+	this.frame = anim_bender_stand + this.walkframe;
+
 	ai_stand(this);
+
+	if(this.walkframe == 0 && random() < 0.2)
+		_sound(this, CH_VOICE, "bend/idle.wav", 1,  ATTN_NORM);
 }
 
 void bend_walk14(entity this) { set_animofs(this, anim_bender_walk, 14, bend_walk1); ai_walk(this, 3); }

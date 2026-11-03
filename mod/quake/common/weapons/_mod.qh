@@ -1,4 +1,6 @@
 // generated file; do not modify
 #include "all.qh"
+#include "calculations.qh"
 #include "inventory.qh"
+#include "projectiles.qh"
 #include "weapon/_mod.qh"

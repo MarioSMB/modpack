@@ -57,15 +57,19 @@ void army_aggrosound(entity this)
 		_sound(this, CH_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
 }
 
-void army_stand1(entity this);
-void army_stand8(entity this) { set_animofs(this, anim_army_stand, 8, army_stand1); ai_stand(this); }
-void army_stand7(entity this) { set_animofs(this, anim_army_stand, 7, army_stand8); ai_stand(this); }
-void army_stand6(entity this) { set_animofs(this, anim_army_stand, 6, army_stand7); ai_stand(this); }
-void army_stand5(entity this) { set_animofs(this, anim_army_stand, 5, army_stand6); ai_stand(this); }
-void army_stand4(entity this) { set_animofs(this, anim_army_stand, 4, army_stand5); ai_stand(this); }
-void army_stand3(entity this) { set_animofs(this, anim_army_stand, 3, army_stand4); ai_stand(this); }
-void army_stand2(entity this) { set_animofs(this, anim_army_stand, 2, army_stand3); ai_stand(this); }
-void army_stand1(entity this) { set_animofs(this, anim_army_stand, 1, army_stand2); ai_stand(this); }
+void army_stand1(entity this)
+{
+	setthink(this, army_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_army_stand + this.walkframe;
+
+	ai_stand(this);
+}
 
 void army_walk1(entity this);
 void army_walk24(entity this) { set_animofs(this, anim_army_prowl, 24, army_walk1); ai_walk(this, 1); }

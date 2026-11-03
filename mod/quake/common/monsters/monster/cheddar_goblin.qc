@@ -22,22 +22,22 @@ void cheddar_idle_sound(entity this)
 	}
 }
 
-void cheddar_stand1(entity this);
-void cheddar_stand15(entity this) { set_animofs(this, anim_cheddar_stand, 15, cheddar_stand1); ai_stand(this); }
-void cheddar_stand14(entity this) { set_animofs(this, anim_cheddar_stand, 14, cheddar_stand15); ai_stand(this); }
-void cheddar_stand13(entity this) { set_animofs(this, anim_cheddar_stand, 13, cheddar_stand14); ai_stand(this); }
-void cheddar_stand12(entity this) { set_animofs(this, anim_cheddar_stand, 12, cheddar_stand13); ai_stand(this); }
-void cheddar_stand11(entity this) { set_animofs(this, anim_cheddar_stand, 11, cheddar_stand12); ai_stand(this); }
-void cheddar_stand10(entity this) { set_animofs(this, anim_cheddar_stand, 10, cheddar_stand11); ai_stand(this); }
-void cheddar_stand9(entity this) { set_animofs(this, anim_cheddar_stand, 9, cheddar_stand10); ai_stand(this); }
-void cheddar_stand8(entity this) { set_animofs(this, anim_cheddar_stand, 8, cheddar_stand9); ai_stand(this); }
-void cheddar_stand7(entity this) { set_animofs(this, anim_cheddar_stand, 7, cheddar_stand8); ai_stand(this); }
-void cheddar_stand6(entity this) { set_animofs(this, anim_cheddar_stand, 6, cheddar_stand7); ai_stand(this); }
-void cheddar_stand5(entity this) { set_animofs(this, anim_cheddar_stand, 5, cheddar_stand6); ai_stand(this); }
-void cheddar_stand4(entity this) { set_animofs(this, anim_cheddar_stand, 4, cheddar_stand5); ai_stand(this); }
-void cheddar_stand3(entity this) { set_animofs(this, anim_cheddar_stand, 3, cheddar_stand4); ai_stand(this); }
-void cheddar_stand2(entity this) { set_animofs(this, anim_cheddar_stand, 2, cheddar_stand3); ai_stand(this); }
-void cheddar_stand1(entity this) { set_animofs(this, anim_cheddar_stand, 1, cheddar_stand2); cheddar_idle_sound(this); ai_stand(this); }
+void cheddar_stand1(entity this)
+{
+	setthink(this, cheddar_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 15)
+		this.walkframe = 0;
+
+	this.frame = anim_cheddar_stand + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		cheddar_idle_sound(this);
+}
 
 void cheddar_walk1(entity this);
 void cheddar_walk11(entity this) { set_animofs(this, anim_cheddar_walk, 11, cheddar_walk1); ai_walk(this, 2); }

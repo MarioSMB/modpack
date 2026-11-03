@@ -1,0 +1,12 @@
+#pragma once
+
+//float autocvar_g_weaponspreadfactor;
+
+const float W_SPREAD_GAUSS_MAX_STDEV = 4; // prevent the extremely rare wild shot
+
+vector damage_explosion_calcpush(vector explosion_f, vector target_v, float speedfactor);
+vector W_CalculateSpreadPattern(int pattern, float bias, int counter, int total);
+vector W_CalculateSpread(vector dir, float spread, int spread_style, bool must_normalize);
+int W_GunAlign(entity this, int preferred_align);
+//int W_GetGunAlignment(entity player);
+float explosion_calcpush_getmultiplier(vector explosion_v, vector target_v);

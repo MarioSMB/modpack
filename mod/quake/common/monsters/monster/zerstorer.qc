@@ -19,39 +19,26 @@ const int anim_zer_dieb = 165; //'165 190 0'
 ------------------------------------------------------------------------------------------------------------------- 
 */
 
-void zer_stand1(entity this);
-void zer_stand22(entity this) { set_animofs(this, anim_zer_hover, 22, zer_stand1); ai_stand(this); }
-void zer_stand21(entity this) { set_animofs(this, anim_zer_hover, 21, zer_stand22); ai_stand(this); }
-void zer_stand20(entity this) { set_animofs(this, anim_zer_hover, 20, zer_stand21); ai_stand(this); }
-void zer_stand19(entity this) { set_animofs(this, anim_zer_hover, 19, zer_stand20); ai_stand(this); }
-void zer_stand18(entity this) { set_animofs(this, anim_zer_hover, 18, zer_stand19); ai_stand(this); }
-void zer_stand17(entity this) { set_animofs(this, anim_zer_hover, 17, zer_stand18); ai_stand(this); }
-void zer_stand16(entity this) { set_animofs(this, anim_zer_hover, 16, zer_stand17); ai_stand(this); }
-void zer_stand15(entity this) { set_animofs(this, anim_zer_hover, 15, zer_stand16); ai_stand(this); }
-void zer_stand14(entity this) { set_animofs(this, anim_zer_hover, 14, zer_stand15); ai_stand(this); }
-void zer_stand13(entity this) { set_animofs(this, anim_zer_hover, 13, zer_stand14); ai_stand(this); }
-void zer_stand12(entity this) { set_animofs(this, anim_zer_hover, 12, zer_stand13); ai_stand(this); }
-void zer_stand11(entity this) { set_animofs(this, anim_zer_hover, 11, zer_stand12); ai_stand(this); }
-void zer_stand10(entity this) { set_animofs(this, anim_zer_hover, 10, zer_stand11); ai_stand(this); }
-void zer_stand9(entity this) { set_animofs(this, anim_zer_hover, 9, zer_stand10); ai_stand(this); }
-void zer_stand8(entity this) { set_animofs(this, anim_zer_hover, 8, zer_stand9); ai_stand(this); }
-void zer_stand7(entity this) { set_animofs(this, anim_zer_hover, 7, zer_stand8); ai_stand(this); }
-void zer_stand6(entity this) { set_animofs(this, anim_zer_hover, 6, zer_stand7); ai_stand(this); }
-void zer_stand5(entity this) { set_animofs(this, anim_zer_hover, 5, zer_stand6); ai_stand(this); }
-void zer_stand4(entity this) { set_animofs(this, anim_zer_hover, 4, zer_stand5); ai_stand(this); }
-void zer_stand3(entity this) { set_animofs(this, anim_zer_hover, 3, zer_stand4); ai_stand(this); }
-void zer_stand2(entity this) { set_animofs(this, anim_zer_hover, 2, zer_stand3); ai_stand(this); }
 void zer_stand1(entity this)
 {
-	set_animofs(this, anim_zer_hover, 1, zer_stand2); 
-	if(random() < 0.2)
+	setthink(this, zer_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 22)
+		this.walkframe = 0;
+
+	this.frame = anim_zer_hover + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0 && random() < 0.2)
 	{
 		if(random() > 0.5)
 			_sound(this, CH_VOICE, "zer/idle1.wav", 1, ATTN_IDLE);
 		else
 			_sound(this, CH_VOICE, "zer/idle2.wav", 1, ATTN_IDLE);
 	}
-	ai_stand(this);
 }
 
 void zer_walk1(entity this);

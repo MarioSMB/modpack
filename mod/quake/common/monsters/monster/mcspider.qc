@@ -15,7 +15,7 @@ void mcspider_idlesound(entity this)
 	if(time < this.pain_finished)
 		return;
 
-	if(random() < 0.2 && time >= this.idle_finished)
+	if(time >= this.idle_finished && random() < 0.2)
 	{
 		this.idle_finished = time + 2;
 		float r = random();
@@ -30,15 +30,7 @@ void mcspider_idlesound(entity this)
 	}
 }
 
-void mcspider_stand1(entity this);
-void mcspider_stand8(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand7(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand6(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand5(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand4(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand3(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand2(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); }
-void mcspider_stand1(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand2); ai_stand(this); mcspider_idlesound(this); }
+void mcspider_stand1(entity this) { set_anim(this, anim_mcspider_stand, mcspider_stand1); ai_stand(this); mcspider_idlesound(this); }
 
 void mcspider_moveframe(entity this)
 {

@@ -455,7 +455,7 @@ METHOD(EggSelection, m_condition, bool(RadialMenu this))
 	return (wep == WEP_BREEGULLBLASTER);
 }
 
-METHOD(EggSelection, m_drawentry, void(int index, vector pos, vector sz))
+METHOD(EggSelection, m_drawentry, void(int index, vector pos, vector sz, bool is_selected))
 {
 	string pic = string_null;
 	switch(index)

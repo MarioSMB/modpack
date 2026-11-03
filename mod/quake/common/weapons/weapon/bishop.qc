@@ -66,7 +66,7 @@ void W_Bishop_Attack_Bolt(entity this, .entity weaponentity)
 	float pspeed = 500;
 	float pdamage = 9;
 	float ptime = 8;
-	vector dir = qc_aim(this, pspeed);
+	vector dir = qc_aim_fromorg(this, neworg, pspeed);
 	int scount = 6;
 
 	for(int j = 0; j < scount; ++j)

@@ -846,12 +846,17 @@ void empress_ai_think(entity this)
 				if(is_expert_phase2)
 					shotvel = rotated_by(vec2_3d('0 -10 0'), M_PI * 2 * prandom(), '0 0 0') * PHYS_SCALE;
 
+				int fired = 0;
 				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 				{
 					if(vdist(this.origin - it.origin, >, 48000))
 						continue;
 
 					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
+
+					++fired;
+					if(fired > 3)
+						break; // not too many rainbows!
 				});
 			}
 			this.empress_ai[1] += 1;
@@ -948,6 +953,7 @@ void empress_ai_think(entity this)
 					if(is_expert)
 						rad = 450;
 
+					int fired = 0;
 					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
 						if(vdist(this.origin - it.origin, >, 48000))
@@ -976,6 +982,10 @@ void empress_ai_think(entity this)
 						vector v4 = normalize(dir_lead - stagger);
 
 						empress_lance_create(this, stagger, should_enrage, v4, pstrike_damage, this.empress_ai[1] / 100);
+
+						++fired;
+						if(fired > 3)
+							break; // not too many rainbows!
 					});
 				}
 			}
@@ -1324,6 +1334,7 @@ void empress_ai_think(entity this)
 			{
 				for(int j = 0; j < 1; ++j)
 				{
+					int fired = 0;
 					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
 						if(vdist(this.origin - it.origin, >, 48000))
@@ -1360,6 +1371,10 @@ void empress_ai_think(entity this)
 						vector v2 = normalize(dir_lead - stagger);
 
 						empress_lance_create(this, stagger, should_enrage, v2, pstrike_damage, this.empress_ai[1] / 100);
+
+						++fired;
+						if(fired > 3)
+							break; // not too many rainbows!
 					});
 				}
 			}
@@ -1399,12 +1414,17 @@ void empress_ai_think(entity this)
 			{
 				vector shotvel = rotated_by(vec2_3d('0 -20 0'), M_PI * 2 * pspeed, '0 0 0');
 
+				int fired = 0;
 				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 				{
 					if(vdist(this.origin - it.origin, >, 48000))
 						continue;
 
 					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
+
+					++fired;
+					if(fired > 3)
+						break; // not too many rainbows!
 				});
 			}
 

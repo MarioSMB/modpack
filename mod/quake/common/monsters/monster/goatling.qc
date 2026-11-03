@@ -23,19 +23,22 @@ void goatling_idle_sound(entity this)
 	}
 }
 
-void goatling_idle1(entity this);
-void goatling_idle12(entity this) { set_animofs(this, anim_goatling_idle, 12, goatling_idle1); ai_stand(this); }
-void goatling_idle11(entity this) { set_animofs(this, anim_goatling_idle, 11, goatling_idle12); ai_stand(this); }
-void goatling_idle10(entity this) { set_animofs(this, anim_goatling_idle, 10, goatling_idle11); ai_stand(this); }
-void goatling_idle9(entity this) { set_animofs(this, anim_goatling_idle, 9, goatling_idle10); ai_stand(this); }
-void goatling_idle8(entity this) { set_animofs(this, anim_goatling_idle, 8, goatling_idle9); ai_stand(this); }
-void goatling_idle7(entity this) { set_animofs(this, anim_goatling_idle, 7, goatling_idle8); ai_stand(this); }
-void goatling_idle6(entity this) { set_animofs(this, anim_goatling_idle, 6, goatling_idle7); ai_stand(this); }
-void goatling_idle5(entity this) { set_animofs(this, anim_goatling_idle, 5, goatling_idle6); ai_stand(this); }
-void goatling_idle4(entity this) { set_animofs(this, anim_goatling_idle, 4, goatling_idle5); ai_stand(this); }
-void goatling_idle3(entity this) { set_animofs(this, anim_goatling_idle, 3, goatling_idle4); ai_stand(this); }
-void goatling_idle2(entity this) { set_animofs(this, anim_goatling_idle, 2, goatling_idle3); ai_stand(this); }
-void goatling_idle1(entity this) { set_animofs(this, anim_goatling_idle, 1, goatling_idle2); goatling_idle_sound(this); ai_stand(this); }
+void goatling_idle1(entity this)
+{
+	setthink(this, goatling_idle1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 12)
+		this.walkframe = 0;
+
+	this.frame = anim_goatling_idle + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		goatling_idle_sound(this);
+}
 
 void goatling_walk1(entity this);
 void goatling_walk6(entity this) { set_animofs(this, anim_goatling_walk, 6, goatling_walk1); ai_walk(this, 4); }

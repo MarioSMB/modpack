@@ -36,15 +36,7 @@ void endermite_idlesound(entity this)
 	}
 }
 
-void endermite_stand1(entity this);
-void endermite_stand8(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand7(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand6(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand5(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand4(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand3(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand2(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); }
-void endermite_stand1(entity this) { set_anim(this, anim_endermite_stand, endermite_stand2); ai_stand(this); endermite_idlesound(this); }
+void endermite_stand1(entity this) { set_anim(this, anim_endermite_stand, endermite_stand1); ai_stand(this); endermite_idlesound(this); }
 
 void endermite_moveframe(entity this)
 {

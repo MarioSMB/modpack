@@ -3,10 +3,13 @@
 #ifdef SVQC
 const int anim_squeak_walk = 0; //'0 8 0'
 
+.float idle_finished;
+
 void squeak_idle_sound(entity this)
 {
-	if(random() < 0.05)
+	if(time >= this.idle_finished && random() < 0.05)
 	{
+		this.idle_finished = time + 2;
 		float r = random();
 		if(r < 0.33)
 			_sound(this, CH_VOICE, "squeak/hunt1.wav", 1, ATTN_NORM);
@@ -29,20 +32,7 @@ void squeak_moveframe(entity this)
 	squeak_idle_sound(this);
 }
 
-void squeak_idle1(entity this);
-void squeak_idle13(entity this) { set_anim(this, anim_squeak_walk, squeak_idle1); ai_stand(this); }
-void squeak_idle12(entity this) { set_anim(this, anim_squeak_walk, squeak_idle13); ai_stand(this); }
-void squeak_idle11(entity this) { set_anim(this, anim_squeak_walk, squeak_idle12); ai_stand(this); }
-void squeak_idle10(entity this) { set_anim(this, anim_squeak_walk, squeak_idle11); ai_stand(this); }
-void squeak_idle9(entity this) { set_anim(this, anim_squeak_walk, squeak_idle10); ai_stand(this); }
-void squeak_idle8(entity this) { set_anim(this, anim_squeak_walk, squeak_idle9); ai_stand(this); }
-void squeak_idle7(entity this) { set_anim(this, anim_squeak_walk, squeak_idle8); ai_stand(this); }
-void squeak_idle6(entity this) { set_anim(this, anim_squeak_walk, squeak_idle7); ai_stand(this); }
-void squeak_idle5(entity this) { set_anim(this, anim_squeak_walk, squeak_idle6); ai_stand(this); }
-void squeak_idle4(entity this) { set_anim(this, anim_squeak_walk, squeak_idle5); ai_stand(this); }
-void squeak_idle3(entity this) { set_anim(this, anim_squeak_walk, squeak_idle4); ai_stand(this); }
-void squeak_idle2(entity this) { set_anim(this, anim_squeak_walk, squeak_idle3); ai_stand(this); }
-void squeak_idle1(entity this) { set_anim(this, anim_squeak_walk, squeak_idle2); squeak_idle_sound(this); ai_stand(this); }
+void squeak_idle1(entity this) { set_anim(this, anim_squeak_walk, squeak_idle1); squeak_idle_sound(this); ai_stand(this); }
 
 void squeak_walk1(entity this)
 {

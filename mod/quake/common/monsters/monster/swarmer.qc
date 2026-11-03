@@ -18,22 +18,20 @@ void swarmer_transparency(entity this)
 		this.alpha = -1; // because engine
 }
 
-void swarmer_stand1(entity this);
-void swarmer_stand15(entity this) { set_anim(this, 14, swarmer_stand1); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand14(entity this) { set_anim(this, 13, swarmer_stand15); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand13(entity this) { set_anim(this, 12, swarmer_stand14); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand12(entity this) { set_anim(this, 11, swarmer_stand13); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand11(entity this) { set_anim(this, 10, swarmer_stand12); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand10(entity this) { set_anim(this, 9, swarmer_stand11); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand9(entity this) { set_anim(this, 8, swarmer_stand10); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand8(entity this) { set_anim(this, 7, swarmer_stand9); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand7(entity this) { set_anim(this, 6, swarmer_stand8); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand6(entity this) { set_anim(this, 5, swarmer_stand7); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand5(entity this) { set_anim(this, 4, swarmer_stand6); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand4(entity this) { set_anim(this, 3, swarmer_stand5); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand3(entity this) { set_anim(this, 2, swarmer_stand4); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand2(entity this) { set_anim(this, 1, swarmer_stand3); swarmer_transparency(this); ai_stand(this); }
-void swarmer_stand1(entity this) { set_anim(this, 0, swarmer_stand2); swarmer_transparency(this); ai_stand(this); }
+void swarmer_stand1(entity this)
+{
+	setthink(this, swarmer_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe > 14)
+		this.walkframe = 0;
+
+	this.frame = 0 + this.walkframe;
+
+	swarmer_transparency(this);
+	ai_stand(this);
+}
 
 void swarmer_footStep(entity this)
 {

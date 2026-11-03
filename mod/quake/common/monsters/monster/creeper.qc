@@ -7,15 +7,7 @@ const int anim_creeper_death = 41;
 
 const int MON_CREEPER_NERD = BIT(1);
 
-void creeper_stand1(entity this);
-void creeper_stand8(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand7(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand6(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand5(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand4(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand3(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand2(entity this) { set_animofs(this, anim_creeper_stand, 2, creeper_stand1); ai_stand(this); }
-void creeper_stand1(entity this) { set_animofs(this, anim_creeper_stand, 1, creeper_stand2); ai_stand(this); }
+void creeper_stand1(entity this) { set_animofs(this, anim_creeper_stand, 1, creeper_stand1); ai_stand(this); }
 
 void creeper_moveframe(entity this)
 {

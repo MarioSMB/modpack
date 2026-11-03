@@ -25,20 +25,22 @@ void voreling_idle_sound(entity this)
 		_sound(this, CH_VOICE, "voreling/idle.wav", 1, ATTN_NORM);
 }
 
-void voreling_idle1(entity this);
-void voreling_idle13(entity this) { set_animofs(this, anim_voreling_idle, 13, voreling_idle1); ai_stand(this); }
-void voreling_idle12(entity this) { set_animofs(this, anim_voreling_idle, 12, voreling_idle13); ai_stand(this); }
-void voreling_idle11(entity this) { set_animofs(this, anim_voreling_idle, 11, voreling_idle12); ai_stand(this); }
-void voreling_idle10(entity this) { set_animofs(this, anim_voreling_idle, 10, voreling_idle11); ai_stand(this); }
-void voreling_idle9(entity this) { set_animofs(this, anim_voreling_idle, 9, voreling_idle10); ai_stand(this); }
-void voreling_idle8(entity this) { set_animofs(this, anim_voreling_idle, 8, voreling_idle9); ai_stand(this); }
-void voreling_idle7(entity this) { set_animofs(this, anim_voreling_idle, 7, voreling_idle8); ai_stand(this); }
-void voreling_idle6(entity this) { set_animofs(this, anim_voreling_idle, 6, voreling_idle7); ai_stand(this); }
-void voreling_idle5(entity this) { set_animofs(this, anim_voreling_idle, 5, voreling_idle6); ai_stand(this); }
-void voreling_idle4(entity this) { set_animofs(this, anim_voreling_idle, 4, voreling_idle5); ai_stand(this); }
-void voreling_idle3(entity this) { set_animofs(this, anim_voreling_idle, 3, voreling_idle4); ai_stand(this); }
-void voreling_idle2(entity this) { set_animofs(this, anim_voreling_idle, 2, voreling_idle3); ai_stand(this); }
-void voreling_idle1(entity this) { set_animofs(this, anim_voreling_idle, 1, voreling_idle2); voreling_idle_sound(this); ai_stand(this); }
+void voreling_idle1(entity this)
+{
+	setthink(this, voreling_idle1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 13)
+		this.walkframe = 0;
+
+	this.frame = anim_voreling_idle + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		voreling_idle_sound(this);
+}
 
 void voreling_walk1(entity this);
 void voreling_walk5(entity this) { set_animofs(this, anim_voreling_walk, 5, voreling_walk1); ai_walk(this, 5); }
@@ -112,13 +114,22 @@ void voreling_jump1(entity this) { set_animofs(this, anim_voreling_jump, 1, vore
 //======================================================================
 // CEILING VORELINGS - Idle/Drop/Touch/Land functions
 //======================================================================
-void voreling_idleup1(entity this);
-void voreling_idleup6(entity this) { set_animofs(this, anim_voreling_idleup, 6, voreling_idleup1); ai_stand(this); }
-void voreling_idleup5(entity this) { set_animofs(this, anim_voreling_idleup, 5, voreling_idleup6); ai_stand(this); }
-void voreling_idleup4(entity this) { set_animofs(this, anim_voreling_idleup, 4, voreling_idleup5); ai_stand(this); }
-void voreling_idleup3(entity this) { set_animofs(this, anim_voreling_idleup, 3, voreling_idleup4); ai_stand(this); }
-void voreling_idleup2(entity this) { set_animofs(this, anim_voreling_idleup, 2, voreling_idleup3); ai_stand(this); }
-void voreling_idleup1(entity this) { set_animofs(this, anim_voreling_idleup, 1, voreling_idleup2); voreling_idle_sound(this); ai_stand(this); }
+void voreling_idleup1(entity this)
+{
+	setthink(this, voreling_idleup1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 6)
+		this.walkframe = 0;
+
+	this.frame = anim_voreling_idleup + this.walkframe;
+
+	ai_stand(this);
+
+	if(this.walkframe == 0)
+		voreling_idle_sound(this);
+}
 
 //----------------------------------------------------------------------
 void voreling_droptouch(entity this, entity toucher)

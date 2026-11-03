@@ -184,15 +184,19 @@ void Caco_idle_sound(entity this)
 	return;
 }
 
-void caco_stand1(entity this);
-void caco_stand8(entity this) { set_animofs(this, anim_caco_hover, 8, caco_stand1); ai_stand(this); }
-void caco_stand7(entity this) { set_animofs(this, anim_caco_hover, 7, caco_stand8); ai_stand(this); }
-void caco_stand6(entity this) { set_animofs(this, anim_caco_hover, 6, caco_stand7); ai_stand(this); }
-void caco_stand5(entity this) { set_animofs(this, anim_caco_hover, 5, caco_stand6); ai_stand(this); }
-void caco_stand4(entity this) { set_animofs(this, anim_caco_hover, 4, caco_stand5); ai_stand(this); }
-void caco_stand3(entity this) { set_animofs(this, anim_caco_hover, 3, caco_stand4); ai_stand(this); }
-void caco_stand2(entity this) { set_animofs(this, anim_caco_hover, 2, caco_stand3); ai_stand(this); }
-void caco_stand1(entity this) { set_animofs(this, anim_caco_hover, 1, caco_stand2); ai_stand(this); }
+void caco_stand1(entity this)
+{
+	setthink(this, caco_stand1);
+	this.nextthink = time + FRAME_TIME;
+
+	this.walkframe += 1;
+	if(this.walkframe >= 8)
+		this.walkframe = 0;
+
+	this.frame = anim_caco_hover + this.walkframe;
+
+	ai_stand(this);
+}
 
 void caco_walk1(entity this);
 void caco_walk8(entity this) { set_animofs(this, anim_caco_hover, 8, caco_walk1); ai_walk(this, 8); }
