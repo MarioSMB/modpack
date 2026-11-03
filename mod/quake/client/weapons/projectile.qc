@@ -627,6 +627,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(LETTER_X)           this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(LETTER_Y)           this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(LETTER_Z)           this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(GOAT)               this.traileffect = EFFECT_TR_POPPER_STRIKER.m_id; this.scale = 0.35; break;
 #undef HANDLE
 			//default:
 				//error("Received invalid CSQC projectile, can't work with this!");
@@ -1051,6 +1052,14 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				set_movetype(this, MOVETYPE_BOUNCE);
 				this.effects |= EF_FULLBRIGHT;
 				settouch(this, func_null);
+				break;
+			case PROJECTILE_GOAT:
+				vector col;
+				col.x = max(0.2, random());
+				col.y = max(0.2, random());
+				col.z = max(0.2, random());
+				this.colormod = col * 2;
+				this.effects |= EF_FULLBRIGHT;
 				break;
 			default:
 				break;

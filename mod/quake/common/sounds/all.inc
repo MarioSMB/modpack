@@ -114,3 +114,7 @@ SOUND(RIC3, "weapons/ric3");
 Sound SND_RIC_RANDOM() {
     return REGISTRY_GET(Sounds, SND_RIC1.m_id + floor(prandom() * 3));
 }
+
+SOUND(PROJECTILE_BOUNCE, "player_mime/bounce");
+
+SOUND(GOAT_EXPLODE, "goatling/death1");

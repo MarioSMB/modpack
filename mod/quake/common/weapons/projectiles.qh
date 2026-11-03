@@ -57,7 +57,7 @@ CLASS(Projectile, Object)
 	METHOD(Projectile, m_sound_explode, Sound(entity actor)) { return SND_Null; }
 	METHOD(Projectile, m_sound_impact, Sound(entity actor)) { return SND_Null; }
 	METHOD(Projectile, m_sound_pierce, Sound(entity actor)) { return SND_Null; }
-	METHOD(Projectile, m_sound_bounce, Sound(entity actor)) { return SND_Null; }
+	METHOD(Projectile, m_sound_bounce, Sound(entity actor)) { return SND_PROJECTILE_BOUNCE; }
 	ATTRIB(Projectile, m_effect_explode, entity, EFFECT_Null);
 	ATTRIB(Projectile, m_effect_impact, entity, EFFECT_Null);
 	ATTRIB(Projectile, m_effect_pierce, entity, EFFECT_Null);
@@ -309,7 +309,16 @@ REGISTER_PROJECTILE(PEA, NEW(Projectile));
 REGISTER_PROJECTILE(SNOWPEA, NEW(Projectile));
 REGISTER_PROJECTILE(PLASMA_CANNON, NEW(Projectile));
 REGISTER_PROJECTILE(ALIEN_SNIPER, NEW(Projectile));
-REGISTER_PROJECTILE(COCONUT, NEW(Projectile));
+
+CLASS(Coconut, Projectile)
+	ATTRIB(Coconut, m_mins, vector, '-3 -3 -3');
+	ATTRIB(Coconut, m_maxs, vector, '3 3 3');
+#ifdef CSQC
+/* model     */ ATTRIB(Coconut, m_model, Model, MDL_PROJECTILE_COCONUT);
+#endif
+ENDCLASS(Coconut)
+REGISTER_PROJECTILE(COCONUT, NEW(Coconut));
+
 REGISTER_PROJECTILE(BFG, NEW(Projectile));
 REGISTER_PROJECTILE(FAITH_FIREBALL, NEW(Projectile));
 REGISTER_PROJECTILE(EMPRESS_STREAK, NEW(Projectile));
@@ -324,6 +333,7 @@ REGISTER_PROJECTILE(POPPER_DJINN, NEW(Projectile));
 REGISTER_PROJECTILE(POPPER_ARROW, NEW(Projectile));
 REGISTER_PROJECTILE(POPPER_MAGIC, NEW(Projectile));
 REGISTER_PROJECTILE(BISHOP_BOLT, NEW(Projectile));
+REGISTER_PROJECTILE(GOAT, NEW(Projectile));
 
 CLASS(MinisharkBullet, Bullet)
 	ATTRIB(MinisharkBullet, m_spread, float, 0.01);

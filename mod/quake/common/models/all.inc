@@ -182,4 +182,5 @@ MODEL(PROJECTILE_LETTER_Y,                  "progs/s_sns_y.spr");
 MODEL(PROJECTILE_LETTER_Z,                  "progs/s_sns_z.spr");
 MODEL(PROJECTILE_MINISHARK_BULLET,          "progs/spike.mdl");
 MODEL(PROJECTILE_MEGASHARK_BULLET,          "progs/spike.mdl");
+MODEL(PROJECTILE_GOAT,                      "progs/player_goat.mdl");
 #endif

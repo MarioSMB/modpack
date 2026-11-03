@@ -102,6 +102,13 @@ bool Projectile_Collide(entity this, entity toucher, bool is_touch)
 	}
 	else
 	{
+		this.bounced += 1;
+		if(ptype.m_bouncecnt >= 0 && this.bounced > ptype.m_bouncecnt)
+		{
+			Projectile_Explode(this, NULL, is_touch);
+			return false;
+		}
+
 		if(ptype.m_effect_bounce != EFFECT_Null)
 			Send_Effect(ptype.m_effect_bounce, this.origin, normalize(this.velocity) * (this.speed * 0.25), 1);
 
@@ -111,13 +118,6 @@ bool Projectile_Collide(entity this, entity toucher, bool is_touch)
 
 		if(ptype.pr_bounce)
 			ptype.pr_bounce(ptype, this, toucher, is_touch);
-
-		this.bounced += 1;
-		if(ptype.m_bouncecnt >= 0 && this.bounced > ptype.m_bouncecnt)
-		{
-			Projectile_Explode(this, NULL, is_touch);
-			return false;
-		}
 	}
 	return true;
 }
@@ -345,8 +345,8 @@ METHOD(Projectile, pr_setup, void(Projectile this, entity actor))
 	}
 	if(this.m_avelocity != '0 0 0')
 		actor.avelocity = this.m_avelocity;
-	if(this.scale)
-		actor.scale = this.scale;
+	if(this.m_scale)
+		actor.scale = this.m_scale;
 
 	if(this.spawnflags & PROJ_FLAG_NOCOLLISIONS)
 		actor.dphitcontentsmask = DPCONTENTS_DONOTENTER;

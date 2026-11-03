@@ -130,11 +130,7 @@ void enf_idle_sound(entity this)
 
 void enf_stand1(entity this)
 {
-	this.walkframe += 1;
-	if(this.walkframe >= 7)
-		this.walkframe = 0;
-
-	set_anim(this, anim_enf_stand + this.walkframe, enf_stand1);
+	monster_animate(this, anim_enf_stand, 7, enf_stand1, enf_stand1);
 
 	ai_stand(this);
 }

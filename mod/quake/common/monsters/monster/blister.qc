@@ -105,67 +105,49 @@ void Sploder_Forget(entity this)
 
 void sploder_stand1(entity this)
 {
-	setthink(this, sploder_stand1);
-	this.nextthink = time + FRAME_TIME;
+	monster_animate(this, anim_blister_stand, 25, sploder_stand1, sploder_stand1);
 
-	this.walkframe += 1;
-	if(this.walkframe >= 25)
-		this.walkframe = 0;
+	ai_stand(this);
 
-	this.frame = anim_blister_stand + this.walkframe;
-
-	ai_stand(this);	
-
-	int myframe = this.walkframe + 1;
-	if(myframe == 14)
-		SploderIdleNoise(this);
+	switch(this.walkframe + 1)
+	{
+		case 14: SploderIdleNoise(this); break;
+	}
 }
 
 void sploder_run1(entity this);
-void sploder_stunned_a9(entity this) { set_animofs(this, anim_blister_stunned_a, 9, sploder_run1); }
-void sploder_stunned_a8(entity this) { set_animofs(this, anim_blister_stunned_a, 8, sploder_stunned_a9); }
-void sploder_stunned_a7(entity this) { set_animofs(this, anim_blister_stunned_a, 7, sploder_stunned_a8); }
-void sploder_stunned_a6(entity this) { set_animofs(this, anim_blister_stunned_a, 6, sploder_stunned_a7); }
-void sploder_stunned_a5(entity this) { set_animofs(this, anim_blister_stunned_a, 5, sploder_stunned_a6); }
-void sploder_stunned_a4(entity this) { set_animofs(this, anim_blister_stunned_a, 4, sploder_stunned_a5); }
-void sploder_stunned_a3(entity this) { set_animofs(this, anim_blister_stunned_a, 3, sploder_stunned_a4); }
-void sploder_stunned_a2(entity this) { set_animofs(this, anim_blister_stunned_a, 2, sploder_stunned_a3); }
-void sploder_stunned_a1(entity this) { set_animofs(this, anim_blister_stunned_a, 1, sploder_stunned_a2); }
+void sploder_stunned_a1(entity this)
+{
+	monster_animate(this, anim_blister_stunned_a, 9, sploder_stunned_a1, sploder_run1);
+}
 
-void sploder_stunned_b9(entity this) { set_animofs(this, anim_blister_stunned_b, 9, sploder_run1); }
-void sploder_stunned_b8(entity this) { set_animofs(this, anim_blister_stunned_b, 8, sploder_stunned_b9); }
-void sploder_stunned_b7(entity this) { set_animofs(this, anim_blister_stunned_b, 7, sploder_stunned_b8); }
-void sploder_stunned_b6(entity this) { set_animofs(this, anim_blister_stunned_b, 6, sploder_stunned_b7); }
-void sploder_stunned_b5(entity this) { set_animofs(this, anim_blister_stunned_b, 5, sploder_stunned_b6); }
-void sploder_stunned_b4(entity this) { set_animofs(this, anim_blister_stunned_b, 4, sploder_stunned_b5); }
-void sploder_stunned_b3(entity this) { set_animofs(this, anim_blister_stunned_b, 3, sploder_stunned_b4); }
-void sploder_stunned_b2(entity this) { set_animofs(this, anim_blister_stunned_b, 2, sploder_stunned_b3); }
-void sploder_stunned_b1(entity this) { set_animofs(this, anim_blister_stunned_b, 1, sploder_stunned_b2); }
+void sploder_stunned_b1(entity this)
+{
+	monster_animate(this, anim_blister_stunned_b, 9, sploder_stunned_b1, sploder_run1);
+}
 
-void sploder_stunned_c9(entity this) { set_animofs(this, anim_blister_stunned_c, 9, sploder_run1); }
-void sploder_stunned_c8(entity this) { set_animofs(this, anim_blister_stunned_c, 8, sploder_stunned_c9); }
-void sploder_stunned_c7(entity this) { set_animofs(this, anim_blister_stunned_c, 7, sploder_stunned_c8); }
-void sploder_stunned_c6(entity this) { set_animofs(this, anim_blister_stunned_c, 6, sploder_stunned_c7); }
-void sploder_stunned_c5(entity this) { set_animofs(this, anim_blister_stunned_c, 5, sploder_stunned_c6); }
-void sploder_stunned_c4(entity this) { set_animofs(this, anim_blister_stunned_c, 4, sploder_stunned_c5); }
-void sploder_stunned_c3(entity this) { set_animofs(this, anim_blister_stunned_c, 3, sploder_stunned_c4); }
-void sploder_stunned_c2(entity this) { set_animofs(this, anim_blister_stunned_c, 2, sploder_stunned_c3); }
-void sploder_stunned_c1(entity this) { set_animofs(this, anim_blister_stunned_c, 1, sploder_stunned_c2); }
+void sploder_stunned_c1(entity this)
+{
+	monster_animate(this, anim_blister_stunned_c, 9, sploder_stunned_c1, sploder_run1);
+}
 
-void sploder_walk1(entity this);
-void sploder_walk13(entity this) { set_animofs(this, anim_blister_walk, 13, sploder_walk1); ai_walk(this, 3); }
-void sploder_walk12(entity this) { set_animofs(this, anim_blister_walk, 12, sploder_walk13); ai_walk(this, 3); SploderIdleNoise(this); }
-void sploder_walk11(entity this) { set_animofs(this, anim_blister_walk, 11, sploder_walk12); ai_walk(this, 3); }
-void sploder_walk10(entity this) { set_animofs(this, anim_blister_walk, 10, sploder_walk11); ai_walk(this, 3); }
-void sploder_walk9(entity this) { set_animofs(this, anim_blister_walk, 9, sploder_walk10); ai_walk(this, 4); }
-void sploder_walk8(entity this) { set_animofs(this, anim_blister_walk, 8, sploder_walk9); ai_walk(this, 2); }
-void sploder_walk7(entity this) { set_animofs(this, anim_blister_walk, 7, sploder_walk8); ai_walk(this, 3); }
-void sploder_walk6(entity this) { set_animofs(this, anim_blister_walk, 6, sploder_walk7); ai_walk(this, 3); }
-void sploder_walk5(entity this) { set_animofs(this, anim_blister_walk, 5, sploder_walk6); ai_walk(this, 3); SploderIdleNoise(this); }
-void sploder_walk4(entity this) { set_animofs(this, anim_blister_walk, 4, sploder_walk5); ai_walk(this, 3); }
-void sploder_walk3(entity this) { set_animofs(this, anim_blister_walk, 3, sploder_walk4); ai_walk(this, 4); }
-void sploder_walk2(entity this) { set_animofs(this, anim_blister_walk, 2, sploder_walk3); ai_walk(this, 2); }
-void sploder_walk1(entity this) { set_animofs(this, anim_blister_walk, 1, sploder_walk2); ai_walk(this, 3); }
+void sploder_walk1(entity this)
+{
+	monster_animate(this, anim_blister_walk, 13, sploder_walk1, sploder_walk1);
+
+	int mspeed = 3;
+	switch(this.walkframe + 1)
+	{
+		case 2: mspeed = 2; break;
+		case 3: mspeed = 4; break;
+		case 5: SploderIdleNoise(this); break;
+		case 8: mspeed = 2; break;
+		case 9: mspeed = 4; break;
+		case 12: SploderIdleNoise(this); break;
+	}
+
+	ai_walk(this, mspeed);
+}
 
 void nmfast(entity this, float frate)
 {
@@ -212,22 +194,12 @@ void sploder_run(entity this, float dist)
 	}
 }
 
-void sploder_run11(entity this) { set_animofs(this, anim_blister_run, 11, sploder_run1); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run10(entity this) { set_animofs(this, anim_blister_run, 10, sploder_run11); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run9(entity this) { set_animofs(this, anim_blister_run, 9, sploder_run10); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run8(entity this) { set_animofs(this, anim_blister_run, 8, sploder_run9); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run7(entity this) { set_animofs(this, anim_blister_run, 7, sploder_run8); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run6(entity this) { set_animofs(this, anim_blister_run, 6, sploder_run7); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run5(entity this) { set_animofs(this, anim_blister_run, 5, sploder_run6); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run4(entity this) { set_animofs(this, anim_blister_run, 4, sploder_run5); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run3(entity this) { set_animofs(this, anim_blister_run, 3, sploder_run4); nmfast(this, 0.075); sploder_run(this, 28); }
-void sploder_run2(entity this) { set_animofs(this, anim_blister_run, 2, sploder_run3); nmfast(this, 0.075); sploder_run(this, 28); }
 void sploder_run1(entity this)
 {
-	set_animofs(this, anim_blister_run, 1, sploder_run2);
+	monster_animate(this, anim_blister_run, 11, sploder_run1, sploder_run1);
+
 	nmfast(this, 0.075);
 	sploder_run(this, 28);
-	//Sploder_Forget(this);
 }
 
 void sploder_pain(entity this, entity attacker, float damage, int deathtype)

@@ -124,6 +124,84 @@ void wheel_slowmo_do(entity this)
 	this.nextthink = time + 7;
 }
 
+void goat_touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+
+	float mydmg = (this.dmg) ? this.dmg : 5;
+	float damg = mydmg + random() * (mydmg * 0.2);
+	
+	if(toucher.health > 0 && toucher.takedamage)
+		T_Damage(toucher, this, this.owner, damg, this.projectiledeathtype);
+
+	// don't do radius damage to the toucher, because all the damage
+	// was done in the impact
+	T_RadiusDamageForSource(this, this.origin, this.owner, mydmg * 1.2, 50, this.projectiledeathtype, toucher);
+
+	sound(this, CH_SHOTS, SND_GOAT_EXPLODE, 1, ATTN_NORM);
+	this.origin = this.origin - 8 * normalize(this.velocity);
+
+	//Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
+	//Send_Effect(EFFECT_RUNE_METEOR_IMPACT, this.origin, '0 0 0', 1);
+	te_explosion2(this.origin, bound(100, random() * 250, 220), 5);
+
+	delete(this);
+}
+
+void summon_goats(entity this)
+{
+	if(time > this.cnt)
+	{
+		delete(this);
+		return;
+	}
+	this.nextthink = time + 0.1;
+	setthink(this, summon_goats);
+
+	this.frame += 1;
+	if(this.frame > 9)
+		this.frame = 0;
+
+	this.avelocity_y += 1400 * PHYS_INPUT_FRAMETIME;
+
+	int meteors = floor(random() * 3) + 1; // 1-3 at a time
+	for(int j = 0; j < meteors; ++j)
+	{
+		entity flame = spawn();
+		flame.solid = SOLID_BBOX;
+		flame.owner = this;
+		flame.realowner = this;
+		flame.projectiledeathtype = DEATH_TRAP.m_id;
+		flame.clipgroup = this.clipgroup;
+		flame.classname = "missile";
+		set_movetype(flame, MOVETYPE_FLY);
+		//setorigin(flame, this.origin);
+		//flame.origin_x = flame.origin_x + 96 - (random()*128);
+		//flame.origin_y = flame.origin_y + 96 - (random()*128);
+		flame.origin = this.origin + randomvec() * 128;
+		flame.origin_z = this.origin_z;
+		setorigin(flame, flame.origin);
+		vector dir = normalize(this.pos1 - this.origin);
+		flame.velocity = dir * 350;
+		flame.angles = vectoangles(dir);
+		setsize(flame, '0 0 0', '0 0 0');
+		flame.scale = max(0.25, random());
+		flame.dmg = 10;
+		setthink(flame, SUB_Remove);
+		flame.nextthink = time + 5;
+		settouch(flame, goat_touch);
+
+		CSQCProjectile(flame, true, PROJECTILE_GOAT, true);
+	}
+}
+
 void wheel_trigger(entity this, int combo)
 {
 	if(this.health < 1)
@@ -143,6 +221,24 @@ void wheel_trigger(entity this, int combo)
 				if((time + efftime) > curtime)
 					StatusEffects_apply(STATUSEFFECT_Golden, it, time + efftime, 0);
 			});
+			if(gametype != GAMETYPE_TD)
+			{
+				tracebox(this.origin, '-64 -64 0', '64 64 4', this.origin + '0 0 1200', MOVE_NOMONSTERS, this);
+				if(trace_startsolid)
+					break;
+				entity goatrain = spawn();
+				set_movetype(goatrain, MOVETYPE_NOCLIP);
+				goatrain.classname = "goatrain";
+				setorigin(goatrain, trace_endpos);
+				_setmodel(goatrain, "progs/stormcloud.mdl");
+				setsize(goatrain, '0 0 0', '0 0 0');
+				goatrain.scale = 5;
+				goatrain.pos1 = this.origin;
+				setthink(goatrain, summon_goats);
+				goatrain.nextthink = time + 1;
+				goatrain.cnt = time + 8;
+				goatrain.alpha = 0.5;
+			}
 			break;
 		}
 		case COMBO_BUFF_ENEMIES:
@@ -498,8 +594,8 @@ PRECACHE(Wheel)
 
 	precache_sound("goatling/idle1.wav");
 
-	registercvar("sbar_wheel_pos", "0.15 0.15");
-	registercvar("sbar_wheel_size", "0.7 0.7");
+	registercvar("sbar_wheel_pos", "0.05 0.05");
+	registercvar("sbar_wheel_size", "0.85 0.85");
 
 	wheel_closetime = 0;
 }
