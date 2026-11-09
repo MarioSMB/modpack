@@ -93,7 +93,7 @@ void plat_go_up(entity this)
 	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
-float autocvar_sv_quake_platform_delay = 1;
+float autocvar_sv_quake_platform_delay = 1.5;
 void plat_center_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -104,7 +104,7 @@ void plat_center_touch(entity this, entity toucher)
 
 	if(this.enemy.state == STATE_BOTTOM)
 	{
-		this.enemy.state = STATE_UP;
+		this.enemy.state = STATE_UP; // prevent re-touch while starting
 		defer(this.enemy, autocvar_sv_quake_platform_delay, plat_go_up);
 		//plat_go_up(this.enemy);
 	}

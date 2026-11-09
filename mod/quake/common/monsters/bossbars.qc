@@ -128,9 +128,10 @@ void HUD_BossBar_Draw(entity this)
 	vector pos = panel_pos;
 	vector mySize = panel_size;
 
-	vector tcolor = mon.m_color;
-	if(tcolor == '0 0 0')
-		tcolor = '1 0.2 0';
+	// TODO: maybe make it dynamic? at least fix the overlapping colours!
+	vector tcolor = '1 0 0'; //mon.m_color;
+	//if(tcolor == '0 0 0')
+		//tcolor = '1 0.2 0';
 	if(this.state & BOSS_FROZEN)
 		tcolor = '0.5 0.5 0.5';
 
