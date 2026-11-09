@@ -141,7 +141,7 @@ void HUD_BossBar_Draw(entity this)
 	// background, progress bar, then bar image, nice layering!
 	drawpic_aspect(panel_pos + vec2(-mySize.x * 0.5, 0), "gfx/quake/bossbar_bg", mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 
-	HUD_Panel_DrawProgressBar(pos + vec2(mySize.x * 0.05, mySize.y * 1.25), vec2(mySize.x * 0.9, mySize.y * 0.5), strcat("progressbar_", mon.netname), this.health, false, 0, tcolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	HUD_Panel_DrawProgressBar(pos + vec2(mySize.x * 0.05, mySize.y * 1.25), vec2(mySize.x * 0.9, mySize.y * 0.5), strcat("progressbar_", mon.netname), this.health, false, 0, tcolor, 0.6 * 1, DRAWFLAG_NORMAL);
 
 	if(have_bar)
 		drawpic_aspect(panel_pos + vec2(-mySize.x * 0.5, 0), pic, mySize * 2, '1 1 1', 0.8, DRAWFLAG_NORMAL);
