@@ -169,7 +169,8 @@ METHOD(Projectile, m_tick, void(Projectile this, entity actor))
 	if(!actor.csqcprojectile_clientanimate)
 		UpdateCSQCProjectile(actor);
 
-	FOREACH_ENTITY_BOX_ORDERED(emin, emax, it != actor && it != actor.owner && it.solid != SOLID_TRIGGER && it.solid != SOLID_NOT,
+	// NOTE: BSP solid handled by regular touch, need accurate collisions!
+	FOREACH_ENTITY_BOX_ORDERED(emin, emax, it != actor && it != actor.owner && it.solid != SOLID_TRIGGER && it.solid != SOLID_NOT && it.solid != SOLID_BSP,
 	{
 		if(it.clipgroup && it.clipgroup == actor.clipgroup)
 			continue;
