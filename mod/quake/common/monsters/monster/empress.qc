@@ -847,10 +847,15 @@ void empress_ai_think(entity this)
 					shotvel = rotated_by(vec2_3d('0 -10 0'), M_PI * 2 * prandom(), '0 0 0') * PHYS_SCALE;
 
 				int fired = 0;
+				entity prev = NULL;
 				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 				{
 					if(vdist(this.origin - it.origin, >, 48000))
 						continue;
+					// another target is close enough that there would be too much overlap
+					if(prev && vdist(it.origin - prev.origin, <, 2000))
+						continue;
+					prev = it;
 
 					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
 
@@ -954,10 +959,15 @@ void empress_ai_think(entity this)
 						rad = 450;
 
 					int fired = 0;
+					entity prev = NULL;
 					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
 						if(vdist(this.origin - it.origin, >, 48000))
 							continue;
+						// another target is close enough that there would be too much overlap
+						if(prev && vdist(it.origin - prev.origin, <, 2000))
+							continue;
+						prev = it;
 
 						vector torg = CENTER_OR_VIEWOFS(it);
 						vector dirvec = dir_vector;
@@ -1335,10 +1345,15 @@ void empress_ai_think(entity this)
 				for(int j = 0; j < 1; ++j)
 				{
 					int fired = 0;
+					entity prev = NULL;
 					FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 					{
 						if(vdist(this.origin - it.origin, >, 48000))
 							continue;
+						// another target is close enough that there would be too much overlap
+						if(prev && vdist(it.origin - prev.origin, <, 2000))
+							continue;
+						prev = it;
 
 						vector vdir = it.velocity * -1;
 						vector torg = CENTER_OR_VIEWOFS(it);
@@ -1415,10 +1430,15 @@ void empress_ai_think(entity this)
 				vector shotvel = rotated_by(vec2_3d('0 -20 0'), M_PI * 2 * pspeed, '0 0 0');
 
 				int fired = 0;
+				entity prev = NULL;
 				FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0 && Damage_ValidTarget(it, this),
 				{
 					if(vdist(this.origin - it.origin, >, 48000))
 						continue;
+					// another target is close enough that there would be too much overlap
+					if(prev && vdist(it.origin - prev.origin, <, 2000))
+						continue;
+					prev = it;
 
 					empress_rainbowstreak_create(this, my_center + offset, shotvel, it, pstreak_damage, should_enrage);
 
