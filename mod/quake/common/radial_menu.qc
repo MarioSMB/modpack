@@ -125,7 +125,6 @@ void radial_drawseparator(vector center, float r_start, float r_end, float ang, 
 	p4.y = starty + offsety;
 	p4.z = 0;
 
-	// 6. Draw via the DarkPlaces 2D pixel space layout pipeline
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	R_PolygonVertex(p1, '0 0 0', col, alph);
 	R_PolygonVertex(p2, '1 0 0', col, alph);
@@ -133,7 +132,6 @@ void radial_drawseparator(vector center, float r_start, float r_end, float ang, 
 	R_PolygonVertex(p4, '0 1 0', col, alph);
 	R_EndPolygon();
 }
-
 
 bool radial_allowed()
 {
